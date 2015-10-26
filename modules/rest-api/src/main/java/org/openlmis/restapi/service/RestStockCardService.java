@@ -1,16 +1,24 @@
 package org.openlmis.restapi.service;
 
+import lombok.NoArgsConstructor;
+import org.openlmis.core.domain.StockAdjustmentReason;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.core.repository.FacilityRepository;
 import org.openlmis.core.repository.StockAdjustmentReasonRepository;
 import org.openlmis.core.service.ProductService;
 import org.openlmis.stockmanagement.domain.StockCard;
+import org.openlmis.stockmanagement.domain.StockCardEntry;
+import org.openlmis.stockmanagement.domain.StockCardEntryType;
 import org.openlmis.stockmanagement.dto.StockEvent;
 import org.openlmis.stockmanagement.service.StockCardService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
+@Service
+@NoArgsConstructor
 public class RestStockCardService {
 
   @Autowired
@@ -25,10 +33,11 @@ public class RestStockCardService {
   @Autowired
   private StockCardService stockCardService;
 
-  public StockCard adjustStock(Long facilityId, List<StockEvent> stockEventList, Long loggedInUserId) {
+  public List<StockCardEntry> adjustStock(Long facilityId, List<StockEvent> stockEventList, Long userId) {
     if (!validFacility(facilityId)) {
       throw new DataException("error.facility.unknown");
     }
+    List<StockCardEntry> entries = new ArrayList<>();
 
     for (StockEvent stockEvent: stockEventList) {
       String errorInStockEvent = validateStockEvent(stockEvent);
@@ -36,10 +45,30 @@ public class RestStockCardService {
         throw new DataException(errorInStockEvent);
       }
 
-      stockCardService.getOrCreateStockCard(facilityId, stockEvent.getProductCode());
-    }
+      StockCard stockCard = stockCardService.getOrCreateStockCard(facilityId, stockEvent.getProductCode());
 
-    return null;
+      if (stockCard == null) {
+        throw new DataException("error.stockmanagement.adjuststockfailed");
+      }
+
+      StockCardEntry entry = createStockCardEntry(stockEvent, stockCard, userId);
+      entries.add(entry);
+    }
+    stockCardService.addStockCardEntries(entries);
+    return entries;
+  }
+
+  private StockCardEntry createStockCardEntry(StockEvent stockEvent, StockCard stockCard, Long userId) {
+    StockAdjustmentReason stockAdjustmentReason = stockAdjustmentReasonRepository.getAdjustmentReasonByName(stockEvent.getReasonName());
+
+    long quantity = stockEvent.getQuantity();
+    quantity = stockAdjustmentReason.getAdditive() ? quantity : quantity * -1;
+
+    StockCardEntry entry = new StockCardEntry(stockCard, StockCardEntryType.ADJUSTMENT, quantity);
+    entry.setAdjustmentReason(stockAdjustmentReason);
+    entry.setCreatedBy(userId);
+    entry.setModifiedBy(userId);
+    return entry;
   }
 
   private boolean validFacility(Long facilityId) {

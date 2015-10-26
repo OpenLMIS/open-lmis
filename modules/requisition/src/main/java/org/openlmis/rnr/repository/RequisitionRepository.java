@@ -128,7 +128,6 @@ public class RequisitionRepository {
       updateRegimenLineItems(rnr);
       updateEquipmentLineItems(rnr);
       insertPatientQuantificationLineItems(rnr, rnr.getPatientQuantifications());
-
     }
   }
 
@@ -265,7 +264,7 @@ public class RequisitionRepository {
                                                                    Integer pageSize, Long userId, String rightName, String sortBy,
                                                                    String sortDirection) {
     return requisitionMapper.getApprovedRequisitionsForCriteriaAndPageNumber(searchType, searchVal, pageNumber, pageSize,
-      userId, rightName, sortBy, sortDirection);
+        userId, rightName, sortBy, sortDirection);
   }
 
   public Integer getCountOfApprovedRequisitionsForCriteria(String searchType, String searchVal, Long userId, String rightName) {
@@ -302,5 +301,9 @@ public class RequisitionRepository {
 
   public void updateClientFields(Rnr rnr) {
     requisitionMapper.updateClientFields(rnr);
+  }
+
+  public List<Rnr> getRequisitionDetailsByFacilityAndProgram(Facility facility, Program program) {
+    return requisitionMapper.getRequisitionsWithLineItemsByFacilityAndProgram(facility, program);
   }
 }

@@ -39,6 +39,7 @@ function ViewRnrController($scope, requisitionData , rnrColumns, regimenTemplate
       }
     };
 
+
     var options = {
       id: "confirmDialog",
       header: "label.confirm.action",

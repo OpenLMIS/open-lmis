@@ -19,6 +19,8 @@ import org.openlmis.core.repository.StockAdjustmentReasonRepository;
 import org.openlmis.core.service.ProductService;
 import org.openlmis.db.categories.UnitTests;
 import org.openlmis.stockmanagement.builder.StockEventBuilder;
+import org.openlmis.stockmanagement.domain.StockCard;
+import org.openlmis.stockmanagement.domain.StockCardEntry;
 import org.openlmis.stockmanagement.dto.StockEvent;
 import org.openlmis.stockmanagement.service.StockCardService;
 import org.powermock.modules.junit4.PowerMockRunner;
@@ -28,7 +30,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static com.natpryce.makeiteasy.MakeItEasy.*;
-import static org.mockito.Mockito.times;
+import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.assertThat;
+import static org.mockito.Matchers.anyList;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -57,8 +61,11 @@ public class RestStockCardServiceTest {
   private List<StockEvent> stockEventList;
   private Facility defaultFacility;
   private Product defaultProduct;
-  private StockEvent stockEvent;
+  private StockEvent stockEvent2;
   private String reasonName;
+  private Long quantity;
+  private StockEvent stockEvent1;
+  private Long userId;
 
   @Test
   public void shouldThrowDataExceptionIfFacilityIdIsInvalid() throws Exception {
@@ -69,7 +76,7 @@ public class RestStockCardServiceTest {
     when(facilityRepository.getById(facilityId)).thenReturn(null);
     when(productService.getByCode(productCode)).thenReturn(defaultProduct);
 
-    restStockCardService.adjustStock(facilityId, stockEventList, facilityId);
+    restStockCardService.adjustStock(facilityId, stockEventList, userId);
   }
 
   @Test
@@ -80,10 +87,15 @@ public class RestStockCardServiceTest {
     expectedException.expectMessage("error.stockmanagement.invalidadjustment");
     when(facilityRepository.getById(facilityId)).thenReturn(defaultFacility);
     when(productService.getByCode(productCode)).thenReturn(defaultProduct);
-    when(stockAdjustmentReasonRepository.getAdjustmentReasonByName("some reason")).thenReturn(new StockAdjustmentReason());
-    stockEvent.setReasonName(null);
+    StockAdjustmentReason stockAdjustmentReason = new StockAdjustmentReason();
+    stockAdjustmentReason.setAdditive(true);
+    when(stockAdjustmentReasonRepository.getAdjustmentReasonByName("some reason")).thenReturn(stockAdjustmentReason);
+    stockEvent2.setReasonName(null);
 
-    restStockCardService.adjustStock(facilityId, stockEventList, facilityId);
+    StockCard expectedStockCard = StockCard.createZeroedStockCard(defaultFacility, defaultProduct);
+    when(stockCardService.getOrCreateStockCard(facilityId, productCode)).thenReturn(expectedStockCard);
+
+    restStockCardService.adjustStock(facilityId, stockEventList, userId);
   }
 
   @Test
@@ -95,7 +107,7 @@ public class RestStockCardServiceTest {
     when(facilityRepository.getById(facilityId)).thenReturn(defaultFacility);
     when(productService.getByCode(productCode)).thenReturn(null);
 
-    restStockCardService.adjustStock(facilityId, stockEventList, facilityId);
+    restStockCardService.adjustStock(facilityId, stockEventList, userId);
   }
 
   @Test
@@ -107,41 +119,181 @@ public class RestStockCardServiceTest {
     when(facilityRepository.getById(facilityId)).thenReturn(defaultFacility);
     when(productService.getByCode(productCode)).thenReturn(defaultProduct);
     String reasonName = "invalid reason";
-    stockEvent.setReasonName(reasonName);
+    stockEvent2.setReasonName(reasonName);
     when(stockAdjustmentReasonRepository.getAdjustmentReasonByName(reasonName)).thenReturn(null);
 
-    restStockCardService.adjustStock(facilityId, stockEventList, facilityId);
+    restStockCardService.adjustStock(facilityId, stockEventList, userId);
   }
 
   @Test
   public void shouldCreateOrUpdateStockCardIfAdjustmentIsValid() throws Exception {
     setupStockData();
 
+    String productCode2 = "P2";
+    Product product2 = make(a(ProductBuilder.defaultProduct, with(ProductBuilder.code, productCode2)));
+    stockEvent2.setProductCode(productCode2);
+
+    when(facilityRepository.getById(facilityId)).thenReturn(defaultFacility);
+    when(productService.getByCode(productCode)).thenReturn(defaultProduct);
+    when(productService.getByCode(productCode2)).thenReturn(product2);
+    StockAdjustmentReason stockAdjustmentReason = new StockAdjustmentReason();
+    stockAdjustmentReason.setAdditive(true);
+    when(stockAdjustmentReasonRepository.getAdjustmentReasonByName(reasonName)).thenReturn(stockAdjustmentReason);
+
+    when(stockCardService.getOrCreateStockCard(facilityId, productCode)).thenReturn(StockCard.createZeroedStockCard(defaultFacility, defaultProduct));
+    when(stockCardService.getOrCreateStockCard(facilityId, productCode2)).thenReturn(StockCard.createZeroedStockCard(defaultFacility, product2));
+
+    restStockCardService.adjustStock(facilityId, stockEventList, userId);
+    verify(stockCardService).getOrCreateStockCard(facilityId, productCode);
+    verify(stockCardService).getOrCreateStockCard(facilityId, productCode2);
+  }
+
+  @Test
+  public void shouldReturnErrorIfStockCardIsNotCreated() throws Exception {
+    setupStockData();
+
+    expectedException.expect(DataException.class);
+    expectedException.expectMessage("error.stockmanagement.adjuststockfailed");
+
     when(facilityRepository.getById(facilityId)).thenReturn(defaultFacility);
     when(productService.getByCode(productCode)).thenReturn(defaultProduct);
     when(stockAdjustmentReasonRepository.getAdjustmentReasonByName(reasonName)).thenReturn(new StockAdjustmentReason());
 
-    restStockCardService.adjustStock(facilityId, stockEventList, facilityId);
-    verify(stockCardService, times(2)).getOrCreateStockCard(facilityId, productCode);
+    when(stockCardService.getOrCreateStockCard(facilityId, productCode)).thenReturn(null);
+
+    restStockCardService.adjustStock(facilityId, stockEventList, userId);
+  }
+
+  @Test
+  public void shouldAddStockCardEntriesWithAdjustmentReasonToStockCard() throws Exception {
+    setupStockData();
+
+    String stockAdjustmentReasonName = "Issue";
+    StockAdjustmentReason stockAdjustmentReason = new StockAdjustmentReason();
+    stockAdjustmentReason.setName(stockAdjustmentReasonName);
+    stockAdjustmentReason.setAdditive(false);
+    stockEvent1.setReasonName(stockAdjustmentReasonName);
+
+    String stockAdjustmentReasonName2 = "Acquire";
+    StockAdjustmentReason stockAdjustmentReason2 = new StockAdjustmentReason();
+    stockAdjustmentReason2.setName(stockAdjustmentReasonName2);
+    stockAdjustmentReason2.setAdditive(true);
+    stockEvent2.setReasonName(stockAdjustmentReasonName2);
+
+    when(facilityRepository.getById(facilityId)).thenReturn(defaultFacility);
+    when(productService.getByCode(productCode)).thenReturn(defaultProduct);
+    when(stockAdjustmentReasonRepository.getAdjustmentReasonByName(stockAdjustmentReasonName)).thenReturn(stockAdjustmentReason);
+    when(stockAdjustmentReasonRepository.getAdjustmentReasonByName(stockAdjustmentReasonName2)).thenReturn(stockAdjustmentReason2);
+
+    StockCard expectedStockCard = StockCard.createZeroedStockCard(defaultFacility, defaultProduct);
+    when(stockCardService.getOrCreateStockCard(facilityId, productCode)).thenReturn(expectedStockCard);
+
+    List<StockCardEntry> stockCardEntries = restStockCardService.adjustStock(facilityId, stockEventList, userId);
+
+    verify(stockCardService).addStockCardEntries(anyList());
+
+    assertThat(stockCardEntries.get(0).getAdjustmentReason(), is(stockAdjustmentReason));
+    assertThat(stockCardEntries.get(1).getAdjustmentReason(), is(stockAdjustmentReason2));
+  }
+
+  @Test
+  public void shouldAddStockCardEntriesWithPositiveQuantityToStockCardIfReasonIsAdditive() throws Exception {
+    setupStockData();
+
+    String stockAdjustmentReasonName = "Acquire";
+    StockAdjustmentReason stockAdjustmentReason = new StockAdjustmentReason();
+    stockAdjustmentReason.setName(stockAdjustmentReasonName);
+    stockAdjustmentReason.setAdditive(true);
+    stockEvent1.setReasonName(stockAdjustmentReasonName);
+    stockEvent2.setReasonName(stockAdjustmentReasonName);
+
+    Long quantity1 = 1000L;
+    Long quantity2 = 3000L;
+    stockEvent1.setQuantity(quantity1);
+    stockEvent2.setQuantity(quantity2);
+
+    when(facilityRepository.getById(facilityId)).thenReturn(defaultFacility);
+    when(productService.getByCode(productCode)).thenReturn(defaultProduct);
+    when(stockAdjustmentReasonRepository.getAdjustmentReasonByName(stockAdjustmentReasonName)).thenReturn(stockAdjustmentReason);
+
+    StockCard expectedStockCard = StockCard.createZeroedStockCard(defaultFacility, defaultProduct);
+    when(stockCardService.getOrCreateStockCard(facilityId, productCode)).thenReturn(expectedStockCard);
+
+    List<StockCardEntry> stockCardEntries = restStockCardService.adjustStock(facilityId, stockEventList, userId);
+
+    assertThat(stockCardEntries.get(0).getQuantity(), is(1000L));
+    assertThat(stockCardEntries.get(1).getQuantity(), is(3000L));
+  }
+
+  @Test
+  public void shouldAddStockCardEntriesWithPositiveQuantityToStockCardIfReasonIsNotAdditive() throws Exception {
+    setupStockData();
+
+    String stockAdjustmentReasonName = "Issue";
+    StockAdjustmentReason stockAdjustmentReason = new StockAdjustmentReason();
+    stockAdjustmentReason.setName(stockAdjustmentReasonName);
+    stockAdjustmentReason.setAdditive(false);
+    stockEvent1.setReasonName(stockAdjustmentReasonName);
+    stockEvent2.setReasonName(stockAdjustmentReasonName);
+
+    Long quantity1 = 1000L;
+    Long quantity2 = 3000L;
+    stockEvent1.setQuantity(quantity1);
+    stockEvent2.setQuantity(quantity2);
+
+    when(facilityRepository.getById(facilityId)).thenReturn(defaultFacility);
+    when(productService.getByCode(productCode)).thenReturn(defaultProduct);
+    when(stockAdjustmentReasonRepository.getAdjustmentReasonByName(stockAdjustmentReasonName)).thenReturn(stockAdjustmentReason);
+
+    StockCard expectedStockCard = StockCard.createZeroedStockCard(defaultFacility, defaultProduct);
+    when(stockCardService.getOrCreateStockCard(facilityId, productCode)).thenReturn(expectedStockCard);
+
+    List<StockCardEntry> stockCardEntries = restStockCardService.adjustStock(facilityId, stockEventList, userId);
+
+    assertThat(stockCardEntries.get(0).getQuantity(), is(-1000L));
+    assertThat(stockCardEntries.get(1).getQuantity(), is(-3000L));
+  }
+
+  @Test
+  public void shouldAddStockCardEntriesWithUserId() throws Exception {
+    setupStockData();
+
+    when(facilityRepository.getById(facilityId)).thenReturn(defaultFacility);
+    when(productService.getByCode(productCode)).thenReturn(defaultProduct);
+    StockAdjustmentReason stockAdjustmentReason = new StockAdjustmentReason();
+    stockAdjustmentReason.setAdditive(true);
+    when(stockAdjustmentReasonRepository.getAdjustmentReasonByName(reasonName)).thenReturn(stockAdjustmentReason);
+
+    StockCard expectedStockCard = StockCard.createZeroedStockCard(defaultFacility, defaultProduct);
+    when(stockCardService.getOrCreateStockCard(facilityId, productCode)).thenReturn(expectedStockCard);
+
+    List<StockCardEntry> stockCardEntries = restStockCardService.adjustStock(facilityId, stockEventList, userId);
+
+    assertThat(stockCardEntries.get(0).getCreatedBy(), is(userId));
+    assertThat(stockCardEntries.get(0).getModifiedBy(), is(userId));
+
   }
 
   private void setupStockData() {
     facilityId = 1L;
     productCode = "P123";
     reasonName = "some reason";
+    quantity = 100L;
+    userId = 123L;
     defaultFacility = make(a(FacilityBuilder.defaultFacility, with(FacilityBuilder.facilityId, facilityId)));
     defaultProduct = make(a(ProductBuilder.defaultProduct, with(ProductBuilder.code, productCode)));
 
     stockEventList = new ArrayList<>();
-    StockEvent defaultStockEvent = make(a(StockEventBuilder.defaultStockEvent,
-        with(StockEventBuilder.facilityId, facilityId),
+    stockEvent1 = make(a(StockEventBuilder.defaultStockEvent,
         with(StockEventBuilder.productCode, productCode),
-        with(StockEventBuilder.reasonName, reasonName)));
-    stockEventList.add(defaultStockEvent);
-    stockEvent = make(a(StockEventBuilder.defaultStockEvent,
-        with(StockEventBuilder.facilityId, facilityId),
+        with(StockEventBuilder.reasonName, reasonName),
+        with(StockEventBuilder.quantity, quantity)));
+    stockEventList.add(stockEvent1);
+    stockEvent2 = make(a(StockEventBuilder.defaultStockEvent,
         with(StockEventBuilder.productCode, productCode),
-        with(StockEventBuilder.reasonName, reasonName)));
-    stockEventList.add(stockEvent);
+        with(StockEventBuilder.reasonName, reasonName),
+        with(StockEventBuilder.quantity, quantity)
+    ));
+    stockEventList.add(stockEvent2);
   }
 }

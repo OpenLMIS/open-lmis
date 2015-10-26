@@ -55,6 +55,7 @@ import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.spy;
 import static org.openlmis.core.builder.FacilityBuilder.*;
+import static org.openlmis.core.builder.ProgramSupportedBuilder.PROGRAM_CODE;
 import static org.openlmis.core.builder.ProgramSupportedBuilder.PROGRAM_ID;
 import static org.openlmis.core.builder.ProgramSupportedBuilder.defaultProgramSupported;
 import static org.openlmis.restapi.builder.ReportBuilder.*;
@@ -281,11 +282,11 @@ public class RestRequisitionServiceTest {
     expectedException.expect(DataException.class);
     doThrow(new DataException("rnr.error")).when(restRequisitionCalculator).validateCustomPeriod(any(Facility.class), any(Program.class), any(ProcessingPeriod.class), any(Long.class));
 
-    ArrayList<ProcessingPeriod> array = new ArrayList<ProcessingPeriod>();
-    when(requisitionService.getRequisitionsFor(any(RequisitionSearchCriteria.class),any(array.getClass()))).thenReturn(asList(new Rnr()));
+    ArrayList<ProcessingPeriod> array = new ArrayList<>();
+    when(requisitionService.getRequisitionsFor(any(RequisitionSearchCriteria.class), any(array.getClass()))).thenReturn(asList(new Rnr()));
 
-    service.submitSdpReport(report,1L);
-    verify(requisitionService,never()).initiate(any(Facility.class),any(Program.class),any(Long.class),any(Boolean.class), any(ProcessingPeriod.class));
+    service.submitSdpReport(report, 1L);
+    verify(requisitionService,never()).initiate(any(Facility.class), any(Program.class), any(Long.class), any(Boolean.class), any(ProcessingPeriod.class));
 
   }
 
@@ -356,7 +357,7 @@ public class RestRequisitionServiceTest {
 
     Facility facility = make(a(defaultFacility, with(virtualFacility, false)));
     Rnr rnr = make(a(RequisitionBuilder.defaultRequisition, with
-            (RequisitionBuilder.facility, facility)));
+        (RequisitionBuilder.facility, facility)));
 
     expectedException.expect(DataException.class);
     expectedException.expectMessage("error.approval.not.allowed");
@@ -637,6 +638,46 @@ public class RestRequisitionServiceTest {
     service.submitReport(report, 3L);
 
     verify(restRequisitionCalculator).setDefaultValues(initiatedRnr);
+  }
+
+  @Test
+  public void shouldThrowExceptionIfFacilityCodeIsInvalid() throws Exception {
+    Program program = new Program();
+    program.setCode(PROGRAM_CODE);
+    program.setId(12L);
+    when(programService.getByCode(PROGRAM_CODE)).thenReturn(program);
+
+    expectedException.expect(DataException.class);
+    expectedException.expectMessage("error.facility.unknown");
+    service.getRequisitionsByFacilityAndProgram("invalid_code", PROGRAM_CODE);
+  }
+
+  @Test
+  public void shouldThrowExceptionIfProgramCodeIsInvalid() throws Exception {
+
+    when(facilityService.getFacilityByCode(FACILITY_CODE)).thenReturn(new Facility());
+
+    expectedException.expect(DataException.class);
+    expectedException.expectMessage("program.code.invalid");
+    service.getRequisitionsByFacilityAndProgram(FACILITY_CODE, "invalid_program");
+  }
+
+  @Test
+  public void shouldGetRequisitionsIfFacilityAndProgramIsValid() {
+    Program program = new Program();
+    program.setCode(PROGRAM_CODE);
+    program.setId(12L);
+
+    Facility facility = new Facility();
+    facility.setCode(FACILITY_CODE);
+    facility.setId(120L);
+
+    when(facilityService.getFacilityByCode(FACILITY_CODE)).thenReturn(facility);
+    when(programService.getByCode(PROGRAM_CODE)).thenReturn(program);
+
+    service.getRequisitionsByFacilityAndProgram(FACILITY_CODE, PROGRAM_CODE);
+
+    verify(requisitionService).getRequisitionsByFacilityAndProgram(facility, program);
   }
 
   private List<RnrColumn> getRnrColumns() {
