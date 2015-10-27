@@ -375,11 +375,12 @@
             </div>
           </li>
 
+          <div ng-include src="'/public/pages/reports/mozambique/reports.html'"></div>
 
           <li class="has-children">
 
           <li>
-            <a href="/public/pages/reports/requisition/index.html" openlmis-message="menu.report.requisition.reports"></a>
+            <a href="/public/pages/reports/custom/index.html" openlmis-message="menu.report.custom.reports"></a>
           </li>
 
           <li ng-show="hasPermission('VIEW_REPORT')">
@@ -391,7 +392,6 @@
         </ul>
       </div>
     </li>
-
     <li>
       <a id="administration-menu" href="javascript: void(0)" openlmis-message="link.administration"></a>
 

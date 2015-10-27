@@ -1320,3 +1320,7 @@ services.factory('FacilitiesByLevel', function($resource){
 services.factory('RequisitionReportService', function($resource){
     return $resource('/reports/requisition-report.json',{},{});
 });
+
+services.factory('SingleProductReportService', function($resource){
+    return $resource('/reports/requisition-report.json',{},{});
+});

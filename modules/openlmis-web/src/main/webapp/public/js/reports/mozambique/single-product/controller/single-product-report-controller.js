@@ -1,0 +1,3 @@
+function SingleProductReportController($scope,SingleProductReportService){
+
+}
