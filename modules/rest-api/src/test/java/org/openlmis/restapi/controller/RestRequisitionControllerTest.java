@@ -225,7 +225,7 @@ public class RestRequisitionControllerTest {
   public void shouldReturnSuccessCodeAndRequisitionListIfNoException() {
     String facilityCode = "F1";
 
-    List<Rnr> expectedRequisitions = new ArrayList<>();
+    List<Report> expectedRequisitions = new ArrayList<>();
     when(service.getRequisitionsByFacility(facilityCode)).thenReturn(expectedRequisitions);
     String requisitionsKey = "requisitions";
     ResponseEntity<RestResponse> expectedResponse = new ResponseEntity<>(new RestResponse(requisitionsKey, expectedRequisitions), OK);
@@ -233,7 +233,7 @@ public class RestRequisitionControllerTest {
 
     ResponseEntity<RestResponse> response = controller.getRequisitionsByFacility(facilityCode);
     assertThat(response.getStatusCode(), is(HttpStatus.OK));
-    assertThat((List<Rnr>) response.getBody().getData().get(requisitionsKey), is(expectedRequisitions));
+    assertThat((List<Report>) response.getBody().getData().get(requisitionsKey), is(expectedRequisitions));
   }
 
   @Test
