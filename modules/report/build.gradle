@@ -19,6 +19,7 @@ dependencies {
           'com.lowagie:itext:4.2.2',
           'org.apache.poi:poi:3.7',
       project(':modules:authentication'),
+      project(':modules:stock-management'),
       project(':modules:requisition'),
       project(':modules:shipment'),
       project(':modules:core')

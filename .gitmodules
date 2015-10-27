@@ -4,6 +4,3 @@
 [submodule "modules/stock-management"]
 	path = modules/stock-management
 	url = https://github.com/OpenLMIS/stock-management.git
-[submodule "modules/report-moz"]
-	path = modules/report-moz
-	url = https://github.com/clintonhealthaccess/report-moz.git

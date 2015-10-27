@@ -28,6 +28,7 @@ import org.openlmis.core.utils.DateUtil;
 import org.openlmis.core.web.OpenLmisResponse;
 import org.openlmis.core.web.controller.BaseController;
 import org.openlmis.report.mapper.RequisitionReportsMapper;
+import org.openlmis.report.service.FacilityProductsReportDataProvider;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
 import org.springframework.http.ResponseEntity;
@@ -45,10 +46,14 @@ import static org.springframework.web.bind.annotation.RequestMethod.GET;
 @Controller
 @NoArgsConstructor
 @RequestMapping(value = "/reports")
-public class SimpleTableController extends BaseController {
+public class SimpleTableController {
 
 	@Autowired
 	private RequisitionReportsMapper requisitionReportsMapper;
+
+	@Autowired
+	private FacilityProductsReportDataProvider facilityProductsReportDataProvider;
+
 
 	@RequestMapping(value = "/requisition-report", method = GET, headers = BaseController.ACCEPT_JSON)
 	public ResponseEntity<OpenLmisResponse> requisitionReport(
@@ -56,6 +61,15 @@ public class SimpleTableController extends BaseController {
 					@RequestParam(value = "endTime", required = true) Date endTime) {
 		return OpenLmisResponse.response("rnr_list", requisitionReportsMapper
             .getRequisitionList(startTime, endTime));
+	}
+
+
+	@RequestMapping(value = "/facility-products-report", method = GET, headers = BaseController.ACCEPT_JSON)
+	public ResponseEntity<OpenLmisResponse> facilityProductsReport(
+			@RequestParam(value = "geographicZoneId") Long geographicZoneId,
+			@RequestParam(value = "productId") final Long productId,
+			@RequestParam(value = "endTime", required = false) final Date endTime) {
+		return OpenLmisResponse.response("products", facilityProductsReportDataProvider.getReportData(geographicZoneId, productId,endTime));
 	}
 
 	@InitBinder
