@@ -1322,5 +1322,15 @@ services.factory('RequisitionReportService', function($resource){
 });
 
 services.factory('SingleProductReportService', function($resource){
-    return $resource('/reports/requisition-report.json',{},{});
+    return {
+        loadAllProducts : function () {
+            return $resource('/rest-api/lookup/products', {pageSize:10000}, {});
+        },
+        loadGeographicZone : function () {
+            return $resource('/reports/geographic-zones/flat.json', {}, {});
+        },
+        loadGeographicLevel : function () {
+            return $resource('/rest-api/lookup/geographic-levels', {}, {});
+        }
+    };
 });

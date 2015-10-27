@@ -7,8 +7,8 @@
             <label class="labels" openlmis-message="label.drug"></label>
 
             <div class="form-fields">
-                <select ui-select2 style="width:160px;" class="large-input" name="program" ng-model="formFilter.programId">
-                    <option ng-repeat="option in programs" value="{{option.id}}">{{option.name}}</option>
+                <select ui-select2 style="width:160px;" class="large-input" name="selectedProduct" ng-model="reportParam.productId">
+                    <option ng-repeat="option in products" value="{{option.id}}">{{option.primaryName}}</option>
                 </select>
             </div>
         </div>
@@ -18,8 +18,8 @@
             <label class="labels" openlmis-message="label.province"></label>
 
             <div class="form-fields">
-                <select ui-select2 style="width:160px;" class="large-input" name="program" ng-model="formFilter.programId">
-                    <option ng-repeat="option in programs" value="{{option.id}}">{{option.name}}</option>
+                <select ui-select2 style="width:160px;" class="large-input" name="provinces" ng-model="reportParam.provinceId">
+                    <option ng-repeat="option in provinces" value="{{option.id}}">{{option.name}}</option>
                 </select>
             </div>
         </div>
@@ -29,8 +29,8 @@
             <label class="labels" openlmis-message="label.district"></label>
 
             <div class="form-fields">
-                <select ui-select2 style="width:160px;" class="large-input" name="program" ng-model="formFilter.programId">
-                    <option ng-repeat="option in programs" value="{{option.id}}">{{option.name}}</option>
+                <select ui-select2 style="width:160px;" class="large-input" name="districts" ng-model="reportParam.districtId">
+                    <option ng-repeat="option in districts" value="{{option.id}}">{{option.name}}</option>
                 </select>
             </div>
         </div>
