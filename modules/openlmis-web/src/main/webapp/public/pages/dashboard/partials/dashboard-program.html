@@ -200,10 +200,24 @@
             <pre>Page: {{bigCurrentPage}} / {{numPages}}</pre>-->
         </div>
         <div class="span10">
+            <div  ng-if="productsTrend.length > 0" class="row-fluid">
+                <div class="span4" ng-repeat="carousel in carousels">
+                    <div id="{{carousel.id}}" class="carousel-play-control">
+                        <button id="{{carousel.id}}_play" type="button" class="btn btn-default btn-xs" ng-class="{'carousel-playing': carousel.isPlaying, '': !carousel.isPlaying}"  ng-click="carousel.play()" alt="this si">
+                            <span class="icon-play"></span>
+                        </button>
+                        <button id="{{carousel.id}}_pause" type="button" class="btn btn-default btn-xs"  ng-class="{'carousel-paused': !carousel.isPlaying, '': carousel.isPlaying}" ng-click="carousel.pause()">
+                            <span class="icon-pause"></span>
+                        </button>
+                    </div>
+                </div>
+
+            </div>
 
             <div class="row-fluid" ng-repeat="product in productsTrend" ng-if="product.selected" >
                 <div class="span4" >
-                    <carousel  interval="slideTransitionInterval">
+
+                    <carousel  interval="setInterval('consumption')">
                         <slide>
                             <accordion>
                                 <accordion-group class="gray-cascade" is-open="product.consumptionChart.openPanel">
@@ -330,7 +344,7 @@
 
                 </div>
                 <div class="span4">
-                    <carousel  interval="slideTransitionInterval">
+                    <carousel  interval="setInterval('stocks')">
                         <slide>
                             <accordion>
                                 <accordion-group class="gray-cascade" is-open="product.stockingEfficiencyChart.openPanel">
@@ -526,7 +540,7 @@
                     </carousel>
                 </div>
                 <div class="span4">
-                    <carousel  interval="slideTransitionInterval">
+                    <carousel  interval="setInterval('losses')">
                         <slide>
                             <accordion>
                                 <accordion-group class="gray-cascade" is-open="product.lossesAndAdjustmentChart.openPanel">
