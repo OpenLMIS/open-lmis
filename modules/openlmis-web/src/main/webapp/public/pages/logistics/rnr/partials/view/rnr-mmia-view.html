@@ -1,6 +1,3 @@
-<link rel="stylesheet" href="/public/css/rnr-view.css">
-<link rel="stylesheet" href="/public/css/rnr-mmia-view.css"/>
-<body>
 <div class="mmia-form">
     <table class="border-all-bold head-section" cellpadding="0" cellspacing="0">
         <tr>
@@ -32,7 +29,7 @@
         </tr>
 
         <tr>
-            <td colspan="3">Health Facility:</td>
+            <td colspan="3">Health Facility: {{rnr.facility.name}}</td>
             <td rowspan="2">Ano:</td>
         </tr>
 
@@ -49,17 +46,29 @@
             <th class="border-bottom-bold">FNM</th>
             <th class="col-4">medical</th>
             <th>UNIDATA de Saida</th>
-            <th>Saide</th>
-            <th>ENt</th>
-            <th>Sail</th>
-            <th>fea</th>
-            <th>es</th>
-            <th>sea</th>
+            <th>Saido inicial</th>
+            <th>Entradas</th>
+            <th>Saidas</th>
+            <th>Perdas e ajusts</th>
+            <th>inventario</th>
+            <th>Validade</th>
         </tr>
         </thead>
         <tbody>
+        <tr ng-repeat="item in adult">
+            <td class="banner-text">{{$index+1}}</td>
+            <td class="no-top-and-bottom-border bg-color-green">{{item.productCode}}</td>
+            <td class="bg-color-green align-left">{{item.product}}</td>
+            <td>{{item.packSize}}mg</td>
+            <td>{{item.beginningBalance}}</td>
+            <td>{{item.quantityReceived}}</td>
+            <td>{{item.quantityDispensed}}</td>
+            <td>{{item.totalLossesAndAdjustments}}</td>
+            <td>{{item.stockInHand}}</td>
+            <td><span ng-show="item.stockOutDays != 0">{{item.stockOutDays}}</span></td>
+        </tr>
         <tr>
-            <td class="banner-text">1</td>
+            <td class="banner-text bg-color-black">13</td>
             <td class="no-top-and-bottom-border bg-color-green"></td>
             <td class="bg-color-green"></td>
             <td></td>
@@ -71,7 +80,32 @@
             <td></td>
         </tr>
         <tr>
-            <td class="banner-text bg-color-">2</td>
+            <td class="banner-text bg-color-black">14</td>
+            <td class="no-top-and-bottom-border bg-color-green"></td>
+            <td class="bg-color-green"></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+        </tr>
+
+        <tr ng-repeat="item in children">
+            <td class="banner-text">{{$index+15}}</td>
+            <td class="no-top-and-bottom-border bg-color-lightyellow">{{item.productCode}}</td>
+            <td class="bg-color-lightyellow align-left">{{item.product}}</td>
+            <td>{{item.packSize}}mg</td>
+            <td>{{item.beginningBalance}}</td>
+            <td>{{item.quantityReceived}}</td>
+            <td>{{item.quantityDispensed}}</td>
+            <td>{{item.totalLossesAndAdjustments}}</td>
+            <td>{{item.stockInHand}}</td>
+            <td><span ng-show="item.stockOutDays != 0">{{item.stockOutDays}}</span></td>
+        </tr>
+        <tr>
+            <td class="banner-text bg-color-">25</td>
             <td class="no-top-and-bottom-border bg-color-lightyellow"></td>
             <td class="bg-color-lightyellow"></td>
             <td></td>
@@ -82,58 +116,23 @@
             <td></td>
             <td></td>
         </tr>
-        <tr>
-            <td class="banner-text bg-color-">2</td>
-            <td class="no-top-and-bottom-border bg-color-lightyellow"></td>
-            <td class="bg-color-lightyellow"></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
+        <tr ng-repeat="item in other">
+            <td class="banner-text">{{$index+26}}</td>
+            <td class="no-top-and-bottom-border bg-color-lightblue">{{item.productCode}}</td>
+            <td class="bg-color-lightblue align-left">{{item.product}}</td>
+            <td>{{item.packSize}}mg</td>
+            <td>{{item.beginningBalance}}</td>
+            <td>{{item.quantityReceived}}</td>
+            <td>{{item.quantityDispensed}}</td>
+            <td>{{item.totalLossesAndAdjustments}}</td>
+            <td>{{item.stockInHand}}</td>
+            <td><span ng-show="item.stockOutDays != 0">{{item.stockOutDays}}</span></td>
         </tr>
+
         <tr>
-            <td class="banner-text bg-color-">2</td>
-            <td class="no-top-and-bottom-border bg-color-lightyellow"></td>
-            <td class="bg-color-lightyellow"></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-        </tr>
-        <tr>
-            <td class="banner-text bg-color-">2</td>
-            <td class="no-top-and-bottom-border bg-color-lightyellow"></td>
-            <td class="bg-color-lightyellow"></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-        </tr>
-        <tr>
-            <td class="banner-text">3</td>
+            <td class="banner-text">28</td>
             <td class="no-top-and-bottom-border bg-color-lightblue"></td>
             <td class="bg-color-lightblue"></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-        </tr>
-        <tr>
-            <td class="banner-text">4</td>
-            <td class="no-top-and-bottom-border"></td>
-            <td></td>
             <td></td>
             <td></td>
             <td></td>
@@ -157,54 +156,24 @@
                 </tr>
                 </thead>
                 <tbody>
-                <tr>
-                    <td class="banner-text">&nbsp;1</td>
+                <tr ng-repeat="item in regimenAdult">
+                    <td class="banner-text">{{$index+1}}</td>
                     <td class="bg-color-green"></td>
-                    <td class="bg-color-green"></td>
-                    <td></td>
+                    <td class="bg-color-green">{{item.name}}</td>
+                    <td>{{item.patientsOnTreatment}}</td>
                 </tr>
-                <tr>
-                    <td class="banner-text">&nbsp;2</td>
+                <tr ng-repeat="item in regimenChildren">
+                    <td class="banner-text">{{$index+9}}</td>
                     <td class="bg-color-yellow"></td>
-                    <td class="bg-color-yellow"></td>
-                    <td></td>
-                </tr>
-                <tr>
-                    <td class="banner-text">&nbsp;2</td>
-                    <td class="bg-color-yellow"></td>
-                    <td class="bg-color-yellow"></td>
-                    <td></td>
-                </tr>
-                <tr>
-                    <td class="banner-text">&nbsp;2</td>
-                    <td class="bg-color-yellow"></td>
-                    <td class="bg-color-yellow"></td>
-                    <td></td>
-                </tr>
-                <tr>
-                    <td class="banner-text">&nbsp;2</td>
-                    <td class="bg-color-yellow"></td>
-                    <td class="bg-color-yellow"></td>
-                    <td></td>
-                </tr>
-                <tr>
-                    <td class="banner-text">&nbsp;2</td>
-                    <td class="bg-color-yellow"></td>
-                    <td class="bg-color-yellow"></td>
-                    <td></td>
-                </tr>
-                <tr>
-                    <td class="banner-text">&nbsp;2</td>
-                    <td class="bg-color-yellow"></td>
-                    <td class="bg-color-yellow"></td>
-                    <td></td>
+                    <td class="bg-color-yellow">{{item.name}}</td>
+                    <td>{{item.patientsOnTreatment}}</td>
                 </tr>
                 </tbody>
             </table>
             <table class="total-form">
                 <tr>
                     <td class="col-2 align-right bg-color-darkgray">Total:&nbsp</td>
-                    <td></td>
+                    <td>{{regimenTotal}}</td>
                 </tr>
             </table>
         </div>
@@ -224,9 +193,9 @@
                 </thead>
 
                 <tbody>
-                <tr>
-                    <td></td>
-                    <td></td>
+                <tr ng-repeat="item in patient">
+                    <td>{{item.category}}</td>
+                    <td>{{item.total}}</td>
                 </tr>
                 </tbody>
             </table>
@@ -236,13 +205,23 @@
                     <tr>
                         <td>Comment :</td>
                     </tr>
-                    <tr><td class="col-5"></td></tr>
-                    <tr><td></td></tr>
-                    <tr><td></td></tr>
-                    <tr><td></td></tr>
-                    <tr><td></td></tr>
+                    <tr>
+                        <td class="col-5"></td>
+                    </tr>
+                    <tr>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td></td>
+                    </tr>
                 </table>
-                <div class="comment">ahhahah hahahaha hhahahahahh ah ahhsahahhfea fehjakl fea fe afesa fea feas fa </div>
+                <div class="comment">{{rnr.clientSubmittedNotes}}</div>
             </div>
         </div>
     </div>
@@ -256,9 +235,9 @@
             </tr>
         </table>
 
-        <div>Note:Mapa de Preenchimento Obrigatorio Mensal HdD em Conjunto com a Farmacia da Unidade Sanitaria ou DPM</div>
+        <div>Note:Mapa de Preenchimento Obrigatorio Mensal HdD em Conjunto com a Farmacia da Unidade Sanitaria ou DPM
+        </div>
         <div>dhuewifi</div>
 
     </div>
 </div>
-</body>
