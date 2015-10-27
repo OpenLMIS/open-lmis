@@ -179,25 +179,6 @@
 
                 </div>
             </div>
-
-          <!--  <pagination total-items="totalItems" page="currentPage"></pagination>
-            <pagination boundary-links="true" total-items="totalItems" page="currentPage" class="pagination-small" previous-text="&lsaquo;" next-text="&rsaquo;" first-text="&laquo;" last-text="&raquo;"></pagination>
-            <pagination direction-links="false" boundary-links="true" total-items="totalItems" page="currentPage"></pagination>
-            <pagination direction-links="false" total-items="totalItems" page="currentPage" num-pages="smallnumPages"></pagination>
-
-            <button class="btn" ng-click="setPage(3)">Set current page to: 3</button>
-            The selected page no: {{currentPage}}
-
-            <hr />
-            <h4>Pager</h4>
-            <pager total-items="totalItems" page="currentPage"></pager>
-
-            <hr />
-            <h4>Limit the maximum visible buttons</h4>
-            <pagination total-items="bigTotalItems" page="bigCurrentPage" max-size="maxSize" class="pagination-small" boundary-links="true"></pagination>
-            <pagination total-items="bigTotalItems" page="bigCurrentPage" max-size="maxSize" class="pagination-small" boundary-links="true" rotate="false" num-pages="numPages"></pagination>
-
-            <pre>Page: {{bigCurrentPage}} / {{numPages}}</pre>-->
         </div>
         <div class="span10">
             <div  ng-if="productsTrend.length > 0" class="row-fluid">
@@ -225,7 +206,7 @@
                                         <div class="accordion-title">
                                             <div class="caption">
 
-                                                <span >Consumption : {{product.name}}  </span>
+                                                <span ><span openlmis-message="title.consumption.trend"></span> : {{product.name}}  </span>
                                             </div>
                                             <div class="tools">
                                                 <i  ng-class="'icon-info-sign'" ns-popover ns-popover-template="consumption-chart-info" ns-popover-trigger="mouseenter" ns-popover-theme="ns-popover-tooltip-theme" ns-popover-placement="bottom|right"></i>
@@ -265,7 +246,7 @@
                                         <div class="accordion-title">
                                             <div class="caption">
 
-                                                <span >Top Dispensed : {{product.name}}  </span>
+                                                <span ><span openlmis-message="title.top.district.dispensed"></span> : {{product.name}}  </span>
                                             </div>
                                             <div class="tools">
                                                 <i  ng-class="'icon-info-sign'" ns-popover ns-popover-template="consumption-chart-info" ns-popover-trigger="mouseenter" ns-popover-theme="ns-popover-tooltip-theme" ns-popover-placement="bottom|right"></i>
@@ -306,7 +287,7 @@
                                         <div class="accordion-title">
                                             <div class="caption">
 
-                                                <span >Top Facility Dispensed : {{product.name}}  </span>
+                                                <span ><span openlmis-message="title.top.facility.dispensed"></span> : {{product.name}}  </span>
                                             </div>
                                             <div class="tools">
                                                 <i  ng-class="'icon-info-sign'" ns-popover ns-popover-template="consumption-chart-info" ns-popover-trigger="mouseenter" ns-popover-theme="ns-popover-tooltip-theme" ns-popover-placement="bottom|right"></i>
@@ -351,7 +332,7 @@
                                     <accordion-heading >
                                         <div class="accordion-title">
                                             <div class="caption">
-                                                <span >Stock Efficiency : {{product.name}}</span>
+                                                <span ><span openlmis-message="title.stock.efficiency.trend"></span>Stock Efficiency : {{product.name}}</span>
                                             </div>
                                             <div class="tools">
                                                 <i  ng-class="'icon-info-sign'" ns-popover ns-popover-template="stocking-chart-info" ns-popover-trigger="mouseenter" ns-popover-theme="ns-popover-tooltip-theme" ns-popover-placement="bottom|right"></i>
@@ -397,7 +378,7 @@
                                         <div class="accordion-title">
                                             <div class="caption">
 
-                                                <span >Top District Stocked out : {{product.name}}  </span>
+                                                <span ><span openlmis-message="title.top.district.stockedout"></span> : {{product.name}}  </span>
                                             </div>
                                             <div class="tools">
                                                 <i  ng-class="'icon-info-sign'" ns-popover ns-popover-template="stocking-chart-info" ns-popover-trigger="mouseenter" ns-popover-theme="ns-popover-tooltip-theme" ns-popover-placement="bottom|right"></i>
@@ -433,7 +414,7 @@
                                         <div class="accordion-title">
                                             <div class="caption">
 
-                                                <span >Top District Over stocked : {{product.name}}  </span>
+                                                <span ><span openlmis-message="title.top.district.over.stocked"></span> : {{product.name}}  </span>
                                             </div>
                                             <div class="tools">
                                                 <i  ng-class="'icon-info-sign'" ns-popover ns-popover-template="stocking-chart-info" ns-popover-trigger="mouseenter" ns-popover-theme="ns-popover-tooltip-theme" ns-popover-placement="bottom|right"></i>
@@ -470,7 +451,7 @@
                                         <div class="accordion-title">
                                             <div class="caption">
 
-                                                <span >Top District Adequetly stocked out : {{product.name}}  </span>
+                                                <span ><span openlmis-message="title.top.district.adequately.stocked.out"></span> : {{product.name}}  </span>
                                             </div>
                                             <div class="tools">
                                                 <i  ng-class="'icon-info-sign'" ns-popover ns-popover-template="stocking-chart-info" ns-popover-trigger="mouseenter" ns-popover-theme="ns-popover-tooltip-theme" ns-popover-placement="bottom|right"></i>
@@ -507,7 +488,7 @@
                                         <div class="accordion-title">
                                             <div class="caption">
 
-                                                <span >Top District Understocked : {{product.name}}  </span>
+                                                <span ><span openlmis-message="title.top.district.understocked"></span> : {{product.name}}  </span>
                                             </div>
                                             <div class="tools">
                                                 <i  ng-class="'icon-info-sign'" ns-popover ns-popover-template="stocking-chart-info" ns-popover-trigger="mouseenter" ns-popover-theme="ns-popover-tooltip-theme" ns-popover-placement="bottom|right"></i>
@@ -548,7 +529,7 @@
                                         <div class="accordion-title">
                                             <div class="caption">
 
-                                                <span >Losses And Adjustment : {{product.name}}</span>
+                                                <span ><span openlmis-message="title.losses.and.adjustment.trend"></span> : {{product.name}}</span>
                                             </div>
                                             <div class="tools">
                                                 <i  ng-class="'icon-info-sign'" ns-popover ns-popover-template="losses-chart-info" ns-popover-trigger="mouseenter" ns-popover-theme="ns-popover-tooltip-theme" ns-popover-placement="bottom|right"></i>
@@ -591,7 +572,7 @@
                                         <div class="accordion-title">
                                             <div class="caption">
 
-                                                <span >Top losses : {{product.name}}  </span>
+                                                <span ><span openlmis-message="title.top.losses"></span> : {{product.name}}  </span>
                                             </div>
                                             <div class="tools">
                                                 <i  ng-class="'icon-info-sign'" ns-popover ns-popover-template="losses-chart-info" ns-popover-trigger="mouseenter" ns-popover-theme="ns-popover-tooltip-theme" ns-popover-placement="bottom|right"></i>
@@ -634,7 +615,7 @@
                                         <div class="accordion-title">
                                             <div class="caption">
 
-                                                <span >Top Facility losses : {{product.name}}  </span>
+                                                <span ><span openlmis-message="title.top.facility.losses"></span> : {{product.name}}  </span>
                                             </div>
                                             <div class="tools">
                                                 <i  ng-class="'icon-info-sign'" ns-popover ns-popover-template="losses-chart-info" ns-popover-trigger="mouseenter" ns-popover-theme="ns-popover-tooltip-theme" ns-popover-placement="bottom|right"></i>
@@ -677,7 +658,7 @@
                                         <div class="accordion-title">
                                             <div class="caption">
 
-                                                <span >Top Facility Fill rate : {{product.name}}   </span>
+                                                <span ><span openlmis-message="title.top.facility.fill.rate"></span> : {{product.name}}   </span>
                                             </div>
                                             <div class="tools">
                                                 <i  ng-class="'icon-info-sign'" ns-popover ns-popover-template="losses-chart-info" ns-popover-trigger="mouseenter" ns-popover-theme="ns-popover-tooltip-theme" ns-popover-placement="bottom|right"></i>
