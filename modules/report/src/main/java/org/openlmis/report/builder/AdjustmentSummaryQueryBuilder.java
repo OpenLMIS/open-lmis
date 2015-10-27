@@ -30,7 +30,6 @@ public class AdjustmentSummaryQueryBuilder {
     SELECT("product_category_name category");
     SELECT("facility_type_name facilityType,facility_name facilityName, adjustment_type, t.description as adjustmentType, adjutment_qty adjustment, adjutment_qty * case when adjustment_additive  = 't' then 1 else -1 end AS signedadjustment, supplying_facility_name supplyingFacility");
     FROM("vw_requisition_adjustment ");
-
       JOIN(" facilities f on f.id = vw_requisition_adjustment.facility_id ");
       JOIN(" vw_districts d on f.geographicZoneId = d.district_id ");
       JOIN(" losses_adjustments_types t on t.name = vw_requisition_adjustment.adjustment_type AND t.isdefault = TRUE ");
@@ -59,12 +58,11 @@ public class AdjustmentSummaryQueryBuilder {
       WHERE(multiProductFilterBy(filter.getProducts(), "p.id", "p.tracer"));
     }
 
-    if (filter.getAdjustmentType() != null && !filter.getAdjustmentType().equals("0") && !filter.getAdjustmentType().equals("")) {
+    if (filter.getAdjustmentType() != null && !"0".equals(filter.getAdjustmentType()) && !filter.getAdjustmentType().isEmpty()) {
       WHERE("adjustment_type = #{filterCriteria.adjustmentType}");
     }
     ORDER_BY(QueryHelpers.getSortOrder(params, " product, adjustment_type, facility_type_name,facility_name, supplying_facility_name, product_category_name "));
-    String strQuery = SQL();
-    return strQuery;
+    return SQL();
   }
 
 }

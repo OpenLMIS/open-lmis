@@ -23,6 +23,11 @@ public class StockCard extends BaseModel {
     Facility facility;
 
     Long facilityId;
+    Long toFacilityId;
+
+    @JsonFormat(shape=JsonFormat.Shape.STRING, pattern="yyyy-MM-dd")
+    @JsonDeserialize(using=DateDeserializer.class)
+    Date initiatedDate;
 
     Long productId;
 

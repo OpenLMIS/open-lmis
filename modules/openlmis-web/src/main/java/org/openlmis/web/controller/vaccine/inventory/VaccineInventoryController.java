@@ -19,10 +19,7 @@ import org.openlmis.core.service.ProgramProductService;
 import org.openlmis.core.service.ProgramService;
 import org.openlmis.core.web.OpenLmisResponse;
 import org.openlmis.core.web.controller.BaseController;
-import org.openlmis.vaccine.domain.inventory.Lot;
-import org.openlmis.vaccine.domain.inventory.StockCard;
-import org.openlmis.vaccine.domain.inventory.StockCardEntry;
-import org.openlmis.vaccine.domain.inventory.StockCardEntryType;
+import org.openlmis.vaccine.domain.inventory.*;
 import org.openlmis.vaccine.dto.VaccineInventoryTransactionDTO;
 import org.openlmis.vaccine.service.Inventory.VaccineInventoryService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,10 +28,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -160,5 +154,12 @@ public class VaccineInventoryController extends BaseController {
             }
         }
     }
+
+    @RequestMapping(value = "stock/lastReport", method = RequestMethod.GET)
+    public ResponseEntity<OpenLmisResponse>
+    getLastReport(HttpServletRequest request){
+        return response("lastReport", service.getLastStockMovement());
+    }
+
 
 }

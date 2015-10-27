@@ -92,9 +92,9 @@ public class AnnualFacilityEstimateRepositoryTest {
   public void shouldFinalize() throws Exception {
     AnnualFacilityEstimateEntry estimate = make(an(AnnualFacilityEstimateBuilder.defaultAnnualFacilityEstimateEntry));
 
-    repository.finalize(estimate);
+    repository.finalizeEstimate(estimate);
 
-    verify(mapper).finalize(estimate);
+    verify(mapper).finalizeEstimate(estimate);
   }
 
   @Test

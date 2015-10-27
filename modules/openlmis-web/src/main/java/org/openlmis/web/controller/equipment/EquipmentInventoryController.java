@@ -42,6 +42,11 @@ import static org.openlmis.core.domain.RightName.MANAGE_EQUIPMENT_INVENTORY;
 @RequestMapping(value="/equipment/inventory/")
 public class EquipmentInventoryController extends BaseController {
 
+  public static final String PROGRAMS = "programs";
+  public static final String INVENTORY = "inventory";
+  public static final String FACILITIES = "facilities";
+  public static final String PAGINATION = "pagination";
+
   @Autowired
   private EquipmentInventoryService service;
 
@@ -62,21 +67,21 @@ public class EquipmentInventoryController extends BaseController {
     Pagination pagination = new Pagination(page, parseInt(limit));
     pagination.setTotalRecords(service.getInventoryCount(userId, typeId, programId, equipmentTypeId));
     List<EquipmentInventory> inventory = service.getInventory(userId, typeId, programId, equipmentTypeId, pagination);
-    ResponseEntity<OpenLmisResponse> response = OpenLmisResponse.response("inventory", inventory);
-    response.getBody().addData("pagination", pagination);
+    ResponseEntity<OpenLmisResponse> response = OpenLmisResponse.response(INVENTORY, inventory);
+    response.getBody().addData(PAGINATION, pagination);
     return response;
   }
 
-  @RequestMapping(value="programs", method = RequestMethod.GET)
+  @RequestMapping(value= PROGRAMS, method = RequestMethod.GET)
   public ResponseEntity<OpenLmisResponse> getPrograms(HttpServletRequest request){
     Long userId = loggedInUserId(request);
-    return OpenLmisResponse.response("programs",programService.getProgramForSupervisedFacilities(userId, MANAGE_EQUIPMENT_INVENTORY));
+    return OpenLmisResponse.response(PROGRAMS,programService.getProgramForSupervisedFacilities(userId, MANAGE_EQUIPMENT_INVENTORY));
   }
 
   @RequestMapping(value="facility/programs", method = RequestMethod.GET)
   public ResponseEntity<OpenLmisResponse> getProgramsForFacility(@RequestParam("facilityId") Long facilityId, HttpServletRequest request){
     Long userId = loggedInUserId(request);
-    return OpenLmisResponse.response("programs",programService.getProgramsForUserByFacilityAndRights(facilityId, userId, MANAGE_EQUIPMENT_INVENTORY));
+    return OpenLmisResponse.response(PROGRAMS,programService.getProgramsForUserByFacilityAndRights(facilityId, userId, MANAGE_EQUIPMENT_INVENTORY));
   }
 
   @RequestMapping(value="supervised/facilities", method = RequestMethod.GET)
@@ -85,14 +90,14 @@ public class EquipmentInventoryController extends BaseController {
     ModelMap modelMap = new ModelMap();
     Long userId = loggedInUserId(request);
     List<Facility> facilities = facilityService.getUserSupervisedFacilities(userId, programId, MANAGE_EQUIPMENT_INVENTORY);
-    modelMap.put("facilities", facilities);
+    modelMap.put(FACILITIES, facilities);
     return new ResponseEntity<>(modelMap, HttpStatus.OK);
   }
 
   @RequestMapping(value="by-id", method = RequestMethod.GET)
   @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_EQUIPMENT_INVENTORY')")
   public ResponseEntity<OpenLmisResponse> getInventory(@RequestParam("id") Long id){
-    return OpenLmisResponse.response("inventory", service.getInventoryById(id));
+    return OpenLmisResponse.response(INVENTORY, service.getInventoryById(id));
   }
 
   @RequestMapping(value="save", method = RequestMethod.POST)
@@ -104,7 +109,7 @@ public class EquipmentInventoryController extends BaseController {
     inventory.setModifiedBy(userId);
     service.save(inventory);
     response = OpenLmisResponse.success(messageService.message("message.equipment.inventory.saved"));
-    response.getBody().addData("inventory", inventory);
+    response.getBody().addData(INVENTORY, inventory);
     return response;
   }
 
@@ -116,7 +121,7 @@ public class EquipmentInventoryController extends BaseController {
     inventory.setModifiedBy(userId);
     service.updateStatus(inventory);
     response = OpenLmisResponse.success(messageService.message("message.equipment.inventory.saved"));
-    response.getBody().addData("inventory", inventory);
+    response.getBody().addData(INVENTORY, inventory);
     return response;
   }
 

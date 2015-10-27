@@ -10,7 +10,6 @@
 angular.module('vaccine_stock_movement', ['openlmis', 'ngGrid', 'ui.bootstrap.dialog', 'ui.bootstrap.accordion', 'ui.bootstrap.pagination', 'ui.bootstrap.dropdownToggle','angularCombine'])
     .config(['$routeProvider', function ($routeProvider) {
         $routeProvider.
-            when('/stock-movement/:id/:facility', {controller:StockMovementController, templateUrl:'partials/create-distribution.html',resolve:StockMovementController.resolve,  reloadOnSearch: false}).
             when('/stock-movement-view/:programId/:periodId/:facilityId/:facilityName/:id', {controller:StockMovementViewController, templateUrl:'partials/distribute.html',resolve:StockMovementViewController.resolve,  reloadOnSearch: false}).
             when('/view-pending', {controller:StockMovementViewController, templateUrl:'partials/view.html',resolve:StockMovementViewController.resolve,  reloadOnSearch: false})
             .otherwise({redirectTo: '/partials/view.html'});

@@ -15,10 +15,15 @@ import org.openlmis.core.domain.Facility;
 import org.openlmis.core.service.FacilityService;
 import org.openlmis.vaccine.domain.inventory.*;
 import org.openlmis.vaccine.dto.VaccineInventoryTransactionDTO;
+import org.openlmis.vaccine.repository.Inventory.StockMovementLineItemExtRepository;
+import org.openlmis.vaccine.repository.Inventory.StockMovementLineItemRepository;
+import org.openlmis.vaccine.repository.Inventory.StockMovementRepository;
 import org.openlmis.vaccine.repository.Inventory.VaccineInventoryRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
 
@@ -33,8 +38,18 @@ public class VaccineInventoryService {
     @Autowired
     VaccineInventoryRepository repository;
 
+
+
     @Autowired
     FacilityService facilityService;
+
+    @Autowired
+    StockMovementRepository stockMovementRepository;
+    @Autowired
+    StockMovementLineItemRepository lineItemRepository;
+
+    @Autowired
+    StockMovementLineItemExtRepository lineItemExtRepository;
 
 //  public List<Lot> getLots(Long productId) {
 //    return getTestLots(productId);
@@ -82,14 +97,28 @@ public class VaccineInventoryService {
 
 
     public void saveTransaction(VaccineInventoryTransactionDTO dto, StockCardEntryType type, Long userId) {
-
+        StockMovement stockMovement = new StockMovement();
         Facility homeFacility = facilityService.getHomeFacility(userId);
+        Long facilityId = homeFacility.getId();
+
+        if (type == StockCardEntryType.DEBIT) {
+
+            stockMovement.setType(StockMovementType.Order);
+            stockMovement.setFromFacilityId(facilityId);
+            stockMovement.setToFacilityId(dto.getTransactionList().get(0).getToFacilityId());
+            stockMovement.setInitiatedDate(dto.getTransactionList().get(0).getInitiatedDate());
+            stockMovement.setCreatedBy(userId);
+            stockMovement.setModifiedBy(userId);
+            stockMovementRepository.insert(stockMovement);
+        }
+
         for (InventoryTransaction transaction : dto.getTransactionList()) {
             //Check if stock card exist if not create;
             Long productId = (transaction.getProduct() != null) ? transaction.getProduct().getId() : transaction.getProductId();
-            Long facilityId = homeFacility.getId();
-            StockCard existStockCard = repository.getStockCard(facilityId, productId);
 
+           StockCard existStockCard = repository.getStockCard(facilityId, productId);
+
+            // stockMovement.set
 
             //No stock card exist hence create it and associated lots and entry (ONLY CREDIT)
             //CREDIT
@@ -134,6 +163,7 @@ public class VaccineInventoryService {
             else {
 //          1. Stock card exist check if lot exist
                 Long newTotalQuantity = existStockCard.getTotalQuantityOnHand();
+
                 if (transaction.getLots() != null && transaction.getLots().size() > 0) {
 
                     for (LotOnHandTransaction lot : transaction.getLots()) {
@@ -219,6 +249,30 @@ public class VaccineInventoryService {
                                 repository.insertStockCardEntry(newEntry);
 
                                 newTotalQuantity = newTotalQuantity - lot.getQuantity();
+
+                                StockMovementLineItem lineItem = new StockMovementLineItem();
+                                lineItem.setStockMovementId(stockMovement.getId());
+                                lineItem.setLotId(lotId);
+                                lineItem.setQuantity(lot.getQuantity());
+                                lineItem.setCreatedBy(userId);
+                                lineItem.setModifiedBy(userId);
+                                lineItemRepository.insert(lineItem);
+
+                                if(lineItem.getId() != null) {
+
+                                    StockMovementLineItemExt lineItemExt = new StockMovementLineItemExt();
+                                    lineItemExt.setStockMovementLineItemId(lineItem.getId());
+                                    lineItemExt.setIssueVoucher(transaction.getIssueVoucher());
+                                    lineItemExt.setIssueDate(transaction.getIssueDate());
+                                    lineItemExt.setToFacilityName(transaction.getToFacilityName());
+                                    lineItemExt.setProductId(transaction.getProductId());
+                                    lineItemExt.setDosesRequested(transaction.getDosesRequested());
+                                    lineItemExt.setGap(transaction.getGap());
+                                    lineItemExt.setProductCategoryId(transaction.getProductCategoryId());
+                                    lineItemExt.setQuantityOnHand(lot.getQuantityOnHand());
+                                    lineItemExt.setCreatedBy(userId);
+                                    lineItemExtRepository.insert(lineItemExt);
+                                }
                             }
                         }
 
@@ -236,6 +290,7 @@ public class VaccineInventoryService {
                     }
                 }
                 repository.updateStockCard(existStockCard);
+
             }
         }
     }
@@ -249,4 +304,7 @@ public class VaccineInventoryService {
         return repository.getStockCards(facilityId, programId);
     }
 
+    public StockMovement getLastStockMovement(){
+        return stockMovementRepository.getLastStock();
+    }
 }

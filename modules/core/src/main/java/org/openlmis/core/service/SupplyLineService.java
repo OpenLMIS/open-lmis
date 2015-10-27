@@ -10,11 +10,7 @@
 
 package org.openlmis.core.service;
 
-import org.openlmis.core.domain.Pagination;
-import org.openlmis.core.domain.Program;
-import org.openlmis.core.domain.SupervisoryNode;
-import org.openlmis.core.domain.SupplyLine;
-import org.openlmis.core.dto.SupplyDepot;
+import org.openlmis.core.domain.*;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.core.repository.FacilityRepository;
 import org.openlmis.core.repository.ProgramRepository;
@@ -49,7 +45,7 @@ public class SupplyLineService {
   }
 
   public void save(SupplyLine supplyLine) {
-    //validateIfSupervisoryNodeIsTopmostNode(supplyLine);
+    validateIfSupervisoryNodeIsTopmostNode(supplyLine);
 
     if (supplyLine.getId() == null) {
       repository.insert(supplyLine);
@@ -77,8 +73,8 @@ public class SupplyLineService {
     return repository.getSupplyLineBy(supplyLine.getSupervisoryNode(), supplyLine.getProgram());
   }
   
-  public List<SupplyDepot> getSupplyDepots(Long userId){
-    return repository.getSupplyDepots(userId);
+  public List<Facility> getSupplyingFacilities(Long userId){
+    return repository.getSupplyingFacilities(userId);
   }
   
   public SupplyLine getById(Long id) {

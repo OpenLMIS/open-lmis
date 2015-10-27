@@ -47,7 +47,7 @@ public class VaccineLineItemService {
 
   public void saveLogisticsLineItems(List<LogisticsLineItem> lineItems, Long reportId){
     for(LogisticsLineItem lineItem: emptyIfNull(lineItems)){
-      if(lineItem.getId() == null){
+      if(!lineItem.hasId()){
         lineItem.setReportId(reportId);
         repository.insert(lineItem);
       }else{
@@ -58,7 +58,7 @@ public class VaccineLineItemService {
 
   public void saveDiseaseLineItems(List<DiseaseLineItem> lineItems, Long reportId){
     for(DiseaseLineItem lineItem: emptyIfNull(lineItems)){
-      if(lineItem.getId() == null){
+      if(!lineItem.hasId()){
         lineItem.setReportId(reportId);
         diseaseLineItemRepository.insert(lineItem);
       }else{
@@ -69,7 +69,7 @@ public class VaccineLineItemService {
 
   public void saveCoverageLineItems(List<VaccineCoverageItem> lineItems, Long reportId) {
     for(VaccineCoverageItem lineItem: emptyIfNull(lineItems)){
-      if(lineItem.getId() == null){
+      if(!lineItem.hasId()){
         lineItem.setReportId(reportId);
         coverageItemRepository.insert(lineItem);
       }else{
@@ -81,7 +81,7 @@ public class VaccineLineItemService {
   public void saveAdverseEffectLineItems(List<AdverseEffectLineItem> adverseEffectLineItems, Long reportId) {
     for(AdverseEffectLineItem lineItem: emptyIfNull(adverseEffectLineItems)){
       lineItem.setReportId(reportId);
-      if(lineItem.getId() == null){
+      if(!lineItem.hasId()){
         adverseLineItemRepository.insert(lineItem);
       }
       else{
@@ -93,7 +93,7 @@ public class VaccineLineItemService {
   public void saveCampaignLineItems(List<CampaignLineItem> campaignLineItems, Long reportId) {
     for(CampaignLineItem lineItem: emptyIfNull(campaignLineItems)){
       lineItem.setReportId(reportId);
-      if(lineItem.getId() == null){
+      if(!lineItem.hasId()){
         campaignLineItemRepository.insert(lineItem);
       }
       else{
@@ -105,7 +105,7 @@ public class VaccineLineItemService {
   public void saveColdChainLIneItems(List<ColdChainLineItem> coldChainLineItems, Long reportId) {
     for(ColdChainLineItem lineItem: emptyIfNull(coldChainLineItems)){
       lineItem.setReportId(reportId);
-      if(lineItem.getId() == null){
+      if(!lineItem.hasId()){
         coldChainRepository.insert(lineItem);
       }
       else{
@@ -117,7 +117,7 @@ public class VaccineLineItemService {
   public void saveVitaminLineItems(List<VitaminSupplementationLineItem> vitaminSupplementationLineItems, Long reportId) {
     for(VitaminSupplementationLineItem lineItem: emptyIfNull(vitaminSupplementationLineItems)){
       lineItem.setReportId(reportId);
-      if(lineItem.getId() == null){
+      if(!lineItem.hasId()){
         vitaminSupplementationLineItemRepository.insert(lineItem);
       }
       else{

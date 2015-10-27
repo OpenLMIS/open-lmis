@@ -30,7 +30,7 @@ public class DiseaseService {
   }
 
   public void save(VaccineDisease disease){
-    if(disease.getId() == null){
+    if(!disease.hasId()){
       repository.insert(disease);
     }else {
       repository.update(disease);

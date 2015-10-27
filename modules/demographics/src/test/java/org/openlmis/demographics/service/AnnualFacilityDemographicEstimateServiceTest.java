@@ -135,11 +135,11 @@ public class AnnualFacilityDemographicEstimateServiceTest {
       with(AnnualFacilityEstimateBuilder.isFinal,false)));
     EstimateForm form = getDemographicEstimateFormForOneFacility(facilityEstimateEntry);
 
-    service.finalize(form, 2L);
+    service.finalizeEstimate(form, 2L);
 
     verify(repository, never()).insert(facilityEstimateEntry);
     verify(repository, times(1)).update(any(AnnualFacilityEstimateEntry.class));
-    verify(repository, times(1)).finalize(any(AnnualFacilityEstimateEntry.class));
+    verify(repository, times(1)).finalizeEstimate(any(AnnualFacilityEstimateEntry.class));
   }
 
   @Test
@@ -154,7 +154,7 @@ public class AnnualFacilityDemographicEstimateServiceTest {
 
     verify(repository, never()).insert(facilityEstimateEntry);
     verify(repository, never()).update(facilityEstimateEntry);
-    verify(repository, never()).finalize(facilityEstimateEntry);
+    verify(repository, never()).finalizeEstimate(facilityEstimateEntry);
     verify(repository, times(1)).undoFinalize(any(AnnualFacilityEstimateEntry.class));
   }
 

@@ -10,7 +10,9 @@
 
 package org.openlmis.core.web.controller;
 
+import org.openlmis.core.domain.ConfigurationSettingKey;
 import org.openlmis.core.logging.ApplicationLogger;
+import org.openlmis.core.service.ConfigurationSettingService;
 import org.openlmis.core.service.MessageService;
 import org.openlmis.core.web.OpenLmisResponse;
 import org.slf4j.Logger;
@@ -39,12 +41,16 @@ public class BaseController {
   @Autowired
   public MessageService messageService;
 
+  @Autowired
+  private ConfigurationSettingService settingService;
+
   protected Long loggedInUserId(HttpServletRequest request) {
     return (Long) request.getSession().getAttribute("USER_ID");
   }
 
   protected String homePageUrl() {
-    return "redirect:/public/site/index.html#/home";
+    String homePage = settingService.getConfigurationStringValue(ConfigurationSettingKey.LOGIN_SUCCESS_DEFAULT_LANDING_PAGE);
+    return "redirect:" + homePage;
   }
 
   @ExceptionHandler(Exception.class)

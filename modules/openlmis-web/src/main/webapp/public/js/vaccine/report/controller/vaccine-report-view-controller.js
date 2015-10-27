@@ -36,12 +36,11 @@ function ViewVaccineReportController($scope, programs, VaccineReportFacilities, 
 
   $scope.view = function (period) {
     if (!angular.isUndefined(period.id) && (period.id !== null)) {
-      // redirect already
       $location.path('/view/' + period.id);
     }
   };
 
-  function getActionButton(showButton) {
+  function getActionButton() {
     return '<a href="" class="padding2px" ng-click="view(row.entity)" openlmis-message="link.view" />';
   }
 
@@ -58,12 +57,12 @@ function ViewVaccineReportController($scope, programs, VaccineReportFacilities, 
     columnDefs: [
       {field: 'periodName', displayName: messageService.get("label.periods")},
       {field: 'status', displayName: messageService.get("label.ivd.status")},
-      {field: '', displayName: '', cellTemplate: getActionButton('row.entity.showButton')}
+      {field: '', displayName: '', cellTemplate: getActionButton()}
     ]
   };
 
   // load facility list for program.
-  if (programs.length == 1) {
+  if (programs.length === 1) {
     $scope.filter = {program: programs[0].id};
     $scope.onProgramChanged();
   }

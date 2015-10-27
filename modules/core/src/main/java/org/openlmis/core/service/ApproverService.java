@@ -29,12 +29,12 @@ public class ApproverService {
   @Autowired
   ApproverMapper approverMapper;
 
-  public List<User> getNextApprovers(Long RnrID){
-    return approverMapper.getNextSupervisors(RnrID);
+  public List<User> getNextApprovers(Long rnrID){
+    return approverMapper.getNextSupervisors(rnrID);
   }
 
-  public List<User> getFacilityBasedAutorizers(Long RnrID){
-    return approverMapper.getFacilityBasedAuthorizers(RnrID);
+  public List<User> getFacilityBasedAutorizers(Long rnrID){
+    return approverMapper.getFacilityBasedAuthorizers(rnrID);
   }
 
 

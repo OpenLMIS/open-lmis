@@ -176,15 +176,20 @@ services.factory('StockCardsForProgramByCategory', function($resource,VaccineOrd
 
                             stockCards.forEach(function (s) {
                                 var product = _.filter(programProducts, function (obj) {
-                                    return obj.product.primaryName === s.product.primaryName;
+                                    if(s.product.primaryName !== undefined) {
+                                        return obj.product.primaryName === s.product.primaryName;
+                                    }
                                 });
 
                                 var quantityToRequest= _.filter(quantityRequested, function(obj) {
-                                    return obj.productId === s.product.id;
+                                    if(obj.productId !== undefined) {
+                                        return obj.productId === s.product.id;
+                                    }
                                 });
 
                                 s.productCategory = product[0].productCategory;
 
+                                if(quantityToRequest[0].quantityRequested !==undefined)
                                 s.quantityRequested = quantityToRequest[0].quantityRequested;
                             });
 

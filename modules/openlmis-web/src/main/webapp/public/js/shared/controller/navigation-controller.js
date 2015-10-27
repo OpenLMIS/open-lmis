@@ -8,7 +8,12 @@
  * You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org. 
  */
 
-function NavigationController($scope, localStorageService, Locales, $location, $window) {
+function NavigationController($scope, ConfigSettingsByKey, localStorageService, Locales, $location, $window) {
+
+  ConfigSettingsByKey.get({key: 'LOGIN_SUCCESS_DEFAULT_LANDING_PAGE'}, function (data){
+    $scope.homePage =  data.settings.value;
+  });
+
   $scope.loadRights = function () {
     $scope.rights = localStorageService.get(localStorageKeys.RIGHT);
 
@@ -30,8 +35,7 @@ function NavigationController($scope, localStorageService, Locales, $location, $
     return false;
   };
 $scope.homeLinkClicked=function(){
-    var homePath= $scope.hasPermission('VIEW_DASHBOARD_POC')?"/public/pages/dashboard/index.html#/dashboard":'/';
-    $window.location.href= homePath;
+    $window.location.href= $scope.homePage;
 };
   $scope.hasPermission = function (permission) {
     if ($scope.rights !== undefined && $scope.rights !== null) {

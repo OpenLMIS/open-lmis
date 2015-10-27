@@ -11,9 +11,11 @@
 package org.openlmis.web.controller;
 
 import lombok.NoArgsConstructor;
+import org.openlmis.core.domain.ConfigurationSettingKey;
 import org.openlmis.core.domain.Pagination;
 import org.openlmis.core.domain.User;
 import org.openlmis.core.exception.DataException;
+import org.openlmis.core.service.ConfigurationSettingService;
 import org.openlmis.core.service.RoleRightsService;
 import org.openlmis.core.service.UserService;
 import org.openlmis.core.web.OpenLmisResponse;
@@ -66,6 +68,8 @@ public class UserController extends BaseController {
   private UserService userService;
   @Autowired
   private SessionRegistry sessionRegistry;
+  @Autowired
+  private ConfigurationSettingService settingService;
 
   @RequestMapping(value = "/user-context", method = GET, headers = ACCEPT_JSON)
   public ResponseEntity<OpenLmisResponse> user(HttpServletRequest httpServletRequest) {
@@ -78,7 +82,7 @@ public class UserController extends BaseController {
       openLmisResponse.addData("userId", userId);
       openLmisResponse.addData("rights", roleRightService.getRights(userId));
       openLmisResponse.addData("preferences", userService.getPreferences(userId));
-
+      openLmisResponse.addData("homePage", settingService.getConfigurationStringValue(ConfigurationSettingKey.LOGIN_SUCCESS_DEFAULT_LANDING_PAGE));
       return openLmisResponse.response(OK);
     } else {
       return authenticationError();

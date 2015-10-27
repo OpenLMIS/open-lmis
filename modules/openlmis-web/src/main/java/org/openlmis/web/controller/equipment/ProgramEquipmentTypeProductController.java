@@ -30,6 +30,9 @@ import java.util.Date;
 @Controller
 public class ProgramEquipmentTypeProductController extends BaseController{
 
+  public static final String PROGRAM_EQUIPMENT_PRODUCT = "programEquipmentProduct";
+  public static final String PRODUCTS = "products";
+
   @Autowired
   ProgramEquipmentTypeProductService programEquipmentTypeProductService;
 
@@ -61,7 +64,7 @@ public class ProgramEquipmentTypeProductController extends BaseController{
     }
 
     successResponse = OpenLmisResponse.success("message.equipment.association.pep.saved");
-    successResponse.getBody().addData("programEquipmentProduct", equipmentTypeProduct);
+    successResponse.getBody().addData(PROGRAM_EQUIPMENT_PRODUCT, equipmentTypeProduct);
     return successResponse;
   }
 
@@ -84,6 +87,6 @@ public class ProgramEquipmentTypeProductController extends BaseController{
 
   @RequestMapping(value="possible-products",headers = ACCEPT_JSON,method = RequestMethod.GET)
   public ResponseEntity<OpenLmisResponse> getProducts(@RequestParam("program") Long programId, @RequestParam(value = "equipment", defaultValue = "0") Long equipmentId ){
-    return OpenLmisResponse.response("products", programEquipmentTypeProductService.getAvailableProductsToLink(programId, equipmentId));
+    return OpenLmisResponse.response(PRODUCTS, programEquipmentTypeProductService.getAvailableProductsToLink(programId, equipmentId));
   }
 }

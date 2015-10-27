@@ -35,6 +35,9 @@ import static org.springframework.web.bind.annotation.RequestMethod.POST;
 @RequestMapping(value="/equipment/type/")
 public class EquipmentTypeController extends BaseController {
 
+  public static final String EQUIPMENT_TYPE = "equipment_type";
+  public static final String STATUS = "status";
+  public static final String EQUIPMENT_TYPES = "equipment_types";
   @Autowired
   private EquipmentTypeService service;
 
@@ -43,19 +46,19 @@ public class EquipmentTypeController extends BaseController {
 
   @RequestMapping(method = GET, value = "list")
   public ResponseEntity<OpenLmisResponse> getAll(){
-    return  OpenLmisResponse.response("equipment_type", service.getAll());
+    return  OpenLmisResponse.response(EQUIPMENT_TYPES, service.getAll());
   }
 
   @RequestMapping(method = GET, value = "id")
   @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_EQUIPMENT_SETTINGS')" +
       " or @permissionEvaluator.hasPermission(principal,'MANAGE_EQUIPMENT_INVENTORY')")
   public ResponseEntity<OpenLmisResponse> getById( @RequestParam("id") Long id){
-    return  OpenLmisResponse.response("equipment_type", service.getTypeById(id));
+    return  OpenLmisResponse.response(EQUIPMENT_TYPE, service.getTypeById(id));
   }
 
   @RequestMapping(method = GET, value = "operational-status")
   public ResponseEntity<OpenLmisResponse> getAllStatuses( ){
-    return  OpenLmisResponse.response("status", statusRepository.getAll());
+    return  OpenLmisResponse.response(STATUS, statusRepository.getAll());
   }
 
   @RequestMapping(value = "save", method = POST, headers = ACCEPT_JSON)
@@ -69,9 +72,7 @@ public class EquipmentTypeController extends BaseController {
     }catch(DuplicateKeyException exp){
       return OpenLmisResponse.error("Duplicate Code Exists in DB.", HttpStatus.BAD_REQUEST);
     }
-    return OpenLmisResponse.response("status","success");
+    return OpenLmisResponse.response(STATUS,"success");
   }
-
-
 
 }

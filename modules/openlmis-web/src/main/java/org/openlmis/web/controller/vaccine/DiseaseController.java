@@ -32,13 +32,14 @@ import static org.springframework.http.HttpStatus.BAD_REQUEST;
 @RequestMapping(value = "/vaccine/disease/")
 public class DiseaseController extends BaseController {
 
+  public static final String DISEASE = "disease";
   @Autowired
   private DiseaseService service;
 
 
   @RequestMapping(value="get/{id}")
   public ResponseEntity<OpenLmisResponse> get(@PathVariable Long id) {
-    return OpenLmisResponse.response("disease", service.getById(id));
+    return OpenLmisResponse.response(DISEASE, service.getById(id));
   }
 
   @RequestMapping(value="all")
@@ -55,7 +56,7 @@ public class DiseaseController extends BaseController {
     } catch (DataException e) {
       return OpenLmisResponse.error(e, BAD_REQUEST);
     }
-    return OpenLmisResponse.response("disease", service.getById(disease.getId()));
+    return OpenLmisResponse.response(DISEASE, service.getById(disease.getId()));
   }
 
 

@@ -19,7 +19,7 @@ function ConfigureTabVisibilityController($scope, $routeParams, SaveVaccineIvdTa
   });
 
   $scope.$parent.saveTabVisibility = function(){
-    SaveVaccineIvdTabConfigs.update($scope.protocol, function(data){
+    SaveVaccineIvdTabConfigs.update($scope.protocol, function(){
       $scope.$parent.message = 'label.vaccine.settings.tab.visibility.saved';
     });
   };

@@ -30,8 +30,10 @@ function newVaccineOrderRequisitionController($scope,VaccineOrderRequisitionLast
                     VaccineOrderRequisitionLastReport.get({facilityId:parseInt(facilityId,10),programId:parseInt(id,10)}, function(data){
 
                         var lastReport = data.lastReport;
-                        if(lastReport.status === 'ISSUED' && lastReport.emergency===false){
-                            VaccineOrderRequisitionReportInitiateEmergency.get({
+
+                            if(lastReport.status === 'ISSUED'){
+                                $scope.enableIssueMenu = false;
+                                VaccineOrderRequisitionReportInitiateEmergency.get({
                                 periodId: lastReport.periodId,
                                 programId: lastReport.programId,
                                 facilityId: lastReport.facilityId

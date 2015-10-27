@@ -18,6 +18,7 @@ import com.mangofactory.swagger.plugin.SwaggerSpringMvcPlugin;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.client.RestTemplate;
 
 @EnableSwagger
 public class MySwaggerConfig {
@@ -37,17 +38,15 @@ public class MySwaggerConfig {
 
   @Bean
   public SwaggerSpringMvcPlugin customImplementation(){
-
     return new SwaggerSpringMvcPlugin(this.springSwaggerConfig)
       .apiInfo(apiInfo())
       .swaggerGroup("Rest API")
       .genericModelSubstitutes(ResponseEntity.class)
-      //.requestMappingPatternMatcher()
-      .includePatterns(".*rest-api.*", ".*/api/.*"); // assuming the API lives at something like either http://myapp/rest-api or http://myapp/v2/api
+      .includePatterns(".*rest-api.*", ".*/api/.*");
   }
 
   private ApiInfo apiInfo() {
-    ApiInfo apiInfo = new ApiInfo(
+    return new ApiInfo(
       "e-LMIS REST API",
       "Please use this API to connect to the e-LMIS. This service allows you to build applications that directly interact with the e-LMIS",
       "TOS",
@@ -55,6 +54,5 @@ public class MySwaggerConfig {
       "API License",
       "https://github.com/OpenLMIS/open-lmis/blob/master/LICENSE"
     );
-    return apiInfo;
   }
 }

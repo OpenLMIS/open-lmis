@@ -15,6 +15,7 @@ import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.openlmis.core.service.ConfigurationSettingService;
 import org.openlmis.core.service.MessageService;
 import org.openlmis.core.web.OpenLmisResponse;
 import org.openlmis.db.categories.UnitTests;
@@ -31,6 +32,9 @@ public class BaseControllerTest {
 
   @Mock
   MessageService messageService;
+
+  @Mock
+  ConfigurationSettingService settingService;
 
   @InjectMocks
   BaseController baseController;
