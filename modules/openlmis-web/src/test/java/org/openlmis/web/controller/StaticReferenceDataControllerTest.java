@@ -50,4 +50,16 @@ public class StaticReferenceDataControllerTest {
     assertThat(response.getStatusCode(), is(HttpStatus.OK));
     assertThat((String) openLmisResponse.getData().get("pageSize"), is("2"));
   }
+
+  @Test
+  public void shouldReturnToggleValueGivenKey() throws Exception {
+
+    when(service.getPropertyValue(StaticReferenceDataController.KEY_TOGGLE_PREFIX+"test")).thenReturn("false");
+
+    ResponseEntity<OpenLmisResponse> response = staticReferenceDataController.getToggle("test");
+
+    OpenLmisResponse openLmisResponse = response.getBody();
+    assertThat(response.getStatusCode(), is(HttpStatus.OK));
+    assertThat((boolean) openLmisResponse.getData().get("key"), is(false));
+  }
 }

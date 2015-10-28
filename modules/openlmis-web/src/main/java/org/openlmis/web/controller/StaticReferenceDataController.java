@@ -18,6 +18,7 @@ import org.openlmis.core.web.controller.BaseController;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
@@ -33,6 +34,8 @@ public class StaticReferenceDataController extends BaseController {
 
   public static final String PAGE_SIZE = "pageSize";
   public static final String LINE_ITEMS_PER_PAGE = "line.items.per.page";
+  public static final String KEY_TOGGLE_PREFIX = "toggle.";
+  public static final String KEY = "key";
 
   @Autowired
   private StaticReferenceDataService service;
@@ -40,6 +43,12 @@ public class StaticReferenceDataController extends BaseController {
   @RequestMapping(value = "/reference-data/pageSize", method = RequestMethod.GET)
   public ResponseEntity<OpenLmisResponse> getPageSize() {
     OpenLmisResponse response = new OpenLmisResponse(PAGE_SIZE, service.getPropertyValue(LINE_ITEMS_PER_PAGE));
+    return new ResponseEntity(response, OK);
+  }
+
+  @RequestMapping(value = "/reference-data/toggle/{key}", method = RequestMethod.GET)
+  public ResponseEntity<OpenLmisResponse> getToggle(@PathVariable(value = "key") String key) {
+    OpenLmisResponse response = new OpenLmisResponse(KEY, service.getBoolean(KEY_TOGGLE_PREFIX + key));
     return new ResponseEntity(response, OK);
   }
 }

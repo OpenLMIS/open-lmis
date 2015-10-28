@@ -15,7 +15,6 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.openlmis.core.utils.DateUtil;
-import org.openlmis.rnr.domain.RegimenLineItem;
 import org.openlmis.rnr.domain.Rnr;
 
 import java.util.ArrayList;
@@ -107,6 +106,7 @@ public class RnrDTO {
     rnrDTO.programId = requisition.getProgram().getId();
     rnrDTO.facilityId = requisition.getFacility().getId();
     rnrDTO.programName = requisition.getProgram().getName();
+    rnrDTO.programCode = requisition.getProgram().getCode();
     rnrDTO.facilityCode = requisition.getFacility().getCode();
     rnrDTO.facilityName = requisition.getFacility().getName();
 
