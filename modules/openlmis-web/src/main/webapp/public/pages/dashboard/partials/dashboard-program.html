@@ -120,8 +120,8 @@
                 <tbody>
                 <tr ng-repeat="facility in facilities">
                     <td>{{facility.facility_name}}</td>
-                    <td>{{facility.stock_in_hand}}</td>
-                    <td>{{facility.previous_stock_in_hand}}</td>
+                    <td class="number">{{facility.stock_in_hand | number}}</td>
+                    <td class="number">{{facility.previous_stock_in_hand | number}}</td>
                 </tr>
                 </tbody>
 
