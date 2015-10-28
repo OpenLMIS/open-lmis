@@ -46,8 +46,8 @@ function SingleProductReportController($scope, $filter, SingleProductReportServi
                     }
                 }
 
-                Array.prototype.push.apply($scope.fullGeoZoneList, $scope.provinces)
-                Array.prototype.push.apply($scope.fullGeoZoneList, $scope.districts)
+                Array.prototype.push.apply($scope.fullGeoZoneList, $scope.provinces);
+                Array.prototype.push.apply($scope.fullGeoZoneList, $scope.districts);
             }, function () {
             });
 
