@@ -280,33 +280,32 @@ public class RequisitionController extends BaseController {
 
   @RequestMapping(value = "/requisitions/delete/{id}", method = POST, headers = ACCEPT_JSON)
   @PreAuthorize("@permissionEvaluator.hasPermission(principal, 'DELETE_REQUISITION')")
-  public ResponseEntity<OpenLmisResponse> deleteRnR(@PathVariable("id") Long rnrId,
-                                                        HttpServletRequest request) {
-    String result = requisitionService.deleteRnR(rnrId);
-    return OpenLmisResponse.response("delete", result);
+  public ResponseEntity<OpenLmisResponse> deleteRnR(@PathVariable("id") Long rnrId) {
+    requisitionService.deleteRnR(rnrId);
+    return OpenLmisResponse.success(messageService.message("msg.rnr.deleted"));
   }
 
   @RequestMapping(value = "/requisitions/skip/{id}", method = POST, headers = ACCEPT_JSON)
   @PreAuthorize("@permissionEvaluator.hasPermission(principal, 'CREATE_REQUISITION')")
   public ResponseEntity<OpenLmisResponse> skipRnR(@PathVariable("id") Long rnrId,
                                                     HttpServletRequest request) {
-    requisitionService.skipRnR(rnrId);
-    return OpenLmisResponse.response("status", "skipped");
+    requisitionService.skipRnR(rnrId, loggedInUserId(request));
+    return OpenLmisResponse.success(messageService.message("msg.rnr.skipped"));
   }
 
   @RequestMapping(value = "/requisitions/reject/{id}", method = POST, headers = ACCEPT_JSON)
   @PreAuthorize("@permissionEvaluator.hasPermission(principal, 'CREATE_REQUISITION')")
   public ResponseEntity<OpenLmisResponse> rejectRnR(@PathVariable("id") Long rnrId,
                                                   HttpServletRequest request) {
-    requisitionService.rejectRnR(rnrId);
-    return OpenLmisResponse.response("status", "rejected");
+    requisitionService.rejectRnR(rnrId, loggedInUserId(request));
+    return OpenLmisResponse.success(messageService.message("msg.rnr.returned"));
   }
 
   @RequestMapping(value = "/requisitions/reopen/{id}", method = POST, headers = ACCEPT_JSON)
   @PreAuthorize("@permissionEvaluator.hasPermission(principal, 'CREATE_REQUISITION')")
   public ResponseEntity<OpenLmisResponse> reopenRnR(@PathVariable("id") Long rnrId,
                                                   HttpServletRequest request) {
-    requisitionService.reOpenRnR(rnrId);
-    return OpenLmisResponse.response("status", "reopened");
+    requisitionService.reOpenRnR(rnrId, loggedInUserId(request));
+    return OpenLmisResponse.success(messageService.message("msg.rnr.reopened"));
   }
 }
