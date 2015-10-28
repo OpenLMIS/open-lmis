@@ -1327,10 +1327,13 @@ services.factory('SingleProductReportService', function($resource){
             return $resource('/rest-api/lookup/products', {pageSize:10000}, {});
         },
         loadGeographicZone : function () {
-            return $resource('/reports/geographic-zones/flat.json', {}, {});
+            return $resource('/rest-api/lookup/geographic-zones', {}, {});
         },
         loadGeographicLevel : function () {
             return $resource('/rest-api/lookup/geographic-levels', {}, {});
+        },
+        loadReport : function () {
+          return $resource('/reports/facility-products-report', {}, {save:{method:'POST'}});
         }
     };
 });
