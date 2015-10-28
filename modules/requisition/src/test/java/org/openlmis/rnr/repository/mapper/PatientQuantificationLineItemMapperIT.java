@@ -18,7 +18,6 @@ import org.openlmis.db.categories.IntegrationTests;
 import org.openlmis.rnr.domain.PatientQuantificationLineItem;
 import org.openlmis.rnr.domain.Rnr;
 import org.openlmis.rnr.domain.RnrStatus;
-import org.openlmis.rnr.repository.PatientQuantificationLineItemMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;

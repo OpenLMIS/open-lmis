@@ -10,10 +10,12 @@
 
 package org.openlmis.rnr.repository;
 
-import org.openlmis.core.domain.*;
+import org.openlmis.core.domain.Facility;
+import org.openlmis.core.domain.ProcessingPeriod;
+import org.openlmis.core.domain.Program;
+import org.openlmis.core.domain.RoleAssignment;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.core.repository.helper.CommaSeparator;
-import org.openlmis.core.repository.mapper.BudgetFileColumnMapper;
 import org.openlmis.equipment.domain.EquipmentInventoryStatus;
 import org.openlmis.equipment.repository.mapper.EquipmentInventoryStatusMapper;
 import org.openlmis.rnr.domain.*;
@@ -126,7 +128,6 @@ public class RequisitionRepository {
       updateRegimenLineItems(rnr);
       updateEquipmentLineItems(rnr);
       insertPatientQuantificationLineItems(rnr, rnr.getPatientQuantifications());
-
     }
   }
 
@@ -263,7 +264,7 @@ public class RequisitionRepository {
                                                                    Integer pageSize, Long userId, String rightName, String sortBy,
                                                                    String sortDirection) {
     return requisitionMapper.getApprovedRequisitionsForCriteriaAndPageNumber(searchType, searchVal, pageNumber, pageSize,
-      userId, rightName, sortBy, sortDirection);
+        userId, rightName, sortBy, sortDirection);
   }
 
   public Integer getCountOfApprovedRequisitionsForCriteria(String searchType, String searchVal, Long userId, String rightName) {
@@ -296,5 +297,13 @@ public class RequisitionRepository {
 
   public String deleteRnR(Long rnrId) {
     return requisitionMapper.deleteRnR(rnrId.intValue());
+  }
+
+  public void updateClientFields(Rnr rnr) {
+    requisitionMapper.updateClientFields(rnr);
+  }
+
+  public List<Rnr> getRequisitionDetailsByFacilityAndProgram(Facility facility, Program program) {
+    return requisitionMapper.getRequisitionsWithLineItemsByFacilityAndProgram(facility, program);
   }
 }

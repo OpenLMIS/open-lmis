@@ -1,0 +1,3 @@
+function ViewRnrMmiaController($scope, Requisitions) {
+
+}

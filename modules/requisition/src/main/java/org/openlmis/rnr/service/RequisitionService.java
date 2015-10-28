@@ -661,5 +661,14 @@ public class RequisitionService {
   public Long getProgramId(Long rnrId) {
     return requisitionRepository.getProgramId(rnrId);
   }
+
+  @Transactional
+  public void updateClientFields(Rnr rnr) {
+    requisitionRepository.updateClientFields(rnr);
+  }
+
+  public List<Rnr> getRequisitionsByFacilityAndProgram(Facility facility, Program program) {
+    return requisitionRepository.getRequisitionDetailsByFacilityAndProgram(facility, program);
+  }
 }
 

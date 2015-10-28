@@ -1,0 +1,186 @@
+
+<table cellpadding="0" cellspacing="0" class="view-table" align="center">
+    <tr>
+        <td class="left-block width-28">
+            <div class="width-28">
+            <div class="text-nowrap rotate">
+                <span>Triplicado</span>
+                <span class="checkbox">
+                <input type="checkbox" value="1" id="checkboxInput1"  name=""/>
+                <label for="checkboxInput1"></label>
+                </span>
+                <span>Duplicado</span>
+                <span class="checkbox">
+                <input type="checkbox" value="2" id="checkboxInput2" name=""/>
+                <label for="checkboxInput2"></label>
+                </span>
+                <span>Original</span>
+                <span class="checkbox">
+                <input type="checkbox" value="3" id="checkboxInput3" checked="checked" name=""/>
+                <label for="checkboxInput3"></label>
+                </span>
+            </div>
+            </div>
+        </td>
+        <td>
+
+        <table class="border-all-bold">
+            <tr>
+                <td tag="col1" class="border-all-thin background-black" width="28px" rowspan="4">
+                    <div class="width-28 banner-text">
+                        <div class="text-nowrap rotate">CMAM - Modelo 01</div>
+                    </div>
+                <td tag="col2" class="border-all-thin" width="350px">
+                    <div >
+                        <span style="float: left" class="view-table-logo"></span>
+                        <span style="font-size: 10px">
+                            REPUBLICA DE MOCAMBIQUE<br>
+                            MINISTERIO DA SAUDE<br>
+                            <strong>CENTRAL DE MEDICAMENTOS E ARTIGOS MEDICOS</strong><br>
+                        </span>
+                    </div>
+                </td>
+                <td tag="col3-10" class="border-all-thin text-align-center" colspan="8">
+                    <h2>REQUISICAO/BALANCETTE N <input class="border-all-bold bigger-checkbox" type="text" value="" maxlength="20"></h2>
+                </td>
+                <td tag="col11" class="border-all-thin" width="183px" rowspan="4">
+                    <ul>
+                    <li class="type-checkbox">
+                        <span>Normal</span>
+                        <span class="checkbox">
+                        <input type="checkbox" value="4" id="checkboxInput4" checked="checked" name=""/>
+                        <label for="checkboxInput4"></label>
+                        </span>
+                    </li>
+
+                    <li class="type-checkbox">
+                        <span>Especial/Urgencia</span>
+                        <span class="checkbox">
+                        <input type="checkbox" value="5" id="checkboxInput5" name=""/>
+                        <label for="checkboxInput5"></label>
+                        </span>
+                    </li>
+                    <li class="type-checkbox">
+                        <span>2 Via</span>
+                        <span class="checkbox">
+                        <input type="checkbox" value="6" id="checkboxInput6" name=""/>
+                        <label for="checkboxInput6"></label>
+                        </span>
+                    </li>
+                    </ul>
+                    <div class="type-checkbox">Data de Requisicao: {{ rnr.submittedDate | date:"MM/dd/yyyy"}}</div>
+                </td>
+            </tr>
+            <tr>
+                <td tag="col2" class="border-all-thin">
+                Health Facility: {{rnr.facility.name}}
+                </td>
+                <td tag="col3" class="border-all-thin" width="246px">Provincia:</td>
+                <td tag="col4" class="border-all-thin" width="90px"></td>
+                <td tag="col5-8" class="border-all-thin" colspan="4">Periodo: {{rnr.period.stringStartDate}}</td>
+                <td tag="col9-10" class="border-all-thin" colspan="2">Ate: {{rnr.period.stringEndDate}}</td>
+            </tr>
+            <tr>
+
+                <td tag="col2" class="border-all-thin">Distrito:</td>
+                <td tag="col3" class="border-all-thin"></td>
+                <td tag="col4" class="border-all-thin"></td>
+                <td tag="col5" class="border-all-thin" width="70px">N de Kits Recebido</td>
+                <td tag="col6" class="border-all-thin" width="70px"></td>
+                <td tag="col7" class="border-all-thin" width="25px">US</td>
+                <td tag="col8" class="border-all-thin" width="25px"></td>
+                <td tag="col9" class="border-all-thin" width="30px">APE</td>
+                <td tag="col10" class="border-all-thin" width="70px"></td>
+            </tr>
+            <tr>
+
+                <td class="border-all-thin">Nivel de Qualificacao do ResponsaveI Clinico:</td>
+                <td class="border-all-thin">N de Consultas Externas Realizadas:</td>
+                <td class="border-all-thin">{{rnr.patientQuantifications[0].total}}</td>
+                <td class="border-all-thin"  width="70px">N de Kits Recebido</td>
+                <td class="border-all-thin"> </td>
+                <td class="border-all-thin">US</td>
+                <td class="border-all-thin"> </td>
+                <td class="border-all-thin">APE</td>
+                <td class="border-all-thin"> </td>
+            </tr>
+        </table>
+        <div class="view-table-spacing"></div>
+        <table class="border-all-bold text-align-center">
+            <tr>
+                <td tag="col1" class="border-all-thin" width="60px" rowspan="4">FNM</td>
+                <td tag="col2" class="border-all-thin" width="318px" rowspan="4">
+                    <table class="text-align-center" style="height: 130px" width="100%">
+                        <tr>
+                            <td colspan="3">Designacao</td>
+                        </tr>
+                        <tr>
+                            <td width="25%">Nome</td>
+                            <td width="30%">Dosagem</td>
+                            <td width="45%">Forma Farmaceutica</td>
+                        </tr>
+                    </table>
+                </td>
+                <td tag="col3-10" class="border-all-thin" height="18px" colspan="8">
+                    <strong>Requisicao do Nivel Provincial ou Distrital</strong></td>
+                <td tag="col11" class="border-all-thin" width="90px" rowspan="4">Quantidade Pedida</td>
+                <td tag="col12" class="border-all-thin" width="90px" rowspan="4">Qtd. Autorzada pelo Responsavel Clinico</td>
+            </tr>
+            <tr>
+                <td tag="col3-7" class="border-all-thin" colspan="5"><strong>Controlo da Ficha de Stock</strong></td>
+                <td tag="col8-10" class="border-all-thin" colspan="3"><strong>Controlo de Inventario</strong></td>
+            </tr>
+            <tr height="30px">
+
+                <td tag="col3" class="border-all-thin" width="80px">Stock no Inicio de Periodo</td>
+                <td tag="col4" class="border-all-thin" width="80px">Soma das Entradas</td>
+                <td tag="col5" class="border-all-thin" width="80px">Soma das Saidas</td>
+                <td tag="col6" class="border-all-thin" width="90px">Stock Teorico Fim do Periodo</td>
+                <td tag="col7" class="border-all-thin" width="70px">Total dos Pedidos</td>
+                <td tag="col8" class="border-all-thin" width="70px">Inventario do Stock</td>
+                <td tag="col9" class="border-all-thin" width="86px">Diferenca</td>
+                <td tag="col10" class="border-all-thin" width="70px" rowspan="2">Quantidade a Requisitar</td>
+            </tr>
+            <tr>
+                <td tag="col3" class="border-all-thin" width="80px">SI</td>
+                <td tag="col4" class="border-all-thin" width="80px">E</td>
+                <td tag="col5" class="border-all-thin" width="80px">S</td>
+                <td tag="col6" class="border-all-thin" width="90px">SF=SI+E-S</td>
+                <td tag="col7" class="border-all-thin" width="70px">P</td>
+                <td tag="col8" class="border-all-thin" width="70px">I</td>
+                <td tag="col9" class="border-all-thin" width="86px">I-SF</td>
+            </tr>
+        </table>
+        <div class="view-table-spacing "></div>
+        <table class="border-all-bold view-table-cell-scrolling text-align-center" >
+            <tr ng-repeat="rnrItem in rnrItemsVisible">
+                <td tag="col1" class="border-all-thin" width="60px">{{rnrItem.productCode}}&nbsp;</td>
+                <td tag="col2" class="border-all-thin" width="318px">{{rnrItem.product}}</td>
+                <td tag="col3" class="border-all-thin" width="80px">{{rnrItem.beginningBalance}}</td>
+                <td tag="col4" class="border-all-thin" width="80px">{{rnrItem.quantityReceived}}</td>
+                <td tag="col5" class="border-all-thin" width="80px">{{rnrItem.quantityDispensed}}</td>
+                <td tag="col6" class="border-all-thin" width="90px"><span ng-if="rnrItem.productCode">{{rnrItem.beginningBalance + rnrItem.quantityReceived - rnrItem.quantityDispensed}}</span></td>
+                <td tag="col7" class="border-all-thin" width="70px"><span ng-if="rnrItem.productCode"> - </span></td>
+                <td tag="col8" class="border-all-thin" width="70px">{{rnrItem.stockInHand}}</td>
+                <td tag="col9" class="border-all-thin" width="86px">{{rnrItem.totalLossesAndAdjustments}}</td>
+                <td tag="col10" class="border-all-thin" width="70px">{{rnrItem.calculatedOrderQuantity}}</td>
+                <td tag="col11" class="border-all-thin" width="90px">{{rnrItem.quantityRequested}}</td>
+                <td tag="col12" class="border-all-thin" width="90px">{{rnrItem.quantityApproved}}</td>
+            </tr>
+        </table>
+        <div class="view-table-spacing"></div>
+            <table class="border-all-bold sign-box">
+            <tr>
+                <td width="50%">Elaborado por:</td>
+                <td width="50%">Visto do Responsavel Clinico:</td>
+            </tr>
+        </table>
+        </td>
+    </tr>
+    <tr>
+        <td></td>
+        <td class="text-align-right"><openlmis-pagination num-pages="numPages" current-page="currentPage" max-size="4"></openlmis-pagination></td>
+    </tr>
+</table>
+
+
