@@ -23,12 +23,24 @@ public class VaccineInventoryDistributionRepository {
         return mapper.saveDistribution(vaccineDistribution);
     }
 
+    public Integer updateDistribution(VaccineDistribution vaccineDistribution) {
+        return mapper.updateDistribution(vaccineDistribution);
+    }
+
     public Integer saveDistributionLineItem(VaccineDistributionLineItem vaccineDistributionLineItem) {
         return mapper.saveDistributionLineItem(vaccineDistributionLineItem);
     }
 
+    public Integer updateDistributionLineItem(VaccineDistributionLineItem vaccineDistributionLineItem) {
+        return mapper.updateDistributionLineItem(vaccineDistributionLineItem);
+    }
+
     public Integer saveDistributionLineItemLot(VaccineDistributionLineItemLot vaccineDistributionLineItemLot) {
         return mapper.saveDistributionLineItemLot(vaccineDistributionLineItemLot);
+    }
+
+    public Integer updateDistributionLineItemLot(VaccineDistributionLineItemLot vaccineDistributionLineItemLot) {
+        return mapper.updateDistributionLineItemLot(vaccineDistributionLineItemLot);
     }
 
     public List<VaccineDistribution> getDistributedFacilitiesByMonth(int month) {

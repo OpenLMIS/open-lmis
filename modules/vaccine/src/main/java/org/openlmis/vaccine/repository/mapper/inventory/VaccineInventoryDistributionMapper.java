@@ -20,6 +20,12 @@ public interface VaccineInventoryDistributionMapper {
     @Options(useGeneratedKeys = true)
     Integer saveDistribution(VaccineDistribution vaccineDistribution);
 
+    @Update("update vaccine_distributions set " +
+            " status=#{status}, modifiedby=#{modifiedBy}, modifieddate=NOW() " +
+            " where id=#{id}"
+    )
+    Integer updateDistribution(VaccineDistribution vaccineDistribution);
+
     @Insert("insert into vaccine_distribution_line_items " +
             " (distributionid, productid, quantity, vvmstatus, createdby, createddate, modifiedby,modifieddate )" +
             " values " +
@@ -27,12 +33,24 @@ public interface VaccineInventoryDistributionMapper {
     @Options(useGeneratedKeys = true)
     Integer saveDistributionLineItem(VaccineDistributionLineItem vaccineDistributionLineItem);
 
+    @Update("update vaccine_distribution_line_items set " +
+            " quantity=#{quantity}, modifiedby=#{modifiedBy}, modifieddate=NOW() " +
+            " where id=#{id}"
+    )
+    Integer updateDistributionLineItem(VaccineDistributionLineItem vaccineDistributionLineItem);
+
     @Insert("insert into vaccine_distribution_line_item_lots " +
             " (distributionlineitemid, lotid, quantity, vvmstatus, createdby, createddate, modifiedby,modifieddate )" +
             " values " +
             " (#{distributionLineItemId}, #{lotId}, #{quantity}, #{vvmStatus}, #{createdBy},NOW(),#{modifiedBy},NOW()) ")
     @Options(useGeneratedKeys = true)
     Integer saveDistributionLineItemLot(VaccineDistributionLineItemLot lot);
+
+    @Insert("update vaccine_distribution_line_item_lots set " +
+            " quantity=#{quantity}, modifiedby=#{modifiedBy},modifieddate=NOW() " +
+            " where id=#{id}"
+    )
+    Integer updateDistributionLineItemLot(VaccineDistributionLineItemLot lot);
 
 
     @Select("Select  pp.id, pp.name, pp.startdate::DATE, pp.enddate::DATE from requisition_groups rg " +
@@ -51,7 +69,7 @@ public interface VaccineInventoryDistributionMapper {
 
     @Select("SELECT *" +
             " FROM vaccine_distributions " +
-            " WHERE EXTRACT(MONTH FROM distributionDate) = #{month} "
+            " WHERE EXTRACT(MONTH FROM distributionDate) = #{month};"
     )
     @Results({@Result(property = "id", column = "id"),
             @Result(property = "lineItems", column = "id", javaType = List.class,

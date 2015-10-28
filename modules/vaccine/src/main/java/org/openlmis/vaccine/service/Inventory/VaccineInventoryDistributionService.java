@@ -58,13 +58,29 @@ public class VaccineInventoryDistributionService {
             distribution.setPeriodId(period.getId());
         }
 
-        repository.saveDistribution(distribution);
+        if (distribution.getId() != null) {
+            repository.updateDistribution(distribution);
+        } else {
+            repository.saveDistribution(distribution);
+        }
+
         for (VaccineDistributionLineItem lineItem : distribution.getLineItems()) {
             lineItem.setDistributionId(distribution.getId());
-            repository.saveDistributionLineItem(lineItem);
-            for (VaccineDistributionLineItemLot lot : lineItem.getLots()) {
-                lot.setDistributionLineItemId(lineItem.getId());
-                repository.saveDistributionLineItemLot(lot);
+            if (lineItem.getId() != null) {
+                repository.updateDistributionLineItem(lineItem);
+            } else {
+                repository.saveDistributionLineItem(lineItem);
+            }
+
+            if (lineItem.getLots() != null) {
+                for (VaccineDistributionLineItemLot lot : lineItem.getLots()) {
+                    lot.setDistributionLineItemId(lineItem.getId());
+                    if (lot.getId() != null) {
+                        repository.updateDistributionLineItemLot(lot);
+                    } else {
+                        repository.saveDistributionLineItemLot(lot);
+                    }
+                }
             }
         }
     }

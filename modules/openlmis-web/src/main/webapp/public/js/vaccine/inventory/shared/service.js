@@ -27,22 +27,22 @@ services.factory('StockCardsByCategory', function($resource,StockCards,$q, $time
                                         var stockCards=data.stockCards;
 
                                         stockCards.forEach(function(s){
+                                              s.displayOrder=s.product.form.displayOrder;
                                               var product= _.filter(programProducts, function(obj) {
                                                   return obj.product.primaryName === s.product.primaryName;
                                               });
-
-                                                    s.productCategory=product[0].productCategory;
-                                              });
-
-                                              var byCategory=_.groupBy(stockCards,function(s){
+                                                s.productCategory=product[0].productCategory;
+                                        });
+                                        stockCards=_.sortBy(stockCards,'displayOrder');
+                                        var byCategory=_.groupBy(stockCards,function(s){
                                                    return s.productCategory.name;
-                                              });
+                                        });
 
-                                              var stockCardsToDisplay = $.map(byCategory, function(value, index) {
+                                        var stockCardsToDisplay = $.map(byCategory, function(value, index) {
                                                   return [{"productCategory":index,"stockCards":value}];
-                                              });
+                                        });
 
-                                              deferred.resolve(stockCardsToDisplay);
+                                        deferred.resolve(stockCardsToDisplay);
                                  });
                         });
                     }
@@ -247,37 +247,44 @@ services.factory('FacilitiesWithProducts', function($resource,$timeout,$q,Vaccin
      var allSupervisedFacilities;
      var stockCards;
      var distributions;
+     var facilities={};
+     facilities.routine=[];
+     facilities.emergence=[];
 
      function get(pId,fId) {
          var deferred =$q.defer();
                      $timeout(function(){
                          if(!isNaN(pId)){
-                            VaccineReportFacilities.get({programId:pId},function(data){
-                                allSupervisedFacilities=data.facilities;
-                                StockCards.get({facilityId:fId},function(data){
-                                    stockCards=data.stockCards;
-                                    DistributedFacilities.get(function(data){
-                                        distributions=data.Distributions;
+                            VaccineReportFacilities.get({programId:pId},function(f){
+
+                                StockCards.get({facilityId:fId},function(s){
+                                console.log(JSON.stringify(s.stockCards));
+                                    DistributedFacilities.get(function(d){
+                                        allSupervisedFacilities=f.facilities;
+                                        stockCards=s.stockCards;
+                                        distributions=d.Distributions;
                                         allSupervisedFacilities.forEach(function(facility){
 
                                              facility.productsToIssue=[];
                                              var facilityDistribution=_.findWhere(distributions,{toFacilityId:facility.id});
-                                             if(facilityDistribution !=undefined)
-                                             {
-                                                facility.status=facilityDistribution.status;
-                                             }
+                                             facility.status=(facilityDistribution !== undefined)?facilityDistribution.status:undefined;
+                                             facility.voucherNumber=(facilityDistribution !== undefined)?facilityDistribution.voucherNumber:undefined;
+                                             facility.distributionDate=(facilityDistribution !== undefined)?facilityDistribution.distributionDate:undefined;
+                                             facility.distributionId=(facilityDistribution !== undefined)?facilityDistribution.id:undefined;
                                              stockCards.forEach(function(stockCard){
                                                  var product={};
-                                                 var distributedProduct
-                                                 if(facilityDistribution !=undefined)
+                                                 var distributedProduct;
+                                                 if(facilityDistribution !== undefined)
                                                  {
                                                      distributedProduct=_.findWhere(facilityDistribution.lineItems,{productId:stockCard.product.id});
-                                                     console.log(JSON.stringify(distributedProduct));
                                                  }
                                                  product.name=stockCard.product.primaryName;
                                                  product.productId=stockCard.product.id;
+                                                 product.displayOrder=stockCard.product.id;
                                                  product.totalQuantityOnHand=stockCard.totalQuantityOnHand;
                                                  product.quantity=(distributedProduct===undefined)?0:distributedProduct.quantity;
+                                                 product.lineItemId=(distributedProduct===undefined)?null:distributedProduct.id;
+                                                 product.initialQuantity=(distributedProduct === undefined)?null:distributedProduct.quantity;
                                                  if(stockCard.lotsOnHand !== undefined && stockCard.lotsOnHand.length >0)
                                                  {
                                                       product.lots=[];
@@ -287,24 +294,34 @@ services.factory('FacilitiesWithProducts', function($resource,$timeout,$q,Vaccin
                                                           if(distributedProduct !== undefined)
                                                           {
                                                              distributedLot=_.findWhere(distributedProduct.lots,{lotId:lot.lot.id});
-//                                                             console.log(distributedLot);
                                                           }
                                                           lotOnHand.lotId=lot.lot.id;
                                                           lotOnHand.lotCode=lot.lot.lotCode;
                                                           lotOnHand.quantityOnHand=lot.quantityOnHand;
                                                           lotOnHand.quantity=(distributedLot === undefined)?0:distributedLot.quantity;
+                                                          lotOnHand.lineItemLotId=(distributedLot === undefined)?null:distributedLot.id;
+                                                          lotOnHand.initialQuantity=(distributedLot === undefined)?null:distributedLot.quantity;
                                                           lotOnHand.vvmStatus=lot.vvmStatus;
                                                           lotOnHand.expirationDate=lot.lot.expirationDate;
                                                           product.lots.push(lotOnHand);
                                                       });
                                                  }
+
                                                  facility.productsToIssue.push(product);
+                                                 facility.productsToIssue=_.sortBy(facility.productsToIssue,'displayOrder');
                                              });
+
                                         });
 
+                                         facilities.routine = $.grep(allSupervisedFacilities, function (facility) {
+                                                   return facility.status !=='RECEIVED';
+                                         });
+                                         facilities.emergence = $.grep(allSupervisedFacilities, function (facility) {
+                                                   return facility.status ==="RECEIVED";
+                                         });
+                                         deferred.resolve(facilities);
                                     });
 
-                                    deferred.resolve(allSupervisedFacilities);
                                 });
                              });
                          }
