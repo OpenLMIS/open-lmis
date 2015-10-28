@@ -10,21 +10,34 @@
  * You should have received a copy of the GNU Affero General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-function DashboardProgramController($scope,$routeParams,$timeout,$filter,messageService, dashboardMenuServiceNew, UserSupervisedActivePrograms, GetLastPeriods, GetProgramPeriodTracerProductsTrend, GetStockOutFacilitiesForProgramPeriodAndProductCode, DashboardReportingPerformance, DashboardDistrictStockSummary, DashboardFacilityStockSummary) {
+function DashboardProgramController($scope,$routeParams,$timeout,$filter,messageService, dashboardMenuServiceNew, UserSupervisedActivePrograms, GetLastPeriods, GetProgramPeriodTracerProductsTrend, GetStockOutFacilitiesForProgramPeriodAndProductCode, DashboardReportingPerformance, DashboardDistrictStockSummary, DashboardFacilityStockSummary, SettingsByKey) {
     var dashboardMenuService = dashboardMenuServiceNew;
-    $scope.slideTransitionInterval = 20000;
+
+    SettingsByKey.get({key: 'DASHBOARD_SLIDES_TRANSITION_INTERVAL_MILLISECOND'}, function(data){
+        $scope.defaultSlideTransitionInterval = data.settings.value;
+        $scope.consumptionSlideInterval = $scope.stockSlideInterval = $scope.lossesSlideInterval = $scope.defaultSlideTransitionInterval;
 
 
-    /* $scope.totalItems = 64;
-    $scope.currentPage = 4;
-    $scope.maxSize = 5;
+        var carousel = function(id){
+            return {id: id,
+                interval: $scope.defaultSlideTransitionInterval,
+                isPlaying:  function(){ return this.interval >= 0;},
+                play: function(){ this.interval = $scope.defaultSlideTransitionInterval; this.isPlaying = true;},
+                pause: function(){this.interval = -1; this.isPlaying = false; }};
+        };
 
-    $scope.setPage = function (pageNo) {
-        $scope.currentPage = pageNo;
+        $scope.carousels = [carousel('consumption'), carousel('stocks'), carousel('losses')];
+    });
+
+
+    $scope.setInterval = function(carouselId){
+       var cr = _.findWhere($scope.carousels, {id: carouselId});
+        if(!isUndefined(cr)){
+            return cr.interval;
+        }
+        return -1;
     };
 
-    $scope.bigTotalItems = 175;
-    $scope.bigCurrentPage = 1;*/
 
     var  colors = ["bg-green", "bg-red","bg-blue"];
     /**
@@ -36,9 +49,7 @@ function DashboardProgramController($scope,$routeParams,$timeout,$filter,message
          return colors[index];
 
     };
-    var itemFillRateColors = [{'minRange': -100, 'maxRange': 0, 'color' : '#E23E3E', 'description' : 'Red color for product with a fill rate <= 0 '},
-        {'minRange': 1, 'maxRange': 50, 'color' : '#FEBA50', 'description' : 'Yellow color for product with a fill rate > 0 and <= 50 '},
-        {'minRange': 51, 'maxRange': 100, 'color' : '#38AB49', 'description' : 'Green color for product with a fill rate > 50 '}];
+
     var $scaleColor = '#D7D5D5';
     var defaultBarColor = '#FEBA50';
     var $lineWidth = 5;
@@ -214,7 +225,7 @@ function DashboardProgramController($scope,$routeParams,$timeout,$filter,message
                         $scope.quantityLost = _.pluck(productTrend, 'total_quantity_lost');
                         $scope.quantityDamaged = _.pluck(productTrend, 'total_quantity_damaged');
                         $scope.quantityExpired = _.pluck(productTrend, 'total_quantity_expired');
-                        $scope.periods = _.pluck(productTrend, 'startdate').toString();
+                        $scope.periods = _.pluck(productTrend, 'period_name').toString();
 
                         var total_facility_stocked_out = _.findWhere(productTrend, {'order': 1}).total_facilities_stocked_out;
                         var productCode = productTrend[0].product_code;

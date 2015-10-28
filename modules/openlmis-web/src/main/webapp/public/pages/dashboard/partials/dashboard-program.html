@@ -131,12 +131,12 @@
     <ng-include src="'/public/pages/dashboard/shared/dashboard-header_new.html'"></ng-include>
     <div class="reporting-header">
         <span style="margin-right: 10px; font-size: 1.2em;"><span openlmis-message="title.dashboard.reporting.rate"></span></span>
-        <span><span>Total:</span> {{reportingPerformance.total}}</span>
-        <span><span>Expected To Report:</span> {{reportingPerformance.expected}}</span>
-        <span><span>Ever Reported:</span> {{reportingPerformance.ever}}</span>
-        <span><span>Reported This Period:</span> {{reportingPerformance.period}} ( {{(reportingPerformance.period/reportingPerformance.expected)*100 | number:0}}%)</span>
-        <span><span>Late Reported:</span> {{reportingPerformance.late}} ({{(reportingPerformance.late/reportingPerformance.period)*100 | number:0}}%)</span>
-        <span><span>Reporting on time:</span> {{(reportingPerformance.period - reportingPerformance.late)}} ({{((reportingPerformance.period - reportingPerformance.late)/reportingPerformance.period)*100 | number:0}}%)</span>
+        <span><span openlmis-message="label.total"></span>: {{reportingPerformance.total}}</span>
+        <span><span openlmis-message="label.expected.to.report"></span>: {{reportingPerformance.expected}}</span>
+        <span><span openlmis-message="label.ever.reported"></span>: {{reportingPerformance.ever}}</span>
+        <span><span openlmis-message="label.reported.this.period"></span>: {{reportingPerformance.period}} ( {{(reportingPerformance.period/reportingPerformance.expected)*100 | number:0}}%)</span>
+        <span><span openlmis-message="label.late.reported"></span>: {{reportingPerformance.late}} ({{(reportingPerformance.late/reportingPerformance.period)*100 | number:0}}%)</span>
+        <span><span openlmis-message="label.reporting.on.time"></span>: {{(reportingPerformance.period - reportingPerformance.late)}} ({{((reportingPerformance.period - reportingPerformance.late)/reportingPerformance.period)*100 | number:0}}%)</span>
     </div>
     <div class="row-fluid">
         <div class="span2" style="border-right: solid 1px #EAEFF3">
@@ -179,31 +179,26 @@
 
                 </div>
             </div>
-
-          <!--  <pagination total-items="totalItems" page="currentPage"></pagination>
-            <pagination boundary-links="true" total-items="totalItems" page="currentPage" class="pagination-small" previous-text="&lsaquo;" next-text="&rsaquo;" first-text="&laquo;" last-text="&raquo;"></pagination>
-            <pagination direction-links="false" boundary-links="true" total-items="totalItems" page="currentPage"></pagination>
-            <pagination direction-links="false" total-items="totalItems" page="currentPage" num-pages="smallnumPages"></pagination>
-
-            <button class="btn" ng-click="setPage(3)">Set current page to: 3</button>
-            The selected page no: {{currentPage}}
-
-            <hr />
-            <h4>Pager</h4>
-            <pager total-items="totalItems" page="currentPage"></pager>
-
-            <hr />
-            <h4>Limit the maximum visible buttons</h4>
-            <pagination total-items="bigTotalItems" page="bigCurrentPage" max-size="maxSize" class="pagination-small" boundary-links="true"></pagination>
-            <pagination total-items="bigTotalItems" page="bigCurrentPage" max-size="maxSize" class="pagination-small" boundary-links="true" rotate="false" num-pages="numPages"></pagination>
-
-            <pre>Page: {{bigCurrentPage}} / {{numPages}}</pre>-->
         </div>
         <div class="span10">
+            <div  ng-if="productsTrend.length > 0" class="row-fluid">
+                <div class="span4" ng-repeat="carousel in carousels">
+                    <div id="{{carousel.id}}" class="carousel-play-control">
+                        <button id="{{carousel.id}}_play" type="button" class="btn btn-default btn-xs" ng-class="{'carousel-playing': carousel.isPlaying, '': !carousel.isPlaying}"  ng-click="carousel.play()" alt="this si">
+                            <span class="icon-play"></span>
+                        </button>
+                        <button id="{{carousel.id}}_pause" type="button" class="btn btn-default btn-xs"  ng-class="{'carousel-paused': !carousel.isPlaying, '': carousel.isPlaying}" ng-click="carousel.pause()">
+                            <span class="icon-pause"></span>
+                        </button>
+                    </div>
+                </div>
+
+            </div>
 
             <div class="row-fluid" ng-repeat="product in productsTrend" ng-if="product.selected" >
                 <div class="span4" >
-                    <carousel  interval="slideTransitionInterval">
+
+                    <carousel  interval="setInterval('consumption')">
                         <slide>
                             <accordion>
                                 <accordion-group class="gray-cascade" is-open="product.consumptionChart.openPanel">
@@ -211,7 +206,7 @@
                                         <div class="accordion-title">
                                             <div class="caption">
 
-                                                <span >Consumption : {{product.name}}  </span>
+                                                <span ><span openlmis-message="title.consumption.trend"></span> : {{product.name}}  </span>
                                             </div>
                                             <div class="tools">
                                                 <i  ng-class="'icon-info-sign'" ns-popover ns-popover-template="consumption-chart-info" ns-popover-trigger="mouseenter" ns-popover-theme="ns-popover-tooltip-theme" ns-popover-placement="bottom|right"></i>
@@ -251,7 +246,7 @@
                                         <div class="accordion-title">
                                             <div class="caption">
 
-                                                <span >Top Dispensed : {{product.name}}  </span>
+                                                <span ><span openlmis-message="title.top.district.dispensed"></span> : {{product.name}}  </span>
                                             </div>
                                             <div class="tools">
                                                 <i  ng-class="'icon-info-sign'" ns-popover ns-popover-template="consumption-chart-info" ns-popover-trigger="mouseenter" ns-popover-theme="ns-popover-tooltip-theme" ns-popover-placement="bottom|right"></i>
@@ -292,7 +287,7 @@
                                         <div class="accordion-title">
                                             <div class="caption">
 
-                                                <span >Top Facility Dispensed : {{product.name}}  </span>
+                                                <span ><span openlmis-message="title.top.facility.dispensed"></span> : {{product.name}}  </span>
                                             </div>
                                             <div class="tools">
                                                 <i  ng-class="'icon-info-sign'" ns-popover ns-popover-template="consumption-chart-info" ns-popover-trigger="mouseenter" ns-popover-theme="ns-popover-tooltip-theme" ns-popover-placement="bottom|right"></i>
@@ -330,14 +325,14 @@
 
                 </div>
                 <div class="span4">
-                    <carousel  interval="slideTransitionInterval">
+                    <carousel  interval="setInterval('stocks')">
                         <slide>
                             <accordion>
                                 <accordion-group class="gray-cascade" is-open="product.stockingEfficiencyChart.openPanel">
                                     <accordion-heading >
                                         <div class="accordion-title">
                                             <div class="caption">
-                                                <span >Stock Efficiency : {{product.name}}</span>
+                                                <span ><span openlmis-message="title.stock.efficiency.trend"></span> : {{product.name}}</span>
                                             </div>
                                             <div class="tools">
                                                 <i  ng-class="'icon-info-sign'" ns-popover ns-popover-template="stocking-chart-info" ns-popover-trigger="mouseenter" ns-popover-theme="ns-popover-tooltip-theme" ns-popover-placement="bottom|right"></i>
@@ -383,7 +378,7 @@
                                         <div class="accordion-title">
                                             <div class="caption">
 
-                                                <span >Top District Stocked out : {{product.name}}  </span>
+                                                <span ><span openlmis-message="title.top.district.stockedout"></span> : {{product.name}}  </span>
                                             </div>
                                             <div class="tools">
                                                 <i  ng-class="'icon-info-sign'" ns-popover ns-popover-template="stocking-chart-info" ns-popover-trigger="mouseenter" ns-popover-theme="ns-popover-tooltip-theme" ns-popover-placement="bottom|right"></i>
@@ -419,7 +414,7 @@
                                         <div class="accordion-title">
                                             <div class="caption">
 
-                                                <span >Top District Over stocked : {{product.name}}  </span>
+                                                <span ><span openlmis-message="title.top.district.over.stocked"></span> : {{product.name}}  </span>
                                             </div>
                                             <div class="tools">
                                                 <i  ng-class="'icon-info-sign'" ns-popover ns-popover-template="stocking-chart-info" ns-popover-trigger="mouseenter" ns-popover-theme="ns-popover-tooltip-theme" ns-popover-placement="bottom|right"></i>
@@ -456,7 +451,7 @@
                                         <div class="accordion-title">
                                             <div class="caption">
 
-                                                <span >Top District Adequetly stocked out : {{product.name}}  </span>
+                                                <span ><span openlmis-message="title.top.district.adequately.stocked.out"></span> : {{product.name}}  </span>
                                             </div>
                                             <div class="tools">
                                                 <i  ng-class="'icon-info-sign'" ns-popover ns-popover-template="stocking-chart-info" ns-popover-trigger="mouseenter" ns-popover-theme="ns-popover-tooltip-theme" ns-popover-placement="bottom|right"></i>
@@ -493,7 +488,7 @@
                                         <div class="accordion-title">
                                             <div class="caption">
 
-                                                <span >Top District Understocked : {{product.name}}  </span>
+                                                <span ><span openlmis-message="title.top.district.understocked"></span> : {{product.name}}  </span>
                                             </div>
                                             <div class="tools">
                                                 <i  ng-class="'icon-info-sign'" ns-popover ns-popover-template="stocking-chart-info" ns-popover-trigger="mouseenter" ns-popover-theme="ns-popover-tooltip-theme" ns-popover-placement="bottom|right"></i>
@@ -526,7 +521,7 @@
                     </carousel>
                 </div>
                 <div class="span4">
-                    <carousel  interval="slideTransitionInterval">
+                    <carousel  interval="setInterval('losses')">
                         <slide>
                             <accordion>
                                 <accordion-group class="gray-cascade" is-open="product.lossesAndAdjustmentChart.openPanel">
@@ -534,7 +529,7 @@
                                         <div class="accordion-title">
                                             <div class="caption">
 
-                                                <span >Losses And Adjustment : {{product.name}}</span>
+                                                <span ><span openlmis-message="title.losses.and.adjustment.trend"></span> : {{product.name}}</span>
                                             </div>
                                             <div class="tools">
                                                 <i  ng-class="'icon-info-sign'" ns-popover ns-popover-template="losses-chart-info" ns-popover-trigger="mouseenter" ns-popover-theme="ns-popover-tooltip-theme" ns-popover-placement="bottom|right"></i>
@@ -577,7 +572,7 @@
                                         <div class="accordion-title">
                                             <div class="caption">
 
-                                                <span >Top losses : {{product.name}}  </span>
+                                                <span ><span openlmis-message="title.top.losses"></span> : {{product.name}}  </span>
                                             </div>
                                             <div class="tools">
                                                 <i  ng-class="'icon-info-sign'" ns-popover ns-popover-template="losses-chart-info" ns-popover-trigger="mouseenter" ns-popover-theme="ns-popover-tooltip-theme" ns-popover-placement="bottom|right"></i>
@@ -620,7 +615,7 @@
                                         <div class="accordion-title">
                                             <div class="caption">
 
-                                                <span >Top Facility losses : {{product.name}}  </span>
+                                                <span ><span openlmis-message="title.top.facility.losses"></span> : {{product.name}}  </span>
                                             </div>
                                             <div class="tools">
                                                 <i  ng-class="'icon-info-sign'" ns-popover ns-popover-template="losses-chart-info" ns-popover-trigger="mouseenter" ns-popover-theme="ns-popover-tooltip-theme" ns-popover-placement="bottom|right"></i>
@@ -663,7 +658,7 @@
                                         <div class="accordion-title">
                                             <div class="caption">
 
-                                                <span >Top Facility Fill rate : {{product.name}}   </span>
+                                                <span ><span openlmis-message="title.top.facility.fill.rate"></span> : {{product.name}}   </span>
                                             </div>
                                             <div class="tools">
                                                 <i  ng-class="'icon-info-sign'" ns-popover ns-popover-template="losses-chart-info" ns-popover-trigger="mouseenter" ns-popover-theme="ns-popover-tooltip-theme" ns-popover-placement="bottom|right"></i>

@@ -205,6 +205,7 @@ public interface DashboardMapper {
             "quantity_expired_facility,\n" +
             "quantity_expired_upper,\n" +
             "startdate,\n" +
+            "period_short_name as period_name,\n" +
             "number_of_facilities_understocked,\n" +
             "number_of_facilities_adquatelystocked,\n" +
             "number_of_facilities_overstocked,\n" +
