@@ -180,6 +180,13 @@ public class DashboardLookupService {
     public HashMap<String, Object> getDashboardReportingPerformance(Long programId, Long periodId, Long userId) {
         return dashboardMapper.getDashboardReportingPerformance(programId, periodId, userId);
     }
+
+    public List<HashMap<String, Object>> getDistrictStockSummary(Long programId, Long periodId, Long userId) {
+        return dashboardMapper.getDistrictStockSummary(programId, periodId, userId);
+    }
+    public List<HashMap<String, Object>> getFacilityStockSummary(Long programId, Long periodId, Long userId) {
+        return dashboardMapper.getFacilityStockSummary(programId, periodId, userId);
+    }
     public List<HashMap<String, Object>> getFacilitiesStockedOut(Long programId, Long periodId, String productCode) {
         return dashboardMapper.getFacilityStockedOut(programId, periodId, productCode);
     }
