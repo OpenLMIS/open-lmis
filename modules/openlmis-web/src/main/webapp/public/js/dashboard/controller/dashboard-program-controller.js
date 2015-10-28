@@ -263,7 +263,7 @@ function DashboardProgramController($scope,$routeParams,$timeout,$filter,message
                             'topFacilityOnhand':  getFacilityStatusByCodeAndIndicator(productCode, 'ONHAND'),
                             'topFacilityLost':  getFacilityStatusByCodeAndIndicator(productCode, 'LOST'),
                             'topFacilityFillrate': getFacilityStatusByCodeAndIndicator(productCode, 'FILLRATE'),
-                            color: $scope.colorify(),
+                             color: $scope.colorify(),
                             'facilityStockedOut': total_facility_stocked_out,
                             'productTrend': productTrend,
                             'consumptionChart': {openPanel:true},

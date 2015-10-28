@@ -99,14 +99,20 @@
     <div style="width: 600px;">
         <div class="triangle"></div>
         <div class="ns-popover-tooltip" style="max-height: 300px; overflow-y: scroll;">
-            <table style="width: 100%; " class="table">
-                <thead>
-                <tr class="gradient-header">
-                    <th openlmis-message="label.facility" rowspan="2"></th>
+            <table ng-show="facilities == undefined || facilities.length == 0" >
+                <tbody><tr>
+                    <td>No data to show under selected filters</td>
+                </tr>
+                </tbody>
+            </table>
+            <table ng-show="facilities != undefined && facilities.length > 0 " class="table-bordered table table-striped">
+                <thead class="compact-header">
+                <tr >
+                    <th openlmis-message="label.facility" rowspan="2" ></th>
                     <th openlmis-message="label.stock.on.hand" colspan="2"></th>
                 </tr>
-                <tr class="gradient-header">
-                    <th openlmis-message="label.this.period"></th>
+                <tr >
+                    <th openlmis-message="label.this.period" ></th>
                     <th openlmis-message="label.last.period"></th>
                 </tr>
 
@@ -131,9 +137,9 @@
     <ng-include src="'/public/pages/dashboard/shared/dashboard-header_new.html'"></ng-include>
     <div class="reporting-header">
         <span style="margin-right: 10px; font-size: 1.2em;"><span openlmis-message="title.dashboard.reporting.rate"></span></span>
-        <span><span openlmis-message="label.total"></span>: {{reportingPerformance.total}}</span>
-        <span><span openlmis-message="label.expected.to.report"></span>: {{reportingPerformance.expected}}</span>
-        <span><span openlmis-message="label.ever.reported"></span>: {{reportingPerformance.ever}}</span>
+        <span><span openlmis-message="label.total"></span>: {{reportingPerformance.total | number}}</span>
+        <span><span openlmis-message="label.expected.to.report"></span>: {{reportingPerformance.expected | number}}</span>
+        <span><span openlmis-message="label.ever.reported"></span>: {{reportingPerformance.ever | number}}</span>
         <span><span openlmis-message="label.reported.this.period"></span>: {{reportingPerformance.period}} ( {{(reportingPerformance.period/reportingPerformance.expected)*100 | number:0}}%)</span>
         <span><span openlmis-message="label.late.reported"></span>: {{reportingPerformance.late}} ({{(reportingPerformance.late/reportingPerformance.period)*100 | number:0}}%)</span>
         <span><span openlmis-message="label.reporting.on.time"></span>: {{(reportingPerformance.period - reportingPerformance.late)}} ({{((reportingPerformance.period - reportingPerformance.late)/reportingPerformance.period)*100 | number:0}}%)</span>
@@ -168,7 +174,7 @@
                                  ns-popover-hide-on-inside-click="false"
                                  ns-popover-hide-on-outside-click="true"
                                  ns-popover-hide-on-button-click="true" style="cursor: pointer; padding: 10px 0px;">
-                                <span ng-class="product.color"
+                                <span class="bg-red"
                                       style="  color:white; padding:2px 20px; border-radius:10px; font-size:12px;">{{product.facilityStockedOut | number}}</span>
                             </div>
 
@@ -181,6 +187,7 @@
             </div>
         </div>
         <div class="span10">
+
             <div  ng-if="productsTrend.length > 0" class="row-fluid">
                 <div class="span4" ng-repeat="carousel in carousels">
                     <div id="{{carousel.id}}" class="carousel-play-control">
