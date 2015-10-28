@@ -57,7 +57,7 @@
   content: "";
   display: block;
   height: 2px;
-  width: 33px;
+  width: 31px;
   background-color: black;
 }
 
@@ -72,8 +72,8 @@
 
 .mmia-form table.second-section tr th:first-child,
 .mmia-form table.second-section tr td:first-child,
-.mmia-form table.regimen-form tr th:first-child,
-.mmia-form table.regimen-form tr td:first-child {
+.mmia-form table.regime-form tr th:first-child,
+.mmia-form table.regime-form tr td:first-child {
   background-color: black;
   color: white;
 }
@@ -85,27 +85,26 @@ table th {
 .mmia-form table th,
 .mmia-form table td {
   border: 1px solid black;
-  border-bottom: 0;
 }
 
 .mmia-form table .col-1 {
-  width: 78px;
+  width: 79px;
 }
 
 .mmia-form table .col-2 {
-  width: 158px;
+  width: 159px;
 }
 
 .mmia-form table .col-3 {
-  width: 238px;
+  width: 239px;
 }
 
 .mmia-form table .col-4 {
-  width: 318px;
+  width: 319px;
 }
 
 .mmia-form table .col-5 {
-  width: 398px;
+  width: 399px;
 }
 
 .mmia-form table tr td {
@@ -114,7 +113,7 @@ table th {
 
 .mmia-form table tr td,
 .mmia-form table tr th {
-  width: 78px;
+  width: 79px;
   word-wrap: break-word;
 }
 
@@ -123,8 +122,7 @@ table th {
   text-align: center;
 }
 
-.mmia-form tr td.no-top-and-bottom-border,
-.mmia-form tr th.no-top-and-bottom-border {
+.mmia-form tr td.product-code {
   border-bottom: 0;
   border-top: 0;
 }
@@ -135,10 +133,12 @@ table th {
 
 .mmia-form table.second-section th {
   background-color: #d0d0d0;
+  word-break: break-all;
 }
 
-.mmia-form table.second-section td.align-left {
+.mmia-form table td.align-left {
   text-align: left;
+  padding: 3px;
 }
 
 .mmia-form .second-section tr td:nth-child(4) {
@@ -150,23 +150,26 @@ table th {
   flex-direction: row;
 }
 
-.mmia-form .middle-section .regimen-section {
+.mmia-form .middle-section .regime-section {
   display: block;
 }
 
-.mmia-form .middle-section .regimen-section .regimen-form thead {
+.mmia-form .middle-section .regime-section .regime-form thead {
   background-color: #f0f0f0;
 }
 
-.mmia-form .middle-section .regimen-section .total-form {
+.mmia-form .middle-section .regime-section .total-form {
   margin-right: 0;
   margin-left: auto;
   border-top: 0;
 }
 
-.mmia-form .middle-section .regimen-section .total-form td {
-  text-align: right;
+.mmia-form .middle-section .regime-section .total-form td {
   border-top: 0;
+}
+
+.mmia-form .middle-section .regime-section .total-form td.align-right {
+  text-align: right;
 }
 
 .mmia-form .middle-section .patient-section {
@@ -183,6 +186,10 @@ table th {
 
 .mmia-form .middle-section .patient-section .patient-form thead tr {
   font-size: 8px;
+}
+
+.mmia-form .patient-form tbody tr {
+  height: 54px;
 }
 
 .mmia-form .middle-section .patient-section .patient-form tr td:first-child {
@@ -207,10 +214,6 @@ table th {
   width: 398px;
   padding-top: 24px;
   line-height: 20.8px;
-}
-
-.mmia-form .middle-section .patient-section .comment-wrapper .comment:before {
-  content: "\00a0\00a0\00a0\00a0\00a0\00a0\00a0\00a0\00a0\00a0 ";
 }
 
 .mmia-form .bottom-section {
