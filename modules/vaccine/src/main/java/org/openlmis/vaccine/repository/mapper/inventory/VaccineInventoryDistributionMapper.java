@@ -1,6 +1,7 @@
 package org.openlmis.vaccine.repository.mapper.inventory;
 
 import org.apache.ibatis.annotations.*;
+import org.openlmis.core.domain.Facility;
 import org.openlmis.core.domain.ProcessingPeriod;
 import org.openlmis.vaccine.domain.inventory.VaccineDistributionLineItem;
 import org.openlmis.vaccine.domain.inventory.VaccineDistributionLineItemLot;
@@ -12,6 +13,13 @@ import java.util.List;
 
 @Repository
 public interface VaccineInventoryDistributionMapper {
+
+    @Select("SELECT f.id ,f.name FROM requisition_group_members rgm\n" +
+            "JOIN facilities f ON f.id=rgm.facilityid\n" +
+            "JOIN requisition_groups rg ON rg.id=rgm.requisitiongroupid\n" +
+            "JOIN supervisory_nodes sn ON sn.id= rg.supervisorynodeid\n" +
+            "WHERE sn.facilityid=#{facilityId};")
+    List<Facility> getOneLevelSupervisedFacities(@Param("facilityId") Long facilityId);
 
     @Insert("insert into vaccine_distributions " +
             " (tofacilityid, fromfacilityid, vouchernumber, distributiondate, periodid,orderid,status, distributiontype, createdby, createddate, modifiedby,modifieddate )" +

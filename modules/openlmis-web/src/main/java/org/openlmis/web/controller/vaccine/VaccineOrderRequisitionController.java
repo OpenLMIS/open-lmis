@@ -17,7 +17,7 @@ import org.openlmis.reporting.service.JasperReportsViewFactory;
 import org.openlmis.reporting.service.TemplateService;
 import org.openlmis.vaccine.domain.VaccineOrderRequisition.VaccineOrderStatus;
 import org.openlmis.vaccine.domain.inventory.StockMovement;
-import org.openlmis.vaccine.service.Inventory.VaccineInventoryService;
+import org.openlmis.vaccine.service.inventory.VaccineInventoryService;
 import org.openlmis.vaccine.service.VaccineOrderRequisitionServices.VaccineOrderRequisitionLineItemService;
 import org.openlmis.vaccine.service.VaccineOrderRequisitionServices.VaccineOrderRequisitionService;
 import org.openlmis.vaccine.service.VaccineOrderRequisitionServices.VaccineOrderRequisitionsColumnService;
@@ -32,9 +32,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.view.jasperreports.JasperReportsMultiFormatView;
 
-import javax.imageio.ImageIO;
 import javax.servlet.http.HttpServletRequest;
-import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.util.*;
 
@@ -42,7 +40,6 @@ import static org.openlmis.core.web.OpenLmisResponse.error;
 import static org.openlmis.core.web.OpenLmisResponse.response;
 import static org.openlmis.core.web.OpenLmisResponse.success;
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
-import static java.lang.System.out;
 
 
 @Controller
@@ -68,19 +65,15 @@ public class VaccineOrderRequisitionController extends BaseController {
     @Autowired
     ProgramService programService;
     @Autowired
-    private ProgramProductService programProductService;
-
-    @Autowired
-    private JasperReportsViewFactory jasperReportsViewFactory;
-    @Autowired
     UserService userService;
-
     @Autowired
     VaccineInventoryService inventoryService;
-
     @Autowired
     ConfigurationSettingService settingService;
-
+    @Autowired
+    private ProgramProductService programProductService;
+    @Autowired
+    private JasperReportsViewFactory jasperReportsViewFactory;
 
     @RequestMapping(value = "periods/{facilityId}/{programId}", method = RequestMethod.GET)
    //TODO// @PreAuthorize("@permissionEvaluator.hasPermission(principal,'CREATE_REQUISITION, AUTHORIZE_REQUISITION')")

@@ -1,4 +1,4 @@
-package org.openlmis.vaccine.repository.Inventory;
+package org.openlmis.vaccine.repository.inventory;
 
 import lombok.NoArgsConstructor;
 import org.openlmis.vaccine.domain.inventory.StockMovementLineItem;

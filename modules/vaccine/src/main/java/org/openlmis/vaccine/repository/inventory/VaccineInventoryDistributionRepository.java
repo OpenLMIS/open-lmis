@@ -1,6 +1,7 @@
-package org.openlmis.vaccine.repository.Inventory;
+package org.openlmis.vaccine.repository.inventory;
 
 import lombok.NoArgsConstructor;
+import org.openlmis.core.domain.Facility;
 import org.openlmis.core.domain.ProcessingPeriod;
 import org.openlmis.vaccine.domain.inventory.VaccineDistribution;
 import org.openlmis.vaccine.domain.inventory.VaccineDistributionLineItem;
@@ -19,6 +20,9 @@ public class VaccineInventoryDistributionRepository {
     @Autowired
     VaccineInventoryDistributionMapper mapper;
 
+    public List<Facility> getOneLevelSupervisedFacilities(Long facilityId) {
+        return mapper.getOneLevelSupervisedFacities(facilityId);
+    }
     public Integer saveDistribution(VaccineDistribution vaccineDistribution) {
         return mapper.saveDistribution(vaccineDistribution);
     }

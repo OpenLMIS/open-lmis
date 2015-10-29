@@ -18,7 +18,7 @@ import org.openlmis.core.web.controller.BaseController;
 import org.openlmis.vaccine.domain.inventory.Lot;
 import org.openlmis.vaccine.domain.inventory.StockCardEntryType;
 import org.openlmis.vaccine.dto.VaccineInventoryTransactionDTO;
-import org.openlmis.vaccine.service.Inventory.VaccineInventoryService;
+import org.openlmis.vaccine.service.inventory.VaccineInventoryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;

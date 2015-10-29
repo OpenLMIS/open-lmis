@@ -8,10 +8,9 @@
  * You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org. 
  */
 
-package org.openlmis.vaccine.service.Inventory;
+package org.openlmis.vaccine.service.inventory;
 
 import lombok.NoArgsConstructor;
-import org.apache.log4j.Logger;
 import org.openlmis.core.domain.Facility;
 import org.openlmis.core.domain.ProcessingPeriod;
 import org.openlmis.core.domain.Program;
@@ -20,7 +19,7 @@ import org.openlmis.core.service.ProgramService;
 import org.openlmis.vaccine.domain.inventory.VaccineDistribution;
 import org.openlmis.vaccine.domain.inventory.VaccineDistributionLineItem;
 import org.openlmis.vaccine.domain.inventory.VaccineDistributionLineItemLot;
-import org.openlmis.vaccine.repository.Inventory.VaccineInventoryDistributionRepository;
+import org.openlmis.vaccine.repository.inventory.VaccineInventoryDistributionRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -45,6 +44,17 @@ public class VaccineInventoryDistributionService {
 
     @Autowired
     FacilityService facilityService;
+
+
+    public List<Facility> getFacilities(Long userId) {
+        Facility homeFacility = facilityService.getHomeFacility(userId);
+        Long facilityId = homeFacility.getId();
+        return getOneLevelSupervisedFacilities(facilityId);
+    }
+
+    public List<Facility> getOneLevelSupervisedFacilities(Long facilityId) {
+        return repository.getOneLevelSupervisedFacilities(facilityId);
+    }
 
     public void save(VaccineDistribution distribution, Long userId) {
         //Get supervised facility period

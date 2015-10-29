@@ -15,7 +15,7 @@ package org.openlmis.web.controller.vaccine.inventory;
 import org.openlmis.core.web.OpenLmisResponse;
 import org.openlmis.core.web.controller.BaseController;
 import org.openlmis.vaccine.domain.inventory.VaccineDistribution;
-import org.openlmis.vaccine.service.Inventory.VaccineInventoryDistributionService;
+import org.openlmis.vaccine.service.inventory.VaccineInventoryDistributionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -26,7 +26,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import javax.servlet.http.HttpServletRequest;
 
 import java.util.Calendar;
-import java.util.Date;
 
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
 import static org.springframework.web.bind.annotation.RequestMethod.POST;

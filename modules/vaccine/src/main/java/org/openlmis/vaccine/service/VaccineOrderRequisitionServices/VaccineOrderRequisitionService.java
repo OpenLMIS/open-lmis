@@ -16,7 +16,7 @@ import org.openlmis.vaccine.domain.inventory.StockCard;
 import org.openlmis.vaccine.dto.OrderRequisitionDTO;
 import org.openlmis.vaccine.repository.VaccineOrderRequisitions.VaccineOrderRequisitionRepository;
 import org.openlmis.vaccine.repository.VaccineOrderRequisitions.VaccineOrderRequisitionStatusChangeRepository;
-import org.openlmis.vaccine.service.Inventory.VaccineInventoryService;
+import org.openlmis.vaccine.service.inventory.VaccineInventoryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

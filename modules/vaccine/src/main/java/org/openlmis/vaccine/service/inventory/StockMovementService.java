@@ -1,6 +1,6 @@
-package org.openlmis.vaccine.service.Inventory;
+package org.openlmis.vaccine.service.inventory;
 
-import org.openlmis.vaccine.repository.Inventory.StockMovementRepository;
+import org.openlmis.vaccine.repository.inventory.StockMovementRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

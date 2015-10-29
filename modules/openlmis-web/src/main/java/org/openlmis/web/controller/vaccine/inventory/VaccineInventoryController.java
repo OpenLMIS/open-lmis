@@ -12,7 +12,6 @@
 package org.openlmis.web.controller.vaccine.inventory;
 
 
-import com.wordnik.swagger.annotations.ApiOperation;
 import org.openlmis.core.domain.Program;
 import org.openlmis.core.domain.ProgramProduct;
 import org.openlmis.core.service.ProgramProductService;
@@ -21,11 +20,10 @@ import org.openlmis.core.web.OpenLmisResponse;
 import org.openlmis.core.web.controller.BaseController;
 import org.openlmis.vaccine.domain.inventory.*;
 import org.openlmis.vaccine.dto.VaccineInventoryTransactionDTO;
-import org.openlmis.vaccine.service.Inventory.VaccineInventoryService;
+import org.openlmis.vaccine.service.inventory.VaccineInventoryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;

@@ -8,22 +8,20 @@
  * You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org. 
  */
 
-package org.openlmis.vaccine.service.Inventory;
+package org.openlmis.vaccine.service.inventory;
 
 import lombok.NoArgsConstructor;
 import org.openlmis.core.domain.Facility;
 import org.openlmis.core.service.FacilityService;
 import org.openlmis.vaccine.domain.inventory.*;
 import org.openlmis.vaccine.dto.VaccineInventoryTransactionDTO;
-import org.openlmis.vaccine.repository.Inventory.StockMovementLineItemExtRepository;
-import org.openlmis.vaccine.repository.Inventory.StockMovementLineItemRepository;
-import org.openlmis.vaccine.repository.Inventory.StockMovementRepository;
-import org.openlmis.vaccine.repository.Inventory.VaccineInventoryRepository;
+import org.openlmis.vaccine.repository.inventory.StockMovementLineItemExtRepository;
+import org.openlmis.vaccine.repository.inventory.StockMovementLineItemRepository;
+import org.openlmis.vaccine.repository.inventory.StockMovementRepository;
+import org.openlmis.vaccine.repository.inventory.VaccineInventoryRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.List;
 
 
