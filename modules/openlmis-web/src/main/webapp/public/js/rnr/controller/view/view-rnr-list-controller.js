@@ -8,7 +8,7 @@
  * You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org. 
  */
 
-function ViewRnrListController($scope, facilities, RequisitionsForViewing, ProgramsToViewRequisitions, $location, messageService, navigateBackService) {
+function ViewRnrListController($scope, facilities, RequisitionsForViewing, ProgramsToViewRequisitions, $location, messageService, navigateBackService, FeatureToggleService) {
     $scope.facilities = facilities;
     $scope.facilityLabel = (!$scope.facilities.length) ? messageService.get("label.none.assigned") : messageService.get("label.select.facility");
     $scope.programLabel = messageService.get("label.none.assigned");
@@ -96,13 +96,18 @@ function ViewRnrListController($scope, facilities, RequisitionsForViewing, Progr
         navigateBackService.setData(data);
 
         var url = "requisition/";
-        if ($scope.selectedItems[0].programName === "VIA ESSENTIAL") {
-            url = "view-requisition-via/";
-        }
-
-        if ($scope.selectedItems[0].programName === "MMIA") {
-            url = "view-requisition-mmia/";
-        }
+        FeatureToggleService.getToggleValue("new.rnr.view").then(function (result) {
+            if (result) {
+                if ($scope.selectedItems[0].programCode === "ESS_MEDS") {
+                    url = "view-requisition-via/";
+                }
+                if ($scope.selectedItems[0].programCode === "MMIA") {
+                    url = "view-requisition-mmia/";
+                }
+            }
+            //url += $scope.selectedItems[0].id + "/" + $scope.selectedItems[0].programId + "?supplyType=fullSupply&page=1";
+            //$location.url(url);
+        });
         url += $scope.selectedItems[0].id + "/" + $scope.selectedItems[0].programId + "?supplyType=fullSupply&page=1";
         $location.url(url);
     };
