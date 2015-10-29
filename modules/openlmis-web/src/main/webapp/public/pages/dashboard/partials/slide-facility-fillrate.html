@@ -1,0 +1,32 @@
+<!-- slide facility top 5 fill rate  -->
+<slide>
+    <accordion>
+        <accordion-group class="gray-cascade" is-open="product.lossesAndAdjustmentChart.openPanel">
+            <accordion-heading >
+                <div class="accordion-title">
+                    <div class="caption">
+                        <span ><span openlmis-message="title.top.facility.fill.rate"></span> : {{product.name}}   </span>
+                    </div>
+                    <div class="tools">
+                        <i  ng-class="'icon-info-sign'" ns-popover ns-popover-template="losses-chart-info" ns-popover-trigger="mouseenter" ns-popover-theme="ns-popover-tooltip-theme" ns-popover-placement="bottom|right"></i>
+                        <i  ng-class="{'icon-minus-sign': product.lossesAndAdjustmentChart.openPanel, 'icon-plus-sign': !product.lossesAndAdjustmentChart.openPanel}"></i>
+                    </div>
+                </div>
+            </accordion-heading>
+            <table style="width:100%; margin: 10px">
+                <tr>
+                    <td style="width: 33%" ng-repeat="itemFillRate in product.topFacilityFillrate">
+                                                <span class="easychart" style="height: 75px" easypiechart options="getFIllRateOption(itemFillRate.indicator_value)"   percent="itemFillRate.indicator_value">
+                                                <span class="easychart-percent" ng-bind="itemFillRate.indicator_value"></span>
+                                                </span>
+                    </td>
+                </tr>
+                <tr>
+                    <td style="width: 33%" ng-repeat="itemFillRate in product.topFacilityFillrate">
+                        <div style="width: 60%; padding-left: 20px;">{{itemFillRate.facilityname}}</div>
+                    </td>
+                </tr>
+            </table>
+        </accordion-group>
+    </accordion>
+</slide>
