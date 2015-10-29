@@ -1,4 +1,6 @@
-function newVaccineOrderRequisitionController($scope,VaccineOrderRequisitionLastReport,VaccineOrderRequisitionReportInitiateEmergency, programs, facility, messageService, VaccineOrderRequisitionColumns, VaccineOrderRequisitionReportInitiate, $location, VaccineOrderRequisitionReportPeriods) {
+function newVaccineOrderRequisitionController($scope,$rootScope,VaccineOrderRequisitionLastReport,VaccineOrderRequisitionReportInitiateEmergency, programs, facility, messageService, VaccineOrderRequisitionColumns, VaccineOrderRequisitionReportInitiate, $location, VaccineOrderRequisitionReportPeriods) {
+    $rootScope.viewOrder = false;
+    $rootScope.receive = false;
     $scope.programs = programs;
     $scope.facility = facility;
     $scope.emergency = false;
@@ -11,6 +13,7 @@ function newVaccineOrderRequisitionController($scope,VaccineOrderRequisitionLast
 
     var id = parseInt($scope.programs[0].id,10);
     var facilityId = parseInt($scope.facility.id,10);
+
 
     $scope.requisitionTypes = [];
     $scope.requisitionTypes = [{id: '0', name: 'Unscheduled Reporting'}, {id: '1', name: 'Scheduled Reporting'}];
@@ -32,7 +35,7 @@ function newVaccineOrderRequisitionController($scope,VaccineOrderRequisitionLast
                         var lastReport = data.lastReport;
 
                             if(lastReport.status === 'ISSUED'){
-                                $scope.enableIssueMenu = false;
+                                //$rootScope.receive = "yes";
                                 VaccineOrderRequisitionReportInitiateEmergency.get({
                                 periodId: lastReport.periodId,
                                 programId: lastReport.programId,
