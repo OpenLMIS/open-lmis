@@ -65,7 +65,7 @@ public class FacilityProgramProductService {
 
     List<FacilityTypeApprovedProduct> facilityTypeApprovedProducts = facilityApprovedProductRepository.getAllByFacilityAndProgramId(facilityId, programId);
 
-    LinkedList<StockRequirements> stockRequirements = new LinkedList<>();
+    List<StockRequirements> stockRequirements = new ArrayList<>();
 
     List<FacilityProgramProduct> programProductsByProgram = getActiveProductsForProgramAndFacility(programId, facilityId);
     for (FacilityProgramProduct facilityProgramProduct : programProductsByProgram)
@@ -83,15 +83,20 @@ public class FacilityProgramProductService {
       //set productId
       Long productId = facilityProgramProduct.getProduct().getId();
       requirements.setProductId(productId);
+      requirements.setProductName(facilityProgramProduct.getProduct().getPrimaryName());
 
       //set catchmentPopulation
       requirements.setPopulation(facility.getCatchmentPopulation());
-
       //set minStock, maxStock, and eop
       for(FacilityTypeApprovedProduct facilityTypeApprovedProduct : facilityTypeApprovedProducts)
       {
+
+
         if(productId.equals(facilityTypeApprovedProduct.getProgramProduct().getProduct().getId()))
         {
+          ProgramProduct programProduct = facilityTypeApprovedProduct.getProgramProduct();
+          ProductCategory category = programProduct.getProductCategory();
+          requirements.setProductCategory(category.getName());
           requirements.setMinMonthsOfStock(facilityTypeApprovedProduct.getMinMonthsOfStock());
           requirements.setMaxMonthsOfStock(facilityTypeApprovedProduct.getMaxMonthsOfStock());
           requirements.setEop(facilityTypeApprovedProduct.getEop());
