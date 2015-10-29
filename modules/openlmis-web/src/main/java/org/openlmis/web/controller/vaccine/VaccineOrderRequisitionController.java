@@ -12,7 +12,6 @@ import org.openlmis.report.util.Constants;
 import org.openlmis.reporting.model.Template;
 import org.openlmis.reporting.service.JasperReportsViewFactory;
 import org.openlmis.reporting.service.TemplateService;
-import org.openlmis.vaccine.domain.VaccineOrderRequisition.VaccineOrderRequisitionSearchCriteria;
 import org.openlmis.vaccine.domain.VaccineOrderRequisition.VaccineOrderStatus;
 import org.openlmis.vaccine.domain.inventory.StockMovement;
 import org.openlmis.vaccine.service.Inventory.VaccineInventoryService;
@@ -20,7 +19,6 @@ import org.openlmis.vaccine.service.VaccineOrderRequisitionServices.VaccineOrder
 import org.openlmis.vaccine.service.VaccineOrderRequisitionServices.VaccineOrderRequisitionService;
 import org.openlmis.vaccine.service.VaccineOrderRequisitionServices.VaccineOrderRequisitionsColumnService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpStatus;
@@ -32,20 +30,13 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.view.jasperreports.JasperReportsMultiFormatView;
 
-import javax.imageio.ImageIO;
 import javax.servlet.http.HttpServletRequest;
-import java.awt.image.BufferedImage;
 import java.io.IOException;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.*;
-
-import static java.lang.Integer.parseInt;
 import static org.openlmis.core.web.OpenLmisResponse.error;
 import static org.openlmis.core.web.OpenLmisResponse.response;
 import static org.openlmis.core.web.OpenLmisResponse.success;
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
-import static java.lang.System.out;
 
 
 @Controller
@@ -290,9 +281,8 @@ public class VaccineOrderRequisitionController extends BaseController {
                                                        @RequestParam(value = "dateRangeEnd", required = false) String dateRangeEnd,
                                                        @RequestParam(value = "programId", required = false) Long programId,
 
-    VaccineOrderRequisitionSearchCriteria criteria, HttpServletRequest request
+     HttpServletRequest request
     ) {
-
         return response(ORDER_REQUISITION_SEARCH, service.getAllSearchBy(facilityId,dateRangeStart,dateRangeEnd,programId));
 
     }
