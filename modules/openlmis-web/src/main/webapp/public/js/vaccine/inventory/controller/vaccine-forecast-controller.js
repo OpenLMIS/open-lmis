@@ -1,45 +1,62 @@
-function VaccineForecastingController($scope){
+function VaccineForecastingController($scope,$routeParams,$location,programs,homeFacility,StockRequirementsData){
 
+    $scope.pageLineItems1 = [];
     $scope.pageLineItems = [];
+    var dataToDisplay = [];
+    $scope.pageSize = 10;
+    var program = 0;
 
-    $scope.pageLineItems = {
+    if(programs.length == 1){
+        program = programs[0].id;
 
-        "forecasting": [
-            {
-                "productId": 2412,
-                "productName":"BCG",
-                "annualNeeds": 1000,
-                "quarterlyNeed": 400,
-                "reOrderLevel": "300",
-                "bufferStock": "100",
-                "maximumStock": "500",
-                "productCategoryId": 100,
-                "productCategoryName": "Vaccine"
-            },
-            {
-                "productId": 2412,
-                "productName":"Penta",
-                "annualNeeds": 500,
-                "quarterlyNeed": 200,
-                "reOrderLevel": "150",
-                "bufferStock": "50",
-                "maximumStock": "20",
-                "productCategoryId": 100,
-                "productCategoryName": "Vaccine"
-            },
-            {
-                "productId": 2413,
-                "productName":"ADS 0.05ml",
-                "annualNeeds": 500,
-                "quarterlyNeed": 200,
-                "reOrderLevel": "150",
-                "bufferStock": "50",
-                "maximumStock": "20",
-                "productCategoryId": 100,
-                "productCategoryName": "Safety Injection Equipment"
-            }
-        ]
-    };
+    }
+ var refreshPageLineItems = function(){
+    StockRequirementsData.get(parseInt(program,10), parseInt(19077,10)).then(function (data) {
+        dataToDisplay = data;
+        $scope.numberOfPages = Math.ceil(dataToDisplay.length / $scope.pageSize) || 1;
+        $scope.currentPage = (utils.isValidPage($routeParams.page, $scope.numberOfPages)) ? parseInt($routeParams.page, 10) : 1;
+        $scope.pageLineItems = dataToDisplay.slice($scope.pageSize * ($scope.currentPage - 1), $scope.pageSize * $scope.currentPage);
+    });
+ };
+    refreshPageLineItems();
 
+    $scope.$watch('currentPage', function () {
+        $location.search('page', $scope.currentPage);
+    });
+
+
+    $scope.$on('$routeUpdate', function () {
+        refreshPageLineItems();
+    });
 
 }
+
+VaccineForecastingController.resolve = {
+
+
+
+    homeFacility: function ($q, $timeout, UserFacilityList) {
+        var deferred = $q.defer();
+        var homeFacility = {};
+
+        $timeout(function () {
+            UserFacilityList.get({}, function (data) {
+                homeFacility = data.facilityList[0];
+                deferred.resolve(homeFacility);
+            });
+
+        }, 100);
+        return deferred.promise;
+    },
+    programs: function ($q, $timeout, VaccineHomeFacilityPrograms) {
+        var deferred = $q.defer();
+        $timeout(function () {
+            VaccineHomeFacilityPrograms.get({}, function (data) {
+                deferred.resolve(data.programs);
+            });
+        }, 100);
+
+        return deferred.promise;
+    }
+
+};
