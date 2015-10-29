@@ -152,12 +152,6 @@ services.factory('VaccineIssueStock', function($resource){
     return $resource('/vaccine/inventory/stock/debit.json',{}, update);
 });
 
-/*
-
-services.factory('VaccineSupervisedIvdPrograms', function ($resource) {
-    return $resource('/vaccine/orderRequisition/ivd-form/supervised-programs.json', {}, {});
-});
-*/
 
 services.factory('VaccineReportPrograms', function ($resource) {
     return $resource('/vaccine/orderRequisition/programs.json', {}, {});
@@ -243,4 +237,31 @@ services.factory('UpdateOrderRequisitionStatus',function($resource){
 
 services.factory('VaccineLastStockMovement', function ($resource) {
     return $resource('/vaccine/inventory/stock/lastReport.json', {}, {});
+});
+
+
+
+services.factory('StockRequirementsTest', function($resource) {
+
+   return $resource(
+        '/facility/:facilityId/program/:programId/stockRequirements.json',
+        {facilityId: '@facilityId', programId: '@programId'},
+        {
+            'get': {
+                method: 'GET',
+                transformResponse: function (data) {
+                    return angular.fromJson(data);
+                },
+                isArray: true //since list property is an array
+            }
+        }
+    )
+});
+
+services.factory('SaveForecastConfiguration',function($resource){
+    return $resource('/vaccine/inventory/configuration/saveForecastConfiguration.json',{},{update:{method:'PUT'}});
+});
+
+services.factory('VaccineForecastConfigurations',function($resource){
+    return $resource('/vaccine/inventory/configuration/getAllForecastConfigurations.json',{},{});
 });

@@ -119,29 +119,29 @@
             <a href="javascript: void(0);"
                openlmis-message="link.vaccine.request.form"></a>
             <div class="submenu">
+
               <ul>
                 <li ng-show="hasPermission('CREATE_ORDER_REQUISITION')">
-                  <a  href="/public/pages/vaccine/order-requisition/index.html#/initiate"> Create / Submit</a>
 
+                  <a  href="/public/pages/vaccine/order-requisition/index.html#/initiate" openlmis-message="link.vaccine.create.report" ></a>
+                <!--  <a href="/public/pages/vaccine/inventory/index.html#/receive" ng-if = "receive == true"
+                     openlmis-message="link.vaccine.receive"></a>-->
                 </li>
 
                 <li ng-show="hasPermission('VIEW_PENDING_REQUEST')">
-                  <a href="/public/pages/vaccine/order-requisition/index.html#/view">View Pending</a>
-
-
+                  <a href="/public/pages/vaccine/order-requisition/index.html#/view" Openlmis-message="title.view.pending"></a>
                 </li>
 
 
                 <li ng-show="hasPermission('VIEW_ORDER_REQUISITION')">
-                  <a href="/public/pages/vaccine/order-requisition/index.html#/search">View</a>
+                  <a href="/public/pages/vaccine/order-requisition/index.html#/search" openlmis-message="link.vaccine.view"></a>
 
                 </li>
+                <li class="beak"></li>
 
               </ul>
 
-
             </div>
-
 
           </li>
 

@@ -445,4 +445,14 @@ services.factory('SupplyingDepots', function ($resource) {
   return $resource('/supplyLines/supplying-depots.json', {});
 });
 
+services.factory('UserFacilityWithViewVaccineOrderRequisition', function ($resource) {
+  return $resource('/user/facilities/view-order-requisition.json', {}, {});
+});
 
+services.factory('ProgramsToViewVaccineOrderRequisitions', function ($resource) {
+  return $resource('/facility/:facilityId/view/vaccine-order-requisition/programs.json', {}, {});
+});
+
+services.factory('VaccineOrderRequisitionsForViewing', function ($resource) {
+  return $resource('/vaccine/orderRequisition/search.json', {}, {});
+});
