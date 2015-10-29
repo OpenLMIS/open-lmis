@@ -10,6 +10,7 @@
 
 package org.openlmis.restapi.service;
 
+import org.apache.log4j.Logger;
 import org.openlmis.core.domain.Facility;
 import org.openlmis.core.domain.ProcessingPeriod;
 import org.openlmis.core.domain.Program;
@@ -45,6 +46,7 @@ public class RestRequisitionCalculator {
 
   @Autowired
   private ProcessingScheduleService processingScheduleService;
+  private static final Logger logger = Logger.getLogger(RestRequisitionCalculator.class);
 
   public void validatePeriod(Facility reportingFacility, Program reportingProgram) {
 
@@ -54,9 +56,12 @@ public class RestRequisitionCalculator {
       searchCriteria.setProgramId(reportingProgram.getId());
       searchCriteria.setFacilityId(reportingFacility.getId());
 
-      if (requisitionService.getCurrentPeriod(searchCriteria) != null && !requisitionService.getCurrentPeriod(searchCriteria).getId().equals
-        (requisitionService.getPeriodForInitiating(reportingFacility, reportingProgram).getId())) {
-        throw new DataException("error.rnr.previous.not.filled");
+      ProcessingPeriod currentPeriod = requisitionService.getCurrentPeriod(searchCriteria);
+      ProcessingPeriod periodForInitiating = requisitionService.getPeriodForInitiating(reportingFacility, reportingProgram);
+      if (currentPeriod != null && !currentPeriod.getId().equals(periodForInitiating.getId())) {
+        logger.info("facility:" + reportingFacility.getCode() + " program:" + reportingProgram.getCode());
+        throw new DataException("error.rnr.previous.not.filled" + " currentPeriod: " + currentPeriod + " periodForInitiating:" +
+                                        periodForInitiating);
       }
     }
   }

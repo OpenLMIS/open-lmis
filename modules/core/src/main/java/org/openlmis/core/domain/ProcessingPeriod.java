@@ -107,4 +107,13 @@ public class ProcessingPeriod extends BaseModel {
   public String getNextStartDate() {
     return forPattern("yyyy-MM-dd").print(new DateTime(getEndDate()).plusDays(1));
   }
+
+  @Override
+  public String toString() {
+    return "ProcessingPeriod{" +
+                   "scheduleId=" + scheduleId +
+                   ", startDate=" + startDate +
+                   ", endDate=" + endDate +
+                   '}';
+  }
 }
