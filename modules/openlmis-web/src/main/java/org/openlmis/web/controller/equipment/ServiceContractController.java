@@ -29,36 +29,38 @@ import static org.springframework.web.bind.annotation.RequestMethod.POST;
 @RequestMapping(value="/equipment/service-contracts/")
 public class ServiceContractController extends BaseController {
 
+  public static final String CONTRACT = "contract";
+  public static final String CONTRACTS = "contracts";
   @Autowired
   private ServiceContractService service;
 
   @RequestMapping(method = GET, value = "list")
   public ResponseEntity<OpenLmisResponse> getAll(){
-    return  OpenLmisResponse.response("contracts", service.getAll());
+    return  OpenLmisResponse.response(CONTRACTS, service.getAll());
   }
 
   @RequestMapping(method = GET, value = "id")
   public ResponseEntity<OpenLmisResponse> getById( @RequestParam("id") Long id){
     ServiceContract contract = service.getById(id);
     contract.setId(id);
-    return  OpenLmisResponse.response("contract", contract);
+    return  OpenLmisResponse.response(CONTRACT, contract);
   }
 
   @RequestMapping(method = GET, value = "for-facility")
   public ResponseEntity<OpenLmisResponse> getByFacilityId( @RequestParam("id") Long id){
-    return  OpenLmisResponse.response("contracts", service.getAllForFacility(id));
+    return  OpenLmisResponse.response(CONTRACTS, service.getAllForFacility(id));
   }
 
   @RequestMapping(method = GET, value = "for-vendor")
   public ResponseEntity<OpenLmisResponse> getByVendorId( @RequestParam("id") Long id){
-    return  OpenLmisResponse.response("contracts", service.getAllForVendor(id));
+    return  OpenLmisResponse.response(CONTRACTS, service.getAllForVendor(id));
   }
 
   @RequestMapping(value = "save", method = POST, headers = ACCEPT_JSON)
   public ResponseEntity<OpenLmisResponse> save(@RequestBody ServiceContract contract){
     service.save(contract);
     ResponseEntity<OpenLmisResponse> response = OpenLmisResponse.success("message.equipment.service.contract.saved");
-    response.getBody().addData("contract", contract);
+    response.getBody().addData(CONTRACT, contract);
     return response;
   }
 }

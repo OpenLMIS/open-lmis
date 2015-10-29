@@ -9,31 +9,9 @@
  *
  * You should have received a copy of the GNU Affero General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-function DistrictDemographicEstimateController($scope, $filter, $dialog, rights, categories, programs , years, DistrictDemographicEstimates, UndoFinalizeDistrictDemographicEstimates, FinalizeDistrictDemographicEstimates , SaveDistrictDemographicEstimates) {
+function DistrictDemographicEstimateController($scope, $dialog, $filter, rights, categories, programs , years, DistrictDemographicEstimates, UndoFinalizeDistrictDemographicEstimates, FinalizeDistrictDemographicEstimates , SaveDistrictDemographicEstimates) {
 
-  $scope.currentPage = 1;
-  $scope.pageSize = 10;
-
-  $scope.categories = categories;
-  $scope.rights = rights;
-  $scope.years = years;
-  $scope.programs = programs;
-
-
-  $scope.isDirty = function(){
-    return $scope.$dirty;
-  };
-
-  $scope.hasPermission = function (permission) {
-    return ($scope.rights.indexOf(permission) >= 0);
-  };
-
-  $scope.showParent = function(index){
-    if(index > 0){
-      return ($scope.form.estimateLineItems[index].parentName != $scope.form.estimateLineItems[index - 1].parentName);
-    }
-    return true;
-  };
+  $.extend(this, new BaseDemographicEstimateController($scope, rights, categories, programs , years, $filter));
 
   $scope.bindEstimates = function(data){
     $scope.lineItems = [];
@@ -81,7 +59,7 @@ function DistrictDemographicEstimateController($scope, $filter, $dialog, rights,
   });
 
   $scope.save = function(){
-    SaveDistrictDemographicEstimates.update($scope.form, function(data){
+    SaveDistrictDemographicEstimates.update($scope.form, function(){
       $scope.message = "message.district.demographic.estimates.saved";
     }, function(data){
       $scope.error = data.error;
@@ -130,59 +108,7 @@ function DistrictDemographicEstimateController($scope, $filter, $dialog, rights,
     OpenLmisDialog.newDialog(options, callBack, $dialog);
   };
 
-
-
-  $scope.init = function(){
-    // default to the current year
-    $scope.year = Number( $filter('date')(new Date(), 'yyyy') );
-    // when the available program is only 1, default to this program.
-    if(programs.length == 1){
-      $scope.program = programs[0].id;
-    }
-    $scope.onParamChanged();
-  };
-
   $scope.init();
 
 }
 
-DistrictDemographicEstimateController.resolve = {
-
-  categories: function ($q, $timeout, DemographicEstimateCategories) {
-    var deferred = $q.defer();
-    $timeout(function () {
-      DemographicEstimateCategories.get({}, function (data) {
-        deferred.resolve(data.estimate_categories);
-      }, {});
-    }, 100);
-    return deferred.promise;
-  }, years: function ($q, $timeout, OperationYears) {
-    var deferred = $q.defer();
-
-    $timeout(function () {
-      OperationYears.get({}, function (data) {
-        deferred.resolve(data.years);
-      });
-    }, 100);
-
-    return deferred.promise;
-  }, programs: function($q, $timeout, DemographicEstimatePrograms){
-    var deferred = $q.defer();
-    $timeout(function(){
-      DemographicEstimatePrograms.get({}, function(data){
-        deferred.resolve(data.programs);
-      });
-    },100);
-    return deferred.promise;
-  }, rights: function ($q, $timeout, UserSupervisoryRights) {
-    var deferred = $q.defer();
-    $timeout(function () {
-      UserSupervisoryRights.get({}, function (data) {
-        deferred.resolve(data.rights);
-      }, {});
-    }, 100);
-    return deferred.promise;
-  }
-
-
-};

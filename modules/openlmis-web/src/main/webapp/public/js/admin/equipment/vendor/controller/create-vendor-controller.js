@@ -40,7 +40,8 @@ function CreateVendorController($scope, $routeParams, $location, $dialog, messag
             id: $routeParams.id
         }, function (data) {
             $scope.current = data.vendor;
-            $scope.vendorUser.vendor = $scope.current; //The vendor user object holds the association with users
+            $scope.vendorUser.vendor = $scope.current;
+            //The vendor user object holds the association with users
         });
         $scope.loadUsersForVendor();
     }
@@ -48,7 +49,7 @@ function CreateVendorController($scope, $routeParams, $location, $dialog, messag
     $scope.save = function () {
         $scope.showError = true;
         if($scope.vendorForm.$valid){
-            SaveVendor.save($scope.current, function (data) {
+            SaveVendor.save($scope.current, function () {
                 // success
                 $scope.$parent.message = 'Your changes have been saved';
                 $location.path('');
@@ -135,8 +136,5 @@ function CreateVendorController($scope, $routeParams, $location, $dialog, messag
 
         }
 
-
-        //$scope.vendorToRemove = undefined;
-        //$scope.loadAvailableUsersForVendor();
     };
 }

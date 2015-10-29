@@ -16,7 +16,6 @@ import org.openlmis.core.domain.Facility;
 import org.openlmis.core.domain.Program;
 import org.openlmis.core.domain.SupervisoryNode;
 import org.openlmis.core.domain.SupplyLine;
-import org.openlmis.core.dto.SupplyDepot;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -127,7 +126,7 @@ public interface SupplyLineMapper {
   }
 
   @Select( "select distinct f.id, f.name from supply_lines sl join facilities f on f.id = sl.supplyingFacilityId where sl.supplyingFacilityId in (select facilityId from fulfillment_role_assignments where userId = #{userId} )")
-  List<SupplyDepot> getSupplyDepots(@Param("userId") Long userId);
+  List<Facility> getSupplyingFacilities(@Param("userId") Long userId);
 
   @Select("SELECT * FROM supply_lines WHERE supplyingFacilityId = #{facilityId} AND programId = #{programId} limit 1")
   @Results(value = {

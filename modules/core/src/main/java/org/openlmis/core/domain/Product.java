@@ -10,16 +10,14 @@
 
 package org.openlmis.core.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.upload.Importable;
 import org.openlmis.upload.annotation.ImportField;
-
-import java.util.List;
 
 import static com.fasterxml.jackson.databind.annotation.JsonSerialize.Inclusion.NON_EMPTY;
 
@@ -192,10 +190,5 @@ public class Product extends BaseModel implements Importable {
       + " " + (getStrength() == null ? "" : getStrength())
       + " " + (getDosageUnit() == null || getDosageUnit().getCode() == null ? "" : getDosageUnit().getCode());
   }
-
-  private String programName;
-
-  // this section is added to make the product editing form work.
-  private List<ProgramProduct> programProducts;
 
 }

@@ -16,7 +16,6 @@ import java.util.Map;
 
 public class PureSqlProvider {
   public String sql(Map filter) {
-    String theSql = filter.get("sql").toString();
-    return theSql;
+    return filter.get("sql").toString();
   }
 }

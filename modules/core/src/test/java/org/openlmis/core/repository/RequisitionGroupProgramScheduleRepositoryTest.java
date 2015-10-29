@@ -99,7 +99,7 @@ public class RequisitionGroupProgramScheduleRepositoryTest {
     when(programRepository.getById(programId)).thenReturn(program);
     when(facilityMapper.getIdForCode(dropOffFacility.getCode())).thenReturn(facilityId);
 
-//    expectedEx.expect(dataExceptionMatcher("error.program.type.not.supported.requisitions"));
+    expectedEx.expect(dataExceptionMatcher("error.program.type.not.supported.requisitions"));
 
     repository.insert(requisitionGroupProgramSchedule);
   }
@@ -119,7 +119,7 @@ public class RequisitionGroupProgramScheduleRepositoryTest {
     when(programRepository.getById(programId)).thenReturn(program);
     when(facilityMapper.getIdForCode(dropOffFacility.getCode())).thenReturn(facilityId);
 
-//    expectedEx.expect(dataExceptionMatcher("error.program.type.not.supported.requisitions"));
+    expectedEx.expect(dataExceptionMatcher("error.program.type.not.supported.requisitions"));
 
     repository.update(requisitionGroupProgramSchedule);
   }

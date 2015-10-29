@@ -27,48 +27,44 @@ import java.util.Date;
 @Controller
 @RequestMapping(value="/equipment/maintenance-log/")
 public class MaintenanceLogController extends BaseController {
+  public static final String LOG = "log";
+  public static final String LOGS = "logs";
+  public static final String STATUS = "status";
   @Autowired
   private MaintenanceLogService service;
 
   @RequestMapping(method = RequestMethod.GET, value = "list")
   public ResponseEntity<OpenLmisResponse> getAll(){
-    return  OpenLmisResponse.response("logs", service.getAll());
+    return  OpenLmisResponse.response(LOGS, service.getAll());
   }
 
   @RequestMapping(method = RequestMethod.GET, value = "id")
   public ResponseEntity<OpenLmisResponse> getById( @RequestParam("id") Long id){
-    return  OpenLmisResponse.response("log", service.getById(id));
+    return  OpenLmisResponse.response(LOG, service.getById(id));
   }
 
   @RequestMapping(method = RequestMethod.GET, value = "for-facility")
   public ResponseEntity<OpenLmisResponse> getByFacilityId( @RequestParam("id") Long id){
-    return  OpenLmisResponse.response("logs", service.getAllForFacility(id));
+    return  OpenLmisResponse.response(LOGS, service.getAllForFacility(id));
   }
 
   @RequestMapping(method = RequestMethod.GET, value = "for-vendor")
   public ResponseEntity<OpenLmisResponse> getByVendorId( @RequestParam("id") Long id){
-    return  OpenLmisResponse.response("logs", service.getAllForVendor(id));
+    return  OpenLmisResponse.response(LOGS, service.getAllForVendor(id));
   }
 
   @RequestMapping(value = "save", method = RequestMethod.POST, headers = ACCEPT_JSON)
   public ResponseEntity<OpenLmisResponse> save(@RequestBody MaintenanceLog log){
     service.save(log);
-    return OpenLmisResponse.response("status","success");
+    return OpenLmisResponse.response(STATUS,"success");
   }
 
   @RequestMapping(value = "saveAndLogMaintenance", method = RequestMethod.POST, headers = ACCEPT_JSON)
   public ResponseEntity<OpenLmisResponse> save(@RequestBody MaintenanceRequest maintenanceRequest, HttpServletRequest request){
-    if(maintenanceRequest.getId() == null) {
-      maintenanceRequest.setCreatedBy(loggedInUserId(request));
-      maintenanceRequest.setUserId(loggedInUserId(request));
-      maintenanceRequest.setResolved(false);
-      maintenanceRequest.setRequestDate(new Date());
-    }
-
     maintenanceRequest.setModifiedBy(loggedInUserId(request));
     maintenanceRequest.setModifiedDate(new Date());
     service.save(maintenanceRequest);
-    return OpenLmisResponse.response("status","success");
+    return OpenLmisResponse.response(STATUS,"success");
   }
 
 

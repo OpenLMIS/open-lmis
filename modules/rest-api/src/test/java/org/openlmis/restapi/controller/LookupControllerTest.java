@@ -54,7 +54,7 @@ public class LookupControllerTest {
     when(lookupService.getAllProductCategories()).thenReturn(new ArrayList<ProductCategory>());
     when(RestResponse.response("product-categories", new ArrayList<ProductCategory>())).thenReturn(expectResponse);
 
-    ResponseEntity<RestResponse> response = controller.getProductCategories(principal);
+    ResponseEntity<RestResponse> response = controller.getProductCategories();
 
     verify(lookupService).getAllProductCategories();
     assertThat(response, is(expectResponse));
@@ -67,7 +67,7 @@ public class LookupControllerTest {
     when(RestResponse.response("products", new ArrayList<ProductList>())).thenReturn(expectResponse);
     when(lookupService.getFullProductList(rowBounds)).thenReturn(new ArrayList<org.openlmis.core.domain.Product>());
 
-    ResponseEntity<RestResponse> response = controller.getProducts(1,10,false, principal);
+    ResponseEntity<RestResponse> response = controller.getProducts(1,10,false);
 
     assertThat(response, is(expectResponse));
   }
@@ -79,7 +79,7 @@ public class LookupControllerTest {
     when(RestResponse.response("product", new Product())).thenReturn(expectResponse);
     when(lookupService.getProductByCode("123")).thenReturn(new Product());
 
-    ResponseEntity<RestResponse> response = controller.getProductByCode(principal, "123");
+    ResponseEntity<RestResponse> response = controller.getProductByCode( "123");
 
     verify(lookupService).getProductByCode("123");
     assertThat(response, is(expectResponse));
@@ -92,7 +92,7 @@ public class LookupControllerTest {
     when(RestResponse.response("dosage-units", new ArrayList<DosageUnit>())).thenReturn(expectResponse);
     when(lookupService.getDosageUnits()).thenReturn(new ArrayList<DosageUnit>());
 
-    ResponseEntity<RestResponse> response = controller.getDosageUnits(principal);
+    ResponseEntity<RestResponse> response = controller.getDosageUnits();
 
     verify(lookupService).getDosageUnits();
     assertThat(response, is(expectResponse));
@@ -105,7 +105,7 @@ public class LookupControllerTest {
     when(RestResponse.response("facility-types", new ArrayList<FacilityType>())).thenReturn(expectResponse);
     when(lookupService.getAllFacilityTypes()).thenReturn(new ArrayList<FacilityType>());
 
-    ResponseEntity<RestResponse> response = controller.getFacilityTypes(principal);
+    ResponseEntity<RestResponse> response = controller.getFacilityTypes();
 
     verify(lookupService).getAllFacilityTypes();
     assertThat(response, is(expectResponse));
@@ -119,7 +119,7 @@ public class LookupControllerTest {
 
     when(lookupService.getAllFacilities(rowBounds)).thenReturn(new ArrayList<Facility>());
 
-    ResponseEntity<RestResponse> response = controller.getFacilities(1,10, false, principal);
+    ResponseEntity<RestResponse> response = controller.getFacilities(1,10, false);
 
     assertThat(response, is(expectResponse));
   }
@@ -131,7 +131,7 @@ public class LookupControllerTest {
     when(RestResponse.response("facility", new Facility())).thenReturn(expectResponse);
     when(lookupService.getFacilityByCode("123")).thenReturn(new Facility());
 
-    ResponseEntity<RestResponse> response = controller.getFacilityByCode(principal, "123");
+    ResponseEntity<RestResponse> response = controller.getFacilityByCode("123");
 
     verify(lookupService).getFacilityByCode("123");
     assertThat(response, is(expectResponse));
@@ -144,7 +144,7 @@ public class LookupControllerTest {
     when(RestResponse.response("programs", new ArrayList<Program>())).thenReturn(expectResponse);
     when(lookupService.getAllPrograms()).thenReturn(new ArrayList<Program>());
 
-    ResponseEntity<RestResponse> response = controller.getPrograms(principal);
+    ResponseEntity<RestResponse> response = controller.getPrograms();
 
     verify(lookupService).getAllPrograms();
     assertThat(response, is(expectResponse));
@@ -157,7 +157,7 @@ public class LookupControllerTest {
     when(RestResponse.response("program-products", new ArrayList<ProgramProduct>())).thenReturn(expectResponse);
     when(lookupService.getAllProgramProducts()).thenReturn(new ArrayList<ProgramProduct>());
 
-    ResponseEntity<RestResponse> response = controller.getProgramProducts(principal);
+    ResponseEntity<RestResponse> response = controller.getProgramProducts();
 
     verify(lookupService).getAllProgramProducts();
     assertThat(response, is(expectResponse));
@@ -169,7 +169,7 @@ public class LookupControllerTest {
     when(RestResponse.response("facility-approved-products", new ArrayList<FacilityTypeApprovedProduct>())).thenReturn(expectResponse);
     when(lookupService.getAllFacilityTypeApprovedProducts()).thenReturn(new ArrayList<FacilityTypeApprovedProduct>());
 
-    ResponseEntity<RestResponse> response = controller.getFacilityApprovedProducts(principal);
+    ResponseEntity<RestResponse> response = controller.getFacilityApprovedProducts();
 
     verify(lookupService).getAllFacilityTypeApprovedProducts();
     assertThat(response, is(expectResponse));
@@ -181,7 +181,7 @@ public class LookupControllerTest {
     when(RestResponse.response("program", new Program())).thenReturn(expectResponse);
     when(lookupService.getProgramByCode("123")).thenReturn(new Program());
 
-    ResponseEntity<RestResponse> response = controller.getProgramByCode(principal, "123");
+    ResponseEntity<RestResponse> response = controller.getProgramByCode( "123");
 
     verify(lookupService).getProgramByCode("123");
     assertThat(response, is(expectResponse));
@@ -194,7 +194,7 @@ public class LookupControllerTest {
     when(RestResponse.response("losses-adjustments-types", new ArrayList<AdjustmentType>())).thenReturn(expectResponse);
     when(lookupService.getAllAdjustmentTypes()).thenReturn(new ArrayList<AdjustmentType>());
 
-    ResponseEntity<RestResponse> response = controller.getLossesAdjustmentsTypes(principal);
+    ResponseEntity<RestResponse> response = controller.getLossesAdjustmentsTypes();
 
     verify(lookupService).getAllAdjustmentTypes();
     assertThat(response, is(expectResponse));
@@ -207,7 +207,7 @@ public class LookupControllerTest {
     when(RestResponse.response("processing-periods", new ArrayList<ProcessingPeriod>())).thenReturn(expectResponse);
     when(lookupService.getAllProcessingPeriods()).thenReturn(new ArrayList<ProcessingPeriod>());
 
-    ResponseEntity<RestResponse> response = controller.getProcessingPeriods(principal);
+    ResponseEntity<RestResponse> response = controller.getProcessingPeriods();
 
     verify(lookupService).getAllProcessingPeriods();
     assertThat(response, is(expectResponse));
@@ -219,7 +219,7 @@ public class LookupControllerTest {
     when(RestResponse.response("regimens", new ArrayList<Regimen>())).thenReturn(expectResponse);
     when(lookupService.getAllRegimens()).thenReturn(new ArrayList<Regimen>());
 
-    ResponseEntity<RestResponse> response = controller.getRegimens(principal);
+    ResponseEntity<RestResponse> response = controller.getRegimens();
 
     verify(lookupService).getAllRegimens();
     assertThat(response, is(expectResponse));

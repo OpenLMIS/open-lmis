@@ -334,9 +334,9 @@ app.directive('zoneFilter', ['TreeGeographicZoneList', 'TreeGeographicZoneListBy
         }
         categoriseZoneBySupervisoryNode(scope);
 
-        var onParamsChanged = function(value) {
+        var onParamsChanged = function() {
           if (!scope.showDistrictOnly) {
-            categoriseZoneBySupervisoryNode(scope, attr);
+            categoriseZoneBySupervisoryNode(scope);
           }
           onCascadedVarsChanged(scope, attr);
         };
@@ -588,7 +588,6 @@ app.directive('productFilter', ['ReportProductsByProgram', 'messageService' ,'$r
           });
         }
 
-
       });
 
     };
@@ -833,9 +832,9 @@ app.directive('clientSideSortPagination', ['$filter', 'ngTableParams',
 
         // the grid options
         scope.tableParams = new ngTableParams({
-          page: 1, // show first page
-          total: 0, // length of data
-          count: 25 // count per page
+          page: 1,
+          total: 0,
+          count: 25
         });
 
         scope.paramsChanged = function(params) {
@@ -1027,9 +1026,6 @@ app.directive('vaccineFacilityLevelFilter',['FacilitiesByLevel','VaccineInventor
             scope.filter.facilityId = $routeParams.facilityId;
 
             scope.filter.facilityId = (isUndefined($routeParams.facilityId) || $routeParams.facilityId === '') ? 0 : $routeParams.facilityId;
-           // scope.facilityLevel = [];
-
-          //  scope.facilityLevel.unshift({'name': '-- Select Facility Level --', id: -1});
 
             if (attr.required) {
               scope.requiredFilters.facilityId = 'facilityId';

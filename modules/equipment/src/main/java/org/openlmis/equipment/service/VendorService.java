@@ -12,9 +12,7 @@
 
 package org.openlmis.equipment.service;
 
-import org.openlmis.equipment.domain.Equipment;
 import org.openlmis.equipment.domain.Vendor;
-import org.openlmis.equipment.repository.EquipmentRepository;
 import org.openlmis.equipment.repository.VendorRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;

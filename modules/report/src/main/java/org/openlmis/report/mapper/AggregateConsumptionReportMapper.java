@@ -18,7 +18,6 @@ import org.apache.ibatis.annotations.SelectProvider;
 import org.apache.ibatis.mapping.ResultSetType;
 import org.apache.ibatis.session.RowBounds;
 import org.openlmis.report.builder.AggregateConsumptionQueryBuilder;
-import org.openlmis.report.builder.DistrictConsumptionQueryBuilder;
 import org.openlmis.report.model.ReportParameter;
 import org.openlmis.report.model.report.DistrictConsumptionReport;
 import org.springframework.stereotype.Repository;

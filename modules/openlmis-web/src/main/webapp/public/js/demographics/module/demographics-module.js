@@ -15,8 +15,7 @@ angular.module('demographics', ['openlmis','ngTable','ui.sortable' , 'ui.bootstr
         when('/list', {controller:DemographicEstimateCategoryController, templateUrl:'partials/category.html', resolve : DemographicEstimateCategoryController.resolve }).
         when('/category/add', {controller:DemographicEstimateCategoryFormController, templateUrl:'partials/category_form.html', resolve : DemographicEstimateCategoryFormController.resolve }).
         when('/category/edit/:id', {controller:DemographicEstimateCategoryFormController, templateUrl:'partials/category_form.html', resolve : DemographicEstimateCategoryFormController.resolve }).
-        when('/facility', {controller:FacilityDemographicEstimateController, templateUrl:'partials/facility.html', resolve : FacilityDemographicEstimateController.resolve }).
-        when('/district', {controller:DistrictDemographicEstimateController, templateUrl:'partials/district.html', resolve : DistrictDemographicEstimateController.resolve }).
+        when('/facility', {controller:FacilityDemographicEstimateController, templateUrl:'partials/facility.html', resolve : BaseDemographicEstimateController.resolve }).
+        when('/district', {controller:DistrictDemographicEstimateController, templateUrl:'partials/district.html', resolve : BaseDemographicEstimateController.resolve }).
       otherwise({redirectTo:'/list'});
-  }]).run(function ($rootScope, AuthorizationService) {
-  });
+  }]);
