@@ -213,4 +213,8 @@ public class VaccineOrderRequisitionService {
 
        return orderRequisitionRepository.updateOFRStatus(orderId);
     }
+
+    public List<OrderRequisitionDTO>getAllSearchBy(Long facilityId,String dateRangeStart,String dateRangeEnd,Long programId){
+        return orderRequisitionRepository.getAllSearchBy(facilityId,dateRangeStart,dateRangeEnd,programId);
+    }
 }
