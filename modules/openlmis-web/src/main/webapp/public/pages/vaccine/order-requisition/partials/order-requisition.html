@@ -66,6 +66,8 @@
 
                     <td class="cell-input col-product">
                         <span ng-bind="item.product.primaryName" id="product{{$index}}" class="cell-text"></span>
+
+
                     </td>
                     <td class="cell-input col-maximumStock">
                         <span ng-bind="item.getMaximumStock()" id="item.MaximumStock{{$index}}"
@@ -90,6 +92,7 @@
                               ng-bind="item.getTotalStockOnHand() ">
                         </span>
 
+
                     </td>
 
                     <td class="cell-input col-amountRequired">
@@ -109,7 +112,7 @@
         <div form-toolbar id="action_buttons" class="action-buttons">
             <div class="form-cell button-row">
 
-                <span>
+                <span ng-hide="viewOrder">
                       <input id="submitButton" type="button" class="btn btn-primary submit-button" ng-click="submit()"
                              openlmis-message="button.submit" ng-disabled="selectedType==1"/> </span>
                 &nbsp;&nbsp;&nbsp;
