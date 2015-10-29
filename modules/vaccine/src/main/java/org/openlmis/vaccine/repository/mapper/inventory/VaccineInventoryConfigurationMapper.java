@@ -26,16 +26,18 @@ public interface VaccineInventoryConfigurationMapper {
     @Update("update vaccine_inventory_product_configurations " +
             " set " +
             " batchtracked = #{batchTracked}," +
-            " vvmtracked= #{vvmTracked}" +
+            " vvmtracked= #{vvmTracked}, " +
+            " survivingInfants = #{survivingInfants}," +
+            " denominatorEstimateCategoryId = #{denominatorEstimateCategoryId} " +
             "WHERE id=#{id} "
     )
     Integer update(VaccineInventoryConfiguration configuration);
 
 
     @Insert("insert into vaccine_inventory_product_configurations  " +
-            " (type, productid, batchtracked, vvmtracked)" +
+            " (type, productid, batchtracked, vvmtracked,survivingInfants,denominatorEstimateCategoryId) " +
             " values " +
-            " (#{type}, #{productId}, #{batchTracked}, #{vvmTracked}) ")
+            " (#{type}, #{productId}, #{batchTracked}, #{vvmTracked},#{survivingInfants},#{denominatorEstimateCategoryId}) ")
     @Options(useGeneratedKeys = true)
     Integer insert(VaccineInventoryConfiguration configuration);
 
