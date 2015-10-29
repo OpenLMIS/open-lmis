@@ -8,6 +8,7 @@ import org.openlmis.vaccine.domain.VaccineOrderRequisition.VaccineOrderRequisiti
 import org.openlmis.vaccine.dto.OrderRequisitionDTO;
 import org.springframework.stereotype.Repository;
 
+import java.util.Date;
 import java.util.List;
 
 @Repository
@@ -103,6 +104,17 @@ public interface VaccineOrderRequisitionMapper {
             "JOIN vaccine_order_requisition_line_items li on r.id = li.orderId  " +
             " WHERE programId = #{programId} AND periodId = #{periodId} and facilityId = #{facilityId} and R.STATUS  IN('SUBMITTED') and productCategory is not null")
     List<OrderRequisitionDTO> getAllBy(@Param("programId") Long programId, @Param("periodId") Long periodId, @Param("facilityId") Long facilityId);
+
+    @Select("select r.id,p.name programName, f.name facilityName,r.status,pp.startdate periodStartDate,pp.enddate periodEndDate,emergency,orderDate::timestamp  from vaccine_order_requisitions r   " +
+            "JOIN programs p on r.programId =p.id  " +
+            "JOIN processing_periods pp on r.periodId = pp.id  " +
+            "JOIN facilities f on r.facilityId= f.id    "+
+            " WHERE programId = #{programId} AND r.createdDate >= #{dateRangeStart}::date and r.createdDate <= #{dateRangeEnd}::date  " +
+            " and facilityId = #{facilityId} and R.STATUS  IN('SUBMITTED')")
+    List<OrderRequisitionDTO> getSearchedDataBy(@Param("facilityId") Long facilityId,
+                                                @Param("dateRangeStart") String dateRangeStart,
+                                                @Param("dateRangeEnd") String dateRangeEnd
+                                                ,@Param("programId") Long programId);
 
 }
 

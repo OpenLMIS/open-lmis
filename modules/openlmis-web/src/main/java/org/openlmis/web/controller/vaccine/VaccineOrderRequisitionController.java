@@ -3,10 +3,7 @@ package org.openlmis.web.controller.vaccine;
 
 import net.sf.jasperreports.engine.JRException;
 import net.sf.jasperreports.engine.JRParameter;
-import org.openlmis.core.domain.ConfigurationSetting;
-import org.openlmis.core.domain.Program;
-import org.openlmis.core.domain.ProgramProduct;
-import org.openlmis.core.domain.User;
+import org.openlmis.core.domain.*;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.core.service.*;
 import org.openlmis.core.web.OpenLmisResponse;
@@ -15,6 +12,7 @@ import org.openlmis.report.util.Constants;
 import org.openlmis.reporting.model.Template;
 import org.openlmis.reporting.service.JasperReportsViewFactory;
 import org.openlmis.reporting.service.TemplateService;
+import org.openlmis.vaccine.domain.VaccineOrderRequisition.VaccineOrderRequisitionSearchCriteria;
 import org.openlmis.vaccine.domain.VaccineOrderRequisition.VaccineOrderStatus;
 import org.openlmis.vaccine.domain.inventory.StockMovement;
 import org.openlmis.vaccine.service.Inventory.VaccineInventoryService;
@@ -22,11 +20,13 @@ import org.openlmis.vaccine.service.VaccineOrderRequisitionServices.VaccineOrder
 import org.openlmis.vaccine.service.VaccineOrderRequisitionServices.VaccineOrderRequisitionService;
 import org.openlmis.vaccine.service.VaccineOrderRequisitionServices.VaccineOrderRequisitionsColumnService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PostAuthorize;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
@@ -36,8 +36,11 @@ import javax.imageio.ImageIO;
 import javax.servlet.http.HttpServletRequest;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.*;
 
+import static java.lang.Integer.parseInt;
 import static org.openlmis.core.web.OpenLmisResponse.error;
 import static org.openlmis.core.web.OpenLmisResponse.response;
 import static org.openlmis.core.web.OpenLmisResponse.success;
@@ -53,6 +56,7 @@ public class VaccineOrderRequisitionController extends BaseController {
     private static final String PROGRAM_PRODUCT_LIST = "programProductList";
     private static final String PRINT_ORDER_REQUISITION = "Print Order Requisition";
     private static final String PRINT_ISSUE_STOCK = "Print Issue report";
+    private static final String ORDER_REQUISITION_SEARCH = "search";
 
     @Autowired
     VaccineOrderRequisitionService service;
@@ -278,6 +282,20 @@ public class VaccineOrderRequisitionController extends BaseController {
         return new ModelAndView(jasperView, map);
     }
 
+
+    @RequestMapping(value = "search", method = GET,headers = ACCEPT_JSON)
+    @PreAuthorize("@permissionEvaluator.hasPermission(principal,'VIEW_ORDER_REQUISITION')")
+    public ResponseEntity<OpenLmisResponse> searchUser(@RequestParam(value = "facilityId", required = false) Long facilityId,
+                                                       @RequestParam(value = "dateRangeStart", required = false) String dateRangeStart,
+                                                       @RequestParam(value = "dateRangeEnd", required = false) String dateRangeEnd,
+                                                       @RequestParam(value = "programId", required = false) Long programId,
+
+    VaccineOrderRequisitionSearchCriteria criteria, HttpServletRequest request
+    ) {
+
+        return response(ORDER_REQUISITION_SEARCH, service.getAllSearchBy(facilityId,dateRangeStart,dateRangeEnd,programId));
+
+    }
 
 
 }
