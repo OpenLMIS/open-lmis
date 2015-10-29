@@ -22,7 +22,7 @@
             <td class=" col-2">
                 &nbsp;
                 <span openlmis-message="mmia.month"></span>
-                <span> : </span> {{month0}}
+                <span> : </span> {{month}}
             </td>
         </tr>
 
@@ -39,7 +39,10 @@
         </tr>
 
         <tr class="">
-            <td colspan="2"><span openlmis-message="mmia.district"></span>:</td>
+            <td colspan="2">
+                <span openlmis-message="mmia.district"></span>
+                <span>:{{rnr.facility.geographicZone.name}}</span>
+            </td>
             <td><span openlmis-message="mmia.province"></span>:</td>
         </tr>
     </table>
@@ -283,9 +286,9 @@
             </tr>
         </table>
 
-        <div>Note:Mapa de Preenchimento Obrigatorio Mensal HdD em Conjunto com a Farmacia da Unidade Sanitaria ou DPM
+        <div>Nota: Mapa de Preenchimento Obrigatório Mensal HdD em Conjunto com a Farmácia da Unidade Sanitária/ ou DPM
         </div>
-        <div>dhuewifi</div>
+        <div>Versão no 5 14Nov 2012</div>
 
     </div>
 </div>

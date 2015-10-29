@@ -19,7 +19,7 @@ function ViewRnrMmiaController($scope, $route, Requisitions, messageService) {
     $scope.loadMmiaDetail = function () {
         Requisitions.get({id: $route.current.params.rnr}, function (data) {
             $scope.rnr = data.rnr;
-
+console.log($scope.rnr);
             $scope.year = data.rnr.period.name.substr(3, 4);
 
             $scope.initMonth();
