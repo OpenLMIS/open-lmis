@@ -11,8 +11,9 @@
  */
 
 
-function StockOnHandController($scope,$window,programs,$location,homeFacility, localStorageService,StockCardsByCategory,Forecast) {
-
+function StockOnHandController($scope,$window,VaccinePendingRequisitions,programs,$location,homeFacility,VaccineOrderRequisitionLastReport, localStorageService,StockCardsByCategory,Forecast) {
+    $scope.createOrder = false;
+    $scope.receiveConsignment = false;
     $scope.selectedProgramId=null;
     if(homeFacility){
         $scope.homeFacilityId=homeFacility.id;
@@ -26,6 +27,8 @@ function StockOnHandController($scope,$window,programs,$location,homeFacility, l
 
     $scope.data={"stockcards": null};//Set default chart stock cards data to null;
     $scope.panel = {alerts:false};//Close Alert Accordion by default
+
+
 
     var loadStockCards=function(programId, facilityId){
         StockCardsByCategory.get(programId ,facilityId).then(function(data){
@@ -103,9 +106,38 @@ function StockOnHandController($scope,$window,programs,$location,homeFacility, l
         $location.path('/stock-adjustment');
     };
 
-     $scope.Requisition=function(){
-            $window.location='/public/pages/vaccine/order-requisition/index.html#/order-requisition';
+     $scope.Requisition = function(){
+            $window.location='/public/pages/vaccine/order-requisition/index.html#/initiate';
      };
+
+    $scope.ReceiveConsignment = function(){
+        $location.path('/receive');
+    };
+
+
+    VaccineOrderRequisitionLastReport.get({facilityId:parseInt($scope.homeFacilityId,10),programId:parseInt($scope.selectedProgramId,10)}, function(data) {
+
+        if(data.lastReport.length !== undefined || data.lastReport.length !== null || data.lastReport.status !==undefined || data.status !== null) {
+          var lastReport = data.lastReport;
+
+          if (lastReport.status === 'ISSUED')
+           $scope.receiveConsignment = true;
+          else
+          $scope.createOrder = true;
+      }
+
+    });
+
+    VaccinePendingRequisitions.get({facilityId:parseInt($scope.homeFacilityId,10),programId:parseInt($scope.selectedProgramId,10)},
+    function(data){
+        if(!isUndefined(data.pendingRequest) || data.pendingRequest.length > 0) {
+            $scope.messageInfo = 'You have '+ data.pendingRequest.length+' Pending Request(s)';
+            $scope.pendingRequisition = data.pendingRequest;
+        }
+    });
+
+
+
 }
 StockOnHandController.resolve = {
 

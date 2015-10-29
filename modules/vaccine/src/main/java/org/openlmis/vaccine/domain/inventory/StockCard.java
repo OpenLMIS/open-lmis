@@ -45,8 +45,16 @@ public class StockCard extends BaseModel {
 
     List<LotOnHand> lotsOnHand;
 
+    /*
+     The single overriddenisa value that used to exist has been replaced by the ability for users
+     to override all of the coeficcients which comprise an ISA. In other words, user can now specify
+     overridden whoRatio, dosesPerYear, wastageFactor, bufferPercentage, minimumValue, maximumValue,
+     and adjustmentValue numbers.
 
-    Integer overriddenisa;
+     The following endpoint may serve as a potential, alternate, way to retrieve these values:
+     http://localhost:9091/facility/{facilityId}/program/{programId}/stockRequirements.json
+     */
+    //Integer overriddenisa;
     Integer maxmonthsofstock;
     Double minmonthsofstock;
     Double eop;

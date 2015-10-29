@@ -29,4 +29,8 @@ public class VaccineInventoryConfiguration extends BaseModel {
 
     private Boolean vvmTracked;
 
+    private Boolean survivingInfants;
+
+    private Long denominatorEstimateCategoryId;
+
 }

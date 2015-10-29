@@ -9,7 +9,6 @@
  */
 
 function LoginController($scope, $http, localStorageService, messageService) {
-  var HOME_PAGE = "/public/pages/dashboard/index.html#/dashboard";
   var FORGOT_PASSWORD = "/public/pages/forgot-password.html";
 
   var validateLoginForm = function () {
@@ -52,7 +51,7 @@ function LoginController($scope, $http, localStorageService, messageService) {
       }
       
       if (window.location.href.indexOf("login.html") != -1) {
-        window.location = HOME_PAGE;
+        window.location = data.homePage;
         return;
       }
       if (!$scope.loginConfig.preventReload) {

@@ -9,11 +9,12 @@
  */
 
 
-function FacilityController($scope, facilityReferenceData, $routeParams, facility, Facility, $location, FacilityProgramProducts, priceSchedules, facilityImages, $q, $dialog, messageService, interfacesReferenceData) {
+function FacilityController($scope, facilityReferenceData, $routeParams, facility, Facility, $location, FacilityProgramProducts, FacilityProgramProductsISA, priceSchedules, facilityImages, $q, $dialog, messageService, interfacesReferenceData) {
 
   $scope.$parent.facilityId = null;
   $scope.message = "";
   $scope.$parent.message = "";
+  $scope.isaService = FacilityProgramProductsISA; //isaService is used by ISACoefficientsModalController, which is intended to be used as a descendant controller of this one.
   initialize();
 
   function initialize() {

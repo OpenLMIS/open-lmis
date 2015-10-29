@@ -3,10 +3,7 @@ package org.openlmis.web.controller.vaccine;
 
 import net.sf.jasperreports.engine.JRException;
 import net.sf.jasperreports.engine.JRParameter;
-import org.openlmis.core.domain.ConfigurationSetting;
-import org.openlmis.core.domain.Program;
-import org.openlmis.core.domain.ProgramProduct;
-import org.openlmis.core.domain.User;
+import org.openlmis.core.domain.*;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.core.service.*;
 import org.openlmis.core.web.OpenLmisResponse;
@@ -27,6 +24,7 @@ import org.springframework.core.io.Resource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PostAuthorize;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
@@ -35,7 +33,6 @@ import org.springframework.web.servlet.view.jasperreports.JasperReportsMultiForm
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.util.*;
-
 import static org.openlmis.core.web.OpenLmisResponse.error;
 import static org.openlmis.core.web.OpenLmisResponse.response;
 import static org.openlmis.core.web.OpenLmisResponse.success;
@@ -50,6 +47,7 @@ public class VaccineOrderRequisitionController extends BaseController {
     private static final String PROGRAM_PRODUCT_LIST = "programProductList";
     private static final String PRINT_ORDER_REQUISITION = "Print Order Requisition";
     private static final String PRINT_ISSUE_STOCK = "Print Issue report";
+    private static final String ORDER_REQUISITION_SEARCH = "search";
 
     @Autowired
     VaccineOrderRequisitionService service;
@@ -271,6 +269,19 @@ public class VaccineOrderRequisitionController extends BaseController {
         return new ModelAndView(jasperView, map);
     }
 
+
+    @RequestMapping(value = "search", method = GET,headers = ACCEPT_JSON)
+    @PreAuthorize("@permissionEvaluator.hasPermission(principal,'VIEW_ORDER_REQUISITION')")
+    public ResponseEntity<OpenLmisResponse> searchUser(@RequestParam(value = "facilityId", required = false) Long facilityId,
+                                                       @RequestParam(value = "dateRangeStart", required = false) String dateRangeStart,
+                                                       @RequestParam(value = "dateRangeEnd", required = false) String dateRangeEnd,
+                                                       @RequestParam(value = "programId", required = false) Long programId,
+
+     HttpServletRequest request
+    ) {
+        return response(ORDER_REQUISITION_SEARCH, service.getAllSearchBy(facilityId,dateRangeStart,dateRangeEnd,programId));
+
+    }
 
 
 }

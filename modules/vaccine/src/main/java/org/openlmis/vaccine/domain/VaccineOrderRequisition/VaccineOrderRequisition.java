@@ -51,7 +51,7 @@ public class VaccineOrderRequisition extends BaseModel {
                lineItem.setProductId(stockCard.getProduct().getId());
                lineItem.setProductName(stockCard.getProduct().getPrimaryName());
                lineItem.setMaxmonthsofstock(stockCard.getMaxmonthsofstock());
-               lineItem.setOverriddenisa(stockCard.getOverriddenisa());
+               lineItem.setOverriddenisa(-1 /*stockCard.getOverriddenisa()*/);
                lineItem.setEop(stockCard.getEop());
                lineItem.setStockOnHand(stockCard.getTotalQuantityOnHand());
                lineItem.setMinMonthsOfStock(stockCard.getMinmonthsofstock());

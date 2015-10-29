@@ -10,7 +10,9 @@
 * You should have received a copy of the GNU Affero General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
 -->
 <!DOCTYPE html>
-<!--<ng-include src="/public/lib/angular-ui/bootstrap/ui-bootstrap-tpls-0.8.0.min.js"></ng-include>-->
+<!--
+<ng-include src="/public/lib/angular-ui/bootstrap/ui-bootstrap-tpls-0.8.0.min.js"></ng-include>
+-->
 <script id="template/accordion/accordion.html" type="text/ng-template">
     <div class="accordion" ng-transclude></div>
 </script>
@@ -47,28 +49,8 @@
 
 </style>
 
-<div style="background-color: #f9f9f9; padding: 5px">
-    <!--<accordion close-others="false">-->
-    <!--<accordion-group class="green-haze" is-open="panel.Alerts">-->
-    <!--<accordion-heading>-->
-    <!--<div class="accordion-title">-->
-    <!--<div class="caption">-->
-    <!--&lt;!&ndash;<i   class="flaticon-alert red" ng-class="{'_fadeIn':alert.notify,'_fadeOut':!alert.notify}"></i> &ndash;&gt;-->
-    <!--<span class="icon-bullhorn white"></span>-->
-    <!--<span openlmis-message="title.notifications"></span>-->
-    <!--&lt;!&ndash;<span style="width:20px; height:20px; border-radius:10px;background:#FF0000" class="glyphicon glyphicon-exclamation-sign" ng-class="{'_fadeIn':alert.notify,'_fadeOut':!alert.notify}">2</span>&ndash;&gt;-->
-    <!--<span ng-show="dataRows.alert.length > 0"-->
-    <!--style="position:relative;font-size:0.8em;top:-6px;;background:#FF0000 !important; padding:4px 8px 4px 8px !important;border-radius:20px">{{dataRows.alert.length}}</span>-->
-    <!--</div>-->
-    <!--<div class="tools">-->
-    <!--<i ng-class="{'icon-minus-sign': panel.Alerts, 'icon-plus-sign': !panel.Alerts}"></i>-->
-    <!--</div>-->
-    <!--</div>-->
-    <!--</accordion-heading>-->
-    <!--<valerts ng-model="data"></valerts>-->
-    <!--</accordion-group>-->
-    <!--</accordion>-->
-    <!--<br/>-->
+<div style="background-color: #f9f9f9; padding: 5px" >
+    <ng-include src="'/public/pages/vaccine/inventory/partials/accordion-template.html'"></ng-include>
 
     <div class="row-fluid">
         <div class="span12">
@@ -172,9 +154,13 @@
 
     <div form-toolbar id="action_buttons" class="action-buttons">
         <div class="form-cell button-row">
-            <input ng-show="false" ng-click="Requisition()" id="requisitionButton"
+            <input ng-disabled='selectedType === "1"' ng-show="hasPermission('CREATE_ORDER_REQUISITION') && createOrder==true" ng-click="Requisition()" id="requisitionButton"
                    type="submit" id="requisition-button" class="btn btn-primary save-button"
                    openlmis-message="button.create.requisition"/>
+
+            <input ng-disabled='selectedType === "1"' ng-show="hasPermission('RECEIVE_STOCK') && receiveConsignment==true" ng-click="ReceiveConsignment()" id="requisitionButton2"
+           class="btn btn-primary save-button"  openlmis-message="button.receive.consignment"/>
+
             <input ng-disabled='selectedType === "1"' id="adjustButton" type="submit" id="adjust-button"
                    ng-click="Adjustment()"
                    class="btn btn-primary save-button"

@@ -7,6 +7,7 @@ import org.openlmis.vaccine.service.VaccineOrderRequisitionServices.VaccineOrder
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.util.Date;
 import java.util.List;
 
 @Component
@@ -60,6 +61,12 @@ public class VaccineOrderRequisitionRepository {
     public List<OrderRequisitionDTO>getAllBy(Long programId, Long periodId, Long facilityId){
         return orderRequisitionMapper.getAllBy(programId,periodId,facilityId);
     }
+
+    public List<OrderRequisitionDTO>getAllSearchBy(Long facilityId,String dateRangeStart,String dateRangeEnd,Long programId){
+        return orderRequisitionMapper.getSearchedDataBy(facilityId, dateRangeStart, dateRangeEnd, programId);
+    }
+
+
     public Long updateOFRStatus(Long orderId){
         return orderRequisitionMapper.updateORStatus(orderId);
     }

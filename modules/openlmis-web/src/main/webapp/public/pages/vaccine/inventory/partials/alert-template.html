@@ -12,7 +12,7 @@
 <!doctype html>
 <div>
     <table class="table-bordered table table-striped"
-           ng-show="dataRows.alert == undefined || dataRows.alert.length == 0">
+           ng-show="pendingRequisition == undefined || pendingRequisition.length == 0">
         <thead>
         <tr class="gradient-header">
             <th openlmis-message="title.alerts" style="text-align: center"></th>
@@ -25,24 +25,19 @@
         </tbody>
 
     </table>
-    <div ng-show="dataRows.alert.length > 0">
-        <table ng-show="dataRows.alert.length > 0" class="table-bordered table table-striped pull-right"
-               ng-table="alertTableParams">
-            <tbody>
-            <tr ng-repeat="alert in dataRows.alert">
-                <td data-title="Alerts">
-                    {{ alert.description}}
-                </td>
-                <td>
-                    <a ng-show="alert.type=='stock'" ng-click="Requisition()" class="btn btn-primary save-button"
-                       href="" openlmis-message="button.create.requisition"></a>
-                    <a ng-show="alert.type=='cce'" class="btn btn-primary save-button" href=""
-                       openlmis-message="button.equipment.maintenance"></a>
-                </td>
 
-            </tr>
-            </tbody>
-        </table>
+    <div ng-show="pendingRequisition.length > 0">
+        <div class="row-fluid">
+            <div class="span12" ng-show="pendingRequisition.length > 0">
+                <div class="alert alert-success" id="saveSuccessMsgDiv" ng-show="messageInfo">
+                    <span ng-bind="messageInfo"></span>.&nbsp;&nbsp;
+                    <span> <a href="/public/pages/vaccine/order-requisition/index.html#/view" ng-click="popUp(this.href)" target="newWin" openlmis-message="title.view.pending"></a> </span>
+                </div>
+
+            </div>
+
+        </div>
+
         <div class="clearfix"></div>
     </div>
 </div>

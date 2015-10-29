@@ -38,7 +38,7 @@ public class ProgramSupportedTest {
     ProgramSupported programSupported = new ProgramSupported();
 
     FacilityProgramProduct facilityProgramProduct = mock(FacilityProgramProduct.class);
-    when(facilityProgramProduct.getWhoRatio(productCode)).thenReturn(whoRatio);
+    when(facilityProgramProduct.getWhoRatio(/*productCode*/)).thenReturn(whoRatio);
 
     Product product = mock(Product.class);
     when(product.getCode()).thenReturn(productCode);
@@ -64,7 +64,7 @@ public class ProgramSupportedTest {
     String productCode = "BCG";
     ProgramSupported programSupported = new ProgramSupported();
     FacilityProgramProduct facilityProgramProduct = mock(FacilityProgramProduct.class);
-    when(facilityProgramProduct.getWhoRatio(productCode)).thenReturn(whoRatio);
+    when(facilityProgramProduct.getWhoRatio()).thenReturn(whoRatio);
     Product product = mock(Product.class);
     when(product.getCode()).thenReturn(productCode);
     when(facilityProgramProduct.getProduct()).thenReturn(product);

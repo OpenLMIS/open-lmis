@@ -21,6 +21,7 @@ public class ConfigurationSettingKey {
   public static final String ORDER_SUMMARY_SHOW_SIGNATURE_SPACE_FOR_CUSTOMER = "ORDER_SUMMARY_SHOW_SIGNATURE_SPACE_FOR_CUSTOMER";
   public static final String ORDER_REPORT_TITLE = "ORDER_REPORT_TITLE";
   public static final String ORDER_REPORT_ADDRESS = "ORDER_REPORT_ADDRESS";
+  public static final String LOGIN_SUCCESS_DEFAULT_LANDING_PAGE = "LOGIN_SUCCESS_DEFAULT_LANDING_PAGE";
 
   private ConfigurationSettingKey(){
 
