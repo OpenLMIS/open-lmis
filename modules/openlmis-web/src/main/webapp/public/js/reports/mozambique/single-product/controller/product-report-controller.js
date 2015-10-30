@@ -112,12 +112,12 @@ function ProductReportController(type) {
             $scope.filteredFacilities = [];
             if ($scope.reportParams.districtId) {
                 addToFilteredFacilities(getAllFacilityInDistrict($scope.getGeoZone($scope.reportParams.districtId)));
-            }else if ($scope.reportParams.provinceId) {
+            } else if ($scope.reportParams.provinceId) {
                 var districts = $scope.getGeoZone($scope.reportParams.provinceId).children;
-                for (var i=0;i<districts.length;i++) {
+                for (var i = 0; i < districts.length; i++) {
                     addToFilteredFacilities(getAllFacilityInDistrict(districts[i]));
                 }
-            }else{
+            } else {
                 $scope.filteredFacilities = $scope.facilities;
                 $scope.filteredProvince = $scope.provinces;
                 $scope.filteredDistrict = $scope.districts;
@@ -163,20 +163,20 @@ function ProductReportController(type) {
             var params = {};
 
             params.endTime = $filter('date')($scope.reportParams.endTime, "yyyy-MM-dd HH:mm:ss");
-            if(type == "singleProduct"){
+            if (type == "singleProduct") {
                 params.productId = $scope.reportParams.productId;
                 params.geographicZoneId = $scope.reportParams.districtId ? $scope.reportParams.districtId : $scope.reportParams.provinceId;
 
-                if(!validateProduct()){
+                if (!validateProduct()) {
                     return;
                 }
 
                 ProductReportService.loadProductReport().get(params, function (data) {
                     $scope.reportData = data.products;
                 });
-            }else{
+            } else {
                 params.facilityId = $scope.reportParams.facilityId;
-                if(!validateFacility()){
+                if (!validateFacility()) {
                     return;
                 }
                 ProductReportService.loadFacilityReport().get(params, function (data) {
@@ -185,14 +185,14 @@ function ProductReportController(type) {
             }
         };
 
-        function validateFacility(){
+        function validateFacility() {
             $scope.invalid = !$scope.reportParams.facilityId;
             return !$scope.invalid;
         }
 
-        function validateProduct(){
+        function validateProduct() {
             $scope.invalid = !$scope.reportParams.productId;
             return !$scope.invalid;
         }
-    }
+    };
 }

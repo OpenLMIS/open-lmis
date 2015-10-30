@@ -1336,7 +1336,7 @@ services.factory('ProductReportService', function ($resource) {
             return $resource('/reports/single-product-report', {}, {save: {method: 'POST'}});
         },
         loadFacilityReport: function () {
-            return $resource('/reports/all-products-report', {}, {save: {method: 'POST'}})
+            return $resource('/reports/all-products-report', {}, {save: {method: 'POST'}});
         },
         loadFacilities: function () {
             return $resource('/rest-api/lookup/facilities', {pageSize: 2000}, {});
