@@ -161,5 +161,4 @@ public class VaccineInventoryController extends BaseController {
         return response("lastReport", service.getLastStockMovement());
     }
 
-
 }

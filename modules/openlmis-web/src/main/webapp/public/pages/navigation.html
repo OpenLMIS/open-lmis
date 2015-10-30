@@ -169,8 +169,8 @@
                   <a href="/public/pages/vaccine/inventory/index.html#/receive"
                       openlmis-message="link.vaccine.receive"></a>
                 </li>
-                <li ng-show="hasPermission('DISTRIBUTE_STOCK')">
-                  <a href="/public/pages/vaccine/index.html#/distribute"
+                  <li ng-show="!hasPermission('DISTRIBUTE_STOCK')">
+                      <a href="/public/pages/vaccine/inventory/index.html#/mass-distribution"
                       openlmis-message="link.vaccine.distribute"></a>
                 </li>
 
