@@ -1321,19 +1321,25 @@ services.factory('RequisitionReportService', function($resource){
     return $resource('/reports/requisition-report.json',{},{});
 });
 
-services.factory('SingleProductReportService', function($resource){
+services.factory('ProductReportService', function ($resource) {
     return {
-        loadAllProducts : function () {
-            return $resource('/rest-api/lookup/products', {pageSize:10000}, {});
+        loadAllProducts: function () {
+            return $resource('/rest-api/lookup/products', {pageSize: 2000}, {});
         },
-        loadGeographicZone : function () {
+        loadGeographicZone: function () {
             return $resource('/rest-api/lookup/geographic-zones', {}, {});
         },
-        loadGeographicLevel : function () {
+        loadGeographicLevel: function () {
             return $resource('/rest-api/lookup/geographic-levels', {}, {});
         },
-        loadReport : function () {
-          return $resource('/reports/facility-products-report', {}, {save:{method:'POST'}});
+        loadProductReport: function () {
+            return $resource('/reports/single-product-report', {}, {save: {method: 'POST'}});
+        },
+        loadFacilityReport: function () {
+            return $resource('/reports/all-products-report', {}, {save: {method: 'POST'}})
+        },
+        loadFacilities: function () {
+            return $resource('/rest-api/lookup/facilities', {pageSize: 2000}, {});
         }
     };
 });

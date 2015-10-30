@@ -59,6 +59,12 @@ public class FacilityProductsReportDataProvider {
         return fillReportEntryList(productId, endTime, facilities);
     }
 
+    public List<FacilityProductReportEntry> getReportData(Long facilityId, final Date endTime) {
+        List<StockCard> stockCards = stockCardService.getStockCards(facilityId);
+        return from(stockCards).transform(getReportEntry(endTime)).toList();
+    }
+
+
     protected static boolean inGeographicZone(GeographicZone geographicZone, Facility facility) {
         if (DISTRICT_CODE.equalsIgnoreCase(geographicZone.getLevel().getCode())) {
             return geographicZone.getCode().equals(facility.getGeographicZone().getCode());
@@ -78,12 +84,7 @@ public class FacilityProductsReportDataProvider {
                 public boolean apply(StockCard input) {
                     return input.getProduct().getId().equals(productId);
                 }
-            }).transform(new Function<StockCard, FacilityProductReportEntry>() {
-                @Override
-                public FacilityProductReportEntry apply(StockCard input) {
-                    return new FacilityProductReportEntry(input, endTime);
-                }
-            });
+            }).transform(getReportEntry(endTime));
 
             if (entryOptional.isPresent()) {
                 FacilityProductReportEntry entry = entryOptional.get();
@@ -94,8 +95,17 @@ public class FacilityProductsReportDataProvider {
         return reportEntryList;
     }
 
+    private Function<StockCard, FacilityProductReportEntry> getReportEntry(final Date endTime) {
+        return new Function<StockCard, FacilityProductReportEntry>() {
+            @Override
+            public FacilityProductReportEntry apply(StockCard input) {
+                return new FacilityProductReportEntry(input, endTime);
+            }
+        };
+    }
+
     @Transactional
-    protected List<Facility> getAllHealthFacilities(){
+    protected List<Facility> getAllHealthFacilities() {
         FacilityType type = facilityService.getFacilityTypeByCode(new FacilityType(HEALTH_FACILITY));
         return facilityMapper.getFacilitiesListForAFacilityType(type.getId());
     }

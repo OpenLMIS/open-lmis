@@ -8,8 +8,13 @@ angular.module('requisition-report', ['openlmis', 'angularCombine', 'ngTable'])
                     reloadOnSearch: false
                 }).
                 when('/single-product', {
-                    controller: SingleProductReportController,
+                    controller: ProductReportController("singleProduct"),
                     templateUrl: 'single-product/partials/list.html',
+                    reloadOnSearch: false
+                }).
+                when('/all-products', {
+                    controller: ProductReportController("singleFacility"),
+                    templateUrl: 'all-products/partials/list.html',
                     reloadOnSearch: false
                 }).
                 otherwise({redirectTo: '/'});
