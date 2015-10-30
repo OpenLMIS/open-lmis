@@ -59,6 +59,8 @@ public class Report {
   private String clientSubmittedTime;
   private String clientSubmittedNotes;
 
+  private Date periodStartDate;
+
   public void validate() {
     if (isEmpty(agentCode) || isEmpty(programCode)) {
       throw new DataException("error.mandatory.fields.missing");
@@ -122,6 +124,7 @@ public class Report {
     }
 
     report.setClientSubmittedNotes(rnr.getClientSubmittedNotes());
+    report.setPeriodStartDate(rnr.getPeriod().getStartDate());
 
     return report;
   }

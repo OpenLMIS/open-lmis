@@ -15,9 +15,11 @@ import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.junit.rules.ExpectedException;
 import org.openlmis.core.builder.FacilityBuilder;
+import org.openlmis.core.builder.ProcessingPeriodBuilder;
 import org.openlmis.core.builder.ProductBuilder;
 import org.openlmis.core.builder.ProgramBuilder;
 import org.openlmis.core.domain.Facility;
+import org.openlmis.core.domain.ProcessingPeriod;
 import org.openlmis.core.domain.Program;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.core.utils.DateUtil;
@@ -201,6 +203,7 @@ public class ReportTest {
     List<PatientQuantificationLineItem> patientQuantificationLineItems = asList(make(a(PatientQuantificationsBuilder.defaultPatientQuantificationLineItem)),
         make(a(PatientQuantificationsBuilder.defaultPatientQuantificationLineItem)));
     rnr.setPatientQuantifications(patientQuantificationLineItems);
+    rnr.setPeriod(new ProcessingPeriod());
 
     Report report = Report.prepareForREST(rnr);
 
@@ -221,9 +224,24 @@ public class ReportTest {
     rnr.setFacility(make(a(FacilityBuilder.defaultFacility)));
     rnr.setProgram(make(a(ProgramBuilder.defaultProgram)));
     rnr.setClientSubmittedTime(date);
+    rnr.setPeriod(new ProcessingPeriod());
 
     Report report = Report.prepareForREST(rnr);
     assertThat(report.getClientSubmittedTime().getTime(), is(date.getTime()));
+  }
+
+  @Test
+  public void shouldRetrievePeriodStartDateForARequisitionIfExists() {
+    Rnr rnr = new Rnr();
+    Date date = DateUtil.parseDate("2011-11-11 11:11:11");
+    rnr.setFacility(make(a(FacilityBuilder.defaultFacility)));
+    rnr.setProgram(make(a(ProgramBuilder.defaultProgram)));
+    rnr.setClientSubmittedTime(date);
+    ProcessingPeriod period = make(a(ProcessingPeriodBuilder.defaultProcessingPeriod));
+    rnr.setPeriod(period);
+
+    Report report = Report.prepareForREST(rnr);
+    assertThat(report.getPeriodStartDate(), is(period.getStartDate()));
   }
 }
 
