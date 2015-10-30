@@ -74,8 +74,8 @@
             <tr ng-repeat="entry in reportData">
                 <td>{{entry.facilityName}}</td>
                 <td>{{entry.productQuantity}}</td>
-                <td>{{entry.soonestExpiryDate}}</td>
-                <td>{{entry.lastSyncDate}}</td>
+                <td>{{entry.soonestExpiryDate | date:'MMMM y'}}</td>
+                <td>{{entry.lastSyncDate | date:'h:mm a d MMMM y'}}</td>
             </tr>
         </table>
     </div>

@@ -8,8 +8,11 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.openlmis.core.domain.Facility;
+import org.openlmis.core.domain.GeographicLevel;
+import org.openlmis.core.domain.GeographicZone;
 import org.openlmis.core.domain.Product;
 import org.openlmis.core.service.FacilityService;
+import org.openlmis.core.service.GeographicZoneService;
 import org.openlmis.db.categories.UnitTests;
 import org.openlmis.report.model.dto.FacilityProductReportEntry;
 import org.openlmis.stockmanagement.domain.StockCard;
@@ -23,7 +26,6 @@ import java.util.List;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.core.Is.is;
-import static org.mockito.Matchers.anyLong;
 import static org.mockito.Mockito.when;
 
 @Category(UnitTests.class)
@@ -35,6 +37,9 @@ public class FacilityProductsReportProviderTest {
 
     @Mock
     StockCardService stockCardService;
+
+    @Mock
+    GeographicZoneService geographicZoneService;
 
     @InjectMocks
     FacilityProductsReportDataProvider facilityProductsReportDataProvider;
@@ -68,13 +73,29 @@ public class FacilityProductsReportProviderTest {
         stockCards.add(stockCard);
 
         when(stockCardService.getStockCards(1L)).thenReturn(stockCards);
-
-        when(facilityService.getAllForGeographicZone(anyLong())).thenReturn(facilities);
-
-        List<FacilityProductReportEntry> entryList = facilityProductsReportDataProvider.getReportData(1L, 1L, null);
+        List<FacilityProductReportEntry> entryList = facilityProductsReportDataProvider.fillReportEntryList(1L, null, facilities);
 
         assertThat(entryList.size(), is(1));
         assertThat(entryList.get(0).getProductQuantity(), is(100L));
         assertThat(entryList.get(0).getProductName(), containsString("Product Test Name"));
+    }
+
+    @Test
+    public void shouldReturnTrueIfFacilityInGeographicZone() {
+        GeographicZone district = new GeographicZone();
+        district.setCode("District");
+        district.setLevel(new GeographicLevel(1L, FacilityProductsReportDataProvider.DISTRICT_CODE, "District", 5));
+
+        GeographicZone province = new GeographicZone();
+        province.setCode("Maputo");
+        province.setLevel(new GeographicLevel(2L, FacilityProductsReportDataProvider.PROVINCE_CODE, "Province", 6));
+
+        district.setParent(province);
+
+        Facility facility = new Facility();
+        facility.setGeographicZone(district);
+
+        assertThat(FacilityProductsReportDataProvider.inGeographicZone(district, facility), is(true));
+        assertThat(FacilityProductsReportDataProvider.inGeographicZone(province, facility), is(true));
     }
 }

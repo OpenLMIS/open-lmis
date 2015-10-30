@@ -19,41 +19,53 @@ function SingleProductReportController($scope, $filter, SingleProductReportServi
     };
 
     $scope.loadGeographicZone = function () {
+        loadGeographicLevel();
+        fillGeoZoneList();
+    };
+
+    function loadGeographicLevel() {
         SingleProductReportService.loadGeographicLevel().get({}, function (data) {
+
             $scope.geographicZoneLevel = data["geographic-levels"];
-
-            SingleProductReportService.loadGeographicZone().get({}, function (data) {
-
-                if (!$scope.geographicZoneLevel) {
-                    return;
-                }
-
-                var provinceLevel = $scope.geographicZoneLevel.find(function (level) {
-                    return level.code === "province";
-                });
-
-                var districtLevel = $scope.geographicZoneLevel.find(function (level) {
-                    return level.code === "district";
-                });
-
-
-                for (var i = 0; i < data["geographic-zones"].length; i++) {
-                    var geoZone = data["geographic-zones"][i];
-                    if (geoZone.levelId == provinceLevel.id) {
-                        $scope.provinces.push(geoZone);
-                    } else if (geoZone.levelId == districtLevel.id) {
-                        $scope.districts.push(geoZone);
-                    }
-                }
-
-                Array.prototype.push.apply($scope.fullGeoZoneList, $scope.provinces);
-                Array.prototype.push.apply($scope.fullGeoZoneList, $scope.districts);
-            }, function () {
-            });
 
         }, function () {
         });
-    };
+    }
+
+    function fillGeoZoneList() {
+        SingleProductReportService.loadGeographicZone().get({}, function (data) {
+
+            if (!$scope.geographicZoneLevel) {
+                return;
+            }
+
+            var provinceLevel = $scope.geographicZoneLevel.find(function (level) {
+                return level.code === "province";
+            });
+
+            var districtLevel = $scope.geographicZoneLevel.find(function (level) {
+                return level.code === "district";
+            });
+
+
+            getProvincesAndDistricts(data, provinceLevel, districtLevel);
+
+            Array.prototype.push.apply($scope.fullGeoZoneList, $scope.provinces);
+            Array.prototype.push.apply($scope.fullGeoZoneList, $scope.districts);
+        }, function () {
+        });
+    }
+
+    function getProvincesAndDistricts(data, provinceLevel, districtLevel) {
+        for (var i = 0; i < data["geographic-zones"].length; i++) {
+            var geoZone = data["geographic-zones"][i];
+            if (geoZone.levelId == provinceLevel.id) {
+                $scope.provinces.push(geoZone);
+            } else if (geoZone.levelId == districtLevel.id) {
+                $scope.districts.push(geoZone);
+            }
+        }
+    }
 
     $scope.filterDistrict = function () {
         if (!$scope.reportParam || !$scope.reportParam.provinceId) {
@@ -87,7 +99,7 @@ function SingleProductReportController($scope, $filter, SingleProductReportServi
     };
 
     $scope.getParent = function (geoZoneId) {
-        if(!geoZoneId){
+        if (!geoZoneId) {
             return;
         }
         var parent = $scope.fullGeoZoneList.find(function (zone, index, array) {
@@ -97,7 +109,7 @@ function SingleProductReportController($scope, $filter, SingleProductReportServi
     };
 
     $scope.getGeoZone = function (id) {
-        if(!id){
+        if (!id) {
             return;
         }
         var geoZone = $scope.fullGeoZoneList.find(function (zone, index, array) {
@@ -108,11 +120,11 @@ function SingleProductReportController($scope, $filter, SingleProductReportServi
 
     $scope.loadReport = function () {
         var params = {};
-        params['geographicZoneId'] = $scope.reportParam.districtId? $scope.reportParam.districtId : $scope.reportParam.provinceId;
-        params['productId'] = $scope.reportParam.productId;
-        params['endTime'] = $filter('date')($scope.reportParam.endTime,"yyyy-MM-dd HH:mm:ss");
+        params.geographicZoneId = $scope.reportParam.districtId ? $scope.reportParam.districtId : $scope.reportParam.provinceId;
+        params.productId = $scope.reportParam.productId;
+        params.endTime = $filter('date')($scope.reportParam.endTime, "yyyy-MM-dd HH:mm:ss");
         SingleProductReportService.loadReport().get(params, function (data) {
             $scope.reportData = data.products;
-        })
+        });
     };
 }
