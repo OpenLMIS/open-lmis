@@ -12,8 +12,6 @@ package org.openlmis.web.controller;
 
 import com.wordnik.swagger.annotations.Api;
 import com.wordnik.swagger.annotations.ApiOperation;
-import org.json.JSONException;
-import org.json.JSONObject;
 import org.openlmis.core.domain.FacilityProgramProduct;
 import org.openlmis.core.domain.ISA;
 import org.openlmis.core.domain.ProgramProductISA;
