@@ -60,7 +60,7 @@ public interface ProcessingPeriodReportMapper {
             "psn.name as name\n" +
             "from requisitions r\n" +
             "inner join processing_periods pp on r.periodid = pp.id\n" +
-            "left outer join period_short_names psn on psn.id = pp.id\n" +
+            "left outer join period_short_names psn on psn.periodid = pp.id\n" +
             "where pp.startdate < NOW()\n" +
             "and r.programid =  #{programId}\n" +
             "order by pp.startdate desc\n" +

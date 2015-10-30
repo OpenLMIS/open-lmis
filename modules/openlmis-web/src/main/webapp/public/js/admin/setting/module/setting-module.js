@@ -17,9 +17,10 @@ angular.module('setting', ['openlmis', 'textAngular', 'ui.bootstrap', 'ui.bootst
     taOptions.toolbar = [
       ['h1', 'h2', 'h3'],
       ['bold', 'italics', 'underline'],['ul', 'ol',  'clear'],
-      ['html', 'insertImage', 'insertLink',],
+      ['html', 'insertImage', 'insertLink'],
       ['justifyLeft', 'justifyCenter', 'justifyRight']
     ];
+
     taOptions.classes = {
       focussed: 'focussed',
       toolbar: 'btn-toolbar',
@@ -63,11 +64,11 @@ app.directive('setting', function ($compile, $http, $templateCache) {
     return templateLoader;
   };
 
-  var linker = function (scope, element, attrs) {
+  var linker = function (scope, element) {
     var loader = getTemplate(scope.content.valueType);
     var promise = loader.success(function (html) {
       element.html(html);
-    }).then(function (response) {
+    }).then(function () {
       element.replaceWith($compile(element.html())(scope));
     });
   };

@@ -73,7 +73,4 @@ public class Order extends BaseModel implements Comparable {
     return this.getCreatedDate().compareTo(order2.getCreatedDate());
   }
 
-  public String getConcatinatedOrderId(){
-    return this.rnr.getProgram().getCode() + String.format("%06d", this.getId()) + ((this.rnr.isEmergency())?"E":"R");
-  }
 }

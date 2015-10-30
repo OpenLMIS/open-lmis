@@ -95,28 +95,6 @@ public interface GeographicZoneReportMapper {
 
 
 
-    /*@Select("select f.id, f.name, f.mainPhone, f.longitude, f.latitude, false reported , " +
-            " (select count(*) > 0 from users where users.active = true and users.facilityId = f.id) as hasContacts, " +
-            "             ( SELECT count(*) >0  " +
-            "              FROM role_assignments " +
-            "              JOIN supervisory_nodes on supervisory_nodes.id = role_assignments.supervisorynodeid " +
-            "              JOIN users on users.id = role_assignments.userid AND users.active = true " +
-            "              WHERE supervisory_nodes.facilityid = f.id " +
-            "             ) as hasSupervisors " +
-            "             from facilities f" +
-            " JOIN requisition_group_members rgm on rgm.facilityid = f.id" +
-            " JOIN vw_districts gz on gz.district_id = f.geographiczoneid" +
-            " JOIN facility_types ft on ft.id = f.typeid" +
-            " JOIN programs_supported ps on ps.facilityid = f.id" +
-            " JOIN requisition_group_program_schedules rgps on rgps.requisitiongroupid = rgm.requisitiongroupid " +
-            " and ps.programid = rgps.programid" +
-            " WHERE f.id in (select facility_id from vw_user_facilities where user_id =  #{userId} and" +
-            " program_id = #{programId}) AND f.id not in" +
-            " (select r.facilityid from requisitions r where r.status not in ('INITIATED', 'SUBMITTED', 'SKIPPED')" +
-            "  and r.periodid = #{periodId} and r.programid = #{programId} ) " +
-            " AND ps.programId = #{programId} " +
-            "  and f.geographicZoneId = #{geographicZoneId}" +
-            " ORDER BY gz.district_name,name")*/
     @Select("select   f.id, f.name, f.mainPhone, f.longitude, f.latitude,false reported ,\n" +
             "   (select count(*) > 0 from users where users.active = true and users.facilityId = f.id) as hasContacts,  \n" +
             "                         ( SELECT count(*) >0   \n" +
@@ -169,11 +147,6 @@ public interface GeographicZoneReportMapper {
 
     @Select("select * from geographic_zones where parentId is null")
     GeoZoneTree getParentZoneTree();
-
-    // NO MORE USED
-    // This does not pay attention to user's permission and program permission.
-    @Select("select * from geographic_zones where id = #{zoneId}")
-    GeoZoneTree getGeographicZoneById(int zoneId);
 
     @Select("select * from geographic_zones where parentId = #{parentId} order by name")
     List<GeoZoneTree> getChildrenZoneTree(int parentId);

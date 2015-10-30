@@ -52,7 +52,7 @@ function CustomReportDesignerController($scope, reports, SaveCustomReport, Custo
     $scope.current.columnoptions = $scope.column.getValue();
 
     var save = SaveCustomReport.save($scope.current);
-    save.$promise.then(function(data){
+    save.$promise.then(function(){
       $scope.message =  $scope.current.name + ' saved successfully!';
       $scope.current = undefined;
       $scope.r = CustomReportFullList.get();

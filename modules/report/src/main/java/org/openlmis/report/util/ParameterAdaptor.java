@@ -19,29 +19,39 @@ import java.util.Map;
 
 public class ParameterAdaptor {
 
-  public static <T> T parse( Map<String, String[]> params ,Class<T> type) {
+  private ParameterAdaptor(){
+
+  }
+
+  public static <T> T parse( Map<String, String[]> params ,Class<T> ParamObjectType) {
 
     try {
-      T result = type.newInstance();
+      T result = ParamObjectType.newInstance();
 
-      for (Field f : type.getDeclaredFields()) {
+      for (Field f : ParamObjectType.getDeclaredFields()) {
+
+        Class<?> fieldType = f.getType();
         f.setAccessible(true);
         String value = StringHelper.getValue(params, f.getName());
-        if (value != null) {
-          if (f.getType() == String.class) {
-            f.set(result, value);
-          } else if (f.getType() == Long.class) {
-            f.set(result, Long.parseLong(value));
-          } else if (f.getType() == Integer.class) {
-            f.set(result, Integer.parseInt(value));
-          } else if(f.getType() == Boolean.class){
-            f.set(result, Boolean.parseBoolean(value));
-          }
-        }else{
-          if(f.getType() == Long.class){
+        if (value == null) {
+          if(fieldType == Long.class){
             f.set(result, 0L);
-          }else if(f.getType() == Integer.class){
+          }else if(fieldType == Integer.class){
             f.set(result, 0);
+          }else if(fieldType == Boolean.class){
+            f.set(result, false);
+          }
+        } else {
+
+          if (fieldType == String.class) {
+            f.set(result, value);
+          }
+          else if (fieldType == Long.class) {
+            f.set(result, Long.parseLong(value));
+          } else if (fieldType == Integer.class) {
+            f.set(result, Integer.parseInt(value));
+          } else if(fieldType == Boolean.class){
+            f.set(result, Boolean.parseBoolean(value));
           }
         }
       }

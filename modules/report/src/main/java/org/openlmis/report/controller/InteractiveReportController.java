@@ -86,25 +86,7 @@ public class InteractiveReportController extends BaseController {
                 (List<ConsumptionReport>) report.getReportDataProvider().getMainReportData(request.getParameterMap(), request.getParameterMap(), page, max);
         return new Pages(page, max, consumptionReportList);
     }
-
-    @RequestMapping(value = "/reportdata/averageConsumption", method = GET, headers = BaseController.ACCEPT_JSON)
-    @PreAuthorize("@permissionEvaluator.hasPermission(principal,'VIEW_AVERAGE_CONSUMPTION_REPORT')")
-    public Pages getAverageConsumptionData(
-            @RequestParam(value = "page", required = false, defaultValue = "1") int page,
-            @RequestParam(value = "max", required = false, defaultValue = "10") int max,
-            HttpServletRequest request
-
-    ) {
-
-        Report report = reportManager.getReportByKey("average_consumption");
-        report.getReportDataProvider().setUserId(loggedInUserId(request));
-        List<AverageConsumptionReport> averageConsumptionReportList =
-                (List<AverageConsumptionReport>) report.getReportDataProvider().getMainReportData(request.getParameterMap(), request.getParameterMap(), page, max);
-
-        return new Pages(page, max, averageConsumptionReportList);
-    }
-
-
+    
     @RequestMapping(value = "/reportdata/summary", method = GET, headers = BaseController.ACCEPT_JSON)
     @PreAuthorize("@permissionEvaluator.hasPermission(principal,'VIEW_SUMMARY_REPORT')")
     public Pages getSummaryData(

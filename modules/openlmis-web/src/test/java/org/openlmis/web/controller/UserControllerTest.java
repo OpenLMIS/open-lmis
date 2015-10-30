@@ -22,6 +22,7 @@ import org.openlmis.core.domain.Pagination;
 import org.openlmis.core.domain.Right;
 import org.openlmis.core.domain.User;
 import org.openlmis.core.exception.DataException;
+import org.openlmis.core.service.ConfigurationSettingService;
 import org.openlmis.core.service.MessageService;
 import org.openlmis.core.service.RoleRightsService;
 import org.openlmis.core.service.UserService;
@@ -78,6 +79,9 @@ public class UserControllerTest {
 
   @Mock
   private SessionRegistry sessionRegistry;
+
+  @Mock
+  private ConfigurationSettingService settingService;
 
   @InjectMocks
   private UserController userController;

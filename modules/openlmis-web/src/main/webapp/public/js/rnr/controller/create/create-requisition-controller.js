@@ -53,7 +53,7 @@ function CreateRequisitionController($scope, requisitionData, comments , pageSiz
     var callBack = function (result) {
       if (result) {
         // delete the rnr here
-        SkipRequisition.post({id: $scope.rnr.id}, function(data){
+        SkipRequisition.post({id: $scope.rnr.id}, function(){
           OpenLmisDialog.newDialog({
             id: "confirmDialog",
             header: "label.confirm.action",
