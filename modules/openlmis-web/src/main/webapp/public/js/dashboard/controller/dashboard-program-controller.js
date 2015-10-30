@@ -26,7 +26,7 @@ function DashboardProgramController($scope,$routeParams,$timeout,$filter,message
                 pause: function(){this.interval = -1; this.isPlaying = false; }};
         };
 
-        $scope.carousels = [carousel('consumption'), carousel('stocks'), carousel('losses')];
+        $scope.carousels = [carousel('trend'), carousel('district'), carousel('facility')];
     });
 
 
@@ -153,7 +153,7 @@ function DashboardProgramController($scope,$routeParams,$timeout,$filter,message
                     var groupByStock = _.groupBy(product, function(prd){return prd.indicator;});
                     $scope.districtStockStatus[product[0].productcode] = groupByStock;
                 });
-
+                //alert(JSON.stringify($scope.districtStockStatus));
                 getFacilityStockSummary();
             });
         }
@@ -216,8 +216,11 @@ function DashboardProgramController($scope,$routeParams,$timeout,$filter,message
 
                     angular.forEach( $scope.tracerProducts , function(productTrend){
                         count = count + 1;
-                        $scope.sohValue = _.pluck(productTrend,'quantity_dispensed');
+                        $scope.beginningBalanceValue = _.pluck(productTrend,'beginning_balance');
+                        $scope.quantityReceivedValue = _.pluck(productTrend,'quantity_received');
+                        $scope.quantityDispensedValue = _.pluck(productTrend,'quantity_dispensed');
                         $scope.amcValues = _.pluck(productTrend, 'amc');
+                        $scope.sohValue = _.pluck(productTrend,'stock_in_hand_facility');
                         $scope.overStockedValues = _.pluck(productTrend, 'number_of_facilities_overstocked');
                         $scope.adequetlyStockedValues = _.pluck(productTrend, 'number_of_facilities_adquatelystocked');
                         $scope.understockedValues = _.pluck(productTrend, 'number_of_facilities_understocked');
@@ -232,8 +235,11 @@ function DashboardProgramController($scope,$routeParams,$timeout,$filter,message
 
                         $scope.productsTrend.push({'name':productTrend[0].name,'code': productCode,
                             "sohTrend": $scope.sohValue,
-                            'consumption':$scope.sohValue.toString(),
+                            'beginningBalance':$scope.beginningBalanceValue.toString(),
+                            'received':$scope.quantityReceivedValue.toString(),
+                            'consumption':$scope.quantityDispensedValue.toString(),
                             'amc': $scope.amcValues.toString(),
+                            'soh': $scope.sohValue.toString(),
                             'overStocked': $scope.overStockedValues.toString(),
                             'adequetlyStocked' : $scope.adequetlyStockedValues.toString(),
                             'understocked': $scope.understockedValues.toString(),
@@ -263,10 +269,11 @@ function DashboardProgramController($scope,$routeParams,$timeout,$filter,message
                             'topFacilityOnhand':  getFacilityStatusByCodeAndIndicator(productCode, 'ONHAND'),
                             'topFacilityLost':  getFacilityStatusByCodeAndIndicator(productCode, 'LOST'),
                             'topFacilityFillrate': getFacilityStatusByCodeAndIndicator(productCode, 'FILLRATE'),
-                            color: $scope.colorify(),
+                             color: $scope.colorify(),
                             'facilityStockedOut': total_facility_stocked_out,
                             'productTrend': productTrend,
                             'consumptionChart': {openPanel:true},
+                            'utilizationChart': {openPanel:true},
                             'stockingEfficiencyChart': {openPanel:true},
                             'lossesAndAdjustmentChart': {openPanel:true},
                             'selected': count <= defaultProducts? true: false
