@@ -77,6 +77,9 @@ function FacilityIsaModalController($scope, $rootScope, FacilityProgramProducts,
 
   $rootScope.$on('updateISA', function(event, data)
   {
+    if(!$scope.filteredProducts)
+      return;
+
     $scope.filteredProducts[data.index].overriddenIsa = data.isa;
     //calculateAndSetProgramProductIsa( $scope.filteredProducts[data.index] );
     calculateAndSetFacilityIsa( $scope.filteredProducts[data.index] );
