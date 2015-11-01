@@ -70,54 +70,28 @@ function FacilityController($scope, facilityReferenceData, $routeParams, facilit
     $location.path('#/search');
   };
 
-  function saveAllocationProgramProducts() {
-    var promises = [];
-
-    var keys = _.keys($scope.facilityProgramProductsList);
-
-    $(keys).each(function (index, key) {
-      var deferred = $q.defer();
-      promises.push(deferred.promise);
-
-      var program = $scope.facilityProgramProductsList[key][0].program;
-
-      FacilityProgramProducts.update({facilityId: $scope.facility.id, programId: program.id}, $scope.facilityProgramProductsList[key], function (data) {
-        deferred.resolve();
-      }, function () {
-        deferred.reject({error: "error.facility.allocation.product.save", program: program.name});
-      });
-    });
-
-    return promises;
-  }
-
-  $scope.saveFacility = function () {
-    if ($scope.facilityForm.$error.pattern || $scope.facilityForm.$error.required) {
+  $scope.saveFacility = function()
+  {
+    if ($scope.facilityForm.$error.pattern || $scope.facilityForm.$error.required)
+    {
       $scope.showError = "true";
       $scope.error = 'form.error';
       $scope.message = "";
       return;
     }
 
-    var facilitySaveCallback = function (data) {
-      $scope.facility = data.facility;
-      var promises = saveAllocationProgramProducts();
 
-      $q.all(promises).then(function () {
-        $scope.showError = "true";
-        $scope.error = "";
-        $scope.errorProgram = "";
-        $scope.$parent.message = data.success;
-        $scope.facility = getFacilityWithDateObjects(data.facility);
-        $scope.$parent.facilityId = $scope.facility.id;
-        $location.path('');
-      }, function (error) {
-        $scope.showError = "true";
-        $scope.message = "";
-        $scope.error = error.error;
-        $scope.errorProgram = error.program;
-      });
+    var facilitySaveCallback = function(data)
+    {
+      $scope.showError = "true";
+      $scope.error = "";
+      $scope.errorProgram = "";
+      $scope.$parent.message = data.success;
+      $scope.facility = getFacilityWithDateObjects(data.facility);
+      $scope.$parent.facilityId = $scope.facility.id;
+      $location.path('');
     };
+
 
     if (!$scope.isEdit) {
       Facility.save({}, $scope.facility, facilitySaveCallback, errorFunc);
