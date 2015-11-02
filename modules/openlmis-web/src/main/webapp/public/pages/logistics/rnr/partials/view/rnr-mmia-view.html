@@ -70,7 +70,7 @@
             <td>{{item.quantityDispensed}}</td>
             <td>{{item.totalLossesAndAdjustments}}</td>
             <td>{{item.stockInHand}}</td>
-            <td><span ng-show="item.stockOutDays != 0">{{item.stockOutDays}}</span></td>
+            <td><span ng-show="item.expirationDate">{{item.expirationDate | date : 'MMM yyyy'}}</span></td>
         </tr>
         <tr>
             <td class="banner-text bg-color-black">13</td>
@@ -107,7 +107,7 @@
             <td>{{item.quantityDispensed}}</td>
             <td>{{item.totalLossesAndAdjustments}}</td>
             <td>{{item.stockInHand}}</td>
-            <td><span ng-show="item.stockOutDays != 0">{{item.stockOutDays}}</span></td>
+            <td><span ng-show="item.expirationDate">{{item.expirationDate | date : 'MMM yyyy'}}</span></td>
         </tr>
         <tr>
             <td class="banner-text bg-color-">25</td>
@@ -131,7 +131,7 @@
             <td>{{item.quantityDispensed}}</td>
             <td>{{item.totalLossesAndAdjustments}}</td>
             <td>{{item.stockInHand}}</td>
-            <td><span ng-show="item.stockOutDays != 0">{{item.stockOutDays}}</span></td>
+            <td><span ng-show="item.expirationDate">{{item.expirationDate | date : 'MMM yyyy'}}</span></td>
         </tr>
 
         <tr>

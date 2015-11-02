@@ -39,17 +39,31 @@ console.log($scope.rnr);
 
     $scope.initProduct = function () {
         var i = 0;
+        var item;
 
         for (i = 0; i < 12; i++) {
-            $scope.adult.push($scope.rnr.nonSkippedLineItems[i]);
+            item = $scope.rnr.nonSkippedLineItems[i];
+            $scope.adult.push(item);
+            $scope.formatExpirationDate(item);
         }
 
         for (i = 12; i < 22; i++) {
-            $scope.children.push($scope.rnr.nonSkippedLineItems[i]);
+            item = $scope.rnr.nonSkippedLineItems[i];
+            $scope.children.push(item);
+            $scope.formatExpirationDate(item);
         }
 
         for (i = 22; i < 24; i++) {
-            $scope.other.push($scope.rnr.nonSkippedLineItems[i]);
+            item = $scope.rnr.nonSkippedLineItems[i];
+            $scope.other.push(item);
+            $scope.formatExpirationDate(item);
+        }
+    };
+
+    $scope.formatExpirationDate = function(item) {
+        if (item.expirationDate) {
+            var splitedDate = item.expirationDate.split('/');
+            item.expirationDate = splitedDate[2] + "-" + splitedDate[1] + "-" + splitedDate[0];
         }
     };
 
