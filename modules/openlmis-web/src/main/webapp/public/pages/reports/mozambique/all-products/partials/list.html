@@ -8,9 +8,9 @@
             <label class="labels" openlmis-message="label.province"></label>
 
             <div class="form-fields">
-                <select ui-select2 style="width:160px;" class="large-input" ng-change="filterDistrict();filterFacility();" name="provinces" ng-model="reportParams.provinceId">
+                <select ui-select2 style="width:160px;" id="selectorProvince" class="large-input" ng-change="filterDistrict();filterFacility();" name="provinces" ng-model="reportParams.provinceId">
+                    <option ng-repeat="option in filteredProvince" value="{{option.id}}" >{{option.name}}</option>
                     <option value="">ALL</option>
-                    <option ng-repeat="option in filteredProvince" value="{{option.id}}" ng-selected="option.id == getParent(reportParams.districtId).id">{{option.name}}</option>
                 </select>
             </div>
         </div>
@@ -21,8 +21,8 @@
 
             <div class="form-fields">
                 <select ui-select2 style="width:160px;" class="large-input" ng-change="fillProvince();filterFacility()" name="districts" ng-model="reportParams.districtId">
-                    <option value="">ALL</option>
                     <option ng-repeat="option in filteredDistrict" value="{{option.id}}">{{option.name}}</option>
+                    <option value="">ALL</option>
                 </select>
             </div>
         </div>

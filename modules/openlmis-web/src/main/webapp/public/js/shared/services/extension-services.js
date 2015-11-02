@@ -1338,20 +1338,30 @@ services.factory('ProductReportService', function ($resource) {
         loadAllProducts: function () {
             return $resource('/rest-api/lookup/products', {pageSize: 2000}, {});
         },
-        loadGeographicZone: function () {
-            return $resource('/rest-api/lookup/geographic-zones', {}, {});
-        },
-        loadGeographicLevel: function () {
-            return $resource('/rest-api/lookup/geographic-levels', {}, {});
-        },
         loadProductReport: function () {
             return $resource('/reports/single-product-report', {}, {save: {method: 'POST'}});
         },
         loadFacilityReport: function () {
             return $resource('/reports/all-products-report', {}, {save: {method: 'POST'}});
-        },
-        loadFacilities: function () {
-            return $resource('/rest-api/lookup/facilities', {pageSize: 2000}, {});
         }
     };
+});
+
+services.factory('FacilityService',function($resource){
+    return {
+        allFacilities: function () {
+            return $resource('/rest-api/lookup/facilities', {pageSize: 2000}, {});
+        }
+    }
+});
+
+services.factory('GeographicZoneService',function($resource){
+    return {
+        loadGeographicZone: function () {
+            return $resource('/rest-api/lookup/geographic-zones', {}, {});
+        },
+        loadGeographicLevel: function () {
+            return $resource('/rest-api/lookup/geographic-levels', {}, {});
+        }
+    }
 });

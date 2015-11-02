@@ -21,7 +21,7 @@
             <div class="form-fields">
                 <select ui-select2 style="width:160px;" class="large-input" ng-change="filterDistrict()" name="provinces" ng-model="reportParams.provinceId">
                     <option value="">ALL</option>
-                    <option ng-repeat="option in filteredProvince" value="{{option.id}}" ng-selected="option.id == getParent(reportParams.districtId).id">{{option.name}}</option>
+                    <option ng-repeat="option in filteredProvince" value="{{option.id}}">{{option.name}}</option>
                 </select>
             </div>
         </div>
