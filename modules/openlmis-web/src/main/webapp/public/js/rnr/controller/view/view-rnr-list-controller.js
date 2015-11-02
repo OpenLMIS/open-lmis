@@ -95,22 +95,21 @@ function ViewRnrListController($scope, facilities, RequisitionsForViewing, Progr
         if ($scope.selectedProgramId) data.programId = $scope.selectedProgramId;
         navigateBackService.setData(data);
 
-        var url = "requisition/";
-        FeatureToggleService.getToggleValue("new.rnr.view").then(function (result) {
-            if (result) {
-                if ($scope.selectedItems[0].programCode === "ESS_MEDS") {
-                    url = "view-requisition-via/";
-                }
-                if ($scope.selectedItems[0].programCode === "MMIA") {
-                    url = "view-requisition-mmia/";
-                }
-            }
-            //url += $scope.selectedItems[0].id + "/" + $scope.selectedItems[0].programId + "?supplyType=fullSupply&page=1";
-            //$location.url(url);
-        });
-        url += $scope.selectedItems[0].id + "/" + $scope.selectedItems[0].programId + "?supplyType=fullSupply&page=1";
-        $location.url(url);
+        redirectBasedOnFeatureToggle();
     };
+
+    function redirectBasedOnFeatureToggle() {
+        var url = "requisition/";
+        var urlMapping = {"ESS_MEDS": "view-requisition-via/", "MMIA": "view-requisition-mmia/"};
+        var viewToggleKey = {key: "new.rnr.view"};
+        FeatureToggleService.get(viewToggleKey, function (result) {
+            if (result.key) {
+                url = urlMapping[$scope.selectedItems[0].programCode];
+            }
+            url += $scope.selectedItems[0].id + "/" + $scope.selectedItems[0].programId + "?supplyType=fullSupply&page=1";
+            $location.url(url);
+        });
+    }
 
     function setProgramsLabel() {
         $scope.selectedProgramId = undefined;

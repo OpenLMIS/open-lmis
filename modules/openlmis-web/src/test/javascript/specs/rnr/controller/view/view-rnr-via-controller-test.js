@@ -24,9 +24,6 @@ describe('ViewRnrViaDetailController', function () {
     $controller(ViewRnrViaDetailController, {$scope: scope, $route: route, $location:$location});
   }));
 
-  //spyOn(requisitionService, 'get').andCallFake(function (arg) {
-  //  return "--None Assigned--";
-  //});
 
   it('should get rnr items ',function(){
     var rnrItems = {rnr: {facility:{code: "F10", name: "Health Facility 1"},
