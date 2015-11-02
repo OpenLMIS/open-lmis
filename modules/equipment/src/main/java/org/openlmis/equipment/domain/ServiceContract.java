@@ -2,20 +2,19 @@ package org.openlmis.equipment.domain;
 
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
+import lombok.*;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.openlmis.core.domain.BaseModel;
 import org.openlmis.equipment.dto.ContractDetail;
 
 import java.util.Date;
 import java.util.List;
 
-@Data
+@Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@EqualsAndHashCode(callSuper=false)
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class ServiceContract extends BaseModel{
 
@@ -45,6 +44,23 @@ public class ServiceContract extends BaseModel{
     return getFormattedDate(this.contractDate);
   }
 
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) return true;
 
+    if (o == null || getClass() != o.getClass()) return false;
 
+    ServiceContract that = (ServiceContract) o;
+
+    return new EqualsBuilder()
+        .append(id, that.id)
+        .isEquals();
+  }
+
+  @Override
+  public int hashCode() {
+    return new HashCodeBuilder(17, 37)
+        .append(id)
+        .toHashCode();
+  }
 }

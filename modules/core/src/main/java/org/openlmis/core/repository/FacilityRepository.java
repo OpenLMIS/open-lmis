@@ -80,7 +80,8 @@ public class FacilityRepository {
     private void validateAndSetPriceScheduleCategory(Facility facility) {
 
         PriceSchedule priceSchedule = facility.getPriceSchedule();
-        if (priceSchedule == null || priceSchedule.getId() != null) return;
+        if (priceSchedule == null || priceSchedule.getId() != null)
+          return;
 
         priceSchedule = priceScheduleService.getByCode(facility.getPriceSchedule().getCode());
         facility.setPriceSchedule(priceSchedule);
