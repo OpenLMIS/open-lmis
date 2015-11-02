@@ -12,7 +12,6 @@
 package org.openlmis.web.controller.vaccine.inventory;
 
 
-import org.openlmis.core.exception.DataException;
 import org.openlmis.core.web.OpenLmisResponse;
 import org.openlmis.core.web.controller.BaseController;
 import org.openlmis.vaccine.service.inventory.VaccineInventoryDashboardService;
@@ -23,10 +22,6 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 
-import static org.springframework.http.HttpStatus.BAD_REQUEST;
-import static org.springframework.http.HttpStatus.OK;
-
-
 @Controller
 @RequestMapping(value = "/vaccine/inventory/dashboard")
 public class VaccineInventoryDashboardController extends BaseController {
@@ -34,18 +29,8 @@ public class VaccineInventoryDashboardController extends BaseController {
     @Autowired
     VaccineInventoryDashboardService service;
 
-    @RequestMapping(value = "sync", method = RequestMethod.PUT)
-    public ResponseEntity<OpenLmisResponse> syncEquipments(HttpServletRequest request) {
-        try {
-            service.updateNonFunctionalEquipments();
-        } catch (DataException e) {
-            return OpenLmisResponse.error(e, BAD_REQUEST);
-        }
-        return new OpenLmisResponse().response(OK);
-    }
-
-    @RequestMapping(value = "equipmentalerts", method = RequestMethod.GET)
-    public ResponseEntity<OpenLmisResponse> getNonFunctionalAlerts(HttpServletRequest request) {
+    @RequestMapping(value = "get-equipment-alerts", method = RequestMethod.GET)
+    public ResponseEntity<OpenLmisResponse> getEquipmentAlerts(HttpServletRequest request) {
         Long userId = loggedInUserId(request);
         return OpenLmisResponse.response("Alerts", service.getNonFunctionalAlerts(userId));
     }

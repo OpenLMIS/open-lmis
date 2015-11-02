@@ -16,6 +16,7 @@ import org.openlmis.core.domain.ProcessingPeriod;
 import org.openlmis.core.domain.Program;
 import org.openlmis.core.service.FacilityService;
 import org.openlmis.core.service.ProgramService;
+import org.openlmis.stockmanagement.domain.Lot;
 import org.openlmis.vaccine.domain.inventory.VaccineDistribution;
 import org.openlmis.vaccine.domain.inventory.VaccineDistributionLineItem;
 import org.openlmis.vaccine.domain.inventory.VaccineDistributionLineItemLot;
@@ -26,11 +27,6 @@ import org.springframework.stereotype.Service;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
-
-
-/**
- * Exposes the services for handling stock cards.
- */
 
 @Service
 @NoArgsConstructor
@@ -56,7 +52,7 @@ public class VaccineInventoryDistributionService {
         return repository.getOneLevelSupervisedFacilities(facilityId);
     }
 
-    public void save(VaccineDistribution distribution, Long userId) {
+    public Long save(VaccineDistribution distribution, Long userId) {
         //Get supervised facility period
         Facility homeFacility = facilityService.getHomeFacility(userId);
         Long facilityId = homeFacility.getId();
@@ -69,8 +65,10 @@ public class VaccineInventoryDistributionService {
         }
 
         if (distribution.getId() != null) {
+            distribution.setModifiedBy(userId);
             repository.updateDistribution(distribution);
         } else {
+            distribution.setCreatedBy(userId);
             repository.saveDistribution(distribution);
         }
 
@@ -93,6 +91,7 @@ public class VaccineInventoryDistributionService {
                 }
             }
         }
+        return distribution.getId();
     }
 
     public List<VaccineDistribution> getDistributedFacilitiesByPeriod(Long userId) {
@@ -109,7 +108,8 @@ public class VaccineInventoryDistributionService {
             Calendar cal = Calendar.getInstance();
             cal.setTime(date);
             int month = cal.get(Calendar.MONTH) + 1;
-            return repository.getDistributedFacilitiesByMonth(month);
+            int year = cal.get(Calendar.YEAR);
+            return repository.getDistributedFacilitiesByMonth(month, year);
         }
     }
 
@@ -118,12 +118,19 @@ public class VaccineInventoryDistributionService {
         Calendar cal = Calendar.getInstance();
         cal.setTime(date);
         int month = cal.get(Calendar.MONTH) + 1;
-
-        return repository.getDistributedFacilitiesByMonth(month);
+        int year = cal.get(Calendar.YEAR);
+        return repository.getDistributedFacilitiesByMonth(month, year);
     }
 
     public ProcessingPeriod getCurrentPeriod(Long facilityId, Long programId, Date distributionDate) {
         return repository.getCurrentPeriod(facilityId, programId, distributionDate);
     }
 
+    public VaccineDistribution getById(Long id) {
+        return repository.getById(id);
+    }
+
+    public List<Lot> getLotsByProductId(Long productId) {
+        return repository.getLotsByProductId(productId);
+    }
 }

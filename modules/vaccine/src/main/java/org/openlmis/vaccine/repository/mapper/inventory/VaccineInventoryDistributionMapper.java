@@ -3,6 +3,7 @@ package org.openlmis.vaccine.repository.mapper.inventory;
 import org.apache.ibatis.annotations.*;
 import org.openlmis.core.domain.Facility;
 import org.openlmis.core.domain.ProcessingPeriod;
+import org.openlmis.stockmanagement.domain.Lot;
 import org.openlmis.vaccine.domain.inventory.VaccineDistributionLineItem;
 import org.openlmis.vaccine.domain.inventory.VaccineDistributionLineItemLot;
 import org.openlmis.vaccine.domain.inventory.VaccineDistribution;
@@ -77,16 +78,16 @@ public interface VaccineInventoryDistributionMapper {
 
     @Select("SELECT *" +
             " FROM vaccine_distributions " +
-            " WHERE EXTRACT(MONTH FROM distributionDate) = #{month};"
+            " WHERE distributiontype='ROUTINE' AND EXTRACT(MONTH FROM distributionDate) = #{month} AND EXTRACT(YEAR FROM distributionDate = #{year});"
     )
     @Results({@Result(property = "id", column = "id"),
             @Result(property = "lineItems", column = "id", javaType = List.class,
                     many = @Many(select = "getLineItems"))})
-    List<VaccineDistribution> getDistributedFacilitiesByMonth(@Param("month") int month);
+    List<VaccineDistribution> getDistributedFacilitiesByMonth(@Param("month") int month, @Param("year") int year);
 
     @Select("SELECT *" +
             " FROM vaccine_distributions " +
-            "WHERE periodId=#{periodId}")
+            "WHERE periodId=#{periodId} AND distributiontype='ROUTINE'")
     @Results({@Result(property = "id", column = "id"),
             @Result(property = "lineItems", column = "id", javaType = List.class,
                     many = @Many(select = "getLineItems"))})
@@ -106,4 +107,20 @@ public interface VaccineInventoryDistributionMapper {
             " WHERE distributionlineitemid = #{distributionLineItemId}"
     )
     List<VaccineDistributionLineItemLot> getLineItemsLots(@Param("distributionLineItemId") Long distributionLineItemId);
+
+    @Select("SELECT *" +
+            " FROM vaccine_distributions " +
+            "WHERE id=#{id}")
+    @Results({@Result(property = "id", column = "id"),
+            @Result(property = "lineItems", column = "id", javaType = List.class,
+                    many = @Many(select = "getLineItems"))})
+    VaccineDistribution getById(@Param("id") Long id);
+
+    @Select("SELECT *" +
+            " FROM lots" +
+            " WHERE productid = #{productId} ")
+    @Results({
+            @Result(property = "lotCode", column = "lotnumber"),
+    })
+    List<Lot> getLotsByProductId(@Param("productId") Long productId);
 }

@@ -3,6 +3,7 @@ package org.openlmis.vaccine.repository.inventory;
 import lombok.NoArgsConstructor;
 import org.openlmis.core.domain.Facility;
 import org.openlmis.core.domain.ProcessingPeriod;
+import org.openlmis.stockmanagement.domain.Lot;
 import org.openlmis.vaccine.domain.inventory.VaccineDistribution;
 import org.openlmis.vaccine.domain.inventory.VaccineDistributionLineItem;
 import org.openlmis.vaccine.domain.inventory.VaccineDistributionLineItemLot;
@@ -47,8 +48,8 @@ public class VaccineInventoryDistributionRepository {
         return mapper.updateDistributionLineItemLot(vaccineDistributionLineItemLot);
     }
 
-    public List<VaccineDistribution> getDistributedFacilitiesByMonth(int month) {
-        return mapper.getDistributedFacilitiesByMonth(month);
+    public List<VaccineDistribution> getDistributedFacilitiesByMonth(int month, int year) {
+        return mapper.getDistributedFacilitiesByMonth(month, year);
     }
 
     public List<VaccineDistribution> getDistributedFacilitiesByPeriod(Long periodId) {
@@ -59,4 +60,11 @@ public class VaccineInventoryDistributionRepository {
         return mapper.getCurrentPeriod(facilityId, programId, distributionDate);
     }
 
+    public VaccineDistribution getById(Long id) {
+        return mapper.getById(id);
+    }
+
+    public List<Lot> getLotsByProductId(Long productId) {
+        return mapper.getLotsByProductId(productId);
+    }
 }

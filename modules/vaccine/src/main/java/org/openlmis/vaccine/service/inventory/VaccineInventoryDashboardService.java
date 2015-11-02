@@ -40,10 +40,6 @@ public class VaccineInventoryDashboardService {
     @Autowired
     VaccineInventoryDistributionService distributionService;
 
-    public void updateNonFunctionalEquipments() {
-        mapper.updateNonFunctionalEquipments();
-    }
-
     public List<EquipmentAlert> getNonFunctionalAlerts(Long userId) {
 
         List<Facility> facilities = distributionService.getFacilities(userId);
@@ -59,20 +55,5 @@ public class VaccineInventoryDashboardService {
         str.append(")");
 
         return mapper.getNonFunctionalAlerts(str.toString());
-    }
-
-    public String getNonFunctionalAlertsTest(Long userId) {
-        List<Facility> facilities = distributionService.getFacilities(userId);
-        StringBuilder str = new StringBuilder();
-        str.append("(");
-        for (Facility f : facilities) {
-            str.append(f.getId());
-            str.append(",");
-        }
-        if (str.length() > 1) {
-            str.deleteCharAt(str.length() - 1);
-        }
-        str.append(")");
-        return str.toString();
     }
 }

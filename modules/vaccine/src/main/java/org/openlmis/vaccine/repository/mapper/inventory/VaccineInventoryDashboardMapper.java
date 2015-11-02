@@ -10,10 +10,6 @@ import java.util.List;
 @Repository
 public interface VaccineInventoryDashboardMapper {
 
-    @Select("select * from fn_populate_alert_equipment_nonfunctional(1)")
-    void updateNonFunctionalEquipments();
-
-
     @SelectProvider(type = VaccineInventoryDashboardQueryBuilder.class, method = "getNonFunctionalAlerts")
     @Results(value = {
             @Result(property = "changeBy", column = "modifiedby")})

@@ -26,6 +26,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import javax.servlet.http.HttpServletRequest;
 
 import java.util.Calendar;
+import java.util.Date;
 
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
 import static org.springframework.web.bind.annotation.RequestMethod.POST;
@@ -42,23 +43,20 @@ public class VaccineInventoryDistributionController extends BaseController {
     @Transactional
     public ResponseEntity<OpenLmisResponse> save(@RequestBody VaccineDistribution distribution, HttpServletRequest request) {
         Long userId = loggedInUserId(request);
-        service.save(distribution, userId);
-        return OpenLmisResponse.response("Distributions", service.getDistributedFacilitiesByPeriod(userId));
+        return OpenLmisResponse.response("distributionId", service.save(distribution, userId));
     }
 
-    @RequestMapping(value = "getDistributed", method = GET, headers = ACCEPT_JSON)
+    @RequestMapping(value = "get-distributed", method = GET, headers = ACCEPT_JSON)
     //TODO @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_PROGRAM_PRODUCT')")
     public ResponseEntity<OpenLmisResponse> getAll(HttpServletRequest request) {
         Long userId = loggedInUserId(request);
         return OpenLmisResponse.response("Distributions", service.getDistributedFacilitiesByPeriod(userId));
     }
 
-    @RequestMapping(value = "month", method = GET, headers = ACCEPT_JSON)
-    public ResponseEntity<OpenLmisResponse> testDate(HttpServletRequest request) {
-
-        Calendar cal = Calendar.getInstance();
-        int month = cal.get(Calendar.MONTH);
-        return OpenLmisResponse.response("Distributions", month);
+    @RequestMapping(value = "supervised-facilities", method = GET, headers = ACCEPT_JSON)
+    public ResponseEntity<OpenLmisResponse> getOneLevelSupervisedFacilities(HttpServletRequest request) {
+        Long userId = loggedInUserId(request);
+        return OpenLmisResponse.response("facilities", service.getFacilities(userId));
     }
 
 }
