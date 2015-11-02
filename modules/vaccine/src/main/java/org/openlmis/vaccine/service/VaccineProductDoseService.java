@@ -44,7 +44,7 @@ public class VaccineProductDoseService {
         continue;
       }
       List<VaccineProductDose> doses = repository.getDosesForProduct(programId, p.getProduct().getId());
-      if (doses.size() > 0) {
+      if (!doses.isEmpty()) {
         ProductDoseDTO productDose = new ProductDoseDTO();
         productDose.setProductId(p.getProduct().getId());
         productDose.setProductName(p.getProduct().getPrimaryName());

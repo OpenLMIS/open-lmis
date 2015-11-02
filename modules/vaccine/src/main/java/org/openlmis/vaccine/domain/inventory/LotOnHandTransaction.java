@@ -22,6 +22,8 @@ public class LotOnHandTransaction extends BaseModel {
 
     Long stockCardId;
 
+    Long quantityOnHand;
+
     Long quantity;
 
     Integer vvmStatus; //used for physical count

@@ -17,6 +17,4 @@ angular.module('vaccine-report-create', ['openlmis', 'ngGrid', 'ui.bootstrap.mod
       when('/view/:id', { controller:ViewVaccineReportDetailController, templateUrl:'partials/view.html', resolve: ViewVaccineReportDetailController.resolve}).
       when('/view', { controller: ViewVaccineReportController, templateUrl:'partials/view-list.html', resolve:ViewVaccineReportController.resolve}).
       otherwise({redirectTo:'/list'});
-  }]).run(function ($rootScope, AuthorizationService) {
-    //AuthorizationService.preAuthorize('VIEW_REPORT');
-  });
+  }]);

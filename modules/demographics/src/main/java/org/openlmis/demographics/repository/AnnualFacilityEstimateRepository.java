@@ -50,8 +50,8 @@ public class AnnualFacilityEstimateRepository {
     return mapper.getFacilityList(programId, requsitionGroupIds);
   }
 
-  public Integer finalize(AnnualFacilityEstimateEntry estimate){
-    return mapper.finalize(estimate);
+  public Integer finalizeEstimate(AnnualFacilityEstimateEntry estimate){
+    return mapper.finalizeEstimate(estimate);
   }
 
   public Integer undoFinalize(AnnualFacilityEstimateEntry estimate){

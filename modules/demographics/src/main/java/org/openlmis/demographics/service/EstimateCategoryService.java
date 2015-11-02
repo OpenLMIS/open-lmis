@@ -26,19 +26,19 @@ public class EstimateCategoryService {
   @Autowired
   private EstimateCategoryRepository repository;
 
-  public List<EstimateCategory> getAll(){
+  public List<EstimateCategory> getAll() {
     return repository.getAll();
   }
 
-  public EstimateCategory getById(Long id){
+  public EstimateCategory getById(Long id) {
     return repository.getById(id);
   }
 
-  public void save(List<EstimateCategory> categories){
-    for(EstimateCategory category : ListUtil.emptyIfNull(categories)){
-      if(category.getId() == null){
+  public void save(List<EstimateCategory> categories) {
+    for (EstimateCategory category : ListUtil.emptyIfNull(categories)) {
+      if (category.getId() == null) {
         repository.insert(category);
-      }else{
+      } else {
         repository.update(category);
       }
     }

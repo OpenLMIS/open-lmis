@@ -17,9 +17,11 @@ function DistrictEstimateModel (){
       'demographicEstimateId': category.id
     });
     if (angular.isUndefined(categoryValue)) {
+      var programId = (this.districtEstimates !== undefined && this.districtEstimates.length > 0)? this.districtEstimates[0].programId: undefined;
       categoryValue = {
         'demographicEstimateId': category.id,
         'year': year,
+        'programId': programId,
         'conversionFactor': category.defaultConverstionFactor,
         'value': 0
       };
@@ -33,9 +35,11 @@ function DistrictEstimateModel (){
       'demographicEstimateId': category.id
     });
     if (angular.isUndefined(categoryValue)) {
+      var programId = (this.facilityEstimates !== undefined && this.facilityEstimates.length > 0)? this.facilityEstimates[0].programId: undefined;
       categoryValue = {
         'demographicEstimateId': category.id,
         'year': year,
+        'programId': programId,
         'conversionFactor': category.defaultConverstionFactor,
         'value': 0
       };

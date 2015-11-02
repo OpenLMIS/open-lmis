@@ -10,63 +10,217 @@
   ~ You should have received a copy of the GNU Affero General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
   -->
 
-<li >
-    <a href="javascript: void(0);">Admin Reports</a>
+<a id="reports-menu" href="javascript: void(0)" openlmis-message="link.reports"></a>
 
-    <div class="submenu">
+<div id="report-submenu" class="submenu" ui-nav>
+  <ul>
+    <li class="has-children">
+      <a href="javascript: void(0);" openlmis-message="menu.report.admin"></a>
+
+      <div class="submenu">
         <ul>
-            <li ng-show="hasPermission('VIEW_FACILITY_REPORT')">
-                <a href="/public/pages/reports/facilitylist/index.html">Facility List (V1)</a>
-            </li>
-            <li ng-show="hasPermission('VIEW_MAILING_LABEL_REPORT')">
-                <a href="/public/pages/reports/mailinglabels/index.html">Facility List (V2)</a>
-            </li>
+          <li ng-show="hasPermission('VIEW_FACILITY_REPORT')">
+            <a ng-href="/public/pages/reports/main/index.html#facility-list?status=true" openlmis-message="menu.report.facility.list"></a>
+          </li>
+
+          <li ng-show="hasPermission('VIEW_USER_SUMMARY_REPORT')">
+            <a ng-href="/public/pages/reports/main/index.html#user-summary" openlmis-message="menu.report.user.summary"></a>
+          </li>
+
+          <li class="beak"></li>
+        </ul>
+      </div>
+    </li>
+
+    <li class="has-children">
+      <a href="javascript: void(0);" openlmis-message="menu.report.consumption"></a>
+
+      <div class="submenu">
+        <ul>
+          <li ng-show="hasPermission('VIEW_DISTRICT_CONSUMPTION_REPORT')">
+            <a ng-href="/public/pages/reports/main/index.html#aggregate-consumption"
+               openlmis-message="menu.report.aggregate.consumption"></a>
+          </li>
+          <li ng-show="hasPermission('VIEW_DISTRICT_CONSUMPTION_REPORT')">
+            <a ng-href="/public/pages/reports/main/index.html#district-consumption"
+               openlmis-message="menu.report.district.consumption.comparison"></a>
+          </li>
+          <li ng-show="hasPermission('VIEW_PIPELINE_EXPORT')">
+            <a ng-href="/public/pages/reports/main/index.html#pipeline-export"
+               openlmis-message="menu.report.pipeline.export"></a>
+          </li>
 
         </ul>
-    </div>
-</li>
-<li >
-    <a href="javascript: void(0);">Product Reports</a>
+      </div>
+    </li>
 
-    <div class="submenu">
+    <li class="has-children">
+      <a href="javascript: void(0);" openlmis-message="menu.report.equipment"></a>
+
+      <div class="submenu">
         <ul>
-            <li ng-show="hasPermission('VIEW_AVERAGE_CONSUMPTION_REPORT')">
-                <a href="/public/pages/reports/averageconsumption/index.html">Consumption Average by Product</a>
-            </li>
-            <li ng-show="hasPermission('VIEW_ADJUSTMENT_SUMMARY_REPORT')">
-                <a href="/public/pages/reports/adjustmentsummary/index.html">Adjustment Summary</a>
-            </li>
-            <li ng-show="hasPermission('VIEW_STOCKED_OUT_REPORT')">
-                <a href="/public/pages/reports/stocked_out/index.html">Stocked Out</a>
-            </li>
-            <li ng-show="hasPermission('VIEW_SUMMARY_REPORT')">
-                <a href="/public/pages/reports/summary/index.html">Summary Report</a>
-            </li>
+          <li ng-show="hasPermission('VIEW_LAB_EQUIPMENT_LIST_REPORT')">
+            <a ng-href="/public/pages/reports/main/index.html#lab-equipment-list"
+               openlmis-message="menu.report.lab.equipment.list"></a>
+          </li>
+          <li ng-show="hasPermission('VIEW_LAB_EQUIPMENTS_BY_FUNDING_SOURCE')">
+            <a ng-href="/public/pages/reports/main/index.html#lab-equipments-by-donor"
+               openlmis-message="menu.report.lab.equipment.by.funding.source"></a>
+          </li>
+          <li ng-show="hasPermission('VIEW_LAB_EQUIPMENTS_BY_LOCATION_REPORT')">
+            <a ng-href="/public/pages/reports/maps/index.html#lab-equipments-by-location"
+               openlmis-message="menu.report.lab.equipment.by.location"></a>
+          </li>
 
-            <!--<li ng-show="hasPermission('VIEW_CONSUMPTION_REPORT')">-->
-            <!--<a href="/public/pages/reports/consumption/index.html">Consumption Report</a>-->
-            <!--</li>-->
+          <li ng-show="hasPermission('VIEW_REPAIR_MANAGEMENT_REPORT')">
+            <a ng-href="/public/pages/reports/main/index.html#cce-repair-management"
+               openlmis-message="menu.report.repair.management"></a>
+
+          <li ng-show="hasPermission('VIEW_COLD_CHAIN_EQUIPMENT_LIST_REPORT')">
+            <a ng-href="/public/pages/reports/main/index.html#cold-chain-equipment-inventory"
+               openlmis-message="menu.report.lab.equipment.coldchain.inventory"></a>
+          </li>
+          <li ng-show="hasPermission('VIEW_CCE_STORAGE_CAPACITY_REPORT')">
+            <a ng-href="/public/pages/reports/main/index.html#cce-storage-capacity"
+               openlmis-message="menu.report.cce.storage.capacity"></a>
+          </li>
+          <li ng-show="hasPermission('VIEW_VACCINE_REPLACEMENT_PLAN_SUMMARY')">
+            <a ng-href="/public/pages/reports/main/index.html#replacement-plan-summary"
+               openlmis-message="menu.report.vaccine.replacement.plan.summary"></a>
+          </li>
+
+          <li class="beak"></li>
         </ul>
-    </div>
-</li>
-<li >
-    <a href="javascript: void(0);">Performance Reports</a>
+      </div>
+    </li>
 
-    <div class="submenu">
+    <li class="has-children">
+      <a href="javascript: void(0);" openlmis-message="menu.report.order.fulfillment"></a>
+
+      <div class="submenu">
         <ul>
-            <li ng-show="hasPermission('VIEW_NON_REPORTING_FACILITIES')">
-                <a href="/public/pages/reports/non_reporting/index.html">Non Reporting Facilities</a>
-            </li>
-            <li ng-show="hasPermission('VIEW_REPORTING_RATE_REPORT')">
-                <a href="/public/pages/reports/reportingrate/index.html">Reporting Rate</a>
-            </li>
-            <li ng-show="hasPermission('VIEW_DISTRICT_CONSUMPTION_REPORT')">
-                <a href="/public/pages/reports/district-consumption/index.html">District Consumption
-                    Comparison</a>
-            </li>
-            <li ng-show="hasPermission('VIEW_SUPPLY_STATUS_REPORT')">
-                <a href="/public/pages/reports/supply_status/index.html">Supply Status by Facility</a>
-            </li>
+
+          <li ng-show="hasPermission('VIEW_DISTRICT_FINANCIAL_SUMMARY_REPORT')">
+            <a ng-href="/public/pages/reports/main/index.html#district-financial-summary"
+               openlmis-message="menu.report.order.district.financial.compilation"></a>
+          </li>
+
+          <li ng-show="hasPermission('VIEW_ORDER_FILL_RATE_SUMMARY_REPORT')">
+            <a ng-href="/public/pages/reports/main/index.html#order-fill-rate-summary"
+               openlmis-message="menu.report.order.fill.rate.summary"></a>
+          </li>
+
+          <li ng-show="hasPermission('VIEW_ORDER_FILL_RATE_REPORT')">
+            <a ng-href="/public/pages/reports/main/index.html#order-fill-rate"
+               openlmis-message="menu.report.order.fill.rate.by.facility"></a>
+          </li>
+
+          <li ng-show="hasPermission('VIEW_ORDER_REPORT')">
+            <a ng-href="/public/pages/reports/main/index.html#order" openlmis-message="menu.report.order.report"></a>
+          </li>
+
+          <li ng-show="hasPermission('VIEW_RNR_FEEDBACK_REPORT')">
+            <a ng-href="/public/pages/reports/main/index.html#rnr-feedback" openlmis-message="menu.report.rnr.feedback"></a>
+          </li>
+
+          <li ng-show="hasPermission('VIEW_SEASONALITY_RATIONING_REPORT')">
+            <a ng-href="/public/pages/reports/main/index.html#seasonality-rationing"
+               openlmis-message="menu.report.seasonality.rationing"></a>
+          </li>
         </ul>
-    </div>
-</li>
+      </div>
+    </li>
+
+    <li class="has-children">
+      <a href="javascript: void(0);" openlmis-message="menu.report.regimen"></a>
+
+      <div class="submenu">
+        <ul>
+          <li ng-show="hasPermission('VIEW_REGIMEN_SUMMARY_REPORT')">
+            <a ng-href="/public/pages/reports/main/index.html#aggregate-regimen"
+               openlmis-message="menu.report.regimen.aggregate"></a>
+          </li>
+          <li ng-show="hasPermission('VIEW_REGIMEN_SUMMARY_REPORT')">
+            <a ng-href="/public/pages/reports/main/index.html#regimen-summary"
+               openlmis-message="menu.report.regimen.summary"></a>
+          </li>
+          <li ng-show="hasPermission('VIEW_REGIMEN_SUMMARY_REPORT')">
+            <a ng-href="/public/pages/reports/main/index.html#regimen-distribution"
+               openlmis-message="menu.report.regimen.distribution"></a>
+          </li>
+          <li class="beak"></li>
+        </ul>
+      </div>
+    </li>
+
+    <li class="has-children">
+      <a href="javascript: void(0);" openlmis-message="menu.report.status"></a>
+
+      <div class="submenu">
+        <ul>
+          <li ng-show="hasPermission('VIEW_NON_REPORTING_FACILITIES')">
+            <a ng-href="/public/pages/reports/main/index.html#non-reporting"
+               openlmis-message="menu.report.non.reporting.facilities"></a>
+          </li>
+          <li ng-show="hasPermission('VIEW_REPORTING_RATE_REPORT')">
+            <a ng-href="/public/pages/reports/maps/index.html#reporting-rate" openlmis-message="menu.report.reporting.rate"></a>
+          </li>
+          <li ng-show="hasPermission('VIEW_TIMELINESS_REPORT')">
+            <a ng-href="/public/pages/reports/main/index.html#timeliness"
+               openlmis-message="menu.report.reporting.timeliness"></a>
+          </li>
+        </ul>
+      </div>
+    </li>
+
+    <li class="has-children">
+      <a href="javascript: void(0);" openlmis-message="menu.report.stock.keeping"></a>
+
+      <div class="submenu">
+        <ul>
+          <li ng-show="hasPermission('VIEW_ADJUSTMENT_SUMMARY_REPORT')">
+            <a ng-href="/public/pages/reports/main/index.html#adjustment-summary"
+               openlmis-message="menu.report.adjustment.summary"></a>
+          </li>
+          <li ng-show="hasPermission('VIEW_STOCKED_OUT_REPORT')">
+            <a ng-href="/public/pages/reports/main/index.html#stocked-out" openlmis-message="menu.report.stocked.out"></a>
+          </li>
+          <li ng-show="hasPermission('VIEW_STOCK_IMBALANCE_REPORT')">
+            <a ng-href="/public/pages/reports/main/index.html#stock-imbalance"
+               openlmis-message="menu.report.stock.imbalance"></a>
+          </li>
+          <li ng-show="hasPermission('VIEW_SUMMARY_REPORT')">
+            <a ng-href="/public/pages/reports/main/index.html#summary" openlmis-message="menu.report.summary"></a>
+          </li>
+          <li ng-show="hasPermission('VIEW_SUPPLY_STATUS_REPORT')">
+            <a ng-href="/public/pages/reports/main/index.html#supply-status" openlmis-message="menu.report.supply.status"></a>
+          </li>
+          <li ng-show="hasPermission('VIEW_STOCK_IMBALANCE_REPORT')">
+            <a ng-href="/public/pages/reports/maps/index.html#stock-status"
+               openlmis-message="menu.report.stock.status.by.location"></a>
+          </li>
+          <li ng-show="hasPermission('VIEW_STOCK_IMBALANCE_REPORT')">
+            <a ng-href="/public/pages/reports/maps/index.html#mnch-status" openlmis-message="menu.report.mnch.staus"></a>
+          </li>
+        </ul>
+      </div>
+    </li>
+
+    <li class="has-children">
+
+    <li>
+      <a ng-href="/public/pages/reports/custom/index.html" openlmis-message="menu.report.custom.reports"></a>
+    </li>
+
+    <li ng-show="hasPermission('VIEW_REQUISITION_REPORT')">
+      <a ng-href="/public/pages/reports/requisition/index.html" openlmis-message="menu.report.requisition.reports"></a>
+    </li>
+
+    <li ng-show="hasPermission('VIEW_REPORT')">
+      <a id="other-reports-menu" ng-href="/public/pages/report/index.html" openlmis-message="menu.report.others"></a>
+    </li>
+    <li class="beak"></li>
+
+
+  </ul>
+</div>

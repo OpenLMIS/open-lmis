@@ -15,13 +15,11 @@ function DemographicEstimateCategoryFormController($scope, estimate_category, Sa
 
   $scope.save = function(form){
     if(form.$valid){
-      SaveDemographicEstimateCategory.update($scope.estimate_category, function(data){
+      SaveDemographicEstimateCategory.update($scope.estimate_category, function(){
         $location.path('/');
       });
     }
   };
-
-
 }
 
 DemographicEstimateCategoryFormController.resolve = {

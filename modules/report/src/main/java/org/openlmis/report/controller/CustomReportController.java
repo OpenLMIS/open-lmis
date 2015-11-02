@@ -41,28 +41,34 @@ import static org.springframework.web.bind.annotation.RequestMethod.GET;
 @RequestMapping(value="/report-api")
 public class CustomReportController extends BaseController {
 
+  public static final String DURATION = "duration";
+  public static final String DATE = "date";
+  public static final String VALUES = "values";
+  public static final String REPORTS = "reports";
+  public static final String QUERY_MODEL = "queryModel";
+  public static final String REPORT = "report";
   @Autowired
   CustomReportRepository reportRepository;
 
   @RequestMapping(value = "list")
   public ResponseEntity<OpenLmisResponse> getListOfReports(){
-    return OpenLmisResponse.response("reports", reportRepository.getReportList());
+    return OpenLmisResponse.response(REPORTS, reportRepository.getReportList());
   }
 
   @RequestMapping(value = "full-list")
   @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_CUSTOM_REPORTS')")
   public ResponseEntity<OpenLmisResponse> getFullListOfReports(){
-    return OpenLmisResponse.response("reports", reportRepository.getReportListWithFullAttributes());
+    return OpenLmisResponse.response(REPORTS, reportRepository.getReportListWithFullAttributes());
   }
 
   @RequestMapping(value = "report")
   public ResponseEntity<OpenLmisResponse> getReportData( @RequestParam Map filter ){
     long requestTime = new Date().getTime();
-    ResponseEntity<OpenLmisResponse> response = OpenLmisResponse.response("values", reportRepository.getReportData(filter));
-    response.getBody().addData("date", new Date());
+    ResponseEntity<OpenLmisResponse> response = OpenLmisResponse.response(VALUES, reportRepository.getReportData(filter));
+    response.getBody().addData(DATE, new Date());
     long responseTime = new Date().getTime();
     long duration = responseTime - requestTime;
-    response.getBody().addData("duration", duration);
+    response.getBody().addData(DURATION, duration);
     return response;
   }
 
@@ -71,8 +77,8 @@ public class CustomReportController extends BaseController {
     List<Map> report = reportRepository.getReportData(filter);
     Map queryModel = reportRepository.getQueryModelByKey(filter.get("report_key").toString());
     ModelAndView view = new ModelAndView("customCsvTemplate");
-    view.addObject("report", report);
-    view.addObject("queryModel", queryModel);
+    view.addObject(REPORT, report);
+    view.addObject(QUERY_MODEL, queryModel);
     return view;
   }
 
@@ -85,7 +91,7 @@ public class CustomReportController extends BaseController {
     }else{
       reportRepository.insert(report);
     }
-    return OpenLmisResponse.response("report", report);
+    return OpenLmisResponse.response(REPORT, report);
   }
 
 }

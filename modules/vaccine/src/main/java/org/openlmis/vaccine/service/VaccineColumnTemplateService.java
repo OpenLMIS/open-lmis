@@ -28,7 +28,7 @@ public class VaccineColumnTemplateService {
 
   public ProgramColumnTemplateDTO getTemplate(Long programId) {
     List<LogisticsColumn> columns = repository.getTemplateForProgram(programId);
-    if(columns == null || columns.size() == 0){
+    if(columns == null || columns.isEmpty()){
       columns = repository.getMasterColumns();
       for(LogisticsColumn column: columns){
         column.setProgramId(programId);

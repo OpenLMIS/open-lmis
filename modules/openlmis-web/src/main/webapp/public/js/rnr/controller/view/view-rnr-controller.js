@@ -22,11 +22,9 @@ function ViewRnrController($scope, requisitionData , rnrColumns, regimenTemplate
   }
 
   $scope.reOpenRnR = function( ){
-
     var callBack = function (result) {
       if (result) {
-        // delete the rnr here
-        ReOpenRequisition.post({id: $scope.rnr.id}, function(data){
+        ReOpenRequisition.post({id: $scope.rnr.id}, function(){
           OpenLmisDialog.newDialog({
             id: "confirmDialog",
             header: "label.confirm.action",
@@ -35,7 +33,6 @@ function ViewRnrController($scope, requisitionData , rnrColumns, regimenTemplate
             $location.url('/public/pages/logistics/rnr/index.html#/init-rnr');
           }, $dialog);
         });
-        // redirect to the main page
       }
     };
 
@@ -52,9 +49,7 @@ function ViewRnrController($scope, requisitionData , rnrColumns, regimenTemplate
     var callBack = function (result) {
 
       if (result) {
-
-        // reject
-        RejectRequisition.post({id: $scope.rnr.id}, function(data){
+        RejectRequisition.post({id: $scope.rnr.id}, function(){
           OpenLmisDialog.newDialog({
             id: "confirmDialog",
             header: "label.confirm.action",
@@ -63,7 +58,6 @@ function ViewRnrController($scope, requisitionData , rnrColumns, regimenTemplate
             $location.url('/public/pages/logistics/rnr/index.html#/init-rnr');
           }, $dialog);
         });
-        // redirect to the main page
       }
     };
 

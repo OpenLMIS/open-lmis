@@ -27,7 +27,7 @@ function CustomReportController($scope, $window, reports, CustomReportValue) {
   function updateFilterSection($scope) {
 
     // avoid having the blinking effect if the report has not been changed.
-    if ($scope.previous_report_key != $scope.filter.report_key) {
+    if ($scope.previous_report_key !== $scope.filter.report_key) {
       $scope.previous_report_key = $scope.filter.report_key;
 
       $scope.report = _.findWhere($scope.reports, {reportkey: $scope.filter.report_key});

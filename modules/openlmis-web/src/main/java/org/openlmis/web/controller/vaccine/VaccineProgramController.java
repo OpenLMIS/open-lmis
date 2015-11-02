@@ -33,6 +33,8 @@ import javax.servlet.http.HttpServletRequest;
 @Controller
 public class VaccineProgramController extends BaseController {
 
+    public static final String PROGRAMS = "programs";
+    public static final String FACILITIES = "facilities";
     @Autowired
     VaccineReportService service;
 
@@ -47,7 +49,7 @@ public class VaccineProgramController extends BaseController {
 
     @RequestMapping(value = "/vaccine/report/programs.json", method = RequestMethod.GET)
     public ResponseEntity<OpenLmisResponse> getProgramsForConfiguration() {
-        return OpenLmisResponse.response("programs", programService.getAllIvdPrograms());
+        return OpenLmisResponse.response(PROGRAMS, programService.getAllIvdPrograms());
     }
 
     @RequestMapping(value = "/vaccine/report/ivd-form/programs.json", method = RequestMethod.GET)
@@ -55,13 +57,13 @@ public class VaccineProgramController extends BaseController {
     public ResponseEntity<OpenLmisResponse> getProgramForIvdFormHomeFacility(HttpServletRequest request) {
         Long userId = loggedInUserId(request);
         User user = userService.getById(userId);
-        return OpenLmisResponse.response("programs", programService.getIvdProgramsSupportedByUserHomeFacilityWithRights(user.getFacilityId(), userId, RightName.CREATE_IVD, RightName.APPROVE_IVD, RightName.VIEW_IVD));
+        return OpenLmisResponse.response(PROGRAMS, programService.getIvdProgramsSupportedByUserHomeFacilityWithRights(user.getFacilityId(), userId, RightName.CREATE_IVD, RightName.APPROVE_IVD, RightName.VIEW_IVD));
     }
 
     @RequestMapping(value = "/vaccine/report/ivd-form/supervised-programs")
     @PreAuthorize("@permissionEvaluator.hasPermission(principal,'CREATE_IVD, APPROVE_IVD, VIEW_IVD')")
     public ResponseEntity<OpenLmisResponse> getProgramForIvdFormSupervisedFacilities(HttpServletRequest request) {
-        return OpenLmisResponse.response("programs", programService.getIvdProgramForSupervisedFacilities(loggedInUserId(request), RightName.CREATE_IVD, RightName.APPROVE_IVD, RightName.VIEW_IVD));
+        return OpenLmisResponse.response(PROGRAMS, programService.getIvdProgramForSupervisedFacilities(loggedInUserId(request), RightName.CREATE_IVD, RightName.APPROVE_IVD, RightName.VIEW_IVD));
     }
 
     @RequestMapping(value = "/vaccine/report/ivd-form/facilities/{programId}.json", method = RequestMethod.GET)
@@ -69,7 +71,7 @@ public class VaccineProgramController extends BaseController {
     public ResponseEntity<OpenLmisResponse> getFacilities(@PathVariable Long programId, HttpServletRequest request) {
         Long userId = loggedInUserId(request);
         //TODO: make sure this method also supports home facility.
-        return OpenLmisResponse.response("facilities", facilityService.getUserSupervisedFacilities(userId, programId, RightName.CREATE_IVD, RightName.APPROVE_IVD, RightName.VIEW_IVD));
+        return OpenLmisResponse.response(FACILITIES, facilityService.getUserSupervisedFacilities(userId, programId, RightName.CREATE_IVD, RightName.APPROVE_IVD, RightName.VIEW_IVD));
     }
 
 

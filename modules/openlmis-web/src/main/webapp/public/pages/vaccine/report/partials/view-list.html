@@ -28,7 +28,7 @@
   </div>
   <div ng-show="programs.length == 1">
     <div class="info-box">
-      <b><span openlmis-message="label.program"></span>:</b>
+      <strong><span openlmis-message="label.program"></span>:</strong>
       <span ng-bind="programs[0].name"></span>
       <div class="padding2px"></div>
     </div>
@@ -55,8 +55,6 @@
       </div>
     </div>
   </div>
-
-
   <div class="row-fluid" ng-show="error">
     <div class="span12">
       <div class="alert alert-error" id="saveSuccessMsgDiv"

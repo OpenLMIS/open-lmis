@@ -18,6 +18,7 @@ import org.apache.ibatis.annotations.SelectProvider;
 import org.apache.ibatis.mapping.ResultSetType;
 import org.apache.ibatis.session.RowBounds;
 import org.openlmis.report.builder.SummaryQueryBuilder;
+import org.openlmis.report.model.params.SummaryReportParam;
 import org.openlmis.report.model.report.SummaryReport;
 import org.springframework.stereotype.Repository;
 
@@ -30,6 +31,6 @@ public interface SummaryReportMapper {
 
     @SelectProvider(type=SummaryQueryBuilder.class, method="getQuery")
     @Options(resultSetType = ResultSetType.SCROLL_SENSITIVE, fetchSize=10,timeout=0,useCache=true,flushCache=true)
-    public List<SummaryReport> getReport(Map params, @Param("RowBounds") RowBounds rowBounds);
+    public List<SummaryReport> getReport(@Param("filterCriteria") SummaryReportParam params, @Param("RowBounds") RowBounds rowBounds);
 
 }

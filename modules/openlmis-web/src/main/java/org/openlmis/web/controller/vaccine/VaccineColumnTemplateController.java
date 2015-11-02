@@ -28,6 +28,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @RequestMapping(value = "/vaccine/columns/")
 public class VaccineColumnTemplateController extends BaseController {
 
+  public static final String COLUMNS = "columns";
   @Autowired
   VaccineColumnTemplateService service;
   @Autowired
@@ -35,19 +36,19 @@ public class VaccineColumnTemplateController extends BaseController {
 
   @RequestMapping(value = "get/{programId}")
   public ResponseEntity<OpenLmisResponse> get(@PathVariable Long programId) {
-    return OpenLmisResponse.response("columns", service.getTemplate(programId));
+    return OpenLmisResponse.response(COLUMNS, service.getTemplate(programId));
   }
 
   @RequestMapping(value="save")
   public ResponseEntity<OpenLmisResponse> save(@RequestBody ProgramColumnTemplateDTO programColumnDTO) {
     service.saveChanges(programColumnDTO.getColumns());
-    return OpenLmisResponse.response("columns", service.getTemplate(programColumnDTO.getProgramId()));
+    return OpenLmisResponse.response(COLUMNS, service.getTemplate(programColumnDTO.getProgramId()));
   }
 
   @RequestMapping(value = "get/columns")
   public ResponseEntity<OpenLmisResponse>getAll(){
 
-    return OpenLmisResponse.response("columns",columnService.getAllColumns());
+    return OpenLmisResponse.response(COLUMNS,columnService.getAllColumns());
   }
 
 }

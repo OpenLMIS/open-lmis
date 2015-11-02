@@ -15,10 +15,6 @@ angular.module('custom_report', ['openlmis', 'ngTable',  'ui.chart', 'angularCom
                 when('/list', {controller:CustomReportController, templateUrl:'partials/list.html',reloadOnSearch:false, resolve: CustomReportController.resolve}).
                 when('/designer', {controller:CustomReportDesignerController, templateUrl:'partials/designer.html',reloadOnSearch:false, resolve: CustomReportDesignerController.resolve}).
                 otherwise({redirectTo:'/list'});
-        }]).run(
-        function ($rootScope, AuthorizationService) {
-
-        }
-    ).config(function(angularCombineConfigProvider) {
+        }]).config(function(angularCombineConfigProvider) {
     angularCombineConfigProvider.addConf(/filter-/, '/public/pages/reports/shared/filters.html');
   });

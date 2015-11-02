@@ -111,8 +111,4 @@ public class ProcessingPeriodRepository {
   public List<ProcessingPeriod>  getAllPeriodsForScheduleAndYear(Long scheduleId, Long year) {
       return mapper.getAllPeriodsForScheduleAndYear(scheduleId, year);
   }
-
-//  public Long getIdByName(String name){
-//      return mapper.getIdByName(name);
-//  }
 }

@@ -27,32 +27,18 @@ public class OrderReportParam
 
   private Long orderId;
 
-  private int facilityTypeId;
-  private String facilityType;
-  private String facility;
-  private Long facilityId;
-  private int productId;
-  private String product;
-  private int productCategoryId;
-  private String productCategory;
-  private Long programId;
-  private String program;
-  private String orderType;
-  private int zoneId;
-  private Long periodId;
-  private String period;
-  private int scheduleId;
-  private String schedule;
-  private String year;
+  private Long facilityType;
+  private Long facility;
+  private Long program;
+  private Long zone;
+  private Long period;
+  private Long schedule;
+
+  private String title;
 
   @Override
   public String toString() {
-
-    StringBuilder filtersValue = new StringBuilder("");
-    filtersValue.append("Program: ").append(this.program).append("\n").
-      append("Period: ").append(this.period).append(" - ").append(this.year).append("\n");
-
-    return filtersValue.toString();
+    return title;
   }
 
 

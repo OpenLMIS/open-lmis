@@ -36,7 +36,7 @@ function ViewRequestController($scope, $location, $routeParams, EquipmentInvento
   $scope.save = function () {
 
     if ($scope.requestForm.$valid) {
-      SaveMaintenanceRequest.save($scope.current, function (data) {
+      SaveMaintenanceRequest.save($scope.current, function () {
         $location.path('');
       });
     } else {

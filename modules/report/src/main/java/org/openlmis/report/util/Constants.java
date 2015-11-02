@@ -32,6 +32,7 @@ public class Constants {
     public static String REPORT_ID = "REPORT_ID";
     public static String GENERATED_BY = "GENERATED_BY";
     public static String LOGO = "LOGO";
+    public static String VIMS_LOGO = "VIMS_LOGO";
     public static String OPERATOR_LOGO = "OPERATOR_LOGO";
     public static String OPERATOR_NAME = "OPERATOR_NAME";
     public static String REPORT_SUB_TITLE = "REPORT_SUB_TITLE";
@@ -43,6 +44,7 @@ public class Constants {
      * Configuration keys
      */
     public static String LOGO_FILE_NAME_KEY = "logo_file_name";
+    public static String VIMS_LOGO_FILE_NAME_KEY = "VIMS_LOGO_FILE_NAME";
     public static String OPERATOR_LOGO_FILE_NAME_KEY = "operator_logo_file_name";
     public static String START_YEAR = "start_year";
     public static String MONTHS = "months";

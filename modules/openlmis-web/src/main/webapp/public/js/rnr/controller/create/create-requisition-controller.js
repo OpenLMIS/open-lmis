@@ -24,17 +24,15 @@ function CreateRequisitionController($scope, requisitionData, comments , pageSiz
 
     var callBack = function (result) {
       if (result) {
-        // delete the rnr here
         DeleteRequisition.post({id: $scope.rnr.id}, function(data){
           OpenLmisDialog.newDialog({
                                       id: "confirmDialog",
                                       header: "label.confirm.action",
-                                      body: data.delete
+                                      body: data.success
                                     }, function(){
             $location.url('/public/pages/logistics/rnr/index.html#/init-rnr');
           }, $dialog);
         });
-        // redirect to the main page
       }
     };
 
@@ -52,8 +50,7 @@ function CreateRequisitionController($scope, requisitionData, comments , pageSiz
 
     var callBack = function (result) {
       if (result) {
-        // delete the rnr here
-        SkipRequisition.post({id: $scope.rnr.id}, function(data){
+        SkipRequisition.post({id: $scope.rnr.id}, function(){
           OpenLmisDialog.newDialog({
             id: "confirmDialog",
             header: "label.confirm.action",
@@ -62,7 +59,6 @@ function CreateRequisitionController($scope, requisitionData, comments , pageSiz
             $location.url('/public/pages/logistics/rnr/index.html#/init-rnr');
           }, $dialog);
         });
-        // redirect to the main page
       }
     };
 

@@ -24,19 +24,20 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping(value = "/vaccine/product-dose/")
 public class ProductDoseController extends BaseController {
 
+  public static final String PROTOCOL = "protocol";
   @Autowired
   private VaccineProductDoseService service;
 
   @RequestMapping(value = "get/{programId}")
   public ResponseEntity<OpenLmisResponse> getProgramProtocol(@PathVariable Long programId) {
     VaccineServiceConfigDTO dto = service.getProductDoseForProgram(programId);
-    return OpenLmisResponse.response("protocol", dto);
+    return OpenLmisResponse.response(PROTOCOL, dto);
   }
 
   @RequestMapping(value = "save", headers = ACCEPT_JSON, method = RequestMethod.PUT)
   public ResponseEntity<OpenLmisResponse> save(@RequestBody VaccineServiceConfigDTO config) {
     service.save(config.getProtocols());
-    return OpenLmisResponse.response("protocol", config);
+    return OpenLmisResponse.response(PROTOCOL, config);
   }
 
 }

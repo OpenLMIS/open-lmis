@@ -29,42 +29,44 @@ import java.util.Date;
 @Controller
 @RequestMapping(value="/equipment/maintenance-request/")
 public class MaintenanceRequestController extends BaseController {
+  public static final String LOG = "log";
+  public static final String LOGS = "logs";
   @Autowired
   private MaintenanceRequestService service;
 
   @RequestMapping(method = RequestMethod.GET, value = "list")
   public ResponseEntity<OpenLmisResponse> getAll(){
-    return  OpenLmisResponse.response("logs", service.getAll());
+    return  OpenLmisResponse.response(LOGS, service.getAll());
   }
 
   @RequestMapping(method = RequestMethod.GET, value = "id")
   public ResponseEntity<OpenLmisResponse> getById( @RequestParam("id") Long id){
-    return  OpenLmisResponse.response("log", service.getById(id));
+    return  OpenLmisResponse.response(LOG, service.getById(id));
   }
 
   @RequestMapping(method = RequestMethod.GET, value = "for-facility")
   public ResponseEntity<OpenLmisResponse> getByFacilityId( @RequestParam("id") Long id){
-    return  OpenLmisResponse.response("logs", service.getAllForFacility(id));
+    return  OpenLmisResponse.response(LOGS, service.getAllForFacility(id));
   }
 
   @RequestMapping(method = RequestMethod.GET, value = "for-vendor")
   public ResponseEntity<OpenLmisResponse> getByVendorId( @RequestParam("id") Long id){
-    return  OpenLmisResponse.response("logs", service.getAllForVendor(id));
+    return  OpenLmisResponse.response(LOGS, service.getAllForVendor(id));
   }
 
   @RequestMapping(method = RequestMethod.GET, value = "outstanding-for-vendor")
   public ResponseEntity<OpenLmisResponse> getOutstandingByVendorId( @RequestParam("id") Long id){
-    return  OpenLmisResponse.response("logs", service.getOutstandingForVendor(id));
+    return  OpenLmisResponse.response(LOGS, service.getOutstandingForVendor(id));
   }
 
   @RequestMapping(method = RequestMethod.GET, value = "outstanding-for-user")
   public ResponseEntity<OpenLmisResponse> getOutstandingByUserId( HttpServletRequest request){
-    return  OpenLmisResponse.response("logs", service.getOutstandingForUser(loggedInUserId(request)));
+    return  OpenLmisResponse.response(LOGS, service.getOutstandingForUser(loggedInUserId(request)));
   }
 
   @RequestMapping(method = RequestMethod.GET, value = "full-history")
   public ResponseEntity<OpenLmisResponse> getFullHistoryId( @RequestParam("id") Long inventoryId){
-    return  OpenLmisResponse.response("logs", service.getFullHistory(inventoryId));
+    return  OpenLmisResponse.response(LOGS, service.getFullHistory(inventoryId));
   }
 
   @RequestMapping(value = "save", method = RequestMethod.POST, headers = ACCEPT_JSON)
@@ -80,7 +82,7 @@ public class MaintenanceRequestController extends BaseController {
     maintenanceRequest.setModifiedDate(new Date());
     service.save(maintenanceRequest);
     ResponseEntity<OpenLmisResponse> response = OpenLmisResponse.success(messageService.message("message.maintenance.request.saved"));
-    response.getBody().addData("log", maintenanceRequest);
+    response.getBody().addData(LOG, maintenanceRequest);
     return response;
   }
 

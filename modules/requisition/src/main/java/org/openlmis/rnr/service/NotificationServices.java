@@ -13,11 +13,14 @@ package org.openlmis.rnr.service;
 
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
+import org.openlmis.core.domain.ConfigurationSettingKey;
 import org.openlmis.core.domain.User;
 import org.openlmis.core.service.ApproverService;
 import org.openlmis.core.service.ConfigurationSettingService;
 import org.openlmis.email.service.EmailService;
 import org.openlmis.rnr.domain.Rnr;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.SimpleMailMessage;
@@ -30,76 +33,70 @@ import java.util.List;
 @AllArgsConstructor
 public class NotificationServices {
 
+  private static final Logger LOGGER = LoggerFactory.getLogger(NotificationServices.class);
 
-    @Value("${mail.base.url}")
-    String baseURL;
+  @Value("${mail.base.url}")
+  String baseURL;
+
   @Autowired
   private ConfigurationSettingService configService;
+
   @Autowired
   private EmailService emailService;
+
   @Autowired
   private ApproverService approverService;
 
-  public void notifyStatusChange(Rnr requisition)   {
+  public void notifyStatusChange(Rnr requisition) {
 
+    String emailTemplate = configService.getByKey(ConfigurationSettingKey.EMAIL_TEMPLATE_APPROVAL).getValue();
 
-        // read from the configuration the email template
-        String emailTemplate = configService.getByKey("EMAIL_TEMPLATE_APPROVAL").getValue();
-
-        List<User> users = null;
-        // find out which email to send it to
-       switch(requisition.getStatus() ){
-         // this order has been submitted
-         case SUBMITTED:
-           // all that can fill for the facility
-            users = approverService.getFacilityBasedAutorizers(requisition.getId());
-           break;
-         case AUTHORIZED:
-           users = approverService.getNextApprovers(requisition.getId());
-          break;
-         case IN_APPROVAL:
-           users = approverService.getNextApprovers(requisition.getId());
-           break;
-         case RELEASED:
-           break;
-       }
-
-         if(users != null){
-            // iterate through the emails and send the email.
-            // replace the template with the message
-            for(User user : users){
-                if (user.isMobileUser()) {
-                    continue;
-                }
-
-              SimpleMailMessage message = new SimpleMailMessage();
-              String emailMessage = emailTemplate;
-
-              // compse the link to the RnR
-              String approvalURL = baseURL + "/public/pages/logistics/rnr/index.html#/rnr-for-approval/" + requisition.getId().toString()
-                  + "/"
-                  + requisition.getProgram().getId().toString()
-                  +"?supplyType=full-supply&page=1" ;
-
-              emailMessage = emailMessage.replaceAll("\\{facility_name\\}", requisition.getFacility().getName());
-              emailMessage = emailMessage.replaceAll("\\{approver_name\\}", user.getFirstName() + " " + user.getLastName());
-              emailMessage = emailMessage.replaceAll("\\{period\\}", requisition.getPeriod().getName());
-              emailMessage = emailMessage.replaceAll("\\{link\\}", approvalURL);
-
-              message.setText(emailMessage);
-              message.setSubject(configService.getByKey("EMAIL_SUBJECT_APPROVAL").getValue());
-              message.setTo(user.getEmail());
-
-              try {
-                emailService.queueMessage(message);
-              }catch(Exception exp){
-                //TODO: message is not sent ... try to log this error; may be preserve the message in the database to retry later 
-              }
-            }
-         }
-
-
-
+    List<User> users = null;
+    // find out which email to send it to
+    switch (requisition.getStatus()) {
+      // this order has been submitted
+      case SUBMITTED:
+        // all that can fill for the facility
+        users = approverService.getFacilityBasedAutorizers(requisition.getId());
+        break;
+      case AUTHORIZED:
+        users = approverService.getNextApprovers(requisition.getId());
+        break;
+      case IN_APPROVAL:
+        users = approverService.getNextApprovers(requisition.getId());
+        break;
+      case RELEASED:
+      default:
+        break;
     }
+
+    if (users != null) {
+      for (User user : users) {
+        if (user.isMobileUser()) {
+          continue;
+        }
+
+        SimpleMailMessage message = new SimpleMailMessage();
+        String emailMessage = emailTemplate;
+
+        String approvalURL = String.format("%1$s/public/pages/logistics/rnr/index.html#/rnr-for-approval/%2$s/%3$s?supplyType=full-supply&page=1", baseURL, requisition.getId(), requisition.getProgram().getId());
+
+        emailMessage = emailMessage.replaceAll("\\{facility_name\\}", requisition.getFacility().getName());
+        emailMessage = emailMessage.replaceAll("\\{approver_name\\}", user.getFirstName() + " " + user.getLastName());
+        emailMessage = emailMessage.replaceAll("\\{period\\}", requisition.getPeriod().getName());
+        emailMessage = emailMessage.replaceAll("\\{link\\}", approvalURL);
+
+        message.setText(emailMessage);
+        message.setSubject(configService.getByKey(ConfigurationSettingKey.EMAIL_SUBJECT_APPROVAL).getValue());
+        message.setTo(user.getEmail());
+
+        try {
+          emailService.queueMessage(message);
+        } catch (Exception exp) {
+          LOGGER.error("Notification was not sent due to the following exception ...", exp);
+        }
+      }
+    }
+  }
 
 }

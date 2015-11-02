@@ -15,6 +15,8 @@ import org.apache.velocity.VelocityContext;
 import org.apache.velocity.app.Velocity;
 import org.openlmis.email.domain.OpenlmisEmailMessage;
 import org.openlmis.email.repository.EmailNotificationRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
@@ -27,6 +29,7 @@ import org.springframework.scheduling.annotation.Async;
 import org.springframework.scheduling.annotation.AsyncResult;
 import org.springframework.stereotype.Service;
 
+import javax.activation.DataSource;
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
 import java.io.StringWriter;
@@ -41,6 +44,9 @@ import java.util.concurrent.Future;
 @Service
 @NoArgsConstructor
 public class EmailService {
+
+  private static final Logger LOGGER = LoggerFactory.getLogger(EmailService.class);
+
 
   private Boolean mailSendingFlag;
 
@@ -74,6 +80,8 @@ public class EmailService {
     for(final OpenlmisEmailMessage oMessage: mailMessage){
       if(oMessage.getIsHtml()){
         mailSender.send(new MimeMessagePreparator() {
+
+          @Override
           public void prepare(MimeMessage mimeMessage) throws MessagingException {
             MimeMessageHelper message = new MimeMessageHelper(mimeMessage, true, "UTF-8");
             message.setFrom(fromAddress);
@@ -110,8 +118,26 @@ public class EmailService {
       Velocity.evaluate(context, writer, "velocity", template);
     }catch(Exception exp)
     {
-
+      LOGGER.error("Velocity had some errors generating this email. The exception was .... ", exp);
     }
     repository.queueMessage(to, writer.toString(), subject, true);
+  }
+
+  public void sendMimeMessage(final String to, final String subject, final String messageBody, final String attachementFileName, final DataSource dataSource) {
+    mailSender.send(new MimeMessagePreparator() {
+
+      @Override
+      public void prepare(MimeMessage mimeMessage) throws MessagingException {
+        MimeMessageHelper message = new MimeMessageHelper(mimeMessage, true, "UTF-8");
+        message.setFrom(fromAddress);
+        message.setTo(to);
+        message.setSubject(subject);
+        message.setText(messageBody, true);
+        if(attachementFileName != null && dataSource != null){
+          message.addAttachment(attachementFileName, dataSource);
+        }
+
+      }
+    });
   }
 }

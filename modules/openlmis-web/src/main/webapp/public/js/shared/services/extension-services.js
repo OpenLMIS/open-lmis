@@ -1279,6 +1279,18 @@ services.factory('GetProgramPeriodTracerProductsTrend', function($resource) {
     return $resource('/dashboard/program/:programId/period/:periodId/tracer-products-trend.json', {}, {});
 });
 
+services.factory('DashboardReportingPerformance', function($resource) {
+    return $resource('/dashboard/program/:programId/period/:periodId/reporting-performance.json', {}, {});
+});
+
+services.factory('DashboardDistrictStockSummary', function($resource) {
+    return $resource('/dashboard/program/:programId/period/:periodId/district-stock-summary.json', {}, {});
+});
+
+services.factory('DashboardFacilityStockSummary', function($resource) {
+    return $resource('/dashboard/program/:programId/period/:periodId/facility-stock-summary.json', {}, {});
+});
+
 services.factory('GetStockOutFacilitiesForProgramPeriodAndProductCode', function($resource) {
     return $resource('/dashboard/program/:programId/period/:periodId/product/:productCode/stocked-out-facilities.json', {}, {});
 });

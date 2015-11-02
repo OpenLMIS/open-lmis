@@ -15,6 +15,8 @@ package org.openlmis.report.view;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.openlmis.core.exception.DataException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.view.AbstractView;
 
@@ -28,13 +30,13 @@ import java.util.Map;
 @Component
 public class CustomCsvTemplate extends AbstractView {
 
+  private static final Logger LOGGER = LoggerFactory.getLogger(CustomCsvTemplate.class);
+
   @Override
   protected void renderMergedOutputModel(Map<String, Object> model, HttpServletRequest request, HttpServletResponse response) throws Exception {
     Map queryModel = (Map)model.get("queryModel");
     List reportContent = (List) model.get("report");
     response.setHeader("Content-Disposition", "attachment; filename=" + queryModel.get("name") + ".csv");
-
-
 
     try (BufferedWriter writer = new BufferedWriter(response.getWriter())) {
       writeHeader(queryModel, writer);
@@ -65,7 +67,7 @@ public class CustomCsvTemplate extends AbstractView {
     try {
       actualObj = mapper.readValue(columnModel, JsonNode.class);
     }catch (Exception exp){
-
+      LOGGER.warn("Column Definition was not populated correctly due to .... ", exp);
     }
     return actualObj;
   }

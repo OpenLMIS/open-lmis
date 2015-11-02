@@ -33,7 +33,7 @@ public class QueryHelpers {
                 }
             }
         }
-        return ((sortOrder.isEmpty())? defaultColumn : sortOrder);
+        return sortOrder.isEmpty()? defaultColumn : sortOrder;
     }
 
 
@@ -46,7 +46,8 @@ public class QueryHelpers {
                 Column column = field.getAnnotation(Column.class);
                 columnMapping.put(field.getName(),column.name());
 
-            }else {//assumes report model column name matches database column name
+            }else {
+              //assumes report model column name matches database column name
                 columnMapping.put(field.getName(),field.getName());
             }
         }

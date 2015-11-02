@@ -101,14 +101,14 @@ public class VaccineReportService {
   }
 
   @Transactional
-  public void save(VaccineReport report) {
-    repository.update(report);
+  public void save(VaccineReport report, Long userId) {
+    repository.update(report, userId);
   }
 
   @Transactional
   public void submit(VaccineReport report, Long userId) {
     report.setStatus(ReportStatus.SUBMITTED);
-    repository.update(report);
+    repository.update(report, userId);
     ReportStatusChange change = new ReportStatusChange(report, ReportStatus.SUBMITTED, userId);
     reportStatusChangeRepository.insert(change);
   }
@@ -160,7 +160,6 @@ public class VaccineReportService {
       startDate = lastRequest.getPeriod().getStartDate();
     }
 
-    Long lastPeriodId = lastRequest == null ? null : lastRequest.getPeriodId();
     List<ReportStatusDTO> results = new ArrayList<>();
     // find all periods that are after this period, and before today.
 

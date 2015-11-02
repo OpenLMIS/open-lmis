@@ -12,15 +12,16 @@
 
 package org.openlmis.report.model.report;
 
+import lombok.Data;
 import org.openlmis.report.model.ReportData;
-import org.openlmis.report.model.dto.NameCount;
 
 import java.util.List;
 
+@Data
 public class MasterReport implements ReportData {
 
-    public List<? extends ReportData> details;
+  private List<? extends ReportData> details;
 
-    public List<? extends ReportData> summary;
+  private List<? extends ReportData> summary;
 
 }

@@ -272,6 +272,27 @@ public class DashboardController extends BaseController {
         return OpenLmisResponse.response("tracerProducts", this.lookupService.getProgramPeriodTracerProductsTrend(programId, periodId, loggedInUserId(request), limit));
     }
 
+    @RequestMapping(value = "/program/{programId}/period/{periodId}/reporting-performance.json", method = GET, headers = ACCEPT_JSON)
+    public ResponseEntity<OpenLmisResponse> getDashboardReportingPerformance(@PathVariable("programId") Long programId, @PathVariable("periodId") Long periodId,
+                                                                                HttpServletRequest request) {
+
+        return OpenLmisResponse.response("reportingPerformance", this.lookupService.getDashboardReportingPerformance(programId, periodId, loggedInUserId(request)));
+    }
+
+    @RequestMapping(value = "/program/{programId}/period/{periodId}/district-stock-summary.json", method = GET, headers = ACCEPT_JSON)
+    public ResponseEntity<OpenLmisResponse> getDistrictStockSummary(@PathVariable("programId") Long programId, @PathVariable("periodId") Long periodId,
+                                                                             HttpServletRequest request) {
+
+        return OpenLmisResponse.response("stockSummary", this.lookupService.getDistrictStockSummary(programId, periodId, loggedInUserId(request)));
+    }
+
+    @RequestMapping(value = "/program/{programId}/period/{periodId}/facility-stock-summary.json", method = GET, headers = ACCEPT_JSON)
+    public ResponseEntity<OpenLmisResponse> getFacilityStockSummary(@PathVariable("programId") Long programId, @PathVariable("periodId") Long periodId,
+                                                                    HttpServletRequest request) {
+
+        return OpenLmisResponse.response("facilityStockSummary", this.lookupService.getFacilityStockSummary(programId, periodId, loggedInUserId(request)));
+    }
+
 
     @RequestMapping(value = "/program/{programId}/period/{periodId}/product/{productCode}/stocked-out-facilities.json", method = GET, headers = ACCEPT_JSON)
     public ResponseEntity<OpenLmisResponse> getFacilitiesStockedOutForProgramPeriodAndProductCode(@PathVariable("programId") Long programId,

@@ -1,0 +1,41 @@
+<!-- facility top 5 facility dispensed -->
+<slide>
+    <accordion>
+        <accordion-group class="gray-cascade" is-open="product.consumptionChart.openPanel">
+            <accordion-heading >
+                <div class="accordion-title">
+                    <div class="caption">
+
+                        <span ><span openlmis-message="title.top.facility.dispensed"></span> : {{product.name}}  </span>
+                    </div>
+                    <div class="tools">
+                        <i  ng-class="'icon-info-sign'" ns-popover ns-popover-template="consumption-chart-info" ns-popover-trigger="mouseenter" ns-popover-theme="ns-popover-tooltip-theme" ns-popover-placement="bottom|right"></i>
+                        <i  ng-class="{'icon-minus-sign': product.consumptionChart.openPanel, 'icon-plus-sign': !product.consumptionChart.openPanel}"></i>
+                    </div>
+                </div>
+            </accordion-heading>
+            <c3chart bindto-id="{{product.name}}_facility_dispensed_chart">
+                <chart-tooltip value-format-function="formatValue" />
+                <chart-axes values-x="x" />
+                <chart-axis >
+                    <chart-axis-x axis-position="outer-center" axis-label="Facility" axis-height="40"
+                                  axis-type="category" >
+                        <!--<chart-axis-x-tick tick-rotate="50" />-->
+                    </chart-axis-x>
+                    <chart-axis-y>
+                        <chart-axis-y-tick tick-format-function="formatValue" />
+                    </chart-axis-y>
+                </chart-axis>
+
+                <chart-column column-id="Dispensed"
+                              column-values="{{product.topFacilityDispensed.values}}"
+                              column-type="bar"/>
+                <chart-column column-id="amc"
+                              column-values="{{product.topFacilityAmc.values}}"
+                              column-type="line"/>
+                <chart-column column-id="x"
+                              column-values="{{product.topFacilityDispensed.facilities}}"/>
+            </c3chart>
+        </accordion-group>
+    </accordion>
+</slide>

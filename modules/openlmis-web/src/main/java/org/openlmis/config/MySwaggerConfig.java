@@ -32,29 +32,26 @@ public class MySwaggerConfig {
     // this avoids the duplicate api endpoints on the swagger ui.
     do {
       this.springSwaggerConfig.swaggerRequestMappingHandlerMappings().remove(1);
-    }while(this.springSwaggerConfig.swaggerRequestMappingHandlerMappings().size()  > 1);
+    } while (this.springSwaggerConfig.swaggerRequestMappingHandlerMappings().size() > 1);
   }
 
   @Bean
-  public SwaggerSpringMvcPlugin customImplementation(){
-
+  public SwaggerSpringMvcPlugin customImplementation() {
     return new SwaggerSpringMvcPlugin(this.springSwaggerConfig)
-      .apiInfo(apiInfo())
-      .swaggerGroup("Rest API")
-      .genericModelSubstitutes(ResponseEntity.class)
-      //.requestMappingPatternMatcher()
-      .includePatterns(".*rest-api.*", ".*/api/.*"); // assuming the API lives at something like either http://myapp/rest-api or http://myapp/v2/api
+        .apiInfo(apiInfo())
+        .swaggerGroup("Rest API")
+        .genericModelSubstitutes(ResponseEntity.class)
+        .includePatterns(".*rest-api.*", ".*/api/.*");
   }
 
   private ApiInfo apiInfo() {
-    ApiInfo apiInfo = new ApiInfo(
-      "e-LMIS REST API",
-      "Please use this API to connect to the e-LMIS. This service allows you to build applications that directly interact with the e-LMIS",
-      "TOS",
-      "info@elmis-dev.org",
-      "API License",
-      "https://github.com/OpenLMIS/open-lmis/blob/master/LICENSE"
+    return new ApiInfo(
+        "e-LMIS REST API",
+        "Please use this API to connect to the e-LMIS. This service allows you to build applications that directly interact with the e-LMIS",
+        "TOS",
+        "info@elmis-dev.org",
+        "API License",
+        "https://github.com/OpenLMIS/open-lmis/blob/master/LICENSE"
     );
-    return apiInfo;
   }
 }
