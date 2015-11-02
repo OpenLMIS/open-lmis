@@ -17,25 +17,24 @@ import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.SelectProvider;
 import org.apache.ibatis.mapping.ResultSetType;
 import org.apache.ibatis.session.RowBounds;
-import org.openlmis.report.builder.DistrictConsumptionQueryBuilder;
-import org.openlmis.report.model.ReportData;
-import org.openlmis.report.model.ReportParameter;
-import org.openlmis.report.model.report.DistrictConsumptionReport;
+import org.openlmis.report.builder.OrderFillRateQueryBuilder;
+import org.openlmis.report.builder.PushedProductsQueryBuilder;
+import org.openlmis.report.model.params.OrderFillRateReportParam;
+import org.openlmis.report.model.report.OrderFillRateReport;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
 import java.util.Map;
 
+
 @Repository
-public interface DistrictConsumptionReportMapper {
+public interface PushedProductReportMapper {
 
-  @SelectProvider(type = DistrictConsumptionQueryBuilder.class, method = "getQuery")
-  @Options(resultSetType = ResultSetType.SCROLL_SENSITIVE, fetchSize = 10, timeout = 0, useCache = true, flushCache = true)
-  public List<DistrictConsumptionReport> getFilteredSortedPagedAdjustmentSummaryReport(
-    @Param("filterCriteria") ReportParameter filterCriteria,
-    @Param("SortCriteria") Map<String, String[]> sortCriteria,
-    @Param("RowBounds") RowBounds rowBounds,
-    @Param("userId") Long userId
-  );
-
+    @SelectProvider(type = PushedProductsQueryBuilder.class, method = "getQueryForPushedItems")
+    @Options(resultSetType = ResultSetType.SCROLL_SENSITIVE, fetchSize = -1, timeout = 0, useCache = false, flushCache = false)
+    public List<OrderFillRateReport> getPushedProducts(
+        @Param("filterCriteria") OrderFillRateReportParam params,
+        @Param("rowBounds") RowBounds rowBounds,
+        @Param("userId") Long userId
+    );
 }

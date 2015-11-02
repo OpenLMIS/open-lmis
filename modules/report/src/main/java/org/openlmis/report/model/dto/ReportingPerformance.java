@@ -13,26 +13,19 @@
 package org.openlmis.report.model.dto;
 
 import lombok.AllArgsConstructor;
-import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
-/**
- * User: Issa
- * Date: 5/22/14
- * Time: 5:50 PM
- */
-@Data
+@Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 public class ReportingPerformance {
 
-    private String name;
-
-    private String mainPhone;
-
-    private String status;
-
-    private String district;
-
-    private Boolean hasContacts;
+  private String name;
+  private String mainPhone;
+  private String status;
+  private String district;
+  private Boolean hasContacts;
 }

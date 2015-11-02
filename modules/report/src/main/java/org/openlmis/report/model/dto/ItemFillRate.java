@@ -12,16 +12,10 @@
 
 package org.openlmis.report.model.dto;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
-/**
- * User: Issa
- * Date: 2/18/14
- * Time: 9:42 PM
- */
-@Data
+@Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 public class ItemFillRate {

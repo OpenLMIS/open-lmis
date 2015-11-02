@@ -12,11 +12,13 @@
 
 package org.openlmis.report.model.dto;
 
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
-@Data
+@Getter
+@Setter
 public class ReportingStatus {
-    private Integer total;
-    private Integer reporting;
-    private Integer nonReporting;
+  private Integer total;
+  private Integer reporting;
+  private Integer nonReporting;
 }

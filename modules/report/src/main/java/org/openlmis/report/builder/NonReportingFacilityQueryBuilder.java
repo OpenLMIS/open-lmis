@@ -21,8 +21,10 @@ import static org.openlmis.report.builder.helpers.RequisitionPredicateHelper.*;
 
 public class NonReportingFacilityQueryBuilder {
 
+  public static final String FILTER_CRITERIA = "filterCriteria";
+
   public static String getQuery(Map params) {
-    NonReportingFacilityParam nonReportingFacilityParam = (NonReportingFacilityParam) params.get("filterCriteria");
+    NonReportingFacilityParam nonReportingFacilityParam = (NonReportingFacilityParam) params.get(FILTER_CRITERIA);
     return getQueryString(nonReportingFacilityParam);
   }
 
@@ -60,7 +62,7 @@ public class NonReportingFacilityQueryBuilder {
 
 
   public static String getTotalFacilities(Map params) {
-    NonReportingFacilityParam filterParams = (NonReportingFacilityParam) params.get("filterCriteria");
+    NonReportingFacilityParam filterParams = (NonReportingFacilityParam) params.get(FILTER_CRITERIA);
 
     BEGIN();
     SELECT("COUNT (*)");
@@ -76,7 +78,7 @@ public class NonReportingFacilityQueryBuilder {
 
   public static String getTotalNonReportingFacilities(Map params) {
 
-    NonReportingFacilityParam filterParams = (NonReportingFacilityParam) params.get("filterCriteria");
+    NonReportingFacilityParam filterParams = (NonReportingFacilityParam) params.get(FILTER_CRITERIA);
     BEGIN();
     SELECT("COUNT (*)");
     FROM("facilities");
@@ -91,7 +93,7 @@ public class NonReportingFacilityQueryBuilder {
   }
 
   public static String getSummaryQuery(Map params) {
-    NonReportingFacilityParam filterParams = (NonReportingFacilityParam) params.get("filterCriteria");
+    NonReportingFacilityParam filterParams = (NonReportingFacilityParam) params.get(FILTER_CRITERIA);
 
     BEGIN();
     SELECT("'Non Reporting Facilities' AS name");

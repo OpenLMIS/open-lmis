@@ -51,7 +51,7 @@ public class InteractiveReportController extends BaseController {
 
         Report report = reportManager.getReportByKey("facilities");
         report.getReportDataProvider().setUserId(loggedInUserId(request));
-        List<FacilityReport> facilityReportList = (List<FacilityReport>) report.getReportDataProvider().getMainReportData(request.getParameterMap(), request.getParameterMap(), page, max);
+        List<FacilityReport> facilityReportList = (List<FacilityReport>) report.getReportDataProvider().getReportBody(request.getParameterMap(), request.getParameterMap(), page, max);
 
         return new Pages(page, max, facilityReportList);
     }
@@ -66,7 +66,7 @@ public class InteractiveReportController extends BaseController {
 
         Report report = reportManager.getReportByKey("mailinglabels");
         report.getReportDataProvider().setUserId(loggedInUserId(request));
-        List<MailingLabelReport> mailingLabelReports = (List<MailingLabelReport>) report.getReportDataProvider().getMainReportData(request.getParameterMap(), request.getParameterMap(), page, max);
+        List<MailingLabelReport> mailingLabelReports = (List<MailingLabelReport>) report.getReportDataProvider().getReportBody(request.getParameterMap(), request.getParameterMap(), page, max);
         return new Pages(page, max, mailingLabelReports);
     }
 
@@ -83,7 +83,7 @@ public class InteractiveReportController extends BaseController {
         Report report = reportManager.getReportByKey("consumption");
         report.getReportDataProvider().setUserId(loggedInUserId(request));
         List<ConsumptionReport> consumptionReportList =
-                (List<ConsumptionReport>) report.getReportDataProvider().getMainReportData(request.getParameterMap(), request.getParameterMap(), page, max);
+                (List<ConsumptionReport>) report.getReportDataProvider().getReportBody(request.getParameterMap(), request.getParameterMap(), page, max);
         return new Pages(page, max, consumptionReportList);
     }
     
@@ -99,7 +99,7 @@ public class InteractiveReportController extends BaseController {
         Report report = reportManager.getReportByKey("summary");
         report.getReportDataProvider().setUserId(loggedInUserId(request));
         List<SummaryReport> reportList =
-                (List<SummaryReport>) report.getReportDataProvider().getMainReportData(request.getParameterMap(), request.getParameterMap(), page, max);
+                (List<SummaryReport>) report.getReportDataProvider().getReportBody(request.getParameterMap(), request.getParameterMap(), page, max);
 
         return new Pages(page, max, reportList);
     }
@@ -117,7 +117,7 @@ public class InteractiveReportController extends BaseController {
         Report report = reportManager.getReportByKey("non_reporting");
         report.getReportDataProvider().setUserId(loggedInUserId(request));
         List<MasterReport> reportList =
-                (List<MasterReport>) report.getReportDataProvider().getMainReportData(request.getParameterMap(), request.getParameterMap(), page, max);
+                (List<MasterReport>) report.getReportDataProvider().getReportBody(request.getParameterMap(), request.getParameterMap(), page, max);
 
         return new Pages(page, max, reportList);
     }
@@ -132,7 +132,7 @@ public class InteractiveReportController extends BaseController {
 
         Report report = reportManager.getReportByKey("adjustment_summary");
         report.getReportDataProvider().setUserId(loggedInUserId(request));
-        List<AdjustmentSummaryReport> adjustmentSummaryReportList = (List<AdjustmentSummaryReport>) report.getReportDataProvider().getMainReportData(request.getParameterMap(), request.getParameterMap(), page, max);
+        List<AdjustmentSummaryReport> adjustmentSummaryReportList = (List<AdjustmentSummaryReport>) report.getReportDataProvider().getReportBody(request.getParameterMap(), request.getParameterMap(), page, max);
 
         return new Pages(page, max, adjustmentSummaryReportList);
     }
@@ -148,7 +148,7 @@ public class InteractiveReportController extends BaseController {
         Report report = reportManager.getReportByKey("district_consumption");
         report.getReportDataProvider().setUserId(loggedInUserId(request));
         List<DistrictConsumptionReport> districtConsumptionReportList =
-                (List<DistrictConsumptionReport>) report.getReportDataProvider().getMainReportData(request.getParameterMap(), request.getParameterMap(), page, max);
+                (List<DistrictConsumptionReport>) report.getReportDataProvider().getReportBody(request.getParameterMap(), request.getParameterMap(), page, max);
 
         return new Pages(page, max, districtConsumptionReportList);
     }
@@ -164,7 +164,7 @@ public class InteractiveReportController extends BaseController {
         Report report = reportManager.getReportByKey("aggregate_consumption");
         report.getReportDataProvider().setUserId(loggedInUserId(request));
         List<DistrictConsumptionReport> districtConsumptionReportList =
-                (List<DistrictConsumptionReport>) report.getReportDataProvider().getMainReportData(request.getParameterMap(), request.getParameterMap(), page, max);
+                (List<DistrictConsumptionReport>) report.getReportDataProvider().getReportBody(request.getParameterMap(), request.getParameterMap(), page, max);
 
         return new Pages(page, max, districtConsumptionReportList);
     }
@@ -182,7 +182,7 @@ public class InteractiveReportController extends BaseController {
         Report report = reportManager.getReportByKey("order_summary");
         report.getReportDataProvider().setUserId(loggedInUserId(request));
         List<OrderSummaryReport> orderReportList =
-                (List<OrderSummaryReport>) report.getReportDataProvider().getMainReportData(request.getParameterMap(), request.getParameterMap(), page, max);
+                (List<OrderSummaryReport>) report.getReportDataProvider().getReportBody(request.getParameterMap(), request.getParameterMap(), page, max);
 
         return new Pages(page, max, orderReportList);
     }
@@ -200,7 +200,7 @@ public class InteractiveReportController extends BaseController {
         Report report = reportManager.getReportByKey("supply_status");
         report.getReportDataProvider().setUserId(loggedInUserId(request));
         List<SupplyStatusReport> supplyStatusReportList =
-                (List<SupplyStatusReport>) report.getReportDataProvider().getMainReportData(request.getParameterMap(), request.getParameterMap(), page, max);
+                (List<SupplyStatusReport>) report.getReportDataProvider().getReportBody(request.getParameterMap(), request.getParameterMap(), page, max);
 
         return new Pages(page, max, supplyStatusReportList);
     }
@@ -217,7 +217,7 @@ public class InteractiveReportController extends BaseController {
         Report report = reportManager.getReportByKey("stock_imbalance");
         report.getReportDataProvider().setUserId(loggedInUserId(request));
         List<StockImbalanceReport> stockImbalanceReportList =
-                (List<StockImbalanceReport>) report.getReportDataProvider().getMainReportData(request.getParameterMap(), request.getParameterMap(), page, max);
+                (List<StockImbalanceReport>) report.getReportDataProvider().getReportBody(request.getParameterMap(), request.getParameterMap(), page, max);
         return new Pages(page, max, stockImbalanceReportList);
     }
 
@@ -235,7 +235,7 @@ public class InteractiveReportController extends BaseController {
         Report report = reportManager.getReportByKey("stocked_out");
         report.getReportDataProvider().setUserId(loggedInUserId(request));
         List<StockedOutReport> stockedOutReportList =
-                (List<StockedOutReport>) report.getReportDataProvider().getMainReportData(request.getParameterMap(), request.getParameterMap(), page, max);
+                (List<StockedOutReport>) report.getReportDataProvider().getReportBody(request.getParameterMap(), request.getParameterMap(), page, max);
 
         return new Pages(page, max, stockedOutReportList);
     }
@@ -252,7 +252,7 @@ public class InteractiveReportController extends BaseController {
         Report report = reportManager.getReportByKey("rnr_feedback");
         report.getReportDataProvider().setUserId(loggedInUserId(request));
         List<RnRFeedbackReport> rnRFeedbackReports =
-                (List<RnRFeedbackReport>) report.getReportDataProvider().getMainReportData(request.getParameterMap(), request.getParameterMap(), page, max);
+                (List<RnRFeedbackReport>) report.getReportDataProvider().getReportBody(request.getParameterMap(), request.getParameterMap(), page, max);
         return new Pages(page, max, rnRFeedbackReports);
     }
 
@@ -269,7 +269,7 @@ public class InteractiveReportController extends BaseController {
         Report report = reportManager.getReportByKey("order_fill_rate");
         report.getReportDataProvider().setUserId(loggedInUserId(request));
         List<MasterReport> orderFillRateReportList =
-                (List<MasterReport>) report.getReportDataProvider().getMainReportData(request.getParameterMap(), request.getParameterMap(), page, max);
+                (List<MasterReport>) report.getReportDataProvider().getReportBody(request.getParameterMap(), request.getParameterMap(), page, max);
         return new Pages(page, max, orderFillRateReportList);
     }
 
@@ -285,7 +285,7 @@ public class InteractiveReportController extends BaseController {
         Report report = reportManager.getReportByKey("regimen_summary");
         report.getReportDataProvider().setUserId(loggedInUserId(request));
         List<RegimenSummaryReport> regimenSummaryReportList =
-                (List<RegimenSummaryReport>) report.getReportDataProvider().getMainReportData(request.getParameterMap(), request.getParameterMap(), page, max);
+                (List<RegimenSummaryReport>) report.getReportDataProvider().getReportBody(request.getParameterMap(), request.getParameterMap(), page, max);
         return new Pages(page, max, regimenSummaryReportList);
     }
 
@@ -301,7 +301,7 @@ public class InteractiveReportController extends BaseController {
         Report report = reportManager.getReportByKey("aggregate_regimen_summary");
         report.getReportDataProvider().setUserId(loggedInUserId(request));
         List<RegimenSummaryReport> regimenSummaryReportList =
-                (List<RegimenSummaryReport>) report.getReportDataProvider().getMainReportData(request.getParameterMap(), request.getParameterMap(), page, max);
+                (List<RegimenSummaryReport>) report.getReportDataProvider().getReportBody(request.getParameterMap(), request.getParameterMap(), page, max);
         return new Pages(page, max, regimenSummaryReportList);
     }
 
@@ -317,7 +317,7 @@ public class InteractiveReportController extends BaseController {
         Report report = reportManager.getReportByKey("regimen_distribution");
         report.getReportDataProvider().setUserId(loggedInUserId(request));
         List<RegimenSummaryReport> regimenSummaryReportList =
-                (List<RegimenSummaryReport>) report.getReportDataProvider().getMainReportData(request.getParameterMap(), request.getParameterMap(), page, max);
+                (List<RegimenSummaryReport>) report.getReportDataProvider().getReportBody(request.getParameterMap(), request.getParameterMap(), page, max);
         return new Pages(page, max, regimenSummaryReportList);
     }
 
@@ -331,7 +331,7 @@ public class InteractiveReportController extends BaseController {
         Report report = reportManager.getReportByKey("district_financial_summary");
         report.getReportDataProvider().setUserId(loggedInUserId(request));
         List<DistrictSummaryReport> districtSummaryReportList =
-                (List<DistrictSummaryReport>) report.getReportDataProvider().getMainReportData(request.getParameterMap(), request.getParameterMap(), page, max);
+                (List<DistrictSummaryReport>) report.getReportDataProvider().getReportBody(request.getParameterMap(), request.getParameterMap(), page, max);
         return new Pages(page, max, districtSummaryReportList);
     }
 
@@ -346,7 +346,7 @@ public class InteractiveReportController extends BaseController {
         Report report = reportManager.getReportByKey("user_summary");
         report.getReportDataProvider().setUserId(loggedInUserId(request));
         List<UserSummaryReport> userSummmaryReportList =
-                (List<UserSummaryReport>) report.getReportDataProvider().getMainReportData(request.getParameterMap(), request.getParameterMap(), page, max);
+                (List<UserSummaryReport>) report.getReportDataProvider().getReportBody(request.getParameterMap(), request.getParameterMap(), page, max);
         return new Pages(page, max, userSummmaryReportList);
     }
 
@@ -372,7 +372,7 @@ public class InteractiveReportController extends BaseController {
         report.getReportDataProvider().setUserId(loggedInUserId(request));
         PipelineExportReportProvider provider = (PipelineExportReportProvider) report.getReportDataProvider();
         List<PipelineExportReport> pipelineExportData = (List<PipelineExportReport>)
-                provider.getMainReportData(request.getParameterMap(), request.getParameterMap(), page, max);
+                provider.getReportBody(request.getParameterMap(), request.getParameterMap(), page, max);
 
         return new Pages(page, max, pipelineExportData);
     }
@@ -388,7 +388,7 @@ public class InteractiveReportController extends BaseController {
         report.getReportDataProvider().setUserId(loggedInUserId(request));
         LabEquipmentStatusReportDataProvider provider = (LabEquipmentStatusReportDataProvider) report.getReportDataProvider();
         List<LabEquipmentStatusReport> labEquipmentStatusList = (List<LabEquipmentStatusReport>)
-                provider.getMainReportData(request.getParameterMap(), request.getParameterMap(), page, max);
+                provider.getReportBody(request.getParameterMap(), request.getParameterMap(), page, max);
 
         return new Pages(page, max, labEquipmentStatusList);
     }
@@ -402,7 +402,7 @@ public class InteractiveReportController extends BaseController {
     report.getReportDataProvider().setUserId(loggedInUserId(request));
     CCEStorageCapacityReportDataProvider provider = (CCEStorageCapacityReportDataProvider)report.getReportDataProvider();
     List<CCEStorageCapacityReport> list = (List<CCEStorageCapacityReport>)
-        provider.getMainReportData(request.getParameterMap(), request.getParameterMap(), page, max);
+        provider.getReportBody(request.getParameterMap(), request.getParameterMap(), page, max);
 
     return new Pages(page, max, list);
   }
@@ -417,7 +417,7 @@ public class InteractiveReportController extends BaseController {
         report.getReportDataProvider().setUserId(loggedInUserId(request));
         LabEquipmentsByDonorReportDataProvider provider = (LabEquipmentsByDonorReportDataProvider) report.getReportDataProvider();
         List<LabEquipmentsByDonorReport> labEquipmentsListByDonor = (List<LabEquipmentsByDonorReport>)
-                provider.getMainReportData(request.getParameterMap(), request.getParameterMap(), page, max);
+                provider.getReportBody(request.getParameterMap(), request.getParameterMap(), page, max);
 
         return new Pages(page, max, labEquipmentsListByDonor);
     }
@@ -432,7 +432,7 @@ public class InteractiveReportController extends BaseController {
         report.getReportDataProvider().setUserId(loggedInUserId(request));
         PushedProductReportDataProvider provider = (PushedProductReportDataProvider) report.getReportDataProvider();
         List<OrderFillRateReport> pushedProductList = (List<OrderFillRateReport>)
-                provider.getMainReportData(request.getParameterMap(), request.getParameterMap(), page, max);
+                provider.getReportBody(request.getParameterMap(), request.getParameterMap(), page, max);
 
         return new Pages(page, max, pushedProductList);
     }
@@ -447,7 +447,7 @@ public class InteractiveReportController extends BaseController {
         report.getReportDataProvider().setUserId(loggedInUserId(request));
         OrderFillRateReportSummaryDataProvider provider = (OrderFillRateReportSummaryDataProvider) report.getReportDataProvider();
         List<OrderFillRateSummaryReport> orderFillRateReportList = (List<OrderFillRateSummaryReport>)
-                provider.getMainReportData(request.getParameterMap(), request.getParameterMap(), page, max);
+                provider.getReportBody(request.getParameterMap(), request.getParameterMap(), page, max);
 
         return new Pages(page, max, orderFillRateReportList);
     }
@@ -462,7 +462,7 @@ public class InteractiveReportController extends BaseController {
         report.getReportDataProvider().setUserId(loggedInUserId(request));
         EquipmentsFunctioningDataProvider provider = (EquipmentsFunctioningDataProvider) report.getReportDataProvider();
         List<LabEquipmentStatusReport> labEquipmentFunctioningList = (List<LabEquipmentStatusReport>)
-                provider.getMainReportData(request.getParameterMap(), request.getParameterMap(), page, max);
+                provider.getReportBody(request.getParameterMap(), request.getParameterMap(), page, max);
 
         return new Pages(page, max, labEquipmentFunctioningList);
     }
@@ -477,7 +477,7 @@ public class InteractiveReportController extends BaseController {
         report.getReportDataProvider().setUserId(loggedInUserId(request));
         EquipmentsNonFunctioningDataProvider provider = (EquipmentsNonFunctioningDataProvider) report.getReportDataProvider();
         List<LabEquipmentStatusReport> labEquipmentNonFunctioningList = (List<LabEquipmentStatusReport>)
-                provider.getMainReportData(request.getParameterMap(), request.getParameterMap(), page, max);
+                provider.getReportBody(request.getParameterMap(), request.getParameterMap(), page, max);
 
         return new Pages(page, max, labEquipmentNonFunctioningList);
     }
@@ -493,7 +493,7 @@ public class InteractiveReportController extends BaseController {
         report.getReportDataProvider().setUserId(loggedInUserId(request));
         SeasonalRationingReportDataProvider provider = (SeasonalRationingReportDataProvider) report.getReportDataProvider();
         List<SeasonalRationingReport> seasonalRationingAdjustmentList = (List<SeasonalRationingReport>)
-                provider.getMainReportData(request.getParameterMap(), request.getParameterMap(), page, max);
+                provider.getReportBody(request.getParameterMap(), request.getParameterMap(), page, max);
 
         return new Pages(page, max, seasonalRationingAdjustmentList);
     }
@@ -508,7 +508,7 @@ public class InteractiveReportController extends BaseController {
         Report report = reportManager.getReportByKey("timeliness");
         report.getReportDataProvider().setUserId(loggedInUserId(request));
         List<TimelinessReport> timelinessReportList =
-                (List<TimelinessReport>) report.getReportDataProvider().getMainReportData(request.getParameterMap(), request.getParameterMap(), page, max);
+                (List<TimelinessReport>) report.getReportDataProvider().getReportBody(request.getParameterMap(), request.getParameterMap(), page, max);
         return new Pages(page, max, timelinessReportList);
     }
     @RequestMapping(value = "/reportdata/cceRepairManagement", method = GET, headers = BaseController.ACCEPT_JSON)
@@ -520,7 +520,7 @@ public class InteractiveReportController extends BaseController {
 
         Report report = reportManager.getReportByKey("cce_repair_management");
         report.getReportDataProvider().setUserId(loggedInUserId(request));
-        List<CCERepairManagementReport> CCERepairManagementReport = (List<CCERepairManagementReport>) report.getReportDataProvider().getMainReportData(request.getParameterMap(), request.getParameterMap(), page, max);
+        List<CCERepairManagementReport> CCERepairManagementReport = (List<CCERepairManagementReport>) report.getReportDataProvider().getReportBody(request.getParameterMap(), request.getParameterMap(), page, max);
 
         return new Pages(page, max, CCERepairManagementReport);
     }
@@ -535,7 +535,7 @@ public class InteractiveReportController extends BaseController {
 
         Report report = reportManager.getReportByKey("cce_repair_management_equipment_list");
         report.getReportDataProvider().setUserId(loggedInUserId(request));
-        List<CCERepairManagementEquipmentList> repairManagementEquipmentList = (List<CCERepairManagementEquipmentList>) report.getReportDataProvider().getMainReportData(request.getParameterMap(), request.getParameterMap(), page, max);
+        List<CCERepairManagementEquipmentList> repairManagementEquipmentList = (List<CCERepairManagementEquipmentList>) report.getReportDataProvider().getReportBody(request.getParameterMap(), request.getParameterMap(), page, max);
 
         return new Pages(page, max, repairManagementEquipmentList);
     }
@@ -551,7 +551,7 @@ public class InteractiveReportController extends BaseController {
         report.getReportDataProvider().setUserId(loggedInUserId(request));
 
         List<ReplacementPlanSummary> reportList =
-                (List<ReplacementPlanSummary>) report.getReportDataProvider().getMainReportData(request.getParameterMap(), request.getParameterMap(), page, max);
+                (List<ReplacementPlanSummary>) report.getReportDataProvider().getReportBody(request.getParameterMap(), request.getParameterMap(), page, max);
 
         return new Pages(page, max, reportList);
     }
@@ -566,7 +566,7 @@ public class InteractiveReportController extends BaseController {
         Report report = reportManager.getReportByKey("equipment_replacement_list");
         report.getReportDataProvider().setUserId(loggedInUserId(request));
 
-        List<ReplacementPlanSummary> SummaryList = (List<ReplacementPlanSummary>)report.getReportDataProvider().getMainReportData(request.getParameterMap(), request.getParameterMap(), page, max);
+        List<ReplacementPlanSummary> SummaryList = (List<ReplacementPlanSummary>)report.getReportDataProvider().getReportBody(request.getParameterMap(), request.getParameterMap(), page, max);
 
         return new Pages(page, max, SummaryList);
     }
@@ -581,7 +581,7 @@ public class InteractiveReportController extends BaseController {
         Report report = reportManager.getReportByKey("cold_chain_equipment");
         report.getReportDataProvider().setUserId(loggedInUserId(request));
         List<CCEInventoryReportDatum> reportData =
-                (List<CCEInventoryReportDatum>) report.getReportDataProvider().getMainReportData(request.getParameterMap(), request.getParameterMap(), page, max);
+                (List<CCEInventoryReportDatum>) report.getReportDataProvider().getReportBody(request.getParameterMap(), request.getParameterMap(), page, max);
         return new Pages(page, max, reportData);
     }
 

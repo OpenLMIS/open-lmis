@@ -19,9 +19,7 @@ import lombok.NoArgsConstructor;
 import org.openlmis.report.model.ReportParameter;
 @Data
 @NoArgsConstructor
-@EqualsAndHashCode(callSuper=false)
 @AllArgsConstructor
-
 public class UserSummaryParams
       extends BaseParam implements ReportParameter {
 

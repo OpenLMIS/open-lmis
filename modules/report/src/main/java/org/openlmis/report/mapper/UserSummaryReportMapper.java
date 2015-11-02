@@ -35,15 +35,18 @@ public interface UserSummaryReportMapper {
     @SelectProvider(type=UserSummaryQueryBuilder.class, method="getQuery")
     @Options(resultSetType = ResultSetType.SCROLL_SENSITIVE, fetchSize=10,timeout=0,useCache=true,flushCache=true)
     public List<UserSummaryReport> getReport( @Param("filterCriteria") ReportParameter filterCriteria,
-                                             @Param("SortCriteria") Map<String, String[]> SortCriteria ,
+                                             @Param("SortCriteria") Map<String, String[]> sortCriteria ,
                                              @Param("RowBounds")RowBounds rowBounds);
 
     @Select("select rolename, count(*) count from vw_user_role_assignments group by rolename")
     public List<HashMap> getUserRoleAssignments();
+
     @Select("select * from programs where id = #{programId}" )
     Program getProgram(@Param(value = "programId") Long programId);
+
     @Select("select * from roles where id = #{roleId}" )
     Role getRole(@Param(value = "roleId") Long roleId);
+
     @Select("select * from supervisory_nodes where id = #{superviosryNodeId}" )
     SupervisoryNode getSuperVisoryNode(@Param(value = "superviosryNodeId") Long superviosryNodeId);
 }

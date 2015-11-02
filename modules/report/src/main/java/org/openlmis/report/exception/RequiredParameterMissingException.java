@@ -10,25 +10,12 @@
  * You should have received a copy of the GNU Affero General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.openlmis.report.model.dto;
+package org.openlmis.report.exception;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+public class RequiredParameterMissingException extends RuntimeException {
 
-/**
- * User: Issa
- * Date: 3/17/14
- * Time: 1:49 PM
- */
-@Data
-@AllArgsConstructor
-@NoArgsConstructor
-public class Alerts {
-    private Long id;
-    private String description;
-    private Long supervisoryNodeId;
-    private String category;
-    private Boolean email;
-    private Boolean sms;
+  public RequiredParameterMissingException(String message){
+    super(message);
+  }
+
 }

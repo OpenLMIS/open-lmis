@@ -14,7 +14,6 @@ package org.openlmis.report.service;
 import lombok.NoArgsConstructor;
 import org.apache.ibatis.session.RowBounds;
 import org.openlmis.report.mapper.LabEquipmentByDonorMapper;
-import org.openlmis.report.mapper.LabEquipmentMapper;
 import org.openlmis.report.model.ReportData;
 import org.openlmis.report.model.params.LabEquipmentListReportParam;
 import org.openlmis.report.util.SelectedFilterHelper;
@@ -36,12 +35,12 @@ public class LabEquipmentsByDonorReportDataProvider extends ReportDataProvider {
     private SelectedFilterHelper filterHelper;
 
     @Override
-    protected List<? extends ReportData> getResultSetReportData(Map<String, String[]> params) {
-        return getMainReportData(params, null, RowBounds.NO_ROW_OFFSET, RowBounds.NO_ROW_LIMIT);
+    protected List<? extends ReportData> getResultSet(Map<String, String[]> params) {
+        return getReportBody(params, null, RowBounds.NO_ROW_OFFSET, RowBounds.NO_ROW_LIMIT);
     }
 
     @Override
-    public List<? extends ReportData> getMainReportData(Map<String, String[]> filterCriteria, Map<String, String[]> sorter, int page, int pageSize) {
+    public List<? extends ReportData> getReportBody(Map<String, String[]> filterCriteria, Map<String, String[]> sorter, int page, int pageSize) {
         RowBounds rowBounds = new RowBounds((page - 1) * pageSize, pageSize);
         return mapper.getFilteredLabEquipmentByDonorReport(getReportFilterData(filterCriteria), rowBounds, this.getUserId());
     }

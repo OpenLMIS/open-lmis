@@ -22,7 +22,6 @@ import org.openlmis.report.util.SelectedFilterHelper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Map;
@@ -41,13 +40,13 @@ public class SupplyStatusReportDataProvider extends ReportDataProvider {
   private SelectedFilterHelper filterHelper;
 
   @Override
-  protected List<? extends ReportData> getResultSetReportData(Map<String, String[]> filterCriteria) {
+  protected List<? extends ReportData> getResultSet(Map<String, String[]> filterCriteria) {
     RowBounds rowBounds = new RowBounds(RowBounds.NO_ROW_OFFSET, RowBounds.NO_ROW_LIMIT);
     return reportMapper.getSupplyStatus(getParam(filterCriteria), rowBounds, this.getUserId());
   }
 
   @Override
-  public List<? extends ReportData> getMainReportData(Map<String, String[]> filterCriteria, Map<String, String[]> SortCriteria, int page, int pageSize) {
+  public List<? extends ReportData> getReportBody(Map<String, String[]> filterCriteria, Map<String, String[]> sortCriteria, int page, int pageSize) {
     RowBounds rowBounds = new RowBounds((page - 1) * pageSize, pageSize);
     return reportMapper.getSupplyStatus(getParam(filterCriteria), rowBounds, this.getUserId());
   }
