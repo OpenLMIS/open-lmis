@@ -21,29 +21,26 @@
             </td>
             <td class=" col-2">
                 &nbsp;
-                <span openlmis-message="mmia.month"></span>
+                <span openlmis-message="view.rnr.mmia.month"></span>
                 <span> : </span> {{month}}
             </td>
         </tr>
 
         <tr>
             <td colspan="3">
-                <span openlmis-message="mmia.healthFacility"></span>
+                <span openlmis-message="view.rnr.healthFacility"></span>
                 <span>: {{rnr.facility.name}}</span>
             </td>
             <td rowspan="2">
                 &nbsp;
-                <span openlmis-message="mmia.year"></span>
+                <span openlmis-message="view.rnr.mmia.year"></span>
                 <span>: {{year}}</span>
             </td>
         </tr>
 
         <tr class="">
-            <td colspan="2">
-                <span openlmis-message="mmia.district"></span>
-                <span>:{{rnr.facility.geographicZone.name}}</span>
-            </td>
-            <td><span openlmis-message="mmia.province"></span>:</td>
+            <td colspan="2"><span openlmis-message="view.rnr.district"></span>: {{rnr.facility.geographicZone.name}}</td>
+            <td><span openlmis-message="view.rnr.province"></span>:</td>
         </tr>
     </table>
     <div class="separate"></div>
@@ -51,15 +48,15 @@
         <thead>
         <tr>
             <th class="banner-text"></th>
-            <th class="border-bottom-bold" openlmis-message="mmia.fnm"></th>
-            <th class="col-4" openlmis-message="mmia.medicine"></th>
-            <th openlmis-message="mmia.issuedUnit"></th>
-            <th openlmis-message="mmia.initialAmount"></th>
-            <th openlmis-message="mmia.entries"></th>
-            <th openlmis-message="mmia.issues"></th>
-            <th openlmis-message="mmia.adjustments"></th>
-            <th openlmis-message="mmia.inventory"></th>
-            <th openlmis-message="mmia.validate"></th>
+            <th class="border-bottom-bold" openlmis-message="view.rnr.fnm"></th>
+            <th class="col-4" openlmis-message="view.rnr.mmia.medicine"></th>
+            <th openlmis-message="view.rnr.mmia.issuedUnit"></th>
+            <th openlmis-message="view.rnr.mmia.initialAmount"></th>
+            <th openlmis-message="view.rnr.mmia.entries"></th>
+            <th openlmis-message="view.rnr.mmia.issues"></th>
+            <th openlmis-message="view.rnr.mmia.adjustments"></th>
+            <th openlmis-message="view.rnr.mmia.inventory"></th>
+            <th openlmis-message="view.rnr.mmia.validate"></th>
         </tr>
         </thead>
         <tbody>
@@ -158,9 +155,9 @@
                 <thead>
                 <tr>
                     <th class="banner-text"></th>
-                    <th openlmis-message="mmia.regime.code"></th>
-                    <th class="col-4" openlmis-message="mmia.regime.therapeutic"></th>
-                    <th openlmis-message="mmia.regime.column.total">Total</th>
+                    <th openlmis-message="view.rnr.mmia.regime.code"></th>
+                    <th class="col-4" openlmis-message="view.rnr.mmia.regime.therapeutic"></th>
+                    <th openlmis-message="view.rnr.mmia.regime.column.total">Total</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -206,7 +203,7 @@
             <table class="total-form">
                 <tr>
                     <td class="col-2 align-right bg-color-darkgray align-right">
-                        <span openlmis-message="mmia.regime.total"></span>
+                        <span openlmis-message="view.rnr.mmia.regime.total"></span>
                         <span> :</span>
                     </td>
                     <td>{{regimeTotal}}</td>
@@ -220,11 +217,11 @@
             <table class="patient-form">
                 <thead>
                 <tr>
-                    <th colspan="2" class="background-black" openlmis-message="mmia.patient.header"></th>
+                    <th colspan="2" class="background-black" openlmis-message="view.rnr.mmia.patient.header"></th>
                 </tr>
                 <tr>
-                    <th class="col-2" openlmis-message="mmia.patient.type"></th>
-                    <th class="col-3" openlmis-message="mmia.patient.total"></th>
+                    <th class="col-2" openlmis-message="view.rnr.mmia.patient.type"></th>
+                    <th class="col-3" openlmis-message="view.rnr.mmia.patient.total"></th>
                 </tr>
                 </thead>
 
@@ -260,7 +257,7 @@
                     </tr>
                 </table>
                 <div class="comment">
-                    <span openlmis-message="mmia.comments"></span>
+                    <span openlmis-message="view.rnr.mmia.comments"></span>
                     <span> : </span>
                     {{rnr.clientSubmittedNotes}}
                 </div>
@@ -272,23 +269,23 @@
         <table>
             <tr>
                 <td>
-                    <span openlmis-message="mmia.createBy"></span>
+                    <span openlmis-message="view.rnr.mmia.createBy"></span>
                     <span> : </span>
                 </td>
                 <td>
-                    <span openlmis-message="mmia.vistor"></span>
+                    <span openlmis-message="view.rnr.mmia.vistor"></span>
                     <span> : </span>
                 </td>
                 <td>
-                    <span openlmis-message="mmia.dateOfCreate"></span>
+                    <span openlmis-message="view.rnr.mmia.dateOfCreate"></span>
                     <span> : </span>
                 </td>
             </tr>
         </table>
 
-        <div>Nota: Mapa de Preenchimento Obrigat贸rio Mensal HdD em Conjunto com a Farm谩cia da Unidade Sanit谩ria/ ou DPM
+        <div>Nota: Mapa de Preenchimento Obrigatório Mensal HdD em Conjunto com a Farmácia da Unidade Sanitária/ ou DPM
         </div>
-        <div>Vers茫o no 5 14Nov 2012</div>
+        <div>Versão no 5 14Nov 2012</div>
 
     </div>
 </div>
