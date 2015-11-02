@@ -36,7 +36,7 @@
                 </select>
             </div>
 
-            <span class="field-error" ng-show="invalid" openlmis-message="missing.value">Please fill this value</span>
+            <span class="field-error" ng-show="invalid" openlmis-message="report.missing.facility"></span>
         </div>
 
         <div class="form-cell report-selection">
@@ -48,7 +48,8 @@
                 <input name="endTime" id="endTime" type="text"
                        ui-date
                        ng-model="reportParams.endTime"
-                       ng-required="true"/>
+                       ng-required="true"
+                       ng-change="checkDate()"/>
 
               <span class="field-error" ng-show="createPeriodForm.startDate.$error.required && showErrorForCreate"
                     openlmis-message="missing.value"></span>
@@ -75,9 +76,13 @@
             </tr>
             <tr ng-repeat="entry in reportData">
                 <td>{{entry.productName}}</td>
-                <td>{{entry.productQuantity}}</td>
+                <td style="text-align: right" ng-style="entry.productQuantity == 0 && {'color':'#F2DEDE'}">{{entry.productQuantity | number:0}}</td>
                 <td>{{entry.soonestExpiryDate | date:'MMMM y'}}</td>
-                <td>{{entry.lastSyncDate | date:'h:mm a d MMMM y'}}</td>
+                <td><span class="circle-icon" ng-style="calculateSyncInterval(entry) <= 24 && {'background-color':'green'}
+                        || calculateSyncInterval(entry) > 24*3 && {'background-color':'red'}
+                        || {'background-color':'yellow'}"> </span>
+                    <span>{{entry.lastSyncDate | date:'h:mm a d MMMM y'}}</span>
+                </td>
             </tr>
         </table>
     </div>

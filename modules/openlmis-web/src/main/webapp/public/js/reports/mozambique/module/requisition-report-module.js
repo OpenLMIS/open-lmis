@@ -1,4 +1,4 @@
-angular.module('requisition-report', ['openlmis', 'angularCombine', 'ngTable'])
+angular.module('requisition-report', ['openlmis', 'angularCombine', 'ngTable','ui.bootstrap.dialog'])
     .config(['$routeProvider',
         function ($routeProvider) {
             $routeProvider.

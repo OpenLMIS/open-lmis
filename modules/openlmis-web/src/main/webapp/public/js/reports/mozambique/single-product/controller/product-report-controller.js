@@ -1,5 +1,5 @@
 function ProductReportController(type) {
-    return function ($scope, $filter, ProductReportService,GeographicZoneService,FacilityService) {
+    return function ($scope, $filter, ProductReportService,GeographicZoneService,FacilityService, $dialog) {
 
         $scope.provinces = [];
         $scope.districts = [];
@@ -16,6 +16,8 @@ function ProductReportController(type) {
                 $scope.loadFacilities();
             }
             loadGeographicLevel();
+            $scope.reportParams = {};
+            $scope.reportParams.endTime = $filter('date')(new Date(), "yyyy-MM-dd");
         });
 
         $scope.loadProducts = function () {
@@ -82,7 +84,7 @@ function ProductReportController(type) {
         }
 
         $scope.filterDistrict = function () {
-            if (!$scope.reportParams || !$scope.reportParams.provinceId) {
+            if (!$scope.reportParams.provinceId) {
                 $scope.filteredDistrict = $scope.districts;
                 return;
             }
@@ -120,7 +122,7 @@ function ProductReportController(type) {
         }
 
         $scope.fillProvince = function () {
-            if (!$scope.reportParams || !$scope.reportParams.districtId) {
+            if (!$scope.reportParams.districtId) {
                 $scope.filteredProvince = $scope.provinces;
                 return;
             }
@@ -174,6 +176,22 @@ function ProductReportController(type) {
                     $scope.reportData = data.products;
                 });
             }
+        };
+
+        $scope.checkDate = function(){
+            if(new Date() < $scope.reportParams.endTime){
+                $scope.reportParams.endTime = null;
+                var options = {
+                    id: "chooseDateAlertDialog",
+                    header: "Confirmation",
+                    body: "Cannot choose future date!"
+                };
+                OpenLmisDialog.newDialog(options, function(){}, $dialog);
+            }
+        };
+
+        $scope.calculateSyncInterval = function(entry){
+            return (new Date() - entry.lastSyncDate)/1000/3600;
         };
 
         function validateFacility() {

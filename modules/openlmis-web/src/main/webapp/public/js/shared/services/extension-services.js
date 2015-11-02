@@ -1352,7 +1352,7 @@ services.factory('FacilityService',function($resource){
         allFacilities: function () {
             return $resource('/rest-api/lookup/facilities', {pageSize: 2000}, {});
         }
-    }
+    };
 });
 
 services.factory('GeographicZoneService',function($resource){
@@ -1363,5 +1363,5 @@ services.factory('GeographicZoneService',function($resource){
         loadGeographicLevel: function () {
             return $resource('/rest-api/lookup/geographic-levels', {}, {});
         }
-    }
+    };
 });

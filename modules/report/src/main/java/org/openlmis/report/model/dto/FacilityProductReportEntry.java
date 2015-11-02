@@ -4,9 +4,11 @@ import com.google.common.base.Predicate;
 import com.google.common.collect.FluentIterable;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.apache.commons.lang.time.DateUtils;
 import org.openlmis.stockmanagement.domain.StockCard;
 import org.openlmis.stockmanagement.domain.StockCardEntry;
 
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -33,11 +35,11 @@ public class FacilityProductReportEntry {
 
     }
 
-    private List<StockCardEntry> filterEntryByDate(StockCard stockCard, final Date date){
+    private List<StockCardEntry> filterEntryByDate(final StockCard stockCard, final Date date){
         return FluentIterable.from(stockCard.getEntries()).filter(new Predicate<StockCardEntry>() {
             @Override
             public boolean apply(StockCardEntry input) {
-                return input.getCreatedDate().before(date);
+                return !DateUtils.truncate(input.getCreatedDate(), Calendar.DATE).after(date);
             }
         }).toList();
     }
