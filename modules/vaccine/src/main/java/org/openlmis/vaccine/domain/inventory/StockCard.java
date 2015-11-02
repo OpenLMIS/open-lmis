@@ -8,6 +8,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.openlmis.core.domain.BaseModel;
 import org.openlmis.core.domain.Facility;
+import org.openlmis.core.domain.ISA;
 import org.openlmis.core.domain.Product;
 import org.openlmis.core.serializer.DateDeserializer;
 
@@ -18,6 +19,15 @@ import java.util.List;
 @EqualsAndHashCode(callSuper = false)
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class StockCard extends BaseModel {
+
+
+    Double whoRatio;
+    Integer dosesPerYear;
+    Double wastageFactor;
+    Double bufferPercentage;
+    Integer minimumValue;
+    Integer maximumValue;
+    Integer adjustmentValue;
 
     @JsonIgnore
     Facility facility;
@@ -44,6 +54,11 @@ public class StockCard extends BaseModel {
     List<StockCardEntry> entries;
 
     List<LotOnHand> lotsOnHand;
+
+
+
+
+
 
     /*
      The single overriddenisa value that used to exist has been replaced by the ability for users

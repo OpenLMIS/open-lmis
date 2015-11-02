@@ -9,7 +9,7 @@
  */
 
 
-function StockMovementViewController($scope, $window, UpdateOrderRequisitionStatus,VaccineLastStockMovement, StockCardsByCategoryAndRequisition, StockCardsForProgramByCategory, $dialog, homeFacility, programs, $routeParams, $location, VaccineIssueStock) {
+function StockMovementViewController($scope, $window,SaveDistribution,StockEvent, UpdateOrderRequisitionStatus,VaccineLastStockMovement, StockCardsByCategoryAndRequisition, StockCardsForProgramByCategory, $dialog, homeFacility, programs, $routeParams, $location, VaccineIssueStock) {
 
     var orderId = parseInt($routeParams.id, 10);
     var programId = parseInt($routeParams.programId, 10);
@@ -86,6 +86,64 @@ function StockMovementViewController($scope, $window, UpdateOrderRequisitionStat
     };
     var printTest = false;
 
+    $scope.distribute=function(){
+        var distribution = {};
+        var transaction = {};
+        transaction.transactionList=[];
+
+        distribution.fromFacilityId = homeFacility.id;
+        distribution.toFacilityId= $scope.facilityToIssue.id;
+        distribution.distributionDate = $scope.facilityToIssue.issueDate;
+        distribution.voucherNumber = $scope.facilityToIssue.issueVoucher;
+        distribution.lineItems=[];
+        distribution.distributionType="ROUTINE";
+        distribution.status="PENDING";
+        $scope.facilityToIssue.productsToIssue.forEach(function(product){
+            if(product.quantity >0)
+            {
+                var list = {};
+
+                list.productId = product.productId;
+                list.quantity=product.quantity;
+                list.facilityId = distribution.fromFacilityId;
+                list.toFacilityId = distribution.toFacilityId;
+                list.initiatedDate = distribution.distributionDate;
+                list.issueDate = distribution.distributionDate;
+                list.issueVoucher = distribution.voucherNumber;
+                list.toFacilityName = $scope.facilityToIssue.name;
+                if(product.lots !==undefined && product.lots.length >0)
+                {
+                    list.lots = [];
+                    product.lots.forEach(function(l)
+                    {
+                        if(l.quantity !==null && l.quantity >0)
+                        {
+                            var lot = {};
+                            lot.lotId = l.lotId;
+                            lot.vvmStatus=l.vvmStatus;
+                            lot.quantity = l.quantity;
+                            list.lots.push(lot);
+                        }
+
+                    });
+                }
+                distribution.lineItems.push(list);
+                transaction.transactionList.push(list);
+            }
+
+        });
+
+        SaveDistribution.save(distribution,function(data){
+            VaccineIssueStock.update(transaction, function (data) {
+                $scope.issueModal=false;
+                $scope.message=data.success;
+                print();
+                $scope.loadSupervisedFacilities($scope.userPrograms[0].id,homeFacility.id);
+            });
+        });
+    };
+
+
 
 
     $scope.submit = function () {
@@ -103,52 +161,101 @@ function StockMovementViewController($scope, $window, UpdateOrderRequisitionStat
 
         var callBack = function (result) {
             if (result) {
+                var distribution = {};
+                var events=[];
 
                 $scope.stockCardsByCategory.forEach(function (st) {
-                    var issueDate = st.issueDate;
-                    var issueVoucher = $scope.stockCardsByCategory[0].issueVoucher;
-                    st.stockCards.forEach(function (s) {
-                        var list = {};
-                        list.productId = s.product.id;
-                        list.quantity = s.quantity;
-                        list.facilityId = s.facilityId;
-                        list.toFacilityId = toFacilityId;
-                        list.initiatedDate = issueDate;
-                        list.issueDate = issueDate;
-                        list.issueVoucher = issueVoucher;
-                        list.toFacilityName = $routeParams.facilityName;
-                        list.dosesRequested = s.quantityRequested;
-                        list.gap = s.sum;
-                        list.productCategoryId = s.productCategory.id;
-                        list.lots = [];
-                        s.lotsOnHand.forEach(function (l) {
-                            var lot = {};
-                            lot.lotId = l.lot.id;
-                            lot.quantity = parseInt(l.quantity, 10);
-                            lot.quantityOnHand = l.quantityOnHand;
 
-                            list.lots.push(lot);
-                        });
-                        transaction.transactionList.push(list);
+                    distribution.fromFacilityId = homeFacility.id;
+                    distribution.toFacilityId= toFacilityId;
+                    distribution.distributionDate = st.issueDate;
+                    distribution.periodId = periodId;
+                    distribution.orderId = orderId;
+                    distribution.voucherNumber = $scope.stockCardsByCategory[0].issueVoucher;
+                    distribution.lineItems=[];
+                    distribution.distributionType="ROUTINE";
+                    distribution.status="PENDING";
+
+
+
+                    st.stockCards.forEach(function (s) {
+
+                        var list = {};
+
+                           list.productId = s.product.id;
+
+                           if(s.lotsOnHand !==undefined && s.lotsOnHand.length >0)
+                           {
+                           list.lots = [];
+                           var lotSum = 0;
+                           s.lotsOnHand.forEach(function (l) {
+
+
+                               if( l.quantity >0)
+                               {
+                                   var lot = {};
+                                   var event={};
+                                   event.type="ISSUE";
+                                   event.productCode= s.product.code;
+                                   event.facilityId=toFacilityId;
+                                   event.lotId= l.lot.id;
+                                   event.quantity= l.quantity;
+                                   event.customPros={"occurred":st.issueDate};
+                                   events.push(event);
+
+                                   lot.lotId = l.lot.id;
+                                   lot.quantity = l.quantity;
+                                   list.lots.push(lot);
+                                   lotSum = lotSum + l.quantity;
+                               }
+
+
+                           });
+                               list.quantity = lotSum;
+                           distribution.lineItems.push(list);
+
+                           }
+                        else{
+                               var event={};
+                               event.type="ISSUE";
+                               event.productCode= s.product.code;
+                               event.facilityId=toFacilityId;
+                               event.quantity= st.quantity;
+                               event.customPros={"occurred":st.issueDate};
+                               events.push(event);
+
+                           }
+
+
+
                     });
 
                 });
 
-                VaccineIssueStock.update(transaction, function () {
+                console.log(JSON.stringify(events));
+               StockEvent.save({facilityId:homeFacility.id},events,function(data){
+                   console.log(data);
+                   SaveDistribution.save(distribution,function(data) {
+                       // console.(data.success);
+                       // VaccineIssueStock.update(transaction, function () {
 
-                /*  // $scope.lastInsertedReport = data.success ;
-                    console.log(lastInsertedReport.list.push(data.success));*/
+                       /*  // $scope.lastInsertedReport = data.success ;
+                        console.log(lastInsertedReport.list.push(data.success));*/
 
 
-                    $scope.message = "label.form.Submitted.Successfully";
+                       $scope.message = "label.form.Submitted.Successfully";
+
+                       // });
+                   });
+               });
+
+
+
+               UpdateOrderRequisitionStatus.update({orderId: orderId}, function () {
 
                 });
 
-                UpdateOrderRequisitionStatus.update({orderId: orderId}, function () {
-
-                });
-
-                 print();
+                print();
             }
         };
 

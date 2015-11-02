@@ -11,7 +11,7 @@ function VaccineForecastingController($scope,$routeParams,$location,programs,hom
 
     }
  var refreshPageLineItems = function(){
-    StockRequirementsData.get(parseInt(program,10), parseInt(19077,10)).then(function (data) {
+    StockRequirementsData.get(parseInt(program,10), parseInt(homeFacility.id,10)).then(function (data) {
         dataToDisplay = data;
         $scope.numberOfPages = Math.ceil(dataToDisplay.length / $scope.pageSize) || 1;
         $scope.currentPage = (utils.isValidPage($routeParams.page, $scope.numberOfPages)) ? parseInt($routeParams.page, 10) : 1;
