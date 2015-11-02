@@ -146,4 +146,11 @@ public class FacilityProgramProductService {
   public List<FacilityProgramProduct> getActiveProductsForProgramAndFacility(Long programId, Long facilityId) {
     return FacilityProgramProduct.filterActiveProducts(getForProgramAndFacility(programId, facilityId));
   }
+
+  public ISA getOverriddenIsa(Long programProductId, Long facilityId)
+  {
+    return repository.getOverriddenIsa(programProductId,facilityId);
+  }
+
+
 }
