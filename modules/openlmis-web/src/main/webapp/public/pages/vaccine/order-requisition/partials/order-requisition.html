@@ -41,7 +41,7 @@
         <div ng-show="report.LineItemViews.length" class="alert alert-info" openlmis-message="label.no.products"></div>
 
 
-        <div id="pod" class="rnr-table" ng-hide="report.LineItemViews.length">
+        <div id="pod" class="rnr-table" ng-hide="report.LineItemViews.length > 0">
             <table id="podTable" class="table table-bordered" fixed-table-header>
                 <thead>
                 <tr>
@@ -53,16 +53,16 @@
                 </tr>
                 </thead>
 
-                <tbody ng-repeat="(productCategory,lineItems) in report.LineItemViews">
+                <tbody ng-repeat="(key,items) in report.LineItemViews | orderObjectBy:'displayOrder'">
 
                 <tr>
-                    <td class="productCategory" id="productCategory{{$index}}" colspan="5"
-                        ng-bind="productCategory">
+                    <td class="productCategory" id="key{{$index}}" colspan="5"
+                        ng-bind="items[0].productCategory.name">
 
                     </td>
                 </tr>
 
-                <tr ng-repeat="item in lineItems">
+                <tr ng-repeat="item in items">
 
                     <td class="cell-input col-product">
                         <span ng-bind="item.product.primaryName" id="product{{$index}}" class="cell-text"></span>
@@ -74,14 +74,14 @@
                               class="cell-text"></span>
                     </td>
                     <td class="cell-input">
-                        <span ng-bind="item.getReorderLevel()" id="item.ReorderLevel{{$index}}"
+                        <span ng-bind="item.getReorderLevel() | number" id="item.ReorderLevel{{$index}}"
                               class="cell-text"></span>
                     </td>
                     <td class="cell-input col-stockAvailable" ng-hide="selectedType==1">
                         <span class="{{(item.stockOnHand <= item.getBufferStock())?'red':((item.stockOnHand > item.getBufferStock()) && (item.stockOnHand <= item.getReorderLevel())  )?'yellow':
 
                         ((item.stockOnHand > item.getReorderLevel()) && (item.getReorderLevel() <= item.getMaximumStock()))?green:'black'}}  cell-text"
-                              ng-bind="item.stockOnHand">
+                              ng-bind="item.stockOnHand | number">
                         </span>
 
                     </td>
@@ -89,14 +89,14 @@
                     <td class="cell-input col-stockAvailable" ng-hide="selectedType==0">
                         <span class="{{(item.getTotalStockOnHand() <= item.getBufferStock())?'red':((item.getTotalStockOnHand() > item.getBufferStock()) && (item.getTotalStockOnHand() <= item.getReorderLevel())  )?'yellow':
                         ((item.getTotalStockOnHand() > item.getReorderLevel()) && (item.getReorderLevel() <= item.getMaximumStock()))?green:'black'}}  cell-text "
-                              ng-bind="item.getTotalStockOnHand() ">
+                              ng-bind="item.getTotalStockOnHand() | number">
                         </span>
 
 
                     </td>
 
                     <td class="cell-input col-amountRequired">
-                        <span ng-bind="item.getQuantityToRequest() | positive" id="amountRequired{{$index}}"
+                        <span ng-bind="item.getQuantityToRequest() | number" id="amountRequired{{$index}}"
                               class="cell-text"></span>
                     </td>
 
@@ -104,7 +104,7 @@
                 </tbody>
             </table>
         </div>
-        <openlmis-pagination ng-show="pageLineItems.length" num-pages="numberOfPages" current-page="currentPage"
+        <openlmis-pagination ng-show="report.length" num-pages="numberOfPages" current-page="currentPage"
                              max-size="10"
                              error-pages="errorPages"></openlmis-pagination>
 

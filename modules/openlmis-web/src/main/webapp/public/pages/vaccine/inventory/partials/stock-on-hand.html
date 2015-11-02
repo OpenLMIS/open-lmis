@@ -153,13 +153,13 @@
     </div>
 
     <div form-toolbar id="action_buttons" class="action-buttons">
-        <div class="form-cell button-row">
+      <!--  <input class="form-cell button-row">-->
             <input ng-disabled='selectedType === "1"' ng-show="hasPermission('CREATE_ORDER_REQUISITION') && createOrder==true" ng-click="Requisition()" id="requisitionButton"
                    type="submit" id="requisition-button" class="btn btn-primary save-button"
                    openlmis-message="button.create.requisition"/>
 
-            <input ng-disabled='selectedType === "1"' ng-show="hasPermission('RECEIVE_STOCK') && receiveConsignment==true" ng-click="ReceiveConsignment()" id="requisitionButton2"
-           class="btn btn-primary save-button"  openlmis-message="button.receive.consignment"/>
+            <input ng-disabled='selectedType === "1"' type="submit"  ng-show="hasPermission('RECEIVE_STOCK') && receiveConsignment==true" ng-click="ReceiveConsignment()" id="requisitionButton"
+           class="btn btn-primary save-button"  value="Receive Consignment"/>
 
             <input ng-disabled='selectedType === "1"' id="adjustButton" type="submit" id="adjust-button"
                    ng-click="Adjustment()"
