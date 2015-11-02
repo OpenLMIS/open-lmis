@@ -13,18 +13,18 @@
 package org.openlmis.vaccine.domain.reports;
 
 import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.openlmis.core.domain.BaseModel;
 
 import java.util.Date;
 
-@Data
+@Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@EqualsAndHashCode(callSuper = true)
-public class ReportStatusChange extends BaseModel{
+public class ReportStatusChange extends BaseModel {
 
   private Long reportId;
 
@@ -41,7 +41,7 @@ public class ReportStatusChange extends BaseModel{
   public ReportStatusChange(VaccineReport report, ReportStatus statusToSave, Long userId) {
     reportId = report.getId();
     status = statusToSave;
-    createdBy  = userId;
+    createdBy = userId;
     modifiedBy = userId;
   }
 }
