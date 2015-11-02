@@ -105,8 +105,8 @@ function ViewRnrListController($scope, facilities, RequisitionsForViewing, Progr
                     url = "view-requisition-mmia/";
                 }
             }
-            url += $scope.selectedItems[0].id + "/" + $scope.selectedItems[0].programId + "?supplyType=fullSupply&page=1";
-            $location.url(url);
+            //url += $scope.selectedItems[0].id + "/" + $scope.selectedItems[0].programId + "?supplyType=fullSupply&page=1";
+            //$location.url(url);
         });
         url += $scope.selectedItems[0].id + "/" + $scope.selectedItems[0].programId + "?supplyType=fullSupply&page=1";
         $location.url(url);

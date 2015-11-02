@@ -176,7 +176,7 @@ public interface GeographicZoneReportMapper {
             "SELECT * from geographic_zones gz\n" +
             "INNER JOIN userGeographicZonesRec gzRec on gz.id = gzRec.id\n" +
             "WHERE gz.parentId = #{parentId} order by gz.name\n")
-    List<GeoZoneTree> getUserGeographicZoneChildren(@Param("programId") Long programId, @Param("parentId") int parentId, @Param(        "userId") Long userId);
+    List<GeoZoneTree> getUserGeographicZoneChildren(@Param("programId") Long programId, @Param("parentId") int parentId, @Param("userId") Long userId);
 
     @Select("   SELECT  " +
             "   	gzz. ID,  " +

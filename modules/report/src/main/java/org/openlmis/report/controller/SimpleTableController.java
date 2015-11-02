@@ -46,7 +46,7 @@ import static org.springframework.web.bind.annotation.RequestMethod.GET;
 @Controller
 @NoArgsConstructor
 @RequestMapping(value = "/reports")
-public class SimpleTableController {
+public class SimpleTableController extends BaseController {
 
 	@Autowired
 	private RequisitionReportsMapper requisitionReportsMapper;
