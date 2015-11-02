@@ -30,7 +30,7 @@
               <div>
                 <p>
                   Please use the form below to customize and send sms notifications for
-                  <b>{{selected_facility.name}}</b>
+                  <strong>{{selected_facility.name}}</strong>
                 </p>
 
                 <div style="padding: 10px;">
@@ -55,7 +55,7 @@
             <div ng-show="show_email">
               <div>
                 <p>
-                  Use this form to customize and send email notifications for <b>{{selected_facility.name}}</b>
+                  Use this form to customize and send email notifications for <strong>{{selected_facility.name}}</strong>
                 </p>
 
                 <div style="padding: 10px;">
@@ -67,7 +67,7 @@
                     <div>
                       <table class="table table-bordered">
                         <tr ng-repeat="contact in contacts">
-                          <td><b>{{contact.name}}</b></td>
+                          <td><strong>{{contact.name}}</strong></td>
                           <td>{{contact.contact}}</td>
                         </tr>
                       </table>
@@ -123,7 +123,7 @@
             <div ng-show="show_email_supervisor">
               <div>
                 <p>
-                  Use this form to customize and send email notifications for <b>{{selected_facility.name}}</b>
+                  Use this form to customize and send email notifications for <strong>{{selected_facility.name}}</strong>
                 </p>
 
                 <div style="padding: 10px;">
@@ -135,7 +135,7 @@
                     <div>
                       <table class="table table-bordered">
                         <tr ng-repeat="contact in contacts">
-                          <td><b>{{contact.name}}</b></td>
+                          <td><strong>{{contact.name}}</strong></td>
                           <td>{{contact.contact}}</td>
                         </tr>
                       </table>
@@ -149,7 +149,7 @@
             <table ng-show="!show_email_supervisor" class="table table-bordered">
               <thead>
               <tr>
-                <th>Facility Namess</th>
+                <th>Facility Name</th>
                 <th>Phone</th>
                 <th>Action</th>
               </tr>

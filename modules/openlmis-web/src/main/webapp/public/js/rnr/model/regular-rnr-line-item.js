@@ -234,9 +234,9 @@ var RegularRnrLineItem = base2.Base.extend({
     
     // find the calculation option
     var normalizedConsumptionCalcOption = this.getCalcOption("normalizedConsumption");
-    if(normalizedConsumptionCalcOption == 'DISPENSED_PLUS_NEW_PATIENTS'){
+    if(normalizedConsumptionCalcOption === 'DISPENSED_PLUS_NEW_PATIENTS'){
       this.normalizedConsumption = this.quantityDispensed  + this.newPatientCount;
-    } else if(normalizedConsumptionCalcOption == "DISPENSED_X_90") {
+    } else if(normalizedConsumptionCalcOption === "DISPENSED_X_90") {
       if(this.stockOutDays < 90){
         this.normalizedConsumption = Math.round((90 * this.quantityDispensed) / (90 - this.stockOutDays));
       }else{
@@ -291,9 +291,9 @@ var RegularRnrLineItem = base2.Base.extend({
     var maxStockColumnCalculationOption = this.getCalcOption('maxStockQuantity');
 
     // if not default, apply the formula
-    if( maxStockColumnCalculationOption == 'CONSUMPTION_X_2'){
+    if( maxStockColumnCalculationOption === 'CONSUMPTION_X_2'){
       this.maxStockQuantity = this.normalizedConsumption * 2;
-    }else if( maxStockColumnCalculationOption == 'DISPENSED_X_2'){
+    }else if( maxStockColumnCalculationOption === 'DISPENSED_X_2'){
       this.maxStockQuantity = this.quantityDispensed * 2;
     }
     else {

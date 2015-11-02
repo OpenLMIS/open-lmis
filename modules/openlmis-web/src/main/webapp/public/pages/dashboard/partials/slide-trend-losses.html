@@ -1,0 +1,48 @@
+<!-- slide trend losses   -->
+<slide>
+    <accordion>
+        <accordion-group class="gray-cascade" is-open="product.lossesAndAdjustmentChart.openPanel">
+            <accordion-heading >
+                <div class="accordion-title">
+                    <div class="caption">
+
+                        <span ><span openlmis-message="title.losses.and.adjustment.trend"></span> : {{product.name}}</span>
+                    </div>
+                    <div class="tools">
+                        <i  ng-class="'icon-info-sign'" ns-popover ns-popover-template="losses-chart-info" ns-popover-trigger="mouseenter" ns-popover-theme="ns-popover-tooltip-theme" ns-popover-placement="bottom|right"></i>
+                        <i  ng-class="{'icon-minus-sign': product.lossesAndAdjustmentChart.openPanel, 'icon-plus-sign': !product.lossesAndAdjustmentChart.openPanel}"></i>
+                    </div>
+                </div>
+            </accordion-heading>
+            <c3chart bindto-id="{{product.name}}_losses_and_adjustment_chart">
+                <chart-tooltip value-format-function="formatValue" />
+                <chart-axes values-x="x" />
+                <chart-axis >
+                    <chart-axis-x axis-position="outer-center" axis-label="Period" axis-height="40"
+                                  axis-type="category" >
+                        <!--<chart-axis-x-tick tick-rotate="50" />-->
+                    </chart-axis-x>
+                    <chart-axis-y>
+                        <chart-axis-y-tick tick-format-function="formatValue" />
+                    </chart-axis-y>
+                </chart-axis>
+
+                <chart-column column-id="Quantity Lost"
+                              column-values="{{product.quantityLost}}"
+                              column-color="green"
+                              column-type="bar"/>
+                <chart-column column-id="Quantity Damaged"
+                              column-values="{{product.quantityDamaged}}"
+                              column-color="red"
+                              column-type="bar"/>
+                <chart-column column-id="Quantity Expired"
+                              column-values="{{product.quantityExpired}}"
+                              column-color="blue"
+                              column-type="bar"/>
+                <chart-column column-id="x"
+                              column-values="{{product.periods}}"/>
+                <chart-group group-values="Quantity Lost,Quantity Damaged,Quantity Expired"/>
+            </c3chart>
+        </accordion-group>
+    </accordion>
+</slide>
