@@ -22,7 +22,7 @@ var Rnr = function (rnr, programRnrColumns, numberOfMonths, operationalStatuses)
   var thisRnr = this;
   this.skipAll = false;
   this.numberOfMonths = numberOfMonths;
-  
+
   var getInvalidLineItemIndexes = function (lineItems) {
     var errorLineItems = [];
     $(lineItems).each(function (i, lineItem) {
@@ -112,10 +112,14 @@ var Rnr = function (rnr, programRnrColumns, numberOfMonths, operationalStatuses)
     }
     this.equipmentErrorMessage = "";
     $(this.fullSupplyLineItems).each(function (i, lineItem) {
-      if (lineItem.skipped) return;
-      if (!validateRequiredFields(lineItem)) return false;
-      if (!validateFormula(lineItem)) return false;
-      if (!validateEquipmentStatus(lineItem)) return false;
+      if (lineItem.skipped)
+        return;
+      if (!validateRequiredFields(lineItem))
+        return false;
+      if (!validateFormula(lineItem))
+        return false;
+      if (!validateEquipmentStatus(lineItem))
+        return false;
     });
     return errorMessage;
   };
@@ -130,7 +134,7 @@ var Rnr = function (rnr, programRnrColumns, numberOfMonths, operationalStatuses)
     });
     return errorMessage;
   };
-  
+
   Rnr.prototype.validateNonFullSupply = function () {
     var errorMessage = "";
 
@@ -242,17 +246,15 @@ var Rnr = function (rnr, programRnrColumns, numberOfMonths, operationalStatuses)
       for(var j = 0;eqli.relatedProducts !== undefined && j < eqli.relatedProducts.length;j++){
         var prod = eqli.relatedProducts[j];
         var lineItem = _.findWhere(this.fullSupplyLineItems, {productCode: prod.code});
-        if(lineItem !== null){
-          if(lineItem.equipments === undefined){
+        if(lineItem !== null && lineItem.equipments === undefined){
             lineItem.equipments = [];
-          }
+        }else if(lineItem !== null){
           lineItem.equipments.push(eqli);
         }
       }
     }
-    
   };
-  
+
   Rnr.prototype.init = function () {
     var thisRnr = this;
 
@@ -268,7 +270,8 @@ var Rnr = function (rnr, programRnrColumns, numberOfMonths, operationalStatuses)
     this.fullSupplyLineItems = prepareLineItems(this.fullSupplyLineItems);
     this.nonFullSupplyLineItems = prepareLineItems(this.nonFullSupplyLineItems);
     this.nonFullSupplyLineItems.sort(function (lineItem1, lineItem2) {
-      if (isUndefined(lineItem1)) return 1;
+      if (isUndefined(lineItem1))
+        return 1;
       return lineItem1.compareTo(lineItem2);
     });
     this.programRnrColumnList = programRnrColumns;

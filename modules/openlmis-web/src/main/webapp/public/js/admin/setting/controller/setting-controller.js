@@ -14,9 +14,11 @@ function ListSettingController($scope, $location, Settings, SettingUpdator) {
 
   $scope.current = '';
   $scope.CreateHeader = function(setting) {
-    showHeader = (setting.toUpperCase() !== $scope.current.toUpperCase());
+    if(setting.toUpperCase() !== $scope.current.toUpperCase()){
+      return true;
+    }
     $scope.current = setting;
-    return showHeader;
+    return false;
   };
 
   $scope.changeTab = function(tab){
