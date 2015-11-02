@@ -13,7 +13,7 @@
 app.directive('stockchart', ['messageService',function(messageService) {
     return{
             restrict: 'EA',
-            template: '<div ng-show="showGraph"></div> <div class="chart-tooltip" style="display: none;z-index:532;position: absolute;width: auto;line-height: 20px;padding: 10px;font-size: 14px;text-align: center;color:#333;background: #FFF;border: 1px solid #ccc;border-radius: 5px;text-shadow: rgba(0, 0, 0, 0.0980392) 1px 1px 1px;box-shadow: rgba(0, 0, 0, 0.0980392) 1px 1px 2px 0px;"></div>',
+            template: '<div ng-show="showGraph" ></div> <div class="chart-tooltip" style="display: none;z-index:532;position: absolute;width: auto;line-height: 20px;padding: 10px;font-size: 14px;text-align: center;color:#333;background: #FFF;border: 1px solid #ccc;border-radius: 5px;text-shadow: rgba(0, 0, 0, 0.0980392) 1px 1px 1px;box-shadow: rgba(0, 0, 0, 0.0980392) 1px 1px 2px 0px;"></div>',
             link: function(scope, elem, attrs){
                 var stockCards=null;
                 var forecasts=null;

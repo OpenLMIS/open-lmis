@@ -34,6 +34,7 @@ services.factory('StockCardsByCategory', function($resource,StockCards,$q, $time
                                                 s.productCategory=product[0].productCategory;
                                         });
                                         stockCards=_.sortBy(stockCards,'displayOrder');
+
                                         var byCategory=_.groupBy(stockCards,function(s){
                                                    return s.productCategory.name;
                                         });
@@ -99,18 +100,12 @@ services.factory('StockCardsByCategoryAndRequisition', function($resource,StockC
                                 var quantityToRequest= _.filter(quantityRequested, function(obj) {
                                     return obj.productId === s.product.id;
                                 });
-
-
                                 s.productCategory=product[0].productCategory;
-
-
                                 s.quantityRequested = quantityToRequest[0].quantityRequested;
-
                             });
                             var byCategory=_.groupBy(stockCards,function(s){
                                 return s.productCategory.name;
                             });
-
                             var stockCardsToDisplay = $.map(byCategory, function(value, index) {
                                 return [{"productCategory":index,"stockCards":value}];
                             });
@@ -203,10 +198,7 @@ services.factory('StockCardsForProgramByCategory', function($resource,VaccineOrd
 
                             deferred.resolve(stockCardsToDisplay);
                         });
-
                     });
-
-
                 });
             }
             else{
@@ -241,7 +233,7 @@ services.factory('RequisitionForFacility', function ($resource) {
     return $resource('/vaccine/orderRequisition/getAllBy/:programId/:periodId/:facilityId.json', {facilityId: '@facilityId', programId: '@programId'}, {});
 });
 
-services.factory('FacilitiesWithProducts', function($resource,$timeout,$q,VaccineReportFacilities,StockCards,DistributedFacilities){
+services.factory('FacilitiesWithProducts', function($resource,$timeout,$q,OneLevelSupervisedFacilities,StockCards,DistributedFacilities){
      var programId;
      var facilityId;
      var allSupervisedFacilities;
@@ -255,10 +247,9 @@ services.factory('FacilitiesWithProducts', function($resource,$timeout,$q,Vaccin
          var deferred =$q.defer();
                      $timeout(function(){
                          if(!isNaN(pId)){
-                            VaccineReportFacilities.get({programId:pId},function(f){
+                            OneLevelSupervisedFacilities.get(function(f){
 
                                 StockCards.get({facilityId:fId},function(s){
-                                console.log(JSON.stringify(s.stockCards));
                                     DistributedFacilities.get(function(d){
                                         allSupervisedFacilities=f.facilities;
                                         stockCards=s.stockCards;
@@ -280,9 +271,11 @@ services.factory('FacilitiesWithProducts', function($resource,$timeout,$q,Vaccin
                                                  }
                                                  product.name=stockCard.product.primaryName;
                                                  product.productId=stockCard.product.id;
+                                                 product.productCode=stockCard.product.code;
                                                  product.displayOrder=stockCard.product.id;
                                                  product.totalQuantityOnHand=stockCard.totalQuantityOnHand;
-                                                 product.quantity=(distributedProduct===undefined)?0:distributedProduct.quantity;
+                                                 product.quantity=(distributedProduct===undefined || facility.status==="RECEIVED")?0:distributedProduct.quantity;
+                                                 product.emergenceQuantity=0;
                                                  product.lineItemId=(distributedProduct===undefined)?null:distributedProduct.id;
                                                  product.initialQuantity=(distributedProduct === undefined)?null:distributedProduct.quantity;
                                                  if(stockCard.lotsOnHand !== undefined && stockCard.lotsOnHand.length >0)
@@ -298,7 +291,7 @@ services.factory('FacilitiesWithProducts', function($resource,$timeout,$q,Vaccin
                                                           lotOnHand.lotId=lot.lot.id;
                                                           lotOnHand.lotCode=lot.lot.lotCode;
                                                           lotOnHand.quantityOnHand=lot.quantityOnHand;
-                                                          lotOnHand.quantity=(distributedLot === undefined)?0:distributedLot.quantity;
+                                                          lotOnHand.quantity=(distributedLot === undefined || facility.status==="RECEIVED" )?0:distributedLot.quantity;
                                                           lotOnHand.lineItemLotId=(distributedLot === undefined)?null:distributedLot.id;
                                                           lotOnHand.initialQuantity=(distributedLot === undefined)?null:distributedLot.quantity;
                                                           lotOnHand.vvmStatus=lot.vvmStatus;
@@ -316,7 +309,7 @@ services.factory('FacilitiesWithProducts', function($resource,$timeout,$q,Vaccin
                                          facilities.routine = $.grep(allSupervisedFacilities, function (facility) {
                                                    return facility.status !=='RECEIVED';
                                          });
-                                         facilities.emergence = $.grep(allSupervisedFacilities, function (facility) {
+                                         facilities.emergency = $.grep(allSupervisedFacilities, function (facility) {
                                                    return facility.status ==="RECEIVED";
                                          });
                                          deferred.resolve(facilities);
@@ -333,6 +326,4 @@ services.factory('FacilitiesWithProducts', function($resource,$timeout,$q,Vaccin
      return {
        get: get,
       };
-
-
 });

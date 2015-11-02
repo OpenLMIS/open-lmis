@@ -148,8 +148,8 @@ services.factory('ManufacturerList', function ($resource) {
 
 
 
-services.factory('VaccineIssueStock', function($resource){
-    return $resource('/vaccine/inventory/stock/debit.json',{}, update);
+services.factory('StockEvent', function($resource){
+    return $resource('/api/v2/facilities/:facilityId/stockCards',{facilityId:'@facilityId'}, {save:{method:"POST"}});
 });
 
 /*
@@ -243,4 +243,24 @@ services.factory('UpdateOrderRequisitionStatus',function($resource){
 
 services.factory('VaccineLastStockMovement', function ($resource) {
     return $resource('/vaccine/inventory/stock/lastReport.json', {}, {});
+});
+
+services.factory('FacilityDistributed', function ($resource) {
+    return $resource('/vaccine/inventory/distribution/get-distributed.json', {}, {});
+});
+
+services.factory('SaveDistribution', function ($resource) {
+    return $resource('/vaccine/inventory/distribution/save.json', {}, {save:{method:'POST'}});
+});
+
+services.factory('DistributedFacilities', function ($resource) {
+    return $resource('/vaccine/inventory/distribution/get-distributed.json', {}, {});
+});
+
+services.factory('EquipmentNonFunctional',function($resource){
+    return $resource('/vaccine/inventory/dashboard/get-equipment-alerts',{},{});
+});
+
+services.factory('OneLevelSupervisedFacilities',function($resource){
+    return $resource('/vaccine/inventory/distribution/supervised-facilities',{},{});
 });

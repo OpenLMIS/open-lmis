@@ -11,7 +11,7 @@
  */
 
 
-function MassDistributionController($scope,$location, $window,programs,$timeout,facilityDistributed,homeFacility,FacilitiesWithProducts,SaveVaccineInventoryAdjustment,VaccineIssueStock,SaveDistribution,localStorageService,$anchorScroll) {
+function MassDistributionController($scope,$location, $window,programs,$timeout,facilityDistributed,homeFacility,FacilitiesWithProducts,StockCardsByCategory,StockEvent,SaveDistribution,localStorageService,$anchorScroll) {
 
      $scope.userPrograms=programs;
      $scope.facilityDisplayName=homeFacility.name;
@@ -19,15 +19,20 @@ function MassDistributionController($scope,$location, $window,programs,$timeout,
      $scope.distributionType='ROUTINE';
      $scope.pageSize =8;
      $scope.currentPage=1;
+     $scope.emergencyFacility=undefined;
      $scope.loadSupervisedFacilities=function(programId,facilityId){
          FacilitiesWithProducts.get(programId,facilityId).then(function(data){
 
                 $scope.allRoutineFacilities =data.routine;
-                $scope.allEmergenceFacilities =data.emergence;
+                $scope.allEmergencyFacilities =data.emergency;
                 $scope.numberOfPages = Math.ceil( $scope.allRoutineFacilities.length / $scope.pageSize) || 1;
                 $scope.page();
          });
      };
+
+    $scope.loadEmergencyFacility=function(){
+          $scope.emergencyFacility=_.findWhere($scope.allEmergencyFacilities,{id:$scope.emergencyFacilityId});
+    };
 
      $scope.showLots=function(facility,product)
      {
@@ -80,7 +85,7 @@ function MassDistributionController($scope,$location, $window,programs,$timeout,
      $scope.page=function(){
         if($scope.allRoutineFacilities !== undefined)
         {
-            $scope.supervisedFacilities = $scope.allRoutineFacilities.slice($scope.pageSize * ($scope.currentPage - 1), $scope.pageSize * $scope.currentPage);
+            $scope.routineFacilities = $scope.allRoutineFacilities.slice($scope.pageSize * ($scope.currentPage - 1), $scope.pageSize * $scope.currentPage);
         }
      };
      if($scope.userPrograms.length > 1)
@@ -93,9 +98,10 @@ function MassDistributionController($scope,$location, $window,programs,$timeout,
            $scope.showPrograms=false;
            $scope.loadSupervisedFacilities($scope.userPrograms[0].id,homeFacility.id);
      }
-     $scope.showIssueModal=function(facility){
+     $scope.showIssueModal=function(facility, type){
         $scope.allProductsZero=true;
-        $scope.facilityToIssue=_.findWhere($scope.supervisedFacilities, {id:facility.id});
+        $scope.facilityToIssue=facility;
+        $scope.facilityToIssue.type=type;
         $scope.facilityToIssue.productsToIssue.forEach(function(product){
 
             if(product.quantity > 0)
@@ -113,7 +119,7 @@ function MassDistributionController($scope,$location, $window,programs,$timeout,
      $scope.showPODModal=function(facility){
 
         $scope.podModal=true;
-        $scope.facilityPOD=_.findWhere($scope.supervisedFacilities, {id:facility.id});
+        $scope.facilityPOD=_.findWhere($scope.routineFacilities, {id:facility.id});
 
      };
 
@@ -162,29 +168,28 @@ function MassDistributionController($scope,$location, $window,programs,$timeout,
 
      $scope.distribute=function(){
             var distribution = {};
-            var transaction = {};
-            transaction.transactionList=[];
+            var events = [];
 
             distribution.fromFacilityId = homeFacility.id;
             distribution.toFacilityId= $scope.facilityToIssue.id;
             distribution.distributionDate = $scope.facilityToIssue.issueDate;
             distribution.voucherNumber = $scope.facilityToIssue.issueVoucher;
             distribution.lineItems=[];
-            distribution.distributionType="ROUTINE";
+            distribution.distributionType=$scope.facilityToIssue.type;
             distribution.status="PENDING";
             $scope.facilityToIssue.productsToIssue.forEach(function(product){
                 if(product.quantity >0)
                 {
                     var list = {};
+                    var event ={};
+
+                    event.type="ISSUE";
+                    event.productCode =product.productCode;
+                    event.facilityId=$scope.facilityToIssue.id;
+                    event.customProps={"occurred":$scope.facilityToIssue.issueDate};
 
                     list.productId = product.productId;
                     list.quantity=product.quantity;
-                    list.facilityId = distribution.fromFacilityId;
-                    list.toFacilityId = distribution.toFacilityId;
-                    list.initiatedDate = distribution.distributionDate;
-                    list.issueDate = distribution.distributionDate;
-                    list.issueVoucher = distribution.voucherNumber;
-                    list.toFacilityName = $scope.facilityToIssue.name;
                     if(product.lots !==undefined && product.lots.length >0)
                     {
                          list.lots = [];
@@ -193,32 +198,43 @@ function MassDistributionController($scope,$location, $window,programs,$timeout,
                             if(l.quantity !==null && l.quantity >0)
                             {
                                 var lot = {};
+                                event.lotId=l.lotId;
+                                event.quantity=l.quantity;
                                 lot.lotId = l.lotId;
                                 lot.vvmStatus=l.vvmStatus;
                                 lot.quantity = l.quantity;
                                 list.lots.push(lot);
+                                events.push(event);
                             }
 
                          });
                     }
+                    else{
+                        event.quantity=product.quantity;
+                        events.push(event);
+                    }
                     distribution.lineItems.push(list);
-                    transaction.transactionList.push(list);
                 }
 
             });
+            StockEvent.save({facilityId:homeFacility.id},events, function (data) {
+                if(data.success)
+                {
+                     $scope.issueModal=false;
+                     $scope.message=data.success;
+                     SaveDistribution.save(distribution,function(distribution){
+                              $scope.emergencyFacilityId=undefined;
+                              $scope.emergencyFacility=undefined;
+                              $scope.loadSupervisedFacilities($scope.userPrograms[0].id,homeFacility.id);
+                              print(distribution.distributionId);
 
-            SaveDistribution.save(distribution,function(data){
-                  VaccineIssueStock.update(transaction, function (data) {
-                      $scope.issueModal=false;
-                      $scope.message=data.success;
-                      print();
-                      $scope.loadSupervisedFacilities($scope.userPrograms[0].id,homeFacility.id);
-                  });
+                      });
+                }
             });
      };
 
-     var print = function(){
-          var url = '/vaccine/orderRequisition/issue/print';
+     var print = function(distributionId){
+          var url = '/vaccine/orderRequisition/issue/print/'+distributionId;
            $window.open(url, '_blank');
 
      };
@@ -241,7 +257,7 @@ function MassDistributionController($scope,$location, $window,programs,$timeout,
       };
 
       $scope.cancel=function(){
-        $location.path('/stock-on-hand');
+        $window.location='/public/pages/vaccine/inventory/dashboard/index.html#/stock-on-hand';
       };
 
      $scope.setSelectedFacility=function(facility)
@@ -258,34 +274,43 @@ function MassDistributionController($scope,$location, $window,programs,$timeout,
      };
 
      $scope.getSelectedFacilityColor = function (facility) {
-          if (!$scope.selectedFacilityId) {
-            return 'none';
-          }
+           if(facility !== undefined)
+           {
+                if (!$scope.selectedFacilityId) {
+                      return 'none';
+                 }
 
-          if ($scope.selectedFacilityId== facility.id) {
-            return "background-color :#dff0d8; color: white !important";
-          }
-          else {
-            return 'none';
-          }
+                if ($scope.selectedFacilityId== facility.id) {
+                     return "background-color :#dff0d8; color: white !important";
+                }
+                else {
+                    return 'none';
+                }
+           }
+
      };
-     $scope.loadEmergenceFacilities=function(){
-        $scope.emergenceFacilities=_.where($scope.allEmergenceFacilities,{name:$scope.facilityQuery});
+     $scope.loadEmergencyFacilities=function(){
+        $scope.emergencyFacilities=_.where($scope.allEmergencyFacilities,{name:$scope.facilityQuery});
      };
      $scope.hasProductToIssue=function(facility)
      {
         var hasAtLeastOne=false;
-        f=_.findWhere($scope.supervisedFacilities, {name:facility.name});
-        if(f.productsToIssue !== undefined)
+        var hasError=false;
+
+        if(facility !==undefined && facility.productsToIssue !== undefined)
         {
-             f.productsToIssue.forEach(function(p)
+             facility.productsToIssue.forEach(function(p)
                     {
-                        if(p.quantity >0)
+                        if(p.quantity >0 )
                         {
                            hasAtLeastOne=true;
                         }
+                        if(p.quantity >0 && p.quantityOnHand < p.quantity)
+                        {
+                            hasError=true;
+                        }
                     });
-                    return hasAtLeastOne;
+                    return (hasAtLeastOne && !hasError);
         }
 
      };

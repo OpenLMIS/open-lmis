@@ -8,7 +8,7 @@
  * You should have received a copy of the Mozilla Public License along with this program. If not, see http://www.mozilla.org/MPL/
  */
 
-function StockAdjustmentController($scope, $timeout,$location,$routeParams,programs,StockCardsByCategory,productsConfiguration,SaveVaccineInventoryAdjustment,localStorageService,homeFacility,adjustmentTypes,UserFacilityList) {
+function StockAdjustmentController($scope, $timeout,$window,$routeParams,programs,StockCardsByCategory,productsConfiguration,StockEvent,localStorageService,homeFacility,adjustmentTypes,UserFacilityList) {
 
     //Get Home Facility
     $scope.currentStockLot = undefined;
@@ -103,42 +103,54 @@ function StockAdjustmentController($scope, $timeout,$location,$routeParams,progr
 
      };
      $scope.updateStock=function(){
-            var transaction={};
-            transaction.transactionList=[];
-
+            var events=[];
             $scope.stockCardsToDisplay.forEach(function(st){
                 st.stockCards.forEach(function(s){
-                     var list={};
-                     list.productId=s.product.id;
-                     list.quantity=s.quantity;
-                     list.lots=[];
-                    s.lotsOnHand.forEach(function(l){
-                        var lot={};
-                        lot.lotId=l.lot.id;
-                        lot.quantity=l.quantity;
-                        lot.vvmStatus=l.vvmStatus;
-                        lot.adjustmentReasons=l.adjustmentReasons;
-                        list.lots.push(lot);
-                    });
-                   transaction.transactionList.push(list);
+                 console.log(JSON.stringify(s));
+                    if(s.lotsOnHand !==undefined && s.lotsOnHand.length>0){
+                        s.lotsOnHand.forEach(function(l){
+                            if(l.quantity !== undefined)
+                            {
+                                    l.adjustmentReasons.forEach(function(reason){
+                                        var event={};
+                                        event.type= "ADJUSTMENT";
+                                        event.productCode=s.product.code;
+                                        event.quantity=reason.quantity;
+                                        event.lotId=l.lot.id;
+                                        event.reasonName=reason.name;
+                                        events.push(event);
+                                    });
+                            }
+                        });
+                    }
+                    else{
+                     if(s.quantity !==undefined && s.quantity >0)
+                     {
+                        s.adjustmentReasons.forEach(function(reason){
+                            var event={};
+                            event.type= "ADJUSTMENT";
+                            event.productCode=s.product.code;
+                            event.quantity=reason.quantity;
+                            event.reasonName=reason.name;
+                            events.push(event);
+                        });
+                     }
+                    }
                 });
-
             });
-            SaveVaccineInventoryAdjustment.update(transaction,function(data)
-            {
+            console.log(JSON.stringify(events));
+           StockEvent.save({facilityId:homeFacility.id},events, function (data) {
                if(data.success !==null)
                {
                      $scope.message=data.success;
                      $timeout(function(){
-                         $location.path('/stock-on-hand');
+                       $window.location='/public/pages/vaccine/inventory/dashboard/index.html#/stock-on-hand';
                      },900);
                }
-
             });
-
      };
      $scope.cancel=function(){
-        $location.path('/stock-on-hand');
+        $window.location='/public/pages/vaccine/inventory/dashboard/index.html#/stock-on-hand';
      };
 
 
