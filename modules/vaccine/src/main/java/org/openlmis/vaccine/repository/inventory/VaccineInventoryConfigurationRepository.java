@@ -16,19 +16,19 @@ public class VaccineInventoryConfigurationRepository {
     VaccineInventoryConfigurationMapper mapper;
 
 
-    public List<VaccineInventoryConfiguration> getAll() {
+    public List<VaccineInventoryProductConfiguration> getAll() {
         return mapper.getAll();
     }
 
-    public VaccineInventoryConfiguration getById(Long id) {
+    public VaccineInventoryProductConfiguration getById(Long id) {
         return mapper.getById(id);
     }
 
-    public Integer insert(VaccineInventoryConfiguration configuration) {
+    public Integer insert(VaccineInventoryProductConfiguration configuration) {
         return mapper.insert(configuration);
     }
 
-    public Integer update(VaccineInventoryConfiguration configuration) {
+    public Integer update(VaccineInventoryProductConfiguration configuration) {
         return mapper.update(configuration);
     }
 

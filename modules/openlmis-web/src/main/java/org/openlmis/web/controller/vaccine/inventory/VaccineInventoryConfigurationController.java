@@ -14,7 +14,7 @@ package org.openlmis.web.controller.vaccine.inventory;
 
 import org.openlmis.core.web.OpenLmisResponse;
 import org.openlmis.core.web.controller.BaseController;
-import org.openlmis.vaccine.domain.inventory.VaccineInventoryConfiguration;
+import org.openlmis.vaccine.domain.inventory.VaccineInventoryProductConfiguration;
 import org.openlmis.vaccine.service.inventory.VaccineInventoryConfigurationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -37,7 +37,7 @@ public class VaccineInventoryConfigurationController extends BaseController {
 
     @RequestMapping(value = "save", method = PUT, headers = ACCEPT_JSON)
     //TODO @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_PROGRAM_PRODUCT')")
-    public ResponseEntity<OpenLmisResponse> save(@RequestBody List<VaccineInventoryConfiguration> configurations) {
+    public ResponseEntity<OpenLmisResponse> save(@RequestBody List<VaccineInventoryProductConfiguration> configurations) {
         service.save(configurations);
         return OpenLmisResponse.response("Configurations", service.getAll());
     }

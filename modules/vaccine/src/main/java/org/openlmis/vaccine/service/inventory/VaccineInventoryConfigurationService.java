@@ -30,17 +30,17 @@ public class VaccineInventoryConfigurationService {
     @Autowired
     VaccineInventoryConfigurationRepository repository;
 
-    public List<VaccineInventoryConfiguration> getAll() {
+    public List<VaccineInventoryProductConfiguration> getAll() {
         return repository.getAll();
     }
 
-    public VaccineInventoryConfiguration getById(Long id) {
+    public VaccineInventoryProductConfiguration getById(Long id) {
         return repository.getById(id);
     }
 
-    public void save(List<VaccineInventoryConfiguration> configurations) {
+    public void save(List<VaccineInventoryProductConfiguration> configurations) {
 
-        for (VaccineInventoryConfiguration configuration : configurations) {
+        for (VaccineInventoryProductConfiguration configuration : configurations) {
             Long productId = (configuration.getProductId() == null) ? configuration.getProduct().getId() : configuration.getProductId();
             configuration.setProductId(productId);
             if (configuration.getId() == null) {
