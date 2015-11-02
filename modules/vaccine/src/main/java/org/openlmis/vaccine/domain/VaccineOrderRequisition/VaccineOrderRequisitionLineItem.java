@@ -5,7 +5,9 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import org.openlmis.core.domain.BaseModel;
+import org.openlmis.core.domain.FacilityTypeApprovedProduct;
 import org.openlmis.core.domain.Product;
+import org.openlmis.core.domain.ProductCategory;
 
 @Data
 @NoArgsConstructor
@@ -16,8 +18,8 @@ public class VaccineOrderRequisitionLineItem extends BaseModel {
     private Long orderId;
     private Long productId;
     private String productName;
-    private String productCategory;
     private Product product;
+    private ProductCategory productCategory;
     private Integer displayOrder;
     private Integer maximumStock;
     private Integer minimumStock;
@@ -33,7 +35,6 @@ public class VaccineOrderRequisitionLineItem extends BaseModel {
     private Integer maxmonthsofstock;
     private Double minMonthsOfStock;
     private Double eop;
-
 
 
 }

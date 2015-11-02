@@ -44,7 +44,7 @@ public interface VaccineOrderRequisitionMapper {
 
     @Select("select * from vaccine_order_requisitions " +
             "   where " +
-            "   facilityId = #{facilityId} and programId = #{programId} and emergency=false order by id desc limit 1")
+            "   facilityId = #{facilityId} and programId = #{programId} order by id desc limit 1")
     VaccineOrderRequisition getLastReport(@Param("facilityId") Long facilityId, @Param("programId") Long programId);
 
 
@@ -102,7 +102,7 @@ public interface VaccineOrderRequisitionMapper {
 
     @Select("select * from vaccine_order_requisitions r " +
             "JOIN vaccine_order_requisition_line_items li on r.id = li.orderId  " +
-            " WHERE programId = #{programId} AND periodId = #{periodId} and facilityId = #{facilityId} and R.STATUS  IN('SUBMITTED') and productCategory is not null")
+            " WHERE programId = #{programId} AND periodId = #{periodId} and facilityId = #{facilityId} and R.STATUS  IN('SUBMITTED') ")
     List<OrderRequisitionDTO> getAllBy(@Param("programId") Long programId, @Param("periodId") Long periodId, @Param("facilityId") Long facilityId);
 
     @Select("select r.id,p.name programName, f.name facilityName,r.status,pp.startdate periodStartDate,pp.enddate periodEndDate,emergency,orderDate::timestamp  from vaccine_order_requisitions r   " +

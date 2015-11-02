@@ -46,7 +46,7 @@ public class VaccineOrderRequisitionController extends BaseController {
     public static final String OrderRequisitionColumns = "columns";
     private static final String PROGRAM_PRODUCT_LIST = "programProductList";
     private static final String PRINT_ORDER_REQUISITION = "Print Order Requisition";
-    private static final String PRINT_ISSUE_STOCK = "Print Issue report";
+    private static final String PRINT_ISSUE_STOCK = "vims_distribution";
     private static final String ORDER_REQUISITION_SEARCH = "search";
 
     @Autowired
@@ -103,7 +103,7 @@ public class VaccineOrderRequisitionController extends BaseController {
     }
 
     @RequestMapping(value = "initializeEmergency/{periodId}/{programId}/{facilityId}")
-   //TODO @PreAuthorize("@permissionEvaluator.hasPermission(principal,'CREATE_ORDER_REQUISITION)")
+    @PreAuthorize("@permissionEvaluator.hasPermission(principal,'CREATE_ORDER_REQUISITION')")
     public ResponseEntity<OpenLmisResponse> initializeEmergency(
             @PathVariable Long periodId,
             @PathVariable Long programId,
@@ -114,21 +114,20 @@ public class VaccineOrderRequisitionController extends BaseController {
     }
 
     @RequestMapping(value = "submit")
-    //TODO @PreAuthorize("@permissionEvaluator.hasPermission(principal,'CREATE_ORDER_REQUISITION')")
+   @PreAuthorize("@permissionEvaluator.hasPermission(principal,'CREATE_ORDER_REQUISITION')")
     public ResponseEntity<OpenLmisResponse> submit(@RequestBody org.openlmis.vaccine.domain.VaccineOrderRequisition.VaccineOrderRequisition orderRequisition, HttpServletRequest request){
         service.submit(orderRequisition, loggedInUserId(request));
         return response("report", orderRequisition);
     }
 
     @RequestMapping(value = "save")
-   //TODO @PreAuthorize("@permissionEvaluator.hasPermission(principal,'CREATE_ORDER_REQUISITION')")
+    @PreAuthorize("@permissionEvaluator.hasPermission(principal,'CREATE_ORDER_REQUISITION')")
     public ResponseEntity<OpenLmisResponse> save(@RequestBody org.openlmis.vaccine.domain.VaccineOrderRequisition.VaccineOrderRequisition orderRequisition, HttpServletRequest request){
         service.save(orderRequisition);
         return response("report", orderRequisition);
     }
 
     @RequestMapping(value = "lastReport/{facilityId}/{programId}", method = RequestMethod.GET)
-   //TODO @PreAuthorize("@permissionEvaluator.hasPermission(principal,'CREATE_ORDER_REQUISITION')")
     public ResponseEntity<OpenLmisResponse>
     getLastReport(@PathVariable  Long facilityId,@PathVariable Long programId,HttpServletRequest request){
 
@@ -136,7 +135,6 @@ public class VaccineOrderRequisitionController extends BaseController {
     }
 
     @RequestMapping(value = "get/{id}.json", method = RequestMethod.GET)
-   //TODO @PreAuthorize("@permissionEvaluator.hasPermission(principal,'CREATE_REQUISITION, AUTHORIZE_REQUISITION')")
     public ResponseEntity<OpenLmisResponse> getReport(@PathVariable Long id, HttpServletRequest request){
         return response("report", service.getAllDetailsById(id));
     }
@@ -145,22 +143,6 @@ public class VaccineOrderRequisitionController extends BaseController {
         public ResponseEntity<OpenLmisResponse> getUserHomeFacilities(HttpServletRequest request){
             return  response("homeFacility", facilityService.getHomeFacility(loggedInUserId(request)));
         }
-
-
-    @RequestMapping(value = "orderRequisitionTest/{id}/print", method = RequestMethod.GET, headers = ACCEPT_PDF)
-    @PostAuthorize("@vaccineOrderRequisitionPermissionService.hasPermission(principal, returnObject.model.get(\"orderRequisition\"), 'VIEW_REQUISITION')")
-    public ModelAndView printOrders(@PathVariable Long id)  throws JRException, IOException, ClassNotFoundException {
-
-        ModelAndView modelAndView = new ModelAndView("vaccineOrderRequisition");
-
-        org.openlmis.vaccine.domain.VaccineOrderRequisition.VaccineOrderRequisition requisition = service.getAllDetailsById(id);
-
-        modelAndView.addObject(VaccineOrderRequisition, requisition);
-        modelAndView.addObject(OrderRequisitionColumns,columnService.getAllColumns());
-
-        return modelAndView;
-    }
-
 
     @RequestMapping(value = "getPendingRequest/{facilityId}/{programId}", method = RequestMethod.GET,headers = ACCEPT_JSON)
     public ResponseEntity<OpenLmisResponse> getPendingRequest(@PathVariable  Long facilityId,@PathVariable Long programId,HttpServletRequest request){
@@ -175,7 +157,6 @@ public class VaccineOrderRequisitionController extends BaseController {
 
 
     @RequestMapping(value = "updateOrderRequest/{orderId}", method = RequestMethod.PUT,headers = ACCEPT_JSON)
-    //TODO @PreAuthorize("@permissionEvaluator.hasPermission(principal,'CREATE_ORDER_REQUISITION')")
     public ResponseEntity<OpenLmisResponse>
     updateORStatus(@PathVariable  Long orderId,HttpServletRequest request){
     try{
@@ -252,11 +233,11 @@ public class VaccineOrderRequisitionController extends BaseController {
     @RequestMapping(value = "issue/print", method = GET, headers = ACCEPT_JSON)
     public ModelAndView printIssueStock() throws JRException, IOException, ClassNotFoundException {
         Template orPrintTemplate = templateService.getByName(PRINT_ISSUE_STOCK);
-        StockMovement stockMovement = inventoryService.getLastStockMovement();
+        //StockMovement stockMovement = inventoryService.getLastStockMovement();
         JasperReportsMultiFormatView jasperView = jasperReportsViewFactory.getJasperReportsView(orPrintTemplate);
         Map<String, Object> map = new HashMap<>();
         map.put("format", "pdf");
-
+        int id = 14;
         Locale currentLocale = messageService.getCurrentLocale();
         map.put(JRParameter.REPORT_LOCALE, currentLocale);
         ResourceBundle resourceBundle = ResourceBundle.getBundle("messages", currentLocale);
@@ -268,7 +249,7 @@ public class VaccineOrderRequisitionController extends BaseController {
 
         String separator = System.getProperty("file.separator");
         map.put("image_dir", imgResource.getFile().getAbsolutePath() + separator);
-        map.put("ISSUE_ID", stockMovement.getId().intValue());
+        map.put("ISSUE_ID", id);
 
         return new ModelAndView(jasperView, map);
     }

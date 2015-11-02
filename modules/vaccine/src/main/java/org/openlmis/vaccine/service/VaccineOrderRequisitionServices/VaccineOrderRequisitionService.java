@@ -1,14 +1,9 @@
 package org.openlmis.vaccine.service.VaccineOrderRequisitionServices;
 
 import org.joda.time.DateTime;
-import org.openlmis.core.domain.ProcessingPeriod;
-import org.openlmis.core.domain.ProgramProduct;
-import org.openlmis.core.domain.SupervisoryNode;
+import org.openlmis.core.domain.*;
 import org.openlmis.core.repository.ProcessingPeriodRepository;
-import org.openlmis.core.service.FacilityService;
-import org.openlmis.core.service.ProgramProductService;
-import org.openlmis.core.service.ProgramService;
-import org.openlmis.core.service.SupervisoryNodeService;
+import org.openlmis.core.service.*;
 import org.openlmis.vaccine.domain.VaccineOrderRequisition.VaccineOrderRequisition;
 import org.openlmis.vaccine.domain.VaccineOrderRequisition.VaccineOrderRequisitionStatusChange;
 import org.openlmis.vaccine.domain.VaccineOrderRequisition.VaccineOrderStatus;
@@ -55,6 +50,8 @@ public class VaccineOrderRequisitionService {
     @Autowired
     VaccineOrderRequisitionsColumnService columnService;
 
+    @Autowired
+    FacilityProgramProductService facilityProgramProductService;
 
     @Transactional
     public VaccineOrderRequisition initialize(Long periodId, Long programId, Long facilityId, Long userId) {
@@ -86,9 +83,10 @@ public class VaccineOrderRequisitionService {
 
         VaccineOrderRequisition orderRequisition;
         SimpleDateFormat form = new SimpleDateFormat("dd-MM-YYYY");
-        //List<StockCard> stockCards = stockCardService.getStockCards(facilityId,programId);
+
+        Facility facility = facilityService.getById(facilityId);
+
         Date date = new Date();
-        List<ProgramProduct> programProducts = programProductService.getActiveByProgram(programId);
         SupervisoryNode supervisoryNode = supervisoryNodeService.getFor(facilityService.getFacilityById(facilityId), programService.getById(programId));
         List<StockCard> stockCard = vaccineInventoryService.getStockCards(facilityId, programId);
         orderRequisition = new VaccineOrderRequisition();
@@ -100,8 +98,9 @@ public class VaccineOrderRequisitionService {
         orderRequisition.setOrderDate(form.format(date));
         orderRequisition.setCreatedBy(userId);
         orderRequisition.setModifiedBy(userId);
-        orderRequisition.viewOrderRequisitionLineItems(stockCard, programProducts);
-        //orderRequisition.initiateOrderRequisitionLineItem(programProducts);
+        if(facility !=null)
+        orderRequisition.setFacility(facility);
+        orderRequisition.viewOrderRequisitionLineItems(stockCard);
         return orderRequisition;
     }
 
@@ -172,14 +171,6 @@ public class VaccineOrderRequisitionService {
                 reportStatusDTO.setStatus(VaccineOrderStatus.DRAFT.toString());
                 reportStatusDTO.setProgramId(programId);
                 reportStatusDTO.setFacilityId(facilityId);
-                results.add(reportStatusDTO);
-            }
-
-            if(results == null){
-                out.print("Got It");
-                OrderRequisitionDTO reportStatusDTO = new OrderRequisitionDTO();
-                reportStatusDTO.setPeriodName("Period");
-                reportStatusDTO.setPeriodId(2L);
                 results.add(reportStatusDTO);
             }
 

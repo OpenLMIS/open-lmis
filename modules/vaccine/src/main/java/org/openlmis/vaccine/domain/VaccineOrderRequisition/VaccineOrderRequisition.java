@@ -23,6 +23,7 @@ import static org.openlmis.vaccine.utils.ListUtil.emptyIfNull;
 public class VaccineOrderRequisition extends BaseModel {
     private Long periodId;
     private Long programId;
+    private ProductCategory productCategory;
     private VaccineOrderStatus status;
     private ProcessingPeriod period;
     private Facility facility;
@@ -38,12 +39,16 @@ public class VaccineOrderRequisition extends BaseModel {
     private List<StockCard> stockCards ;
     private List<VaccineOrderRequisitionColumns> columnsList;
 
-    public void viewOrderRequisitionLineItems(List<StockCard>stockCards, List<ProgramProduct>programProducts){
+    public void viewOrderRequisitionLineItems(List<StockCard>stockCards){
         lineItems = new ArrayList<>();
 
-       for(ProgramProduct programProduct :emptyIfNull(programProducts)) {
+        ISA myIsa;
 
            for (StockCard stockCard : stockCards) {
+
+               myIsa = new ISA.Builder().adjustmentValue(stockCard.getAdjustmentValue()).bufferPercentage(stockCard.getBufferPercentage()).dosesPerYear(stockCard.getDosesPerYear()).
+                       maximumValue(stockCard.getMaximumValue())
+                       .minimumValue(stockCard.getMinimumValue()).wastageFactor(stockCard.getWastageFactor()).whoRatio(stockCard.getWhoRatio()).build();
 
                VaccineOrderRequisitionLineItem lineItem = new VaccineOrderRequisitionLineItem();
 
@@ -51,18 +56,15 @@ public class VaccineOrderRequisition extends BaseModel {
                lineItem.setProductId(stockCard.getProduct().getId());
                lineItem.setProductName(stockCard.getProduct().getPrimaryName());
                lineItem.setMaxmonthsofstock(stockCard.getMaxmonthsofstock());
-               lineItem.setOverriddenisa(-1 /*stockCard.getOverriddenisa()*/);
+               lineItem.setOverriddenisa(myIsa.calculate(facility.getCatchmentPopulation()));
                lineItem.setEop(stockCard.getEop());
                lineItem.setStockOnHand(stockCard.getTotalQuantityOnHand());
                lineItem.setMinMonthsOfStock(stockCard.getMinmonthsofstock());
                lineItem.setOrderedDate(form.format(new Date()));
-               if (stockCard.getProduct().getPrimaryName().equals(programProduct.getProduct().getPrimaryName())){
-                   lineItem.setProductCategory(programProduct.getProductCategory().getName());
-               }
 
                lineItems.add(lineItem);
            }
-       }
+
     }
 
 
