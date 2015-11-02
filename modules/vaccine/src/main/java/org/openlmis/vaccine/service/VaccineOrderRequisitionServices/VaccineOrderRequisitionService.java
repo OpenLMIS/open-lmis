@@ -9,14 +9,15 @@ import org.openlmis.core.service.FacilityService;
 import org.openlmis.core.service.ProgramProductService;
 import org.openlmis.core.service.ProgramService;
 import org.openlmis.core.service.SupervisoryNodeService;
+import org.openlmis.stockmanagement.domain.StockCard;
+import org.openlmis.stockmanagement.service.StockCardService;
 import org.openlmis.vaccine.domain.VaccineOrderRequisition.VaccineOrderRequisition;
 import org.openlmis.vaccine.domain.VaccineOrderRequisition.VaccineOrderRequisitionStatusChange;
 import org.openlmis.vaccine.domain.VaccineOrderRequisition.VaccineOrderStatus;
-import org.openlmis.vaccine.domain.inventory.StockCard;
 import org.openlmis.vaccine.dto.OrderRequisitionDTO;
+import org.openlmis.vaccine.dto.OrderRequisitionStockCardDTO;
 import org.openlmis.vaccine.repository.VaccineOrderRequisitions.VaccineOrderRequisitionRepository;
 import org.openlmis.vaccine.repository.VaccineOrderRequisitions.VaccineOrderRequisitionStatusChangeRepository;
-import org.openlmis.vaccine.service.inventory.VaccineInventoryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -46,8 +47,6 @@ public class VaccineOrderRequisitionService {
     FacilityService facilityService;
     @Autowired
     ProgramService programService;
-    @Autowired
-    VaccineInventoryService vaccineInventoryService;
 
     @Autowired
     ProcessingPeriodRepository periodService;
@@ -90,7 +89,7 @@ public class VaccineOrderRequisitionService {
         Date date = new Date();
         List<ProgramProduct> programProducts = programProductService.getActiveByProgram(programId);
         SupervisoryNode supervisoryNode = supervisoryNodeService.getFor(facilityService.getFacilityById(facilityId), programService.getById(programId));
-        List<StockCard> stockCard = vaccineInventoryService.getStockCards(facilityId, programId);
+        List<OrderRequisitionStockCardDTO> stockCard = getStockCards(facilityId, programId);
         orderRequisition = new VaccineOrderRequisition();
         orderRequisition.setPeriodId(periodId);
         orderRequisition.setProgramId(programId);
@@ -216,5 +215,9 @@ public class VaccineOrderRequisitionService {
 
     public List<OrderRequisitionDTO>getAllSearchBy(Long facilityId,String dateRangeStart,String dateRangeEnd,Long programId){
         return orderRequisitionRepository.getAllSearchBy(facilityId,dateRangeStart,dateRangeEnd,programId);
+    }
+
+    public List<OrderRequisitionStockCardDTO> getStockCards(Long facilityId, Long programId) {
+        return orderRequisitionRepository.getStockCards(facilityId, programId);
     }
 }

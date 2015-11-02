@@ -6,8 +6,8 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import org.openlmis.core.domain.*;
-import org.openlmis.vaccine.domain.inventory.StockCard;
 import org.openlmis.vaccine.dto.OrderRequisitionDTO;
+import org.openlmis.vaccine.dto.OrderRequisitionStockCardDTO;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -21,6 +21,7 @@ import static org.openlmis.vaccine.utils.ListUtil.emptyIfNull;
 @AllArgsConstructor
 @EqualsAndHashCode(callSuper = true)
 public class VaccineOrderRequisition extends BaseModel {
+    public static final SimpleDateFormat form = new SimpleDateFormat("YYYY-MM-dd");
     private Long periodId;
     private Long programId;
     private VaccineOrderStatus status;
@@ -31,19 +32,18 @@ public class VaccineOrderRequisition extends BaseModel {
     private Long facilityId;
     private String orderDate;
     private boolean emergency;
-    public static final SimpleDateFormat form = new SimpleDateFormat("YYYY-MM-dd");
     private List<VaccineOrderRequisitionLineItem> lineItems;
     private List<VaccineOrderRequisitionStatusChange> statusChanges;
     private List<OrderRequisitionDTO> orderRequisitionDTOs;
-    private List<StockCard> stockCards ;
+    private List<OrderRequisitionStockCardDTO> stockCards;
     private List<VaccineOrderRequisitionColumns> columnsList;
 
-    public void viewOrderRequisitionLineItems(List<StockCard>stockCards, List<ProgramProduct>programProducts){
+    public void viewOrderRequisitionLineItems(List<OrderRequisitionStockCardDTO> stockCards, List<ProgramProduct> programProducts) {
         lineItems = new ArrayList<>();
 
        for(ProgramProduct programProduct :emptyIfNull(programProducts)) {
 
-           for (StockCard stockCard : stockCards) {
+           for (OrderRequisitionStockCardDTO stockCard : stockCards) {
 
                VaccineOrderRequisitionLineItem lineItem = new VaccineOrderRequisitionLineItem();
 

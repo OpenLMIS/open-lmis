@@ -17,7 +17,7 @@ import java.util.Date;
 @Data
 @EqualsAndHashCode(callSuper = false)
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class VaccineInventoryConfiguration extends BaseModel {
+public class VaccineInventoryProductConfiguration extends BaseModel {
 
     private String type;
 

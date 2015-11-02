@@ -13,8 +13,6 @@ import org.openlmis.reporting.model.Template;
 import org.openlmis.reporting.service.JasperReportsViewFactory;
 import org.openlmis.reporting.service.TemplateService;
 import org.openlmis.vaccine.domain.VaccineOrderRequisition.VaccineOrderStatus;
-import org.openlmis.vaccine.domain.inventory.StockMovement;
-import org.openlmis.vaccine.service.inventory.VaccineInventoryService;
 import org.openlmis.vaccine.service.VaccineOrderRequisitionServices.VaccineOrderRequisitionLineItemService;
 import org.openlmis.vaccine.service.VaccineOrderRequisitionServices.VaccineOrderRequisitionService;
 import org.openlmis.vaccine.service.VaccineOrderRequisitionServices.VaccineOrderRequisitionsColumnService;
@@ -46,7 +44,7 @@ public class VaccineOrderRequisitionController extends BaseController {
     public static final String OrderRequisitionColumns = "columns";
     private static final String PROGRAM_PRODUCT_LIST = "programProductList";
     private static final String PRINT_ORDER_REQUISITION = "Print Order Requisition";
-    private static final String PRINT_ISSUE_STOCK = "Print Issue report";
+    private static final String PRINT_ISSUE_STOCK = "vims_distribution";
     private static final String ORDER_REQUISITION_SEARCH = "search";
 
     @Autowired
@@ -64,8 +62,6 @@ public class VaccineOrderRequisitionController extends BaseController {
     ProgramService programService;
     @Autowired
     UserService userService;
-    @Autowired
-    VaccineInventoryService inventoryService;
     @Autowired
     ConfigurationSettingService settingService;
     @Autowired
@@ -245,10 +241,9 @@ public class VaccineOrderRequisitionController extends BaseController {
     }
 
 
-    @RequestMapping(value = "issue/print", method = GET, headers = ACCEPT_JSON)
-    public ModelAndView printIssueStock() throws JRException, IOException, ClassNotFoundException {
+    @RequestMapping(value = "issue/print/{id}", method = GET, headers = ACCEPT_JSON)
+    public ModelAndView printIssueStock(@PathVariable Long id) throws JRException, IOException, ClassNotFoundException {
         Template orPrintTemplate = templateService.getByName(PRINT_ISSUE_STOCK);
-        StockMovement stockMovement = inventoryService.getLastStockMovement();
         JasperReportsMultiFormatView jasperView = jasperReportsViewFactory.getJasperReportsView(orPrintTemplate);
         Map<String, Object> map = new HashMap<>();
         map.put("format", "pdf");
@@ -264,7 +259,7 @@ public class VaccineOrderRequisitionController extends BaseController {
 
         String separator = System.getProperty("file.separator");
         map.put("image_dir", imgResource.getFile().getAbsolutePath() + separator);
-        map.put("ISSUE_ID", stockMovement.getId().intValue());
+        map.put("ISSUE_ID", id.intValue());
 
         return new ModelAndView(jasperView, map);
     }

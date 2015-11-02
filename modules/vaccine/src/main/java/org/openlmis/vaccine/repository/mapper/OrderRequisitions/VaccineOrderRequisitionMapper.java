@@ -3,9 +3,14 @@ package org.openlmis.vaccine.repository.mapper.OrderRequisitions;
 import org.apache.ibatis.annotations.*;
 import org.openlmis.core.domain.Facility;
 import org.openlmis.core.domain.ProcessingPeriod;
+import org.openlmis.core.domain.Product;
 import org.openlmis.core.domain.Program;
+import org.openlmis.stockmanagement.domain.Lot;
+import org.openlmis.stockmanagement.domain.LotOnHand;
+import org.openlmis.stockmanagement.repository.mapper.StockCardMapper;
 import org.openlmis.vaccine.domain.VaccineOrderRequisition.VaccineOrderRequisition;
 import org.openlmis.vaccine.dto.OrderRequisitionDTO;
+import org.openlmis.vaccine.dto.OrderRequisitionStockCardDTO;
 import org.springframework.stereotype.Repository;
 
 import java.util.Date;
@@ -115,6 +120,30 @@ public interface VaccineOrderRequisitionMapper {
                                                 @Param("dateRangeStart") String dateRangeStart,
                                                 @Param("dateRangeEnd") String dateRangeEnd
                                                 ,@Param("programId") Long programId);
+
+    @Select("SELECT *" +
+            " FROM vw_stock_cards" +
+            " WHERE facilityid = #{facilityId}" +
+            " AND programid = #{programId}")
+    @Results({
+            @Result(property = "id", column = "id"),
+            @Result(property = "product", column = "productId", javaType = Product.class,
+                    one = @One(select = "org.openlmis.core.repository.mapper.ProductMapper.getById")),
+            @Result(property = "lotsOnHand", column = "id", javaType = List.class,
+                    many = @Many(select = "getLotsOnHand"))
+
+    })
+    List<OrderRequisitionStockCardDTO> getAllByFacilityAndProgram(@Param("facilityId") Long facilityId, @Param("programId") Long programId);
+
+    @Select("SELECT loh.*" +
+            " FROM lots_on_hand loh" +
+            " WHERE loh.stockcardid = #{stockCardId}")
+    @Results({
+            @Result(
+                    property = "lot", column = "lotId", javaType = Lot.class,
+                    one = @One(select = "org.openlmis.stockmanagement.repository.mapper.LotMapper.getById"))
+    })
+    List<LotOnHand> getLotsOnHand(@Param("stockCardId") Long stockCardId);
 
 }
 

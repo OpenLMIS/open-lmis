@@ -31,7 +31,7 @@ public class VaccineDistribution extends BaseModel {
 
     String distributionType;
 
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
     @JsonDeserialize(using = DateDeserializer.class)
     Date distributionDate;
 
