@@ -5,15 +5,17 @@ var VaccineOrderRequisition = function (orderRequisition) {
 
         function getLineItems(collection) {
             var lineItems = [];
-            angular.forEach(collection, function (stockCards, r) {
-                lineItems.push(new OrderRequisitionLineItem(stockCards, r));
+            angular.forEach(collection, function (lineItem, r) {
+                lineItems.push(new OrderRequisitionLineItem(lineItem, r));
             });
+            lineItems=_.sortBy(lineItems,'displayOrder');
             return lineItems;
         }
 
         this.lineItems = getLineItems(this.lineItems, this);
-
-        this.LineItemViews = _.groupBy(this.lineItems, 'productCategory');
+        this.LineItemViews = _.groupBy(this.lineItems, function(s){
+            return s.productCategory.name;
+        });
 
 
     };

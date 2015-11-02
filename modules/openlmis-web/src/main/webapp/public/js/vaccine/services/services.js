@@ -255,7 +255,7 @@ services.factory('StockRequirementsTest', function($resource) {
                 isArray: true //since list property is an array
             }
         }
-    )
+    );
 });
 
 services.factory('SaveForecastConfiguration',function($resource){
@@ -276,4 +276,9 @@ services.factory('SaveDistribution', function ($resource) {
 
 services.factory('DistributedFacilities', function ($resource) {
     return $resource('/vaccine/inventory/distribution/getDistributed.json', {}, {});
+});
+
+services.factory('StockEvent',function($resource){
+    return $resource('/api/v2/facilities/:facilityId/stockCards',{facilityId:'@facilityId'},{save:{method:"POST"}});
+
 });
