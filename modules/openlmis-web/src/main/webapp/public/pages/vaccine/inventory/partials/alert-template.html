@@ -11,33 +11,5 @@
 -->
 <!doctype html>
 <div>
-    <table class="table-bordered table table-striped"
-           ng-show="pendingRequisition == undefined || pendingRequisition.length == 0">
-        <thead>
-        <tr class="gradient-header">
-            <th openlmis-message="title.alerts" style="text-align: center"></th>
-        </tr>
-        </thead>
-        <tbody>
-        <tr>
-            <td>No data to show under selected filters</td>
-        </tr>
-        </tbody>
 
-    </table>
-
-    <div ng-show="pendingRequisition.length > 0">
-        <div class="row-fluid">
-            <div class="span12" ng-show="pendingRequisition.length > 0">
-                <div class="alert alert-success" id="saveSuccessMsgDiv" ng-show="messageInfo">
-                    <span ng-bind="messageInfo"></span>.&nbsp;&nbsp;
-                    <span> <a href="/public/pages/vaccine/order-requisition/index.html#/view" ng-click="popUp(this.href)" target="newWin" openlmis-message="title.view.pending"></a> </span>
-                </div>
-
-            </div>
-
-        </div>
-
-        <div class="clearfix"></div>
-    </div>
 </div>
