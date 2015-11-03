@@ -7,4 +7,4 @@ INSERT INTO rights (name, rightType, displaynamekey, description) VALUES
 DELETE FROM rights WHERE name = 'MANAGE_SUPERVISED_EQUIPMENTS';
 
 INSERT INTO rights (name, rightType,displaynamekey, description) VALUES
- ('MANAGE_SUPERVISED_EQUIPMENTS','ADMIN','right.manage.supervised.equipments','Permission to manage equipment inventory for supervised facility');
+ ('MANAGE_SUPERVISED_EQUIPMENTS','REQUISITION','right.manage.supervised.equipments','Permission to manage equipment inventory for supervised facility');
