@@ -19,9 +19,9 @@
             <label class="labels" openlmis-message="label.province"></label>
 
             <div class="form-fields">
-                <select ui-select2 style="width:160px;" class="large-input" ng-change="filterDistrict()" name="provinces" ng-model="reportParams.provinceId">
+                <select ui-select2 style="width:160px;" class="large-input" name="provinces" ng-model="reportParams.provinceId">
                     <option value="">ALL</option>
-                    <option ng-repeat="option in filteredProvince" value="{{option.id}}">{{option.name}}</option>
+                    <option ng-repeat="option in provinces | provinceFilter:reportParams.provinceId" value="{{option.id}}">{{option.name}}</option>
                 </select>
             </div>
         </div>
@@ -33,7 +33,7 @@
             <div class="form-fields">
                 <select ui-select2 style="width:160px;" class="large-input" ng-change="fillProvince()" name="districts" ng-model="reportParams.districtId">
                     <option value="">ALL</option>
-                    <option ng-repeat="option in filteredDistrict" value="{{option.id}}">{{option.name}}</option>
+                    <option ng-repeat="option in districts| districtFilter:reportParams.provinceId" value="{{option.id}}">{{option.name}}</option>
                 </select>
             </div>
         </div>
@@ -46,6 +46,7 @@
             <div class="form-field">
                 <input name="endTime" id="endTime" type="text"
                        ui-date
+                       ui-date-format
                        ng-model="reportParams.endTime"
                        ng-required="true"
                        ng-change="checkDate()"/>
