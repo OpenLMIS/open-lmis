@@ -49,7 +49,7 @@ public class VaccineReportRepository {
     lineItemService.saveCampaignLineItems(report.getCampaignLineItems(), report.getId());
   }
 
-  public void update(VaccineReport report, Long userId){
+  public void update(VaccineReport report, Long userId) {
     report.setModifiedBy(userId);
     mapper.update(report);
     saveDetails(report);

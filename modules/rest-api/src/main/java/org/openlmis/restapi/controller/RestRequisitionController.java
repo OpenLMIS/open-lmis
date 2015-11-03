@@ -91,9 +91,9 @@ public class RestRequisitionController extends BaseController {
     }
   }
 
-  @RequestMapping(value="/rest-api/requisitions", method = GET, headers = ACCEPT_JSON)
-  public ResponseEntity<RestResponse> getRequisitionsByFacilityAndProgram(@RequestParam(value="facilityCode") String facilityCode,
-                                                                          @RequestParam(value="programCode") String programCode) {
+  @RequestMapping(value = "/rest-api/requisitions", method = GET, headers = ACCEPT_JSON)
+  public ResponseEntity<RestResponse> getRequisitionsByFacilityAndProgram(@RequestParam(value = "facilityCode") String facilityCode,
+                                                                          @RequestParam(value = "programCode") String programCode) {
     try {
       return response("requisitions", restRequisitionService.getRequisitionsByFacilityAndProgram(facilityCode, programCode), OK);
     } catch (DataException e) {

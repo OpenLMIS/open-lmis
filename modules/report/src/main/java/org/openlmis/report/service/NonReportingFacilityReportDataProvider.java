@@ -118,7 +118,7 @@ public class NonReportingFacilityReportDataProvider extends ReportDataProvider {
 
     Long percent = 100L;
     if (totalFacilities != 0) {
-      percent = Math.round((nonReporting / totalFacilities ) * 100);
+      percent = Math.round((nonReporting / totalFacilities) * 100);
     }
     result.put(PERCENTAGE_NON_REPORTING, percent.toString());
 

@@ -139,7 +139,6 @@ public class RestRequisitionServiceTest {
   }
 
 
-
   @Test
   public void shouldUpdateClientSubmittedNotesIfExists() throws Exception {
     setUpRequisitionReportBeforeSubmit();
@@ -150,7 +149,7 @@ public class RestRequisitionServiceTest {
     verify(requisitionService).updateClientFields(requisition);
     assertEquals("xyz", requisition.getClientSubmittedNotes());
   }
-  
+
   @Test
   public void shouldUpdateClientSubmittedTimeWhenTimeIsSet() throws
           Exception {
@@ -160,7 +159,7 @@ public class RestRequisitionServiceTest {
     service.submitReport(report, 1L);
     verify(requisitionService, times(1)).updateClientFields(requisition);
   }
-  
+
   private void setUpRequisitionReportBeforeSubmit() throws Exception {
     RnrLineItem rnrLineItem = make(a(defaultRnrLineItem, with(productCode, "P10")));
     List<RnrLineItem> products = asList(rnrLineItem);
@@ -286,7 +285,7 @@ public class RestRequisitionServiceTest {
     when(requisitionService.getRequisitionsFor(any(RequisitionSearchCriteria.class), any(array.getClass()))).thenReturn(asList(new Rnr()));
 
     service.submitSdpReport(report, 1L);
-    verify(requisitionService,never()).initiate(any(Facility.class), any(Program.class), any(Long.class), any(Boolean.class), any(ProcessingPeriod.class));
+    verify(requisitionService, never()).initiate(any(Facility.class), any(Program.class), any(Long.class), any(Boolean.class), any(ProcessingPeriod.class));
 
   }
 
@@ -357,7 +356,7 @@ public class RestRequisitionServiceTest {
 
     Facility facility = make(a(defaultFacility, with(virtualFacility, false)));
     Rnr rnr = make(a(RequisitionBuilder.defaultRequisition, with
-        (RequisitionBuilder.facility, facility)));
+            (RequisitionBuilder.facility, facility)));
 
     expectedException.expect(DataException.class);
     expectedException.expectMessage("error.approval.not.allowed");
@@ -509,7 +508,7 @@ public class RestRequisitionServiceTest {
 
     Rnr rnr = make(a(RequisitionBuilder.defaultRequisition, with
             (RequisitionBuilder.facility,
-            reportFacility)));
+                    reportFacility)));
     rnr.setFullSupplyLineItems(asList(rnrLineItem1, rnrLineItem2));
 
     when(requisitionService.initiate(reportFacility, program, 3l, false, null)).thenReturn(rnr);
@@ -541,7 +540,7 @@ public class RestRequisitionServiceTest {
 
     Rnr rnr = make(a(RequisitionBuilder.defaultRequisition, with
             (RequisitionBuilder.facility,
-            reportFacility), with(RequisitionBuilder.program, rnrProgram)));
+                    reportFacility), with(RequisitionBuilder.program, rnrProgram)));
     rnr.setFullSupplyLineItems(asList(initiatedLineItem));
 
     when(requisitionService.initiate(reportFacility, rnrProgram, 3l, false, null)).thenReturn(rnr);
@@ -579,7 +578,7 @@ public class RestRequisitionServiceTest {
 
     Rnr rnr = make(a(RequisitionBuilder.defaultRequisition, with
             (RequisitionBuilder.facility,
-            reportFacility), with(RequisitionBuilder.program, rnrProgram)));
+                    reportFacility), with(RequisitionBuilder.program, rnrProgram)));
     rnr.setFullSupplyLineItems(asList(initiatedLineItem));
 
     when(requisitionService.initiate(reportFacility, rnrProgram, 3l, false, null)).thenReturn(rnr);

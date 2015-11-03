@@ -47,21 +47,21 @@ import static org.springframework.web.bind.annotation.RequestMethod.GET;
 @RequestMapping(value = "/reports")
 public class SimpleTableController extends BaseController {
 
-	@Autowired
-	private RequisitionReportsMapper requisitionReportsMapper;
+    @Autowired
+    private RequisitionReportsMapper requisitionReportsMapper;
 
-	@RequestMapping(value = "/requisition-report", method = GET, headers = BaseController.ACCEPT_JSON)
-	public ResponseEntity<OpenLmisResponse> requisitionReport(
-					@RequestParam (value = "startTime", required = true) Date startTime,
-					@RequestParam(value = "endTime", required = true) Date endTime) {
-		return OpenLmisResponse.response("rnr_list", requisitionReportsMapper
-            .getRequisitionList(startTime, endTime));
-	}
+    @RequestMapping(value = "/requisition-report", method = GET, headers = BaseController.ACCEPT_JSON)
+    public ResponseEntity<OpenLmisResponse> requisitionReport(
+            @RequestParam(value = "startTime", required = true) Date startTime,
+            @RequestParam(value = "endTime", required = true) Date endTime) {
+        return OpenLmisResponse.response("rnr_list", requisitionReportsMapper
+                .getRequisitionList(startTime, endTime));
+    }
 
-	@InitBinder
-	public void initBinder(WebDataBinder binder) {
-		SimpleDateFormat dateFormat = new SimpleDateFormat(DateUtil.FORMAT_DATE_TIME);
-		dateFormat.setLenient(false);
-		binder.registerCustomEditor(Date.class, new CustomDateEditor(dateFormat, false));
-	}
+    @InitBinder
+    public void initBinder(WebDataBinder binder) {
+        SimpleDateFormat dateFormat = new SimpleDateFormat(DateUtil.FORMAT_DATE_TIME);
+        dateFormat.setLenient(false);
+        binder.registerCustomEditor(Date.class, new CustomDateEditor(dateFormat, false));
+    }
 }
