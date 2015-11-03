@@ -10,12 +10,43 @@
 
 
 describe('ViewRnrViaDetailController', function () {
-  var scope, route, location, requisition, requisitionService;
+  var httpBackend, scope, route, location, requisition, requisitionService;
 
   var rnrItemsVisible = [];
 
+  var rnrItemsForPagination = {
+    rnr: {
+      facility: {code: "F10", name: "Health Facility 1"},
+      fullSupplyLineItems: [
+        {beginningBalance: 1, quantityRequested: 12345, stockInHand: 261, totalLossesAndAdjustments: 140},
+        {beginningBalance: 2, quantityRequested: 12345, stockInHand: 261, totalLossesAndAdjustments: 140},
+        {beginningBalance: 3, quantityRequested: 12345, stockInHand: 261, totalLossesAndAdjustments: 140},
+        {beginningBalance: 4, quantityRequested: 12345, stockInHand: 261, totalLossesAndAdjustments: 140},
+        {beginningBalance: 5, quantityRequested: 12345, stockInHand: 261, totalLossesAndAdjustments: 140},
+        {beginningBalance: 6, quantityRequested: 12345, stockInHand: 261, totalLossesAndAdjustments: 140},
+        {beginningBalance: 7, quantityRequested: 12345, stockInHand: 261, totalLossesAndAdjustments: 140},
+        {beginningBalance: 8, quantityRequested: 12345, stockInHand: 261, totalLossesAndAdjustments: 140},
+        {beginningBalance: 9, quantityRequested: 12345, stockInHand: 261, totalLossesAndAdjustments: 140},
+        {beginningBalance: 10, quantityRequested: 12345, stockInHand: 261, totalLossesAndAdjustments: 140},
+        {beginningBalance: 11, quantityRequested: 12345, stockInHand: 261, totalLossesAndAdjustments: 140},
+        {beginningBalance: 12, quantityRequested: 12345, stockInHand: 261, totalLossesAndAdjustments: 140},
+        {beginningBalance: 13, quantityRequested: 12345, stockInHand: 261, totalLossesAndAdjustments: 140},
+        {beginningBalance: 14, quantityRequested: 12345, stockInHand: 261, totalLossesAndAdjustments: 140},
+        {beginningBalance: 15, quantityRequested: 12345, stockInHand: 261, totalLossesAndAdjustments: 140},
+        {beginningBalance: 16, quantityRequested: 12345, stockInHand: 261, totalLossesAndAdjustments: 140},
+        {beginningBalance: 17, quantityRequested: 12345, stockInHand: 261, totalLossesAndAdjustments: 140},
+        {beginningBalance: 18, quantityRequested: 12345, stockInHand: 261, totalLossesAndAdjustments: 140},
+        {beginningBalance: 19, quantityRequested: 12345, stockInHand: 261, totalLossesAndAdjustments: 140},
+        {beginningBalance: 20, quantityRequested: 12345, stockInHand: 261, totalLossesAndAdjustments: 140},
+        {beginningBalance: 21, quantityRequested: 12345, stockInHand: 261, totalLossesAndAdjustments: 140},
+        {beginningBalance: 22, quantityRequested: 12345, stockInHand: 261, totalLossesAndAdjustments: 140}],
+      period: {stringStartDate: "01/01/2014", stringEndDate: "31/01/2014"}
+    }
+  };
+
   beforeEach(module('openlmis'));
-  beforeEach(inject(function ($rootScope, $controller, $location, _requisitionService_) {
+  beforeEach(inject(function ($httpBackend, $rootScope, $controller, $location, _requisitionService_) {
+    httpBackend = $httpBackend;
     scope = $rootScope.$new();
     location = $location;
     requisition = {lineItems: [], nonFullSupplyLineItems: [], regimenLineItems: [], equipmentLineItems :[], period: {numberOfMonths: 3}};
@@ -25,16 +56,58 @@ describe('ViewRnrViaDetailController', function () {
   }));
 
 
-  it('should get rnr items ',function(){
-    var rnrItems = {rnr: {facility:{code: "F10", name: "Health Facility 1"},
-                          fullSupplyLineItems: [{beginningBalance: 98, quantityRequested: 12345, stockInHand: 261, totalLossesAndAdjustments: 140}],
-                          period: {stringStartDate: "01/01/2014", stringEndDate: "31/01/2014"}}};
+  it('should get rnr items size is same as pageSize',function(){
+    var rnrItems = {
+      rnr: {
+        facility: {code: "F10", name: "Health Facility 1"},
+        fullSupplyLineItems: [{beginningBalance: 98, quantityRequested: 12345, stockInHand: 261, totalLossesAndAdjustments: 140}],
+        period: {stringStartDate: "01/01/2014", stringEndDate: "31/01/2014"}
+      }
+    };
 
-    scope.loadRequisitionDetail();
-
-    //expect(scope.rnrItems).toEqual(rnrItems);
-    //expect(scope.lossesAndAdjustmentsModal).toBeTruthy();
+    initMockRequisition(rnrItems);
+    expect(scope.rnrItems.length).toEqual(20);
   });
 
+  it('should get numberPages is 2 ',function(){
 
+    initMockRequisition(rnrItemsForPagination);
+
+    expect(scope.numPages).toEqual(2);
+  });
+
+  it('should get the 2 page of visible rnr items ',function(){
+    scope.currentPage = 2;
+    var expectRnrList = [
+      {beginningBalance: 21, quantityRequested: 12345, stockInHand: 261, totalLossesAndAdjustments: 140},
+      {beginningBalance: 22, quantityRequested: 12345, stockInHand: 261, totalLossesAndAdjustments: 140},
+      {},
+      {},
+      {},
+      {},
+      {},
+      {},
+      {},
+      {},
+      {},
+      {},
+      {},
+      {},
+      {},
+      {},
+      {},
+      {},
+      {},
+      {}];
+    initMockRequisition(rnrItemsForPagination);
+
+    expect(scope.rnrItemsVisible).toEqual(expectRnrList);
+  });
+
+  function initMockRequisition(rnrItems) {
+    var expectedUrl = "/requisitions/1.json";
+    httpBackend.expect('GET', expectedUrl).respond(200, rnrItems);
+    scope.loadRequisitionDetail();
+    httpBackend.flush();
+  }
 });
