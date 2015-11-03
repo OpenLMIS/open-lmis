@@ -43,15 +43,15 @@ public class GeoDataController extends BaseController {
     public static final String CONSUMPTION = "consumption";
     public static final String EQUIPMENTS_STATUS_SUMMARY = "equipmentsStatusSummary";
 
-    public static String getCommaSeparatedIds(List<Long> idList) {
-
-        return idList == null ? "{}" : idList.toString().replace("[", "").replace("]", "");
-    }
-
     @Autowired
     private GeographicReportProvider geographicReportProvider;
     @Autowired
     private GeographicZoneReportMapper geographicZoneReportMapper;
+
+    public static String getCommaSeparatedIds(List<Long> idList) {
+        return idList == null ? "{}" : idList.toString().replace("[", "").replace("]", "");
+    }
+
 
     @RequestMapping(value = "/reporting-rate", method = GET, headers = BaseController.ACCEPT_JSON)
     public ResponseEntity<OpenLmisResponse> getReportingRateReport(@RequestParam(value = "program", required = true, defaultValue = "0") Long program,
@@ -68,7 +68,6 @@ public class GeoDataController extends BaseController {
     public ResponseEntity<OpenLmisResponse> getReportingFacilities(@RequestParam(value = "program", required = true, defaultValue = "0") Long program,
                                                                    @RequestParam(value = "period", required = true, defaultValue = "0") Long period,
                                                                    @RequestParam(value = "geo_zone", required = true, defaultValue = "0") Long geoZoneId,
-                                                                   @RequestParam(value = "schedule", required = true, defaultValue = "0") Long schedule,
              HttpServletRequest request
     ) {
         Long userId = loggedInUserId(request);

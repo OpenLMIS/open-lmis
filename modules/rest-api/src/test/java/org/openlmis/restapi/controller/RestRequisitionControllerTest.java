@@ -33,6 +33,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
 import java.security.Principal;
+import java.util.ArrayList;
+import java.util.List;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
@@ -218,4 +220,36 @@ public class RestRequisitionControllerTest {
 
     assertThat(response, is(expectedResponse));
   }
+
+  @Test
+  public void shouldReturnSuccessCodeAndRequisitionListIfNoException() {
+    String facilityCode = "F1";
+    String programCode = "MMIA";
+
+    List<Rnr> expectedRequisitions = new ArrayList<>();
+    when(service.getRequisitionsByFacilityAndProgram(facilityCode, programCode)).thenReturn(expectedRequisitions);
+    String requisitionsKey = "requisitions";
+    ResponseEntity<RestResponse> expectedResponse = new ResponseEntity<>(new RestResponse(requisitionsKey, expectedRequisitions), OK);
+    when(RestResponse.response(requisitionsKey, expectedRequisitions, HttpStatus.OK)).thenReturn(expectedResponse);
+
+    ResponseEntity<RestResponse> response = controller.getRequisitionsByFacilityAndProgram(facilityCode, programCode);
+    assertThat(response.getStatusCode(), is(HttpStatus.OK));
+    assertThat((List<Rnr>) response.getBody().getData().get(requisitionsKey), is(expectedRequisitions));
+  }
+
+  @Test
+  public void shouldReturnErrorIfCodeAndRequisitionThrowsException() {
+    String facilityCode = "F1";
+    String programCode = "MMIA";
+
+    DataException exception = new DataException("some error");
+    doThrow(exception).when(service).getRequisitionsByFacilityAndProgram(facilityCode, programCode);
+
+    ResponseEntity<RestResponse> expectedResponse = new ResponseEntity<>(new RestResponse(ERROR, messageService.message("some error")), BAD_REQUEST);
+    when(error(exception.getOpenLmisMessage(), BAD_REQUEST)).thenReturn(expectedResponse);
+
+    ResponseEntity<RestResponse> response = controller.getRequisitionsByFacilityAndProgram(facilityCode, programCode);
+    assertThat(response.getStatusCode(), is(HttpStatus.BAD_REQUEST));
+  }
+
 }

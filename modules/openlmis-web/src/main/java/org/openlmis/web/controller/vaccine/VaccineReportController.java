@@ -11,7 +11,6 @@
  */
 package org.openlmis.web.controller.vaccine;
 
-import org.openlmis.core.domain.User;
 import org.openlmis.core.service.FacilityService;
 import org.openlmis.core.service.ProgramService;
 import org.openlmis.core.service.UserService;
@@ -53,50 +52,50 @@ public class VaccineReportController extends BaseController {
 
   @RequestMapping(value = "periods/{facilityId}/{programId}", method = RequestMethod.GET)
   @PreAuthorize("@permissionEvaluator.hasPermission(principal,'CREATE_IVD')")
-  public ResponseEntity<OpenLmisResponse> getPeriods(@PathVariable Long facilityId, @PathVariable Long programId, HttpServletRequest request){
+  public ResponseEntity<OpenLmisResponse> getPeriods(@PathVariable Long facilityId, @PathVariable Long programId) {
     return OpenLmisResponse.response(PERIODS, service.getPeriodsFor(facilityId, programId, new Date()));
   }
 
   @RequestMapping(value = "view-periods/{facilityId}/{programId}", method = RequestMethod.GET)
   @PreAuthorize("@permissionEvaluator.hasPermission(principal,'VIEW_IVD')")
-  public ResponseEntity<OpenLmisResponse> getViewPeriods(@PathVariable Long facilityId, @PathVariable Long programId, HttpServletRequest request){
+  public ResponseEntity<OpenLmisResponse> getViewPeriods(@PathVariable Long facilityId, @PathVariable Long programId) {
     return OpenLmisResponse.response(PERIODS, service.getReportedPeriodsFor(facilityId, programId));
   }
 
   @RequestMapping(value = "initialize/{facilityId}/{programId}/{periodId}")
   @PreAuthorize("@permissionEvaluator.hasPermission(principal,'CREATE_IVD')")
   public ResponseEntity<OpenLmisResponse> initialize(
-    @PathVariable Long facilityId,
-    @PathVariable Long programId,
-    @PathVariable Long periodId,
-    HttpServletRequest request
-  ){
+      @PathVariable Long facilityId,
+      @PathVariable Long programId,
+      @PathVariable Long periodId,
+      HttpServletRequest request
+  ) {
     return OpenLmisResponse.response(REPORT, service.initialize(facilityId, programId, periodId, loggedInUserId(request)));
   }
 
   @RequestMapping(value = "get/{id}.json", method = RequestMethod.GET)
   @PreAuthorize("@permissionEvaluator.hasPermission(principal,'CREATE_IVD, VIEW_IVD')")
-  public ResponseEntity<OpenLmisResponse> getReport(@PathVariable Long id, HttpServletRequest request){
+  public ResponseEntity<OpenLmisResponse> getReport(@PathVariable Long id) {
     return OpenLmisResponse.response(REPORT, service.getById(id));
   }
 
   @RequestMapping(value = "save")
   @PreAuthorize("@permissionEvaluator.hasPermission(principal,'CREATE_IVD')")
-  public ResponseEntity<OpenLmisResponse> save(@RequestBody VaccineReport report, HttpServletRequest request){
-    service.save(report);
+  public ResponseEntity<OpenLmisResponse> save(@RequestBody VaccineReport report, HttpServletRequest request) {
+    service.save(report, loggedInUserId(request));
     return OpenLmisResponse.response(REPORT, report);
   }
 
   @RequestMapping(value = "submit")
   @PreAuthorize("@permissionEvaluator.hasPermission(principal,'CREATE_IVD')")
-  public ResponseEntity<OpenLmisResponse> submit(@RequestBody VaccineReport report, HttpServletRequest request){
+  public ResponseEntity<OpenLmisResponse> submit(@RequestBody VaccineReport report, HttpServletRequest request) {
     service.submit(report, loggedInUserId(request));
     return OpenLmisResponse.response(REPORT, report);
   }
 
   @RequestMapping(value = "vaccine-monthly-report")
   @PreAuthorize("@permissionEvaluator.hasPermission(principal,'CREATE_IVD')")
-  public ResponseEntity<OpenLmisResponse> getVaccineMonthlyReport(@RequestParam("facility") Long facilityId, @RequestParam("period") Long periodId, @RequestParam("zone") Long zoneId){
+  public ResponseEntity<OpenLmisResponse> getVaccineMonthlyReport(@RequestParam("facility") Long facilityId, @RequestParam("period") Long periodId, @RequestParam("zone") Long zoneId) {
 
     if (periodId == null || periodId == 0) return null;
 
@@ -105,7 +104,7 @@ public class VaccineReportController extends BaseController {
   }
 
   @RequestMapping(value = "vaccine-usage-trend")
-  public ResponseEntity<OpenLmisResponse> vaccineUsageTrend(@RequestParam("facilityCode") String facilityCode, @RequestParam("productCode") String productCode, @RequestParam("period") Long periodId, @RequestParam("zone") Long zoneId){
+  public ResponseEntity<OpenLmisResponse> vaccineUsageTrend(@RequestParam("facilityCode") String facilityCode, @RequestParam("productCode") String productCode, @RequestParam("period") Long periodId, @RequestParam("zone") Long zoneId) {
 
     return OpenLmisResponse.response("vaccineUsageTrend", service.vaccineUsageTrend(facilityCode, productCode, periodId, zoneId));
   }

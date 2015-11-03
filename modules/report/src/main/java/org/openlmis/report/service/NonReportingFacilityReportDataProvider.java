@@ -14,7 +14,6 @@ package org.openlmis.report.service;
 
 import lombok.NoArgsConstructor;
 import org.apache.ibatis.session.RowBounds;
-import org.openlmis.core.repository.GeographicZoneRepository;
 import org.openlmis.report.mapper.NonReportingFacilityReportMapper;
 import org.openlmis.report.model.ReportData;
 import org.openlmis.report.model.dto.NameCount;
@@ -33,6 +32,11 @@ import java.util.Map;
 @Component
 @NoArgsConstructor
 public class NonReportingFacilityReportDataProvider extends ReportDataProvider {
+
+  public static final String PERCENTAGE_NON_REPORTING = "PERCENTAGE_NON_REPORTING";
+  public static final String REPORT_FILTER_PARAM_VALUES = "REPORT_FILTER_PARAM_VALUES";
+  public static final String TOTAL_NON_REPORTING = "TOTAL_NON_REPORTING";
+  public static final String TOTAL_FACILITIES = "TOTAL_FACILITIES";
 
   @Autowired
   private NonReportingFacilityReportMapper reportMapper;
@@ -55,14 +59,14 @@ public class NonReportingFacilityReportDataProvider extends ReportDataProvider {
     report.setDetails(reportMapper.getReport(nonReportingFacilityParam, rowBounds, this.getUserId()));
     List<NameCount> summary = reportMapper.getReportSummary(nonReportingFacilityParam, this.getUserId());
 
-    String totalFacilities = reportMapper.getTotalFacilities(nonReportingFacilityParam, this.getUserId()).get(0).toString();
-    String nonReporting = reportMapper.getNonReportingTotalFacilities(nonReportingFacilityParam, this.getUserId()).get(0).toString();
+    Double totalFacilities = reportMapper.getTotalFacilities(nonReportingFacilityParam, this.getUserId());
+    Double nonReporting = reportMapper.getNonReportingTotalFacilities(nonReportingFacilityParam, this.getUserId());
 
     // Assume by default that the 100% of facilities didn't report
     Long percentNonReporting = 100L;
     Long percentReporting = 100L;
-    if (!totalFacilities.equals("0")) {
-      percentNonReporting = Math.round((Double.parseDouble(nonReporting) / Double.parseDouble(totalFacilities)) * 100);
+    if (totalFacilities != 0) {
+      percentNonReporting = Math.round((nonReporting / totalFacilities) * 100);
       percentReporting = 100 - percentNonReporting;
     }
 
@@ -106,19 +110,19 @@ public class NonReportingFacilityReportDataProvider extends ReportDataProvider {
 
     HashMap<String, String> result = new HashMap<String, String>();
 
-    String totalFacilities = reportMapper.getTotalFacilities(nonReportingFacilityParam, this.getUserId()).get(0).toString();
-    String nonReporting = reportMapper.getNonReportingTotalFacilities(nonReportingFacilityParam, this.getUserId()).get(0).toString();
+    Double totalFacilities = reportMapper.getTotalFacilities(nonReportingFacilityParam, this.getUserId());
+    Double nonReporting = reportMapper.getNonReportingTotalFacilities(nonReportingFacilityParam, this.getUserId());
 
-    result.put("TOTAL_FACILITIES", totalFacilities);
-    result.put("TOTAL_NON_REPORTING", nonReporting);
+    result.put(TOTAL_FACILITIES, totalFacilities.toString());
+    result.put(TOTAL_NON_REPORTING, nonReporting.toString());
 
     Long percent = 100L;
-    if (!totalFacilities.equals("0")) {
-      percent = Math.round((Double.parseDouble(nonReporting) / Double.parseDouble(totalFacilities)) * 100);
+    if (totalFacilities != 0) {
+      percent = Math.round((nonReporting / totalFacilities ) * 100);
     }
-    result.put("PERCENTAGE_NON_REPORTING", percent.toString());
+    result.put(PERCENTAGE_NON_REPORTING, percent.toString());
 
-    result.put("REPORT_FILTER_PARAM_VALUES",  filterHelper.getProgramPeriodGeoZone(params) );
+    result.put(REPORT_FILTER_PARAM_VALUES, filterHelper.getProgramPeriodGeoZone(params));
     return result;
   }
 

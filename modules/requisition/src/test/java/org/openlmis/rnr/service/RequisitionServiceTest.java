@@ -1555,6 +1555,13 @@ public class RequisitionServiceTest {
     assertThat(lineItem, is(expectedLineItem));
   }
 
+  @Test
+  public void shouldUpdateClientSubmittedFields() throws Exception {
+    Rnr rnr = new Rnr();
+    requisitionService.updateClientFields(rnr);
+    verify(requisitionRepository).updateClientFields(rnr);
+  }
+
   private void setupForInitRnr() {
     when(requisitionPermissionService.hasPermission(USER_ID, FACILITY, PROGRAM, CREATE_REQUISITION)).thenReturn(true);
     when(rnrTemplateService.fetchProgramTemplateForRequisition(PROGRAM.getId())).thenReturn(

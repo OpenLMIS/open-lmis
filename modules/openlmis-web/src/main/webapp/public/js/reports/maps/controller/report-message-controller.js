@@ -145,7 +145,7 @@ function ReportMessageController($scope, SendMessagesReportAttachment, GetFacili
 
       messages.push({
         type: 'email',
-        facility_id: $scope.selected_facility.id,
+        facilityId: $scope.selected_facility.id,
         contact: contact.contact,
         message: template
       });
