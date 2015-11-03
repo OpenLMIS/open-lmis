@@ -160,15 +160,15 @@
                   <a href="/public/pages/vaccine/inventory/dashboard/index.html#/stock-on-hand"
                      openlmis-message="link.vaccine.stock.on.hand"></a>
                 </li>
-                <li ng-show="hasPermission('ADJUST_STOCK')">
+                <li ng-show="hasPermission('ADJUST_STOCK') || hasPermission('MANAGE_STOCK')">
                   <a href="/public/pages/vaccine/inventory/index.html#/stock-adjustment"
                      openlmis-message="link.vaccine.stock.adjustment"></a>
                 </li>
-                <li ng-show="hasPermission('RECEIVE_STOCK')">
+                <li ng-show="hasPermission('RECEIVE_STOCK') || hasPermission('MANAGE_STOCK') ">
                   <a href="/public/pages/vaccine/inventory/index.html#/receive"
                       openlmis-message="link.vaccine.receive"></a>
                 </li>
-                  <li ng-show="!hasPermission('DISTRIBUTE_STOCK')">
+                <li ng-show="hasPermission('MASS_DISTRIBUTION')">
                       <a href="/public/pages/vaccine/inventory/index.html#/mass-distribution"
                       openlmis-message="link.vaccine.distribute"></a>
                 </li>

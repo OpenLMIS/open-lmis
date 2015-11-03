@@ -72,7 +72,7 @@
   </div>
 
   <div ng-show="selectedProgram.id && selectedEquipmentType.id">
-    <a ng-show="selectedType ==='0'" id="add-new-equipment-type"
+    <a ng-show="selectedType ==='0' || hasPermission('MANAGE_SUPERVISED_EQUIPMENTS')" id="add-new-equipment-type"
        ng-href="#/create/{{selectedType}}/{{selectedProgram.id}}/{{selectedEquipmentType.id}}/{{currentPage}}"
        class="pull-right btn btn-primary" openlmis-message="button.add.new"></a>
 

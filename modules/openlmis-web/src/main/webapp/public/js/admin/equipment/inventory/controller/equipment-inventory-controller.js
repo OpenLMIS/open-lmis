@@ -10,7 +10,7 @@
  * You should have received a copy of the GNU Affero General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-function EquipmentInventoryController($scope, UserFacilityList, EquipmentInventories, ManageEquipmentInventoryProgramList, ManageEquipmentInventoryFacilityProgramList, EquipmentTypesByProgram, EquipmentOperationalStatus, $routeParams, messageService, UpdateEquipmentInventoryStatus, $timeout, SaveEquipmentInventory) {
+function EquipmentInventoryController($scope, UserFacilityList, EquipmentInventories, ManageEquipmentInventoryProgramList, ManageEquipmentInventoryFacilityProgramList, EquipmentTypesByProgram, EquipmentOperationalStatus, $routeParams, messageService, UpdateEquipmentInventoryStatus, $timeout, SaveEquipmentInventory,localStorageService) {
 
   $scope.loadPrograms = function (initialLoad) {
     // Get home facility for user
@@ -216,5 +216,18 @@ function EquipmentInventoryController($scope, UserFacilityList, EquipmentInvento
     $scope.operationalStatusList = _.where(data.status, {category: 'CCE'});
     $scope.notFunctionalStatusList = _.where(data.status, {category: 'CCE Not Functional'});
   });
+
+  $scope.loadRights = function () {
+        $scope.rights = localStorageService.get(localStorageKeys.RIGHT);
+  }();
+
+  $scope.hasPermission = function (permission) {
+              if ($scope.rights !== undefined && $scope.rights !== null) {
+                var rights = JSON.parse($scope.rights);
+                var rightNames = _.pluck(rights, 'name');
+                return rightNames.indexOf(permission) > -1;
+              }
+              return false;
+  };
 
 }
