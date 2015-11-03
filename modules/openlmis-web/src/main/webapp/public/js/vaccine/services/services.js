@@ -239,25 +239,6 @@ services.factory('VaccineLastStockMovement', function ($resource) {
     return $resource('/vaccine/inventory/stock/lastReport.json', {}, {});
 });
 
-
-
-services.factory('StockRequirementsTest', function($resource) {
-
-   return $resource(
-        '/facility/:facilityId/program/:programId/stockRequirements.json',
-        {facilityId: '@facilityId', programId: '@programId'},
-        {
-            'get': {
-                method: 'GET',
-                transformResponse: function (data) {
-                    return angular.fromJson(data);
-                },
-                isArray: true //since list property is an array
-            }
-        }
-    );
-});
-
 services.factory('SaveForecastConfiguration',function($resource){
     return $resource('/vaccine/inventory/configuration/saveForecastConfiguration.json',{},{update:{method:'PUT'}});
 });

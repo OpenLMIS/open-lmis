@@ -424,7 +424,7 @@ services.factory('RequisitionForFacility', function ($resource) {
 services.factory('StockRequirements', function ($resource) {
 
     return $resource(
-        '/facility/:facilityId/program/:programId/stockRequirements.json',
+        '/rest-api/facility/:facilityId/program/:programId/stockRequirements.json',
         {facilityId: '@facilityId', programId: '@programId'},
         {
             'get': {
