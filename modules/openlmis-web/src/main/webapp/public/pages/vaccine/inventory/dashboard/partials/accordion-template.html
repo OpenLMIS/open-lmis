@@ -17,14 +17,12 @@
 
 <div ng-show="true" class="row-fluid">
     <accordion close-others="false">
-        <accordion-group class="green-haze" is-open="panel.Alerts">
+        <accordion-group class="red-sunglo" is-open="panel.Alerts">
             <accordion-heading>
                 <div class="accordion-title">
                     <div class="caption">
-                            <span style=""
-                                  class="glyphicon glyphicon-exclamation-sign"
-                                    >
-                            </span>
+                        <i class="icon-bullhorn orange"></i>&nbsp;&nbsp;
+                        <span openlmis-message="title.notifications"></span>
                             <span ng-show="pendingRequisition.length > 0 || equipmentNonFunctionalAlerts.length >0"
                                   style="position:relative;color:#fff;font-size:0.8em;top:-6px;;background:#FF0000 !important; padding:4px 8px 4px 8px !important;border-radius:20px">
                                 {{pendingRequisition.length + equipmentNonFunctionalAlerts.length}}
