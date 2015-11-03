@@ -27,11 +27,13 @@ import org.powermock.modules.junit4.PowerMockRunner;
 import org.powermock.modules.junit4.PowerMockRunnerDelegate;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import static com.natpryce.makeiteasy.MakeItEasy.*;
 import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertThat;
+import static org.junit.Assert.*;
+import static org.junit.runners.model.MultipleFailureException.assertEmpty;
 import static org.mockito.Matchers.anyList;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -272,6 +274,28 @@ public class RestStockCardServiceTest {
     assertThat(stockCardEntries.get(0).getCreatedBy(), is(userId));
     assertThat(stockCardEntries.get(0).getModifiedBy(), is(userId));
 
+  }
+
+  @Test
+  public void shouldAddStockEventCustomPropsValues() throws Exception {
+    setupStockData();
+    HashMap<String, String> expirationDates = new HashMap<>();
+    expirationDates.put("expirationDates", "10/10/2016, 11/11/2016");
+    stockEvent1.setCustomProps(expirationDates);
+
+    when(facilityRepository.getById(facilityId)).thenReturn(defaultFacility);
+    when(productService.getByCode(productCode)).thenReturn(defaultProduct);
+    StockAdjustmentReason stockAdjustmentReason = new StockAdjustmentReason();
+    stockAdjustmentReason.setAdditive(true);
+    when(stockAdjustmentReasonRepository.getAdjustmentReasonByName(reasonName)).thenReturn(stockAdjustmentReason);
+
+    StockCard expectedStockCard = StockCard.createZeroedStockCard(defaultFacility, defaultProduct);
+    when(stockCardService.getOrCreateStockCard(facilityId, productCode)).thenReturn(expectedStockCard);
+
+    List<StockCardEntry> stockCardEntries = restStockCardService.adjustStock(facilityId, stockEventList, userId);
+
+    assertTrue(stockCardEntries.get(0).getKeyValues().get(0).getValueColumn().equals("10/10/2016, 11/11/2016"));
+    assertEquals(0, stockCardEntries.get(1).getKeyValues().size());
   }
 
   private void setupStockData() {

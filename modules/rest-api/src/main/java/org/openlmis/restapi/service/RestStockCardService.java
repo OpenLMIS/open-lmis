@@ -16,6 +16,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 @Service
 @NoArgsConstructor
@@ -68,6 +69,13 @@ public class RestStockCardService {
     entry.setAdjustmentReason(stockAdjustmentReason);
     entry.setCreatedBy(userId);
     entry.setModifiedBy(userId);
+
+    Map<String, String> customProps = stockEvent.getCustomProps();
+    if (null != customProps) {
+      for (String k : customProps.keySet()) {
+        entry.addKeyValue(k, customProps.get(k));
+      }
+    }
     return entry;
   }
 
