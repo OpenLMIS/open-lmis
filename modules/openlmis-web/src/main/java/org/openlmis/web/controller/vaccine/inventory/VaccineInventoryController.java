@@ -23,6 +23,7 @@ import org.openlmis.stockmanagement.domain.Lot;
 import org.openlmis.vaccine.service.inventory.VaccineInventoryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
@@ -46,27 +47,27 @@ public class VaccineInventoryController extends BaseController {
     VaccineInventoryService service;
 
     @RequestMapping(value = "programProducts/programId/{programId}", method = GET, headers = ACCEPT_JSON)
-    //TODO @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_PROGRAM_PRODUCT')")
+    //@PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_STOCK','VIEW_STOCK_ON_HAND','')")
     public ResponseEntity<OpenLmisResponse> getProgramProductsByProgram(@PathVariable Long programId) {
         List<ProgramProduct> programProductsByProgram = programProductService.getByProgram(new Program(programId));
         return response(PROGRAM_PRODUCT_LIST, programProductsByProgram);
     }
 
     @RequestMapping(value = "programs")
-//TODO:  @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_VACCINE_INVENTORY')")
+    //  @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_STOCK','VIEW_STOCK_ON_HAND')")
     public ResponseEntity<OpenLmisResponse> getProgramsForConfiguration() {
         return OpenLmisResponse.response("programs", programService.getAllIvdPrograms());
     }
 
     @RequestMapping(value = "lots/byProduct/{productId}", method = GET, headers = ACCEPT_JSON)
-//TODO:   @PreAuthorize("@permissionEvaluator.hasPermission(principal,'CREATE_LOT')")
+    // @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_STOCK')")
     public ResponseEntity getLotsByProductId(@PathVariable Long productId) {
 
         return OpenLmisResponse.response("lots", service.getLotsByProductId(productId));
     }
 
     @RequestMapping(value = "lot/create", method = PUT, headers = ACCEPT_JSON)
-//TODO:   @PreAuthorize("@permissionEvaluator.hasPermission(principal,'CREATE_LOT')")
+//TODO:   @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_STOCK')")
     public ResponseEntity saveLot(@RequestBody Lot lot) {
         return OpenLmisResponse.response("lot", service.insertLot(lot));
     }
