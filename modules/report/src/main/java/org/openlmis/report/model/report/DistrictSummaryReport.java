@@ -14,8 +14,6 @@ package org.openlmis.report.model.report;
 import lombok.*;
 import org.openlmis.report.model.ReportData;
 
-import javax.persistence.Column;
-
 @Getter
 @Setter
 @AllArgsConstructor

@@ -19,7 +19,7 @@ import lombok.Setter;
 
 @NoArgsConstructor
 @AllArgsConstructor
-public class BaseParam {
+public abstract class BaseParam {
 
   @Getter @Setter
   private Long userId;

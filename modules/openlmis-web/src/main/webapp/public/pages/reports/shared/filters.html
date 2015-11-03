@@ -82,7 +82,7 @@
     <label for="zone" class="labels" openlmis-message="label.geographic.zone"><span ng-show="requiredFilters.zone" class="label-required">*</span></label>
     <div>
       <select id="zone" ui-select2 class="input-large" data-placeholder="-- All Zones --"  ng-change="notifyFilterChanged('zone-changed');" ng-model="filter.zone">
-        <option ng-selected="filter.zone == undefined || filter.zone == ''">{{user_geo_level}}</option>
+        <option ng-selected="filter.zone == undefined || filter.zone == '' || filter.zone == 0" value="0">{{user_geo_level}}</option>
         <optgroup ng-repeat="value in zones.children" value="{{ value.id }}" ng-selected="filter.zone == value.id" label="{{value.name}}">
           <option ng-selected="filter.zone == value.id" value="{{value.id}}"><b class="green"> -- All of {{value.name}}</b></option>
           <option ng-repeat-start="v in value.children" ng-selected="filter.zone == v.id" value="{{v.id}}">{{v.name}}</option>
