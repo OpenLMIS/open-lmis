@@ -10,8 +10,8 @@ function ProvinceFilter(){
     return function(provinces, provinceId){
         return _.filter(provinces, function(input){
             return !provinceId || input.id == provinceId;
-        })
-    }
+        });
+    };
 }
 
 function FacilityFilter(){
