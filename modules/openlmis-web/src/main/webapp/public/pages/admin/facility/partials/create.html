@@ -328,10 +328,8 @@
                 </div>
 
                 <div class="list-container ">
-                  <div
-                          ng-class="{'has-overridden-isa': programProduct.overriddenIsa != null || programProduct.overriddenIsa != undefined}"
-                          ng-repeat="programProduct in filteredProducts">
-                    <div class="row-fluid list-row">
+                  <div ng-repeat="programProduct in filteredProducts">
+                    <div class="row-fluid list-row" productId="{{programProduct.product.id}}">
                       <div class="span4">
                         <span class="first-column" id="product-name{{$index}}" ng-bind="programProduct.product.primaryName"></span>
                       </div>
@@ -684,21 +682,18 @@
         <div class="toolbar-success" id="saveSuccessMsgDiv" openlmis-message="message" ng-show="message"></div>
       </div>
 
-        <div class="form-row clearfix" ng-show="images.length > 0">
-            <div ng-repeat="image in images">
-                <img class="form-cell" ng-show="image.firstPicture" alt="Picture of Facility"
-                     ng-src="data:image/png;base64,{{ image.firstPicture }}"/>
-                <img class="form-cell" ng-show="image.secondPicture" alt="Picture of Facility"
-                     ng-src="data:image/png;base64,{{ image.secondPicture }}"/>
-                <img class="form-cell" ng-show="image.thirdPicture" alt="Picture of Facility"
-                     ng-src="data:image/png;base64,{{ image.thirdPicture }}"/>
-                <img class="form-cell" ng-show="image.fourthPicture" alt="Picture of Facility"
-                     ng-src="data:image/png;base64,{{ image.fourthPicture }}"/>
-                <img class="form-cell" ng-show="image.fifthPicture" alt="Picture of Facility"
-                     ng-src="data:image/png;base64,{{ image.fifthPicture }}"/>
+
+  <div class="form-row clearfix" ng-show="images.length > 0">
+    <div ng-repeat="image in images">
+      <img class="form-cell" ng-show="image.firstPicture" alt="Picture of Facility" ng-src="data:image/png;base64,{{ image.firstPicture }}" />
+      <img class="form-cell" ng-show="image.secondPicture" alt="Picture of Facility" ng-src="data:image/png;base64,{{ image.secondPicture }}" />
+      <img class="form-cell" ng-show="image.thirdPicture" alt="Picture of Facility" ng-src="data:image/png;base64,{{ image.thirdPicture }}" />
+      <img class="form-cell" ng-show="image.fourthPicture" alt="Picture of Facility" ng-src="data:image/png;base64,{{ image.fourthPicture }}" />
+      <img class="form-cell" ng-show="image.fifthPicture" alt="Picture of Facility" ng-src="data:image/png;base64,{{ image.fifthPicture }}" />
     </div>
-        </div>
     </div>
+      </div>
+
   </form>
 
 

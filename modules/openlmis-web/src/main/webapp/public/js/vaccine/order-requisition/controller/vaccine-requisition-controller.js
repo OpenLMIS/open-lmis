@@ -1,4 +1,4 @@
-function newVaccineOrderRequisitionController($scope,$rootScope,VaccineOrderRequisitionLastReport,VaccineOrderRequisitionReportInitiateEmergency, programs, facility, messageService, VaccineOrderRequisitionColumns, VaccineOrderRequisitionReportInitiate, $location, VaccineOrderRequisitionReportPeriods) {
+function newVaccineOrderRequisitionController($scope,$rootScope,localStorageService,VaccineOrderRequisitionLastReport,VaccineOrderRequisitionReportInitiateEmergency, programs, facility, messageService, VaccineOrderRequisitionColumns, VaccineOrderRequisitionReportInitiate, $location, VaccineOrderRequisitionReportPeriods) {
     $rootScope.viewOrder = false;
     $rootScope.receive = false;
     $scope.programs = programs;
@@ -35,16 +35,19 @@ function newVaccineOrderRequisitionController($scope,$rootScope,VaccineOrderRequ
                         var lastReport = data.lastReport;
 
                             if(lastReport.status === 'ISSUED'){
-                                //$rootScope.receive = "yes";
                                 VaccineOrderRequisitionReportInitiateEmergency.get({
                                 periodId: lastReport.periodId,
                                 programId: lastReport.programId,
                                 facilityId: lastReport.facilityId
                             }, function (data) {
-                                $location.path('/create/' + data.report.id);
+                                $location.path('/create/' + data.report.id+'/'+data.report.programId);
                             });
+                           } else{
+                                $location.path('/details');
 
-                        }
+                                  $scope.message="Your Previous Requisition Submitted On "+lastReport.orderDate +"" +
+                                      " has not yet Received. ";
+                            }
                     });
 
 
@@ -78,7 +81,7 @@ function newVaccineOrderRequisitionController($scope,$rootScope,VaccineOrderRequ
 
     $scope.initiate = function (period) {
         if (!angular.isUndefined(period.id) && (period.id !== null)) {
-            $location.path('/create/' + period.id);
+            $location.path('/create/' + period.id + '/'+period.programId);
 
         } else {
             // initiate
@@ -87,10 +90,25 @@ function newVaccineOrderRequisitionController($scope,$rootScope,VaccineOrderRequ
                 programId: period.programId,
                 facilityId: period.facilityId
             }, function (data) {
-                $location.path('/create/' + data.report.id);
+                console.log(data);
+                $location.path('/create/' + data.report.id+'/'+data.report.programId);
             });
         }
     };
+
+    $scope.loadRights = function () {
+        $scope.rights = localStorageService.get(localStorageKeys.RIGHT);
+    }();
+
+    $scope.hasPermission = function (permission) {
+        if ($scope.rights !== undefined && $scope.rights !== null) {
+            var rights = JSON.parse($scope.rights);
+            var rightNames = _.pluck(rights, 'name');
+            return rightNames.indexOf(permission) > -1;
+        }
+        return false;
+    };
+
 
 
 }

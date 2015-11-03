@@ -12,21 +12,22 @@
 
 
 function StockOnHandController($scope,$window,EquipmentNonFunctional,VaccinePendingRequisitions,programs,$location,homeFacility,VaccineOrderRequisitionLastReport, localStorageService,StockCardsByCategory,Forecast) {
+function StockOnHandController($scope, $window, VaccinePendingRequisitions, programs, $location, homeFacility, VaccineOrderRequisitionLastReport, localStorageService, StockCardsByCategory, Forecast) {
     $scope.createOrder = false;
     $scope.receiveConsignment = false;
-    $scope.selectedProgramId=null;
-    if(homeFacility){
-        $scope.homeFacilityId=homeFacility.id;
-        $scope.selectedFacilityId=homeFacility.id;
-        $scope.facilityDisplayName=homeFacility.name;
-        }
-    $scope.userPrograms=programs;
+    $scope.selectedProgramId = null;
+    if (homeFacility) {
+        $scope.homeFacilityId = homeFacility.id;
+        $scope.selectedFacilityId = homeFacility.id;
+        $scope.facilityDisplayName = homeFacility.name;
+    }
+    $scope.userPrograms = programs;
     $scope.date = new Date();
-    $scope.selectedType="0";//My facility selected by default;
+    $scope.selectedType = "0";//My facility selected by default;
 
 
-    $scope.data={"stockcards": null};//Set default chart stock cards data to null;
-    $scope.panel = {alerts:false};//Close Alert Accordion by default
+    $scope.data = {"stockcards": null};//Set default chart stock cards data to null;
+    $scope.panel = {alerts: false};//Close Alert Accordion by default
 
 
 
@@ -118,54 +119,60 @@ function StockOnHandController($scope,$window,EquipmentNonFunctional,VaccinePend
         $scope.equipmentNonFunctionalAlerts=data.Alerts;
      });
 
-    VaccineOrderRequisitionLastReport.get({facilityId:parseInt($scope.homeFacilityId,10),programId:parseInt($scope.selectedProgramId,10)}, function(data) {
+    VaccineOrderRequisitionLastReport.get({
+        facilityId: parseInt($scope.homeFacilityId, 10),
+        programId: parseInt($scope.selectedProgramId, 10)
+    }, function (data) {
+        if (!isUndefined(data.lastReport) || data.lastReport !== null) {
+            var lastReport = data.lastReport;
 
-        if(data.lastReport.length !== undefined || data.lastReport.length !== null || data.lastReport.status !==undefined || data.status !== null) {
-          var lastReport = data.lastReport;
-
-          if (lastReport.status === 'ISSUED')
-           $scope.receiveConsignment = true;
-          else
-          $scope.createOrder = true;
-      }
-
-    });
-
-    VaccinePendingRequisitions.get({facilityId:parseInt($scope.homeFacilityId,10),programId:parseInt($scope.selectedProgramId,10)},
-    function(data){
-        if(!isUndefined(data.pendingRequest) || data.pendingRequest.length > 0) {
-            $scope.messageInfo = 'You have '+ data.pendingRequest.length+' Pending Request(s)';
-            $scope.pendingRequisition = data.pendingRequest;
+            if (lastReport.status === 'SUBMITTED')
+                $scope.receiveConsignment = true;
+            else
+                $scope.createOrder = true;
         }
+
     });
+
+    VaccinePendingRequisitions.get({
+            facilityId: parseInt($scope.homeFacilityId, 10),
+            programId: parseInt($scope.selectedProgramId, 10)
+        },
+        function (data) {
+            if (!isUndefined(data.pendingRequest) || data.pendingRequest.length > 0) {
+                $scope.messageInfo = 'You have ' + data.pendingRequest.length + ' Pending Request(s)';
+                $scope.pendingRequisition = data.pendingRequest;
+            }
+        });
+
 
 
 }
 StockOnHandController.resolve = {
 
-        homeFacility: function ($q, $timeout,UserFacilityList) {
-            var deferred = $q.defer();
-            var homeFacility={};
+    homeFacility: function ($q, $timeout, UserFacilityList) {
+        var deferred = $q.defer();
+        var homeFacility = {};
 
-            $timeout(function () {
-                   UserFacilityList.get({}, function (data) {
-                           homeFacility = data.facilityList[0];
-                           deferred.resolve(homeFacility);
-                   });
+        $timeout(function () {
+            UserFacilityList.get({}, function (data) {
+                homeFacility = data.facilityList[0];
+                deferred.resolve(homeFacility);
+            });
 
-            }, 100);
-            return deferred.promise;
-         },
-        programs:function ($q, $timeout, VaccineInventoryPrograms) {
-            var deferred = $q.defer();
-            var programs={};
+        }, 100);
+        return deferred.promise;
+    },
+    programs: function ($q, $timeout, VaccineInventoryPrograms) {
+        var deferred = $q.defer();
+        var programs = {};
 
-            $timeout(function () {
-                     VaccineInventoryPrograms.get({},function(data){
-                       programs=data.programs;
-                        deferred.resolve(programs);
-                     });
-            }, 100);
-            return deferred.promise;
-         }
+        $timeout(function () {
+            VaccineInventoryPrograms.get({}, function (data) {
+                programs = data.programs;
+                deferred.resolve(programs);
+            });
+        }, 100);
+        return deferred.promise;
+    }
 };

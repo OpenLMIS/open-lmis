@@ -12,8 +12,11 @@ var VaccineOrderRequisition2 = function (orderRequisition) {
         }
 
         this.lineItems = getLineItems(this.lineItems, this);
+        this.lineItems = _.sortBy(this.lineItems,'displayOrder');
+        this.LineItemViews = _.groupBy(this.lineItems, function(s){
+            return s.productCategory.name;
+        });
 
-        this.LineItemViews = _.groupBy(this.lineItems, 'productCategory');
 
     };
     this.init();

@@ -121,7 +121,8 @@
             <div class="submenu">
               <ul>
                 <li ng-show="hasPermission('CREATE_ORDER_REQUISITION')">
-                  <a  href="/public/pages/vaccine/order-requisition/index.html#/initiate"> Create / Submit</a>
+
+                  <a  href="/public/pages/vaccine/order-requisition/index.html#/initiate" openlmis-message="link.vaccine.create.report" ></a>
 
                 </li>
 
@@ -133,12 +134,12 @@
 
 
                 <li ng-show="hasPermission('VIEW_ORDER_REQUISITION')">
-                  <a href="/public/pages/vaccine/order-requisition/index.html#/search">View</a>
+                  <a href="/public/pages/vaccine/order-requisition/index.html#/search" openlmis-message="link.vaccine.view"></a>
+
 
                 </li>
 
               </ul>
-
 
             </div>
 
