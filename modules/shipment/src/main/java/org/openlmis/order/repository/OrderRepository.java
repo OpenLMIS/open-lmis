@@ -100,8 +100,4 @@ public class OrderRepository {
   public Order getByOrderNumber(String orderNumber) {
     return orderMapper.getByOrderNumber(orderNumber);
   }
-
-  public List<Order> getSearchedOrdersForPage(Long userId, int page, String query, String searchType) {
-    return orderMapper.getSearchOrders(userId, page, query, searchType);
-  }
 }

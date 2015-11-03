@@ -13,12 +13,14 @@
 package org.openlmis.core.domain;
 
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 import static com.fasterxml.jackson.databind.annotation.JsonSerialize.Inclusion.NON_NULL;
 
-@Data
+@Getter
+@Setter
 @NoArgsConstructor
 @JsonSerialize(include = NON_NULL)
 public class ConfigurationSetting {
@@ -31,4 +33,26 @@ public class ConfigurationSetting {
   private String valueOptions;
   private String displayOrder;
   private String groupName;
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o)
+      return true;
+
+    if (o == null || getClass() != o.getClass())
+      return false;
+
+    ConfigurationSetting that = (ConfigurationSetting) o;
+
+    return new EqualsBuilder()
+        .append(key, that.key)
+        .isEquals();
+  }
+
+  @Override
+  public int hashCode() {
+    return new HashCodeBuilder(17, 37)
+        .append(key)
+        .toHashCode();
+  }
 }

@@ -89,12 +89,12 @@ public class SeasonalityRationingReportControllerTest {
         Report expectedReport = new Report();
         expectedReport.setReportDataProvider(dataProvider);
 
-        when(dataProvider.getMainReportData(requestParam, requestParam, pageSize, maxSize)).thenAnswer(createAnswer(expectedSeasonalityReportData));
+        when(dataProvider.getReportBody(requestParam, requestParam, pageSize, maxSize)).thenAnswer(createAnswer(expectedSeasonalityReportData));
         when(reportManager.getReportByKey("seasonality_rationing")).thenReturn(expectedReport);
 
         Pages reportPages = controller.getSeasonalityRationingAdjustmentReport(pageSize, maxSize, httpServletRequest);
 
-        verify(dataProvider).getMainReportData(requestParam, requestParam, pageSize, maxSize);
+        verify(dataProvider).getReportBody(requestParam, requestParam, pageSize, maxSize);
         verify(reportManager).getReportByKey("seasonality_rationing");
 
         assertThat(reportPages, is(expectedPage));

@@ -2,6 +2,7 @@ function ViewRnrViaDetailController($scope, $route, $location, Requisitions) {
     $scope.pageSize = 20;
     $scope.currentPage = 1;
     $scope.rnrItemsVisible = [];
+    $scope.rnr = [];
 
     $scope.$on('$viewContentLoaded', function () {
         $scope.loadRequisitionDetail();
@@ -9,7 +10,7 @@ function ViewRnrViaDetailController($scope, $route, $location, Requisitions) {
 
     $scope.loadRequisitionDetail = function () {
         Requisitions.get({id: $route.current.params.rnr}, function (data) {
-            //console.log(data.rnr.fullSupplyLineItems.toString());
+            $scope.rnr = data.rnr;
             $scope.rnrItems = data.rnr.fullSupplyLineItems;
 
             var extraRows = $scope.rnrItems.length % $scope.pageSize;

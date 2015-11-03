@@ -13,9 +13,7 @@
 package org.openlmis.report.mapper;
 
 import org.apache.ibatis.annotations.*;
-import org.openlmis.core.domain.Product;
 import org.openlmis.report.model.dto.ProductList;
-import org.openlmis.report.model.dto.Program;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -54,16 +52,4 @@ public interface ProductListMapper {
     })
     List<ProductList> getList();
 
-    @Select("select p.* from programs p " +
-        "   join program_products pp on pp.programId = p.id and pp.productId = #{id} and pp.active = true")
-    List<Program> getProgramsForProduct(Long id);
-
-    @Update("UPDATE products SET  active=false where id = #{productId}")
-    int deleteById(Long productId);
-
-    @Update("UPDATE products SET  active=true where id = #{productId}")
-    int restoreById(Long productId);
-
-    @Select("SELECT * FROM products WHERE id=#{id}")
-    Product getProductById(Long id);
 }

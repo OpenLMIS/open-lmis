@@ -23,14 +23,12 @@ import org.openlmis.report.model.report.SummaryReport;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
-import java.util.Map;
 
 @Repository
 public interface SummaryReportMapper {
 
-
-    @SelectProvider(type=SummaryQueryBuilder.class, method="getQuery")
-    @Options(resultSetType = ResultSetType.SCROLL_SENSITIVE, fetchSize=10,timeout=0,useCache=true,flushCache=true)
-    public List<SummaryReport> getReport(@Param("filterCriteria") SummaryReportParam params, @Param("RowBounds") RowBounds rowBounds);
+  @SelectProvider(type = SummaryQueryBuilder.class, method = "getQuery")
+  @Options(resultSetType = ResultSetType.SCROLL_SENSITIVE, fetchSize = 10, timeout = 0, useCache = true, flushCache = true)
+  public List<SummaryReport> getReport(@Param("filterCriteria") SummaryReportParam params, @Param("RowBounds") RowBounds rowBounds);
 
 }

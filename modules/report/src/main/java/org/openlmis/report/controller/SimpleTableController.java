@@ -28,6 +28,7 @@ import org.openlmis.core.utils.DateUtil;
 import org.openlmis.core.web.OpenLmisResponse;
 import org.openlmis.core.web.controller.BaseController;
 import org.openlmis.report.mapper.RequisitionReportsMapper;
+import org.openlmis.report.service.FacilityProductsReportDataProvider;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
 import org.springframework.http.ResponseEntity;
@@ -50,6 +51,10 @@ public class SimpleTableController extends BaseController {
 	@Autowired
 	private RequisitionReportsMapper requisitionReportsMapper;
 
+	@Autowired
+	private FacilityProductsReportDataProvider facilityProductsReportDataProvider;
+
+
 	@RequestMapping(value = "/requisition-report", method = GET, headers = BaseController.ACCEPT_JSON)
 	public ResponseEntity<OpenLmisResponse> requisitionReport(
 					@RequestParam (value = "startTime", required = true) Date startTime,
@@ -57,6 +62,23 @@ public class SimpleTableController extends BaseController {
 		return OpenLmisResponse.response("rnr_list", requisitionReportsMapper
             .getRequisitionList(startTime, endTime));
 	}
+
+
+	@RequestMapping(value = "/single-product-report", method = GET, headers = BaseController.ACCEPT_JSON)
+	public ResponseEntity<OpenLmisResponse> singleProductReport(
+			@RequestParam(value = "geographicZoneId") Long geographicZoneId,
+			@RequestParam(value = "productId") final Long productId,
+			@RequestParam(value = "endTime", required = false) final Date endTime) {
+		return OpenLmisResponse.response("products", facilityProductsReportDataProvider.getReportData(geographicZoneId, productId, endTime));
+	}
+
+	@RequestMapping(value = "/all-products-report",method = GET,headers = BaseController.ACCEPT_JSON)
+	public ResponseEntity<OpenLmisResponse> allProductsReport(
+			@RequestParam(value = "facilityId",required = true) Long facilityId,
+			@RequestParam(value = "endTime", required = false) final Date endTime){
+		return OpenLmisResponse.response("products", facilityProductsReportDataProvider.getReportData(facilityId, endTime));
+	}
+
 
 	@InitBinder
 	public void initBinder(WebDataBinder binder) {

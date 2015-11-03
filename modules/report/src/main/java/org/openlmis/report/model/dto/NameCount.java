@@ -13,16 +13,17 @@
 package org.openlmis.report.model.dto;
 
 import lombok.AllArgsConstructor;
-import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.openlmis.report.model.ReportData;
 
-@Data
+@Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 public class NameCount implements ReportData {
 
-    private String name;
-    private String count;
-
+  private String name;
+  private String count;
 }

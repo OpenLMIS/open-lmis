@@ -22,7 +22,6 @@ import java.text.DateFormat;
 
 @Data
 @NoArgsConstructor
-@EqualsAndHashCode(callSuper=false)
 @AllArgsConstructor
 public class DistrictSummaryReportParam
   extends BaseParam implements ReportParameter {

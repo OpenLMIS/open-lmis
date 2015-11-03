@@ -17,9 +17,8 @@ import org.apache.ibatis.annotations.Select;
 import org.apache.ibatis.annotations.SelectProvider;
 import org.apache.ibatis.mapping.ResultSetType;
 import org.openlmis.report.builder.UserSummaryExQueryBuilder;
-import org.openlmis.report.builder.UserSummaryQueryBuilder;
 import org.openlmis.report.model.ReportParameter;
-import org.openlmis.report.model.dto.*;
+import org.openlmis.report.model.dto.UserRoleAssignmentsReport;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -27,11 +26,11 @@ import java.util.List;
 @Repository
 public interface UserSummaryExReportMapper {
 
-   @Select ("select supervisorynodename as supervisoryNodeName,rolename as roleName from vw_user_role_assignments " +
-           "where roleid=#{roleId} and programid=#{programId} and supervisorynodeid=#{supervisoryNodeId}" )
-    List<UserRoleAssignmentsReport>getUserRoleAssignments(@Param("roleId") Long roleId,@Param("programId") Long programId,@Param("supervisoryNodeId") Long supervisoryNodeId);
+  @Select("select supervisorynodename as supervisoryNodeName,rolename as roleName from vw_user_role_assignments " +
+      "where roleid=#{roleId} and programid=#{programId} and supervisorynodeid=#{supervisoryNodeId}")
+  List<UserRoleAssignmentsReport> getUserRoleAssignments(@Param("roleId") Long roleId, @Param("programId") Long programId, @Param("supervisoryNodeId") Long supervisoryNodeId);
 
-    @SelectProvider(type=UserSummaryExQueryBuilder.class, method="getQuery")
-    @Options(resultSetType = ResultSetType.SCROLL_SENSITIVE, fetchSize=10,timeout=0,useCache=true,flushCache=true)
-    List<UserRoleAssignmentsReport>getUserRoleAssignment(@Param("filterCriteria") ReportParameter filterCriteria);
-    }
+  @SelectProvider(type = UserSummaryExQueryBuilder.class, method = "getQuery")
+  @Options(resultSetType = ResultSetType.SCROLL_SENSITIVE, fetchSize = 10, timeout = 0, useCache = true, flushCache = true)
+  List<UserRoleAssignmentsReport> getUserRoleAssignment(@Param("filterCriteria") ReportParameter filterCriteria);
+}

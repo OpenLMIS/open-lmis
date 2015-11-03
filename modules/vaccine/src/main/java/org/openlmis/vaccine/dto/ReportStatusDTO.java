@@ -13,8 +13,13 @@
 package org.openlmis.vaccine.dto;
 
 import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 
-@Data
+@Getter
+@Setter
 public class ReportStatusDTO {
 
   Long id;
@@ -24,4 +29,25 @@ public class ReportStatusDTO {
   String status;
   String periodName;
 
+  @Override
+  public boolean equals(Object o) {
+    if (this == o)
+      return true;
+
+    if (!(o instanceof ReportStatusDTO))
+      return false;
+
+    ReportStatusDTO that = (ReportStatusDTO) o;
+
+    return new EqualsBuilder()
+        .append(id, that.id)
+        .isEquals();
+  }
+
+  @Override
+  public int hashCode() {
+    return new HashCodeBuilder(17, 37)
+        .append(id)
+        .toHashCode();
+  }
 }

@@ -66,7 +66,7 @@ app.directive('setting', function ($compile, $http, $templateCache) {
 
   var linker = function (scope, element) {
     var loader = getTemplate(scope.content.valueType);
-    var promise = loader.success(function (html) {
+    loader.success(function (html) {
       element.html(html);
     }).then(function () {
       element.replaceWith($compile(element.html())(scope));

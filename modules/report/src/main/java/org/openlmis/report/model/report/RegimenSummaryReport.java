@@ -12,13 +12,12 @@
 
 package org.openlmis.report.model.report;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.openlmis.report.model.ReportData;
 
 import javax.persistence.Column;
-@Data
+@Getter
+@Setter
 @AllArgsConstructor
 @NoArgsConstructor
 public class RegimenSummaryReport implements ReportData {

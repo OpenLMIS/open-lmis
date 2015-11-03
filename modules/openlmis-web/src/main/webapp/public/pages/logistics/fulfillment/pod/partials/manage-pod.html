@@ -12,47 +12,59 @@
 
 <div class="app-form">
 
-
   <div class="row-fluid">
-    <div class="span12">
-      <label openlmis-message="label.program"></label>
+    <div>
+      <div class="form-cell">
+        <label openlmis-message="label.program"></label>
+
+        <div class="form-field">
+          <select ui-select2 class="span3"
+                  id="programListMyFacility"
+                  ng-model="filter.program" ng-change="onParamChanged()">
+            <option value="{{program.id}}" ng-repeat="program in programs">{{program.name}}</option>
+          </select>
+        </div>
+      </div>
     </div>
-  </div>
-  <div class="row-fluid">
-    <select ui-select2
-            id="programListMyFacility" class="span3"
-            ng-model="filter.program"   ng-change="onProgramChanged()">
-      <option>Select Program</option>
-      <option value="{{program.id}}" ng-repeat="program in programs">{{program.name}}</option>
-    </select>
-    <lable ng-show="filter.program"><input type="checkbox"  ng-change="onProgramChanged()" ng-model="option.all"> All POD under this program</lable>
-  </div>
-  <div class="row-fluid">
-    <div class="span12">
-      <label openlmis-message="label.facility"></label>
-    </div>
-  </div>
-  <div class="row-fluid">
-    <select ui-select2
-            id="facility" class="span3"
-            ng-model="filter.facility"  ng-change="onFacilityChanged()">
-      <option>Select Facility</option>
-      <option value="{{facility.id}}" ng-repeat="facility in facilities">{{facility.name}}</option>
+    <div class="span5" ng-show="filter.program">
+      <div class="form-cell">
+        <div class="form-field checkbox">
+          <input id="allpods" type="checkbox" ng-change="onParamChanged()" ng-model="option.all">
+          <label for="allpods" class="checkbox">
+            Show all pending PODs under this program
+          </label>
+        </div>
 
-    </select>
-  </div>
-
-
-    <div class="form-group" ng-show="(filter.program && option.all) || filter.facility">
-      <h3 openlmis-message="label.order.list"></h3>
-
-      <div class="alert alert-info" id="noOrdersPresent" ng-hide="orders && orders.length">
-        <span openlmis-message="message.no.order"></span>
       </div>
 
-
-      <div class="form-row clearfix"></div>
-
-        <div ng-show="orders && orders.length" class="gridStyle" ng-grid="gridOptions"></div>
     </div>
+  </div>
+  <div ng-show="filter.program && !option.all">
+    <div class="row-fluid">
+      <div class="form-cell">
+        <label openlmis-message="label.facility"></label>
+
+        <div class="form-field">
+          <select ui-select2
+                  id="facility" class="span3"
+                  ng-model="filter.facility" ng-change="onFacilityChanged()">
+            <option value="{{facility.id}}" ng-repeat="facility in facilities">{{facility.name}}</option>
+          </select>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  <div class="form-group" ng-show="(filter.program && option.all) || filter.facility">
+    <h3 openlmis-message="label.order.list"></h3>
+
+    <div class="alert alert-info" id="noOrdersPresent" ng-hide="orders && orders.length">
+      <span openlmis-message="message.no.order"></span>
+    </div>
+
+
+    <div class="form-row clearfix"></div>
+    <div ng-show="orders && orders.length" class="gridStyle" ng-grid="gridOptions"></div>
+  </div>
 </div>

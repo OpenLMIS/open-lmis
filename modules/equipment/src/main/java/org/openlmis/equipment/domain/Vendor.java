@@ -11,18 +11,17 @@
  */
 package org.openlmis.equipment.domain;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
+import lombok.*;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.openlmis.core.domain.BaseModel;
 
 import java.util.Date;
 
-@Data
+@Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@EqualsAndHashCode(callSuper=false)
 public class Vendor extends BaseModel {
 
   private String name;
@@ -35,4 +34,23 @@ public class Vendor extends BaseModel {
   private String geographicCoverage;
   private Date registrationDate;
 
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) return true;
+
+    if (o == null || getClass() != o.getClass()) return false;
+
+    Vendor vendor = (Vendor) o;
+
+    return new EqualsBuilder()
+        .append(id, vendor.id)
+        .isEquals();
+  }
+
+  @Override
+  public int hashCode() {
+    return new HashCodeBuilder(17, 37)
+        .append(id)
+        .toHashCode();
+  }
 }

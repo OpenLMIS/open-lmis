@@ -70,7 +70,7 @@ public class DiseaseMapperIT {
     mapper.update(disease);
 
     VaccineDisease returnedObject = mapper.getById(disease.getId());
-    assertThat(returnedObject, is(disease));
+    assertThat(returnedObject.getDescription(), is(disease.getDescription()));
   }
 
   @Test
@@ -82,6 +82,7 @@ public class DiseaseMapperIT {
     mapper.insert(disease);
 
     VaccineDisease returnedObject = mapper.getById(disease.getId());
-    assertThat(returnedObject, is(disease));
+    assertThat(returnedObject.getName(), is(disease.getName()));
+    assertThat(returnedObject.getId(), is(disease.getId()));
   }
 }

@@ -42,13 +42,13 @@ public class CCERepairManagementEquipmentListDataProvider extends ReportDataProv
   private CCERepairManagementEquipmentListParam CCERepairManagementEquipmentListParam = null;
 
   @Override
-  protected List<? extends ReportData> getResultSetReportData(Map<String, String[]> params) {
+  protected List<? extends ReportData> getResultSet(Map<String, String[]> params) {
 
     return CCERepairManagementReportMapper.getEquipmentList(getReportFilterData(params), this.getUserId());
   }
 
   @Override
-  public List<? extends ReportData> getMainReportData(Map<String, String[]> filterCriteria, Map<String, String[]> sortCriteria, int page, int pageSize) {
+  public List<? extends ReportData> getReportBody(Map<String, String[]> filterCriteria, Map<String, String[]> sortCriteria, int page, int pageSize) {
     RowBounds rowBounds = new RowBounds((page - 1) * pageSize, pageSize);
     return  CCERepairManagementReportMapper.getEquipmentList(getReportFilterData(filterCriteria), this.getUserId());
 

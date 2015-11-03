@@ -13,16 +13,15 @@
 package org.openlmis.report.model.report;
 
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.openlmis.core.utils.DateUtil;
 import org.openlmis.report.model.ReportData;
 
 import java.util.Date;
 
 
-@Data
+@Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 public class TimelinessReport implements ReportData {

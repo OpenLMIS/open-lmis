@@ -122,7 +122,7 @@ public class AnnualDistrictDemographicEstimateService {
     for (EstimateFormLineItem dto : districts) {
       dto.setDistrictEstimates(repository.getDistrictEstimates(year, dto.getId(), programId));
       dto.setFacilityEstimates(repository.getFacilityEstimateAggregate(year, dto.getId(), programId));
-      if (dto.getDistrictEstimates().size() == 0) {
+      if (dto.getDistrictEstimates().isEmpty()) {
         dto.setDistrictEstimates(getEmptyEstimateObjects(categories, dto.getId(), programId, year));
       }
       form.getEstimateLineItems().add(dto);

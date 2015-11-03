@@ -45,14 +45,14 @@ public class DistrictFinancialSummaryDataProvider extends ReportDataProvider {
   }
 
     @Override
-    protected List<? extends ReportData> getResultSetReportData(Map<String, String[]> filterCriteria) {
-        return getMainReportData(filterCriteria, null, RowBounds.NO_ROW_OFFSET, RowBounds.NO_ROW_LIMIT);
+    protected List<? extends ReportData> getResultSet(Map<String, String[]> filterCriteria) {
+        return getReportBody(filterCriteria, null, RowBounds.NO_ROW_OFFSET, RowBounds.NO_ROW_LIMIT);
     }
 
   @Override
-  public List<? extends ReportData> getMainReportData(Map<String, String[]> filterCriteria, Map<String, String[]> SortCriteria, int page, int pageSize) {
+  public List<? extends ReportData> getReportBody(Map<String, String[]> filterCriteria, Map<String, String[]> sortCriteria, int page, int pageSize) {
     RowBounds rowBounds = new RowBounds((page - 1) * pageSize, pageSize);
-    return reportMapper.getReportPagedData(getReportFilterData(filterCriteria), SortCriteria, rowBounds,this.getUserId());
+    return reportMapper.getReportPagedData(getReportFilterData(filterCriteria), sortCriteria, rowBounds,this.getUserId());
   }
 
   public ReportParameter getReportFilterData(Map<String, String[]> filterCriteria) {

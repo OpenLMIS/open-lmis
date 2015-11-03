@@ -14,19 +14,18 @@ package org.openlmis.vaccine.domain.reports;
 
 
 import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.openlmis.core.domain.BaseModel;
 import org.openlmis.core.domain.Product;
 import org.openlmis.vaccine.domain.VaccineProductDose;
 
-@Data
+@Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@EqualsAndHashCode(callSuper = false)
-public class VaccineCoverageItem extends BaseModel{
-
+public class VaccineCoverageItem extends BaseModel {
 
   private Long reportId;
   private Long productId;

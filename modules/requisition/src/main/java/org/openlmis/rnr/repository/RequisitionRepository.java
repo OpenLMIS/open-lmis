@@ -303,7 +303,7 @@ public class RequisitionRepository {
     requisitionMapper.updateClientFields(rnr);
   }
 
-  public List<Rnr> getRequisitionDetailsByFacilityAndProgram(Facility facility, Program program) {
-    return requisitionMapper.getRequisitionsWithLineItemsByFacilityAndProgram(facility, program);
+  public List<Rnr> getRequisitionDetailsByFacility(Facility facility) {
+    return requisitionMapper.getRequisitionsWithLineItemsByFacility(facility);
   }
 }

@@ -13,21 +13,24 @@
 package org.openlmis.report.model.dto;
 
 import lombok.AllArgsConstructor;
-import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
-@Data
+@Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 public class GeographicZone {
 
-    private Integer id;
-    private String name;
-    private String parent;
-    private Integer parentId;
-    private String code;
-    private Long catchmentPopulation;
-    private Double latitude;
-    private Double longitude;
-    private Integer levelId;
+  private Integer id;
+  private String name;
+  private String parent;
+  private Integer parentId;
+  private String code;
+  private Long catchmentPopulation;
+  private Double latitude;
+  private Double longitude;
+  private Integer levelId;
+
 }

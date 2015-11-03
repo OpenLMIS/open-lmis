@@ -12,50 +12,25 @@
 
 package org.openlmis.report.model.params;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.openlmis.report.model.ReportData;
 import org.openlmis.report.model.ReportParameter;
 
-@Data
+@Getter
+@Setter
 @AllArgsConstructor
-@EqualsAndHashCode(callSuper=false)
 @NoArgsConstructor
 public class RnRFeedbackReportParam
   extends BaseParam implements ReportParameter {
 
-  private int facilityTypeId;
-  private long zoneId;
-  private int facilityId;
-  private int productId;
-  private int productCategoryId;
-  private int programId;
-  private int periodId;
-  private int scheduleId;
-  private int rgroupId;
-
-  private String rgroup;
-  private String facilityType;
-  private String facility;
-  private String orderType;
-  private String product;
-  private String program;
-  private String period;
-  private String schedule;
-
-  @Override
-  public String toString() {
-
-    StringBuilder filtersValue = new StringBuilder("");
-    filtersValue.append("Program : ").append(this.program).append("\n").
-      append("Schedule : ").append(this.schedule).append("\n").
-      append("Period : ").append(this.period).append("\n").
-      append("Requisition Group : ").append(this.rgroup).append("\n").
-      append("Product : ").append(this.product).append("\n");
-    return filtersValue.toString();
-  }
-
+  private Long facilityType;
+  private Long zone;
+  private Long facility;
+  private Long product;
+  private Long productCategory;
+  private Long program;
+  private Long period;
+  private Long schedule;
+  private Long requisitionGroup;
 
 }

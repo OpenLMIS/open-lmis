@@ -12,17 +12,18 @@
 package org.openlmis.report.model.dto;
 
 import lombok.AllArgsConstructor;
-import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 
-@Data
+@Getter
+@Setter
 @AllArgsConstructor
 @NoArgsConstructor
 public class UserRoleAssignmentsReport {
-    private String roleName;
-    private String supervisoryNodeName;
-    private Integer totalRoles;
-    private Long roleid;
-
+  private String roleName;
+  private String supervisoryNodeName;
+  private Integer totalRoles;
+  private Long roleid;
 }

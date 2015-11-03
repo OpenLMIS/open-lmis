@@ -12,16 +12,10 @@
 
 package org.openlmis.report.model.dto;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
-/**
- * User: Issa
- * Date: 3/17/14
- * Time: 1:49 PM
- */
-@Data
+@Getter
+@Setter
 @AllArgsConstructor
 @NoArgsConstructor
 public class StockOut {

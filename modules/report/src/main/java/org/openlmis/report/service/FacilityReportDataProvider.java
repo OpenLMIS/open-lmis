@@ -36,12 +36,12 @@ public class FacilityReportDataProvider extends ReportDataProvider {
 
 
   @Override
-  protected List<? extends ReportData> getResultSetReportData(Map<String, String[]> params) {
+  protected List<? extends ReportData> getResultSet(Map<String, String[]> params) {
     return facilityReportMapper.SelectFilteredSortedPagedFacilities(getReportFilterData(params), this.getUserId());
   }
 
   @Override
-  public List<? extends ReportData> getMainReportData(Map<String, String[]> filterCriteria, Map<String, String[]> sortCriteria, int page, int pageSize) {
+  public List<? extends ReportData> getReportBody(Map<String, String[]> filterCriteria, Map<String, String[]> sortCriteria, int page, int pageSize) {
     return facilityReportMapper.SelectFilteredSortedPagedFacilities(getReportFilterData(filterCriteria), this.getUserId());
   }
 

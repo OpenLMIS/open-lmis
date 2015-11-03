@@ -138,7 +138,7 @@ public class AnnualFacilityDemographicEstimateService {
     List<EstimateFormLineItem> facilities = repository.getFacilityList(programId, commaSeparator.commaSeparateIds(requisitionGroups));
     for (EstimateFormLineItem facility : facilities) {
       facility.setFacilityEstimates(repository.getFacilityEstimate(year, facility.getId(), programId));
-      if (facility.getFacilityEstimates().size() == 0) {
+      if (facility.getFacilityEstimates().isEmpty()) {
         facility.setFacilityEstimates(createDefaultEstimateEntries(categories, facility.getId(), programId, year, false));
       }
       form.getEstimateLineItems().add(facility);
