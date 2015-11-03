@@ -68,7 +68,7 @@ function GeographicZonesJsonController($scope, leafletData, FlatGeographicZoneLi
     } else {
       $scope.geographicZones = [];
       $scope.origionalGeographicZones.forEach(function (zone) {
-        if (zone.levelId == $scope.level) {
+        if (zone.levelId === $scope.level) {
           $scope.geographicZones.push(zone);
         }
       });

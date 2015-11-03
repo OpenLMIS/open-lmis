@@ -14,7 +14,7 @@ function SaveRegimenTemplateController($scope, program, programRegimens, regimen
   $scope.regimens = programRegimens;
   $scope.regimenTemplate = regimenTemplate;
   var hiddenColumns = _.filter($scope.regimenTemplate.columns, function (column) {
-    return (column.name == 'name' || column.name == 'code' || column.name == 'skipped');
+    return (column.name === 'name' || column.name === 'code' || column.name === 'skipped');
   });
   $scope.regimenTemplate.columns = _.difference($scope.regimenTemplate.columns,hiddenColumns);
   $scope.regimenCategories = regimenCategories;

@@ -18,7 +18,6 @@ import com.mangofactory.swagger.plugin.SwaggerSpringMvcPlugin;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.client.RestTemplate;
 
 @EnableSwagger
 public class MySwaggerConfig {
@@ -33,26 +32,26 @@ public class MySwaggerConfig {
     // this avoids the duplicate api endpoints on the swagger ui.
     do {
       this.springSwaggerConfig.swaggerRequestMappingHandlerMappings().remove(1);
-    }while(this.springSwaggerConfig.swaggerRequestMappingHandlerMappings().size()  > 1);
+    } while (this.springSwaggerConfig.swaggerRequestMappingHandlerMappings().size() > 1);
   }
 
   @Bean
-  public SwaggerSpringMvcPlugin customImplementation(){
+  public SwaggerSpringMvcPlugin customImplementation() {
     return new SwaggerSpringMvcPlugin(this.springSwaggerConfig)
-      .apiInfo(apiInfo())
-      .swaggerGroup("Rest API")
-      .genericModelSubstitutes(ResponseEntity.class)
-      .includePatterns(".*rest-api.*", ".*/api/.*");
+        .apiInfo(apiInfo())
+        .swaggerGroup("Rest API")
+        .genericModelSubstitutes(ResponseEntity.class)
+        .includePatterns(".*rest-api.*", ".*/api/.*");
   }
 
   private ApiInfo apiInfo() {
     return new ApiInfo(
-      "e-LMIS REST API",
-      "Please use this API to connect to the e-LMIS. This service allows you to build applications that directly interact with the e-LMIS",
-      "TOS",
-      "info@elmis-dev.org",
-      "API License",
-      "https://github.com/OpenLMIS/open-lmis/blob/master/LICENSE"
+        "e-LMIS REST API",
+        "Please use this API to connect to the e-LMIS. This service allows you to build applications that directly interact with the e-LMIS",
+        "TOS",
+        "info@elmis-dev.org",
+        "API License",
+        "https://github.com/OpenLMIS/open-lmis/blob/master/LICENSE"
     );
   }
 }

@@ -66,6 +66,8 @@ public class Rnr extends BaseModel {
   private Long supplyingDepotId;
   private Long supervisoryNodeId;
   private Date submittedDate;
+  private Date clientSubmittedTime;
+  private String clientSubmittedNotes;
   private List<Comment> comments = new ArrayList<>();
 
   public Rnr(Facility facility, Program program, ProcessingPeriod period, Boolean emergency, Long modifiedBy, Long createdBy) {

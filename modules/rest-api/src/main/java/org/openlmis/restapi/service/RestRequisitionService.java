@@ -32,6 +32,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 
@@ -91,9 +92,21 @@ public class RestRequisitionService {
 
     requisitionService.save(rnr);
 
+    updateClientFields(report, rnr);
+
     rnr = requisitionService.submit(rnr);
 
     return requisitionService.authorize(rnr);
+  }
+
+  private void updateClientFields(Report report, Rnr rnr) {
+    Date clientSubmittedTime = report.getClientSubmittedTime();
+    rnr.setClientSubmittedTime(clientSubmittedTime);
+
+    String clientSubmittedNotes = report.getClientSubmittedNotes();
+    rnr.setClientSubmittedNotes(clientSubmittedNotes);
+
+    requisitionService.updateClientFields(rnr);
   }
 
   @Transactional
@@ -289,5 +302,19 @@ public class RestRequisitionService {
         logger.error("could not copy field: " + column.getName());
       }
     }
+  }
+
+  public List<Rnr> getRequisitionsByFacilityAndProgram(String facilityCode, String programCode) {
+    Facility facility = facilityService.getFacilityByCode(facilityCode);
+    if (facility == null) {
+      throw new DataException("error.facility.unknown");
+    }
+
+    Program program = programService.getByCode(programCode);
+    if (program == null) {
+      throw new DataException("program.code.invalid");
+    }
+
+    return requisitionService.getRequisitionsByFacilityAndProgram(facility, program);
   }
 }

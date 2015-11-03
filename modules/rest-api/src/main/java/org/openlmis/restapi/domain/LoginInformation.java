@@ -23,6 +23,8 @@ public class LoginInformation {
 
     private String facilityName;
 
+    private Long facilityId;
+
     public static LoginInformation prepareForREST(final User user, final Facility facility) {
         LoginInformation loginInformation = new LoginInformation();
         loginInformation.setUserFirstName(user.getFirstName());
@@ -30,9 +32,11 @@ public class LoginInformation {
         loginInformation.setUserName(user.getUserName());
 
         if (facility != null) {
+            loginInformation.setFacilityId(facility.getId());
             loginInformation.setFacilityCode(facility.getCode());
             loginInformation.setFacilityName(facility.getName());
         } else {
+            loginInformation.setFacilityId(null);
             loginInformation.setFacilityCode(null);
             loginInformation.setFacilityName(null);
         }

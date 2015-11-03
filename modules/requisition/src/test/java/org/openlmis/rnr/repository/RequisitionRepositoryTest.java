@@ -452,4 +452,11 @@ public class RequisitionRepositoryTest {
 
     assertThat(lineItem, is(expectedLineItem));
   }
+
+  @Test
+  public void shouldUpdateClientSubmittedFields() throws Exception {
+    Rnr rnr = new Rnr();
+    requisitionRepository.updateClientFields(rnr);
+    verify(requisitionMapper).updateClientFields(rnr);
+  }
 }
