@@ -14,7 +14,6 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import static org.openlmis.vaccine.utils.ListUtil.emptyIfNull;
 
 @Data
 @NoArgsConstructor
@@ -39,7 +38,7 @@ public class VaccineOrderRequisition extends BaseModel {
     private List<OrderRequisitionStockCardDTO> stockCards;
     private List<VaccineOrderRequisitionColumns> columnsList;
 
-    public void viewOrderRequisitionLineItems(List<OrderRequisitionStockCardDTO> stockCards, List<ProgramProduct> programProducts) {
+    public void viewOrderRequisitionLineItems(List<OrderRequisitionStockCardDTO> stockCards) {
         lineItems = new ArrayList<>();
 
         ISA myIsa;

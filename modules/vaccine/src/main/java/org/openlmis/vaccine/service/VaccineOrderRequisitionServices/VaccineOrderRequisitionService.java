@@ -3,10 +3,7 @@ package org.openlmis.vaccine.service.VaccineOrderRequisitionServices;
 import org.joda.time.DateTime;
 import org.openlmis.core.domain.*;
 import org.openlmis.core.repository.ProcessingPeriodRepository;
-import org.openlmis.core.service.FacilityService;
-import org.openlmis.core.service.ProgramProductService;
-import org.openlmis.core.service.ProgramService;
-import org.openlmis.core.service.SupervisoryNodeService;
+import org.openlmis.core.service.*;
 import org.openlmis.stockmanagement.domain.StockCard;
 import org.openlmis.stockmanagement.service.StockCardService;
 import org.openlmis.vaccine.domain.VaccineOrderRequisition.VaccineOrderRequisition;
@@ -210,4 +207,10 @@ public class VaccineOrderRequisitionService {
     public List<OrderRequisitionDTO>getAllSearchBy(Long facilityId,String dateRangeStart,String dateRangeEnd,Long programId){
         return orderRequisitionRepository.getAllSearchBy(facilityId,dateRangeStart,dateRangeEnd,programId);
     }
+
+    public List<OrderRequisitionStockCardDTO> getStockCards(Long facilityId, Long programId) {
+        return orderRequisitionRepository.getStockCards(facilityId, programId);
+    }
+
+
 }
