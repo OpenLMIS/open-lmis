@@ -92,7 +92,7 @@ function ReceiveStockController($scope,programs,$timeout,$window,homeFacility,Va
             }
 
     });
-    StockEvent.save({facilityId:homeFacility.id},events, function (data) {
+    StockEvent.update({facilityId:homeFacility.id},events, function (data) {
        if(data.success)
        {
              $timeout(function(){

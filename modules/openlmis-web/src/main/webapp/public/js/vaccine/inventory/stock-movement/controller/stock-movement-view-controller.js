@@ -9,7 +9,7 @@
  */
 
 
-function StockMovementViewController($scope, $window,SaveDistribution,StockEvent, UpdateOrderRequisitionStatus,VaccineLastStockMovement, StockCardsByCategoryAndRequisition, StockCardsForProgramByCategory, $dialog, homeFacility, programs, $routeParams, $location, VaccineIssueStock) {
+function StockMovementViewController($scope, $window,SaveDistribution,StockEvent, UpdateOrderRequisitionStatus,VaccineLastStockMovement, StockCardsByCategoryAndRequisition, StockCardsForProgramByCategory, $dialog, homeFacility, programs, $routeParams, $location) {
 
     var orderId = parseInt($routeParams.id, 10);
     var programId = parseInt($routeParams.programId, 10);
@@ -86,72 +86,12 @@ function StockMovementViewController($scope, $window,SaveDistribution,StockEvent
     };
     var printTest = false;
 
-    $scope.distribute=function(){
-        var distribution = {};
-        var transaction = {};
-        transaction.transactionList=[];
-
-        distribution.fromFacilityId = homeFacility.id;
-        distribution.toFacilityId= $scope.facilityToIssue.id;
-        distribution.distributionDate = $scope.facilityToIssue.issueDate;
-        distribution.voucherNumber = $scope.facilityToIssue.issueVoucher;
-        distribution.lineItems=[];
-        distribution.distributionType="ROUTINE";
-        distribution.status="PENDING";
-        $scope.facilityToIssue.productsToIssue.forEach(function(product){
-            if(product.quantity >0)
-            {
-                var list = {};
-
-                list.productId = product.productId;
-                list.quantity=product.quantity;
-                list.facilityId = distribution.fromFacilityId;
-                list.toFacilityId = distribution.toFacilityId;
-                list.initiatedDate = distribution.distributionDate;
-                list.issueDate = distribution.distributionDate;
-                list.issueVoucher = distribution.voucherNumber;
-                list.toFacilityName = $scope.facilityToIssue.name;
-                if(product.lots !==undefined && product.lots.length >0)
-                {
-                    list.lots = [];
-                    product.lots.forEach(function(l)
-                    {
-                        if(l.quantity !==null && l.quantity >0)
-                        {
-                            var lot = {};
-                            lot.lotId = l.lotId;
-                            lot.vvmStatus=l.vvmStatus;
-                            lot.quantity = l.quantity;
-                            list.lots.push(lot);
-                        }
-
-                    });
-                }
-                distribution.lineItems.push(list);
-                transaction.transactionList.push(list);
-            }
-
-        });
-
-        SaveDistribution.save(distribution,function(data){
-            VaccineIssueStock.update(transaction, function (data) {
-                $scope.issueModal=false;
-                $scope.message=data.success;
-                print();
-                $scope.loadSupervisedFacilities($scope.userPrograms[0].id,homeFacility.id);
-            });
-        });
-    };
-
-
-
-
     $scope.submit = function () {
-        if ($scope.orderRequisitionForm.$error.required) {
-            $scope.showError = true;
-            $scope.error = "The form you submitted is invalid. Please revise and try again.";
-            return;
-        }
+//        if ($scope.orderRequisitionForm.$error.required) {
+//            $scope.showError = true;
+//            $scope.error = "The form you submitted is invalid. Please revise and try again.";
+//            return;
+//        }
 
         var transaction = {};
         transaction.transactionList = [];
@@ -164,19 +104,17 @@ function StockMovementViewController($scope, $window,SaveDistribution,StockEvent
                 var distribution = {};
                 var events=[];
 
+                distribution.fromFacilityId = homeFacility.id;
+                distribution.toFacilityId= toFacilityId;
+                distribution.distributionDate = $scope.stockCardsByCategory[0].issueDate;
+                distribution.periodId = periodId;
+                distribution.orderId = orderId;
+                distribution.voucherNumber = $scope.stockCardsByCategory[0].issueVoucher;
+                distribution.lineItems=[];
+                distribution.distributionType="ROUTINE";
+                distribution.status="PENDING";
+
                 $scope.stockCardsByCategory.forEach(function (st) {
-
-                    distribution.fromFacilityId = homeFacility.id;
-                    distribution.toFacilityId= toFacilityId;
-                    distribution.distributionDate = st.issueDate;
-                    distribution.periodId = periodId;
-                    distribution.orderId = orderId;
-                    distribution.voucherNumber = $scope.stockCardsByCategory[0].issueVoucher;
-                    distribution.lineItems=[];
-                    distribution.distributionType="ROUTINE";
-                    distribution.status="PENDING";
-
-
 
                     st.stockCards.forEach(function (s) {
 
@@ -184,7 +122,7 @@ function StockMovementViewController($scope, $window,SaveDistribution,StockEvent
 
                            list.productId = s.product.id;
 
-                           if(s.lotsOnHand !==undefined && s.lotsOnHand.length >0)
+                           if(s.lotsOnHand.length >0)
                            {
                            list.lots = [];
                            var lotSum = 0;
@@ -210,9 +148,9 @@ function StockMovementViewController($scope, $window,SaveDistribution,StockEvent
                                }
 
 
-                           });
+                              });
                                list.quantity = lotSum;
-                           distribution.lineItems.push(list);
+                               distribution.lineItems.push(list);
 
                            }
                         else{
@@ -226,36 +164,27 @@ function StockMovementViewController($scope, $window,SaveDistribution,StockEvent
 
                            }
 
-
+                        distribution.lineItems.push(list);
 
                     });
 
                 });
 
-                console.log(JSON.stringify(events));
-               StockEvent.save({facilityId:homeFacility.id},events,function(data){
-                   console.log(data);
-                   SaveDistribution.save(distribution,function(data) {
-                       // console.(data.success);
-                       // VaccineIssueStock.update(transaction, function () {
-
-                       /*  // $scope.lastInsertedReport = data.success ;
-                        console.log(lastInsertedReport.list.push(data.success));*/
-
-
+                console.log(JSON.stringify(distribution));
+              StockEvent.save({facilityId:homeFacility.id},events,function(data){
+                   SaveDistribution.save(distribution,function(distribution) {
+                       print(distribution.distributionId);
                        $scope.message = "label.form.Submitted.Successfully";
-
-                       // });
                    });
                });
 
 
 
-               UpdateOrderRequisitionStatus.update({orderId: orderId}, function () {
-
-                });
-
-                print();
+//               UpdateOrderRequisitionStatus.update({orderId: orderId}, function () {
+//
+//                });
+//
+//                print();
             }
         };
 
@@ -271,15 +200,13 @@ function StockMovementViewController($scope, $window,SaveDistribution,StockEvent
 
     };
 
+    var print = function(distributionId){
+              var url = '/vaccine/orderRequisition/issue/print/'+distributionId;
+               $window.open(url, '_blank');
 
- var print = function(){
+               $window.location = '/public/pages/vaccine/inventory/dashboard/index.html#/stock-on-hand';
 
-     var url = '/vaccine/orderRequisition/issue/print';
-      $window.open(url, '_blank');
-
-     $window.location = '/public/pages/vaccine/inventory/index.html#/stock-on-hand';
-
-    };
+         };
 
 
     $scope.cancel = function () {

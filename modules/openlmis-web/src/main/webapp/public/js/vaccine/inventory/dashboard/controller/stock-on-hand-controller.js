@@ -12,7 +12,6 @@
 
 
 function StockOnHandController($scope,$window,EquipmentNonFunctional,VaccinePendingRequisitions,programs,$location,homeFacility,VaccineOrderRequisitionLastReport, localStorageService,StockCardsByCategory,Forecast) {
-function StockOnHandController($scope, $window, VaccinePendingRequisitions, programs, $location, homeFacility, VaccineOrderRequisitionLastReport, localStorageService, StockCardsByCategory, Forecast) {
     $scope.createOrder = false;
     $scope.receiveConsignment = false;
     $scope.selectedProgramId = null;
@@ -104,7 +103,7 @@ function StockOnHandController($scope, $window, VaccinePendingRequisitions, prog
       };
 
     $scope.Adjustment=function(){
-        $location.path('/stock-adjustment');
+        $window.location='/public/pages/vaccine/inventory/index.html#/stock-adjustment';
     };
 
      $scope.Requisition = function(){
@@ -112,7 +111,7 @@ function StockOnHandController($scope, $window, VaccinePendingRequisitions, prog
      };
 
     $scope.ReceiveConsignment = function(){
-        $location.path('/receive');
+        $window.location='/public/pages/vaccine/inventory/index.html#/receive';
     };
 
      EquipmentNonFunctional.get({},function(data){
@@ -130,6 +129,9 @@ function StockOnHandController($scope, $window, VaccinePendingRequisitions, prog
                 $scope.receiveConsignment = true;
             else
                 $scope.createOrder = true;
+        }
+        else{
+            $scope.createOrder = true;
         }
 
     });
