@@ -153,11 +153,6 @@ services.factory('StockEvent', function($resource){
 });
 
 
-services.factory('VaccineSupervisedIvdPrograms', function ($resource) {
-    return $resource('/vaccine/orderRequisition/ivd-form/supervised-programs.json', {}, {});
-});
-*/
-
 services.factory('VaccineReportPrograms', function ($resource) {
     return $resource('/vaccine/orderRequisition/programs.json', {}, {});
 });

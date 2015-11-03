@@ -69,170 +69,6 @@ return {
  };
 });
 
-
-
-
-services.factory('StockCardsByCategoryAndRequisition', function($resource,StockCards,$q, $timeout, VaccineOrderRequisitionProgramProduct,RequisitionForFacility){
-
-    var programId;
-    var facilityId;
-    var programProducts=[];
-    var quantityRequested = [];
-
-    function get(pId,fId,periodId,toFacilityId) {
-        var deferred =$q.defer();
-        $timeout(function(){
-            if(!isNaN(pId)){
-                VaccineOrderRequisitionProgramProduct.get({programId:pId},function(data){
-                    programProducts=data.programProductList;
-
-                    RequisitionForFacility.get({programId:pId, periodId:periodId,facilityId:toFacilityId}, function(data){
-                        quantityRequested = data.requisitionList;
-
-                        StockCards.get({facilityId:fId},function(data){
-                            var stockCards = data.stockCards;
-
-                            stockCards.forEach(function(s){
-                                var product= _.filter(programProducts, function(obj) {
-                                    return obj.product.primaryName === s.product.primaryName;
-                                });
-
-                                var quantityToRequest= _.filter(quantityRequested, function(obj) {
-                                    return obj.productId === s.product.id;
-                                });
-                                s.productCategory=product[0].productCategory;
-                                s.quantityRequested = quantityToRequest[0].quantityRequested;
-                            });
-                            var byCategory=_.groupBy(stockCards,function(s){
-                                return s.productCategory.name;
-                            });
-                            var stockCardsToDisplay = $.map(byCategory, function(value, index) {
-                                return [{"productCategory":index,"stockCards":value}];
-                            });
-
-                            deferred.resolve(stockCardsToDisplay);
-                        });
-
-                    });
-
-                });
-            }
-            else{
-                var stockCardsToDisplay=[];
-                StockCards.get({facilityId:fId},function(data){
-                    var stockCards=data.stockCards;
-                    if(stockCards.length > 0){
-                        stockCardsToDisplay=[{"productCategory":"no-category","stockCards":stockCards}];
-                    }
-                    deferred.resolve(stockCardsToDisplay);
-                });
-
-            }
-
-
-        },100);
-        return deferred.promise;
-
-    }
-    return {
-        get: get,
-    };
-});
-
-
-services.factory('VaccineOrderRequisitionReport', function($resource){
-    return $resource('/vaccine/inventory/facilities/:facilityId/programs/:programId/stockCards.json', {facilityId: '@facilityId',programId:'@programId'}, {});
-});
-services.factory('VaccineOrderRequisitionProgramProduct', function($resource){
-    return $resource('/vaccine/orderRequisition/:programId.json', {programId:'@programId'}, {});
-});
-
-
-services.factory('StockCardsForProgramByCategory', function($resource,VaccineOrderRequisitionReport,RequisitionForFacility,$q, $timeout, VaccineOrderRequisitionProgramProduct){
-
-    var programProducts=[];
-    var programId;
-    var facilityId;
-    var quantityRequested = [];
-
-    function get(pId,fId,periodId,toFacilityId) {
-        var deferred = $q.defer();
-        $timeout(function(){
-            if(!isNaN(pId)){
-                VaccineOrderRequisitionProgramProduct.get({programId:pId},function(data){
-                    programProducts=data.programProductList;
-
-                    RequisitionForFacility.get({programId:pId, periodId:periodId,facilityId:toFacilityId}, function(data) {
-
-                        quantityRequested = data.requisitionList;
-
-                        VaccineOrderRequisitionReport.get({facilityId: fId, programId: pId}, function (data) {
-                            var stockCards = data.stockCards;
-
-                            stockCards.forEach(function (s) {
-                                var product = _.filter(programProducts, function (obj) {
-                                    if(s.product.primaryName !== undefined) {
-                                        return obj.product.primaryName === s.product.primaryName;
-                                    }
-                                });
-
-                                var quantityToRequest= _.filter(quantityRequested, function(obj) {
-                                    if(obj.productId !== undefined) {
-                                        return obj.productId === s.product.id;
-                                    }
-                                });
-
-                                s.productCategory = product[0].productCategory;
-
-                                if(quantityToRequest[0].quantityRequested !==undefined)
-                                s.quantityRequested = quantityToRequest[0].quantityRequested;
-                            });
-
-                            var byCategory = _.groupBy(stockCards, function (s) {
-                                return s.productCategory.name;
-                            });
-
-                            var stockCardsToDisplay = $.map(byCategory, function (value, index) {
-                                return [{"productCategory": index, "stockCards": value}];
-                            });
-
-                            deferred.resolve(stockCardsToDisplay);
-                        });
-                    });
-                });
-            }
-            else{
-                var stockCardsToDisplay=[];
-                VaccineOrderRequisitionReport.get({facilityId:fId, programId:pId},function(data){
-                    var stockCards=data.stockCards;
-                    if(stockCards.length > 0){
-                        stockCardsToDisplay=[{"productCategory":"no-category","stockCards":stockCards}];
-                    }
-                    deferred.resolve(stockCardsToDisplay);
-                });
-
-            }
-
-
-        },100);
-        return deferred.promise;
-
-    }
-    return {
-        get: get,
-    };
-});
-
-
-
-
-
-
-
-services.factory('RequisitionForFacility', function ($resource) {
-    return $resource('/vaccine/orderRequisition/getAllBy/:programId/:periodId/:facilityId.json', {facilityId: '@facilityId', programId: '@programId'}, {});
-});
-
 services.factory('FacilitiesWithProducts', function($resource,$timeout,$q,OneLevelSupervisedFacilities,StockCards,DistributedFacilities){
      var programId;
      var facilityId;
@@ -326,4 +162,375 @@ services.factory('FacilitiesWithProducts', function($resource,$timeout,$q,OneLev
      return {
        get: get,
       };
+});
+
+
+services.factory('VaccineOrderRequisitionByCategory', function ($resource, VaccineOrderRequisitionGetReport, $q, $timeout, VaccineProgramProducts) {
+
+    var programId;
+    var facilityId;
+    var programProducts = [];
+
+    function get(OrderId,programId) {
+        var deferred = $q.defer();
+        $timeout(function () {
+            if (!isNaN(OrderId)) {
+                VaccineProgramProducts.get({programId: parseInt(programId,10)}, function (data) {
+                    programProducts = data.programProductList;
+
+                    VaccineOrderRequisitionGetReport.get({id: parseInt(OrderId,10)}, function (data) {
+
+                        var overallData = data.report;
+
+                        var lineItems = data.report.lineItems;
+
+                        lineItems.forEach(function(s){
+                            s.displayOrder=s.product.form.displayOrder;
+                            var product= _.filter(programProducts, function(obj) {
+                                return obj.product.primaryName === s.product.primaryName;
+                            });
+                            s.productCategory=product[0].productCategory;
+                        });
+                        lineItems=_.sortBy(lineItems,'displayOrder');
+
+                        var byCategory=_.groupBy(lineItems,function(s){
+                            return s.productCategory.name;
+                        });
+
+                        var stockCardsToDisplay = $.map(byCategory, function(value, index) {
+                            return {"productCategory":index,"lineItem":value};
+                        });
+
+                        var object = angular.extend({},overallData,stockCardsToDisplay);
+
+                        deferred.resolve(object);
+                    });
+
+                });
+            }
+            else {
+                var stockCardsToDisplay = [];
+                VaccineOrderRequisitionGetReport.get({id:parseInt(OrderId,10)}, function (data) {
+                    var stockCards = data.report.lineItems;
+                    if (stockCards.length > 0) {
+                        stockCardsToDisplay = [{"productCategory": "no-category", "stockCards": stockCards}];
+                    }
+                    deferred.resolve(stockCardsToDisplay);
+                });
+
+            }
+
+
+        }, 100);
+        return deferred.promise;
+
+    }
+
+    return {
+        get: get,
+    };
+});
+
+
+
+services.factory('StockRequirementsData', function ($resource, StockRequirements, $q, $timeout, VaccineOrderRequisitionProgramProduct) {
+
+    var programProducts = [];
+    var pageLineItems = [];
+
+    function getData(program, homeFacility) {
+
+        var deferred = $q.defer();
+        $timeout(function () {
+            if (!isNaN(program) && !isUndefined(homeFacility)) {
+
+                VaccineOrderRequisitionProgramProduct.get({programId: program}, function (data) {
+                    programProducts = data.programProductList;
+
+
+                    StockRequirements.get({facilityId: homeFacility, programId: program}, function (data) {
+
+                        pageLineItems = data;
+                        pageLineItems.forEach(function (s) {
+
+                            if (s.isaValue !== null && s.eop !== null && s.maxMonthsOfStock !== null) {
+
+                                var product = _.filter(programProducts, function (obj) {
+                                    if (s.productName !== undefined) {
+                                        return obj.product.primaryName === s.productName;
+                                    }
+                                });
+                                s.productCategory = product[0].productCategory;
+                            }
+
+
+                        });
+
+                        var byCategory = _.groupBy(pageLineItems, function (s) {
+                            return s.productCategory.name;
+
+                        });
+                        var stockCardsToDisplay = $.map(byCategory, function (value, index) {
+                            if (index !== 'undefined') {
+                                return [{"productCategory": index, "stockRequirements": value}];
+                            }
+                        });
+
+                        deferred.resolve(stockCardsToDisplay);
+
+                    });
+
+
+                });
+
+
+            } else {
+                var stockCardsToDisplay = [];
+                StockRequirements.get({facilityId: homeFacility, programId: program}, function (data) {
+                    var stockRequirements = data;
+                    if (stockRequirements.length > 0) {
+                        stockCardsToDisplay = [{
+                            "productCategory": "no-category",
+                            "stockRequirements": stockRequirements
+                        }];
+                    }
+                    deferred.resolve(stockCardsToDisplay);
+                });
+
+            }
+        }, 100);
+        return deferred.promise;
+
+    }
+
+    return {
+        get: getData,
+    };
+
+
+});
+
+
+
+
+
+services.factory('StockCardsByCategoryAndRequisition', function ($resource, StockCards, $q, $timeout, VaccineOrderRequisitionProgramProduct, RequisitionForFacility) {
+
+    var programId;
+    var facilityId;
+    var programProducts = [];
+    var quantityRequested = [];
+
+    function get(pId, fId, periodId, toFacilityId) {
+        var deferred = $q.defer();
+        $timeout(function () {
+            if (!isNaN(pId)) {
+                VaccineOrderRequisitionProgramProduct.get({programId: pId}, function (data) {
+                    programProducts = data.programProductList;
+
+                    RequisitionForFacility.get({
+                        programId: pId,
+                        periodId: periodId,
+                        facilityId: toFacilityId
+                    }, function (data) {
+                        quantityRequested = data.requisitionList;
+
+                        StockCards.get({facilityId: fId}, function (data) {
+                            var stockCards = data.stockCards;
+
+                            stockCards.forEach(function (s) {
+                                var product = _.filter(programProducts, function (obj) {
+                                    return obj.product.primaryName === s.product.primaryName;
+                                });
+
+                                var quantityToRequest = _.filter(quantityRequested, function (obj) {
+                                    return obj.productId === s.product.id;
+                                });
+
+
+                                s.productCategory = product[0].productCategory;
+
+
+                                s.quantityRequested = quantityToRequest[0].quantityRequested;
+
+                            });
+                            var byCategory = _.groupBy(stockCards, function (s) {
+                                return s.productCategory.name;
+                            });
+
+                            var stockCardsToDisplay = $.map(byCategory, function (value, index) {
+                                return [{"productCategory": index, "stockCards": value}];
+                            });
+
+                            deferred.resolve(stockCardsToDisplay);
+                        });
+
+                    });
+
+                });
+            }
+            else {
+                var stockCardsToDisplay = [];
+                StockCards.get({facilityId: fId}, function (data) {
+                    var stockCards = data.stockCards;
+                    if (stockCards.length > 0) {
+                        stockCardsToDisplay = [{"productCategory": "no-category", "stockCards": stockCards}];
+                    }
+                    deferred.resolve(stockCardsToDisplay);
+                });
+
+            }
+
+
+        }, 100);
+        return deferred.promise;
+
+    }
+
+    return {
+        get: get,
+    };
+});
+
+services.factory('StockCardsForProgramByCategory', function ($resource, VaccineOrderRequisitionReport, RequisitionForFacility, $q, $timeout, VaccineOrderRequisitionProgramProduct) {
+
+    var programProducts = [];
+    var programId;
+    var facilityId;
+    var quantityRequested = [];
+
+    function get(pId, fId, periodId, toFacilityId) {
+        var deferred = $q.defer();
+        $timeout(function () {
+            if (!isNaN(pId)) {
+                VaccineOrderRequisitionProgramProduct.get({programId: pId}, function (data) {
+                    programProducts = data.programProductList;
+
+                    RequisitionForFacility.get({
+                        programId: pId,
+                        periodId: periodId,
+                        facilityId: toFacilityId
+                    }, function (data) {
+                        if(!isUndefined(data.requisitionList) || data.requisitionList !== null){
+
+                            quantityRequested = data.requisitionList;
+
+                            VaccineOrderRequisitionReport.get({facilityId: fId, programId: pId}, function (data) {
+                                var stockCards = data.stockCards;
+                                //console.log(stockCards);
+
+
+                                stockCards.forEach(function (s) {
+                                    if (s.product.id !== undefined && quantityRequested !==undefined) {
+
+                                        var product = _.filter(programProducts, function (obj) {
+                                            if (s.product.primaryName !== undefined) {
+                                                return obj.product.primaryName === s.product.primaryName;
+                                            }
+                                        });
+
+                                        var quantityToRequest = _.filter(quantityRequested, function (obj) {
+                                            if (obj.productId !== undefined) {
+                                                return obj.productId === s.product.id;
+                                            }
+                                        });
+
+                                        //console.log(product[0]);
+
+                                        if (quantityToRequest.length > 0 && product[0].productCategory !==undefined) {
+                                            s.productCategory = product[0].productCategory;
+                                            console.log(product[0]);
+
+                                            s.quantityRequested = quantityToRequest[0].quantityRequested;
+
+                                        }
+                                    }
+                                });
+
+                                var byCategory = _.groupBy(stockCards, function (s) {
+                                    if(!isUndefined(s.productCategory))
+                                        return s.productCategory.name;
+                                });
+
+                                var stockCardsToDisplay = $.map(byCategory, function (value, index) {
+                                    if (index !== 'undefined')
+                                        return [{"productCategory": index, "stockCards": value}];
+                                });
+                                deferred.resolve(stockCardsToDisplay);
+                            });
+
+                        } });
+
+
+                });
+            }
+            else {
+                var stockCardsToDisplay = [];
+                VaccineOrderRequisitionReport.get({facilityId: fId, programId: pId}, function (data) {
+                    var stockCards = data.stockCards;
+                    if (stockCards.length > 0) {
+                        stockCardsToDisplay = [{"productCategory": "no-category", "stockCards": stockCards}];
+                    }
+                    deferred.resolve(stockCardsToDisplay);
+                });
+
+            }
+
+
+        }, 100);
+        return deferred.promise;
+
+    }
+
+    return {
+        get: get,
+    };
+});
+
+
+
+services.factory('RequisitionForFacility', function ($resource) {
+    return $resource('/vaccine/orderRequisition/getAllBy/:programId/:periodId/:facilityId.json', {
+        facilityId: '@facilityId',
+        programId: '@programId'
+    }, {});
+});
+
+
+
+services.factory('VaccineOrderRequisitionGetReport', function ($resource) {
+    return $resource('/vaccine/orderRequisition/get/:id.json', {id: '@id'}, {});
+});
+
+
+
+services.factory('VaccineOrderRequisitionReport', function ($resource) {
+    return $resource('/vaccine/orderRequisition/facilities/:facilityId/programs/:programId/stockCards.json', {
+        facilityId: '@facilityId',
+        programId: '@programId'
+    }, {});
+});
+
+
+services.factory('VaccineOrderRequisitionProgramProduct', function ($resource) {
+    return $resource('/vaccine/orderRequisition/:programId.json', {programId: '@programId'}, {});
+});
+
+
+
+services.factory('StockRequirements', function ($resource) {
+
+    return $resource(
+        '/rest-api/facility/:facilityId/program/:programId/stockRequirements.json',
+        {facilityId: '@facilityId', programId: '@programId'},
+        {
+            'get': {
+                method: 'GET',
+                transformResponse: function (data) {
+                    return angular.fromJson(data);
+                },
+                isArray: true //since list property is an array
+            }
+        }
+    );
 });
