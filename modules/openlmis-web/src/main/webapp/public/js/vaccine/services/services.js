@@ -148,10 +148,15 @@ services.factory('ManufacturerList', function ($resource) {
 
 
 
-services.factory('VaccineIssueStock', function($resource){
-    return $resource('/vaccine/inventory/stock/debit.json',{}, update);
+services.factory('StockEvent', function($resource){
+    return $resource('/api/v2/facilities/:facilityId/stockCards',{facilityId:'@facilityId'}, {update:{method:"POST"}});
 });
 
+
+services.factory('VaccineSupervisedIvdPrograms', function ($resource) {
+    return $resource('/vaccine/orderRequisition/ivd-form/supervised-programs.json', {}, {});
+});
+*/
 
 services.factory('VaccineReportPrograms', function ($resource) {
     return $resource('/vaccine/orderRequisition/programs.json', {}, {});
@@ -239,38 +244,6 @@ services.factory('VaccineLastStockMovement', function ($resource) {
     return $resource('/vaccine/inventory/stock/lastReport.json', {}, {});
 });
 
-<<<<<<< Temporary merge branch 1
-services.factory('FacilityDistributed', function ($resource) {
-    return $resource('/vaccine/inventory/distribution/getDistributed.json', {}, {});
-});
-
-services.factory('SaveDistribution', function ($resource) {
-    return $resource('/vaccine/inventory/distribution/save.json', {}, {save:{method:'POST'}});
-});
-
-services.factory('DistributedFacilities', function ($resource) {
-    return $resource('/vaccine/inventory/distribution/getDistributed.json', {}, {});
-});
-=======
-
-
-services.factory('StockRequirementsTest', function($resource) {
-
-   return $resource(
-        '/facility/:facilityId/program/:programId/stockRequirements.json',
-        {facilityId: '@facilityId', programId: '@programId'},
-        {
-            'get': {
-                method: 'GET',
-                transformResponse: function (data) {
-                    return angular.fromJson(data);
-                },
-                isArray: true //since list property is an array
-            }
-        }
-    )
-});
-
 services.factory('SaveForecastConfiguration',function($resource){
     return $resource('/vaccine/inventory/configuration/saveForecastConfiguration.json',{},{update:{method:'PUT'}});
 });
@@ -278,4 +251,23 @@ services.factory('SaveForecastConfiguration',function($resource){
 services.factory('VaccineForecastConfigurations',function($resource){
     return $resource('/vaccine/inventory/configuration/getAllForecastConfigurations.json',{},{});
 });
->>>>>>> Temporary merge branch 2
+
+services.factory('FacilityDistributed', function ($resource) {
+    return $resource('/vaccine/inventory/distribution/get-distributed.json', {}, {});
+});
+
+services.factory('SaveDistribution', function ($resource) {
+    return $resource('/vaccine/inventory/distribution/save.json', {}, {save:{method:'POST'}});
+});
+
+services.factory('DistributedFacilities', function ($resource) {
+    return $resource('/vaccine/inventory/distribution/get-distributed.json', {}, {});
+});
+
+services.factory('EquipmentNonFunctional',function($resource){
+    return $resource('/vaccine/inventory/dashboard/get-equipment-alerts',{},{});
+});
+
+services.factory('OneLevelSupervisedFacilities',function($resource){
+    return $resource('/vaccine/inventory/distribution/supervised-facilities',{},{});
+});
