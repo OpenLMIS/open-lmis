@@ -667,6 +667,12 @@ public class RequisitionService {
     requisitionRepository.updateClientFields(rnr);
   }
 
+  @Transactional
+  public void insertPatientQuantificationLineItems(Rnr rnr) {
+    requisitionRepository.insertPatientQuantificationLineItems(rnr);
+  }
+
+
   public List<Rnr> getRequisitionsByFacility(Facility facility) {
     return requisitionRepository.getRequisitionDetailsByFacility(facility);
   }

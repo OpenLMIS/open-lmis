@@ -76,10 +76,11 @@ public class RequisitionRepository {
     insertEquipmentStatus(requisition, requisition.getEquipmentLineItems());
   }
 
-  private void insertPatientQuantificationLineItems(Rnr requisition, List<PatientQuantificationLineItem> patientQuantifications) {
-    for (PatientQuantificationLineItem patientQuantificationLineItem : patientQuantifications) {
-      patientQuantificationLineItem.setRnrId(requisition.getId());
-      patientQuantificationLineItem.setModifiedBy(requisition.getModifiedBy());
+  public void insertPatientQuantificationLineItems(Rnr rnr) {
+    for (PatientQuantificationLineItem patientQuantificationLineItem : rnr.getPatientQuantifications()) {
+      patientQuantificationLineItem.setRnrId(rnr.getId());
+      patientQuantificationLineItem.setModifiedBy(rnr.getModifiedBy());
+      patientQuantificationLineItem.setCreatedBy(rnr.getCreatedBy());
       patientQuantificationLineItemMapper.insert(patientQuantificationLineItem);
     }
   }
@@ -127,7 +128,6 @@ public class RequisitionRepository {
     if (!(rnr.getStatus() == AUTHORIZED || rnr.getStatus() == IN_APPROVAL)) {
       updateRegimenLineItems(rnr);
       updateEquipmentLineItems(rnr);
-      insertPatientQuantificationLineItems(rnr, rnr.getPatientQuantifications());
     }
   }
 

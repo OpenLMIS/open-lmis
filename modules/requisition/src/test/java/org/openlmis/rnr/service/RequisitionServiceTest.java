@@ -1563,6 +1563,13 @@ public class RequisitionServiceTest {
   }
 
   @Test
+  public void shouldInsertPatientQuantificationLineItems() throws Exception {
+    Rnr rnr = new Rnr();
+    requisitionService.insertPatientQuantificationLineItems(rnr);
+    verify(requisitionRepository).insertPatientQuantificationLineItems(rnr);
+  }
+
+  @Test
   public void shouldGetRequisitionsByFacility() {
     Facility facility = new Facility();
     requisitionService.getRequisitionsByFacility(facility);

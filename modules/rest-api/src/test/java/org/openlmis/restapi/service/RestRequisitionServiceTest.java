@@ -193,12 +193,11 @@ public class RestRequisitionServiceTest {
 
 
   @Test
-  public void shouldCopyPatientQuantificationWhenReportHasData() throws Exception {
+  public void shouldInsertPatientQuantificationWhenReportHasData() throws Exception {
 
     setUpRequisitionReportBeforeSubmit();
 
-    PatientQuantificationsBuilder patientQuantificationsBuilder = new PatientQuantificationsBuilder();
-    List<PatientQuantificationLineItem> patientQuantifications = patientQuantificationsBuilder.addLineItem(new PatientQuantificationLineItem("newborn", new Integer(10))).
+    List<PatientQuantificationLineItem> patientQuantifications = new PatientQuantificationsBuilder().addLineItem(new PatientQuantificationLineItem("newborn", new Integer(10))).
             addLineItem(new PatientQuantificationLineItem("adults", new Integer(5))).build();
 
     RegimenLineItem reportRegimenLineItem = make(a(defaultRegimenLineItem, with(patientsOnTreatment, 10), with(patientsStoppedTreatment, 5)));
@@ -208,6 +207,7 @@ public class RestRequisitionServiceTest {
 
     assertThat(requisition.getPatientQuantifications().get(0).getTotal(), is(10));
     assertThat(requisition.getPatientQuantifications().get(1).getTotal(), is(5));
+    verify(requisitionService).insertPatientQuantificationLineItems(requisition);
   }
 
   @Test

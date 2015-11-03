@@ -138,22 +138,25 @@ public class RequisitionRepositoryTest {
 
   @Test
   public void shouldInsertPatientQuantificationLineItems() {
-    PatientQuantificationLineItem lineItem1 = new PatientQuantificationLineItem("newborn", new Integer(10));
-    PatientQuantificationLineItem lineItem2 = new PatientQuantificationLineItem("adults", new Integer(5));
-    PatientQuantificationsBuilder patientQuantificationsBuilder = new PatientQuantificationsBuilder();
-    List<PatientQuantificationLineItem> patientQuantifications = patientQuantificationsBuilder
+    PatientQuantificationLineItem lineItem1 = make(a(PatientQuantificationsBuilder.defaultPatientQuantificationLineItem, with(PatientQuantificationsBuilder.category, "category1")));
+    PatientQuantificationLineItem lineItem2 = make(a(PatientQuantificationsBuilder.defaultPatientQuantificationLineItem, with(PatientQuantificationsBuilder.category, "category2")));
+    List<PatientQuantificationLineItem> patientQuantifications = new PatientQuantificationsBuilder()
             .addLineItem(lineItem1).addLineItem(lineItem2).build();
     rnr.setPatientQuantifications(patientQuantifications);
     rnr.setId(123L);
 
-    requisitionRepository.update(rnr);
-
-    assertEquals(rnr.getId(), patientQuantifications.get(0).getRnrId());
-    assertEquals(rnr.getId(), patientQuantifications.get(1).getRnrId());
-    assertThat(rnr.getStatus(), is(INITIATED));
+    requisitionRepository.insertPatientQuantificationLineItems(rnr);
 
     verify(patientQuantificationLineItemMapper).insert(lineItem1);
     verify(patientQuantificationLineItemMapper).insert(lineItem2);
+
+    assertEquals(2, rnr.getPatientQuantifications().size());
+    assertEquals(rnr.getId(), rnr.getPatientQuantifications().get(0).getRnrId());
+    assertEquals(rnr.getId(), rnr.getPatientQuantifications().get(1).getRnrId());
+    assertEquals(rnr.getModifiedBy(), rnr.getPatientQuantifications().get(0).getModifiedBy());
+    assertEquals(rnr.getModifiedBy(), rnr.getPatientQuantifications().get(1).getModifiedBy());
+    assertEquals(rnr.getCreatedBy(), rnr.getPatientQuantifications().get(0).getCreatedBy());
+    assertEquals(rnr.getCreatedBy(), rnr.getPatientQuantifications().get(1).getCreatedBy());
   }
 
   @Test

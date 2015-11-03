@@ -90,11 +90,10 @@ public class RestRequisitionService {
 
     copyRegimens(rnr, report);
 
-    copyPatientQuantifications(rnr, report);
-
     requisitionService.save(rnr);
 
     updateClientFields(report, rnr);
+    insertPatientQuantificationLineItems(report, rnr);
 
     rnr = requisitionService.submit(rnr);
 
@@ -208,16 +207,12 @@ public class RestRequisitionService {
     }
   }
 
-  private void copyPatientQuantifications(Rnr rnr, Report report) {
+  private void insertPatientQuantificationLineItems(Report report, Rnr rnr) {
     if (report.getPatientQuantifications() != null) {
-      List<PatientQuantificationLineItem> patientQuantifications = new ArrayList();
-      rnr.setPatientQuantifications(patientQuantifications);
-      for (PatientQuantificationLineItem regimenLineItem : report.getPatientQuantifications()) {
-        patientQuantifications.add(regimenLineItem);
-      }
+      rnr.setPatientQuantifications(report.getPatientQuantifications());
+      requisitionService.insertPatientQuantificationLineItems(rnr);
     }
   }
-
 
   @Transactional
   public void approve(Report report, Long requisitionId, Long userId) {
