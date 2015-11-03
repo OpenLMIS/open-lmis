@@ -73,7 +73,7 @@ function ReceiveStockController($scope,programs,$timeout,$window,homeFacility,Va
                     event.lotId=l.lot.id;
                     if(l.vvmStatus !==undefined)
                     {
-                        event.customProps={"vvmStatus":l.vvmStatus}
+                        event.customProps={"vvmStatus":l.vvmStatus};
                     }
                     events.push(event);
                 });
@@ -86,7 +86,7 @@ function ReceiveStockController($scope,programs,$timeout,$window,homeFacility,Va
                  event.quantity=s.quantity;
                  if(s.vvmStatus !==undefined)
                  {
-                    event.customProps={"vvmStatus":s.vvmStatus}
+                    event.customProps={"vvmStatus":s.vvmStatus};
                  }
                  events.push(event);
             }
