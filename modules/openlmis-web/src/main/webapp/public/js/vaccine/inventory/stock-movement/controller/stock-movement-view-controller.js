@@ -169,20 +169,14 @@ function StockMovementViewController($scope, $window,SaveDistribution,StockEvent
                     });
 
                 });
-
-                console.log(JSON.stringify(distribution));
               StockEvent.save({facilityId:homeFacility.id},events,function(data){
                    SaveDistribution.save(distribution,function(distribution) {
-                       print(distribution.distributionId);
-                       $scope.message = "label.form.Submitted.Successfully";
+                        UpdateOrderRequisitionStatus.update({orderId: orderId}, function () {
+                            print(distribution.distributionId);
+                            $scope.message = "label.form.Submitted.Successfully";
+                         });
                    });
                });
-
-
-
-               UpdateOrderRequisitionStatus.update({orderId: orderId}, function () {
-
-                });
 
             }
         };
