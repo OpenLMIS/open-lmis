@@ -37,14 +37,15 @@ function ViewRnrMmiaController($scope, $route, Requisitions, messageService) {
     };
 
     $scope.initProduct = function () {
-        var nonSkippedLineItems = $scope.rnr.fullSupplyLineItems;
-        for (var theOneItem in nonSkippedLineItems) {
-            formatExpirationDate(theOneItem);
+        var fullSupplyLineItems = $scope.rnr.fullSupplyLineItems;
+
+        for (var i = 0; i < fullSupplyLineItems.length; i++) {
+            formatExpirationDate(fullSupplyLineItems[i]);
         }
 
-        $scope.adult = nonSkippedLineItems.slice(0,11);
-        $scope.children = nonSkippedLineItems.slice(12,21);
-        $scope.other = nonSkippedLineItems.slice(22,23);
+        $scope.adult = fullSupplyLineItems.slice(0,11);
+        $scope.children = fullSupplyLineItems.slice(12,21);
+        $scope.other = fullSupplyLineItems.slice(22,23);
     };
 
     var formatExpirationDate = function(theOneItem) {
@@ -63,11 +64,12 @@ function ViewRnrMmiaController($scope, $route, Requisitions, messageService) {
     };
 
     var calculateRegimeTotal = function(regimes){
-        for(var theOneItem in regimes){
-            $scope.regimeTotal += theOneItem.patientsOnTreatment;
+        for(var i = 0; i < regimes.length; i++) {
+            $scope.regimeTotal += regimes[i].patientsOnTreatment;
         }
     };
 
+    //TODO:can be removed after duplicated issue in DB
     $scope.initPatient = function () {
         for (var i = 0; i < 7; i++) {
             $scope.patient.push($scope.rnr.patientQuantifications[i]);
