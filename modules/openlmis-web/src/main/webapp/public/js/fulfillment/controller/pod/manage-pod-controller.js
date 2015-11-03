@@ -25,7 +25,7 @@ function ManagePODController($scope, OrdersForManagePOD, messageService, OrderPO
 
       if($scope.option.all){
         OrdersForManagePOD.get({program: $scope.filter.program}, function (data) {
-          $scope.orders = data.ordersForPOD || [];
+          $scope.orders = data.ordersForPOD;
         });
       }
     }
@@ -33,7 +33,7 @@ function ManagePODController($scope, OrdersForManagePOD, messageService, OrderPO
 
   $scope.onFacilityChanged = function(){
     OrdersForManagePOD.get({program: $scope.filter.program, facility: $scope.filter.facility}, function (data) {
-      $scope.orders = data.ordersForPOD || [];
+      $scope.orders = data.ordersForPOD;
     });
   };
 
