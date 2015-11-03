@@ -180,11 +180,10 @@ function StockMovementViewController($scope, $window,SaveDistribution,StockEvent
 
 
 
-//               UpdateOrderRequisitionStatus.update({orderId: orderId}, function () {
-//
-//                });
-//
-//                print();
+               UpdateOrderRequisitionStatus.update({orderId: orderId}, function () {
+
+                });
+
             }
         };
 
