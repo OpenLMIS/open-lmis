@@ -66,13 +66,24 @@ public class FacilityProgramProductController extends BaseController {
     service.save(facilityId, products);
   }
 
-
-  @ApiOperation(value = "Returns the Minimum Stock, Maximum Stock, and re-order levels, along with ancillary data, for the active products at the specified facility's program.", notes = "")
-  @RequestMapping(value = "/facility/{facilityId}/program/{programId}/stockRequirements", method = GET, headers = ACCEPT_JSON)
+  @ApiOperation
+  (
+    value = "Returns the Minimum Stock, Maximum Stock, and re-order levels, along with ancillary data, for the active products at the specified facility's program.",
+    notes = "The values returned by this endpoint may be categorized as follows: <p />" +
+            "<b>facilityId and productId:</b> Returned as a convenience for the developer. <p />" +
+            "<b>population:</b> The 'catchment population' associated with the relevant facility. In the future, this value will come from alternate sources as well. <p />" +
+            "<b>isaCoefficients:</b> The ISA Coefficients specified by the user at the facility-level. If such values don't exist, the ISA Coefficients set at the more general program-product level are returned. <p />" +
+            "<b>minMonthsOfStock, maxMonthsOfStock, and eop:</b> Values set by the user, potentially via the Facility Approved Products page. Note that eop stands for 'Emergency Order Point.' <p />" +
+            "<b>isaValue:</b> The result of applying the ISA formula to the isaCoefficients. <p />" +
+            "<b>MinimumStock:</b>  This equals isaValue * minMonthsOfStock <p />" +
+            "<b>MaximumStock:</b>  This equals isaValue * maxMonthsOfStock <p />" +
+            "<b>ReorderLevel:</b>  This equals isaValue * eop <p />"
+  )
+  @RequestMapping(value = "/rest-api/facility/{facilityId}/program/{programId}/stockRequirements", method = GET, headers = ACCEPT_JSON)
   public ResponseEntity<Object> getStockRequirements(@PathVariable Long facilityId, @PathVariable Long programId)
   {
     String JSON =  StockRequirements.getJSONArray(service.getStockRequirements(facilityId, programId));
-    return OpenLmisResponse.response(JSON );
+    return OpenLmisResponse.response(JSON);
   }
 
   @RequestMapping(value = "/facility/{facilityId}/programProducts/{programProductId}/isa", method = POST, headers = ACCEPT_JSON)
