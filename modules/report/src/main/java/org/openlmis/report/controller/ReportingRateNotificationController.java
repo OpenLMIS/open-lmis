@@ -44,113 +44,109 @@ import static org.springframework.web.bind.annotation.RequestMethod.POST;
 @RequestMapping(value = "/messages")
 public class ReportingRateNotificationController extends BaseController {
 
-  public static final String SMS = "sms";
-  public static final String EMAIL = "email";
-  public static final String DIRECTION_OUT = "O";
+    public static final String SMS = "sms";
+    public static final String EMAIL = "email";
+    public static final String DIRECTION_OUT = "O";
 
-  public static final String XLS = "XLS";
-  public static final String HTML = "HTML";
+    public static final String XLS = "XLS";
+    public static final String HTML = "HTML";
 
-  public static final String REPORT_PDF = "report.pdf";
-  public static final String REPORT_HTML = "report.html";
-  public static final String REPORT_XLS = "report.xls";
+    public static final String REPORT_PDF = "report.pdf";
+    public static final String REPORT_HTML = "report.html";
+    public static final String REPORT_XLS = "report.xls";
 
-  public static final String APPLICATION_HTML = "application/html";
-  public static final String APPLICATION_VND_MS_EXCEL = "application/vnd.ms-excel";
-  public static final String APPLICATION_PDF = "application/pdf";
-
-  @Autowired
-  private SMSService smsService;
-
-  @Autowired
-  private EmailService emailService;
-
-  @Autowired
-  public ReportManager reportManager;
-
-  @Autowired
-  private JavaMailSender mailSender;
+    public static final String APPLICATION_HTML = "application/html";
+    public static final String APPLICATION_VND_MS_EXCEL = "application/vnd.ms-excel";
+    public static final String APPLICATION_PDF = "application/pdf";
+    @Autowired
+    public ReportManager reportManager;
+    @Autowired
+    private SMSService smsService;
+    @Autowired
+    private EmailService emailService;
+    @Autowired
+    private JavaMailSender mailSender;
 
 
-  @RequestMapping(value = "/send", method = POST, headers = BaseController.ACCEPT_JSON)
-  public ResponseEntity<OpenLmisResponse> send(
-      @RequestBody MessageCollection messages
-  ) {
+    @RequestMapping(value = "/send", method = POST, headers = BaseController.ACCEPT_JSON)
+    public ResponseEntity<OpenLmisResponse> send(
+            @RequestBody MessageCollection messages
+    ) {
 
-    for (MessageDto dto : messages.getMessages()) {
+        for (MessageDto dto : messages.getMessages()) {
 
-      switch (dto.getType()) {
-        case SMS:
-          queueSms(dto);
-          break;
-        case EMAIL:
-          queueSimpleMail(dto);
-          break;
-        default:
-      }
+            switch (dto.getType()) {
+                case SMS:
+                    queueSms(dto);
+                    break;
+                case EMAIL:
+                    queueSimpleMail(dto);
+                    break;
+                default:
+            }
+        }
+
+        return OpenLmisResponse.success("Success");
     }
 
-    return OpenLmisResponse.success("Success");
-  }
-
-  private void queueSimpleMail(MessageDto dto) {
-    SimpleMailMessage message = new SimpleMailMessage();
-    message.setTo(dto.getContact());
-    message.setSubject("Reporting rate notice");
-    message.setText(dto.getMessage());
-    emailService.send(message);
-  }
-
-  private void queueSms(MessageDto dto) {
-    SMS sms = new SMS();
-    sms.setMessage(dto.getMessage());
-    sms.setPhoneNumber(dto.getContact());
-    sms.setDateSaved(new Date());
-    sms.setDirection(DIRECTION_OUT);
-    smsService.sendAsync(sms);
-  }
-
-  @RequestMapping(value = "/send/report", method = POST, headers = BaseController.ACCEPT_JSON)
-  public ResponseEntity<OpenLmisResponse> sendWithReportAttachment(
-      @RequestBody MessageCollection messageParams,
-      HttpServletRequest request
-  ) {
-
-    Integer userId = loggedInUserId(request).intValue();
-
-    /** extract message inputs from the payload **/
-    String reportKey = messageParams.getReportKey();
-    List<MessageDto> messages = messageParams.getMessages();
-    String subject = messageParams.getSubject();
-    String outputOption = messageParams.getOutputOption();
-    Map<String, String[]> reportFilterParams = messageParams.getReportParams();
-
-    /** Export report and process email attachment **/
-    ByteArrayOutputStream byteArrayOutputStream = reportManager.exportReportBytesStream(userId, reportKey, reportFilterParams, outputOption);
-
-    byte[] bytes = byteArrayOutputStream.toByteArray();
-
-    DataSource attachmentDataSource;
-    String fileName;
-    switch (outputOption.toUpperCase()) {
-      case XLS:
-        attachmentDataSource = new ByteArrayDataSource(bytes, APPLICATION_VND_MS_EXCEL);
-        fileName = REPORT_XLS;
-        break;
-      case HTML:
-        attachmentDataSource = new ByteArrayDataSource(bytes, APPLICATION_HTML);
-        fileName = REPORT_HTML;
-        break;
-      default:
-        attachmentDataSource = new ByteArrayDataSource(bytes, APPLICATION_PDF);
-        fileName = REPORT_PDF;
-        break;
+    private void queueSimpleMail(MessageDto dto) {
+        SimpleMailMessage message = new SimpleMailMessage();
+        message.setTo(dto.getContact());
+        message.setSubject("Reporting rate notice");
+        message.setText(dto.getMessage());
+        emailService.send(message);
     }
 
-    for (MessageDto dto : messages) {
-      emailService.sendMimeMessage(dto.getContact(), subject, dto.getMessage(), fileName, attachmentDataSource);
+    private void queueSms(MessageDto dto) {
+        SMS sms = new SMS();
+        sms.setMessage(dto.getMessage());
+        sms.setPhoneNumber(dto.getContact());
+        sms.setDateSaved(new Date());
+        sms.setDirection(DIRECTION_OUT);
+        smsService.sendAsync(sms);
     }
 
-    return OpenLmisResponse.success("Success");
-  }
+    @RequestMapping(value = "/send/report", method = POST, headers = BaseController.ACCEPT_JSON)
+    public ResponseEntity<OpenLmisResponse> sendWithReportAttachment(
+            @RequestBody MessageCollection messageParams,
+            HttpServletRequest request
+    ) {
+
+        Integer userId = loggedInUserId(request).intValue();
+
+        /** extract message inputs from the payload **/
+        String reportKey = messageParams.getReportKey();
+        List<MessageDto> messages = messageParams.getMessages();
+        String subject = messageParams.getSubject();
+        String outputOption = messageParams.getOutputOption();
+        Map<String, String[]> reportFilterParams = messageParams.getReportParams();
+
+        /** Export report and process email attachment **/
+        ByteArrayOutputStream byteArrayOutputStream = reportManager.exportReportBytesStream(userId, reportKey, reportFilterParams, outputOption);
+
+        byte[] bytes = byteArrayOutputStream.toByteArray();
+
+        DataSource attachmentDataSource;
+        String fileName;
+        switch (outputOption.toUpperCase()) {
+            case XLS:
+                attachmentDataSource = new ByteArrayDataSource(bytes, APPLICATION_VND_MS_EXCEL);
+                fileName = REPORT_XLS;
+                break;
+            case HTML:
+                attachmentDataSource = new ByteArrayDataSource(bytes, APPLICATION_HTML);
+                fileName = REPORT_HTML;
+                break;
+            default:
+                attachmentDataSource = new ByteArrayDataSource(bytes, APPLICATION_PDF);
+                fileName = REPORT_PDF;
+                break;
+        }
+
+        for (MessageDto dto : messages) {
+            emailService.sendMimeMessage(dto.getContact(), subject, dto.getMessage(), fileName, attachmentDataSource);
+        }
+
+        return OpenLmisResponse.success("Success");
+    }
 }

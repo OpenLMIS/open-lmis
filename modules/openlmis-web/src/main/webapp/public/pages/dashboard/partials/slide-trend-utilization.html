@@ -27,7 +27,6 @@
                     </chart-axis-y>
                 </chart-axis>
 
-
                 <chart-column column-id="Beginning Balance"
                               column-values="{{product.beginningBalance}}"
                               column-type="bar"/>
@@ -37,10 +36,19 @@
                  <chart-column column-id="Consumption"
                               column-values="{{product.consumption}}"
                               column-type="bar"/>
+                <chart-column column-id="Expired"
+                              column-values="{{product.quantityExpired}}"
+                              column-type="bar"/>
+                <chart-column column-id="Lost"
+                              column-values="{{product.quantityLost}}"
+                              column-type="bar"/>
+                <chart-column column-id="Damaged"
+                              column-values="{{product.quantityDamaged}}"
+                              column-type="bar"/>
                  <chart-column column-id="x"
                               column-values="{{product.periods}}"/>
                 <chart-group group-values="Beginning Balance,Received"/>
-                <chart-group group-values="Consumption"/>
+                <chart-group group-values="Consumption,Expired,Lost,Damaged"/>
             </c3chart>
         </accordion-group>
     </accordion>

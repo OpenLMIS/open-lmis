@@ -25,25 +25,25 @@ import java.util.List;
 @Repository
 public interface RequisitionReportsMapper {
 
-  @Select({"SELECT req.id id," +
-                  "fac.name facilityName," +
-                  "pro.name programName," +
-                  "us.username submittedUser," +
-                  "req.clientsubmittedtime clientSubmittedTime," +
-                  "req.status requisitionStatus," +
-                  "req.modifieddate webSubmittedTime" +
-          "  FROM requisitions req" +
-          "  left join facilities fac" +
-          "      on req.facilityid = fac.id" +
-          "  left join programs pro" +
-          "      on req.programid = pro.id" +
-          "  left join users us" +
-          "      on req.modifiedby=us.id" +
-          "  where ",
-          "(req.modifiedDate >= #{startDate} "
-                  + "AND req.modifiedDate <= #{endDate})"})
-  List<RequisitionDTO> getRequisitionList(@Param("startDate") Date startTime,
-                                          @Param("endDate") Date endTime);
+    @Select({"SELECT req.id id," +
+            "fac.name facilityName," +
+            "pro.name programName," +
+            "us.username submittedUser," +
+            "req.clientsubmittedtime clientSubmittedTime," +
+            "req.status requisitionStatus," +
+            "req.modifieddate webSubmittedTime" +
+            "  FROM requisitions req" +
+            "  left join facilities fac" +
+            "      on req.facilityid = fac.id" +
+            "  left join programs pro" +
+            "      on req.programid = pro.id" +
+            "  left join users us" +
+            "      on req.modifiedby=us.id" +
+            "  where ",
+            "(req.modifiedDate >= #{startDate} "
+                    + "AND req.modifiedDate <= #{endDate})"})
+    List<RequisitionDTO> getRequisitionList(@Param("startDate") Date startTime,
+                                            @Param("endDate") Date endTime);
 
 }
 

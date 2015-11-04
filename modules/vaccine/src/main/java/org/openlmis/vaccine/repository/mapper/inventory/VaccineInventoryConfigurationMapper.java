@@ -16,27 +16,29 @@ public interface VaccineInventoryConfigurationMapper {
             @Result(property = "product", column = "productId", javaType = Product.class,
                     one = @One(select = "org.openlmis.core.repository.mapper.ProductMapper.getById"))
     })
-    List<VaccineInventoryConfiguration> getAll();
+    List<VaccineInventoryProductConfiguration> getAll();
 
     @Select("SELECT *" +
             " FROM vaccine_inventory_product_configurations " +
             " WHERE id=#{id}")
-    VaccineInventoryConfiguration getById(Long id);
+    VaccineInventoryProductConfiguration getById(Long id);
 
     @Update("update vaccine_inventory_product_configurations " +
             " set " +
             " batchtracked = #{batchTracked}," +
-            " vvmtracked= #{vvmTracked}" +
+            " vvmtracked= #{vvmTracked}, " +
+            " survivingInfants = #{survivingInfants}," +
+            " denominatorEstimateCategoryId = #{denominatorEstimateCategoryId} " +
             "WHERE id=#{id} "
     )
-    Integer update(VaccineInventoryConfiguration configuration);
+    Integer update(VaccineInventoryProductConfiguration configuration);
 
 
     @Insert("insert into vaccine_inventory_product_configurations  " +
-            " (type, productid, batchtracked, vvmtracked)" +
+            " (type, productid, batchtracked, vvmtracked,survivingInfants,denominatorEstimateCategoryId) " +
             " values " +
-            " (#{type}, #{productId}, #{batchTracked}, #{vvmTracked}) ")
+            " (#{type}, #{productId}, #{batchTracked}, #{vvmTracked},#{survivingInfants},#{denominatorEstimateCategoryId}) ")
     @Options(useGeneratedKeys = true)
-    Integer insert(VaccineInventoryConfiguration configuration);
+    Integer insert(VaccineInventoryProductConfiguration configuration);
 
 }

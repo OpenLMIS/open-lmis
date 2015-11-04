@@ -30,7 +30,7 @@ public class EpiInventoryLineItemTest {
 
   @Test
   public void shouldCreateEpiInventoryLineItemFromFacilityProgramProduct() throws Exception {
-    FacilityProgramProduct facilityProgramProduct = new FacilityProgramProduct(new ProgramProduct(), 4L, 567);
+    FacilityProgramProduct facilityProgramProduct = new FacilityProgramProduct(new ProgramProduct(), 4L, null);
     facilityProgramProduct.setDisplayOrder(1);
     Product product = new Product();
     product.setCode("P10");

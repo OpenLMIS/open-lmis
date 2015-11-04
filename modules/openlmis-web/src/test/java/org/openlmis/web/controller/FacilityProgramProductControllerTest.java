@@ -53,29 +53,18 @@ public class FacilityProgramProductControllerTest {
   }
 
   @Test
-  public void shouldInsertProgramProductISA() {
+  public void shouldInsertFacilityProgramProductISA() {
     ProgramProductISA programProductISA = new ProgramProductISA();
-    Long programProductId = 1l;
+    Long programProductId = 1L;
+    Long facilityId = 2L;
     String username = "Foo";
 
     session.setAttribute(UserAuthenticationSuccessHandler.USER, username);
 
-    controller.insertIsa(programProductId, programProductISA, httpServletRequest);
+    controller.insertIsa(facilityId, programProductId, programProductISA, httpServletRequest);
 
-    verify(service).insertISA(programProductISA);
+    verify(service).insertISA(facilityId, programProductISA);
     assertThat(programProductISA.getProgramProductId(), is(1l));
   }
-
-  @Test
-  public void shouldUpdateProgramProductISA() {
-    ProgramProductISA programProductISA = new ProgramProductISA();
-    Long isaId = 1l;
-    Long programProductId = 2l;
-
-    controller.updateIsa(isaId, programProductId, programProductISA, httpServletRequest);
-
-    verify(service).updateISA(programProductISA);
-  }
-
 
 }

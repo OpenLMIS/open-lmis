@@ -21,72 +21,72 @@ import java.util.List;
 @NoArgsConstructor
 public class RestStockCardService {
 
-  @Autowired
-  private FacilityRepository facilityRepository;
+    @Autowired
+    private FacilityRepository facilityRepository;
 
-  @Autowired
-  private ProductService productService;
+    @Autowired
+    private ProductService productService;
 
-  @Autowired
-  private StockAdjustmentReasonRepository stockAdjustmentReasonRepository;
+    @Autowired
+    private StockAdjustmentReasonRepository stockAdjustmentReasonRepository;
 
-  @Autowired
-  private StockCardService stockCardService;
+    @Autowired
+    private StockCardService stockCardService;
 
-  public List<StockCardEntry> adjustStock(Long facilityId, List<StockEvent> stockEventList, Long userId) {
-    if (!validFacility(facilityId)) {
-      throw new DataException("error.facility.unknown");
+    public List<StockCardEntry> adjustStock(Long facilityId, List<StockEvent> stockEventList, Long userId) {
+        if (!validFacility(facilityId)) {
+            throw new DataException("error.facility.unknown");
+        }
+        List<StockCardEntry> entries = new ArrayList<>();
+
+        for (StockEvent stockEvent : stockEventList) {
+            String errorInStockEvent = validateStockEvent(stockEvent);
+            if (errorInStockEvent != null) {
+                throw new DataException(errorInStockEvent);
+            }
+
+            StockCard stockCard = stockCardService.getOrCreateStockCard(facilityId, stockEvent.getProductCode());
+
+            if (stockCard == null) {
+                throw new DataException("error.stockmanagement.adjuststockfailed");
+            }
+
+            StockCardEntry entry = createStockCardEntry(stockEvent, stockCard, userId);
+            entries.add(entry);
+        }
+        stockCardService.addStockCardEntries(entries);
+        return entries;
     }
-    List<StockCardEntry> entries = new ArrayList<>();
 
-    for (StockEvent stockEvent: stockEventList) {
-      String errorInStockEvent = validateStockEvent(stockEvent);
-      if (errorInStockEvent != null) {
-        throw new DataException(errorInStockEvent);
-      }
+    private StockCardEntry createStockCardEntry(StockEvent stockEvent, StockCard stockCard, Long userId) {
+        StockAdjustmentReason stockAdjustmentReason = stockAdjustmentReasonRepository.getAdjustmentReasonByName(stockEvent.getReasonName());
 
-      StockCard stockCard = stockCardService.getOrCreateStockCard(facilityId, stockEvent.getProductCode());
+        long quantity = stockEvent.getQuantity();
+        quantity = stockAdjustmentReason.getAdditive() ? quantity : quantity * -1;
 
-      if (stockCard == null) {
-        throw new DataException("error.stockmanagement.adjuststockfailed");
-      }
-
-      StockCardEntry entry = createStockCardEntry(stockEvent, stockCard, userId);
-      entries.add(entry);
+        StockCardEntry entry = new StockCardEntry(stockCard, StockCardEntryType.ADJUSTMENT, quantity);
+        entry.setAdjustmentReason(stockAdjustmentReason);
+        entry.setCreatedBy(userId);
+        entry.setModifiedBy(userId);
+        return entry;
     }
-    stockCardService.addStockCardEntries(entries);
-    return entries;
-  }
 
-  private StockCardEntry createStockCardEntry(StockEvent stockEvent, StockCard stockCard, Long userId) {
-    StockAdjustmentReason stockAdjustmentReason = stockAdjustmentReasonRepository.getAdjustmentReasonByName(stockEvent.getReasonName());
+    private boolean validFacility(Long facilityId) {
+        return facilityRepository.getById(facilityId) != null;
+    }
 
-    long quantity = stockEvent.getQuantity();
-    quantity = stockAdjustmentReason.getAdditive() ? quantity : quantity * -1;
+    private String validateStockEvent(StockEvent stockEvent) {
+        if (!stockEvent.isValidAdjustment()) return "error.stockmanagement.invalidadjustment";
+        if (!validProduct(stockEvent)) return "error.product.unknown";
+        if (!validAdjustmentReason(stockEvent)) return "error.stockadjustmentreason.unknown";
+        return null;
+    }
 
-    StockCardEntry entry = new StockCardEntry(stockCard, StockCardEntryType.ADJUSTMENT, quantity);
-    entry.setAdjustmentReason(stockAdjustmentReason);
-    entry.setCreatedBy(userId);
-    entry.setModifiedBy(userId);
-    return entry;
-  }
+    private boolean validProduct(StockEvent stockEvent) {
+        return productService.getByCode(stockEvent.getProductCode()) != null;
+    }
 
-  private boolean validFacility(Long facilityId) {
-    return facilityRepository.getById(facilityId) != null;
-  }
-
-  private String validateStockEvent(StockEvent stockEvent) {
-    if (!stockEvent.isValidAdjustment()) return "error.stockmanagement.invalidadjustment";
-    if (!validProduct(stockEvent)) return "error.product.unknown";
-    if (!validAdjustmentReason(stockEvent)) return "error.stockadjustmentreason.unknown";
-    return null;
-  }
-
-  private boolean validProduct(StockEvent stockEvent) {
-    return productService.getByCode(stockEvent.getProductCode()) != null;
-  }
-
-  private boolean validAdjustmentReason(StockEvent stockEvent) {
-    return stockAdjustmentReasonRepository.getAdjustmentReasonByName(stockEvent.getReasonName()) != null;
-  }
+    private boolean validAdjustmentReason(StockEvent stockEvent) {
+        return stockAdjustmentReasonRepository.getAdjustmentReasonByName(stockEvent.getReasonName()) != null;
+    }
 }

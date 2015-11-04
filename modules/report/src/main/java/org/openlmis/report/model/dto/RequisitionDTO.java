@@ -11,25 +11,25 @@ import java.util.Date;
 @NoArgsConstructor
 @AllArgsConstructor
 public class RequisitionDTO {
-	private Long id;
-	private String programName;
-	private String facilityName;
-	private String submittedUser;
-	private String webSubmittedTimeString;
-	private String clientSubmittedTimeString;
+    private Long id;
+    private String programName;
+    private String facilityName;
+    private String submittedUser;
+    private String webSubmittedTimeString;
+    private String clientSubmittedTimeString;
 
-	private Date webSubmittedTime;
-	private Date clientSubmittedTime;
+    private Date webSubmittedTime;
+    private Date clientSubmittedTime;
 
-	private String requisitionStatus;
+    private String requisitionStatus;
 
-	public String getClientSubmittedTimeString() {
+    public String getClientSubmittedTimeString() {
 
-		return DateUtil.formatDate(clientSubmittedTime);
-	}
+        return DateUtil.formatDate(clientSubmittedTime);
+    }
 
-	public String getWebSubmittedTimeString() {
-		return DateUtil.formatDate(webSubmittedTime);
-	}
+    public String getWebSubmittedTimeString() {
+        return DateUtil.formatDate(webSubmittedTime);
+    }
 
 }

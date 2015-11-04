@@ -69,14 +69,20 @@ import static org.openlmis.rnr.domain.RnrStatus.*;
 public class RequisitionMapperIT {
   public static final Long MODIFIED_BY = 1L;
   public static final Long USER_ID = 2L;
-
+  @Autowired
+  LossesAndAdjustmentsMapper lossesAndAdjustmentsMapper;
+  @Autowired
+  SupervisoryNodeMapper supervisoryNodeMapper;
+  @Autowired
+  SupplyLineMapper supplyLineMapper;
+  @Autowired
+  RequisitionStatusChangeMapper requisitionStatusChangeMapper;
   private Facility facility;
   private ProcessingSchedule processingSchedule;
   private ProcessingPeriod processingPeriod1;
   private ProcessingPeriod processingPeriod2;
   private ProcessingPeriod processingPeriod3;
   private Program program;
-
   @Autowired
   private UserMapper userMapper;
   @Autowired
@@ -90,13 +96,9 @@ public class RequisitionMapperIT {
   @Autowired
   private RnrLineItemMapper lineItemMapper;
   @Autowired
-  LossesAndAdjustmentsMapper lossesAndAdjustmentsMapper;
-  @Autowired
   private ProcessingPeriodMapper processingPeriodMapper;
   @Autowired
   private ProcessingScheduleMapper processingScheduleMapper;
-  @Autowired
-  SupervisoryNodeMapper supervisoryNodeMapper;
   @Autowired
   private ProductMapper productMapper;
   @Autowired
@@ -108,12 +110,7 @@ public class RequisitionMapperIT {
   @Autowired
   private CommentMapper commentMapper;
   @Autowired
-  SupplyLineMapper supplyLineMapper;
-  @Autowired
   private ProductCategoryMapper productCategoryMapper;
-  @Autowired
-  RequisitionStatusChangeMapper requisitionStatusChangeMapper;
-
   private SupervisoryNode supervisoryNode;
   private Role role;
   private Date modifiedDate;
@@ -242,7 +239,7 @@ public class RequisitionMapperIT {
     Rnr updatedRequisition = mapper.getById(requisition.getId());
 
     assertThat(updatedRequisition.getId(), is(requisition.getId()));
-    assertThat(updatedRequisition.getClientSubmittedTime() , is(clientSubmittedTime));
+    assertThat(updatedRequisition.getClientSubmittedTime(), is(clientSubmittedTime));
 
   }
 

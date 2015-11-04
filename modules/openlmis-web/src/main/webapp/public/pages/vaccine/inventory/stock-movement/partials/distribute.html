@@ -136,11 +136,15 @@
 
                 <td ng-class="{'last-row':$last} " class="col-count cell-input col-general number disabled">
                   <span class="cell-text " >
-                      <input required name="requested_{{$index}}" numeric-validator="positiveInteger" maxlength="8" max="{{c.lotsOnHand[0].quantityOnHand}}"
+                      <input ng-show="c.lotsOnHand.length > 0" required name="requested_{{$index}}" numeric-validator="positiveInteger" maxlength="8" max="{{c.lotsOnHand[0].quantityOnHand}}"
                              ng-model="c.lotsOnHand[0].quantity" ng-change="sumLots(c)" type="number" style="width: 180px;!important;"/>
+                      <input ng-show="c.lotsOnHand.length ===0" required name="requested_{{$index}}" numeric-validator="positiveInteger" maxlength="8" max="{{c.totalQuantityOnHand}}"
+                             ng-model="c.quantity" ng-change="sumLots(c)" type="number" style="width: 180px;!important;"/>
                   </span>
-                    <span class="field-error" ng-show="c.lotsOnHand[0].quantity.$error.required && showError"
-                          openlmis-message="missing.value"></span>
+                    <!--<span class="field-error" ng-show="c.lotsOnHand.length > 0 && c.lotsOnHand[0].quantity.$error.required && showError"-->
+                          <!--openlmis-message="missing.value"></span>-->
+                    <!--<span class="field-error" ng-show="c.lotsOnHand.length ===0 && c.quantity.$error.required && showError"-->
+                          <!--openlmis-message="missing.value"></span>-->
                     <span class="field-error" ng-show="orderRequisitionForm.requested_{{$index}}.$error.max"
                             ></span>
 

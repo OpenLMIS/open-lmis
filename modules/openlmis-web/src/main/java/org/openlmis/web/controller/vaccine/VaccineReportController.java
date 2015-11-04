@@ -65,10 +65,10 @@ public class VaccineReportController extends BaseController {
   @RequestMapping(value = "initialize/{facilityId}/{programId}/{periodId}")
   @PreAuthorize("@permissionEvaluator.hasPermission(principal,'CREATE_IVD')")
   public ResponseEntity<OpenLmisResponse> initialize(
-      @PathVariable Long facilityId,
-      @PathVariable Long programId,
-      @PathVariable Long periodId,
-      HttpServletRequest request
+          @PathVariable Long facilityId,
+          @PathVariable Long programId,
+          @PathVariable Long periodId,
+          HttpServletRequest request
   ) {
     return OpenLmisResponse.response(REPORT, service.initialize(facilityId, programId, periodId, loggedInUserId(request)));
   }

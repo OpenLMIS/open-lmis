@@ -3,17 +3,18 @@
  * Copyright © 2013 VillageReach
  *
  * This program is free software: you can redistribute it and/or modify it under the terms of the GNU Affero General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
- *  
- * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Affero General Public License for more details.
- * You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org. 
+ *  
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Affero General Public License for more details.
+ * You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org. 
  */
 
 
-function FacilityController($scope, facilityReferenceData, $routeParams, facility, Facility, $location, FacilityProgramProducts, priceSchedules, facilityImages, $q, $dialog, messageService, interfacesReferenceData) {
+function FacilityController($scope, facilityReferenceData, $routeParams, facility, Facility, $location, FacilityProgramProducts, FacilityProgramProductsISA, priceSchedules, facilityImages, $q, $dialog, messageService, interfacesReferenceData) {
 
   $scope.$parent.facilityId = null;
   $scope.message = "";
   $scope.$parent.message = "";
+  $scope.isaService = FacilityProgramProductsISA; //isaService is used by ISACoefficientsModalController, which is intended to be used as a descendant controller of this one.
   initialize();
 
   function initialize() {
@@ -69,54 +70,28 @@ function FacilityController($scope, facilityReferenceData, $routeParams, facilit
     $location.path('#/search');
   };
 
-  function saveAllocationProgramProducts() {
-    var promises = [];
-
-    var keys = _.keys($scope.facilityProgramProductsList);
-
-    $(keys).each(function (index, key) {
-      var deferred = $q.defer();
-      promises.push(deferred.promise);
-
-      var program = $scope.facilityProgramProductsList[key][0].program;
-
-      FacilityProgramProducts.update({facilityId: $scope.facility.id, programId: program.id}, $scope.facilityProgramProductsList[key], function (data) {
-        deferred.resolve();
-      }, function () {
-        deferred.reject({error: "error.facility.allocation.product.save", program: program.name});
-      });
-    });
-
-    return promises;
-  }
-
-  $scope.saveFacility = function () {
-    if ($scope.facilityForm.$error.pattern || $scope.facilityForm.$error.required) {
+  $scope.saveFacility = function()
+  {
+    if ($scope.facilityForm.$error.pattern || $scope.facilityForm.$error.required)
+    {
       $scope.showError = "true";
       $scope.error = 'form.error';
       $scope.message = "";
       return;
     }
 
-    var facilitySaveCallback = function (data) {
-      $scope.facility = data.facility;
-      var promises = saveAllocationProgramProducts();
 
-      $q.all(promises).then(function () {
-        $scope.showError = "true";
-        $scope.error = "";
-        $scope.errorProgram = "";
-        $scope.$parent.message = data.success;
-        $scope.facility = getFacilityWithDateObjects(data.facility);
-        $scope.$parent.facilityId = $scope.facility.id;
-        $location.path('');
-      }, function (error) {
-        $scope.showError = "true";
-        $scope.message = "";
-        $scope.error = error.error;
-        $scope.errorProgram = error.program;
-      });
+    var facilitySaveCallback = function(data)
+    {
+      $scope.showError = "true";
+      $scope.error = "";
+      $scope.errorProgram = "";
+      $scope.$parent.message = data.success;
+      $scope.facility = getFacilityWithDateObjects(data.facility);
+      $scope.$parent.facilityId = $scope.facility.id;
+      $location.path('');
     };
+
 
     if (!$scope.isEdit) {
       Facility.save({}, $scope.facility, facilitySaveCallback, errorFunc);
@@ -242,54 +217,54 @@ function FacilityController($scope, facilityReferenceData, $routeParams, facilit
     $scope.programSupportedMessage = ($scope.programsToDisplay.length) ? 'label.select.program.supported' : 'label.no.programs.left';
   }
 
-    function updateInterfacesToDisplay() {
-        $scope.facility.interfaceMappings = $scope.facility.interfaceMappings || [];
-        var interfaceIds = _.pluck(_.pluck($scope.facility.interfaceMappings, 'interfaceId'), "id");
-        $scope.interfacesToDisplay = _.reject($scope.interfaces, function (_interface) {
-            return _.contains(interfaceIds, _interface.id);
-        });
-        $scope.interfaceSelectMessage = ($scope.interfacesToDisplay.length) ? 'label.select.interface' : 'label.no.interface.left';
+  function updateInterfacesToDisplay() {
+    $scope.facility.interfaceMappings = $scope.facility.interfaceMappings || [];
+    var interfaceIds = _.pluck(_.pluck($scope.facility.interfaceMappings, 'interfaceId'), "id");
+    $scope.interfacesToDisplay = _.reject($scope.interfaces, function (_interface) {
+      return _.contains(interfaceIds, _interface.id);
+    });
+    $scope.interfaceSelectMessage = ($scope.interfacesToDisplay.length) ? 'label.select.interface' : 'label.no.interface.left';
+  }
+
+  $scope.addInterfaceMapping = function(mapping){
+    if(!mapping.interfaceId){
+      $scope.showInterfaceRequiredError = true;
+      return;
     }
-
-    $scope.addInterfaceMapping = function(mapping){
-        if(!mapping.interfaceId){
-            $scope.showInterfaceRequiredError = true;
-            return;
-        }
-        if(!mapping.mappedId){
-            $scope.showMappingIdRequiredError = true;
-            return;
-        }
-        $scope.showInterfaceRequiredError = false;
-        $scope.showMappingIdRequiredError = false;
-
-        mapping.interfaceId = getInterfaceById(mapping.interfaceId);
-        $scope.facility.interfaceMappings.push(mapping);
-        $scope.interfaceMapping = undefined;
-        updateInterfacesToDisplay();
-    };
-
-    function getInterfaceById(interfaceId){
-        return (_.findWhere($scope.interfaces, {'id': interfaceId}));
+    if(!mapping.mappedId){
+      $scope.showMappingIdRequiredError = true;
+      return;
     }
+    $scope.showInterfaceRequiredError = false;
+    $scope.showMappingIdRequiredError = false;
 
-    $scope.showRemoveInterfaceMappingConfirmDialog = function (interfaceMapping) {
-        $scope.selectedInterfaceMapping = interfaceMapping;
-        var options = {
-            id: "removeInterfaceMappingConfirmDialog",
-            header: 'delete.interface.mapping.header',
-            body: messageService.get('delete.facility.interface.mapping.confirm', $scope.selectedInterfaceMapping.interfaceId.name)
-        };
-        OpenLmisDialog.newDialog(options, $scope.removeInterfaceMappingConfirm, $dialog);
-    };
+    mapping.interfaceId = getInterfaceById(mapping.interfaceId);
+    $scope.facility.interfaceMappings.push(mapping);
+    $scope.interfaceMapping = undefined;
+    updateInterfacesToDisplay();
+  };
 
-    $scope.removeInterfaceMappingConfirm = function(result){
-        if (result) {
-            $scope.facility.interfaceMappings = _.without($scope.facility.interfaceMappings, $scope.selectedInterfaceMapping);
-        }
-        $scope.selectedInterfaceMapping = undefined;
-        updateInterfacesToDisplay();
+  function getInterfaceById(interfaceId){
+    return (_.findWhere($scope.interfaces, {'id': interfaceId}));
+  }
+
+  $scope.showRemoveInterfaceMappingConfirmDialog = function (interfaceMapping) {
+    $scope.selectedInterfaceMapping = interfaceMapping;
+    var options = {
+      id: "removeInterfaceMappingConfirmDialog",
+      header: 'delete.interface.mapping.header',
+      body: messageService.get('delete.facility.interface.mapping.confirm', $scope.selectedInterfaceMapping.interfaceId.name)
     };
+    OpenLmisDialog.newDialog(options, $scope.removeInterfaceMappingConfirm, $dialog);
+  };
+
+  $scope.removeInterfaceMappingConfirm = function(result){
+    if (result) {
+      $scope.facility.interfaceMappings = _.without($scope.facility.interfaceMappings, $scope.selectedInterfaceMapping);
+    }
+    $scope.selectedInterfaceMapping = undefined;
+    updateInterfacesToDisplay();
+  };
 }
 
 FacilityController.resolve = {
@@ -306,13 +281,13 @@ FacilityController.resolve = {
     var deferred = $q.defer();
     var facilityId = $route.current.params.facilityId;
     $timeout(function(){
-        if(!isUndefined(facilityId)){
-            FacilityImages.get({facilityId: facilityId }, function (data){
-                deferred.resolve(data);
-            });
-        }else{
-            deferred.resolve([]);
-        }
+      if(!isUndefined(facilityId)){
+        FacilityImages.get({facilityId: facilityId }, function (data){
+          deferred.resolve(data);
+        });
+      }else{
+        deferred.resolve([]);
+      }
     }, 100);
     return deferred.promise;
   },
@@ -332,24 +307,24 @@ FacilityController.resolve = {
   },
 
   priceSchedules: function ($q, $route, $timeout, PriceScheduleCategories) {
-        var deferred = $q.defer();
-        $timeout(function () {
-            PriceScheduleCategories.get({}, function (data) {
-                deferred.resolve(data.priceScheduleCategories);
-            }, {});
-        }, 100);
-        return deferred.promise;
-    },
-    
+    var deferred = $q.defer();
+    $timeout(function () {
+      PriceScheduleCategories.get({}, function (data) {
+        deferred.resolve(data.priceScheduleCategories);
+      }, {});
+    }, 100);
+    return deferred.promise;
+  },
+
   interfacesReferenceData : function ($q, $route, $timeout, ELMISInterface) {
-       var deferred = $q.defer();
+    var deferred = $q.defer();
 
-       $timeout(function () {
-           ELMISInterface.getInterfacesReference().get({}, function (data) {
-               deferred.resolve(data.activeInterfaces);
-           }, {});
-       }, 100);
+    $timeout(function () {
+      ELMISInterface.getInterfacesReference().get({}, function (data) {
+        deferred.resolve(data.activeInterfaces);
+      }, {});
+    }, 100);
 
-       return deferred.promise;
-   }
+    return deferred.promise;
+  }
 };

@@ -12,26 +12,20 @@
 package org.openlmis.web.controller.vaccine.inventory;
 
 
-import com.wordnik.swagger.annotations.ApiOperation;
 import org.openlmis.core.domain.Program;
 import org.openlmis.core.domain.ProgramProduct;
 import org.openlmis.core.service.ProgramProductService;
 import org.openlmis.core.service.ProgramService;
 import org.openlmis.core.web.OpenLmisResponse;
 import org.openlmis.core.web.controller.BaseController;
-import org.openlmis.vaccine.domain.inventory.*;
-import org.openlmis.vaccine.dto.VaccineInventoryTransactionDTO;
-import org.openlmis.vaccine.service.Inventory.VaccineInventoryService;
+
+import org.openlmis.stockmanagement.domain.Lot;
+import org.openlmis.vaccine.service.inventory.VaccineInventoryService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
-
-import javax.servlet.http.HttpServletRequest;
-
 import java.util.List;
 
 import static org.openlmis.core.web.OpenLmisResponse.response;
@@ -43,123 +37,38 @@ import static org.springframework.web.bind.annotation.RequestMethod.PUT;
 public class VaccineInventoryController extends BaseController {
 
     private static final String PROGRAM_PRODUCT_LIST = "programProductList";
-    @Autowired
-    VaccineInventoryService service;
+
     @Autowired
     ProgramService programService;
     @Autowired
     ProgramProductService programProductService;
 
+    @Autowired
+    VaccineInventoryService service;
+
     @RequestMapping(value = "programProducts/programId/{programId}", method = GET, headers = ACCEPT_JSON)
-    //TODO @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_PROGRAM_PRODUCT')")
+    //@PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_STOCK','VIEW_STOCK_ON_HAND','')")
     public ResponseEntity<OpenLmisResponse> getProgramProductsByProgram(@PathVariable Long programId) {
         List<ProgramProduct> programProductsByProgram = programProductService.getByProgram(new Program(programId));
         return response(PROGRAM_PRODUCT_LIST, programProductsByProgram);
     }
 
     @RequestMapping(value = "programs")
-//TODO:  @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_VACCINE_INVENTORY')")
+    //  @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_STOCK','VIEW_STOCK_ON_HAND')")
     public ResponseEntity<OpenLmisResponse> getProgramsForConfiguration() {
         return OpenLmisResponse.response("programs", programService.getAllIvdPrograms());
     }
 
-    @RequestMapping(value = "stock/adjustment", method = PUT)
-// TODO:   @PreAuthorize("@permissionEvaluator.hasPermission(principal,'ADJUST STOCK')")
-    @Transactional
-    public ResponseEntity<OpenLmisResponse> adjustment(@RequestBody VaccineInventoryTransactionDTO dto, HttpServletRequest request) {
-        Long userId = loggedInUserId(request);
-        service.saveTransaction(dto, StockCardEntryType.ADJUSTMENT, userId);
-        return OpenLmisResponse.response("success", "Adjustment was successful!");
-    }
-
-    @RequestMapping(value = "stock/credit", method = PUT)
-//TODO:    @PreAuthorize("@permissionEvaluator.hasPermission(principal,'CREDIT_STOCK')")
-    @Transactional
-    public ResponseEntity<OpenLmisResponse> credit(@RequestBody VaccineInventoryTransactionDTO dto, HttpServletRequest request) {
-        Long userId = loggedInUserId(request);
-        service.saveTransaction(dto, StockCardEntryType.CREDIT, userId);
-        return OpenLmisResponse.response("success", "Receiving was successful!");
-    }
-
-    @RequestMapping(value = "stock/debit", method = PUT)
-//TODO:   @PreAuthorize("@permissionEvaluator.hasPermission(principal,'DEBIT_STOCK')")
-    @Transactional
-    public ResponseEntity<OpenLmisResponse> debit(@RequestBody VaccineInventoryTransactionDTO dto, HttpServletRequest request) {
-        Long userId = loggedInUserId(request);
-        service.saveTransaction(dto, StockCardEntryType.DEBIT, userId);
-        return OpenLmisResponse.response("success", "Issue was successful!");
-    }
-
-    @RequestMapping(value = "lot/create", method = PUT, headers = ACCEPT_JSON)
-//TODO:   @PreAuthorize("@permissionEvaluator.hasPermission(principal,'CREATE_LOT')")
-    public ResponseEntity saveLot(@RequestBody Lot lot) {
-
-        Lot existing = service.getLotByCode(lot.getLotCode());
-        if (existing == null) {
-            service.insertLot(lot);
-            return OpenLmisResponse.response("lotId", lot.getId());
-        } else {
-            return OpenLmisResponse.response("lotId", existing.getId());
-        }
-
-    }
-
     @RequestMapping(value = "lots/byProduct/{productId}", method = GET, headers = ACCEPT_JSON)
-//TODO:   @PreAuthorize("@permissionEvaluator.hasPermission(principal,'CREATE_LOT')")
+    // @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_STOCK')")
     public ResponseEntity getLotsByProductId(@PathVariable Long productId) {
 
         return OpenLmisResponse.response("lots", service.getLotsByProductId(productId));
     }
 
-    @RequestMapping(value = "facilities/{facilityId}/programs/{programId}/stockCards", method = GET, headers = ACCEPT_JSON)
-    public ResponseEntity getStockCards(@PathVariable Long facilityId,
-                                        @PathVariable Long programId,
-                                        @RequestParam(value = "entries", defaultValue = "1")Integer entries,
-                                        @RequestParam(value = "countOnly", defaultValue = "false")Boolean countOnly)
-    {
-
-        List<StockCard> stockCards = service.getStockCards(facilityId, programId);
-        return getResponse(stockCards, entries, countOnly);
+    @RequestMapping(value = "lot/create", method = PUT, headers = ACCEPT_JSON)
+//TODO:   @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_STOCK')")
+    public ResponseEntity saveLot(@RequestBody Lot lot) {
+        return OpenLmisResponse.response("lot", service.insertLot(lot));
     }
-
-    private ResponseEntity getResponse(List<StockCard> stockCards, Integer entries, Boolean countOnly)
-    {
-        if (stockCards == null)
-            return getNotFoundResponse();
-
-        else if (countOnly) {
-            return OpenLmisResponse.response("count", stockCards.size());
-        }
-
-        else {
-            for (StockCard stockCard : stockCards) {
-                filterEntries(stockCard, entries);
-            }
-            return OpenLmisResponse.response("stockCards", stockCards);
-        }
-    }
-
-    private ResponseEntity getNotFoundResponse()
-    {
-        return OpenLmisResponse.error("The specified stock card(s) do not exist." , HttpStatus.NOT_FOUND);
-    }
-
-    private void filterEntries(StockCard stockCard, Integer entryCount) {
-        List<StockCardEntry> entries = stockCard.getEntries();
-        if (entries != null) {
-            if (entryCount < 0) {
-                stockCard.setEntries(entries.subList(0, 1));
-            } else if (entryCount < entries.size()) {
-                stockCard.setEntries(entries.subList(0, entryCount));
-            }
-        }
-    }
-
-    @RequestMapping(value = "stock/lastReport", method = RequestMethod.GET)
-    public ResponseEntity<OpenLmisResponse>
-    getLastReport(HttpServletRequest request){
-        return response("lastReport", service.getLastStockMovement());
-    }
-
-
 }

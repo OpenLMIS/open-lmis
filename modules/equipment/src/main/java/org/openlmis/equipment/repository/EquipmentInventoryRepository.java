@@ -24,25 +24,19 @@ import java.util.List;
 @Repository
 public class EquipmentInventoryRepository {
 
+  public static Logger logger = Logger.getLogger(EquipmentInventoryRepository.class);
   @Autowired
   EquipmentInventoryMapper mapper;
-
   @Autowired
   EquipmentMapper equipmentMapper;
-
   @Autowired
   EquipmentTypeMapper equipmentTypeMapper;
-
   @Autowired
   ColdChainEquipmentMapper coldChainEquipmentMapper;
-
   @Autowired
   EquipmentInventoryStatusMapper equipmentInventoryStatusMapper;
-
   @Autowired
   EquipmentOperationalStatusMapper equipmentOperationalStatusMapper;
-
-  public static Logger logger = Logger.getLogger(EquipmentInventoryRepository.class);
 
   public List<EquipmentInventory> getFacilityInventory(Long facilityId, Long programId){
     List<EquipmentInventory> inventories = mapper.getInventoryByFacilityAndProgram(facilityId, programId);
@@ -142,5 +136,9 @@ public class EquipmentInventoryRepository {
     inventoryStatus.setStatusId(inventory.getOperationalStatusId());
     inventoryStatus.setNotFunctionalStatusId(inventory.getNotFunctionalStatusId());
     return inventoryStatus;
+  }
+
+  public String updateNonFunctionalEquipments() {
+    return mapper.updateNonFunctionalEquipments();
   }
 }

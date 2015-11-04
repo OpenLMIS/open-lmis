@@ -197,8 +197,8 @@ public class FacilityPage extends Page {
   @FindBy(how = ID, using = "calculated-isa0")
   private static WebElement calculatedIsaTextField = null;
 
-  @FindBy(how = ID, using = "use-calculated-button0")
-  private static WebElement useCalculatedIsaButton = null;
+  @FindBy(how = ID, using = "override-isa-values-button0")
+  private static WebElement overrideISAValuesButton = null;
 
   @FindBy(how = ID, using = "isaDoneButton")
   private static WebElement doneIsaButton = null;
@@ -414,8 +414,8 @@ public class FacilityPage extends Page {
   }
 
   public void clickUseCalculatedIsaButton() {
-    testWebDriver.waitForElementToAppear(useCalculatedIsaButton);
-    useCalculatedIsaButton.click();
+    testWebDriver.waitForElementToAppear(overrideISAValuesButton);
+    overrideISAValuesButton.click();
   }
 
   public void verifyOverriddenIsa(String expectedIsa) {

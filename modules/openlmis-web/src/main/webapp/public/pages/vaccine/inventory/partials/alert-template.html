@@ -11,38 +11,5 @@
 -->
 <!doctype html>
 <div>
-    <table class="table-bordered table table-striped"
-           ng-show="dataRows.alert == undefined || dataRows.alert.length == 0">
-        <thead>
-        <tr class="gradient-header">
-            <th openlmis-message="title.alerts" style="text-align: center"></th>
-        </tr>
-        </thead>
-        <tbody>
-        <tr>
-            <td>No data to show under selected filters</td>
-        </tr>
-        </tbody>
 
-    </table>
-    <div ng-show="dataRows.alert.length > 0">
-        <table ng-show="dataRows.alert.length > 0" class="table-bordered table table-striped pull-right"
-               ng-table="alertTableParams">
-            <tbody>
-            <tr ng-repeat="alert in dataRows.alert">
-                <td data-title="Alerts">
-                    {{ alert.description}}
-                </td>
-                <td>
-                    <a ng-show="alert.type=='stock'" ng-click="Requisition()" class="btn btn-primary save-button"
-                       href="" openlmis-message="button.create.requisition"></a>
-                    <a ng-show="alert.type=='cce'" class="btn btn-primary save-button" href=""
-                       openlmis-message="button.equipment.maintenance"></a>
-                </td>
-
-            </tr>
-            </tbody>
-        </table>
-        <div class="clearfix"></div>
-    </div>
 </div>

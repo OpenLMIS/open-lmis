@@ -65,7 +65,7 @@ public class SelectedFilterHelper {
     String zone = StringHelper.getValue(params, ZONE);
     String userId = StringHelper.getValue(params, USER_ID);
 
-    ProcessingPeriod periodObject = periodService.getById(Long.parseLong(period));
+    ProcessingPeriod periodObject = (period != null)? periodService.getById(Long.parseLong(period)) : null;
     GeographicZone zoneObject = (zone != null)? geoZoneRepsotory.getById(Long.parseLong(zone)): null;
     if (program != null) {
       if ("0".equals(program)) {
@@ -77,7 +77,7 @@ public class SelectedFilterHelper {
     if (periodObject != null) {
       filterSummary += String.format("%nPeriod: %s, %s", periodObject.getName(), periodObject.getStringYear());
     }
-    if (zoneObject == null) {
+    if (zoneObject == null && userId != null && program != null) {
       // Lets determine the user's supervisory node is either National or not
       Long totalSNods = supervisoryNodeService.getTotalUnassignedSupervisoryNodeOfUserBy(Long.parseLong(userId), Long.parseLong(program));
 
@@ -86,7 +86,7 @@ public class SelectedFilterHelper {
       else
         filterSummary += "%nGeographic Zone: All Zones";
 
-    } else {
+    } else if(zoneObject != null) {
       filterSummary += "%nGeographic Zone: " + zoneObject.getName();
     }
 
@@ -104,8 +104,8 @@ public class SelectedFilterHelper {
     Facility facilityObject = facilityRepository.getById(Long.parseLong(facility));
     String filterSummary;
     filterSummary = String.format("Program: %s", "0".equals(program) ? "" : programService.getById(Long.parseLong(program)).getName());
-    filterSummary = filterSummary + (zoneObject == null ? "%nGeographic Zone: National" : String.format("%nGeographic Zone: %s", zoneObject.getName()));
-    filterSummary = filterSummary + (facilityObject == null ? "%nFacility: All Facilities" : String.format("%nFacility: %s", facilityObject.getName()));
+    filterSummary = filterSummary + (zoneObject == null ? "\nGeographic Zone: National" : String.format("%nGeographic Zone: %s", zoneObject.getName()));
+    filterSummary = filterSummary + (facilityObject == null ? "\nFacility: All Facilities" : String.format("%nFacility: %s", facilityObject.getName()));
     return filterSummary;
   }
 

@@ -38,20 +38,20 @@ public class MySwaggerConfig {
   @Bean
   public SwaggerSpringMvcPlugin customImplementation() {
     return new SwaggerSpringMvcPlugin(this.springSwaggerConfig)
-        .apiInfo(apiInfo())
-        .swaggerGroup("Rest API")
-        .genericModelSubstitutes(ResponseEntity.class)
-        .includePatterns(".*rest-api.*", ".*/api/.*");
+            .apiInfo(apiInfo())
+            .swaggerGroup("Rest API")
+            .genericModelSubstitutes(ResponseEntity.class)
+            .includePatterns(".*rest-api.*", ".*/api/.*");
   }
 
   private ApiInfo apiInfo() {
     return new ApiInfo(
-        "e-LMIS REST API",
-        "Please use this API to connect to the e-LMIS. This service allows you to build applications that directly interact with the e-LMIS",
-        "TOS",
-        "info@elmis-dev.org",
-        "API License",
-        "https://github.com/OpenLMIS/open-lmis/blob/master/LICENSE"
+            "e-LMIS REST API",
+            "Please use this API to connect to the e-LMIS. This service allows you to build applications that directly interact with the e-LMIS",
+            "TOS",
+            "info@elmis-dev.org",
+            "API License",
+            "https://github.com/OpenLMIS/open-lmis/blob/master/LICENSE"
     );
   }
 }

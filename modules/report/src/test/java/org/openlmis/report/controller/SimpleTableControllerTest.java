@@ -30,46 +30,46 @@ import static org.mockito.Mockito.when;
 @PrepareForTest(OpenLmisResponse.class)
 public class SimpleTableControllerTest {
 
-	@Mock
-	private RequisitionReportsMapper requisitionReportsMapper;
+    @Mock
+    private RequisitionReportsMapper requisitionReportsMapper;
 
-	@InjectMocks
-	private SimpleTableController controller;
+    @InjectMocks
+    private SimpleTableController controller;
 
-	@Test
-	public void shouldReturnRequisitionListGivenStartAndEnd() throws Exception {
-		Date startTime = new Date();
-		Date endTime = new Date();
+    @Test
+    public void shouldReturnRequisitionListGivenStartAndEnd() throws Exception {
+        Date startTime = new Date();
+        Date endTime = new Date();
 
-		List<RequisitionDTO> requisitionDTOs = new ArrayList<RequisitionDTO>();
-		RequisitionDTO requisitionDTO = new RequisitionDTO();
-		requisitionDTO.setId(2L);
-		requisitionDTOs.add(requisitionDTO);
+        List<RequisitionDTO> requisitionDTOs = new ArrayList<RequisitionDTO>();
+        RequisitionDTO requisitionDTO = new RequisitionDTO();
+        requisitionDTO.setId(2L);
+        requisitionDTOs.add(requisitionDTO);
 
-		when(requisitionReportsMapper.getRequisitionList(startTime, endTime))
-						.thenReturn(requisitionDTOs);
+        when(requisitionReportsMapper.getRequisitionList(startTime, endTime))
+                .thenReturn(requisitionDTOs);
 
-		ResponseEntity<OpenLmisResponse> response =
-						controller.requisitionReport(startTime, endTime);
+        ResponseEntity<OpenLmisResponse> response =
+                controller.requisitionReport(startTime, endTime);
 
-		assertThat(response.getStatusCode(), is(HttpStatus.OK));
-		assertThat((List<RequisitionDTO>)response.getBody().getData().get("rnr_list"),is
-						(requisitionDTOs));
-	}
+        assertThat(response.getStatusCode(), is(HttpStatus.OK));
+        assertThat((List<RequisitionDTO>) response.getBody().getData().get("rnr_list"), is
+                (requisitionDTOs));
+    }
 
-	@Test
-	public void shouldReturnFormattedDateWhenDataValue() throws Exception {
+    @Test
+    public void shouldReturnFormattedDateWhenDataValue() throws Exception {
 
-		WebDataBinder dataBinder = new WebDataBinder(null);
-		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-		String dateString = "2015-10-01 12:00:00";
-		Date value = dateFormat.parse(dateString);
+        WebDataBinder dataBinder = new WebDataBinder(null);
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        String dateString = "2015-10-01 12:00:00";
+        Date value = dateFormat.parse(dateString);
 
-		controller.initBinder(dataBinder);
-		CustomDateEditor editor = (CustomDateEditor) dataBinder.findCustomEditor
-						(Date.class, null);
-		editor.setValue(value);
-		String parsedDate = editor.getAsText();
-		assertThat(dateString, is(parsedDate));
-	}
+        controller.initBinder(dataBinder);
+        CustomDateEditor editor = (CustomDateEditor) dataBinder.findCustomEditor
+                (Date.class, null);
+        editor.setValue(value);
+        String parsedDate = editor.getAsText();
+        assertThat(dateString, is(parsedDate));
+    }
 }

@@ -2,11 +2,13 @@ package org.openlmis.vaccine.repository.VaccineOrderRequisitions;
 
 import org.openlmis.vaccine.domain.VaccineOrderRequisition.VaccineOrderRequisition;
 import org.openlmis.vaccine.dto.OrderRequisitionDTO;
+import org.openlmis.vaccine.dto.OrderRequisitionStockCardDTO;
 import org.openlmis.vaccine.repository.mapper.OrderRequisitions.VaccineOrderRequisitionMapper;
 import org.openlmis.vaccine.service.VaccineOrderRequisitionServices.VaccineOrderRequisitionLineItemService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.util.Date;
 import java.util.List;
 
 @Component
@@ -60,7 +62,17 @@ public class VaccineOrderRequisitionRepository {
     public List<OrderRequisitionDTO>getAllBy(Long programId, Long periodId, Long facilityId){
         return orderRequisitionMapper.getAllBy(programId,periodId,facilityId);
     }
+
+    public List<OrderRequisitionDTO>getAllSearchBy(Long facilityId,String dateRangeStart,String dateRangeEnd,Long programId){
+        return orderRequisitionMapper.getSearchedDataBy(facilityId, dateRangeStart, dateRangeEnd, programId);
+    }
+
+
     public Long updateOFRStatus(Long orderId){
         return orderRequisitionMapper.updateORStatus(orderId);
+    }
+
+    public List<OrderRequisitionStockCardDTO> getStockCards(Long facilityId, Long programId) {
+        return orderRequisitionMapper.getAllByFacilityAndProgram(facilityId, programId);
     }
 }

@@ -29,6 +29,9 @@ public interface ProgramMapper {
   @Options(useGeneratedKeys = true)
   Integer insert(Program program);
 
+  @Delete("DELETE FROM programs WHERE code=#{code}")
+  public void deleteByCode(String code);
+
   @Select({"SELECT P.*",
     "FROM programs P, programs_supported PS",
     "WHERE P.id = PS.programId AND",

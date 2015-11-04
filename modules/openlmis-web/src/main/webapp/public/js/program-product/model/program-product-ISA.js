@@ -44,14 +44,26 @@ var ProgramProductISA = function (isa) {
     return((this.maximumValue && this.minimumValue) !== null && utils.parseIntWithBaseTen(this.maximumValue) < utils.parseIntWithBaseTen(this.minimumValue));
   };
 
-  ProgramProductISA.prototype.getIsaFormula = function () {
+  function getNumericDisplayVal(val)
+  {
+    if( val === undefined || isNaN(val) )
+      return '#';
+    else
+      return val;
+  }
+
+  ProgramProductISA.prototype.getIsaFormula = function() {
     var adjustmentVal = utils.parseIntWithBaseTen(this.adjustmentValue);
-    adjustmentVal = adjustmentVal > 0 ? adjustmentVal : "(" + adjustmentVal + ")";
+    adjustmentVal = adjustmentVal > 0 ? getNumericDisplayVal(adjustmentVal) : "(" + getNumericDisplayVal(adjustmentVal) + ")";
+
+    var whoRatioVal = (this.whoRatio / 100).toFixed(5);
+
+
     return "(population) * " +
-      (this.whoRatio / 100).toFixed(5) +
-      " * " + utils.parseIntWithBaseTen(this.dosesPerYear) +
-      " * " + parseFloat(this.wastageFactor).toFixed(3) +
-      " / 12 * " + (1 + this.bufferPercentage / 100).toFixed(5) +
+        getNumericDisplayVal( (this.whoRatio / 100).toFixed(5) ) +
+      " * " + getNumericDisplayVal( utils.parseIntWithBaseTen(this.dosesPerYear) ) +
+      " * " + getNumericDisplayVal( parseFloat(this.wastageFactor).toFixed(3) ) +
+      " / 12 * " + getNumericDisplayVal( (1 + this.bufferPercentage / 100).toFixed(5) ) +
       " + " + adjustmentVal;
   };
 

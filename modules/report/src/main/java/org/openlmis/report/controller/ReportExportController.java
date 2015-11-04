@@ -32,13 +32,13 @@ import java.io.*;
 public class ReportExportController extends BaseController {
 
 
-  private static final String USER_ID = "USER_ID";
-  private static final String FACILITY_MAILING_LIST = "facility_mailing_list";
+    private static final String USER_ID = "USER_ID";
+    private static final String FACILITY_MAILING_LIST = "facility_mailing_list";
 
-  private static final String PDF = "PDF";
-  private static final String XLS = "XLS";
-  private static final String HTML = "HTML";
-  private static final String CSV = "CSV";
+    private static final String PDF = "PDF";
+    private static final String XLS = "XLS";
+    private static final String HTML = "HTML";
+    private static final String CSV = "CSV";
 
   @Autowired
   public ReportManager reportManager;
@@ -57,19 +57,19 @@ public class ReportExportController extends BaseController {
     Integer userId = Integer.parseInt(request.getSession().getAttribute(USER_ID).toString());
 
     switch (outputOption.toUpperCase()) {
-      case  PDF:
+        case PDF:
         reportManager.showReport(userId, reportKey, request.getParameterMap(), ReportOutputOption.PDF, response);
         break;
-      case XLS:
+        case XLS:
         reportManager.showReport(userId, reportKey, request.getParameterMap(), ReportOutputOption.XLS, response);
         break;
-      case HTML:
+        case HTML:
         reportManager.showReport(userId, reportKey, request.getParameterMap(), ReportOutputOption.HTML, response);
         break;
-      case CSV:
+        case CSV:
         reportManager.showReport(userId, reportKey, request.getParameterMap(), ReportOutputOption.CSV, response);
         break;
-      default:
+        default:
     }
   }
 

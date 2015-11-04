@@ -31,6 +31,9 @@ public interface ProgramProductMapper {
   @Options(useGeneratedKeys = true)
   Integer insert(ProgramProduct programProduct);
 
+  @Delete("DELETE FROM program_products WHERE id=#{id}")
+  public void deleteById(Long id);
+
   @Select(("SELECT id FROM program_products WHERE programId = #{programId} AND productId = #{productId}"))
   Long getIdByProgramAndProductId(@Param("programId") Long programId, @Param("productId") Long productId);
 

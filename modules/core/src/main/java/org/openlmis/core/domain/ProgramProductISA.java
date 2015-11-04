@@ -22,26 +22,75 @@ import lombok.NoArgsConstructor;
 @EqualsAndHashCode(callSuper = false)
 @Data
 @AllArgsConstructor
-@NoArgsConstructor
 public class ProgramProductISA extends BaseModel {
 
   Long programProductId;
-  Double whoRatio;
-  Integer dosesPerYear;
-  Double wastageFactor;
-  Double bufferPercentage;
-  Integer minimumValue;
-  Integer maximumValue;
-  Integer adjustmentValue;
+
+  ISA isa;
+
+  public ProgramProductISA()
+  {
+    isa = new ISA();
+  }
 
   public Integer calculate(Long population) {
-    int isaValue = (int) Math.ceil(population * (this.whoRatio / 100) * this.dosesPerYear * this.wastageFactor / 12 * (1 + this.bufferPercentage / 100) + this.adjustmentValue);
+    return isa.calculate(population);
+  }
 
-    if (this.minimumValue != null && isaValue < this.minimumValue)
-      return this.minimumValue;
-    if (this.maximumValue != null && isaValue > this.maximumValue)
-      return this.maximumValue;
 
-    return isaValue;
+  public Double getWhoRatio() {
+    return isa.getWhoRatio();
+  }
+
+  public void setWhoRatio(Double whoRatio) {
+    isa.setWhoRatio(whoRatio);
+  }
+
+  public Integer getDosesPerYear() {
+    return isa.getDosesPerYear();
+  }
+
+  public void setDosesPerYear(Integer dosesPerYear) {
+    isa.setDosesPerYear(dosesPerYear);
+  }
+
+  public Double getWastageFactor() {
+    return isa.getWastageFactor();
+  }
+
+  public void setWastageFactor(Double wastageFactor) {
+    isa.setWastageFactor(wastageFactor);
+  }
+
+  public Double getBufferPercentage() {
+    return isa.getBufferPercentage();
+  }
+
+  public void setBufferPercentage(Double bufferPercentage) {
+    isa.setBufferPercentage(bufferPercentage);
+  }
+
+  public Integer getMinimumValue() {
+    return isa.getMinimumValue();
+  }
+
+  public void setMinimumValue(Integer minimumValue) {
+    isa.setMinimumValue(minimumValue);
+  }
+
+  public Integer getMaximumValue() {
+    return isa.getMaximumValue();
+  }
+
+  public void setMaximumValue(Integer maximumValue) {
+    isa.setMaximumValue(maximumValue);
+  }
+
+  public Integer getAdjustmentValue() {
+    return isa.getAdjustmentValue();
+  }
+
+  public void setAdjustmentValue(Integer adjustmentValue) {
+    isa.setAdjustmentValue(adjustmentValue);
   }
 }

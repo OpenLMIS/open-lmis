@@ -86,7 +86,7 @@ public class ProgramSupported extends BaseModel implements Importable {
         return ((FacilityProgramProduct) o).getProduct().getCode().equals(productCode);
       }
     });
-    return (facilityProgramProduct == null) ? null : facilityProgramProduct.getWhoRatio(productCode);
+    return (facilityProgramProduct == null) ? null : facilityProgramProduct.getWhoRatio();
   }
 
   @JsonIgnore

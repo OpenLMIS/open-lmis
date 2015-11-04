@@ -114,7 +114,7 @@ public class VaccineReportControllerTest {
   @Test
   public void shouldSave() throws Exception {
     VaccineReport report = new VaccineReport();
-    doNothing().when(service).save(report,1L);
+    doNothing().when(service).save(report, 1L);
 
     ResponseEntity<OpenLmisResponse> response = controller.save(report, httpServletRequest);
 

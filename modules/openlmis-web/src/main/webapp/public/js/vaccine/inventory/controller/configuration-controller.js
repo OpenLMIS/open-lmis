@@ -11,12 +11,17 @@
  */
 
 
-function VaccineInventoryConfigurationController($scope,programs,VaccineInventoryConfigurations,VaccineProgramProducts,configurations,SaveVaccineInventoryConfigurations,localStorageService,$location) {
+function VaccineInventoryConfigurationController($scope,programs,DemographicEstimateCategories,VaccineInventoryConfigurations,VaccineProgramProducts,configurations,SaveVaccineInventoryConfigurations,localStorageService,$location) {
 
     $scope.userPrograms=programs;
     $scope.configToAdd={};
     $scope.configToAdd.batchTracked=false;
     $scope.configToAdd.vvmTracked=false;
+    $scope.configToAdd.survivingInfants = false;
+
+    DemographicEstimateCategories.get({}, function (data) {
+        $scope.demographicCategories = data.estimate_categories;
+    });
 
     $scope.loadProducts=function(programId){
         VaccineProgramProducts.get({programId:programId},function(data){
@@ -42,6 +47,9 @@ function VaccineInventoryConfigurationController($scope,programs,VaccineInventor
         $scope.configToAdd={};
         $scope.configToAdd.batchTracked=false;
         $scope.configToAdd.vvmTracked=false;
+        $scope.configToAdd.survivingInfants = false;
+
+
     };
     $scope.$watch('configurations',function(){
         if($scope.configurations !==undefined)
@@ -49,6 +57,7 @@ function VaccineInventoryConfigurationController($scope,programs,VaccineInventor
 
         }
     });
+    $scope.visibleTab = 'PRODUCT';
     $scope.changeTab=function(key){
         $scope.visibleTab=key;
     };

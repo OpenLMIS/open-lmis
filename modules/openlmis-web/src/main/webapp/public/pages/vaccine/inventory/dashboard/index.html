@@ -1,0 +1,120 @@
+<!doctype html>
+<!--
+* Electronic Logistics Management Information System (eLMIS) is a supply chain management system for health commodities in a developing country setting.
+*
+* Copyright (C) 2015 Clinton Health Access Initiative (CHAI). This program was produced for the U.S. Agency for International Development (USAID). It was prepared under the USAID | DELIVER PROJECT, Task Order 4.
+*
+* This program is free software: you can redistribute it and/or modify it under the terms of the GNU Affero General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
+*
+* This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Affero General Public License for more details.
+*
+* You should have received a copy of the GNU Affero General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
+-->
+
+<html lang="en" ng-app="vaccine-inventory-dashboard">
+<head>
+    <meta charset="utf-8">
+    <title openlmis-message="app.title"></title>
+    <link rel="icon" href="/public/favicon.ico" type="image/x-icon"/>
+    <!--New code-->
+    <script src="/public/lib/jquery/jquery-2.0.0.min.js"></script>
+    <script src="/public/lib/jquery/jquery-ui-1.9.2.custom.min.js"></script>
+    <script src="/public/lib/angular/angular.min.js"></script>
+    <script src="/public/lib/angular/angular-route.min.js"></script>
+    <script src="/public/lib/angular/angular-cookies.js"></script>
+    <script src="/public/lib/angular/angular-resource.min.js"></script>
+    <script src="/public/lib/underscore/underscore-min.js"></script>
+    <script src="/public/lib/angular-ui/angular-ui.min.js"></script>
+    <script src="/public/lib/angular-ui/bootstrap/ui-bootstrap-tpls-0.8.0.min.js"></script>
+    <script src="/public/lib/angular-ui/ng-table/ng-table.js"></script>
+    <script src="/public/lib/leaflet/leaflet.js"></script>
+    <script src="/public/js/shared/services/services.js"></script>
+
+    <script src="/public/lib/nsPopover/nsPopover.js"></script>
+    <link rel="stylesheet" href="/public/lib/nsPopover/nsPopover.css">
+
+    <script src="/public/lib/select2/select2.js"></script>
+    <script src="/public/js/shared/select2-ext.js"></script>
+
+    <link rel="stylesheet" href="/public/lib/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/public/lib/select2/select2.css"/>
+    <link rel="stylesheet" href="/public/lib/fullcalendar/fullcalendar.css">
+    <link rel="stylesheet" href="/public/lib/jquery/jquery.jqplot.min.css">
+
+
+    <script src="/public/js/shared/services/services.js"></script>
+    <script src="/public/js/shared/services/extension-services.js"></script>
+    <script type="text/javascript" src="/public/js/shared/services/message-service.js"></script>
+    <script type="text/javascript" src="/public/js/shared/services/authorization-service.js"></script>
+    <script src="/public/js/shared/services/navigate-back-service.js"></script>
+
+    <script src="/public/js/shared/app.js"></script>
+
+    <script src="/public/js/shared/directives/form-toolbar.js"></script>
+    <script src="/public/js/shared/directives/openlmis-message.js"></script>
+    <script src="/public/js/shared/directives/openlmis-pagination.js"></script>
+    <script src="/public/js/shared/directives/placeholder.js"></script>
+    <script src="/public/js/shared/directives/ui-nav.js"></script>
+    <script src="/public/lib/localstorage/localStorage.js"></script>
+    <script src="/public/js/shared/util.js"></script>
+    <script src="/public/js/shared/open-lmis-dialog.js"></script>
+    <script src="/public/js/shared/localStorageKeys.js"></script>
+    <script src="/public/js/shared/directives/ng-table-scroll.js"></script>
+
+    <link rel="stylesheet" href="/public/css/app.css">
+    <link rel="stylesheet" href="/public/lib/angular-ui/ng-table/ng-table.css">
+    <link rel="stylesheet" href="/public/css/dashboard.css">
+    <link rel="stylesheet" href="/public/css/report.css"/>
+    <link rel="stylesheet" href="/public/lib/leaflet/leaflet.css"/>
+
+    <script src="/public/js/shared/controller/login-controller.js"></script>
+    <script src="/public/js/shared/controller/locale-controller.js"></script>
+    <script src="/public/js/shared/controller/header-controller.js"></script>
+    <script src="/public/js/shared/controller/navigation-controller.js"></script>
+    <script src="/public/js/dashboard/shared/controller/alerts-controller.js"></script>
+    <script src="/public/js/shared/directives/fixed-table-header.js"></script>
+
+
+    <!-- Page specific files -->
+    <script src="/public/lib/flot/jquery.js"></script>
+    <script src="/public/lib/flot/excanvas.min.js"></script>
+    <script src="/public/lib/flot/jquery.min.js"></script>
+    <script src="/public/lib/flot/jquery.flot.js"></script>
+    <script src="/public/lib/flot/jquery.flot.axislabels.js"></script>
+    <script src="/public/lib/flot/jquery.flot.categories.js"></script>
+
+
+    <script src="/public/js/vaccine/services/services.js"></script>
+    <script src="/public/js/demographics/services/demographic-services.js"></script>
+
+    <script src="/public/js/vaccine/inventory/dashboard/module/inventory-dashboard-module.js"></script>
+    <script src="/public/js/vaccine/inventory/dashboard/controller/stock-on-hand-controller.js"></script>
+
+
+    <script src="/public/js/vaccine/inventory/shared/service.js"></script>
+    <script src="/public/js/vaccine/directives/stock-on-hand-bar-chart.js"></script>
+    <script src="/public/js/vaccine/directives/alerts.js"></script>
+    <script src="/public/js/admin/equipment/shared/services.js"></script>
+    <script src="/public/js/reports/shared/directives/filters.js"></script>
+    <script src="/public/js/shared/open-lmis-dialog.js"></script>
+
+
+    <!--End New Code-->
+
+    <script src="/public/lib/angular/angular-combine.js"></script>
+    <link type="text/css" rel="stylesheet" charset="UTF-8" href="/public/css/app.css">
+
+    <!--[if IE 9]>
+    <link rel="stylesheet" href="/public/css/ie9.css"/>
+    <![endif]-->
+
+</head>
+<body>
+<ng-include src="'/public/pages/header.html'"></ng-include>
+<ng-include src="'/public/pages/navigation.html'"></ng-include>
+
+<div class="content">
+    <div ng-view></div>
+</div>
+</body>
+</html>

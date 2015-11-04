@@ -11,7 +11,7 @@
  */
 
 
-function ReceiveStockController($scope,programs,$timeout,homeFacility,VaccineProgramProducts,productsConfiguration, ProductLots,SaveVaccineInventoryReceived,localStorageService,$location, $anchorScroll) {
+function ReceiveStockController($scope,programs,$timeout,$window,homeFacility,VaccineProgramProducts,productsConfiguration, ProductLots,StockEvent,localStorageService,$location, $anchorScroll) {
 
     $scope.userPrograms=programs;
     $scope.facilityDisplayName=homeFacility.name;
@@ -60,41 +60,49 @@ function ReceiveStockController($scope,programs,$timeout,homeFacility,VaccinePro
     };
     $scope.submit=function()
     {
-        var transaction={};
-        transaction.transactionList=[];
+        var events=[];
         $scope.receivedProducts.forEach(function(s){
-            var list={};
-            list.productId=s.product.id;
-            list.quantity=s.quantity;
-            if(s.lots !==undefined && s.lots.length)
+            if(s.lots !==undefined && s.lots.length >0)
             {
-                list.lots=[];
                 s.lots.forEach(function(l){
-                    var lot={};
-                    lot.lotId=l.lot.id;
-                    lot.quantity=l.quantity;
-                    lot.vvmStatus=l.vvmStatus;
-                 //   lot.adjustmentReasons=l.adjustmentReasons;
-                    list.lots.push(lot);
+                    var event={};
+                    event.type="RECEIPT";
+                    event.facilityId=homeFacility.id;
+                    event.productCode=s.product.code;
+                    event.quantity=l.quantity;
+                    event.lotId=l.lot.id;
+                    if(l.vvmStatus !==undefined)
+                    {
+                        event.customProps={"vvmStatus":l.vvmStatus};
+                    }
+                    events.push(event);
                 });
             }
-            transaction.transactionList.push(list);
+            else{
+                 var event={};
+                 event.type="RECEIPT";
+                 event.facilityId=homeFacility.id;
+                 event.productCode=s.product.code;
+                 event.quantity=s.quantity;
+                 if(s.vvmStatus !==undefined)
+                 {
+                    event.customProps={"vvmStatus":s.vvmStatus};
+                 }
+                 events.push(event);
+            }
+
     });
-
-    SaveVaccineInventoryReceived.update(transaction,function(data)
-        {
-             if(data.success !==null)
-             {
-                  $scope.message=data.success;
-                  $timeout(function(){
-                     $location.path('/stock-on-hand');
-                  },100);
-              }
-
-        });
+    StockEvent.update({facilityId:homeFacility.id},events, function (data) {
+       if(data.success)
+       {
+             $timeout(function(){
+                  $window.location='/public/pages/vaccine/inventory/dashboard/index.html#/stock-on-hand';
+             },900);
+       }
+     });
     };
     $scope.cancel=function(){
-       $location.path('/stock-on-hand');
+       $window.location='/public/pages/vaccine/inventory/dashboard/index.html#/stock-on-hand';
     };
     if($scope.userPrograms.length > 1)
     {

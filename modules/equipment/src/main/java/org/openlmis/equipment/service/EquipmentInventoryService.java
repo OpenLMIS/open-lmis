@@ -33,17 +33,13 @@ public class EquipmentInventoryService {
 
   @Autowired
   EquipmentInventoryRepository repository;
-
+  Logger logger = Logger.getLogger(EquipmentInventoryService.class);
   @Autowired
   private FacilityService facilityService;
-
   @Autowired
   private EquipmentService equipmentService;
-
   @Autowired
   private EquipmentRepository equipmentRepository;
-
-  Logger logger = Logger.getLogger(EquipmentInventoryService.class);
 
   public List<EquipmentInventory> getInventoryForFacility(Long facilityId, Long programId){
     return repository.getFacilityInventory(facilityId, programId);
@@ -124,6 +120,10 @@ public class EquipmentInventoryService {
 
   public void updateStatus(EquipmentInventory inventory){
     repository.updateStatus(inventory);
+  }
+
+  public void updateNonFunctionalEquipments() {
+    repository.updateNonFunctionalEquipments();
   }
 
 }
