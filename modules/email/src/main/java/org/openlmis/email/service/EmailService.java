@@ -133,7 +133,7 @@ public class EmailService {
         message.setTo(to);
         message.setSubject(subject);
         message.setText(messageBody, true);
-        if(attachementFileName != null && dataSource != null){
+        if (attachementFileName != null && dataSource != null) {
           message.addAttachment(attachementFileName, dataSource);
         }
 

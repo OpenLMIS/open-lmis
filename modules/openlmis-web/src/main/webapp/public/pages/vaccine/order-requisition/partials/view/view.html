@@ -85,7 +85,7 @@
         <div class="row-fluid">
             <div class="span12">
                 <input type="submit" class="btn btn-primary"
-                       openlmis-message="button.search" ng-click="search();"/>
+                       openlmis-message="button.search" ng-click="loadRequisitions();"/>
             </div>
         </div>
     </div>
@@ -95,14 +95,6 @@
 </div>
 
 <div ng-show="requisitions.length">
-    <div class="row-fluid">
-        <div class="span4 offset8 grid-filters">
-            <input id="searchRequisition" class="search-query"
-                   ng-change="filterRequisitions()" type="text"
-                   ng-model="query"
-                   openlmis-message="placeholder.search.by.status"/>
-        </div>
-    </div>
     <div id='viewReqList' class="gridStyle" ng-grid="rnrListGrid"
          ng-show="requisitions.length"></div>
 </div>

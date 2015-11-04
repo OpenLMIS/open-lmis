@@ -16,6 +16,7 @@ dependencies {
 
     compile  project(':modules:core')
     compile project(':modules:demographics')
+    compile project(':modules:stock-management')
    
     testCompile project(path: ':modules:core', configuration: 'testFixtures')
 

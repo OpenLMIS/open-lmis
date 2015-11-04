@@ -7,9 +7,12 @@
      * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Affero General Public License for more details.
      * You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org. 
      */
-    function ViewOrderRequisitionList($scope,programs,facility,VaccineOrderRequisitionLastReport, facilities, RequisitionsForViewing, ProgramsToViewRequisitions, $location, messageService, navigateBackService) {
+    function ViewOrderRequisitionList($scope,programs,$window,$rootScope,facility,VaccineOrderRequisitionsForViewing,VaccineOrderRequisitionLastReport, facilities, RequisitionsForViewing, ProgramsToViewVaccineOrderRequisitions, $location, messageService, navigateBackService) {
 
         $scope.facilities = facilities;
+        $scope.programs = programs;
+
+
         $scope.facilityLabel = (!$scope.facilities.length) ? messageService.get("label.none.assigned") : messageService.get("label.select.facility");
         $scope.programLabel = messageService.get("label.none.assigned");
         $scope.selectedItems = [];
@@ -28,9 +31,9 @@
 
             if ($scope.selectedProgramId) requisitionQueryParameters.programId = $scope.selectedProgramId;
 
-            RequisitionsForViewing.get(requisitionQueryParameters, function (data) {
-
-                $scope.requisitions = $scope.filteredRequisitions = data.rnr_list;
+            VaccineOrderRequisitionsForViewing.get(requisitionQueryParameters, function (data) {
+                 console.log(data.search);
+                $scope.requisitions = $scope.filteredRequisitions = data.search;
 
                 setRequisitionsFoundMessage();
             }, function () {
@@ -41,6 +44,7 @@
         $scope.startDate = navigateBackService.dateRangeStart;
         $scope.endDate = navigateBackService.dateRangeEnd;
         $scope.programs = navigateBackService.programs;
+
         if (navigateBackService.programId) {
             $scope.selectedProgramId = navigateBackService.programId;
             $scope.program = _.findWhere($scope.programs, {id: utils.parseIntWithBaseTen($scope.selectedProgramId)});
@@ -51,7 +55,9 @@
         }
 
         var selectionFunc = function () {
-            $scope.$parent.rnrStatus = $scope.selectedItems[0].status;
+            $scope.$parent.Status = $scope.selectedItems[0].status;
+            $rootScope.viewOrder = true;
+            console.log($scope.selectedItems[0].id);
             $scope.openRequisition();
         };
 
@@ -66,16 +72,14 @@
             showColumnMenu: false,
             showFilter: false,
             enableSorting: true,
-            sortInfo: { fields: ['submittedDate'], directions: ['asc'] },
+            sortInfo: { fields: ['orderDate'], directions: ['asc'] },
             columnDefs: [
                 {field: 'programName', displayName: messageService.get("program.header") },
-                {field: 'facilityCode', displayName: messageService.get("option.value.facility.code")},
                 {field: 'facilityName', displayName: messageService.get("option.value.facility.name")},
-                {field: 'stringPeriodStartDate', displayName: messageService.get("label.period.start.date")},
-                {field: 'stringPeriodEndDate', displayName: messageService.get("label.period.end.date")},
-                {field: 'stringSubmittedDate', displayName: messageService.get("label.date.submitted")},
-                {field: 'stringModifiedDate', displayName: messageService.get("label.date.modified")},
-                {field: 'requisitionStatus', displayName: messageService.get("label.status")},
+                {field: 'periodStartDate', displayName: messageService.get("label.period.start.date"), cellFilter: 'date:\'dd-MM-yyyy\''},
+                {field: 'periodEndDate', displayName: messageService.get("label.period.end.date"), cellFilter: 'date:\'dd-MM-yyyy\''},
+                {field: 'orderDate', displayName: messageService.get("label.date.submitted"), cellFilter: 'date:\'dd-MM-yyyy\''},
+                {field: 'status', displayName: messageService.get("label.status")},
                 {field: 'emergency', displayName: messageService.get("requisition.type.emergency"),
                     cellTemplate: '<div id="emergency{{$parent.$index}}" class="ngCellText checked"><i ng-class="{\'icon-ok\': row.entity.emergency}"></i></div>',
                     width: 110 }
@@ -92,9 +96,7 @@
             if ($scope.selectedProgramId) data.programId = $scope.selectedProgramId;
             navigateBackService.setData(data);
 
-            var url = "requisition/";
-            url += $scope.selectedItems[0].id + "/" + $scope.selectedItems[0].programId + "?supplyType=fullSupply&page=1";
-            $location.url(url);
+            $window.location = '/public/pages/vaccine/order-requisition/index.html#/create/'+parseInt($scope.selectedItems[0].id,10);
         };
 
         function setProgramsLabel() {
@@ -109,7 +111,7 @@
         }
 
         $scope.loadProgramsForFacility = function () {
-            ProgramsToViewRequisitions.get({facilityId: $scope.selectedFacilityId},
+            ProgramsToViewVaccineOrderRequisitions.get({facilityId: $scope.selectedFacilityId},
                 function (data) {
                     $scope.programs = data.programList;
                     setOptions();
@@ -144,40 +146,17 @@
             }
             $scope.endDateOffset = Math.ceil((new Date($scope.startDate.split('-')).getTime() + oneDay - Date.now()) / oneDay);
         };
-
-
-        //Testing Functionality
-
-        $scope.programs = programs;
-        $scope.facility = facility;
-
-        var id = parseInt($scope.programs[0].id,10);
-        var facilityId = parseInt($scope.facility.id,10);
-
-  $scope.search = function() {
-
-      VaccineOrderRequisitionLastReport.get({
-          facilityId: parseInt(facilityId,10),
-          programId: parseInt(id,10)
-      }, function (data) {
-
-          var lastReport = data.lastReport;
-          $location.path('/create/' + lastReport.id);
-
-      });
-  };
-
-
+        
     }
 
     var oneDay = 1000 * 60 * 60 * 24;
 
 ViewOrderRequisitionList.resolve = {
 
-    facilities: function ($q, $timeout, UserFacilityWithViewRequisition) {
+    facilities: function ($q, $timeout, UserFacilityWithViewVaccineOrderRequisition) {
         var deferred = $q.defer();
         $timeout(function () {
-            UserFacilityWithViewRequisition.get({}, function (data) {
+            UserFacilityWithViewVaccineOrderRequisition.get({}, function (data) {
                 deferred.resolve(data.facilities);
             }, {});
         }, 100);

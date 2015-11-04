@@ -3,10 +3,7 @@ package org.openlmis.web.controller.vaccine;
 
 import net.sf.jasperreports.engine.JRException;
 import net.sf.jasperreports.engine.JRParameter;
-import org.openlmis.core.domain.ConfigurationSetting;
-import org.openlmis.core.domain.Program;
-import org.openlmis.core.domain.ProgramProduct;
-import org.openlmis.core.domain.User;
+import org.openlmis.core.domain.*;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.core.service.*;
 import org.openlmis.core.web.OpenLmisResponse;
@@ -16,8 +13,8 @@ import org.openlmis.reporting.model.Template;
 import org.openlmis.reporting.service.JasperReportsViewFactory;
 import org.openlmis.reporting.service.TemplateService;
 import org.openlmis.vaccine.domain.VaccineOrderRequisition.VaccineOrderStatus;
-import org.openlmis.vaccine.domain.inventory.StockMovement;
-import org.openlmis.vaccine.service.Inventory.VaccineInventoryService;
+import org.openlmis.vaccine.dto.OrderRequisitionDTO;
+import org.openlmis.vaccine.dto.OrderRequisitionStockCardDTO;
 import org.openlmis.vaccine.service.VaccineOrderRequisitionServices.VaccineOrderRequisitionLineItemService;
 import org.openlmis.vaccine.service.VaccineOrderRequisitionServices.VaccineOrderRequisitionService;
 import org.openlmis.vaccine.service.VaccineOrderRequisitionServices.VaccineOrderRequisitionsColumnService;
@@ -26,23 +23,19 @@ import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PostAuthorize;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.view.jasperreports.JasperReportsMultiFormatView;
 
-import javax.imageio.ImageIO;
 import javax.servlet.http.HttpServletRequest;
-import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.util.*;
-
 import static org.openlmis.core.web.OpenLmisResponse.error;
 import static org.openlmis.core.web.OpenLmisResponse.response;
 import static org.openlmis.core.web.OpenLmisResponse.success;
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
-import static java.lang.System.out;
 
 
 @Controller
@@ -51,8 +44,9 @@ public class VaccineOrderRequisitionController extends BaseController {
     public static final String VaccineOrderRequisition = "orderRequisition";
     public static final String OrderRequisitionColumns = "columns";
     private static final String PROGRAM_PRODUCT_LIST = "programProductList";
-    private static final String PRINT_ORDER_REQUISITION = "Print Order Requisition";
-    private static final String PRINT_ISSUE_STOCK = "Print Issue report";
+    private static final String PRINT_ORDER_REQUISITION = "print_vaccine_Order_Requisition";
+    private static final String PRINT_ISSUE_STOCK = "vims_distribution";
+    private static final String ORDER_REQUISITION_SEARCH = "search";
 
     @Autowired
     VaccineOrderRequisitionService service;
@@ -68,19 +62,13 @@ public class VaccineOrderRequisitionController extends BaseController {
     @Autowired
     ProgramService programService;
     @Autowired
-    private ProgramProductService programProductService;
-
-    @Autowired
-    private JasperReportsViewFactory jasperReportsViewFactory;
-    @Autowired
     UserService userService;
-
-    @Autowired
-    VaccineInventoryService inventoryService;
-
     @Autowired
     ConfigurationSettingService settingService;
-
+    @Autowired
+    private ProgramProductService programProductService;
+    @Autowired
+    private JasperReportsViewFactory jasperReportsViewFactory;
 
     @RequestMapping(value = "periods/{facilityId}/{programId}", method = RequestMethod.GET)
    //TODO// @PreAuthorize("@permissionEvaluator.hasPermission(principal,'CREATE_REQUISITION, AUTHORIZE_REQUISITION')")
@@ -108,7 +96,7 @@ public class VaccineOrderRequisitionController extends BaseController {
     }
 
     @RequestMapping(value = "initializeEmergency/{periodId}/{programId}/{facilityId}")
-   //TODO @PreAuthorize("@permissionEvaluator.hasPermission(principal,'CREATE_ORDER_REQUISITION)")
+    @PreAuthorize("@permissionEvaluator.hasPermission(principal,'CREATE_ORDER_REQUISITION')")
     public ResponseEntity<OpenLmisResponse> initializeEmergency(
             @PathVariable Long periodId,
             @PathVariable Long programId,
@@ -119,21 +107,20 @@ public class VaccineOrderRequisitionController extends BaseController {
     }
 
     @RequestMapping(value = "submit")
-    //TODO @PreAuthorize("@permissionEvaluator.hasPermission(principal,'CREATE_ORDER_REQUISITION')")
+   @PreAuthorize("@permissionEvaluator.hasPermission(principal,'CREATE_ORDER_REQUISITION')")
     public ResponseEntity<OpenLmisResponse> submit(@RequestBody org.openlmis.vaccine.domain.VaccineOrderRequisition.VaccineOrderRequisition orderRequisition, HttpServletRequest request){
         service.submit(orderRequisition, loggedInUserId(request));
         return response("report", orderRequisition);
     }
 
     @RequestMapping(value = "save")
-   //TODO @PreAuthorize("@permissionEvaluator.hasPermission(principal,'CREATE_ORDER_REQUISITION')")
+    @PreAuthorize("@permissionEvaluator.hasPermission(principal,'CREATE_ORDER_REQUISITION')")
     public ResponseEntity<OpenLmisResponse> save(@RequestBody org.openlmis.vaccine.domain.VaccineOrderRequisition.VaccineOrderRequisition orderRequisition, HttpServletRequest request){
         service.save(orderRequisition);
         return response("report", orderRequisition);
     }
 
     @RequestMapping(value = "lastReport/{facilityId}/{programId}", method = RequestMethod.GET)
-   //TODO @PreAuthorize("@permissionEvaluator.hasPermission(principal,'CREATE_ORDER_REQUISITION')")
     public ResponseEntity<OpenLmisResponse>
     getLastReport(@PathVariable  Long facilityId,@PathVariable Long programId,HttpServletRequest request){
 
@@ -141,7 +128,6 @@ public class VaccineOrderRequisitionController extends BaseController {
     }
 
     @RequestMapping(value = "get/{id}.json", method = RequestMethod.GET)
-   //TODO @PreAuthorize("@permissionEvaluator.hasPermission(principal,'CREATE_REQUISITION, AUTHORIZE_REQUISITION')")
     public ResponseEntity<OpenLmisResponse> getReport(@PathVariable Long id, HttpServletRequest request){
         return response("report", service.getAllDetailsById(id));
     }
@@ -150,22 +136,6 @@ public class VaccineOrderRequisitionController extends BaseController {
         public ResponseEntity<OpenLmisResponse> getUserHomeFacilities(HttpServletRequest request){
             return  response("homeFacility", facilityService.getHomeFacility(loggedInUserId(request)));
         }
-
-
-    @RequestMapping(value = "orderRequisitionTest/{id}/print", method = RequestMethod.GET, headers = ACCEPT_PDF)
-    @PostAuthorize("@vaccineOrderRequisitionPermissionService.hasPermission(principal, returnObject.model.get(\"orderRequisition\"), 'VIEW_REQUISITION')")
-    public ModelAndView printOrders(@PathVariable Long id)  throws JRException, IOException, ClassNotFoundException {
-
-        ModelAndView modelAndView = new ModelAndView("vaccineOrderRequisition");
-
-        org.openlmis.vaccine.domain.VaccineOrderRequisition.VaccineOrderRequisition requisition = service.getAllDetailsById(id);
-
-        modelAndView.addObject(VaccineOrderRequisition, requisition);
-        modelAndView.addObject(OrderRequisitionColumns,columnService.getAllColumns());
-
-        return modelAndView;
-    }
-
 
     @RequestMapping(value = "getPendingRequest/{facilityId}/{programId}", method = RequestMethod.GET,headers = ACCEPT_JSON)
     public ResponseEntity<OpenLmisResponse> getPendingRequest(@PathVariable  Long facilityId,@PathVariable Long programId,HttpServletRequest request){
@@ -180,7 +150,6 @@ public class VaccineOrderRequisitionController extends BaseController {
 
 
     @RequestMapping(value = "updateOrderRequest/{orderId}", method = RequestMethod.PUT,headers = ACCEPT_JSON)
-    //TODO @PreAuthorize("@permissionEvaluator.hasPermission(principal,'CREATE_ORDER_REQUISITION')")
     public ResponseEntity<OpenLmisResponse>
     updateORStatus(@PathVariable  Long orderId,HttpServletRequest request){
     try{
@@ -254,11 +223,10 @@ public class VaccineOrderRequisitionController extends BaseController {
     }
 
 
-    @RequestMapping(value = "issue/print", method = GET, headers = ACCEPT_JSON)
-    public ModelAndView printIssueStock() throws JRException, IOException, ClassNotFoundException {
+    @RequestMapping(value = "issue/print/{id}", method = GET, headers = ACCEPT_JSON)
+    public ModelAndView printIssueStock(@PathVariable Long id) throws JRException, IOException, ClassNotFoundException {
         Template orPrintTemplate = templateService.getByName(PRINT_ISSUE_STOCK);
-        StockMovement stockMovement = inventoryService.getLastStockMovement();
-        JasperReportsMultiFormatView jasperView = jasperReportsViewFactory.getJasperReportsView(orPrintTemplate);
+   JasperReportsMultiFormatView jasperView = jasperReportsViewFactory.getJasperReportsView(orPrintTemplate);
         Map<String, Object> map = new HashMap<>();
         map.put("format", "pdf");
 
@@ -273,9 +241,34 @@ public class VaccineOrderRequisitionController extends BaseController {
 
         String separator = System.getProperty("file.separator");
         map.put("image_dir", imgResource.getFile().getAbsolutePath() + separator);
-        map.put("ISSUE_ID", stockMovement.getId().intValue());
+        map.put("ISSUE_ID", id.intValue());
 
         return new ModelAndView(jasperView, map);
+    }
+
+
+    @RequestMapping(value = "search", method = GET,headers = ACCEPT_JSON)
+    @PreAuthorize("@permissionEvaluator.hasPermission(principal,'VIEW_ORDER_REQUISITION')")
+    public ResponseEntity<OpenLmisResponse> searchUser(@RequestParam(value = "facilityId", required = false) Long facilityId,
+                                                       @RequestParam(value = "dateRangeStart", required = false) String dateRangeStart,
+                                                       @RequestParam(value = "dateRangeEnd", required = false) String dateRangeEnd,
+                                                       @RequestParam(value = "programId", required = false) Long programId,
+
+     HttpServletRequest request
+    ) {
+        return response(ORDER_REQUISITION_SEARCH, service.getAllSearchBy(facilityId,dateRangeStart,dateRangeEnd,programId));
+
+    }
+
+    @RequestMapping(value = "facilities/{facilityId}/programs/{programId}/stockCards", method = GET, headers = ACCEPT_JSON)
+    public ResponseEntity getStockCards(@PathVariable Long facilityId,
+                                        @PathVariable Long programId,
+                                        @RequestParam(value = "entries", defaultValue = "1")Integer entries,
+                                        @RequestParam(value = "countOnly", defaultValue = "false")Boolean countOnly)
+    {
+
+        List<OrderRequisitionStockCardDTO> stockCards = service.getStockCards(facilityId, programId);
+        return OpenLmisResponse.response("stockCards", stockCards);
     }
 
 

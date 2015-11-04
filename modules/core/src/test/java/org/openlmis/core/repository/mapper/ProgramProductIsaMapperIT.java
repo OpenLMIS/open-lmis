@@ -14,6 +14,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
+import org.openlmis.core.builder.ISABuilder;
 import org.openlmis.core.builder.ProductBuilder;
 import org.openlmis.core.builder.ProgramBuilder;
 import org.openlmis.core.domain.*;
@@ -22,6 +23,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.transaction.TransactionConfiguration;
+import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
 
 import static com.natpryce.makeiteasy.MakeItEasy.a;
@@ -34,8 +36,8 @@ import static org.junit.Assert.assertThat;
 @Category(IntegrationTests.class)
 @Transactional
 @TransactionConfiguration(defaultRollback = true, transactionManager = "openLmisTransactionManager")
-public class ProgramProductIsaMapperIT {
-
+public class ProgramProductIsaMapperIT
+{
 
   private Product product;
   private Program program;
@@ -65,19 +67,22 @@ public class ProgramProductIsaMapperIT {
     programMapper.insert(program);
   }
 
+
   @Test
   public void testUpdate() throws Exception {
     ProgramProduct programProduct = new ProgramProduct(program, product, 10, true);
     programProduct.setProductCategory(productCategory);
     programProductMapper.insert(programProduct);
 
-    ProgramProductISA programProductISA = new ProgramProductISA(programProduct.getId(), 23d, 4, 10d, 25d, 20, 50, 17);
+    ISA isa = ISABuilder.build();
+    ProgramProductISA programProductISA = new ProgramProductISA(programProduct.getId(), isa);
     mapper.insert(programProductISA);
 
     programProductISA.setAdjustmentValue(23);
     mapper.update(programProductISA);
 
-    ProgramProductISA returnedIsa = mapper.getIsaByProgramProductId(programProduct.getId());
+    Long id = programProduct.getId();
+    ProgramProductISA returnedIsa = mapper.getIsaByProgramProductId(id);
 
     assertThat(returnedIsa, is(programProductISA));
   }
@@ -88,11 +93,11 @@ public class ProgramProductIsaMapperIT {
     programProduct.setProductCategory(productCategory);
     programProductMapper.insert(programProduct);
 
-    ProgramProductISA programProductISA = new ProgramProductISA(programProduct.getId(), 23d, 4, 10d, 25d, 20, 50, 17);
+    ISA isa = ISABuilder.build();
+    ProgramProductISA programProductISA = new ProgramProductISA(programProduct.getId(), isa);
     mapper.insert(programProductISA);
 
     ProgramProductISA returnedIsa = mapper.getIsaByProgramProductId(programProduct.getId());
-
     assertThat(returnedIsa, is(programProductISA));
   }
 }

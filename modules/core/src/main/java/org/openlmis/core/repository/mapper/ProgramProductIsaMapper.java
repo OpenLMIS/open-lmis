@@ -9,10 +9,10 @@
  */
 package org.openlmis.core.repository.mapper;
 
-import org.apache.ibatis.annotations.Insert;
-import org.apache.ibatis.annotations.Options;
-import org.apache.ibatis.annotations.Select;
-import org.apache.ibatis.annotations.Update;
+import org.apache.ibatis.annotations.*;
+import org.apache.ibatis.mapping.StatementType;
+import org.openlmis.core.domain.ISA;
+import org.openlmis.core.domain.ProgramProduct;
 import org.openlmis.core.domain.ProgramProductISA;
 import org.springframework.stereotype.Repository;
 
@@ -22,18 +22,56 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface ProgramProductIsaMapper {
 
-  @Insert({"INSERT INTO program_product_isa",
-    "(programProductId, whoRatio, dosesPerYear, wastageFactor, bufferPercentage, minimumValue, maximumValue, adjustmentValue,createdBy,createdDate,modifiedBy,modifiedDate)",
-    "VALUES (#{programProductId}, #{whoRatio}, #{dosesPerYear}, #{wastageFactor}, #{bufferPercentage},",
-    "#{minimumValue}, #{maximumValue}, #{adjustmentValue},#{createdBy},COALESCE(#{createdDate}, NOW()),#{modifiedBy},COALESCE(#{modifiedDate}, NOW()) )"})
-  @Options(useGeneratedKeys = true)
-  void insert(ProgramProductISA programProductISA);
+    @Insert(value = "SELECT fn_insert_isa" +
+            "(" +
+                "#{isa.whoRatio}::numeric, " +
+                "#{isa.dosesPerYear}::int," +
+                "#{isa.wastageFactor}::numeric," +
+                "#{isa.bufferPercentage}::numeric," +
+                "#{isa.minimumValue}::int," +
+                "#{isa.maximumValue}::int," +
+                "#{isa.adjustmentValue}::int," +
+                "#{isa.createdBy}::int," +
+                "COALESCE(#{isa.createdDate}, NOW())::timestamp ," +
+                "#{isa.modifiedBy}::int," +
+                "COALESCE(#{isa.modifiedDate}, NOW())::timestamp ," +
+                "#{programProductId}::int " +
+            ")"
+    )
+    @Options(statementType = StatementType.CALLABLE)
+    @SelectKey(
+            statement = "SELECT id FROM isa_coefficients ORDER BY id DESC LIMIT 1",
+            resultType = Long.class,
+            before = false,
+            keyColumn = "id",
+            keyProperty = "isa.id"
+    )
+    void insert(ProgramProductISA ppi);
 
-  @Update({"UPDATE program_product_isa SET whoRatio = #{whoRatio} , dosesPerYear = #{dosesPerYear}, ",
-    "wastageFactor = #{wastageFactor}, bufferPercentage = #{bufferPercentage}, minimumValue = #{minimumValue}, ",
-    "maximumValue = #{maximumValue}, adjustmentValue = #{adjustmentValue},modifiedBy=#{modifiedBy},modifiedDate=(COALESCE(#{modifiedDate}, NOW())) where id = #{id}"})
-  void update(ProgramProductISA programProductISA);
 
-  @Select("SELECT * FROM program_product_isa WHERE programProductId = #{programProductId}")
+  @Insert(value = "SELECT fn_update_program_product_isa" +
+          "(" +
+          "#{programProductId}::int, " +
+          "#{isa.id}::int, " +
+          "#{isa.whoRatio}::numeric, " +
+          "#{isa.dosesPerYear}::int," +
+          "#{isa.wastageFactor}::numeric," +
+          "#{isa.bufferPercentage}::numeric," +
+          "#{isa.minimumValue}::int," +
+          "#{isa.maximumValue}::int," +
+          "#{isa.adjustmentValue}::int," +
+          "#{isa.createdBy}::int," +
+          "COALESCE(#{createdDate}, NOW())::timestamp ," +
+          "#{isa.modifiedBy}::int," +
+          "COALESCE(#{modifiedDate}, NOW())::timestamp" +
+          ")"
+  )
+  @Options(statementType = StatementType.CALLABLE)
+  void update(ProgramProductISA ppi);
+
+  @Select("SELECT pp.id AS \"programProductId\", ic.* \n" +
+          "FROM isa_coefficients ic JOIN program_products pp\n" +
+          "ON pp.isaCoefficientsId = ic.id\n" +
+          "WHERE pp.id = #{programProductId}")
   ProgramProductISA getIsaByProgramProductId(Long programProductId);
 }

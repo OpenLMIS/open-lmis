@@ -108,6 +108,7 @@ public class EquipmentInventoryController extends BaseController {
     inventory.setCreatedBy(userId);
     inventory.setModifiedBy(userId);
     service.save(inventory);
+    service.updateNonFunctionalEquipments();
     response = OpenLmisResponse.success(messageService.message("message.equipment.inventory.saved"));
     response.getBody().addData(INVENTORY, inventory);
     return response;
@@ -120,6 +121,7 @@ public class EquipmentInventoryController extends BaseController {
     Long userId = loggedInUserId(request);
     inventory.setModifiedBy(userId);
     service.updateStatus(inventory);
+    service.updateNonFunctionalEquipments();
     response = OpenLmisResponse.success(messageService.message("message.equipment.inventory.saved"));
     response.getBody().addData(INVENTORY, inventory);
     return response;

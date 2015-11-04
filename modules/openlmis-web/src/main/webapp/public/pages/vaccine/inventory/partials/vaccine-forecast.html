@@ -37,10 +37,10 @@
 
 <form name="orderRequisitionForm">
 
-    <div ng-show="report.LineItemViews.length"  class="alert alert-info" openlmis-message="label.no.products"></div>
+    <div ng-hide="pageLineItems.length"  class="alert alert-info" openlmis-message="label.no.products"></div>
 
 
-    <div id="pod" class="rnr-table" ng-hide="pageLineItems.length">
+    <div id="pod" class="rnr-table" ng-show="pageLineItems.length > 0">
         <table id="podTable" class="table table-bordered" fixed-table-header>
             <thead>
             <tr>
@@ -56,37 +56,38 @@
 
             <tbody>
 
-            <tr ng-repeat-start="(productCategory,item) in pageLineItems.forecasting">
-                <td class="productCategory" id="productCategoryName{{$index}}" colspan="6"   ng-show="$index == 0 || ( $index > 0 && item.productCategoryName != pageLineItems.forecasting[$index - 1].productCategoryName)"
-                    ng-bind="item.productCategoryName">
+
+            <tr ng-repeat-start = "category in pageLineItems">
+                <td class="productCategory" id="productCategoryName{{$index}}" colspan="6"   ng-show="$index == 0 || ( $index > 0 && category.productCategory != pageLineItems[$index - 1].productCategory)"
+                 ng-bind="category.productCategory" >
                 </td>
             </tr>
 
-            <tr ng-repeat-end>
+            <tr  ng-repeat-end ng-repeat=" item in category.stockRequirements">
 
                 <td class="cell-input col-product">
-                    <span ng-bind="item.productName" id="product{{$index}}" class="cell-text"></span>
+                    <span ng-bind="item.productName" id="productName{{$index}}" class="cell-text"></span>
                 </td>
                 <td class="cell-input col-maximumStock">
-                        <span ng-bind="item.annualNeeds | number" id="item.annualNeeds{{$index}}"
+                        <span ng-bind="item.annualNeed | number" id="item.isaCoefficients.annualNeed{{$index}}"
                               class="cell-text"></span>
                 </td>
                 <td class="cell-input">
-                        <span ng-bind="item.quarterlyNeed | number"  id="item.quarterlyNeed{{$index}}"
+                        <span ng-bind="item.quarterlyNeed | number"  id="item.isaCoefficients.quarterlyNeed{{$index}}"
                               class="cell-text"></span>
                 </td>
                 <td class="cell-input">
-                        <span ng-bind="item.reOrderLevel | number" id="item.reOrderLevel{{$index}}"
+                        <span ng-bind="item.ReorderLevel" id="item.ReorderLevel{{$index}}"
                               class="cell-text"></span>
                 </td>
 
                 <td class="cell-input col-bufferStock">
-                        <span ng-bind="item.bufferStock | number" id="bufferStock{{$index}}"
+                        <span ng-bind="item.MinimumStock | number" id="bufferStock{{$index}}"
                               class="cell-text"></span>
                 </td>
 
-                <td class="cell-input col-amountRequired">
-                        <span ng-bind="item.maximumStock | number" id="maximumStock{{$index}}"
+                <td class="cell-input col-MaximumStock">
+                        <span ng-bind="item.MaximumStock | number" id="maximumStock{{$index}}"
                               class="cell-text"></span>
                 </td>
 
@@ -102,10 +103,10 @@
     <div form-toolbar id="action_buttons" class="action-buttons">
         <div class="form-cell button-row">
 
-               <span> <a id="printButton" class="btn btn-primary submit-button"  ng-click="print(report.id)"
+             <!--  <span> <a id="printButton" class="btn btn-primary submit-button"  ng-click="print(report.id)"
                          openlmis-message="button.print"
                          target="_blank" ng-disabled="selectedType==1"></a>
-                </span>
+                </span>-->
 
         </div>
         &nbsp;&nbsp;&nbsp;
