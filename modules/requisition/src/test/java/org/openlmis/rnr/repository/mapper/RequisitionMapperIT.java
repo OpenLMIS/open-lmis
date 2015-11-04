@@ -163,6 +163,10 @@ public class RequisitionMapperIT {
     lineItemMapper.insert(fullSupplyLineItem, Collections.EMPTY_LIST.toString());
     lineItemMapper.insert(nonFullSupplyLineItem, Collections.EMPTY_LIST.toString());
 
+    ProgramProduct programProduct = new ProgramProduct(program, product, 1, true);
+    programProduct.setProductCategory(productCategory);
+    programProductMapper.insert(programProduct);
+
     User author = new User();
     author.setId(1L);
     Comment comment = new Comment(requisition.getId(), author, "A comment", null);
