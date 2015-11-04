@@ -20,6 +20,7 @@ public class FacilityProductReportEntry {
     long productQuantity;
     Date soonestExpiryDate;
     Date lastSyncDate;
+    String code;
 
     public FacilityProductReportEntry(StockCard stockCard, Date endTime){
         if (endTime == null){
@@ -32,7 +33,7 @@ public class FacilityProductReportEntry {
         // TODO need change
         this.soonestExpiryDate = new Date();
         this.lastSyncDate = stockCard.getModifiedDate();
-
+        this.code = stockCard.getProduct().getCode();
     }
 
     private List<StockCardEntry> filterEntryByDate(final StockCard stockCard, final Date date){

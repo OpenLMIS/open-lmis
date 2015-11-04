@@ -1,7 +1,7 @@
 <div>
     <div id="control-bar">
 
-        <h3  openlmis-message="title.all.products.report"></h3>
+        <h3 class="report-title" openlmis-message="title.all.products.report"></h3>
 
         <div class="report-selection">
 
@@ -65,27 +65,30 @@
 
     </div>
 
-    <div id="report">
-        <h3>Stock on hand for drug1 in all facilities</h3>
+    <hr/>
+
+    <div id="report" ng-if="reportData">
+        <h3 class="report-title" openlmis-message="subtitle.all.product.report|reportData[0].facilityName"></h3>
 
         <table class="table table-condensed table-bordered table-striped">
             <tr class="gradient-header">
-                <th>Drug Name</th>
-                <th>Drug quantity</th>
-                <th>Soonest drug expiry date</th>
-                <th>Last update from tablet</th>
+                <th openlmis-message="report.drug.name">Drug Name</th>
+                <th openlmis-message="report.drug.quantity"></th>
+                <th openlmis-message="report.soonest.expiry.date"></th>
+                <th openlmis-message="report.last.update.date">Last update from tablet</th>
             </tr>
             <tr ng-repeat="entry in reportData">
-                <td>{{entry.productName}}</td>
+                <td>{{entry.productName}} [{{entry.code}}]</td>
                 <td style="text-align: right" ng-style="entry.productQuantity == 0 && {'color':'#F2DEDE'}">{{entry.productQuantity | number:0}}</td>
                 <td>{{entry.soonestExpiryDate | date:'MMMM y'}}</td>
-                <td><span class="circle-icon" ng-style="calculateSyncInterval(entry) <= 24 && {'background-color':'green'}
-                        || calculateSyncInterval(entry) > 24*3 && {'background-color':'red'}
-                        || {'background-color':'yellow'}"> </span>
+                <td><span class="circle-icon" ng-style="checkLastSyncDate(entry.lastSyncDate)"> </span>
                     <span>{{entry.lastSyncDate | date:'h:mm a d MMMM y'}}</span>
                 </td>
             </tr>
         </table>
+
+        <p class="report-title" openlmis-message="message.stock.on.hand.report">
     </div>
+    <label ng-show="reportData && reportData.length == 0">No Data</label>
 
 </div>

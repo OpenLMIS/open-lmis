@@ -105,19 +105,15 @@ function ProductReportController(type) {
         };
 
         $scope.checkDate = function(){
-            if(new Date() < $scope.reportParams.endTime){
+            if(new Date() < new Date($scope.reportParams.endTime)){
                 $scope.reportParams.endTime = null;
                 var options = {
                     id: "chooseDateAlertDialog",
-                    header: "Confirmation",
-                    body: "Cannot choose future date!"
+                    header:"title.alert",
+                    body: "dialog.body.date"
                 };
-                OpenLmisDialog.newDialog(options, function(){}, $dialog);
+                MozambiqueDialog.newDialog(options, function(){}, $dialog);
             }
-        };
-
-        $scope.calculateSyncInterval = function(entry){
-            return (new Date() - entry.lastSyncDate)/1000/3600;
         };
 
         function validateFacility() {
@@ -128,6 +124,13 @@ function ProductReportController(type) {
         function validateProduct() {
             $scope.invalid = !$scope.reportParams.productId;
             return !$scope.invalid;
+        }
+
+        $scope.checkLastSyncDate = function (time) {
+            var syncInterval = (new Date() - time) / 1000 / 3600;
+            return syncInterval <= 24 && {'background-color':'green'}
+                || syncInterval > 24*3 && {'background-color':'red'}
+                || {'background-color':'yellow'};
         }
     };
 }
