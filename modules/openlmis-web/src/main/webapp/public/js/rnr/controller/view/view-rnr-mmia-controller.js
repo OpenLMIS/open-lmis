@@ -19,74 +19,53 @@ function ViewRnrMmiaController($scope, $route, Requisitions, messageService) {
     $scope.loadMmiaDetail = function () {
         Requisitions.get({id: $route.current.params.rnr}, function (data) {
             $scope.rnr = data.rnr;
-console.log($scope.rnr);
-            $scope.year = data.rnr.period.name.substr(3, 4);
+
+            $scope.year = data.rnr.period.stringYear;
 
             $scope.initMonth();
-
             $scope.initProduct();
             $scope.initRegime();
-            $scope.initPatient();
         });
 
     };
 
     $scope.initMonth = function () {
-        var month = "month." + $scope.rnr.period.name.substr(0, 3);
+        var month = "month." + $scope.rnr.period.stringEndDate.substr(3, 2);
         $scope.month = messageService.get(month);
 
     };
 
     $scope.initProduct = function () {
-        var i = 0;
-        var item;
+        var fullSupplyLineItems = $scope.rnr.fullSupplyLineItems;
 
-        for (i = 0; i < 12; i++) {
-            item = $scope.rnr.nonSkippedLineItems[i];
-            $scope.adult.push(item);
-            $scope.formatExpirationDate(item);
+        for (var i = 0; i < fullSupplyLineItems.length; i++) {
+            formatExpirationDate(fullSupplyLineItems[i]);
         }
 
-        for (i = 12; i < 22; i++) {
-            item = $scope.rnr.nonSkippedLineItems[i];
-            $scope.children.push(item);
-            $scope.formatExpirationDate(item);
-        }
-
-        for (i = 22; i < 24; i++) {
-            item = $scope.rnr.nonSkippedLineItems[i];
-            $scope.other.push(item);
-            $scope.formatExpirationDate(item);
-        }
+        $scope.adult = fullSupplyLineItems.slice(0,12);
+        $scope.children = fullSupplyLineItems.slice(12,22);
+        $scope.other = fullSupplyLineItems.slice(22,24);
     };
 
-    $scope.formatExpirationDate = function(item) {
-        if (item.expirationDate) {
-            var splitedDate = item.expirationDate.split('/');
-            item.expirationDate = splitedDate[2] + "-" + splitedDate[1] + "-" + splitedDate[0];
+    var formatExpirationDate = function(theOneItem) {
+        if (theOneItem.expirationDate) {
+            var splitDate = theOneItem.expirationDate.split('/');
+            theOneItem.expirationDate = splitDate[2] + "-" + splitDate[1] + "-" + splitDate[0];
         }
     };
 
     $scope.initRegime = function () {
-        var regime = $scope.rnr.regimenLineItems;
-        var i = 0;
+        var regimes = $scope.rnr.regimenLineItems;
 
-        for (i = 0; i < 8; i++) {
-            $scope.regimeTotal += regime[i].patientsOnTreatment;
-            $scope.regimeAdult.push(regime[i]);
-        }
+        $scope.regimeAdult = regimes.slice(0, 8);
+        $scope.regimeChildren = regimes.slice(8, 18);
+        calculateRegimeTotal(regimes);
+    };
 
-        for (i = 8; i < 18; i++) {
-            $scope.regimeTotal += regime[i].patientsOnTreatment;
-            $scope.regimeChildren.push(regime[i]);
+    var calculateRegimeTotal = function(regimes){
+        for(var i = 0; i < regimes.length; i++) {
+            $scope.regimeTotal += regimes[i].patientsOnTreatment;
         }
     };
 
-    $scope.initPatient = function () {
-        var i = 0;
-
-        for (i = 0; i < 7; i++) {
-            $scope.patient.push($scope.rnr.patientQuantifications[i]);
-        }
-    };
 }

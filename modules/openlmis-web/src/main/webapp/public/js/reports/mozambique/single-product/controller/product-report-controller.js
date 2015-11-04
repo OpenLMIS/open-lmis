@@ -4,9 +4,6 @@ function ProductReportController(type) {
         $scope.provinces = [];
         $scope.districts = [];
         $scope.facilities = [];
-        $scope.filteredDistrict = [];
-        $scope.filteredProvince = [];
-        $scope.filteredFacilities = [];
         $scope.fullGeoZoneList = [];
 
         $scope.$on('$viewContentLoaded', function () {
@@ -15,7 +12,7 @@ function ProductReportController(type) {
             } else {
                 $scope.loadFacilities();
             }
-            loadGeographicLevel();
+            loadGeographicZones();
             $scope.reportParams = {};
             $scope.reportParams.endTime = $filter('date')(new Date(), "yyyy-MM-dd");
         });
@@ -32,35 +29,28 @@ function ProductReportController(type) {
             });
         };
 
-        function loadGeographicLevel() {
+        function loadGeographicZones() {
             GeographicZoneService.loadGeographicLevel().get({}, function (data) {
 
-                $scope.geographicZoneLevel = data["geographic-levels"];
-                fillGeoZoneList();
+                var geographicZoneLevel = data["geographic-levels"];
+                GeographicZoneService.loadGeographicZone().get({}, function (data) {
+                    $scope.getProvincesAndDistricts(geographicZoneLevel,data);
+                });
             });
         }
 
-        function fillGeoZoneList() {
-            GeographicZoneService.loadGeographicZone().get({}, function (data) {
-
-                if (!$scope.geographicZoneLevel) {
-                    return;
-                }
-
-                var provinceLevel = $scope.geographicZoneLevel.find(function (level) {
-                    return level.code === "province";
-                });
-
-                var districtLevel = $scope.geographicZoneLevel.find(function (level) {
-                    return level.code === "district";
-                });
-
-                getProvincesAndDistricts(data, provinceLevel, districtLevel);
+        function findGeographicZoneLevelByCode(geographicZoneLevels, code){
+            if (!geographicZoneLevels) {
+                return null;
+            }
+            return geographicZoneLevels.find(function (level) {
+                return level.code == code;
             });
         }
 
-        function getProvincesAndDistricts(data, provinceLevel, districtLevel) {
-
+        $scope.getProvincesAndDistricts = function(geographicZoneLevels, data) {
+            var provinceLevel = findGeographicZoneLevelByCode(geographicZoneLevels, "province");
+            var districtLevel = findGeographicZoneLevelByCode(geographicZoneLevels, "district");
             _.forEach(data["geographic-zones"], function(zone){
                 if (zone.levelId == provinceLevel.id) {
                     $scope.provinces.push(zone);
@@ -68,86 +58,22 @@ function ProductReportController(type) {
                     $scope.districts.push(zone);
                 }
             });
-
             $scope.fullGeoZoneList = _.union($scope.fullGeoZoneList, $scope.provinces, $scope.districts);
-
-            _.forEach($scope.districts, function(district){
-                var parent = $scope.getParent(district.id);
-                if (parent) {
-                    if (!parent.children) {
-                        parent.children = [];
-                    }
-                    parent.children.push(district);
-                    district.parent = parent;
-                }
-            });
-        }
-
-        $scope.filterDistrict = function () {
-            if (!$scope.reportParams.provinceId) {
-                $scope.filteredDistrict = $scope.districts;
-                return;
-            }
-            var currentProvince = $scope.getGeoZone($scope.reportParams.provinceId);
-
-            $scope.filteredDistrict = [];
-            if (!currentProvince) {
-                return;
-            }
-            $scope.filteredDistrict = currentProvince.children;
         };
-
-        $scope.filterFacility = function () {
-            $scope.filteredFacilities = [];
-            if ($scope.reportParams.districtId) {
-                $scope.filteredFacilities = $scope.filteredFacilities
-                    .concat(getAllFacilityInDistrict($scope.getGeoZone($scope.reportParams.districtId)));
-            } else if ($scope.reportParams.provinceId) {
-                var districts = $scope.getGeoZone($scope.reportParams.provinceId).children;
-
-                $scope.filteredFacilities = _.reduce(districts, function(fullList ,district){
-                    return fullList.concat(getAllFacilityInDistrict(district));
-                }, []);
-            } else {
-                $scope.filteredFacilities = $scope.facilities;
-                $scope.filteredProvince = $scope.provinces;
-                $scope.filteredDistrict = $scope.districts;
-            }
-        };
-
-        function getAllFacilityInDistrict(district) {
-            return $scope.facilities.find(function (facility) {
-                return facility.geographicZoneId == district.id;
-            });
-        }
 
         $scope.fillProvince = function () {
-            if (!$scope.reportParams.districtId) {
-                $scope.filteredProvince = $scope.provinces;
-                return;
-            }
-
             var parent = $scope.getParent($scope.reportParams.districtId);
-            $scope.filteredProvince = [];
-            $scope.filteredProvince.push(parent);
-
-            $scope.reportParams.provinceId = parent.id;
+            $scope.reportParams.provinceId = !parent ? undefined : parent.id;
         };
 
         $scope.getParent = function (geoZoneId) {
-            if (!geoZoneId) {
-                return;
-            }
-            return $scope.fullGeoZoneList.find(function (zone, index, array) {
+            return geoZoneId && $scope.fullGeoZoneList.find(function (zone, index, array) {
                 return $scope.getGeoZone(geoZoneId).parentId == zone.id;
             });
         };
 
         $scope.getGeoZone = function (id) {
-            if (!id) {
-                return;
-            }
-            return $scope.fullGeoZoneList.find(function (zone, index, array) {
+            return id && $scope.fullGeoZoneList.find(function (zone, index, array) {
                 return id == zone.id;
             });
         };

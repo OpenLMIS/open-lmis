@@ -16,6 +16,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 @Service
 @NoArgsConstructor
@@ -58,35 +59,42 @@ public class RestStockCardService {
         return entries;
     }
 
-    private StockCardEntry createStockCardEntry(StockEvent stockEvent, StockCard stockCard, Long userId) {
-        StockAdjustmentReason stockAdjustmentReason = stockAdjustmentReasonRepository.getAdjustmentReasonByName(stockEvent.getReasonName());
+  private StockCardEntry createStockCardEntry(StockEvent stockEvent, StockCard stockCard, Long userId) {
+    StockAdjustmentReason stockAdjustmentReason = stockAdjustmentReasonRepository.getAdjustmentReasonByName(stockEvent.getReasonName());
 
-        long quantity = stockEvent.getQuantity();
-        quantity = stockAdjustmentReason.getAdditive() ? quantity : quantity * -1;
+    long quantity = stockEvent.getQuantity();
+    quantity = stockAdjustmentReason.getAdditive() ? quantity : quantity * -1;
 
-        StockCardEntry entry = new StockCardEntry(stockCard, StockCardEntryType.ADJUSTMENT, quantity);
-        entry.setAdjustmentReason(stockAdjustmentReason);
-        entry.setCreatedBy(userId);
-        entry.setModifiedBy(userId);
-        return entry;
+    StockCardEntry entry = new StockCardEntry(stockCard, StockCardEntryType.ADJUSTMENT, quantity);
+    entry.setAdjustmentReason(stockAdjustmentReason);
+    entry.setCreatedBy(userId);
+    entry.setModifiedBy(userId);
+
+    Map<String, String> customProps = stockEvent.getCustomProps();
+    if (null != customProps) {
+      for (String k : customProps.keySet()) {
+        entry.addKeyValue(k, customProps.get(k));
+      }
     }
+    return entry;
+  }
 
-    private boolean validFacility(Long facilityId) {
-        return facilityRepository.getById(facilityId) != null;
-    }
+  private boolean validFacility(Long facilityId) {
+    return facilityRepository.getById(facilityId) != null;
+  }
 
-    private String validateStockEvent(StockEvent stockEvent) {
-        if (!stockEvent.isValidAdjustment()) return "error.stockmanagement.invalidadjustment";
-        if (!validProduct(stockEvent)) return "error.product.unknown";
-        if (!validAdjustmentReason(stockEvent)) return "error.stockadjustmentreason.unknown";
-        return null;
-    }
+  private String validateStockEvent(StockEvent stockEvent) {
+    if (!stockEvent.isValidAdjustment()) return "error.stockmanagement.invalidadjustment";
+    if (!validProduct(stockEvent)) return "error.product.unknown";
+    if (!validAdjustmentReason(stockEvent)) return "error.stockadjustmentreason.unknown";
+    return null;
+  }
 
-    private boolean validProduct(StockEvent stockEvent) {
-        return productService.getByCode(stockEvent.getProductCode()) != null;
-    }
+  private boolean validProduct(StockEvent stockEvent) {
+    return productService.getByCode(stockEvent.getProductCode()) != null;
+  }
 
-    private boolean validAdjustmentReason(StockEvent stockEvent) {
-        return stockAdjustmentReasonRepository.getAdjustmentReasonByName(stockEvent.getReasonName()) != null;
-    }
+  private boolean validAdjustmentReason(StockEvent stockEvent) {
+    return stockAdjustmentReasonRepository.getAdjustmentReasonByName(stockEvent.getReasonName()) != null;
+  }
 }

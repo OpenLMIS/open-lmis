@@ -60,17 +60,17 @@
         </tr>
         </thead>
         <tbody>
-        <tr ng-repeat="item in adult">
+        <tr ng-repeat="adultItem in adult">
             <td class="banner-text">{{$index+1}}</td>
-            <td class="product-code bg-color-green">*{{item.productCode}}*</td>
-            <td class="bg-color-green align-left">{{item.product}}</td>
-            <td>{{item.packSize}}mg</td>
-            <td>{{item.beginningBalance}}</td>
-            <td>{{item.quantityReceived}}</td>
-            <td>{{item.quantityDispensed}}</td>
-            <td>{{item.totalLossesAndAdjustments}}</td>
-            <td>{{item.stockInHand}}</td>
-            <td><span ng-show="item.expirationDate">{{item.expirationDate | date : 'MMM yyyy'}}</span></td>
+            <td class="product-code bg-color-green">*{{adultItem.productCode}}*</td>
+            <td class="bg-color-green align-left">{{adultItem.product}}</td>
+            <td>{{adultItem.productStrength}}</td>
+            <td>{{adultItem.beginningBalance}}</td>
+            <td>{{adultItem.quantityReceived}}</td>
+            <td>{{adultItem.quantityDispensed}}</td>
+            <td>{{adultItem.totalLossesAndAdjustments}}</td>
+            <td>{{adultItem.stockInHand}}</td>
+            <td><span ng-show="item.expirationDate">{{adultItem.expirationDate | date : 'MMM yyyy'}}</span></td>
         </tr>
         <tr>
             <td class="banner-text bg-color-black">13</td>
@@ -97,17 +97,17 @@
             <td></td>
         </tr>
 
-        <tr ng-repeat="item in children">
+        <tr ng-repeat="childrenItem in children">
             <td class="banner-text">{{$index+15}}</td>
-            <td class="product-code bg-color-lightyellow">*{{item.productCode}}*</td>
-            <td class="bg-color-lightyellow align-left">{{item.product}}</td>
-            <td>{{item.packSize}}mg</td>
-            <td>{{item.beginningBalance}}</td>
-            <td>{{item.quantityReceived}}</td>
-            <td>{{item.quantityDispensed}}</td>
-            <td>{{item.totalLossesAndAdjustments}}</td>
-            <td>{{item.stockInHand}}</td>
-            <td><span ng-show="item.expirationDate">{{item.expirationDate | date : 'MMM yyyy'}}</span></td>
+            <td class="product-code bg-color-lightyellow">*{{childrenItem.productCode}}*</td>
+            <td class="bg-color-lightyellow align-left">{{childrenItem.product}}</td>
+            <td>{{childrenItem.productStrength}}</td>
+            <td>{{childrenItem.beginningBalance}}</td>
+            <td>{{childrenItem.quantityReceived}}</td>
+            <td>{{childrenItem.quantityDispensed}}</td>
+            <td>{{childrenItem.totalLossesAndAdjustments}}</td>
+            <td>{{childrenItem.stockInHand}}</td>
+            <td><span ng-show="item.expirationDate">{{childrenItem.expirationDate | date : 'MMM yyyy'}}</span></td>
         </tr>
         <tr>
             <td class="banner-text bg-color-">25</td>
@@ -121,17 +121,17 @@
             <td></td>
             <td></td>
         </tr>
-        <tr ng-repeat="item in other">
+        <tr ng-repeat="otherItem in other">
             <td class="banner-text">{{$index+26}}</td>
-            <td class="product-code bg-color-lightblue">*{{item.productCode}}*</td>
-            <td class="bg-color-lightblue align-left">{{item.product}}</td>
-            <td>{{item.packSize}}mg</td>
-            <td>{{item.beginningBalance}}</td>
-            <td>{{item.quantityReceived}}</td>
-            <td>{{item.quantityDispensed}}</td>
-            <td>{{item.totalLossesAndAdjustments}}</td>
-            <td>{{item.stockInHand}}</td>
-            <td><span ng-show="item.expirationDate">{{item.expirationDate | date : 'MMM yyyy'}}</span></td>
+            <td class="product-code bg-color-lightblue">*{{otherItem.productCode}}*</td>
+            <td class="bg-color-lightblue align-left">{{otherItem.product}}</td>
+            <td>{{otherItem.productStrength}}</td>
+            <td>{{otherItem.beginningBalance}}</td>
+            <td>{{otherItem.quantityReceived}}</td>
+            <td>{{otherItem.quantityDispensed}}</td>
+            <td>{{otherItem.totalLossesAndAdjustments}}</td>
+            <td>{{otherItem.stockInHand}}</td>
+            <td><span ng-show="item.expirationDate">{{otherItem.expirationDate | date : 'MMM yyyy'}}</span></td>
         </tr>
 
         <tr>
@@ -168,20 +168,20 @@
                     <td>{{item.patientsOnTreatment}}</td>
                 </tr>
                 <tr>
-                    <td class="banner-text"></td>
+                    <td class="banner-text">9</td>
                     <td class="bg-color-green"></td>
                     <td class="bg-color-green align-left"></td>
                     <td></td>
                 </tr>
                 <tr>
-                    <td class="banner-text"></td>
+                    <td class="banner-text">10</td>
                     <td class="bg-color-green"></td>
                     <td class="bg-color-green align-left"></td>
                     <td></td>
                 </tr>
 
                 <tr ng-repeat="item in regimeChildren">
-                    <td class="banner-text">{{$index+9}}</td>
+                    <td class="banner-text">{{$index+11}}</td>
                     <td class="bg-color-yellow"></td>
                     <td class="bg-color-yellow align-left">{{item.name}}</td>
                     <td>{{item.patientsOnTreatment}}</td>
@@ -226,7 +226,7 @@
                 </thead>
 
                 <tbody>
-                <tr ng-repeat="item in patient">
+                <tr ng-repeat="item in rnr.patientQuantifications">
                     <td>{{item.category}}</td>
                     <td>{{item.total}}</td>
                 </tr>
@@ -236,9 +236,7 @@
             <div class="comment-wrapper">
                 <table class="background">
                     <tr>
-                        <td>
-
-                        </td>
+                        <td></td>
                     </tr>
                     <tr>
                         <td class="col-5"></td>
@@ -283,9 +281,9 @@
             </tr>
         </table>
 
-        <div>Nota: Mapa de Preenchimento Obrigatório Mensal HdD em Conjunto com a Farmácia da Unidade Sanitária/ ou DPM
+        <div>Nota: Mapa de Preenchimento Obrigat贸rio Mensal HdD em Conjunto com a Farm谩cia da Unidade Sanit谩ria/ ou DPM
         </div>
-        <div>Versão no 5 14Nov 2012</div>
+        <div>Vers茫o no 5 14Nov 2012</div>
 
     </div>
 </div>

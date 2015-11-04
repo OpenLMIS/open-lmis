@@ -62,6 +62,7 @@ public class RnrLineItem extends LineItem {
   private String productCode;
   private String productCategory;
   private Integer productCategoryDisplayOrder;
+  private String productStrength;
   private Boolean roundToZero;
   private Integer packRoundingThreshold;
   private Integer packSize;
