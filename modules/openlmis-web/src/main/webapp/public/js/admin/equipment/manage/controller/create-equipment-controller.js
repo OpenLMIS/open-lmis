@@ -24,6 +24,7 @@ function CreateEquipmentController($scope, $routeParams, $location, Equipment,Eq
 
   ColdChainDesignations.get(function (data) {
      $scope.designations = data.designations;
+     console.log(data);
   });
 
   ColdChainPqsStatus.get(function (data) {
@@ -76,9 +77,11 @@ function CreateEquipmentController($scope, $routeParams, $location, Equipment,Eq
       if($scope.equipment.equipmentType.coldChain)
       {
         $scope.equipment.equipmentTypeName = "coldChainEquipment";
+        $scope.equipment.designationId=$scope.equipment.designation.id;
       }
       else{
         $scope.equipment.equipmentTypeName = "equipment";
+        $scope.equipment.designationId=$scope.equipment.designation.id;
       }
       SaveEquipment.save($scope.equipment, onSuccess, onError);
     }

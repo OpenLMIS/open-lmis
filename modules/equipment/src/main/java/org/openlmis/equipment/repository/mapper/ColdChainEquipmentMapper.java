@@ -83,11 +83,11 @@ public interface ColdChainEquipmentMapper {
   ColdChainEquipment getById(@Param("id") Long id);
 
   @Insert("INSERT into equipment_cold_chain_equipments " +
-      "(equipmentId, designationId, cceCode, pqsCode, refrigeratorCapacity,freezerCapacity" +
+      "(equipmentId, designationId, cceCode, pqsCode, refrigeratorCapacity,freezerCapacity,capacity" +
       ", refrigerant, temperatureZone, maxTemperature, minTemperature, holdoverTime, energyConsumption" +
       ", dimension, price, pqsStatusId, donorId, createdBy, createdDate, modifiedBy, modifiedDate)" +
       "values " +
-      " ( #{id}, #{designationId}, #{cceCode}, #{pqsCode}, #{refrigeratorCapacity},#{freezerCapacity}" +
+      " ( #{id}, #{designationId}, #{cceCode}, #{pqsCode}, #{refrigeratorCapacity},#{freezerCapacity},#{capacity}" +
       ", #{refrigerant}, #{temperatureZone}, #{maxTemperature}, #{minTemperature}, #{holdoverTime},#{energyConsumption}" +
       ", #{dimension}, #{price}, #{pqsStatusId}, #{donorId}" +
       ", #{createdBy}, NOW(), #{modifiedBy}, NOW())")
