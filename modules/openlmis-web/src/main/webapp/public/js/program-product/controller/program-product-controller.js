@@ -8,10 +8,13 @@
  * You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org. 
  */
 
-function ProgramProductController($scope, programs, ProgramProducts, ProgramProductsISA)
+function ProgramProductController($scope, programs, ProgramProducts, ProgramProductsISA, demographicCategories)
 {
   $scope.programs = programs;
   $scope.isaService = ProgramProductsISA; //isaService is used by ISACoefficientsModalController, which is intended to be used as a descendant controller of this one.
+
+  console.log(demographicCategories);
+  $scope.demographicCategories = demographicCategories; //Will be undefined if we aren't in VIMS
 
   $scope.loadProgramProducts = function () {
     if ($scope.programId) {
@@ -71,5 +74,35 @@ ProgramProductController.resolve = {
   }
 };
 
+//Begin: Specific for Tanzania
+/*  The code below is intended to illustrate one potential way of conditionally injecting demographic-category data
+ For now, because we don’t have a way to conditionally toggle OpenLMIS’ features on and off, we simple set injectDemographyCategories to true. */
+var injectDemographyCategories = true;
+if(injectDemographyCategories)
+{
+    ProgramProductController.resolve.demographicCategories = function ($q, $route, $timeout, DemographicEstimateCategories)
+    {
+        var deferred = $q.defer();
+        $timeout(function () {
+            DemographicEstimateCategories.get({}, function (data) {
+                deferred.resolve(data.estimate_categories);
+            }, {});
+        }, 100);
+        return deferred.promise;
+    };
+}
+else //As suggested in the comments above, this else-clause is intended to run for non-Tanzanian countries.
+{
+    //demographicEstimateCategories has to be assigned something...
+    ProgramProductController.resolve.demographicCategories = function($timeout)
+    {
+        //...so set it to a $timeout which returns a promise that will be resolved
+        return $timeout
+        (
+            function() {},
+            5
+        );
+    }
+}
 
 

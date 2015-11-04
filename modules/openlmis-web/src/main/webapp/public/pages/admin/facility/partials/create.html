@@ -237,7 +237,7 @@
               </thead>
               <tbody>
               <tr ng-repeat="supportedProgram in facility.supportedPrograms">
-                <td ng-bind="supportedProgram.program.name"></td>
+                <td ng-bind="supportedProgram.program.name" programId="{{supportedProgram.program.id}}"></td>
                 <td><input ng-model="supportedProgram.active" id="" type="checkbox" value="true"/></td>
                 <td ng-init="supportedProgram.editedStartDate = supportedProgram.startDate">
                   <input type="text" ng-model="supportedProgram.editedStartDate"

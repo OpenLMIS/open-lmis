@@ -26,7 +26,6 @@ import lombok.NoArgsConstructor;
 @JsonSerialize
 public class ISA extends BaseModel
 {
-
   Double whoRatio;
   Integer dosesPerYear;
   Double wastageFactor;
@@ -34,6 +33,9 @@ public class ISA extends BaseModel
   Integer minimumValue;
   Integer maximumValue;
   Integer adjustmentValue;
+
+  //For Tanzania
+  Integer populationSource;
 
   private ISA(Builder builder)
   {
@@ -44,6 +46,7 @@ public class ISA extends BaseModel
     this.minimumValue = builder.minimumValue;
     this.maximumValue = builder.maximumValue;
     this.adjustmentValue = builder.adjustmentValue;
+    this.populationSource = builder.populationSource;
   }
 
   public Integer calculate(Long population)
@@ -58,6 +61,14 @@ public class ISA extends BaseModel
     return isaValue;
   }
 
+  //For Tanzania
+  public void calculate(Facility facility)
+  {
+    //Figure out population
+
+    //Return this.calculate(population);
+  }
+
   public static class Builder
   {
     private Double whoRatio;
@@ -67,6 +78,7 @@ public class ISA extends BaseModel
     private Integer minimumValue;
     private Integer maximumValue;
     private Integer adjustmentValue;
+    private Integer populationSource;
 
     public Builder whoRatio(Double value)
     {
@@ -107,6 +119,12 @@ public class ISA extends BaseModel
     public Builder adjustmentValue(Integer value)
     {
       this.adjustmentValue = value;
+      return this;
+    }
+
+    public Builder populationSource(Integer value)
+    {
+      this.populationSource = value;
       return this;
     }
 

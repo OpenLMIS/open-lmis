@@ -31,7 +31,7 @@ public class ProgramProductISATest
   @Test
   public void shouldCalculateISA() throws Exception
   {
-    ISA isa = new ISA(3.33, 44, 1.4, 33.9, 23, 345, 11);
+    ISA isa = new ISA(3.33, 44, 1.4, 33.9, 23, 345, 11, null);
     ProgramProductISA programProductISA = new ProgramProductISA(3L, isa);
 
     Integer isaAmount = programProductISA.calculate(420L);
