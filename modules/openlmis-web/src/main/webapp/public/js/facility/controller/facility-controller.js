@@ -9,13 +9,17 @@
  */
 
 
-function FacilityController($scope, facilityReferenceData, $routeParams, facility, Facility, $location, FacilityProgramProducts, FacilityProgramProductsISA, priceSchedules, facilityImages, $q, $dialog, messageService, interfacesReferenceData) {
-
+function FacilityController($scope, facilityReferenceData, $routeParams, facility, Facility, demographicCategories, $location, FacilityProgramProducts, FacilityProgramProductsISA, priceSchedules, facilityImages, $q, $dialog, messageService, interfacesReferenceData)
+{
   $scope.$parent.facilityId = null;
   $scope.message = "";
   $scope.$parent.message = "";
   $scope.isaService = FacilityProgramProductsISA; //isaService is used by ISACoefficientsModalController, which is intended to be used as a descendant controller of this one.
   initialize();
+
+  console.log(demographicCategories);
+  $scope.demographicCategories = demographicCategories; //Will be undefined if we aren't in VIMS
+
 
   function initialize() {
     $scope.facilityTypes = facilityReferenceData.facilityTypes;
@@ -328,3 +332,34 @@ FacilityController.resolve = {
        return deferred.promise;
    }
 };
+
+//Begin: Specific for Tanzania
+/*  The code below is intended to illustrate one potential way of conditionally injecting demographic-category data
+    For now, because we don’t have a way to conditionally toggle OpenLMIS’ features on and off, we simple set injectDemographyCategories to true. */
+var injectDemographyCategories = true;
+if(injectDemographyCategories)
+{
+    FacilityController.resolve.demographicCategories = function ($q, $route, $timeout, DemographicEstimateCategories)
+    {
+        var deferred = $q.defer();
+        $timeout(function () {
+            DemographicEstimateCategories.get({}, function (data) {
+                deferred.resolve(data.estimate_categories);
+            }, {});
+        }, 100);
+        return deferred.promise;
+    };
+}
+else //As suggested in the comments above, this else-clause is intended to run for non-Tanzanian countries.
+{
+    //demographicEstimateCategories has to be assigned something...
+    FacilityController.resolve.demographicCategories = function($timeout)
+    {
+        //...so set it to a $timeout which returns a promise that will be resolved
+        return $timeout
+        (
+            function() {},
+            5
+        );
+    }
+}

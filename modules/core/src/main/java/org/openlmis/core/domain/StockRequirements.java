@@ -64,6 +64,10 @@ public class StockRequirements
 
   public String getJSON()
   {
+    /* Perhaps use a Map instead, and then let Jackson turn it into JSON.
+    (The benefit is that we wouldn't have to worry about maulually escaping strings, etc, as
+    Alternatively, look into "Jackson Views." They may give you good control over what is and
+    isn't returned to the client. */
     StringBuilder builder = new StringBuilder();
     builder.append("{");
 
