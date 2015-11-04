@@ -157,8 +157,25 @@ describe('ViewRnrListController', function () {
     scope.selectedItems = [
       {'id': 1, 'programId': 2}
     ];
-    scope.openRequisition();
+    //scope.openRequisition();
+    openRequisition("/reference-data/toggle/new.rnr.view.json", {key:false});
     expect(location.url()).toEqual("/requisition/1/2?supplyType=fullSupply&page=1");
+  });
+
+  it('should open a via requisition view', function () {
+    scope.selectedItems = [
+      {'id': 1, 'programId': 2,'programCode':'ESS_MEDS'}
+    ];
+    openRequisition("/reference-data/toggle/new.rnr.view.json", {key:true});
+    expect(location.url()).toEqual("/view-requisition-via/1/2?supplyType=fullSupply&page=1");
+  });
+
+  it('should open a mmia requisition view', function () {
+    scope.selectedItems = [
+      {'id': 1, 'programId': 2,'programCode':'MMIA'}
+    ];
+    openRequisition("/reference-data/toggle/new.rnr.view.json", {key:true});
+    expect(location.url()).toEqual("/view-requisition-mmia/1/2?supplyType=fullSupply&page=1");
   });
 
   it('should open a requisition with id 1 and for program 2 and full-supply and set data in navigateBackService', function () {
@@ -173,7 +190,8 @@ describe('ViewRnrListController', function () {
       {id: 1}
     ];
     scope.selectedProgramId = 2;
-    scope.openRequisition();
+    //scope.openRequisition();
+    openRequisition("/reference-data/toggle/new.rnr.view.json", {key:false});
     expect(location.url()).toEqual("/requisition/1/2?supplyType=fullSupply&page=1");
     expect(navigateBackService.facilityId).toEqual(1);
     expect(navigateBackService.dateRangeStart).toEqual("10/10/2004");
@@ -205,9 +223,16 @@ describe('ViewRnrListController', function () {
     expect(scope.selectedProgramId).toEqual(2);
   });
 
-  function loadRequisitions(expectedUrl, respondWith) {
+  function  loadRequisitions(expectedUrl, respondWith) {
     httpBackend.expect('GET', expectedUrl).respond(200, respondWith);
     scope.loadRequisitions();
     httpBackend.flush();
   }
+
+  function  openRequisition(expectedUrl, respondWith) {
+    httpBackend.expect('GET', expectedUrl).respond(200, respondWith);
+    scope.openRequisition();
+    httpBackend.flush();
+  }
+
 });

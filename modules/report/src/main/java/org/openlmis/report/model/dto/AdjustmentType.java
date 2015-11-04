@@ -13,15 +13,19 @@
 package org.openlmis.report.model.dto;
 
 import lombok.AllArgsConstructor;
-import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
-@Data
+@Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 public class AdjustmentType {
-    private String name;
-    private String description;
-    private Boolean additive;
-    private Integer displayOrder;
+
+  private String name;
+  private String description;
+  private Boolean additive;
+  private Integer displayOrder;
+
 }

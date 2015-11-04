@@ -12,9 +12,7 @@
 
 package org.openlmis.report.model.report;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.openlmis.report.model.ReportData;
 
 import javax.persistence.Column;
@@ -25,7 +23,8 @@ import javax.persistence.Column;
  * Logistics managers may use these labels when sending reports or corresponds to facilities in the distribution system
  */
 
-@Data
+@Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 public class MailingLabelReport implements ReportData {

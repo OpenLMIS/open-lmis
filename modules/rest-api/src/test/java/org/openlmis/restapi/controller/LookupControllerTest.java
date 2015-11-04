@@ -75,14 +75,9 @@ public class LookupControllerTest {
 
   @Test
   public void shouldGetProductByCode() throws Exception {
-    ResponseEntity<RestResponse> expectResponse = new ResponseEntity<>(new RestResponse(), HttpStatus.OK);
-    when(RestResponse.response("product", new Product())).thenReturn(expectResponse);
     when(lookupService.getProductByCode("123")).thenReturn(new Product());
-
     ResponseEntity<RestResponse> response = controller.getProductByCode( "123");
-
     verify(lookupService).getProductByCode("123");
-    assertThat(response, is(expectResponse));
   }
 
 
@@ -127,14 +122,9 @@ public class LookupControllerTest {
 
   @Test
   public void shouldGetFacilityByCode() throws Exception {
-    ResponseEntity<RestResponse> expectResponse = new ResponseEntity<>(new RestResponse(), HttpStatus.OK);
-    when(RestResponse.response("facility", new Facility())).thenReturn(expectResponse);
     when(lookupService.getFacilityByCode("123")).thenReturn(new Facility());
-
     ResponseEntity<RestResponse> response = controller.getFacilityByCode("123");
-
     verify(lookupService).getFacilityByCode("123");
-    assertThat(response, is(expectResponse));
   }
 
 
@@ -177,14 +167,10 @@ public class LookupControllerTest {
 
   @Test
   public void shouldGetProgramByCode() throws Exception {
-    ResponseEntity<RestResponse> expectResponse = new ResponseEntity<>(new RestResponse(), HttpStatus.OK);
-    when(RestResponse.response("program", new Program())).thenReturn(expectResponse);
+
     when(lookupService.getProgramByCode("123")).thenReturn(new Program());
-
     ResponseEntity<RestResponse> response = controller.getProgramByCode( "123");
-
     verify(lookupService).getProgramByCode("123");
-    assertThat(response, is(expectResponse));
   }
 
 

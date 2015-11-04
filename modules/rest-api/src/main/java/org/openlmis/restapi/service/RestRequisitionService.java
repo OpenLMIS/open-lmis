@@ -10,6 +10,8 @@
 
 package org.openlmis.restapi.service;
 
+import com.google.common.base.Function;
+import com.google.common.collect.FluentIterable;
 import lombok.NoArgsConstructor;
 import org.apache.commons.collections.Predicate;
 import org.apache.log4j.Logger;
@@ -304,17 +306,19 @@ public class RestRequisitionService {
     }
   }
 
-  public List<Rnr> getRequisitionsByFacilityAndProgram(String facilityCode, String programCode) {
+  public List<Report> getRequisitionsByFacility(String facilityCode) {
     Facility facility = facilityService.getFacilityByCode(facilityCode);
     if (facility == null) {
       throw new DataException("error.facility.unknown");
     }
 
-    Program program = programService.getByCode(programCode);
-    if (program == null) {
-      throw new DataException("program.code.invalid");
-    }
+    List<Rnr> rnrList = requisitionService.getRequisitionsByFacility(facility);
 
-    return requisitionService.getRequisitionsByFacilityAndProgram(facility, program);
+    return FluentIterable.from(rnrList).transform(new Function<Rnr, Report>() {
+      @Override
+      public Report apply(Rnr input) {
+        return Report.prepareForREST(input);
+      }
+    }).toList();
   }
 }

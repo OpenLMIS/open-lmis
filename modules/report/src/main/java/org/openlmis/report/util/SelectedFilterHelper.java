@@ -12,7 +12,6 @@
 
 package org.openlmis.report.util;
 
-import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.openlmis.core.domain.Facility;
 import org.openlmis.core.domain.GeographicZone;
@@ -30,116 +29,112 @@ import org.springframework.stereotype.Component;
 import java.util.Map;
 
 
-//TODO:  Oh Lord - please re-write this class
 @Component
 @NoArgsConstructor
-@Data
 public class SelectedFilterHelper {
 
-    @Autowired
-    private ProcessingPeriodRepository periodService;
+  public static final String PROGRAM = "program";
+  public static final String PERIOD = "period";
+  public static final String ZONE = "zone";
+  public static final String USER_ID = "userId";
+  public static final String FACILITY = "facility";
+  public static final String PRODUCT = "product";
+  @Autowired
+  private ProcessingPeriodRepository periodService;
 
-    @Autowired
-    private ProgramService programService;
+  @Autowired
+  private ProgramService programService;
 
-    @Autowired
-    private ProductRepository productService;
+  @Autowired
+  private ProductRepository productService;
 
-    @Autowired
-    private GeographicZoneRepository geoZoneRepsotory;
+  @Autowired
+  private GeographicZoneRepository geoZoneRepsotory;
 
-    @Autowired
-    private FacilityRepository facilityRepository;
+  @Autowired
+  private FacilityRepository facilityRepository;
 
-    @Autowired
-    private SupervisoryNodeService supervisoryNodeService;
+  @Autowired
+  private SupervisoryNodeService supervisoryNodeService;
 
-    public String getProgramPeriodGeoZone(Map<String, String[]> params) {
-        String filterSummary = "";
+  public String getProgramPeriodGeoZone(Map<String, String[]> params) {
+    String filterSummary = "";
 
-        String program = StringHelper.isBlank(params, "program") ? "0" : params.get("program")[0];
-        String period = StringHelper.isBlank(params, "period") ? "0" : params.get("period")[0];
-        String zone = StringHelper.isBlank(params, "zone") ? "0" : params.get("zone")[0];
-        String userId = StringHelper.isBlank(params, "userId") ? "0" : params.get("userId")[0];
-        // these filters are essential for all reports and these lines should be fairly re-used.
+    String program = StringHelper.getValue(params, PROGRAM);
+    String period = StringHelper.getValue(params, PERIOD);
+    String zone = StringHelper.getValue(params, ZONE);
+    String userId = StringHelper.getValue(params, USER_ID);
 
-        ProcessingPeriod periodObject = periodService.getById(Long.parseLong(period));
-        GeographicZone zoneObject = geoZoneRepsotory.getById(Long.parseLong(zone));
-        if (program != null) {
-            if(program.equals("0")){
-                filterSummary = "Program: All Programs";
-            }else {
-                filterSummary = "Program: " + programService.getById(Long.parseLong(program)).getName();
-            }
-        }
-        if (periodObject != null) {
-            filterSummary += "\nPeriod: " + periodObject.getName() + ", " + periodObject.getStringYear();
-        }
-        if (zoneObject == null) {
-            // Lets determine the user's supervisory node is either National or not
-            Long totalSNods = supervisoryNodeService.getTotalUnassignedSupervisoryNodeOfUserBy(Long.parseLong(userId), Long.parseLong(program));
+    ProcessingPeriod periodObject = periodService.getById(Long.parseLong(period));
+    GeographicZone zoneObject = (zone != null)? geoZoneRepsotory.getById(Long.parseLong(zone)): null;
+    if (program != null) {
+      if ("0".equals(program)) {
+        filterSummary = "Program: All Programs";
+      } else {
+        filterSummary = String.format("Program: %s", programService.getById(Long.parseLong(program)).getName());
+      }
+    }
+    if (periodObject != null) {
+      filterSummary += String.format("%nPeriod: %s, %s", periodObject.getName(), periodObject.getStringYear());
+    }
+    if (zoneObject == null) {
+      // Lets determine the user's supervisory node is either National or not
+      Long totalSNods = supervisoryNodeService.getTotalUnassignedSupervisoryNodeOfUserBy(Long.parseLong(userId), Long.parseLong(program));
 
-            if (totalSNods == 0)
-                filterSummary += "\nGeographic Zone: National";
-            else
-                filterSummary += "\nGeographic Zone: All Zones";
+      if (totalSNods == 0)
+        filterSummary += "%nGeographic Zone: National";
+      else
+        filterSummary += "%nGeographic Zone: All Zones";
 
-        } else {
-            filterSummary += "\nGeographic Zone: " + zoneObject.getName();
-        }
-
-        return filterSummary;
+    } else {
+      filterSummary += "%nGeographic Zone: " + zoneObject.getName();
     }
 
-    public String getProgramGeoZoneFacility(Map<String, String[]> params) {
+    return filterSummary;
+  }
 
-        String program = StringHelper.isBlank(params, "program") ? "0" : params.get("program")[0];
-        String zone = StringHelper.isBlank(params, "zone") ? "0" : params.get("zone")[0];
-        String facility = StringHelper.isBlank(params, "facility") ? "0" : params.get("facility")[0];
+  public String getProgramGeoZoneFacility(Map<String, String[]> params) {
 
-        String filterSummary = "Program: " + ((program.equals("0"))?"":programService.getById(Long.parseLong(program)).getName());
-        GeographicZone zoneObject = geoZoneRepsotory.getById(Long.parseLong(zone));
-        Facility facilityObject = facilityRepository.getById(Long.parseLong(facility));
+    String program = StringHelper.getValue(params, PROGRAM);
+    String zone = StringHelper.getValue(params, ZONE);
+    String facility = StringHelper.getValue(params, FACILITY);
 
-        if (zoneObject == null) {
-            filterSummary += "\nGeographic Zone: National";
-        } else {
-            filterSummary += "\nGeographic Zone: " + zoneObject.getName();
-        }
 
-        if (facilityObject == null) {
-            filterSummary += "\nFacility: All Facilities";
-        } else {
-            filterSummary += "\nFacility: " + facilityObject.getName();
-        }
+    GeographicZone zoneObject = geoZoneRepsotory.getById(Long.parseLong(zone));
+    Facility facilityObject = facilityRepository.getById(Long.parseLong(facility));
+    String filterSummary;
+    filterSummary = String.format("Program: %s", "0".equals(program) ? "" : programService.getById(Long.parseLong(program)).getName());
+    filterSummary = filterSummary + (zoneObject == null ? "%nGeographic Zone: National" : String.format("%nGeographic Zone: %s", zoneObject.getName()));
+    filterSummary = filterSummary + (facilityObject == null ? "%nFacility: All Facilities" : String.format("%nFacility: %s", facilityObject.getName()));
+    return filterSummary;
+  }
 
-        return filterSummary;
+  public String getSelectedFilterString(Map<String, String[]> params) {
+    String product = StringHelper.getValue(params, PRODUCT);
+    String program = StringHelper.getValue(params, PROGRAM);
+    String period = StringHelper.getValue(params, PERIOD);
+
+    return new StringBuilder()
+        .append("Program: ").append(programService.getById(Long.parseLong(program)).getName())
+        .append("\nPeriod: ").append(periodService.getById(Long.parseLong(period)).getName())
+        .append("\n")
+        .append(getSelectedProductSummary(product))
+        .toString();
+  }
+
+  private String getSelectedProductSummary(String product) {
+    if (product == null || product.isEmpty() || "0".equals(product)) {
+      return "Product: All Products";
+    } else if ("-1".equals(product)) {
+      return "Product: Indicator / Tracer Commodities";
+    } else {
+      Product productObject = productService.getById(Long.parseLong(product));
+      if (productObject != null) {
+        return "Product: " + productObject.getFullName();
+      }
     }
-
-    public String getSelectedFilterString(Map<String, String[]> params) {
-        String filterSummary = "";
-
-        String product = params.get("product")[0];
-        String program = params.get("program")[0];
-        String period = params.get("period")[0];
-        // these filters are essential for all reports and these lines should be fairly re-used.
-
-        filterSummary = "Program: " + programService.getById(Long.parseLong(program)).getName();
-        filterSummary += "\nPeriod: " + periodService.getById(Long.parseLong(period)).getName();
-
-        if (product.isEmpty()) {
-            filterSummary += "\nProduct: All Products";
-        } else if (product.equalsIgnoreCase("0")) {
-            filterSummary += "\nProduct: Indicator / Tracer Commodities";
-        } else {
-            Product productObject = productService.getById(Long.parseLong(product));
-            if (productObject != null) {
-                filterSummary += "Product: " + productObject.getFullName();
-            }
-        }
-
-        return filterSummary;
-    }
+    return "";
+  }
 
 
 }

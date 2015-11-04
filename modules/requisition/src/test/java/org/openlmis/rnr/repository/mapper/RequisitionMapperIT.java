@@ -199,13 +199,13 @@ public class RequisitionMapperIT {
 
     mapper.insert(requisition);
 
-    List<Rnr> rnrList = mapper.getRequisitionsWithLineItemsByFacilityAndProgram(queryFacility, queryProgram);
+    List<Rnr> rnrList = mapper.getRequisitionsWithLineItemsByFacility(queryFacility);
     assertThat(rnrList.size(), is(1));
 
     Facility anotherFacility = new Facility(122L);
     facility.setCode(FACILITY_CODE);
 
-    rnrList = mapper.getRequisitionsWithLineItemsByFacilityAndProgram(anotherFacility, queryProgram);
+    rnrList = mapper.getRequisitionsWithLineItemsByFacility(anotherFacility);
     assertThat(rnrList.size(), is(0));
   }
 

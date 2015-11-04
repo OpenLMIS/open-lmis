@@ -12,16 +12,14 @@
 
 package org.openlmis.report.model.dto;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
-@Data
+@Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 public class RequisitionGroup {
-    private Integer id;
-    private String name;
-    private String code;
-
+  private Integer id;
+  private String name;
+  private String code;
 }

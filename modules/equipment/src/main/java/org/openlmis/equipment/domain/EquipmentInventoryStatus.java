@@ -44,8 +44,4 @@ public class EquipmentInventoryStatus extends BaseModel {
     }
   }
 
-  @Override
-  public int hashCode() {
-    return super.hashCode();
-  }
 }

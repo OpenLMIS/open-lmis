@@ -13,11 +13,12 @@ package org.openlmis.report.service;
 
 import lombok.NoArgsConstructor;
 import org.apache.ibatis.session.RowBounds;
-import org.openlmis.core.domain.ProcessingPeriod;
 import org.openlmis.core.repository.GeographicZoneRepository;
-import org.openlmis.report.mapper.OrderFillRateReportMapper;
+import org.openlmis.report.mapper.PushedProductReportMapper;
 import org.openlmis.report.model.ReportData;
-import org.openlmis.report.util.StringHelper;
+import org.openlmis.report.model.params.OrderFillRateReportParam;
+import org.openlmis.report.util.ParameterAdaptor;
+import org.openlmis.report.util.SelectedFilterHelper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -28,65 +29,33 @@ import java.util.Map;
 @Component
 @NoArgsConstructor
 public class PushedProductReportDataProvider extends ReportDataProvider {
-    @Autowired
-    private OrderFillRateReportMapper reportMapper;
-    @Autowired
-    private GeographicZoneRepository geographicZoneMapper;
 
-    @Override
-    protected List<? extends ReportData> getResultSetReportData(Map<String, String[]> params) {
-        return getMainReportData(params, null, RowBounds.NO_ROW_OFFSET, RowBounds.NO_ROW_LIMIT);
-    }
+  public static final String REPORT_FILTER_PARAM_VALUES = "REPORT_FILTER_PARAM_VALUES";
 
-    @Override
-    public List<? extends ReportData> getMainReportData(Map<String, String[]> filterCriteria, Map<String, String[]> sorter, int page, int pageSize) {
-        RowBounds rowBounds = new RowBounds((page - 1) * pageSize, pageSize);
-        return reportMapper.getPushedProducts(filterCriteria, rowBounds, this.getUserId());
-    }
+  @Autowired
+  private PushedProductReportMapper reportMapper;
 
-    @Override
-    public HashMap<String, String> getAdditionalReportData(Map params) {
-        HashMap<String, String> result = new HashMap<String, String>();
+  @Autowired
+  private GeographicZoneRepository geographicZoneMapper;
 
-        // Interprate the different reporting parameters that were selected on the UI
+  @Autowired
+  private SelectedFilterHelper selectedFilterHelper;
 
-        String period = (StringHelper.isBlank(params, "period")) ? "" : ((String[]) params.get("period"))[0];
-        String facility = (StringHelper.isBlank(params, "facility")) ? "" : ((String[]) params.get("facility"))[0];
-        String facilityType = (StringHelper.isBlank(params, "facilityType")) ? "" : ((String[]) params.get("facilityType"))[0];
-        String program = (StringHelper.isBlank(params, "program")) ? "" : ((String[]) params.get("program"))[0];
-        String zone = (StringHelper.isBlank(params, "zone")) ? "" : ((String[]) params.get("zone"))[0];
-        String schedule = (StringHelper.isBlank(params, "schedule")) ? "" : ((String[]) params.get("schedule"))[0];
+  @Override
+  protected List<? extends ReportData> getResultSet(Map<String, String[]> params) {
+    return getReportBody(params, null, RowBounds.NO_ROW_OFFSET, RowBounds.NO_ROW_LIMIT);
+  }
 
-        // compose the filter text as would be presented on the pdf reports.
-        String header = "";
-        if (!program.equals("0") && !program.isEmpty() && !program.endsWith("undefined")) {
-            header += "Program: " + this.reportMapper.getProgram(Integer.parseInt(program)).get(0).getName();
-        }
-        if(!schedule.equals("0") && !schedule.isEmpty() && !schedule.endsWith("undefined")){
-            header += "\nSchedule:" + this.reportMapper.getSchedule(Integer.parseInt(schedule)).get(0).getName();
-        }
-        ProcessingPeriod periodObject = this.reportMapper.getPeriodId(Integer.parseInt(period));
+  @Override
+  public List<? extends ReportData> getReportBody(Map<String, String[]> filterCriteria, Map<String, String[]> sorter, int page, int pageSize) {
+    RowBounds rowBounds = new RowBounds((page - 1) * pageSize, pageSize);
+    return reportMapper.getPushedProducts(ParameterAdaptor.parse(filterCriteria, OrderFillRateReportParam.class), rowBounds, this.getUserId());
+  }
 
-        if (period != "" && !period.endsWith("undefined")) {
-            header += "\nPeriod : " + periodObject.getName() + " - " + periodObject.getStringYear();
-        }
-        if (!zone.equals("0") && !zone.isEmpty() && !zone.endsWith("undefined")) {
-            header += "\nGeographic Zone: " + this.geographicZoneMapper.getById(Long.parseLong(zone)).getName();
-        }else{
-            header += "\nGeographic Zone : All Geographic Zones";
-
-        }
-        if (!facilityType.isEmpty() && !facilityType.equals("0") && !facilityType.endsWith("undefined")) {
-            header += "\nFacility Type : " + this.reportMapper.getFacilityType(Integer.parseInt(facilityType)).get(0).getName();
-        } else {
-            header += "\nFacility Type : All Facility Types";
-        }
-
-        if (facility != "" && !facility.endsWith("undefined")) {
-            header += "\nFacility Name: " + this.reportMapper.getFacility(Integer.parseInt(facility)).get(0).getName();
-        }
-
-        result.put("REPORT_FILTER_PARAM_VALUES", header.toString());
-        return result;
-    }
+  @Override
+  public HashMap<String, String> getExtendedHeader(Map params) {
+    HashMap<String, String> result = new HashMap<String, String>();
+    result.put(REPORT_FILTER_PARAM_VALUES, selectedFilterHelper.getProgramGeoZoneFacility(params));
+    return result;
+  }
 }

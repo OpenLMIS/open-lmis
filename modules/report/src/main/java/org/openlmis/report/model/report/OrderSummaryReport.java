@@ -13,13 +13,15 @@
 package org.openlmis.report.model.report;
 
 import lombok.AllArgsConstructor;
-import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.openlmis.report.model.ReportData;
 
 import javax.persistence.Column;
 
-@Data
+@Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 public class OrderSummaryReport implements ReportData {
@@ -38,7 +40,7 @@ public class OrderSummaryReport implements ReportData {
   @Column(name = "requisition_line_item_losses_adjustments.quantity")
   private Integer discrepancy;
 
- @Column(name = "facility_name")
+  @Column(name = "facility_name")
   private String facilityName;
 
   @Column(name = "facility_code")

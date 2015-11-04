@@ -11,7 +11,10 @@
 package org.openlmis.restapi.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.core.utils.DateUtil;
@@ -20,9 +23,11 @@ import org.openlmis.rnr.domain.RegimenLineItem;
 import org.openlmis.rnr.domain.Rnr;
 import org.openlmis.rnr.domain.RnrLineItem;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import static com.fasterxml.jackson.databind.annotation.JsonSerialize.Inclusion.NON_NULL;
 import static org.apache.commons.lang3.StringUtils.isEmpty;
 
 /**
@@ -33,11 +38,16 @@ import static org.apache.commons.lang3.StringUtils.isEmpty;
 
 @Data
 @NoArgsConstructor
+@JsonIgnoreProperties(ignoreUnknown = true)
+@JsonSerialize(include = NON_NULL)
+@EqualsAndHashCode(callSuper = false)
 public class Report {
 
   private List<RnrLineItem> products;
   private List<RnrLineItem> nonFullSupplyProducts;
   private List<RegimenLineItem> regimens;
+  private List<PatientQuantificationLineItem> patientQuantifications;
+
   private String agentCode;
   private String programCode;
   private String approverName;
@@ -49,7 +59,7 @@ public class Report {
   private String clientSubmittedTime;
   private String clientSubmittedNotes;
 
-  private List<PatientQuantificationLineItem> patientQuantifications;
+  private Date periodStartDate;
 
   public void validate() {
     if (isEmpty(agentCode) || isEmpty(programCode)) {
@@ -80,5 +90,42 @@ public class Report {
       if (rnrLineItem.getQuantityApproved() < 0)
         throw new DataException("error.restapi.quantity.approved.negative");
     }
+  }
+
+  public static Report prepareForREST(final Rnr rnr) {
+    Report report = new Report();
+    report.setAgentCode(rnr.getFacility().getCode());
+    report.setProgramCode(rnr.getProgram().getCode());
+
+    ArrayList<RnrLineItem> nonFullSupplyProducts = new ArrayList<RnrLineItem>() {{
+      addAll(rnr.getNonFullSupplyLineItems());
+    }};
+    report.setNonFullSupplyProducts(nonFullSupplyProducts);
+
+    ArrayList<RnrLineItem> fullSupplyProducts = new ArrayList<RnrLineItem>() {{
+      addAll(rnr.getFullSupplyLineItems());
+    }};
+    report.setProducts(fullSupplyProducts);
+
+    ArrayList<RegimenLineItem> regimenLineItems = new ArrayList<RegimenLineItem>() {{
+        addAll(rnr.getRegimenLineItems());
+    }};
+    report.setRegimens(regimenLineItems);
+
+    ArrayList<PatientQuantificationLineItem> patientQuantificationLineItems = new ArrayList<PatientQuantificationLineItem>() {{
+      addAll(rnr.getPatientQuantifications());
+    }};
+    report.setPatientQuantifications(patientQuantificationLineItems);
+
+    report.setEmergency(rnr.isEmergency());
+
+    if (rnr.getClientSubmittedTime() != null) {
+      report.setClientSubmittedTime(DateUtil.formatDate(rnr.getClientSubmittedTime()));
+    }
+
+    report.setClientSubmittedNotes(rnr.getClientSubmittedNotes());
+    report.setPeriodStartDate(rnr.getPeriod().getStartDate());
+
+    return report;
   }
 }

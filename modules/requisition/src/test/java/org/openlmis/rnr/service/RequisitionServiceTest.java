@@ -1562,6 +1562,13 @@ public class RequisitionServiceTest {
     verify(requisitionRepository).updateClientFields(rnr);
   }
 
+  @Test
+  public void shouldGetRequisitionsByFacility() {
+    Facility facility = new Facility();
+    requisitionService.getRequisitionsByFacility(facility);
+    verify(requisitionRepository).getRequisitionDetailsByFacility(facility);
+  }
+
   private void setupForInitRnr() {
     when(requisitionPermissionService.hasPermission(USER_ID, FACILITY, PROGRAM, CREATE_REQUISITION)).thenReturn(true);
     when(rnrTemplateService.fetchProgramTemplateForRequisition(PROGRAM.getId())).thenReturn(

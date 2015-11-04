@@ -53,13 +53,13 @@ public class RegimenDistributionReportDataProvider extends ReportDataProvider {
   }
 
   @Override
-  protected List<? extends ReportData> getResultSetReportData(Map<String, String[]> filterCriteria) {
+  protected List<? extends ReportData> getResultSet(Map<String, String[]> filterCriteria) {
     RowBounds rowBounds = new RowBounds(RowBounds.NO_ROW_OFFSET, RowBounds.NO_ROW_LIMIT);
     return reportMapper.getRegimenDistributionReport(getReportFilterData(filterCriteria), null, rowBounds, this.getUserId());
   }
 
   @Override
-  public List<? extends ReportData> getMainReportData(Map<String, String[]> filterCriteria, Map<String, String[]> SortCriteria, int page, int pageSize) {
+  public List<? extends ReportData> getReportBody(Map<String, String[]> filterCriteria, Map<String, String[]> SortCriteria, int page, int pageSize) {
     RowBounds rowBounds = new RowBounds((page - 1) * pageSize, pageSize);
     return reportMapper.getRegimenDistributionReport(getReportFilterData(filterCriteria), SortCriteria, rowBounds, this.getUserId());
   }

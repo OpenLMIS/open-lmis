@@ -15,11 +15,10 @@ package org.openlmis.report.model.geo;
 /**
  * Created by issa on 10/17/14.
  */
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
-@Data
+@Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 public class GeoStockStatusProductConsumption {

@@ -1,0 +1,291 @@
+<div class="mmia-form">
+    <table class="border-all-bold head-section" cellpadding="0" cellspacing="0">
+        <tr>
+            <td rowspan="3" class="background-black banner-text">
+                <div class="width-28 banner-text">
+                    <div class="text-nowrap rotate">CMAM - Modelo 01</div>
+                </div>
+            </td>
+            <td class=" col-1">
+                <span style="float: left" class="view-table-logo"></span>
+
+            </td>
+            <td class="col-4">
+                <h6>REPUBLICA DE MOCAMBIQUE</h6>
+                <h6>MINISTERIO DA SAUDE</h6>
+                <h6>CENTRAL DE MEDICAMENTOS E ARTIGOS MEDICOS</h6>
+            </td>
+            <td class=" col-5 align-center">
+                <h5>MMIA</h5>
+                <h5>MAPA MENSAL DE INFORMACAO ARV</h5>
+            </td>
+            <td class=" col-2">
+                &nbsp;
+                <span openlmis-message="view.rnr.mmia.month"></span>
+                <span> : </span> {{month}}
+            </td>
+        </tr>
+
+        <tr>
+            <td colspan="3">
+                <span openlmis-message="view.rnr.healthFacility"></span>
+                <span>: {{rnr.facility.name}}</span>
+            </td>
+            <td rowspan="2">
+                &nbsp;
+                <span openlmis-message="view.rnr.mmia.year"></span>
+                <span>: {{year}}</span>
+            </td>
+        </tr>
+
+        <tr class="">
+            <td colspan="2"><span openlmis-message="view.rnr.district"></span>: {{rnr.facility.geographicZone.name}}</td>
+            <td><span openlmis-message="view.rnr.province"></span>:</td>
+        </tr>
+    </table>
+    <div class="separate"></div>
+    <table class="second-section">
+        <thead>
+        <tr>
+            <th class="banner-text"></th>
+            <th class="border-bottom-bold" openlmis-message="view.rnr.fnm"></th>
+            <th class="col-4" openlmis-message="view.rnr.mmia.medicine"></th>
+            <th openlmis-message="view.rnr.mmia.issuedUnit"></th>
+            <th openlmis-message="view.rnr.mmia.initialAmount"></th>
+            <th openlmis-message="view.rnr.mmia.entries"></th>
+            <th openlmis-message="view.rnr.mmia.issues"></th>
+            <th openlmis-message="view.rnr.mmia.adjustments"></th>
+            <th openlmis-message="view.rnr.mmia.inventory"></th>
+            <th openlmis-message="view.rnr.mmia.validate"></th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr ng-repeat="item in adult">
+            <td class="banner-text">{{$index+1}}</td>
+            <td class="product-code bg-color-green">*{{item.productCode}}*</td>
+            <td class="bg-color-green align-left">{{item.product}}</td>
+            <td>{{item.packSize}}mg</td>
+            <td>{{item.beginningBalance}}</td>
+            <td>{{item.quantityReceived}}</td>
+            <td>{{item.quantityDispensed}}</td>
+            <td>{{item.totalLossesAndAdjustments}}</td>
+            <td>{{item.stockInHand}}</td>
+            <td><span ng-show="item.expirationDate">{{item.expirationDate | date : 'MMM yyyy'}}</span></td>
+        </tr>
+        <tr>
+            <td class="banner-text bg-color-black">13</td>
+            <td class="product-code bg-color-green"></td>
+            <td class="bg-color-green"></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+        </tr>
+        <tr>
+            <td class="banner-text bg-color-black">14</td>
+            <td class="product-code bg-color-green"></td>
+            <td class="bg-color-green"></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+        </tr>
+
+        <tr ng-repeat="item in children">
+            <td class="banner-text">{{$index+15}}</td>
+            <td class="product-code bg-color-lightyellow">*{{item.productCode}}*</td>
+            <td class="bg-color-lightyellow align-left">{{item.product}}</td>
+            <td>{{item.packSize}}mg</td>
+            <td>{{item.beginningBalance}}</td>
+            <td>{{item.quantityReceived}}</td>
+            <td>{{item.quantityDispensed}}</td>
+            <td>{{item.totalLossesAndAdjustments}}</td>
+            <td>{{item.stockInHand}}</td>
+            <td><span ng-show="item.expirationDate">{{item.expirationDate | date : 'MMM yyyy'}}</span></td>
+        </tr>
+        <tr>
+            <td class="banner-text bg-color-">25</td>
+            <td class="product-code bg-color-lightyellow"></td>
+            <td class="bg-color-lightyellow"></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+        </tr>
+        <tr ng-repeat="item in other">
+            <td class="banner-text">{{$index+26}}</td>
+            <td class="product-code bg-color-lightblue">*{{item.productCode}}*</td>
+            <td class="bg-color-lightblue align-left">{{item.product}}</td>
+            <td>{{item.packSize}}mg</td>
+            <td>{{item.beginningBalance}}</td>
+            <td>{{item.quantityReceived}}</td>
+            <td>{{item.quantityDispensed}}</td>
+            <td>{{item.totalLossesAndAdjustments}}</td>
+            <td>{{item.stockInHand}}</td>
+            <td><span ng-show="item.expirationDate">{{item.expirationDate | date : 'MMM yyyy'}}</span></td>
+        </tr>
+
+        <tr>
+            <td class="banner-text">28</td>
+            <td class="product-code bg-color-lightblue"></td>
+            <td class="bg-color-lightblue"></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+        </tr>
+        </tbody>
+    </table>
+    <div class="separate"></div>
+    <div class="middle-section">
+        <div class="regime-section">
+            <table class="regime-form">
+                <thead>
+                <tr>
+                    <th class="banner-text"></th>
+                    <th openlmis-message="view.rnr.mmia.regime.code"></th>
+                    <th class="col-4" openlmis-message="view.rnr.mmia.regime.therapeutic"></th>
+                    <th openlmis-message="view.rnr.mmia.regime.column.total">Total</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr ng-repeat="item in regimeAdult">
+                    <td class="banner-text">{{$index+1}}</td>
+                    <td class="bg-color-green"></td>
+                    <td class="bg-color-green align-left">{{item.name}}</td>
+                    <td>{{item.patientsOnTreatment}}</td>
+                </tr>
+                <tr>
+                    <td class="banner-text"></td>
+                    <td class="bg-color-green"></td>
+                    <td class="bg-color-green align-left"></td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td class="banner-text"></td>
+                    <td class="bg-color-green"></td>
+                    <td class="bg-color-green align-left"></td>
+                    <td></td>
+                </tr>
+
+                <tr ng-repeat="item in regimeChildren">
+                    <td class="banner-text">{{$index+9}}</td>
+                    <td class="bg-color-yellow"></td>
+                    <td class="bg-color-yellow align-left">{{item.name}}</td>
+                    <td>{{item.patientsOnTreatment}}</td>
+                </tr>
+                <tr>
+                    <td class="banner-text"></td>
+                    <td class="bg-color-yellow"></td>
+                    <td class="bg-color-yellow align-left"></td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td class="banner-text"></td>
+                    <td class="bg-color-yellow"></td>
+                    <td class="bg-color-yellow align-left"></td>
+                    <td></td>
+                </tr>
+                </tbody>
+            </table>
+            <table class="total-form">
+                <tr>
+                    <td class="col-2 align-right bg-color-darkgray align-right">
+                        <span openlmis-message="view.rnr.mmia.regime.total"></span>
+                        <span> :</span>
+                    </td>
+                    <td>{{regimeTotal}}</td>
+                </tr>
+            </table>
+        </div>
+
+
+        <div class="patient-section">
+
+            <table class="patient-form">
+                <thead>
+                <tr>
+                    <th colspan="2" class="background-black" openlmis-message="view.rnr.mmia.patient.header"></th>
+                </tr>
+                <tr>
+                    <th class="col-2" openlmis-message="view.rnr.mmia.patient.type"></th>
+                    <th class="col-3" openlmis-message="view.rnr.mmia.patient.total"></th>
+                </tr>
+                </thead>
+
+                <tbody>
+                <tr ng-repeat="item in patient">
+                    <td>{{item.category}}</td>
+                    <td>{{item.total}}</td>
+                </tr>
+                </tbody>
+            </table>
+
+            <div class="comment-wrapper">
+                <table class="background">
+                    <tr>
+                        <td>
+
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="col-5"></td>
+                    </tr>
+                    <tr>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td></td>
+                    </tr>
+                </table>
+                <div class="comment">
+                    <span openlmis-message="view.rnr.mmia.comments"></span>
+                    <span> : </span>
+                    {{rnr.clientSubmittedNotes}}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="bottom-section">
+        <table>
+            <tr>
+                <td>
+                    <span openlmis-message="view.rnr.mmia.createBy"></span>
+                    <span> : </span>
+                </td>
+                <td>
+                    <span openlmis-message="view.rnr.mmia.vistor"></span>
+                    <span> : </span>
+                </td>
+                <td>
+                    <span openlmis-message="view.rnr.mmia.dateOfCreate"></span>
+                    <span> : </span>
+                </td>
+            </tr>
+        </table>
+
+        <div>Nota: Mapa de Preenchimento Obrigatório Mensal HdD em Conjunto com a Farmácia da Unidade Sanitária/ ou DPM
+        </div>
+        <div>Versão no 5 14Nov 2012</div>
+
+    </div>
+</div>

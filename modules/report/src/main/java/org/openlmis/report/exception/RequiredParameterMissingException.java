@@ -10,12 +10,12 @@
  * You should have received a copy of the GNU Affero General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.openlmis.report.model.sorter;
+package org.openlmis.report.exception;
 
+public class RequiredParameterMissingException extends RuntimeException {
 
-import org.openlmis.report.model.report.FacilityReport;
-
-public class FacilityReportSorter extends FacilityReport {
-
+  public RequiredParameterMissingException(String message){
+    super(message);
+  }
 
 }

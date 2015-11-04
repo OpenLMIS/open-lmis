@@ -88,7 +88,7 @@ public class ProductDoseMapperIT {
 
     List<VaccineProductDose> doses = mapper.getDoseSettingByProduct(program.getId(), product.getId());
     assertThat(doses.size(), is(1));
-    assertThat(doses.get(0), is(dose));
+    assertThat(doses.get(0).getId(), is(dose.getId()));
   }
 
   @Test
@@ -118,7 +118,7 @@ public class ProductDoseMapperIT {
     mapper.insert(dose);
     List<VaccineProductDose> doses = mapper.getProgramProductDoses(program.getId());
     assertThat(doses.size(), is(1));
-    assertThat(doses.get(0),is(dose));
+    assertThat(doses.get(0).getId(),is(dose.getId()));
   }
 
   @Test

@@ -13,7 +13,6 @@
 package org.openlmis.report.service;
 
 import lombok.NoArgsConstructor;
-import org.apache.commons.lang.StringUtils;
 import org.apache.ibatis.session.RowBounds;
 
 import org.openlmis.core.service.ProgramService;
@@ -22,13 +21,11 @@ import org.openlmis.core.service.ProcessingPeriodService;
 import org.openlmis.report.mapper.PipelineExportReportMapper;
 import org.openlmis.report.model.ReportData;
 
-import org.openlmis.report.model.params.FacilityReportParam;
 import org.openlmis.report.model.params.PipelineExportParams;
 import org.openlmis.report.util.StringHelper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -53,14 +50,14 @@ public class PipelineExportReportProvider extends ReportDataProvider{
 
 
     @Override
-    protected List<? extends ReportData> getResultSetReportData(Map<String, String[]> filterCriteria) {
-        return getMainReportData(filterCriteria, null, RowBounds.NO_ROW_OFFSET, RowBounds.NO_ROW_LIMIT);
+    protected List<? extends ReportData> getResultSet(Map<String, String[]> filterCriteria) {
+        return getReportBody(filterCriteria, null, RowBounds.NO_ROW_OFFSET, RowBounds.NO_ROW_LIMIT);
     }
 
     @Override
-    public List<? extends ReportData> getMainReportData(Map<String, String[]> filterCriteria, Map<String, String[]> SortCriteria, int page, int pageSize) {
+    public List<? extends ReportData> getReportBody(Map<String, String[]> filterCriteria, Map<String, String[]> sortCriteria, int page, int pageSize) {
         RowBounds rowBounds = new RowBounds((page - 1) * pageSize, pageSize);
-        return reportMapper.getReport(getReportFilterData(filterCriteria),SortCriteria, rowBounds);
+        return reportMapper.getReport(getReportFilterData(filterCriteria),sortCriteria, rowBounds);
     }
 
     public PipelineExportParams getReportFilterData(Map<String, String[]> filterCriteria) {

@@ -184,8 +184,8 @@ app.directive('quarterFilter', [function() {
   };
 }]);
 
-app.directive('facilityTypeFilter', ['ReportFacilityTypes', 'ReportFacilityTypesByProgram', '$routeParams',
-  function(ReportFacilityTypes, ReportFacilityTypesByProgram, $routeParams) {
+app.directive('facilityTypeFilter', ['ReportFacilityTypes', 'ReportFacilityTypesByProgram',
+  function(ReportFacilityTypes, ReportFacilityTypesByProgram) {
 
     var onCascadedPVarsChanged = function($scope, attr) {
       if ( $scope.filter && $scope.filter.program !== undefined) {
@@ -216,8 +216,8 @@ app.directive('facilityTypeFilter', ['ReportFacilityTypes', 'ReportFacilityTypes
   }
 ]);
 
-app.directive('facilityLevelFilter', ['ReportFacilityLevels', '$routeParams',
-  function(ReportFacilityLevels, $routeParams) {
+app.directive('facilityLevelFilter', ['ReportFacilityLevels',
+  function(ReportFacilityLevels) {
 
     var onCascadedPVarsChanged = function($scope) {
       if ($scope.filter.program !== undefined || $scope.filter.program !== '') {
@@ -292,11 +292,10 @@ app.directive('scheduleFilter', ['ReportSchedules', 'ReportProgramSchedules', '$
   }
 ]);
 
-app.directive('zoneFilter', ['TreeGeographicZoneList', 'TreeGeographicZoneListByProgram', 'GetUserUnassignedSupervisoryNode', 'messageService' , '$routeParams',
-  function(TreeGeographicZoneList, TreeGeographicZoneListByProgram, GetUserUnassignedSupervisoryNode, messageService, $routeParams) {
+app.directive('zoneFilter', ['TreeGeographicZoneList', 'TreeGeographicZoneListByProgram', 'GetUserUnassignedSupervisoryNode', 'messageService' ,
+  function(TreeGeographicZoneList, TreeGeographicZoneListByProgram, GetUserUnassignedSupervisoryNode, messageService) {
 
     var onCascadedVarsChanged = function($scope, attr) {
-      var label = (attr.required)?'report.filter.select.zone': 'report.filter.all.zones';
       if (!angular.isUndefined($scope.filter) && !angular.isUndefined($scope.filter.program)) {
         TreeGeographicZoneListByProgram.get({
           program: $scope.filter.program
@@ -356,7 +355,7 @@ app.directive('zoneFilter', ['TreeGeographicZoneList', 'TreeGeographicZoneListBy
 app.directive('periodFilter', ['ReportPeriods', 'ReportPeriodsByScheduleAndYear', '$routeParams',
   function(ReportPeriods, ReportPeriodsByScheduleAndYear, $routeParams) {
 
-    var onCascadedVarsChanged = function($scope, newValue) {
+    var onCascadedVarsChanged = function($scope) {
       // don't call the server if you don't have all that it takes.
       if (isUndefined($scope.filter) || isUndefined($scope.filter.year) || isUndefined($scope.filter.schedule))
         return;
@@ -392,8 +391,8 @@ app.directive('periodFilter', ['ReportPeriods', 'ReportPeriodsByScheduleAndYear'
   }
 ]);
 
-app.directive('requisitionGroupFilter', ['RequisitionGroupsByProgram', '$routeParams',
-  function(RequisitionGroupsByProgram, $routeParams) {
+app.directive('requisitionGroupFilter', ['RequisitionGroupsByProgram',
+  function(RequisitionGroupsByProgram) {
 
     var onRgCascadedVarsChanged = function($scope) {
 
@@ -421,7 +420,7 @@ app.directive('requisitionGroupFilter', ['RequisitionGroupsByProgram', '$routePa
   }
 ]);
 
-app.directive('adjustmentTypeFilter', ['AdjustmentTypes', '$routeParams', 'messageService', function(AdjustmentTypes, $routeParams, messageService) {
+app.directive('adjustmentTypeFilter', ['AdjustmentTypes', 'messageService', function(AdjustmentTypes, messageService) {
   return {
     restrict: 'E',
     require: '^filterContainer',
@@ -720,8 +719,8 @@ app.directive('vaccinePeriodTreeFilter', ['GetVaccineReportPeriodTree', '$routeP
   }
 ]);
 
-app.directive('productMultiFilter', ['ReportProductsByProgram', '$routeParams',
-  function(ReportProductsByProgram, $routeParams) {
+app.directive('productMultiFilter', ['ReportProductsByProgram',
+  function(ReportProductsByProgram) {
 
     var onPgCascadedVarsChanged = function($scope) {
 
@@ -797,8 +796,8 @@ app.directive('regimenCategoryFilter', ['ReportRegimenCategories', function(Repo
   };
 }]);
 
-app.directive('regimenFilter', ['ReportRegimensByCategory', '$routeParams',
-  function(ReportRegimensByCategory, $routeParams) {
+app.directive('regimenFilter', ['ReportRegimensByCategory',
+  function(ReportRegimensByCategory) {
 
     var onPgCascadedVarsChanged = function($scope) {
 
@@ -828,7 +827,7 @@ app.directive('clientSideSortPagination', ['$filter', 'ngTableParams',
 
     return {
       restrict: 'A',
-      link: function(scope, elm, attr) {
+      link: function(scope) {
 
         // the grid options
         scope.tableParams = new ngTableParams({
@@ -865,7 +864,7 @@ app.directive('clientSideSortPagination', ['$filter', 'ngTableParams',
   }
 ]);
 
-app.directive('equipmentTypeFilter', ['ReportEquipmentTypes', '$routeParams', function(ReportEquipmentTypes, $routeParams) {
+app.directive('equipmentTypeFilter', ['ReportEquipmentTypes', function(ReportEquipmentTypes) {
   return {
     restrict: 'E',
     require: '^filterContainer',
@@ -879,8 +878,8 @@ app.directive('equipmentTypeFilter', ['ReportEquipmentTypes', '$routeParams', fu
   };
 }]);
 
-app.directive('programProductPeriodFilter', ['ReportUserPrograms', 'GetProductCategoryProductByProgramTree', 'GetYearSchedulePeriodTree', '$routeParams',
-  function(ReportUserPrograms, GetProductCategoryProductByProgramTree, GetYearSchedulePeriodTree, $routeParams) {
+app.directive('programProductPeriodFilter', ['ReportUserPrograms', 'GetProductCategoryProductByProgramTree', 'GetYearSchedulePeriodTree',
+  function(ReportUserPrograms, GetProductCategoryProductByProgramTree, GetYearSchedulePeriodTree) {
 
     // When a program filter changes
     var onProgramChanged = function($scope) {
@@ -918,7 +917,7 @@ app.directive('programProductPeriodFilter', ['ReportUserPrograms', 'GetProductCa
   }
 ]);
 
-app.directive('equipmentFilter', ['ReportEquipments', '$routeParams', function(ReportEquipments, $routeParams) {
+app.directive('equipmentFilter', ['ReportEquipments', function(ReportEquipments) {
   var onEquipmentTypeChanged = function($scope) {
     if (isUndefined($scope.filter) || isUndefined($scope.filter.equipmentType) || $scope.filter.equipmentType === 0) {
       $scope.equipments = [];
@@ -934,7 +933,7 @@ app.directive('equipmentFilter', ['ReportEquipments', '$routeParams', function(R
   return {
     restrict: 'E',
     require: '^filterContainer',
-    link: function(scope, elm, attr) {
+    link: function(scope) {
       var cascaseOnEquipmentTypeChanged = function() {
         onEquipmentTypeChanged(scope, value);
       };
@@ -944,7 +943,7 @@ app.directive('equipmentFilter', ['ReportEquipments', '$routeParams', function(R
   };
 }]);
 
-app.directive('serviceContractFilter', ['$routeParams', function($routeParams) {
+app.directive('serviceContractFilter', [ function() {
 
   return {
     restrict: 'E',
@@ -966,12 +965,12 @@ app.directive('serviceContractFilter', ['$routeParams', function($routeParams) {
   };
 }]);
 
-app.directive('donorFilter', ['$routeParams', 'GetDonors', function($routeParams, GetDonors) {
+app.directive('donorFilter', [ 'GetDonors', function(GetDonors) {
 
   return {
     restrict: 'E',
     require: '^filterContainer',
-    link: function(scope, elm, attr) {
+    link: function(scope) {
       GetDonors.get({}, function(data) {
         scope.donors = scope.unshift(data.donors, 'report.filter.all.donors');
       });
@@ -995,7 +994,7 @@ app.directive('vaccineFacilityLevelFilter',['FacilitiesByLevel','VaccineInventor
 
 
 
-        var onCascadedVarsChanged = function ($scope, newValue) {
+        var onCascadedVarsChanged = function ($scope) {
 
           if (!angular.isUndefined($scope.filter) && !angular.isUndefined($scope.filter.program)) {
             $scope.$parent.facilityLevels = $scope.$parent.homeFacility= [];

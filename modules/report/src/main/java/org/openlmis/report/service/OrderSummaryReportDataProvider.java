@@ -79,17 +79,17 @@ public class OrderSummaryReportDataProvider extends ReportDataProvider {
   private ProgramService programService;
 
   @Override
-  protected List<? extends ReportData> getResultSetReportData(Map<String, String[]> filterCriteria) {
-    return getMainReportData(filterCriteria, filterCriteria, RowBounds.NO_ROW_OFFSET, RowBounds.NO_ROW_LIMIT);
+  protected List<? extends ReportData> getResultSet(Map<String, String[]> filterCriteria) {
+    return getReportBody(filterCriteria, filterCriteria, RowBounds.NO_ROW_OFFSET, RowBounds.NO_ROW_LIMIT);
   }
 
   @Override
-  public List<? extends ReportData> getMainReportData(Map<String, String[]> filterCriteria, Map<String, String[]> SortCriteria, int page, int pageSize) {
+  public List<? extends ReportData> getReportBody(Map<String, String[]> filterCriteria, Map<String, String[]> sortCriteria, int page, int pageSize) {
     RowBounds rowBounds = new RowBounds((page - 1) * pageSize, pageSize);
     OrderReportParam orderReportParam =   getReportFilterData(filterCriteria);
     orderReportParam.setTitle(getTitle(orderReportParam));
 
-    return reportMapper.getOrderSummaryReport(orderReportParam, SortCriteria, rowBounds);
+    return reportMapper.getOrderSummaryReport(orderReportParam, sortCriteria, rowBounds);
   }
 
   private String getTitle(OrderReportParam orderReportParam) {
@@ -122,7 +122,7 @@ public class OrderSummaryReportDataProvider extends ReportDataProvider {
   }
 
   @Override
-  public HashMap<String, String> getAdditionalReportData(Map filterCriteria) {
+  public HashMap<String, String> getExtendedHeader(Map filterCriteria) {
     OrderReportParam orderReportParam = getReportFilterData(filterCriteria);
     HashMap<String, String> result = new HashMap<String, String>();
     result.put(ADDRESS, configurationService.getConfigurationStringValue(ConfigurationSettingKey.ORDER_REPORT_ADDRESS));

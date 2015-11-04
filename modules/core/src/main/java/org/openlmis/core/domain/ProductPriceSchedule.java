@@ -11,35 +11,59 @@
  */
 package org.openlmis.core.domain;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.openlmis.upload.Importable;
 import org.openlmis.upload.annotation.ImportField;
 
 import static com.fasterxml.jackson.databind.annotation.JsonSerialize.Inclusion.NON_EMPTY;
 
 
-@Data
+@Getter
+@Setter
 @AllArgsConstructor
 @NoArgsConstructor
-@EqualsAndHashCode(callSuper = false)
 @JsonSerialize(include = NON_EMPTY)
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class ProductPriceSchedule extends BaseModel implements Importable {
 
-    @ImportField(mandatory = true, name = "Product code", nested = "code")
-    private Product product;
+  @ImportField(mandatory = true, name = "Product code", nested = "code")
+  private Product product;
 
-    @ImportField(mandatory = true, name = "Price Schedule", nested="code")
-    private PriceSchedule priceSchedule;
+  @ImportField(mandatory = true, name = "Price Schedule", nested = "code")
+  private PriceSchedule priceSchedule;
 
-    @ImportField(mandatory = false, name = "Product name")
-    private String productName;
+  @ImportField(mandatory = false, name = "Product name")
+  private String productName;
 
-    @ImportField(mandatory = false, name = "Price")
-    private Double price;
+  @ImportField(mandatory = false, name = "Price")
+  private Double price;
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o)
+      return true;
+
+    if (o == null || getClass() != o.getClass())
+      return false;
+
+    ProductPriceSchedule that = (ProductPriceSchedule) o;
+
+    return new EqualsBuilder()
+        .append(id, that.id)
+        .isEquals();
+  }
+
+  @Override
+  public int hashCode() {
+    return new HashCodeBuilder(17, 37)
+        .append(id)
+        .toHashCode();
+  }
 }

@@ -3,17 +3,17 @@
         <td class="left-block width-28">
             <div class="width-28">
                 <div class="text-nowrap rotate">
-                    <span>Triplicado</span>
+                    <span openlmis-message="view.rnr.via.triplicate"></span>
                 <span class="checkbox">
                 <input type="checkbox" value="1" id="checkboxInput1" name=""/>
                 <label for="checkboxInput1"></label>
                 </span>
-                    <span>Duplicado</span>
+                    <span openlmis-message="view.rnr.via.double"></span>
                 <span class="checkbox">
                 <input type="checkbox" value="2" id="checkboxInput2" name=""/>
                 <label for="checkboxInput2"></label>
                 </span>
-                    <span>Original</span>
+                    <span openlmis-message="view.rnr.via.original"></span>
                 <span class="checkbox">
                 <input type="checkbox" value="3" id="checkboxInput3" checked="checked" name=""/>
                 <label for="checkboxInput3"></label>
@@ -40,13 +40,16 @@
                         </div>
                     </td>
                     <td tag="col3-10" class="border-all-thin text-align-center" colspan="8">
-                        <h2>REQUISICAO/BALANCETTE N <input class="border-all-bold bigger-checkbox" type="text" value=""
-                                                           maxlength="20"></h2>
+                        <h2>
+                            <span openlmis-message="view.rnr.via.header"></span>
+                            <input class="border-all-bold bigger-checkbox" type="text" value=""
+                                                           maxlength="20">
+                        </h2>
                     </td>
                     <td tag="col11" class="border-all-thin" width="183px" rowspan="4">
                         <ul>
                             <li class="type-checkbox">
-                                <span>Normal</span>
+                                <span openlmis-message="view.rnr.via.normal"></span>
                         <span class="checkbox">
                         <input type="checkbox" value="4" id="checkboxInput4" checked="checked" name=""/>
                         <label for="checkboxInput4"></label>
@@ -54,54 +57,54 @@
                             </li>
 
                             <li class="type-checkbox">
-                                <span>Especial/Urgencia</span>
+                                <span openlmis-message="view.rnr.via.special"></span>
                         <span class="checkbox">
                         <input type="checkbox" value="5" id="checkboxInput5" name=""/>
                         <label for="checkboxInput5"></label>
                         </span>
                             </li>
                             <li class="type-checkbox">
-                                <span>2 Via</span>
+                                <span openlmis-message="view.rnr.via.via"></span>
                         <span class="checkbox">
                         <input type="checkbox" value="6" id="checkboxInput6" name=""/>
                         <label for="checkboxInput6"></label>
                         </span>
                             </li>
                         </ul>
-                        <div class="type-checkbox">Data de Requisicao: {{ rnr.submittedDate | date:"MM/dd/yyyy"}}</div>
+                        <div class="type-checkbox"><span openlmis-message="view.rnr.via.submittedTime"></span>: {{ rnr.submittedDate | date:"MM/dd/yyyy"}}</div>
                     </td>
                 </tr>
                 <tr>
                     <td tag="col2" class="border-all-thin">
-                        Health Facility: {{rnr.facility.name}}
+                        <span openlmis-message="view.rnr.healthFacility"></span>: {{rnr.facility.name}}
                     </td>
-                    <td tag="col3" class="border-all-thin" width="246px">Provincia:</td>
+                    <td tag="col3" class="border-all-thin" width="246px"><span openlmis-message="view.rnr.province"></span>:</td>
                     <td tag="col4" class="border-all-thin" width="90px"></td>
-                    <td tag="col5-8" class="border-all-thin" colspan="4">Periodo: {{rnr.period.stringStartDate}}</td>
-                    <td tag="col9-10" class="border-all-thin" colspan="2">Ate: {{rnr.period.stringEndDate}}</td>
+                    <td tag="col5-8" class="border-all-thin" colspan="4"><span openlmis-message="view.rnr.via.periodStart"></span>: {{rnr.period.stringStartDate}}</td>
+                    <td tag="col9-10" class="border-all-thin" colspan="2"><span openlmis-message="view.rnr.via.periodEnd"></span>: {{rnr.period.stringEndDate}}</td>
                 </tr>
                 <tr>
 
-                    <td tag="col2" class="border-all-thin">Distrito:</td>
+                    <td tag="col2" class="border-all-thin"><span openlmis-message="view.rnr.district"></span>: {{rnr.facility.geographicZone.name}}</td>
                     <td tag="col3" class="border-all-thin"></td>
                     <td tag="col4" class="border-all-thin"></td>
-                    <td tag="col5" class="border-all-thin" width="70px">N de Kits Recebido</td>
+                    <td tag="col5" class="border-all-thin" width="70px"><span openlmis-message="view.rnr.via.2"></span></td>
                     <td tag="col6" class="border-all-thin" width="70px"></td>
-                    <td tag="col7" class="border-all-thin" width="25px">US</td>
+                    <td tag="col7" class="border-all-thin" width="25px"><span openlmis-message="view.rnr.via.HF"></span></td>
                     <td tag="col8" class="border-all-thin" width="25px"></td>
-                    <td tag="col9" class="border-all-thin" width="30px">APE</td>
+                    <td tag="col9" class="border-all-thin" width="30px"><span openlmis-message="view.rnr.via.CHW"></span></td>
                     <td tag="col10" class="border-all-thin" width="70px"></td>
                 </tr>
                 <tr>
 
-                    <td class="border-all-thin">Nivel de Qualificacao do ResponsaveI Clinico:</td>
-                    <td class="border-all-thin">N de Consultas Externas Realizadas:</td>
+                    <td class="border-all-thin"><span openlmis-message="view.rnr.via.1"></span>:</td>
+                    <td class="border-all-thin"><span openlmis-message="view.rnr.via.consultation"></span>:</td>
                     <td class="border-all-thin">{{rnr.patientQuantifications[0].total}}</td>
-                    <td class="border-all-thin" width="70px">N de Kits Recebido</td>
+                    <td class="border-all-thin" width="70px"><span openlmis-message="view.rnr.via.3"></span></td>
                     <td class="border-all-thin"></td>
-                    <td class="border-all-thin">US</td>
+                    <td class="border-all-thin"><span openlmis-message="view.rnr.via.HF"></span></td>
                     <td class="border-all-thin"></td>
-                    <td class="border-all-thin">APE</td>
+                    <td class="border-all-thin"><span openlmis-message="view.rnr.via.CHW"></span></td>
                     <td class="border-all-thin"></td>
                 </tr>
             </table>
@@ -112,37 +115,55 @@
                     <td tag="col2" class="border-all-thin" width="318px" rowspan="4">
                         <table class="text-align-center" style="height: 130px" width="100%">
                             <tr>
-                                <td colspan="3">Designacao</td>
+                                <td colspan="3"><span openlmis-message="view.rnr.via.product.designation"></span></td>
                             </tr>
                             <tr>
-                                <td width="25%">Nome</td>
-                                <td width="30%">Dosagem</td>
-                                <td width="45%">Forma Farmaceutica</td>
+                                <td width="25%"><span openlmis-message="view.rnr.via.product.name"></span></td>
+                                <td width="30%"><span openlmis-message="view.rnr.via.product.dosage"></span></td>
+                                <td width="45%"><span openlmis-message="view.rnr.via.product.pharmaceuticalForm"></span></td>
                             </tr>
                         </table>
                     </td>
                     <td tag="col3-10" class="border-all-thin" height="18px" colspan="8">
-                        <strong>Requisicao do Nivel Provincial ou Distrital</strong></td>
-                    <td tag="col11" class="border-all-thin" width="90px" rowspan="4">Quantidade Pedida</td>
-                    <td tag="col12" class="border-all-thin" width="90px" rowspan="4">Qtd. Autorzada pelo Responsavel
-                        Clinico
+                        <strong><span openlmis-message="view.rnr.via.product.table.title"></span></strong></td>
+                    <td tag="col11" class="border-all-thin" width="90px" rowspan="4">
+                        <span openlmis-message="view.rnr.via.product.quantityRequested"></span>
+                    </td>
+                    <td tag="col12" class="border-all-thin" width="90px" rowspan="4">
+                        <span openlmis-message="view.rnr.via.product.quantityApproved"></span>
                     </td>
                 </tr>
                 <tr>
-                    <td tag="col3-7" class="border-all-thin" colspan="5"><strong>Controlo da Ficha de Stock</strong>
+                    <td tag="col3-7" class="border-all-thin" colspan="5"><strong><span openlmis-message="view.rnr.via.product.stockMovements"></span></strong>
                     </td>
-                    <td tag="col8-10" class="border-all-thin" colspan="3"><strong>Controlo de Inventario</strong></td>
+                    <td tag="col8-10" class="border-all-thin" colspan="3"><strong><span openlmis-message="view.rnr.via.product.inventory"></span></strong></td>
                 </tr>
                 <tr height="30px">
 
-                    <td tag="col3" class="border-all-thin" width="80px">Stock no Inicio de Periodo</td>
-                    <td tag="col4" class="border-all-thin" width="80px">Soma das Entradas</td>
-                    <td tag="col5" class="border-all-thin" width="80px">Soma das Saidas</td>
-                    <td tag="col6" class="border-all-thin" width="90px">Stock Teorico Fim do Periodo</td>
-                    <td tag="col7" class="border-all-thin" width="70px">Total dos Pedidos</td>
-                    <td tag="col8" class="border-all-thin" width="70px">Inventario do Stock</td>
-                    <td tag="col9" class="border-all-thin" width="86px">Diferenca</td>
-                    <td tag="col10" class="border-all-thin" width="70px" rowspan="2">Quantidade a Requisitar</td>
+                    <td tag="col3" class="border-all-thin" width="80px">
+                        <span openlmis-message="view.rnr.via.product.initialAmount"></span>
+                    </td>
+                    <td tag="col4" class="border-all-thin" width="80px">
+                        <span openlmis-message="view.rnr.via.product.sumEntries"></span>
+                    </td>
+                    <td tag="col5" class="border-all-thin" width="80px">
+                        <span openlmis-message="view.rnr.via.product.sumIssues"></span>
+                    </td>
+                    <td tag="col6" class="border-all-thin" width="90px">
+                        <span openlmis-message="view.rnr.via.product.theoreticalSum"></span>
+                    </td>
+                    <td tag="col7" class="border-all-thin" width="70px">
+                        <span openlmis-message="view.rnr.via.product.totalRequested"></span>
+                    </td>
+                    <td tag="col8" class="border-all-thin" width="70px">
+                        <span openlmis-message="view.rnr.via.product.inventoryStock"></span>
+                    </td>
+                    <td tag="col9" class="border-all-thin" width="86px">
+                        <span openlmis-message="view.rnr.via.product.difference"></span>
+                    </td>
+                    <td tag="col10" class="border-all-thin" width="70px" rowspan="2">
+                        <span openlmis-message="view.rnr.via.product.theoreticalRequest"></span>
+                    </td>
                 </tr>
                 <tr>
                     <td tag="col3" class="border-all-thin" width="80px">SI</td>
@@ -176,8 +197,8 @@
             <div class="view-table-spacing"></div>
             <table class="border-all-bold sign-box">
                 <tr>
-                    <td width="50%">Elaborado por:</td>
-                    <td width="50%">Visto do Responsavel Clinico:</td>
+                    <td width="50%"><span openlmis-message="view.rnr.via.createBy"></span>:</td>
+                    <td width="50%"><span openlmis-message="view.rnr.via.visa"></span>:</td>
                 </tr>
             </table>
         </td>

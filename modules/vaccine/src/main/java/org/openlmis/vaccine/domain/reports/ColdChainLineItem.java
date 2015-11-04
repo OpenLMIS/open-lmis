@@ -14,15 +14,15 @@ package org.openlmis.vaccine.domain.reports;
 
 
 import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.openlmis.core.domain.BaseModel;
 
-@Data
+@Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@EqualsAndHashCode(callSuper = false)
 public class ColdChainLineItem extends BaseModel {
 
   private Long reportId;
@@ -42,5 +42,6 @@ public class ColdChainLineItem extends BaseModel {
   private String model;
   private String energySource;
   private String serial;
+
 
 }

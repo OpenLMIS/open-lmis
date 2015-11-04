@@ -32,7 +32,7 @@ public interface AdjustmentSummaryReportMapper {
     @Options(resultSetType = ResultSetType.SCROLL_SENSITIVE, fetchSize=10,timeout=0,useCache=true,flushCache=true)
     public List<AdjustmentSummaryReport> getFilteredSortedPagedAdjustmentSummaryReport(
             @Param("filterCriteria") AdjustmentSummaryReportParam filterCriteria,
-            @Param("SortCriteria") Map<String, String[]> SortCriteria ,
+            @Param("SortCriteria") Map<String, String[]> sortCriteria ,
             @Param("RowBounds")RowBounds rowBounds,
             @Param("userId")Long userId
     );

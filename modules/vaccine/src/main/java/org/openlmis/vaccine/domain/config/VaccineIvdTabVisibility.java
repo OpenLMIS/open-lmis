@@ -12,15 +12,15 @@
 
 package org.openlmis.vaccine.domain.config;
 
-import lombok.Data;
-import lombok.EqualsAndHashCode;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.openlmis.core.domain.BaseModel;
 
-@Data
-@EqualsAndHashCode(callSuper = false)
+@Getter
+@Setter
 @NoArgsConstructor
-public class VaccineIvdTabVisibility extends BaseModel{
+public class VaccineIvdTabVisibility extends BaseModel {
   Long programId;
   String tab;
   String name;

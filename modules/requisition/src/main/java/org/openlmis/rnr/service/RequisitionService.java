@@ -667,8 +667,8 @@ public class RequisitionService {
     requisitionRepository.updateClientFields(rnr);
   }
 
-  public List<Rnr> getRequisitionsByFacilityAndProgram(Facility facility, Program program) {
-    return requisitionRepository.getRequisitionDetailsByFacilityAndProgram(facility, program);
+  public List<Rnr> getRequisitionsByFacility(Facility facility) {
+    return requisitionRepository.getRequisitionDetailsByFacility(facility);
   }
 }
 

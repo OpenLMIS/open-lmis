@@ -459,4 +459,11 @@ public class RequisitionRepositoryTest {
     requisitionRepository.updateClientFields(rnr);
     verify(requisitionMapper).updateClientFields(rnr);
   }
+
+  @Test
+  public void shouldGetRequisitionsWithLineItemsByFacility() {
+    Facility facility = new Facility();
+    requisitionRepository.getRequisitionDetailsByFacility(facility);
+    verify(requisitionMapper).getRequisitionsWithLineItemsByFacility(facility);
+  }
 }
