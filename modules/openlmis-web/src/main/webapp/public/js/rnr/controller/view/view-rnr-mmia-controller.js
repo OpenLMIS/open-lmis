@@ -25,7 +25,6 @@ function ViewRnrMmiaController($scope, $route, Requisitions, messageService) {
             $scope.initMonth();
             $scope.initProduct();
             $scope.initRegime();
-            $scope.initPatient();
         });
 
     };
@@ -43,9 +42,9 @@ function ViewRnrMmiaController($scope, $route, Requisitions, messageService) {
             formatExpirationDate(fullSupplyLineItems[i]);
         }
 
-        $scope.adult = fullSupplyLineItems.slice(0,11);
-        $scope.children = fullSupplyLineItems.slice(12,21);
-        $scope.other = fullSupplyLineItems.slice(22,23);
+        $scope.adult = fullSupplyLineItems.slice(0,12);
+        $scope.children = fullSupplyLineItems.slice(12,22);
+        $scope.other = fullSupplyLineItems.slice(22,24);
     };
 
     var formatExpirationDate = function(theOneItem) {
@@ -58,8 +57,8 @@ function ViewRnrMmiaController($scope, $route, Requisitions, messageService) {
     $scope.initRegime = function () {
         var regimes = $scope.rnr.regimenLineItems;
 
-        $scope.regimeAdult = regimes.slice(0, 7);
-        $scope.regimeChildren = regimes.slice(8, 17);
+        $scope.regimeAdult = regimes.slice(0, 8);
+        $scope.regimeChildren = regimes.slice(8, 18);
         calculateRegimeTotal(regimes);
     };
 
@@ -69,10 +68,4 @@ function ViewRnrMmiaController($scope, $route, Requisitions, messageService) {
         }
     };
 
-    //TODO:can be removed after duplicated issue in DB
-    $scope.initPatient = function () {
-        for (var i = 0; i < 7; i++) {
-            $scope.patient.push($scope.rnr.patientQuantifications[i]);
-        }
-    };
 }

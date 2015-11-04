@@ -58,6 +58,7 @@ describe('ViewRnrViaDetailController', function () {
         {id: 53, patientsOnTreatment: 1},
         {id: 54, patientsOnTreatment: 1},
         {id: 55, patientsOnTreatment: 1},
+        {id: 57, patientsOnTreatment: 1},
         {id: 56, patientsOnTreatment: 1}],
       patientQuantifications: [
         {id: 1, total: 1},
@@ -86,7 +87,7 @@ describe('ViewRnrViaDetailController', function () {
     initMockRequisition();
 
     expect(scope.rnr.fullSupplyLineItems.length).toBe(24);
-    expect(scope.rnr.regimenLineItems.length).toBe(17);
+    expect(scope.rnr.regimenLineItems.length).toBe(18);
     expect(scope.rnr.patientQuantifications.length).toBe(7);
   });
 
@@ -106,6 +107,9 @@ describe('ViewRnrViaDetailController', function () {
     expect(scope.adult[0].expirationDate).toBe(null);
     expect(scope.adult[1].expirationDate).toBe(undefined);
     expect(scope.adult[2].expirationDate).toBe("2000-02-28");
+    expect(scope.adult.length).toBe(12);
+    expect(scope.children.length).toBe(10);
+    expect(scope.other.length).toBe(2);
   });
 
   it('should calculate regime total',function(){
@@ -113,7 +117,10 @@ describe('ViewRnrViaDetailController', function () {
     scope.initRegime();
     //initMockRequisition();
 
-    expect(scope.regimeTotal).toBe(17);
+    expect(scope.regimeTotal).toBe(18);
+    expect(scope.regimeAdult.length).toBe(8);
+    expect(scope.regimeChildren.length).toBe(10);
+
   });
 
   function initMockRequisition() {

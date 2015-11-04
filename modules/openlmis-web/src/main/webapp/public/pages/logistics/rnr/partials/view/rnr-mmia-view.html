@@ -168,20 +168,20 @@
                     <td>{{item.patientsOnTreatment}}</td>
                 </tr>
                 <tr>
-                    <td class="banner-text"></td>
+                    <td class="banner-text">9</td>
                     <td class="bg-color-green"></td>
                     <td class="bg-color-green align-left"></td>
                     <td></td>
                 </tr>
                 <tr>
-                    <td class="banner-text"></td>
+                    <td class="banner-text">10</td>
                     <td class="bg-color-green"></td>
                     <td class="bg-color-green align-left"></td>
                     <td></td>
                 </tr>
 
                 <tr ng-repeat="item in regimeChildren">
-                    <td class="banner-text">{{$index+9}}</td>
+                    <td class="banner-text">{{$index+11}}</td>
                     <td class="bg-color-yellow"></td>
                     <td class="bg-color-yellow align-left">{{item.name}}</td>
                     <td>{{item.patientsOnTreatment}}</td>
@@ -226,7 +226,7 @@
                 </thead>
 
                 <tbody>
-                <tr ng-repeat="item in patient">
+                <tr ng-repeat="item in rnr.patientQuantifications">
                     <td>{{item.category}}</td>
                     <td>{{item.total}}</td>
                 </tr>
@@ -236,9 +236,7 @@
             <div class="comment-wrapper">
                 <table class="background">
                     <tr>
-                        <td>
-
-                        </td>
+                        <td></td>
                     </tr>
                     <tr>
                         <td class="col-5"></td>
