@@ -47,6 +47,7 @@ public class FacilityProductsReportDataProvider {
     public List<FacilityProductReportEntry> getReportData(final Long geographicZoneId, final Long productId, final Date endTime) {
         List<Facility> facilities = getAllHealthFacilities();
         final GeographicZone geographicZone = geographicZoneService.getById(geographicZoneId);
+
         if (geographicZone != null) {
 
             facilities = from(facilities).filter(new Predicate<Facility>() {
@@ -56,14 +57,21 @@ public class FacilityProductsReportDataProvider {
                 }
             }).toList();
         }
+
         return fillReportEntryList(productId, endTime, facilities);
     }
 
     public List<FacilityProductReportEntry> getReportData(Long facilityId, final Date endTime) {
         List<StockCard> stockCards = stockCardService.getStockCards(facilityId);
-        return from(stockCards).transform(getReportEntry(endTime)).toList();
+        final Facility facility = facilityService.getById(facilityId);
+        return from(stockCards).transform(getReportEntry(endTime)).transform(new Function<FacilityProductReportEntry, FacilityProductReportEntry>() {
+            @Override
+            public FacilityProductReportEntry apply(FacilityProductReportEntry input) {
+                input.setFacilityName(facility.getName());
+                return input;
+            }
+        }).toList();
     }
-
 
     protected static boolean inGeographicZone(GeographicZone geographicZone, Facility facility) {
         if (DISTRICT_CODE.equalsIgnoreCase(geographicZone.getLevel().getCode())) {
