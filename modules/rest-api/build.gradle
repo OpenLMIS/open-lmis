@@ -9,13 +9,11 @@
  */
 
 apply plugin: 'cobertura'
-apply plugin: 'war'
 
 buildscript {
     repositories {
        mavenCentral();
        jcenter();
-
     }
 }
 

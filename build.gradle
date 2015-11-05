@@ -67,6 +67,9 @@ subprojects {
     maven {
       url "http://repo.springsource.org/plugins-release/"
     }
+    maven { url "http://repo.spring.io/release" }
+    maven { url "http://jaspersoft.artifactoryonline.com/jaspersoft/third-party-ce-artifacts/" }
+    maven { url "http://jasperreports.sourceforge.net/maven2/" }
   }
   dependencies {
     compile 'cglib:cglib:3.1',
