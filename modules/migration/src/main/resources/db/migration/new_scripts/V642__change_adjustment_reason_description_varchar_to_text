@@ -1,0 +1,1 @@
+ALTER TABLE losses_adjustments_types ALTER COLUMN description TYPE text;
