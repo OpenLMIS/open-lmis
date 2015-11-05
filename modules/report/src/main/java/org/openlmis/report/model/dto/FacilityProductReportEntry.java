@@ -11,11 +11,9 @@ import org.apache.commons.lang.time.DateUtils;
 import org.openlmis.core.utils.DateUtil;
 import org.openlmis.stockmanagement.domain.StockCard;
 import org.openlmis.stockmanagement.domain.StockCardEntry;
+import org.openlmis.stockmanagement.domain.StockCardEntryKV;
 
-import java.util.Calendar;
-import java.util.Comparator;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 import static com.google.common.collect.FluentIterable.from;
 import static com.google.common.collect.Lists.newArrayList;
@@ -23,12 +21,14 @@ import static com.google.common.collect.Lists.newArrayList;
 @Data
 @NoArgsConstructor
 public class FacilityProductReportEntry {
-    String productName;
-    String facilityName;
-    long productQuantity;
-    Date soonestExpiryDate;
-    Date lastSyncDate;
-    String code;
+    private String productName;
+    private String facilityName;
+    private long productQuantity;
+    private Date soonestExpiryDate;
+    private Date lastSyncDate;
+    private String code;
+
+    public static final String EXPIRATION_DATES = "expirationdates";
 
     public FacilityProductReportEntry(StockCard stockCard, Date endTime) {
         if (endTime == null) {
@@ -45,12 +45,26 @@ public class FacilityProductReportEntry {
         this.code = stockCard.getProduct().getCode();
     }
 
+    private String getExpirationDateFromStockCardEntry(StockCardEntry entry){
+        Optional<StockCardEntryKV> kv = from(entry.getKeyValues()).firstMatch(new Predicate<StockCardEntryKV>() {
+            @Override
+            public boolean apply(StockCardEntryKV input) {
+                return EXPIRATION_DATES.equalsIgnoreCase(input.getKeyColumn());
+            }
+        });
+
+        if (kv.isPresent()){
+            return kv.get().getValueColumn();
+        }
+        return StringUtils.EMPTY;
+    }
+
     protected void getSoonestExpirationDate(StockCardEntry lastEntry) {
         if (lastEntry == null) {
             return;
         }
 
-        String expirationDates = lastEntry.getCustomProps().get("expirationdates");
+        String expirationDates = getExpirationDateFromStockCardEntry(lastEntry);
         if (!StringUtils.isEmpty(expirationDates)) {
             String[] dateStrings = expirationDates.split(",");
 
@@ -65,12 +79,12 @@ public class FacilityProductReportEntry {
         return from(newArrayList(dateStrings)).transform(new Function<String, Date>() {
                     @Override
                     public Date apply(String input) {
-                        return DateUtil.parseDate(input, "dd/MM/yyyy");
+                        return DateUtil.parseDate(input,DateUtil.FORMAT_DATE_TIME_DAY_MONTH_YEAR );
                     }
                 }).toSortedList(new Comparator<Date>() {
                     @Override
                     public int compare(Date o1, Date o2) {
-                        return o1.compareTo(o2);
+                        return o2.compareTo(o1);
                     }
                 });
     }

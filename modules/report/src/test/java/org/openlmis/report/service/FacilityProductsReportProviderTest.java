@@ -69,7 +69,7 @@ public class FacilityProductsReportProviderTest {
         stockCardEntry.setQuantity(100L);
         stockCardEntry.setCreatedDate(new Date());
         ArrayList<StockCardEntryKV> keyValues = new ArrayList<>();
-        keyValues.add(new StockCardEntryKV("expirationdates",null,null));
+        keyValues.add(new StockCardEntryKV(FacilityProductReportEntry.EXPIRATION_DATES,null));
         stockCardEntry.setKeyValues(keyValues);
 
         List<StockCardEntry> entries = new ArrayList<>();
