@@ -39,22 +39,22 @@ public class FacilityProductReportEntry {
         List<StockCardEntry> stockCardEntryList = filterEntryByDate(stockCard, endTime);
         this.productQuantity = calculateQuantity(stockCardEntryList);
 
-        getSoonestExpirationDate(from(stockCardEntryList).last().get());
+        getSoonestExpirationDate(from(stockCardEntryList).first().get());
 
         this.lastSyncDate = stockCard.getModifiedDate();
         this.code = stockCard.getProduct().getCode();
     }
 
     private String getExpirationDateFromStockCardEntry(StockCardEntry entry){
-        Optional<StockCardEntryKV> kv = from(entry.getKeyValues()).firstMatch(new Predicate<StockCardEntryKV>() {
+        Optional<StockCardEntryKV> stockCardEntryKVOptional = from(entry.getKeyValues()).firstMatch(new Predicate<StockCardEntryKV>() {
             @Override
             public boolean apply(StockCardEntryKV input) {
                 return EXPIRATION_DATES.equalsIgnoreCase(input.getKeyColumn());
             }
         });
 
-        if (kv.isPresent()){
-            return kv.get().getValueColumn();
+        if (stockCardEntryKVOptional.isPresent()){
+            return stockCardEntryKVOptional.get().getValueColumn();
         }
         return StringUtils.EMPTY;
     }
