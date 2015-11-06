@@ -1,5 +1,6 @@
 package org.openlmis.restapi.service;
 
+import org.joda.time.DateTime;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
@@ -17,6 +18,7 @@ import org.openlmis.core.exception.DataException;
 import org.openlmis.core.repository.FacilityRepository;
 import org.openlmis.core.repository.StockAdjustmentReasonRepository;
 import org.openlmis.core.service.ProductService;
+import org.openlmis.core.utils.DateUtil;
 import org.openlmis.db.categories.UnitTests;
 import org.openlmis.stockmanagement.builder.StockEventBuilder;
 import org.openlmis.stockmanagement.domain.StockCard;
@@ -27,6 +29,7 @@ import org.powermock.modules.junit4.PowerMockRunner;
 import org.powermock.modules.junit4.PowerMockRunnerDelegate;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
@@ -295,6 +298,29 @@ public class RestStockCardServiceTest {
 
     assertTrue(stockCardEntries.get(0).getKeyValues().get(0).getValueColumn().equals("10/10/2016, 11/11/2016"));
     assertEquals(0, stockCardEntries.get(1).getKeyValues().size());
+  }
+
+  @Test
+  public void shouldSaveStockEventOccurredDateToStockCardEntry() {
+    setupStockData();
+    Date occurred1 = new Date();
+    stockEvent1.setOccurred(occurred1);
+    Date occurred2 = new Date();
+    stockEvent2.setOccurred(occurred2);
+
+    when(facilityRepository.getById(facilityId)).thenReturn(defaultFacility);
+    when(productService.getByCode(productCode)).thenReturn(defaultProduct);
+    StockAdjustmentReason stockAdjustmentReason = new StockAdjustmentReason();
+    stockAdjustmentReason.setAdditive(true);
+    when(stockAdjustmentReasonRepository.getAdjustmentReasonByName(reasonName)).thenReturn(stockAdjustmentReason);
+
+    StockCard expectedStockCard = StockCard.createZeroedStockCard(defaultFacility, defaultProduct);
+    when(stockCardService.getOrCreateStockCard(facilityId, productCode)).thenReturn(expectedStockCard);
+
+    List<StockCardEntry> stockCardEntries = restStockCardService.adjustStock(facilityId, stockEventList, userId);
+
+    assertTrue(stockCardEntries.get(0).getOccurred().equals(occurred1));
+    assertTrue(stockCardEntries.get(1).getOccurred().equals(occurred2));
   }
 
   private void setupStockData() {

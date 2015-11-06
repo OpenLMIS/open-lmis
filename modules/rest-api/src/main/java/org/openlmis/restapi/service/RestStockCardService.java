@@ -65,7 +65,7 @@ public class RestStockCardService {
     long quantity = stockEvent.getQuantity();
     quantity = stockAdjustmentReason.getAdditive() ? quantity : quantity * -1;
 
-    StockCardEntry entry = new StockCardEntry(stockCard, StockCardEntryType.ADJUSTMENT, quantity);
+    StockCardEntry entry = new StockCardEntry(stockCard, StockCardEntryType.ADJUSTMENT, quantity, stockEvent.getOccurred());
     entry.setAdjustmentReason(stockAdjustmentReason);
     entry.setCreatedBy(userId);
     entry.setModifiedBy(userId);
