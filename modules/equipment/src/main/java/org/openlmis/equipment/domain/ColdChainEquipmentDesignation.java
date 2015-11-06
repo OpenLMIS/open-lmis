@@ -24,4 +24,10 @@ public class ColdChainEquipmentDesignation extends BaseModel{
 
   private String name;
 
+  private boolean hasEnergy;
+
+  private boolean isRefrigerator;
+
+  private boolean isFreezer;
+
 }

@@ -27,6 +27,7 @@ public class ColdChainEquipment extends Equipment{
   private String pqsCode;
   private Float refrigeratorCapacity;
   private Float freezerCapacity;
+  private Float capacity;
   private String refrigerant;
   private String temperatureZone;
   private String energyConsumption;
