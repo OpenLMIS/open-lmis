@@ -30,12 +30,20 @@ public class RoleRightsService {
   private RoleRightsRepository roleRightsRepository;
   private SupervisoryNodeService supervisoryNodeService;
   private FacilityService facilityService;
+  private ProgramService programService;
+  private ProgramProductService programProductService;
 
   @Autowired
-  public RoleRightsService(RoleRightsRepository roleRightsRepository, SupervisoryNodeService supervisoryNodeService, FacilityService facilityService) {
+  public RoleRightsService(RoleRightsRepository roleRightsRepository,
+                           SupervisoryNodeService supervisoryNodeService,
+                           FacilityService facilityService,
+                           ProgramService programService,
+                           ProgramProductService programProductService) {
     this.roleRightsRepository = roleRightsRepository;
     this.supervisoryNodeService = supervisoryNodeService;
     this.facilityService = facilityService;
+    this.programService = programService;
+    this.programProductService = programProductService;
   }
 
   @Transactional
@@ -82,6 +90,28 @@ public class RoleRightsService {
 
   public List<Right> getRightsForUserAndWarehouse(Long userId, Long warehouseId) {
     return roleRightsRepository.getRightsForUserAndWarehouse(userId, warehouseId);
+  }
+
+
+  public List<Right> getRightsForUserFacilityAndProductCode(Long userId, Long facilityId, String productCode)
+  {
+    Facility facility = facilityService.getById(facilityId);
+
+    // Get programs by product code, through programProducts
+    List<ProgramProduct> programProducts = programProductService.getByProductCode(productCode);
+    List<Program> programs = new ArrayList<>();
+    for (ProgramProduct programProduct : programProducts) {
+      Program program = programService.getByCode(programProduct.getProgram().getCode());
+      programs.add(program);
+    }
+
+    // For each program, get rights
+    List<Right> rights = new ArrayList<>();
+    for (Program program : programs) {
+      rights.addAll(getRightsForUserAndFacilityProgram(userId, facility, program));
+    }
+
+    return rights;
   }
 
   private List<Right> getSupervisoryRights(Long userId, Facility facility, Program program) {
