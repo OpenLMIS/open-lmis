@@ -15,7 +15,7 @@
 
 <div class="box-header">
     <h2 openlmis-message="title.bundled.distribution.vaccination.supplies"></span>
-        <span> {{filter.year}}</span><span> {{filter.product}}</span></h2>
+        <span> Year: {{filter.year}}</span><span> product : {{product.primaryName}}</span></h2>
 
     <div class="box-icon">
         <a ng-click="section(0)" ng-show="show(1)" class="btn-minimize"><i class="icon-chevron-up"></i></a>
@@ -52,39 +52,39 @@
             <thead>
 
             <tr>
-                <th class="col-product">
+                <th style="width: 20px; height: 70px" >
                     <span>Zones</span>
 
                 </th>
-                <th class="col-product">
+                <th style="width: 20px; height: 70px"  >
                     <span>Regions</span>
 
                 </th>
-                <th class="col-product">
+                <th style="width: 20px; height: 70px"  >
                     <span>District</span>
 
                 </th>
-                <th class="col-product">
+                <th style="width: 20px; height: 70px" >
                     <span>Population</span>
 
                 </th>
             </tr>
             </thead>
             <tbody
-                    ng-repeat="supply in bundledDistributionVaccinationSupplies">
+                    ng-repeat="supply in bundledDistributionVaccinationSupplies.vaccinationSuppliesList">
             <tr>
-                <td style="width: 70px"
+                <td style="width: 20px"
 
                     ng-bind="supply.zone_name"></td>
-                <td style="width: 70px"
+                <td style="width: 20px"
 
                     ng-bind="supply.region_name"></td>
-                <td style="width: 70px"
+                <td style="width: 20px"
 
                     ng-bind="supply.district_name"></td>
-                <td style="width:70px"
+                <td style="width:20px; text-align: right"
 
-                    ng-bind="supply.population"></td>
+                    ng-bind="supply.population | number"></td>
             </tr>
 
             </tbody>
@@ -92,8 +92,8 @@
             <tr>
                 <td></td>
                 <td></td>
-                <td style="color: blue">Total</td>
-                <td></td>
+                <td style="color: blue; text-align: right">Total</td>
+                <td style=" background-color:red; text-align: right" ng-bind="bundledDistributionVaccinationSupplies.totalPopulation | number"></td>
             </tr>
             <tr>
                 <td style="text-align: right" colspan="4"><span>Districtswith Ratio < Lower Limit</span></td>
@@ -119,8 +119,8 @@
                 </th>
             </tr>
             <tr>
-                <th colspan="12" style="text-align: center; vertical-align: middle">
-                    <span>	ADS_0.05ml</span>
+                <th ng-bind="product.primaryName" colspan="12" style="text-align: center; vertical-align: middle">
+
                 </th>
             </tr>
             <tr>
@@ -176,42 +176,42 @@
             </tr>
             </thead>
             <tbody
-                    ng-repeat="supply in bundledDistributionVaccinationSupplies">
+                    ng-repeat="supply in bundledDistributionVaccinationSupplies.vaccinationSuppliesList">
             <tr>
-                <td
+                <td ng-style="supply.jan_rec<0.5&& {'color': 'red' } ||supply.jan_rec>3&& {'color': 'blue' } "
 
                         ng-bind="supply.jan_rec"></td>
-                <td
+                <td  ng-style="supply.feb_rec<0.5&& {'color': 'red' } ||supply.feb_rec>3&& {'color': 'blue' } "
 
                         ng-bind="supply.feb_rec"></td>
-                <td
+                <td  ng-style="supply.mar_rec<0.5&& {'color': 'red' } ||supply.mar_rec>3&& {'color': 'blue' } "
 
                         ng-bind="supply.mar_rec"></td>
-                <td
+                <td  ng-style="supply.apr_rec<0.5&& {'color': 'red' } ||supply.apr_rec>3&& {'color': 'blue' } "
 
                         ng-bind="supply.apr_rec"></td>
-                <td
+                <td ng-style="supply.may_rec<0.5&& {'color': 'red' } ||supply.may_rec>3&& {'color': 'blue' } "
 
                         ng-bind="supply.may_rec"></td>
-                <td
+                <td  ng-style="supply.jun_rec<0.5&& {'color': 'red' } ||supply.jun_rec>3&& {'color': 'blue' } "
 
                         ng-bind="supply.jun_rec"></td>
-                <td
+                <td  ng-style="supply.jul_rec<0.5&& {'color': 'red' } ||supply.jul_rec>3&& {'color': 'blue' } "
 
                         ng-bind="supply.jul_rec"></td>
-                <td
+                <td  ng-style="supply.aug_rec<0.5&& {'color': 'red' } ||supply.aug_rec>3&& {'color': 'blue' } "
 
                         ng-bind="supply.aug_rec"></td>
-                <td
+                <td  ng-style="supply.sep_rec<0.5&& {'color': 'red' } ||supply.sep_rec>3&& {'color': 'blue' } "
 
                         ng-bind="supply.sep_rec"></td>
-                <td
+                <td  ng-style="supply.oct_rec<0.5&& {'color': 'red' } ||supply.oct_rec>3&& {'color': 'blue' } "
 
                         ng-bind="supply.oct_rec"></td>
-                <td
+                <td  ng-style="supply.nov_rec<0.5&& {'color': 'red' } ||supply.nov_rec>3&& {'color': 'blue' } "
 
                         ng-bind="supply.nov_rec"></td>
-                <td
+                <td  ng-style="supply.dec_rec<0.5&& {'color': 'red' } ||supply.dec_rec>3&& {'color': 'blue' } "
 
                         ng-bind="supply.dec_rec"></td>
             </tr>
@@ -219,63 +219,63 @@
             </tbody>
             <tfoot>
             <tr>
-                <td colspan="12">dd</td>
+                <td style="background-color: red"  colspan="12">&nbsp;</td>
             </tr>
             <tr>
-                <td></td>
-                <td>s</td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
+                <td ng-bind="bundledDistributionVaccinationSupplies.vaccinationSupplyDistrict.jan_rec_district_less_lower_limit"></td>
+                <td ng-bind="bundledDistributionVaccinationSupplies.vaccinationSupplyDistrict.feb_rec_district_less_lower_limit"></td>
+                <td ng-bind="bundledDistributionVaccinationSupplies.vaccinationSupplyDistrict.mar_rec_district_less_lower_limit"></td>
+                <td ng-bind="bundledDistributionVaccinationSupplies.vaccinationSupplyDistrict.apr_rec_district_less_lower_limit"></td>
+                <td ng-bind="bundledDistributionVaccinationSupplies.vaccinationSupplyDistrict.may_rec_district_less_lower_limit"></td>
+                <td ng-bind="bundledDistributionVaccinationSupplies.vaccinationSupplyDistrict.jun_rec_district_less_lower_limit"></td>
+                <td ng-bind="bundledDistributionVaccinationSupplies.vaccinationSupplyDistrict.jul_rec_district_less_lower_limit"></td>
+                <td ng-bind="bundledDistributionVaccinationSupplies.vaccinationSupplyDistrict.aug_rec_district_less_lower_limit"></td>
+                <td ng-bind="bundledDistributionVaccinationSupplies.vaccinationSupplyDistrict.sep_rec_district_less_lower_limit"></td>
+                <td ng-bind="bundledDistributionVaccinationSupplies.vaccinationSupplyDistrict.oct_rec_district_less_lower_limit"></td>
+                <td ng-bind="bundledDistributionVaccinationSupplies.vaccinationSupplyDistrict.nov_rec_district_less_lower_limit"></td>
+                <td ng-bind="bundledDistributionVaccinationSupplies.vaccinationSupplyDistrict.dec_rec_district_less_lower_limit"></td>
             </tr>
             <tr>
-                <td>-</td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
+                <td ng-bind="bundledDistributionVaccinationSupplies.vaccinationSupplyDistrict.jan_rec_district_greater_upper_limit"></td>
+                <td ng-bind="bundledDistributionVaccinationSupplies.vaccinationSupplyDistrict.feb_rec_district_greater_upper_limit"></td>
+                <td ng-bind="bundledDistributionVaccinationSupplies.vaccinationSupplyDistrict.mar_rec_district_greater_upper_limit"></td>
+                <td ng-bind="bundledDistributionVaccinationSupplies.vaccinationSupplyDistrict.apr_rec_district_greater_upper_limit"></td>
+                <td ng-bind="bundledDistributionVaccinationSupplies.vaccinationSupplyDistrict.may_rec_district_greater_upper_limit"></td>
+                <td ng-bind="bundledDistributionVaccinationSupplies.vaccinationSupplyDistrict.jun_rec_district_greater_upper_limit"></td>
+                <td ng-bind="bundledDistributionVaccinationSupplies.vaccinationSupplyDistrict.jul_rec_district_greater_upper_limit"></td>
+                <td ng-bind="bundledDistributionVaccinationSupplies.vaccinationSupplyDistrict.aug_rec_district_greater_upper_limit"></td>
+                <td ng-bind="bundledDistributionVaccinationSupplies.vaccinationSupplyDistrict.sep_rec_district_greater_upper_limit"></td>
+                <td ng-bind="bundledDistributionVaccinationSupplies.vaccinationSupplyDistrict.oct_rec_district_greater_upper_limit"></td>
+                <td ng-bind="bundledDistributionVaccinationSupplies.vaccinationSupplyDistrict.nov_rec_district_greater_upper_limit"></td>
+                <td ng-bind="bundledDistributionVaccinationSupplies.vaccinationSupplyDistrict.dec_rec_district_greater_upper_limit"></td>
             </tr>
             <tr>
-                <td>-</td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
+                <td ng-bind="bundledDistributionVaccinationSupplies.vaccinationSupplyRegion.jan_rec_district_less_lower_limit"></td>
+                <td ng-bind="bundledDistributionVaccinationSupplies.vaccinationSupplyRegion.feb_rec_district_less_lower_limit"></td>
+                <td ng-bind="bundledDistributionVaccinationSupplies.vaccinationSupplyRegion.mar_rec_district_less_lower_limit"></td>
+                <td ng-bind="bundledDistributionVaccinationSupplies.vaccinationSupplyRegion.apr_rec_district_less_lower_limit"></td>
+                <td ng-bind="bundledDistributionVaccinationSupplies.vaccinationSupplyRegion.may_rec_district_less_lower_limit"></td>
+                <td ng-bind="bundledDistributionVaccinationSupplies.vaccinationSupplyRegion.jun_rec_district_less_lower_limit"></td>
+                <td ng-bind="bundledDistributionVaccinationSupplies.vaccinationSupplyRegion.jul_rec_district_less_lower_limit"></td>
+                <td ng-bind="bundledDistributionVaccinationSupplies.vaccinationSupplyRegion.aug_rec_district_less_lower_limit"></td>
+                <td ng-bind="bundledDistributionVaccinationSupplies.vaccinationSupplyRegion.sep_rec_district_less_lower_limit"></td>
+                <td ng-bind="bundledDistributionVaccinationSupplies.vaccinationSupplyRegion.oct_rec_district_less_lower_limit"></td>
+                <td ng-bind="bundledDistributionVaccinationSupplies.vaccinationSupplyRegion.nov_rec_district_less_lower_limit"></td>
+                <td ng-bind="bundledDistributionVaccinationSupplies.vaccinationSupplyRegion.dec_rec_district_less_lower_limit"></td>
             </tr>
             <tr>
-                <td>-</td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
+                <td ng-bind="bundledDistributionVaccinationSupplies.vaccinationSupplyRegion.jan_rec_district_greater_upper_limit"></td>
+                <td ng-bind="bundledDistributionVaccinationSupplies.vaccinationSupplyRegion.feb_rec_district_greater_upper_limit"></td>
+                <td ng-bind="bundledDistributionVaccinationSupplies.vaccinationSupplyRegion.mar_rec_district_greater_upper_limit"></td>
+                <td ng-bind="bundledDistributionVaccinationSupplies.vaccinationSupplyRegion.apr_rec_district_greater_upper_limit"></td>
+                <td ng-bind="bundledDistributionVaccinationSupplies.vaccinationSupplyRegion.may_rec_district_greater_upper_limit"></td>
+                <td ng-bind="bundledDistributionVaccinationSupplies.vaccinationSupplyRegion.jun_rec_district_greater_upper_limit"></td>
+                <td ng-bind="bundledDistributionVaccinationSupplies.vaccinationSupplyRegion.jul_rec_district_greater_upper_limit"></td>
+                <td ng-bind="bundledDistributionVaccinationSupplies.vaccinationSupplyRegion.aug_rec_district_greater_upper_limit"></td>
+                <td ng-bind="bundledDistributionVaccinationSupplies.vaccinationSupplyRegion.sep_rec_district_greater_upper_limit"></td>
+                <td ng-bind="bundledDistributionVaccinationSupplies.vaccinationSupplyRegion.oct_rec_district_greater_upper_limit"></td>
+                <td ng-bind="bundledDistributionVaccinationSupplies.vaccinationSupplyRegion.nov_rec_district_greater_upper_limit"></td>
+                <td ng-bind="bundledDistributionVaccinationSupplies.vaccinationSupplyRegion.dec_rec_district_greater_upper_limit"></td>
             </tr>
 
             </tfoot>
@@ -289,8 +289,8 @@
                 </th>
             </tr>
             <tr>
-                <th colspan="12" style="text-align: center; vertical-align: middle">
-                    <span>	ADS_0.05ml</span>
+                <th ng-bind="product.primaryName" colspan="12" style="text-align: center; vertical-align: middle">
+
                 </th>
             </tr>
             <tr>
@@ -346,7 +346,7 @@
             </tr>
             </thead>
             <tbody
-                    ng-repeat="supply in bundledDistributionVaccinationSupplies">
+                    ng-repeat="supply in bundledDistributionVaccinationSupplies.vaccinationSuppliesList">
 
             <tr>
                 <td
@@ -390,63 +390,63 @@
             </tbody>
             <tfoot>
             <tr>
-                <td colspan="12"><span>dd</span></td>
+                <td  style="background-color: red" colspan="12">&nbsp;</td>
             </tr>
             <tr>
-                <td></td>
-                <td>s</td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
+                <td ng-bind="bundledDistributionVaccinationSupplies.vaccinationSupplyDistrict.jan_issued_district_less_lower_limit"></td>
+                <td ng-bind="bundledDistributionVaccinationSupplies.vaccinationSupplyDistrict.feb_rec_district_less_lower_limit"></td>
+                <td ng-bind="bundledDistributionVaccinationSupplies.vaccinationSupplyDistrict.mar_rec_district_less_lower_limit"></td>
+                <td ng-bind="bundledDistributionVaccinationSupplies.vaccinationSupplyDistrict.apr_rec_district_less_lower_limit"></td>
+                <td ng-bind="bundledDistributionVaccinationSupplies.vaccinationSupplyDistrict.may_rec_district_less_lower_limit"></td>
+                <td ng-bind="bundledDistributionVaccinationSupplies.vaccinationSupplyDistrict.jun_rec_district_less_lower_limit"></td>
+                <td ng-bind="bundledDistributionVaccinationSupplies.vaccinationSupplyDistrict.jul_rec_district_less_lower_limit"></td>
+                <td ng-bind="bundledDistributionVaccinationSupplies.vaccinationSupplyDistrict.aug_rec_district_less_lower_limit"></td>
+                <td ng-bind="bundledDistributionVaccinationSupplies.vaccinationSupplyDistrict.sep_rec_district_less_lower_limit"></td>
+                <td ng-bind="bundledDistributionVaccinationSupplies.vaccinationSupplyDistrict.oct_rec_district_less_lower_limit"></td>
+                <td ng-bind="bundledDistributionVaccinationSupplies.vaccinationSupplyDistrict.nov_rec_district_less_lower_limit"></td>
+                <td ng-bind="bundledDistributionVaccinationSupplies.vaccinationSupplyDistrict.dec_rec_district_less_lower_limit"></td>
             </tr>
             <tr>
-                <td>-</td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
+                <td ng-bind="bundledDistributionVaccinationSupplies.vaccinationSupplyDistrict.jan_rec_district_greater_upper_limit"></td>
+                <td ng-bind="bundledDistributionVaccinationSupplies.vaccinationSupplyDistrict.feb_rec_district_greater_upper_limit"></td>
+                <td ng-bind="bundledDistributionVaccinationSupplies.vaccinationSupplyDistrict.mar_rec_district_greater_upper_limit"></td>
+                <td ng-bind="bundledDistributionVaccinationSupplies.vaccinationSupplyDistrict.apr_rec_district_greater_upper_limit"></td>
+                <td ng-bind="bundledDistributionVaccinationSupplies.vaccinationSupplyDistrict.may_rec_district_greater_upper_limit"></td>
+                <td ng-bind="bundledDistributionVaccinationSupplies.vaccinationSupplyDistrict.jun_rec_district_greater_upper_limit"></td>
+                <td ng-bind="bundledDistributionVaccinationSupplies.vaccinationSupplyDistrict.jul_rec_district_greater_upper_limit"></td>
+                <td ng-bind="bundledDistributionVaccinationSupplies.vaccinationSupplyDistrict.aug_rec_district_greater_upper_limit"></td>
+                <td ng-bind="bundledDistributionVaccinationSupplies.vaccinationSupplyDistrict.sep_rec_district_greater_upper_limit"></td>
+                <td ng-bind="bundledDistributionVaccinationSupplies.vaccinationSupplyDistrict.oct_rec_district_greater_upper_limit"></td>
+                <td ng-bind="bundledDistributionVaccinationSupplies.vaccinationSupplyDistrict.nov_rec_district_greater_upper_limit"></td>
+                <td ng-bind="bundledDistributionVaccinationSupplies.vaccinationSupplyDistrict.dec_rec_district_greater_upper_limit"></td>
             </tr>
             <tr>
-                <td>-</td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
+                <td ng-bind="bundledDistributionVaccinationSupplies.vaccinationSupplyRegion.jan_rec_district_less_lower_limit"></td>
+                <td ng-bind="bundledDistributionVaccinationSupplies.vaccinationSupplyRegion.feb_rec_district_less_lower_limit"></td>
+                <td ng-bind="bundledDistributionVaccinationSupplies.vaccinationSupplyRegion.mar_rec_district_less_lower_limit"></td>
+                <td ng-bind="bundledDistributionVaccinationSupplies.vaccinationSupplyRegion.apr_rec_district_less_lower_limit"></td>
+                <td ng-bind="bundledDistributionVaccinationSupplies.vaccinationSupplyRegion.may_rec_district_less_lower_limit"></td>
+                <td ng-bind="bundledDistributionVaccinationSupplies.vaccinationSupplyRegion.jun_rec_district_less_lower_limit"></td>
+                <td ng-bind="bundledDistributionVaccinationSupplies.vaccinationSupplyRegion.jul_rec_district_less_lower_limit"></td>
+                <td ng-bind="bundledDistributionVaccinationSupplies.vaccinationSupplyRegion.aug_rec_district_less_lower_limit"></td>
+                <td ng-bind="bundledDistributionVaccinationSupplies.vaccinationSupplyRegion.sep_rec_district_less_lower_limit"></td>
+                <td ng-bind="bundledDistributionVaccinationSupplies.vaccinationSupplyRegion.oct_rec_district_less_lower_limit"></td>
+                <td ng-bind="bundledDistributionVaccinationSupplies.vaccinationSupplyRegion.nov_rec_district_less_lower_limit"></td>
+                <td ng-bind="bundledDistributionVaccinationSupplies.vaccinationSupplyRegion.dec_rec_district_less_lower_limit"></td>
             </tr>
             <tr>
-                <td>-</td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
+                <td ng-bind="bundledDistributionVaccinationSupplies.vaccinationSupplyRegion.jan_rec_district_greater_upper_limit"></td>
+                <td ng-bind="bundledDistributionVaccinationSupplies.vaccinationSupplyRegion.feb_rec_district_greater_upper_limit"></td>
+                <td ng-bind="bundledDistributionVaccinationSupplies.vaccinationSupplyRegion.mar_rec_district_greater_upper_limit"></td>
+                <td ng-bind="bundledDistributionVaccinationSupplies.vaccinationSupplyRegion.apr_rec_district_greater_upper_limit"></td>
+                <td ng-bind="bundledDistributionVaccinationSupplies.vaccinationSupplyRegion.may_rec_district_greater_upper_limit"></td>
+                <td ng-bind="bundledDistributionVaccinationSupplies.vaccinationSupplyRegion.jun_rec_district_greater_upper_limit"></td>
+                <td ng-bind="bundledDistributionVaccinationSupplies.vaccinationSupplyRegion.jul_rec_district_greater_upper_limit"></td>
+                <td ng-bind="bundledDistributionVaccinationSupplies.vaccinationSupplyRegion.aug_rec_district_greater_upper_limit"></td>
+                <td ng-bind="bundledDistributionVaccinationSupplies.vaccinationSupplyRegion.sep_rec_district_greater_upper_limit"></td>
+                <td ng-bind="bundledDistributionVaccinationSupplies.vaccinationSupplyRegion.oct_rec_district_greater_upper_limit"></td>
+                <td ng-bind="bundledDistributionVaccinationSupplies.vaccinationSupplyRegion.nov_rec_district_greater_upper_limit"></td>
+                <td ng-bind="bundledDistributionVaccinationSupplies.vaccinationSupplyRegion.dec_rec_district_greater_upper_limit"></td>
             </tr>
 
             </tfoot>
