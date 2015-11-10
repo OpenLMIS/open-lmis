@@ -9,7 +9,7 @@ function ViewRnrViaDetailController($scope, $route, $location, Requisitions) {
     });
 
     $scope.loadRequisitionDetail = function () {
-        Requisitions.get({id: $route.current.params.rnr}, function (data) {
+        Requisitions.get({id: $route.current.params.rnr, operation:"skipped"}, function (data) {
             $scope.rnr = data.rnr;
             $scope.rnrItems = data.rnr.fullSupplyLineItems;
 
