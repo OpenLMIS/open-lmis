@@ -112,6 +112,6 @@ public class FacilityProductsReportDataProvider {
 
     @Transactional
     protected List<Facility> getAllFacilities() {
-        return facilityMapper.getAll();
+        return facilityMapper.getAllReportFacilities();
     }
 }
