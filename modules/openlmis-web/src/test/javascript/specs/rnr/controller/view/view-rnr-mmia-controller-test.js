@@ -106,7 +106,7 @@ describe('ViewRnrViaDetailController', function () {
 
     expect(scope.adult[0].expirationDate).toBe(null);
     expect(scope.adult[1].expirationDate).toBe(undefined);
-    expect(scope.adult[2].expirationDate).toBe("2000-02-28");
+    expect(scope.adult[2].expirationDate).toEqual(new Date("2000-02-28"));
     expect(scope.adult.length).toBe(12);
     expect(scope.children.length).toBe(10);
     expect(scope.other.length).toBe(2);

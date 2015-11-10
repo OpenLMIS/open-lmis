@@ -51,6 +51,7 @@ function ViewRnrMmiaController($scope, $route, Requisitions, messageService) {
         if (theOneItem.expirationDate) {
             var splitDate = theOneItem.expirationDate.split('/');
             theOneItem.expirationDate = splitDate[2] + "-" + splitDate[1] + "-" + splitDate[0];
+            theOneItem.expirationDate = new Date(theOneItem.expirationDate);
         }
     };
 

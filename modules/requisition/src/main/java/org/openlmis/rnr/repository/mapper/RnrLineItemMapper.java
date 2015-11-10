@@ -162,4 +162,20 @@ public interface RnrLineItemMapper {
       many = @Many(select = "org.openlmis.rnr.repository.mapper.LossesAndAdjustmentsMapper.getByRnrLineItem"))
   })
   RnrLineItem getNonSkippedLineItem(@Param("rnrId") Long rnrId, @Param("productCode") String productCode);
+
+  @Select({"SELECT productCode, beginningBalance, quantityReceived, quantityDispensed, ",
+      "stockInHand, quantityRequested, calculatedOrderQuantity, quantityApproved, ",
+      "totalLossesAndAdjustments, expirationDate",
+      "FROM requisition_line_items",
+      "WHERE rnrId = #{rnrId} and fullSupply = TRUE",
+      "AND skipped = FALSE"})
+  List<RnrLineItem> getNonSkippedRnrLineItemsByRnrId(Long rnrId);
+
+  @Select({"SELECT productCode, beginningBalance, quantityReceived, quantityDispensed, ",
+      "stockInHand, quantityRequested, calculatedOrderQuantity, quantityApproved, ",
+      "totalLossesAndAdjustments, expirationDate",
+      "FROM requisition_line_items",
+      "WHERE rnrId = #{rnrId} and fullSupply = FALSE",
+      "AND skipped = FALSE"})
+  List<RnrLineItem> getNonSkippedNonFullSupplyRnrLineItemsByRnrId(Long rnrId);
 }
