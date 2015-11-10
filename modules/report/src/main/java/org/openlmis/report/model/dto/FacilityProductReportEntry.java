@@ -35,7 +35,7 @@ public class FacilityProductReportEntry {
             endTime = new Date();
         }
 
-        this.productName = stockCard.getProduct().getName();
+        this.productName = stockCard.getProduct().getPrimaryName();
         List<StockCardEntry> stockCardEntryList = filterEntryByDate(stockCard, endTime);
         this.productQuantity = calculateQuantity(stockCardEntryList);
 

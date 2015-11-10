@@ -32,6 +32,7 @@
 
             <div class="form-fields">
                 <select ui-select2 style="width:160px;" class="large-input"  name="select-facility" ng-model="reportParams.facilityId">
+                    <option value=""></option>
                     <option ng-repeat="option in facilities | facilityFilter:districts:reportParams.districtId:reportParams.provinceId" value="{{option.id}}">{{option.name}}</option>
                 </select>
             </div>
