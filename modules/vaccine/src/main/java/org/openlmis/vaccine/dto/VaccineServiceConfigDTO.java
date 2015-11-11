@@ -13,15 +13,17 @@
 package org.openlmis.vaccine.dto;
 
 import lombok.AllArgsConstructor;
-import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.openlmis.core.domain.Product;
 import org.openlmis.vaccine.domain.VaccineDose;
 import org.openlmis.vaccine.domain.config.VaccineIvdTabVisibility;
 
 import java.util.List;
 
-@Data
+@Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 public class VaccineServiceConfigDTO {

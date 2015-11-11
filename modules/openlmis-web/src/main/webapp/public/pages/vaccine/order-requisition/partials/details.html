@@ -1,0 +1,14 @@
+
+<div>
+   <h2><span openlmis-message="label.vaccine.order.requisition.title"></span></h2>
+
+
+    <div  class="alert alert-error" id="saveSuccessMsgDiv" ng-show="message">
+        <span ng-bind="message"></span>&nbsp;&nbsp;Please:
+        <span><a ng-show="hasPermission('RECEIVE_STOCK')" id="viewHereLink"  href="/public/pages/vaccine/inventory/index.html#/receive"
+            >Receive Consignment</a></span>
+
+    </div>
+
+
+</div>

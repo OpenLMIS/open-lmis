@@ -13,14 +13,15 @@
 package org.openlmis.report.model.dto;
 
 
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
-@Data
+@Getter
+@Setter
 public class MessageDto {
 
   private String type;
   private String message;
   private String contact;
-  private int facility_id;
-
+  private int facilityId;
 }

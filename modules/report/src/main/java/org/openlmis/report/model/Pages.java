@@ -12,9 +12,7 @@
 
 package org.openlmis.report.model;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import org.openlmis.report.model.ReportData;
@@ -24,9 +22,9 @@ import java.util.List;
 
 import static com.fasterxml.jackson.databind.annotation.JsonSerialize.Inclusion.NON_EMPTY;
 
-@Data
-//@NoArgsConstructor
-//@AllArgsConstructor
+@Getter
+@Setter
+@EqualsAndHashCode
 @JsonSerialize(include = NON_EMPTY)
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Pages {

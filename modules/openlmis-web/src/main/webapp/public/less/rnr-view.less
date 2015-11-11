@@ -1,0 +1,158 @@
+.view-table {
+  alignment: top;
+  font-family: Verdana, Arial, sans-serif;
+  font-size: 11px;
+  line-height: 20px;
+  border-collapse: initial;
+  border-spacing: 0;
+    ul {
+        padding: 0px;
+        margin: 0px;
+        li {
+            list-style: none;
+            padding: 8px 0px;
+        }
+    }
+    h2{
+        margin:inherit;
+        border:none;
+        font-size: 20px;
+        font-weight: bold;
+        color: #000000;
+    }
+}
+
+.view-table-logo {
+  height: 60px;
+  width: 60px;
+  background: url(../images/table-logo-moz.png) no-repeat left top;
+  background-size: 100% auto;
+}
+
+.left-block {
+  border-left: 2px solid;
+  border-top: 2px solid;
+  border-bottom: 2px solid;
+  border-right: 0px;
+  border-color: #000000;
+}
+
+.border-all-bold {
+  border: 2px solid #000000;
+}
+
+.border-all-thin {
+  border: 1px solid #000000;
+}
+
+.text-nowrap {
+  white-space: nowrap;
+}
+
+.text-align-center {
+  text-align: center;
+}
+
+.text-align-right {
+  text-align: right;
+}
+
+.text-align-bottom {
+  vertical-align: text-bottom;
+}
+
+.view-table-spacing {
+  height: 5px;
+}
+
+.view-table-cell-scrolling {
+  overflow-scrolling: auto;
+}
+
+.rotate {
+  transform: rotate(-90deg);
+  transform-origin: 50% 50%;
+}
+
+.background-black {
+  background-color: #000000;
+  color: #FFFFFF;
+}
+
+.width-28 {
+  width: 28px;
+}
+
+.banner-text {
+  margin-top: 100px;
+}
+
+.left-block .rotate {
+  margin-top: 450px;
+}
+
+/*check box*/
+.checkbox input[type=checkbox] {
+  visibility: hidden;
+}
+
+.checkbox {
+  width: 15px;
+  position: relative;
+  margin-left: 12px;
+  margin-right: 12px;
+}
+
+.checkbox label {
+  cursor: pointer;
+  position: absolute;
+  width: 15px;
+  height: 15px;
+  top: 0;
+  left: 0;
+  border: 2px solid #000;
+}
+
+.checkbox label:after {
+  opacity: 0;
+  content: '';
+  position: absolute;
+  width: 8px;
+  height: 4px;
+  background: transparent;
+  top: 2px;
+  left: 3px;
+  border: 3px solid #000;
+  border-top: none;
+  border-right: none;
+  -webkit-transform: rotate(-45deg);
+  -moz-transform: rotate(-45deg);
+  -o-transform: rotate(-45deg);
+  -ms-transform: rotate(-45deg);
+  transform: rotate(-45deg);
+}
+
+.checkbox label:hover::after {
+  opacity: 0.3;
+}
+
+.checkbox input[type=checkbox]:checked + label:after {
+  opacity: 1;
+}
+
+.type-checkbox .checkbox {
+  float: right;
+}
+
+/*check box*/
+
+
+.bigger-checkbox {
+  width: 230px;
+  height: 32px;
+}
+
+.sign-box {
+  height: 50px;
+  width: 1223px;
+}

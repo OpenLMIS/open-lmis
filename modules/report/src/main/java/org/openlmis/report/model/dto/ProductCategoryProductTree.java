@@ -13,23 +13,26 @@
 package org.openlmis.report.model.dto;
 
 import lombok.AllArgsConstructor;
-import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.util.ArrayList;
 import java.util.List;
 
-@Data
+@Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 public class ProductCategoryProductTree {
 
-    int program_id;
-    int category_id;
-    int product_id;
-    String category;
-    String product;
-    String code;
+  int program_id;
+  int category_id;
+  int product_id;
+  String category;
+  String product;
+  String code;
 
-    List<ProductCategoryProductTree> children = new ArrayList<ProductCategoryProductTree>();
+  List<ProductCategoryProductTree> children = new ArrayList<ProductCategoryProductTree>();
+
 }

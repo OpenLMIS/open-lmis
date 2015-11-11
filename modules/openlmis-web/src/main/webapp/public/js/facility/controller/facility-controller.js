@@ -221,54 +221,54 @@ function FacilityController($scope, facilityReferenceData, $routeParams, facilit
     $scope.programSupportedMessage = ($scope.programsToDisplay.length) ? 'label.select.program.supported' : 'label.no.programs.left';
   }
 
-    function updateInterfacesToDisplay() {
-        $scope.facility.interfaceMappings = $scope.facility.interfaceMappings || [];
-        var interfaceIds = _.pluck(_.pluck($scope.facility.interfaceMappings, 'interfaceId'), "id");
-        $scope.interfacesToDisplay = _.reject($scope.interfaces, function (_interface) {
-            return _.contains(interfaceIds, _interface.id);
-        });
-        $scope.interfaceSelectMessage = ($scope.interfacesToDisplay.length) ? 'label.select.interface' : 'label.no.interface.left';
+  function updateInterfacesToDisplay() {
+    $scope.facility.interfaceMappings = $scope.facility.interfaceMappings || [];
+    var interfaceIds = _.pluck(_.pluck($scope.facility.interfaceMappings, 'interfaceId'), "id");
+    $scope.interfacesToDisplay = _.reject($scope.interfaces, function (_interface) {
+      return _.contains(interfaceIds, _interface.id);
+    });
+    $scope.interfaceSelectMessage = ($scope.interfacesToDisplay.length) ? 'label.select.interface' : 'label.no.interface.left';
+  }
+
+  $scope.addInterfaceMapping = function(mapping){
+    if(!mapping.interfaceId){
+      $scope.showInterfaceRequiredError = true;
+      return;
     }
-
-    $scope.addInterfaceMapping = function(mapping){
-        if(!mapping.interfaceId){
-            $scope.showInterfaceRequiredError = true;
-            return;
-        }
-        if(!mapping.mappedId){
-            $scope.showMappingIdRequiredError = true;
-            return;
-        }
-        $scope.showInterfaceRequiredError = false;
-        $scope.showMappingIdRequiredError = false;
-
-        mapping.interfaceId = getInterfaceById(mapping.interfaceId);
-        $scope.facility.interfaceMappings.push(mapping);
-        $scope.interfaceMapping = undefined;
-        updateInterfacesToDisplay();
-    };
-
-    function getInterfaceById(interfaceId){
-        return (_.findWhere($scope.interfaces, {'id': interfaceId}));
+    if(!mapping.mappedId){
+      $scope.showMappingIdRequiredError = true;
+      return;
     }
+    $scope.showInterfaceRequiredError = false;
+    $scope.showMappingIdRequiredError = false;
 
-    $scope.showRemoveInterfaceMappingConfirmDialog = function (interfaceMapping) {
-        $scope.selectedInterfaceMapping = interfaceMapping;
-        var options = {
-            id: "removeInterfaceMappingConfirmDialog",
-            header: 'delete.interface.mapping.header',
-            body: messageService.get('delete.facility.interface.mapping.confirm', $scope.selectedInterfaceMapping.interfaceId.name)
-        };
-        OpenLmisDialog.newDialog(options, $scope.removeInterfaceMappingConfirm, $dialog);
-    };
+    mapping.interfaceId = getInterfaceById(mapping.interfaceId);
+    $scope.facility.interfaceMappings.push(mapping);
+    $scope.interfaceMapping = undefined;
+    updateInterfacesToDisplay();
+  };
 
-    $scope.removeInterfaceMappingConfirm = function(result){
-        if (result) {
-            $scope.facility.interfaceMappings = _.without($scope.facility.interfaceMappings, $scope.selectedInterfaceMapping);
-        }
-        $scope.selectedInterfaceMapping = undefined;
-        updateInterfacesToDisplay();
+  function getInterfaceById(interfaceId){
+    return (_.findWhere($scope.interfaces, {'id': interfaceId}));
+  }
+
+  $scope.showRemoveInterfaceMappingConfirmDialog = function (interfaceMapping) {
+    $scope.selectedInterfaceMapping = interfaceMapping;
+    var options = {
+      id: "removeInterfaceMappingConfirmDialog",
+      header: 'delete.interface.mapping.header',
+      body: messageService.get('delete.facility.interface.mapping.confirm', $scope.selectedInterfaceMapping.interfaceId.name)
     };
+    OpenLmisDialog.newDialog(options, $scope.removeInterfaceMappingConfirm, $dialog);
+  };
+
+  $scope.removeInterfaceMappingConfirm = function(result){
+    if (result) {
+      $scope.facility.interfaceMappings = _.without($scope.facility.interfaceMappings, $scope.selectedInterfaceMapping);
+    }
+    $scope.selectedInterfaceMapping = undefined;
+    updateInterfacesToDisplay();
+  };
 }
 
 FacilityController.resolve = {
@@ -285,13 +285,13 @@ FacilityController.resolve = {
     var deferred = $q.defer();
     var facilityId = $route.current.params.facilityId;
     $timeout(function(){
-        if(!isUndefined(facilityId)){
-            FacilityImages.get({facilityId: facilityId }, function (data){
-                deferred.resolve(data);
-            });
-        }else{
-            deferred.resolve([]);
-        }
+      if(!isUndefined(facilityId)){
+        FacilityImages.get({facilityId: facilityId }, function (data){
+          deferred.resolve(data);
+        });
+      }else{
+        deferred.resolve([]);
+      }
     }, 100);
     return deferred.promise;
   },
@@ -311,55 +311,55 @@ FacilityController.resolve = {
   },
 
   priceSchedules: function ($q, $route, $timeout, PriceScheduleCategories) {
-        var deferred = $q.defer();
-        $timeout(function () {
-            PriceScheduleCategories.get({}, function (data) {
-                deferred.resolve(data.priceScheduleCategories);
-            }, {});
-        }, 100);
-        return deferred.promise;
-    },
-    
+    var deferred = $q.defer();
+    $timeout(function () {
+      PriceScheduleCategories.get({}, function (data) {
+        deferred.resolve(data.priceScheduleCategories);
+      }, {});
+    }, 100);
+    return deferred.promise;
+  },
+
   interfacesReferenceData : function ($q, $route, $timeout, ELMISInterface) {
-       var deferred = $q.defer();
+    var deferred = $q.defer();
 
-       $timeout(function () {
-           ELMISInterface.getInterfacesReference().get({}, function (data) {
-               deferred.resolve(data.activeInterfaces);
-           }, {});
-       }, 100);
+    $timeout(function () {
+      ELMISInterface.getInterfacesReference().get({}, function (data) {
+        deferred.resolve(data.activeInterfaces);
+      }, {});
+    }, 100);
 
-       return deferred.promise;
-   }
+    return deferred.promise;
+  }
 };
 
 //Begin: Specific for Tanzania
 /*  The code below is intended to illustrate one potential way of conditionally injecting demographic-category data
-    For now, because we don’t have a way to conditionally toggle OpenLMIS’ features on and off, we simple set injectDemographyCategories to true. */
+ For now, because we don’t have a way to conditionally toggle OpenLMIS’ features on and off, we simple set injectDemographyCategories to true. */
 var injectDemographyCategories = true;
 if(injectDemographyCategories)
 {
-    FacilityController.resolve.demographicCategories = function ($q, $route, $timeout, DemographicEstimateCategories)
-    {
-        var deferred = $q.defer();
-        $timeout(function () {
-            DemographicEstimateCategories.get({}, function (data) {
-                deferred.resolve(data.estimate_categories);
-            }, {});
-        }, 100);
-        return deferred.promise;
-    };
+  FacilityController.resolve.demographicCategories = function ($q, $route, $timeout, DemographicEstimateCategories)
+  {
+    var deferred = $q.defer();
+    $timeout(function () {
+      DemographicEstimateCategories.get({}, function (data) {
+        deferred.resolve(data.estimate_categories);
+      }, {});
+    }, 100);
+    return deferred.promise;
+  };
 }
 else //As suggested in the comments above, this else-clause is intended to run for non-Tanzanian countries.
 {
-    //demographicEstimateCategories has to be assigned something...
-    FacilityController.resolve.demographicCategories = function($timeout)
-    {
-        //...so set it to a $timeout which returns a promise that will be resolved
-        return $timeout
-        (
-            function() {},
-            5
-        );
-    }
+  //demographicEstimateCategories has to be assigned something...
+  FacilityController.resolve.demographicCategories = function($timeout)
+  {
+    //...so set it to a $timeout which returns a promise that will be resolved
+    return $timeout
+    (
+        function() {},
+        5
+    );
+  }
 }

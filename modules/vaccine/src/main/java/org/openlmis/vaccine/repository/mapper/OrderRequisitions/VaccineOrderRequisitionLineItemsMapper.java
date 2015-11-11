@@ -19,10 +19,10 @@ public interface VaccineOrderRequisitionLineItemsMapper {
     @Insert("  INSERT INTO vaccine_order_requisition_line_items(  " +
             "             orderid, productid, productName, maximumStock, reOrderLevel,  " +
             "            bufferStock, stockOnHand, quantityRequested, ordereddate, overriddenisa,  " +
-            "            maxmonthsofstock,minMonthsOfStock, eop, createdBy, createddate, modifiedBy, modifieddate,productCategory )  " +
+            "            maxmonthsofstock,minMonthsOfStock, eop, createdBy, createddate, modifiedBy, modifieddate )  " +
             "    VALUES ( #{orderId}, #{productId}, #{productName}, #{maximumStock}, #{reOrderLevel},  " +
             "            #{bufferStock}, #{stockOnHand}, #{quantityRequested}, #{orderedDate}, #{overriddenisa},   " +
-            "            #{maxmonthsofstock},#{minMonthsOfStock}, #{eop}, #{createdBy}, NOW(), #{modifiedBy}, NOW(), #{productCategory}) ")
+            "            #{maxmonthsofstock},#{minMonthsOfStock}, #{eop}, #{createdBy}, NOW(), #{modifiedBy}, NOW()) ")
     @Options(useGeneratedKeys = true)
     Integer Insert(VaccineOrderRequisitionLineItem item);
 
@@ -42,7 +42,7 @@ public interface VaccineOrderRequisitionLineItemsMapper {
     )
     void Update(VaccineOrderRequisitionLineItem item);
 
-    @Select("select * from vaccine_order_requisition_line_items where orderId = #{orderId} and productCategory is not null order by id")
+    @Select("select * from vaccine_order_requisition_line_items where orderId = #{orderId} order by id")
     @Results(value = {
             @Result(property = "productId", column = "productId"),
             @Result(property = "product", column = "productId", javaType = Product.class,

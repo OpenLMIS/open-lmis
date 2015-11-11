@@ -13,18 +13,17 @@
 package org.openlmis.equipment.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
+import lombok.*;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.openlmis.core.domain.BaseModel;
 
 import java.util.Date;
 
-@Data
+@Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@EqualsAndHashCode(callSuper=false)
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class MaintenanceLog extends BaseModel{
 
@@ -49,5 +48,25 @@ public class MaintenanceLog extends BaseModel{
 
   public String getNextVisitDateString()  {
     return getFormattedDate(this.nextVisitDate);
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) return true;
+
+    if (o == null || getClass() != o.getClass()) return false;
+
+    MaintenanceLog that = (MaintenanceLog) o;
+
+    return new EqualsBuilder()
+        .append(id, that.id)
+        .isEquals();
+  }
+
+  @Override
+  public int hashCode() {
+    return new HashCodeBuilder(17, 37)
+        .append(id)
+        .toHashCode();
   }
 }

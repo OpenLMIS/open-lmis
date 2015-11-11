@@ -101,14 +101,14 @@ public class VaccineReportService {
   }
 
   @Transactional
-  public void save(VaccineReport report) {
-    repository.update(report);
+  public void save(VaccineReport report, Long userId) {
+    repository.update(report, userId);
   }
 
   @Transactional
   public void submit(VaccineReport report, Long userId) {
     report.setStatus(ReportStatus.SUBMITTED);
-    repository.update(report);
+    repository.update(report, userId);
     ReportStatusChange change = new ReportStatusChange(report, ReportStatus.SUBMITTED, userId);
     reportStatusChangeRepository.insert(change);
   }

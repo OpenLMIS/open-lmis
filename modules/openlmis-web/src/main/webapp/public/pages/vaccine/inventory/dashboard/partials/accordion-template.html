@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title></title>
+    <style>
+        table.alerts th, table.alerts td, table.alerts td input {
+        line-height:16px !important;
+        padding-top:6px !important;
+        padding-bottom:6px !important;
+        padding-left:10px !important;
+        padding-right:10px !important;
+        }
+    </style>
+</head>
+<body>
+
+<div ng-show="true" class="row-fluid">
+    <accordion close-others="false">
+        <accordion-group class="red-sunglo" is-open="panel.Alerts">
+            <accordion-heading>
+                <div class="accordion-title">
+                    <div class="caption">
+                        <i class="icon-bullhorn orange"></i>&nbsp;&nbsp;
+                        <span openlmis-message="title.notifications"></span>
+                            <span ng-show="pendingRequisition.length > 0 || equipmentNonFunctionalAlerts.length >0"
+                                  style="position:relative;color:#fff;font-size:0.8em;top:-6px;;background:#FF0000 !important; padding:4px 8px 4px 8px !important;border-radius:20px">
+                                {{pendingRequisition.length + equipmentNonFunctionalAlerts.length}}
+                            </span>
+                    </div>
+                    <div class="tools">
+                        <i ng-class="{'icon-minus-sign': panel.Alerts, 'icon-plus-sign': !panel.Alerts}"></i>
+                    </div>
+                </div>
+            </accordion-heading>
+
+            <div ng-show="pendingRequisition.length > 0">
+                <div class="row-fluid">
+                    <div class="span12" ng-show="pendingRequisition.length > 0">
+                        <div class="alert alert-info" id="saveSuccessMsgDiv" ng-show="messageInfo">
+                            <span data-toggle="tooltip"
+                                  title="" class="icon-info-sign blue"></span>&nbsp;&nbsp;
+                            <span ng-bind="messageInfo"></span>.&nbsp;&nbsp;
+                            <span> <a href="/public/pages/vaccine/order-requisition/index.html#/view"
+                                      ng-click="popUp(this.href)" target="newWin"
+                                      openlmis-message="title.view.pending"></a> </span>
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <div class="clearfix"></div>
+            </div>
+
+            <table style="width:100%" class="alert alert-warning alerts"
+                   ng-show="equipmentNonFunctionalAlerts.length >0">
+                <thead>
+                <tr class="alert alert-warning">
+                    <th colspan="6" style="text-align: left">
+                        <span data-toggle="tooltip"
+                              title="No functional" class="icon-warning-sign yellow"></span>&nbsp;&nbsp;
+                        Non Functional Equipments
+                    </th>
+                </tr>
+                <tr style="text-align:left" class="">
+                    <th>Facility</th>
+                    <th>Equipment</th>
+                    <th>Status</th>
+                    <th>Changed By</th>
+                    <th>Date</th>
+                    <th>Action</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr class="alert alert-warning" ng-repeat="alert in equipmentNonFunctionalAlerts">
+                    <td ng-bind="alert.facilityName"></td>
+                    <td ng-bind="alert.model"></td>
+                    <td ng-bind="alert.status"></td>
+                    <td ng-bind="alert.changeBy"></td>
+                    <td ng-bind="alert.modifiedDate"></td>
+                    <td>
+                        <span> <a href="/public/pages/admin/equipment/inventory/index.html#/" target="newWin"
+                                  openlmis-message="title.view"></a> </span>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+
+        </accordion-group>
+    </accordion>
+</div>
+</body>
+</html>

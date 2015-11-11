@@ -327,7 +327,6 @@ public class ReportLookupService {
         return scheduleMapper.getAll();
     }
 
-    //TODO: implement this method
     public List<org.openlmis.report.model.dto.GeographicZone> getAllZones() {
         return geographicZoneMapper.getAll();
     }

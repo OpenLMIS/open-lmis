@@ -31,7 +31,7 @@ public interface StockedOutReportMapper {
     @SelectProvider(type=StockedOutReportQueryBuilder.class, method="getQuery")
     @Options(resultSetType = ResultSetType.SCROLL_SENSITIVE, fetchSize=10,timeout=0,useCache=true,flushCache=true)
     public List<StockedOutReport> getReport( @Param("filterCriteria") ReportParameter filterCriteria,
-                                                 @Param("SortCriteria") Map<String, String[]> SortCriteria ,
+                                                 @Param("SortCriteria") Map<String, String[]> sortCriteria ,
                                                  @Param("RowBounds")RowBounds rowBounds,
                                                  @Param("userId") Long userId
     );

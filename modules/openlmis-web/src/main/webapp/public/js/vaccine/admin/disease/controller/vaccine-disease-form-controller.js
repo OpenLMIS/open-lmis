@@ -17,8 +17,6 @@ function VaccineDiseaseFormController($scope, disease, SaveVaccineDisease,$locat
     if(form.$valid){
       SaveVaccineDisease.update($scope.disease, function(){
         $location.path('/disease');
-      },function(error){
-        alert(error.message);
       });
     }
   };

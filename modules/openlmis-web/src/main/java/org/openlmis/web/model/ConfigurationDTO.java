@@ -11,12 +11,15 @@
  */
 package org.openlmis.web.model;
 import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.openlmis.core.domain.ConfigurationSetting;
 
 import java.util.List;
 
-@Data
+@Getter
+@Setter
 @NoArgsConstructor
 public class ConfigurationDTO {
 

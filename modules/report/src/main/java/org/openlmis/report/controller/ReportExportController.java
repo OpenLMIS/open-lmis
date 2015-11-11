@@ -32,10 +32,17 @@ import java.io.*;
 public class ReportExportController extends BaseController {
 
 
-  public static final String USER_ID = "USER_ID";
-  public static final String FACILITY_MAILING_LIST = "facility_mailing_list";
+    private static final String USER_ID = "USER_ID";
+    private static final String FACILITY_MAILING_LIST = "facility_mailing_list";
+
+    private static final String PDF = "PDF";
+    private static final String XLS = "XLS";
+    private static final String HTML = "HTML";
+    private static final String CSV = "CSV";
+
   @Autowired
   public ReportManager reportManager;
+
   @Autowired
   public ReportLookupService reportService;
 
@@ -47,60 +54,23 @@ public class ReportExportController extends BaseController {
     , HttpServletRequest request
     , HttpServletResponse response
   ) {
-    //TODO: change the methods to have a long user id parameter instead of integer
     Integer userId = Integer.parseInt(request.getSession().getAttribute(USER_ID).toString());
 
     switch (outputOption.toUpperCase()) {
-      case "PDF":
+        case PDF:
         reportManager.showReport(userId, reportKey, request.getParameterMap(), ReportOutputOption.PDF, response);
         break;
-      case "XLS":
+        case XLS:
         reportManager.showReport(userId, reportKey, request.getParameterMap(), ReportOutputOption.XLS, response);
         break;
-      case "HTML":
+        case HTML:
         reportManager.showReport(userId, reportKey, request.getParameterMap(), ReportOutputOption.HTML, response);
         break;
-      case "CSV":
+        case CSV:
         reportManager.showReport(userId, reportKey, request.getParameterMap(), ReportOutputOption.CSV, response);
         break;
+        default:
     }
-  }
-
-    @RequestMapping(value = "/exportfile/{reportKey}/{outputOption}")
-    public void exportReportBytesStream(
-            @PathVariable(value = "reportKey") String reportKey
-            , @PathVariable(value = "outputOption") String outputOption
-            , HttpServletRequest request
-    ) {
-        //TODO: change the methods to have a long user id parameter instead of integer
-        Integer userId = Integer.parseInt(request.getSession().getAttribute(USER_ID).toString());
-
-        ByteArrayOutputStream byteArrayOutputStream = reportManager.exportReportBytesStream(userId, reportKey, request.getParameterMap(), outputOption);
-
-        OutputStream outStream = null;
-        ByteArrayOutputStream byteOutStream = null;
-        try {
-            outStream = new FileOutputStream("C:\\companies\\doop.pdf");
-            // writing bytes in to byte output stream
-            byteArrayOutputStream.writeTo(outStream);
-        } catch (IOException e) {
-            e.printStackTrace();
-        } finally {
-            try {
-                outStream.close();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-    }
-
-  @RequestMapping(value = "/download/mailinglabels/list/{outputOption}")
-  public void showMailingListReport(
-    @PathVariable(value = "outputOption") String outputOption
-    , HttpServletRequest request
-    , HttpServletResponse response
-  ) {
-    showReport(FACILITY_MAILING_LIST, outputOption, request, response);
   }
 
 

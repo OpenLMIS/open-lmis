@@ -84,7 +84,7 @@ public class VaccineReportControllerTest {
     when(service.getPeriodsFor(1L, 1L, currentDate)).thenReturn(periods);
     whenNew(Date.class).withNoArguments().thenReturn(currentDate);
 
-    ResponseEntity<OpenLmisResponse> response = controller.getPeriods(1L, 1L, httpServletRequest);
+    ResponseEntity<OpenLmisResponse> response = controller.getPeriods(1L, 1L);
     
     assertThat(periods, is(response.getBody().getData().get("periods")));
   }
@@ -105,7 +105,7 @@ public class VaccineReportControllerTest {
     VaccineReport report = new VaccineReport();
     when(service.getById(23L)).thenReturn(report);
 
-    ResponseEntity<OpenLmisResponse> response = controller.getReport(23L, httpServletRequest);
+    ResponseEntity<OpenLmisResponse> response = controller.getReport(23L);
 
     verify(service).getById(23L);
     assertThat(report, is(response.getBody().getData().get("report")));
@@ -114,11 +114,11 @@ public class VaccineReportControllerTest {
   @Test
   public void shouldSave() throws Exception {
     VaccineReport report = new VaccineReport();
-    doNothing().when(service).save(report);
+    doNothing().when(service).save(report, 1L);
 
     ResponseEntity<OpenLmisResponse> response = controller.save(report, httpServletRequest);
 
-    verify(service).save(report);
+    verify(service).save(report, 1L);
     assertThat(report, is(response.getBody().getData().get("report")));
   }
 

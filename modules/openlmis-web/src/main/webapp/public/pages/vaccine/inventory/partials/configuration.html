@@ -23,6 +23,7 @@
                     <li ng-class="{'selected': (visibleTab == key || visibleTab ==undefined) }">
                         <a href="" ng-click="changeTab('PRODUCT')">PRODUCT</a>
                     </li>
+
                 </ul>
             </div>
             <div>
@@ -46,6 +47,12 @@
                                    type="checkbox" ng-checked="false" ng-model="configToAdd.vvmTracked"/>
                             <span>isVVMTracked?</span>
                         </div>
+                        <div class="span2">
+                            <input ng-disabled="(configToAdd.product ===undefined || configToAdd.product===null)"
+                                   type="checkbox" ng-checked="false" ng-model="configToAdd.survivingInfants"/>
+                            <span>isSurvivingInfants Applied?</span>
+                        </div>
+
                         <div class="span2"><input
                                 ng-disabled="(configToAdd.product ===undefined || configToAdd.product===null)"
                                 type="submit" class="btn btn-primary" value="Add"
@@ -58,6 +65,8 @@
                             <th class="col-product " openlmis-message="label.products"></th>
                             <th class="col-lot"><span openlmis-message="batchTracked"></span></th>
                             <th class="col-available"><span openlmis-message="vvmTracked"></span></th>
+                            <th class="col-survivingInfants"><span openlmis-message="survivingInfants"></span></th>
+                            <th width="150px"><span openlmis-message="label.vaccine.coverage.denominator"></span></th>
                         </tr>
                         </thead>
                         <tbody>
@@ -65,10 +74,17 @@
                             <td class="col-product ">{{setting.product.primaryName}}</td>
                             <td class="col-lot"><input type="checkbox" ng-model="setting.batchTracked"/></td>
                             <td class="col-available"><input type="checkbox" ng-model="setting.vvmTracked"/></td>
+                            <td class="col-survivingInfants"><input type="checkbox" ng-model="setting.survivingInfants"/></td>
+                            <td class="col-general cell-input">
+                                <select ng-model="setting.denominatorEstimateCategoryId">
+                                    <option ng-selected="c.id == setting.denominatorEstimateCategoryId" ng-repeat="c in demographicCategories" value="{{c.id}}" openlmis-message="c.name"></option>
+                                </select>
+                            </td>
                         </tr>
                         </tbody>
                     </table>
                 </div>
+
             </div>
         </div>
 

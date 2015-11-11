@@ -13,20 +13,22 @@
 package org.openlmis.report.model.dto;
 
 import lombok.AllArgsConstructor;
-import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
-@Data
+@Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 public class FlatGeographicZone {
 
-    private Integer id;
-    private String name;
-    private String parent;
-    private Integer levelId;
-    private String code;
-    private String adm1;
-    private String adm2;
-    private String adm3;
+  private Integer id;
+  private String name;
+  private String parent;
+  private Integer levelId;
+  private String code;
+  private String adm1;
+  private String adm2;
+  private String adm3;
 }

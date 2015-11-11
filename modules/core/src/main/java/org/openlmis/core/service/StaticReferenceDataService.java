@@ -30,4 +30,7 @@ public class StaticReferenceDataService {
     return environment.getProperty(propertyName);
   }
 
+  public boolean getBoolean(String propertyName) {
+    return "true".equals(environment.getProperty(propertyName));
+  }
 }

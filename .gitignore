@@ -19,3 +19,9 @@ local-ftp-data/
 *.jasper
 *.jar
 modules/openlmis-web/src/main/webapp/public/odk-collect-submissions/*
+.gitignore.swp
+git
+gradle/
+gradlew
+gradlew.bat
+.gitignore

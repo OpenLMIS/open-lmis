@@ -452,4 +452,18 @@ public class RequisitionRepositoryTest {
 
     assertThat(lineItem, is(expectedLineItem));
   }
+
+  @Test
+  public void shouldUpdateClientSubmittedFields() throws Exception {
+    Rnr rnr = new Rnr();
+    requisitionRepository.updateClientFields(rnr);
+    verify(requisitionMapper).updateClientFields(rnr);
+  }
+
+  @Test
+  public void shouldGetRequisitionsWithLineItemsByFacility() {
+    Facility facility = new Facility();
+    requisitionRepository.getRequisitionDetailsByFacility(facility);
+    verify(requisitionMapper).getRequisitionsWithLineItemsByFacility(facility);
+  }
 }

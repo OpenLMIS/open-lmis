@@ -1,0 +1,471 @@
+<!--
+* Electronic Logistics Management Information System (eLMIS) is a supply chain management system for health commodities in a developing country setting.
+*
+* Copyright (C) 2015 Clinton Health Access Initiative (CHAI). This program was produced for the U.S. Agency for International Development (USAID). It was prepared under the USAID | DELIVER PROJECT, Task Order 4.
+*
+* This program is free software: you can redistribute it and/or modify it under the terms of the GNU Affero General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
+*
+* This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Affero General Public License for more details.
+*
+* You should have received a copy of the GNU Affero General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
+-->
+<!DOCTYPE html>
+
+<style>
+    .rnr-table #fullSupplyFrozenTable th ,.rnr-table #fullSupplyFrozenTable td{min-width:80px !important;width:80px
+    !important;}
+    .rnr-table .left-table {width: 24%; max-width: 24%;}
+    .rnr-table .right-table {width: 75.7%;max-width: 75.7%;}
+    .rnr-table .left-table th.col-action,.rnr-table .left-table
+    td.col-action{width:100px;max-width:100px;min-width:100px}
+    .rnr-table .left-table input[type="submit"]{width:80px !important;margin:4px 2px 5px 2px !important}
+    a span{font-size:12px}
+    input[type="number"] {width:100px !important;float:left !important}
+    #popupModel2 {width:80%; }
+    table tr.pod td {
+    background-color: #F0F0F0;
+
+    }
+    .right-table table tr.pod td span{
+    float:right;margin:9px 8px 10px 2px;
+    color:#055e74;
+    }
+    .rnr-table .table-bordered tr td.skip{
+    background: linear-gradient(to bottom, #f9f9f9 0%, #e0e0e0 100%) !important;
+    }
+    input[type="number"].ng-invalid-max{border:1px solid #F00 !important}
+</style>
+
+<div class="rnr-table" style="background-color: #f9f9f9; padding: 5px">
+    <div class="row-fluid">
+        <div class="span12">
+            <div class="info-box padding2px">
+                <div class="requisition-head-block">
+                    <div class="row-fluid">
+                        <div class="span12" style="padding: 10px;">
+                            <div class="row-fluid">
+                                <div class="span3">
+                                    <input type="radio" name="type" ng-checked="true" value="ROUTINE"
+                                           ng-model="distributionType"></span>
+                                    <strong id='routineLabel' openlmis-message="label.vaccine.stock.routine"> </strong>:&nbsp;
+                                </div>
+                                <div class="span3">
+                                    <input type="radio" name="type" value="EMERGENCY"
+                                           ng-model="distributionType"></span>
+                                    <strong id='emergencyLabel'
+                                            openlmis-message="label.vaccine.stock.emergency"> </strong>:&nbsp;
+                                </div>
+
+                                <!--<div class="span3">-->
+                                <!--<strong id='periodLabel' openlmis-message="label.vaccine.stock.period"> </strong>:&nbsp;-->
+                                <!--<span id='period' ng-bind="period"></span>-->
+                                <!--</div>-->
+
+                                <div class="span3">
+                                    <strong id='facilityLabel' openlmis-message="label.facility"> </strong>:&nbsp;
+                                    <span id='facility' ng-bind="facilityDisplayName"></span>
+                                </div>
+
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div ng-show="distributionType==='ROUTINE' && routineFacilities.length === 0"
+             openlmis-message="label.vaccine.stock.no.routine.facilities"></div>
+        <div ng-show="distributionType==='ROUTINE' && routineFacilities.length >0" adjust-height bottom-offset="180"
+             ng-show="true" tab-scroll>
+            <div class="float-left left-table parent">
+
+                <table class="table table-bordered" fixed-table-header id="fullSupplyFrozenTable">
+                    <thead>
+                    <tr>
+                        <th colspan="2">&nbsp;</th>
+                    </tr>
+                    <tr>
+                        <th colspan="2">&nbsp;</th>
+                    </tr>
+                    <tr>
+                        <th openlmis-message="label.facility"></th>
+                        <th style="width:100px;max-width:100px;min-width:100px" class="col-action"
+                            openlmis-message="label.action"></th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr ng-class="{'pod':(facility.status === 'PENDING')}" ng-repeat="facility in routineFacilities"
+                        ng-if="facility.status !=='RECEIVED'"
+                        ng-click="setSelectedFacility(facility)"
+                        style="{{getSelectedFacilityColor(facility)}}">
+                        <td class="col-facility">
+                            <span class="cell-text">{{facility.name}}</span>
+                        </td>
+                        <td style="width:100px;max-width:100px;min-width:100px" class="col-action">
+                            <input ng-show="facility.status === undefined || facility.status !=='PENDING'"
+                                   ng-disabled="!hasProductToIssue(facility)"
+                                   ng-click="showIssueModal(facility,'ROUTINE')"
+                                   type="submit" class="btn btn-primary" value="ISSUE">
+                            <input ng-show="facility.status === 'PENDING'" ng-click="showPODModal(facility)"
+                                   type="submit"
+                                   class="btn btn-primary" value="POD" openlmis-message="button.vaccine.stock.pod">
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="float-left right-table parent" custom-horizontal-scroll>
+                <table class="table table-bordered" fixed-table-header>
+                    <thead>
+                    <tr>
+                        <th colspan="{{routineFacilities[0].productsToIssue.length *2}}"
+                            openlmis-message="label.products"></th>
+                    </tr>
+                    <tr>
+                        <th colspan="2" ng-repeat="product in routineFacilities[0].productsToIssue">
+                            {{product.name}}
+                        </th>
+                    </tr>
+                    <tr colspan="2">
+                        <th style="max-width:80px;width:80px;min-width:80px"
+                            ng-repeat-start="product in routineFacilities[0].productsToIssue"
+                            openlmis-message="label.vaccine.stock.quantity.required">
+                        </th>
+                        <th ng-repeat-end openlmis-message="label.vaccine.stock.quantity.toissue"></th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr ng-class="{'pod':(facility.status === 'PENDING')}" ng-repeat="facility in routineFacilities"
+                        ng-if="facility.status !=='RECEIVED'"
+                        ng-click="setSelectedFacility(facility)"
+                        style="{{getSelectedFacilityColor(facility)}}"
+                            >
+                        <td ng-repeat-start="product in facility.productsToIssue">
+                            <span ng-bind="product.required"></span>
+                        </td>
+                        <td class="col-facility" ng-repeat-end>
+                            <a style="margin:3px 2px 7px 3px;padding-left:30px"
+                               ng-show="product.lots.length > 0 && (facility.status === undefined || facility.status !=='PENDING')"
+                               href
+                               id="lots" ng-click="showLots(facility,product)" class="rnr-adjustment">
+                                <span ng-bind="product.quantity"></span>
+                            </a>
+                            <input ng-show="product.lots === undefined && (facility.status === undefined || facility.status !=='PENDING')"
+                                   style="float:right"
+                                   numeric-validator="positiveInteger" maxlength="8" ng-model="product.quantity"
+                                   max="{{product.totalQuantityOnHand}}"
+                                   type="number"/>
+                            <span ng-if="(facility.status === 'PENDING' && product.quantity !==0)"
+                                  ng-bind="product.quantity"></span>
+                            <span ng-if="(facility.status === 'PENDING' && product.quantity ===0)">-</span>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+            <div class="clear-both"><br/></div>
+            <openlmis-pagination ng-show="routineFacilities.length > 0" num-pages="numberOfPages"
+                                 current-page="currentPage"
+                                 max-size="10"
+                                 error-pages="errorPages"></openlmis-pagination>
+        </div>
+
+        <div ng-show="distributionType==='EMERGENCY'">
+            <br/>
+            <br/>
+            <select style="min-width:300px !important" ui-select2
+                    ng-click="loadEmergencyFacility()"
+                    ng-disabled="productToAdd.lots.length >0" ng-model="emergencyFacilityId"
+                    ng-options="f.id as f.name for f in allEmergencyFacilities">
+                <option value="" openlmis-message="placeholder.select.facility"></option>
+            </select>
+            <br/>
+            <br/>
+
+            <div class="row-fluid" ng-show='emergencyFacilityId !==undefined || emergencyFacilityId >0'>
+
+                <div class="float-left left-table parent">
+                    <table class="table table-bordered" fixed-table-header id="emergencyFixedTable">
+                        <thead>
+                        <tr>
+                            <th colspan="2">&nbsp;</th>
+                        </tr>
+                        <tr>
+                            <th openlmis-message="label.facility"></th>
+                            <th style="width:100px;max-width:100px;min-width:100px" class="col-action"
+                                openlmis-message="label.action"></th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr ng-class=""
+                            ng-click="setSelectedFacility(emergencyFacility)"
+                                >
+                            <td class="col-facility">
+                                <span class="cell-text">{{emergencyFacility.name}}</span>
+                            </td>
+                            <td style="width:100px;max-width:100px;min-width:100px" class="col-action">
+                                <input ng-show="facility.status === undefined || facility.status !=='PENDING'"
+                                       ng-disabled="!hasProductToIssue(emergencyFacility)"
+                                       ng-click="showIssueModal(emergencyFacility,'EMERGENCY')"
+                                       type="submit" class="btn btn-primary" value="ISSUE"
+                                       openlmis-message="button.vaccine.stock.issue">
+
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="float-left right-table parent" custom-horizontal-scroll>
+                    <table class="table table-bordered" fixed-table-header>
+                        <thead>
+                        <tr>
+                            <th colspan="{{emergencyFacility.productsToIssue.length *2}}"
+                                openlmis-message="label.products"></th>
+                        </tr>
+                        <tr>
+                            <th ng-repeat="product in emergencyFacility.productsToIssue">
+                                {{product.name}}
+                            </th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr>
+                            <td ng-repeat="product in emergencyFacility.productsToIssue">
+                                <a style="margin:3px 2px 7px 3px;padding-left:30px"
+                                   ng-show="product.lots.length > 0 "
+                                   href
+                                   id="lots2" ng-click="showLots(emergencyFacility,product)" class="rnr-adjustment">
+                                    <span ng-bind="product.quantity"></span>
+                                </a>
+                                <input ng-show="product.lots.length === undefined"
+                                       style="float:right"
+                                       numeric-validator="positiveInteger" max="{{product.totalQuantityOnHand}}"
+                                       maxlength="8" ng-model="product.quantity"
+                                       type="number"/>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+
+    </div>
+
+    <div id="popupModel" modal="lotsModal">
+        <div class="modal-header">
+            <h3 openlmis-message="label.vaccine.stock.select.batch.and.quantity.to.issue"></h3>
+        </div>
+
+        <div class="modal-body">
+            <div class="row-fluid">
+                <div class="span4"><span openlmis-message="label.facility"></span><b>:{{currentFacility}}</b></div>
+                <div class="span4"><span openlmis-message="label.product"></span><b>:{{currentProduct.name}}</b></div>
+                <div class="span4" ng-show="distributionType==='ROUTINE'">
+                    <span
+                            openlmis-message="label.vaccine.stock.quantity.required"></span><b>{{currentProduct.required}}</b>
+                </div>
+            </div>
+            <table id="podTable" class="table table-bordered">
+                <thead>
+                <tr>
+                    <th class="col-lot"><span openlmis-message="label.stock.batch"></span></th>
+                    <th class="col-quantity "><span openlmis-message="label.stock.batch.expiration"></span></th>
+                    <th class="col-lot"><span openlmis-message="label.stock.vvm"></span></th>
+                    <th class="col-quantity "><span openlmis-message="label.stock.onhand"></span></th>
+                    <th class="col-available"><span openlmis-message="label.vaccine.stock.quantity.toissue"></span></th>
+                </tr>
+                </thead>
+                <tbody ng-form="lotsForm">
+                <tr ng-repeat="lot in currentProduct.lots">
+                    <td ng-bind="lot.lotCode"></td>
+                    <td ng-bind="lot.expirationDate"></td>
+                    <td ng-bind="lot.vvm"></td>
+                    <td>
+                        <span ng-bind="lot.quantityOnHand"></span>
+                        <span ng-show="lotsForm.lotQuantity{{$index}}.$invalid" data-toggle="tooltip" title=""
+                              class="icon-warning-sign red"></span>
+                    </td>
+                    <td>
+                        <input max="{{lot.quantityOnHand}}" name="lotQuantity{{$index}}" ng-model="lot.quantity"
+                               ng-change="updateCurrentTotal()" style="width:100%" numeric-validator="positiveInteger"
+                               maxlength="8" type="number"/>
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="4" openlmis-message="label.vaccine.stock.total"></td>
+                    <td ng-bind="currentLotsTotal"></td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="modal-footer">
+            <input ng-disabled="!currentLotsTotal >0" type="button" id="" class="btn btn-primary save-button"
+                   ng-click="saveLots()"
+                   openlmis-message="button.done"/>
+            <input type="button" ng-click="closeModal();equipmentError=''" class="btn btn-cancel"
+                   openlmis-message="button.cancel"/>
+        </div>
+
+    </div>
+
+    <div id="popup-box" ng-form="issueForm" modal="issueModal" style="width:80% !important;margin-left:-40% !important">
+        <div class="modal-header">
+            <h3 openlmis-message="label.vaccine.stock.issue.voucher"></h3>
+        </div>
+        <div class="modal-body">
+            <div class="row-fluid ">
+                <div class="info-box span12">
+                    <div class="span4">
+                        <strong id='issue-voucher-label'
+                                openlmis-message="label.stock.issue.voucher"> </strong>:&nbsp;
+                        <input type="text" name="voucherNumber" ng-required="true"
+                               ng-model="facilityToIssue.issueVoucher"/>
+                    </div>
+                    <div class="span4">
+                        <strong id="received-date-label"
+                                openlmis-message="Issuedate"> </strong>:&nbsp;
+                        <input ng-required="true" id="receivingDate" name="issueDate" type="text"
+                               ui-date="{dateFormat: 'dd/mm/yy', changeYear: true}"
+                               ng-model="facilityToIssue.issueDate"/>
+
+                    </div>
+                    <div class="span2">
+                        <strong id='facilityLabel2' openlmis-message="label.facility"> </strong>:&nbsp;
+                        <span id='facility2' ng-bind="facilityToIssue.name"></span>
+                    </div>
+                    <div class="span2">
+                        <strong id='issueTypeLabel' openlmis-message="label.type"> </strong>:&nbsp;
+                        <span id='issueType' ng-bind="facilityToIssue.type"></span>
+                    </div>
+                </div>
+            </div>
+            <table id="podTable2" class="table table-bordered">
+                <thead>
+                <tr>
+                    <th class="col-lot"><span openlmis-message="label.product"></span></th>
+                    <th class="col-lot "><span openlmis-message="label.stock.batch"></span></th>
+                    <th class="col-quantity "><span openlmis-message="label.stock.quantity"></span></th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr ng-repeat-start="product in facilityToIssue.productsToIssue">
+                    <td rowspan="{{product.lots.length}}">
+                        <span ng-bind="product.name"></span>
+                    </td>
+                    <td ng-class="{'skip':product.lots === undefined}">
+                        <span ng-bind="product.lots[0].lotCode"></span>
+                    </td>
+                    <td>
+                        <span ng-bind="product.lots[0].quantity" ng-show="product.lots.length > 0"></span>
+                        <span ng-bind="product.quantity" ng-show="product.lots === undefined"></span>
+                    </td>
+                </tr>
+                <tr ng-repeat-end ng-repeat="lot in product.lots" ng-show="!$first">
+                    <td>
+                        <span ng-bind="lot.lotCode"></span>
+                    </td>
+                    <td>
+                        <span ng-bind="lot.quantity"></span>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="modal-footer">
+            <input type="button" id="issueSubmit" class="btn btn-primary save-button"
+                   ng-click="distribute()"
+                   ng-disabled="issueForm.$invalid || allProductsZero"
+                   openlmis-message="button.submit"/>
+            <input type="button" ng-click="closeIssueModal();" class="btn btn-cancel"
+                   openlmis-message="button.cancel"/>
+        </div>
+
+    </div>
+
+    <div id="popup-box2" ng-form="podForm" modal="podModal" style="width:50% !important;margin-left:-25% !important">
+        <div class="modal-header">
+            <h3 openlmis-message="label.vaccine.stock.pod"></h3>
+        </div>
+        <div class="modal-body">
+            <div class="row-fluid ">
+                <div class="info-box span12">
+                    <div class="span4">
+                        <strong id='issue-voucher-label2'
+                                openlmis-message="label.stock.issue.voucher"> </strong>:&nbsp;
+                        <span type="text" name="voucherNumber" ng-required="true"
+                              ng-bind="facilityPOD.voucherNumber"></span>
+                    </div>
+                    <div class="span5">
+                        <strong id="issue-date-label"
+                                openlmis-message="Issuedate"> </strong>:&nbsp;
+                        <span id="issueDate2" type="text" ng-bind="facilityPOD.distributionDate"></span>
+                    </div>
+                    <div class="span3">
+                        <strong id='facilityLabel3' openlmis-message="label.facility"> </strong>:&nbsp;
+                        <span id='facility3' ng-bind="facilityPOD.name"></span>
+                    </div>
+                </div>
+            </div>
+            <table id="podTable3" class="table table-bordered">
+                <thead>
+                <tr>
+                    <th class="col-product"><span openlmis-message="label.product"></span></th>
+                    <th class="col-lot "><span openlmis-message="label.stock.batch"></span></th>
+                    <th class="col-quantity "><span openlmis-message="label.stock.quantity"></span></th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr ng-repeat-start="product in facilityPOD.productsToIssue">
+                    <td rowspan="{{product.lots.length}}">
+                        <span ng-bind="product.name"></span>
+                    </td>
+                    <td ng-class="{'skip':product.lots === undefined}">
+                        <span ng-bind="product.lots[0].lotCode"></span>
+                    </td>
+                    <td>
+                        <input ng-change="updateCurrentPOD(product)" ng-show="product.lots.length > 0" type="number"
+                               ng-model="product.lots[0].quantity">
+                        <input ng-show="product.lots === undefined" type="number" ng-model="product.quantity"/>
+                    </td>
+                </tr>
+                <tr ng-repeat-end ng-repeat="lot in product.lots" ng-show="!$first">
+                    <td>
+                        <span ng-bind="lot.lotCode"></span>
+                    </td>
+                    <td>
+                        <input ng-change="updateCurrentPOD(product)" type="number" ng-model="lot.quantity"/>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="modal-footer">
+            <input type="button" id="issueSubmit2" class="btn btn-primary save-button"
+                   ng-click="updatePOD()"
+                   openlmis-message="button.confirm"/>
+            <input type="button" ng-click="closePODModal();" class="btn btn-cancel"
+                   openlmis-message="button.cancel"/>
+        </div>
+
+    </div>
+
+    <div form-toolbar id="action_buttons" class="action-buttons">
+        <div class="form-cell button-row">
+
+            <input id="cancel" type="submit" id="cancel-button" ng-click="cancel()" class="btn btn-primary save-button"
+                   openlmis-message="button.cancel"/>
+        </div>
+        <div class="toolbar-error" id="saveErrorMsgDiv">
+            <span openlmis-message="error" ng-show="error"></span>&nbsp;
+            <span ng-show="errorProgram" ng-bind="errorProgram"></span>
+        </div>
+        <div class="toolbar-success" id="saveSuccessMsgDiv" openlmis-message="message.issue.successful"
+             ng-show="message"></div>
+    </div>
+
+</div>

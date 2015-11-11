@@ -25,6 +25,7 @@ import org.openlmis.core.repository.RoleRightsRepository;
 import org.openlmis.db.categories.UnitTests;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -56,10 +57,16 @@ public class RoleRightsServiceTest {
   @Mock
   private FacilityService facilityService;
 
+  @Mock
+  private ProgramService programService;
+
+  @Mock
+  private ProgramProductService programProductService;
+
   @Before
   public void setUp() throws Exception {
     role = new Role("role name", "role description");
-    roleRightsService = new RoleRightsService(roleRightsRepository, supervisoryNodeService, facilityService);
+    roleRightsService = new RoleRightsService(roleRightsRepository, supervisoryNodeService, facilityService, programService, programProductService);
   }
 
   @Test
@@ -109,7 +116,7 @@ public class RoleRightsServiceTest {
     when(supervisoryNodeService.getFor(facility, program)).thenReturn(supervisoryNode);
     when(supervisoryNodeService.getAllParentSupervisoryNodesInHierarchy(supervisoryNode)).thenReturn(supervisoryNodes);
     when(roleRightsRepository.getRightsForUserOnSupervisoryNodeAndProgram(userId, supervisoryNodes, program)).thenReturn(
-      expected);
+            expected);
 
     List<Right> result = roleRightsService.getRightsForUserAndFacilityProgram(userId, facility, program);
 
@@ -131,6 +138,31 @@ public class RoleRightsServiceTest {
 
     assertThat(result.containsAll(expected), is(true));
     verify(roleRightsRepository).getRightsForUserOnHomeFacilityAndProgram(userId, program);
+  }
+
+  // Test case commented out because it gives a Mockito exception that is not understood
+  @Test
+  public void shouldGetRightsForAUserOnFacilityAndProductCode() {
+    Long userId = 1L;
+    Long facilityId = 2L;
+    String productCode = "3";
+    Facility facility = new Facility(facilityId);
+    Program program = new Program(3L);
+    program.setCode("4");
+    ProgramProduct programProduct = new ProgramProduct(5L);
+    programProduct.setProgram(program);
+    List<Right> expected = Collections.singletonList(new Right(CREATE_REQUISITION, ADMIN));
+
+    when(facilityService.getById(facilityId)).thenReturn(facility);
+    when(programProductService.getByProductCode(productCode)).thenReturn(Collections.singletonList(programProduct));
+    when(programService.getByCode(any(String.class))).thenReturn(program);
+    when(supervisoryNodeService.getFor(facility, program)).thenReturn(null);
+    when(facilityService.getHomeFacility(userId)).thenReturn(facility);
+    when(roleRightsRepository.getRightsForUserOnHomeFacilityAndProgram(userId, program)).thenReturn(expected);
+
+    List<Right> result = roleRightsService.getRightsForUserFacilityAndProductCode(userId, facilityId, productCode);
+
+    assertThat(result.containsAll(expected), is(true));
   }
 
   @Test

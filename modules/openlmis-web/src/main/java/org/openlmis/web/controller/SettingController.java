@@ -28,6 +28,9 @@ import org.springframework.web.bind.annotation.RequestMethod;
 @Controller
 @NoArgsConstructor
 public class SettingController extends BaseController {
+
+  public static final String SETTINGS = "settings";
+
   @Autowired
   private ConfigurationSettingService configurationService;
 
@@ -37,19 +40,19 @@ public class SettingController extends BaseController {
   public ResponseEntity<OpenLmisResponse> getAll() {
     ConfigurationDTO dto = new ConfigurationDTO();
     dto.setList( configurationService.getConfigurations() );
-    return OpenLmisResponse.response("settings", dto );
+    return OpenLmisResponse.response(SETTINGS, dto );
   }
 
   @RequestMapping(value = "/settings/{key}",  method = RequestMethod.GET, headers = "Accept=application/json")
   public ResponseEntity<OpenLmisResponse> getByKey(@PathVariable(value = "key") String key) {
-    return OpenLmisResponse.response("settings", configurationService.getByKey(key) );
+    return OpenLmisResponse.response(SETTINGS, configurationService.getByKey(key) );
   }
 
   @RequestMapping(value = "/saveSettings", method = RequestMethod.POST, headers = "Accept=application/json")
   @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_SETTING')")
   public ResponseEntity<OpenLmisResponse> updateSettings(@RequestBody ConfigurationDTO settings) {
     configurationService.update(settings.getList());
-    return OpenLmisResponse.response("settings", "success");
+    return OpenLmisResponse.response(SETTINGS, "success");
   }
 
 }

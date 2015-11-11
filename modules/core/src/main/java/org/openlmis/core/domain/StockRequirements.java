@@ -10,29 +10,54 @@
 
 package org.openlmis.core.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+import org.openlmis.core.dto.IsaDTO;
 
+import java.util.ArrayList;
 import java.util.List;
+
+import static com.fasterxml.jackson.databind.annotation.JsonSerialize.Inclusion.NON_NULL;
 
 
 @EqualsAndHashCode(callSuper = false)
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class StockRequirements
+@JsonSerialize(include = NON_NULL)
+@JsonIgnoreProperties(ignoreUnknown = true)
+public class StockRequirements extends BaseModel
 {
   Long facilityId;
   Long productId;
+  String productCategory;
+  String productName;
 
   ISA isa;
+
   Double minMonthsOfStock;
   Double maxMonthsOfStock;
   Double eop;
 
   Long population;
+
+  Integer annualNeed;
+
+  Integer quarterlyNeed;
+
+  Double MinimumStock;
+
+  Double MaximumStock;
+
+  Double ReorderLevel;
+
+  IsaDTO isaDTO;
+
+  int isaValue = 0;
 
   private Integer getIsaValue()
   {
@@ -45,14 +70,16 @@ public class StockRequirements
   {
     if(getIsaValue() == null || minMonthsOfStock == null)
       return null;
-    return getIsaValue() * minMonthsOfStock;
+    Double value = getIsaValue() * minMonthsOfStock;
+    return MinimumStock = value;
   }
 
   private Double getMaximumStock()
   {
     if(getIsaValue() == null || maxMonthsOfStock == null)
       return null;
-    return getIsaValue() * maxMonthsOfStock;
+    Double value = getIsaValue() * maxMonthsOfStock;
+    return MaximumStock= value;
   }
 
   private Double getReorderLevel()
@@ -61,6 +88,19 @@ public class StockRequirements
       return null;
     return getIsaValue() * eop;
   }
+
+  private Integer getAnnualNeed(){
+    if(getIsaValue() == null)
+      return null;
+    return getIsaValue() * 12;
+  }
+
+  private Integer getQuarterlyNeed(){
+    if (getAnnualNeed() == null)
+      return null;
+    return getAnnualNeed() / 4;
+  }
+
 
   public String getJSON()
   {
@@ -71,46 +111,52 @@ public class StockRequirements
     StringBuilder builder = new StringBuilder();
     builder.append("{");
 
-      builder.append("\"facilityId\": ");
-      builder.append(facilityId);
+    builder.append("\"facilityId\": ");
+    builder.append(facilityId);
 
-      builder.append(", \"productId\": ");
-      builder.append(productId);
+    builder.append(", \"productId\": ");
+    builder.append(productId);
 
-      builder.append(", \"population\": ");
-      builder.append(population);
+    builder.append(", \"productName\": ");
+    builder.append("\""+productName +"\"");
 
-      builder.append(", \"minMonthsOfStock\": ");
-      builder.append(minMonthsOfStock);
-      builder.append(", \"maxMonthsOfStock\": ");
-      builder.append(maxMonthsOfStock);
-      builder.append(", \"eop\": ");
-      builder.append(eop);
+    builder.append(", \"productCategory\": ");
+    builder.append("\""+productCategory +"\"");
 
-      builder.append(", \"isaCoefficients\": {");
-      if(isa != null) {
-        builder.append("\"whoRatio\": "); //whoRatio equals "target population percentage"
-        builder.append(isa.whoRatio);
+    builder.append(", \"population\": ");
+    builder.append(population);
 
-        builder.append(", \"dosesPerYear\": ");
-        builder.append(isa.dosesPerYear);
+    builder.append(", \"minMonthsOfStock\": ");
+    builder.append(minMonthsOfStock);
+    builder.append(", \"maxMonthsOfStock\": ");
+    builder.append(maxMonthsOfStock);
+    builder.append(", \"eop\": ");
+    builder.append(eop);
 
-        builder.append(", \"wastageFactor\": ");
-        builder.append(isa.wastageFactor);
+    builder.append(", \"isaCoefficients\": {");
+    if(isa != null) {
+      builder.append("\"whoRatio\": ");
+      builder.append(isa.whoRatio);
 
-        builder.append(", \"bufferPercentage\": ");
-        builder.append(isa.bufferPercentage);
+      builder.append(", \"dosesPerYear\": ");
+      builder.append(isa.dosesPerYear);
 
-        builder.append(", \"adjustmentValue\": ");
-        builder.append(isa.adjustmentValue);
+      builder.append(", \"wastageFactor\": ");
+      builder.append(isa.wastageFactor);
 
-        builder.append(", \"minimumValue\": ");
-        builder.append(isa.minimumValue);
+      builder.append(", \"bufferPercentage\": ");
+      builder.append(isa.bufferPercentage);
 
-        builder.append(", \"maximumValue\": ");
-        builder.append(isa.maximumValue);
-      }
-      builder.append("}");
+      builder.append(", \"minimumValue\": ");
+      builder.append(isa.minimumValue);
+
+      builder.append(", \"maximumValue\": ");
+      builder.append(isa.maximumValue);
+
+      builder.append(", \"adjustmentValue\": ");
+      builder.append(isa.adjustmentValue);
+    }
+    builder.append("}");
 
     builder.append(", \"isaValue\": ");
     builder.append(getIsaValue());
@@ -124,10 +170,18 @@ public class StockRequirements
     builder.append(", \"ReorderLevel\": ");
     builder.append(getReorderLevel());
 
+    builder.append(", \"annualNeed\": ");
+    builder.append(getAnnualNeed());
+
+    builder.append(", \"quarterlyNeed\": ");
+    builder.append(getQuarterlyNeed());
+
+
     builder.append("}");
 
     return builder.toString();
   }
+
 
   //If anyone likes this pattern that this method is intended to support, the method should be generalized and moved elsewhere
   public static String getJSONArray(List<StockRequirements> items)
@@ -143,4 +197,6 @@ public class StockRequirements
 
     return builder.toString();
   }
+
+
 }

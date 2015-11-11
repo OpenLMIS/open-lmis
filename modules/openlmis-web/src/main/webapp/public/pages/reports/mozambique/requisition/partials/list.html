@@ -1,0 +1,39 @@
+<div>
+    <h3>Requisition Report</h3>
+    <h4>Total : {{requisitions.length}} requisition(s)</h4>
+    <table class="table table-condensed table-bordered table-striped">
+        <tr class="gradient-header">
+            <th>Number</th>
+            <th ng-click="sortType = 'programName'; sortReverse = !sortReverse" class="sortable sort-desc">Program Name
+                <span ng-show="sortType != 'programName'" class="icon-sort"></span>
+                <span ng-show="sortType == 'programName' && !sortReverse" class="icon-sort-up"></span>
+                <span ng-show="sortType == 'programName' && sortReverse" class="icon-sort-down"></span></th>
+            <th ng-click="sortType = 'facilityName'; sortReverse = !sortReverse">Facility Name
+                <span ng-show="sortType != 'facilityName'" class="icon-sort"></span>
+                <span ng-show="sortType == 'facilityName' && !sortReverse" class="icon-sort-up"></span>
+                <span ng-show="sortType == 'facilityName' && sortReverse" class="icon-sort-down"></span></th>
+            <th ng-click="sortType = 'submittedUser'; sortReverse = !sortReverse">Submitted User
+                <span ng-show="sortType != 'submittedUser'" class="icon-sort"></span>
+                <span ng-show="sortType == 'submittedUser' && !sortReverse" class="icon-sort-up"></span>
+                <span ng-show="sortType == 'submittedUser' && sortReverse" class="icon-sort-down"></span></th>
+            <th ng-click="sortType = 'clientSubmittedTimeString'; sortReverse = !sortReverse">Submitted Time
+                <span ng-show="sortType != 'clientSubmittedTimeString'" class="icon-sort"></span>
+                <span ng-show="sortType == 'clientSubmittedTimeString' && !sortReverse" class="icon-sort-up"></span>
+                <span ng-show="sortType == 'clientSubmittedTimeString' && sortReverse" class="icon-sort-down"></span>
+            </th>
+            <th ng-click="sortType = 'webSubmittedTimeString'; sortReverse = !sortReverse">Sync Time
+                <span ng-show="sortType != 'webSubmittedTimeString'" class="icon-sort"></span>
+                <span ng-show="sortType == 'webSubmittedTimeString' && !sortReverse" class="icon-sort-up"></span>
+                <span ng-show="sortType == 'webSubmittedTimeString' && sortReverse" class="icon-sort-down"></span></th>
+
+        </tr>
+        <tr ng-repeat="row in requisitions| orderBy:sortType:sortReverse">
+            <td>{{$index+1}}</td>
+            <td>{{row.programName}}</td>
+            <td>{{row.facilityName}}</td>
+            <td>{{row.submittedUser}}</td>
+            <td>{{row.clientSubmittedTimeString}}</td>
+            <td>{{row.webSubmittedTimeString}}</td>
+        </tr>
+    </table>
+</div>

@@ -210,7 +210,7 @@ public class ReportManager {
         params.put(Constants.OPERATOR_NAME, configuration.getValue());
 
         // populate all the rest of the report parameters as overriden by the report data provider
-        HashMap<String, String> values = report.getReportDataProvider().getAdditionalReportData(filterCriteria);
+        Map<String, String> values = report.getReportDataProvider().getExtendedHeader(filterCriteria);
         if(values != null){
             for(String key : values.keySet()){
                 params.put(key, values.get(key));

@@ -98,4 +98,8 @@ public interface EquipmentInventoryMapper {
       " , modifiedBy = #{modifiedBy}, modifiedDate = NOW() " +
       " WHERE id = #{id}")
   void update(EquipmentInventory inventory);
+
+    @Select("Select * from fn_populate_alert_equipment_nonfunctional(1);")
+    String updateNonFunctionalEquipments();
+
 }

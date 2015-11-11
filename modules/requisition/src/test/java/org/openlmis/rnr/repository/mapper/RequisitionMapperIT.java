@@ -43,8 +43,10 @@ import static com.natpryce.makeiteasy.MakeItEasy.*;
 import static java.util.Arrays.asList;
 import static org.hamcrest.CoreMatchers.*;
 import static org.joda.time.DateTime.now;
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
+import static org.openlmis.core.builder.FacilityBuilder.FACILITY_CODE;
 import static org.openlmis.core.builder.FacilityBuilder.defaultFacility;
 import static org.openlmis.core.builder.FacilityBuilder.name;
 import static org.openlmis.core.builder.ProcessingPeriodBuilder.*;
@@ -67,14 +69,20 @@ import static org.openlmis.rnr.domain.RnrStatus.*;
 public class RequisitionMapperIT {
   public static final Long MODIFIED_BY = 1L;
   public static final Long USER_ID = 2L;
-
+  @Autowired
+  LossesAndAdjustmentsMapper lossesAndAdjustmentsMapper;
+  @Autowired
+  SupervisoryNodeMapper supervisoryNodeMapper;
+  @Autowired
+  SupplyLineMapper supplyLineMapper;
+  @Autowired
+  RequisitionStatusChangeMapper requisitionStatusChangeMapper;
   private Facility facility;
   private ProcessingSchedule processingSchedule;
   private ProcessingPeriod processingPeriod1;
   private ProcessingPeriod processingPeriod2;
   private ProcessingPeriod processingPeriod3;
   private Program program;
-
   @Autowired
   private UserMapper userMapper;
   @Autowired
@@ -88,13 +96,9 @@ public class RequisitionMapperIT {
   @Autowired
   private RnrLineItemMapper lineItemMapper;
   @Autowired
-  LossesAndAdjustmentsMapper lossesAndAdjustmentsMapper;
-  @Autowired
   private ProcessingPeriodMapper processingPeriodMapper;
   @Autowired
   private ProcessingScheduleMapper processingScheduleMapper;
-  @Autowired
-  SupervisoryNodeMapper supervisoryNodeMapper;
   @Autowired
   private ProductMapper productMapper;
   @Autowired
@@ -106,12 +110,7 @@ public class RequisitionMapperIT {
   @Autowired
   private CommentMapper commentMapper;
   @Autowired
-  SupplyLineMapper supplyLineMapper;
-  @Autowired
   private ProductCategoryMapper productCategoryMapper;
-  @Autowired
-  RequisitionStatusChangeMapper requisitionStatusChangeMapper;
-
   private SupervisoryNode supervisoryNode;
   private Role role;
   private Date modifiedDate;
@@ -184,6 +183,33 @@ public class RequisitionMapperIT {
   }
 
   @Test
+  public void shouldGetRequisitionsByFacilityAndProgram() {
+    String facilityCode = "F10";
+    String programCode = "MMIA";
+
+    Facility queryFacility = new Facility(facility.getId());
+    queryFacility.setCode(facilityCode);
+
+    Program queryProgram = new Program(program.getId());
+    queryProgram.setCode(programCode);
+
+    Rnr requisition = new Rnr(queryFacility, queryProgram, processingPeriod1, false, MODIFIED_BY, 4L);
+    requisition.setAllocatedBudget(new BigDecimal(123.45));
+    requisition.setStatus(INITIATED);
+
+    mapper.insert(requisition);
+
+    List<Rnr> rnrList = mapper.getRequisitionsWithLineItemsByFacility(queryFacility);
+    assertThat(rnrList.size(), is(1));
+
+    Facility anotherFacility = new Facility(122L);
+    facility.setCode(FACILITY_CODE);
+
+    rnrList = mapper.getRequisitionsWithLineItemsByFacility(anotherFacility);
+    assertThat(rnrList.size(), is(0));
+  }
+
+  @Test
   public void shouldUpdateRequisition() {
     Rnr requisition = insertRequisition(processingPeriod1, program, INITIATED, false, facility, supervisoryNode, modifiedDate);
     requisition.setModifiedBy(USER_ID);
@@ -199,6 +225,35 @@ public class RequisitionMapperIT {
     assertThat(updatedRequisition.getId(), is(requisition.getId()));
     assertThat(updatedRequisition.getSupervisoryNodeId(), is(requisition.getSupervisoryNodeId()));
     assertThat(updatedRequisition.getModifiedBy(), is(equalTo(USER_ID)));
+  }
+
+  @Test
+  public void shouldUpdateClientSubmittedTime() {
+    Rnr requisition = insertRequisition(processingPeriod1, program, INITIATED, false, facility, supervisoryNode, modifiedDate);
+
+    Date clientSubmittedTime = new Date();
+    requisition.setClientSubmittedTime(clientSubmittedTime);
+
+    mapper.updateClientFields(requisition);
+
+    Rnr updatedRequisition = mapper.getById(requisition.getId());
+
+    assertThat(updatedRequisition.getId(), is(requisition.getId()));
+    assertThat(updatedRequisition.getClientSubmittedTime(), is(clientSubmittedTime));
+
+  }
+
+  @Test
+  public void shouldUpdateClientSubmittedNotes() throws Exception {
+    Rnr requisition = insertRequisition(processingPeriod1, program, INITIATED, false, facility, supervisoryNode, modifiedDate);
+    requisition.setClientSubmittedNotes("xyz");
+
+    mapper.updateClientFields(requisition);
+
+    Rnr updatedRequisition = mapper.getById(requisition.getId());
+
+    assertThat(updatedRequisition.getId(), is(requisition.getId()));
+    assertEquals("xyz", updatedRequisition.getClientSubmittedNotes());
   }
 
   @Test

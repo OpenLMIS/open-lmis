@@ -154,9 +154,9 @@ public class VaccineReportServiceTest {
   @Test
   public void shouldSave() throws Exception {
     VaccineReport report = make(a(VaccineReportBuilder.defaultVaccineReport));
-    doNothing().when(repository).update(report);
-    service.save(report);
-    verify(repository).update(report);
+    doNothing().when(repository).update(report, 2L);
+    service.save(report, 2L);
+    verify(repository).update(report, 2L);
   }
 
   @Test
@@ -175,9 +175,9 @@ public class VaccineReportServiceTest {
   @Test
   public void shouldSubmit() throws Exception {
     VaccineReport report = make(a(VaccineReportBuilder.defaultVaccineReport));
-    doNothing().when(repository).update(report);
-    service.submit(report, 1L);
-    verify(repository).update(report);
+    doNothing().when(repository).update(report, 2L);
+    service.submit(report, 2L);
+    verify(repository).update(report, 2L);
     assertThat(report.getStatus(), is(ReportStatus.SUBMITTED));
   }
 

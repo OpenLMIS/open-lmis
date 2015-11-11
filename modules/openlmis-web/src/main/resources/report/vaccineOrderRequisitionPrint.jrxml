@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="report1" pageWidth="842" pageHeight="595" orientation="Landscape" whenNoDataType="NoDataSection" columnWidth="842" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" isFloatColumnFooter="true" uuid="a0a4e861-0726-422f-b3d5-54b1aefe96ce">
-	<property name="ireport.zoom" value="1.5"/>
+	<property name="ireport.zoom" value="1.3636363636363638"/>
 	<property name="ireport.x" value="0"/>
-	<property name="ireport.y" value="468"/>
+	<property name="ireport.y" value="167"/>
 	<style name="table">
 		<box>
 			<pen lineWidth="1.0" lineColor="#000000"/>
@@ -71,9 +71,9 @@
 	<parameter name="OPERATOR_NAME" class="java.lang.String"/>
 	<queryString>
 		<![CDATA[select
- u.firstName,u.lastName,  f.name facilityName,p.name programName,pp.startdate,pp.endDate,r.orderdate,
+ u.firstName,u.lastName,  f.name facilityName,p.name programName,pp.startdate::date,pp.endDate::date,r.orderdate,
 
- li.maximumStock, reorderLevel,stockOnHand,quantityRequested, productName,productCategory
+ li.maximumStock, reorderLevel,stockOnHand,quantityRequested, productName
  from vaccine_order_requisitions r
  inner join facilities f on r.facilityId = F.id
  inner join processing_periods pp on r.periodId = PP.ID
@@ -81,17 +81,16 @@
  inner join users u  on  r.createdBy = u.id
  inner join vaccine_order_requisition_line_items li on r.id = li.orderId
 
- WHERE r.id = $P{ORDER_ID} and productCategory is not Null]]>
+ WHERE r.id = $P{ORDER_ID}]]>
 	</queryString>
 	<field name="facilityName" class="java.lang.String"/>
 	<field name="orderdate" class="java.util.Date"/>
 	<field name="programName" class="java.lang.String"/>
-	<field name="startdate" class="java.lang.String"/>
-	<field name="enddate" class="java.lang.String"/>
+	<field name="startdate" class="java.util.Date"/>
+	<field name="enddate" class="java.util.Date"/>
 	<field name="firstName" class="java.lang.String"/>
 	<field name="lastName" class="java.lang.String"/>
 	<field name="productName" class="java.lang.String"/>
-	<field name="productCategory" class="java.lang.String"/>
 	<field name="maximumStock" class="java.lang.String"/>
 	<field name="reOrderLevel" class="java.lang.String"/>
 	<field name="quantityRequested" class="java.lang.String"/>
@@ -125,56 +124,56 @@
 				<frame>
 					<reportElement style="table_TH" x="11" y="0" width="815" height="81" forecolor="#3D9297" backcolor="#FFFFFF" uuid="605cceed-5add-40d1-aab0-863025404974"/>
 					<textField>
-						<reportElement x="0" y="3" width="108" height="20" isPrintInFirstWholeBand="true" uuid="3d3d4b94-82f7-4b5b-a962-6dd2252913ef"/>
+						<reportElement x="4" y="3" width="108" height="20" isPrintInFirstWholeBand="true" uuid="3d3d4b94-82f7-4b5b-a962-6dd2252913ef"/>
 						<textElement>
 							<font size="12" isBold="true" isUnderline="false"/>
 						</textElement>
 						<textFieldExpression><![CDATA[$R{label.name}]]></textFieldExpression>
 					</textField>
 					<textField>
-						<reportElement x="0" y="23" width="108" height="20" isPrintInFirstWholeBand="true" uuid="e9ad75ff-e3a0-4d90-95e3-4a3d34d62cde"/>
+						<reportElement x="4" y="23" width="108" height="20" isPrintInFirstWholeBand="true" uuid="e9ad75ff-e3a0-4d90-95e3-4a3d34d62cde"/>
 						<textElement>
 							<font size="12" isBold="true" isUnderline="false"/>
 						</textElement>
 						<textFieldExpression><![CDATA[$R{label.from}]]></textFieldExpression>
 					</textField>
 					<textField>
-						<reportElement x="0" y="43" width="108" height="20" isPrintInFirstWholeBand="true" uuid="c33894c1-6bff-4ce8-9107-7b3feda429df"/>
+						<reportElement x="4" y="43" width="108" height="20" isPrintInFirstWholeBand="true" uuid="c33894c1-6bff-4ce8-9107-7b3feda429df"/>
 						<textElement>
 							<font size="12" isBold="true" isUnderline="false"/>
 						</textElement>
 						<textFieldExpression><![CDATA[$R{label.date}]]></textFieldExpression>
 					</textField>
 					<staticText>
-						<reportElement x="108" y="3" width="15" height="20" uuid="0ddeb019-12d8-4bb9-b104-18c61404d546"/>
+						<reportElement x="112" y="3" width="15" height="20" uuid="0ddeb019-12d8-4bb9-b104-18c61404d546"/>
 						<textElement textAlignment="Center" verticalAlignment="Top">
 							<font size="13" isBold="true"/>
 						</textElement>
 						<text><![CDATA[  :  ]]></text>
 					</staticText>
 					<staticText>
-						<reportElement x="108" y="23" width="15" height="20" uuid="86d20271-1f40-4af9-af35-6388283b2d2c"/>
+						<reportElement x="112" y="23" width="15" height="20" uuid="86d20271-1f40-4af9-af35-6388283b2d2c"/>
 						<textElement textAlignment="Center" verticalAlignment="Top">
 							<font size="13" isBold="true"/>
 						</textElement>
 						<text><![CDATA[  :  ]]></text>
 					</staticText>
 					<staticText>
-						<reportElement x="108" y="43" width="15" height="20" uuid="5a3b255b-5a41-4979-9b8a-ae125bf14b53"/>
+						<reportElement x="112" y="43" width="15" height="20" uuid="5a3b255b-5a41-4979-9b8a-ae125bf14b53"/>
 						<textElement textAlignment="Center" verticalAlignment="Top">
 							<font size="13" isBold="true"/>
 						</textElement>
 						<text><![CDATA[  :  ]]></text>
 					</staticText>
 					<textField>
-						<reportElement x="123" y="3" width="236" height="20" isPrintInFirstWholeBand="true" uuid="9a331883-a24f-45fa-bbf2-b5ba76b47242"/>
+						<reportElement x="127" y="3" width="236" height="20" isPrintInFirstWholeBand="true" uuid="9a331883-a24f-45fa-bbf2-b5ba76b47242"/>
 						<textElement>
 							<font size="12" isUnderline="false"/>
 						</textElement>
 						<textFieldExpression><![CDATA[$F{firstName}+ " "+ $F{lastName}]]></textFieldExpression>
 					</textField>
 					<textField isStretchWithOverflow="true">
-						<reportElement x="123" y="23" width="236" height="20" isPrintInFirstWholeBand="true" uuid="219fe371-17e1-4ab4-acfb-8e262215827d"/>
+						<reportElement x="127" y="23" width="236" height="20" isPrintInFirstWholeBand="true" uuid="219fe371-17e1-4ab4-acfb-8e262215827d"/>
 						<textElement verticalAlignment="Middle">
 							<font size="12" isUnderline="false"/>
 						</textElement>
@@ -182,32 +181,32 @@
 					</textField>
 				</frame>
 				<textField isStretchWithOverflow="true" pattern="dd-MM-yyyy">
-					<reportElement positionType="Float" x="134" y="43" width="236" height="20" isPrintInFirstWholeBand="true" uuid="5bca3f3a-1c7a-4a3b-8d5b-a56fb297c06b"/>
+					<reportElement positionType="Float" x="138" y="43" width="236" height="20" isPrintInFirstWholeBand="true" uuid="5bca3f3a-1c7a-4a3b-8d5b-a56fb297c06b"/>
 					<textElement textAlignment="Left" verticalAlignment="Middle">
 						<font fontName="SansSerif" size="12" isUnderline="false"/>
 					</textElement>
 					<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
 				</textField>
 				<textField isStretchWithOverflow="true">
-					<reportElement x="11" y="63" width="108" height="18" isPrintInFirstWholeBand="true" uuid="290c6493-c0dd-41f4-b251-01f05f2ae792"/>
+					<reportElement x="15" y="63" width="108" height="18" isPrintInFirstWholeBand="true" uuid="290c6493-c0dd-41f4-b251-01f05f2ae792"/>
 					<textElement>
 						<font size="12" isBold="true" isUnderline="false"/>
 					</textElement>
 					<textFieldExpression><![CDATA[$R{label.facility.reportingPeriod}]]></textFieldExpression>
 				</textField>
 				<staticText>
-					<reportElement x="119" y="61" width="15" height="20" uuid="bb710ece-de6c-47bc-8ec3-25ededa54c56"/>
+					<reportElement x="123" y="61" width="15" height="20" uuid="bb710ece-de6c-47bc-8ec3-25ededa54c56"/>
 					<textElement textAlignment="Center" verticalAlignment="Top">
 						<font size="13" isBold="true"/>
 					</textElement>
 					<text><![CDATA[  :  ]]></text>
 				</staticText>
-				<textField isStretchWithOverflow="true" pattern="dd/MM/yyyy">
-					<reportElement x="134" y="63" width="236" height="18" isPrintInFirstWholeBand="true" uuid="c2d7f24d-862a-4da9-8cb4-014dd4704077"/>
+				<textField isStretchWithOverflow="true" pattern="dd-MM-yyyy">
+					<reportElement x="138" y="63" width="236" height="18" isPrintInFirstWholeBand="true" uuid="c2d7f24d-862a-4da9-8cb4-014dd4704077"/>
 					<textElement verticalAlignment="Bottom">
 						<font size="12" isUnderline="false"/>
 					</textElement>
-					<textFieldExpression><![CDATA[$F{startdate} +" - " +$F{enddate}]]></textFieldExpression>
+					<textFieldExpression><![CDATA[new SimpleDateFormat("dd-MM-yyyy").format($F{startdate})  +" - " + new SimpleDateFormat("dd-MM-yyyy").format($F{enddate})]]></textFieldExpression>
 				</textField>
 			</band>
 		</groupHeader>
@@ -231,7 +230,6 @@
 		</groupFooter>
 	</group>
 	<group name="Group by ProductCategory">
-		<groupExpression><![CDATA[$F{productCategory}]]></groupExpression>
 		<groupHeader>
 			<band height="20">
 				<staticText>
@@ -295,45 +293,35 @@
 					<reportElement x="13" y="9" width="813" height="183" forecolor="#3D9297" uuid="f5679f44-951b-47b0-82d3-3a204b248b0c"/>
 				</rectangle>
 				<textField>
-					<reportElement x="13" y="9" width="155" height="21" forecolor="#3D9297" backcolor="#3D9297" uuid="bd180386-f3a3-4ef6-b8ca-bee881686723"/>
-					<textElement verticalAlignment="Bottom">
-						<font size="12" isBold="true"/>
-					</textElement>
-					<textFieldExpression><![CDATA[$R{label.requested.by}]]></textFieldExpression>
-				</textField>
-				<line>
-					<reportElement x="168" y="29" width="246" height="1" uuid="42f44448-a1c8-4b46-967d-09307996c1aa"/>
-				</line>
-				<textField>
-					<reportElement x="168" y="10" width="246" height="20" uuid="d07d6d88-44e3-4423-ba09-f8314956b372"/>
+					<reportElement x="171" y="10" width="246" height="20" uuid="d07d6d88-44e3-4423-ba09-f8314956b372"/>
 					<textElement verticalAlignment="Bottom"/>
 					<textFieldExpression><![CDATA[$F{firstName} +" "+$F{lastName}]]></textFieldExpression>
 				</textField>
 				<textField>
-					<reportElement x="13" y="30" width="155" height="22" forecolor="#3D9297" backcolor="#3D9297" uuid="e8295969-b922-4907-9a62-b80659c9bfad"/>
+					<reportElement x="16" y="30" width="155" height="22" forecolor="#3D9297" backcolor="#3D9297" uuid="e8295969-b922-4907-9a62-b80659c9bfad"/>
 					<textElement verticalAlignment="Bottom">
 						<font size="13"/>
 					</textElement>
 					<textFieldExpression><![CDATA[$R{label.signature}]]></textFieldExpression>
 				</textField>
 				<line>
-					<reportElement x="168" y="51" width="246" height="1" uuid="225b8863-a292-4a41-a70d-e29f327d0e78"/>
+					<reportElement x="171" y="51" width="246" height="1" uuid="225b8863-a292-4a41-a70d-e29f327d0e78"/>
 				</line>
 				<textField>
-					<reportElement x="13" y="51" width="155" height="20" forecolor="#3D9297" backcolor="#3D9297" uuid="3d79a1aa-3ae0-4749-87c8-6f81d1271018"/>
+					<reportElement x="16" y="51" width="155" height="20" forecolor="#3D9297" backcolor="#3D9297" uuid="3d79a1aa-3ae0-4749-87c8-6f81d1271018"/>
 					<textElement verticalAlignment="Bottom">
 						<font size="13"/>
 					</textElement>
 					<textFieldExpression><![CDATA[$R{label.date}]]></textFieldExpression>
 				</textField>
 				<line>
-					<reportElement x="168" y="70" width="246" height="1" uuid="31b459bd-96de-4d7f-8e8f-0244657b7a4b"/>
+					<reportElement x="171" y="70" width="246" height="1" uuid="31b459bd-96de-4d7f-8e8f-0244657b7a4b"/>
 				</line>
 				<line>
-					<reportElement x="508" y="30" width="240" height="1" uuid="926ea451-cf79-437f-8f39-da880abf4d75"/>
+					<reportElement x="511" y="30" width="240" height="1" uuid="926ea451-cf79-437f-8f39-da880abf4d75"/>
 				</line>
 				<textField>
-					<reportElement x="508" y="52" width="240" height="18" forecolor="#3D9297" backcolor="#3D9297" uuid="3cf77c08-0c3c-47e3-b934-edf2fd2dd377"/>
+					<reportElement x="511" y="52" width="240" height="18" forecolor="#3D9297" backcolor="#3D9297" uuid="3cf77c08-0c3c-47e3-b934-edf2fd2dd377"/>
 					<textElement verticalAlignment="Bottom">
 						<font size="13"/>
 					</textElement>
@@ -371,9 +359,6 @@
 					<textFieldExpression><![CDATA[$R{label.date}]]></textFieldExpression>
 				</textField>
 				<line>
-					<reportElement x="169" y="110" width="245" height="1" uuid="11e6f4f5-b81a-4f65-a69c-ac7de2765510"/>
-				</line>
-				<line>
 					<reportElement x="168" y="135" width="246" height="1" uuid="5786abae-09cd-4441-8d75-fd5d1948dbdc"/>
 				</line>
 				<line>
@@ -381,6 +366,16 @@
 				</line>
 				<line>
 					<reportElement x="166" y="174" width="248" height="1" uuid="bc596f38-19f7-47d6-b592-e480b4736c98"/>
+				</line>
+				<textField>
+					<reportElement x="16" y="9" width="155" height="21" forecolor="#3D9297" backcolor="#3D9297" uuid="bd180386-f3a3-4ef6-b8ca-bee881686723"/>
+					<textElement verticalAlignment="Bottom">
+						<font size="12" isBold="true"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$R{label.requested.by}]]></textFieldExpression>
+				</textField>
+				<line>
+					<reportElement x="168" y="29" width="246" height="1" uuid="42f44448-a1c8-4b46-967d-09307996c1aa"/>
 				</line>
 			</band>
 		</groupFooter>

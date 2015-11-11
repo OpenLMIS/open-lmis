@@ -14,32 +14,35 @@ package org.openlmis.vaccine.domain.reports;
 
 
 import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.openlmis.core.domain.*;
+import lombok.Setter;
+import org.openlmis.core.domain.BaseModel;
+import org.openlmis.core.domain.Facility;
+import org.openlmis.core.domain.ProcessingPeriod;
+import org.openlmis.core.domain.ProgramProduct;
+import org.openlmis.demographics.domain.AnnualFacilityEstimateEntry;
 import org.openlmis.vaccine.domain.VaccineDisease;
 import org.openlmis.vaccine.domain.VaccineProductDose;
 import org.openlmis.vaccine.domain.Vitamin;
 import org.openlmis.vaccine.domain.VitaminSupplementationAgeGroup;
 import org.openlmis.vaccine.domain.config.VaccineIvdTabVisibility;
-import org.openlmis.demographics.domain.AnnualFacilityEstimateEntry;
 
 import java.util.ArrayList;
 import java.util.List;
 
 
-@Data
+@Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@EqualsAndHashCode(callSuper=false)
 public class VaccineReport extends BaseModel {
 
-  private Long   periodId;
-  private Long   programId;
-  private Long   facilityId;
+  private Long periodId;
+  private Long programId;
+  private Long facilityId;
   private ReportStatus status;
-  private Long   supervisoryNodeId;
+  private Long supervisoryNodeId;
   private ProcessingPeriod period;
   private Facility facility;
   private String majorImmunizationActivities;
@@ -66,9 +69,9 @@ public class VaccineReport extends BaseModel {
   private List<ReportStatusChange> reportStatusChanges;
 
 
-  public void initializeLogisticsLineItems(List<ProgramProduct> programProducts){
+  public void initializeLogisticsLineItems(List<ProgramProduct> programProducts) {
     logisticsLineItems = new ArrayList<>();
-    for(ProgramProduct pp: programProducts){
+    for (ProgramProduct pp : programProducts) {
       LogisticsLineItem item = new LogisticsLineItem();
 
       item.setReportId(id);
@@ -86,7 +89,7 @@ public class VaccineReport extends BaseModel {
 
   public void initializeDiseaseLineItems(List<VaccineDisease> diseases) {
     diseaseLineItems = new ArrayList<>();
-    for(VaccineDisease disease: diseases){
+    for (VaccineDisease disease : diseases) {
       DiseaseLineItem lineItem = new DiseaseLineItem();
       lineItem.setReportId(id);
       lineItem.setDiseaseId(disease.getId());
@@ -94,12 +97,12 @@ public class VaccineReport extends BaseModel {
       lineItem.setDisplayOrder(disease.getDisplayOrder());
 
       diseaseLineItems.add(lineItem);
-   }
+    }
   }
 
   public void initializeCoverageLineItems(List<VaccineProductDose> dosesToCover) {
     coverageLineItems = new ArrayList<>();
-    for(VaccineProductDose dose: dosesToCover){
+    for (VaccineProductDose dose : dosesToCover) {
       VaccineCoverageItem item = new VaccineCoverageItem();
       item.setReportId(id);
       item.setDoseId(dose.getDoseId());
@@ -119,8 +122,8 @@ public class VaccineReport extends BaseModel {
   public void initializeVitaminLineItems(List<Vitamin> vitamins, List<VitaminSupplementationAgeGroup> ageGroups) {
     this.vitaminSupplementationLineItems = new ArrayList<>();
     Long displayOrder = 1L;
-    for(Vitamin vitamin: vitamins){
-      for(VitaminSupplementationAgeGroup ageGroup: ageGroups){
+    for (Vitamin vitamin : vitamins) {
+      for (VitaminSupplementationAgeGroup ageGroup : ageGroups) {
         VitaminSupplementationLineItem item = new VitaminSupplementationLineItem();
         item.setVitaminAgeGroupId(ageGroup.getId());
         item.setDisplayOrder(displayOrder);
@@ -131,4 +134,5 @@ public class VaccineReport extends BaseModel {
       }
     }
   }
+
 }

@@ -50,6 +50,8 @@ public class RightName {
 
   public static final String MANAGE_DEMOGRAPHIC_ESTIMATES = "MANAGE_DEMOGRAPHIC_ESTIMATES";
   public static final String MANAGE_DEMOGRAPHIC_PARAMETERS = "MANAGE_DEMOGRAPHIC_PARAMETERS";
+  public static final String VIEW_VACCINE_ORDER_REQUISITION = "VIEW_ORDER_REQUISITION";
+
 
   public static String commaSeparateRightNames(String... rightNames) {
     return Arrays.toString(rightNames).replace("[", "{").replace("]", "}");

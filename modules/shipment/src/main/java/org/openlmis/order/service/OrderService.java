@@ -275,8 +275,4 @@ public class OrderService {
   public Order getByOrderNumber(String orderNumber) {
     return orderRepository.getByOrderNumber(orderNumber);
   }
-
-  public List<Order> getSearchedOrdersForPage(Long userId, int page, String query, String searchType) {
-    return orderRepository.getSearchedOrdersForPage(userId, page, query, searchType);
-  }
 }

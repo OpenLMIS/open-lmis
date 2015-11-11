@@ -13,31 +13,31 @@
 package org.openlmis.report.model.dto;
 
 import lombok.AllArgsConstructor;
-import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
-/**
- * User: Issa
- * Date: 3/17/14
- * Time: 1:49 PM
- */
-@Data
+@Getter
+@Setter
 @AllArgsConstructor
 @NoArgsConstructor
 public class AlertSummary {
-    private Long id;
-    private String staticsValue;
-    private String description;
-    private Long supervisoryNodeId;
-    private Long periodId;
-    private Long programId;
-    private Long productId;
-    private String zone;
-    private String alertType;
-    private String displaySection;
-    private Boolean email;
-    private Boolean sms;
-    private String detailTable;
-    private String smsMessageTemplate;
-    private String emailMessageTemplate;
+
+  private Long id;
+  private String staticsValue;
+  private String description;
+  private Long supervisoryNodeId;
+  private Long periodId;
+  private Long programId;
+  private Long productId;
+  private String zone;
+  private String alertType;
+  private String displaySection;
+  private Boolean email;
+  private Boolean sms;
+  private String detailTable;
+  private String smsMessageTemplate;
+  private String emailMessageTemplate;
+
+
 }

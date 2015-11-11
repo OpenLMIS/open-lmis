@@ -23,12 +23,12 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import java.security.Principal;
 
 import static org.openlmis.restapi.response.RestResponse.*;
-import static org.springframework.http.HttpStatus.BAD_REQUEST;
-import static org.springframework.http.HttpStatus.CREATED;
+import static org.springframework.http.HttpStatus.*;
 import static org.springframework.web.bind.annotation.RequestMethod.*;
 
 /**
@@ -86,6 +86,15 @@ public class RestRequisitionController extends BaseController {
   public ResponseEntity<RestResponse> getReplenishment(@PathVariable Long id) {
     try {
       return response("requisition", restRequisitionService.getReplenishmentDetails(id));
+    } catch (DataException e) {
+      return error(e.getOpenLmisMessage(), BAD_REQUEST);
+    }
+  }
+
+  @RequestMapping(value="/rest-api/requisitions", method = GET, headers = ACCEPT_JSON)
+  public ResponseEntity<RestResponse> getRequisitionsByFacility(@RequestParam(value="facilityCode") String facilityCode) {
+    try {
+      return response("requisitions", restRequisitionService.getRequisitionsByFacility(facilityCode), OK);
     } catch (DataException e) {
       return error(e.getOpenLmisMessage(), BAD_REQUEST);
     }

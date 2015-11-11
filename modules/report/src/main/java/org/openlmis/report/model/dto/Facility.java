@@ -15,81 +15,51 @@ package org.openlmis.report.model.dto;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.util.Date;
 
 import static com.fasterxml.jackson.databind.annotation.JsonSerialize.Inclusion.NON_EMPTY;
 
-@Data
+@Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @JsonSerialize(include = NON_EMPTY)
-@EqualsAndHashCode(callSuper = false)
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Facility {
 
   private Integer id;
-
   private String code;
-
   private String name;
-
   private String description;
-
   private String gln;
-
   private String mainPhone;
-
   private String fax;
-
   private String address1;
-
   private String address2;
-
   private Integer geographicZoneId;
-
   private Integer typeId;
-
   private Long catchmentPopulation;
-
   private Double latitude;
-
   private Double longitude;
-
   private Double altitude;
-
   private Integer operatedById;
-
   private Double coldStorageGrossCapacity;
-
   private Double coldStorageNetCapacity;
-
   private Boolean suppliesOthers;
-
   private Boolean sdp;
-
   private Boolean hasElectricity;
-
   private Boolean online;
-
   private Boolean hasElectronicScc;
-
   private Boolean hasElectronicDar;
-
   private Boolean active;
-
   private Date goLiveDate;
-
   private Date goDownDate;
-
   private Boolean satellite;
-
   private Integer satelliteParentId;
-
   private String comment;
-
   private Boolean dataReportable;
 }

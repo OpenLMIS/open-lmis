@@ -16,8 +16,6 @@ import lombok.NoArgsConstructor;
 import org.apache.ibatis.session.RowBounds;
 import org.openlmis.core.domain.Facility;
 import org.openlmis.core.service.FacilityService;
-import org.openlmis.report.Report;
-import org.openlmis.report.ReportManager;
 import org.openlmis.report.mapper.CCERepairManagementReportMapper;
 import org.openlmis.report.model.ReportData;
 import org.openlmis.report.model.params.CCERepairManagementReportParam;
@@ -44,13 +42,13 @@ public class CCERepairManagementReportDataProvider extends ReportDataProvider {
   private CCERepairManagementReportParam cceRepairManagementReportParam = null;
 
   @Override
-  protected List<? extends ReportData> getResultSetReportData(Map<String, String[]> params) {
+  protected List<? extends ReportData> getResultSet(Map<String, String[]> params) {
 
-    return getMainReportData(params, null, RowBounds.NO_ROW_OFFSET, RowBounds.NO_ROW_LIMIT);
+    return getReportBody(params, null, RowBounds.NO_ROW_OFFSET, RowBounds.NO_ROW_LIMIT);
   }
 
   @Override
-  public List<? extends ReportData> getMainReportData(Map<String, String[]> filterCriteria, Map<String, String[]> sortCriteria, int page, int pageSize) {
+  public List<? extends ReportData> getReportBody(Map<String, String[]> filterCriteria, Map<String, String[]> sortCriteria, int page, int pageSize) {
     RowBounds rowBounds = new RowBounds((page - 1) * pageSize, pageSize);
 
     return cceRepairManagementReportMapper.SelectEquipmentCountByStatusEnergy(getReportFilterData(filterCriteria),rowBounds,this.getUserId());

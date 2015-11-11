@@ -13,11 +13,14 @@
 package org.openlmis.report.model.report;
 
 import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 import org.openlmis.report.model.ReportData;
 
 import java.util.List;
 
-@Data
+@Getter
+@Setter
 public class MasterReport implements ReportData {
 
   private List<? extends ReportData> details;

@@ -12,41 +12,30 @@
 
 package org.openlmis.report.model.dto;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import org.joda.time.DateTime;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.util.Date;
 
-import static com.fasterxml.jackson.databind.annotation.JsonSerialize.Inclusion.NON_NULL;
-
-
-/**
- * Created with IntelliJ IDEA.
- * User: mahmed
- * Date: 6/19/13
- * Time: 3:58 PM
- * To change this template use File | Settings | File Templates..
- */
-
-@Data
+@Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@EqualsAndHashCode(callSuper = false)
 @JsonSerialize
 public class ProgramProductPriceList {
 
-    private Integer id;
-    private Integer programid;
-    private Integer productid;
-    private Integer programproductid;
-    private String programname;
-    private Double priceperpack;
-    private Double priceperdosage;
-    private Date  startdate;
-    private Date  enddate;
-    private String  source;
+  private Integer id;
+  private Integer programid;
+  private Integer productid;
+  private Integer programproductid;
+  private String programname;
+  private Double priceperpack;
+  private Double priceperdosage;
+  private Date startdate;
+  private Date enddate;
+  private String source;
+
 }

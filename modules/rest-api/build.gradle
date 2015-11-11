@@ -9,13 +9,11 @@
  */
 
 apply plugin: 'cobertura'
-apply plugin: 'war'
 
 buildscript {
     repositories {
        mavenCentral();
        jcenter();
-
     }
 }
 
@@ -24,9 +22,11 @@ dependencies {
             project(':modules:requisition'),
             project(':modules:report'),
             project(':modules:shipment'),
-            project(':modules:vaccine')
+            project(':modules:vaccine'),
+            project(':modules:stock-management')
 
-    testCompile  project(path: ':modules:requisition', configuration: 'testFixtures')
+    testCompile project(path: ':modules:requisition', configuration: 'testFixtures'),
+            project(path: ':modules:stock-management', configuration: 'testFixtures')
 
     configurations {
         testFixtures {

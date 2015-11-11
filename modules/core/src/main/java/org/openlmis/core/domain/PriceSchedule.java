@@ -11,22 +11,39 @@
 package org.openlmis.core.domain;
 
 import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
+
+import java.util.Objects;
 
 /**
  * PriceScheduleCategory represents a category type for price schedule
  */
 
-@Data
+@Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@EqualsAndHashCode(callSuper = false)
 public class PriceSchedule extends BaseModel {
 
-    private String code;
+  private String code;
 
-    private String description;
+  private String description;
+
+  @Override
+  public boolean equals(Object o){
+    if (this == o)
+      return true;
+    if (o == null || getClass() != o.getClass())
+      return false;
+
+    PriceSchedule that = (PriceSchedule) o;
+    return id.equals(that.id);
+  }
+  @Override
+  public int hashCode(){
+    return id.hashCode();
+  }
 
 }

@@ -68,7 +68,7 @@ function VaccineReportController($scope, programs, VaccineReportFacilities, Vacc
     ]
   };
 
-  if (programs.length == 1) {
+  if (programs.length === 1) {
     $scope.filter = {program: programs[0].id};
     $scope.onProgramChanged();
   }

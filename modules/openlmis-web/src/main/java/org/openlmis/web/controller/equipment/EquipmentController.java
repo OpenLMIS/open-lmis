@@ -50,16 +50,16 @@ public class EquipmentController extends BaseController {
 
   @RequestMapping(method = RequestMethod.GET, value = "id")
   @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_EQUIPMENT_SETTINGS')")
-  public ResponseEntity<OpenLmisResponse> getEquipmentById(@RequestParam("id") Long Id){
+  public ResponseEntity<OpenLmisResponse> getEquipmentById(@RequestParam("id") Long id){
 
-    return OpenLmisResponse.response(EQUIPMENT, service.getById(Id));
+    return OpenLmisResponse.response(EQUIPMENT, service.getById(id));
   }
 
     @RequestMapping(method = RequestMethod.GET, value = "type-and-id")
     @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_EQUIPMENT_SETTINGS')")
-    public ResponseEntity<OpenLmisResponse> getEquipmentByTypeAndId(@RequestParam("id") Long Id, @RequestParam("equipmentTypeId") Long equipmentTypeId){
+    public ResponseEntity<OpenLmisResponse> getEquipmentByTypeAndId(@RequestParam("id") Long id, @RequestParam("equipmentTypeId") Long equipmentTypeId){
 
-        return OpenLmisResponse.response(EQUIPMENT, service.getByTypeAndId(Id,equipmentTypeId));
+        return OpenLmisResponse.response(EQUIPMENT, service.getByTypeAndId(id,equipmentTypeId));
 
     }
 

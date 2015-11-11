@@ -42,6 +42,8 @@ public class SupplyLineController extends BaseController {
 
   public static final String SUPPLY_LINES = "supplyLines";
   public static final String PAGINATION = "pagination";
+  public static final String SUPPLYLINES = "supplylines";
+  public static final String SUPPLY_LINE_ID = "supplyLineId";
 
   @Autowired
   private SupplyLineService service;
@@ -76,7 +78,7 @@ public class SupplyLineController extends BaseController {
       return response;
     }
     response = OpenLmisResponse.success(messageService.message("message.supply.line.created.success"));
-    response.getBody().addData("supplyLineId", supplyLine.getId());
+    response.getBody().addData(SUPPLY_LINE_ID, supplyLine.getId());
     return response;
   }
 
@@ -96,7 +98,7 @@ public class SupplyLineController extends BaseController {
       return response;
     }
     response = OpenLmisResponse.success(messageService.message("message.supply.line.updated.success"));
-    response.getBody().addData("supplyLineId", supplyLine.getId());
+    response.getBody().addData(SUPPLY_LINE_ID, supplyLine.getId());
     return response;
   }
 
@@ -109,7 +111,6 @@ public class SupplyLineController extends BaseController {
   @RequestMapping(value = "/supplying-depots.json", method = GET, headers = ACCEPT_JSON)
   public ResponseEntity<OpenLmisResponse> getSupplyingDepots(HttpServletRequest request){
 
-    ResponseEntity<OpenLmisResponse> response = OpenLmisResponse.response("supplylines", service.getSupplyingFacilities(loggedInUserId(request)));
-    return response;
+    return OpenLmisResponse.response(SUPPLYLINES, service.getSupplyingFacilities(loggedInUserId(request)));
   }
 }

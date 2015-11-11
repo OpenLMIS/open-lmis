@@ -106,6 +106,7 @@ public class RnrDTO {
     rnrDTO.programId = requisition.getProgram().getId();
     rnrDTO.facilityId = requisition.getFacility().getId();
     rnrDTO.programName = requisition.getProgram().getName();
+    rnrDTO.programCode = requisition.getProgram().getCode();
     rnrDTO.facilityCode = requisition.getFacility().getCode();
     rnrDTO.facilityName = requisition.getFacility().getName();
 

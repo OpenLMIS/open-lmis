@@ -112,5 +112,16 @@ public class ProgramController extends BaseController {
       return OpenLmisResponse.response(PROGRAMS,programService.getByFacility(facilityId));
   }
 
+  @RequestMapping(value = "/facility/{facilityId}/view/vaccine-order-requisition/programs", method = GET, headers = ACCEPT_JSON)
+  public List<Program> getProgramsToViewVaccineOrderRequisitions(@PathVariable(value = "facilityId") Long facilityId,
+                                                     HttpServletRequest request) {
+    List<Program> programs = programService.getProgramsForUserByFacilityAndRights(facilityId, loggedInUserId(request), VIEW_VACCINE_ORDER_REQUISITION);
+    List<Program> pullPrograms = new ArrayList<>();
+    for (Program program : programs) {
+      if (!program.getPush())
+        pullPrograms.add(program);
+    }
+    return pullPrograms;
+  }
 
 }

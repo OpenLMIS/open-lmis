@@ -9,9 +9,7 @@
  *
  * You should have received a copy of the GNU Affero General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-function ListFacilitiesController($scope, FacilityList, ngTableParams) {
-
-
+function ListFacilitiesController($scope, FacilityList) {
 
     $scope.OnFilterChanged = function(){
         FacilityList.get($scope.getSanitizedParameter(), function(data) {
@@ -27,19 +25,10 @@ function ListFacilitiesController($scope, FacilityList, ngTableParams) {
 
 
     $scope.exportReport   = function (type){
-
-
       var params = jQuery.param($scope.getSanitizedParameter());
-
-    var sortOrderParams = jQuery.param($scope.tableParams.sorting);
-    sortOrderParams = sortOrderParams.split('=');
-    sortOrderParams = { sortBy:sortOrderParams[0], order:sortOrderParams[1] };
-    sortOrderParams = jQuery.param(sortOrderParams);
-
-
-      var url = '/reports/download/facility-list/' + type +'?' + sortOrderParams +'&'+ params ;
-      if(type == "mailing-list"){
-        url = '/reports/download/mailinglabels/list/' + "pdf" +'?' + sortOrderParams +'&'+ params ;
+      var url = '/reports/download/facility-list/' + type + '?' + params ;
+      if(type === "mailing-list"){
+        url = '/reports/download/facility_mailing_list/pdf?' +  params ;
       }
 
       window.open(url, '_BLANK');

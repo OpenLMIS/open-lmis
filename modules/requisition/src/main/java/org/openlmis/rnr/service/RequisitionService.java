@@ -621,32 +621,37 @@ public class RequisitionService {
     return requisitionRepository.deleteRnR(rnrId);
   }
 
-  public void skipRnR(Long rnrId) {
+  public void skipRnR(Long rnrId, Long userId) {
     Rnr rnr = this.getFullRequisitionById(rnrId);
     for(RnrLineItem li : rnr.getFullSupplyLineItems()){
       li.setSkipped(true);
     }
+    rnr.setModifiedBy(userId);
     rnr.setStatus(RnrStatus.SKIPPED);
     this.save(rnr);
     requisitionRepository.update(rnr);
+    logStatusChangeAndNotify(rnr, false, RnrStatus.SKIPPED.toString());
   }
 
 
-  public void reOpenRnR(Long rnrId) {
+  public void reOpenRnR(Long rnrId, Long userId) {
     Rnr rnr = this.getFullRequisitionById(rnrId);
+    rnr.setModifiedBy(userId);
     for(RnrLineItem li : rnr.getFullSupplyLineItems()){
       li.setSkipped(false);
     }
     rnr.setStatus(RnrStatus.INITIATED);
-
     requisitionRepository.update(rnr);
     this.save(rnr);
+    logStatusChangeAndNotify(rnr, false, RnrStatus.INITIATED.toString());
   }
 
-  public void rejectRnR(Long rnrId) {
+  public void rejectRnR(Long rnrId, Long userId) {
     Rnr rnr = this.getFullRequisitionById(rnrId);
+    rnr.setModifiedBy(userId);
     rnr.setStatus(RnrStatus.INITIATED);
     requisitionRepository.update(rnr);
+    logStatusChangeAndNotify(rnr, false, RnrStatus.INITIATED.toString());
   }
 
   public Integer findM(ProcessingPeriod period) {
@@ -655,6 +660,15 @@ public class RequisitionService {
 
   public Long getProgramId(Long rnrId) {
     return requisitionRepository.getProgramId(rnrId);
+  }
+
+  @Transactional
+  public void updateClientFields(Rnr rnr) {
+    requisitionRepository.updateClientFields(rnr);
+  }
+
+  public List<Rnr> getRequisitionsByFacility(Facility facility) {
+    return requisitionRepository.getRequisitionDetailsByFacility(facility);
   }
 }
 

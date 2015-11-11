@@ -10,21 +10,22 @@
  * You should have received a copy of the GNU Affero General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 package org.openlmis.report.model.dto;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import org.openlmis.core.domain.RegimenCategory;
 
-@Data
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
+@Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 public class Regimen {
-    private int id;
-    private String name;
-    private String code;
-    private Long programId;
-    private Boolean active;
-    private Long categoryId;
-    private Integer displayOrder;
-
+  private int id;
+  private String name;
+  private String code;
+  private Long programId;
+  private Boolean active;
+  private Long categoryId;
+  private Integer displayOrder;
 }
