@@ -8,17 +8,25 @@ function ViewRnrViaDetailController($scope, $route, $location, Requisitions) {
         $scope.loadRequisitionDetail();
     });
 
+    function generateEmptyRows(extraRows) {
+        for (var i = 0; i < $scope.pageSize - extraRows; i++) {
+            $scope.rnrItems.push({});
+        }
+    }
+
     $scope.loadRequisitionDetail = function () {
         Requisitions.get({id: $route.current.params.rnr, operation:"skipped"}, function (data) {
             $scope.rnr = data.rnr;
             $scope.rnrItems = data.rnr.fullSupplyLineItems;
 
             var extraRows = $scope.rnrItems.length % $scope.pageSize;
-            if (extraRows !== 0) {
-                for (var i = 0; i < $scope.pageSize - extraRows; i++) {
-                    $scope.rnrItems.push({});
-                }
+            if ($scope.rnrItems.length === 0) {
+                generateEmptyRows($scope.pageSize);
             }
+            if (extraRows !== 0) {
+                generateEmptyRows(extraRows);
+            }
+
             $scope.numPages = $scope.rnrItems.length / $scope.pageSize;
 
             refreshItems();
