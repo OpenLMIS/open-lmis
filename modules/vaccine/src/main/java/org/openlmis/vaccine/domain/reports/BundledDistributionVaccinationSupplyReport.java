@@ -12,34 +12,24 @@
  *
  */
 
-function ViewbundledDistributionVacinationSuppliesController($scope,Period,VaccineReportFacilities,Products, messageService, ViewBundledDistributionVaccinationSupplies){
-$scope.product=[];
-    $scope.OnFilterChanged = function() {
-        $scope.data = $scope.datarows = [];
-        $scope.filter.max = 10000;
+package org.openlmis.vaccine.domain.reports;
 
-        Period.get({id: $scope.filter.period}, function(data){
-            $scope.period = data.period;
-        });
-        Products.get({
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
-            id: $scope.filter.product
-        }, function (data) {
-
-            $scope.product = data.productDTO.product;
-
-alert($scope.product.id);
-
-        });
-    ViewBundledDistributionVaccinationSupplies.get({
-        year:$scope.filter.year,
-        productId: $scope.filter.product
-    }, function (data) {
-        $scope.bundledDistributionVaccinationSupplies = data.bundledDistributionVaccinationSupplies;
+import java.util.List;
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+public class BundledDistributionVaccinationSupplyReport {
+    private List<BundledDistributionVaccinationSupplies> vaccinationSuppliesList;
+    private Long totalPopulation;
+    private Long year;
+    private BundledDistributionVaccinationSupplyRegion vaccinationSupplyRegion;
+    private BundledDistributionVaccinationSupplyDistrict vaccinationSupplyDistrict;
 
 
-
-    });
-
-    };
 }

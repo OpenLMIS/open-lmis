@@ -9,6 +9,8 @@
  */
 package org.openlmis.vaccine.repository.reports;
 import org.openlmis.vaccine.domain.reports.BundledDistributionVaccinationSupplies;
+import org.openlmis.vaccine.domain.reports.BundledDistributionVaccinationSupplyDistrict;
+import org.openlmis.vaccine.domain.reports.BundledDistributionVaccinationSupplyRegion;
 import org.openlmis.vaccine.repository.mapper.reports.BundledDistributionVaccinationSuppliesMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -27,6 +29,19 @@ public class BundledDistributionVaccinationSuppliesRepository {
       System.out.println(" year and product id is "+ year + " "+ productId + "  "+vaccinationSuppliesList.size());
       return vaccinationSuppliesList;
     }
+    public  BundledDistributionVaccinationSupplyDistrict getBundledDistributionVaccinationSuppliesDistrictSummary(Long year, Long productId){
+        BundledDistributionVaccinationSupplyDistrict vaccinationSupplyDistrict=null;
+        System.out.println(" year and product id is "+ year + " "+ productId);
+        vaccinationSupplyDistrict=vaccinationSuppliesMapper.getBundledDistributionVaccinationSuppliesDistrictSummary(year,productId);
 
+        return vaccinationSupplyDistrict;
+    }
+    public BundledDistributionVaccinationSupplyRegion getBundledDistributionVaccinationSuppliesRegionSummary(Long year, Long productId){
+        BundledDistributionVaccinationSupplyRegion vaccinationSupplyRegion=null;
+        System.out.println(" year and product id is "+ year + " "+ productId);
+        vaccinationSupplyRegion=vaccinationSuppliesMapper.getBundledDistributionVaccinationSuppliesRegionSummary(year,productId);
+
+        return vaccinationSupplyRegion;
+    }
 
 }

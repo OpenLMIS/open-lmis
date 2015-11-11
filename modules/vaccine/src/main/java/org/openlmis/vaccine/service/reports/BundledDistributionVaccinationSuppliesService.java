@@ -10,6 +10,9 @@
 package org.openlmis.vaccine.service.reports;
 
 import org.openlmis.vaccine.domain.reports.BundledDistributionVaccinationSupplies;
+import org.openlmis.vaccine.domain.reports.BundledDistributionVaccinationSupplyDistrict;
+import org.openlmis.vaccine.domain.reports.BundledDistributionVaccinationSupplyRegion;
+import org.openlmis.vaccine.domain.reports.BundledDistributionVaccinationSupplyReport;
 import org.openlmis.vaccine.repository.reports.BundledDistributionVaccinationSuppliesRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -20,17 +23,39 @@ import java.util.List;
 public class BundledDistributionVaccinationSuppliesService {
     @Autowired
     private BundledDistributionVaccinationSuppliesRepository vaccinationSuppliesRepository;
-    public List<BundledDistributionVaccinationSupplies> getBundledDistributionVaccinationSupplies(Long year, Long productId){
+    public BundledDistributionVaccinationSupplyReport getBundledDistributionVaccinationSupplies(Long year, Long productId){
         System.out.println(" year and product id is "+ year + " "+ productId);
         List<BundledDistributionVaccinationSupplies> vaccinationSupplyList=null;
+        BundledDistributionVaccinationSupplyRegion vaccinationSupplyRegion=null;
+        BundledDistributionVaccinationSupplyDistrict vaccinationSupplyDistrict=null;
+        BundledDistributionVaccinationSupplyReport vaccinationSupplyReport=null;
+        Long totalPopulation=0l;
         try {
-            vaccinationSupplyList=vaccinationSuppliesRepository.getBundledDistributionVaccinationSupplies(year,productId);
+            vaccinationSupplyReport= new BundledDistributionVaccinationSupplyReport();
+            vaccinationSupplyList=vaccinationSuppliesRepository.getBundledDistributionVaccinationSupplies(year, productId);
+            vaccinationSupplyRegion=vaccinationSuppliesRepository.getBundledDistributionVaccinationSuppliesRegionSummary(year, productId);
+            vaccinationSupplyDistrict=vaccinationSuppliesRepository.getBundledDistributionVaccinationSuppliesDistrictSummary(year, productId);
+            vaccinationSupplyReport.setVaccinationSuppliesList(vaccinationSupplyList);
+            vaccinationSupplyReport.setVaccinationSupplyRegion(vaccinationSupplyRegion);
+            vaccinationSupplyReport.setVaccinationSupplyDistrict(vaccinationSupplyDistrict);
+            for (BundledDistributionVaccinationSupplies vaccinationSupplies: vaccinationSupplyList){
+                totalPopulation+=vaccinationSupplies.getPopulation();
+            }
+            vaccinationSupplyReport.setTotalPopulation(totalPopulation);
         }catch (Exception ex){
             System.out.println("Exception "+ ex.getMessage());
         }
 
         System.out.println(" year and product id is "+ year + " "+ productId + "  "+vaccinationSupplyList.size());
-        return  vaccinationSupplyList;
+        return  vaccinationSupplyReport;
+    }
+
+    public BundledDistributionVaccinationSupplyReport prepareReport(List<BundledDistributionVaccinationSupplies> vaccinationSuppliesList){
+        BundledDistributionVaccinationSupplyReport vaccinationSupplyReport= new BundledDistributionVaccinationSupplyReport();
+        for(BundledDistributionVaccinationSupplies vaccinationSupplies: vaccinationSuppliesList){
+            //if()
+        }
+        return vaccinationSupplyReport;
     }
 }
 
