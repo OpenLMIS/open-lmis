@@ -1570,6 +1570,13 @@ public class RequisitionServiceTest {
   }
 
   @Test
+  public void shouldInsertRnRSignature(){
+    Rnr rnr = new Rnr();
+    requisitionService.insertRnrSignatures(rnr);
+    verify(requisitionRepository).insertRnrSignatures(rnr);
+  }
+
+  @Test
   public void shouldGetRequisitionsByFacility() {
     Facility facility = new Facility();
     requisitionService.getRequisitionsByFacility(facility);

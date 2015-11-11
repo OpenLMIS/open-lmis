@@ -19,13 +19,11 @@ import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
-import org.openlmis.core.domain.Facility;
-import org.openlmis.core.domain.ProcessingPeriod;
-import org.openlmis.core.domain.Program;
-import org.openlmis.core.domain.RoleAssignment;
+import org.openlmis.core.domain.*;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.core.repository.SupervisoryNodeRepository;
 import org.openlmis.core.repository.helper.CommaSeparator;
+import org.openlmis.core.repository.mapper.SignatureMapper;
 import org.openlmis.db.categories.UnitTests;
 import org.openlmis.rnr.builder.PatientQuantificationsBuilder;
 import org.openlmis.rnr.builder.RnrLineItemBuilder;
@@ -95,6 +93,9 @@ public class RequisitionRepositoryTest {
   private Rnr rnr;
   private RegimenLineItem regimenLineItem;
   private PatientQuantificationLineItem patientQuantificationLineItem;
+
+  @Mock
+  private SignatureMapper signatureMapper;
 
   @Before
   public void setUp() throws Exception {
@@ -406,14 +407,14 @@ public class RequisitionRepositoryTest {
     String sortBy = "program";
     Integer pageSize = 2;
     when(requisitionMapper.getApprovedRequisitionsForCriteriaAndPageNumber(searchType, searchVal, pageNumber, pageSize,
-        1l, CONVERT_TO_ORDER, sortBy, sortDirection)).thenReturn(expected);
+            1l, CONVERT_TO_ORDER, sortBy, sortDirection)).thenReturn(expected);
 
     List<Rnr> rnrList = requisitionRepository.getApprovedRequisitionsForCriteriaAndPageNumber(searchType, searchVal,
-        pageNumber, pageSize, 1l, CONVERT_TO_ORDER, sortBy, sortDirection);
+            pageNumber, pageSize, 1l, CONVERT_TO_ORDER, sortBy, sortDirection);
 
     assertThat(rnrList, is(expected));
     verify(requisitionMapper).getApprovedRequisitionsForCriteriaAndPageNumber(searchType, searchVal, pageNumber,
-        pageSize, 1l, CONVERT_TO_ORDER, sortBy, sortDirection);
+            pageSize, 1l, CONVERT_TO_ORDER, sortBy, sortDirection);
   }
 
   @Test
@@ -468,5 +469,19 @@ public class RequisitionRepositoryTest {
     Facility facility = new Facility();
     requisitionRepository.getRequisitionDetailsByFacility(facility);
     verify(requisitionMapper).getRequisitionsWithLineItemsByFacility(facility);
+  }
+
+  @Test
+  public void shouldInsertRnrSignature() {
+    Rnr rnr = new Rnr();
+    Signature submitterSignature = new Signature(Signature.Type.SUBMITTER, "Mystique");
+    Signature approverSignature = new Signature(Signature.Type.APPROVER, "Magneto");
+    rnr.setRnrSignatures(asList(submitterSignature, approverSignature));
+
+    requisitionRepository.insertRnrSignatures(rnr);
+    verify(signatureMapper).insertSignature(rnr.getRnrSignatures().get(0));
+    verify(signatureMapper).insertSignature(rnr.getRnrSignatures().get(1));
+    verify(requisitionMapper).insertRnrSignature(rnr, submitterSignature);
+    verify(requisitionMapper).insertRnrSignature(rnr, approverSignature);
   }
 }

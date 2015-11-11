@@ -676,5 +676,10 @@ public class RequisitionService {
   public List<Rnr> getRequisitionsByFacility(Facility facility) {
     return requisitionRepository.getRequisitionDetailsByFacility(facility);
   }
+
+  @Transactional
+  public void insertRnrSignatures(Rnr rnr) {
+    requisitionRepository.insertRnrSignatures(rnr);
+  }
 }
 

@@ -11,10 +11,7 @@
 package org.openlmis.rnr.repository.mapper;
 
 import org.apache.ibatis.annotations.*;
-import org.openlmis.core.domain.Facility;
-import org.openlmis.core.domain.ProcessingPeriod;
-import org.openlmis.core.domain.Program;
-import org.openlmis.core.domain.RoleAssignment;
+import org.openlmis.core.domain.*;
 import org.openlmis.rnr.domain.Rnr;
 import org.openlmis.rnr.dto.RnrDTO;
 import org.openlmis.rnr.service.RequisitionService;
@@ -127,7 +124,10 @@ public interface RequisitionMapper {
       @Result(property = "period", column = "periodId", javaType = ProcessingPeriod.class,
           one = @One(select = "org.openlmis.core.repository.mapper.ProcessingPeriodMapper.getById")),
       @Result(property = "clientSubmittedTime", column = "clientSubmittedTime"),
-      @Result(property = "clientSubmittedNotes", column = "clientSubmittedNotes")
+      @Result(property = "clientSubmittedNotes", column = "clientSubmittedNotes"),
+      @Result(property = "rnrSignatures", column = "id", javaType = List.class,
+        many = @Many(select = "org.openlmis.rnr.repository.mapper.RequisitionMapper.getRnrSignaturesByRnrId")
+      )
   })
   List<Rnr> getRequisitionsWithLineItemsByFacility(@Param("facility") Facility facility);
 
@@ -244,6 +244,16 @@ public interface RequisitionMapper {
       "clientSubmittedTime = COALESCE(#{clientSubmittedTime}, clientSubmittedTime)",
       "WHERE id = #{id}"})
   void updateClientFields(Rnr rnr);
+
+  @Insert("INSERT INTO requisition_signatures(signatureId, rnrId) VALUES " +
+      "(#{signature.id}, #{rnr.id})")
+  void insertRnrSignature(@Param("rnr") Rnr rnr, @Param("signature") Signature signature);
+
+  @Select("SELECT * FROM requisition_signatures " +
+      "JOIN signatures " +
+      "ON signatures.id = requisition_signatures.signatureId " +
+      "WHERE requisition_signatures.rnrId = #{rnrId} ")
+  List<Signature> getRnrSignaturesByRnrId(Long rnrId);
 
   public class ApprovedRequisitionSearch {
 

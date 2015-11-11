@@ -10,12 +10,10 @@
 
 package org.openlmis.rnr.repository;
 
-import org.openlmis.core.domain.Facility;
-import org.openlmis.core.domain.ProcessingPeriod;
-import org.openlmis.core.domain.Program;
-import org.openlmis.core.domain.RoleAssignment;
+import org.openlmis.core.domain.*;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.core.repository.helper.CommaSeparator;
+import org.openlmis.core.repository.mapper.SignatureMapper;
 import org.openlmis.equipment.domain.EquipmentInventoryStatus;
 import org.openlmis.equipment.repository.mapper.EquipmentInventoryStatusMapper;
 import org.openlmis.rnr.domain.*;
@@ -65,6 +63,9 @@ public class RequisitionRepository {
 
   @Autowired
   private PatientQuantificationLineItemMapper patientQuantificationLineItemMapper;
+
+  @Autowired
+  private SignatureMapper signatureMapper;
 
 
   public void insert(Rnr requisition) {
@@ -305,5 +306,12 @@ public class RequisitionRepository {
 
   public List<Rnr> getRequisitionDetailsByFacility(Facility facility) {
     return requisitionMapper.getRequisitionsWithLineItemsByFacility(facility);
+  }
+
+  public void insertRnrSignatures(Rnr rnr) {
+    for (Signature signature: rnr.getRnrSignatures()) {
+      signatureMapper.insertSignature(signature);
+      requisitionMapper.insertRnrSignature(rnr, signature);
+    }
   }
 }
