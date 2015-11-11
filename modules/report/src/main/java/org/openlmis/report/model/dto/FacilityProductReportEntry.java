@@ -39,7 +39,11 @@ public class FacilityProductReportEntry {
         List<StockCardEntry> stockCardEntryList = filterEntryByDate(stockCard, endTime);
         this.productQuantity = calculateQuantity(stockCardEntryList);
 
-        getSoonestExpirationDate(from(stockCardEntryList).first().get());
+        if (stockCardEntryList == null || stockCardEntryList.size() == 0) {
+            getSoonestExpirationDate(stockCard.getEntries());
+        } else {
+            getSoonestExpirationDate(stockCardEntryList);
+        }
 
         this.lastSyncDate = stockCard.getModifiedDate();
         this.code = stockCard.getProduct().getCode();
@@ -59,10 +63,8 @@ public class FacilityProductReportEntry {
         return StringUtils.EMPTY;
     }
 
-    protected void getSoonestExpirationDate(StockCardEntry lastEntry) {
-        if (lastEntry == null) {
-            return;
-        }
+    protected void getSoonestExpirationDate(List<StockCardEntry> stockCardEntryList) {
+        StockCardEntry lastEntry = from(stockCardEntryList).first().get();
 
         String expirationDates = getExpirationDateFromStockCardEntry(lastEntry);
         if (!StringUtils.isEmpty(expirationDates)) {

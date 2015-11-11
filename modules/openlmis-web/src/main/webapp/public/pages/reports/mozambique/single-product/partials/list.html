@@ -85,7 +85,8 @@
             </tr>
         </table>
 
-        <p class="report-title" openlmis-message="message.stock.on.hand.report"></p>
+        <ng-include src="'/public/pages/reports/mozambique/product-report-footer.html'"/>
+
     </div>
     <label ng-show="reportData && reportData.length == 0">No Data</label>
 

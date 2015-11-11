@@ -130,7 +130,7 @@ function ProductReportController(type) {
             var syncInterval = (new Date() - time) / 1000 / 3600;
             return syncInterval <= 24 && {'background-color': 'green'} ||
                 syncInterval > 24 * 3 && {'background-color': 'red'} ||
-                {'background-color': 'yellow'};
+                {'background-color': 'orange'};
         };
     };
 }
