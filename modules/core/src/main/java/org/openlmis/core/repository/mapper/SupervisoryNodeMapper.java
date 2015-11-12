@@ -122,7 +122,6 @@ public interface SupervisoryNodeMapper {
           @Result(property = "facility", column = "facilityId", javaType = Facility.class,
                   one = @One(select = "org.openlmis.core.repository.mapper.FacilityMapper.getById"))
   })
-
   List<SupervisoryNode> getAllParentSupervisoryNodesInHierarchy(SupervisoryNode supervisoryNode);
 
   @Select({"WITH  recursive  supervisoryNodesRec AS ",
@@ -142,7 +141,6 @@ public interface SupervisoryNodeMapper {
                   one = @One(select = "org.openlmis.core.repository.mapper.FacilityMapper.getById"))
   })
   List<SupervisoryNode> getAllChildSupervisoryNodesInHierarchy(SupervisoryNode supervisoryNode);
-
 
   @Select("SELECT * FROM supervisory_nodes WHERE LOWER(code) = LOWER(#{code})")
   SupervisoryNode getByCode(SupervisoryNode supervisoryNode);
