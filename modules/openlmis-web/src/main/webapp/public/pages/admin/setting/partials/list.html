@@ -27,7 +27,7 @@
             <div ng-repeat="(grp, things) in grouped_settings" heading="{{grp}}">
               <div ng-show="visibleTab == grp" class="tab-content">
                       <div ng-repeat="setting in things">
-                          <h3 style="padding-left: -30px;" ng-show="CreateHeader(setting.groupName)">{{setting.groupName}}</h3>
+                          <h3 style="padding-left: -30px;" ng-show="$index == 0 || ($index > 0 && grouped_settings[$index].groupName != grouped_settings[$index - 1].groupName)">{{setting.groupName}}</h3>
                           <div class="control-group">
                               <div class="row">
                                   <div class="span4 col-desc">
