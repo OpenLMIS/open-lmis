@@ -92,6 +92,10 @@ public class SupervisoryNodeRepository {
     return supervisoryNodeMapper.getAllParentSupervisoryNodesInHierarchy(node);
   }
 
+  public List<SupervisoryNode> getAllChildSupervisoryNodesInHierarchy(SupervisoryNode node) {
+    return supervisoryNodeMapper.getAllChildSupervisoryNodesInHierarchy(node);
+  }
+
   public SupervisoryNode getByCode(SupervisoryNode supervisoryNode) {
     return supervisoryNodeMapper.getByCode(supervisoryNode);
   }
