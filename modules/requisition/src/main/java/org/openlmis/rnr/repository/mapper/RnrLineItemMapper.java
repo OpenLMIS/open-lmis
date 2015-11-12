@@ -41,7 +41,7 @@ public interface RnrLineItemMapper {
   @Options(useGeneratedKeys = true, keyProperty = "lineItem.id")
   public Integer insert(@Param("lineItem") RnrLineItem rnrLineItem, @Param("previousNormalizedConsumptions") String previousNormalizedConsumptions);
 
-  @Select({"SELECT requisition_line_items.*, products.strength ",
+  @Select({"SELECT requisition_line_items.*, products.strength, products.primaryname ",
           "FROM requisition_line_items, products, program_products",
           "WHERE rnrId = #{rnrId} and requisition_line_items.fullSupply = true",
           "and requisition_line_items.productcode = products.code",
@@ -50,6 +50,7 @@ public interface RnrLineItemMapper {
   @Results(value = {
     @Result(property = "id", column = "id"),
     @Result(property = "productStrength", column = "strength"),
+    @Result(property = "productPrimaryName", column = "primaryname"),
     @Result(property = "previousNormalizedConsumptions", column = "previousNormalizedConsumptions", typeHandler = StringToList.class),
     @Result(property = "lossesAndAdjustments", javaType = List.class, column = "id",
       many = @Many(select = "org.openlmis.rnr.repository.mapper.LossesAndAdjustmentsMapper.getByRnrLineItem"))
