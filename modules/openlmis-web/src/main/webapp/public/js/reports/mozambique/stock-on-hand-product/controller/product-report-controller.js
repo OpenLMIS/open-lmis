@@ -126,7 +126,7 @@ function ProductReportController(type) {
 
         $scope.checkDate = function(){
             if(new Date() < new Date($scope.reportParams.endTime)){
-                $scope.reportParams.endTime = null;
+                $scope.reportParams.endTime = $filter('date')(new Date(), "yyyy-MM-dd");
                 var options = {
                     id: "chooseDateAlertDialog",
                     header:"title.alert",

@@ -142,6 +142,7 @@ public class FacilityMapperIT {
 
     assertEquals(facilities.get(0).getCode(), trz001.getCode());
     assertEquals(facilities.get(1).getName(), trz002.getName());
+    assertEquals(facilities.get(1).getFacilityType().getCode(),FacilityBuilder.FACILITY_TYPE_CODE);
   }
 
   @Test
