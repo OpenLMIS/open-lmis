@@ -10,7 +10,7 @@ function ProductReportController(type) {
             if (type == "singleProduct") {
                 $scope.loadProducts();
             } else {
-                $scope.loadFacilities();
+                $scope.loadHealthFacilities();
             }
             loadGeographicZones();
             $scope.reportParams = {};
@@ -23,9 +23,29 @@ function ProductReportController(type) {
             });
         };
 
-        $scope.loadFacilities = function () {
+        $scope.loadHealthFacilities = function () {
+            FacilityService.facilityTypes().get({},function(data){
+               var facilityTypes = data["facility-types"];
+
+               $scope.loadFacilities(facilityTypes);
+            });
+        };
+
+        $scope.loadFacilities = function (facilityTypes) {
             FacilityService.allFacilities().get({}, function (data) {
-                $scope.facilities = data.facilities;
+                var facilities = data.facilities;
+                var healthFacilities = [];
+
+                _.forEach(facilities,function(facility){
+                    _.forEach(facilityTypes,function(type){
+                       if(type.id == facility.typeId){
+                           if(type.code != "ddm" && type.code != "dpm"){
+                               healthFacilities.push(facility);
+                           }
+                       }
+                    });
+                });
+                $scope.facilities = healthFacilities;
             });
         };
 
