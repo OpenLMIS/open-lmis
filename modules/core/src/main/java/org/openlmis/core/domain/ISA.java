@@ -61,14 +61,6 @@ public class ISA extends BaseModel
     return isaValue;
   }
 
-  //For Tanzania
-  public void calculate(Facility facility)
-  {
-    //Figure out population
-
-    //Return this.calculate(population);
-  }
-
   public static class Builder
   {
     private Double whoRatio;
