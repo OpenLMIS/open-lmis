@@ -11,9 +11,7 @@ package org.openlmis.core.repository.mapper;
 
 import org.apache.ibatis.annotations.*;
 import org.apache.ibatis.mapping.StatementType;
-import org.openlmis.core.domain.FacilityProgramProduct;
-import org.openlmis.core.domain.ISA;
-import org.openlmis.core.domain.ProgramProductISA;
+import org.openlmis.core.domain.*;
 import org.springframework.stereotype.Repository;
 
 /**
@@ -74,4 +72,25 @@ public interface FacilityProgramProductMapper {
   @Options(statementType=StatementType.CALLABLE)
   void removeFacilityProgramProduct(@Param("programProductId") Long programProductId, @Param("facilityId") Long facilityId);
 
+  @Select("SELECT f.id AS facilityid" +
+          "   ,pg.id AS programid" +
+          "   ,pd.id AS productid" +
+          "   ,fpp.isacoefficientsid" +
+          " FROM facility_program_products fpp" +
+          "   JOIN facilities f ON f.id = fpp.facilityid" +
+          "   JOIN program_products pp ON pp.id = fpp.programproductid" +
+          "   JOIN programs pg ON pg.id = pp.programid" +
+          "   JOIN products pd ON pd.id = pp.productid" +
+          " WHERE f.code = #{facilityCode}" +
+          "   AND pg.code = #{programCode}" +
+          "   AND pd.code = #{productCode}")
+  @Results({
+          @Result(property = "program", column = "programId", javaType = Program.class,
+                  one = @One(select = "org.openlmis.core.repository.mapper.ProgramMapper.getById")),
+          @Result(property = "product", column = "productId", javaType = Product.class,
+                  one = @One(select = "org.openlmis.core.repository.mapper.ProductMapper.getById"))
+  })
+  FacilityProgramProduct getByCodes(@Param("facilityCode")String facilityCode,
+                                    @Param("programCode")String programCode,
+                                    @Param("productCode")String productCode);
 }

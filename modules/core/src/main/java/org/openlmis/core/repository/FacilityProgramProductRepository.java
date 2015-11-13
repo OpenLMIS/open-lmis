@@ -68,7 +68,10 @@ public class FacilityProgramProductRepository {
   public void save(FacilityProgramProduct fpp) {
     fppMapper.removeFacilityProgramProduct(fpp.getId(), fpp.getFacilityId());
     fppMapper.insert(fpp);
-    fppMapper.insertISA(fpp.getId(), fpp.getProgramProductIsa());
+    fppMapper.insertISA(fpp.getFacilityId(), fpp.getProgramProductIsa());
   }
 
+  public FacilityProgramProduct getByCodes(String facilityCode, String programCode, String productCode) {
+    return fppMapper.getByCodes(facilityCode, programCode, productCode);
+  }
 }
