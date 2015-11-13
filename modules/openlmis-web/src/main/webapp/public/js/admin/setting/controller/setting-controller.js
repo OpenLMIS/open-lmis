@@ -12,15 +12,6 @@
 
 function ListSettingController($scope, $location, Settings, SettingUpdator) {
 
-  $scope.current = '';
-  $scope.CreateHeader = function(setting) {
-    if(setting.toUpperCase() !== $scope.current.toUpperCase()){
-      return true;
-    }
-    $scope.current = setting;
-    return false;
-  };
-
   $scope.changeTab = function(tab){
     $scope.visibleTab = tab;
   };

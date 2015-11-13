@@ -21,7 +21,7 @@ dependencies {
             'postgresql:postgresql:9.0-801.jdbc4',
             project(':modules:db')
 
-    compile("org.apache.poi:poi-ooxml:3.11") {
+    compile("org.apache.poi:poi-ooxml:3.13") {
         exclude group: "xml-apis", module: "xml-apis"
     }
 
