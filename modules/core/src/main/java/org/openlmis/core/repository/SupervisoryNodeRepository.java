@@ -56,6 +56,11 @@ public class SupervisoryNodeRepository {
       commaSeparateRightNames(rightNames));
   }
 
+  public List<SupervisoryNode> getSupervisoryNodeChildren(Long parentSupervisoryNodeId)
+  {
+    return supervisoryNodeMapper.getSupervisoryNodeChildren(parentSupervisoryNodeId);
+  }
+
   public Long getIdForCode(String code) {
     Long supervisoryNodeId = supervisoryNodeMapper.getIdForCode(code);
     if (supervisoryNodeId == null)

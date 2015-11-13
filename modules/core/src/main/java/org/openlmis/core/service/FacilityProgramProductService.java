@@ -18,7 +18,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.List;
 
 import static org.apache.commons.collections.CollectionUtils.forAllDo;
@@ -58,56 +57,6 @@ public class FacilityProgramProductService {
     return new FacilityProgramProduct(programProduct, facilityId, repository.getOverriddenIsa(programProduct.getId(), facilityId));
   }
 
-  public List<StockRequirements> getStockRequirements(final Long facilityId, Long programId)
-  {
-    //temporarily get facility in order to access its catchment population
-    Facility facility = facilityService.getById(facilityId);
-
-    List<FacilityTypeApprovedProduct> facilityTypeApprovedProducts = facilityApprovedProductRepository.getAllByFacilityAndProgramId(facilityId, programId);
-
-    List<StockRequirements> stockRequirements = new ArrayList<>();
-
-    List<FacilityProgramProduct> programProductsByProgram = getActiveProductsForProgramAndFacility(programId, facilityId);
-    for (FacilityProgramProduct facilityProgramProduct : programProductsByProgram)
-    {
-      StockRequirements requirements = new StockRequirements();
-      requirements.setFacilityId(facilityId);
-
-      //set our ISA to the most specific one possible
-      ISA facilityIsa = facilityProgramProduct.getOverriddenIsa();
-      if(facilityIsa != null)
-        requirements.setIsa(facilityIsa);
-      else if(facilityProgramProduct.getProgramProductIsa() != null)
-        requirements.setIsa(facilityProgramProduct.getProgramProductIsa().getIsa());
-
-      //set productId
-      Long productId = facilityProgramProduct.getProduct().getId();
-      requirements.setProductId(productId);
-      requirements.setProductName(facilityProgramProduct.getProduct().getPrimaryName());
-
-      //set catchmentPopulation
-      requirements.setPopulation(facility.getCatchmentPopulation());
-      //set minStock, maxStock, and eop
-      for(FacilityTypeApprovedProduct facilityTypeApprovedProduct : facilityTypeApprovedProducts)
-      {
-
-
-        if(productId.equals(facilityTypeApprovedProduct.getProgramProduct().getProduct().getId()))
-        {
-          ProgramProduct programProduct = facilityTypeApprovedProduct.getProgramProduct();
-          ProductCategory category = programProduct.getProductCategory();
-          requirements.setProductCategory(category.getName());
-          requirements.setMinMonthsOfStock(facilityTypeApprovedProduct.getMinMonthsOfStock());
-          requirements.setMaxMonthsOfStock(facilityTypeApprovedProduct.getMaxMonthsOfStock());
-          requirements.setEop(facilityTypeApprovedProduct.getEop());
-          break;
-        }
-      }
-      stockRequirements.add(requirements);
-    }
-
-    return stockRequirements;
-  }
 
   public void insertISA(Long facilityId, ProgramProductISA isa)
   {
@@ -149,7 +98,7 @@ public class FacilityProgramProductService {
 
   public ISA getOverriddenIsa(Long programProductId, Long facilityId)
   {
-    return repository.getOverriddenIsa(programProductId,facilityId);
+    return repository.getOverriddenIsa(programProductId, facilityId);
   }
 
 

@@ -8,7 +8,7 @@
  * You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org. 
  */
 
-package org.openlmis.core.domain;
+package org.openlmis.demographics.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
@@ -16,9 +16,10 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+import org.openlmis.core.domain.BaseModel;
+import org.openlmis.core.domain.ISA;
 import org.openlmis.core.dto.IsaDTO;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import static com.fasterxml.jackson.databind.annotation.JsonSerialize.Inclusion.NON_NULL;
@@ -33,6 +34,7 @@ import static com.fasterxml.jackson.databind.annotation.JsonSerialize.Inclusion.
 public class StockRequirements extends BaseModel
 {
   Long facilityId;
+  String facilityCode;
   Long productId;
   String productCategory;
   String productName;
@@ -114,6 +116,9 @@ public class StockRequirements extends BaseModel
     builder.append("\"facilityId\": ");
     builder.append(facilityId);
 
+    builder.append(", \"facilityCode\": ");
+    builder.append(facilityCode);
+
     builder.append(", \"productId\": ");
     builder.append(productId);
 
@@ -136,25 +141,25 @@ public class StockRequirements extends BaseModel
     builder.append(", \"isaCoefficients\": {");
     if(isa != null) {
       builder.append("\"whoRatio\": ");
-      builder.append(isa.whoRatio);
+      builder.append(isa.getWhoRatio());
 
       builder.append(", \"dosesPerYear\": ");
-      builder.append(isa.dosesPerYear);
+      builder.append(isa.getDosesPerYear());
 
       builder.append(", \"wastageFactor\": ");
-      builder.append(isa.wastageFactor);
+      builder.append(isa.getWastageFactor());
 
       builder.append(", \"bufferPercentage\": ");
-      builder.append(isa.bufferPercentage);
+      builder.append(isa.getBufferPercentage());
 
       builder.append(", \"minimumValue\": ");
-      builder.append(isa.minimumValue);
+      builder.append(isa.getMinimumValue());
 
       builder.append(", \"maximumValue\": ");
-      builder.append(isa.maximumValue);
+      builder.append(isa.getMaximumValue());
 
       builder.append(", \"adjustmentValue\": ");
-      builder.append(isa.adjustmentValue);
+      builder.append(isa.getAdjustmentValue());
     }
     builder.append("}");
 
