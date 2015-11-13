@@ -39,7 +39,7 @@ function ProductReportController(type) {
                 _.forEach(facilities,function(facility){
                     _.forEach(facilityTypes,function(type){
                        if(type.id == facility.typeId){
-                           if(type.code != "ddm" && type.code != "dpm"){
+                           if(type.code != "DDM" && type.code != "DPM"){
                                healthFacilities.push(facility);
                            }
                        }
