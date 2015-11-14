@@ -13,9 +13,10 @@
 package org.openlmis.equipment.domain;
 
 
-import lombok.*;
-import org.apache.commons.lang3.builder.EqualsBuilder;
-import org.apache.commons.lang3.builder.HashCodeBuilder;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.openlmis.core.domain.BaseModel;
 
 @Getter
@@ -30,23 +31,4 @@ public class EquipmentType extends BaseModel {
 
   private boolean isColdChain;
 
-  @Override
-  public boolean equals(Object o) {
-    if (this == o) return true;
-
-    if (o == null || getClass() != o.getClass()) return false;
-
-    EquipmentType that = (EquipmentType) o;
-
-    return new EqualsBuilder()
-        .append(id, that.id)
-        .isEquals();
-  }
-
-  @Override
-  public int hashCode() {
-    return new HashCodeBuilder(17, 37)
-        .append(id)
-        .toHashCode();
-  }
 }

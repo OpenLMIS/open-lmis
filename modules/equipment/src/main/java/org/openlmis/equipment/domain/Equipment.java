@@ -18,8 +18,6 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.apache.commons.lang3.builder.EqualsBuilder;
-import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.openlmis.core.domain.BaseModel;
 
 @Getter
@@ -57,23 +55,4 @@ public class Equipment extends BaseModel {
     return inventoryCount != null && inventoryCount == 0;
   }
 
-  @Override
-  public boolean equals(Object o) {
-    if (this == o) return true;
-
-    if (o == null || getClass() != o.getClass()) return false;
-
-    Equipment equipment = (Equipment) o;
-
-    return new EqualsBuilder()
-        .append(id, equipment.id)
-        .isEquals();
-  }
-
-  @Override
-  public int hashCode() {
-    return new HashCodeBuilder(17, 37)
-        .append(id)
-        .toHashCode();
-  }
 }
