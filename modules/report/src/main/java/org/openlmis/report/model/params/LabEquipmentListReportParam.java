@@ -12,26 +12,22 @@
 
 package org.openlmis.report.model.params;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
-import org.openlmis.core.domain.ProcessingPeriod;
-import org.openlmis.core.domain.Program;
+import lombok.*;
 
-@Data
+@Getter
+@Setter
 @NoArgsConstructor
-@EqualsAndHashCode(callSuper=false)
+@EqualsAndHashCode(callSuper = false)
 @AllArgsConstructor
 public class LabEquipmentListReportParam {
 
-    private Long programId;
-    private Long zoneId;
-    private Long facilityTypeId;
-    private Long facilityId;
-    private Long equipmentId;
-    private Long equipmentTypeId;
-    private Long serviceContractAvailable;
-    private Long donor;
+  private Long programId;
+  private Long zoneId;
+  private Long facilityTypeId;
+  private Long facilityId;
+  private Long equipmentId;
+  private Long equipmentTypeId;
+  private Long serviceContractAvailable;
+  private Long donor;
 
 }

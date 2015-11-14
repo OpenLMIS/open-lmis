@@ -12,15 +12,11 @@
 
 package org.openlmis.report.model.params;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
-import org.openlmis.report.model.ReportParameter;
+import lombok.*;
 
-@Data
+@Getter
+@Setter
 @AllArgsConstructor
-@EqualsAndHashCode(callSuper=false)
 @NoArgsConstructor
 public class ReplacementPlanReportParam{
 

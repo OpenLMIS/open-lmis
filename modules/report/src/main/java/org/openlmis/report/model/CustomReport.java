@@ -18,7 +18,6 @@ import org.openlmis.core.domain.BaseModel;
 @Getter
 @Setter
 @NoArgsConstructor
-@EqualsAndHashCode(callSuper=false)
 @AllArgsConstructor
 public class CustomReport extends BaseModel{
 

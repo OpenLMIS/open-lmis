@@ -13,17 +13,17 @@
 package org.openlmis.report.model.params;
 
 import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
-@Data
+@Getter
+@Setter
 @NoArgsConstructor
-@EqualsAndHashCode(callSuper=false)
 @AllArgsConstructor
 public class CCEStorageCapacityReportParam {
 
-    private Long programId;
-    private String facilityLevel;
-    private String facilityIds;
+  private Long programId;
+  private String facilityLevel;
+  private String facilityIds;
 }
