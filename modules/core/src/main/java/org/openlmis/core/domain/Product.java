@@ -12,9 +12,7 @@ package org.openlmis.core.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.upload.Importable;
 import org.openlmis.upload.annotation.ImportField;
@@ -24,10 +22,10 @@ import static com.fasterxml.jackson.databind.annotation.JsonSerialize.Inclusion.
 /**
  * Product represents real world entity Product. It also defines the contract for creation/upload of product entity.
  */
-@Data
+@Getter
+@Setter
 @NoArgsConstructor
 @JsonSerialize(include = NON_EMPTY)
-@EqualsAndHashCode(callSuper = false)
 public class Product extends BaseModel implements Importable {
 
   @ImportField(mandatory = true, name = "Product Code")

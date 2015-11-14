@@ -13,7 +13,9 @@ package org.openlmis.core.domain;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.openlmis.core.utils.DateUtil;
 
 import java.util.Date;
@@ -23,7 +25,8 @@ import java.util.Date;
  * Most domain objects have BaseModel as a superclass which defines its primary attributes.
  */
 
-@Data
+@Getter
+@Setter
 @NoArgsConstructor
 @JsonSerialize()
 public abstract class BaseModel {
