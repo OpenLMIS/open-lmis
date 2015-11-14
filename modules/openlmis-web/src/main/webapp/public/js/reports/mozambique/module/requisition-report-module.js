@@ -1,5 +1,4 @@
-angular.module('requisition-report', ['openlmis', 'angularCombine', 'ngTable','ui.bootstrap.dialog'])
-    .config(['$routeProvider',
+angular.module('requisition-report', ['openlmis', 'angularCombine', 'ngTable', 'ui.bootstrap.dialog']).config(['$routeProvider',
         function ($routeProvider) {
             $routeProvider.
                 when('/requisition', {
@@ -24,4 +23,6 @@ angular.module('requisition-report', ['openlmis', 'angularCombine', 'ngTable','u
     }
 ).config(function (angularCombineConfigProvider) {
         angularCombineConfigProvider.addConf(/filter-/, '/public/pages/reports/shared/filters.html');
-    });
+    }).filter("districtFilter", DistrictFilter)
+    .filter("provinceFilter", ProvinceFilter)
+    .filter("facilityFilter", FacilityFilter);

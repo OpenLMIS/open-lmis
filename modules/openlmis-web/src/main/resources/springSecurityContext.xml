@@ -41,7 +41,7 @@
   <beans:bean id="openLmisAccessDeniedHandler" class="org.openlmis.authentication.web.OpenLmisAccessDeniedHandler"/>
 
   <http pattern="/rest-api/**" use-expressions="true" authentication-manager-ref="restAuthenticationManager">
-      <intercept-url pattern="/rest-api/login" access="permitAll" requires-channel="any"/>
+    <intercept-url pattern="/rest-api/login" access="permitAll" requires-channel="any"/>
     <intercept-url pattern="/rest-api/**" access="isAuthenticated()" requires-channel="any"/>
     <http-basic/>
   </http>

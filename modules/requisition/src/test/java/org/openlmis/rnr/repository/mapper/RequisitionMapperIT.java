@@ -115,6 +115,8 @@ public class RequisitionMapperIT {
   private Role role;
   private Date modifiedDate;
   private ProductCategory productCategory;
+  @Autowired
+  private SignatureMapper signatureMapper;
 
   @Before
   public void setUp() {
@@ -162,6 +164,10 @@ public class RequisitionMapperIT {
     nonFullSupplyLineItem.setRnrId(requisition.getId());
     lineItemMapper.insert(fullSupplyLineItem, Collections.EMPTY_LIST.toString());
     lineItemMapper.insert(nonFullSupplyLineItem, Collections.EMPTY_LIST.toString());
+
+    ProgramProduct programProduct = new ProgramProduct(program, product, 1, true);
+    programProduct.setProductCategory(productCategory);
+    programProductMapper.insert(programProduct);
 
     User author = new User();
     author.setId(1L);
@@ -375,8 +381,8 @@ public class RequisitionMapperIT {
     DateTime date2 = date1.plusMonths(1);
 
     ProcessingPeriod processingPeriod4 = make(a(defaultProcessingPeriod,
-      with(scheduleId, processingSchedule.getId()),
-      with(ProcessingPeriodBuilder.name, "Period4")));
+        with(scheduleId, processingSchedule.getId()),
+        with(ProcessingPeriodBuilder.name, "Period4")));
     processingPeriod4.setStartDate(new Date());
 
     processingPeriodMapper.insert(processingPeriod4);
@@ -836,6 +842,36 @@ public class RequisitionMapperIT {
     Rnr requisition = insertRequisition(processingPeriod1, program, INITIATED, false, facility, supervisoryNode, modifiedDate);
 
     assertThat(mapper.getProgramId(requisition.getId()), is(requisition.getProgram().getId()));
+  }
+
+  @Test
+  public void shouldInsertRnrSignatures() throws Exception {
+    Rnr requisition = insertRequisition(processingPeriod1, program, INITIATED, false, facility, supervisoryNode, modifiedDate);
+
+    Signature submitterSignature = new Signature(Signature.Type.SUBMITTER, "Mystique");
+
+    signatureMapper.insertSignature(submitterSignature);
+    mapper.insertRnrSignature(requisition, submitterSignature);
+
+    List<Signature> dbRnrSignatures = mapper.getRnrSignaturesByRnrId(requisition.getId());
+    assertThat(dbRnrSignatures.size(), is(1));
+    assertThat(dbRnrSignatures.get(0).getText(), is("Mystique"));
+  }
+
+  @Test
+  public void shouldReturnSignaturesInRequisitions() {
+    Rnr requisition = insertRequisition(processingPeriod1, program, INITIATED, false, facility, supervisoryNode, modifiedDate);
+
+    Signature submitterSignature = new Signature(Signature.Type.SUBMITTER, "Mystique");
+
+    signatureMapper.insertSignature(submitterSignature);
+    mapper.insertRnrSignature(requisition, submitterSignature);
+
+    List<Rnr> rnrs = mapper.getRequisitionsWithLineItemsByFacility(facility);
+    List<Signature> rnrSignatures = rnrs.get(0).getRnrSignatures();
+
+    assertThat(rnrSignatures.size(), is(1));
+    assertThat(rnrSignatures.get(0).getText(), is("Mystique"));
   }
 
   private void insertRoleForApprovedRequisitions(Long facilityId, Long userId) throws SQLException {

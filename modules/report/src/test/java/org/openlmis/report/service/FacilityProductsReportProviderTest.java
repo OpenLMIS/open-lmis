@@ -17,6 +17,7 @@ import org.openlmis.db.categories.UnitTests;
 import org.openlmis.report.model.dto.FacilityProductReportEntry;
 import org.openlmis.stockmanagement.domain.StockCard;
 import org.openlmis.stockmanagement.domain.StockCardEntry;
+import org.openlmis.stockmanagement.domain.StockCardEntryKV;
 import org.openlmis.stockmanagement.service.StockCardService;
 
 import java.util.ArrayList;
@@ -63,11 +64,15 @@ public class FacilityProductsReportProviderTest {
         product.setId(1L);
         product.setPrimaryName("Product Test Name");
         stockCard.setProduct(product);
-        List<StockCardEntry> entries = new ArrayList<>();
+
         StockCardEntry stockCardEntry = new StockCardEntry();
         stockCardEntry.setQuantity(100L);
         stockCardEntry.setCreatedDate(new Date());
+        ArrayList<StockCardEntryKV> keyValues = new ArrayList<>();
+        keyValues.add(new StockCardEntryKV(FacilityProductReportEntry.EXPIRATION_DATES,null, null));
+        stockCardEntry.setKeyValues(keyValues);
 
+        List<StockCardEntry> entries = new ArrayList<>();
         entries.add(stockCardEntry);
         stockCard.setEntries(entries);
         stockCards.add(stockCard);

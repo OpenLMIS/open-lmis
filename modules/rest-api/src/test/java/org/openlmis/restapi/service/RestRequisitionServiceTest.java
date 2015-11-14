@@ -55,7 +55,6 @@ import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.spy;
 import static org.openlmis.core.builder.FacilityBuilder.*;
-import static org.openlmis.core.builder.ProgramSupportedBuilder.PROGRAM_CODE;
 import static org.openlmis.core.builder.ProgramSupportedBuilder.PROGRAM_ID;
 import static org.openlmis.core.builder.ProgramSupportedBuilder.defaultProgramSupported;
 import static org.openlmis.restapi.builder.ReportBuilder.*;
@@ -192,12 +191,11 @@ public class RestRequisitionServiceTest {
 
 
   @Test
-  public void shouldCopyPatientQuantificationWhenReportHasData() throws Exception {
+  public void shouldInsertPatientQuantificationWhenReportHasData() throws Exception {
 
     setUpRequisitionReportBeforeSubmit();
 
-    PatientQuantificationsBuilder patientQuantificationsBuilder = new PatientQuantificationsBuilder();
-    List<PatientQuantificationLineItem> patientQuantifications = patientQuantificationsBuilder.addLineItem(new PatientQuantificationLineItem("newborn", new Integer(10))).
+    List<PatientQuantificationLineItem> patientQuantifications = new PatientQuantificationsBuilder().addLineItem(new PatientQuantificationLineItem("newborn", new Integer(10))).
             addLineItem(new PatientQuantificationLineItem("adults", new Integer(5))).build();
 
     RegimenLineItem reportRegimenLineItem = make(a(defaultRegimenLineItem, with(patientsOnTreatment, 10), with(patientsStoppedTreatment, 5)));
@@ -207,6 +205,7 @@ public class RestRequisitionServiceTest {
 
     assertThat(requisition.getPatientQuantifications().get(0).getTotal(), is(10));
     assertThat(requisition.getPatientQuantifications().get(1).getTotal(), is(5));
+    verify(requisitionService).insertPatientQuantificationLineItems(requisition);
   }
 
   @Test
@@ -356,7 +355,7 @@ public class RestRequisitionServiceTest {
 
     Facility facility = make(a(defaultFacility, with(virtualFacility, false)));
     Rnr rnr = make(a(RequisitionBuilder.defaultRequisition, with
-            (RequisitionBuilder.facility, facility)));
+        (RequisitionBuilder.facility, facility)));
 
     expectedException.expect(DataException.class);
     expectedException.expectMessage("error.approval.not.allowed");
@@ -657,6 +656,24 @@ public class RestRequisitionServiceTest {
     service.getRequisitionsByFacility(FACILITY_CODE);
 
     verify(requisitionService).getRequisitionsByFacility(facility);
+  }
+
+  @Test
+  public void shouldSaveSignaturesForRequisition() throws Exception {
+    setUpRequisitionReportBeforeSubmit();
+    Signature submitterSignature = new Signature(Signature.Type.SUBMITTER, "Mystique");
+    Signature approverSignature = new Signature(Signature.Type.APPROVER, "Magneto");
+    report.setRnrSignatures(asList(submitterSignature, approverSignature));
+
+    service.submitReport(report, 1L);
+
+    assertThat(requisition.getRnrSignatures().get(0).getText(), is("Mystique"));
+    assertThat(requisition.getRnrSignatures().get(1).getText(), is("Magneto"));
+    assertThat(requisition.getRnrSignatures().get(0).getCreatedBy(), is(user.getId()));
+    assertThat(requisition.getRnrSignatures().get(0).getModifiedBy(), is(user.getId()));
+    assertThat(requisition.getRnrSignatures().get(1).getCreatedBy(), is(user.getId()));
+    assertThat(requisition.getRnrSignatures().get(1).getModifiedBy(), is(user.getId()));
+    verify(requisitionService).insertRnrSignatures(requisition);
   }
 
   private List<RnrColumn> getRnrColumns() {

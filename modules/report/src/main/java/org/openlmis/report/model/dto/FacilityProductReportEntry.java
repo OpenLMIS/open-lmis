@@ -1,42 +1,98 @@
 package org.openlmis.report.model.dto;
 
+import com.google.common.base.Function;
+import com.google.common.base.Optional;
 import com.google.common.base.Predicate;
-import com.google.common.collect.FluentIterable;
+import com.google.common.collect.ImmutableList;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.time.DateUtils;
+import org.openlmis.core.utils.DateUtil;
 import org.openlmis.stockmanagement.domain.StockCard;
 import org.openlmis.stockmanagement.domain.StockCardEntry;
+import org.openlmis.stockmanagement.domain.StockCardEntryKV;
 
-import java.util.Calendar;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
+
+import static com.google.common.collect.FluentIterable.from;
+import static com.google.common.collect.Lists.newArrayList;
 
 @Data
 @NoArgsConstructor
 public class FacilityProductReportEntry {
-    String productName;
-    String facilityName;
-    long productQuantity;
-    Date soonestExpiryDate;
-    Date lastSyncDate;
+    private String productName;
+    private String facilityName;
+    private long productQuantity;
+    private Date soonestExpiryDate;
+    private Date lastSyncDate;
+    private String code;
 
-    public FacilityProductReportEntry(StockCard stockCard, Date endTime){
-        if (endTime == null){
+    public static final String EXPIRATION_DATES = "expirationdates";
+
+    public FacilityProductReportEntry(StockCard stockCard, Date endTime) {
+        if (endTime == null) {
             endTime = new Date();
         }
 
-        this.productName = stockCard.getProduct().getName();
-        this.productQuantity = calculateQuantity(filterEntryByDate(stockCard, endTime));
+        this.productName = stockCard.getProduct().getPrimaryName();
+        List<StockCardEntry> stockCardEntryList = filterEntryByDate(stockCard, endTime);
+        this.productQuantity = calculateQuantity(stockCardEntryList);
 
-        // TODO need change
-        this.soonestExpiryDate = new Date();
+        getSoonestExpirationDate(stockCardEntryList);
+
         this.lastSyncDate = stockCard.getModifiedDate();
-
+        this.code = stockCard.getProduct().getCode();
     }
 
-    private List<StockCardEntry> filterEntryByDate(final StockCard stockCard, final Date date){
-        return FluentIterable.from(stockCard.getEntries()).filter(new Predicate<StockCardEntry>() {
+    private String getExpirationDateFromStockCardEntry(StockCardEntry entry){
+        Optional<StockCardEntryKV> stockCardEntryKVOptional = from(entry.getKeyValues()).firstMatch(new Predicate<StockCardEntryKV>() {
+            @Override
+            public boolean apply(StockCardEntryKV input) {
+                return EXPIRATION_DATES.equalsIgnoreCase(input.getKeyColumn());
+            }
+        });
+
+        if (stockCardEntryKVOptional.isPresent()){
+            return stockCardEntryKVOptional.get().getValueColumn();
+        }
+        return StringUtils.EMPTY;
+    }
+
+    protected void getSoonestExpirationDate(List<StockCardEntry> stockCardEntryList) {
+        if (stockCardEntryList == null || stockCardEntryList.size() == 0) {
+            return;
+        }
+
+        StockCardEntry lastEntry = from(stockCardEntryList).first().get();
+
+        String expirationDates = getExpirationDateFromStockCardEntry(lastEntry);
+        if (!StringUtils.isEmpty(expirationDates)) {
+            String[] dateStrings = expirationDates.split(",");
+
+            Optional<Date> soonestDate = from(sortExpirationDate(dateStrings)).last();
+            if (soonestDate.isPresent()) {
+                this.soonestExpiryDate = soonestDate.get();
+            }
+        }
+    }
+
+    private ImmutableList<Date> sortExpirationDate(String[] dateStrings) {
+        return from(newArrayList(dateStrings)).transform(new Function<String, Date>() {
+                    @Override
+                    public Date apply(String input) {
+                        return DateUtil.parseDate(input,DateUtil.FORMAT_DATE_TIME_DAY_MONTH_YEAR );
+                    }
+                }).toSortedList(new Comparator<Date>() {
+                    @Override
+                    public int compare(Date o1, Date o2) {
+                        return o2.compareTo(o1);
+                    }
+                });
+    }
+
+    private List<StockCardEntry> filterEntryByDate(final StockCard stockCard, final Date date) {
+        return from(stockCard.getEntries()).filter(new Predicate<StockCardEntry>() {
             @Override
             public boolean apply(StockCardEntry input) {
                 return !DateUtils.truncate(input.getCreatedDate(), Calendar.DATE).after(date);
@@ -44,9 +100,9 @@ public class FacilityProductReportEntry {
         }).toList();
     }
 
-    private long calculateQuantity(List<StockCardEntry> stockCardEntryList){
+    private long calculateQuantity(List<StockCardEntry> stockCardEntryList) {
         long result = 0;
-        for (StockCardEntry entry : stockCardEntryList){
+        for (StockCardEntry entry : stockCardEntryList) {
             result += entry.getQuantity();
         }
         return result;

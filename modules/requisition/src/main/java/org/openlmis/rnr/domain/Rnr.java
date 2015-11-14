@@ -70,6 +70,8 @@ public class Rnr extends BaseModel {
   private String clientSubmittedNotes;
   private List<Comment> comments = new ArrayList<>();
 
+  private List<Signature> rnrSignatures;
+
   public Rnr(Facility facility, Program program, ProcessingPeriod period, Boolean emergency, Long modifiedBy, Long createdBy) {
     this.facility = facility;
     this.program = program;
@@ -372,6 +374,5 @@ public class Rnr extends BaseModel {
   public boolean isBudgetingApplicable() {
     return !this.emergency && this.program.getBudgetingApplies();
   }
-
 }
 

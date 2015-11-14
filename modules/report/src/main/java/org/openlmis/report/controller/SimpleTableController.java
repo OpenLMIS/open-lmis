@@ -66,7 +66,7 @@ public class SimpleTableController extends BaseController {
 
 	@RequestMapping(value = "/single-product-report", method = GET, headers = BaseController.ACCEPT_JSON)
 	public ResponseEntity<OpenLmisResponse> singleProductReport(
-			@RequestParam(value = "geographicZoneId") Long geographicZoneId,
+			@RequestParam(value = "geographicZoneId", required = false) Long geographicZoneId,
 			@RequestParam(value = "productId") final Long productId,
 			@RequestParam(value = "endTime", required = false) final Date endTime) {
 		return OpenLmisResponse.response("products", facilityProductsReportDataProvider.getReportData(geographicZoneId, productId, endTime));
