@@ -10,13 +10,11 @@
 
 package org.openlmis.rnr.domain;
 
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
-@Data
+@Getter
+@Setter
 @NoArgsConstructor
-@EqualsAndHashCode
 public class Formula {
 
   private String id;

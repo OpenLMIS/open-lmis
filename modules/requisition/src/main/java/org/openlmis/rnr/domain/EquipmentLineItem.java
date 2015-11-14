@@ -12,9 +12,7 @@
 
 package org.openlmis.rnr.domain;
 
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import org.openlmis.core.domain.Product;
 
@@ -22,13 +20,12 @@ import java.util.List;
 
 import static com.fasterxml.jackson.databind.annotation.JsonSerialize.Inclusion.NON_EMPTY;
 
-@Data
+@Getter
+@Setter
 @NoArgsConstructor
-@EqualsAndHashCode(callSuper = true)
 @JsonSerialize(include = NON_EMPTY)
 public class EquipmentLineItem extends LineItem  {
 
-  private Long id;
   private String code;
   private String equipmentName;
   private String equipmentCategory;

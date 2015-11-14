@@ -10,10 +10,7 @@
 
 package org.openlmis.distribution.domain;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.openlmis.core.domain.BaseModel;
 import org.openlmis.core.domain.Facility;
 
@@ -24,10 +21,10 @@ import static java.lang.Math.ceil;
  * target population percentage and catchment population of the corresponding facility.
  */
 
-@Data
+@Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@EqualsAndHashCode(callSuper = false)
 public class CoverageLineItem extends BaseModel {
 
   protected Long facilityVisitId;

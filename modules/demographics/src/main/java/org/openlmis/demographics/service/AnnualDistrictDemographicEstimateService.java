@@ -93,7 +93,7 @@ public class AnnualDistrictDemographicEstimateService {
     }
   }
 
-  private List<AnnualDistrictEstimateEntry> getEmptyEstimateObjects(List<EstimateCategory> categories, Long districtId, Long programId, Integer year) {
+  private static List<AnnualDistrictEstimateEntry> getEmptyEstimateObjects(List<EstimateCategory> categories, Long districtId, Long programId, Integer year) {
     List<AnnualDistrictEstimateEntry> result = new ArrayList<>();
     for (EstimateCategory category : categories) {
       AnnualDistrictEstimateEntry estimate = new AnnualDistrictEstimateEntry();

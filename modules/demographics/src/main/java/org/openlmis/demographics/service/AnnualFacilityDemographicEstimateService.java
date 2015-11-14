@@ -106,7 +106,7 @@ public class AnnualFacilityDemographicEstimateService {
     }
   }
 
-  private List<AnnualFacilityEstimateEntry> createDefaultEstimateEntries(List<EstimateCategory> categories, Long facilityId, Long programId, Integer year, Boolean includeDetails) {
+  private static List<AnnualFacilityEstimateEntry> createDefaultEstimateEntries(List<EstimateCategory> categories, Long facilityId, Long programId, Integer year, Boolean includeDetails) {
 
     List<AnnualFacilityEstimateEntry> result = new ArrayList<>();
 
