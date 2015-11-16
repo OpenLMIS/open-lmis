@@ -7,6 +7,7 @@ import org.openlmis.core.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Component
@@ -27,6 +28,12 @@ public class FacilityProgramProductISAHandler extends AbstractModelPersistenceHa
 
     @Autowired
     SupervisoryNodeRepository supervisoryNodeRepository;
+
+    @Autowired
+    RequisitionGroupRepository requisitionGroupRepository;
+
+    @Autowired
+    RequisitionGroupMemberRepository requisitionGroupMemberRepository;
 
     @Autowired
     FacilityProgramProductRepository facilityProgramProductRepository;
@@ -67,7 +74,7 @@ public class FacilityProgramProductISAHandler extends AbstractModelPersistenceHa
 
     @Override
     public String getMessageKey() {
-        return "error.duplicate.facility.program.product";
+        return "error.duplicate.facility.program.product.isa";
     }
 
     private void saveWastageFactorForSupervisingFacilities(Facility facility, ProgramProduct pp, Program program) {
@@ -78,18 +85,29 @@ public class FacilityProgramProductISAHandler extends AbstractModelPersistenceHa
         for (SupervisoryNode parentNode : parentNodes) {
             Double wastageFactor = 0.0;
 
-            // Re-calculate wastage factor if parent facility is a RVS/CVS
+            // Re-calculate wastage factor if parent facility is a DVS/RVS/CVS
             Facility parentFacility = parentNode.getFacility();
             if (parentFacility.getFacilityType().getCode().equalsIgnoreCase("cvs") ||
-                    parentFacility.getFacilityType().getCode().equalsIgnoreCase("rvs")) {
+                    parentFacility.getFacilityType().getCode().equalsIgnoreCase("rvs") ||
+                    parentFacility.getFacilityType().getCode().equalsIgnoreCase("dvs")) {
                 int facilityCount = 0;
                 Double totalWastageFactor = 0.0;
 
                 // Do the calculation by looking at all children
+
+                // First, get all child facilities by looking at all requisition groups and their members
                 List<SupervisoryNode> childNodes = supervisoryNodeRepository.getAllChildSupervisoryNodesInHierarchy(parentNode);
-                for (SupervisoryNode childNode : childNodes) {
-                    Facility childFacility = childNode.getFacility();
-                    if (childFacility.getFacilityType().getCode().equalsIgnoreCase("dvs")) {
+                List<RequisitionGroup> requisitionGroups = requisitionGroupRepository.getRequisitionGroups(childNodes);
+                List<RequisitionGroupMember> requisitionGroupMembers = new ArrayList<>();
+                for (RequisitionGroup requisitionGroup : requisitionGroups) {
+                    requisitionGroupMembers.addAll(requisitionGroupMemberRepository.getMembersBy(requisitionGroup.getId()));
+                }
+
+                // For each requisition group member, check if facility is an SDP and add its wastage factor to running total
+                for (RequisitionGroupMember requisitionGroupMember : requisitionGroupMembers) {
+                    // This call to the database is necessary, as facility does not have SDP info
+                    Facility childFacility = facilityRepository.getById(requisitionGroupMember.getFacility().getId());
+                    if (childFacility.getSdp()) {
                         ISA facilityISA = facilityProgramProductRepository.getOverriddenIsa(pp.getId(), childFacility.getId());
                         if (facilityISA != null) {
                             facilityCount += 1;
@@ -98,6 +116,7 @@ public class FacilityProgramProductISAHandler extends AbstractModelPersistenceHa
                     }
                 }
 
+                // Calculate average wastage factor
                 if (facilityCount > 0) {
                     wastageFactor = totalWastageFactor / facilityCount;
                 }
