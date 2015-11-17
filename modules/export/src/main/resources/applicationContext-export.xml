@@ -18,12 +18,6 @@
   <context:annotation-config/>
   <context:spring-configured/>
 
-  <import resource="classpath*:applicationContext-db.xml"/>
-  <import resource="classpath*:applicationContext-core.xml"/>
-  <import resource="classpath*:applicationContext-equipment.xml"/>
-  <import resource="classpath*:atomFeedContext.xml" />
-  <import resource="classpath*:applicationContext-export.xml" />
-
-  <context:component-scan base-package="org.openlmis.rnr"/>
+  <context:component-scan base-package="org.openlmis.files.excel"/>
 
 </beans>

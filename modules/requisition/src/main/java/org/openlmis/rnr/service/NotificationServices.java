@@ -47,9 +47,11 @@ public class NotificationServices {
   @Autowired
   private ApproverService approverService;
 
+  @Autowired
+  private RequisitionEmailService requisitionEmailService;
+
   public void notifyStatusChange(Rnr requisition) {
 
-    String emailTemplate = configService.getByKey(ConfigurationSettingKey.EMAIL_TEMPLATE_APPROVAL).getValue();
 
     List<User> users = null;
     // find out which email to send it to
@@ -71,13 +73,15 @@ public class NotificationServices {
     }
 
     if (users != null) {
+      requisitionEmailService.sendRequisitionEmailWithAttachment(requisition, users);
+
       for (User user : users) {
         if (user.isMobileUser()) {
           continue;
         }
 
         SimpleMailMessage message = new SimpleMailMessage();
-        String emailMessage = emailTemplate;
+        String emailMessage = configService.getByKey(ConfigurationSettingKey.EMAIL_TEMPLATE_APPROVAL).getValue();
 
         String approvalURL = String.format("%1$s/public/pages/logistics/rnr/index.html#/rnr-for-approval/%2$s/%3$s?supplyType=full-supply&page=1", baseURL, requisition.getId(), requisition.getProgram().getId());
 

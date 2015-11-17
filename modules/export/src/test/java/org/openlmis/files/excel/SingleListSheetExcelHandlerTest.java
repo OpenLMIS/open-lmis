@@ -24,7 +24,7 @@ public class SingleListSheetExcelHandlerTest {
 	@Before
 	public void setUp() throws Exception {
 		util = new SingleListSheetExcelHandler();
-		tempWb = util.readXssTemplateFile("templete_test.xlsx");
+		tempWb = util.readXssTemplateFile("template_test.xlsx", ExcelHandler.PathType.CLASSPATH);
 		tempSheet = tempWb.getSheetAt(0);
 	}
 
