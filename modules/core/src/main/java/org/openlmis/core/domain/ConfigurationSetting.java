@@ -13,9 +13,9 @@
 package org.openlmis.core.domain;
 
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import lombok.*;
-import org.apache.commons.lang3.builder.EqualsBuilder;
-import org.apache.commons.lang3.builder.HashCodeBuilder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import static com.fasterxml.jackson.databind.annotation.JsonSerialize.Inclusion.NON_NULL;
 
@@ -23,7 +23,7 @@ import static com.fasterxml.jackson.databind.annotation.JsonSerialize.Inclusion.
 @Setter
 @NoArgsConstructor
 @JsonSerialize(include = NON_NULL)
-public class ConfigurationSetting {
+public class ConfigurationSetting extends BaseModel {
 
   private String key;
   private String value;
@@ -34,25 +34,4 @@ public class ConfigurationSetting {
   private String displayOrder;
   private String groupName;
 
-  @Override
-  public boolean equals(Object o) {
-    if (this == o)
-      return true;
-
-    if (o == null || getClass() != o.getClass())
-      return false;
-
-    ConfigurationSetting that = (ConfigurationSetting) o;
-
-    return new EqualsBuilder()
-        .append(key, that.key)
-        .isEquals();
-  }
-
-  @Override
-  public int hashCode() {
-    return new HashCodeBuilder(17, 37)
-        .append(key)
-        .toHashCode();
-  }
 }

@@ -10,11 +10,12 @@
 
 package org.openlmis.core.dto;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import org.apache.log4j.Logger;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import org.apache.log4j.Logger;
 import org.openlmis.core.exception.DataException;
 
 import java.io.IOException;
@@ -22,7 +23,8 @@ import java.io.IOException;
 /**
  * BaseFeedDTO is the base class for all DTO objects which provides utility methods like getting a serialized DTO object.
  */
-@Data
+@Getter
+@Setter
 @NoArgsConstructor
 public abstract class BaseFeedDTO {
 

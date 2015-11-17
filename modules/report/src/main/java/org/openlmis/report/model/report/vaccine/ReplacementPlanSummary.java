@@ -13,12 +13,11 @@
 
 package org.openlmis.report.model.report.vaccine;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.openlmis.report.model.ReportData;
 
-@Data
+@Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 public class ReplacementPlanSummary implements ReportData {

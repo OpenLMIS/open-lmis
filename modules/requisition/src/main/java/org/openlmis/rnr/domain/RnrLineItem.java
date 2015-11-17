@@ -62,6 +62,7 @@ public class RnrLineItem extends LineItem {
   private String productCode;
   private String productCategory;
   private Integer productCategoryDisplayOrder;
+  private String productStrength;
   private Boolean roundToZero;
   private Integer packRoundingThreshold;
   private Integer packSize;
@@ -126,6 +127,7 @@ public class RnrLineItem extends LineItem {
       this.stockOutDays = null;
       this.newPatientCount = null;
       this.quantityRequested = null;
+      this.quantityApproved = null;
       this.reasonForRequestedQuantity = null;
       this.normalizedConsumption = null;
       this.periodNormalizedConsumption = null;
@@ -133,7 +135,9 @@ public class RnrLineItem extends LineItem {
       this.remarks = null;
       this.expirationDate = null;
     }
-    quantityApproved = (quantityRequested == null) ? calculatedOrderQuantity : quantityRequested;
+    if(quantityApproved == null){
+      quantityApproved = (quantityRequested == null) ? calculatedOrderQuantity : quantityRequested;
+    }
   }
 
   public void setBeginningBalanceWhenPreviousStockInHandAvailable(RnrLineItem previousLineItem,

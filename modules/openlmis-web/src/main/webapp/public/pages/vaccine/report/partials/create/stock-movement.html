@@ -31,11 +31,11 @@
       <td ng-repeat-start="column in report.columnTemplate | filter : {visible:true}" ng-if="false"></td>
         <td ng-if="column.name == 'productName'"  class="cell-input"><span class="cell-text">{{product.productName}}</span></td>
         <td ng-if="column.name == 'openingBalance'" class="cell-input col-beginningBalance">
-          <input numeric-validator="positiveInteger" maxlength="8" ng-disabled="!product.product.fullSupply" ng-model="product.openingBalance" type="text" /></td>
+          <input numeric-validator="positiveInteger" maxlength="8" ng-model="product.openingBalance" type="text" /></td>
         <td ng-if="column.name == 'quantityReceived'" class="cell-input col-beginningBalance">
           <input numeric-validator="positiveInteger" maxlength="8" ng-model="product.quantityReceived" type="text" /></td>
         <td ng-if="column.name == 'quantityIssued'" class="cell-input col-beginningBalance">
-          <input numeric-validator="positiveInteger" maxlength="8" ng-disabled="!product.product.fullSupply" ng-model="product.quantityIssued" type="text" /></td>
+          <input numeric-validator="positiveInteger" maxlength="8" ng-model="product.quantityIssued" type="text" /></td>
         <td ng-if="column.name == 'closingBalance'" class="cell-input col-beginningBalance">
           <input numeric-validator="positiveInteger" maxlength="8" ng-model="product.closingBalance" type="text" /></td>
         <td ng-if="column.name == 'quantityVvmAlerted'" class="cell-input col-beginningBalance">

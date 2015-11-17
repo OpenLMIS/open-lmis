@@ -18,8 +18,9 @@
     <tr class="text-row">
       <th class="span5"><span openlmis-message="label.vaccine.disease.name"></span></th>
       <th class="span1"><span openlmis-message="label.vaccine.disease.cases"></span></th>
-      <th class="span1"><span openlmis-message="label.vaccine.disease.cumulative"></span></th>
+      <th class="span1"><span openlmis-message="label.vaccine.disease.cumulative.cases"></span></th>
       <th class="span1"><span openlmis-message="label.vaccine.disease.death"></span></th>
+      <th class="span1"><span openlmis-message="label.vaccine.disease.cumulative.deaths"></span></th>
     </tr>
     </thead>
     <tbody>
@@ -28,6 +29,8 @@
         <td class="cell-input col-general"><input numeric-validator="positiveInteger" maxlength="8" type="text" ng-model="disease.cases" /></td>
         <td class="cell-input col-general number" style="text-align: right"><span class="cell-text" ng-bind="(disease.calculatedCumulativeCases + toNumber(disease.cases))"></span></td>
         <td class="cell-input col-general"><input numeric-validator="positiveInteger" maxlength="8" type="text" ng-model="disease.death" /></td>
+        <td class="cell-input col-general number" style="text-align: right"><span class="cell-text" ng-bind="(disease.calculatedCumulativeDeaths + toNumber(disease.death))"></span></td>
+
       </tr>
     </tbody>
     </table>

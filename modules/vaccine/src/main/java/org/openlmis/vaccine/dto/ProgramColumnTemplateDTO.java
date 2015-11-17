@@ -14,8 +14,6 @@ package org.openlmis.vaccine.dto;
 
 import lombok.Getter;
 import lombok.Setter;
-import org.apache.commons.lang3.builder.EqualsBuilder;
-import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.openlmis.vaccine.domain.reports.LogisticsColumn;
 
 import java.util.List;
@@ -28,25 +26,4 @@ public class ProgramColumnTemplateDTO {
 
   List<LogisticsColumn> columns;
 
-  @Override
-  public boolean equals(Object o) {
-    if (this == o)
-      return true;
-
-    if (!(o instanceof ProgramColumnTemplateDTO))
-      return false;
-
-    ProgramColumnTemplateDTO that = (ProgramColumnTemplateDTO) o;
-
-    return new EqualsBuilder()
-        .append(programId, that.programId)
-        .isEquals();
-  }
-
-  @Override
-  public int hashCode() {
-    return new HashCodeBuilder(17, 37)
-        .append(programId)
-        .toHashCode();
-  }
 }

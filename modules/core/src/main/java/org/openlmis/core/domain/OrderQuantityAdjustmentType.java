@@ -1,4 +1,3 @@
-
 /*
  * Electronic Logistics Management Information System (eLMIS) is a supply chain management system for health commodities in a developing country setting.
  *
@@ -12,17 +11,15 @@
  */
 package org.openlmis.core.domain;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
-@Data
+@Getter
+@Setter
 @AllArgsConstructor
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = false)
 public class OrderQuantityAdjustmentType extends BaseModel {
-    private String name;
-    private String description;
-    private int displayOrder;
+  private String name;
+  private String description;
+  private int displayOrder;
 }

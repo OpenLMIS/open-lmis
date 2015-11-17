@@ -21,6 +21,7 @@ import org.openlmis.core.builder.ProgramBuilder;
 import org.openlmis.core.domain.Facility;
 import org.openlmis.core.domain.ProcessingPeriod;
 import org.openlmis.core.domain.Program;
+import org.openlmis.core.domain.Signature;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.core.utils.DateUtil;
 import org.openlmis.db.categories.UnitTests;
@@ -204,6 +205,7 @@ public class ReportTest {
         make(a(PatientQuantificationsBuilder.defaultPatientQuantificationLineItem)));
     rnr.setPatientQuantifications(patientQuantificationLineItems);
     rnr.setPeriod(new ProcessingPeriod());
+    rnr.setRnrSignatures(asList(new Signature(Signature.Type.SUBMITTER, "abc")));
 
     Report report = Report.prepareForREST(rnr);
 
@@ -215,6 +217,7 @@ public class ReportTest {
     assertThat(report.getRegimens().size(), is(2));
     assertThat(report.getPatientQuantifications().size(), is(2));
     assertNull(report.getClientSubmittedTime());
+    assertThat(report.getRnrSignatures().get(0).getText(), is("abc"));
   }
 
   @Test

@@ -1,0 +1,10 @@
+<div id="{{dialogOptions.id}}" class="dialog">
+    <div class="modal-header"><h3 openlmis-message="dialogOptions.header"></h3></div>
+    <div class="modal-body">
+        <p id="dialogMessage" openlmis-message="dialogOptions.body"></p>
+    </div>
+    <div class="modal-footer">
+        <a id="button_OK" href="" class="btn btn-primary" ng-click="dialogClose(dialogOptions.ok.value)"
+           openlmis-message="dialogOptions.ok.label"></a>
+    </div>
+</div>

@@ -65,8 +65,8 @@ public class SelectedFilterHelper {
     String zone = StringHelper.getValue(params, ZONE);
     String userId = StringHelper.getValue(params, USER_ID);
 
-    ProcessingPeriod periodObject = (period != null)? periodService.getById(Long.parseLong(period)) : null;
-    GeographicZone zoneObject = (zone != null)? geoZoneRepsotory.getById(Long.parseLong(zone)): null;
+    ProcessingPeriod periodObject = (period != null) ? periodService.getById(Long.parseLong(period)) : null;
+    GeographicZone zoneObject = (zone != null) ? geoZoneRepsotory.getById(Long.parseLong(zone)) : null;
     if (program != null) {
       if ("0".equals(program)) {
         filterSummary = "Program: All Programs";
@@ -82,12 +82,12 @@ public class SelectedFilterHelper {
       Long totalSNods = supervisoryNodeService.getTotalUnassignedSupervisoryNodeOfUserBy(Long.parseLong(userId), Long.parseLong(program));
 
       if (totalSNods == 0)
-        filterSummary += "%nGeographic Zone: National";
+        filterSummary += "\nGeographic Zone: National";
       else
-        filterSummary += "%nGeographic Zone: All Zones";
+        filterSummary += "\nGeographic Zone: All Zones";
 
-    } else if(zoneObject != null) {
-      filterSummary += "%nGeographic Zone: " + zoneObject.getName();
+    } else if (zoneObject != null) {
+      filterSummary += "\nGeographic Zone: " + zoneObject.getName();
     }
 
     return filterSummary;

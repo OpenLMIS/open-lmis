@@ -1,0 +1,1 @@
+ALTER TABLE stock_card_entries ADD COLUMN occurred DATE;

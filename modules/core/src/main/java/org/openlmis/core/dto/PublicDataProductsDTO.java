@@ -11,16 +11,16 @@
  */
 package org.openlmis.core.dto;
 
-import lombok.Data;
-import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.Setter;
 
-@Data
-@EqualsAndHashCode(callSuper = false)
+@Getter
+@Setter
 public class PublicDataProductsDTO {
 
-    private String product_category;
-    private String product_name;
-    private String product_code;
-    private String product_form;
-    private String dispensing_unit;
+  private String product_category;
+  private String product_name;
+  private String product_code;
+  private String product_form;
+  private String dispensing_unit;
 }

@@ -10,10 +10,7 @@
 
 package org.openlmis.core.domain;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.openlmis.upload.Importable;
 import org.openlmis.upload.annotation.ImportField;
 
@@ -21,7 +18,8 @@ import org.openlmis.upload.annotation.ImportField;
  * ProductCategory represents the category for product. Also defines the contract for creation/upload of ProductCategory like
  * code, name and displayOrder are mandatory, their respective data types and headers in upload csv.
  */
-@Data
+@Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode(callSuper = false)

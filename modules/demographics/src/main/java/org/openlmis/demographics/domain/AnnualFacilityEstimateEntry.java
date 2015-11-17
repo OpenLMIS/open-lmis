@@ -16,8 +16,6 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.apache.commons.lang3.builder.EqualsBuilder;
-import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.openlmis.core.domain.BaseModel;
 
 @Getter
@@ -40,25 +38,4 @@ public class AnnualFacilityEstimateEntry extends BaseModel {
     value = calculatedValue.longValue();
   }
 
-  @Override
-  public boolean equals(Object o) {
-    if (this == o)
-      return true;
-
-    if (!(o instanceof AnnualFacilityEstimateEntry))
-      return false;
-
-    AnnualFacilityEstimateEntry that = (AnnualFacilityEstimateEntry) o;
-
-    return new EqualsBuilder()
-        .append(id, that.id)
-        .isEquals();
-  }
-
-  @Override
-  public int hashCode() {
-    return new HashCodeBuilder(17, 37)
-        .append(id)
-        .toHashCode();
-  }
 }

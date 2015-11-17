@@ -20,7 +20,6 @@ import java.util.Date;
 
 @Getter
 @Setter
-@EqualsAndHashCode
 @NoArgsConstructor
 @AllArgsConstructor
 public class SeasonalRationingReport implements ReportData {

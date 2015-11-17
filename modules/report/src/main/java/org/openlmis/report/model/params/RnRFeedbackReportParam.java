@@ -13,7 +13,6 @@
 package org.openlmis.report.model.params;
 
 import lombok.*;
-import org.openlmis.report.model.ReportData;
 import org.openlmis.report.model.ReportParameter;
 
 @Getter

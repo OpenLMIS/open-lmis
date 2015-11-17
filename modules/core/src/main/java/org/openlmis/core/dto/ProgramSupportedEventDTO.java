@@ -10,10 +10,11 @@
 
 package org.openlmis.core.dto;
 
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import lombok.Getter;
+import lombok.Setter;
 import org.ict4h.atomfeed.server.service.Event;
 import org.joda.time.DateTime;
 import org.openlmis.core.domain.ProgramSupported;
@@ -32,8 +33,8 @@ import static com.fasterxml.jackson.databind.annotation.JsonSerialize.Inclusion.
  * like facilityCode, and list of programs to be used while displaying ProgramSupported
  * information to user, for eg. in feed.
  */
-@Data
-@EqualsAndHashCode(callSuper = false)
+@Getter
+@Setter
 @JsonSerialize(include = NON_EMPTY)
 public class ProgramSupportedEventDTO extends BaseFeedDTO {
 
