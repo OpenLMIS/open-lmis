@@ -22,7 +22,8 @@ dependencies {
             project(':modules:migration'),
             project(':modules:email'),
             project(':modules:sms'),
-            project(':modules:upload')
+            project(':modules:upload'),
+            project(':modules:export')
 
     testCompile project(path: ':modules:email', configuration: 'testFixtures')
 

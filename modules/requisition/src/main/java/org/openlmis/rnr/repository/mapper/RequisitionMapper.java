@@ -248,7 +248,6 @@ public interface RequisitionMapper {
   @Insert("INSERT INTO requisition_signatures(signatureId, rnrId) VALUES " +
       "(#{signature.id}, #{rnr.id})")
   void insertRnrSignature(@Param("rnr") Rnr rnr, @Param("signature") Signature signature);
-
   @Select("SELECT * FROM requisition_signatures " +
       "JOIN signatures " +
       "ON signatures.id = requisition_signatures.signatureId " +
