@@ -69,6 +69,7 @@ public class FacilityProgramProductISAHandler extends AbstractModelPersistenceHa
 
         saveFacilityProgramProductWithISA(facility, pp, isa);
 
+        // This method only really applies for VIMS, but is in place for all
         saveWastageFactorForSupervisingFacilities(facility, pp, program);
     }
 
@@ -85,7 +86,7 @@ public class FacilityProgramProductISAHandler extends AbstractModelPersistenceHa
         for (SupervisoryNode parentNode : parentNodes) {
             Double wastageFactor = 0.0;
 
-            // Re-calculate wastage factor if parent facility is a DVS/RVS/CVS
+            // Re-calculate wastage factor if parent facility is a DVS/RVS/CVS (VIMS-specific)
             Facility parentFacility = parentNode.getFacility();
             if (parentFacility.getFacilityType().getCode().equalsIgnoreCase("cvs") ||
                     parentFacility.getFacilityType().getCode().equalsIgnoreCase("rvs") ||
@@ -96,6 +97,7 @@ public class FacilityProgramProductISAHandler extends AbstractModelPersistenceHa
                 // Do the calculation by looking at all children
 
                 // First, get all child facilities by looking at all requisition groups and their members
+                // NOTE: assumption here is that a supervisory node only has one requisition group assigned to it, which is true for VIMS
                 List<SupervisoryNode> childNodes = supervisoryNodeRepository.getAllChildSupervisoryNodesInHierarchy(parentNode);
                 List<RequisitionGroup> requisitionGroups = requisitionGroupRepository.getRequisitionGroups(childNodes);
                 List<RequisitionGroupMember> requisitionGroupMembers = new ArrayList<>();
@@ -120,18 +122,16 @@ public class FacilityProgramProductISAHandler extends AbstractModelPersistenceHa
                 if (facilityCount > 0) {
                     wastageFactor = totalWastageFactor / facilityCount;
                 }
-            } else {
-                continue;
+
+                ISA isa = new ISA();
+                isa.setWhoRatio(0.0);
+                isa.setDosesPerYear(0);
+                isa.setWastageFactor(wastageFactor);
+                isa.setBufferPercentage(0.0);
+                isa.setAdjustmentValue(0);
+
+                saveFacilityProgramProductWithISA(parentFacility, pp, isa);
             }
-
-            ISA isa = new ISA();
-            isa.setWhoRatio(0.0);
-            isa.setDosesPerYear(0);
-            isa.setWastageFactor(wastageFactor);
-            isa.setBufferPercentage(0.0);
-            isa.setAdjustmentValue(0);
-
-            saveFacilityProgramProductWithISA(parentFacility, pp, isa);
         }
     }
 
