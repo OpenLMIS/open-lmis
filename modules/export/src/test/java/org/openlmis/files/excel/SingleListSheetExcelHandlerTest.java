@@ -23,7 +23,7 @@ public class SingleListSheetExcelHandlerTest {
 
 	@Before
 	public void setUp() throws Exception {
-		util = new SingleListSheetExcelHandler(null, null);
+		util = new SingleListSheetExcelHandler();
 		tempWb = util.readXssTemplateFile("templete_test.xlsx");
 		tempSheet = tempWb.getSheetAt(0);
 	}

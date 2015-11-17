@@ -7,11 +7,9 @@ import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.ss.usermodel.WorkbookFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
 import java.util.List;
 import java.util.Map;
 
@@ -19,20 +17,19 @@ public abstract class ExcelHandler {
 	protected static Logger logger = LoggerFactory.getLogger(ExcelHandler.class);
 
 	public static final String VARIABLE_PREFIX = "$";
-	public static final String FOLDER_SUFFIX = "./";
-	private String templatePath = "";
-	private String cachePath = "";
+	public static final String FOLDER_SUFFIX = "/";
 
-	public ExcelHandler(String templatePath, String cachePath) {
+	@Value("${email.attachment.template.path}")
+	protected String templatePath;
 
-		if (templatePath != null) {
-			this.templatePath = templatePath;
-		}
+	@Value("${email.attachment.cache.path}")
+	protected String cachePath;
+
+
+	public void init() {
+
 		if (!this.templatePath.endsWith(FOLDER_SUFFIX)) {
 			this.templatePath = this.templatePath.concat(FOLDER_SUFFIX);
-		}
-		if (cachePath != null) {
-			this.cachePath = cachePath;
 		}
 
 		if (!this.cachePath.endsWith(FOLDER_SUFFIX)) {
@@ -41,10 +38,10 @@ public abstract class ExcelHandler {
 	}
 
 	public Workbook readXssTemplateFile(String templateFileName) {
-		InputStream templateIn = getClasspathFileInputStream(templateFileName);
 
 		Workbook wb = null;
 		try {
+			InputStream templateIn = getClasspathFileInputStream(templateFileName);
 			wb = WorkbookFactory.create(templateIn);
 		} catch (FileNotFoundException e) {
 			logger.error("Not found file with error:" + e.getMessage());
@@ -56,16 +53,17 @@ public abstract class ExcelHandler {
 		return wb;
 	}
 
-	private InputStream getClasspathFileInputStream(String templateFileName) {
-		return ExcelHandler.class.getClassLoader().getResourceAsStream(templatePath + templateFileName);
+	private InputStream getClasspathFileInputStream(String templateFileName) throws FileNotFoundException {
+			return new FileInputStream(new File(templateFileName));
 	}
 
 	public abstract void createDataRows(Sheet tempSheet, List<Map<String, String>> dataList);
 
-	public Workbook createXssFile(Workbook wb, String fileName) {
+	public String createXssFile(Workbook wb, String fileName) {
 		FileOutputStream fileOut = null;
+		String filePath = this.cachePath + fileName;
 		try {
-			fileOut = new FileOutputStream(this.cachePath + fileName);
+			fileOut = new FileOutputStream(filePath);
 			wb.write(fileOut);
 		} catch (FileNotFoundException e) {
 			logger.error("Not found file:" + fileName + " with error:" + e.getMessage());
@@ -80,7 +78,7 @@ public abstract class ExcelHandler {
 				}
 			}
 		}
-		return wb;
+		return filePath;
 	}
 
 	public CellMeta parseCellMeta(Cell rowCell) {
