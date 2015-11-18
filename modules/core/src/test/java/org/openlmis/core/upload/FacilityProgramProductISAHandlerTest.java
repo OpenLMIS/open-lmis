@@ -1,6 +1,5 @@
 package org.openlmis.core.upload;
 
-import org.apache.log4j.Logger;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
@@ -23,7 +22,6 @@ import java.util.Collections;
 import static com.natpryce.makeiteasy.MakeItEasy.a;
 import static com.natpryce.makeiteasy.MakeItEasy.make;
 import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.verify;
@@ -32,8 +30,6 @@ import static org.mockito.Mockito.when;
 @Category(UnitTests.class)
 @RunWith(MockitoJUnitRunner.class)
 public class FacilityProgramProductISAHandlerTest {
-
-    private static Logger logger = Logger.getLogger(FacilityProgramProductISAHandlerTest.class);
 
     @Mock
     FacilityProgramProductRepository repository;
