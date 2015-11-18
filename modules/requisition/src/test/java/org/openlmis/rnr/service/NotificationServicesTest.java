@@ -12,6 +12,7 @@ import org.openlmis.core.domain.Program;
 import org.openlmis.core.domain.User;
 import org.openlmis.core.service.ApproverService;
 import org.openlmis.core.service.ConfigurationSettingService;
+import org.openlmis.core.service.StaticReferenceDataService;
 import org.openlmis.db.categories.UnitTests;
 import org.openlmis.email.service.EmailService;
 import org.openlmis.rnr.domain.Rnr;
@@ -19,6 +20,7 @@ import org.openlmis.rnr.domain.RnrStatus;
 
 import static com.natpryce.makeiteasy.MakeItEasy.a;
 import static com.natpryce.makeiteasy.MakeItEasy.make;
+import static org.mockito.Mockito.never;
 import static org.openlmis.rnr.builder.RequisitionBuilder.defaultRequisition;
 
 import java.util.ArrayList;
@@ -46,9 +48,12 @@ public class NotificationServicesTest {
   @Mock
   private RequisitionEmailService requisitionEmailService;
 
+  @Mock
+  private StaticReferenceDataService staticReferenceDataService;
+
   @Before
   public void setUp() throws Exception {
-    notificationServices = new NotificationServices("emailBaseURL", configService, emailService, approverService, requisitionEmailService);
+    notificationServices = new NotificationServices("emailBaseURL", configService, emailService, approverService, requisitionEmailService, staticReferenceDataService);
   }
 
   @Test
@@ -75,9 +80,40 @@ public class NotificationServicesTest {
       add(user1); add(user2);
     }};
     when(approverService.getNextApprovers(1L)).thenReturn(userList);
+    when(staticReferenceDataService.getBoolean("toggle.email.attachment")).thenReturn(true);
 
     notificationServices.notifyStatusChange(rnr);
 
     verify(requisitionEmailService).sendRequisitionEmailWithAttachment(rnr, userList);
+  }
+
+  @Test
+  public void shouldNotSendEmailWhenToggleOff(){
+
+    Rnr rnr = make(a(defaultRequisition));
+    rnr.setId(1L);
+    rnr.setProgram(new Program(1L, "VIA_ESS", "VIA_ESS", "", false, false));
+    rnr.setStatus(RnrStatus.AUTHORIZED);
+
+    Facility facility = new Facility();
+    facility.setName("abc");
+    rnr.setFacility(facility);
+
+
+    ConfigurationSetting setting = new ConfigurationSetting();
+    setting.setValue("abc");
+    when(configService.getByKey(anyString())).thenReturn(setting);
+
+    final User user1 = new User();
+    final User user2 = new User();
+    ArrayList<User> userList = new ArrayList<User>(){{
+      add(user1); add(user2);
+    }};
+    when(approverService.getNextApprovers(1L)).thenReturn(userList);
+    when(staticReferenceDataService.getBoolean("toggle.email.attachment")).thenReturn(false);
+
+    notificationServices.notifyStatusChange(rnr);
+
+    verify(requisitionEmailService,never()).sendRequisitionEmailWithAttachment(rnr, userList);
   }
 }

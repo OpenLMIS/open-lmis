@@ -17,6 +17,7 @@ import org.openlmis.core.domain.ConfigurationSettingKey;
 import org.openlmis.core.domain.User;
 import org.openlmis.core.service.ApproverService;
 import org.openlmis.core.service.ConfigurationSettingService;
+import org.openlmis.core.service.StaticReferenceDataService;
 import org.openlmis.email.service.EmailService;
 import org.openlmis.rnr.domain.Rnr;
 import org.slf4j.Logger;
@@ -50,6 +51,9 @@ public class NotificationServices {
   @Autowired
   private RequisitionEmailService requisitionEmailService;
 
+  @Autowired
+  private StaticReferenceDataService staticReferenceDataService;
+
   public void notifyStatusChange(Rnr requisition) {
 
 
@@ -73,7 +77,10 @@ public class NotificationServices {
     }
 
     if (users != null) {
-      requisitionEmailService.sendRequisitionEmailWithAttachment(requisition, users);
+
+      if ( staticReferenceDataService.getBoolean("toggle.email.attachment") ) {
+        requisitionEmailService.sendRequisitionEmailWithAttachment(requisition, users);
+      }
 
       for (User user : users) {
         if (user.isMobileUser()) {
