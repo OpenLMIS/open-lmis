@@ -13,9 +13,10 @@
 package org.openlmis.equipment.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import lombok.*;
-import org.apache.commons.lang3.builder.EqualsBuilder;
-import org.apache.commons.lang3.builder.HashCodeBuilder;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.openlmis.core.domain.BaseModel;
 
 import java.util.Date;
@@ -25,14 +26,13 @@ import java.util.Date;
 @NoArgsConstructor
 @AllArgsConstructor
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class MaintenanceLog extends BaseModel{
+public class MaintenanceLog extends BaseModel {
 
   private Long userId;
   private Long facilityId;
   private Long equipmentId;
   private Long vendorId;
   private Long contractId;
-
 
 
   private Date maintenanceDate;
@@ -42,31 +42,12 @@ public class MaintenanceLog extends BaseModel{
   private Long requestId;
   private Date nextVisitDate;
 
-  public String getMaintenanceDateString()  {
+  public String getMaintenanceDateString() {
     return getFormattedDate(this.maintenanceDate);
   }
 
-  public String getNextVisitDateString()  {
+  public String getNextVisitDateString() {
     return getFormattedDate(this.nextVisitDate);
   }
 
-  @Override
-  public boolean equals(Object o) {
-    if (this == o) return true;
-
-    if (o == null || getClass() != o.getClass()) return false;
-
-    MaintenanceLog that = (MaintenanceLog) o;
-
-    return new EqualsBuilder()
-        .append(id, that.id)
-        .isEquals();
-  }
-
-  @Override
-  public int hashCode() {
-    return new HashCodeBuilder(17, 37)
-        .append(id)
-        .toHashCode();
-  }
 }

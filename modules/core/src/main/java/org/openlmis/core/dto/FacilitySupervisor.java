@@ -12,18 +12,20 @@
 
 package org.openlmis.core.dto;
 
-import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
-@Data
+@Getter
+@Setter
 @NoArgsConstructor
 public class FacilitySupervisor {
 
-    private Long userId;
+  private Long userId;
 
-    private String name;
+  private String name;
 
-    private String type;
+  private String type;
 
-    private String contact;
+  private String contact;
 }

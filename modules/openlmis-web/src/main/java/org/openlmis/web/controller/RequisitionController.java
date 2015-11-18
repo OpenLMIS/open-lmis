@@ -11,18 +11,21 @@
 package org.openlmis.web.controller;
 
 import lombok.NoArgsConstructor;
+import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.collections.Predicate;
 import org.openlmis.core.domain.Facility;
 import org.openlmis.core.domain.ProcessingPeriod;
 import org.openlmis.core.domain.Program;
 import org.openlmis.core.domain.User;
 import org.openlmis.core.exception.DataException;
+import org.openlmis.core.web.OpenLmisResponse;
 import org.openlmis.core.web.controller.BaseController;
 import org.openlmis.rnr.domain.Comment;
 import org.openlmis.rnr.domain.Rnr;
+import org.openlmis.rnr.domain.RnrLineItem;
 import org.openlmis.rnr.dto.RnrDTO;
 import org.openlmis.rnr.search.criteria.RequisitionSearchCriteria;
 import org.openlmis.rnr.service.*;
-import org.openlmis.core.web.OpenLmisResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,12 +45,10 @@ import java.util.List;
 
 import static org.openlmis.core.domain.RightName.APPROVE_REQUISITION;
 import static org.openlmis.core.domain.RightName.CONVERT_TO_ORDER;
-import static org.openlmis.rnr.dto.RnrDTO.prepareDTOsForListApproval;
-import static org.openlmis.rnr.dto.RnrDTO.prepareForListApproval;
-import static org.openlmis.rnr.dto.RnrDTO.prepareForView;
+import static org.openlmis.core.web.OpenLmisResponse.*;
+import static org.openlmis.rnr.dto.RnrDTO.*;
 import static org.openlmis.rnr.service.RequisitionService.NUMBER_OF_PAGES;
 import static org.openlmis.rnr.service.RequisitionService.SEARCH_ALL;
-import static org.openlmis.core.web.OpenLmisResponse.*;
 import static org.springframework.http.HttpStatus.*;
 import static org.springframework.web.bind.annotation.RequestMethod.*;
 
@@ -115,6 +116,25 @@ public class RequisitionController extends BaseController {
       response.getBody().addData(CAN_APPROVE_RNR, canApproveRnr);
 
       return response;
+    } catch (DataException dataException) {
+      return error(dataException, NOT_FOUND);
+    }
+  }
+
+  @RequestMapping(value = "/requisitions/{id}/skipped", method = GET)
+  @PostAuthorize("@requisitionPermissionService.hasPermission(principal, returnObject.body.data.get(\"rnr\"), 'VIEW_REQUISITION')")
+  public ResponseEntity<OpenLmisResponse> getByIdWithOutSkippedItems(@PathVariable Long id, HttpServletRequest request) {
+    try {
+      Rnr rnr = requisitionService.getFullRequisitionById(id);
+      List<RnrLineItem> allRnrLineItems= rnr.getFullSupplyLineItems();
+      CollectionUtils.filter(allRnrLineItems, new Predicate() {
+        @Override
+        public boolean evaluate(Object o) {
+          RnrLineItem rnrLineItem = (RnrLineItem) o;
+          return !rnrLineItem.getSkipped();
+        }
+      });
+      return response(RNR, rnr);
     } catch (DataException dataException) {
       return error(dataException, NOT_FOUND);
     }

@@ -16,6 +16,7 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+import org.openlmis.core.domain.Signature;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.core.utils.DateUtil;
 import org.openlmis.rnr.domain.PatientQuantificationLineItem;
@@ -60,6 +61,8 @@ public class Report {
   private String clientSubmittedNotes;
 
   private Date periodStartDate;
+
+  private List<Signature> rnrSignatures;
 
   public void validate() {
     if (isEmpty(agentCode) || isEmpty(programCode)) {
@@ -125,6 +128,7 @@ public class Report {
 
     report.setClientSubmittedNotes(rnr.getClientSubmittedNotes());
     report.setPeriodStartDate(rnr.getPeriod().getStartDate());
+    report.setRnrSignatures(rnr.getRnrSignatures());
 
     return report;
   }

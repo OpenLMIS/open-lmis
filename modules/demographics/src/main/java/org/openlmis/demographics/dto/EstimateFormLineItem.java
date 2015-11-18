@@ -16,8 +16,6 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.apache.commons.lang3.builder.EqualsBuilder;
-import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.openlmis.demographics.domain.AnnualDistrictEstimateEntry;
 import org.openlmis.demographics.domain.AnnualFacilityEstimateEntry;
 
@@ -43,31 +41,4 @@ public class EstimateFormLineItem {
 
   private List<AnnualDistrictEstimateEntry> districtEstimates;
 
-  @Override
-  public boolean equals(Object o) {
-    if (this == o) return true;
-
-    if (o == null || getClass() != o.getClass()) return false;
-
-    EstimateFormLineItem that = (EstimateFormLineItem) o;
-
-    return new EqualsBuilder()
-        .append(id, that.id)
-        .append(name, that.name)
-        .append(code, that.code)
-        .append(parentId, that.parentId)
-        .append(parentName, that.parentName)
-        .isEquals();
-  }
-
-  @Override
-  public int hashCode() {
-    return new HashCodeBuilder(17, 37)
-        .append(id)
-        .append(name)
-        .append(code)
-        .append(parentId)
-        .append(parentName)
-        .toHashCode();
-  }
 }

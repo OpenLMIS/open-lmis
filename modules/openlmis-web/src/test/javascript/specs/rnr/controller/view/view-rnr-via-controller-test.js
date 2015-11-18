@@ -105,7 +105,7 @@ describe('ViewRnrViaDetailController', function () {
   });
 
   function initMockRequisition(rnrItems) {
-    var expectedUrl = "/requisitions/1.json";
+    var expectedUrl = "/requisitions/1/skipped.json";
     httpBackend.expect('GET', expectedUrl).respond(200, rnrItems);
     scope.loadRequisitionDetail();
     httpBackend.flush();

@@ -13,21 +13,18 @@
 package org.openlmis.report.model.report;
 
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.openlmis.report.model.ReportData;
 
 import static org.apache.commons.lang3.StringUtils.isEmpty;
 
-import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Date;
 
 
-@Data
+@Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 public class CCEInventoryReportDatum implements ReportData {

@@ -11,15 +11,15 @@
  */
 package org.openlmis.core.dto;
 
-import lombok.Data;
-import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.Setter;
 
-@Data
-@EqualsAndHashCode(callSuper = false)
+@Getter
+@Setter
 public class PublicDataRegionsDTO {
 
-    private String zone_name;
-    private String region_name;
-    private int districtcount;
-    private int facilitycount;
+  private String zone_name;
+  private String region_name;
+  private int districtcount;
+  private int facilitycount;
 }

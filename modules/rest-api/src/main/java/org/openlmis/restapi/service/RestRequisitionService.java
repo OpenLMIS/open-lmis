@@ -13,8 +13,11 @@ package org.openlmis.restapi.service;
 import com.google.common.base.Function;
 import com.google.common.collect.FluentIterable;
 import lombok.NoArgsConstructor;
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
+import org.apache.commons.collections.Transformer;
 import org.apache.log4j.Logger;
+import org.apache.lucene.util.CollectionUtil;
 import org.openlmis.core.domain.*;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.core.service.FacilityApprovedProductService;
@@ -90,11 +93,12 @@ public class RestRequisitionService {
 
     copyRegimens(rnr, report);
 
-    copyPatientQuantifications(rnr, report);
-
     requisitionService.save(rnr);
 
     updateClientFields(report, rnr);
+    insertPatientQuantificationLineItems(report, rnr);
+
+    insertRnrSignatures(report, rnr, userId);
 
     rnr = requisitionService.submit(rnr);
 
@@ -208,16 +212,28 @@ public class RestRequisitionService {
     }
   }
 
-  private void copyPatientQuantifications(Rnr rnr, Report report) {
+  private void insertPatientQuantificationLineItems(Report report, Rnr rnr) {
     if (report.getPatientQuantifications() != null) {
-      List<PatientQuantificationLineItem> patientQuantifications = new ArrayList();
-      rnr.setPatientQuantifications(patientQuantifications);
-      for (PatientQuantificationLineItem regimenLineItem : report.getPatientQuantifications()) {
-        patientQuantifications.add(regimenLineItem);
-      }
+      rnr.setPatientQuantifications(report.getPatientQuantifications());
+      requisitionService.insertPatientQuantificationLineItems(rnr);
     }
   }
 
+  private void insertRnrSignatures(Report report, Rnr rnr, final Long userId) {
+    if (report.getRnrSignatures() != null) {
+
+      List<Signature> rnrSignatures = new ArrayList(CollectionUtils.collect(report.getRnrSignatures(), new Transformer() {
+            @Override
+            public Object transform(Object input) {
+              ((Signature)input).setCreatedBy(userId);
+              ((Signature)input).setModifiedBy(userId);
+              return input;
+            }
+          }));
+          rnr.setRnrSignatures(rnrSignatures);
+      requisitionService.insertRnrSignatures(rnr);
+    }
+  }
 
   @Transactional
   public void approve(Report report, Long requisitionId, Long userId) {

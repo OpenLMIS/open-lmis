@@ -12,9 +12,10 @@
 
 package org.openlmis.vaccine.dto;
 
-import lombok.*;
-import org.apache.commons.lang3.builder.EqualsBuilder;
-import org.apache.commons.lang3.builder.HashCodeBuilder;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.openlmis.vaccine.domain.VaccineProductDose;
 
 import java.util.List;
@@ -31,27 +32,4 @@ public class ProductDoseDTO {
 
   private List<VaccineProductDose> doses;
 
-  @Override
-  public boolean equals(Object o) {
-    if (this == o)
-      return true;
-
-    if (!(o instanceof ProductDoseDTO))
-      return false;
-
-    ProductDoseDTO that = (ProductDoseDTO) o;
-
-    return new EqualsBuilder()
-        .append(productId, that.productId)
-        .append(productName, that.productName)
-        .isEquals();
-  }
-
-  @Override
-  public int hashCode() {
-    return new HashCodeBuilder(17, 37)
-        .append(productId)
-        .append(productName)
-        .toHashCode();
-  }
 }

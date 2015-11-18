@@ -24,6 +24,7 @@ import org.openlmis.core.query.QueryExecutor;
 import org.openlmis.core.repository.mapper.*;
 import org.openlmis.db.categories.IntegrationTests;
 import org.openlmis.rnr.builder.RequisitionBuilder;
+import org.openlmis.rnr.builder.RnrLineItemBuilder;
 import org.openlmis.rnr.domain.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
@@ -640,6 +641,76 @@ public class RnrLineItemMapperIT {
 
     assertThat(lineItems.size(), is(1));
     assertThat(lineItems.get(0).getNormalizedConsumption(), is(3));
+  }
+
+  @Test
+  public void shouldReturnAllNonSkippedNonFullSupplyRnrLineItems() {
+    Rnr newRnr = new Rnr(facility, new Program(PROGRAM_ID), processingPeriod, false, MODIFIED_BY, 1L);
+    newRnr.setStatus(INITIATED);
+
+    requisitionMapper.insert(newRnr);
+    RnrLineItem fullSupplyLineItem = new RnrLineItem(newRnr.getId(), facilityTypeApprovedProduct, MODIFIED_BY, 1L);
+    fullSupplyLineItem.setQuantityRequested(20);
+    fullSupplyLineItem.setReasonForRequestedQuantity("More patients");
+    fullSupplyLineItem.setFullSupply(false);
+    fullSupplyLineItem.setSkipped(false);
+    rnrLineItemMapper.insert(fullSupplyLineItem, fullSupplyLineItem.getPreviousNormalizedConsumptions().toString());
+    rnrLineItemMapper.update(fullSupplyLineItem);
+
+
+    RnrLineItem skippedLineItem = new RnrLineItem(newRnr.getId(), facilityTypeApprovedProduct, MODIFIED_BY, 1L);
+    skippedLineItem.setFullSupply(false);
+    skippedLineItem.setSkipped(true);
+    rnrLineItemMapper.insert(skippedLineItem, skippedLineItem.getPreviousNormalizedConsumptions().toString());
+    rnrLineItemMapper.update(skippedLineItem);
+
+    RnrLineItem nonFullSupplyLineItem = new RnrLineItem(newRnr.getId(), facilityTypeApprovedProduct, MODIFIED_BY, 1L);
+    nonFullSupplyLineItem.setQuantityRequested(20);
+    nonFullSupplyLineItem.setReasonForRequestedQuantity("More patients");
+    nonFullSupplyLineItem.setFullSupply(true);
+    nonFullSupplyLineItem.setSkipped(false);
+    rnrLineItemMapper.insert(nonFullSupplyLineItem, nonFullSupplyLineItem.getPreviousNormalizedConsumptions().toString());
+    rnrLineItemMapper.update(nonFullSupplyLineItem);
+
+    List<RnrLineItem> fetchedNonSkippedNonSupplyLineItems = rnrLineItemMapper.getNonSkippedNonFullSupplyRnrLineItemsByRnrId(newRnr.getId());
+
+    assertThat(fetchedNonSkippedNonSupplyLineItems.size(), is(1));
+    assertThat(fetchedNonSkippedNonSupplyLineItems.get(0).getQuantityRequested(), is(20));
+  }
+
+  @Test
+  public void shouldReturnAllNonSkippedFullSupplyRnrLineItems() {
+    Rnr newRnr = new Rnr(facility, new Program(PROGRAM_ID), processingPeriod, false, MODIFIED_BY, 1L);
+    newRnr.setStatus(INITIATED);
+
+    requisitionMapper.insert(newRnr);
+    RnrLineItem nonFullSupplyLineItem = new RnrLineItem(newRnr.getId(), facilityTypeApprovedProduct, MODIFIED_BY, 1L);
+    nonFullSupplyLineItem.setQuantityRequested(20);
+    nonFullSupplyLineItem.setReasonForRequestedQuantity("More patients");
+    nonFullSupplyLineItem.setFullSupply(true);
+    nonFullSupplyLineItem.setSkipped(false);
+    rnrLineItemMapper.insert(nonFullSupplyLineItem, nonFullSupplyLineItem.getPreviousNormalizedConsumptions().toString());
+    rnrLineItemMapper.update(nonFullSupplyLineItem);
+
+    RnrLineItem fullSupplyLineItem = new RnrLineItem(newRnr.getId(), facilityTypeApprovedProduct, MODIFIED_BY, 1L);
+    fullSupplyLineItem.setQuantityRequested(20);
+    fullSupplyLineItem.setReasonForRequestedQuantity("More patients");
+    fullSupplyLineItem.setFullSupply(false);
+    fullSupplyLineItem.setSkipped(false);
+    rnrLineItemMapper.insert(fullSupplyLineItem, fullSupplyLineItem.getPreviousNormalizedConsumptions().toString());
+    rnrLineItemMapper.update(fullSupplyLineItem);
+
+
+    RnrLineItem skippedLineItem = new RnrLineItem(newRnr.getId(), facilityTypeApprovedProduct, MODIFIED_BY, 1L);
+    skippedLineItem.setFullSupply(true);
+    skippedLineItem.setSkipped(true);
+    rnrLineItemMapper.insert(skippedLineItem, skippedLineItem.getPreviousNormalizedConsumptions().toString());
+    rnrLineItemMapper.update(skippedLineItem);
+
+    List<RnrLineItem> fetchedNonSkippedNonSupplyLineItems = rnrLineItemMapper.getNonSkippedNonFullSupplyRnrLineItemsByRnrId(newRnr.getId());
+
+    assertThat(fetchedNonSkippedNonSupplyLineItems.size(), is(1));
+    assertThat(fetchedNonSkippedNonSupplyLineItems.get(0).getQuantityRequested(), is(20));
   }
 
   private java.sql.Date getDateByDays(int days) {

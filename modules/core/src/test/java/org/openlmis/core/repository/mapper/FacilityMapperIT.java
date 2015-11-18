@@ -124,6 +124,27 @@ public class FacilityMapperIT {
   }
 
   @Test
+  public void shouldGetAllReportFacilities() throws Exception {
+    Facility trz001 = make(a(defaultFacility,
+      with(code, "TRZ001"),
+      with(name, "Ngorongoro Hospital"),
+      with(type, "warehouse"),
+      with(geographicZoneId, 1L)));
+    Facility trz002 = make(a(defaultFacility,
+            with(code, "TRZ002"),
+            with(name, "Rural Clinic"),
+            with(type, "lvl3_hospital"),
+            with(geographicZoneId, 2L)));
+    mapper.insert(trz001);
+    mapper.insert(trz002);
+
+    List<Facility> facilities = mapper.getAllReportFacilities();
+
+    assertEquals(facilities.get(0).getCode(), trz001.getCode());
+    assertEquals(facilities.get(1).getName(), trz002.getName());
+  }
+
+  @Test
   public void shouldGetAllFacilityTypes() throws Exception {
     List<FacilityType> facilityTypes = mapper.getAllTypes();
 

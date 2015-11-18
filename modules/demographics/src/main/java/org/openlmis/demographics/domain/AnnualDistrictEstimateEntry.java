@@ -32,19 +32,4 @@ public class AnnualDistrictEstimateEntry extends BaseModel {
   private Double conversionFactor;
   private Long value;
 
-  @Override
-  public boolean equals(Object o) {
-    if (this == o)
-      return true;
-    if (o == null || getClass() != o.getClass())
-      return false;
-
-    AnnualDistrictEstimateEntry that = (AnnualDistrictEstimateEntry) o;
-    return id.equals(that.id);
-  }
-
-  @Override
-  public int hashCode() {
-    return id.hashCode();
-  }
 }

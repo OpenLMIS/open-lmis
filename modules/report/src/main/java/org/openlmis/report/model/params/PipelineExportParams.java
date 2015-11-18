@@ -12,16 +12,13 @@
 
 package org.openlmis.report.model.params;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.openlmis.report.model.ReportParameter;
-@Data
-@NoArgsConstructor
-@EqualsAndHashCode(callSuper=false)
-@AllArgsConstructor
 
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
 public class PipelineExportParams
    extends BaseParam implements ReportParameter {
 

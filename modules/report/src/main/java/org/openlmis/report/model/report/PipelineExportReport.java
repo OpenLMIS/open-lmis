@@ -15,7 +15,6 @@ package org.openlmis.report.model.report;
 import lombok.*;
 import org.openlmis.report.model.ReportData;
 
-import javax.persistence.Column;
 
 @Getter
 @Setter
@@ -23,7 +22,6 @@ import javax.persistence.Column;
 @AllArgsConstructor
 public class PipelineExportReport implements ReportData {
 
-    //@Column( name="line")
     private String line;
     private String id;
     private String code;

@@ -41,21 +41,53 @@
       <input numeric-validator="positiveInteger" maxlength="8" ng-disabled="true" ng-model="dose.regularFemale" type="text" />
     </td>
     <td class="cell-input col-general" style="text-align: right"><span class="cell-text number">{{dose.getTotalRegular() | number : 0}}</span></td>
-    <td class="cell-input col-general" style="text-align: right"><span class="cell-text number"> {{dose.getRegularCoveragePercentage() | number : 2}}%</span></td>
+    <td class="cell-input col-general" style="text-align: right">
+      <span
+          class="cell-text number"
+          ng-class="{'bad' : (dose.getRegularCoveragePercentage() < 31 || dose.getRegularCoveragePercentage() > 100) ,
+                    'warn' : (dose.getRegularCoveragePercentage() > 30 && dose.getRegularCoveragePercentage() < 71),
+                    'good' : dose.getRegularCoveragePercentage() > 70 && dose.getRegularCoveragePercentage() <= 100 }"
+      > {{dose.getRegularCoveragePercentage() | number : 2}}%</span></td>
     <td class="cell-input col-general" >
       <input  numeric-validator="positiveInteger" maxlength="8" ng-disabled="true" ng-model="dose.outreachMale" type="text" />
     </td>
     <td  class="cell-input col-general">
       <input numeric-validator="positiveInteger" maxlength="8" ng-disabled="true" ng-model="dose.outreachFemale" type="text" />
     </td>
-    <td class="cell-input col-general" style="text-align: right"><span class="cell-text">{{dose.getTotalOutreach() | number : 0}}</span></td>
-    <td class="cell-input col-general" style="text-align: right"><span class="cell-text"> {{dose.getOutreachCoveragePercentage() | number : 2}} %</span></td>
-    <td class="cell-input col-general" style="text-align: right"><span class="cell-text number">{{dose.getMonthlyTotal() | number : 0}}</span></td>
-    <td class="cell-input col-general" style="text-align: right"><span class="cell-text number"> {{ dose.getMonthlyCoverage() | number : 2 }} %</span></td>
+    <td class="cell-input col-general" style="text-align: right">
+      <span class="cell-text">{{dose.getTotalOutreach() | number : 0}}</span>
+    </td>
+    <td class="cell-input col-general" style="text-align: right">
+      <span
+          class="cell-text"
+          ng-class="{'bad' : (dose.getOutreachCoveragePercentage() < 31 || dose.getOutreachCoveragePercentage() > 100) ,
+                  'warn' : (dose.getOutreachCoveragePercentage() > 30 && dose.getOutreachCoveragePercentage() < 71),
+                  'good' : dose.getOutreachCoveragePercentage() > 70 && dose.getOutreachCoveragePercentage() <= 100 }"
+      > {{dose.getOutreachCoveragePercentage() | number : 2}} %</span></td>
+    <td class="cell-input col-general" style="text-align: right">
+      <span class="cell-text number">{{dose.getMonthlyTotal() | number : 0}}</span>
+    </td>
+    <td class="cell-input col-general" style="text-align: right"><span class="cell-text number">{{ dose.getMonthlyCoverage() | number : 2 }} %</span></td>
     <td class="cell-input col-general" style="text-align: right"><span class="cell-text number">{{dose.getTotalAnnualRegular() | number : 0}}</span></td>
-    <td class="cell-input col-general" style="text-align: right"><span class="cell-text number">{{dose.getTotalAnnualRegularCoveragePercentage() | number : 2}}%</span></td>
-    <td class="cell-input col-general" style="text-align: right"><span class="cell-text number">{{dose.getTotalAnnualOutreach() | number : 0}}</span></td>
-    <td class="cell-input col-general" style="text-align: right"><span class="cell-text number">{{dose.getTotalAnnualOutreachCoveragePercentage() | number : 2}}%</span></td>
+    <td class="cell-input col-general" style="text-align: right">
+      <span
+          class="cell-text number"
+          ng-class="{'bad' : (dose.getTotalAnnualRegularCoveragePercentage() < 31 || dose.getTotalAnnualRegularCoveragePercentage() > 100) ,
+                  'warn' : (dose.getTotalAnnualRegularCoveragePercentage() > 30 && dose.getTotalAnnualRegularCoveragePercentage() < 71),
+                  'good' : dose.getTotalAnnualRegularCoveragePercentage() > 70 && dose.getTotalAnnualRegularCoveragePercentage() <= 100 }"
+      >{{dose.getTotalAnnualRegularCoveragePercentage() | number : 2}}%</span>
+    </td>
+    <td class="cell-input col-general" style="text-align: right">
+      <span class="cell-text number">{{dose.getTotalAnnualOutreach() | number : 0}}</span>
+    </td>
+    <td class="cell-input col-general" style="text-align: right">
+      <span
+          class="cell-text number"
+          ng-class="{'bad' : (dose.getTotalAnnualOutreachCoveragePercentage() < 31 || dose.getTotalAnnualOutreachCoveragePercentage() > 100) ,
+                  'warn' : (dose.getTotalAnnualOutreachCoveragePercentage() > 30 && dose.getTotalAnnualOutreachCoveragePercentage() < 71),
+                  'good' : dose.getTotalAnnualOutreachCoveragePercentage() > 70 && dose.getTotalAnnualOutreachCoveragePercentage() <= 100 }"
+      >{{dose.getTotalAnnualOutreachCoveragePercentage() | number : 2}}%</span>
+    </td>
     <td class="cell-input col-general" style="text-align: right"><span class="cell-text number">{{dose.getAnnualTotal() | number : 0}}</span></td>
   </tr>
   <tr ng-repeat-end></tr>

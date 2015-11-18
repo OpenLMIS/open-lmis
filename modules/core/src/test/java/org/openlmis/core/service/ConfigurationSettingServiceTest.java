@@ -17,6 +17,7 @@ import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
+import org.mockito.Matchers;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.openlmis.core.domain.ConfigurationSetting;
@@ -44,7 +45,7 @@ public class ConfigurationSettingServiceTest {
   private ConfigurationSettingService service;
 
   @Before
-  public void setup() throws Exception{
+  public void setup() throws Exception {
     expected = new ConfigurationSetting();
     expected.setKey("KEY_NAME");
     when(repository.getByKey("KEY_NAME")).thenReturn(expected);
@@ -79,7 +80,7 @@ public class ConfigurationSettingServiceTest {
   }
 
   @Test(expected = NumberFormatException.class)
-  public void shouldRaiseNumberFormatExceptionWhenValueIsNotNumber() throws Exception{
+  public void shouldRaiseNumberFormatExceptionWhenValueIsNotNumber() throws Exception {
     expected.setValue("SOME_RANDOM_CHARACTER");
     int actual = service.getConfigurationIntValue("KEY_NAME");
   }
@@ -95,7 +96,7 @@ public class ConfigurationSettingServiceTest {
   }
 
   @Test
-    public void shouldGetConfigurationStringValue() throws Exception {
+  public void shouldGetConfigurationStringValue() throws Exception {
     expected.setValue("Tanzania");
 
     String actual = service.getConfigurationStringValue("KEY_NAME");
@@ -161,7 +162,7 @@ public class ConfigurationSettingServiceTest {
     List<ConfigurationSetting> actual = service.getConfigurations();
 
     verify(repository).getAll();
-    assertEquals(actual.size(),0);
+    assertEquals(actual.size(), 0);
   }
 
   @Test
@@ -172,6 +173,6 @@ public class ConfigurationSettingServiceTest {
 
     service.update(settings);
 
-    verify(repository,atLeastOnce()).setValue(new ConfigurationSetting());
+    verify(repository, atLeastOnce()).setValue(Matchers.any(ConfigurationSetting.class));
   }
 }

@@ -19,18 +19,15 @@ import org.mockito.runners.MockitoJUnitRunner;
 import org.openlmis.authentication.web.UserAuthenticationSuccessHandler;
 import org.openlmis.core.domain.OrderQuantityAdjustmentFactor;
 import org.openlmis.core.domain.OrderQuantityAdjustmentType;
-import org.openlmis.core.repository.OrderQuantityAdjustmentFactorRepository;
-import org.openlmis.core.repository.OrderQuantityAdjustmentTypeRepository;
 import org.openlmis.core.service.OrderQuantityAdjustmentFactorService;
 import org.openlmis.core.service.OrderQuantityAdjustmentTypeService;
 import org.openlmis.db.categories.UnitTests;
 import org.openlmis.web.controller.seasonalRationing.SeasonRationingLookupController;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpSession;
-
-import javax.servlet.http.HttpServletRequest;
-
+import static org.mockito.Mockito.atLeastOnce;
 import static org.mockito.Mockito.verify;
+import org.mockito.Matchers;
 
 @Category(UnitTests.class)
 @RunWith(MockitoJUnitRunner.class)
@@ -132,9 +129,8 @@ public class SeasonRationingLookupControllerTest {
 
     @Test
     public void testRemoveAdjustmentFactor() {
-        OrderQuantityAdjustmentFactor adjustmentFactor = new OrderQuantityAdjustmentFactor();
         this.lookupController.removeAdjustmentFactor(1l, servletRequest);
-        verify(this.factorService).deleteOrderQuantityAdjustmentFactor(adjustmentFactor);
+        verify(this.factorService, atLeastOnce()).deleteOrderQuantityAdjustmentFactor(Matchers.any(OrderQuantityAdjustmentFactor.class));
     }
 
     @Test
