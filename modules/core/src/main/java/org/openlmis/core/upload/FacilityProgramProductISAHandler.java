@@ -35,9 +35,6 @@ public class FacilityProgramProductISAHandler extends AbstractModelPersistenceHa
     @Autowired
     RequisitionGroupMemberRepository requisitionGroupMemberRepository;
 
-    @Autowired
-    FacilityProgramProductRepository facilityProgramProductRepository;
-
     @Override
     protected BaseModel getExisting(BaseModel record) {
         FacilityProgramProductISADTO fppISA = (FacilityProgramProductISADTO)record;
@@ -55,7 +52,7 @@ public class FacilityProgramProductISAHandler extends AbstractModelPersistenceHa
 
         Double wastageFactor = fppISA.getWastageFactor();
         if (wastageFactor == -1.0) {
-            wastageFactor = facilityProgramProductRepository.getOverriddenIsa(pp.getId(), facility.getId()).getWastageFactor();
+            wastageFactor = repository.getOverriddenIsa(pp.getId(), facility.getId()).getWastageFactor();
         }
 
         ISA isa = new ISA();
@@ -110,7 +107,7 @@ public class FacilityProgramProductISAHandler extends AbstractModelPersistenceHa
                     // This call to the database is necessary, as facility does not have SDP info
                     Facility childFacility = facilityRepository.getById(requisitionGroupMember.getFacility().getId());
                     if (childFacility.getSdp()) {
-                        ISA facilityISA = facilityProgramProductRepository.getOverriddenIsa(pp.getId(), childFacility.getId());
+                        ISA facilityISA = repository.getOverriddenIsa(pp.getId(), childFacility.getId());
                         if (facilityISA != null) {
                             facilityCount += 1;
                             totalWastageFactor += facilityISA.getWastageFactor();
@@ -142,6 +139,7 @@ public class FacilityProgramProductISAHandler extends AbstractModelPersistenceHa
         fpp.setFacilityId(facility.getId());
         fpp.setId(pp.getId());
         fpp.setProgramProductIsa(ppISA);
+        fpp.setOverriddenIsa(isa); // Not necessary, but done to get test case shouldSaveFacilityProgramProductISAAndCalculateParents() to work
 
         repository.save(fpp);
     }
