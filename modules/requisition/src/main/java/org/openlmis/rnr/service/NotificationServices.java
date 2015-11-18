@@ -49,7 +49,7 @@ public class NotificationServices {
   private ApproverService approverService;
 
   @Autowired
-  private RequisitionEmailService requisitionEmailService;
+  private RequisitionEmailServiceForSIMAM requisitionEmailServiceForSIMAM;
 
   @Autowired
   private StaticReferenceDataService staticReferenceDataService;
@@ -78,8 +78,9 @@ public class NotificationServices {
 
     if (users != null) {
 
-      if ( staticReferenceDataService.getBoolean("toggle.email.attachment") ) {
-        requisitionEmailService.sendRequisitionEmailWithAttachment(requisition, users);
+      if ( staticReferenceDataService.getBoolean("toggle.email.attachment.simam") ) {
+        requisitionEmailServiceForSIMAM.sendRequisitionEmailWithAttachment(requisition, users);
+        return;
       }
 
       for (User user : users) {
