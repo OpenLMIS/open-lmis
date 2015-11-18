@@ -46,14 +46,14 @@ public class NotificationServicesTest {
   private ApproverService approverService;
 
   @Mock
-  private RequisitionEmailService requisitionEmailService;
+  private RequisitionEmailServiceForSIMAM requisitionEmailServiceForSIMAM;
 
   @Mock
   private StaticReferenceDataService staticReferenceDataService;
 
   @Before
   public void setUp() throws Exception {
-    notificationServices = new NotificationServices("emailBaseURL", configService, emailService, approverService, requisitionEmailService, staticReferenceDataService);
+    notificationServices = new NotificationServices("emailBaseURL", configService, emailService, approverService, requisitionEmailServiceForSIMAM, staticReferenceDataService);
   }
 
   @Test
@@ -80,11 +80,11 @@ public class NotificationServicesTest {
       add(user1); add(user2);
     }};
     when(approverService.getNextApprovers(1L)).thenReturn(userList);
-    when(staticReferenceDataService.getBoolean("toggle.email.attachment")).thenReturn(true);
+    when(staticReferenceDataService.getBoolean("toggle.email.attachment.simam")).thenReturn(true);
 
     notificationServices.notifyStatusChange(rnr);
 
-    verify(requisitionEmailService).sendRequisitionEmailWithAttachment(rnr, userList);
+    verify(requisitionEmailServiceForSIMAM).sendRequisitionEmailWithAttachment(rnr, userList);
   }
 
   @Test
@@ -110,10 +110,10 @@ public class NotificationServicesTest {
       add(user1); add(user2);
     }};
     when(approverService.getNextApprovers(1L)).thenReturn(userList);
-    when(staticReferenceDataService.getBoolean("toggle.email.attachment")).thenReturn(false);
+    when(staticReferenceDataService.getBoolean("toggle.email.attachment.simam")).thenReturn(false);
 
     notificationServices.notifyStatusChange(rnr);
 
-    verify(requisitionEmailService,never()).sendRequisitionEmailWithAttachment(rnr, userList);
+    verify(requisitionEmailServiceForSIMAM,never()).sendRequisitionEmailWithAttachment(rnr, userList);
   }
 }

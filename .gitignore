@@ -24,4 +24,4 @@ git
 gradle/
 gradlew
 gradlew.bat
-.gitignore
+modules/export/src/main/resources/generated/
