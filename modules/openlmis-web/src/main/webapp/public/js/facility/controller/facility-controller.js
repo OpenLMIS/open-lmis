@@ -339,27 +339,32 @@ FacilityController.resolve = {
 var injectDemographyCategories = true;
 if(injectDemographyCategories)
 {
-    FacilityController.resolve.demographicCategories = function ($q, $route, $timeout, DemographicEstimateCategories)
-    {
-        var deferred = $q.defer();
-        $timeout(function () {
-            DemographicEstimateCategories.get({}, function (data) {
-                deferred.resolve(data.estimate_categories);
-            }, {});
-        }, 100);
-        return deferred.promise;
-    };
+  FacilityController.resolve.demographicCategories = function ($q, $route, $timeout, DemographicEstimateCategories)
+  {
+    var deferred = $q.defer();
+    $timeout(function () {
+      DemographicEstimateCategories.get({}, function(data)
+      {
+        //Add 'Facility Population' to the set of available categories
+        var categories = data.estimate_categories;
+        var facilityCatchmentPopulation = {'id': 0, 'name': 'Facility Population'};
+        categories.unshift(facilityCatchmentPopulation);
+        deferred.resolve(categories);
+      }, {});
+    }, 100);
+    return deferred.promise;
+  };
 }
 else //As suggested in the comments above, this else-clause is intended to run for non-Tanzanian countries.
 {
-    //demographicEstimateCategories has to be assigned something...
-    FacilityController.resolve.demographicCategories = function($timeout)
-    {
-        //...so set it to a $timeout which returns a promise that will be resolved
-        return $timeout
-        (
-            function() {},
-            5
-        );
-    }
+  //demographicEstimateCategories has to be assigned something...
+  FacilityController.resolve.demographicCategories = function($timeout)
+  {
+    //...so set it to a $timeout which returns a promise that will be resolved
+    return $timeout
+    (
+        function() {},
+        5
+    );
+  };
 }

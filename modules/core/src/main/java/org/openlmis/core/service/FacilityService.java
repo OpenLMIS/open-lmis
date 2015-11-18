@@ -94,8 +94,11 @@ public class FacilityService {
 
   public Facility getById(Long id) {
     Facility facility = facilityRepository.getById(id);
-    facility.setSupportedPrograms(programSupportedService.getAllByFacilityId(id));
-    facility.setInterfaceMappings(elmisInterfaceService.getFacilityInterfaceMappingById(id));
+    if(facility != null)
+    {
+      facility.setSupportedPrograms(programSupportedService.getAllByFacilityId(id));
+      facility.setInterfaceMappings(elmisInterfaceService.getFacilityInterfaceMappingById(id));
+    }
     return facility;
   }
 

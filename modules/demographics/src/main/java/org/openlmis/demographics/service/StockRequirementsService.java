@@ -10,8 +10,10 @@
 
 package org.openlmis.demographics.service;
 
+import org.openlmis.core.repository.FacilityRepository;
 import org.openlmis.core.repository.RequisitionGroupRepository;
 import org.openlmis.core.repository.SupervisoryNodeRepository;
+import org.openlmis.core.repository.helper.CommaSeparator;
 import org.openlmis.demographics.domain.*;
 import org.openlmis.demographics.repository.*;
 
@@ -27,6 +29,11 @@ import org.springframework.stereotype.Service;
 
 import java.util.*;
 
+/**
+ * @deprecated
+ * This class is intended to return a variety of stock-related information through its getStockRequirements member. Because the calculations it uses are VIMS specific, the class may be considered depreciated.
+ */
+@Deprecated
 @Service
 public class StockRequirementsService
 {
@@ -34,19 +41,22 @@ public class StockRequirementsService
     private FacilityService facilityService = null;
 
     @Autowired
-    private FacilityApprovedProductRepository facilityApprovedProductRepository= null;
+    private FacilityRepository facilityRepository = null;
 
     @Autowired
-    private FacilityProgramProductService facilityProgramProductService= null;
+    private FacilityApprovedProductRepository facilityApprovedProductRepository = null;
 
     @Autowired
-    AnnualFacilityDemographicEstimateService annualFacilityDemographicEstimateService= null;
+    private FacilityProgramProductService facilityProgramProductService = null;
 
     @Autowired
-    AnnualDistrictDemographicEstimateService annualDistrictDemographicEstimateService= null;
+    AnnualFacilityDemographicEstimateService annualFacilityDemographicEstimateService = null;
 
     @Autowired
-    private AnnualDistrictEstimateRepository annualDistrictEstimateRepository= null;
+    AnnualDistrictDemographicEstimateService annualDistrictDemographicEstimateService = null;
+
+    @Autowired
+    private AnnualDistrictEstimateRepository annualDistrictEstimateRepository = null;
 
     @Autowired
     SupervisoryNodeRepository supervisoryNodeRepository;
@@ -62,6 +72,8 @@ public class StockRequirementsService
     {
         //Get facility in order to access its catchment population
         Facility facility = facilityService.getById(facilityId);
+        if(facility == null)
+            return null;
 
         List<FacilityTypeApprovedProduct> facilityTypeApprovedProducts = facilityApprovedProductRepository.getAllByFacilityAndProgramId(facilityId, programId);
 
@@ -86,16 +98,16 @@ public class StockRequirementsService
 
             requirements.setIsa(isa);
 
-            //set productId
+            //Set productId
             Long productId = facilityProgramProduct.getProduct().getId();
             requirements.setProductId(productId);
             requirements.setProductName(facilityProgramProduct.getProduct().getPrimaryName());
 
-            //set population
+            //Set population
             Integer populationSource = (isa != null) ? isa.getPopulationSource() : null;
-            requirements.setPopulation(getPopulation(facility, /*programId*/ facilityProgramProduct.getProgram() , /*isa*/ populationSource));
+            requirements.setPopulation(getPopulation(facility, facilityProgramProduct.getProgram(), populationSource));
 
-            //set minStock, maxStock, and eop
+            //Set minStock, maxStock, and eop
             for(FacilityTypeApprovedProduct facilityTypeApprovedProduct : facilityTypeApprovedProducts)
             {
                 if(productId.equals(facilityTypeApprovedProduct.getProgramProduct().getProduct().getId()))
@@ -116,19 +128,19 @@ public class StockRequirementsService
     }
 
 
-    Long getPopulation(Facility facility, Program program, Integer populationSource)
+    private Long getPopulation(Facility facility, Program program, Integer populationSource)
     {
         if(program == null)
-            return facility.getCatchmentPopulation();
+            return getNonNullFacilityCatchmentPopulation(facility);
 
         //TODO: Currently, there isn't a robust way of determining whether a Facility is a SDP, DVS, RVS, or CVS. Doing string-comparisons on the Facility's name or code, as is done below, is a stopgap that should be removed in the future.
 
         int currentYear = Calendar.getInstance().get(Calendar.YEAR);
         String facilityCode = facility.getFacilityType().getCode().toLowerCase();
-        if (facilityCode.equals("heac") || facilityCode.equals("disp")) //Health Facility ("heac") or Dispensary ("disp")
+        if (facilityCode.equals("heac") || facilityCode.equals("disp")) // "heac" == Health Facility; "disp" == Dispensary
         {
             if(populationSource == null)
-                return facility.getCatchmentPopulation();
+                return getNonNullFacilityCatchmentPopulation(facility);
 
             List<AnnualFacilityEstimateEntry> estimates = annualFacilityDemographicEstimateService.getEstimateValuesForFacility(facility.getId(), program.getId(), currentYear);
             for (AnnualFacilityEstimateEntry estimate : estimates)
@@ -136,26 +148,26 @@ public class StockRequirementsService
                 if (estimate.getDemographicEstimateId() != null && estimate.getDemographicEstimateId().equals(new Long(populationSource)))
                 {
                     if(estimate.getValue() != null)
-                        return estimate.getValue();
+                        return estimate.getValue(); //Note that if the user hasn't specified a value, annualFacilityDemographicEstimateService.getEstimateValuesForFacility() will have done its best to compute one which will, most likely, not equal facility.getCatchmentPopulation().
                     else
-                        return facility.getCatchmentPopulation();
+                        return getNonNullFacilityCatchmentPopulation(facility);
                 }
             }
         }
         else if(facilityCode.equals("dvs"))
         {
             if(populationSource == null)
-                return facility.getCatchmentPopulation();
+                return getNonNullFacilityCatchmentPopulation(facility);
 
             GeographicZone geoZone = facility.getGeographicZone();
             if(geoZone == null)
-                return facility.getCatchmentPopulation();
+                return getNonNullFacilityCatchmentPopulation(facility);
 
             AnnualDistrictEstimateEntry estimateEntry = annualDistrictEstimateRepository.getEntryBy(currentYear, geoZone.getId(), program.getId(), new Long(populationSource));
             if(estimateEntry != null)
-                return estimateEntry.getValue();
+                return estimateEntry.getValue(); //Note that if the user hasn't specified a value, annualFacilityDemographicEstimateService.getEstimateValuesForFacility() will have done its best to compute one which will, most likely, not equal facility.getCatchmentPopulation().
             else
-                return facility.getCatchmentPopulation();
+                return getNonNullFacilityCatchmentPopulation(facility);
         }
         else if(facilityCode.equals("rvs"))
         {
@@ -163,65 +175,94 @@ public class StockRequirementsService
             SupervisoryNode supNodeForReqGroup = supervisoryNodeRepository.getFor(facility, program);
 
             //Get the child supervisory nodes, each of which should be associated with a different requisition group.
-            List<SupervisoryNode> childNodes = supervisoryNodeRepository.getSupervisoryNodeChildren(supNodeForReqGroup.getId());
+            List<SupervisoryNode> childNodes = supervisoryNodeRepository.getAllChildSupervisoryNodesInHierarchy(supNodeForReqGroup);
 
-            //Find the child node we care about
-            SupervisoryNode childNode = null;
-            for(SupervisoryNode node : childNodes)
-            {
-                if(node.getFacility().getId().equals(facility.getId()))
-                {
-                    childNode = node;
-                    break;
-                }
-            }
-
+            //Of the supervisory nodes we just found, determine which (if any) is associated with our facility
+            SupervisoryNode childNode = getSupervisoryNodeAssociatedWithFacility(childNodes, facility);
             if(childNode == null)
-                return facility.getCatchmentPopulation();
+                return getNonNullFacilityCatchmentPopulation(facility);
 
-            //Get the requisition-groups associated with the child supervosory node we just found
+            //Get the requisition-groups associated with the child supervisory node we just found
             List<RequisitionGroup> requisitionGroups = requisitionGroupRepository.getRequisitionGroups(Collections.singletonList(childNode));
 
             //Determine which of the requisition-groups is relevant
+            /*
             RequisitionGroup requisitionGroup = getRequisitionGroupForFacilityAndProgram(requisitionGroups, facility.getId(), program.getId());
             if(requisitionGroup == null)
-                return facility.getCatchmentPopulation();
+                return getNonNullFacilityCatchmentPopulation(facility);  */
+
+            /*  Multiple requisition groups, regardless of their product type, may be associated with the same supervisory node. In other words,
+            there's a 1:* relation.  Given a specific supervisory node and product, it's therefore not possible to return a single requisition
+            group. For VIMS, it is therefore necessary to require a configuration wherein there is a 1:1 relationship between requisition groups
+            and the supervisory-nodes they're associated with. Because VIMS is intended exclusively for use with the vaccine-program, this
+            requirement is tenable.  */
+            if(requisitionGroups == null || requisitionGroups.size() < 1)
+                return getNonNullFacilityCatchmentPopulation(facility);
+            RequisitionGroup requisitionGroup = requisitionGroups.get(0);
 
             //Get all the facilities associated with that requisition-group
             List<Facility> facilities = getFacilitiesInSpecifiedRequisitionGroup(requisitionGroup, program.getId());
 
-            //Sum and return the above facility's populations
-            Long childPopulation = 0L;
+            //Sum and return the above facilities' populations
+            Long totalPopulation = 0L;
             for(Facility childFacility : facilities)
             {
-                childPopulation += getPopulation(childFacility, program, populationSource);
+                totalPopulation += getPopulation(childFacility, program, populationSource);
             }
-            return childPopulation;
+            return totalPopulation;
 
         }
         else if(facilityCode.equals("cvs"))
         {
-            //TODO: Get all RVS nodes in the system and sum their populations
-            return facility.getCatchmentPopulation();
+            List<Facility> facilities = facilityRepository.getAllByFacilityTypeCode("rvs");
+            Long totalPopulation = 0L;
+            for(Facility rvs : facilities)
+            {
+                totalPopulation += getPopulation(rvs, program, populationSource);
+            }
+
+            if(totalPopulation.intValue() > 0)
+                return  totalPopulation;
+            else
+                return getNonNullFacilityCatchmentPopulation(facility);
         }
         else
         {
-            return facility.getCatchmentPopulation();
+            return getNonNullFacilityCatchmentPopulation(facility);
         }
 
-        return facility.getCatchmentPopulation();
+        return getNonNullFacilityCatchmentPopulation(facility);
+    }
+
+    private Long getNonNullFacilityCatchmentPopulation(Facility facility)
+    {
+        Long catchment = facility.getCatchmentPopulation();
+        return (catchment != null) ? catchment : 0L;
     }
 
     private List<Facility> getFacilitiesInSpecifiedRequisitionGroup(RequisitionGroup group, Long programId)
     {
         List<Facility> facilities = new LinkedList<>();
-        List<FacilityLevelTree> facilityLevels = levelMapper.getFacilitiesByLevel(programId, group.getId().toString());
+        String formattedRequisitionGroupId = "{" +  group.getId().toString() + "}"; //Format the ID as an array with a single member
+        List<FacilityLevelTree> facilityLevels = levelMapper.getFacilitiesByLevel(programId, formattedRequisitionGroupId);
         for(FacilityLevelTree level : facilityLevels)
         {
             Facility facility = facilityService.getById(level.getFacilityId());
             facilities.add(facility);
         }
         return facilities;
+    }
+
+    private SupervisoryNode getSupervisoryNodeAssociatedWithFacility(List<SupervisoryNode> supervisoryNodes, Facility facility)
+    {
+        for(SupervisoryNode node : supervisoryNodes)
+        {
+            Facility relatedFacility = node.getFacility();
+            if(relatedFacility != null && relatedFacility.getId().equals(facility.getId())) {
+                return node;
+            }
+        }
+        return null;
     }
 
     //Look through the specified requisitionGroups for one associated with the specified program and facility. Return the result, if found.
@@ -231,7 +272,8 @@ public class StockRequirementsService
         for(RequisitionGroup group : requisitionGroups)
         {
             //...get all of its associated facilties...
-            List<FacilityLevelTree> facilityLevels = levelMapper.getFacilitiesByLevel(programId, group.getId().toString());
+            String formattedRequisitionGroupId = "{" +  group.getId().toString() + "}"; //Format the ID as an array with a single member
+            List<FacilityLevelTree> facilityLevels = levelMapper.getFacilitiesByLevel(programId, formattedRequisitionGroupId);
 
             //...then, check whether our facility is amongst them. If it is, we've found the requisition group we care about
             if (facilityLevelTreeListContainsFacility(facilityLevels, facilityId) )

@@ -56,11 +56,6 @@ public class SupervisoryNodeRepository {
       commaSeparateRightNames(rightNames));
   }
 
-  public List<SupervisoryNode> getSupervisoryNodeChildren(Long parentSupervisoryNodeId)
-  {
-    return supervisoryNodeMapper.getSupervisoryNodeChildren(parentSupervisoryNodeId);
-  }
-
   public Long getIdForCode(String code) {
     Long supervisoryNodeId = supervisoryNodeMapper.getIdForCode(code);
     if (supervisoryNodeId == null)
@@ -99,6 +94,10 @@ public class SupervisoryNodeRepository {
 
   public SupervisoryNode getByCode(SupervisoryNode supervisoryNode) {
     return supervisoryNodeMapper.getByCode(supervisoryNode);
+  }
+
+  public List<SupervisoryNode> getAllChildSupervisoryNodesInHierarchy(SupervisoryNode node) {
+    return supervisoryNodeMapper.getAllChildSupervisoryNodesInHierarchy(node);
   }
 
   public void update(SupervisoryNode supervisoryNode) {
