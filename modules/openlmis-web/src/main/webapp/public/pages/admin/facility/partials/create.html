@@ -315,6 +315,9 @@
                          openlmis-message="placeholder.filter.products"/>
                 </div>
               </div>
+
+              <!-- Do not delete; intended for the non-VIMS use -->
+              <!--
               <div id="overrideIsaTable">
                 <div class="list-header-container">
                   <div class="row-fluid list-header">
@@ -339,8 +342,8 @@
                       <div class="span2" ng-form="overrideForm">
                           <span id="overridden-isa{{$index}}">{{programProduct.calculatedFacilityIsa}}</span>
                       </div>
-                      <div class="span4 use-calculated-isa-column">
 
+                      <div class="span4 use-calculated-isa-column">
                           <input type="button" class="btn" id="delete-overriden-isa-button{{$index}}"
                                  ng-click="deleteProductISA(programProduct, facility, $index)"
                                  openlmis-message="button.delete" />
@@ -353,6 +356,48 @@
                   </div>
                 </div>
               </div>
+              -->
+
+              <!--Begin: For VIMS use -->
+              <div id="overrideIsaTable">
+                <div class="list-header-container">
+                  <div class="row-fluid list-header">
+                    <div class="span3">
+                      <span class="first-column" openlmis-message="label.product"></span>
+                    </div>
+                    <div class="span5" openlmis-message="label.overridden.isa"></div>
+                    <div class="span4"></div>
+                  </div>
+                </div>
+
+                <div class="list-container ">
+                  <div ng-repeat="programProduct in filteredProducts">
+                    <div class="row-fluid list-row" productId="{{programProduct.product.id}}">
+                      <div class="span3">
+                        <span class="first-column" id="product-name{{$index}}" ng-bind="programProduct.product.primaryName"></span>
+                      </div>
+
+                      <div class="span5">
+                        <span style="white-space: nowrap;" id="calculated-isa{{$index}}">{{programProduct.overriddenIsaFormula}}</span>
+                      </div>
+
+                      <div class="span4 use-calculated-isa-column">
+                          <input type="button" id="delete-overriden-isa-button{{$index}}"
+                                 class="btn"   style="margin-left: 0px;"
+                                 ng-click="deleteProductISA(programProduct, facility, $index)"
+                                 openlmis-message="button.delete" />
+
+                          <input type="button"  id="override-isa-values-button{{$index}}"
+                                 class="btn"    style="margin-left: 0px;"
+                                 ng-click="showProductISA(programProduct, $index)"
+                                 openlmis-message="override.isa.values"/>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <!--End: For VIMS use-->
+
             </div>
           </div>
 
