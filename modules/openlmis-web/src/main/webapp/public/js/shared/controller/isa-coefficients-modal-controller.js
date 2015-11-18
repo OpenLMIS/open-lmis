@@ -78,9 +78,12 @@ function ISACoefficientsModalController($scope, $rootScope)
     else
       $scope.isaToEdit = $scope.currentProgramProduct.programProductIsa;
 
-    $scope.origPopulationSource = $scope.isaToEdit.populationSource
-    var index = _.findIndex($scope.demographicCategories, function(value){return value.id==$scope.origPopulationSource});
-    $scope.currentPopulationSource = $scope.demographicCategories[index];
+    $scope.origPopulationSource = $scope.isaToEdit.populationSource;
+    if( ! $scope.origPopulationSource) {
+      $scope.origPopulationSource  = 0;
+    }
+    var origIndex = _.findIndex($scope.demographicCategories, function(value){return value.id==$scope.origPopulationSource;});
+    $scope.currentPopulationSource = $scope.demographicCategories[origIndex];
 
     $scope.programProductISAModal = true;
   };
@@ -91,9 +94,9 @@ function ISACoefficientsModalController($scope, $rootScope)
     console.log($scope.currentPopulationSource);
     $scope.isaToEdit.populationSource = $scope.currentPopulationSource.id;
     console.log($scope.isaToEdit.populationSource );
-  }
+  };
 
-  $scope.clearAndCloseProgramProductISAModal = function ()
+  $scope.clearAndCloseProgramProductISAModal = function()
   {
     $scope.population = 0;
     $scope.inputClass = false;
@@ -148,6 +151,9 @@ function ISACoefficientsModalController($scope, $rootScope)
 
     if(facilityId())
       params.facilityId = facilityId();
+
+    if($scope.isaToEdit.populationSource === 0)
+      $scope.isaToEdit.populationSource = undefined;
 
     saveFunction(params, $scope.isaToEdit, successCallBack, {});
   };

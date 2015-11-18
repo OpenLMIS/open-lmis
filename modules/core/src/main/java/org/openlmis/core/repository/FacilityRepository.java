@@ -163,6 +163,10 @@ public class FacilityRepository {
     return mapper.getAllInRequisitionGroups(commaSeparator.commaSeparateIds(requisitionGroups));
   }
 
+  public List<Facility> getAllByFacilityTypeCode(String typeCode) {
+    return mapper.getAllByFacilityTypeCode(typeCode);
+  }
+
   public Long getIdForCode(String code) {
     Long facilityId = mapper.getIdForCode(code);
 

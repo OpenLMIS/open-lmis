@@ -84,8 +84,13 @@ if(injectDemographyCategories)
     {
         var deferred = $q.defer();
         $timeout(function () {
-            DemographicEstimateCategories.get({}, function (data) {
-                deferred.resolve(data.estimate_categories);
+            DemographicEstimateCategories.get({}, function(data)
+            {
+                //Add 'Facility Population' to the set of available categories
+                var categories = data.estimate_categories;
+                var facilityCatchmentPopulation = {'id': 0, 'name': 'Facility Population'};
+                categories.unshift(facilityCatchmentPopulation);
+                deferred.resolve(categories);
             }, {});
         }, 100);
         return deferred.promise;
@@ -102,7 +107,7 @@ else //As suggested in the comments above, this else-clause is intended to run f
             function() {},
             5
         );
-    }
+    };
 }
 
 

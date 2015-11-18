@@ -169,6 +169,18 @@ public interface FacilityMapper {
   })
   List<Facility> getAllInRequisitionGroups(@Param("requisitionGroupIds") String requisitionGroupIds);
 
+  @Select("SELECT f.* FROM facilities f JOIN facility_types ft " +
+          "ON f.typeid = ft.id " +
+          "WHERE LOWER(ft.code) = LOWER(#{typeCode}) ")
+  @Results(value = {
+          @Result(property = "facilityType", column = "typeId", javaType = Long.class,
+                  one = @One(select = "getFacilityTypeById")),
+          @Result(property = "operatedBy", column = "operatedById", javaType = Long.class,
+                  one = @One(select = "getFacilityOperatorById"))
+  })
+  List<Facility> getAllByFacilityTypeCode(String typeCode);
+
+
   @Select(
     {"SELECT DISTINCT F.geographicZoneId, F.name, F.code, F.id, F.catchmentPopulation FROM facilities F INNER JOIN delivery_zone_members DZM ON F.id = DZM.facilityId",
       "INNER JOIN programs_supported PS ON PS.facilityId = F.id",
