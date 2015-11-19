@@ -20,6 +20,7 @@ public interface RnrMapperForSIMAM {
         "       rl.quantityreceived quantity_received," +
         "       rl.totallossesandadjustments total_losses_and_adjustments," +
         "       rl.stockinhand stock_in_hand," +
+        "       rl.stockinhand inventory," +
         "       rl.quantityapproved quantity_approved" +
         "  FROM requisition_line_items rl" +
         "  LEFT JOIN requisitions r" +
