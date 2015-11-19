@@ -12,8 +12,6 @@ function ProgramProductController($scope, programs, ProgramProducts, ProgramProd
 {
   $scope.programs = programs;
   $scope.isaService = ProgramProductsISA; //isaService is used by ISACoefficientsModalController, which is intended to be used as a descendant controller of this one.
-
-  console.log(demographicCategories);
   $scope.demographicCategories = demographicCategories; //Will be undefined if we aren't in VIMS
 
   $scope.loadProgramProducts = function () {
