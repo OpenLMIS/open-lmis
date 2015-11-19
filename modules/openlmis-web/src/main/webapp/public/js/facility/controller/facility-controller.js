@@ -17,7 +17,6 @@ function FacilityController($scope, facilityReferenceData, $routeParams, facilit
   $scope.isaService = FacilityProgramProductsISA; //isaService is used by ISACoefficientsModalController, which is intended to be used as a descendant controller of this one.
   initialize();
 
-  console.log(demographicCategories);
   $scope.demographicCategories = demographicCategories; //Will be undefined if we aren't in VIMS
 
 
