@@ -17,6 +17,7 @@ import org.openlmis.core.domain.ConfigurationSettingKey;
 import org.openlmis.core.domain.User;
 import org.openlmis.core.service.ApproverService;
 import org.openlmis.core.service.ConfigurationSettingService;
+import org.openlmis.core.service.StaticReferenceDataService;
 import org.openlmis.email.service.EmailService;
 import org.openlmis.rnr.domain.Rnr;
 import org.slf4j.Logger;
@@ -47,9 +48,14 @@ public class NotificationServices {
   @Autowired
   private ApproverService approverService;
 
+  @Autowired
+  private RequisitionEmailServiceForSIMAM requisitionEmailServiceForSIMAM;
+
+  @Autowired
+  private StaticReferenceDataService staticReferenceDataService;
+
   public void notifyStatusChange(Rnr requisition) {
 
-    String emailTemplate = configService.getByKey(ConfigurationSettingKey.EMAIL_TEMPLATE_APPROVAL).getValue();
 
     List<User> users = null;
     // find out which email to send it to
@@ -71,13 +77,19 @@ public class NotificationServices {
     }
 
     if (users != null) {
+
+      if ( staticReferenceDataService.getBoolean("toggle.email.attachment.simam") ) {
+        requisitionEmailServiceForSIMAM.sendRequisitionEmailWithAttachment(requisition, users);
+        return;
+      }
+
       for (User user : users) {
         if (user.isMobileUser()) {
           continue;
         }
 
         SimpleMailMessage message = new SimpleMailMessage();
-        String emailMessage = emailTemplate;
+        String emailMessage = configService.getByKey(ConfigurationSettingKey.EMAIL_TEMPLATE_APPROVAL).getValue();
 
         String approvalURL = String.format("%1$s/public/pages/logistics/rnr/index.html#/rnr-for-approval/%2$s/%3$s?supplyType=full-supply&page=1", baseURL, requisition.getId(), requisition.getProgram().getId());
 

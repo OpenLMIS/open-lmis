@@ -51,7 +51,7 @@ public class SingleListSheetExcelHandler extends ExcelHandler {
     if (cellMeta.isVariable()) {
       String key = cellMeta.getName();
       if (key != null && key.length() > 0) {
-        Object tmp = ((HashMap<String, String>)data).get(key);
+        Object tmp = data.get(key);
         String cellData = ( tmp == null? "" : tmp.toString());
         cell.setCellValue(cellData);
       }

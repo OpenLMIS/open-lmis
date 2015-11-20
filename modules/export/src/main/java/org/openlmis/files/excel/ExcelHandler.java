@@ -9,14 +9,21 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 
+import javax.annotation.PostConstruct;
 import java.io.*;
 import java.util.List;
 import java.util.Map;
 
 public abstract class ExcelHandler {
-	protected static Logger logger = LoggerFactory.getLogger(ExcelHandler.class);
 
+	public enum PathType{
+		FILE,
+		CLASSPATH
+	}
+
+	protected static Logger logger = LoggerFactory.getLogger(ExcelHandler.class);
 	public static final String VARIABLE_PREFIX = "$";
+
 	public static final String FOLDER_SUFFIX = "/";
 
 	@Value("${email.attachment.template.path}")
@@ -25,7 +32,7 @@ public abstract class ExcelHandler {
 	@Value("${email.attachment.cache.path}")
 	protected String cachePath;
 
-
+	@PostConstruct
 	public void init() {
 
 		if (!this.templatePath.endsWith(FOLDER_SUFFIX)) {
@@ -37,11 +44,11 @@ public abstract class ExcelHandler {
 		}
 	}
 
-	public Workbook readXssTemplateFile(String templateFileName) {
+	public Workbook readXssTemplateFile(String templateFileName, PathType type ) {
 
 		Workbook wb = null;
 		try {
-			InputStream templateIn = getClasspathFileInputStream(templateFileName);
+			InputStream templateIn = getClasspathFileInputStream(templateFileName, type);
 			wb = WorkbookFactory.create(templateIn);
 		} catch (FileNotFoundException e) {
 			logger.error("Not found file with error:" + e.getMessage());
@@ -53,8 +60,15 @@ public abstract class ExcelHandler {
 		return wb;
 	}
 
-	private InputStream getClasspathFileInputStream(String templateFileName) throws FileNotFoundException {
-			return new FileInputStream(new File(templateFileName));
+	public InputStream getClasspathFileInputStream(String templateFileName, PathType type) throws FileNotFoundException {
+		switch(type){
+			case FILE:
+				return new FileInputStream(new File(this.templatePath+templateFileName));
+			case CLASSPATH:
+				return ExcelHandler.class.getClassLoader().getResourceAsStream(templateFileName);
+			default:
+				throw new IllegalArgumentException("Path type not supported!");
+		}
 	}
 
 	public abstract void createDataRows(Sheet tempSheet, List<Map<String, String>> dataList);
