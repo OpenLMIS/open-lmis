@@ -15,12 +15,12 @@ import org.openlmis.core.web.OpenLmisResponse;
 import org.openlmis.core.web.controller.BaseController;
 import org.openlmis.demographics.domain.StockRequirements;
 import org.openlmis.demographics.service.StockRequirementsService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.List;
 
@@ -55,26 +55,28 @@ public class StockRequirementsController extends BaseController
                  "<br>" +
                  "Please also note that a third population-source is used when dealing with an RVS or CVS. In such cases, the total population of all of its child facilities is used. " +
                  "<br><br> " +
-                 "Finally, please note that inconsistent population values are necessarily returned if inconsistent population-sources are specified. This happens, for instance, if a user specifies that “Facility Catchment” be used for a ProgramProduct ISA, yet “Children Under 2” be used for a specific DVS. The population associated with an RVS serving the DVS would in part be comprised of the DVS’ population. Rather than using the DVS’ “Children Under 2” population, however, it would use its “Facility Catchment” population. This is by design. Only inconsistent configuration, however, will yield this behavior. " +
+                 "Also, note that inconsistent population values are necessarily returned if inconsistent population-sources are specified. This happens, for instance, if a user specifies that “Facility Catchment” be used for a ProgramProduct ISA, yet “Children Under 2” be used for a specific DVS. The population associated with an RVS serving the DVS would in part be comprised of the DVS’ population. Rather than using the DVS’ “Children Under 2” population, however, it would use its “Facility Catchment” population. This is by design. Only inconsistent configuration, however, will yield this behavior. " +
                  "<br><br> " +
-                "Noteworthy values returned by this endpoint include: " +
-                "<br><br> " +
-                "<b>facilityId, facilityCode, and productId:</b> Returned as a convenience for the developer." +
+                 "Finally, please note that the FacilityDemography page relies on a geoZone being associated with the relevant SDP. Therefore, without a geoZone, an SDP cannot be assigned a demography estimate. An SDP without a geoZone is thus automatically treated as though it Facility Catchment Population should be used for the sake of all ISA calculations. " +
                  "<br><br> " +
-                "<b>population:</b> Usually either a facility catchment, a user-specified demography value, or the total of all child-facility populations. See above documentation for details. " +
-                "<br><br> " +
-                "<b>isaCoefficients:</b> The ISA Coefficients specified by the user at the facility-level. If such values don't exist, the ISA Coefficients set at the more general program-product level are returned. " +
-                "<br><br> " +
-                "<b>minMonthsOfStock, maxMonthsOfStock, and eop:</b> Values set by the user, potentially via the Facility Approved Products page (Administration -> Manage -> Facility Approved Products). Note that eop stands for 'Emergency Order Point.' " +
+                 "Noteworthy values returned by this endpoint include: " +
                  "<br><br> " +
-                "<b>isaValue:</b> The result of applying the ISA formula to the isaCoefficients. " +
-                "<br><br> " +
-                "<b>MinimumStock:</b>  This equals isaValue * minMonthsOfStock " +
-                "<br><br> " +
-                "<b>MaximumStock:</b>  This equals isaValue * maxMonthsOfStock " +
-                "<br><br> " +
-                "<b>ReorderLevel:</b>  This equals isaValue * eop " +
-                "</p> "
+                 "<b>facilityId, facilityCode, and productId:</b> Returned as a convenience for the developer." +
+                 "<br><br> " +
+                 "<b>population:</b> Usually either a facility catchment, a user-specified demography value, or the total of all child-facility populations. See above documentation for details. " +
+                 "<br><br> " +
+                 "<b>isaCoefficients:</b> The ISA Coefficients specified by the user at the facility-level. If such values don't exist, the ISA Coefficients set at the more general program-product level are returned. " +
+                 "<br><br> " +
+                 "<b>minMonthsOfStock, maxMonthsOfStock, and eop:</b> Values set by the user, potentially via the Facility Approved Products page (Administration -> Manage -> Facility Approved Products). Note that eop stands for 'Emergency Order Point.' " +
+                 "<br><br> " +
+                 "<b>isaValue:</b> The result of applying the ISA formula to the isaCoefficients. " +
+                 "<br><br> " +
+                 "<b>MinimumStock:</b>  This equals isaValue * minMonthsOfStock " +
+                 "<br><br> " +
+                 "<b>MaximumStock:</b>  This equals isaValue * maxMonthsOfStock " +
+                 "<br><br> " +
+                 "<b>ReorderLevel:</b>  This equals isaValue * eop " +
+                 "</p> "
     )
     @RequestMapping(value = "/rest-api/facility/{facilityId}/program/{programId}/stockRequirements", method = GET, headers = ACCEPT_JSON)
     public ResponseEntity getStockRequirements(@PathVariable Long facilityId, @PathVariable Long programId)
