@@ -10,18 +10,17 @@
 
 package org.openlmis.demographics.service;
 
+import org.openlmis.core.domain.*;
+import org.openlmis.core.repository.FacilityApprovedProductRepository;
 import org.openlmis.core.repository.FacilityRepository;
 import org.openlmis.core.repository.RequisitionGroupRepository;
 import org.openlmis.core.repository.SupervisoryNodeRepository;
-import org.openlmis.core.repository.helper.CommaSeparator;
-import org.openlmis.demographics.domain.*;
-import org.openlmis.demographics.repository.*;
-
-import org.openlmis.core.domain.*;
-import org.openlmis.core.repository.FacilityApprovedProductRepository;
 import org.openlmis.core.service.FacilityProgramProductService;
 import org.openlmis.core.service.FacilityService;
-
+import org.openlmis.demographics.domain.AnnualDistrictEstimateEntry;
+import org.openlmis.demographics.domain.AnnualFacilityEstimateEntry;
+import org.openlmis.demographics.domain.StockRequirements;
+import org.openlmis.demographics.repository.AnnualDistrictEstimateRepository;
 import org.openlmis.report.mapper.lookup.FacilityLevelMapper;
 import org.openlmis.report.model.dto.FacilityLevelTree;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -128,7 +127,7 @@ public class StockRequirementsService
     }
 
 
-    private Long getPopulation(Facility facility, Program program, Integer populationSource)
+    Long getPopulation(Facility facility, Program program, Integer populationSource)
     {
         if(program == null)
             return getNonNullFacilityCatchmentPopulation(facility);
