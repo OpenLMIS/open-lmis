@@ -117,6 +117,14 @@ public class RequisitionEmailServiceForSIMAM {
           ExcelHandler.PathType.FILE);
     } else {
 
+      CollectionUtils.collect(regimenItemsData, new Transformer() {
+        @Override
+        public Map<String, String> transform(Object input) {
+          ((Map<String, String>) input).put("movDescID", "0");
+          return (Map<String, String>) input;
+        }
+      });
+
       convertOpenLMISProgramCodeToSIMAMCode(regimenItemsData);
 
       workbook = singleListSheetExcelHandler.readXssTemplateFile(TEMPLATE_IMPORT_REGIMEN_XLSX,
