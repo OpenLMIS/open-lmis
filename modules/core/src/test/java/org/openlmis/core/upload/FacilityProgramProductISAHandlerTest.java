@@ -123,18 +123,18 @@ public class FacilityProgramProductISAHandlerTest {
         RequisitionGroupMember dvs3Member = new RequisitionGroupMember(rvs2Group, dvs3);
         SupervisoryNode dvs3Node = createSupervisoryNode(dvs3, 6L);
 
-        sdp1 = createFacility("sdp", true, 7L);
-        Facility sdp2 = createFacility("sdp", true, 8L);
+        sdp1 = createFacility("heac", true, 7L);
+        Facility sdp2 = createFacility("heac", true, 8L);
         RequisitionGroup dvs1Group = createRequisitionGroup(15L);
         RequisitionGroupMember sdp1Member = new RequisitionGroupMember(dvs1Group, sdp1);
         RequisitionGroupMember sdp2Member = new RequisitionGroupMember(dvs1Group, sdp2);
 
-        Facility sdp3 = createFacility("sdp", true, 9L);
+        Facility sdp3 = createFacility("heac", true, 9L);
         RequisitionGroup dvs2Group = createRequisitionGroup(16L);
         RequisitionGroupMember sdp3Member = new RequisitionGroupMember(dvs2Group, sdp3);
 
-        Facility sdp4 = createFacility("sdp", true, 10L);
-        Facility sdp5 = createFacility("sdp", true, 11L);
+        Facility sdp4 = createFacility("heac", true, 10L);
+        Facility sdp5 = createFacility("heac", true, 11L);
         RequisitionGroup dvs3Group = createRequisitionGroup(17L);
         RequisitionGroupMember sdp4Member = new RequisitionGroupMember(dvs3Group, sdp4);
         RequisitionGroupMember sdp5Member = new RequisitionGroupMember(dvs3Group, sdp5);
