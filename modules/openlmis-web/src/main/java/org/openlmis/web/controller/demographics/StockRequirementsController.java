@@ -13,7 +13,7 @@ package org.openlmis.web.controller.demographics;
 import com.wordnik.swagger.annotations.ApiOperation;
 import org.openlmis.core.web.OpenLmisResponse;
 import org.openlmis.core.web.controller.BaseController;
-import org.openlmis.demographics.domain.StockRequirements;
+import org.openlmis.demographics.dto.StockRequirements;
 import org.openlmis.demographics.service.StockRequirementsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;

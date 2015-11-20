@@ -8,7 +8,7 @@
  * You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org. 
  */
 
-package org.openlmis.demographics.domain;
+package org.openlmis.demographics.dto;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
@@ -16,7 +16,6 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
-import org.openlmis.core.domain.BaseModel;
 import org.openlmis.core.domain.ISA;
 import org.openlmis.core.dto.IsaDTO;
 
@@ -31,7 +30,7 @@ import static com.fasterxml.jackson.databind.annotation.JsonSerialize.Inclusion.
 @NoArgsConstructor
 @JsonSerialize(include = NON_NULL)
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class StockRequirements extends BaseModel
+public class StockRequirements
 {
   Long facilityId;
   String facilityCode;

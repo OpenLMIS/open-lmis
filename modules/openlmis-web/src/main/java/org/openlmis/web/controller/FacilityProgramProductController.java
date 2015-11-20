@@ -11,14 +11,11 @@
 package org.openlmis.web.controller;
 
 import com.wordnik.swagger.annotations.Api;
-import com.wordnik.swagger.annotations.ApiOperation;
 import org.openlmis.core.domain.FacilityProgramProduct;
 import org.openlmis.core.domain.ProgramProductISA;
-import org.openlmis.demographics.domain.StockRequirements;
 import org.openlmis.core.service.FacilityProgramProductService;
 import org.openlmis.core.web.controller.BaseController;
 import org.openlmis.core.web.OpenLmisResponse;
-import org.openlmis.demographics.service.StockRequirementsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;

@@ -94,11 +94,11 @@ public class ProgramProductISA extends BaseModel {
     isa.setAdjustmentValue(adjustmentValue);
   }
 
-  public Integer getPopulationSource() {
+  public Long getPopulationSource() {
     return isa.getPopulationSource();
   }
 
-  public void setPopulationSource(Integer sourceId) {
+  public void setPopulationSource(Long sourceId) {
     isa.setPopulationSource(sourceId);
   }
 }
