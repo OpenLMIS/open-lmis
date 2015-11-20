@@ -35,7 +35,7 @@ public class ISA extends BaseModel
   Integer adjustmentValue;
 
   //For Tanzania
-  Integer populationSource;
+  Long populationSource;
 
   private ISA(Builder builder)
   {
@@ -70,7 +70,7 @@ public class ISA extends BaseModel
     private Integer minimumValue;
     private Integer maximumValue;
     private Integer adjustmentValue;
-    private Integer populationSource;
+    private Long populationSource;
 
     public Builder whoRatio(Double value)
     {
@@ -114,7 +114,7 @@ public class ISA extends BaseModel
       return this;
     }
 
-    public Builder populationSource(Integer value)
+    public Builder populationSource(Long value)
     {
       this.populationSource = value;
       return this;

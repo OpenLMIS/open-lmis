@@ -83,8 +83,8 @@ public class StockRequirementsServiceTest
     Facility dvs1, dvs2, dvs3;
     Facility sdp1, sdp2, sdp3, sdp4, sdp5;
 
-    static final Integer populationSourceId_1 = 1;
-    static final Integer populationSourceId_2 = 2;
+    static final Long populationSourceId_1 = 1L;
+    static final Long populationSourceId_2 = 2L;
 
     @Before
     public void setup()
@@ -216,11 +216,11 @@ public class StockRequirementsServiceTest
         when(facilityRepository.getById(rvs2.getId())).thenReturn(rvs2);
         when(facilityRepository.getById(cvs.getId())).thenReturn(cvs);
         when(facilityRepository.getAllByFacilityTypeCode("rvs")).thenReturn(Arrays.asList(rvs1, rvs2));
-        when(facilityProgramProductRepository.getOverriddenIsa(programProduct.getId(), sdp1.getId())).thenReturn(new ISA(0.0, 0, 0.0, 0.0, 0, 0, 0, 0));
-        when(facilityProgramProductRepository.getOverriddenIsa(programProduct.getId(), sdp2.getId())).thenReturn(new ISA(0.0, 0, 0.0, 0.0, 0, 0, 0, 0));
-        when(facilityProgramProductRepository.getOverriddenIsa(programProduct.getId(), sdp3.getId())).thenReturn(new ISA(0.0, 0, 0.0, 0.0, 0, 0, 0, 0));
-        when(facilityProgramProductRepository.getOverriddenIsa(programProduct.getId(), sdp4.getId())).thenReturn(new ISA(0.0, 0, 0.0, 0.0, 0, 0, 0, 0));
-        when(facilityProgramProductRepository.getOverriddenIsa(programProduct.getId(), sdp5.getId())).thenReturn(new ISA(0.0, 0, 0.0, 0.0, 0, 0, 0, 0));
+        when(facilityProgramProductRepository.getOverriddenIsa(programProduct.getId(), sdp1.getId())).thenReturn(new ISA(0.0, 0, 0.0, 0.0, 0, 0, 0, 0L));
+        when(facilityProgramProductRepository.getOverriddenIsa(programProduct.getId(), sdp2.getId())).thenReturn(new ISA(0.0, 0, 0.0, 0.0, 0, 0, 0, 0L));
+        when(facilityProgramProductRepository.getOverriddenIsa(programProduct.getId(), sdp3.getId())).thenReturn(new ISA(0.0, 0, 0.0, 0.0, 0, 0, 0, 0L));
+        when(facilityProgramProductRepository.getOverriddenIsa(programProduct.getId(), sdp4.getId())).thenReturn(new ISA(0.0, 0, 0.0, 0.0, 0, 0, 0, 0L));
+        when(facilityProgramProductRepository.getOverriddenIsa(programProduct.getId(), sdp5.getId())).thenReturn(new ISA(0.0, 0, 0.0, 0.0, 0, 0, 0, 0L));
 
         when(levelMapper.getFacilitiesByLevel(program.getId(), "{"+dvs1Group.getId()+"}")).thenReturn(getTreeList(Arrays.asList(sdp1.getId(), sdp2.getId())));
         when(levelMapper.getFacilitiesByLevel(program.getId(), "{"+dvs2Group.getId()+"}")).thenReturn(getTreeList(Arrays.asList(sdp3.getId())));
@@ -308,14 +308,14 @@ public class StockRequirementsServiceTest
         setupFacilityDemographyEstimate(sdp4.getId(), program.getId(), currentYear);
         setupFacilityDemographyEstimate(sdp5.getId(), program.getId(), currentYear);
 
-        setupDistrictDemographyEstimate(currentYear, dvs1.getId(), program.getId(), new Long(populationSourceId_1));
-        setupDistrictDemographyEstimate(currentYear, dvs1.getId(), program.getId(), new Long(populationSourceId_2));
+        setupDistrictDemographyEstimate(currentYear, dvs1.getId(), program.getId(), populationSourceId_1);
+        setupDistrictDemographyEstimate(currentYear, dvs1.getId(), program.getId(), populationSourceId_2);
 
-        setupDistrictDemographyEstimate(currentYear, dvs2.getId(), program.getId(), new Long(populationSourceId_1));
-        setupDistrictDemographyEstimate(currentYear, dvs2.getId(), program.getId(), new Long(populationSourceId_2));
+        setupDistrictDemographyEstimate(currentYear, dvs2.getId(), program.getId(), populationSourceId_1);
+        setupDistrictDemographyEstimate(currentYear, dvs2.getId(), program.getId(), populationSourceId_2);
 
-        setupDistrictDemographyEstimate(currentYear, dvs3.getId(), program.getId(), new Long(populationSourceId_1));
-        setupDistrictDemographyEstimate(currentYear, dvs3.getId(), program.getId(), new Long(populationSourceId_2));
+        setupDistrictDemographyEstimate(currentYear, dvs3.getId(), program.getId(), populationSourceId_1);
+        setupDistrictDemographyEstimate(currentYear, dvs3.getId(), program.getId(), populationSourceId_2);
     }
 
     @Test

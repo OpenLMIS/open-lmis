@@ -19,7 +19,7 @@ import org.openlmis.core.service.FacilityProgramProductService;
 import org.openlmis.core.service.FacilityService;
 import org.openlmis.demographics.domain.AnnualDistrictEstimateEntry;
 import org.openlmis.demographics.domain.AnnualFacilityEstimateEntry;
-import org.openlmis.demographics.domain.StockRequirements;
+import org.openlmis.demographics.dto.StockRequirements;
 import org.openlmis.demographics.repository.AnnualDistrictEstimateRepository;
 import org.openlmis.report.mapper.lookup.FacilityLevelMapper;
 import org.openlmis.report.model.dto.FacilityLevelTree;
@@ -103,7 +103,7 @@ public class StockRequirementsService
             requirements.setProductName(facilityProgramProduct.getProduct().getPrimaryName());
 
             //Set population
-            Integer populationSource = (isa != null) ? isa.getPopulationSource() : null;
+            Long populationSource = (isa != null) ? isa.getPopulationSource() : null;
             requirements.setPopulation(getPopulation(facility, facilityProgramProduct.getProgram(), populationSource));
 
             //Set minStock, maxStock, and eop
@@ -127,7 +127,7 @@ public class StockRequirementsService
     }
 
 
-    Long getPopulation(Facility facility, Program program, Integer populationSource)
+    Long getPopulation(Facility facility, Program program, Long populationSource)
     {
         if(program == null)
             return getNonNullFacilityCatchmentPopulation(facility);
@@ -144,7 +144,7 @@ public class StockRequirementsService
             List<AnnualFacilityEstimateEntry> estimates = annualFacilityDemographicEstimateService.getEstimateValuesForFacility(facility.getId(), program.getId(), currentYear);
             for (AnnualFacilityEstimateEntry estimate : estimates)
             {
-                if (estimate.getDemographicEstimateId() != null && estimate.getDemographicEstimateId().equals(new Long(populationSource)))
+                if (estimate.getDemographicEstimateId() != null && estimate.getDemographicEstimateId().equals(populationSource))
                 {
                     if(estimate.getValue() != null)
                         return estimate.getValue(); //Note that if the user hasn't specified a value, annualFacilityDemographicEstimateService.getEstimateValuesForFacility() will have done its best to compute one which will, most likely, not equal facility.getCatchmentPopulation().
@@ -158,11 +158,14 @@ public class StockRequirementsService
             if(populationSource == null)
                 return getNonNullFacilityCatchmentPopulation(facility);
 
+            /* Only facilities with an associated geoZone appear on the DemographyEstimate pages.
+               Therefore, a facility without a geoZone should be treated as though it has no DemographyEstimate.
+               In that case, fall back to using the Facility’s catchment population. */
             GeographicZone geoZone = facility.getGeographicZone();
             if(geoZone == null)
                 return getNonNullFacilityCatchmentPopulation(facility);
 
-            AnnualDistrictEstimateEntry estimateEntry = annualDistrictEstimateRepository.getEntryBy(currentYear, geoZone.getId(), program.getId(), new Long(populationSource));
+            AnnualDistrictEstimateEntry estimateEntry = annualDistrictEstimateRepository.getEntryBy(currentYear, geoZone.getId(), program.getId(), populationSource);
             if(estimateEntry != null)
                 return estimateEntry.getValue(); //Note that if the user hasn't specified a value, annualFacilityDemographicEstimateService.getEstimateValuesForFacility() will have done its best to compute one which will, most likely, not equal facility.getCatchmentPopulation().
             else
@@ -224,10 +227,6 @@ public class StockRequirementsService
                 return  totalPopulation;
             else
                 return getNonNullFacilityCatchmentPopulation(facility);
-        }
-        else
-        {
-            return getNonNullFacilityCatchmentPopulation(facility);
         }
 
         return getNonNullFacilityCatchmentPopulation(facility);
