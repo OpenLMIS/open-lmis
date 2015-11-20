@@ -39,6 +39,7 @@ public interface FacilityProgramProductMapper {
             "COALESCE(#{ppi.createdDate}, NOW())::timestamp ," +
             "#{ppi.modifiedBy}::int," +
             "COALESCE(#{ppi.modifiedDate}, NOW())::timestamp ," +
+            "#{ppi.populationSource}::int," +
             "#{ppi.programProductId}::int ," +
             "#{facilityId}::int" +
           ")"

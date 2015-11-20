@@ -167,6 +167,7 @@ public interface SupervisoryNodeMapper {
   })
   List<SupervisoryNode> getSupervisoryNodesByParent(@Param(value = "nameSearchCriteria") String nameSearchCriteria, RowBounds rowBounds);
 
+
   @Select({"SELECT * FROM supervisory_nodes SN LEFT OUTER JOIN supervisory_nodes SNP ON SN.parentId = SNP.id WHERE LOWER(SN.name)" +
     " LIKE '%'|| LOWER(#{nameSearchCriteria}) ||'%' ORDER BY LOWER(SNP.name), LOWER(SN.name) NULLS LAST"})
   @Results(value = {
