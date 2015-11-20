@@ -106,6 +106,9 @@ public interface SupervisoryNodeMapper {
   List<SupervisoryNode> getAllSupervisoryNodesInHierarchyByUserAndRights(@Param("userId") Long userId,
                                                                          @Param("commaSeparatedRights") String commaSeparatedRights);
 
+  /*
+    Returns the specified SupervisoryNode along with all of its ancestor nodes.
+   */
   @Select({"WITH  recursive  supervisoryNodesRec AS ",
     "   (",
     "   SELECT *",
@@ -124,6 +127,9 @@ public interface SupervisoryNodeMapper {
   })
   List<SupervisoryNode> getAllParentSupervisoryNodesInHierarchy(SupervisoryNode supervisoryNode);
 
+  /*
+    Returns the specified SupervisoryNode along with all of its descendant nodes.
+   */
   @Select({"WITH  recursive  supervisoryNodesRec AS ",
           "   (",
           "   SELECT *",

@@ -88,10 +88,12 @@ public class SupervisoryNodeRepository {
       commaSeparateRightNames(rightNames));
   }
 
+  //Returns the specified SupervisoryNode along with all of its ancestor nodes.
   public List<SupervisoryNode> getAllParentSupervisoryNodesInHierarchy(SupervisoryNode node) {
     return supervisoryNodeMapper.getAllParentSupervisoryNodesInHierarchy(node);
   }
 
+  //Returns the specified SupervisoryNode along with all of its descendant nodes.
   public List<SupervisoryNode> getAllChildSupervisoryNodesInHierarchy(SupervisoryNode node) {
     return supervisoryNodeMapper.getAllChildSupervisoryNodesInHierarchy(node);
   }
