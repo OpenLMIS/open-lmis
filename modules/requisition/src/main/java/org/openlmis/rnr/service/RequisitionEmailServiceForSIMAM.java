@@ -6,7 +6,9 @@ import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.MapUtils;
 import org.apache.commons.collections.Transformer;
 import org.apache.poi.ss.usermodel.Workbook;
+import org.openlmis.core.domain.Program;
 import org.openlmis.core.domain.User;
+import org.openlmis.core.service.ConfigurationSettingService;
 import org.openlmis.email.domain.EmailAttachment;
 import org.openlmis.email.service.EmailService;
 import org.openlmis.files.excel.ExcelHandler;
@@ -39,6 +41,7 @@ public class RequisitionEmailServiceForSIMAM {
 
   public static final String REGIMEN_FILE_NAME_PREFIX = "Regimen_Requi";
   public static final String REQUI_FILE_NAME_PREFIX = "Requi";
+  public static final String EMAIL_TEMPLATE_FOR_REQUISITION_ATTACHMENT_PREFIX = "EMAIL_TEMPLATE_FOR_REQUISITION_ATTACHMENT_";
 
 
   @Autowired
@@ -46,6 +49,9 @@ public class RequisitionEmailServiceForSIMAM {
 
   @Autowired
   private EmailService emailService;
+
+  @Autowired
+  ConfigurationSettingService settingService;
 
   @Autowired
   private SingleListSheetExcelHandler singleListSheetExcelHandler;
@@ -66,21 +72,18 @@ public class RequisitionEmailServiceForSIMAM {
     }
 
     final String subject = "SIMAM Import Files for Requisition #" + requisition.getId();
-    final String messageBody = createEmailBodyContent(requisition);
+    Program program = requisition.getProgram();
+    final String messageBody = createEmailBodyContent(program.getCode());
 
-    String fileNameSuffix = requisition.getId() + "_" + requisition.getFacility().getName() + "_" + requisition.getPeriod().getName() + "_" + requisition.getProgram().getName() + ".xlsx";
+    String fileNameSuffix = requisition.getId() + "_" + requisition.getFacility().getName() + "_" + requisition.getPeriod().getName() + "_" + program.getName() + ".xlsx";
 
     List<EmailAttachment> emailAttachments = prepareEmailAttachmentsForSIMAM(requisition, fileNameSuffix);
     emailService.sendMimeMessageToMultipleUser(to.toArray(new String[0]), subject, messageBody, emailAttachments);
   }
 
-  private String createEmailBodyContent(Rnr requisition) {
-    StringBuilder content = new StringBuilder();
-    content.append("Facility: " + requisition.getFacility().getName() + "\r\n");
-    content.append("Program: " + requisition.getProgram().getName() + "\r\n");
-    content.append("Period:" + requisition.getPeriod().getName() + "\r\n");
-
-    return content.toString();
+  private String createEmailBodyContent(String programCode) {
+    String emailContent = settingService.getConfigurationStringValue(EMAIL_TEMPLATE_FOR_REQUISITION_ATTACHMENT_PREFIX + programCode);
+    return emailContent == null ? "" : emailContent;
   }
 
   private void convertOpenLMISProgramCodeToSIMAMCode(final List<Map<String, String>> itemsMap) {

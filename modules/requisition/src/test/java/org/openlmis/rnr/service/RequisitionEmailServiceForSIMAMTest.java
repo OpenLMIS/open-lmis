@@ -1,7 +1,6 @@
 package org.openlmis.rnr.service;
 
 import org.apache.commons.collections.MapUtils;
-import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.junit.Before;
@@ -12,6 +11,7 @@ import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.openlmis.core.builder.ProgramBuilder;
 import org.openlmis.core.domain.User;
+import org.openlmis.core.service.ConfigurationSettingService;
 import org.openlmis.db.categories.UnitTests;
 import org.openlmis.email.domain.EmailAttachment;
 import org.openlmis.email.service.EmailService;
@@ -29,15 +29,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static com.natpryce.makeiteasy.MakeItEasy.a;
-import static com.natpryce.makeiteasy.MakeItEasy.make;
-import static com.natpryce.makeiteasy.MakeItEasy.with;
+import static com.natpryce.makeiteasy.MakeItEasy.*;
 import static java.util.Arrays.asList;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyString;
-import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.*;
 
 @Category(UnitTests.class)
@@ -52,9 +49,12 @@ public class RequisitionEmailServiceForSIMAMTest {
   private EmailService emailService;
 
   @Mock
+  ConfigurationSettingService settingService;
+
+  @Mock
   private SingleListSheetExcelHandler singleListSheetExcelHandler;
 
-  private RequisitionEmailServiceForSIMAM requisitionEmailServiceForSIMAM;
+  private RequisitionEmailServiceForSIMAM requisitionEmailServiceForSIMAM = null;
 
   Rnr rnr;
   private List<Map<String, String>> dataList;
@@ -63,11 +63,13 @@ public class RequisitionEmailServiceForSIMAMTest {
 
   @Before
   public void setUp() throws Exception {
-    requisitionEmailServiceForSIMAM = new RequisitionEmailServiceForSIMAM(rnrMapperForSIMAM, emailService, singleListSheetExcelHandler);
     rnr = make(a(RequisitionBuilder.defaultRequisition));
     rnr.setId(1L);
 
     initUsers();
+    when(settingService.getConfigurationStringValue(anyString())).thenReturn("email content");
+    requisitionEmailServiceForSIMAM =
+            new RequisitionEmailServiceForSIMAM(rnrMapperForSIMAM, emailService, settingService,singleListSheetExcelHandler);
   }
 
   private void initRnrItems(String programCode) {
