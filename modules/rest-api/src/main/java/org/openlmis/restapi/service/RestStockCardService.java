@@ -15,7 +15,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -66,7 +65,7 @@ public class RestStockCardService {
     long quantity = stockEvent.getQuantity();
     quantity = stockAdjustmentReason.getAdditive() ? quantity : quantity * -1;
 
-    StockCardEntry entry = new StockCardEntry(stockCard, StockCardEntryType.ADJUSTMENT, quantity, stockEvent.getOccurred());
+    StockCardEntry entry = new StockCardEntry(stockCard, StockCardEntryType.ADJUSTMENT, quantity, stockEvent.getOccurred(), stockEvent.getReferenceNumber());
     entry.setAdjustmentReason(stockAdjustmentReason);
     entry.setCreatedBy(userId);
     entry.setModifiedBy(userId);

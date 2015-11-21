@@ -1,6 +1,5 @@
 package org.openlmis.restapi.service;
 
-import org.joda.time.DateTime;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
@@ -18,7 +17,6 @@ import org.openlmis.core.exception.DataException;
 import org.openlmis.core.repository.FacilityRepository;
 import org.openlmis.core.repository.StockAdjustmentReasonRepository;
 import org.openlmis.core.service.ProductService;
-import org.openlmis.core.utils.DateUtil;
 import org.openlmis.db.categories.UnitTests;
 import org.openlmis.stockmanagement.builder.StockEventBuilder;
 import org.openlmis.stockmanagement.domain.StockCard;
@@ -36,7 +34,6 @@ import java.util.List;
 import static com.natpryce.makeiteasy.MakeItEasy.*;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.*;
-import static org.junit.runners.model.MultipleFailureException.assertEmpty;
 import static org.mockito.Matchers.anyList;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -321,6 +318,29 @@ public class RestStockCardServiceTest {
 
     assertTrue(stockCardEntries.get(0).getOccurred().equals(occurred1));
     assertTrue(stockCardEntries.get(1).getOccurred().equals(occurred2));
+  }
+
+  @Test
+  public void shouldSaveStockEventDocumentNumberToStockCardEntry() {
+    setupStockData();
+    String referenceNumber1 = "123";
+    stockEvent1.setReferenceNumber(referenceNumber1);
+    String referenceNumber2 = "456";
+    stockEvent2.setReferenceNumber(referenceNumber2);
+
+    when(facilityRepository.getById(facilityId)).thenReturn(defaultFacility);
+    when(productService.getByCode(productCode)).thenReturn(defaultProduct);
+    StockAdjustmentReason stockAdjustmentReason = new StockAdjustmentReason();
+    stockAdjustmentReason.setAdditive(true);
+    when(stockAdjustmentReasonRepository.getAdjustmentReasonByName(reasonName)).thenReturn(stockAdjustmentReason);
+
+    StockCard expectedStockCard = StockCard.createZeroedStockCard(defaultFacility, defaultProduct);
+    when(stockCardService.getOrCreateStockCard(facilityId, productCode)).thenReturn(expectedStockCard);
+
+    List<StockCardEntry> stockCardEntries = restStockCardService.adjustStock(facilityId, stockEventList, userId);
+
+    assertTrue(stockCardEntries.get(0).getReferenceNumber().equals(referenceNumber1));
+    assertTrue(stockCardEntries.get(1).getReferenceNumber().equals(referenceNumber2));
   }
 
   private void setupStockData() {

@@ -60,6 +60,7 @@ public class RnrLineItem extends LineItem {
   private String product;
   private Integer productDisplayOrder;
   private String productCode;
+  private String productPrimaryName;
   private String productCategory;
   private Integer productCategoryDisplayOrder;
   private String productStrength;

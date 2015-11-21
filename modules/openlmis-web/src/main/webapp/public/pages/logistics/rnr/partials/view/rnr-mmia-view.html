@@ -63,7 +63,7 @@
         <tr ng-repeat="adultItem in adult">
             <td class="banner-text">{{$index+1}}</td>
             <td class="product-code bg-color-green">*{{adultItem.productCode}}*</td>
-            <td class="bg-color-green align-left">{{adultItem.product}}</td>
+            <td class="bg-color-green align-left">{{adultItem.productPrimaryName}}</td>
             <td>{{adultItem.productStrength}}</td>
             <td>{{adultItem.beginningBalance}}</td>
             <td>{{adultItem.quantityReceived}}</td>
@@ -100,7 +100,7 @@
         <tr ng-repeat="childrenItem in children">
             <td class="banner-text">{{$index+15}}</td>
             <td class="product-code bg-color-lightyellow">*{{childrenItem.productCode}}*</td>
-            <td class="bg-color-lightyellow align-left">{{childrenItem.product}}</td>
+            <td class="bg-color-lightyellow align-left">{{childrenItem.productPrimaryName}}</td>
             <td>{{childrenItem.productStrength}}</td>
             <td>{{childrenItem.beginningBalance}}</td>
             <td>{{childrenItem.quantityReceived}}</td>
@@ -124,7 +124,7 @@
         <tr ng-repeat="otherItem in other">
             <td class="banner-text">{{$index+26}}</td>
             <td class="product-code bg-color-lightblue">*{{otherItem.productCode}}*</td>
-            <td class="bg-color-lightblue align-left">{{otherItem.product}}</td>
+            <td class="bg-color-lightblue align-left">{{otherItem.productPrimaryName}}</td>
             <td>{{otherItem.productStrength}}</td>
             <td>{{otherItem.beginningBalance}}</td>
             <td>{{otherItem.quantityReceived}}</td>

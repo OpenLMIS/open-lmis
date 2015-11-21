@@ -123,7 +123,7 @@ public class EmailService {
     repository.queueMessage(to, writer.toString(), subject, true);
   }
 
-  public void sendMimeMessage(final String to, final String subject, final String messageBody, final String attachementFileName, final DataSource dataSource) {
+  public void sendMimeMessage(final String to, final String subject, final String messageBody, final String attachmentFileName, final DataSource dataSource) {
     mailSender.send(new MimeMessagePreparator() {
 
       @Override
@@ -133,10 +133,9 @@ public class EmailService {
         message.setTo(to);
         message.setSubject(subject);
         message.setText(messageBody, true);
-        if (attachementFileName != null && dataSource != null) {
-          message.addAttachment(attachementFileName, dataSource);
+        if (attachmentFileName != null && dataSource != null) {
+          message.addAttachment(attachmentFileName, dataSource);
         }
-
       }
     });
   }
