@@ -90,20 +90,16 @@ function zoomAndCenterMap (leafletData, $scope) {
         continue;
       for (var i = 0; i < $scope.features[c].geometry.coordinates.length; i++) {
         var coord = $scope.features[c].geometry.coordinates[i];
-        for (var j in coord) {
+        for (var j=0; j < coord.length; j++) {
           var points = coord[j];
-          var latlng = L.GeoJSON.coordsToLatLng(points);
-
-          //this is a hack to make the tz shape files to work
-          //sadly the shapefiles for tz and zm have some areas that are in europe,
-          //which indicates that the quality of the shapes is not good,
-          //however the zoom neeeds to show the correct country boundaries.
-          if (latlng.lat < 0 && latlng.lng > 0) {
+          for(var p in points){
+            var latlng = L.GeoJSON.coordsToLatLng(points[p]);
             latlngs.push(latlng);
           }
         }
       }
     }
+
     map.fitBounds(latlngs);
   });
 }

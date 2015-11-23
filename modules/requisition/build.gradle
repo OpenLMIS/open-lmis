@@ -16,7 +16,10 @@ dependencies {
             'org.ict4h:atomfeed-spring-server:0.9.2',
             project(':modules:db'),
             project(':modules:core'),
-            project(':modules:equipment')
+            project(':modules:equipment'),
+            project(':modules:upload'),
+            project(':modules:email'),
+            project(':modules:export')
 
     testCompile  project(path : ':modules:core', configuration: 'testFixtures')
     testCompile  project(path : ':modules:equipment', configuration: 'testFixtures')

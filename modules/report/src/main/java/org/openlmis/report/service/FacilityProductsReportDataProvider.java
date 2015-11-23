@@ -29,6 +29,8 @@ public class FacilityProductsReportDataProvider {
 
     public static final String DISTRICT_CODE = "district";
     public static final String PROVINCE_CODE = "province";
+    private static final String DDM_CODE = "DDM";
+    private static final String DPM_CODE = "DPM";
     @Autowired
     private FacilityService facilityService;
     @Autowired
@@ -43,7 +45,7 @@ public class FacilityProductsReportDataProvider {
     private FacilityMapper facilityMapper;
 
     public List<FacilityProductReportEntry> getReportData(final Long geographicZoneId, final Long productId, final Date endTime) {
-        List<Facility> facilities = getAllFacilities();
+        List<Facility> facilities = getAllHealthFacilities();
         final GeographicZone geographicZone = geographicZoneService.getById(geographicZoneId);
 
         if (geographicZone != null) {
@@ -111,7 +113,18 @@ public class FacilityProductsReportDataProvider {
     }
 
     @Transactional
-    protected List<Facility> getAllFacilities() {
-        return facilityMapper.getAllReportFacilities();
+    protected List<Facility> getAllHealthFacilities() {
+        List<Facility> allReportFacilities = facilityMapper.getAllReportFacilities();
+
+        return from(allReportFacilities).filter(new Predicate<Facility>() {
+            @Override
+            public boolean apply(Facility input) {
+                return isHealthFacility(input);
+            }
+        }).toList();
+    }
+
+    private boolean isHealthFacility(Facility input) {
+        return !input.getFacilityType().getCode().equalsIgnoreCase(DDM_CODE) && !input.getFacilityType().getCode().equalsIgnoreCase(DPM_CODE);
     }
 }
