@@ -49,12 +49,14 @@ function ISACoefficientsModalController($scope, $rootScope)
 
   $scope.isaValue = 0;
 
-  $scope.showProductISA = function (programProduct, index) {
-
+  $scope.showProductISA = function(programProduct, index)
+  {
     $scope.inputClass = false;
-    $scope.population = 100;
     $scope.isaValue = 0;
     $scope.error = null;
+
+    //Used to answer the question "what would my ISA be for a given population," this value is arbitrary. It's both seen and easy changed by the user.
+    $scope.population = 100;
 
     angular.element(".form-error").hide();
     if (programProduct.programProductIsa === undefined || programProduct.programProductIsa.id === undefined)
@@ -76,12 +78,25 @@ function ISACoefficientsModalController($scope, $rootScope)
     else
       $scope.isaToEdit = $scope.currentProgramProduct.programProductIsa;
 
+    $scope.origPopulationSource = $scope.isaToEdit.populationSource;
+    if( ! $scope.origPopulationSource) {
+      $scope.origPopulationSource  = 0;
+    }
+    var origIndex = _.findIndex($scope.demographicCategories, function(value){return value.id==$scope.origPopulationSource;});
+    $scope.currentPopulationSource = $scope.demographicCategories[origIndex];
 
     $scope.programProductISAModal = true;
   };
 
+  $scope.populationSourceChanged = function()
+  {
+    console.log($scope.origPopulationSource);
+    console.log($scope.currentPopulationSource);
+    $scope.isaToEdit.populationSource = $scope.currentPopulationSource.id;
+    console.log($scope.isaToEdit.populationSource );
+  };
 
-  $scope.clearAndCloseProgramProductISAModal = function ()
+  $scope.clearAndCloseProgramProductISAModal = function()
   {
     $scope.population = 0;
     $scope.inputClass = false;
@@ -136,6 +151,9 @@ function ISACoefficientsModalController($scope, $rootScope)
 
     if(facilityId())
       params.facilityId = facilityId();
+
+    if($scope.isaToEdit.populationSource === 0)
+      $scope.isaToEdit.populationSource = undefined;
 
     saveFunction(params, $scope.isaToEdit, successCallBack, {});
   };

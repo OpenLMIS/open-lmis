@@ -12,6 +12,7 @@
 
 include "modules:core", "modules:authentication",
         "modules:openlmis-web", "modules:db","modules:upload",
+        "modules:openlmis-web", "modules:db","modules:upload", "modules:export",
         "modules:requisition","modules:email","modules:sms","test-modules:functional-tests","test-modules:service-tests",
         "test-modules:test-core","modules:report", "modules:migration", "modules:distribution",
         "modules:requisition","modules:email","modules:rest-api","test-modules:webservice-test",

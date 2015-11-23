@@ -21,22 +21,51 @@ describe('program product controller', function () {
   beforeEach(module('openlmis'));
 
   var mainScope, ppcScope, icmcScope;
-  var $httpBackend, programProducts;
+  var $httpBackend, programProducts, programProductsService, programProductsISAService;
 
-  beforeEach(inject(function ($rootScope, _$httpBackend_, $controller) {
-    mainScope = $rootScope.$new();
+  beforeEach(inject(function (_$rootScope_, _$httpBackend_, $controller, ProgramProducts, ProgramProductsISA)
+  {
+    mainScope = _$rootScope_.$new();
     mainScope.isaForm = {$error: { required: "" }};
+
+    $httpBackend = _$httpBackend_;
+    programProductsService = ProgramProducts;
+    programProductsISAService = ProgramProductsISA;
+
+    var testDemographicCategories = [
+      {'id': 1, 'name': 'Children Under Two'},
+      {'id': 1, 'name': 'Pregnant Women'}
+    ];
+
     var testPrograms = [
       {"id": 1, "name": "program1"},
       {"id": 2, "name": "program2"}
     ];
-    $controller(ProgramProductController, {$scope: mainScope, programs: testPrograms} );
+    
+    $controller
+    (
+        ProgramProductController,
+        {
+          $scope: mainScope,
+          programs: testPrograms,
+          ProgramProducts: programProductsService,
+          ProgramProductsISA: programProductsISAService,
+          demographicCategories: testDemographicCategories
+        }
+    );
+
     ppcScope = mainScope.$new();
 
-    $controller(ISACoefficientsModalController, {$scope: ppcScope} );
-    icmcScope = ppcScope.$new();
+    $controller
+    (
+        ISACoefficientsModalController,
+        {
+          $scope: ppcScope,
+          $rootScope: _$rootScope_
+        }
+    );
 
-    $httpBackend = _$httpBackend_;
+    icmcScope = ppcScope.$new();
 
     programProducts = [
       {"id": 1, "push": true, "program": {"id": 5}, "product": {"id": 1, "primaryName": "abc", "createdDate": 1371014384494,
@@ -46,28 +75,34 @@ describe('program product controller', function () {
     ];
   }));
 
-  xit('should get program products', function () {
-    icmcScope.programId = 1;
+  it('should get program products', function () {
+    mainScope.programId = 1;
     $httpBackend.expectGET('/programProducts/programId/1.json').respond(200, {"programProductList": programProducts});
-    icmcScope.loadProgramProducts();
+    mainScope.loadProgramProducts();
     $httpBackend.flush();
-    expect(icmcScope.programProducts).toEqual(programProducts);
-    expect(icmcScope.filteredProducts).toEqual(programProducts);
+    expect(mainScope.programProducts).toEqual(programProducts);
+    expect(mainScope.filteredProducts).toEqual(programProducts);
 
   });
 
-  xit('should filter products', function () {
-    ppcScope.query = "abc";
-    ppcScope.programProducts = programProducts;
-    ppcScope.filterProducts();
+  it('should filter products', function () {
+    mainScope.query = "abc";
+    mainScope.programProducts = programProducts;
+    mainScope.filterProducts();
 
-    expect(ppcScope.filteredProducts).toEqual([programProducts[0]]);
-    expect(ppcScope.filteredProducts.length).toEqual(1);
+    expect(mainScope.filteredProducts).toEqual([programProducts[0]]);
+    expect(mainScope.filteredProducts.length).toEqual(1);
   });
 
-  it('should set current program product to selected program product and enable modal', function () {
-    var programProduct = {"id": 1, "push": true, "program": {"id": 5}, "product": {"id": 1, "primaryName": "abc", "createdDate": 1371014384494,
-      "modifiedDate": 1371014384494, "code": "P10"}, "dosesPerMonth": 30, "active": true}
+  it('should set current program product to selected program product and enable modal', function()
+  {
+    var programProduct =
+    {
+      "id": 1, "push": true, "program": {"id": 5},
+      "product": {"id": 1, "primaryName": "abc", "createdDate": 1371014384494, "modifiedDate": 1371014384494, "code": "P10"},
+      "dosesPerMonth": 30, "active": true
+    }
+
     var spyOnProgramProductISA = spyOn(window,'ProgramProductISA').andCallThrough();
 
     icmcScope.showProductISA(programProduct);
@@ -85,8 +120,8 @@ describe('program product controller', function () {
     expect(icmcScope.programProductISAModal).toBeFalsy();
   });
 
-  xit("should highlight error when value is undefined", function () {
-    icmcScope.inputClass = true;
+  it("should highlight error when value is undefined", function () {
+    mainScope.inputClass = true;
     var returnValue = icmcScope.highlightRequired(undefined);
 
     expect(returnValue).toEqual("required-error");
@@ -98,12 +133,13 @@ describe('program product controller', function () {
     expect(returnValue).toEqual(null);
   });
 
-  xit("should update program product ISA if id already exists", function ()
+  it("should update program product ISA if id already exists", function ()
   {
     var programProductIsa = {"id": 1, "whoRatio": 4, "dosesPerYear": 5, "bufferPercentage": 6, "adjustmentValue": 55};
     var productIsa = new ProgramProductISA();
     productIsa.init(programProductIsa);
-    icmcScope.currentProgramProduct = {"id": 1, "programProductIsa": productIsa};
+    mainScope.currentProgramProduct = {"id": 1, "programProductIsa": productIsa};
+    mainScope.isaToEdit = productIsa;
 
     $httpBackend.expect('PUT','/programProducts/1/isa/1.json', productIsa).respond(200);
 
@@ -114,12 +150,13 @@ describe('program product controller', function () {
     expect(icmcScope.error).toEqual("");
   });
 
-  xit("should save program product ISA if id does not exist", function ()
+  it("should save program product ISA if id does not exist", function ()
   {
     var programProductIsa = {"whoRatio": 4, "dosesPerYear": 5, "bufferPercentage": 6, "adjustmentValue": 55};
     var productIsa = new ProgramProductISA();
     productIsa.init(programProductIsa);
-    icmcScope.currentProgramProduct = {"id": 1, "programProductIsa": productIsa};
+    mainScope.currentProgramProduct = {"id": 1, "programProductIsa": productIsa};
+    mainScope.isaToEdit = productIsa;
     $httpBackend.expect('POST','/programProducts/1/isa.json', productIsa).respond(200);
 
     icmcScope.saveProductISA();
@@ -144,14 +181,22 @@ describe('program product controller', function () {
     expect(icmcScope.message).toEqual("");
   });
 
-  xit("should not save ISA if maximum isa value is less than minimum isa value", function ()
+  it("should not save ISA if maximum isa value is less than minimum isa value", function ()
   {
-    var programProductIsa = {"whoRatio": 4, "dosesPerYear": 5, "bufferPercentage": 6, "adjustmentValue": 55 ,
-      "minimumValue":50, "maximumValue":5};
+    var programProductIsa =
+    {
+      "whoRatio": 4,
+      "dosesPerYear": 5,
+      "bufferPercentage": 6,
+      "adjustmentValue": 55,
+      "minimumValue":50,
+      "maximumValue":5
+    };
+
     var productIsa = new ProgramProductISA();
     productIsa.init(programProductIsa);
-    icmcScope.currentProgramProduct = {"id": 1, "programProductIsa": productIsa};
-
+    mainScope.currentProgramProduct = {"id": 1, "programProductIsa": productIsa};
+    mainScope.isaToEdit = productIsa;
     icmcScope.saveProductISA();
 
     expect(icmcScope.error).toEqual("error.minimum.greater.than.maximum");
@@ -174,12 +219,12 @@ describe('program product controller', function () {
     expect(icmcScope.isaValue).toEqual(7);
   });
 
-  xit("should not calculate isa value and show error if form is not valid",function()
+  it("should not calculate isa value and show error if form is not valid",function()
   {
     var programProductIsa = {"whoRatio": 2, "dosesPerYear": 1, "wastageFactor": 47, "bufferPercentage": 45, "adjustmentValue": 6, "minimumValue":22, "maximumValue":3};
     var productIsa = new ProgramProductISA();
     productIsa.init(programProductIsa);
-    icmcScope.population = 2;
+    mainScope.population = 2;
     var spyOnIsMaxLessThanMin = spyOn(productIsa,'isMaxLessThanMinValue').andReturn(true);
 
     icmcScope.calculateValue(productIsa);

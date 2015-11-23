@@ -15,6 +15,12 @@ CREATE TABLE isa_coefficients
 ALTER TABLE isa_coefficients DROP COLUMN programproductid;
 ALTER SEQUENCE program_product_isa_id_seq OWNED BY isa_coefficients.id;
 
+/* Add populationSource to isa_coefficients. Note that a null value is intended to indicate that facility-catchment
+   population, rather than an external demographic estimate, should be used. This column was added for Tanzania.
+   Because it's nullable, however, it should have minimal impact on other countries. */
+ALTER TABLE isa_coefficients ADD populationSource INTEGER NULL REFERENCES demographic_estimate_categories(id);
+
+
 /* Add an isaCoefficientsId column to the program_products table. 
    It's usually best to drop-and-recreate the table in order to be able to specify ordinal of new columns. 
    In this case, however, additional columns have already been tacked on after the standard created* and modified* columns.
@@ -88,33 +94,34 @@ ALTER TABLE vw_stock_cards
 --Create a convenience function for inserting values. The last two arguments determine what the ISA should be associated with.
 --If a ProgramProductId is followed by a facilityTypeID, the ISA is accociated with a facility-program-product.
 --Otherwise, if a ProgramProductId is followed by nothing, the ISA is associated with simply a program-pproduct
-DROP FUNCTION IF EXISTS fn_insert_isa(numeric(6,3), integer, numeric(6,3), numeric(6,3), integer, integer, integer, integer, timestamp, integer, timestamp, integer, integer);
+DROP FUNCTION IF EXISTS fn_insert_isa(numeric(6,3), integer, numeric(6,3), numeric(6,3), integer, integer, integer, integer, timestamp, integer, timestamp, integer, integer, integer);
 CREATE OR REPLACE FUNCTION fn_insert_isa
-(
-  whoratio numeric(6,3),
-  dosesperyear integer,
-  wastagefactor numeric(6,3),
-  bufferpercentage numeric(6,3),
-  minimumvalue integer,
-  maximumvalue integer,
-  adjustmentvalue integer,
-  createdby integer,
-  createddate timestamp,
-  modifiedby integer,
-  modifieddate timestamp,
+  (
+    whoratio numeric(6,3),
+    dosesperyear integer,
+    wastagefactor numeric(6,3),
+    bufferpercentage numeric(6,3),
+    minimumvalue integer,
+    maximumvalue integer,
+    adjustmentvalue integer,
+    createdby integer,
+    createddate timestamp,
+    modifiedby integer,
+    modifieddate timestamp,
+    populationSource integer,
 
-  program_product_id integer,
-  facility_id integer DEFAULT -1
-)
+    program_product_id integer,
+    facility_id integer DEFAULT -1
+  )
   RETURNS integer AS
-$BODY$
+  $BODY$
 DECLARE
   orig_isa_id integer;
   fac_prog_prod_id integer;
   isa_coefficient_id integer;
 BEGIN
-  INSERT INTO isa_coefficients(whoratio, dosesperyear, wastagefactor, bufferpercentage, minimumvalue, maximumvalue, adjustmentvalue, createdby, createddate, modifiedby, modifieddate)
-  VALUES(whoratio, dosesperyear, wastagefactor, bufferpercentage, minimumvalue, maximumvalue, adjustmentvalue, createdby, createddate, modifiedby, modifieddate)
+  INSERT INTO isa_coefficients(whoratio, dosesperyear, wastagefactor, bufferpercentage, minimumvalue, maximumvalue, adjustmentvalue, createdby, createddate, modifiedby, modifieddate, populationsource)
+  VALUES(whoratio, dosesperyear, wastagefactor, bufferpercentage, minimumvalue, maximumvalue, adjustmentvalue, createdby, createddate, modifiedby, modifieddate, populationsource)
   RETURNING id INTO isa_coefficient_id;
 
   IF facility_id < 0 THEN
@@ -145,10 +152,10 @@ BEGIN
   return isa_coefficient_id;
 END;
 $BODY$
-  LANGUAGE plpgsql VOLATILE
-  COST 100;
-ALTER FUNCTION fn_insert_isa(numeric(6,3), integer, numeric(6,3), numeric(6,3), integer, integer, integer, integer, timestamp, integer, timestamp, integer, integer)
-  OWNER TO postgres;
+LANGUAGE plpgsql VOLATILE
+COST 100;
+ALTER FUNCTION fn_insert_isa(numeric(6,3), integer, numeric(6,3), numeric(6,3), integer, integer, integer, integer, timestamp, integer, timestamp, integer, integer, integer)
+OWNER TO postgres;
 
 
 --Create a convenience function for updating ProgramProductISA values.
@@ -167,7 +174,8 @@ CREATE OR REPLACE FUNCTION fn_update_program_product_isa
   created_by integer,
   created_date timestamp,
   modified_by integer,
-  modified_date timestamp
+  modified_date timestamp,
+  population_source integer
 )
   RETURNS void AS
 $BODY$
@@ -184,7 +192,8 @@ BEGIN
 	createdby = created_by,
 	createddate = created_date,
 	modifiedby = modified_by,
-	modifieddate = modified_date
+	modifieddate = modified_date,
+  populationsource =  population_source
   WHERE
 	id = isa_coefficient_id;
 
@@ -196,7 +205,7 @@ END;
 $BODY$
   LANGUAGE plpgsql VOLATILE
   COST 100;
-ALTER FUNCTION fn_update_program_product_isa(integer, integer, numeric(6,3), integer, numeric(6,3), numeric(6,3), integer, integer, integer, integer, timestamp, integer, timestamp)
+ALTER FUNCTION fn_update_program_product_isa(integer, integer, numeric(6,3), integer, numeric(6,3), numeric(6,3), integer, integer, integer, integer, timestamp, integer, timestamp, integer)
   OWNER TO postgres;
 
 

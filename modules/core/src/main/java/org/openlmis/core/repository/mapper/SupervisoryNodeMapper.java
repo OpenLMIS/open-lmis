@@ -106,6 +106,9 @@ public interface SupervisoryNodeMapper {
   List<SupervisoryNode> getAllSupervisoryNodesInHierarchyByUserAndRights(@Param("userId") Long userId,
                                                                          @Param("commaSeparatedRights") String commaSeparatedRights);
 
+  /*
+    Returns the specified SupervisoryNode along with all of its ancestor nodes.
+   */
   @Select({"WITH  recursive  supervisoryNodesRec AS ",
     "   (",
     "   SELECT *",
@@ -118,7 +121,32 @@ public interface SupervisoryNodeMapper {
     "   ON sn.id = supervisoryNodesRec.parentId ",
     "   )",
     "SELECT * FROM supervisoryNodesRec"})
+  @Results(value = {
+          @Result(property = "facility", column = "facilityId", javaType = Facility.class,
+                  one = @One(select = "org.openlmis.core.repository.mapper.FacilityMapper.getById"))
+  })
   List<SupervisoryNode> getAllParentSupervisoryNodesInHierarchy(SupervisoryNode supervisoryNode);
+
+  /*
+    Returns the specified SupervisoryNode along with all of its descendant nodes.
+   */
+  @Select({"WITH  recursive  supervisoryNodesRec AS ",
+          "   (",
+          "   SELECT *",
+          "   FROM supervisory_nodes ",
+          "   WHERE id = #{id}",
+          "   UNION ",
+          "   SELECT sn.* ",
+          "   FROM supervisory_nodes sn ",
+          "   JOIN supervisoryNodesRec ",
+          "   ON sn.parentId = supervisoryNodesRec.id ",
+          "   )",
+          "SELECT * FROM supervisoryNodesRec"})
+  @Results(value = {
+          @Result(property = "facility", column = "facilityId", javaType = Facility.class,
+                  one = @One(select = "org.openlmis.core.repository.mapper.FacilityMapper.getById"))
+  })
+  List<SupervisoryNode> getAllChildSupervisoryNodesInHierarchy(SupervisoryNode supervisoryNode);
 
   @Select("SELECT * FROM supervisory_nodes WHERE LOWER(code) = LOWER(#{code})")
   SupervisoryNode getByCode(SupervisoryNode supervisoryNode);
@@ -138,6 +166,7 @@ public interface SupervisoryNodeMapper {
       one = @One(select = "org.openlmis.core.repository.mapper.FacilityMapper.getById"))
   })
   List<SupervisoryNode> getSupervisoryNodesByParent(@Param(value = "nameSearchCriteria") String nameSearchCriteria, RowBounds rowBounds);
+
 
   @Select({"SELECT * FROM supervisory_nodes SN LEFT OUTER JOIN supervisory_nodes SNP ON SN.parentId = SNP.id WHERE LOWER(SN.name)" +
     " LIKE '%'|| LOWER(#{nameSearchCriteria}) ||'%' ORDER BY LOWER(SNP.name), LOWER(SN.name) NULLS LAST"})
