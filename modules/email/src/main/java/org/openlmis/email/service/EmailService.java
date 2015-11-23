@@ -14,7 +14,7 @@ import lombok.NoArgsConstructor;
 import org.apache.velocity.VelocityContext;
 import org.apache.velocity.app.Velocity;
 import org.openlmis.email.domain.EmailAttachment;
-import org.openlmis.email.domain.OpenlmisEmailMessage;
+import org.openlmis.email.domain.EmailMessage;
 import org.openlmis.email.repository.EmailNotificationRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -75,12 +75,12 @@ public class EmailService {
     return new AsyncResult<>(true);
   }
 
-  public void processEmails(@Payload List<OpenlmisEmailMessage> mailMessage) {
+  public void processEmails(@Payload List<EmailMessage> mailMessage) {
     if (!mailSendingFlag) {
       return;
     }
-    for(final OpenlmisEmailMessage oMessage: mailMessage){
-      if(oMessage.getIsHtml()){
+    for(final EmailMessage oMessage: mailMessage){
+      if(oMessage.isHtml()){
         mailSender.send(new MimeMessagePreparator() {
 
           @Override
@@ -101,7 +101,7 @@ public class EmailService {
   }
 
   @Async
-  public void processEmailsAsync(List<OpenlmisEmailMessage> simpleMailMessage) {
+  public void processEmailsAsync(List<EmailMessage> simpleMailMessage) {
     if (!mailSendingFlag) {
       return;
     }

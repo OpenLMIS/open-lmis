@@ -78,7 +78,7 @@ public class NotificationServices {
 
     if (users != null) {
 
-      if ( staticReferenceDataService.getBoolean("toggle.email.attachment.simam") ) {
+      if (staticReferenceDataService.getBoolean("toggle.email.attachment.simam") ) {
         requisitionEmailServiceForSIMAM.sendRequisitionEmailWithAttachment(requisition, users);
         return;
       }

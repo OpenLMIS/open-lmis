@@ -155,8 +155,15 @@ public class RequisitionEmailServiceForSIMAM {
     DataSource requisitionItemsFile = emailService.getFileDataSource(requisitionItemsFilePath, FILE_APPLICATION_VND_MS_EXCEL);
     DataSource regimenItemsFile = emailService.getFileDataSource(regimenItemsFilePath, FILE_APPLICATION_VND_MS_EXCEL);
 
-    emailAttachments.add(new EmailAttachment(requiFileName, requisitionItemsFile));
-    emailAttachments.add(new EmailAttachment(regimenFileName, regimenItemsFile));
+    EmailAttachment attachmentForRequisition = new EmailAttachment();
+    attachmentForRequisition.setAttachmentName(requiFileName);
+    attachmentForRequisition.setFileDataSource(requisitionItemsFile);
+    emailAttachments.add(attachmentForRequisition);
+
+    EmailAttachment attachmentForRegimen = new EmailAttachment();
+    attachmentForRegimen.setAttachmentName(regimenFileName);
+    attachmentForRegimen.setFileDataSource(regimenItemsFile);
+    emailAttachments.add(attachmentForRegimen);
 
     return emailAttachments;
   }

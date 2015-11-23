@@ -16,13 +16,11 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.junit.rules.ExpectedException;
-import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.openlmis.db.categories.UnitTests;
-import org.openlmis.email.domain.OpenlmisEmailMessage;
+import org.openlmis.email.domain.EmailMessage;
 import org.openlmis.email.repository.EmailNotificationRepository;
 import org.springframework.mail.SimpleMailMessage;
-import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
 
 import java.util.Arrays;
@@ -86,9 +84,9 @@ public class EmailServiceTest {
   public void shouldSendMailsFromAListOfMailMessages() throws Exception {
     EmailService service = new EmailService(mailSender, repository, true);
 
-    OpenlmisEmailMessage mockEmailMessage = mock(OpenlmisEmailMessage.class);
-    List<OpenlmisEmailMessage> emailMessages = Arrays.asList(mockEmailMessage);
-    when(mockEmailMessage.getIsHtml()).thenReturn(false);
+    EmailMessage mockEmailMessage = mock(EmailMessage.class);
+    List<EmailMessage> emailMessages = Arrays.asList(mockEmailMessage);
+    when(mockEmailMessage.isHtml()).thenReturn(false);
     service.processEmails(emailMessages);
 
     verify(mailSender).send(any(SimpleMailMessage.class));
