@@ -86,7 +86,7 @@ if(injectDemographyCategories)
             {
                 //Add 'Facility Population' to the set of available categories
                 var categories = data.estimate_categories;
-                var facilityCatchmentPopulation = {'id': 0, 'name': 'Facility Population'};
+                var facilityCatchmentPopulation = {'id': 0, 'name': 'Facility Catchment Population'};
                 categories.unshift(facilityCatchmentPopulation);
                 deferred.resolve(categories);
             }, {});
