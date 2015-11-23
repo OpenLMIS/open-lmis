@@ -20,7 +20,6 @@ import org.openlmis.upload.annotation.ImportField;
  * programs, see {@link StockAdjustmentReasonProgram}.  When a reason is in a {@link Category}, the reason is
  * intended to be used programmatically in that section of the program.
  */
-@NoArgsConstructor
 @EqualsAndHashCode(callSuper=false)
 public class StockAdjustmentReason extends BaseModel implements Importable {
 
@@ -48,6 +47,11 @@ public class StockAdjustmentReason extends BaseModel implements Importable {
   @ImportField(name = "Category", type = "String")
   private String category;
 
+  @Deprecated
+  public StockAdjustmentReason() {
+    setCategoryHelper(Category.DEFAULT); // useful for upload configuration, would prefer validity pattern in future
+  }
+
   /**
    * Create a new StockAdjustmentReason.
    * @param name the globally unique name
@@ -72,6 +76,16 @@ public class StockAdjustmentReason extends BaseModel implements Importable {
     this.displayOrder = displayOrder;
     this.isDefault = isDefault;
     setCategoryHelper(category);
+  }
+
+  /**
+   * Creates a new reason with the given name.  See {@link #create(String, String)}.
+   * @param name the name of the reason, will also be the description.
+   * @return a new reason.
+   * @throws IllegalArgumentException if name is blank.
+   */
+  public static StockAdjustmentReason create(String name) {
+    return create(name, name);
   }
 
   /**
@@ -117,7 +131,6 @@ public class StockAdjustmentReason extends BaseModel implements Importable {
    * @throws NullPointerException if category is unrecognized
    */
   private void setCategoryHelper(Category category) {
-
     this.category = (null == category ? Category.DEFAULT : category).toString();
   }
 
@@ -137,11 +150,12 @@ public class StockAdjustmentReason extends BaseModel implements Importable {
    * @return true if apart of the given category, false otherwise.
    */
   public boolean inCategory(Category category) {
+    if(null == category) return false;
     return getCategory() == category;
   }
 
   protected final Category getCategory() {
-    return Category.valueOf(category);
+    return Category.parse(category);
   }
 
   /**
@@ -151,16 +165,22 @@ public class StockAdjustmentReason extends BaseModel implements Importable {
    * section may only be concerned with the daily transactions at a rural service delivery point.
    */
   public enum Category {
-    DEFAULT;
+    DEFAULT,
+    NATIONAL_ARRIVAL;
 
     /**
      * Parses the given String to return a matching Category using {@link #values()}.  Cleans the string first
      * of whitespace and case-sensitivity.
      * @param category the category string to parse
-     * @return the Category that matches the string.
+     * @return the Category that matches the string, null if no String parses to a Category.
      */
     public static Category parse(String category) {
-      return valueOf(category.trim().toUpperCase());
+      String wCat = StringUtils.trimToEmpty(category).toUpperCase();
+      Category cat = null;
+      try {
+        cat = valueOf(wCat);
+      } catch (IllegalArgumentException iae) {}
+      return cat;
     }
   }
 }
