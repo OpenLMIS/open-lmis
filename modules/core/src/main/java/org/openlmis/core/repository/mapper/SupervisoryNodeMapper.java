@@ -106,6 +106,9 @@ public interface SupervisoryNodeMapper {
   List<SupervisoryNode> getAllSupervisoryNodesInHierarchyByUserAndRights(@Param("userId") Long userId,
                                                                          @Param("commaSeparatedRights") String commaSeparatedRights);
 
+  /*
+    Returns the specified SupervisoryNode along with all of its ancestor nodes.
+   */
   @Select({"WITH  recursive  supervisoryNodesRec AS ",
     "   (",
     "   SELECT *",
@@ -122,9 +125,11 @@ public interface SupervisoryNodeMapper {
           @Result(property = "facility", column = "facilityId", javaType = Facility.class,
                   one = @One(select = "org.openlmis.core.repository.mapper.FacilityMapper.getById"))
   })
-
   List<SupervisoryNode> getAllParentSupervisoryNodesInHierarchy(SupervisoryNode supervisoryNode);
 
+  /*
+    Returns the specified SupervisoryNode along with all of its descendant nodes.
+   */
   @Select({"WITH  recursive  supervisoryNodesRec AS ",
           "   (",
           "   SELECT *",
@@ -142,7 +147,6 @@ public interface SupervisoryNodeMapper {
                   one = @One(select = "org.openlmis.core.repository.mapper.FacilityMapper.getById"))
   })
   List<SupervisoryNode> getAllChildSupervisoryNodesInHierarchy(SupervisoryNode supervisoryNode);
-
 
   @Select("SELECT * FROM supervisory_nodes WHERE LOWER(code) = LOWER(#{code})")
   SupervisoryNode getByCode(SupervisoryNode supervisoryNode);

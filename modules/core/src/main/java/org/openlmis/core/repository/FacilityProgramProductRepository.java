@@ -65,4 +65,7 @@ public class FacilityProgramProductRepository {
     fppMapper.insertISA(fpp.getFacilityId(), fpp.getProgramProductIsa());
   }
 
+  public FacilityProgramProduct getByCodes(String facilityCode, String programCode, String productCode) {
+    return fppMapper.getByCodes(facilityCode, programCode, productCode);
+  }
 }
