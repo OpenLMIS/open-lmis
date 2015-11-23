@@ -28,34 +28,33 @@ public class StockAdjustmentReasonRepositoryTest {
   List<StockAdjustmentReason> allReasons;
   List<StockAdjustmentReason> positiveReasons;
   List<StockAdjustmentReason> negativeReasons;
+  List<StockAdjustmentReason> catReasons;
 
   @Before
   public void setUp() throws Exception {
-    StockAdjustmentReason positiveReason = new StockAdjustmentReason();
-    positiveReason.setName("POSITIVE_REASON");
-    positiveReason.setDescription("Positive Reason");
-    positiveReason.setAdditive(true);
-
-    StockAdjustmentReason negativeReason = new StockAdjustmentReason();
-    negativeReason.setName("NEGATIVE_REASON");
-    negativeReason.setDescription("Negative Reason");
+    StockAdjustmentReason defaultCatReason = StockAdjustmentReason.create("CATEGORY REASON");
+    StockAdjustmentReason positiveReason = StockAdjustmentReason.create("POSITIVE_REASON");
+    StockAdjustmentReason negativeReason = StockAdjustmentReason.create("NEGATIVE_REASON");
     negativeReason.setAdditive(false);
 
     allReasons = new ArrayList<>();
     positiveReasons = new ArrayList<>();
     negativeReasons = new ArrayList<>();
+    catReasons = new ArrayList<>();
     allReasons.add(positiveReason);
     allReasons.add(negativeReason);
+    allReasons.add(defaultCatReason);
     positiveReasons.add(positiveReason);
+    positiveReasons.add(defaultCatReason);
     negativeReasons.add(negativeReason);
-
+    catReasons.add(defaultCatReason);
   }
 
   @Test
   public void shouldGetAllAdjustmentReasons() {
     when(mapper.getAll()).thenReturn(allReasons);
 
-    List<StockAdjustmentReason> reasons = repository.getAdjustmentReasons(null, null);
+    List<StockAdjustmentReason> reasons = repository.getAdjustmentReasons(null, null, null);
 
     verify(mapper).getAll();
     assertEquals(reasons, allReasons);
@@ -65,7 +64,7 @@ public class StockAdjustmentReasonRepositoryTest {
   public void shouldGetProgramSpecificReasons() {
     when(mapper.getAllByProgram(1L)).thenReturn(positiveReasons);
 
-    List<StockAdjustmentReason> reasons = repository.getAdjustmentReasons(null, 1L);
+    List<StockAdjustmentReason> reasons = repository.getAdjustmentReasons(null, 1L, null);
 
     verify(mapper).getAllByProgram(1L);
     assertEquals(reasons, positiveReasons);
@@ -75,7 +74,7 @@ public class StockAdjustmentReasonRepositoryTest {
   public void shouldGetPositiveAdjustmentReasons() {
     when(mapper.getAll()).thenReturn(allReasons);
 
-    List<StockAdjustmentReason> reasons = repository.getAdjustmentReasons(true, null);
+    List<StockAdjustmentReason> reasons = repository.getAdjustmentReasons(true, null, null);
 
     verify(mapper).getAll();
     assertEquals(reasons, positiveReasons);
@@ -85,9 +84,21 @@ public class StockAdjustmentReasonRepositoryTest {
   public void shouldGetNegativeAdjustmentReasons() {
     when(mapper.getAll()).thenReturn(allReasons);
 
-    List<StockAdjustmentReason> reasons = repository.getAdjustmentReasons(false, null);
+    List<StockAdjustmentReason> reasons = repository.getAdjustmentReasons(false, null, null);
 
     verify(mapper).getAll();
     assertEquals(reasons, negativeReasons);
+  }
+
+  @Test
+  public void shouldGetAdjustmentReasonsInDefaultCategory() {
+    when(mapper.getAll()).thenReturn(allReasons);
+
+    List<StockAdjustmentReason> reasons = repository.getAdjustmentReasons(false,
+      null,
+      StockAdjustmentReason.Category.DEFAULT);
+
+    verify(mapper).getAll();
+    assertEquals(reasons, allReasons);
   }
 }
