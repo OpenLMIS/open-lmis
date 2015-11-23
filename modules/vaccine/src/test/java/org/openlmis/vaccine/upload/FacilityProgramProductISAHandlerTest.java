@@ -1,4 +1,4 @@
-package org.openlmis.core.upload;
+package org.openlmis.vaccine.upload;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -12,7 +12,10 @@ import org.openlmis.core.builder.ProductBuilder;
 import org.openlmis.core.builder.ProgramBuilder;
 import org.openlmis.core.builder.ProgramProductBuilder;
 import org.openlmis.core.domain.*;
-import org.openlmis.core.dto.FacilityProgramProductISADTO;
+import org.openlmis.demographics.domain.EstimateCategory;
+import org.openlmis.demographics.repository.EstimateCategoryRepository;
+import org.openlmis.demographics.service.PopulationService;
+import org.openlmis.vaccine.dto.FacilityProgramProductISADTO;
 import org.openlmis.core.repository.*;
 import org.openlmis.db.categories.UnitTests;
 
@@ -55,6 +58,12 @@ public class FacilityProgramProductISAHandlerTest {
     @Mock
     RequisitionGroupMemberRepository requisitionGroupMemberRepository;
 
+    @Mock
+    PopulationService populationService;
+
+    @Mock
+    EstimateCategoryRepository estimateCategoryRepository;
+
     @InjectMocks
     FacilityProgramProductISAHandler handler;
 
@@ -62,6 +71,7 @@ public class FacilityProgramProductISAHandlerTest {
     Program program;
     Product product;
     ProgramProduct programProduct;
+    EstimateCategory category;
     FacilityProgramProductISADTO fppISA;
     Double whoRatio;
     Integer dosesPerYear;
@@ -80,6 +90,9 @@ public class FacilityProgramProductISAHandlerTest {
         program = make(a(ProgramBuilder.defaultProgram));
         product = make(a(ProductBuilder.defaultProduct));
         programProduct = make(a(ProgramProductBuilder.defaultProgramProduct));
+        category = new EstimateCategory();
+        category.setId(1L);
+        category.setName("Population");
 
         whoRatio = 0.0;
         dosesPerYear = 0;
@@ -99,42 +112,42 @@ public class FacilityProgramProductISAHandlerTest {
     }
 
     private void setupFacilityHierarchy() {
-        cvs = createFacility("cvs", false, 1L);
+        cvs = createFacility("cvs", false, 1L, "CVS");
         SupervisoryNode cvsNode = createSupervisoryNode(cvs, 1L);
 
-        rvs1 = createFacility("rvs", false, 2L);
-        Facility rvs2 = createFacility("rvs", false, 3L);
+        rvs1 = createFacility("rvs", false, 2L, "RVS1");
+        Facility rvs2 = createFacility("rvs", false, 3L, "RVS2");
         RequisitionGroup cvsGroup = createRequisitionGroup(12L);
         RequisitionGroupMember rvs1Member = new RequisitionGroupMember(cvsGroup, rvs1);
         RequisitionGroupMember rvs2Member = new RequisitionGroupMember(cvsGroup, rvs2);
         SupervisoryNode rvs1Node = createSupervisoryNode(rvs1, 2L);
         SupervisoryNode rvs2Node = createSupervisoryNode(rvs2, 3L);
 
-        dvs1 = createFacility("dvs", false, 4L);
-        Facility dvs2 = createFacility("dvs", false, 5L);
+        dvs1 = createFacility("dvs", false, 4L, "DVS1");
+        Facility dvs2 = createFacility("dvs", false, 5L, "DVS2");
         RequisitionGroup rvs1Group = createRequisitionGroup(13L);
         RequisitionGroupMember dvs1Member = new RequisitionGroupMember(rvs1Group, dvs1);
         RequisitionGroupMember dvs2Member = new RequisitionGroupMember(rvs1Group, dvs2);
         SupervisoryNode dvs1Node = createSupervisoryNode(dvs1, 4L);
         SupervisoryNode dvs2Node = createSupervisoryNode(dvs2, 5L);
 
-        Facility dvs3 = createFacility("dvs", false, 6L);
+        Facility dvs3 = createFacility("dvs", false, 6L, "DVS3");
         RequisitionGroup rvs2Group = createRequisitionGroup(14L);
         RequisitionGroupMember dvs3Member = new RequisitionGroupMember(rvs2Group, dvs3);
         SupervisoryNode dvs3Node = createSupervisoryNode(dvs3, 6L);
 
-        sdp1 = createFacility("heac", true, 7L);
-        Facility sdp2 = createFacility("heac", true, 8L);
+        sdp1 = createFacility("heac", true, 7L, "SDP1");
+        Facility sdp2 = createFacility("heac", true, 8L, "SDP2");
         RequisitionGroup dvs1Group = createRequisitionGroup(15L);
         RequisitionGroupMember sdp1Member = new RequisitionGroupMember(dvs1Group, sdp1);
         RequisitionGroupMember sdp2Member = new RequisitionGroupMember(dvs1Group, sdp2);
 
-        Facility sdp3 = createFacility("heac", true, 9L);
+        Facility sdp3 = createFacility("heac", true, 9L, "SDP3");
         RequisitionGroup dvs2Group = createRequisitionGroup(16L);
         RequisitionGroupMember sdp3Member = new RequisitionGroupMember(dvs2Group, sdp3);
 
-        Facility sdp4 = createFacility("heac", true, 10L);
-        Facility sdp5 = createFacility("heac", true, 11L);
+        Facility sdp4 = createFacility("heac", true, 10L, "SDP4");
+        Facility sdp5 = createFacility("heac", true, 11L, "SDP5");
         RequisitionGroup dvs3Group = createRequisitionGroup(17L);
         RequisitionGroupMember sdp4Member = new RequisitionGroupMember(dvs3Group, sdp4);
         RequisitionGroupMember sdp5Member = new RequisitionGroupMember(dvs3Group, sdp5);
@@ -164,14 +177,19 @@ public class FacilityProgramProductISAHandlerTest {
         when(facilityRepository.getById(rvs1.getId())).thenReturn(rvs1);
         when(facilityRepository.getById(rvs2.getId())).thenReturn(rvs2);
         when(facilityRepository.getById(cvs.getId())).thenReturn(cvs);
-        when(repository.getOverriddenIsa(programProduct.getId(), sdp1.getId())).thenReturn(new ISA(0.0, 0, 7.0, 0.0, 0, 0, 0, 1L));
-        when(repository.getOverriddenIsa(programProduct.getId(), sdp2.getId())).thenReturn(new ISA(0.0, 0, 9.0, 0.0, 0, 0, 0, 1L));
-        when(repository.getOverriddenIsa(programProduct.getId(), sdp3.getId())).thenReturn(new ISA(0.0, 0, 9.5, 0.0, 0, 0, 0, 1L));
-        when(repository.getOverriddenIsa(programProduct.getId(), sdp4.getId())).thenReturn(new ISA(0.0, 0, 8.0, 0.0, 0, 0, 0, 1L));
-        when(repository.getOverriddenIsa(programProduct.getId(), sdp5.getId())).thenReturn(new ISA(0.0, 0, 10.0, 0.0, 0, 0, 0, 1L));
+        when(repository.getOverriddenIsa(programProduct.getId(), sdp1.getId())).thenReturn(new ISA(0.0, 0, 7.5, 0.0, 0, 0, 0, category.getId()));
+        when(repository.getOverriddenIsa(programProduct.getId(), sdp2.getId())).thenReturn(new ISA(0.0, 0, 9.0, 0.0, 0, 0, 0, category.getId()));
+        when(repository.getOverriddenIsa(programProduct.getId(), sdp3.getId())).thenReturn(new ISA(0.0, 0, 9.5, 0.0, 0, 0, 0, category.getId()));
+        when(repository.getOverriddenIsa(programProduct.getId(), sdp4.getId())).thenReturn(new ISA(0.0, 0, 8.0, 0.0, 0, 0, 0, category.getId()));
+        when(repository.getOverriddenIsa(programProduct.getId(), sdp5.getId())).thenReturn(new ISA(0.0, 0, 10.0, 0.0, 0, 0, 0, category.getId()));
+        when(populationService.getPopulation(sdp1, program, category.getId())).thenReturn(80L);
+        when(populationService.getPopulation(sdp2, program, category.getId())).thenReturn(70L);
+        when(populationService.getPopulation(sdp3, program, category.getId())).thenReturn(100L);
+        when(populationService.getPopulation(sdp4, program, category.getId())).thenReturn(110L);
+        when(populationService.getPopulation(sdp5, program, category.getId())).thenReturn(90L);
     }
 
-    private Facility createFacility(String facilityTypeCode, boolean isSdp, Long id) {
+    private Facility createFacility(String facilityTypeCode, boolean isSdp, Long id, String name) {
         FacilityType type = new FacilityType(facilityTypeCode);
         Facility facility = new Facility();
         facility.setFacilityType(type);
@@ -179,6 +197,7 @@ public class FacilityProgramProductISAHandlerTest {
         if (id != null) {
             facility.setId(id);
         }
+        facility.setName(name);
         return facility;
     }
 
@@ -211,6 +230,7 @@ public class FacilityProgramProductISAHandlerTest {
         when(facilityRepository.getByCode(any(String.class))).thenReturn(facility);
         when(programProductRepository.getByProgramAndProductCode(any(ProgramProduct.class))).thenReturn(programProduct);
         when(programRepository.getByCode(any(String.class))).thenReturn(program);
+        when(estimateCategoryRepository.getByName(any(String.class))).thenReturn(category);
         when(supervisoryNodeRepository.getFor(any(Facility.class), any(Program.class))).thenReturn(null);
 
         ISA isa = new ISA();
@@ -219,6 +239,7 @@ public class FacilityProgramProductISAHandlerTest {
         isa.setWastageFactor(wastageFactor);
         isa.setBufferPercentage(bufferPercentage);
         isa.setAdjustmentValue(adjustmentValue);
+        isa.setPopulationSource(category.getId());
 
         ProgramProductISA ppISA = new ProgramProductISA(programProduct.getId(), isa);
 
@@ -240,6 +261,7 @@ public class FacilityProgramProductISAHandlerTest {
         when(facilityRepository.getByCode(any(String.class))).thenReturn(sdp1);
         when(programProductRepository.getByProgramAndProductCode(any(ProgramProduct.class))).thenReturn(programProduct);
         when(programRepository.getByCode(any(String.class))).thenReturn(program);
+        when(estimateCategoryRepository.getByName(any(String.class))).thenReturn(category);
 
         ISA isa = new ISA();
         isa.setWhoRatio(whoRatio);
@@ -247,6 +269,7 @@ public class FacilityProgramProductISAHandlerTest {
         isa.setWastageFactor(wastageFactor);
         isa.setBufferPercentage(bufferPercentage);
         isa.setAdjustmentValue(adjustmentValue);
+        isa.setPopulationSource(category.getId());
 
         ProgramProductISA ppISA = new ProgramProductISA(programProduct.getId(), isa);
 
@@ -260,15 +283,15 @@ public class FacilityProgramProductISAHandlerTest {
 
         verify(repository).save(fpp);
 
-        isa.setWastageFactor(8.0);
+        isa.setWastageFactor(8.2);
         fpp.setFacilityId(dvs1.getId());
         verify(repository).save(fpp);
 
-        isa.setWastageFactor(8.5);
+        isa.setWastageFactor(8.72);
         fpp.setFacilityId(rvs1.getId());
         verify(repository).save(fpp);
 
-        isa.setWastageFactor(8.7);
+        isa.setWastageFactor(8.8);
         fpp.setFacilityId(cvs.getId());
         verify(repository).save(fpp);
     }

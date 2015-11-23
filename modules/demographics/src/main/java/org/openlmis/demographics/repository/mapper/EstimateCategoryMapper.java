@@ -27,6 +27,9 @@ public interface EstimateCategoryMapper {
   @Select("select * from demographic_estimate_categories where id = #{id}")
   EstimateCategory getById(@Param("id") Long id);
 
+  @Select("select * from demographic_estimate_categories where name = #{name}")
+  EstimateCategory getByName(@Param("name") String name);
+
   @Insert("insert into demographic_estimate_categories " +
     "(name, description, isPrimaryEstimate, defaultConversionFactor, createdBy, createdDate)" +
     "values " +
