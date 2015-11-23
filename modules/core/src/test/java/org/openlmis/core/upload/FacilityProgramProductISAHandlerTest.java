@@ -164,11 +164,11 @@ public class FacilityProgramProductISAHandlerTest {
         when(facilityRepository.getById(rvs1.getId())).thenReturn(rvs1);
         when(facilityRepository.getById(rvs2.getId())).thenReturn(rvs2);
         when(facilityRepository.getById(cvs.getId())).thenReturn(cvs);
-        when(repository.getOverriddenIsa(programProduct.getId(), sdp1.getId())).thenReturn(new ISA(0.0, 0, 7.0, 0.0, 0, 0, 0));
-        when(repository.getOverriddenIsa(programProduct.getId(), sdp2.getId())).thenReturn(new ISA(0.0, 0, 9.0, 0.0, 0, 0, 0));
-        when(repository.getOverriddenIsa(programProduct.getId(), sdp3.getId())).thenReturn(new ISA(0.0, 0, 9.5, 0.0, 0, 0, 0));
-        when(repository.getOverriddenIsa(programProduct.getId(), sdp4.getId())).thenReturn(new ISA(0.0, 0, 8.0, 0.0, 0, 0, 0));
-        when(repository.getOverriddenIsa(programProduct.getId(), sdp5.getId())).thenReturn(new ISA(0.0, 0, 10.0, 0.0, 0, 0, 0));
+        when(repository.getOverriddenIsa(programProduct.getId(), sdp1.getId())).thenReturn(new ISA(0.0, 0, 7.0, 0.0, 0, 0, 0, 1L));
+        when(repository.getOverriddenIsa(programProduct.getId(), sdp2.getId())).thenReturn(new ISA(0.0, 0, 9.0, 0.0, 0, 0, 0, 1L));
+        when(repository.getOverriddenIsa(programProduct.getId(), sdp3.getId())).thenReturn(new ISA(0.0, 0, 9.5, 0.0, 0, 0, 0, 1L));
+        when(repository.getOverriddenIsa(programProduct.getId(), sdp4.getId())).thenReturn(new ISA(0.0, 0, 8.0, 0.0, 0, 0, 0, 1L));
+        when(repository.getOverriddenIsa(programProduct.getId(), sdp5.getId())).thenReturn(new ISA(0.0, 0, 10.0, 0.0, 0, 0, 0, 1L));
     }
 
     private Facility createFacility(String facilityTypeCode, boolean isSdp, Long id) {
