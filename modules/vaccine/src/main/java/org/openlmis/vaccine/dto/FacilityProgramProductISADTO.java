@@ -1,4 +1,4 @@
-package org.openlmis.core.dto;
+package org.openlmis.vaccine.dto;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -6,6 +6,7 @@ import org.openlmis.core.domain.BaseModel;
 import org.openlmis.core.domain.Facility;
 import org.openlmis.core.domain.Product;
 import org.openlmis.core.domain.Program;
+import org.openlmis.demographics.domain.EstimateCategory;
 import org.openlmis.upload.Importable;
 import org.openlmis.upload.annotation.ImportField;
 
@@ -21,6 +22,9 @@ public class FacilityProgramProductISADTO extends BaseModel implements Importabl
 
     @ImportField(name = "Product Code", type = "String", nested = "code", mandatory = true)
     private Product product;
+
+    @ImportField(name = "Population Source", type = "String", mandatory = true)
+    String populationSourceName;
 
     @ImportField(name = "WHO Ratio", type = "double", mandatory = true)
     Double whoRatio;
