@@ -255,7 +255,7 @@
                   <span ng-show="!supportedProgram.program.push" openlmis-message="label.request"></span>
                     <span>
                       (<a id="overrideIsa{{ supportedProgram.program.name }}" href=""
-                          ng-click="showISAEditModal(supportedProgram)" openlmis-message="link.modify.isa"></a>)
+                          ng-click="showISAEditModal(supportedProgram)" openlmis-message="override.isa.values"></a>)
                     </span>
                 </td>
 
@@ -383,12 +383,12 @@
 
                       <div class="span4 use-calculated-isa-column">
                           <input type="button" id="delete-overriden-isa-button{{$index}}"
-                                 class="btn"   style="margin-left: 0px;"
+                                 class="btn btn-small"   style="margin-left: 0px;"
                                  ng-click="deleteProductISA(programProduct, facility, $index)"
                                  openlmis-message="button.delete" />
 
                           <input type="button"  id="override-isa-values-button{{$index}}"
-                                 class="btn"    style="margin-left: 0px;"
+                                 class="btn btn-small"    style="margin-left: 0px;"
                                  ng-click="showProductISA(programProduct, $index)"
                                  openlmis-message="override.isa.values"/>
                       </div>
