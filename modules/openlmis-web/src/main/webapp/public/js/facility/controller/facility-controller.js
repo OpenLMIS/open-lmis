@@ -3,19 +3,22 @@
  * Copyright © 2013 VillageReach
  *
  * This program is free software: you can redistribute it and/or modify it under the terms of the GNU Affero General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
- *  
- * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Affero General Public License for more details.
- * You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org. 
+ *  
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Affero General Public License for more details.
+ * You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org. 
  */
 
 
-function FacilityController($scope, facilityReferenceData, $routeParams, facility, Facility, $location, FacilityProgramProducts, FacilityProgramProductsISA, priceSchedules, facilityImages, $q, $dialog, messageService, interfacesReferenceData) {
-
+function FacilityController($scope, facilityReferenceData, $routeParams, facility, Facility, demographicCategories, $location, FacilityProgramProducts, FacilityProgramProductsISA, priceSchedules, facilityImages, $q, $dialog, messageService, interfacesReferenceData)
+{
   $scope.$parent.facilityId = null;
   $scope.message = "";
   $scope.$parent.message = "";
   $scope.isaService = FacilityProgramProductsISA; //isaService is used by ISACoefficientsModalController, which is intended to be used as a descendant controller of this one.
   initialize();
+
+  $scope.demographicCategories = demographicCategories; //Will be undefined if we aren't in VIMS
+
 
   function initialize() {
     $scope.facilityTypes = facilityReferenceData.facilityTypes;
@@ -328,3 +331,39 @@ FacilityController.resolve = {
     return deferred.promise;
   }
 };
+
+//Begin: Specific for Tanzania
+/*  The code below is intended to illustrate one potential way of conditionally injecting demographic-category data
+ For now, because we don’t have a way to conditionally toggle OpenLMIS’ features on and off, we simple set injectDemographyCategories to true. */
+var injectDemographyCategories = true;
+if(injectDemographyCategories)
+{
+  FacilityController.resolve.demographicCategories = function ($q, $route, $timeout, DemographicEstimateCategories)
+  {
+    var deferred = $q.defer();
+    $timeout(function () {
+      DemographicEstimateCategories.get({}, function(data)
+      {
+        //Add 'Facility Population' to the set of available categories
+        var categories = data.estimate_categories;
+        var facilityCatchmentPopulation = {'id': 0, 'name': 'Facility Catchment Population'};
+        categories.unshift(facilityCatchmentPopulation);
+        deferred.resolve(categories);
+      }, {});
+    }, 100);
+    return deferred.promise;
+  };
+}
+else //As suggested in the comments above, this else-clause is intended to run for non-Tanzanian countries.
+{
+  //demographicEstimateCategories has to be assigned something...
+  FacilityController.resolve.demographicCategories = function($timeout)
+  {
+    //...so set it to a $timeout which returns a promise that will be resolved
+    return $timeout
+    (
+        function() {},
+        5
+    );
+  };
+}

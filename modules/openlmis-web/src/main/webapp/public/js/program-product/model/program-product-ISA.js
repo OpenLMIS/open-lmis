@@ -27,6 +27,9 @@ var ProgramProductISA = function (isa) {
       this.bufferPercentage = programProductIsa.bufferPercentage;
       this.minimumValue = programProductIsa.minimumValue;
       this.maximumValue = programProductIsa.maximumValue;
+
+      //For Tanzania
+      this.populationSource = programProductIsa.populationSource;
     }
   };
 

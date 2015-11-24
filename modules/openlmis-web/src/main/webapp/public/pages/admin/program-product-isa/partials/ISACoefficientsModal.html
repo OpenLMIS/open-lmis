@@ -13,11 +13,34 @@
             <div class="ISAFormulaModalSubContent">
                 <h5 openlmis-message="label.isa.formula.modal.formula.variables"></h5>
 
+                <!-- Begin: Specific for Tanzania -->
                 <div class="row-fluid">
                     <div class="span6">
-                        <label for="who-ratio"><span openlmis-message="label.who.ratio"></span><span
-                                class="label-required"> *</span></label>
+                        <label>
+                            <span openlmis-message="population.source"></span>
+                            <span class="label-required"> *</span>
+                        </label>
                     </div>
+
+                    <div class="span4">
+                        <select
+                                ng-model="currentPopulationSource"
+                                ng-options="category.name for category in demographicCategories"
+                                ng-change="populationSourceChanged()"
+                                style="width:auto; min-width: 220px;">
+                        </select>
+                    </div>
+                </div>
+                <!-- End: Specific for Tanzania -->
+
+                <div class="row-fluid">
+                    <div class="span6">
+                        <label for="who-ratio">
+                            <span openlmis-message="label.who.ratio"></span>
+                            <span class="label-required"> *</span>
+                        </label>
+                    </div>
+
                     <div class="span4">
                         <input id="who-ratio" name="whoRatio" type="text" ng-required="true" ng-trim="false"
                                ng-model="isaToEdit.whoRatio"

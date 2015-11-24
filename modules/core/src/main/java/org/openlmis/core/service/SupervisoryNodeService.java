@@ -116,6 +116,7 @@ public class SupervisoryNodeService {
     return supervisoryNodeRepository.getAll();
   }
 
+  //Returns the specified SupervisoryNode along with all of its ancestor nodes.
   public List<SupervisoryNode> getAllParentSupervisoryNodesInHierarchy(SupervisoryNode supervisoryNode) {
     return supervisoryNodeRepository.getAllParentSupervisoryNodesInHierarchy(supervisoryNode);
   }
