@@ -13,6 +13,7 @@ package org.openlmis.core.domain;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+import org.codehaus.jackson.annotate.JsonIgnoreProperties;
 import org.codehaus.jackson.map.annotate.JsonSerialize;
 import org.openlmis.upload.Importable;
 import org.openlmis.upload.annotation.ImportField;
@@ -29,6 +30,7 @@ import static org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion.NON_EMPT
 @NoArgsConstructor
 @JsonSerialize(include = NON_EMPTY)
 @EqualsAndHashCode(callSuper = false)
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class FacilityTypeApprovedProduct extends BaseModel implements Importable {
 
   @ImportField(mandatory = true, name = "Facility Type Code", nested = "code")
@@ -39,16 +41,24 @@ public class FacilityTypeApprovedProduct extends BaseModel implements Importable
     @ImportField(name = "Product Code", nested = "product.code", mandatory = true)})
   private ProgramProduct programProduct;
 
-  @ImportField(name = "Max months of stock", mandatory = true, type = "int")
-  private Integer maxMonthsOfStock = 0;
+  @ImportField(name = "Max months of stock", mandatory = true, type = "double")
+  private Double maxMonthsOfStock;
 
-  public FacilityTypeApprovedProduct(FacilityType facilityType, ProgramProduct programProduct, Integer maxMonthsOfStock) {
+  @ImportField(name = "Min months of stock", type = "double")
+  private Double minMonthsOfStock;
+
+  @ImportField(name = "Emergency order point", type = "double")
+  private Double eop;
+
+  public FacilityTypeApprovedProduct(FacilityType facilityType,
+                                     ProgramProduct programProduct,
+                                     Double maxMonthsOfStock) {
     this.facilityType = facilityType;
     this.maxMonthsOfStock = maxMonthsOfStock;
     this.setProgramProduct(programProduct);
   }
 
-  public FacilityTypeApprovedProduct(String facilityTypeCode, ProgramProduct programProduct, Integer maxMonthsOfStock) {
+  public FacilityTypeApprovedProduct(String facilityTypeCode, ProgramProduct programProduct, Double maxMonthsOfStock) {
     this(new FacilityType(facilityTypeCode), programProduct, maxMonthsOfStock);
   }
 }

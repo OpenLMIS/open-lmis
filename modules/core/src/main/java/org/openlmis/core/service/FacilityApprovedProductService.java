@@ -13,6 +13,7 @@ package org.openlmis.core.service;
 import lombok.NoArgsConstructor;
 import org.openlmis.core.domain.FacilityType;
 import org.openlmis.core.domain.FacilityTypeApprovedProduct;
+import org.openlmis.core.domain.Pagination;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.core.repository.FacilityApprovedProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,23 +30,22 @@ import java.util.List;
 public class FacilityApprovedProductService {
 
   public static final String FACILITY_TYPE_DOES_NOT_EXIST = "facilityType.invalid";
-
-  private FacilityApprovedProductRepository repository;
-  private ProgramService programService;
-  private ProductService productService;
-  private ProgramProductService programProductService;
-  private FacilityService facilityService;
+  public static final String FACILITY_APPROVED_PRODUCT_DOES_NOT_EXIST = "facility.approved.product.does.not.exist";
 
   @Autowired
-  public FacilityApprovedProductService(FacilityApprovedProductRepository repository,
-                                        ProgramService programService, ProductService productService,
-                                        ProgramProductService programProductService, FacilityService facilityService) {
-    this.repository = repository;
-    this.programService = programService;
-    this.productService = productService;
-    this.programProductService = programProductService;
-    this.facilityService = facilityService;
-  }
+  private FacilityApprovedProductRepository repository;
+
+  @Autowired
+  private ProgramService programService;
+
+  @Autowired
+  private ProductService productService;
+
+  @Autowired
+  private ProgramProductService programProductService;
+
+  @Autowired
+  private FacilityService facilityService;
 
   public List<FacilityTypeApprovedProduct> getFullSupplyFacilityApprovedProductByFacilityAndProgram(Long facilityId, Long programId) {
     return repository.getFullSupplyProductsByFacilityAndProgram(facilityId, programId);
@@ -63,6 +63,9 @@ public class FacilityApprovedProductService {
     facilityTypeApprovedProduct.getFacilityType().setId(facilityType.getId());
 
     if (facilityTypeApprovedProduct.getId() != null) {
+      if(repository.get(facilityTypeApprovedProduct.getId()) == null){
+        throw new DataException(FACILITY_APPROVED_PRODUCT_DOES_NOT_EXIST);
+      }
       repository.update(facilityTypeApprovedProduct);
     } else {
       repository.insert(facilityTypeApprovedProduct);
@@ -74,6 +77,14 @@ public class FacilityApprovedProductService {
     return repository.getFacilityApprovedProductByProgramProductAndFacilityTypeCode(facilityTypeApprovedProduct);
   }
 
+  public List<FacilityTypeApprovedProduct> getAllBy(Long facilityTypeId, Long programId, String searchParam, Pagination pagination) {
+    return repository.getAllBy(facilityTypeId, programId, searchParam, pagination);
+  }
+
+  public Integer getTotalSearchResultCount(Long facilityTypeId, Long programId, String searchParam) {
+    return repository.getTotalSearchResultCount(facilityTypeId, programId, searchParam);
+  }
+
   private void fillProgramProductIds(FacilityTypeApprovedProduct facilityTypeApprovedProduct) {
     Long programId = programService.getIdForCode(facilityTypeApprovedProduct.getProgramProduct().getProgram().getCode());
     Long productId = productService.getIdForCode(facilityTypeApprovedProduct.getProgramProduct().getProduct().getCode());
@@ -81,5 +92,16 @@ public class FacilityApprovedProductService {
     facilityTypeApprovedProduct.getProgramProduct().getProgram().setId(programId);
     facilityTypeApprovedProduct.getProgramProduct().getProduct().setId(productId);
     facilityTypeApprovedProduct.getProgramProduct().setId(programProductId);
+  }
+
+  public void saveAll(List<FacilityTypeApprovedProduct> facilityTypeApprovedProducts, Long userId) {
+    for (FacilityTypeApprovedProduct facilityTypeApprovedProduct : facilityTypeApprovedProducts) {
+      facilityTypeApprovedProduct.setCreatedBy(userId);
+      save(facilityTypeApprovedProduct);
+    }
+  }
+
+  public void delete(Long id) {
+    repository.delete(id);
   }
 }

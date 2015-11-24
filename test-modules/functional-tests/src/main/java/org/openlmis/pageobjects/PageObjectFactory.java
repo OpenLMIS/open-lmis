@@ -14,8 +14,7 @@ import org.openlmis.UiUtils.TestWebDriver;
 import org.openlmis.pageobjects.edi.*;
 
 public class PageObjectFactory {
-
-  private static ManageFacilityPage instanceOfManageFacilityPage;
+  private static FacilityPage instanceOfFacilityPage;
   private static DistributionPage instanceOfDistributionPage;
   private static FacilityListPage instanceOfFacilityListPage;
   private static RefrigeratorPage instanceOfRefrigeratorPage;
@@ -42,19 +41,34 @@ public class PageObjectFactory {
   private static ViewOrdersPage instanceOfViewOrdersPage;
   private static ConfigureShipmentPage instanceOfConfigureShipmentPage;
   private static ConfigureBudgetPage instanceOfConfigureBudgetPage;
-  private static ConfigureEDIPage instanceOfConfigureEdiPage;
+  private static ConfigureSystemSettingsPage instanceOfConfigureSystemSettingsPage;
   private static ManagePodPage instanceOfManagePodPage;
   private static AdultCoveragePage instanceOfAdultCoveragePage;
   private static ReportPage instanceOfReportPage;
   private static ManageSchedulePage instanceOfManageSchedulePage;
   private static TemplateConfigPage instanceOfTemplateConfigPage;
+  private static GeographicZonePage instanceOfGeographicZonePage;
+  private static ConfigureOrderNumberPage instanceOfConfigureOrderNumberPage;
   private static PeriodsPage instanceOfPeriodsPage;
+  private static SupervisoryNodesPage instanceOfSupervisoryNodesPage;
+  private static RequisitionGroupPage instanceOfRequisitionGroupPage;
+  private static RequisitionPage instanceOfRequisitionPage;
+  private static SupplyLinePage instanceOfSupplyLinePage;
+  private static FacilityApprovedProductPage instanceOfFacilityApprovedProductPage;
+  private static ProductPage instanceOfProductPage;
 
-  public static ManageFacilityPage getManageFacilityPage(TestWebDriver testWebDriver) {
-    if (instanceOfManageFacilityPage == null) {
-      instanceOfManageFacilityPage = new ManageFacilityPage(testWebDriver);
+  public static FacilityPage getFacilityPage(TestWebDriver testWebDriver) {
+    if (instanceOfFacilityPage == null) {
+      instanceOfFacilityPage = new FacilityPage(testWebDriver);
     }
-    return instanceOfManageFacilityPage;
+    return instanceOfFacilityPage;
+  }
+
+  public static GeographicZonePage getGeographicZonePage(TestWebDriver testWebDriver) {
+    if (instanceOfGeographicZonePage == null) {
+      instanceOfGeographicZonePage = new GeographicZonePage(testWebDriver);
+    }
+    return instanceOfGeographicZonePage;
   }
 
   public static DistributionPage getDistributionPage(TestWebDriver testWebDriver) {
@@ -241,11 +255,18 @@ public class PageObjectFactory {
     return instanceOfConfigureBudgetPage;
   }
 
-  public static ConfigureEDIPage getConfigureEdiPage(TestWebDriver testWebDriver) {
-    if (instanceOfConfigureEdiPage == null) {
-      instanceOfConfigureEdiPage = new ConfigureEDIPage(testWebDriver);
+  public static ConfigureOrderNumberPage getConfigureOrderNumberPage(TestWebDriver testWebDriver) {
+    if (instanceOfConfigureOrderNumberPage == null) {
+      instanceOfConfigureOrderNumberPage = new ConfigureOrderNumberPage(testWebDriver);
     }
-    return instanceOfConfigureEdiPage;
+    return instanceOfConfigureOrderNumberPage;
+  }
+
+  public static ConfigureSystemSettingsPage getConfigureSystemSettingsPage(TestWebDriver testWebDriver) {
+    if (instanceOfConfigureSystemSettingsPage == null) {
+      instanceOfConfigureSystemSettingsPage = new ConfigureSystemSettingsPage(testWebDriver);
+    }
+    return instanceOfConfigureSystemSettingsPage;
   }
 
   public static ManagePodPage getManagePodPage(TestWebDriver testWebDriver) {
@@ -288,5 +309,47 @@ public class PageObjectFactory {
       instanceOfPeriodsPage = new PeriodsPage(testWebDriver);
     }
     return instanceOfPeriodsPage;
+  }
+
+  public static SupervisoryNodesPage getSupervisoryNodesPage(TestWebDriver testWebDriver) {
+    if (instanceOfSupervisoryNodesPage == null) {
+      instanceOfSupervisoryNodesPage = new SupervisoryNodesPage(testWebDriver);
+    }
+    return instanceOfSupervisoryNodesPage;
+  }
+
+  public static RequisitionGroupPage getRequisitionGroupPage(TestWebDriver testWebDriver) {
+    if (instanceOfRequisitionGroupPage == null) {
+      instanceOfRequisitionGroupPage = new RequisitionGroupPage(testWebDriver);
+    }
+    return instanceOfRequisitionGroupPage;
+  }
+
+  public static RequisitionPage getRequisitionPage(TestWebDriver testWebDriver) {
+    if (instanceOfRequisitionPage == null) {
+      instanceOfRequisitionPage = new RequisitionPage(testWebDriver);
+    }
+    return instanceOfRequisitionPage;
+  }
+
+  public static SupplyLinePage getSupplyLinePage(TestWebDriver testWebDriver) {
+    if (instanceOfSupplyLinePage == null) {
+      instanceOfSupplyLinePage = new SupplyLinePage(testWebDriver);
+    }
+    return instanceOfSupplyLinePage;
+  }
+
+  public static FacilityApprovedProductPage getFacilityApprovedProductPage(TestWebDriver testWebDriver) {
+    if (instanceOfFacilityApprovedProductPage == null) {
+      instanceOfFacilityApprovedProductPage = new FacilityApprovedProductPage(testWebDriver);
+    }
+    return instanceOfFacilityApprovedProductPage;
+  }
+
+  public static ProductPage getProductPage(TestWebDriver testWebDriver) {
+    if (instanceOfProductPage == null) {
+      instanceOfProductPage = new ProductPage(testWebDriver);
+    }
+    return instanceOfProductPage;
   }
 }

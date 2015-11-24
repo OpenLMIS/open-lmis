@@ -8,7 +8,7 @@
  * You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org. 
  */
 
-function UploadController($scope, SupportedUploads, messageService, loginConfig) {
+function UploadController($scope, SupportedUploads, messageService, loginConfig, $window) {
 
   SupportedUploads.get({}, function (data) {
     $scope.supportedUploads = data.supportedUploads;
@@ -25,6 +25,10 @@ function UploadController($scope, SupportedUploads, messageService, loginConfig)
 
   $scope.getMessage = function (key) {
     return messageService.get(key);
+  };
+
+  $scope.clearMessages = function(){
+    $scope.successMsg = $scope.errorMsg = "";
   };
 
   $scope.validate = function (formData) {
@@ -53,8 +57,11 @@ function UploadController($scope, SupportedUploads, messageService, loginConfig)
 
   var failureHandler = function (response) {
     $scope.$apply(function () {
-      if (response.status == 401) {
+      if (response.status === 401) {
         loginConfig.modalShown = loginConfig.preventReload = true;
+      }
+      else if (response.status === 403) {
+        $window.location = "/public/pages/access-denied.html";
       }
       else {
         try {

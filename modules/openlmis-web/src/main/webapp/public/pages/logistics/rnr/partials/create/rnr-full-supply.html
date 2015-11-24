@@ -42,7 +42,7 @@
         <tbody ng-show="visibleColumns.fullSupply && (rnr.fullSupplyLineItems.length > 0)"
                ng-repeat="rnrLineItem in page.fullSupply">
         <tr>
-            <td id="category_{{$index}}" class="productCategory" colspan="{{visibleColumns.fullSupply.fixed.length}}"
+      <td id="category_{{$index}}" class="productCategory" colspan="{{visibleColumns.fullSupply.fixed.length}}"
                 ng-show="showCategory($index)"
                 ng-bind="rnrLineItem.productCategory"></td>
         </tr>
@@ -80,12 +80,12 @@
         &nbsp;</td>
 </tr>
 <tr ng-class="getRowErrorClass(rnrLineItem)">
-    <td class="cell-input col-{{column.name}}" ng-repeat="column in visibleColumns.fullSupply.scrollable">
+<td class="cell-input col-{{column.name}}" ng-repeat="column in visibleColumns.fullSupply.scrollable">
         <ng-switch on="column.source.name">
     <span ng-switch-when="USER_INPUT">
       <ng-switch on="column.name">
         <span ng-switch-when="beginningBalance"
-              ng-class="getCellErrorClass(rnrLineItem)" class="input-error-parent-cell">
+              ng-class="getCellErrorClass(rnrLineItem)" class="position-relative">
             <input id="{{getId(column.name, $parent)}}" type="text"
                    ng-required="true"
                    ng-disabled="formDisabled || rnrLineItem.skipped"
@@ -105,7 +105,7 @@
         </span>
 
         <span ng-switch-when="quantityReceived"
-              ng-class="getCellErrorClass(rnrLineItem)" class="input-error-parent-cell">
+              ng-class="getCellErrorClass(rnrLineItem)" class="position-relative">
             <input ng-required="true"
                    ng-disabled="formDisabled || rnrLineItem.skipped"
                    id="{{getId(column.name, $parent)}}" type="text"
@@ -129,6 +129,7 @@
                  error-holder="expirationDate{{rnrLineItem['id']}}"
                  maxlength="7"
                  ng-model="rnrLineItem[column.name]"
+                 showError="showError"
                  date-validator="date"/>
           <span class="rnr-form-error" id="expirationDate{{rnrLineItem['id']}}"
                 style="display:none;" openlmis-message="error.invalid.date.format"
@@ -137,7 +138,7 @@
         </span>
 
         <span ng-switch-when="quantityDispensed"
-              ng-class="getCellErrorClass(rnrLineItem, programRnrColumnList)" class="input-error-parent-cell">
+              ng-class="getCellErrorClass(rnrLineItem, programRnrColumnList)" class="position-relative">
             <input ng-required="true"
                    ng-disabled="formDisabled || rnrLineItem.skipped"
                    id="{{getId(column.name, $parent)}}" type="text"
@@ -171,7 +172,7 @@
 
 
         <span ng-switch-when="stockInHand"
-              ng-class="getCellErrorClass(rnrLineItem)" class="input-error-parent-cell">
+              ng-class="getCellErrorClass(rnrLineItem)" class="position-relative">
             <input ng-required="true"
                    ng-disabled="formDisabled || rnrLineItem.skipped"
                    id="{{getId(column.name, $parent)}}" type="text"
@@ -191,7 +192,7 @@
           </span>
         </span>
 
-        <span ng-switch-when="newPatientCount" class="input-error-parent-cell">
+        <span ng-switch-when="newPatientCount" class="position-relative">
             <input ng-required="true"
                    ng-disabled="formDisabled || rnrLineItem.skipped"
                    id="{{getId(column.name, $parent)}}"
@@ -206,7 +207,7 @@
             </span>
           </span>
 
-        <span ng-switch-when="quantityRequested" class="input-error-parent-cell">
+        <span ng-switch-when="quantityRequested" class="position-relative">
             <input ng-disabled="formDisabled || rnrLineItem.skipped" id="{{getId(column.name, $parent)}}" type="text"
                    name="quantityRequested{{rnrLineItem['id']}}" ng-model="rnrLineItem[column.name]"
                    numeric-validator="positiveInteger" ng-trim="false" maxlength="8"
@@ -240,7 +241,7 @@
           </span>
         </span>
 
-        <span ng-switch-when="stockOutDays" class="input-error-parent-cell">
+        <span ng-switch-when="stockOutDays" class="position-relative">
             <input ng-required="true"
                    ng-disabled="formDisabled || rnrLineItem.skipped"
                    id="{{getId(column.name, $parent)}}"
@@ -279,7 +280,7 @@
       </ng-switch>
     </span>
         </ng-switch>
-    </td>
+</td>
 </tr>
 </tbody>
 </table>

@@ -50,12 +50,12 @@ import static org.openlmis.web.view.pdf.requisition.RequisitionPdfModel.DATE_FOR
 @RunWith(MockitoJUnitRunner.class)
 public class RequisitionPdfModelTest {
 
+  @Mock
+  MessageService messageService;
   private Map<String, Object> model;
   private Rnr requisition;
   private RequisitionPdfModel requisitionPdfModel;
   private List<LossesAndAdjustmentsType> lossesAndAdjustmentsList;
-  @Mock
-  MessageService messageService;
   private Date currentDate;
   private Date authorizedDate;
 
@@ -96,7 +96,6 @@ public class RequisitionPdfModelTest {
     final RequisitionStatusChange submittedStatusChange = new RequisitionStatusChange(2L, SUBMITTED, submittingUser, currentDate);
     final RequisitionStatusChange authorizedStatusChange = new RequisitionStatusChange(2L, AUTHORIZED, authorizingUser, authorizedDate);
 
-
     return new ArrayList<RequisitionStatusChange>() {{
       add(initiatedStatusChange);
       add(submittedStatusChange);
@@ -110,9 +109,9 @@ public class RequisitionPdfModelTest {
     when(messageService.message("requisition.type.emergency")).thenReturn("Emergency");
 
     PdfPTable header = requisitionPdfModel.getRequisitionHeader();
-    assertRowValues(header.getRow(0), "Report and Requisition for: Yellow Fever (Central Warehouse)");
+    assertRowValues(header.getRow(0), "Report and Requisition for: Yellow Fever (Warehouse)");
     assertRowValues(header.getRow(1), "Facility: F1", "Operated By: MOH", "Maximum Stock level: 100", "Emergency Order Point: 50.5");
-    assertRowValues(header.getRow(2), "levelName: Lusaka", "parentLevelName: Zambia", "Reporting Period: 01/01/2012 - 01/02/2012", "Requisition Type: Emergency");
+    assertRowValues(header.getRow(2), "levelName: Arusha", "parentLevelName: Zambia", "Reporting Period: 01/01/2012 - 01/02/2012", "Requisition Type: Emergency");
     assertThat(header.getSpacingAfter(), is(RequisitionPdfModel.PARAGRAPH_SPACING));
   }
 
@@ -124,9 +123,9 @@ public class RequisitionPdfModelTest {
     requisition.setEmergency(false);
 
     PdfPTable header = requisitionPdfModel.getRequisitionHeader();
-    assertRowValues(header.getRow(0), "Report and Requisition for: Yellow Fever (Central Warehouse)");
+    assertRowValues(header.getRow(0), "Report and Requisition for: Yellow Fever (Warehouse)");
     assertRowValues(header.getRow(1), "Facility: F1", "Operated By: MOH", "Maximum Stock level: 100", "Emergency Order Point: 50.5");
-    assertRowValues(header.getRow(2), "levelName: Lusaka", "parentLevelName: Zambia", "Reporting Period: 01/01/2012 - 01/02/2012", "Requisition Type: Regular");
+    assertRowValues(header.getRow(2), "levelName: Arusha", "parentLevelName: Zambia", "Reporting Period: 01/01/2012 - 01/02/2012", "Requisition Type: Regular");
     assertThat(header.getSpacingAfter(), is(RequisitionPdfModel.PARAGRAPH_SPACING));
   }
 
@@ -135,10 +134,9 @@ public class RequisitionPdfModelTest {
     when(messageService.message("label.facility")).thenReturn("Facility");
     when(messageService.message("create.facility.operatedBy")).thenReturn("Operated By");
     when(messageService.message("label.facility.maximumStock")).thenReturn("Maximum Stock level");
-    when(messageService.message("label.facility.emergencyOrder")).thenReturn("Emergency Order Point");
+    when(messageService.message("label.emergency.order.point")).thenReturn("Emergency Order Point");
     when(messageService.message("label.facility.reportingPeriod")).thenReturn("Reporting Period");
     when(messageService.message("label.requisition.type")).thenReturn("Requisition Type");
-
   }
 
   @Test
@@ -236,7 +234,6 @@ public class RequisitionPdfModelTest {
     when(messageService.message("label.allocated.budget")).thenReturn("Allocated Budget");
     when(messageService.message("msg.cost.exceeds.budget")).thenReturn("The total cost exceeds the allocated budget");
 
-
     Program requisitionProgram = mock(Program.class);
     when(requisition.getProgram()).thenReturn(requisitionProgram);
     when(requisition.isEmergency()).thenReturn(false);
@@ -244,7 +241,6 @@ public class RequisitionPdfModelTest {
     when(requisition.getAllocatedBudget()).thenReturn(new BigDecimal(7));
 
     PdfPTable summary = requisitionPdfModel.getSummary();
-
 
     assertRowValues(summary.getRow(0), "Summary");
     assertRowValues(summary.getRow(1), "Allocated Budget", "$7.00");
@@ -273,7 +269,6 @@ public class RequisitionPdfModelTest {
     when(messageService.message("msg.cost.exceeds.budget")).thenReturn("The total cost exceeds the allocated budget");
     when(messageService.message("msg.budget.not.allocated")).thenReturn("Not Allocated");
 
-
     Program requisitionProgram = mock(Program.class);
     when(requisition.getProgram()).thenReturn(requisitionProgram);
     when(requisition.isEmergency()).thenReturn(false);
@@ -281,7 +276,6 @@ public class RequisitionPdfModelTest {
     when(requisition.getAllocatedBudget()).thenReturn(null);
 
     PdfPTable summary = requisitionPdfModel.getSummary();
-
 
     assertRowValues(summary.getRow(0), "Summary");
     assertRowValues(summary.getRow(1), "Allocated Budget", "Not Allocated");

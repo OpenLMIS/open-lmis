@@ -35,6 +35,8 @@ public class ShipmentLineItem extends LineItem {
 
   private Long orderId;
 
+  private String orderNumber;
+
   private String productCode;
 
   private String replacedProductCode;
@@ -75,6 +77,11 @@ public class ShipmentLineItem extends LineItem {
     this.productCategoryDisplayOrder = productCategoryDisplayOrder;
     this.productDisplayOrder = productDisplayOrder;
     this.fullSupply = fullSupply;
+  }
+
+  public void fillReferenceFields(Product product) {
+    this.setReferenceFields(product.getName(), product.getDispensingUnit(), null, null,
+      null, null, product.getFullSupply());
   }
 
   public void fillReferenceFields(ProgramProduct programProduct) {

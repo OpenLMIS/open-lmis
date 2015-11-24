@@ -56,7 +56,7 @@
                             </td>
                             <td class="col-existing-quantity">
                                 <div>
-                  <span class="input-error-parent-cell">
+                  <span class="position-relative">
                     <input id="existingQuantity{{ $index }}" type="text" ng-model="lineItem.existingQuantity.value"
                            name="existingQuantityNR{{$index}}" ng-trim=false
                            numeric-validator="positiveInteger" maxlength="7"
@@ -76,7 +76,7 @@
                             </td>
                             <td class="col-delivered-quantity">
                                 <div>
-                  <span class="input-error-parent-cell">
+                  <span class="position-relative">
                     <input id="deliveredQuantity{{ $index }}" type="text" ng-model="lineItem.deliveredQuantity"
                            name="deliveredQuantityNR{{ $index }}" ng-trim=false
                            numeric-validator="positiveInteger" maxlength="7"
@@ -91,7 +91,7 @@
                             </td>
                             <td class="col-spoiled-quantity">
                                 <div>
-                  <span class="input-error-parent-cell">
+                  <span class="position-relative">
                     <input id="spoiledQuantity{{ $index }}" type="text"
                            ng-model="lineItem.spoiledQuantity.value"
                            name="spoiledQuantityNR{{ $index }}" ng-trim=false

@@ -13,7 +13,6 @@ package org.openlmis.distribution.serializer;
 import org.codehaus.jackson.JsonGenerator;
 import org.codehaus.jackson.map.JsonSerializer;
 import org.codehaus.jackson.map.SerializerProvider;
-import org.openlmis.core.domain.Right;
 import org.openlmis.distribution.domain.DistributionStatus;
 
 import java.io.IOException;

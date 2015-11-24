@@ -17,8 +17,6 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.openlmis.core.domain.DeliveryZone;
-import org.openlmis.core.service.AllocationPermissionService;
-import org.openlmis.core.service.DeliveryZoneService;
 import org.openlmis.db.categories.UnitTests;
 
 import java.util.ArrayList;
@@ -27,7 +25,7 @@ import java.util.List;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.when;
-import static org.openlmis.core.domain.Right.MANAGE_DISTRIBUTION;
+import static org.openlmis.core.domain.RightName.MANAGE_DISTRIBUTION;
 
 @RunWith(MockitoJUnitRunner.class)
 @Category(UnitTests.class)

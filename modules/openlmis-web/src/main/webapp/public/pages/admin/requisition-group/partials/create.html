@@ -1,0 +1,172 @@
+<!--
+  ~ This program is part of the OpenLMIS logistics management information system platform software.
+  ~ Copyright © 2013 VillageReach
+  ~
+  ~ This program is free software: you can redistribute it and/or modify it under the terms of the GNU Affero General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
+  ~
+  ~ This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Affero General Public License for more details.
+  ~ You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org.
+  -->
+
+<div xmlns="http://www.w3.org/1999/html" tab-scroll>
+  <div ng-hide="requisitionGroup.id">
+    <h2 id="addNewRequisitionGroupHeader" openlmis-message="header.requisition.group.add.new"></h2>
+  </div>
+
+  <div ng-show="requisitionGroup.id">
+    <h2 id="editRequisitionGroupHeader" openlmis-message="header.requisition.group.edit"></h2>
+  </div>
+
+  <form name="requisitionGroupForm" novalidate>
+    <div class="app-form">
+      <div id="requisitionGroupFormGroup" class="form-group clear-top">
+
+        <div class="form-row clearfix bottom-padding">
+          <div class="form-cell">
+            <label id="codeLabel" for="requisitionGroupCode">
+              <span openlmis-message="header.code"></span>
+              <span class="label-required"> *</span>
+            </label>
+
+            <div class="form-field">
+              <input ng-model="requisitionGroup.code" name="code" id="requisitionGroupCode" type="text" maxlength="50"
+                     ng-required="true"/>
+              <span class="field-error" ng-show="requisitionGroupForm.code.$error.required && showError"
+                    openlmis-message="missing.value"></span>
+            </div>
+          </div>
+          <div class="form-cell">
+            <label id="nameLabel" for="requisitionGroupName">
+              <span openlmis-message="header.name"></span>
+              <span class="label-required"> *</span>
+            </label>
+
+            <div class="form-field">
+              <input ng-model="requisitionGroup.name" name="name" id="requisitionGroupName" type="text" maxlength="50"
+                     ng-required="true"/>
+              <span class="field-error" ng-show="requisitionGroupForm.name.$error.required && showError"
+                    openlmis-message="missing.value"></span>
+            </div>
+          </div>
+        </div>
+
+        <div class="form-row clearfix">
+          <div class="form-cell">
+            <label id="supervisoryNodeLabel" for="searchSupervisoryNode">
+              <span openlmis-message="label.supervisory.node"></span>
+              <span class="label-required"> *</span>
+            </label>
+
+            <div class="form-field autosuggest-input">
+              <div class="suggest-field">
+                <input id="searchSupervisoryNode" type="text" ng-change="showSupervisoryNodeSearchResults()"
+                       ng-model="query" maxlength="50"
+                       openlmis-message="placeholder.supervisory.node.search" ng-hide="nodeSelected"/>
+
+                <div id="searchList" class="search-list" ng-show="query.length > 2">
+                  <ul>
+                    <li ng-repeat="node in filteredNodeList">
+                      <a href="" id="result{{$index}}" ng-click="setSelectedSupervisoryNode(node)" ng-bind="node.name"></a>
+                    </li>
+                    <li ng-show="resultCount == 0">
+                      <a href="" openlmis-message="msg.no.matches|query"></a>
+                    </li>
+                  </ul>
+                </div>
+                <div ng-show="nodeSelected">
+                  <span ng-bind="nodeSelected.name"></span>
+                  <a id="clearNodeSearch" href="" class="clear-search" ng-click="clearSelectedNode()"></a>
+                </div>
+              </div>
+              <div class="form-tip" openlmis-message="search.threeCharacters"></div>
+            </div>
+
+            <span class="field-error" ng-show="!requisitionGroup.supervisoryNode && showError"
+                  openlmis-message="select.value"></span>
+          </div>
+          <div class="form-cell">
+            <label id="descriptionLabel" for="requisitionGroupDescription" openlmis-message="label.description"></label>
+
+            <div class="form-field">
+              <input ng-model="requisitionGroup.description" name="description" id="requisitionGroupDescription"
+                     type="text" maxlength="250"/>
+            </div>
+          </div>
+        </div>
+
+        <div class="container-fluid">
+          <div class="row-fluid">
+            <div class="accordion">
+
+              <div class="pull-right control-accordion">
+                <a id="expandAll" href="javascript:void(0);" onClick="accordion.expandCollapse('expand')"
+                   openlmis-message="label.expand.all"></a> / <a
+                  id="collapseAll"
+                  href="javascript:void(0);"
+                  onClick="accordion.expandCollapse('collapse')" openlmis-message="label.collapse.all"></a>
+              </div>
+              <div class="clearfix"></div>
+
+              <div class="accordion-section">
+                <div class="accordion-heading" onClick="accordion.expandCollapseToggle(this)">
+                  <span>
+                    <b>+</b>
+                    <a id="programSchedules" href="javascript:void(0);"
+                       openlmis-message='label.program.and.schedules'></a>
+                  </span>
+                </div>
+                <div class="accordion-body">
+                  <ng-include
+                      src="'/public/pages/admin/requisition-group/partials/programs-schedules.html'"></ng-include>
+                </div>
+              </div>
+
+              <div class="accordion-section">
+                <div class="accordion-heading" onClick="accordion.expandCollapseToggle(this)">
+                  <span>
+                    <b>+</b>
+                    <a id="Members" href="javascript:void(0);" openlmis-message='label.members'></a>
+                  </span>
+                </div>
+                <div class="accordion-body">
+                  <input type="button" class="btn btn-primary" id="addMembers"
+                         ng-click="toggleMultipleFacilitiesSlider()"
+                         openlmis-message="label.add.members">
+
+                  <div class="position-relative clearfix">
+
+                    <div class="slider" slider="showMultipleFacilitiesSlider" ng-include
+                         src="'/public/pages/admin/shared/select-filter-multiple-facilities.html'"></div>
+
+                    <div class="alert alert-error" id="duplicateFacilityMessage"
+                         openlmis-message="error.duplicate.facility|duplicateFacilityName"
+                         ng-show="duplicateFacilityName"></div>
+
+                    <div id="facilityAddedMessage" class="alert alert-success" ng-show="message"
+                         ng-bind="message" fade-out="3000"></div>
+
+                    <ng-include src="'/public/pages/admin/requisition-group/partials/members.html'"></ng-include>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div form-toolbar id="action_buttons" class="action-buttons">
+        <div class="form-cell button-row">
+          <input id="saveButton" type="submit" class="btn btn-primary save-button"
+                 openlmis-message="button.save" ng-click="save()"/>
+          <input id="cancelButton" type="button" class="btn btn-cancel cancel-button" openlmis-message="button.cancel"
+                 ng-click="cancel()"/>
+        </div>
+
+        <div class="toolbar-error" id="saveErrorMsgDiv" openlmis-message="error" ng-show="error"></div>
+      </div>
+
+    </div>
+  </form>
+</div>
+
+

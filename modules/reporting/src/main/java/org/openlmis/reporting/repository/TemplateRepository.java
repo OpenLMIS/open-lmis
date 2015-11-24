@@ -10,14 +10,18 @@
 
 package org.openlmis.reporting.repository;
 
+import org.apache.log4j.Logger;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.reporting.model.Template;
+import org.openlmis.reporting.model.TemplateParameter;
 import org.openlmis.reporting.repository.mapper.TemplateMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+
+import static org.apache.commons.lang3.StringUtils.isBlank;
 
 /**
  * Repository class for template related database operations.
@@ -27,21 +31,48 @@ import java.util.List;
 public class TemplateRepository {
 
   @Autowired
-  TemplateMapper mapper;
+  private TemplateMapper mapper;
 
-  public void insert(Template template) {
+  private static final Logger logger = Logger.getLogger(TemplateRepository.class);
+
+  public void insertWithParameters(Template template) {
     try {
       mapper.insert(template);
+      for(TemplateParameter parameter : template.getParameters()){
+        parameter.setTemplateId(template.getId());
+        mapper.insertParameter(parameter);
+      }
     } catch (DataIntegrityViolationException integrityViolationException) {
-      throw new DataException("report.template.name.already.exists");
+      throw new DataException("unexpected.exception");
     }
   }
 
-  public List<Template> getAll() {
-    return mapper.getAllConsistencyReportTemplates();
+  public List<Template> getAllTemplatesForUser(Long userId) {
+    return mapper.getAllTemplatesForUser(userId);
   }
 
   public Template getByName(String name) {
     return mapper.getByName(name);
+  }
+
+  public Template getById(Long id) {
+    return mapper.getById(id);
+  }
+
+  public Template getLWById(Long id) {
+    Template t = mapper.getLWById(id);
+    if(t == null) return null;
+
+    // run select sql and populate returned values for every template parameter
+    for(TemplateParameter tp : t.getParameters()) {
+      if(isBlank(tp.getSelectSql()) == false) {
+        logger.debug("Template Parameter " + t.getName() + " has select sql: " + tp.getSelectSql());
+        List<String> selectValues = mapper.runSelectSql(tp.getSelectSql());
+        logger.debug("Template Parameter " + t.getName() + " select values: " + selectValues);
+        tp.setSelectValues(selectValues);
+      }
+    }
+
+    return t;
   }
 }

@@ -13,8 +13,12 @@ package org.openlmis.core.domain;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+import org.codehaus.jackson.annotate.JsonIgnoreProperties;
+import org.codehaus.jackson.map.annotate.JsonSerialize;
 import org.openlmis.upload.Importable;
 import org.openlmis.upload.annotation.ImportField;
+
+import static org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion.NON_NULL;
 
 /**
  * RequisitionGroup represents a group of facilities which follow a particular schedule for a program. It also defines
@@ -23,15 +27,21 @@ import org.openlmis.upload.annotation.ImportField;
 @Data
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = false)
+@JsonSerialize(include = NON_NULL)
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class RequisitionGroup extends BaseModel implements Importable {
 
   @ImportField(mandatory = true, name = "RG Code")
   String code;
+
   @ImportField(mandatory = true, name = "Name of RG")
   String name;
+
   @ImportField(name = "Description")
   String description;
+
   @ImportField(mandatory = true, nested = "code", name = "Supervisory Node")
   SupervisoryNode supervisoryNode;
 
+  Integer memberCount;
 }

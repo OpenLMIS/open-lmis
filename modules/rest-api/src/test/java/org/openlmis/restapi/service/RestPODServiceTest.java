@@ -32,6 +32,7 @@ import org.powermock.modules.junit4.PowerMockRunner;
 
 import static java.util.Arrays.asList;
 import static org.mockito.Mockito.*;
+import static org.openlmis.core.matchers.Matchers.dataExceptionMatcher;
 import static org.powermock.api.mockito.PowerMockito.spy;
 import static org.powermock.api.mockito.PowerMockito.when;
 
@@ -63,11 +64,12 @@ public class RestPODServiceTest {
     orderPodLineItem.setProductCode("productCode");
     OrderPOD orderPod = new OrderPOD(3L);
     orderPod.setOrderId(4L);
+    orderPod.setOrderNumber("ORD");
     orderPod.setPodLineItems(asList(orderPodLineItem));
 
     OrderPOD spyOrderPod = spy(orderPod);
     doNothing().when(spyOrderPod).validate();
-    when(orderService.getOrder(4L)).thenReturn(new Order());
+    when(orderService.getByOrderNumber("ORD")).thenReturn(new Order(4L));
     when(productService.getByCode("productCode")).thenReturn(new Product());
     doNothing().when(podService).checkPermissions(orderPod);
     when(podService.getPODByOrderId(4L)).thenReturn(null);
@@ -81,22 +83,20 @@ public class RestPODServiceTest {
 
     restPODService.updatePOD(spyOrderPod, 1L);
 
-    verify(orderService).getOrder(4L);
     verify(podService).checkPermissions(orderPod);
     verify(podService).getPODByOrderId(4L);
     verify(podService).insertPOD(orderPod);
     verify(podService).insertPODLineItem(orderPodLineItem);
-    verify(podService).updateOrderStatus(orderPod);
   }
 
   @Test
   public void shouldThrowErrorIfInvalidOrder() throws Exception {
     OrderPOD orderPod = new OrderPOD(3L);
-    orderPod.setOrderId(4L);
+    orderPod.setOrderNumber("ON123");
 
     OrderPOD spyOrderPod = spy(orderPod);
     doNothing().when(spyOrderPod).validate();
-    when(orderService.getOrder(4L)).thenReturn(null);
+    when(orderService.getByOrderNumber("ON123")).thenReturn(null);
 
     expectedException.expect(DataException.class);
     expectedException.expectMessage("error.restapi.invalid.order");
@@ -107,11 +107,12 @@ public class RestPODServiceTest {
   @Test
   public void shouldThrowErrorIfPODAlreadyConfirmed() throws Exception {
     OrderPOD orderPod = new OrderPOD(3L);
-    orderPod.setOrderId(4L);
+    orderPod.setOrderNumber("ON123");
 
     OrderPOD spyOrderPod = spy(orderPod);
     doNothing().when(spyOrderPod).validate();
-    when(orderService.getOrder(4L)).thenReturn(new Order());
+    when(orderService.getByOrderNumber("ON123")).thenReturn(new Order(4L));
+
     when(podService.getPODByOrderId(4L)).thenReturn(new OrderPOD());
 
     expectedException.expect(DataException.class);
@@ -123,15 +124,16 @@ public class RestPODServiceTest {
   @Test
   public void shouldThrowErrorWhenInvalidProductCodes() throws Exception {
     OrderPOD orderPod = new OrderPOD(3L);
-    orderPod.setOrderId(4L);
+    orderPod.setOrderNumber("ON123");
 
     OrderPOD spyOrderPod = spy(orderPod);
     doNothing().when(spyOrderPod).validate();
-    when(orderService.getOrder(4L)).thenReturn(new Order());
+    when(orderService.getByOrderNumber("ON123")).thenReturn(new Order(4L));
+
     when(podService.getPODByOrderId(4L)).thenReturn(null);
 
     Rnr rnr = new Rnr();
-    when(requisitionService.getLWById(orderPod.getOrderId())).thenReturn(rnr);
+    when(requisitionService.getLWById(4L)).thenReturn(rnr);
     doNothing().when(spyOrderPod).fillPOD(rnr);
     doNothing().when(podService).insertPOD(orderPod);
 
@@ -140,8 +142,7 @@ public class RestPODServiceTest {
     when(productService.getByCode("ABC")).thenReturn(null);
     when(spyOrderPod.getPodLineItems()).thenReturn(asList(orderPODLineItem));
 
-    expectedException.expect(DataException.class);
-    expectedException.expectMessage("code: error.invalid.product.code, params: { [ABC] }");
+    expectedException.expect(dataExceptionMatcher("error.invalid.product.code"));
 
     restPODService.updatePOD(spyOrderPod, 1L);
   }

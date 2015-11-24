@@ -1,0 +1,145 @@
+<!--
+  ~ This program is part of the OpenLMIS logistics management information system platform software.
+  ~ Copyright © 2013 VillageReach
+  ~
+  ~ This program is free software: you can redistribute it and/or modify it under the terms of the GNU Affero General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
+  ~
+  ~ This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Affero General Public License for more details.
+  ~ You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org.
+  -->
+
+<div xmlns="http://www.w3.org/1999/html" tab-scroll>
+  <div ng-hide="supervisoryNode.id">
+    <h2 id="addNewSupervisoryNodeHeader" openlmis-message="header.supervisory.node.add.new"></h2>
+  </div>
+  <div ng-show="supervisoryNode.id">
+    <h2 id="editSupervisoryNodeHeader" openlmis-message="header.supervisory.node.edit"></h2>
+  </div>
+
+  <form name="supervisoryNodeForm" novalidate>
+    <div class="app-form">
+
+      <div id="supervisoryNodeFormGroup" class="form-group clear-top">
+
+        <div class="form-row clearfix">
+          <div class="form-cell">
+            <label id="codeLabel" for="code">
+              <span openlmis-message="header.code"></span>
+              <span class="label-required"> *</span>
+            </label>
+
+            <div class="form-field">
+              <input ng-model="supervisoryNode.code" name="code" id="code" type="text" maxlength="50"
+                     ng-required="true"/>
+              <span id="codeFieldError" class="field-error"
+                    ng-show="supervisoryNodeForm.code.$error.required && showError"
+                    openlmis-message="missing.value"></span>
+            </div>
+          </div>
+        </div>
+
+        <div class="form-row clearfix">
+          <div class="form-cell">
+            <label id="nameLabel" for="name">
+              <span openlmis-message="header.name"></span>
+              <span class="label-required"> *</span>
+            </label>
+
+            <div class="form-field">
+              <input ng-model="supervisoryNode.name" name="name" id="name" type="text" maxlength="50"
+                     ng-required="true"/>
+              <span id="nameFieldError" class="field-error"
+                    ng-show="supervisoryNodeForm.name.$error.required && showError"
+                    openlmis-message="missing.value"></span>
+            </div>
+          </div>
+        </div>
+
+        <div class="form-row clearfix">
+          <div class="form-cell">
+            <label id="descriptionLabel" for="description" openlmis-message="label.description"></label>
+
+            <div class="form-field">
+              <input ng-model="supervisoryNode.description" name="description" id="description" type="text"
+                     maxlength="250"/>
+            </div>
+          </div>
+        </div>
+
+        <div class="form-row clearfix">
+          <div class="form-cell">
+            <label id="parentNodeLabel" openlmis-message="header.parent.node"></label>
+
+            <div class="form-field autosuggest-input">
+              <div class="suggest-field">
+                <input id="searchParentNode" type="text" ng-change="showParentNodeSearchResults()" ng-model="query"
+                       openlmis-message="placeholder.parent.node.search" ng-hide="supervisoryNode.parent"
+                       maxlength="50"/>
+
+                <div id="search_list" class="search-list" ng-show="query.length > 2">
+                  <ul>
+                    <li ng-repeat="node in filteredNodes">
+                      <a href="" id="result{{$index}}" ng-click="setSelectedParentNode(node)" ng-bind="node.name"></a>
+                    </li>
+                    <li ng-show="resultCount == 0">
+                      <a href="" openlmis-message="msg.no.matches|query"></a>
+                    </li>
+                  </ul>
+                </div>
+                <div ng-show="supervisoryNode.parent">
+                  <span ng-bind="supervisoryNode.parent.name"></span>
+                  <a id="clearSearch" href="" class="clear-search" ng-click="deleteParentNode()"></a>
+                </div>
+              </div>
+              <div class="form-tip" openlmis-message="search.threeCharacters"></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="form-row clearfix">
+          <div class="form-cell">
+            <label id="associatedFacilityLabel">
+              <span openlmis-message="label.associated.facility"></span>
+              <span class="label-required"> *</span>
+            </label>
+
+            <div class="form-field">
+              <div id="associatedFacilityField" class="input-div associate-facility clearfix"
+                   ng-click="toggleSlider()">
+                <div class="facility-associated">
+                  <span class="placeholder" ng-show="!supervisoryNode.facility"
+                        openlmis-message="label.no.facility.selected"></span>
+                  <span ng-show="supervisoryNode.facility">{{supervisoryNode.facility.code}} - {{supervisoryNode.facility.name}}</span>
+                </div>
+                <a href="" class="btn">
+                  <i class="icon icon-ellipsis-horizontal"></i>
+                </a>
+              </div>
+            </div>
+            <span id="facilityFieldError" class="field-error" ng-show="!supervisoryNode.facility && showError"
+                  openlmis-message="select.value"></span>
+          </div>
+        </div>
+
+        <div class="position-relative">
+          <div class="slider" slider="showSlider" ng-include
+               src="'/public/pages/admin/shared/search-filter-facilities.html'"></div>
+        </div>
+
+      </div>
+      <div form-toolbar id="action_buttons" class="action-buttons">
+        <div class="form-cell button-row">
+          <input id="saveButton" type="submit" class="btn btn-primary save-button"
+                 openlmis-message="button.save" ng-click="save()"/>
+          <input id="cancelButton" type="button" class="btn btn-cancel cancel-button" openlmis-message="button.cancel"
+                 ng-click="cancel()"/>
+        </div>
+
+        <div class="toolbar-error" id="saveErrorMsgDiv" openlmis-message="error" ng-show="error"></div>
+      </div>
+
+    </div>
+  </form>
+</div>
+
+

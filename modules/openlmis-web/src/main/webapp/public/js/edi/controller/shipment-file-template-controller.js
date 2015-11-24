@@ -42,7 +42,7 @@ function ShipmentFileTemplateController($scope, shipmentFileTemplate, ShipmentFi
 
   $scope.cancelEdiSave = function () {
     $scope.$parent.message = "";
-    $location.path('configure-edi-file');
+    $location.path('configure-system-settings');
   };
 
   $scope.saveShipmentFileTemplate = function () {
@@ -53,7 +53,7 @@ function ShipmentFileTemplateController($scope, shipmentFileTemplate, ShipmentFi
     ShipmentFileTemplate.save({}, $scope.shipmentFileTemplate, function (data) {
       $scope.error = "";
       $scope.$parent.message = messageService.get(data.success);
-      $location.path('configure-edi-file');
+      $location.path('configure-system-settings');
     });
   };
 

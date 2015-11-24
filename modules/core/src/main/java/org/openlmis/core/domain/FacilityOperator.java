@@ -12,14 +12,21 @@ package org.openlmis.core.domain;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import org.openlmis.upload.Importable;
+import org.openlmis.upload.annotation.ImportField;
 
 /**
  * FacilityOperator represents the operator for facility, the authority responsible for running a facility (for eg. WHO, MOH etc.)
  */
 @Data
 @EqualsAndHashCode(callSuper = false)
-public class FacilityOperator extends BaseModel {
+public class FacilityOperator extends BaseModel implements Importable {
+  @ImportField(name="Facility Operator Code", mandatory=true)
   private String code;
+
+  @ImportField(name="Name", mandatory=true)
   private String text;
+
+  @ImportField(name="Display Order", mandatory=true)
   private Integer displayOrder;
 }

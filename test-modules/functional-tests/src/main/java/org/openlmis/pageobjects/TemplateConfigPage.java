@@ -221,6 +221,12 @@ public class TemplateConfigPage extends Page {
   @FindBy(how = How.XPATH, using = "//li[@id='skipped']/span[3]/input")
   private static WebElement skipTextBox = null;
 
+  @FindBy(how = How.XPATH, using = "//*[@id='newPatientCount']/span[5]/span/select/option[1]")
+  private static WebElement patientOption1 = null;
+
+  @FindBy(how = How.XPATH, using = "//*[@id='newPatientCount']/span[5]/span/select/option[2]")
+  private static WebElement patientOption2 = null;
+
   private static String USER_INPUT = "User Input";
   private static String CALCULATED = "Calculated";
 
@@ -543,6 +549,9 @@ public class TemplateConfigPage extends Page {
     testWebDriver.waitForElementToAppear(SaveButton);
     beginningBalance.clear();
     beginningBalance.sendKeys(columnHeadingToBeAltered);
+  }
+
+  public void saveConfiguration() {
     clickSaveButton();
     verifySuccessDiv();
   }
@@ -573,5 +582,23 @@ public class TemplateConfigPage extends Page {
 
   public void setSkipTextBox(String text) {
     sendKeys(skipTextBox, text);
+  }
+
+  public boolean isPatientOption1Selected() {
+    testWebDriver.waitForElementToAppear(patientOption1);
+    return patientOption1.isSelected();
+  }
+
+  public boolean isPatientOption2Selected() {
+    testWebDriver.waitForElementToAppear(patientOption2);
+    return patientOption2.isSelected();
+  }
+
+  public void selectPatientOption2() {
+    testWebDriver.sleep(1000);
+    testWebDriver.waitForElementToAppear(patientOption2);
+    patientOption2.click();
+    testWebDriver.sleep(2000);
+    assertTrue(isPatientOption2Selected());
   }
 }

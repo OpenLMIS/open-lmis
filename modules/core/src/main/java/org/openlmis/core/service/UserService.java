@@ -10,6 +10,11 @@
 
 package org.openlmis.core.service;
 
+import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.collections.Predicate;
+import org.openlmis.core.domain.Pagination;
+import org.openlmis.core.domain.Program;
+import org.openlmis.core.domain.SupervisoryNode;
 import org.openlmis.core.domain.User;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.core.hash.Encoder;
@@ -21,8 +26,7 @@ import org.springframework.mail.SimpleMailMessage;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 /**
  * Exposes the services for handling User entity.
@@ -77,18 +81,23 @@ public class UserService {
     sendEmail(emailMessage);
   }
 
-  public List<User> searchUser(String userSearchParam) {
-    return userRepository.searchUser(userSearchParam);
+  public List<User> searchUser(String searchParam, Pagination pagination) {
+    return userRepository.searchUser(searchParam,pagination);
   }
 
-  public User getById(Long id) {
+  public User getUserWithRolesById(Long id) {
     User user = userRepository.getById(id);
     user.setHomeFacilityRoles(roleAssignmentService.getHomeFacilityRoles(id));
     user.setSupervisorRoles(roleAssignmentService.getSupervisorRoles(id));
     user.setAdminRole(roleAssignmentService.getAdminRole(id));
+    user.setReportingRole(roleAssignmentService.getReportingRole(id));
     user.setAllocationRoles(roleAssignmentService.getAllocationRoles(id));
     user.setFulfillmentRoles(roleAssignmentService.getFulfilmentRoles(id));
     return user;
+  }
+
+  public User getById(Long id) {
+    return userRepository.getById(id);
   }
 
   public Long getUserIdByPasswordResetToken(String token) {
@@ -121,13 +130,25 @@ public class UserService {
   }
 
   public void updateUserPassword(Long userId, String password) {
-    userRepository.updateUserPassword(userId, Encoder.hash(password));
+    userRepository.updateUserPasswordAndActivate(userId, Encoder.hash(password));
   }
 
   @Transactional
   public void disable(Long userId, Long modifiedBy) {
     userRepository.disable(userId, modifiedBy);
     userRepository.deletePasswordResetTokenForUser(userId);
+  }
+
+  public List<User> getUsersWithRightInNodeForProgram(Program program, SupervisoryNode node, String rightName) {
+    return userRepository.getUsersWithRightInNodeForProgram(program, node, rightName);
+  }
+
+  public List<User> getUsersWithRightInHierarchyUsingBaseNode(Long nodeId, Program program, String rightName) {
+    return userRepository.getUsersWithRightInHierarchyUsingBaseNode(nodeId, program.getId(), rightName);
+  }
+
+  public List<User> getUsersWithRightOnWarehouse(Long id, String rightName) {
+    return userRepository.getUsersWithRightOnWarehouse(id, rightName);
   }
 
   private void sendUserCreationEmail(User user, String resetPasswordLink) {
@@ -178,5 +199,20 @@ public class UserService {
 
   private String generateUUID() {
     return Encoder.hash(UUID.randomUUID().toString());
+  }
+
+  public ArrayList<User> filterForActiveUsers(List<User> userList) {
+    Set<User> users = new LinkedHashSet<>(userList);
+    CollectionUtils.filter(users, new Predicate() {
+      @Override
+      public boolean evaluate(Object o) {
+        return ((User) o).getActive();
+      }
+    });
+    return new ArrayList<>(users);
+  }
+
+  public Integer getTotalSearchResultCount(String searchParam) {
+    return userRepository.getTotalSearchResultCount(searchParam);
   }
 }

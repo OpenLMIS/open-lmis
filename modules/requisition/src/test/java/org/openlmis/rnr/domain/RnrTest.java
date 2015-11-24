@@ -30,8 +30,10 @@ import static com.natpryce.makeiteasy.MakeItEasy.*;
 import static java.util.Arrays.asList;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.nullValue;
-import static org.junit.Assert.*;
-import static org.junit.matchers.JUnitMatchers.hasItem;
+import static org.hamcrest.Matchers.hasItem;
+import static org.junit.Assert.assertThat;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.assertFalse;
 import static org.mockito.Mockito.*;
 import static org.openlmis.core.builder.FacilityApprovedProductBuilder.defaultFacilityApprovedProduct;
 import static org.openlmis.core.builder.ProgramProductBuilder.defaultProgramProduct;
@@ -276,8 +278,9 @@ public class RnrTest {
 
     rnr.copyCreatorEditableFields(newRnr, template, regimenTemplate, programProducts);
 
-    assertThat(rnr.getNonFullSupplyLineItems(), hasItem(lineItem3));
-    assertThat(rnr.getNonFullSupplyLineItems().size(), is(1));
+    List<RnrLineItem> nonFullSupplyLIs = rnr.getNonFullSupplyLineItems();
+    assertThat(nonFullSupplyLIs.size(), is(1));
+    assertThat(nonFullSupplyLIs.get(0), is(spyLineItem3));
   }
 
   @Test

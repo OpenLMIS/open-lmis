@@ -11,10 +11,13 @@
 package org.openlmis.core.domain;
 
 import org.junit.Test;
+import org.junit.experimental.categories.Category;
+import org.openlmis.db.categories.UnitTests;
 
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
+@Category(UnitTests.class)
 public class GeographicLevelTest {
   @Test
   public void shouldReturnTrueIfLevelIsRoot() throws Exception {

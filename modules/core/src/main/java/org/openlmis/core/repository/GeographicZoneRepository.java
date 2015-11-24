@@ -13,11 +13,12 @@ package org.openlmis.core.repository;
 import lombok.NoArgsConstructor;
 import org.openlmis.core.domain.GeographicLevel;
 import org.openlmis.core.domain.GeographicZone;
+import org.openlmis.core.domain.Pagination;
 import org.openlmis.core.exception.DataException;
-import org.openlmis.core.repository.mapper.GeographicLevelMapper;
 import org.openlmis.core.repository.mapper.GeographicZoneMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -31,12 +32,12 @@ import java.util.List;
 public class GeographicZoneRepository {
 
   private GeographicZoneMapper mapper;
-  private GeographicLevelMapper geographicLevelMapper;
+  private GeographicLevelRepository geographicLevelRepository;
 
   @Autowired
-  public GeographicZoneRepository(GeographicZoneMapper mapper, GeographicLevelMapper geographicLevelMapper) {
+  public GeographicZoneRepository(GeographicZoneMapper mapper, GeographicLevelRepository geographicLevelRepository) {
     this.mapper = mapper;
-    this.geographicLevelMapper = geographicLevelMapper;
+    this.geographicLevelRepository = geographicLevelRepository;
   }
 
   public GeographicZone getByCode(String code) {
@@ -44,7 +45,7 @@ public class GeographicZoneRepository {
   }
 
   public Integer getLowestGeographicLevel() {
-    return geographicLevelMapper.getLowestGeographicLevel();
+    return geographicLevelRepository.getLowestGeographicLevel();
   }
 
   public List<GeographicZone> getAllGeographicZones() {
@@ -58,16 +59,46 @@ public class GeographicZoneRepository {
         return;
       }
       mapper.update(zone);
+    } catch (DuplicateKeyException e) {
+      throw new DataException("error.duplicate.geographic.zone.code");
     } catch (DataIntegrityViolationException e) {
       throw new DataException("error.incorrect.length");
     }
   }
 
-  public GeographicLevel getGeographicLevelByCode(String code) {
-    return mapper.getGeographicLevelByCode(code);
-  }
-
   public GeographicZone getById(Long id) {
     return mapper.getWithParentById(id);
+  }
+
+  public List<GeographicZone> searchByParentName(String searchParam, Pagination pagination) {
+    return mapper.searchByParentName(searchParam, pagination);
+  }
+
+  public List<GeographicZone> searchByName(String searchParam, Pagination pagination) {
+    return mapper.searchByName(searchParam, pagination);
+  }
+
+  public List<GeographicLevel> getAllGeographicLevels() {
+    return geographicLevelRepository.getAll();
+  }
+
+  public List<GeographicZone> getAllGeographicZonesAbove(GeographicLevel geographicLevel) {
+    return mapper.getAllGeographicZonesAbove(geographicLevel);
+  }
+
+  public Integer getTotalParentSearchResultCount(String param) {
+    return mapper.getTotalParentSearchResultCount(param);
+  }
+
+  public Integer getTotalSearchResultCount(String param) {
+    return mapper.getTotalSearchResultCount(param);
+  }
+
+  public List<GeographicZone> getGeographicZonesByCodeOrName(String searchParam) {
+    return mapper.getGeographicZonesByCodeOrName(searchParam);
+  }
+
+  public Integer getGeographicZonesCountBy(String searchParam) {
+    return mapper.getGeographicZonesCountBy(searchParam);
   }
 }

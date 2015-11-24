@@ -22,8 +22,7 @@ import org.openqa.selenium.support.pagefactory.AjaxElementLocatorFactory;
 import java.util.List;
 
 import static com.thoughtworks.selenium.SeleneseTestBase.assertEquals;
-import static org.openqa.selenium.support.How.ID;
-import static org.openqa.selenium.support.How.XPATH;
+import static org.openqa.selenium.support.How.*;
 
 
 public class DistributionPage extends Page {
@@ -70,14 +69,8 @@ public class DistributionPage extends Page {
   @FindBy(how = ID, using = "syncMessage")
   private WebElement syncAlertMessage = null;
 
-  @FindBy(how = ID, using = "duplicateFacilities")
-  private WebElement facilityAlreadySyncMessage = null;
-
   @FindBy(how = ID, using = "failedFacilityHeader")
   private WebElement facilitySyncFailedMessage = null;
-
-  @FindBy(how = ID, using = "distributionInitiated")
-  private WebElement distributionAlreadyInitiatedMessage = null;
 
   @FindBy(how = ID, using = "retryButton")
   private WebElement retryButton = null;
@@ -90,6 +83,13 @@ public class DistributionPage extends Page {
 
   @FindBy(how = ID, using = "distributionStatus")
   private WebElement distributionStatus = null;
+
+  @FindBy(how = CSS, using = "div.navigation-locale-bar>ng-include.ng-scope>div.ng-scope>div.locale-container>ul>li.ng-scope>a#locale_pt")
+  private static WebElement langPortugueseLink = null;
+
+  @FindBy(how = CSS, using = "div.navigation-locale-bar>ng-include.ng-scope>div.ng-scope>div.locale-container>ul>li.ng-scope>a#locale_en")
+  private static WebElement langEnglishLink = null;
+
 
   public DistributionPage(TestWebDriver driver) {
     super(driver);
@@ -177,11 +177,6 @@ public class DistributionPage extends Page {
 
     String message = String.format("Data for the selected %s, %s, %s has been downloaded", deliveryZone, program, period);
     assertEquals(message, saveSuccessMessageDiv.getText());
-  }
-
-  public String getFacilityAlreadySyncMessage() {
-    testWebDriver.waitForElementToAppear(facilityAlreadySyncMessage);
-    return facilityAlreadySyncMessage.getText();
   }
 
 
@@ -282,6 +277,18 @@ public class DistributionPage extends Page {
   public void clickOk() {
     testWebDriver.waitForElementToAppear(okButton);
     okButton.click();
+  }
+
+  public void clickPortugueseLink() {
+    testWebDriver.sleep(1000);
+    testWebDriver.waitForElementToAppear(langPortugueseLink);
+    langPortugueseLink.click();
+  }
+
+  public void clickEnglishLink() {
+    testWebDriver.sleep(1000);
+    testWebDriver.waitForElementToAppear(langEnglishLink);
+    langEnglishLink.click();
   }
 
   public void CancelDeleteDistribution() {

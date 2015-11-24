@@ -17,7 +17,7 @@ import lombok.NoArgsConstructor;
 import java.util.Date;
 
 /**
- * This class holds a userId and timestamp, which is used to set audit fields for an imported entity.
+ * AuditFields hold a userId and timestamp, which is used to set audit fields for an imported entity.
  */
 
 @Data

@@ -67,7 +67,7 @@ public class ViewWarehouseLoadAmount extends TestCaseHelper {
     List<String> rightsList = new ArrayList<>();
     rightsList.add("MANAGE_DISTRIBUTION");
     setupTestDataToInitiateRnRAndDistribution(facilityCodeFirst, facilityCodeSecond, true,
-      programFirst, userSIC, "200", rightsList, programSecond, district1, district1, parentGeoZone);
+      programFirst, userSIC, rightsList, programSecond, district1, district1, parentGeoZone);
     dbWrapper.insertProductGroup(productGroupCode);
     dbWrapper.insertProductWithGroup("Product5", "ProductName5", productGroupCode, true);
     dbWrapper.insertProductWithGroup("Product6", "ProductName6", productGroupCode, true);
@@ -197,7 +197,7 @@ public class ViewWarehouseLoadAmount extends TestCaseHelper {
                                                                   String facilityCodeFourth, String programFirst, String programSecond,
                                                                   String schedule, String product1, String product2) throws SQLException {
     List<String> rightsList = asList("MANAGE_DISTRIBUTION");
-    setupTestDataToInitiateRnRAndDistribution(facilityCodeFirst, facilityCodeSecond, true, programFirst, userSIC, "200",
+    setupTestDataToInitiateRnRAndDistribution(facilityCodeFirst, facilityCodeSecond, true, programFirst, userSIC,
       rightsList, programSecond, district1, district1, parentGeoZone1);
 
     setupDataForDeliveryZone(false, deliveryZoneCodeFirst, deliveryZoneCodeSecond, deliveryZoneNameFirst, deliveryZoneNameSecond,
@@ -267,11 +267,13 @@ public class ViewWarehouseLoadAmount extends TestCaseHelper {
     assertEquals(warehouseLoadAmountPage.getAggregateTableTotalPopulation(),
       String.valueOf(Integer.parseInt(warehouseLoadAmountPage.getFacilityPopulation(1, 1)) +
         Integer.parseInt(warehouseLoadAmountPage.getFacilityPopulation(2, 1)) +
-        Integer.parseInt(warehouseLoadAmountPage.getFacilityPopulation(2, 2))));
+        Integer.parseInt(warehouseLoadAmountPage.getFacilityPopulation(2, 2)))
+    );
     assertEquals(warehouseLoadAmountPage.getAggregateTableTotalProductIsa(2),
       String.valueOf(Integer.parseInt(warehouseLoadAmountPage.getProductIsa(1, 1, 2)) +
         Integer.parseInt(warehouseLoadAmountPage.getProductIsa(1, 2, 2)) + Integer.parseInt(warehouseLoadAmountPage.getProductIsa(2, 1, 2)) +
-        Integer.parseInt(warehouseLoadAmountPage.getProductIsa(2, 2, 2))));
+        Integer.parseInt(warehouseLoadAmountPage.getProductIsa(2, 2, 2)))
+    );
     assertEquals(warehouseLoadAmountPage.getAggregateTableTotalProductIsa(1), warehouseLoadAmountPage.getProductIsa(2, 2, 1));
     assertEquals("--", warehouseLoadAmountPage.getTotalProductIsa(1, 1));
 
@@ -292,7 +294,7 @@ public class ViewWarehouseLoadAmount extends TestCaseHelper {
                                                     String facilityCodeSecond, String programFirst, String programSecond, String schedule,
                                                     String product, String product2) throws SQLException {
     List<String> rightsList = asList("MANAGE_DISTRIBUTION");
-    setupTestDataToInitiateRnRAndDistribution(facilityCodeFirst, facilityCodeSecond, true, programFirst, userSIC, "200",
+    setupTestDataToInitiateRnRAndDistribution(facilityCodeFirst, facilityCodeSecond, true, programFirst, userSIC,
       rightsList, programSecond, district1, parentGeoZone, parentGeoZone);
     setupDataForDeliveryZone(false, deliveryZoneCodeFirst, deliveryZoneCodeSecond, deliveryZoneNameFirst, deliveryZoneNameSecond,
       facilityCodeFirst, facilityCodeSecond, programFirst, programSecond, schedule);

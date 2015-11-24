@@ -84,7 +84,7 @@ function ViewLoadAmountController($scope, facilities, period, deliveryZone) {
 
     calculateTotalForGeoZoneParent();
   } else {
-    $scope.message = "msg.delivery.zone.no.record";
+    $scope.message = "msg.no.records.found";
   }
 
   $scope.getProgramProducts = function (facility) {
@@ -124,7 +124,7 @@ function ViewLoadAmountController($scope, facilities, period, deliveryZone) {
     $($scope.sortedGeoZoneKeys).each(function (i, geoZoneKey) {
       if (!isNaN(utils.parseIntWithBaseTen($scope.aggregateMap[geoZoneKey].totalPopulation))) {
         var population = calculateTotalForPopulation($scope.aggregateMap[geoZoneKey].totalPopulation,
-          $scope.zonesTotal.totalPopulation);
+            $scope.zonesTotal.totalPopulation);
         $scope.zonesTotal.totalPopulation = population;
       }
       $($scope.aggregateMap[geoZoneKey].sortedProductGroup).each(function (index, sortedProductGroupKey) {

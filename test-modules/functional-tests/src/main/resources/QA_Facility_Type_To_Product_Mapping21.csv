@@ -1,0 +1,23 @@
+Facility Type Code,Product Code,Program Code,Max Months of Stock
+warehouse,P10,HIV,3
+warehouse,P11,HIV,1
+warehouse,P12,HIV,2
+warehouse,P13,HIV,3
+warehouse,P14,HIV,4
+warehouse,P15,HIV,5
+warehouse,P16,HIV,3
+warehouse,P17,HIV,7
+warehouse,P18,HIV,3
+warehouse,P19,HIV,3
+warehouse,AP10,HIV,3
+warehouse,AP11,HIV,3
+warehouse,AP12,HIV,3
+warehouse,AP13,HIV,3
+warehouse,AP14,HIV,3
+warehouse,AP15,HIV,3
+warehouse,AP16,HIV,3
+warehouse,AP17,HIV,3
+warehouse,AP18,HIV,3
+warehouse,AP19,HIV,3
+warehouse,P20,HIV,3
+lvl3_hospital,P10,HIV,3

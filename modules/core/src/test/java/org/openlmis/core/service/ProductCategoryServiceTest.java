@@ -21,9 +21,11 @@ import org.openlmis.core.repository.ProductCategoryRepository;
 import org.openlmis.db.categories.UnitTests;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import java.util.List;
+
+import static java.util.Arrays.asList;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
-import static org.mockito.Matchers.isNotNull;
 import static org.mockito.Mockito.*;
 
 @Category(UnitTests.class)
@@ -31,24 +33,24 @@ import static org.mockito.Mockito.*;
 public class ProductCategoryServiceTest {
 
   @Mock
-  private ProductCategoryRepository productCategoryRepository;
+  private ProductCategoryRepository repository;
 
   @Autowired
-  ProductCategoryService productCategoryService;
+  ProductCategoryService service;
 
   @Before
   public void setUp() throws Exception {
-    productCategoryService = new ProductCategoryService(productCategoryRepository);
+    service = new ProductCategoryService(repository);
   }
 
   @Test
-  public void shouldGetProductCategoryIdByCode(){
+  public void shouldGetProductCategoryIdByCode() {
     String categoryCode = "category code";
     Long categoryId = 1L;
-    when(productCategoryRepository.getProductCategoryIdByCode(categoryCode)).thenReturn(categoryId);
-    Long productCategoryIdByCode = productCategoryService.getProductCategoryIdByCode(categoryCode);
+    when(repository.getIdByCode(categoryCode)).thenReturn(categoryId);
+    Long productCategoryIdByCode = service.getProductCategoryIdByCode(categoryCode);
 
-    verify(productCategoryRepository).getProductCategoryIdByCode(categoryCode);
+    verify(repository).getIdByCode(categoryCode);
     assertThat(productCategoryIdByCode, is(categoryId));
   }
 
@@ -56,9 +58,18 @@ public class ProductCategoryServiceTest {
   public void shouldUpdateProductCategoryIfAlreadyExists() {
     ProductCategory productCategory = new ProductCategory();
     productCategory.setId(1L);
-    productCategoryService.save(productCategory);
-    verify(productCategoryRepository).update(productCategory);
-    verify(productCategoryRepository, never()).insert(productCategory);
+    service.save(productCategory);
+    verify(repository).update(productCategory);
+    verify(repository, never()).insert(productCategory);
   }
 
+  @Test
+  public void shouldGetAll() {
+    List<ProductCategory> categories = asList(new ProductCategory());
+    when(repository.getAll()).thenReturn(categories);
+    List<ProductCategory> returnedCategories = service.getAll();
+
+    verify(repository).getAll();
+    assertThat(returnedCategories, is(categories));
+  }
 }

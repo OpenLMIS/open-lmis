@@ -45,15 +45,15 @@ import static org.openlmis.web.view.pdf.requisition.RequisitionCellFactory.*;
 @NoArgsConstructor
 public class RequisitionPdfModel {
   public static final String LABEL_CURRENCY_SYMBOL = "label.currency.symbol";
-  private List<RequisitionStatusChange> statusChanges;
   public static final float PARAGRAPH_SPACING = 30.0f;
   public static final BaseColor ROW_GREY_BACKGROUND = new BaseColor(235, 235, 235);
   public static final Font H1_FONT = FontFactory.getFont(FontFactory.TIMES, 30, Font.BOLD, BaseColor.BLACK);
   public static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("dd/MM/yyyy");
   public static final int TABLE_SPACING = 25;
-
+  private List<RequisitionStatusChange> statusChanges;
   private List<? extends Column> rnrColumnList;
   private List<? extends Column> regimenColumnList;
+  private Integer numberOfMonths;
   private Rnr requisition;
   private List<LossesAndAdjustmentsType> lossesAndAdjustmentsTypes;
   private MessageService messageService;
@@ -64,6 +64,7 @@ public class RequisitionPdfModel {
     this.regimenColumnList = (List<RegimenColumn>) model.get(REGIMEN_TEMPLATE);
     this.requisition = (Rnr) model.get(RNR);
     this.lossesAndAdjustmentsTypes = (List<LossesAndAdjustmentsType>) model.get(LOSSES_AND_ADJUSTMENT_TYPES);
+    this.numberOfMonths = (Integer) model.get(NUMBER_OF_MONTHS);
     this.messageService = messageService;
   }
 
@@ -105,7 +106,7 @@ public class RequisitionPdfModel {
 
       if (lineItem.isRnrLineItem()) {
         PrintRnrLineItem printRnrLineItem = new PrintRnrLineItem((RnrLineItem) lineItem);
-        printRnrLineItem.calculate(rnrColumnList, lossesAndAdjustmentsTypes);
+        printRnrLineItem.calculate(rnrColumnList, lossesAndAdjustmentsTypes, numberOfMonths, requisition.getStatus());
       }
 
       List<PdfPCell> cells = getCells(visibleColumns, lineItem, messageService.message(LABEL_CURRENCY_SYMBOL));
@@ -152,7 +153,6 @@ public class RequisitionPdfModel {
     table.addCell(cell);
   }
 
-
   public PdfPTable getNonFullSupplyTable() throws DocumentException, NoSuchFieldException, IllegalAccessException, IOException {
     List<RnrLineItem> nonFullSupplyLineItems = requisition.getNonFullSupplyLineItems();
     Collections.sort(nonFullSupplyLineItems, new LineItemComparator());
@@ -171,7 +171,6 @@ public class RequisitionPdfModel {
     table.setSpacingAfter(PARAGRAPH_SPACING);
     return table;
   }
-
 
   private void addHeading(PdfPTable table) throws DocumentException {
     Chunk chunk = new Chunk(String.format(messageService.message("label.requisition") + ": %s (%s)",
@@ -194,7 +193,7 @@ public class RequisitionPdfModel {
     text = String.format(messageService.message("label.facility.maximumStock") + ": %s",
       facility.getFacilityType().getNominalMaxMonth());
     insertCell(table, text, 1);
-    text = String.format(messageService.message("label.facility.emergencyOrder") + ": %s",
+    text = String.format(messageService.message("label.emergency.order.point") + ": %s",
       facility.getFacilityType().getNominalEop());
     insertCell(table, text, 1);
   }
@@ -227,7 +226,6 @@ public class RequisitionPdfModel {
     builder = new StringBuilder();
     builder.append(messageService.message("label.requisition.type")).append(": ").append(messageService.message(label));
     insertCell(table, builder.toString(), 1);
-
   }
 
   private PdfPTable prepareRequisitionHeaderTable() throws DocumentException {
@@ -323,7 +321,6 @@ public class RequisitionPdfModel {
   public Money getTotalCost(Rnr requisition) {
     return new Money(requisition.getFullSupplyItemsSubmittedCost().getValue().add(requisition.getNonFullSupplyItemsSubmittedCost().getValue()));
   }
-
 
   public Paragraph getRegimenHeader() {
     return new Paragraph(messageService.message("label.regimens"), H2_FONT);

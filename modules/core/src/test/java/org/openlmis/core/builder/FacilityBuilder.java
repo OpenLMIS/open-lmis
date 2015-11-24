@@ -36,8 +36,8 @@ public class FacilityBuilder {
   public static final Property<Facility, Date> goLiveDate = newProperty();
   public static final Property<Facility, String> operatedByCode = newProperty();
   public static final Property<Facility, GeographicZone> geographicZone = newProperty();
-  public static Property<Facility, Long> typeId = newProperty();
-  private static Property<Facility, Long> operatedById = newProperty();
+  public static final Property<Facility, Long> typeId = newProperty();
+  public static final Property<Facility, Long> operatedById = newProperty();
   public static final Property<Facility, Long> parentFacilityId = newProperty();
   public static final Property<Facility, Boolean> enabled = newProperty();
   public static final Property<Facility, List<ProgramSupported>> programSupportedList = newProperty();
@@ -61,7 +61,7 @@ public class FacilityBuilder {
       facility.setCode(lookup.valueOf(code, FACILITY_CODE));
       FacilityType facilityType = new FacilityType();
       facilityType.setCode(lookup.valueOf(type, FACILITY_TYPE_CODE));
-      facilityType.setName("Central Warehouse");
+      facilityType.setName("Warehouse");
       facilityType.setId(lookup.valueOf(typeId, FACILITY_TYPE_ID));
       facilityType.setNominalMaxMonth(100);
       facilityType.setNominalEop(50.5);
@@ -73,7 +73,7 @@ public class FacilityBuilder {
       zone.setLevel(new GeographicLevel(1L, "levelCode", "levelName", 4));
       zone.setId(lookup.valueOf(geographicZoneId, GEOGRAPHIC_ZONE_ID));
       zone.setCode(lookup.valueOf(geographicZoneCode, GEOGRAPHIC_ZONE_CODE));
-      zone.setName("Lusaka");
+      zone.setName("Arusha");
       GeographicZone parentGeographicZone = new GeographicZone();
       parentGeographicZone.setLevel(new GeographicLevel(2L, "parentLevelCode", "parentLevelName", 3));
       parentGeographicZone.setId(lookup.valueOf(geographicZoneId, GEOGRAPHIC_ZONE_ID));

@@ -15,11 +15,12 @@ import org.openlmis.core.domain.*;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.core.repository.mapper.SupervisoryNodeMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
 
-import static org.openlmis.core.domain.Right.commaSeparateRightNames;
+import static org.openlmis.core.domain.RightName.commaSeparateRightNames;
 
 /**
  * SupervisoryNodeRepository is Repository class for SupervisoryNode related database operations.
@@ -34,18 +35,25 @@ public class SupervisoryNodeRepository {
   private RequisitionGroupRepository requisitionGroupRepository;
 
   @Autowired
-  public SupervisoryNodeRepository(SupervisoryNodeMapper supervisoryNodeMapper, FacilityRepository facilityRepository, RequisitionGroupRepository requisitionGroupRepository) {
+  public SupervisoryNodeRepository(SupervisoryNodeMapper supervisoryNodeMapper,
+                                   FacilityRepository facilityRepository,
+                                   RequisitionGroupRepository requisitionGroupRepository) {
     this.supervisoryNodeMapper = supervisoryNodeMapper;
     this.facilityRepository = facilityRepository;
     this.requisitionGroupRepository = requisitionGroupRepository;
   }
 
   public void insert(SupervisoryNode supervisoryNode) {
-    supervisoryNodeMapper.insert(supervisoryNode);
+    try {
+      supervisoryNodeMapper.insert(supervisoryNode);
+    } catch (DuplicateKeyException ex) {
+      throw new DataException("error.duplicate.code.supervisory.node");
+    }
   }
 
-  public List<SupervisoryNode> getAllSupervisoryNodesInHierarchyBy(Long userId, Long programId, Right... rights) {
-    return supervisoryNodeMapper.getAllSupervisoryNodesInHierarchyBy(userId, programId, commaSeparateRightNames(rights));
+  public List<SupervisoryNode> getAllSupervisoryNodesInHierarchyBy(Long userId, Long programId, String... rightNames) {
+    return supervisoryNodeMapper.getAllSupervisoryNodesInHierarchyBy(userId, programId,
+      commaSeparateRightNames(rightNames));
   }
 
   public Long getIdForCode(String code) {
@@ -62,7 +70,8 @@ public class SupervisoryNodeRepository {
   }
 
   public SupervisoryNode getFor(Facility facility, Program program) {
-    RequisitionGroup requisitionGroup = requisitionGroupRepository.getRequisitionGroupForProgramAndFacility(program, facility);
+    RequisitionGroup requisitionGroup = requisitionGroupRepository.getRequisitionGroupForProgramAndFacility(program,
+      facility);
     return (requisitionGroup == null) ? null : supervisoryNodeMapper.getFor(requisitionGroup.getCode());
   }
 
@@ -74,8 +83,9 @@ public class SupervisoryNodeRepository {
     return supervisoryNodeMapper.getAll();
   }
 
-  public List<SupervisoryNode> getAllSupervisoryNodesInHierarchyBy(Long userId, Right... rights) {
-    return supervisoryNodeMapper.getAllSupervisoryNodesInHierarchyByUserAndRights(userId, commaSeparateRightNames(rights));
+  public List<SupervisoryNode> getAllSupervisoryNodesInHierarchyBy(Long userId, String... rightNames) {
+    return supervisoryNodeMapper.getAllSupervisoryNodesInHierarchyByUserAndRights(userId,
+      commaSeparateRightNames(rightNames));
   }
 
   public List<SupervisoryNode> getAllParentSupervisoryNodesInHierarchy(SupervisoryNode node) {
@@ -87,6 +97,38 @@ public class SupervisoryNodeRepository {
   }
 
   public void update(SupervisoryNode supervisoryNode) {
-    supervisoryNodeMapper.update(supervisoryNode);
+    try {
+      supervisoryNodeMapper.update(supervisoryNode);
+    } catch (DuplicateKeyException ex) {
+      throw new DataException("error.duplicate.code.supervisory.node");
+    }
+  }
+
+  public List<SupervisoryNode> getSupervisoryNodesByParent(Pagination pagination, String nameSearchCriteria) {
+    return supervisoryNodeMapper.getSupervisoryNodesByParent(nameSearchCriteria, pagination);
+  }
+
+  public List<SupervisoryNode> getSupervisoryNodesBy(Pagination pagination, String nameSearchCriteria) {
+    return supervisoryNodeMapper.getSupervisoryNodesBy(nameSearchCriteria, pagination);
+  }
+
+  public Integer getTotalSearchResultCount(String param) {
+    return supervisoryNodeMapper.getTotalSearchResultCount(param);
+  }
+
+  public Integer getTotalParentSearchResultCount(String param) {
+    return supervisoryNodeMapper.getTotalParentSearchResultCount(param);
+  }
+
+  public SupervisoryNode getSupervisoryNode(Long id) {
+    return supervisoryNodeMapper.getSupervisoryNode(id);
+  }
+
+  public List<SupervisoryNode> getFilteredSupervisoryNodesByName(String param) {
+    return supervisoryNodeMapper.getFilteredSupervisoryNodesByName(param);
+  }
+
+  public List<SupervisoryNode> searchTopLevelSupervisoryNodesByName(String param) {
+    return supervisoryNodeMapper.searchTopLevelSupervisoryNodesByName(param);
   }
 }
