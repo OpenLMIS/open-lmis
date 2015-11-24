@@ -34,10 +34,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.sql.SQLException;
-import java.util.Calendar;
-import java.util.Collections;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 import static com.natpryce.makeiteasy.MakeItEasy.*;
 import static java.util.Arrays.asList;
@@ -154,8 +151,24 @@ public class RequisitionMapperIT {
     Rnr requisition = new Rnr(new Facility(facility.getId()), new Program(program.getId()), processingPeriod1, false, MODIFIED_BY, 1L);
     requisition.setAllocatedBudget(new BigDecimal(123.45));
     requisition.setStatus(INITIATED);
+    requisition.setId(1L);
 
+    String submitterText = "submitter";
+    Signature submitterSignature = new Signature(Signature.Type.SUBMITTER, submitterText);
+    String approverText = "approver";
+    Signature approverSignature = new Signature(Signature.Type.APPROVER, approverText);
+
+    ArrayList<Signature> rnrSignatures = new ArrayList<>();
+    rnrSignatures.add(submitterSignature);
+    rnrSignatures.add(approverSignature);
+
+    requisition.setRnrSignatures(rnrSignatures);
+
+    signatureMapper.insertSignature(submitterSignature);
+    signatureMapper.insertSignature(approverSignature);
     mapper.insert(requisition);
+    mapper.insertRnrSignature(requisition, submitterSignature);
+    mapper.insertRnrSignature(requisition, approverSignature);
 
     Product product = insertProduct(true, "P1");
     RnrLineItem fullSupplyLineItem = make(a(defaultRnrLineItem, with(fullSupply, true), with(productCode, product.getCode())));
@@ -186,6 +199,11 @@ public class RequisitionMapperIT {
     assertThat(fetchedRequisition.getFullSupplyLineItems().size(), is(1));
     assertThat(fetchedRequisition.getNonFullSupplyLineItems().size(), is(1));
     assertThat(fetchedRequisition.getAllocatedBudget(), is(new BigDecimal(123.45).setScale(2, RoundingMode.FLOOR)));
+    assertThat(fetchedRequisition.getRnrSignatures().size(), is(2));
+    assertThat(fetchedRequisition.getRnrSignatures().get(0).getType(), is(Signature.Type.SUBMITTER));
+    assertThat(fetchedRequisition.getRnrSignatures().get(0).getText(), is(submitterText));
+    assertThat(fetchedRequisition.getRnrSignatures().get(1).getType(), is(Signature.Type.APPROVER));
+    assertThat(fetchedRequisition.getRnrSignatures().get(1).getText(), is(approverText));
   }
 
   @Test

@@ -30,9 +30,20 @@ function ViewRnrViaDetailController($scope, $route, $location, Requisitions) {
             $scope.numPages = $scope.rnrItems.length / $scope.pageSize;
 
             refreshItems();
+            parseSignature($scope.rnr.rnrSignatures);
         });
 
     };
+
+    function parseSignature(signatures){
+        _.forEach(signatures,function(signature){
+           if(signature.type == "SUBMITTER"){
+               $scope.submitterSignature = signature.text;
+           } else if (signature.type == "APPROVER"){
+               $scope.approverSignature = signature.text;
+           }
+        });
+    }
 
     $scope.$on('$routeUpdate', refreshItems);
     function refreshItems() {

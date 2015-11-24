@@ -25,9 +25,21 @@ function ViewRnrMmiaController($scope, $route, Requisitions, messageService) {
             $scope.initMonth();
             $scope.initProduct();
             $scope.initRegime();
+
+            parseSignature($scope.rnr.rnrSignatures);
         });
 
     };
+
+    function parseSignature(signatures){
+        _.forEach(signatures,function(signature){
+            if(signature.type == "SUBMITTER"){
+                $scope.submitterSignature = signature.text;
+            } else if (signature.type == "APPROVER"){
+                $scope.approverSignature = signature.text;
+            }
+        });
+    }
 
     $scope.initMonth = function () {
         var month = "month." + $scope.rnr.period.stringEndDate.substr(3, 2);
