@@ -8,17 +8,20 @@
  * You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org. 
  */
 
-function ISACoefficientsModalController($scope, $rootScope)
+function ISACoefficientsModalController($scope, $rootScope, $timeout)
 {
   var successCallBack = function () {
     $scope.message = "message.isa.save.success";
-    setTimeout(function () {
-      $scope.$apply(function () {
-        angular.element("#saveSuccessMsgDiv").fadeOut('slow', function () {
+
+    $timeout
+    (
+        function()
+        {
           $scope.message = '';
-        });
-      });
-    }, 3000);
+        },
+        2000
+    );
+
     $scope.error = "";
     $scope.programProductISAModal = false;
 
