@@ -50,12 +50,6 @@ public class ProgramProduct extends BaseModel implements Importable {
   @ImportField(name = "Display Order", type = "int")
   private Integer displayOrder;
 
-  @ImportField(mandatory = true, type = "String", name = "Product Category", nested = "code")
-  private ProductCategory productCategory;
-
-  @ImportField(name = "Display Order", type = "int")
-  private Integer displayOrder;
-
   ProgramProductISA programProductIsa;
 
   private Money currentPrice;

@@ -1679,6 +1679,8 @@ public class DBWrapper {
       rights.add(rs.getString(1));
     }
     return rights;
+  }
+
   public void insertProgram(String program) throws SQLException {
     update("INSERT INTO programs (code, name, active) values ('" + program + "','" + program + "','t');");
   }
