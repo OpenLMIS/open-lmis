@@ -18,9 +18,8 @@ repositories {
 }
 
 dependencies {
-    compile 'org.apache.poi:poi:3.7',
-            'org.apache.poi:poi-ooxml:3.7',
-            project(':modules:email')
+    compile 'org.apache.poi:poi:3.13',
+            'org.apache.poi:poi-ooxml:3.13'
 }
 
 cobertura {
