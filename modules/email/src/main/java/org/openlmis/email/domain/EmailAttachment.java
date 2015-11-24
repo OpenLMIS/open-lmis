@@ -12,7 +12,6 @@ import java.util.Date;
 @NoArgsConstructor
 public class EmailAttachment {
   private Long id;
-  private Long emailId;
   private String attachmentPath;
   private String attachmentName;
   private DataSource fileDataSource;

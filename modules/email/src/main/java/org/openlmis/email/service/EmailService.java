@@ -116,6 +116,13 @@ public class EmailService {
     return repository.queueEmailMessage(message);
   }
 
+  public List<EmailAttachment> insertEmailAttachmentList(List<EmailAttachment> attachments) {
+    for (EmailAttachment attachment : attachments) {
+      repository.insertEmailAttachment(attachment);
+    }
+    return attachments;
+  }
+
   public void queueHtmlMessage(String to, String subject, String template, Map model){
     StringWriter writer = new StringWriter();
     VelocityContext context = new VelocityContext();

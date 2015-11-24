@@ -12,8 +12,9 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.transaction.TransactionConfiguration;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 import static org.hamcrest.Matchers.is;
-import static org.hamcrest.Matchers.notNullValue;
 import static org.junit.Assert.assertThat;
 
 
@@ -39,34 +40,52 @@ public class EmailNotificationMapperIT {
 
 	@Test
 	public void shouldReturnIdAfterInsertEmailMessage() throws Exception {
-		EmailMessage message = new EmailMessage();
-		message.setTo("test@dev.org");
-		message.setText("The Test Message");
-		message.setSubject("test");
+		EmailMessage message = generateEmailMessage();
 
 		Integer count = mapper.insertEmailMessage(message);
 		assertThat(count, is(1));
-		assertThat(message.getId()>0, is(true));
+		assertThat(message.getId() > 0, is(true));
 	}
 
 	@Test
 	public void shouldInsertEmailAttachment() throws Exception {
+		EmailAttachment attachment = generateEmailAttachment();
+
+		Integer count = mapper.insertEmailAttachment(attachment);
+		assertThat(count, is(1));
+		assertThat(attachment.getId() > 0, is(true));
+	}
+
+	@Test
+	public void shouldInsertEmailAttachmentRelation() throws Exception {
+		EmailAttachment attachment1 = generateEmailAttachment();
+		EmailAttachment attachment2 = generateEmailAttachment();
+		mapper.insertEmailAttachment(attachment1);
+		mapper.insertEmailAttachment(attachment2);
+
+		EmailMessage message = generateEmailMessage();
+		mapper.insertEmailMessage(message);
+
+		mapper.insertEmailAttachmentsRelation(message.getId(), attachment1.getId());
+		mapper.insertEmailAttachmentsRelation(message.getId(), attachment2.getId());
+
+		List<EmailAttachment> attachmentList = mapper.queryEmailAttachmentsByEmailId(message.getId());
+		assertThat(attachmentList.size(), is(2));
+	}
+
+	private EmailMessage generateEmailMessage() {
 		EmailMessage message = new EmailMessage();
 		message.setTo("test@dev.org");
 		message.setText("The Test Message");
 		message.setSubject("test");
+		return message;
+	}
 
-		Integer count = mapper.insertEmailMessage(message);
-		assertThat(count, is(1));
-
+	private EmailAttachment generateEmailAttachment() {
 		EmailAttachment attachment = new EmailAttachment();
-		attachment.setEmailId(message.getId());
 		attachment.setAttachmentName("test file");
 		attachment.setAttachmentPath("/path");
-
-		count = mapper.insertEmailAttachment(attachment);
-		assertThat(count, is(1));
-		assertThat(attachment.getId()>0, is(true));
+		return attachment;
 	}
 
 }

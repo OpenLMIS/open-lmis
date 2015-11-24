@@ -17,6 +17,9 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.springframework.mail.SimpleMailMessage;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * OpenlmisEmailMessage is an entity that contains additional id attribute apart from basic attributes provided by
  * SimpleMailMessage.
@@ -30,11 +33,17 @@ public class EmailMessage extends SimpleMailMessage {
 	private boolean isHtml;
 	private boolean sent;
 
+	private List<EmailAttachment> emailAttachments = new ArrayList<>();
+
 	public EmailMessage() {
 		super();
 	}
 
 	public String getReceiver() {
 		return super.getTo() != null ? super.getTo()[0] : null;
+	}
+
+	public void addEmailAttachment(EmailAttachment attachment) {
+		this.emailAttachments.add(attachment);
 	}
 }

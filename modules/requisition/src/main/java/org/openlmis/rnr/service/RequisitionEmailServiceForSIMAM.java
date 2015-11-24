@@ -6,10 +6,10 @@ import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.MapUtils;
 import org.apache.commons.collections.Transformer;
 import org.apache.poi.ss.usermodel.Workbook;
-import org.openlmis.core.domain.Program;
 import org.openlmis.core.domain.User;
 import org.openlmis.core.service.ConfigurationSettingService;
 import org.openlmis.email.domain.EmailAttachment;
+import org.openlmis.email.domain.EmailMessage;
 import org.openlmis.email.service.EmailService;
 import org.openlmis.files.excel.ExcelHandler;
 import org.openlmis.files.excel.SingleListSheetExcelHandler;
@@ -31,140 +31,147 @@ import java.util.Map;
 @NoArgsConstructor
 @AllArgsConstructor
 public class RequisitionEmailServiceForSIMAM {
-  private static final Logger logger = LoggerFactory.getLogger(RequisitionEmailServiceForSIMAM.class);
+	private static final Logger logger = LoggerFactory.getLogger(RequisitionEmailServiceForSIMAM.class);
 
-  public static final String TEMPLATE_IMPORT_RNR_XLSX = "template_Simam_import_Requi.xlsx";
-  public static final String TEMPLATE_IMPORT_REGIMEN_XLSX = "template_Simam_import_Regimen.xlsx";
-  public static final String TEMPLATE_IMPORT_REGIMEN_XLSX_EMPTY = "template_Simam_import_Regimen_EMPTY.xlsx";
+	public static final String TEMPLATE_IMPORT_RNR_XLSX = "template_Simam_import_Requi.xlsx";
+	public static final String TEMPLATE_IMPORT_REGIMEN_XLSX = "template_Simam_import_Regimen.xlsx";
+	public static final String TEMPLATE_IMPORT_REGIMEN_XLSX_EMPTY = "template_Simam_import_Regimen_EMPTY.xlsx";
 
-  public static final String FILE_APPLICATION_VND_MS_EXCEL = "application/excel";
+	public static final String FILE_APPLICATION_VND_MS_EXCEL = "application/excel";
 
-  public static final String REGIMEN_FILE_NAME_PREFIX = "Regimen_Requi";
-  public static final String REQUI_FILE_NAME_PREFIX = "Requi";
-  public static final String EMAIL_TEMPLATE_FOR_REQUISITION_ATTACHMENT_PREFIX = "EMAIL_TEMPLATE_FOR_REQUISITION_ATTACHMENT_";
+	public static final String REGIMEN_FILE_NAME_PREFIX = "Regimen_Requi";
+	public static final String REQUI_FILE_NAME_PREFIX = "Requi";
+	public static final String EMAIL_TEMPLATE_FOR_REQUISITION_ATTACHMENT_PREFIX = "EMAIL_TEMPLATE_FOR_REQUISITION_ATTACHMENT_";
 
 
-  @Autowired
-  private RnrMapperForSIMAM rnrMapperForSIMAM;
+	@Autowired
+	private RnrMapperForSIMAM rnrMapperForSIMAM;
 
-  @Autowired
-  private EmailService emailService;
+	@Autowired
+	private EmailService emailService;
 
-  @Autowired
-  ConfigurationSettingService settingService;
+	@Autowired
+	ConfigurationSettingService settingService;
 
-  @Autowired
-  private SingleListSheetExcelHandler singleListSheetExcelHandler;
+	@Autowired
+	private SingleListSheetExcelHandler singleListSheetExcelHandler;
 
-  public static final Map<String, String> SIMAM_PROGRAMS_MAP = MapUtils.putAll(new HashMap(), new String[][]{
-      {"MMIA", "TARV"},
-      {"ESS_MEDS", "Medicamentos Essenciais"}
-  });
+	public static final Map<String, String> SIMAM_PROGRAMS_MAP = MapUtils.putAll(new HashMap(),
+										new String[][]{
+											{"MMIA", "TARV"},
+											{"ESS_MEDS", "Medicamentos Essenciais"}
+										});
 
-  public void sendRequisitionEmailWithAttachment(Rnr requisition, List<User> users) {
-    if (!requisition.getStatus().equals(RnrStatus.AUTHORIZED) || users.size() <= 0 ) {
-      return;
-    }
+	public void sendRequisitionEmailWithAttachment(Rnr requisition, List<User> users) {
+		if (!requisition.getStatus().equals(RnrStatus.AUTHORIZED) || users.size() <= 0) {
+			return;
+		}
 
-    final List<String> to = new ArrayList<>();
-    for (User user : users) {
-      to.add(user.getEmail());
-    }
+		insertEmailMessages(requisition, users);
+	}
 
-    final String subject = "SIMAM Import Files for Requisition #" + requisition.getId();
-    Program program = requisition.getProgram();
-    final String messageBody = createEmailBodyContent(program.getCode());
+	private void insertEmailMessages(Rnr requisition, List<User> users) {
+		List<EmailAttachment> emailAttachments = prepareEmailAttachmentsForSIMAM(requisition);
+		emailService.insertEmailAttachmentList(emailAttachments);
 
-    String fileNameSuffix = requisition.getId() + "_" + requisition.getFacility().getName() + "_" + requisition.getPeriod().getName() + "_" + program.getName() + ".xlsx";
+		final String subject = "SIMAM Import Files for Requisition #" + requisition.getId();
+		final String messageBody = createEmailBodyContent(requisition.getProgram().getCode());
 
-    List<EmailAttachment> emailAttachments = prepareEmailAttachmentsForSIMAM(requisition, fileNameSuffix);
-    emailService.sendMimeMessageToMultipleUser(to.toArray(new String[0]), subject, messageBody, emailAttachments);
-  }
+		for (User user : users) {
+			String emailAddress = user.getEmail();
+			if (emailAddress != null) {
+				EmailMessage emailMessage = new EmailMessage();
+				emailMessage.setTo(emailAddress);
+				emailMessage.setText(messageBody);
+				emailMessage.setSubject(subject);
+				emailMessage.setEmailAttachments(emailAttachments);
 
-  private String createEmailBodyContent(String programCode) {
-    String emailContent = settingService.getConfigurationStringValue(EMAIL_TEMPLATE_FOR_REQUISITION_ATTACHMENT_PREFIX + programCode);
-    return emailContent == null ? "" : emailContent;
-  }
+				emailService.queueEmailMessage(emailMessage);
+			}
+		}
+	}
 
-  private void convertOpenLMISProgramCodeToSIMAMCode(final List<Map<String, String>> itemsMap) {
+	private String createEmailBodyContent(String programCode) {
+		String emailContent = settingService.getConfigurationStringValue(EMAIL_TEMPLATE_FOR_REQUISITION_ATTACHMENT_PREFIX + programCode);
+		return emailContent == null ? "" : emailContent;
+	}
 
-    CollectionUtils.collect(itemsMap, new Transformer() {
-      @Override
-      public Map<String, String> transform(Object input) {
-        String programCode = ((Map<String, String>) input).get("program_code");
-        ((Map<String, String>) input).put("program_code", SIMAM_PROGRAMS_MAP.get(programCode));
-        return (Map<String, String>) input;
-      }
-    });
-  }
+	private void convertOpenLMISProgramCodeToSIMAMCode(final List<Map<String, String>> itemsMap) {
+		CollectionUtils.collect(itemsMap, new Transformer() {
+			@Override
+			public Map<String, String> transform(Object input) {
+				String programCode = ((Map<String, String>) input).get("program_code");
+				((Map<String, String>) input).put("program_code", SIMAM_PROGRAMS_MAP.get(programCode));
+				return (Map<String, String>) input;
+			}
+		});
+	}
 
-  private String generateRequisitionExcelForSIMAM(Rnr requisition, String fileName) {
-    List<Map<String, String>> requisitionItemsData = rnrMapperForSIMAM.getRnrItemsForSIMAMImport(requisition);
-    convertOpenLMISProgramCodeToSIMAMCode(requisitionItemsData);
+	public  EmailAttachment generateRequisitionExcelForSIMAM(Rnr requisition) {
+		List<Map<String, String>> requisitionItemsData = rnrMapperForSIMAM.getRnrItemsForSIMAMImport(requisition);
+		convertOpenLMISProgramCodeToSIMAMCode(requisitionItemsData);
+		Workbook workbook = singleListSheetExcelHandler.readXssTemplateFile(TEMPLATE_IMPORT_RNR_XLSX, ExcelHandler.PathType.FILE);
+		singleListSheetExcelHandler.createDataRows(workbook.getSheetAt(0), requisitionItemsData);
 
-    Workbook workbook = singleListSheetExcelHandler.readXssTemplateFile(TEMPLATE_IMPORT_RNR_XLSX,
-        ExcelHandler.PathType.FILE);
-    singleListSheetExcelHandler.createDataRows(workbook.getSheetAt(0), requisitionItemsData);
-    return singleListSheetExcelHandler.createXssFile(workbook, fileName);
-  }
+		String requiFileName = fileNameForRequiItems(requisition);
+		String filePath = singleListSheetExcelHandler.createXssFile(workbook, requiFileName);
+		return generateEmailAttachment(requiFileName, filePath);
+	}
 
-  private String generateRegimenExcelForSIMAM(Rnr requisition, String fileName) {
-    List<Map<String, String>> regimenItemsData = rnrMapperForSIMAM.getRegimenItemsForSIMAMImport(requisition);
+	private EmailAttachment generateRegimenExcelForSIMAM(Rnr requisition) {
+		List<Map<String, String>> regimenItemsData = rnrMapperForSIMAM.getRegimenItemsForSIMAMImport(requisition);
 
-    Workbook workbook;
-    if (regimenItemsData.isEmpty()) {
-       workbook = singleListSheetExcelHandler.readXssTemplateFile(TEMPLATE_IMPORT_REGIMEN_XLSX_EMPTY,
-          ExcelHandler.PathType.FILE);
-    } else {
+		Workbook workbook;
+		if (regimenItemsData.isEmpty()) {
+			workbook = singleListSheetExcelHandler.readXssTemplateFile(TEMPLATE_IMPORT_REGIMEN_XLSX_EMPTY, ExcelHandler.PathType.FILE);
+		} else {
 
-      CollectionUtils.collect(regimenItemsData, new Transformer() {
-        @Override
-        public Map<String, String> transform(Object input) {
-          ((Map<String, String>) input).put("movDescID", "0");
-          return (Map<String, String>) input;
-        }
-      });
+			CollectionUtils.collect(regimenItemsData, new Transformer() {
+				@Override
+				public Map<String, String> transform(Object input) {
+					((Map<String, String>) input).put("movDescID", "0");
+					return (Map<String, String>) input;
+				}
+			});
 
-      convertOpenLMISProgramCodeToSIMAMCode(regimenItemsData);
+			convertOpenLMISProgramCodeToSIMAMCode(regimenItemsData);
 
-      workbook = singleListSheetExcelHandler.readXssTemplateFile(TEMPLATE_IMPORT_REGIMEN_XLSX,
-          ExcelHandler.PathType.FILE);
-      singleListSheetExcelHandler.createDataRows(workbook.getSheetAt(0), regimenItemsData);
-    }
-    return singleListSheetExcelHandler.createXssFile(workbook, fileName);
+			workbook = singleListSheetExcelHandler.readXssTemplateFile(TEMPLATE_IMPORT_REGIMEN_XLSX, ExcelHandler.PathType.FILE);
+			singleListSheetExcelHandler.createDataRows(workbook.getSheetAt(0), regimenItemsData);
+		}
 
-  }
+		String regimenFileName = fileNameForRegimens(requisition);
+		String filePath = singleListSheetExcelHandler.createXssFile(workbook, regimenFileName);
+		return generateEmailAttachment(regimenFileName, filePath);
+	}
 
-  private String fileNameForRequiItems(Rnr requisition) {
-    return "Regimen_Requi" + requisition.getId() + "_" + requisition.getFacility().getName() + "_" + requisition.getPeriod().getName() + "_" + requisition.getProgram().getName();
-  }
+	private String fileNameForRequiItems(Rnr requisition) {
+		return REQUI_FILE_NAME_PREFIX + requisition.getId() + "_" + requisition.getFacility().getName() + "_" + requisition.getPeriod().getName() + "_" +
+                       requisition.getProgram().getName() + ".xlsx";
+	}
 
-  private String fileNameForRegimens(Rnr requisition) {
-    return "Requi" + requisition.getId() + "_" + requisition.getFacility().getName() + "_" + requisition.getPeriod().getName() + "_" + requisition.getProgram().getName();
-  }
+	private String fileNameForRegimens(Rnr requisition) {
+		return REGIMEN_FILE_NAME_PREFIX + requisition.getId() + "_" + requisition.getFacility().getName() + "_" + requisition.getPeriod().getName() + "_" +
+                       requisition.getProgram().getName() + ".xlsx";
+	}
 
-  private List<EmailAttachment> prepareEmailAttachmentsForSIMAM(Rnr requisition, String fileNameSuffix) {
-    List<EmailAttachment> emailAttachments = new ArrayList<>();
+	private List<EmailAttachment> prepareEmailAttachmentsForSIMAM(Rnr requisition) {
 
-    String requiFileName = REQUI_FILE_NAME_PREFIX + fileNameSuffix;
-    String regimenFileName = REGIMEN_FILE_NAME_PREFIX + fileNameSuffix;
+		List<EmailAttachment> emailAttachments = new ArrayList<>();
+		EmailAttachment attachmentForRequisition = generateRequisitionExcelForSIMAM(requisition);
+		emailAttachments.add(attachmentForRequisition);
 
-    String requisitionItemsFilePath = generateRequisitionExcelForSIMAM(requisition, requiFileName);
-    String regimenItemsFilePath = generateRegimenExcelForSIMAM(requisition, regimenFileName);
+		EmailAttachment attachmentForRegimen = generateRegimenExcelForSIMAM(requisition);
+		emailAttachments.add(attachmentForRegimen);
 
-    DataSource requisitionItemsFile = emailService.getFileDataSource(requisitionItemsFilePath, FILE_APPLICATION_VND_MS_EXCEL);
-    DataSource regimenItemsFile = emailService.getFileDataSource(regimenItemsFilePath, FILE_APPLICATION_VND_MS_EXCEL);
+		return emailAttachments;
+	}
 
-    EmailAttachment attachmentForRequisition = new EmailAttachment();
-    attachmentForRequisition.setAttachmentName(requiFileName);
-    attachmentForRequisition.setFileDataSource(requisitionItemsFile);
-    emailAttachments.add(attachmentForRequisition);
-
-    EmailAttachment attachmentForRegimen = new EmailAttachment();
-    attachmentForRegimen.setAttachmentName(regimenFileName);
-    attachmentForRegimen.setFileDataSource(regimenItemsFile);
-    emailAttachments.add(attachmentForRegimen);
-
-    return emailAttachments;
-  }
+	private EmailAttachment generateEmailAttachment(String fileName, String filePath) {
+		DataSource regimenItemsFile = emailService.getFileDataSource(filePath, FILE_APPLICATION_VND_MS_EXCEL);
+		EmailAttachment attachmentForRegimen = new EmailAttachment();
+		attachmentForRegimen.setAttachmentName(fileName);
+		attachmentForRegimen.setFileDataSource(regimenItemsFile);
+		return attachmentForRegimen;
+	}
 }

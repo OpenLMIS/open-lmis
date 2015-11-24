@@ -10,26 +10,29 @@ import org.springframework.stereotype.Repository;
 @Repository
 public class EmailNotificationRepository {
 
-  @Autowired
-  EmailNotificationMapper mapper;
+	@Autowired
+	EmailNotificationMapper mapper;
 
-  @Deprecated
-  public void queueMessage(SimpleMailMessage message){
-    mapper.insert(message.getTo()[0],message.getText(), message.getSubject(), false);
-  }
+	@Deprecated
+	public void queueMessage(SimpleMailMessage message) {
+		mapper.insert(message.getTo()[0], message.getText(), message.getSubject(), false);
+	}
 
-  @Deprecated
-  public void queueMessage(String to, String message, String subject, Boolean isHtml){
-    mapper.insert(to, message, subject, isHtml);
-  }
+	@Deprecated
+	public void queueMessage(String to, String message, String subject, Boolean isHtml) {
+		mapper.insert(to, message, subject, isHtml);
+	}
 
-  public EmailMessage queueEmailMessage(EmailMessage message){
-    mapper.insertEmailMessage(message);
-    return message;
-  }
+	public EmailMessage queueEmailMessage(EmailMessage message) {
+		mapper.insertEmailMessage(message);
+		for (EmailAttachment attachment : message.getEmailAttachments()) {
+			mapper.insertEmailAttachmentsRelation(message.getId(), attachment.getId());
+		}
+		return message;
+	}
 
-  public EmailAttachment insertEmailAttachment(EmailAttachment attachment){
-    mapper.insertEmailAttachment(attachment);
-    return attachment;
-  }
+	public EmailAttachment insertEmailAttachment(EmailAttachment attachment) {
+		mapper.insertEmailAttachment(attachment);
+		return attachment;
+	}
 }

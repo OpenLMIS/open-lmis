@@ -3,9 +3,12 @@ package org.openlmis.email.repository.mapper;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Options;
 import org.apache.ibatis.annotations.Param;
+import org.apache.ibatis.annotations.Select;
 import org.openlmis.email.domain.EmailAttachment;
 import org.openlmis.email.domain.EmailMessage;
 import org.springframework.stereotype.Repository;
+
+import java.util.List;
 
 @Repository
 public interface EmailNotificationMapper {
@@ -20,8 +23,16 @@ public interface EmailNotificationMapper {
   @Options(useGeneratedKeys = true)
   Integer insertEmailMessage(EmailMessage emailMessage);
 
-  @Insert("INSERT INTO email_attachment(emailId, attachmentName, attachmentPath) VALUES ( #{emailId}, #{attachmentName}, #{attachmentPath})")
+  @Insert("INSERT INTO email_attachments(attachmentName, attachmentPath) VALUES (#{attachmentName}, #{attachmentPath})")
   @Options(useGeneratedKeys = true)
   Integer insertEmailAttachment(EmailAttachment attachment);
 
+  @Insert("INSERT INTO email_attachments_relation(emailId, attachmentId) VALUES (#{emailId}, #{attachmentId})")
+  Integer insertEmailAttachmentsRelation(@Param("emailId") Long emailId, @Param("attachmentId") Long attachmentId);
+
+  @Select("SELECT ea.* FROM email_attachments_relation ear " +
+                  "LEFT JOIN email_attachments ea " +
+                  "ON ear.attachmentId = ea.id " +
+                  "where ear.emailId = #{emailId}")
+  List<EmailAttachment> queryEmailAttachmentsByEmailId(Long emailId);
 }

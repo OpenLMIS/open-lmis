@@ -18,32 +18,28 @@ import org.junit.experimental.categories.Category;
 import org.junit.rules.ExpectedException;
 import org.mockito.Mock;
 import org.openlmis.db.categories.UnitTests;
+import org.openlmis.email.domain.EmailAttachment;
 import org.openlmis.email.domain.EmailMessage;
 import org.openlmis.email.repository.EmailNotificationRepository;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
 
-import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 
 import static com.natpryce.makeiteasy.MakeItEasy.*;
+import static java.util.Arrays.asList;
 import static org.junit.Assert.assertTrue;
 import static org.junit.rules.ExpectedException.none;
 import static org.mockito.Matchers.any;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 import static org.openlmis.email.builder.EmailMessageBuilder.defaultEmailMessage;
 import static org.openlmis.email.builder.EmailMessageBuilder.receiver;
 
 @Category(UnitTests.class)
 public class EmailServiceTest {
-
   @Rule
   public ExpectedException expectedException = none();
-
-
 
   private JavaMailSenderImpl mailSender;
 
@@ -52,8 +48,6 @@ public class EmailServiceTest {
 
   @Mock
   EmailNotificationRepository repository;
-
-
 
   @Before
   public void setUp() throws Exception {
@@ -85,11 +79,22 @@ public class EmailServiceTest {
     EmailService service = new EmailService(mailSender, repository, true);
 
     EmailMessage mockEmailMessage = mock(EmailMessage.class);
-    List<EmailMessage> emailMessages = Arrays.asList(mockEmailMessage);
+    List<EmailMessage> emailMessages = asList(mockEmailMessage);
     when(mockEmailMessage.isHtml()).thenReturn(false);
     service.processEmails(emailMessages);
 
     verify(mailSender).send(any(SimpleMailMessage.class));
+  }
+
+  @Test
+  public void shouldInsertAttachmentListOfMailMessage() throws Exception {
+    repository = mock(EmailNotificationRepository.class);
+    EmailService service = new EmailService(mailSender, repository, true);
+
+    List<EmailAttachment> attachments = asList(new EmailAttachment(), new EmailAttachment());
+    service.insertEmailAttachmentList(attachments);
+
+    verify(repository, times(2)).insertEmailAttachment(any(EmailAttachment.class));
   }
 
 }

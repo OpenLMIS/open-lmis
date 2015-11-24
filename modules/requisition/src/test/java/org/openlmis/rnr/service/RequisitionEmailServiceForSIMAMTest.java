@@ -14,6 +14,7 @@ import org.openlmis.core.domain.User;
 import org.openlmis.core.service.ConfigurationSettingService;
 import org.openlmis.db.categories.UnitTests;
 import org.openlmis.email.domain.EmailAttachment;
+import org.openlmis.email.domain.EmailMessage;
 import org.openlmis.email.service.EmailService;
 import org.openlmis.files.excel.ExcelHandler;
 import org.openlmis.files.excel.SingleListSheetExcelHandler;
@@ -23,7 +24,6 @@ import org.openlmis.rnr.domain.RnrStatus;
 import org.openlmis.rnr.repository.mapper.RnrMapperForSIMAM;
 
 import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -32,7 +32,6 @@ import java.util.Map;
 import static com.natpryce.makeiteasy.MakeItEasy.*;
 import static java.util.Arrays.asList;
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.*;
@@ -149,13 +148,12 @@ public class RequisitionEmailServiceForSIMAMTest {
     Workbook workBook = new XSSFWorkbook();
     workBook.createSheet();
     when(singleListSheetExcelHandler.readXssTemplateFile(anyString(), any(ExcelHandler.PathType.class))).thenReturn(workBook);
-
-    String testFile= getClassPathTestFile("emailattachment.txt");
-    when(singleListSheetExcelHandler.createXssFile(any(Workbook.class), anyString())).thenReturn(testFile);
+    when(singleListSheetExcelHandler.createXssFile(any(Workbook.class), anyString())).thenReturn("anything");
 
     requisitionEmailServiceForSIMAM.sendRequisitionEmailWithAttachment(rnr, users);
 
-    verify(emailService).sendMimeMessageToMultipleUser(any(String[].class), anyString(), anyString(), org.mockito.Matchers.anyListOf(EmailAttachment.class));
+    verify(emailService).insertEmailAttachmentList(any(List.class));
+    verify(emailService, times(2)).queueEmailMessage(any(EmailMessage.class));
   }
 
   @Test
@@ -218,21 +216,15 @@ public class RequisitionEmailServiceForSIMAMTest {
 
     Workbook workBook = new XSSFWorkbook();
     workBook.createSheet();
-    when(singleListSheetExcelHandler.readXssTemplateFile(anyString(), any(ExcelHandler.PathType.class))).thenReturn(workBook, workBook);
-    when(singleListSheetExcelHandler.createXssFile(workBook, "Regimen_Requi" + rnr.getId() + "_" + rnr.getFacility().getName() + "_" + rnr.getPeriod().getName() + "_" + rnr.getProgram().getName() + ".xlsx")).thenReturn("expected file name");
+    when(singleListSheetExcelHandler.readXssTemplateFile(anyString(), any(ExcelHandler.PathType.class))).thenReturn(workBook);
+    when(singleListSheetExcelHandler.createXssFile(workBook, "Regimen_Requi" + getFileName() + ".xlsx")).thenReturn("expected file path");
 
     requisitionEmailServiceForSIMAM.sendRequisitionEmailWithAttachment(rnr, users);
 
-    verify(emailService).getFileDataSource("expected file name", RequisitionEmailServiceForSIMAM.FILE_APPLICATION_VND_MS_EXCEL);
+    verify(emailService).getFileDataSource("expected file path", RequisitionEmailServiceForSIMAM.FILE_APPLICATION_VND_MS_EXCEL);
   }
 
-  private String getClassPathTestFile(String fileName) throws MalformedURLException {
-    URL filepath = null;
-    try {
-      filepath = RequisitionEmailServiceForSIMAMTest.class.getClassLoader().getResource(fileName);
-    } catch (Exception e) {
-      fail(e.getMessage());
-    }
-    return filepath == null ? "" : filepath.getPath();
+  private String getFileName() {
+    return rnr.getId() + "_" + rnr.getFacility().getName() + "_" + rnr.getPeriod().getName() + "_" + rnr.getProgram().getName();
   }
 }
