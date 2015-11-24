@@ -112,6 +112,10 @@ public class EmailService {
     repository.queueMessage(message);
   }
 
+  public EmailMessage queueEmailMessage(EmailMessage message){
+    return repository.queueEmailMessage(message);
+  }
+
   public void queueHtmlMessage(String to, String subject, String template, Map model){
     StringWriter writer = new StringWriter();
     VelocityContext context = new VelocityContext();

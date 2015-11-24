@@ -4,6 +4,7 @@ import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
 import org.openlmis.db.categories.IntegrationTests;
+import org.openlmis.email.domain.EmailAttachment;
 import org.openlmis.email.domain.EmailMessage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
@@ -46,7 +47,26 @@ public class EmailNotificationMapperIT {
 		Integer count = mapper.insertEmailMessage(message);
 		assertThat(count, is(1));
 		assertThat(message.getId()>0, is(true));
+	}
 
+	@Test
+	public void shouldInsertEmailAttachment() throws Exception {
+		EmailMessage message = new EmailMessage();
+		message.setTo("test@dev.org");
+		message.setText("The Test Message");
+		message.setSubject("test");
+
+		Integer count = mapper.insertEmailMessage(message);
+		assertThat(count, is(1));
+
+		EmailAttachment attachment = new EmailAttachment();
+		attachment.setEmailId(message.getId());
+		attachment.setAttachmentName("test file");
+		attachment.setAttachmentPath("/path");
+
+		count = mapper.insertEmailAttachment(attachment);
+		assertThat(count, is(1));
+		assertThat(attachment.getId()>0, is(true));
 	}
 
 }
