@@ -24,7 +24,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.mail.javamail.MimeMessageHelper;
-import org.springframework.mail.javamail.MimeMessagePreparator;
 import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.scheduling.annotation.AsyncResult;
@@ -33,8 +32,7 @@ import org.springframework.stereotype.Service;
 import javax.activation.DataSource;
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
-import javax.mail.util.ByteArrayDataSource;
-import java.io.*;
+import java.io.StringWriter;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.Future;
@@ -49,7 +47,6 @@ public class EmailService {
 
   private static final Logger logger = LoggerFactory.getLogger(EmailService.class);
 
-
   private Boolean mailSendingFlag;
 
   private JavaMailSenderImpl mailSender;
@@ -60,7 +57,8 @@ public class EmailService {
   private EmailNotificationRepository repository;
 
   @Autowired
-  public EmailService(@Qualifier("mailSender")  JavaMailSenderImpl mailSender, EmailNotificationRepository repository, @Value("${mail.sending.flag}") Boolean mailSendingFlag) {
+  public EmailService(@Qualifier("mailSender") JavaMailSenderImpl mailSender, EmailNotificationRepository repository,
+                      @Value("${mail.sending.flag}") Boolean mailSendingFlag) {
     this.mailSender = mailSender;
     this.mailSendingFlag = mailSendingFlag;
     this.repository = repository;
@@ -79,25 +77,47 @@ public class EmailService {
     if (!mailSendingFlag) {
       return;
     }
-    for(final EmailMessage oMessage: mailMessage){
-      if(oMessage.isHtml()){
-        mailSender.send(new MimeMessagePreparator() {
+    for (final EmailMessage oMessage : mailMessage) {
+      initEmailAttachment(oMessage);
 
-          @Override
-          public void prepare(MimeMessage mimeMessage) throws MessagingException {
-            MimeMessageHelper message = new MimeMessageHelper(mimeMessage, true, "UTF-8");
-            message.setFrom(fromAddress);
-            message.setTo(oMessage.getTo());
-            message.setSubject(oMessage.getSubject());
-            message.setText(oMessage.getText(), true);
-          }
-        });
-      }else{
+      if (oMessage.isHtml()) {
+        mailSender.send(setUpMimeMessage(oMessage));
+      } else {
         oMessage.setFrom(fromAddress);
         mailSender.send(oMessage);
       }
     }
 
+  }
+
+  private void initEmailAttachment(EmailMessage oMessage) {
+    List<EmailAttachment> attachments = repository.getEmailAttachmentsByEmailId(oMessage.getId());
+    if (attachments != null) {
+      oMessage.setEmailAttachments(attachments);
+    }
+  }
+
+  private MimeMessage setUpMimeMessage(final EmailMessage oMessage) {
+    MimeMessage mimeMessage = mailSender.createMimeMessage();
+    MimeMessageHelper messageHelper = null;
+    try {
+      messageHelper = new MimeMessageHelper(mimeMessage, true, "UTF-8");
+      messageHelper.setText(oMessage.getText(), true);
+      messageHelper.setFrom(fromAddress);
+      messageHelper.setTo(oMessage.getTo());
+      messageHelper.setSubject(oMessage.getSubject());
+
+      List<EmailAttachment> emailAttachments = oMessage.getEmailAttachments();
+      if (emailAttachments != null) {
+        for (EmailAttachment attachment : emailAttachments) {
+          messageHelper.addAttachment(attachment.getAttachmentName(), attachment.getFileDataSource());
+        }
+      }
+    } catch (MessagingException e) {
+      logger.error("Error setup the email!" + e.getMessage());
+    }
+
+    return messageHelper.getMimeMessage();
   }
 
   @Async
@@ -108,11 +128,11 @@ public class EmailService {
     processEmails(simpleMailMessage);
   }
 
-  public void queueMessage(SimpleMailMessage message){
+  public void queueMessage(SimpleMailMessage message) {
     repository.queueMessage(message);
   }
 
-  public EmailMessage queueEmailMessage(EmailMessage message){
+  public EmailMessage queueEmailMessage(EmailMessage message) {
     return repository.queueEmailMessage(message);
   }
 
@@ -123,73 +143,30 @@ public class EmailService {
     return attachments;
   }
 
-  public void queueHtmlMessage(String to, String subject, String template, Map model){
+  public void queueHtmlMessage(String to, String subject, String template, Map model) {
     StringWriter writer = new StringWriter();
     VelocityContext context = new VelocityContext();
     context.put("model", model);
     try {
       Velocity.evaluate(context, writer, "velocity", template);
-    }catch(Exception exp)
-    {
+    } catch (Exception exp) {
       logger.error("Velocity had some errors generating this email. The exception was .... ", exp);
     }
     repository.queueMessage(to, writer.toString(), subject, true);
   }
 
-  public void sendMimeMessage(final String to, final String subject, final String messageBody, final String attachmentFileName, final DataSource dataSource) {
-    mailSender.send(new MimeMessagePreparator() {
+  public void sendMimeMessage(final String to, final String subject, final String messageBody,
+                              final String attachmentFileName, final DataSource dataSource) {
+    EmailMessage emailMessage = new EmailMessage();
+    emailMessage.setTo(to);
+    emailMessage.setSubject(subject);
+    emailMessage.setText(messageBody);
 
-      @Override
-      public void prepare(MimeMessage mimeMessage) throws MessagingException {
-        MimeMessageHelper message = new MimeMessageHelper(mimeMessage, true, "UTF-8");
-        message.setFrom(fromAddress);
-        message.setTo(to);
-        message.setSubject(subject);
-        message.setText(messageBody, true);
-        if (attachmentFileName != null && dataSource != null) {
-          message.addAttachment(attachmentFileName, dataSource);
-        }
-      }
-    });
-  }
+    EmailAttachment emailAttachment = new EmailAttachment();
+    emailAttachment.setAttachmentName(attachmentFileName);
+    emailAttachment.setFileDataSource(dataSource);
+    emailMessage.addEmailAttachment(emailAttachment);
 
-  public void sendMimeMessageToMultipleUser(final String to[], final String subject, final String messageBody,
-                                            final List<EmailAttachment> attachments) {
-    mailSender.send(new MimeMessagePreparator() {
-
-      @Override
-      public void prepare(MimeMessage mimeMessage) throws MessagingException {
-        MimeMessageHelper message = new MimeMessageHelper(mimeMessage, true, "UTF-8");
-        message.setFrom(fromAddress);
-        message.setTo(to);
-        message.setSubject(subject);
-        message.setText(messageBody, true);
-        if (attachments != null) {
-          for (EmailAttachment attachment:attachments) {
-            message.addAttachment(attachment.getAttachmentName(), attachment.getFileDataSource());
-          }
-        }
-      }
-    });
-  }
-
-  public DataSource getFileDataSource(String outFilePath, String fileType) {
-    InputStream attachment = null;
-    try {
-      attachment = new FileInputStream(new File(outFilePath));
-      DataSource attachmentDataSource = new ByteArrayDataSource(attachment, fileType);
-      return attachmentDataSource;
-    } catch (Exception e) {
-      logger.error("Error send attachment file " + e.getMessage());
-    } finally {
-      if (attachment != null) {
-        try {
-          attachment.close();
-        } catch (IOException e) {
-          logger.error("Error close file " + e.getMessage());
-        }
-      }
-    }
-    return null;
+    mailSender.send(setUpMimeMessage(emailMessage));
   }
 }

@@ -21,7 +21,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import javax.activation.DataSource;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -85,7 +84,7 @@ public class RequisitionEmailServiceForSIMAM {
 				emailMessage.setText(messageBody);
 				emailMessage.setSubject(subject);
 				emailMessage.setEmailAttachments(emailAttachments);
-
+				emailMessage.setHtml(true);
 				emailService.queueEmailMessage(emailMessage);
 			}
 		}
@@ -168,10 +167,9 @@ public class RequisitionEmailServiceForSIMAM {
 	}
 
 	private EmailAttachment generateEmailAttachment(String fileName, String filePath) {
-		DataSource regimenItemsFile = emailService.getFileDataSource(filePath, FILE_APPLICATION_VND_MS_EXCEL);
 		EmailAttachment attachmentForRegimen = new EmailAttachment();
 		attachmentForRegimen.setAttachmentName(fileName);
-		attachmentForRegimen.setFileDataSource(regimenItemsFile);
+		attachmentForRegimen.setAttachmentPath(filePath);
 		return attachmentForRegimen;
 	}
 }
