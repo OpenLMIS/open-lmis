@@ -116,7 +116,7 @@ public class StockRequirements
     builder.append(facilityId);
 
     builder.append(", \"facilityCode\": ");
-    builder.append(facilityCode);
+    builder.append("\""+facilityCode +"\"");
 
     builder.append(", \"productId\": ");
     builder.append(productId);
