@@ -18,8 +18,8 @@ dependencies {
     compile project(':modules:demographics')
     compile project(':modules:stock-management')
    
-    testCompile project(path: ':modules:core', configuration: 'testFixtures')
-
+    testCompile project(path: ':modules:core', configuration: 'testFixtures'),
+                project(path: ':modules:demographics', configuration: 'testFixtures')
 
     configurations {
         testFixtures {
