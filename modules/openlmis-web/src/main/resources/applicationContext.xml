@@ -322,7 +322,7 @@
                     <bean class="org.openlmis.web.model.UploadBean">
                         <property name="displayName" value="label.facility.program.product.isa"/>
                         <property name="importableClass">
-                            <value type="java.lang.Class">org.openlmis.core.dto.FacilityProgramProductISADTO</value>
+                            <value type="java.lang.Class">org.openlmis.vaccine.dto.FacilityProgramProductISADTO</value>
                         </property>
                         <property name="recordHandler" ref="facilityProgramProductISAHandler"/>
                     </bean>

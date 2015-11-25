@@ -42,7 +42,7 @@ import static org.mockito.Mockito.when;
 
 @Category(UnitTests.class)
 @RunWith(MockitoJUnitRunner.class)
-public class StockRequirementsServiceTest
+public class PopulationServiceTest
 {
     @Mock
     FacilityProgramProductRepository facilityProgramProductRepository;
@@ -72,7 +72,7 @@ public class StockRequirementsServiceTest
     private AnnualDistrictEstimateRepository annualDistrictEstimateRepository;
 
     @InjectMocks
-    private StockRequirementsService stockRequirementsService;
+    private PopulationService populationService;
 
 
     Program program;
@@ -321,11 +321,11 @@ public class StockRequirementsServiceTest
     @Test
     public void shouldUseSpecifiedPopulationSourceForServiceDeliveryPoint()
     {
-        Long returnedPopulation = stockRequirementsService.getPopulation(sdp1, program, populationSourceId_1);
+        Long returnedPopulation = populationService.getPopulation(sdp1, program, populationSourceId_1);
         Long expectedPopulation = sdp1.getId() * populationSourceId_1 * 100;
         assertThat(returnedPopulation, is(expectedPopulation));
 
-        returnedPopulation = stockRequirementsService.getPopulation(sdp1, program, populationSourceId_2);
+        returnedPopulation = populationService.getPopulation(sdp1, program, populationSourceId_2);
         expectedPopulation = sdp1.getId() * populationSourceId_2 * 100;
         assertThat(returnedPopulation, is(expectedPopulation));
     }
@@ -333,11 +333,11 @@ public class StockRequirementsServiceTest
     @Test
     public void shouldUseSpecifiedPopulationSourceForDistrictVaccineStore()
     {
-        Long returnedPopulation = stockRequirementsService.getPopulation(dvs1, program, populationSourceId_1);
+        Long returnedPopulation = populationService.getPopulation(dvs1, program, populationSourceId_1);
         Long expectedPopulation = dvs1.getId() * populationSourceId_1 * 100;
         assertThat(returnedPopulation, is(expectedPopulation));
 
-        returnedPopulation = stockRequirementsService.getPopulation(dvs1, program, populationSourceId_2);
+        returnedPopulation = populationService.getPopulation(dvs1, program, populationSourceId_2);
         expectedPopulation = dvs1.getId() * populationSourceId_2 * 100;
         assertThat(returnedPopulation, is(expectedPopulation));
     }
@@ -345,7 +345,7 @@ public class StockRequirementsServiceTest
     @Test
     public void shouldUseFacilityCatchmentPopulationForServiceDeliveryPointWhenPopulationSourceIsNull()
     {
-        Long returnedPopulation = stockRequirementsService.getPopulation(sdp1, program, null);
+        Long returnedPopulation = populationService.getPopulation(sdp1, program, null);
         Long expectedPopulation = sdp1.getId() * 900;
         assertThat(returnedPopulation, is(expectedPopulation));
     }
@@ -353,7 +353,7 @@ public class StockRequirementsServiceTest
     @Test
     public void shouldUseFacilityCatchmentPopulationForDistrictVaccineStoreWhenPopulationSourceIsNull()
     {
-        Long returnedPopulation = stockRequirementsService.getPopulation(dvs1, program, null);
+        Long returnedPopulation = populationService.getPopulation(dvs1, program, null);
         Long expectedPopulation = dvs1.getId() * 900;
         assertThat(returnedPopulation, is(expectedPopulation));
     }
@@ -362,7 +362,7 @@ public class StockRequirementsServiceTest
     @Test
     public void shouldDerivePopulationForCentralVaccineStoreFromChildFacilityPopulations()
     {
-        Long returnedPopulation = stockRequirementsService.getPopulation(cvs, program, populationSourceId_1);
+        Long returnedPopulation = populationService.getPopulation(cvs, program, populationSourceId_1);
 
         Long sdp1Population = sdp1.getId() * populationSourceId_1 * 100;
         Long sdp2Population = sdp2.getId() * populationSourceId_1 * 100;
@@ -384,7 +384,7 @@ public class StockRequirementsServiceTest
     @Test
     public void shouldDerivePopulationForRegionalVaccineStoreFromChildFacilityPopulations()
     {
-        Long returnedPopulation = stockRequirementsService.getPopulation(rvs1, program, populationSourceId_1);
+        Long returnedPopulation = populationService.getPopulation(rvs1, program, populationSourceId_1);
 
         Long dvs1Population = dvs1.getId() * populationSourceId_1 * 100;
         Long dvs2Population = dvs2.getId() * populationSourceId_1 * 100;

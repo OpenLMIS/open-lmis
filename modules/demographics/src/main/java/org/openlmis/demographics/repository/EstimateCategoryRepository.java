@@ -33,6 +33,10 @@ public class EstimateCategoryRepository {
     return mapper.getById(id);
   }
 
+  public EstimateCategory getByName(String name) {
+    return mapper.getByName(name);
+  }
+
   public void insert(EstimateCategory category){
     mapper.insert(category);
   }
