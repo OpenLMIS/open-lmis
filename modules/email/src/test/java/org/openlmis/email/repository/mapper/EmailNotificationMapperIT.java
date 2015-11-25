@@ -85,6 +85,7 @@ public class EmailNotificationMapperIT {
 		EmailAttachment attachment = new EmailAttachment();
 		attachment.setAttachmentName("test file");
 		attachment.setAttachmentPath("/path");
+		attachment.setAttachmentFileType("application/excel");
 		return attachment;
 	}
 
