@@ -2,6 +2,7 @@ CREATE TABLE email_attachments (
   id  SERIAL PRIMARY KEY,
   attachmentName VARCHAR(255) NOT NULL,
   attachmentPath VARCHAR(510) NOT NULL,
+  attachmentFileType VARCHAR(255) NOT NULL,
   createdDate TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 

@@ -23,7 +23,7 @@ public class EmailAttachment {
   private Long id;
   private String attachmentPath;
   private String attachmentName;
-  private String fileType;
+  private String attachmentFileType;
   private DataSource fileDataSource;
 
   protected Date createdDate;
@@ -36,7 +36,7 @@ public class EmailAttachment {
     InputStream attachment = null;
     try {
       attachment = new FileInputStream(new File(attachmentPath));
-      DataSource attachmentDataSource = new ByteArrayDataSource(attachment, fileType);
+      DataSource attachmentDataSource = new ByteArrayDataSource(attachment, attachmentFileType);
       return attachmentDataSource;
     } catch (Exception e) {
       logger.error("Error send attachment file " + e.getMessage());

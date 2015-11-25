@@ -170,6 +170,7 @@ public class RequisitionEmailServiceForSIMAM {
 		EmailAttachment attachmentForRegimen = new EmailAttachment();
 		attachmentForRegimen.setAttachmentName(fileName);
 		attachmentForRegimen.setAttachmentPath(filePath);
+		attachmentForRegimen.setAttachmentFileType(FILE_APPLICATION_VND_MS_EXCEL);
 		return attachmentForRegimen;
 	}
 }

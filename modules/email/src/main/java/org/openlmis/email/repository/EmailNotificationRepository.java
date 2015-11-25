@@ -39,6 +39,6 @@ public class EmailNotificationRepository {
   }
 
   public List<EmailAttachment> getEmailAttachmentsByEmailId(Long id) {
-    return null;
+    return mapper.queryEmailAttachmentsByEmailId(id);
   }
 }

@@ -23,7 +23,7 @@ public interface EmailNotificationMapper {
   @Options(useGeneratedKeys = true)
   Integer insertEmailMessage(EmailMessage emailMessage);
 
-  @Insert("INSERT INTO email_attachments(attachmentName, attachmentPath) VALUES (#{attachmentName}, #{attachmentPath})")
+  @Insert("INSERT INTO email_attachments(attachmentName, attachmentPath, attachmentFileType) VALUES (#{attachmentName}, #{attachmentPath}, #{attachmentFileType})")
   @Options(useGeneratedKeys = true)
   Integer insertEmailAttachment(EmailAttachment attachment);
 
