@@ -60,7 +60,7 @@ public class FacilityProgramProductISAHandler extends AbstractModelPersistenceHa
                 fppISA.getProduct(), null, null));
         Program program = programRepository.getByCode(fppISA.getProgram().getCode());
         EstimateCategory category = estimateCategoryRepository.getByName(fppISA.getPopulationSourceName());
-        Long populationSourceId = (category != null) ? category.getId() : 1L; // TODO: should just throw an exception here
+        Long populationSourceId = (category != null) ? category.getId() : null;
 
         Double wastageFactor = fppISA.getWastageFactor();
         if (wastageFactor == -1.0) {
@@ -119,8 +119,10 @@ public class FacilityProgramProductISAHandler extends AbstractModelPersistenceHa
                 // For each requisition group member, check if facility is an SDP and add its wastage factor to running total
                 for (RequisitionGroupMember requisitionGroupMember : requisitionGroupMembers) {
                     // This call to the database is necessary, as facility does not have SDP info
+                    // For VIMS, SDPs are defined as having facility type code "heac" (health facility) or "disp" (dispensary)
                     Facility childFacility = facilityRepository.getById(requisitionGroupMember.getFacility().getId());
-                    if (childFacility.getSdp()) {
+                    if (childFacility.getFacilityType().getCode().equalsIgnoreCase("heac") ||
+                            childFacility.getFacilityType().getCode().equalsIgnoreCase("disp")) {
                         ISA facilityISA = repository.getOverriddenIsa(pp.getId(), childFacility.getId());
                         if (facilityISA != null) {
                             Long population = populationService.getPopulation(childFacility, program, populationSourceId);
