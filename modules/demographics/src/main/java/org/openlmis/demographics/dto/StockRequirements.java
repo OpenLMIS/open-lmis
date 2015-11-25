@@ -165,13 +165,13 @@ public class StockRequirements
     builder.append(", \"isaValue\": ");
     builder.append(getIsaValue());
 
-    builder.append(", \"MinimumStock\": ");
+    builder.append(", \"minimumStock\": ");
     builder.append(getMinimumStock());
 
-    builder.append(", \"MaximumStock\": ");
+    builder.append(", \"maximumStock\": ");
     builder.append(getMaximumStock());
 
-    builder.append(", \"ReorderLevel\": ");
+    builder.append(", \"reorderLevel\": ");
     builder.append(getReorderLevel());
 
     builder.append(", \"annualNeed\": ");
