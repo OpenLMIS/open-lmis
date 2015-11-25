@@ -70,6 +70,7 @@
           <th class="span2" openlmis-message="vaccine.immunization.sessions.fixed"></th>
           <th class="span2" openlmis-message="vaccine.immunization.sessions.outreach"></th>
           <th class="span2" openlmis-message="vaccine.immunization.sessions.canceled.outreach"></th>
+          <th class="span2" openlmis-message="vaccine.immunization.sessions.canceled.percentage"></th>
         </tr>
       </thead>
       <tbody>
@@ -82,6 +83,9 @@
           </td>
           <td class="cell-input col-general">
             <input maxlength="8" ng-model="report.outreachImmunizationSessionsCanceled" numeric-validator="positiveInteger" type="text">
+          </td>
+          <td class="cell-input col-general number">
+            {{ ((report.outreachImmunizationSessions != 0)? (report.outreachImmunizationSessionsCanceled * 100 / report.outreachImmunizationSessions) : 0) | number : '2' }} %
           </td>
         </tr>
       </tbody>
