@@ -37,7 +37,7 @@
           <div class="form-row clearfix">
             <span id="visitDateContainer">
               <label for="visitDate" openlmis-message="label.visit.date"></label>
-              <input id="visitDate" type="text" ui-date="{dateFormat: 'dd/mm/yy', changeYear: true}"
+              <input id="visitDate" type="text" ui-date="{dateFormat: 'dd/mm/yy', changeYear: true, defaultDate: distribution.period.stringStartDate}"
                      ui-date-format="yy-mm-dd"
                      readonly ng-model="facilityData.facilityVisit.visitDate"
                      ng-class="{'required-error': !facilityData.facilityVisit.visitDate}"/>
