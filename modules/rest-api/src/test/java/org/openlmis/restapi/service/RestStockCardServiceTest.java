@@ -35,8 +35,7 @@ import static com.natpryce.makeiteasy.MakeItEasy.*;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.*;
 import static org.mockito.Matchers.anyList;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 @Category(UnitTests.class)
 @RunWith(PowerMockRunner.class)
@@ -148,22 +147,6 @@ public class RestStockCardServiceTest {
     restStockCardService.adjustStock(facilityId, stockEventList, userId);
     verify(stockCardService).getOrCreateStockCard(facilityId, productCode);
     verify(stockCardService).getOrCreateStockCard(facilityId, productCode2);
-  }
-
-  @Test
-  public void shouldReturnErrorIfStockCardIsNotCreated() throws Exception {
-    setupStockData();
-
-    expectedException.expect(DataException.class);
-    expectedException.expectMessage("error.stockmanagement.adjuststockfailed");
-
-    when(facilityRepository.getById(facilityId)).thenReturn(defaultFacility);
-    when(productService.getByCode(productCode)).thenReturn(defaultProduct);
-    when(stockAdjustmentReasonRepository.getAdjustmentReasonByName(reasonName)).thenReturn(new StockAdjustmentReason());
-
-    when(stockCardService.getOrCreateStockCard(facilityId, productCode)).thenReturn(null);
-
-    restStockCardService.adjustStock(facilityId, stockEventList, userId);
   }
 
   @Test
@@ -341,6 +324,21 @@ public class RestStockCardServiceTest {
 
     assertTrue(stockCardEntries.get(0).getReferenceNumber().equals(referenceNumber1));
     assertTrue(stockCardEntries.get(1).getReferenceNumber().equals(referenceNumber2));
+  }
+
+  @Test
+  public void shouldNotCreateNewStockCardReferenceWhenTheCardAlreadyExists() {
+    setupStockData();
+    when(facilityRepository.getById(facilityId)).thenReturn(defaultFacility);
+    when(productService.getByCode(productCode)).thenReturn(defaultProduct);
+    StockAdjustmentReason stockAdjustmentReason = new StockAdjustmentReason();
+    stockAdjustmentReason.setAdditive(true);
+    when(stockAdjustmentReasonRepository.getAdjustmentReasonByName(reasonName)).thenReturn(stockAdjustmentReason);
+    StockCard expectedStockCard = StockCard.createZeroedStockCard(defaultFacility, defaultProduct);
+    when(stockCardService.getOrCreateStockCard(facilityId, productCode)).thenReturn(expectedStockCard);
+
+    restStockCardService.adjustStock(facilityId, stockEventList, userId);
+    verify(stockCardService).getOrCreateStockCard(facilityId, productCode); //should only invoke once
   }
 
   private void setupStockData() {

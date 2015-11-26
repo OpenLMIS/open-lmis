@@ -15,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -22,42 +23,49 @@ import java.util.Map;
 @NoArgsConstructor
 public class RestStockCardService {
 
-    @Autowired
-    private FacilityRepository facilityRepository;
+  @Autowired
+  private FacilityRepository facilityRepository;
 
-    @Autowired
-    private ProductService productService;
+  @Autowired
+  private ProductService productService;
 
-    @Autowired
-    private StockAdjustmentReasonRepository stockAdjustmentReasonRepository;
+  @Autowired
+  private StockAdjustmentReasonRepository stockAdjustmentReasonRepository;
 
-    @Autowired
-    private StockCardService stockCardService;
+  @Autowired
+  private StockCardService stockCardService;
 
-    public List<StockCardEntry> adjustStock(Long facilityId, List<StockEvent> stockEventList, Long userId) {
-        if (!validFacility(facilityId)) {
-            throw new DataException("error.facility.unknown");
-        }
-        List<StockCardEntry> entries = new ArrayList<>();
-
-        for (StockEvent stockEvent : stockEventList) {
-            String errorInStockEvent = validateStockEvent(stockEvent);
-            if (errorInStockEvent != null) {
-                throw new DataException(errorInStockEvent);
-            }
-
-            StockCard stockCard = stockCardService.getOrCreateStockCard(facilityId, stockEvent.getProductCode());
-
-            if (stockCard == null) {
-                throw new DataException("error.stockmanagement.adjuststockfailed");
-            }
-
-            StockCardEntry entry = createStockCardEntry(stockEvent, stockCard, userId);
-            entries.add(entry);
-        }
-        stockCardService.addStockCardEntries(entries);
-        return entries;
+  public List<StockCardEntry> adjustStock(Long facilityId, List<StockEvent> stockEventList, Long userId) {
+    if (!validFacility(facilityId)) {
+      throw new DataException("error.facility.unknown");
     }
+
+    Map<String, StockCard> stockCardMap = new HashMap<>();
+    List<StockCardEntry> entries = new ArrayList<>();
+
+    for (StockEvent stockEvent : stockEventList) {
+      String errorInStockEvent = validateStockEvent(stockEvent);
+      if (errorInStockEvent != null) {
+        throw new DataException(errorInStockEvent);
+      }
+
+      String productCode = stockEvent.getProductCode();
+      StockCard stockCard;
+
+      if (stockCardMap.get(productCode) == null) {
+        stockCard = stockCardService.getOrCreateStockCard(facilityId, productCode);
+        stockCardMap.put(productCode, stockCard);
+      } else {
+        stockCard = stockCardMap.get(productCode);
+      }
+
+      StockCardEntry entry = createStockCardEntry(stockEvent, stockCard, userId);
+      entries.add(entry);
+    }
+    stockCardService.addStockCardEntries(entries);
+    return entries;
+  }
+
 
   private StockCardEntry createStockCardEntry(StockEvent stockEvent, StockCard stockCard, Long userId) {
     StockAdjustmentReason stockAdjustmentReason = stockAdjustmentReasonRepository.getAdjustmentReasonByName(stockEvent.getReasonName());
