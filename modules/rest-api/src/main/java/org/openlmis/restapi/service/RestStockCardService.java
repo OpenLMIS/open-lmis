@@ -100,6 +100,6 @@ public class RestStockCardService {
   }
 
   public List<StockCard> queryStockMovementsByDate(long facilityId, Date startTime, Date endTime) {
-    return stockCardService.getStockCards(facilityId, startTime, endTime);
+    return stockCardService.getStockCards(facilityId);
   }
 }
