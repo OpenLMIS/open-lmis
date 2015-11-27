@@ -5,6 +5,7 @@ import lombok.NoArgsConstructor;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.restapi.response.RestResponse;
 import org.openlmis.restapi.service.RestStockCardService;
+import org.openlmis.stockmanagement.domain.StockCard;
 import org.openlmis.stockmanagement.dto.StockEvent;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -51,13 +52,13 @@ public class RestStockCardController extends BaseController {
                                         @RequestParam(value = "startTime", required = false) final Date startTime,
                                         @RequestParam(value = "endTime", required = false) final Date endTime,
                                         Principal principal) {
-        List<StockEvent> stockMovements = new ArrayList<>();
+        List<StockCard> stockCards = new ArrayList<>();
         try {
-            stockMovements = restStockCardService.queryStockMovementsByDate(facilityId, startTime, endTime);
+            stockCards = restStockCardService.queryStockMovementsByDate(facilityId, startTime, endTime);
         } catch (DataException e) {
             return error(e.getOpenLmisMessage(), BAD_REQUEST);
         }
-        return response("stockMovements", stockMovements);
+        return response("stockCards", stockCards);
 
     }
 }

@@ -18,6 +18,7 @@ modules/openlmis-web/src/test/coverage/
 local-ftp-data/
 *.jasper
 *.jar
+*.xlsx
 modules/openlmis-web/src/main/webapp/public/odk-collect-submissions/*
 .gitignore.swp
 git
