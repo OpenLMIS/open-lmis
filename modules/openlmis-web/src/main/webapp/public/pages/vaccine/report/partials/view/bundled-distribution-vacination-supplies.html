@@ -52,19 +52,19 @@
             <thead>
 
             <tr>
-                <th style="width: 20px; height: 70px" >
+                <th style="width: 20px; height: 69px" >
                     <span>Zones</span>
 
                 </th>
-                <th style="width: 20px; height: 70px"  >
+                <th style="width: 20px; height: 69px"  >
                     <span>Regions</span>
 
                 </th>
-                <th style="width: 20px; height: 70px"  >
+                <th style="width: 20px; height: 69px"  >
                     <span>District</span>
 
                 </th>
-                <th style="width: 20px; height: 70px" >
+                <th style="width: 20px; height: 69px" >
                     <span>Population</span>
 
                 </th>
@@ -119,13 +119,13 @@
                 </th>
             </tr>
             <tr>
-                <th ng-bind="product.primaryName" colspan="12" style="text-align: center; vertical-align: middle">
+                <th ng-bind="product.primaryName" colspan="12" style="height:13px; text-align: center; vertical-align: middle">
 
                 </th>
             </tr>
             <tr>
 
-                <th>
+                <th style="width: 10px">
                     <span>Jan</span>
 
                 </th>
@@ -178,7 +178,7 @@
             <tbody
                     ng-repeat="supply in bundledDistributionVaccinationSupplies.vaccinationSuppliesList">
             <tr>
-                <td ng-style="supply.jan_rec<0.5&& {'color': 'red' } ||supply.jan_rec>3&& {'color': 'blue' } "
+                <td style="width: 10px" ng-style=" supply.jan_rec<0.5&& {'color': 'red' } ||supply.jan_rec>3&& {'color': 'blue' } "
 
                         ng-bind="supply.jan_rec"></td>
                 <td  ng-style="supply.feb_rec<0.5&& {'color': 'red' } ||supply.feb_rec>3&& {'color': 'blue' } "
@@ -222,7 +222,7 @@
                 <td style="background-color: red"  colspan="12">&nbsp;</td>
             </tr>
             <tr>
-                <td ng-bind="bundledDistributionVaccinationSupplies.vaccinationSupplyDistrict.jan_rec_district_less_lower_limit"></td>
+                <td style="width: 10px" ng-bind="bundledDistributionVaccinationSupplies.vaccinationSupplyDistrict.jan_rec_district_less_lower_limit"></td>
                 <td ng-bind="bundledDistributionVaccinationSupplies.vaccinationSupplyDistrict.feb_rec_district_less_lower_limit"></td>
                 <td ng-bind="bundledDistributionVaccinationSupplies.vaccinationSupplyDistrict.mar_rec_district_less_lower_limit"></td>
                 <td ng-bind="bundledDistributionVaccinationSupplies.vaccinationSupplyDistrict.apr_rec_district_less_lower_limit"></td>
@@ -236,7 +236,7 @@
                 <td ng-bind="bundledDistributionVaccinationSupplies.vaccinationSupplyDistrict.dec_rec_district_less_lower_limit"></td>
             </tr>
             <tr>
-                <td ng-bind="bundledDistributionVaccinationSupplies.vaccinationSupplyDistrict.jan_rec_district_greater_upper_limit"></td>
+                <td style="width: 10px" ng-bind="bundledDistributionVaccinationSupplies.vaccinationSupplyDistrict.jan_rec_district_greater_upper_limit"></td>
                 <td ng-bind="bundledDistributionVaccinationSupplies.vaccinationSupplyDistrict.feb_rec_district_greater_upper_limit"></td>
                 <td ng-bind="bundledDistributionVaccinationSupplies.vaccinationSupplyDistrict.mar_rec_district_greater_upper_limit"></td>
                 <td ng-bind="bundledDistributionVaccinationSupplies.vaccinationSupplyDistrict.apr_rec_district_greater_upper_limit"></td>
@@ -250,7 +250,7 @@
                 <td ng-bind="bundledDistributionVaccinationSupplies.vaccinationSupplyDistrict.dec_rec_district_greater_upper_limit"></td>
             </tr>
             <tr>
-                <td ng-bind="bundledDistributionVaccinationSupplies.vaccinationSupplyRegion.jan_rec_district_less_lower_limit"></td>
+                <td style="width: 10px" ng-bind="bundledDistributionVaccinationSupplies.vaccinationSupplyRegion.jan_rec_district_less_lower_limit"></td>
                 <td ng-bind="bundledDistributionVaccinationSupplies.vaccinationSupplyRegion.feb_rec_district_less_lower_limit"></td>
                 <td ng-bind="bundledDistributionVaccinationSupplies.vaccinationSupplyRegion.mar_rec_district_less_lower_limit"></td>
                 <td ng-bind="bundledDistributionVaccinationSupplies.vaccinationSupplyRegion.apr_rec_district_less_lower_limit"></td>
@@ -264,7 +264,7 @@
                 <td ng-bind="bundledDistributionVaccinationSupplies.vaccinationSupplyRegion.dec_rec_district_less_lower_limit"></td>
             </tr>
             <tr>
-                <td ng-bind="bundledDistributionVaccinationSupplies.vaccinationSupplyRegion.jan_rec_district_greater_upper_limit"></td>
+                <td style="max-width: 10px" ng-bind="bundledDistributionVaccinationSupplies.vaccinationSupplyRegion.jan_rec_district_greater_upper_limit"></td>
                 <td ng-bind="bundledDistributionVaccinationSupplies.vaccinationSupplyRegion.feb_rec_district_greater_upper_limit"></td>
                 <td ng-bind="bundledDistributionVaccinationSupplies.vaccinationSupplyRegion.mar_rec_district_greater_upper_limit"></td>
                 <td ng-bind="bundledDistributionVaccinationSupplies.vaccinationSupplyRegion.apr_rec_district_greater_upper_limit"></td>
@@ -289,14 +289,14 @@
                 </th>
             </tr>
             <tr>
-                <th ng-bind="product.primaryName" colspan="12" style="text-align: center; vertical-align: middle">
+                <th ng-bind="product.primaryName" colspan="12" style="text-align: center; height:13px; vertical-align: middle">
 
                 </th>
             </tr>
             <tr>
 
-                <th>
-                    <span>Jan</span>
+                <th style="width: 20px">
+                    <span >Jan</span>
 
                 </th>
                 <th>
@@ -349,7 +349,7 @@
                     ng-repeat="supply in bundledDistributionVaccinationSupplies.vaccinationSuppliesList">
 
             <tr>
-                <td
+                <td  style="width: 20px"
 
                         ng-bind="supply.jan_issued"></td>
                 <td
@@ -393,7 +393,7 @@
                 <td  style="background-color: red" colspan="12">&nbsp;</td>
             </tr>
             <tr>
-                <td ng-bind="bundledDistributionVaccinationSupplies.vaccinationSupplyDistrict.jan_issued_district_less_lower_limit"></td>
+                <td  style="width: 20px" ng-bind="bundledDistributionVaccinationSupplies.vaccinationSupplyDistrict.jan_issued_district_less_lower_limit"></td>
                 <td ng-bind="bundledDistributionVaccinationSupplies.vaccinationSupplyDistrict.feb_rec_district_less_lower_limit"></td>
                 <td ng-bind="bundledDistributionVaccinationSupplies.vaccinationSupplyDistrict.mar_rec_district_less_lower_limit"></td>
                 <td ng-bind="bundledDistributionVaccinationSupplies.vaccinationSupplyDistrict.apr_rec_district_less_lower_limit"></td>
@@ -407,7 +407,7 @@
                 <td ng-bind="bundledDistributionVaccinationSupplies.vaccinationSupplyDistrict.dec_rec_district_less_lower_limit"></td>
             </tr>
             <tr>
-                <td ng-bind="bundledDistributionVaccinationSupplies.vaccinationSupplyDistrict.jan_rec_district_greater_upper_limit"></td>
+                <td style="width: 20px" ng-bind="bundledDistributionVaccinationSupplies.vaccinationSupplyDistrict.jan_rec_district_greater_upper_limit"></td>
                 <td ng-bind="bundledDistributionVaccinationSupplies.vaccinationSupplyDistrict.feb_rec_district_greater_upper_limit"></td>
                 <td ng-bind="bundledDistributionVaccinationSupplies.vaccinationSupplyDistrict.mar_rec_district_greater_upper_limit"></td>
                 <td ng-bind="bundledDistributionVaccinationSupplies.vaccinationSupplyDistrict.apr_rec_district_greater_upper_limit"></td>
@@ -421,7 +421,7 @@
                 <td ng-bind="bundledDistributionVaccinationSupplies.vaccinationSupplyDistrict.dec_rec_district_greater_upper_limit"></td>
             </tr>
             <tr>
-                <td ng-bind="bundledDistributionVaccinationSupplies.vaccinationSupplyRegion.jan_rec_district_less_lower_limit"></td>
+                <td style="width: 20px" ng-bind="bundledDistributionVaccinationSupplies.vaccinationSupplyRegion.jan_rec_district_less_lower_limit"></td>
                 <td ng-bind="bundledDistributionVaccinationSupplies.vaccinationSupplyRegion.feb_rec_district_less_lower_limit"></td>
                 <td ng-bind="bundledDistributionVaccinationSupplies.vaccinationSupplyRegion.mar_rec_district_less_lower_limit"></td>
                 <td ng-bind="bundledDistributionVaccinationSupplies.vaccinationSupplyRegion.apr_rec_district_less_lower_limit"></td>
@@ -435,7 +435,7 @@
                 <td ng-bind="bundledDistributionVaccinationSupplies.vaccinationSupplyRegion.dec_rec_district_less_lower_limit"></td>
             </tr>
             <tr>
-                <td ng-bind="bundledDistributionVaccinationSupplies.vaccinationSupplyRegion.jan_rec_district_greater_upper_limit"></td>
+                <td style="width: 20px" ng-bind="bundledDistributionVaccinationSupplies.vaccinationSupplyRegion.jan_rec_district_greater_upper_limit"></td>
                 <td ng-bind="bundledDistributionVaccinationSupplies.vaccinationSupplyRegion.feb_rec_district_greater_upper_limit"></td>
                 <td ng-bind="bundledDistributionVaccinationSupplies.vaccinationSupplyRegion.mar_rec_district_greater_upper_limit"></td>
                 <td ng-bind="bundledDistributionVaccinationSupplies.vaccinationSupplyRegion.apr_rec_district_greater_upper_limit"></td>
