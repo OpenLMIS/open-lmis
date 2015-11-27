@@ -96,16 +96,17 @@ public class RestStockCardControllerTest {
     @Test
     public void shouldReturnStockMovementsIfNoException() throws Exception {
         setupStockData();
-        StockEvent stockEvent=new StockEvent();
-        List<StockEvent> stockMovements = asList(stockEvent);
+        StockCard stockEvent=new StockCard();
+
+        List<StockCard> stockCards = asList(stockEvent);
         Date start = new Date();
         Date end = new Date();
 
-        when(restStockCardService.queryStockMovementsByDate(facilityId, start, end)).thenReturn(stockMovements);
+        when(restStockCardService.queryStockMovementsByDate(facilityId, start, end)).thenReturn(stockCards);
 
         ResponseEntity<RestResponse> response = restStockCardController.getStockMovements(facilityId, start, end, principal);
         assertEquals(HttpStatus.OK, response.getStatusCode());
-        assertEquals(stockMovements, response.getBody().getData().get("stockMovements"));
+        assertEquals(stockCards, response.getBody().getData().get("stockCards"));
     }
 
     @Test
