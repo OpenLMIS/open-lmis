@@ -39,6 +39,7 @@ public class EpiUseLineItem extends BaseModel {
   private Integer loss;
   private Integer distributed;
   private String expirationDate;
+  private Integer numberOfStockoutDays;
 
   public EpiUseLineItem(FacilityVisit facilityVisit, ProductGroup productGroup) {
     this.facilityVisitId = facilityVisit.getId();

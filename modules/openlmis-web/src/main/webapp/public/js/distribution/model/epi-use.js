@@ -11,7 +11,7 @@
 function EpiUse(epiUse) {
 
   var DATE_REGEXP = /^(0[1-9]|1[012])[/]((2)\d\d\d)$/;
-  var fieldList = ['stockAtFirstOfMonth', 'received', 'distributed', 'loss', 'stockAtEndOfMonth', 'expirationDate'];
+  var fieldList = ['stockAtFirstOfMonth', 'received', 'distributed', 'loss', 'stockAtEndOfMonth', 'expirationDate', 'numberOfStockoutDays'];
 
   function init() {
     $.extend(true, this, epiUse);
