@@ -36,6 +36,7 @@ angular.module('mainReport', ['openlmis', 'ngTable', 'angularCombine', 'ui.boots
         when('/stock-imbalance', {controller: StockImbalanceController, templateUrl:'partials/stock-imbalance.html',reloadOnSearch:false}).
         when('/summary', {controller: SummaryReportController, templateUrl:'partials/summary.html',reloadOnSearch:false}).
         when('/supply-status', {controller: SupplyStatusController, templateUrl:'partials/supply-status.html',reloadOnSearch:false}).
+        when('/stocked-out', {controller: StockedOutController, templateUrl:'partials/stocked-out.html',reloadOnSearch:false}).
         when('/timeliness', {controller: TimelinessReportController, templateUrl:'partials/timeliness.html',reloadOnSearch:false}).
         when('/user-summary', {controller: UserSummaryReportController, templateUrl:'partials/user-summary.html',reloadOnSearch:false}).
 

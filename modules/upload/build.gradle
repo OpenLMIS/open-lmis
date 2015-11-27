@@ -18,8 +18,9 @@ repositories {
 }
 
 dependencies {
-    compile 'commons-beanutils:commons-beanutils:1.9.2'
-
+    compile 'commons-beanutils:commons-beanutils:1.9.2',
+            'org.apache.poi:poi:3.13',
+            'org.apache.poi:poi-ooxml:3.13'
     compile('net.sf.supercsv:super-csv-dozer:2.0.1') {
         exclude module: 'commons-beanutils'
     }

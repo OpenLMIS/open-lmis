@@ -14,13 +14,18 @@ describe("Facility Controller", function () {
   beforeEach(module('ui.bootstrap.dialog'));
 
   describe("Create Facility", function () {
-    var scope, $httpBackend, ctrl, routeParams, facility, messageService;
+    var scope, $httpBackend, ctrl, routeParams, q, facilityService,  messageService;
 
-    beforeEach(inject(function ($rootScope, _$httpBackend_, $controller, $routeParams, _messageService_) {
-      messageService = _messageService_;
+    beforeEach(inject(function ($rootScope, _$httpBackend_, $controller, $routeParams, _$q_, _Facility_, _messageService_)
+    {
       scope = $rootScope.$new();
-      routeParams = $routeParams;
       $httpBackend = _$httpBackend_;
+      routeParams = $routeParams;
+      q = _$q_;
+      facilityService = _Facility_;
+      messageService = _messageService_;
+
+
       var facilityReferenceData = {"facilityTypes": [
         {"type": "warehouse"}
       ], "programs": [
@@ -30,10 +35,31 @@ describe("Facility Controller", function () {
       ], "facilityOperators": [
         {"operatorCode": "testCode"}
       ]};
-      $rootScope.fixToolBar = function () {
-      };
-      ctrl = $controller(FacilityController, {$scope: scope, $routeParams: routeParams, facilityReferenceData: facilityReferenceData, priceSchedules: undefined, facility: undefined, interfacesReferenceData : undefined,
-        messageService: messageService, facilityImages: []});
+
+      $rootScope.fixToolBar = function(){};
+
+      ctrl = $controller
+      (
+          FacilityController,
+          {
+            $scope: scope,
+            facilityReferenceData: facilityReferenceData,
+            $routeParams: routeParams,
+            facility: undefined,
+            Facility: facilityService,
+            demographicCategories: undefined,
+            $loaction: undefined,
+            FacilityProgramProducts: undefined,
+            FacilityProgramProductsISA: undefined,
+            priceSchedules: undefined,
+            facilityImages:[],
+            $q: q,
+            $dialog: undefined,
+            messageService: messageService,
+            interfacesReferenceData : undefined
+          }
+      );
+
       scope.facilityForm = {$error: { pattern: "" }};
     }));
 
@@ -197,15 +223,20 @@ describe("Facility Controller", function () {
   });
 
   describe("Edit/Delete Facility", function () {
-    var scope, httpBackend;
+    var scope, httpBackend, routeParams, q, facilityService;
 
-    beforeEach(inject(function ($rootScope, _$httpBackend_, $controller, $routeParams) {
+    beforeEach(inject(function ($rootScope, _$httpBackend_, $controller, $routeParams, _$q_, _Facility_)
+    {
       httpBackend = _$httpBackend_;
       scope = $rootScope.$new();
-      $rootScope.fixToolBar = function () {
-      };
-      var routeParams = $routeParams;
+      $rootScope.fixToolBar = function(){};
+
+      routeParams = $routeParams;
+      q = _$q_;
+      facilityService = _Facility_;
+
       routeParams.facilityId = "1";
+
       var facilityReferenceData = {"facilityTypes": [
         {"type": "warehouse"}
       ], "programs": [
@@ -218,6 +249,7 @@ describe("Facility Controller", function () {
         ], "facilityOperators": [
           {"operatorCode": "testCode"}
         ]};
+
       var facility = {"id": 1, "code": "F1756", "name": "Village Dispensary", "description": "IT department", "gln": "G7645", "mainPhone": "9876234981",
         "fax": "fax", "address1": "A", "address2": "B", "geographicZone": {"id": 1}, "facilityType": {"code": "warehouse"}, "catchmentPopulation": 333,
         "latitude": 22.1, "longitude": 1.2, "altitude": 3.3, "operatedBy": {"code": "NGO"}, "coldStorageGrossCapacity": 9.9, "coldStorageNetCapacity": 6.6,
@@ -228,7 +260,29 @@ describe("Facility Controller", function () {
           {"code": "ARV", "name": "ARV", "description": "ARV", "active": true, "program": {"id": 1}, "startDate": 1352572200000, "stringStartDate": "2012-11-21"},
           {"code": "HIV", "name": "HIV", "description": "HIV", "active": true, "program": {"id": 1}, "startDate": 1352572200000, "stringStartDate": "2014-11-21"}
         ], "modifiedBy": null, "modifiedDate": null};
-      $controller(FacilityController, {$scope: scope, $routeParams: routeParams, facilityReferenceData: facilityReferenceData, priceSchedules: undefined, facility: facility, facilityImages:[], interfacesReferenceData : undefined});
+
+      $controller
+      (
+          FacilityController, 
+          {
+            $scope: scope,
+            facilityReferenceData: facilityReferenceData,
+            $routeParams: routeParams,
+            facility: facility,
+            Facility: facilityService,
+            demographicCategories: undefined,
+            $loaction: undefined,
+            FacilityProgramProducts: undefined,
+            FacilityProgramProductsISA: undefined,
+            priceSchedules: undefined,
+            facilityImages:[],
+            $q: q,
+            $dialog: undefined,
+            messageService: undefined,
+            interfacesReferenceData : undefined
+          }
+      );
+
       scope.facilityForm = {$error: { pattern: "" }};
     }));
 

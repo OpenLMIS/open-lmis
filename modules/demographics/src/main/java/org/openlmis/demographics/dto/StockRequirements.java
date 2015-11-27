@@ -8,7 +8,7 @@
  * You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org. 
  */
 
-package org.openlmis.core.domain;
+package org.openlmis.demographics.dto;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
@@ -16,9 +16,9 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+import org.openlmis.core.domain.ISA;
 import org.openlmis.core.dto.IsaDTO;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import static com.fasterxml.jackson.databind.annotation.JsonSerialize.Inclusion.NON_NULL;
@@ -30,9 +30,10 @@ import static com.fasterxml.jackson.databind.annotation.JsonSerialize.Inclusion.
 @NoArgsConstructor
 @JsonSerialize(include = NON_NULL)
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class StockRequirements extends BaseModel
+public class StockRequirements
 {
   Long facilityId;
+  String facilityCode;
   Long productId;
   String productCategory;
   String productName;
@@ -104,11 +105,18 @@ public class StockRequirements extends BaseModel
 
   public String getJSON()
   {
+    /* Perhaps use a Map instead, and then let Jackson turn it into JSON.
+    (The benefit is that we wouldn't have to worry about maulually escaping strings, etc, as
+    Alternatively, look into "Jackson Views." They may give you good control over what is and
+    isn't returned to the client. */
     StringBuilder builder = new StringBuilder();
     builder.append("{");
 
     builder.append("\"facilityId\": ");
     builder.append(facilityId);
+
+    builder.append(", \"facilityCode\": ");
+    builder.append("\""+facilityCode +"\"");
 
     builder.append(", \"productId\": ");
     builder.append(productId);
@@ -132,38 +140,38 @@ public class StockRequirements extends BaseModel
     builder.append(", \"isaCoefficients\": {");
     if(isa != null) {
       builder.append("\"whoRatio\": ");
-      builder.append(isa.whoRatio);
+      builder.append(isa.getWhoRatio());
 
       builder.append(", \"dosesPerYear\": ");
-      builder.append(isa.dosesPerYear);
+      builder.append(isa.getDosesPerYear());
 
       builder.append(", \"wastageFactor\": ");
-      builder.append(isa.wastageFactor);
+      builder.append(isa.getWastageFactor());
 
       builder.append(", \"bufferPercentage\": ");
-      builder.append(isa.bufferPercentage);
+      builder.append(isa.getBufferPercentage());
 
       builder.append(", \"minimumValue\": ");
-      builder.append(isa.minimumValue);
+      builder.append(isa.getMinimumValue());
 
       builder.append(", \"maximumValue\": ");
-      builder.append(isa.maximumValue);
+      builder.append(isa.getMaximumValue());
 
       builder.append(", \"adjustmentValue\": ");
-      builder.append(isa.adjustmentValue);
+      builder.append(isa.getAdjustmentValue());
     }
     builder.append("}");
 
     builder.append(", \"isaValue\": ");
     builder.append(getIsaValue());
 
-    builder.append(", \"MinimumStock\": ");
+    builder.append(", \"minimumStock\": ");
     builder.append(getMinimumStock());
 
-    builder.append(", \"MaximumStock\": ");
+    builder.append(", \"maximumStock\": ");
     builder.append(getMaximumStock());
 
-    builder.append(", \"ReorderLevel\": ");
+    builder.append(", \"reorderLevel\": ");
     builder.append(getReorderLevel());
 
     builder.append(", \"annualNeed\": ");

@@ -17,8 +17,10 @@ public class StockAdjustmentReasonService {
   @Autowired
   StockAdjustmentReasonRepository repository;
 
-  public List<StockAdjustmentReason> getAdjustmentReasons(Boolean additive, Long programId) {
-    return repository.getAdjustmentReasons(additive, programId);
+  public List<StockAdjustmentReason> getAdjustmentReasons(Boolean additive,
+                                                          Long programId,
+                                                          StockAdjustmentReason.Category category) {
+    return repository.getAdjustmentReasons(additive, programId, category);
   }
 
   public StockAdjustmentReason getAdjustmentReasonByName(String name) {

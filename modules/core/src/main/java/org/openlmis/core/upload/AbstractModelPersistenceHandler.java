@@ -34,9 +34,9 @@ public abstract class AbstractModelPersistenceHandler implements RecordHandler<I
   @Autowired
   MessageService messageService;
 
-  abstract BaseModel getExisting(BaseModel record);
+  protected abstract BaseModel getExisting(BaseModel record);
 
-  abstract void save(BaseModel record);
+  protected abstract void save(BaseModel record);
 
   @Getter
   @Setter

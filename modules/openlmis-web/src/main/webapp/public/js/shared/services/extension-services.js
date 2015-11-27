@@ -1350,7 +1350,10 @@ services.factory('ProductReportService', function ($resource) {
 services.factory('FacilityService',function($resource){
     return {
         allFacilities: function () {
-            return $resource('/rest-api/lookup/facilities', {pageSize: 2000}, {});
+            return $resource('/rest-api/lookup/facilities', {page: 0,pageSize:2000}, {});
+        },
+        facilityTypes: function () {
+            return $resource('/rest-api/lookup/facility-types', {}, {});
         }
     };
 });

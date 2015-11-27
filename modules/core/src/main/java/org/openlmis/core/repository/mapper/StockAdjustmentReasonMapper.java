@@ -31,8 +31,18 @@ public interface StockAdjustmentReasonMapper {
       " WHERE name = #{name}")
   StockAdjustmentReason getByName(@Param("name") String name);
 
-  @Insert({"INSERT INTO losses_adjustments_types (name, description, additive, displayOrder, isdefault)",
-      " VALUES (#{name}, #{description}, #{additive}, #{displayOrder}, #{isDefault})"})
+  @Insert({"INSERT INTO losses_adjustments_types (name" +
+    ", description" +
+    ", additive" +
+    ", displayOrder" +
+    ", isdefault" +
+    ", category" +
+    ") VALUES (#{name}" +
+    ", #{description}" +
+    ", #{additive}" +
+    ", #{displayOrder}" +
+    ", #{isDefault}" +
+    ", #{category})"})
   void insert(StockAdjustmentReason reason);
 
   @Select("SELECT *" +

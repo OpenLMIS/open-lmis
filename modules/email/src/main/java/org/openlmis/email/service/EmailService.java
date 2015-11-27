@@ -13,6 +13,7 @@ package org.openlmis.email.service;
 import lombok.NoArgsConstructor;
 import org.apache.velocity.VelocityContext;
 import org.apache.velocity.app.Velocity;
+import org.openlmis.email.domain.EmailAttachment;
 import org.openlmis.email.domain.OpenlmisEmailMessage;
 import org.openlmis.email.repository.EmailNotificationRepository;
 import org.slf4j.Logger;
@@ -32,7 +33,8 @@ import org.springframework.stereotype.Service;
 import javax.activation.DataSource;
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
-import java.io.StringWriter;
+import javax.mail.util.ByteArrayDataSource;
+import java.io.*;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.Future;
@@ -45,7 +47,7 @@ import java.util.concurrent.Future;
 @NoArgsConstructor
 public class EmailService {
 
-  private static final Logger LOGGER = LoggerFactory.getLogger(EmailService.class);
+  private static final Logger logger = LoggerFactory.getLogger(EmailService.class);
 
 
   private Boolean mailSendingFlag;
@@ -118,12 +120,12 @@ public class EmailService {
       Velocity.evaluate(context, writer, "velocity", template);
     }catch(Exception exp)
     {
-      LOGGER.error("Velocity had some errors generating this email. The exception was .... ", exp);
+      logger.error("Velocity had some errors generating this email. The exception was .... ", exp);
     }
     repository.queueMessage(to, writer.toString(), subject, true);
   }
 
-  public void sendMimeMessage(final String to, final String subject, final String messageBody, final String attachementFileName, final DataSource dataSource) {
+  public void sendMimeMessage(final String to, final String subject, final String messageBody, final String attachmentFileName, final DataSource dataSource) {
     mailSender.send(new MimeMessagePreparator() {
 
       @Override
@@ -133,11 +135,50 @@ public class EmailService {
         message.setTo(to);
         message.setSubject(subject);
         message.setText(messageBody, true);
-        if (attachementFileName != null && dataSource != null) {
-          message.addAttachment(attachementFileName, dataSource);
+        if (attachmentFileName != null && dataSource != null) {
+          message.addAttachment(attachmentFileName, dataSource);
         }
-
       }
     });
+  }
+
+  public void sendMimeMessageToMultipleUser(final String to[], final String subject, final String messageBody,
+                                            final List<EmailAttachment> attachments) {
+    mailSender.send(new MimeMessagePreparator() {
+
+      @Override
+      public void prepare(MimeMessage mimeMessage) throws MessagingException {
+        MimeMessageHelper message = new MimeMessageHelper(mimeMessage, true, "UTF-8");
+        message.setFrom(fromAddress);
+        message.setTo(to);
+        message.setSubject(subject);
+        message.setText(messageBody, true);
+        if (attachments != null) {
+          for (EmailAttachment attachment:attachments) {
+            message.addAttachment(attachment.getAttachmentName(), attachment.getFileDataSource());
+          }
+        }
+      }
+    });
+  }
+
+  public DataSource getFileDataSource(String outFilePath, String fileType) {
+    InputStream attachment = null;
+    try {
+      attachment = new FileInputStream(new File(outFilePath));
+      DataSource attachmentDataSource = new ByteArrayDataSource(attachment, fileType);
+      return attachmentDataSource;
+    } catch (Exception e) {
+      logger.error("Error send attachment file " + e.getMessage());
+    } finally {
+      if (attachment != null) {
+        try {
+          attachment.close();
+        } catch (IOException e) {
+          logger.error("Error close file " + e.getMessage());
+        }
+      }
+    }
+    return null;
   }
 }

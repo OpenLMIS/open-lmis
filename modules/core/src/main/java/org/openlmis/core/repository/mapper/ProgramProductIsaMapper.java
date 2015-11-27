@@ -35,6 +35,7 @@ public interface ProgramProductIsaMapper {
                 "COALESCE(#{isa.createdDate}, NOW())::timestamp ," +
                 "#{isa.modifiedBy}::int," +
                 "COALESCE(#{isa.modifiedDate}, NOW())::timestamp ," +
+                "#{isa.populationSource}::int," +
                 "#{programProductId}::int " +
             ")"
     )
@@ -63,7 +64,8 @@ public interface ProgramProductIsaMapper {
           "#{isa.createdBy}::int," +
           "COALESCE(#{createdDate}, NOW())::timestamp ," +
           "#{isa.modifiedBy}::int," +
-          "COALESCE(#{modifiedDate}, NOW())::timestamp" +
+          "COALESCE(#{modifiedDate}, NOW())::timestamp," +
+          "#{isa.populationSource}::int" +
           ")"
   )
   @Options(statementType = StatementType.CALLABLE)
