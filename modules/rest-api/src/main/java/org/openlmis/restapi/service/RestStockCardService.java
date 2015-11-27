@@ -15,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -96,5 +97,9 @@ public class RestStockCardService {
 
   private boolean validAdjustmentReason(StockEvent stockEvent) {
     return stockAdjustmentReasonRepository.getAdjustmentReasonByName(stockEvent.getReasonName()) != null;
+  }
+
+  public List<StockCard> queryStockMovementsByDate(long facilityId, Date startTime, Date endTime) {
+    return stockCardService.getStockCards(facilityId, startTime, endTime);
   }
 }

@@ -7,6 +7,7 @@ import org.junit.runner.RunWith;
 import org.junit.runners.BlockJUnit4ClassRunner;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.db.categories.UnitTests;
 import org.openlmis.restapi.response.RestResponse;
@@ -21,16 +22,18 @@ import org.springframework.http.ResponseEntity;
 
 import java.security.Principal;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
+import static java.util.Arrays.asList;
 import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
-import static org.mockito.Mockito.doThrow;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.*;
 import static org.openlmis.restapi.response.RestResponse.*;
 import static org.powermock.api.mockito.PowerMockito.mockStatic;
 import static org.powermock.api.mockito.PowerMockito.when;
+import static org.springframework.http.HttpStatus.BAD_REQUEST;
 
 @Category(UnitTests.class)
 @RunWith(PowerMockRunner.class)
@@ -54,12 +57,12 @@ public class RestStockCardControllerTest {
     public void setUp() throws Exception {
         principal = mock(Principal.class);
         when(principal.getName()).thenReturn("123");
-        mockStatic(RestResponse.class);
     }
 
     @Test
     public void shouldReturnStatusOKIfNoException() throws Exception {
         setupStockData();
+        mockStatic(RestResponse.class);
 
         String successMsg = "msg.stockmanagement.adjuststocksuccess";
         ResponseEntity<RestResponse> expectedResponse = new ResponseEntity<>(new RestResponse(SUCCESS, successMsg), HttpStatus.OK);
@@ -75,6 +78,7 @@ public class RestStockCardControllerTest {
     @Test
     public void shouldReturnStatusBadRequestIfDataException() throws Exception {
         setupStockData();
+        mockStatic(RestResponse.class);
 
         DataException dataException = new DataException("invalid data");
         doThrow(dataException).when(restStockCardService).adjustStock(facilityId, stockEventList, userId);
@@ -86,6 +90,42 @@ public class RestStockCardControllerTest {
 
         assertThat(response.getStatusCode(), is(HttpStatus.BAD_REQUEST));
         assertThat((String) response.getBody().getData().get(ERROR), is("invalid data"));
+    }
+
+
+    @Test
+    public void shouldReturnStockMovementsIfNoException() throws Exception {
+        setupStockData();
+        StockEvent stockEvent=new StockEvent();
+        List<StockEvent> stockMovements = asList(stockEvent);
+        Date start = new Date();
+        Date end = new Date();
+
+        when(restStockCardService.queryStockMovementsByDate(facilityId, start, end)).thenReturn(stockMovements);
+
+        ResponseEntity<RestResponse> response = restStockCardController.getStockMovements(facilityId, start, end, principal);
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertEquals(stockMovements, response.getBody().getData().get("stockMovements"));
+    }
+
+    @Test
+    public void shouldReturnStockMovementsOnExceptionIfDataException() throws Exception {
+        setupStockData();
+        String errorMessage = "invalid data";
+        DataException dataException = new DataException(errorMessage);
+        Date start = new Date();
+        Date end = new Date();
+
+        mockStatic(RestResponse.class);
+
+        ResponseEntity<RestResponse> expectedResponse = new ResponseEntity<>(new RestResponse(ERROR, errorMessage), BAD_REQUEST);
+
+        Mockito.when(RestResponse.error(dataException.getOpenLmisMessage(), BAD_REQUEST)).thenReturn(expectedResponse);
+        when(restStockCardService.queryStockMovementsByDate(facilityId, start, end)).thenThrow(dataException);
+
+        ResponseEntity<RestResponse> response = restStockCardController.getStockMovements(facilityId, start, end, principal);
+        assertThat(response.getStatusCode(), is(HttpStatus.BAD_REQUEST));
+        assertThat((String) response.getBody().getData().get(ERROR), is(errorMessage));
     }
 
 

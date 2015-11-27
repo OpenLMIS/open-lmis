@@ -12,12 +12,17 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import java.security.Principal;
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import static org.openlmis.restapi.response.RestResponse.error;
+import static org.openlmis.restapi.response.RestResponse.response;
 import static org.springframework.http.HttpStatus.BAD_REQUEST;
+import static org.springframework.web.bind.annotation.RequestMethod.GET;
 import static org.springframework.web.bind.annotation.RequestMethod.POST;
 
 @Controller
@@ -39,5 +44,20 @@ public class RestStockCardController extends BaseController {
         }
 
         return RestResponse.success("msg.stockmanagement.adjuststocksuccess");
+    }
+
+    @RequestMapping(value = "/rest-api/facilities/{facilityId}/stockMovements", method = GET, headers = ACCEPT_JSON)
+    public ResponseEntity getStockMovements(@PathVariable long facilityId,
+                                        @RequestParam(value = "startTime", required = false) final Date startTime,
+                                        @RequestParam(value = "endTime", required = false) final Date endTime,
+                                        Principal principal) {
+        List<StockEvent> stockMovements = new ArrayList<>();
+        try {
+            stockMovements = restStockCardService.queryStockMovementsByDate(facilityId, startTime, endTime);
+        } catch (DataException e) {
+            return error(e.getOpenLmisMessage(), BAD_REQUEST);
+        }
+        return response("stockMovements", stockMovements);
+
     }
 }
