@@ -13,28 +13,32 @@
  */
 
 
+app.directive('vaccineZoneFilter', ['TreeGeographicZoneList', 'TreeGeographicZoneListByProgram', 'GetUserUnassignedSupervisoryNode', 'messageService', 'VaccineSupervisedIvdPrograms',
+    function (TreeGeographicZoneList, TreeGeographicZoneListByProgram, GetUserUnassignedSupervisoryNode, messageService, VaccineSupervisedIvdPrograms) {
 
-app.directive('vaccineZoneFilter', ['TreeGeographicZoneList', 'TreeGeographicZoneListByProgram', 'GetUserUnassignedSupervisoryNode', 'messageService','VaccineSupervisedIvdPrograms' ,
-    function(TreeGeographicZoneList, TreeGeographicZoneListByProgram, GetUserUnassignedSupervisoryNode, messageService,VaccineSupervisedIvdPrograms) {
+
+        var onCascadedVarsChanged = function ($scope, attr) {
+
+            TreeGeographicZoneListByProgram.get({
+                program: $scope.filter.program
+            }, function (data) {
+                $scope.zones = data.zone;
 
 
-        var onCascadedVarsChanged = function($scope, attr) {
+            });
+
+        };
+
+        var categoriseZoneBySupervisoryNode = function ($scope) {
             VaccineSupervisedIvdPrograms.get(function (data) {
+
                 $scope.filter.program = data.programs[0].id;
 
             });
-                TreeGeographicZoneListByProgram.get({
-                    program: $scope.filter.program
-                }, function(data) {
-                    $scope.zones = data.zone;
 
-                });
-        };
-
-        var categoriseZoneBySupervisoryNode = function($scope) {
             GetUserUnassignedSupervisoryNode.get({
                 program: $scope.filter.program
-            }, function(data) {
+            }, function (data) {
                 $scope.user_geo_level = messageService.get('vaccine.report.filter.all.geographic.zones');
                 if (!angular.isUndefined(data.supervisory_nodes)) {
                     if (data.supervisory_nodes === 0)
@@ -46,7 +50,7 @@ app.directive('vaccineZoneFilter', ['TreeGeographicZoneList', 'TreeGeographicZon
         return {
             restrict: 'E',
             require: '^filterContainer',
-            link: function(scope, elm, attr) {
+            link: function (scope, elm, attr) {
                 scope.registerRequired('zone', attr);
 
                 if (attr.districtOnly) {
@@ -54,12 +58,12 @@ app.directive('vaccineZoneFilter', ['TreeGeographicZoneList', 'TreeGeographicZon
                 }
                 categoriseZoneBySupervisoryNode(scope);
 
-                var onParamsChanged = function() {
-                    if (!scope.showDistrictOnly) {
-                        categoriseZoneBySupervisoryNode(scope);
-                    }
+                var onParamsChanged = function () {
+
                     onCascadedVarsChanged(scope, attr);
                 };
+
+                onParamsChanged();
             },
             templateUrl: 'filter2-zone-template'
         };

@@ -12,19 +12,16 @@
  *
  */
 
-function ViewPerformanceByDropoutRateByDistrictController($scope, PerformanceByDropoutRateByDistrict, VaccineSupervisedIvdPrograms,DropoutProducts) {
+function ViewPerformanceByDropoutRateByDistrictController($scope, PerformanceByDropoutRateByDistrict, $window ,DropoutProducts,VaccineSupervisedIvdPrograms, $routeParams) {
     $scope.customPeriod;
     $scope.products;
     $scope.report;
     $scope.error_message;
 
+
     var maxReportSubmission = 10;
     var maxReportSubmissionKey;
-    VaccineSupervisedIvdPrograms.get(function (data) {
-
-        $scope.filter.program = data.programs[0].id;
-
-    });
+    $scope.filter = angular.copy($routeParams);
     DropoutProducts.get({},function (data) {
 
         $scope.dropoutProductsList = data.dropoutProductsList;
@@ -32,11 +29,12 @@ function ViewPerformanceByDropoutRateByDistrictController($scope, PerformanceByD
     });
 
     $scope.OnFilterChanged = function () {
-        alert("hre con");
+
+
         $scope.data = $scope.datarows = [];
 
-        $scope.filter.max = 10000;
-        $scope.filter.facilityId = '';
+
+        $scope.filter.facilityId='' ;
         $scope.filter.geographicZoneId = $scope.filter.zone;
         $scope.filter.productId = $scope.filter.product;
         $scope.filter.periodId = 0;
@@ -44,16 +42,21 @@ function ViewPerformanceByDropoutRateByDistrictController($scope, PerformanceByD
 
         $scope.getStartDate();
         $scope.reportType=false;
+        VaccineSupervisedIvdPrograms.get(function (data) {
 
+            $scope.filter.program = data.programs[0].id;
+
+        });
         var sd= new Date($scope.filter.periodStart);
         var ed= new Date($scope.filter.periodEnd);
         var monthsDifference=0;
+     var param=   $scope.filter;
        if(sd.getTime() <ed.getTime()) {
            monthsDifference=monthDiff(sd,ed);
            if(monthsDifference<=12){
 
            $scope.error_message='';
-           PerformanceByDropoutRateByDistrict.get($scope.getSanitizedParameter(), function (data) {
+           PerformanceByDropoutRateByDistrict.get(param, function (data) {
                if (data !== undefined) {
 
                    $scope.data = data.PerformanceByDropoutRateList.performanceByDropOutDistrictsList;
@@ -65,7 +68,7 @@ function ViewPerformanceByDropoutRateByDistrictController($scope, PerformanceByD
                    $scope.report = data.PerformanceByDropoutRateList;
                    $scope.colValueList = data.PerformanceByDropoutRateList.columnsValueList;
 
-                   //$scope.paramsChanged($scope.tableParams);
+
                }
            });}
            else{

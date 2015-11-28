@@ -38,7 +38,7 @@ angular.module('vaccine-report-create', ['openlmis', 'ngGrid', 'angularCombine',
             }).
             when('/performance-by-dropout-rate-by-district', {
                 controller: ViewPerformanceByDropoutRateByDistrictController,
-                templateUrl: 'partials/view/performance-by-dropout-rate-by-district.html'
+                templateUrl: 'partials/view/performance-by-dropout-rate-by-district.html',reloadOnSearch:false
             }).
 
             otherwise({redirectTo: '/list'});
