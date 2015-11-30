@@ -10,6 +10,11 @@ var VaccineReport = function(report){
       });
       return lineItems;
     }
+    if(this.submissionDate !== null)
+    {
+      var submittedDate = new Date(this.submissionDate);
+      this.submissionDate = (submittedDate.getFullYear() + '-' + submittedDate.getMonth() + '-' + submittedDate.getDate());
+    }
 
     this.coverageLineItems = getLineItems(this.coverageLineItems, this);
     this.coverageLineItemViews = _.groupBy(this.coverageLineItems, 'productId');

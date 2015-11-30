@@ -26,8 +26,8 @@ import java.util.List;
 @Repository
 public interface VaccineReportMapper {
 
-  @Insert("INSERT into vaccine_reports (periodId, programId, facilityId, status, supervisoryNodeId, majorImmunizationActivities, fixedImmunizationSessions, outreachImmunizationSessions,outreachImmunizationSessionsCanceled, createdBy, createdDate, modifiedBy, modifiedDate) " +
-    " values (#{periodId}, #{programId}, #{facilityId}, #{status}, #{supervisoryNodeId}, #{majorImmunizationActivities}, #{fixedImmunizationSessions}, #{outreachImmunizationSessions}, #{outreachImmunizationSessionsCanceled}, #{createdBy}, NOW(), #{modifiedBy}, NOW() )")
+  @Insert("INSERT into vaccine_reports (periodId, programId, facilityId, status, supervisoryNodeId, majorImmunizationActivities, fixedImmunizationSessions, outreachImmunizationSessions,outreachImmunizationSessionsCanceled, submissionDate, createdBy, createdDate, modifiedBy, modifiedDate) " +
+    " values (#{periodId}, #{programId}, #{facilityId}, #{status}, #{supervisoryNodeId}, #{majorImmunizationActivities}, #{fixedImmunizationSessions}, #{outreachImmunizationSessions}, #{outreachImmunizationSessionsCanceled}, #{submissionDate}, #{createdBy}, NOW(), #{modifiedBy}, NOW() )")
   @Options(useGeneratedKeys = true)
   Integer insert(VaccineReport report);
 
@@ -79,6 +79,7 @@ public interface VaccineReportMapper {
       " fixedImmunizationSessions = #{fixedImmunizationSessions}, " +
       " outreachImmunizationSessions = #{outreachImmunizationSessions}, " +
       " outreachImmunizationSessionsCanceled = #{outreachImmunizationSessionsCanceled}, " +
+      " submissionDate = #{submissionDate}, " +
       " modifiedBy = #{modifiedBy}, " +
       " modifiedDate = NOW() " +
     "where id = #{id}")

@@ -12,7 +12,8 @@
 
 package org.openlmis.report.service;
 
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 import org.openlmis.report.DataSourceType;
 import org.openlmis.report.model.ReportData;
 
@@ -20,9 +21,9 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
-@Data
 public abstract class ReportDataProvider {
 
+  @Getter @Setter
   private Long userId;
 
   public final List<? extends ReportData> getReportDataByFilterCriteria(Map<String, String[]> params, DataSourceType dataSourceType){

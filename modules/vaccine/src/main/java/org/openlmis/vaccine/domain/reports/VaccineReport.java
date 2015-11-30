@@ -13,6 +13,7 @@
 package org.openlmis.vaccine.domain.reports;
 
 
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -21,6 +22,7 @@ import org.openlmis.core.domain.BaseModel;
 import org.openlmis.core.domain.Facility;
 import org.openlmis.core.domain.ProcessingPeriod;
 import org.openlmis.core.domain.ProgramProduct;
+import org.openlmis.core.serializer.DateDeserializer;
 import org.openlmis.demographics.domain.AnnualFacilityEstimateEntry;
 import org.openlmis.vaccine.domain.VaccineDisease;
 import org.openlmis.vaccine.domain.VaccineProductDose;
@@ -29,6 +31,7 @@ import org.openlmis.vaccine.domain.VitaminSupplementationAgeGroup;
 import org.openlmis.vaccine.domain.config.VaccineIvdTabVisibility;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 
@@ -50,6 +53,9 @@ public class VaccineReport extends BaseModel {
   private Long fixedImmunizationSessions;
   private Long outreachImmunizationSessions;
   private Long outreachImmunizationSessionsCanceled;
+
+  @JsonDeserialize(using = DateDeserializer.class)
+  private Date submissionDate;
 
   private List<VaccineIvdTabVisibility> tabVisibilitySettings;
 
