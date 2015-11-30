@@ -1,4 +1,4 @@
-/* 
+/*
   Note: This script is intended to be generic enough to create its intended schema as well as migrate preexisting data into it wherever appropriate.
 */
 
@@ -21,8 +21,8 @@ ALTER SEQUENCE program_product_isa_id_seq OWNED BY isa_coefficients.id;
 ALTER TABLE isa_coefficients ADD populationSource INTEGER NULL REFERENCES demographic_estimate_categories(id);
 
 
-/* Add an isaCoefficientsId column to the program_products table. 
-   It's usually best to drop-and-recreate the table in order to be able to specify ordinal of new columns. 
+/* Add an isaCoefficientsId column to the program_products table.
+   It's usually best to drop-and-recreate the table in order to be able to specify ordinal of new columns.
    In this case, however, additional columns have already been tacked on after the standard created* and modified* columns.
 */
 ALTER TABLE program_products ADD isaCoefficientsId INTEGER REFERENCES isa_coefficients(id);
@@ -52,7 +52,7 @@ INSERT INTO isa_coefficients(id, whoratio, dosesperyear, wastagefactor, bufferpe
 SELECT id, whoratio, dosesperyear, wastagefactor, bufferpercentage, minimumvalue, maximumvalue, adjustmentvalue FROM orig_program_product_isa;
 
 UPDATE program_products
-SET isaCoefficientsId = 
+SET isaCoefficientsId =
 (
    SELECT id FROM orig_program_product_isa oppi
    WHERE oppi.programproductid = program_products.id
