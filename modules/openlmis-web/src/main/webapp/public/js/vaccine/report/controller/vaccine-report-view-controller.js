@@ -28,9 +28,6 @@ function ViewVaccineReportController($scope, programs, VaccineReportFacilities, 
       programId: $scope.filter.program
     }, function (data) {
       $scope.periodGridData = data.periods;
-      if ($scope.periodGridData.length > 0) {
-        $scope.periodGridData[0].showButton = true;
-      }
     });
   };
 

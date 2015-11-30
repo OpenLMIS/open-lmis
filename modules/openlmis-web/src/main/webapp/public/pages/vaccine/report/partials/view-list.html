@@ -52,6 +52,10 @@
       <div class="span6">
         <div class="gridStyle small" ng-grid="periodGridOptions"
              ng-show="!(periodGridData.length == 0)"></div>
+        <div
+            ng-show="periodGridData == undefined || periodGridData.length == 0">
+          <span openlmis-message="label.vaccine.no.ivd.reports.to.view"></span>
+        </div>
       </div>
     </div>
   </div>
