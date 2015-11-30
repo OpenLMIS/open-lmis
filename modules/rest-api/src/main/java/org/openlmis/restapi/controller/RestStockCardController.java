@@ -3,6 +3,7 @@ package org.openlmis.restapi.controller;
 import com.wordnik.swagger.annotations.Api;
 import lombok.NoArgsConstructor;
 import org.openlmis.core.exception.DataException;
+import org.openlmis.core.utils.DateUtil;
 import org.openlmis.restapi.response.RestResponse;
 import org.openlmis.restapi.service.RestStockCardService;
 import org.openlmis.stockmanagement.domain.StockCard;
@@ -17,7 +18,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import java.security.Principal;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import static org.openlmis.restapi.response.RestResponse.error;
@@ -49,16 +49,18 @@ public class RestStockCardController extends BaseController {
 
     @RequestMapping(value = "/rest-api/facilities/{facilityId}/stockCards", method = GET, headers = ACCEPT_JSON)
     public ResponseEntity getStockMovements(@PathVariable long facilityId,
-                                        @RequestParam(value = "startTime", required = false) final Date startTime,
-                                        @RequestParam(value = "endTime", required = false) final Date endTime,
-                                        Principal principal) {
+                                            @RequestParam(value = "startTime", required = false) final String startTime,
+                                            @RequestParam(value = "endTime", required = false) final String endTime) {
         List<StockCard> stockCards = new ArrayList<>();
         try {
-            stockCards = restStockCardService.queryStockCardByMovementDate(facilityId, startTime, endTime);
+            stockCards = restStockCardService.queryStockCardByMovementDate(facilityId,
+                DateUtil.parseDate(startTime, DateUtil.FORMAT_DATE),
+                DateUtil.parseDate(endTime, DateUtil.FORMAT_DATE));
         } catch (DataException e) {
             return error(e.getOpenLmisMessage(), BAD_REQUEST);
         }
         return response("stockCards", stockCards);
 
     }
+
 }
