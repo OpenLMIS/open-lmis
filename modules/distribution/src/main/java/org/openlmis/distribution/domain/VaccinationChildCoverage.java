@@ -36,7 +36,7 @@ public class VaccinationChildCoverage extends VaccinationCoverage {
   private List<ChildCoverageLineItem> childCoverageLineItems = new ArrayList<>();
 
   private static List<String> validProductVials = Collections.unmodifiableList(asList(
-    "BCG", "Polio10", "Polio20", "Penta1", "Penta10", "PCV", "Sarampo"));
+    "BCG", "Polio10", "Polio20", "Penta1", "Penta10", "PCV", "Sarampo", "MSD"));
 
   public VaccinationChildCoverage(FacilityVisit facilityVisit, Facility facility,
                                   ProcessingPeriod period, List<TargetGroupProduct> targetGroupProducts,
@@ -45,7 +45,7 @@ public class VaccinationChildCoverage extends VaccinationCoverage {
     List<String> validVaccinations = Collections.unmodifiableList(
       asList("BCG", "Polio (Newborn)", "Polio 1st dose", "Polio 2nd dose",
         "Polio 3rd dose", "Penta 1st dose", "Penta 2nd dose", "Penta 3rd dose",
-        "PCV10 1st dose", "PCV10 2nd dose", "PCV10 3rd dose", "Sarampo 1a dose"));
+        "PCV10 1st dose", "PCV10 2nd dose", "PCV10 3rd dose", "Sarampo 1a dose", "Sarampo 2a dose"));
 
     createChildCoverageLineItems(facilityVisit, facility, targetGroupProducts, validVaccinations, period.getNumberOfMonths());
   }

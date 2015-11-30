@@ -20,5 +20,6 @@ INSERT INTO coverage_target_group_products (targetGroupEntity, productCode, chil
 INSERT INTO coverage_target_group_products (targetGroupEntity, productCode, childCoverage) VALUES ('PCV10 2nd dose', 'P10', TRUE);
 INSERT INTO coverage_target_group_products (targetGroupEntity, productCode, childCoverage) VALUES ('PCV10 3rd dose', 'P10', TRUE);
 INSERT INTO coverage_target_group_products (targetGroupEntity, productCode, childCoverage) VALUES ('Sarampo 1a dose', 'Sarampo', TRUE);
+INSERT INTO coverage_target_group_products (targetGroupEntity, productCode, childCoverage) VALUES ('Sarampo 2a dose', 'MSD', TRUE);
 
 INSERT INTO coverage_target_group_products (targetGroupEntity, productCode, childCoverage) VALUES ('Pregnant Women', 'Tetanus', FALSE);

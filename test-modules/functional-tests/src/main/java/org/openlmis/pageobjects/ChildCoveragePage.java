@@ -58,6 +58,9 @@ public class ChildCoveragePage extends DistributionTab {
   @FindBy(how = ID, using = "colSarampo 1a dose")
   private static WebElement regimenSarampoDose1 = null;
 
+  @FindBy(how = ID, using = "colSarampo 2a dose")
+  private static WebElement regimenSarampoDose2 = null;
+
   @FindBy(how = ID, using = "vaccination")
   private static WebElement headerChildVaccination = null;
 
@@ -280,6 +283,11 @@ public class ChildCoveragePage extends DistributionTab {
   public String getTextOfRegimenSarampoDose1() {
     testWebDriver.waitForElementToAppear(regimenSarampoDose1);
     return regimenSarampoDose1.getText();
+  }
+
+  public String getTextOfRegimenSarampoDose2() {
+    testWebDriver.waitForElementToAppear(regimenSarampoDose2);
+    return regimenSarampoDose2.getText();
   }
 
   public String getTextOfHeaderChildrenVaccination() {

@@ -636,7 +636,8 @@ public class DistributionChildCoverageSyncTest extends TestCaseHelper {
 
     String facilityId = dbWrapper.getAttributeFromTable("facilities", "id", "code", "F10");
     String facilityVisitId = dbWrapper.getAttributeFromTable("facility_visits", "id", "facilityId", facilityId);
-    List<String> vaccinations = asList("BCG", "Polio (Newborn)", "Polio 1st dose", "Polio 2nd dose", "Polio 3rd dose", "Penta 1st dose", "Penta 2nd dose", "Penta 3rd dose", "PCV10 1st dose", "PCV10 2nd dose", "PCV10 3rd dose", "Sarampo 1a dose");
+    List<String> vaccinations = asList("BCG", "Polio (Newborn)", "Polio 1st dose", "Polio 2nd dose", "Polio 3rd dose", "Penta 1st dose", "Penta 2nd dose",
+            "Penta 3rd dose", "PCV10 1st dose", "PCV10 2nd dose", "PCV10 3rd dose", "Sarampo 1a dose", "Sarampo 2a dose");
 
     for (int i = 1; i <= 12; i++) {
       ResultSet childCoverageDetails = dbWrapper.getChildCoverageDetails(vaccinations.get(i - 1), facilityVisitId);
@@ -766,7 +767,8 @@ public class DistributionChildCoverageSyncTest extends TestCaseHelper {
     String facilityId = dbWrapper.getAttributeFromTable("facilities", "id", "code", "F10");
     String facilityVisitId = dbWrapper.getAttributeFromTable("facility_visits", "id", "facilityId", facilityId);
 
-    List<String> vaccinations = asList("BCG", "Polio (Newborn)", "Polio 1st dose", "Polio 2nd dose", "Polio 3rd dose", "Penta 1st dose", "Penta 2nd dose", "Penta 3rd dose", "PCV10 1st dose", "PCV10 2nd dose", "PCV10 3rd dose", "Sarampo 1a dose");
+    List<String> vaccinations = asList("BCG", "Polio (Newborn)", "Polio 1st dose", "Polio 2nd dose", "Polio 3rd dose", "Penta 1st dose", "Penta 2nd dose",
+            "Penta 3rd dose", "PCV10 1st dose", "PCV10 2nd dose", "PCV10 3rd dose", "Sarampo 1a dose", "Sarampo 2a dose");
 
     for (int i = 1; i <= 12; i++) {
       ResultSet childCoverageDetails = dbWrapper.getChildCoverageDetails(vaccinations.get(i - 1), facilityVisitId);
@@ -840,6 +842,7 @@ public class DistributionChildCoverageSyncTest extends TestCaseHelper {
     assertEquals(childCoveragePage.getTextOfRegimenPCV10Dose2(), "PCV10 2nd dose");
     assertEquals(childCoveragePage.getTextOfRegimenPCV10Dose3(), "PCV10 3rd dose");
     assertEquals(childCoveragePage.getTextOfRegimenSarampoDose1(), "Sarampo 1a dose");
+    assertEquals(childCoveragePage.getTextOfRegimenSarampoDose2(), "Sarampo 2a dose");
   }
 
   private void insertRegimenProductMapping() throws SQLException {
@@ -855,6 +858,7 @@ public class DistributionChildCoverageSyncTest extends TestCaseHelper {
     dbWrapper.insertTargetGroupEntityAndProductsInMappingTable("PCV10 2nd dose", "P10", true);
     dbWrapper.insertTargetGroupEntityAndProductsInMappingTable("PCV10 3rd dose", "P10", true);
     dbWrapper.insertTargetGroupEntityAndProductsInMappingTable("Sarampo 1a dose", "Sarampo", true);
+    dbWrapper.insertTargetGroupEntityAndProductsInMappingTable("Sarampo 2a dose", "MSD", true);
   }
 
   @When("^I apply NR to healthCenter11Months for rowNumber \"([^\"]*)\"$")

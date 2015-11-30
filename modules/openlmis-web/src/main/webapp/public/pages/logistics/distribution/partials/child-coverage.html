@@ -67,6 +67,7 @@
                 <span ng-bind="lineItem.targetGroup"></span>
               </td>
               <td class="col-complete-vaccinated">
+                <span ng-hide="lineItem.vaccination == 'Sarampo 2a dose'">
                 <div>
                   <span class="input-error-parent-cell">
                     <input id="healthCenter11Months{{$index}}" type="text"
@@ -89,6 +90,7 @@
                        openlmis-message="label.not.recorded"></label>
               </td>
               <td class="col-complete-vaccinated">
+                <span ng-hide="lineItem.vaccination == 'Sarampo 2a dose'">
                 <div>
                   <span class="input-error-parent-cell">
                     <input id="outreach11Months{{$index}}" type="text"

@@ -604,6 +604,7 @@ public class E2EDistributionTest extends TestCaseHelper {
     dbWrapper.insertTargetGroupEntityAndProductsInMappingTable("PCV10 2nd dose", "P10", true);
     dbWrapper.insertTargetGroupEntityAndProductsInMappingTable("PCV10 3rd dose", "P10", true);
     dbWrapper.insertTargetGroupEntityAndProductsInMappingTable("Sarampo 1a dose", "Sarampo", true);
+    dbWrapper.insertTargetGroupEntityAndProductsInMappingTable("Sarampo 2a dose", "MSD", true);
   }
 
   public void insertOpenedVialsProductMapping() throws SQLException {
