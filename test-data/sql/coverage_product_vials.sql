@@ -14,5 +14,5 @@ INSERT INTO coverage_product_vials (vial, productCode, childCoverage) VALUES ('P
 INSERT INTO coverage_product_vials (vial, productCode, childCoverage) VALUES ('Penta1', 'penta1', true);
 INSERT INTO coverage_product_vials (vial, productCode, childCoverage) VALUES ('Penta10', 'penta10', true);
 INSERT INTO coverage_product_vials (vial, productCode, childCoverage) VALUES ('PCV', 'P10', true);
-INSERT INTO coverage_product_vials (vial, productCode, childCoverage) VALUES ('Measles', 'Measles', true);
+INSERT INTO coverage_product_vials (vial, productCode, childCoverage) VALUES ('Sarampo', 'Sarampo', true);
 INSERT INTO coverage_product_vials (vial, productCode, childCoverage) VALUES ('Tetanus', 'Tetanus', false);

@@ -304,7 +304,7 @@ public class DistributionChildCoverageSyncTest extends TestCaseHelper {
   @Test(groups = {"distribution"})
   public void testShouldVerifyAllRegimensWhenLessThan12RegimensInMappingTable() throws SQLException {
     dbWrapper.deleteRowFromTable("coverage_target_group_products", "targetGroupEntity", "BCG");
-    dbWrapper.deleteRowFromTable("coverage_target_group_products", "targetGroupEntity", "Measles");
+    dbWrapper.deleteRowFromTable("coverage_target_group_products", "targetGroupEntity", "Sarampo");
 
     HomePage homePage = loginPage.loginAs(childCoverageData.get(USER), childCoverageData.get(PASSWORD));
     DistributionPage distributionPage = homePage.navigateToDistributionWhenOnline();
@@ -320,8 +320,8 @@ public class DistributionChildCoverageSyncTest extends TestCaseHelper {
   @Test(groups = {"distribution"})
   public void testShouldVerifyAllRegimensWhenInsertedInDifferentOrderInMappingTableAndMappedToPullTypePrograms() throws SQLException {
     dbWrapper.deleteRowFromTable("coverage_target_group_products", "targetGroupEntity", "BCG");
-    dbWrapper.deleteRowFromTable("coverage_target_group_products", "targetGroupEntity", "Measles");
-    dbWrapper.insertTargetGroupEntityAndProductsInMappingTable("Measles", "P10", true);
+    dbWrapper.deleteRowFromTable("coverage_target_group_products", "targetGroupEntity", "Sarampo");
+    dbWrapper.insertTargetGroupEntityAndProductsInMappingTable("Sarampo", "P10", true);
     dbWrapper.insertTargetGroupEntityAndProductsInMappingTable("BCG", "P10", true);
 
     HomePage homePage = loginPage.loginAs(childCoverageData.get(USER), childCoverageData.get(PASSWORD));
@@ -636,7 +636,7 @@ public class DistributionChildCoverageSyncTest extends TestCaseHelper {
 
     String facilityId = dbWrapper.getAttributeFromTable("facilities", "id", "code", "F10");
     String facilityVisitId = dbWrapper.getAttributeFromTable("facility_visits", "id", "facilityId", facilityId);
-    List<String> vaccinations = asList("BCG", "Polio (Newborn)", "Polio 1st dose", "Polio 2nd dose", "Polio 3rd dose", "Penta 1st dose", "Penta 2nd dose", "Penta 3rd dose", "PCV10 1st dose", "PCV10 2nd dose", "PCV10 3rd dose", "Measles");
+    List<String> vaccinations = asList("BCG", "Polio (Newborn)", "Polio 1st dose", "Polio 2nd dose", "Polio 3rd dose", "Penta 1st dose", "Penta 2nd dose", "Penta 3rd dose", "PCV10 1st dose", "PCV10 2nd dose", "PCV10 3rd dose", "Sarampo 1a dose");
 
     for (int i = 1; i <= 12; i++) {
       ResultSet childCoverageDetails = dbWrapper.getChildCoverageDetails(vaccinations.get(i - 1), facilityVisitId);
@@ -647,7 +647,7 @@ public class DistributionChildCoverageSyncTest extends TestCaseHelper {
         assertEqualsAndNulls(childCoverageDetails.getString("outreach23months"), "null");
       }
     }
-    List<String> openedVials = asList("BCG", "Polio10", "Polio20", "Penta1", "Penta10", "PCV", "Measles");
+    List<String> openedVials = asList("BCG", "Polio10", "Polio20", "Penta1", "Penta10", "PCV", "Sarampo");
     for (int i = 1; i <= 7; i++) {
       ResultSet openedVialLineItem = dbWrapper.getChildOpenedVialLineItem(openedVials.get(i - 1), facilityVisitId);
       assertEqualsAndNulls(openedVialLineItem.getString("openedVials"), "null");
@@ -715,7 +715,7 @@ public class DistributionChildCoverageSyncTest extends TestCaseHelper {
     assertEqualsAndNulls(childCoverageDetails.getString("healthcenter23months"), "1234567");
     assertEqualsAndNulls(childCoverageDetails.getString("outreach23months"), "null");
 
-    childCoverageDetails = dbWrapper.getChildCoverageDetails("Measles", facilityVisitId);
+    childCoverageDetails = dbWrapper.getChildCoverageDetails("Sarampo 1a dose", facilityVisitId);
     assertEqualsAndNulls(childCoverageDetails.getString("healthcenter11months"), "null");
     assertEqualsAndNulls(childCoverageDetails.getString("outreach11months"), "null");
     assertEqualsAndNulls(childCoverageDetails.getString("healthcenter23months"), "null");
@@ -724,7 +724,7 @@ public class DistributionChildCoverageSyncTest extends TestCaseHelper {
     ResultSet openedVialLineItem = dbWrapper.getChildOpenedVialLineItem("BCG", facilityVisitId);
     assertEquals(openedVialLineItem.getString("openedVials"), "1234567");
 
-    openedVialLineItem = dbWrapper.getChildOpenedVialLineItem("Measles", facilityVisitId);
+    openedVialLineItem = dbWrapper.getChildOpenedVialLineItem("Sarampo", facilityVisitId);
     assertEqualsAndNulls(openedVialLineItem.getString("openedVials"), "null");
   }
 
@@ -766,7 +766,7 @@ public class DistributionChildCoverageSyncTest extends TestCaseHelper {
     String facilityId = dbWrapper.getAttributeFromTable("facilities", "id", "code", "F10");
     String facilityVisitId = dbWrapper.getAttributeFromTable("facility_visits", "id", "facilityId", facilityId);
 
-    List<String> vaccinations = asList("BCG", "Polio (Newborn)", "Polio 1st dose", "Polio 2nd dose", "Polio 3rd dose", "Penta 1st dose", "Penta 2nd dose", "Penta 3rd dose", "PCV10 1st dose", "PCV10 2nd dose", "PCV10 3rd dose", "Measles");
+    List<String> vaccinations = asList("BCG", "Polio (Newborn)", "Polio 1st dose", "Polio 2nd dose", "Polio 3rd dose", "Penta 1st dose", "Penta 2nd dose", "Penta 3rd dose", "PCV10 1st dose", "PCV10 2nd dose", "PCV10 3rd dose", "Sarampo 1a dose");
 
     for (int i = 1; i <= 12; i++) {
       ResultSet childCoverageDetails = dbWrapper.getChildCoverageDetails(vaccinations.get(i - 1), facilityVisitId);
@@ -779,7 +779,7 @@ public class DistributionChildCoverageSyncTest extends TestCaseHelper {
       }
     }
 
-    List<String> openedVials = asList("BCG", "Polio10", "Polio20", "Penta1", "Penta10", "PCV", "Measles");
+    List<String> openedVials = asList("BCG", "Polio10", "Polio20", "Penta1", "Penta10", "PCV", "Sarampo");
     for (int i = 1; i <= 7; i++) {
       ResultSet openedVialLineItem = dbWrapper.getChildOpenedVialLineItem(openedVials.get(i - 1), facilityVisitId);
       assertEquals(openedVialLineItem.getString("openedVials"), String.valueOf(i * 100));
@@ -794,7 +794,7 @@ public class DistributionChildCoverageSyncTest extends TestCaseHelper {
     dbWrapper.insertChildCoverageProductVial("Penta1", "penta1");
     dbWrapper.insertChildCoverageProductVial("Penta10", "P11");
     dbWrapper.insertChildCoverageProductVial("PCV", "P10");
-    dbWrapper.insertChildCoverageProductVial("Measles", "Measles");
+    dbWrapper.insertChildCoverageProductVial("Sarampo", "Sarampo");
   }
 
   private void verifyOpenVialsPresent() {
@@ -805,7 +805,7 @@ public class DistributionChildCoverageSyncTest extends TestCaseHelper {
     assertEquals(childCoveragePage.getTextOfOpenedVialsPenta1(), "Penta1");
     assertEquals(childCoveragePage.getTextOfOpenedVialsPenta10(), "Penta10");
     assertEquals(childCoveragePage.getTextOfOpenedVialsPCV(), "PCV");
-    assertEquals(childCoveragePage.getTextOfOpenedVialsMeasles(), "Measles");
+    assertEquals(childCoveragePage.getTextOfOpenedVialsSarampo(), "Sarampo");
   }
 
   private void verifyHeadersPresent() {
@@ -839,7 +839,7 @@ public class DistributionChildCoverageSyncTest extends TestCaseHelper {
     assertEquals(childCoveragePage.getTextOfRegimenPCV10Dose1(), "PCV10 1st dose");
     assertEquals(childCoveragePage.getTextOfRegimenPCV10Dose2(), "PCV10 2nd dose");
     assertEquals(childCoveragePage.getTextOfRegimenPCV10Dose3(), "PCV10 3rd dose");
-    assertEquals(childCoveragePage.getTextOfRegimenMeasles(), "Measles");
+    assertEquals(childCoveragePage.getTextOfRegimenSarampoDose1(), "Sarampo 1a dose");
   }
 
   private void insertRegimenProductMapping() throws SQLException {
@@ -854,7 +854,7 @@ public class DistributionChildCoverageSyncTest extends TestCaseHelper {
     dbWrapper.insertTargetGroupEntityAndProductsInMappingTable("PCV10 1st dose", "P10", true);
     dbWrapper.insertTargetGroupEntityAndProductsInMappingTable("PCV10 2nd dose", "P10", true);
     dbWrapper.insertTargetGroupEntityAndProductsInMappingTable("PCV10 3rd dose", "P10", true);
-    dbWrapper.insertTargetGroupEntityAndProductsInMappingTable("Measles", "Measles", true);
+    dbWrapper.insertTargetGroupEntityAndProductsInMappingTable("Sarampo 1a dose", "Sarampo", true);
   }
 
   @When("^I apply NR to healthCenter11Months for rowNumber \"([^\"]*)\"$")
