@@ -32,7 +32,7 @@ public class SupplyLinePersistenceHandler extends AbstractModelPersistenceHandle
   }
 
   @Override
-  BaseModel getExisting(BaseModel record) {
+  protected BaseModel getExisting(BaseModel record) {
     SupplyLine supplyLine = (SupplyLine) record;
     SupplyLine supplyLineFromDB = supplyLineService.getExisting(supplyLine);
     if (supplyLineFromDB != null) {
