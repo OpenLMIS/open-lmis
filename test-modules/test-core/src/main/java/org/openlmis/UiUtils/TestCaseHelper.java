@@ -648,20 +648,23 @@ public class TestCaseHelper {
     String facilityVisitId = dbWrapper.getAttributeFromTable("facility_visits", "id", "facilityId", facilityId);
 
     List<String> vaccinations = asList("BCG", "Polio (Newborn)", "Polio 1st dose", "Polio 2nd dose", "Polio 3rd dose", "Penta 1st dose", "Penta 2nd dose",
-            "Penta 3rd dose", "PCV10 1st dose", "PCV10 2nd dose", "PCV10 3rd dose", "Sarampo 1a dose", "Sarampo 2a dose");
+            "Penta 3rd dose", "PCV10 1st dose", "PCV10 2nd dose", "PCV10 3rd dose", "RV Rotarix 1a dose", "RV Rotarix 2a dose", "Sarampo 1a dose", "Sarampo 2a dose");
 
-    for (int i = 1; i <= 12; i++) {
+    for (int i = 1; i <= 15; i++) {
       ResultSet childCoverageDetails = dbWrapper.getChildCoverageDetails(vaccinations.get(i - 1), facilityVisitId);
 
-      assertEquals(childCoverageDetails.getString("healthCenter11months"), String.valueOf(i));
-      assertEquals(childCoverageDetails.getString("outreach11months"), String.valueOf(i));
+      if (i != 15) {
+        assertEquals(childCoverageDetails.getString("healthCenter11months"), String.valueOf(i));
+        assertEquals(childCoverageDetails.getString("outreach11months"), String.valueOf(i));
+      }
+
       if (i != 2) {
         assertEquals(childCoverageDetails.getString("healthCenter23months"), String.valueOf(i));
         assertEquals(childCoverageDetails.getString("outreach23months"), String.valueOf(i));
       }
     }
-    List<String> openedVials = asList("BCG", "Polio10", "Polio20", "Penta1", "Penta10", "PCV", "Sarampo");
-    for (int i = 1; i <= 7; i++) {
+    List<String> openedVials = asList("BCG", "Polio10", "Polio20", "Penta1", "Penta10", "PCV", "RV Rotarix", "Sarampo", "MSD");
+    for (int i = 1; i <= 9; i++) {
       ResultSet openedVialLineItem = dbWrapper.getChildOpenedVialLineItem(openedVials.get(i - 1), facilityVisitId);
       assertEquals(openedVialLineItem.getString("openedVials"), String.valueOf(i));
     }

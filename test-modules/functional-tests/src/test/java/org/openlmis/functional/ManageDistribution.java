@@ -125,6 +125,8 @@ public class ManageDistribution extends TestCaseHelper {
     dbWrapper.insertTargetGroupEntityAndProductsInMappingTable("PCV10 1st dose", "P10", true);
     dbWrapper.insertTargetGroupEntityAndProductsInMappingTable("PCV10 2nd dose", "P10", true);
     dbWrapper.insertTargetGroupEntityAndProductsInMappingTable("PCV10 3rd dose", "P10", true);
+    dbWrapper.insertTargetGroupEntityAndProductsInMappingTable("RV Rotarix 1a dose", "RV Rotarix", true);
+    dbWrapper.insertTargetGroupEntityAndProductsInMappingTable("RV Rotarix 2a dose", "RV Rotarix", true);
     dbWrapper.insertTargetGroupEntityAndProductsInMappingTable("Sarampo 1a dose", "Sarampo", true);
     dbWrapper.insertTargetGroupEntityAndProductsInMappingTable("Sarampo 2a dose", "MSD", true);
     dbWrapper.insertChildCoverageProductVial("Polio10", "P11");
@@ -132,6 +134,7 @@ public class ManageDistribution extends TestCaseHelper {
     dbWrapper.insertChildCoverageProductVial("Penta1", "penta1");
     dbWrapper.insertChildCoverageProductVial("Penta10", "P11");
     dbWrapper.insertChildCoverageProductVial("PCV", "P10");
+    dbWrapper.insertChildCoverageProductVial("RV Rotarix", "RV Rotarix");
     dbWrapper.insertChildCoverageProductVial("Sarampo", "Sarampo");
     dbWrapper.insertChildCoverageProductVial("MSD", "MSD");
   }
@@ -475,21 +478,24 @@ public class ManageDistribution extends TestCaseHelper {
     List<Map<String, String>> data = tableData.asMaps();
     for (Map map : data) {
       List<String> vaccinations = asList("BCG", "Polio (Newborn)", "Polio 1st dose", "Polio 2nd dose", "Polio 3rd dose", "Penta 1st dose", "Penta 2nd dose",
-              "Penta 3rd dose", "PCV10 1st dose", "PCV10 2nd dose", "PCV10 3rd dose", "Sarampo 1a dose", "Sarampo 2a dose");
+              "Penta 3rd dose", "PCV10 1st dose", "PCV10 2nd dose", "PCV10 3rd dose", "RV Rotarix 1a dose", "RV Rotarix 2a dose", "Sarampo 1a dose", "Sarampo 2a dose");
 
-      for (int i = 1; i <= 12; i++) {
+      for (int i = 1; i <= 15; i++) {
         ResultSet childCoverageDetails = dbWrapper.getChildCoverageDetails(vaccinations.get(i - 1), facilityVisitId);
 
-        assertEquals(childCoverageDetails.getString("healthCenter11months"), map.get("healthCenter11"));
-        assertEquals(childCoverageDetails.getString("outreach11months"), map.get("outreach11"));
+        if (i != 15) {
+          assertEquals(childCoverageDetails.getString("healthCenter11months"), map.get("healthCenter11"));
+          assertEquals(childCoverageDetails.getString("outreach11months"), map.get("outreach11"));
+        }
+
         if (i != 2) {
           assertEquals(childCoverageDetails.getString("healthCenter23months"), map.get("healthCenter23"));
           assertEquals(childCoverageDetails.getString("outreach23months"), map.get("outreach23"));
         }
       }
 
-      List<String> openedVials = asList("BCG", "Polio10", "Polio20", "Penta1", "Penta10", "PCV", "Sarampo");
-      for (int i = 1; i <= 7; i++) {
+      List<String> openedVials = asList("BCG", "Polio10", "Polio20", "Penta1", "Penta10", "PCV", "RV Rotarix", "Sarampo", "MSD");
+      for (int i = 1; i <= 9; i++) {
         ResultSet openedVialLineItem = dbWrapper.getChildOpenedVialLineItem(openedVials.get(i - 1), facilityVisitId);
         assertEquals(openedVialLineItem.getString("openedVials"), map.get("openedVial"));
       }
