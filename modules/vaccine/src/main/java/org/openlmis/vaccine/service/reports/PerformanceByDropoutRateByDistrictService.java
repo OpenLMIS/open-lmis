@@ -318,12 +318,12 @@ public class PerformanceByDropoutRateByDistrictService {
         if (filterCriteria != null) {
             filterParam = new PerformanceByDropoutRateParam();
             filterParam.setFacility_id(StringUtils.isBlank(filterCriteria.get("facilityId")[0]) ? 0 : Long.parseLong(filterCriteria.get("facilityId")[0])); //defaults to 0
-            filterParam.setGeographic_zone_id(StringUtils.isBlank(filterCriteria.get("geographicZoneId")[0]) ? 0 : Long.parseLong(filterCriteria.get("geographicZoneId")[0]));
+            filterParam.setGeographic_zone_id(filterCriteria.get("geographicZoneId") == null || StringUtils.isBlank(filterCriteria.get("geographicZoneId")[0]) ? 0 : Long.parseLong(filterCriteria.get("geographicZoneId")[0]));
             filterParam.setPeriod_end_date(StringUtils.isBlank(filterCriteria.get("periodEnd")[0]) ? null : filterCriteria.get("periodEnd")[0]);
-            filterParam.setPeriod_id(StringUtils.isBlank(filterCriteria.get("periodId")[0]) ? 0 : Long.parseLong(filterCriteria.get("periodId")[0])); //defaults to 0
+
             filterParam.setPeriod_start_date(StringUtils.isBlank(filterCriteria.get("periodStart")[0]) ? null : filterCriteria.get("periodStart")[0]);
-            filterParam.setProduct_id(StringUtils.isBlank(filterCriteria.get("productId")[0]) ? 0 : Long.parseLong(filterCriteria.get("productId")[0]));
-            filterParam.setProgram_id(StringUtils.isBlank(filterCriteria.get("programId")[0]) ? 0 : Long.parseLong(filterCriteria.get("programId")[0]));
+            filterParam.setProduct_id(filterCriteria.get("productId")==null || StringUtils.isBlank(filterCriteria.get("productId")[0]) ? 0 : Long.parseLong(filterCriteria.get("productId")[0]));
+
         }
         return filterParam;
 
