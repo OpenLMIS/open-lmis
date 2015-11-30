@@ -8,7 +8,6 @@ import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.openlmis.core.builder.FacilityBuilder;
 import org.openlmis.core.builder.ProductBuilder;
-import org.openlmis.core.domain.*;
 import org.openlmis.core.domain.Facility;
 import org.openlmis.core.domain.FacilityType;
 import org.openlmis.core.domain.GeographicLevel;
@@ -134,7 +133,7 @@ public class FacilityProductsReportDataProviderTest {
     assertThat(DateUtil.formatDate(entryList.get(1).getLastSyncDate()), is("2011-11-11 11:11:11"));
   }
 
-  public void setupOneFacilityStockCardListWithOneCardOneEntry() {
+  private void setupOneFacilityStockCardListWithOneCardOneEntry() {
     facility = make(a(FacilityBuilder.defaultFacility));
     product = make(a(ProductBuilder.defaultProduct, with(ProductBuilder.productId, 1L)));
 

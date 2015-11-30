@@ -58,7 +58,7 @@ public class FacilityProductReportEntry {
         return StringUtils.EMPTY;
     }
 
-    protected void assignSoonestExpirationDate(List<StockCardEntry> stockCardEntryList) {
+    private void assignSoonestExpirationDate(List<StockCardEntry> stockCardEntryList) {
         if (stockCardEntryList == null || stockCardEntryList.size() == 0) {
             return;
         }
