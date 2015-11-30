@@ -36,18 +36,9 @@
 
                         <vaccine-zone-filter class="form-cell horizontalFilters" stand-alone="true" required="true">*</vaccine-zone-filter>
 
-                        <div class="form-cell horizontalFilters">
-                            <label class="labels" >Dropouts: <span
-                                    class="label-required">*</span></label>
+                        <vaccine-dropout-filter class="form-cell horizontalFilters" >
 
-                            <div>
-                                <select  ui-select2 class="input-large" ng-change="OnFilterChanged()"
-                                        ng-model="filter.product">
-                                    <option ng-repeat="option in dropoutProductsList " value="{{option.id}}">{{option.dropout}}</option>
-
-                                </select>
-                            </div>
-                        </div>
+                        </vaccine-dropout-filter>
 
                         <div class="form-cell horizontalFilters">
                             <label class="labels" openlmis-message="label.period"> <span

@@ -14,20 +14,54 @@
   -->
 
 
-
 <!-- remember how to re-implement this to be more generic  -->
 <script type="text/ng-template" id="filter2-zone-template">
     <div>
-        <label for="zone" class="labels" openlmis-message="label.vaccine.geographic.zone"><span ng-show="requiredFilters.zone" class="label-required">*</span></label>
+        <label for="zone" class="labels" openlmis-message="label.vaccine.geographic.zone"><span
+                ng-show="requiredFilters.zone" class="label-required">*</span></label>
+
         <div>
-            <select id="zone" ui-select2 class="input-large" data-placeholder="-- All Zones --"  ng-change="notifyFilterChanged('zone-changed');" ng-model="filter.zone">
-                <option ng-selected="filter.zone == undefined || filter.zone == '' || filter.zone == 0" value="0">{{user_geo_level}}</option>
-                <optgroup ng-repeat="value in zones.children" value="{{ value.id }}" ng-selected="filter.zone == value.id" label="{{value.name}}">
-                    <option ng-selected="filter.zone == value.id" value="{{value.id}}"><b class="green"> -- All of {{value.name}}</b></option>
-                    <option ng-repeat-start="v in value.children" ng-selected="filter.zone == v.id" value="{{v.id}}">{{v.name}}</option>
-                    <option ng-repeat-end ng-repeat="d in v.children" ng-selected="filter.zone == d.id" value="{{d.id}}"> &nbsp; &nbsp; {{d.name}}</option>
+            <select id="zone" ui-select2 class="input-large" data-placeholder="-- All Zones --"
+                    ng-change="notifyFilterChanged('vaccine-zone-changed');" ng-model="filter.zone">
+                <option ng-selected="filter.zone == undefined || filter.zone == '' || filter.zone == 0" value="0">
+                    {{user_geo_level}}
+                </option>
+                <optgroup ng-repeat="value in zones.children" value="{{ value.id }}"
+                          ng-selected="filter.zone == value.id" label="{{value.name}}">
+                    <option ng-selected="filter.zone == value.id" value="{{value.id}}"><b class="green"> -- All of
+                        {{value.name}}</b></option>
+                    <option ng-repeat-start="v in value.children" ng-selected="filter.zone == v.id" value="{{v.id}}">
+                        {{v.name}}
+                    </option>
+                    <option ng-repeat-end ng-repeat="d in v.children" ng-selected="filter.zone == d.id"
+                            value="{{d.id}}"> &nbsp; &nbsp; {{d.name}}
+                    </option>
                 </optgroup>
             </select>
         </div>
     </div>
+
+
+</script>
+
+
+<script type="text/ng-template" id="filter2-vaccine-dropout-template">
+    <div>
+
+        <label class="labels" >Dropouts: <span
+                class="label-required">*</span></label>
+
+        <div>
+            <select  ui-select2 class="input-large"  ng-change="notifyFilterChanged('vaccine-dropout-changed');"
+                     ng-model="filter.product">
+                <option ng-repeat="option in dropoutProductsList " value="{{option.id}}">{{option.dropout}}</option>
+
+            </select>
+        </div>
+
+    </div>
+</script>
+
+<script type="text/ng-template" id="filter2-vaccine-period-template">
+
 </script>

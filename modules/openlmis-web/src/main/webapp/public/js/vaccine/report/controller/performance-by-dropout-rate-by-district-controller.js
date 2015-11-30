@@ -12,7 +12,8 @@
  *
  */
 
-function ViewPerformanceByDropoutRateByDistrictController($scope, PerformanceByDropoutRateByDistrict, $window ,DropoutProducts,VaccineSupervisedIvdPrograms, $routeParams) {
+function ViewPerformanceByDropoutRateByDistrictController($scope,  PerformanceByDropoutRateByDistrict, VaccineSupervisedIvdPrograms, $routeParams) {
+
     $scope.customPeriod;
     $scope.products;
     $scope.report;
@@ -21,19 +22,11 @@ function ViewPerformanceByDropoutRateByDistrictController($scope, PerformanceByD
 
     var maxReportSubmission = 10;
     var maxReportSubmissionKey;
-    $scope.filter = angular.copy($routeParams);
-    DropoutProducts.get({},function (data) {
 
-        $scope.dropoutProductsList = data.dropoutProductsList;
 
-    });
 
     $scope.OnFilterChanged = function () {
-
-
         $scope.data = $scope.datarows = [];
-
-
         $scope.filter.facilityId='' ;
         $scope.filter.geographicZoneId = $scope.filter.zone;
         $scope.filter.productId = $scope.filter.product;
@@ -42,11 +35,7 @@ function ViewPerformanceByDropoutRateByDistrictController($scope, PerformanceByD
 
         $scope.getStartDate();
         $scope.reportType=false;
-        VaccineSupervisedIvdPrograms.get(function (data) {
 
-            $scope.filter.program = data.programs[0].id;
-
-        });
         var sd= new Date($scope.filter.periodStart);
         var ed= new Date($scope.filter.periodEnd);
         var monthsDifference=0;
