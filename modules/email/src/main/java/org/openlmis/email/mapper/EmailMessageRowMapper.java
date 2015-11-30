@@ -10,7 +10,7 @@
 
 package org.openlmis.email.mapper;
 
-import org.openlmis.email.domain.OpenlmisEmailMessage;
+import org.openlmis.email.domain.EmailMessage;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Component;
 
@@ -22,15 +22,15 @@ import java.sql.SQLException;
  */
 
 @Component
-public class EmailMessageRowMapper implements RowMapper<OpenlmisEmailMessage> {
+public class EmailMessageRowMapper implements RowMapper<EmailMessage> {
 
   @Override
-  public OpenlmisEmailMessage mapRow(ResultSet rs, int rowNum) throws SQLException {
-    OpenlmisEmailMessage emailMessage = new OpenlmisEmailMessage();
+  public EmailMessage mapRow(ResultSet rs, int rowNum) throws SQLException {
+    EmailMessage emailMessage = new EmailMessage();
     emailMessage.setTo(rs.getString("receiver"));
     emailMessage.setSubject(rs.getString("subject"));
     emailMessage.setText(rs.getString("content"));
-    emailMessage.setIsHtml(rs.getBoolean("isHtml"));
+    emailMessage.setHtml(rs.getBoolean("isHtml"));
     emailMessage.setId(rs.getLong("id"));
     return emailMessage;
   }

@@ -21,7 +21,7 @@ import org.openlmis.core.domain.ProcessingPeriod;
 import org.openlmis.core.domain.Program;
 import org.openlmis.core.domain.User;
 import org.openlmis.db.categories.UnitTests;
-import org.openlmis.email.domain.OpenlmisEmailMessage;
+import org.openlmis.email.domain.EmailMessage;
 import org.openlmis.email.service.EmailService;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
@@ -65,7 +65,7 @@ public class StatusChangeEventServiceTest {
     User user = new User();
     ArrayList<User> userList = new ArrayList<>();
     userList.add(user);
-    OpenlmisEmailMessage emailMessage = new OpenlmisEmailMessage();
+    EmailMessage emailMessage = new EmailMessage();
     String actionUrl = baseUrl + "public/pages/logistics/rnr/index.html#/create-rnr/{0}/{2}/{1}?supplyType=fullSupply&page=1";
     String newLine = System.getProperty("line.separator");
     String paragraphSeparator = newLine.concat(newLine);

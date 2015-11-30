@@ -12,6 +12,9 @@
 describe('ViewRnrViaDetailController', function () {
   var httpBackend, scope, route, requisition, messageService;
 
+  var submitterText = "submitterText";
+  var approverText = "approverText";
+
   var mockedRnrItem = {
     rnr: {
       facility: {code: "F10", name: "Health Facility 1"},
@@ -68,7 +71,8 @@ describe('ViewRnrViaDetailController', function () {
         {id: 5, total: 1},
         {id: 6, total: 1},
         {id: 7, total: 1}
-      ]
+      ],
+      rnrSignatures: [{type: "SUBMITTER",text: submitterText},{type: "APPROVER",text: approverText}]
     }
   };
 
@@ -97,6 +101,13 @@ describe('ViewRnrViaDetailController', function () {
 
     expect(scope.year).toBe("2014");
     expect(scope.month).toBe("January");
+  });
+
+  it('should get the correct submitter and approver on mmia view',function(){
+    initMockRequisition();
+
+    expect(scope.submitterSignature).toEqual(submitterText);
+    expect(scope.approverSignature).toEqual(approverText);
   });
 
   it('should format validate',function(){

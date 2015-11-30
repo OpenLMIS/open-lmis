@@ -10,56 +10,63 @@
 
 package org.openlmis.email.service;
 
-import com.mchange.net.MailSender;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.junit.rules.ExpectedException;
+import org.junit.runner.RunWith;
+import org.junit.runners.BlockJUnit4ClassRunner;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.openlmis.db.categories.UnitTests;
-import org.openlmis.email.domain.OpenlmisEmailMessage;
+import org.openlmis.email.domain.EmailAttachment;
+import org.openlmis.email.domain.EmailMessage;
 import org.openlmis.email.repository.EmailNotificationRepository;
+import org.powermock.core.classloader.annotations.PrepareForTest;
+import org.powermock.modules.junit4.PowerMockRunner;
+import org.powermock.modules.junit4.PowerMockRunnerDelegate;
 import org.springframework.mail.SimpleMailMessage;
-import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
 
-import java.util.Arrays;
+import javax.mail.MessagingException;
+import javax.mail.internet.MimeMessage;
+import java.lang.reflect.Field;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 
 import static com.natpryce.makeiteasy.MakeItEasy.*;
+import static java.util.Arrays.asList;
 import static org.junit.Assert.assertTrue;
 import static org.junit.rules.ExpectedException.none;
 import static org.mockito.Matchers.any;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 import static org.openlmis.email.builder.EmailMessageBuilder.defaultEmailMessage;
 import static org.openlmis.email.builder.EmailMessageBuilder.receiver;
 
 @Category(UnitTests.class)
+@RunWith(PowerMockRunner.class)
+@PowerMockRunnerDelegate(BlockJUnit4ClassRunner.class)
+@PrepareForTest(EmailService.class)
 public class EmailServiceTest {
+  @Mock
+  boolean mailSendingFlag = true;
 
   @Rule
   public ExpectedException expectedException = none();
 
-
-
-  private JavaMailSenderImpl mailSender;
-
   @Mock
-  MailSender sender;
+  JavaMailSenderImpl mailSender;
 
   @Mock
   EmailNotificationRepository repository;
 
-
+  @InjectMocks
+  private EmailService service;
 
   @Before
   public void setUp() throws Exception {
-    mailSender = mock(JavaMailSenderImpl.class);
+    repository = mock(EmailNotificationRepository.class);
   }
 
   @Test
@@ -67,7 +74,7 @@ public class EmailServiceTest {
     SimpleMailMessage message = make(a(defaultEmailMessage,
       with(receiver, "alert.open.lmis@gmail.com")));
 
-    EmailService service = new EmailService(mailSender, repository, true);
+    service = new EmailService(mailSender, repository, true);
     boolean status = service.send(message).get();
     assertTrue(status);
     verify(mailSender).send(any(SimpleMailMessage.class));
@@ -86,12 +93,58 @@ public class EmailServiceTest {
   public void shouldSendMailsFromAListOfMailMessages() throws Exception {
     EmailService service = new EmailService(mailSender, repository, true);
 
-    OpenlmisEmailMessage mockEmailMessage = mock(OpenlmisEmailMessage.class);
-    List<OpenlmisEmailMessage> emailMessages = Arrays.asList(mockEmailMessage);
-    when(mockEmailMessage.getIsHtml()).thenReturn(false);
+    EmailMessage mockEmailMessage = mock(EmailMessage.class);
+    List<EmailMessage> emailMessages = asList(mockEmailMessage);
+    when(mockEmailMessage.isHtml()).thenReturn(false);
     service.processEmails(emailMessages);
 
     verify(mailSender).send(any(SimpleMailMessage.class));
+  }
+
+  @Test
+  public void shouldInsertAttachmentListOfMailMessage() throws Exception {
+    repository = mock(EmailNotificationRepository.class);
+    EmailService service = new EmailService(mailSender, repository, true);
+
+    List<EmailAttachment> attachments = asList(new EmailAttachment(), new EmailAttachment());
+    service.insertEmailAttachmentList(attachments);
+
+    verify(repository, times(2)).insertEmailAttachment(any(EmailAttachment.class));
+  }
+
+  @Test
+  public void shouldSendEmailWithAttachmentIfEmailHasAttachment() throws MessagingException, NoSuchFieldException, IllegalAccessException {
+    //not know why can't inject the fromAddress field
+    Field from = EmailService.class.getDeclaredField("fromAddress");
+    from.setAccessible(true);
+    from.set(service, "from");
+
+    EmailMessage email = generateEmailMessage();
+    EmailAttachment attachment1 = generateEmailAttachment();
+    EmailAttachment attachment2 = generateEmailAttachment();
+    when(repository.getEmailAttachmentsByEmailId(email.getId())).thenReturn(asList(attachment1, attachment2));
+
+    MimeMessage mockMessage = mock(MimeMessage.class);
+    when(mailSender.createMimeMessage()).thenReturn(mockMessage);
+
+    service.processEmails(asList(email));
+    verify(mailSender).send(any(MimeMessage.class));
+  }
+
+  private EmailMessage generateEmailMessage() {
+    EmailMessage message = new EmailMessage();
+    message.setTo("test@dev.org");
+    message.setText("The Test Message");
+    message.setSubject("test");
+    message.setHtml(true);
+    return message;
+  }
+
+  private EmailAttachment generateEmailAttachment() {
+    EmailAttachment attachment = new EmailAttachment();
+    attachment.setAttachmentName("test file");
+    attachment.setAttachmentPath("/path");
+    return attachment;
   }
 
 }
