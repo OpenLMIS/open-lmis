@@ -197,8 +197,14 @@
             <div class="view-table-spacing"></div>
             <table class="border-all-bold sign-box">
                 <tr>
-                    <td width="50%"><span openlmis-message="view.rnr.via.createBy"></span>:</td>
-                    <td width="50%"><span openlmis-message="view.rnr.via.visa"></span>:</td>
+                    <td width="50%">
+                        <span openlmis-message="view.rnr.via.createBy"></span>
+                        <span> : {{submitterSignature}}</span>
+                    </td>
+                    <td width="50%">
+                        <span openlmis-message="view.rnr.via.visa"></span>
+                        <span> : {{approverSignature}}</span>
+                    </td>
                 </tr>
             </table>
         </td>

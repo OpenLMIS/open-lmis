@@ -104,6 +104,25 @@ describe('ViewRnrViaDetailController', function () {
     expect(scope.rnrItemsVisible).toEqual(expectRnrList);
   });
 
+  it('should get the correct submitter and approver on via view',function(){
+    var submitterText = "submitterText";
+    var approverText = "approverText";
+
+    var rnrItems = {
+      rnr: {
+        facility: {code: "F10", name: "Health Facility 1"},
+        fullSupplyLineItems: [{beginningBalance: 98, quantityRequested: 12345, stockInHand: 261, totalLossesAndAdjustments: 140}],
+        period: {stringStartDate: "01/01/2014", stringEndDate: "31/01/2014"},
+        rnrSignatures:[{type: "SUBMITTER",text: submitterText},{type: "APPROVER",text: approverText}]
+      }
+    };
+
+    initMockRequisition(rnrItems);
+
+    expect(scope.submitterSignature).toEqual(submitterText);
+    expect(scope.approverSignature).toEqual(approverText);
+  });
+
   function initMockRequisition(rnrItems) {
     var expectedUrl = "/requisitions/1/skipped.json";
     httpBackend.expect('GET', expectedUrl).respond(200, rnrItems);
