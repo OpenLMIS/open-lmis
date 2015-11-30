@@ -47,14 +47,14 @@ public class RestStockCardController extends BaseController {
         return RestResponse.success("msg.stockmanagement.adjuststocksuccess");
     }
 
-    @RequestMapping(value = "/rest-api/facilities/{facilityId}/stockMovements", method = GET, headers = ACCEPT_JSON)
+    @RequestMapping(value = "/rest-api/facilities/{facilityId}/stockCards", method = GET, headers = ACCEPT_JSON)
     public ResponseEntity getStockMovements(@PathVariable long facilityId,
                                         @RequestParam(value = "startTime", required = false) final Date startTime,
                                         @RequestParam(value = "endTime", required = false) final Date endTime,
                                         Principal principal) {
         List<StockCard> stockCards = new ArrayList<>();
         try {
-            stockCards = restStockCardService.queryStockMovementsByDate(facilityId, startTime, endTime);
+            stockCards = restStockCardService.queryStockCardByMovementDate(facilityId, startTime, endTime);
         } catch (DataException e) {
             return error(e.getOpenLmisMessage(), BAD_REQUEST);
         }
