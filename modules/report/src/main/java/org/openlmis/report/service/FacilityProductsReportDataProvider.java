@@ -7,12 +7,10 @@ import lombok.NoArgsConstructor;
 import org.openlmis.core.domain.Facility;
 import org.openlmis.core.domain.GeographicZone;
 import org.openlmis.core.repository.mapper.FacilityMapper;
-import org.openlmis.core.service.FacilityService;
-import org.openlmis.core.service.GeographicZoneService;
+import org.openlmis.core.repository.mapper.GeographicZoneMapper;
 import org.openlmis.report.model.dto.FacilityProductReportEntry;
-import org.openlmis.report.service.lookup.ReportLookupService;
 import org.openlmis.stockmanagement.domain.StockCard;
-import org.openlmis.stockmanagement.service.StockCardService;
+import org.openlmis.stockmanagement.repository.mapper.StockCardMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -31,22 +29,19 @@ public class FacilityProductsReportDataProvider {
     public static final String PROVINCE_CODE = "province";
     private static final String DDM_CODE = "DDM";
     private static final String DPM_CODE = "DPM";
-    @Autowired
-    private FacilityService facilityService;
-    @Autowired
-    private StockCardService stockCardService;
-    @Autowired
-    private GeographicZoneService geographicZoneService;
 
     @Autowired
-    private ReportLookupService reportLookupService;
+    private GeographicZoneMapper geographicZoneMapper;
 
     @Autowired
     private FacilityMapper facilityMapper;
 
-    public List<FacilityProductReportEntry> getReportData(final Long geographicZoneId, final Long productId, final Date endTime) {
+    @Autowired
+    private StockCardMapper stockCardMapper;
+
+    public List<FacilityProductReportEntry> getReportDataForSingleProduct(final Long geographicZoneId, final Long productId, final Date endTime) {
         List<Facility> facilities = getAllHealthFacilities();
-        final GeographicZone geographicZone = geographicZoneService.getById(geographicZoneId);
+        final GeographicZone geographicZone = geographicZoneMapper.getWithParentById(geographicZoneId);
 
         if (geographicZone != null) {
 
@@ -61,13 +56,15 @@ public class FacilityProductsReportDataProvider {
         return fillReportEntryList(productId, endTime, facilities);
     }
 
-    public List<FacilityProductReportEntry> getReportData(Long facilityId, final Date endTime) {
-        List<StockCard> stockCards = stockCardService.getStockCards(facilityId);
-        final Facility facility = facilityService.getById(facilityId);
-        return from(stockCards).transform(getReportEntry(endTime)).transform(new Function<FacilityProductReportEntry, FacilityProductReportEntry>() {
+    public List<FacilityProductReportEntry> getReportDataForAllProducts(Long facilityId, final Date endTime) {
+        List<StockCard> stockCards = stockCardMapper.getAllByFacility(facilityId);
+        final Date lastSyncedDate = stockCardMapper.getLastUpdatedTimeforStockDataByFacility(facilityId);
+        final Facility facility = facilityMapper.getById(facilityId);
+        return from(stockCards).transform(getReportEntry(endTime, lastSyncedDate)).transform(new Function<FacilityProductReportEntry, FacilityProductReportEntry>() {
             @Override
             public FacilityProductReportEntry apply(FacilityProductReportEntry input) {
                 input.setFacilityName(facility.getName());
+                input.setLastSyncDate(lastSyncedDate);
                 return input;
             }
         }).toList();
@@ -82,17 +79,18 @@ public class FacilityProductsReportDataProvider {
         return false;
     }
 
-    protected List<FacilityProductReportEntry> fillReportEntryList(final Long productId, final Date endTime, List<Facility> facilities) {
+    private List<FacilityProductReportEntry> fillReportEntryList(final Long productId, final Date endTime, List<Facility> facilities) {
         List<FacilityProductReportEntry> reportEntryList = new ArrayList<>();
         for (Facility facility : facilities) {
-            List<StockCard> stockCards = stockCardService.getStockCards(facility.getId());
+            List<StockCard> stockCards = stockCardMapper.getAllByFacility(facility.getId());
+            final Date lastSyncedDate = stockCardMapper.getLastUpdatedTimeforStockDataByFacility(facility.getId());
 
             Optional<FacilityProductReportEntry> entryOptional = from(stockCards).firstMatch(new Predicate<StockCard>() {
                 @Override
                 public boolean apply(StockCard input) {
                     return input.getProduct().getId().equals(productId);
                 }
-            }).transform(getReportEntry(endTime));
+            }).transform(getReportEntry(endTime, lastSyncedDate));
 
             if (entryOptional.isPresent()) {
                 FacilityProductReportEntry entry = entryOptional.get();
@@ -103,11 +101,13 @@ public class FacilityProductsReportDataProvider {
         return reportEntryList;
     }
 
-    private Function<StockCard, FacilityProductReportEntry> getReportEntry(final Date endTime) {
+    private Function<StockCard, FacilityProductReportEntry> getReportEntry(final Date endTime, final Date lastSyncedDate) {
         return new Function<StockCard, FacilityProductReportEntry>() {
             @Override
             public FacilityProductReportEntry apply(StockCard input) {
-                return new FacilityProductReportEntry(input, endTime);
+                FacilityProductReportEntry reportEntry = new FacilityProductReportEntry(input, endTime);
+                reportEntry.setLastSyncDate(lastSyncedDate);
+                return reportEntry;
             }
         };
     }
