@@ -147,7 +147,7 @@ ViewColdChainStatusController.resolve = {
       var deferred = $q.defer();
       $timeout(function () {
         Fridges.get({}, function (data) {
-          deferred.resolve(data.coldTradeData);
+          deferred.resolve(data.coldTraceData);
         }, {});
       }, 100);
 

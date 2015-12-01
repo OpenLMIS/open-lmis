@@ -8,7 +8,7 @@ import lombok.Data;
 
 @Data
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class ColdTradeData {
+public class ColdTraceData {
 
     List<Fridge> fridges;
     Params params;

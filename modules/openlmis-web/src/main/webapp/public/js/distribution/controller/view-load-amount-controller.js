@@ -28,10 +28,10 @@ function ViewLoadAmountController($scope, facilities, period, deliveryZone, frid
 
     $scope.aggregateMap = {};
     if ($scope.viewColdChainStatusAvailable) {
-      if (!fridges.coldTradeData) {
+      if (!fridges.coldTraceData) {
         $scope.apimessage = "message.api.error";
-      } else if (fridges.coldTradeData) {
-        $scope.fridges = fridges.coldTradeData.fridges;
+      } else if (fridges.coldTraceData) {
+        $scope.fridges = fridges.coldTraceData.fridges;
 
         $scope.getFacitilityStatus = function (id) {
           if (!isUndefined(id)) {
