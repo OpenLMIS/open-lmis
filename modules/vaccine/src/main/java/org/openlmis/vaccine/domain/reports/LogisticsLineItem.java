@@ -52,7 +52,4 @@ public class LogisticsLineItem extends BaseModel {
   private String discardingReasonExplanation;
 
   private String remarks;
-
-  private Long endingBalance;
-
 }
