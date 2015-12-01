@@ -13,8 +13,8 @@
 <div>
 
   <h2><span openlmis-message="label.vaccine.monthly.reporting"></span></h2>
-  <div class="info-box padding2px">
-    <div class="requisition-head-block">
+  <div class="info-box" style="margin-top: -10px;">
+    <div>
       <div class="row-fluid">
         <div class="span5" style="padding: 10px;">
           <div class="info-box" style="margin-bottom: 0px;" >
@@ -40,14 +40,14 @@
                   id='parentLevel' ng-bind="report.facility.geographicZone.parent.name"></span>
               </div>
             </div>
-            <div class="row-fluid" style="padding-bottom: 10px">
+            <div class="row-fluid" style="padding-bottom: 5px">
               <div class="span6">
                 <strong id='reportingPeriodLabel' openlmis-message="label.facility.reportingPeriod"></strong>:&nbsp;<span
                   id='reportingPeriod' ng-bind="report.period.name"></span>
               </div>
               <div class="span6">
                 <strong id='submittedDate' openlmis-message="label.facility.submitted.date"></strong>:&nbsp;
-                <input type="text" style="width: 150px;"
+                <input type="text" style="width: 100px;"
                        ng-model="report.submissionDate"
                        ui-date="{dateFormat: 'dd/mm/yy', maxDate: 'today', changeYear: true}"
                        ui-date-format="yy-mm-dd"
@@ -89,7 +89,6 @@
       </div>
     </div>
   </div>
-  <hr/>
   <div class="rnr-tabs clearfix">
     <ul class="clearfix">
       <li ng-show="tabVisibility.TARGET_TAB" ng-class="{'selected': (visibleTab == 'target' || visibleTab == undefined)}">

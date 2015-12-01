@@ -55,8 +55,8 @@
             <option value="{{reason.id}}" ng-repeat="reason in discardingReasons">{{reason.name}}</option>
           </select>
           <span ng-show="rowRequiresExplanation(product);">
-              <input style="width: 85%; text-align: left;" ng-model="product.discardingReasonExplanation" type="text" />
-              <a  ng-click="product.discardingReasonId = undefined;"><i class="icon-remove-circle"></i></a>
+              <input style="width: 80%; text-align: left;" ng-model="product.discardingReasonExplanation" type="text" />
+              <a ng-click="product.discardingReasonId = undefined;"><i class="icon-remove-circle"></i></a>
           </span>
 
         </td>
