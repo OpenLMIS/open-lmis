@@ -47,6 +47,16 @@ describe('ViewColdChainStatusController', function () {
     expect(scope.message).toEqual("msg.delivery.zone.no.record");
   });
 
+  it('should set no cold chain status information available message if no data', function () {
+    controller(ViewColdChainStatusController, {$scope: scope, facilities: facilities, period: {}, deliveryZone: {}, fridges : { fridges: [] }});
+    expect(scope.message).toEqual("label.no.cold.chain.status.information");
+  });
+
+  it('should set no cold chain status information available message if undefined data', function () {
+    controller(ViewColdChainStatusController, {$scope: scope, facilities: facilities, period: {}, deliveryZone: {}, fridges : { fridges: undefined }});
+    expect(scope.message).toEqual("label.no.cold.chain.status.information");
+  });
+
   it('should set program name', function () {
     expect(scope.program).toEqual(program1);
   });
