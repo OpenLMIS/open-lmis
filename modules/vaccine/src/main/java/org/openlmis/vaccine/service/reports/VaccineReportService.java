@@ -122,6 +122,8 @@ public class VaccineReportService {
     List<Vitamin> vitamins = vitaminRepository.getAll();
     List<VitaminSupplementationAgeGroup> ageGroups = ageGroupRepository.getAll();
 
+    VaccineReport previousReport = this.getPreviousReport(facilityId, programId, periodId);
+
     report = new VaccineReport();
     report.setFacilityId(facilityId);
     report.setProgramId(programId);
@@ -129,7 +131,7 @@ public class VaccineReportService {
     report.setStatus(ReportStatus.DRAFT);
 
     // 1. copy the products list and initiate the logistics tab.
-    report.initializeLogisticsLineItems(programProducts);
+    report.initializeLogisticsLineItems(programProducts, previousReport);
 
     // 2. copy the product + dosage settings and initiate the coverage tab.
     report.initializeCoverageLineItems(dosesToCover);
@@ -142,6 +144,11 @@ public class VaccineReportService {
 
     report.initializeVitaminLineItems(vitamins, ageGroups);
     return report;
+  }
+
+  private VaccineReport getPreviousReport(Long facilityId, Long programId, Long periodId) {
+    Long reportId = repository.findLastReportBeforePeriod(facilityId, programId, periodId);
+    return repository.getByIdWithFullDetails(reportId);
   }
 
   public List<ReportStatusDTO> getReportedPeriodsFor(Long facilityId, Long programId) {

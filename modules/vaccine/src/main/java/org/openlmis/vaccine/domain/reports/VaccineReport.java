@@ -30,9 +30,7 @@ import org.openlmis.vaccine.domain.Vitamin;
 import org.openlmis.vaccine.domain.VitaminSupplementationAgeGroup;
 import org.openlmis.vaccine.domain.config.VaccineIvdTabVisibility;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 
 @Getter
@@ -75,8 +73,14 @@ public class VaccineReport extends BaseModel {
   private List<ReportStatusChange> reportStatusChanges;
 
 
-  public void initializeLogisticsLineItems(List<ProgramProduct> programProducts) {
+  public void initializeLogisticsLineItems(List<ProgramProduct> programProducts, VaccineReport previousReport) {
     logisticsLineItems = new ArrayList<>();
+    Map<String, LogisticsLineItem> previousLineItemMap = new HashMap<>();
+    if(previousReport != null){
+      for(LogisticsLineItem lineItem : previousReport.getLogisticsLineItems()){
+        previousLineItemMap.put(lineItem.getProductCode(), lineItem);
+      }
+    }
     for (ProgramProduct pp : programProducts) {
       LogisticsLineItem item = new LogisticsLineItem();
 
@@ -88,6 +92,12 @@ public class VaccineReport extends BaseModel {
       item.setProductCategory(pp.getProductCategory().getName());
       item.setDisplayOrder(pp.getDisplayOrder());
 
+      if(previousReport != null){
+        LogisticsLineItem lineitem = previousLineItemMap.get(item.getProductCode());
+        if(lineitem != null){
+          item.setOpeningBalance(lineitem.getClosingBalance());
+        }
+      }
       logisticsLineItems.add(item);
     }
 

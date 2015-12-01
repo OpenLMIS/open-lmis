@@ -114,6 +114,15 @@ public interface VaccineReportMapper {
           "where report_id = #{reportId}")
   List<DiseaseLineItem> getDiseaseSurveillance(@Param("reportId")Long reportId);
 
+  @Select("SELECT id FROM vaccine_reports " +
+      "WHERE " +
+        "periodId < #{periodId} " +
+        "AND facilityId = #{facilityId} " +
+        "AND programId = #{programId} " +
+      "ORDER BY " +
+      "periodId DESC limit 1")
+  Long findPreviousReport(@Param("facilityId") Long facilityId, @Param("programId") Long programId, @Param("periodId") Long periodId);
+
   @Select("select disease_name as diseaseName,\n" +
           "SUM(COALESCE(cum_cases,0)) cumulative,\n" +
           "SUM(COALESCE(cum_deaths,0)) calculatedCumulativeDeaths,\n" +
@@ -360,5 +369,6 @@ public interface VaccineReportMapper {
 
     @Select("select * from geographic_zones where parentid is null")
     GeographicZone getNationalZone();
+
 
 }

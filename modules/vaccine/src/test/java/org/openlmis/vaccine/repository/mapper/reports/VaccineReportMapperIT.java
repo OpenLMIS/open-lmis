@@ -200,4 +200,9 @@ public class VaccineReportMapperIT {
     assertThat(report.getOutreachImmunizationSessions(), is(returnedReport.getOutreachImmunizationSessions()));
     assertThat(report.getOutreachImmunizationSessionsCanceled(), is(returnedReport.getOutreachImmunizationSessionsCanceled()));
   }
+
+  @Test
+  public void shouldFindPreviousReportById() throws Exception{
+    Long id = vaccineReportMapper.findPreviousReport(1L, 1L, 1L);
+  }
 }

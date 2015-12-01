@@ -161,4 +161,8 @@ public class VaccineReportRepository {
   public GeographicZone getNationalZone() {
     return mapper.getNationalZone();
   }
+
+  public Long findLastReportBeforePeriod(Long facilityId, Long programId, Long periodId) {
+    return mapper.findPreviousReport(facilityId, programId, periodId);
+  }
 }
