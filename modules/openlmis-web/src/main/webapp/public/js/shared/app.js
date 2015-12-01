@@ -181,8 +181,10 @@ app.integer = function (value, errorHolder, length) {
 };
 
 
-app.positiveInteger = function (value, errorHolder) {
-  var POSITIVE_INTEGER_REGEXP_FIXED_LENGTH = /^[0-9]*$/, valid;
+app.positiveInteger = function (value, errorHolder, length) {
+  var str = isUndefined(length) ? "^\\d*$" : "^\\d{0,".concat(length).concat("}$"),
+      POSITIVE_INTEGER_REGEXP_FIXED_LENGTH = new RegExp(str),
+      valid;
 
   if (value === undefined || value === null)
     valid = true;

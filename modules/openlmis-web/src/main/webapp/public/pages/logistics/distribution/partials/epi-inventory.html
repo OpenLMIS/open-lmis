@@ -57,9 +57,9 @@
               <td class="col-existing-quantity">
                 <div>
                   <span class="position-relative">
-                    <input id="existingQuantity{{ $index }}" type="text" ng-model="lineItem.existingQuantity.value"
+                    <input id="existingQuantity{{ $index }}" type="number" ng-model="lineItem.existingQuantity.value"
                            name="existingQuantityNR{{$index}}" ng-trim=false
-                           numeric-validator="positiveInteger" maxlength="7"
+                           numeric-validator="positiveInteger,7" min="0" max="9999999" step="1"
                            error-holder="existingQuantityError{{$index}}"
                            ng-class="{'required-error': !facilityData.isDisabled('epi-inventory') && !(lineItem.existingQuantity.value || lineItem.existingQuantity.notRecorded)}"/>
                     <span id="existingQuantityError{{$index}}"
@@ -77,9 +77,9 @@
               <td class="col-delivered-quantity">
                 <div>
                   <span class="position-relative">
-                    <input id="deliveredQuantity{{ $index }}" type="text" ng-model="lineItem.deliveredQuantity"
+                    <input id="deliveredQuantity{{ $index }}" type="number" ng-model="lineItem.deliveredQuantity"
                            name="deliveredQuantityNR{{ $index }}" ng-trim=false
-                           numeric-validator="positiveInteger" maxlength="7"
+                           numeric-validator="positiveInteger,7" min="0" max="9999999" step="1"
                            error-holder="deliveredQuantityError{{$index}}"
                            ng-class="{'required-error': !facilityData.isDisabled('epi-inventory') && !lineItem.deliveredQuantity}"/>
                     <span id="deliveredQuantityError{{$index}}"
@@ -92,10 +92,10 @@
               <td class="col-spoiled-quantity">
                 <div>
                   <span class="position-relative">
-                    <input id="spoiledQuantity{{ $index }}" type="text"
+                    <input id="spoiledQuantity{{ $index }}" type="number"
                            ng-model="lineItem.spoiledQuantity.value"
                            name="spoiledQuantityNR{{ $index }}" ng-trim=false
-                           numeric-validator="positiveInteger" maxlength="7"
+                           numeric-validator="positiveInteger,7" min="0" max="9999999" step="1"
                            error-holder="spoiledQuantityError{{$index}}"
                            ng-class="{'required-error': !facilityData.isDisabled('epi-inventory') && !(lineItem.spoiledQuantity.value || lineItem.spoiledQuantity.notRecorded)}"/>
                     <span id="spoiledQuantityError{{$index}}" class="rnr-form-error"

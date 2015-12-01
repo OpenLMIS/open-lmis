@@ -41,10 +41,10 @@
                 <td class="col-health-center">
                   <div>
                     <span class="position-relative">
-                      <input id="femaleHealthCenter" type="text"
+                      <input id="femaleHealthCenter" type="number"
                              ng-model="facilityData.fullCoverage.femaleHealthCenterReading.value"
                              name="coverageFemaleHC" ng-trim=false
-                             numeric-validator="positiveInteger" maxlength="7"
+                             numeric-validator="positiveInteger,7" min="0" max="9999999" step="1"
                              error-holder="coverageFemaleHCError"
                              ng-class="{'required-error': !(facilityData.fullCoverage.femaleHealthCenterReading.value ||
                              facilityData.fullCoverage.femaleHealthCenterReading.notRecorded)}"/>
@@ -63,10 +63,10 @@
                 <td class="col-mobile-brigade">
                   <div>
                     <span class="position-relative">
-                      <input id="femaleMobileBrigade" type="text"
+                      <input id="femaleMobileBrigade" type="number"
                              ng-model="facilityData.fullCoverage.femaleMobileBrigadeReading.value"
                              name="coverageFemaleMB" ng-trim=false
-                             numeric-validator="positiveInteger" maxlength="7"
+                             numeric-validator="positiveInteger,7" min="0" max="9999999" step="1"
                              error-holder="coverageFemaleMBError"
                              ng-class="{'required-error': !(facilityData.fullCoverage.femaleMobileBrigadeReading.value ||
                              facilityData.fullCoverage.femaleMobileBrigadeReading.notRecorded)}"/>
@@ -89,10 +89,10 @@
                 <td class="col-health-center">
                   <div>
                     <span class="position-relative">
-                      <input id="maleHealthCenter" type="text"
+                      <input id="maleHealthCenter" type="number"
                              ng-model="facilityData.fullCoverage.maleHealthCenterReading.value"
                              name="coverageMaleHC" ng-trim=false
-                             numeric-validator="positiveInteger" maxlength="7"
+                             numeric-validator="positiveInteger,7" min="0" max="9999999" step="1"
                              error-holder="coverageMaleHCError"
                              ng-class="{'required-error': !(facilityData.fullCoverage.maleHealthCenterReading.value ||
                              facilityData.fullCoverage.maleHealthCenterReading.notRecorded)}"/>
@@ -111,10 +111,10 @@
                 <td class="col-health-center">
                   <div>
                     <span class="position-relative">
-                      <input id="maleMobileBrigade" type="text"
+                      <input id="maleMobileBrigade" type="number"
                              ng-model="facilityData.fullCoverage.maleMobileBrigadeReading.value"
                              name="coverageMaleMB" ng-trim=false
-                             numeric-validator="positiveInteger" maxlength="7"
+                             numeric-validator="positiveInteger,7" min="0" max="9999999" step="1"
                              error-holder="coverageMaleMBError"
                              ng-class="{'required-error': !(facilityData.fullCoverage.maleMobileBrigadeReading.value ||
                              facilityData.fullCoverage.maleMobileBrigadeReading.notRecorded)}"/>
