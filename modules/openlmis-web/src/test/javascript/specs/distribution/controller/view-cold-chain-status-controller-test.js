@@ -34,28 +34,18 @@ describe('ViewColdChainStatusController', function () {
             ]}
         ];
 
-    controller(ViewColdChainStatusController, {$scope: scope, facilities: facilities, period: {id: 1, name: 'period 1'}, deliveryZone: {id: 1}, fridges : []});
+    controller(ViewColdChainStatusController, {$scope: scope, facilities: facilities, period: {id: 1, name: 'period 1'}, deliveryZone: {id: 1}, fridges : {}});
   }));
 
   it('should set no records found message if no facilities are found', function () {
-    controller(ViewColdChainStatusController, {$scope: scope, facilities: [], period: {}, deliveryZone: {}, fridges : []});
+    controller(ViewColdChainStatusController, {$scope: scope, facilities: [], period: {}, deliveryZone: {}, fridges : {}});
     expect(scope.message).toEqual("msg.delivery.zone.no.record");
   });
 
   it('should set no records found message if no facilities are undefined', function () {
-    controller(ViewColdChainStatusController, {$scope: scope, facilities: undefined, period: {}, deliveryZone: {}, fridges : []});
+    controller(ViewColdChainStatusController, {$scope: scope, facilities: undefined, period: {}, deliveryZone: {}, fridges : {}});
     expect(scope.message).toEqual("msg.delivery.zone.no.record");
   });
-
-    it('should set no cold chain status information available message if no data', function () {
-      controller(ViewColdChainStatusController, {$scope: scope, facilities: facilities, period: {}, deliveryZone: {}, fridges : []});
-      expect(scope.message).toEqual("label.no.cold.chain.status.information");
-    });
-
-    it('should set no cold chain status information available message if undefined data', function () {
-      controller(ViewColdChainStatusController, {$scope: scope, facilities: facilities, period: {}, deliveryZone: {}, fridges : undefined});
-      expect(scope.message).toEqual("label.no.cold.chain.status.information");
-    });
 
   it('should set program name', function () {
     expect(scope.program).toEqual(program1);
