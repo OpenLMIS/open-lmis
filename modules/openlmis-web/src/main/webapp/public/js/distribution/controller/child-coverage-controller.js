@@ -62,6 +62,11 @@ function ChildCoverageController($scope, $routeParams, distributionService) {
       vaccinations: ['Polio (Newborn)', 'Polio 1st dose', 'Polio 2nd dose', 'Polio 3rd dose'],
       rowSpan: 4
     },
+    "IPV": {
+      products: [],
+      vaccinations: ['IPV'],
+      rowSpan: 1
+    },
     "Penta 1st dose": {
       products: ['Penta1', 'Penta10'],
       vaccinations: ['Penta 1st dose', 'Penta 2nd dose', 'Penta 3rd dose'],

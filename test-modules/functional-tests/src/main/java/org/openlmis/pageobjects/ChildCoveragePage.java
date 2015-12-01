@@ -37,6 +37,9 @@ public class ChildCoveragePage extends DistributionTab {
   @FindBy(how = ID, using = "colPolio 3rd dose")
   private static WebElement regimenPolioDose3 = null;
 
+  @FindBy(how = ID, using = "colIPV")
+  private static WebElement regimenIPV = null;
+
   @FindBy(how = ID, using = "colPenta 1st dose")
   private static WebElement regimenPentaDose1 = null;
 
@@ -142,19 +145,19 @@ public class ChildCoveragePage extends DistributionTab {
   @FindBy(how = ID, using = "coverageOpenedVial11")
   private static WebElement openedVialsPolioNR = null;
 
-  @FindBy(how = ID, using = "coverageOpenedVial51")
+  @FindBy(how = ID, using = "coverageOpenedVial61")
   private static WebElement openedVialsPentaNR = null;
 
-  @FindBy(how = ID, using = "coverageOpenedVial80")
+  @FindBy(how = ID, using = "coverageOpenedVial90")
   private static WebElement openedVialsPcvNR = null;
 
-  @FindBy(how = ID, using = "coverageOpenedVial110")
+  @FindBy(how = ID, using = "coverageOpenedVial120")
   private static WebElement openedVialsRVRotarixNR = null;
 
-  @FindBy(how = ID, using = "coverageOpenedVial130")
+  @FindBy(how = ID, using = "coverageOpenedVial140")
   private static WebElement openedVialsSarampoNR = null;
 
-  @FindBy(how = ID, using = "coverageOpenedVial140")
+  @FindBy(how = ID, using = "coverageOpenedVial150")
   private static WebElement openedVialsMSDNR = null;
 
   @FindBy(how = ID, using = "childCoverageTable")
@@ -184,10 +187,13 @@ public class ChildCoveragePage extends DistributionTab {
   @Override
   public void enterValues(List<Map<String, String>> data) {
     Map<String, String> dataMap = data.get(0);
-    for (int rowNumber = 1; rowNumber <= 12; rowNumber++) {
-      enterHealthCenter11MonthsDataForGivenRow(rowNumber, dataMap.get("healthCenter11"));
-      enterOutreach11MonthsDataForGivenRow(rowNumber, dataMap.get("outreach11"));
-      if (rowNumber != 2) {
+    for (int rowNumber = 1; rowNumber <= 16; rowNumber++) {
+      if (rowNumber != 16) {
+        enterHealthCenter11MonthsDataForGivenRow(rowNumber, dataMap.get("healthCenter11"));
+        enterOutreach11MonthsDataForGivenRow(rowNumber, dataMap.get("outreach11"));
+      }
+
+      if (rowNumber != 2 && rowNumber != 6) {
         enterHealthCenter23MonthsDataForGivenRow(rowNumber, dataMap.get("healthCenter23"));
         enterOutreach23MonthsDataForGivenRow(rowNumber, dataMap.get("outreach23"));
       }
@@ -266,6 +272,11 @@ public class ChildCoveragePage extends DistributionTab {
   public String getTextOfRegimenPolioDose3() {
     testWebDriver.waitForElementToAppear(regimenPolioDose3);
     return regimenPolioDose3.getText();
+  }
+
+  public String getTextOfRegimenIPV() {
+    testWebDriver.waitForElementToAppear(regimenIPV);
+    return regimenIPV.getText();
   }
 
   public String getTextOfRegimenPentaDose1() {

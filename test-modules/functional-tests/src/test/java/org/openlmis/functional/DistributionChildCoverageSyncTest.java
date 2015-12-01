@@ -636,18 +636,18 @@ public class DistributionChildCoverageSyncTest extends TestCaseHelper {
 
     String facilityId = dbWrapper.getAttributeFromTable("facilities", "id", "code", "F10");
     String facilityVisitId = dbWrapper.getAttributeFromTable("facility_visits", "id", "facilityId", facilityId);
-    List<String> vaccinations = asList("BCG", "Polio (Newborn)", "Polio 1st dose", "Polio 2nd dose", "Polio 3rd dose", "Penta 1st dose", "Penta 2nd dose",
+    List<String> vaccinations = asList("BCG", "Polio (Newborn)", "Polio 1st dose", "Polio 2nd dose", "Polio 3rd dose", "IPV", "Penta 1st dose", "Penta 2nd dose",
             "Penta 3rd dose", "PCV10 1st dose", "PCV10 2nd dose", "PCV10 3rd dose", "RV Rotarix 1a dose", "RV Rotarix 2a dose",
             "Sarampo 1a dose", "Sarampo 2a dose");
 
-    for (int i = 1; i <= 15; i++) {
+    for (int i = 1; i <= 16; i++) {
       ResultSet childCoverageDetails = dbWrapper.getChildCoverageDetails(vaccinations.get(i - 1), facilityVisitId);
-      if (i != 15) {
+      if (i != 16) {
         assertEqualsAndNulls(childCoverageDetails.getString("healthCenter11months"), "null");
         assertEqualsAndNulls(childCoverageDetails.getString("outreach11months"), "null");
       }
 
-      if (i != 2) {
+      if (i != 2 && i != 6) {
         assertEqualsAndNulls(childCoverageDetails.getString("healthCenter23months"), "null");
         assertEqualsAndNulls(childCoverageDetails.getString("outreach23months"), "null");
       }
@@ -771,10 +771,10 @@ public class DistributionChildCoverageSyncTest extends TestCaseHelper {
     String facilityId = dbWrapper.getAttributeFromTable("facilities", "id", "code", "F10");
     String facilityVisitId = dbWrapper.getAttributeFromTable("facility_visits", "id", "facilityId", facilityId);
 
-    List<String> vaccinations = asList("BCG", "Polio (Newborn)", "Polio 1st dose", "Polio 2nd dose", "Polio 3rd dose", "Penta 1st dose", "Penta 2nd dose",
+    List<String> vaccinations = asList("BCG", "Polio (Newborn)", "Polio 1st dose", "Polio 2nd dose", "Polio 3rd dose", "IPV", "Penta 1st dose", "Penta 2nd dose",
             "Penta 3rd dose", "PCV10 1st dose", "PCV10 2nd dose", "PCV10 3rd dose", "RV Rotarix 1a dose", "RV Rotarix 2a dose", "Sarampo 1a dose", "Sarampo 2a dose");
 
-    for (int i = 1; i <= 15; i++) {
+    for (int i = 1; i <= 16; i++) {
       ResultSet childCoverageDetails = dbWrapper.getChildCoverageDetails(vaccinations.get(i - 1), facilityVisitId);
 
       if (i != 15) {
@@ -782,7 +782,7 @@ public class DistributionChildCoverageSyncTest extends TestCaseHelper {
         assertEquals(childCoverageDetails.getString("outreach11months"), String.valueOf(i + 10));
       }
 
-      if (i != 2) {
+      if (i != 2 && i != 6) {
         assertEquals(childCoverageDetails.getString("healthCenter23months"), String.valueOf(i + 100));
         assertEquals(childCoverageDetails.getString("outreach23months"), String.valueOf(i + 11));
       }
@@ -846,6 +846,7 @@ public class DistributionChildCoverageSyncTest extends TestCaseHelper {
     assertEquals(childCoveragePage.getTextOfRegimenPolioDose1(), "Polio 1st dose");
     assertEquals(childCoveragePage.getTextOfRegimenPolioDose2(), "Polio 2nd dose");
     assertEquals(childCoveragePage.getTextOfRegimenPolioDose3(), "Polio 3rd dose");
+    assertEquals(childCoveragePage.getTextOfRegimenIPV(), "IPV");
     assertEquals(childCoveragePage.getTextOfRegimenPentaDose1(), "Penta 1st dose");
     assertEquals(childCoveragePage.getTextOfRegimenPentaDose2(), "Penta 2nd dose");
     assertEquals(childCoveragePage.getTextOfRegimenPentaDose3(), "Penta 3rd dose");
