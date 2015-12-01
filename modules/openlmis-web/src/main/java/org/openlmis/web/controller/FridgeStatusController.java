@@ -25,15 +25,19 @@ public class FridgeStatusController extends BaseController {
 
     @Value("${nexleaf.api.user}")
     private String user;
+
     @Value("${nexleaf.api.pass}")
     private String pwd;
+
+    @Value("${nexleaf.api.url}")
+    private String url;
 
     @RequestMapping(value = "/fridges", method = GET)
     public ResponseEntity<OpenLmisResponse> getFridges(HttpServletRequest request) {
         RestClient restClient = new RestClient(user, pwd);
         ColdTraceData coldTraceData;
         try {
-            coldTraceData = restClient.getForObject("http://uar.coldtrace.org/api/v1/fridges/", ColdTraceData.class);
+            coldTraceData = restClient.getForObject(url, ColdTraceData.class);
             for (Fridge f : coldTraceData.getFridges()) {
                 f.updateURL(user, pwd);
             }
