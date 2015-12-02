@@ -7,9 +7,8 @@ import org.openlmis.web.rest.service.FridgeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
-
-import javax.servlet.http.HttpServletRequest;
 
 import static org.openlmis.web.response.OpenLmisResponse.response;
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
@@ -25,10 +24,10 @@ public class FridgeStatusController extends BaseController {
     @Autowired
     private FridgeService fridgeService;
 
-    @RequestMapping(value = "/fridges", method = GET)
-    public ResponseEntity<OpenLmisResponse> getFridges(HttpServletRequest request) {
-        ColdTraceData coldTraceData = fridgeService.getFridges();
-
+    @RequestMapping(value = "/fridges/{deliveryZoneId}", method = GET)
+    public ResponseEntity<OpenLmisResponse> getFridges(@PathVariable Long deliveryZoneId) {
+        ColdTraceData coldTraceData = fridgeService.getFridges(deliveryZoneId);
         return response("coldTraceData", coldTraceData);
     }
+
 }

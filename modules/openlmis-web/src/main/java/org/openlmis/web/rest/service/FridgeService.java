@@ -10,16 +10,9 @@ import javax.annotation.PostConstruct;
 
 @Service
 public class FridgeService {
-
-    @Value("${nexleaf.api.user}")
     private String user;
-
-    @Value("${nexleaf.api.pass}")
     private String pwd;
-
-    @Value("${nexleaf.api.url}")
     private String url;
-
     private RestClient restClient;
 
     @PostConstruct
@@ -27,16 +20,33 @@ public class FridgeService {
         restClient = new RestClient(user, pwd);
     }
 
-    public ColdTraceData getFridges() {
+    public ColdTraceData getFridges(Long deliveryZoneId) {
         ColdTraceData coldTraceData;
+
         try {
-            coldTraceData = restClient.getForObject(url, ColdTraceData.class);
+            coldTraceData = restClient.getForObject(url, ColdTraceData.class, deliveryZoneId);
             for (Fridge f : coldTraceData.getFridges()) {
                 f.updateURL(user, pwd);
             }
         } catch (Exception e) {
             coldTraceData = null;
         }
+
         return coldTraceData;
+    }
+
+    @Value("${nexleaf.api.user}")
+    public void setUser(String user) {
+        this.user = user;
+    }
+
+    @Value("${nexleaf.api.pass}")
+    public void setPwd(String pwd) {
+        this.pwd = pwd;
+    }
+
+    @Value("${nexleaf.api.url}")
+    public void setUrl(String url) {
+        this.url = String.format("%s?delivery_zone={deliveryZoneId}", url);
     }
 }

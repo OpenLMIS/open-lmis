@@ -16,7 +16,6 @@ function DistributionController($scope, $rootScope, deliveryZones, DeliveryZoneA
   var DEFAULT_PERIOD_MESSAGE = messageService.get('label.select.period');
 
   $scope.zonePlaceholder = !!$scope.deliveryZones.length ? DELIVERY_ZONE_LABEL : NONE_ASSIGNED_LABEL;
-  $scope.provincesForColdChainStatus = ['Gaza', 'Tete', 'Niassa'];
 
   $scope.reload = function() {
     window.location.reload();
@@ -60,15 +59,6 @@ function DistributionController($scope, $rootScope, deliveryZones, DeliveryZoneA
 
   $scope.periodOptionMessage = function () {
     return optionMessage($scope.periods, DEFAULT_PERIOD_MESSAGE);
-  };
-
-  $scope.checkViewColdChainStatus = function () {
-    DeliveryZoneFacilities.get({deliveryZoneId: $scope.selectedZone.id, programId: $scope.selectedProgram.id}, function (data) {
-      $scope.parentZoneName = data.facilities[0].geographicZone.parent.name;
-      $scope.viewColdChainStatusAvailable = _.contains($scope.provincesForColdChainStatus, $scope.parentZoneName);
-    }, function (data) {
-      $scope.error = data.data.error;
-    });
   };
 
   function confirmCaching(data, message) {

@@ -301,5 +301,5 @@ services.factory('OrderPOD', function ($resource) {
 });
 
 services.factory('Fridges', function ($resource) {
-  return $resource('/fridges.json', {id: '@id'}, update);
+  return $resource('/fridges/:deliveryZoneId.json', {}, {});
 });

@@ -14,7 +14,8 @@ function ViewColdChainStatusController($scope, facilities, period, deliveryZone,
     $scope.program = facilities[0].supportedPrograms[0].program;
     $scope.period = period;
     $scope.deliveryZone = deliveryZone;
-    if (!fridges || isUndefined(fridges)) {
+
+    if (isUndefined(fridges)) {
       $scope.apimessage = "message.api.error";
       $scope.apiError = true;
     } else {
@@ -146,7 +147,7 @@ ViewColdChainStatusController.resolve = {
   fridges: function (Fridges, $route, $timeout, $q) {
       var deferred = $q.defer();
       $timeout(function () {
-        Fridges.get({}, function (data) {
+        Fridges.get({deliveryZoneId: $route.current.params.deliveryZoneId}, function (data) {
           deferred.resolve(data.coldTraceData);
         }, {});
       }, 100);

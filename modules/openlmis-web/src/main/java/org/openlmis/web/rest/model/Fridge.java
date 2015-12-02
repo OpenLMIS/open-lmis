@@ -1,43 +1,42 @@
 package org.openlmis.web.rest.model;
 
+import lombok.Data;
 import org.codehaus.jackson.annotate.JsonIgnoreProperties;
 import org.codehaus.jackson.annotate.JsonProperty;
-
-import lombok.Data;
 
 @Data
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Fridge {
 
     @JsonProperty("FacilityID")
-    String facilityID;
+    private String facilityID;
 
     @JsonProperty("FridgeID")
-    String fridgeID;
+    private String fridgeID;
 
     @JsonProperty("HighAlarmCount")
-    Long highAlarmCount;
+    private Long highAlarmCount;
 
     @JsonProperty("LowAlarmCount")
-    Long lowAlarmCount;
+    private Long lowAlarmCount;
 
     @JsonProperty("MinutesHigh")
-    Long minutesHigh;
+    private Long minutesHigh;
 
     @JsonProperty("MinutesInRange")
-    Long minutesInRange;
+    private Long minutesInRange;
 
     @JsonProperty("MinutesLow")
-    Long minutesLow;
+    private Long minutesLow;
 
     @JsonProperty("MinutesNoData")
-    Long minutesNoData;
+    private Long minutesNoData;
 
     @JsonProperty("Status")
-    Long status;
+    private Long status;
 
     @JsonProperty("URL")
-    String url;
+    private String url;
 
     public void updateURL(String user, String pwd) {
         this.url = url.replace("://", "://" + user + ":" + pwd + "@");

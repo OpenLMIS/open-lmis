@@ -10,13 +10,13 @@ import lombok.Data;
 public class Params {
 
     @JsonProperty("alarm_settings")
-    AlarmSettings alarmSettings;
+    private AlarmSettings alarmSettings;
 
-    String created;
+    private String created;
 
     @JsonProperty("end_date")
-    String endDate;
+    private String endDate;
 
     @JsonProperty("start_date")
-    String startDate;
+    private String startDate;
 }

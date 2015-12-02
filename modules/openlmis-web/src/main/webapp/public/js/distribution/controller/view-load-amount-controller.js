@@ -264,7 +264,7 @@ ViewLoadAmountController.resolve = {
   fridges: function (Fridges, $route, $timeout, $q) {
     var deferred = $q.defer();
     $timeout(function () {
-      Fridges.get({}, function (data) {
+      Fridges.get({deliveryZoneId: $route.current.params.deliveryZoneId}, function (data) {
         deferred.resolve(data);
       }, {});
     }, 100);

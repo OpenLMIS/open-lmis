@@ -11,17 +11,17 @@ import lombok.Data;
 public class AlarmSettings {
 
     @JsonProperty("high_delay")
-    float highDelay;
+    private Double highDelay;
 
     @JsonProperty("high_threshold")
-    float highThreshold;
+    private Double highThreshold;
 
     @JsonProperty("low_delay")
-    float lowDelay;
+    private Double lowDelay;
 
     @JsonProperty("low_threshold")
-    float lowThreshold;
+    private Double lowThreshold;
 
     @JsonProperty("no_data_delay")
-    float noDataDelay;
+    private Double noDataDelay;
 }
