@@ -14,10 +14,7 @@ import org.openlmis.stockmanagement.service.StockCardService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Service
 @NoArgsConstructor
@@ -104,5 +101,9 @@ public class RestStockCardService {
 
   private boolean validAdjustmentReason(StockEvent stockEvent) {
     return stockAdjustmentReasonRepository.getAdjustmentReasonByName(stockEvent.getReasonName()) != null;
+  }
+
+  public List<StockCard> queryStockCardByMovementDate(long facilityId, Date startTime, Date endTime) {
+    return stockCardService.queryStockCardByMovementDate(facilityId, startTime, endTime);
   }
 }

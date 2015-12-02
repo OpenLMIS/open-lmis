@@ -334,7 +334,7 @@ FacilityController.resolve = {
 
 //Begin: Specific for Tanzania
 /*  The code below is intended to illustrate one potential way of conditionally injecting demographic-category data
- For now, because we don’t have a way to conditionally toggle OpenLMIS’ features on and off, we simple set injectDemographyCategories to true. */
+    For now, because we don’t have a way to conditionally toggle OpenLMIS’ features on and off, we simple set injectDemographyCategories to true. */
 var injectDemographyCategories = true;
 if(injectDemographyCategories)
 {

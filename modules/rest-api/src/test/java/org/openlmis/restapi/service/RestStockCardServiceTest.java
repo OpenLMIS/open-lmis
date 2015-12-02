@@ -276,8 +276,8 @@ public class RestStockCardServiceTest {
 
     List<StockCardEntry> stockCardEntries = restStockCardService.adjustStock(facilityId, stockEventList, userId);
 
-    assertTrue(stockCardEntries.get(0).getKeyValues().get(0).getValueColumn().equals("10/10/2016, 11/11/2016"));
-    assertEquals(0, stockCardEntries.get(1).getKeyValues().size());
+    assertTrue(stockCardEntries.get(0).getExtensions().get(0).getValue().equals("10/10/2016, 11/11/2016"));
+    assertEquals(0, stockCardEntries.get(1).getExtensions().size());
   }
 
   @Test
