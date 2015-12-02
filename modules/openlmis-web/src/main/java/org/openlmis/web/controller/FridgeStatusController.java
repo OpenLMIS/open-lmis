@@ -2,10 +2,9 @@ package org.openlmis.web.controller;
 
 import lombok.NoArgsConstructor;
 import org.openlmis.web.response.OpenLmisResponse;
-import org.openlmis.web.rest.RestClient;
 import org.openlmis.web.rest.model.ColdTraceData;
-import org.openlmis.web.rest.model.Fridge;
-import org.springframework.beans.factory.annotation.Value;
+import org.openlmis.web.rest.service.FridgeService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -23,28 +22,13 @@ import static org.springframework.web.bind.annotation.RequestMethod.GET;
 @NoArgsConstructor
 public class FridgeStatusController extends BaseController {
 
-    @Value("${nexleaf.api.user}")
-    private String user;
-
-    @Value("${nexleaf.api.pass}")
-    private String pwd;
-
-    @Value("${nexleaf.api.url}")
-    private String url;
+    @Autowired
+    private FridgeService fridgeService;
 
     @RequestMapping(value = "/fridges", method = GET)
     public ResponseEntity<OpenLmisResponse> getFridges(HttpServletRequest request) {
-        RestClient restClient = new RestClient(user, pwd);
-        ColdTraceData coldTraceData;
-        try {
-            coldTraceData = restClient.getForObject(url, ColdTraceData.class);
-            for (Fridge f : coldTraceData.getFridges()) {
-                f.updateURL(user, pwd);
-            }
-        } catch (Exception e) {
-            coldTraceData = null;
-        }
+        ColdTraceData coldTraceData = fridgeService.getFridges();
+
         return response("coldTraceData", coldTraceData);
     }
-
 }
