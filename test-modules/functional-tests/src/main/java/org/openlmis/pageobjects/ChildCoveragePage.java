@@ -28,34 +28,34 @@ public class ChildCoveragePage extends DistributionTab {
   @FindBy(how = ID, using = "colPolio (Newborn)")
   private static WebElement regimenPolioNewborn = null;
 
-  @FindBy(how = ID, using = "colPolio 1st dose")
+  @FindBy(how = ID, using = "colPolio 1a dose")
   private static WebElement regimenPolioDose1 = null;
 
-  @FindBy(how = ID, using = "colPolio 2nd dose")
+  @FindBy(how = ID, using = "colPolio 2a dose")
   private static WebElement regimenPolioDose2 = null;
 
-  @FindBy(how = ID, using = "colPolio 3rd dose")
+  @FindBy(how = ID, using = "colPolio 3a dose")
   private static WebElement regimenPolioDose3 = null;
 
   @FindBy(how = ID, using = "colIPV")
   private static WebElement regimenIPV = null;
 
-  @FindBy(how = ID, using = "colPenta 1st dose")
+  @FindBy(how = ID, using = "colPenta 1a dose")
   private static WebElement regimenPentaDose1 = null;
 
-  @FindBy(how = ID, using = "colPenta 2nd dose")
+  @FindBy(how = ID, using = "colPenta 2a dose")
   private static WebElement regimenPentaDose2 = null;
 
-  @FindBy(how = ID, using = "colPenta 3rd dose")
+  @FindBy(how = ID, using = "colPenta 3a dose")
   private static WebElement regimenPentaDose3 = null;
 
-  @FindBy(how = ID, using = "colPCV10 1st dose")
+  @FindBy(how = ID, using = "colPCV10 1a dose")
   private static WebElement regimenPCV10Dose1 = null;
 
-  @FindBy(how = ID, using = "colPCV10 2nd dose")
+  @FindBy(how = ID, using = "colPCV10 2a dose")
   private static WebElement regimenPCV10Dose2 = null;
 
-  @FindBy(how = ID, using = "colPCV10 3rd dose")
+  @FindBy(how = ID, using = "colPCV10 3a dose")
   private static WebElement regimenPCV10Dose3 = null;
 
   @FindBy(how = ID, using = "colRV Rotarix 1a dose")

@@ -19,6 +19,7 @@ module.exports = function (config) {
       'lib/angular/angular-route.min.js',
       'lib/angular/angular-resource.min.js',
       'lib/angular/angular-cookies.min.js',
+      'lib/angular/angular-sanitize.min.js',
       'lib/angular-ui/ng-grid-1.6.3.js',
       'lib/angular-ui/bootstrap/ui-bootstrap-0.1.0.min.js',
       'lib/angular-ui/angular-ui.js',

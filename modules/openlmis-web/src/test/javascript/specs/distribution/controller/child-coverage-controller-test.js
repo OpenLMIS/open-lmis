@@ -24,10 +24,10 @@ describe('Child Coverage Controller', function () {
       "outreach11Months": {value: undefined}, "healthCenter23Months": {value: undefined}, "outreach23Months": {value: undefined}};
     childCoverageLineItem2 = {"id": 26, "facilityVisitId": 3, "vaccination": "Polio (Newborn)", "healthCenter11Months": {value: undefined},
       "outreach11Months": {value: undefined}, "healthCenter23Months": {value: undefined}, "outreach23Months": {value: undefined}};
-    childCoverageLineItem3 = {"id": 27, "facilityVisitId": 3, "vaccination": "Polio 1st dose", "healthCenter11Months": {value: undefined},
+    childCoverageLineItem3 = {"id": 27, "facilityVisitId": 3, "vaccination": "Polio 1a dose", "healthCenter11Months": {value: undefined},
       "outreach11Months": {value: undefined}, "healthCenter23Months": {value: undefined}, "outreach23Months": {value: undefined}};
-    childCoverageLineItem4 = {"id": 28, "facilityVisitId": 3, "vaccination": "Polio 2nd dose"};
-    childCoverageLineItem5 = {"id": 29, "facilityVisitId": 3, "vaccination": "Polio 3rd dose"};
+    childCoverageLineItem4 = {"id": 28, "facilityVisitId": 3, "vaccination": "Polio 2a dose"};
+    childCoverageLineItem5 = {"id": 29, "facilityVisitId": 3, "vaccination": "Polio 3a dose"};
 
     openedVialLineItem1 = {"id": 15, "facilityVisitId": 3, "productVialName": "BCG", "packSize": 10, openedVial: {value: null, notRecorded: true}};
     openedVialLineItem2 = {"id": 16, "facilityVisitId": 3, "productVialName": "Polio10", "packSize": 10, openedVial: {value: null, notRecorded: true}};
@@ -72,9 +72,9 @@ describe('Child Coverage Controller', function () {
     var childCoverageMap = {
       'BCG': childCoverageLineItem1,
       'Polio (Newborn)': childCoverageLineItem2,
-      'Polio 1st dose': childCoverageLineItem3,
-      'Polio 2nd dose': childCoverageLineItem4,
-      'Polio 3rd dose': childCoverageLineItem5
+      'Polio 1a dose': childCoverageLineItem3,
+      'Polio 2a dose': childCoverageLineItem4,
+      'Polio 3a dose': childCoverageLineItem5
     };
 
     expect(scope.childCoverageMap).toEqual(childCoverageMap);
@@ -183,7 +183,7 @@ describe('Child Coverage Controller', function () {
   it('should not consider openedVial value in calculating wastage rate if undefined', function () {
     var productsForVaccination = {
       products: ['Polio10', 'Polio20'],
-      vaccinations: ['Polio (Newborn)', 'Polio 1st dose', 'Polio 2nd dose', 'Polio 3rd dose'],
+      vaccinations: ['Polio (Newborn)', 'Polio 1a dose', 'Polio 2a dose', 'Polio 3a dose'],
       rowSpan: 4
     };
     childCoverageJSON.childCoverageLineItems[2].healthCenter11Months.value = 5;

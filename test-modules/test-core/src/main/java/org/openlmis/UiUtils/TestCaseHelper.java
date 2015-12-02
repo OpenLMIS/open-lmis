@@ -647,8 +647,8 @@ public class TestCaseHelper {
     String facilityId = dbWrapper.getAttributeFromTable("facilities", "id", "code", "F10");
     String facilityVisitId = dbWrapper.getAttributeFromTable("facility_visits", "id", "facilityId", facilityId);
 
-    List<String> vaccinations = asList("BCG", "Polio (Newborn)", "Polio 1st dose", "Polio 2nd dose", "Polio 3rd dose", "IPV", "Penta 1st dose", "Penta 2nd dose",
-            "Penta 3rd dose", "PCV10 1st dose", "PCV10 2nd dose", "PCV10 3rd dose", "RV Rotarix 1a dose", "RV Rotarix 2a dose", "Sarampo 1a dose", "Sarampo 2a dose");
+    List<String> vaccinations = asList("BCG", "Polio (Newborn)", "Polio 1a dose", "Polio 2a dose", "Polio 3a dose", "IPV", "Penta 1a dose", "Penta 2a dose",
+            "Penta 3a dose", "PCV10 1a dose", "PCV10 2a dose", "PCV10 3a dose", "RV Rotarix 1a dose", "RV Rotarix 2a dose", "Sarampo 1a dose", "Sarampo 2a dose");
 
     for (int i = 1; i <= 16; i++) {
       ResultSet childCoverageDetails = dbWrapper.getChildCoverageDetails(vaccinations.get(i - 1), facilityVisitId);

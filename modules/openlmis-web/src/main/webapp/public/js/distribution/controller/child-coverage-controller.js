@@ -59,7 +59,7 @@ function ChildCoverageController($scope, $routeParams, distributionService) {
     },
     "Polio (Newborn)": {
       products: ['Polio10', 'Polio20'],
-      vaccinations: ['Polio (Newborn)', 'Polio 1st dose', 'Polio 2nd dose', 'Polio 3rd dose'],
+      vaccinations: ['Polio (Newborn)', 'Polio 1a dose', 'Polio 2a dose', 'Polio 3a dose'],
       rowSpan: 4
     },
     "IPV": {
@@ -67,14 +67,14 @@ function ChildCoverageController($scope, $routeParams, distributionService) {
       vaccinations: ['IPV'],
       rowSpan: 1
     },
-    "Penta 1st dose": {
+    "Penta 1a dose": {
       products: ['Penta1', 'Penta10'],
-      vaccinations: ['Penta 1st dose', 'Penta 2nd dose', 'Penta 3rd dose'],
+      vaccinations: ['Penta 1a dose', 'Penta 2a dose', 'Penta 3a dose'],
       rowSpan: 3
     },
-    "PCV10 1st dose": {
+    "PCV10 1a dose": {
       products: ['PCV'],
-      vaccinations: ['PCV10 1st dose', 'PCV10 2nd dose', 'PCV10 3rd dose'],
+      vaccinations: ['PCV10 1a dose', 'PCV10 2a dose', 'PCV10 3a dose'],
       rowSpan: 3
     },
     "RV Rotarix 1a dose": {
@@ -121,6 +121,10 @@ function ChildCoverageController($scope, $routeParams, distributionService) {
 
   $scope.getFormattedAsPercent = function (number) {
       return utils.getFormattedPercent(number);
+  };
+
+  $scope.getHTMLFormattedVaccinationName = function (vaccination) {
+      return vaccination.replace('1a', '1<sup>a</sup>').replace('2a', '2<sup>a</sup>').replace('3a', '3<sup>a</sup>');
   };
 
   $scope.calculateWastageRate = function (productsForVaccination) {

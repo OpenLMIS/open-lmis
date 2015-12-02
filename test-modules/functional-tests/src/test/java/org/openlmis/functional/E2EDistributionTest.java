@@ -272,7 +272,7 @@ public class E2EDistributionTest extends TestCaseHelper {
 
     String facilityId = dbWrapper.getAttributeFromTable("facilities", "id", "code", "F10");
     String facilityVisitId = dbWrapper.getAttributeFromTable("facility_visits", "id", "facilityId", facilityId);
-    ResultSet childCoverageDetails = dbWrapper.getChildCoverageDetails("PCV10 1st dose", facilityVisitId);
+    ResultSet childCoverageDetails = dbWrapper.getChildCoverageDetails("PCV10 1a dose", facilityVisitId);
     assertEquals("300", childCoverageDetails.getInt("targetGroup"));
 
     visitInformationPage.verifyAllFieldsDisabled();
@@ -557,7 +557,7 @@ public class E2EDistributionTest extends TestCaseHelper {
 
     String facilityId = dbWrapper.getAttributeFromTable("facilities", "id", "code", "F10");
     String facilityVisitId = dbWrapper.getAttributeFromTable("facility_visits", "id", "facilityId", facilityId);
-    ResultSet childCoverageDetails = dbWrapper.getChildCoverageDetails("PCV10 1st dose", facilityVisitId);
+    ResultSet childCoverageDetails = dbWrapper.getChildCoverageDetails("PCV10 1a dose", facilityVisitId);
     assertEquals("300", childCoverageDetails.getInt("targetGroup"));
 
     visitInformationPage.verifyAllFieldsDisabled();
@@ -594,15 +594,15 @@ public class E2EDistributionTest extends TestCaseHelper {
   private void insertRegimenProductMapping() throws SQLException {
     dbWrapper.insertTargetGroupEntityAndProductsInMappingTable("BCG", "BCG", true);
     dbWrapper.insertTargetGroupEntityAndProductsInMappingTable("Polio (Newborn)", "polio10dose", true);
-    dbWrapper.insertTargetGroupEntityAndProductsInMappingTable("Polio 1st dose", "polio20dose", true);
-    dbWrapper.insertTargetGroupEntityAndProductsInMappingTable("Polio 2nd dose", "polio10dose", true);
-    dbWrapper.insertTargetGroupEntityAndProductsInMappingTable("Polio 3rd dose", "polio20dose", true);
-    dbWrapper.insertTargetGroupEntityAndProductsInMappingTable("Penta 1st dose", "penta1", true);
-    dbWrapper.insertTargetGroupEntityAndProductsInMappingTable("Penta 2nd dose", "penta10", true);
-    dbWrapper.insertTargetGroupEntityAndProductsInMappingTable("Penta 3rd dose", "penta1", true);
-    dbWrapper.insertTargetGroupEntityAndProductsInMappingTable("PCV10 1st dose", "P10", true);
-    dbWrapper.insertTargetGroupEntityAndProductsInMappingTable("PCV10 2nd dose", "P10", true);
-    dbWrapper.insertTargetGroupEntityAndProductsInMappingTable("PCV10 3rd dose", "P10", true);
+    dbWrapper.insertTargetGroupEntityAndProductsInMappingTable("Polio 1a dose", "polio20dose", true);
+    dbWrapper.insertTargetGroupEntityAndProductsInMappingTable("Polio 2a dose", "polio10dose", true);
+    dbWrapper.insertTargetGroupEntityAndProductsInMappingTable("Polio 3a dose", "polio20dose", true);
+    dbWrapper.insertTargetGroupEntityAndProductsInMappingTable("Penta 1a dose", "penta1", true);
+    dbWrapper.insertTargetGroupEntityAndProductsInMappingTable("Penta 2a dose", "penta10", true);
+    dbWrapper.insertTargetGroupEntityAndProductsInMappingTable("Penta 3a dose", "penta1", true);
+    dbWrapper.insertTargetGroupEntityAndProductsInMappingTable("PCV10 1a dose", "P10", true);
+    dbWrapper.insertTargetGroupEntityAndProductsInMappingTable("PCV10 2a dose", "P10", true);
+    dbWrapper.insertTargetGroupEntityAndProductsInMappingTable("PCV10 3a dose", "P10", true);
     dbWrapper.insertTargetGroupEntityAndProductsInMappingTable("RV Rotarix 1a dose", "RV Rotarix", true);
     dbWrapper.insertTargetGroupEntityAndProductsInMappingTable("RV Rotarix 2a dose", "RV Rotarix", true);
     dbWrapper.insertTargetGroupEntityAndProductsInMappingTable("Sarampo 1a dose", "Sarampo", true);

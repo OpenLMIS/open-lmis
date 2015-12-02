@@ -21,7 +21,7 @@ String.prototype.endsWith = function (suffix) {
 };
 
 var distributionModule = angular.module('distribution',
-  ['openlmis', 'IndexedDB', 'ui.bootstrap.dialog', 'ui.bootstrap.modal']);
+  ['openlmis', 'IndexedDB', 'ui.bootstrap.dialog', 'ui.bootstrap.modal', 'ngSanitize']);
 
 distributionModule.config(['$routeProvider', function ($routeProvider) {
     $routeProvider.
