@@ -37,8 +37,8 @@ import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.*;
 import static org.openlmis.core.builder.ProgramBuilder.defaultProgram;
 import static org.openlmis.core.builder.ProgramBuilder.programCode;
-import static org.openlmis.core.domain.Right.AUTHORIZE_REQUISITION;
-import static org.openlmis.core.domain.Right.VIEW_REQUISITION;
+import static org.openlmis.core.domain.RightName.AUTHORIZE_REQUISITION;
+import static org.openlmis.core.domain.RightName.VIEW_REQUISITION;
 
 @RunWith(MockitoJUnitRunner.class)
 @Category(UnitTests.class)

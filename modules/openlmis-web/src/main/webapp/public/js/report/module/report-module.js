@@ -10,10 +10,11 @@
 
 angular.module('report', ['openlmis', 'ui.bootstrap.modal', 'ui.bootstrap.dialog']).
   config(['$routeProvider', function ($routeProvider) {
-  $routeProvider.
-    when('/create', {controller:CreateReportController, templateUrl:'partials/create.html'}).
-    when('/list', {controller:ListReportController, templateUrl:'partials/list.html', resolve:ListReportController.resolve}).
-    otherwise({redirectTo:'/list'});
-}]).run(function ($rootScope, AuthorizationService) {
-    AuthorizationService.preAuthorize('VIEW_REPORT');
+    $routeProvider.
+      when('/create', {controller: CreateReportController, templateUrl: 'partials/create.html'}).
+      when('/list', {controller: ListReportController, templateUrl: 'partials/list.html', resolve: ListReportController.resolve}).
+      when('/reports/:id', {controller: ViewReportController, templateUrl: 'partials/view.html', resolve: ViewReportController.resolve}).
+      otherwise({redirectTo: '/list'});
+  }]).run(function ($rootScope, AuthorizationService) {
+    AuthorizationService.preAuthorizeReporting();
   });

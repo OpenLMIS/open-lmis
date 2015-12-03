@@ -1,0 +1,80 @@
+<!--
+  ~ This program is part of the OpenLMIS logistics management information system platform software.
+  ~ Copyright © 2013 VillageReach
+  ~
+  ~ This program is free software: you can redistribute it and/or modify it under the terms of the GNU Affero General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
+  ~  
+  ~ This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Affero General Public License for more details.
+  ~ You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org. 
+  -->
+
+<div xmlns="http://www.w3.org/1999/html">
+  <h2><span id="searchSupervisoryNodeLabel" openlmis-message="label.search.supervisory.node"></span>
+    <a href="#/create-supervisory-node" class="pull-right btn btn-primary">
+      <span id="supervisoryNodeAddNew" openlmis-message="button.add.new"></span>
+    </a>
+  </h2>
+
+  <div class="alert alert-success" id="saveSuccessMsgDiv" ng-show="supervisoryNodeId">
+    <span id="successMessage" ng-bind="message"></span>.&nbsp;&nbsp;
+    <a id="viewHereLink" href="" ng-click="edit(supervisoryNodeId)" openlmis-message="search.viewHere"></a>
+  </div>
+
+  <div id="searchControl" class="row-fluid">
+    <div class="span5 search-in-category">
+      <div class="input-append input-prepend">
+        <div class="btn-group">
+          <button id='searchOptionButton' class="btn dropdown-toggle">
+            <span openlmis-message="selectedSearchOption.name"></span>
+            <span class="caret"></span>
+          </button>
+          <ul class="dropdown-menu">
+            <li ng-repeat="searchOption in searchOptions">
+              <a id="searchOption{{$index}}" href="" openlmis-message="searchOption.name"
+                 ng-click="selectSearchType(searchOption)"></a>
+            </li>
+          </ul>
+        </div>
+        <input id='searchSupervisoryNode' type="text" class="span5" ng-model="query" maxlength="50"
+               ng-keydown="triggerSearch($event)" autocomplete="off"/>
+        <button class="btn" ng-click="search(1)">
+          <i id='searchIcon' class="icon-search"></i>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <div class="table-container">
+    <table id="supervisoryNodesTable" class="table table-striped table-bordered search-list" ng-show="showResults">
+      <thead>
+      <tr class="gradient-header resultCountHeader">
+        <th colspan="5">
+          <span ng-switch on="totalItems">
+            <h3 id="noResultMessage" ng-switch-when="0" openlmis-message="msg.no.matches|searchedQuery"></h3>
+            <h3 id="oneResultMessage" ng-switch-when="1" openlmis-message="msg.one.match|searchedQuery"></h3>
+            <h3 id="nResultsMessage" ng-switch-default
+                openlmis-message="msg.many.matches|totalItems|searchedQuery"></h3>
+          </span>
+          <a id="closeButton" class="close-btn" href="" ng-click="clearSearch()" tabindex="-1"></a>
+        </th>
+      </tr>
+      <tr class="gradient-header" ng-show="supervisoryNodeList.length">
+        <th id="supervisoryNodeHeader" openlmis-message="header.supervisory.node.name"></th>
+        <th id="codeHeader" openlmis-message="header.code"></th>
+        <th id="facilityHeader" openlmis-message="label.facility"></th>
+        <th id="parentHeader" openlmis-message="header.parent"></th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr ng-repeat="supervisoryNode in supervisoryNodeList">
+        <td><a id="name{{$index}}" href="" ng-click="edit(supervisoryNode.id)" ng-bind="supervisoryNode.name"></a></td>
+        <td id="code{{$index}}" ng-bind="supervisoryNode.code"></td>
+        <td id="facility{{$index}}" ng-bind="supervisoryNode.facility.name"></td>
+        <td id="parent{{$index}}" ng-bind="supervisoryNode.parent.name"></td>
+      </tr>
+      </tbody>
+    </table>
+  </div>
+  <pagination total-items="totalItems" page="currentPage" max-size="5" items-per-page="pagination.limit"
+              direction-links="false" ng-show="supervisoryNodeList.length" class="pagination-sm"></pagination>
+</div>

@@ -26,11 +26,10 @@ import org.openlmis.rnr.builder.RequisitionBuilder;
 import org.openlmis.rnr.domain.Rnr;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 import static com.natpryce.makeiteasy.MakeItEasy.*;
+import static java.util.Arrays.asList;
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertThat;
@@ -39,7 +38,9 @@ import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.*;
 import static org.openlmis.core.builder.ProgramSupportedBuilder.defaultProgramSupported;
 import static org.openlmis.core.builder.ProgramSupportedBuilder.isActive;
-import static org.openlmis.core.domain.Right.*;
+import static org.openlmis.core.domain.RightName.*;
+import static org.openlmis.core.domain.RightType.FULFILLMENT;
+import static org.openlmis.core.domain.RightType.REQUISITION;
 import static org.openlmis.rnr.builder.RequisitionBuilder.program;
 import static org.openlmis.rnr.builder.RequisitionBuilder.status;
 import static org.openlmis.rnr.domain.RnrStatus.*;
@@ -74,10 +75,8 @@ public class RequisitionPermissionServiceTest {
   public void shouldReturnFalseIfUserDoesNotHaveRequiredPermissionOnProgramAndFacility() throws Exception {
     Facility facility = new Facility(facilityId);
     Program program = new Program(programId);
+    List<Right> rights = asList(new Right(APPROVE_REQUISITION, REQUISITION));
 
-    Set<Right> rights = new HashSet<Right>() {{
-      add(APPROVE_REQUISITION);
-    }};
     when(roleRightsService.getRightsForUserAndFacilityProgram(userId, facility, program)).thenReturn(rights);
 
     assertThat(requisitionPermissionService.hasPermission(userId, facility, program, CREATE_REQUISITION), is(false));
@@ -121,9 +120,8 @@ public class RequisitionPermissionServiceTest {
 
   @Test
   public void shouldReturnTrueIfUserHasRequiredPermissionOnProgramAndFacility() throws Exception {
-    Set<Right> rights = new HashSet<Right>() {{
-      add(CREATE_REQUISITION);
-    }};
+    List<Right> rights = asList(new Right(CREATE_REQUISITION, REQUISITION));
+
     when(programSupportedService.getByFacilityIdAndProgramId(facilityId, programId)).thenReturn(make(a(defaultProgramSupported)));
     when(roleRightsService.getRightsForUserAndFacilityProgram(eq(userId), any(Facility.class), any(Program.class))).thenReturn(rights);
 
@@ -219,9 +217,8 @@ public class RequisitionPermissionServiceTest {
 
   @Test
   public void shouldCheckIfUserHasGivenPermission() throws Exception {
-    Set<Right> rights = new HashSet<Right>() {{
-      add(CONVERT_TO_ORDER);
-    }};
+    List<Right> rights = asList(new Right(CONVERT_TO_ORDER, FULFILLMENT));
+
     when(roleRightsService.getRights(1L)).thenReturn(rights);
     assertThat(requisitionPermissionService.hasPermission(1L, CONVERT_TO_ORDER), is(true));
     assertThat(requisitionPermissionService.hasPermission(1L, CREATE_REQUISITION), is(false));

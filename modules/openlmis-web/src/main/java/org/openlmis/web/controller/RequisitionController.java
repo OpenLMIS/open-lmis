@@ -11,16 +11,16 @@
 package org.openlmis.web.controller;
 
 import lombok.NoArgsConstructor;
-import org.openlmis.core.domain.*;
+import org.openlmis.core.domain.Facility;
+import org.openlmis.core.domain.ProcessingPeriod;
+import org.openlmis.core.domain.Program;
+import org.openlmis.core.domain.User;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.rnr.domain.Comment;
 import org.openlmis.rnr.domain.Rnr;
 import org.openlmis.rnr.dto.RnrDTO;
 import org.openlmis.rnr.search.criteria.RequisitionSearchCriteria;
-import org.openlmis.rnr.service.RegimenColumnService;
-import org.openlmis.rnr.service.RequisitionService;
-import org.openlmis.rnr.service.RequisitionStatusChangeService;
-import org.openlmis.rnr.service.RnrTemplateService;
+import org.openlmis.rnr.service.*;
 import org.openlmis.web.response.OpenLmisResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -39,6 +39,8 @@ import org.springframework.web.servlet.ModelAndView;
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
+import static org.openlmis.core.domain.RightName.APPROVE_REQUISITION;
+import static org.openlmis.core.domain.RightName.CONVERT_TO_ORDER;
 import static org.openlmis.rnr.dto.RnrDTO.prepareForListApproval;
 import static org.openlmis.rnr.dto.RnrDTO.prepareForView;
 import static org.openlmis.rnr.service.RequisitionService.NUMBER_OF_PAGES;
@@ -68,20 +70,19 @@ public class RequisitionController extends BaseController {
   public static final String STATUS_CHANGES = "statusChanges";
   public static final String IS_EMERGENCY = "is_emergency";
   public static final String LOSSES_AND_ADJUSTMENT_TYPES = "lossesAndAdjustmentTypes";
-
+  public static final String NUMBER_OF_MONTHS = "numberOfMonths";
+  public static final String CAN_APPROVE_RNR = "canApproveRnr";
+  private static final Logger logger = LoggerFactory.getLogger(RequisitionController.class);
   @Autowired
   private RequisitionService requisitionService;
-
   @Autowired
   private RnrTemplateService rnrTemplateService;
-
   @Autowired
   private RequisitionStatusChangeService requisitionStatusChangeService;
-
   @Autowired
   private RegimenColumnService regimenColumnService;
-
-  private static final Logger logger = LoggerFactory.getLogger(RequisitionController.class);
+  @Autowired
+  private RequisitionPermissionService requisitionPermissionService;
 
   @RequestMapping(value = "/requisitions", method = POST, headers = ACCEPT_JSON)
   public ResponseEntity<OpenLmisResponse> initiateRnr(@RequestParam("facilityId") Long facilityId,
@@ -89,19 +90,33 @@ public class RequisitionController extends BaseController {
                                                       @RequestParam("emergency") Boolean emergency,
                                                       HttpServletRequest request) {
     try {
-      return response(RNR, requisitionService.initiate(new Facility(facilityId), new Program(programId), loggedInUserId(request), emergency));
+      Rnr initiatedRnr = requisitionService.initiate(new Facility(facilityId), new Program(programId), loggedInUserId(request), emergency);
+      ResponseEntity<OpenLmisResponse> response = response(RNR, initiatedRnr);
+      response.getBody().addData(NUMBER_OF_MONTHS, requisitionService.findM(initiatedRnr.getPeriod()));
+      return response;
     } catch (DataException e) {
       return error(e, BAD_REQUEST);
     }
   }
 
-  @RequestMapping(value = "/requisitions", method = GET, headers = ACCEPT_JSON)
-  @PreAuthorize("@permissionEvaluator.hasPermission(principal,'VIEW_REQUISITION')")
-  public ResponseEntity<OpenLmisResponse> getRequisitionsForView(RequisitionSearchCriteria criteria, HttpServletRequest request) {
-    criteria.setUserId(loggedInUserId(request));
-    return response(RNR_LIST, prepareForView(requisitionService.get(criteria)));
-  }
+  @RequestMapping(value = "/requisitions/{id}", method = GET)
+  @PostAuthorize("@requisitionPermissionService.hasPermission(principal, returnObject.body.data.get(\"rnr\"), 'VIEW_REQUISITION')")
+  public ResponseEntity<OpenLmisResponse> getById(@PathVariable Long id, HttpServletRequest request) {
+    try {
+      Rnr rnr = requisitionService.getFullRequisitionById(id);
+      ResponseEntity<OpenLmisResponse> response = response(RNR, rnr);
+      response.getBody().addData(NUMBER_OF_MONTHS, requisitionService.findM(rnr.getPeriod()));
 
+      boolean canApproveRnr = (rnr.isApprovable() &&
+        requisitionPermissionService.hasPermission(loggedInUserId(request), rnr, APPROVE_REQUISITION));
+
+      response.getBody().addData(CAN_APPROVE_RNR, canApproveRnr);
+
+      return response;
+    } catch (DataException dataException) {
+      return error(dataException, NOT_FOUND);
+    }
+  }
 
   @RequestMapping(value = "/requisitions/{id}/save", method = PUT, headers = ACCEPT_JSON)
   public ResponseEntity<OpenLmisResponse> saveRnr(@RequestBody Rnr rnr,
@@ -132,14 +147,6 @@ public class RequisitionController extends BaseController {
     }
   }
 
-  @RequestMapping(value = "/requisitions/lossAndAdjustments/reference-data", method = GET, headers = ACCEPT_JSON)
-  @PreAuthorize("@permissionEvaluator.hasPermission(principal,'CREATE_REQUISITION, AUTHORIZE_REQUISITION, APPROVE_REQUISITION')")
-  public ResponseEntity<OpenLmisResponse> getReferenceData() {
-    OpenLmisResponse referenceData = new OpenLmisResponse();
-    referenceData.addData(LOSS_ADJUSTMENT_TYPES, requisitionService.getLossesAndAdjustmentsTypes());
-    return referenceData.response(OK);
-  }
-
   @RequestMapping(value = "/requisitions/{id}/authorize", method = PUT, headers = ACCEPT_JSON)
   public ResponseEntity<OpenLmisResponse> authorize(@PathVariable("id") Long id,
                                                     HttpServletRequest request) {
@@ -167,6 +174,20 @@ public class RequisitionController extends BaseController {
     }
   }
 
+  @RequestMapping(value = "/requisitions/lossAndAdjustments/reference-data", method = GET, headers = ACCEPT_JSON)
+  @PreAuthorize("@permissionEvaluator.hasPermission(principal,'CREATE_REQUISITION, AUTHORIZE_REQUISITION, APPROVE_REQUISITION')")
+  public ResponseEntity<OpenLmisResponse> getReferenceData() {
+    OpenLmisResponse referenceData = new OpenLmisResponse();
+    referenceData.addData(LOSS_ADJUSTMENT_TYPES, requisitionService.getLossesAndAdjustmentsTypes());
+    return referenceData.response(OK);
+  }
+
+  @RequestMapping(value = "/requisitions", method = GET, headers = ACCEPT_JSON)
+  @PreAuthorize("@permissionEvaluator.hasPermission(principal,'VIEW_REQUISITION')")
+  public ResponseEntity<OpenLmisResponse> getRequisitionsForView(RequisitionSearchCriteria criteria, HttpServletRequest request) {
+    criteria.setUserId(loggedInUserId(request));
+    return response(RNR_LIST, prepareForView(requisitionService.get(criteria)));
+  }
 
   @RequestMapping(value = "/requisitions-for-approval", method = GET, headers = ACCEPT_JSON)
   @PreAuthorize("@permissionEvaluator.hasPermission(principal, 'APPROVE_REQUISITION')")
@@ -187,9 +208,9 @@ public class RequisitionController extends BaseController {
 
   {
     try {
-      Integer numberOfPages = requisitionService.getNumberOfPagesOfApprovedRequisitionsForCriteria(searchType, searchVal, loggedInUserId(request), Right.CONVERT_TO_ORDER);
+      Integer numberOfPages = requisitionService.getNumberOfPagesOfApprovedRequisitionsForCriteria(searchType, searchVal, loggedInUserId(request), CONVERT_TO_ORDER);
       List<Rnr> approvedRequisitions = requisitionService.getApprovedRequisitionsForCriteriaAndPageNumber(
-        searchType, searchVal, page, numberOfPages, loggedInUserId(request), Right.CONVERT_TO_ORDER, sortBy, sortDirection);
+        searchType, searchVal, page, numberOfPages, loggedInUserId(request), CONVERT_TO_ORDER, sortBy, sortDirection);
       List<RnrDTO> rnrDTOs = prepareForListApproval(approvedRequisitions);
       OpenLmisResponse response = new OpenLmisResponse(RNR_LIST, rnrDTOs);
       response.addData(NUMBER_OF_PAGES, numberOfPages);
@@ -218,16 +239,6 @@ public class RequisitionController extends BaseController {
     }
   }
 
-  @RequestMapping(value = "/requisitions/{id}", method = GET)
-  @PostAuthorize("@requisitionPermissionService.hasPermission(principal, returnObject.body.data.get(\"rnr\"), 'VIEW_REQUISITION')")
-  public ResponseEntity<OpenLmisResponse> getById(@PathVariable Long id) {
-    try {
-      return response(RNR, requisitionService.getFullRequisitionById(id));
-    } catch (DataException dataException) {
-      return error(dataException, NOT_FOUND);
-    }
-  }
-
   @RequestMapping(value = "/requisitions/{id}/print", method = GET, headers = ACCEPT_PDF)
   @PostAuthorize("@requisitionPermissionService.hasPermission(principal, returnObject.model.get(\"rnr\"), 'VIEW_REQUISITION')")
   public ModelAndView printRequisition(@PathVariable Long id) {
@@ -242,10 +253,10 @@ public class RequisitionController extends BaseController {
     modelAndView.addObject(RNR_TEMPLATE, rnrTemplateService.fetchColumnsForRequisition(programId));
     modelAndView.addObject(REGIMEN_TEMPLATE, regimenColumnService.getRegimenColumnsForPrintByProgramId(programId));
     modelAndView.addObject(STATUS_CHANGES, requisitionStatusChangeService.getByRnrId(id));
+    modelAndView.addObject(NUMBER_OF_MONTHS, requisitionService.findM(requisition.getPeriod()));
 
     return modelAndView;
   }
-
 
   @RequestMapping(value = "/requisitions/{id}/comments", method = POST, headers = ACCEPT_JSON)
   @PreAuthorize("@permissionEvaluator.hasPermission(principal, 'CREATE_REQUISITION, AUTHORIZE_REQUISITION, APPROVE_REQUISITION')")

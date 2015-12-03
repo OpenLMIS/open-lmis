@@ -15,7 +15,6 @@ import org.codehaus.jackson.JsonParser;
 import org.codehaus.jackson.ObjectCodec;
 import org.codehaus.jackson.map.DeserializationContext;
 import org.codehaus.jackson.map.JsonDeserializer;
-import org.openlmis.core.domain.Right;
 import org.openlmis.distribution.domain.DistributionStatus;
 
 import java.io.IOException;

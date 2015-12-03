@@ -13,16 +13,27 @@ function RoleController($scope, $routeParams, $location, Roles, Rights, $dialog)
   $scope.$parent.message = "";
   $scope.role = {rights: []};
 
-  if ($routeParams.id) {
-    Roles.get({id: $routeParams.id}, function (data) {
-      $scope.role = data.role;
-      $scope.currentRightType = data.right_type;
+  function getRole() {
+    if ($routeParams.id) {
+      Roles.get({id: $routeParams.id}, function (data) {
+        $scope.role = data.role;
+        $scope.currentRightType = data.right_type;
+        $scope.previousRightType = $scope.currentRightType;
+        if ($scope.role.rights) {
+          _.each($scope.rights, function (right) {
+            _.find($scope.role.rights, function (role_right) {
+              if (role_right.name === right.name) {
+                right.selected = true;
+              }
+            });
+          });
+        }
+      });
+    }
+    else {
+      $scope.currentRightType = "ADMIN";
       $scope.previousRightType = $scope.currentRightType;
-    });
-  }
-  else {
-    $scope.currentRightType = "ADMIN";
-    $scope.previousRightType = $scope.currentRightType;
+    }
   }
 
   Rights.get({}, function (data) {
@@ -31,66 +42,74 @@ function RoleController($scope, $routeParams, $location, Roles, Rights, $dialog)
     $scope.requisitionRights = _.where($scope.rights, {"type": "REQUISITION"});
     $scope.allocationRights = _.where($scope.rights, {"type": "ALLOCATION"});
     $scope.fulfillmentRights = _.where($scope.rights, {"type": "FULFILLMENT"});
+    $scope.reportingRights = _.where($scope.rights, {"type": "REPORTING"});
+    getRole();
   }, {});
 
+  function resetSelected() {
+    _.each($scope.rights, function (right) {
+      right.selected = false;
+    });
+  }
 
-  $scope.updateRights = function (checked, right) {
+  function addDefaultRight(defaultRightName) {
+    var rightExists = _.find($scope.role.rights, function (role_right) {
+      return role_right.name === defaultRightName;
+    });
+    if (rightExists) return;
+    var defaultRight = $scope.getRightFromRightList(defaultRightName);
+    defaultRight.selected = true;
+    $scope.role.rights.push(defaultRight);
+  }
+
+  $scope.updateRights = function (right) {
     $scope.showRightError = false;
-
-    if (checked) {
-      if ($scope.contains(right.right)) return;
-
+    right.selected = !right.selected;
+    if (right.selected) {
       $scope.role.rights.push(right);
-      if (right.right == 'MANAGE_REPORT') {
-        $scope.updateRights(true, $scope.getRightFromRightList("VIEW_REPORT"));
+
+      if (right.name == 'CREATE_REQUISITION' || right.name == 'AUTHORIZE_REQUISITION' || right.name == 'APPROVE_REQUISITION') {
+        addDefaultRight("VIEW_REQUISITION");
       }
-      if (right.right == 'CREATE_REQUISITION' || right.right == 'AUTHORIZE_REQUISITION' ||
-        right.right == 'APPROVE_REQUISITION') {
-        $scope.updateRights(true, $scope.getRightFromRightList("VIEW_REQUISITION"));
-      }
-      if (right.right == 'CONVERT_TO_ORDER' || right.right == 'MANAGE_POD' || right.right == 'FACILITY_FILL_SHIPMENT') {
-        $scope.updateRights(true, $scope.getRightFromRightList("VIEW_ORDER"));
+      if (right.name == 'CONVERT_TO_ORDER' || right.name == 'MANAGE_POD' || right.name == 'FACILITY_FILL_SHIPMENT') {
+        addDefaultRight("VIEW_ORDER");
       }
     } else {
-      $scope.role.rights = $.grep($scope.role.rights, function (rightObj) {
-        return (rightObj.right != right.right);
+      $scope.role.rights = _.filter($scope.role.rights, function (rightObj) {
+        return (rightObj.name != right.name);
       });
     }
   };
 
   $scope.getRightFromRightList = function (rightName) {
     return _.find($scope.rights, function (right) {
-      return right.right == rightName;
+      return right.name == rightName;
     });
   };
 
   $scope.areRelatedFieldsSelected = function (right) {
-    if (right.right == 'VIEW_REQUISITION') {
-      return ($scope.contains('CREATE_REQUISITION') ||
-        $scope.contains('AUTHORIZE_REQUISITION') ||
-        $scope.contains('APPROVE_REQUISITION'));
+    if (right.name == 'VIEW_REQUISITION') {
+      return (contains('CREATE_REQUISITION') ||
+        contains('AUTHORIZE_REQUISITION') ||
+        contains('APPROVE_REQUISITION'));
     }
-
-    if (right.right == 'VIEW_REPORT') {
-      return ($scope.contains('MANAGE_REPORT'));
-    }
-
-    if (right.right == 'VIEW_ORDER') {
-      return ($scope.contains('CONVERT_TO_ORDER') || $scope.contains('MANAGE_POD') || $scope.contains('FACILITY_FILL_SHIPMENT'));
+    if (right.name == 'VIEW_ORDER') {
+      return (contains('CONVERT_TO_ORDER') ||
+        contains('MANAGE_POD') ||
+        contains('FACILITY_FILL_SHIPMENT'));
     }
   };
 
-  $scope.contains = function (right) {
+  function contains(right) {
     var containFlag = false;
     $($scope.role.rights).each(function (index, assignedRight) {
-      if (assignedRight.right == right) {
+      if (assignedRight.name == right) {
         containFlag = true;
         return false;
       }
     });
     return containFlag;
-  };
-
+  }
 
   $scope.saveRole = function () {
     var errorHandler = function (data) {
@@ -103,7 +122,6 @@ function RoleController($scope, $routeParams, $location, Roles, Rights, $dialog)
       $scope.$parent.$error = "";
       $location.path('list');
     };
-
     if (validRole()) {
       var id = $routeParams.id;
       if (id) {
@@ -112,13 +130,12 @@ function RoleController($scope, $routeParams, $location, Roles, Rights, $dialog)
         Roles.save({}, $scope.role, successHandler, errorHandler);
       }
     }
-
   };
-
 
   $scope.dialogCloseCallback = function (result) {
     if (result) {
       $scope.role.rights = [];
+      resetSelected();
       $scope.previousRightType = $scope.currentRightType;
     } else {
       $scope.currentRightType = $scope.previousRightType;
@@ -126,9 +143,7 @@ function RoleController($scope, $routeParams, $location, Roles, Rights, $dialog)
   };
 
   $scope.showRoleTypeModal = function (selectedRoleType) {
-    if (selectedRoleType == $scope.previousRightType) {
-      return;
-    } else {
+    if (selectedRoleType !== $scope.previousRightType) {
       $scope.currentRightType = selectedRoleType;
       $scope.showRightError = false;
       $scope.error = "";

@@ -10,6 +10,9 @@
 
 package org.openlmis;
 
+/**
+ * LmisThreadLocal is used to get/set/remove current thread's value of a thread-local
+ */
 public class LmisThreadLocal {
 
     public static final ThreadLocal<String> lmisThreadLocal = new ThreadLocal<>();

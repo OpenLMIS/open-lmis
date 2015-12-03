@@ -24,7 +24,7 @@ app.directive('openlmisPagination', function () {
       checkErrorOnPage: '&',
       errorPages: '='
     },
-    templateUrl: '/public/pages/template/pagination/pagination.html',
+    templateUrl: '/public/pages/template/pagination/openlmis-pagination.html',
     replace: true,
     link: function (scope) {
       scope.$watch('numPages + currentPage + maxSize', function () {

@@ -12,7 +12,6 @@ package org.openlmis.core.service;
 
 import org.openlmis.core.domain.DeliveryZone;
 import org.openlmis.core.domain.Program;
-import org.openlmis.core.domain.Right;
 import org.openlmis.core.repository.DeliveryZoneRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -44,8 +43,8 @@ public class DeliveryZoneService {
     return repository.getByCode(code);
   }
 
-  public List<DeliveryZone> getByUserForRight(long userId, Right right) {
-    return repository.getByUserForRight(userId, right);
+  public List<DeliveryZone> getByUserForRight(long userId, String rightName) {
+    return repository.getByUserForRight(userId, rightName);
   }
 
   public List<Program> getActiveProgramsForDeliveryZone(long zoneId) {

@@ -10,7 +10,10 @@
 
 package org.openlmis.rnr.repository;
 
-import org.openlmis.core.domain.*;
+import org.openlmis.core.domain.Facility;
+import org.openlmis.core.domain.ProcessingPeriod;
+import org.openlmis.core.domain.Program;
+import org.openlmis.core.domain.RoleAssignment;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.core.repository.helper.CommaSeparator;
 import org.openlmis.rnr.domain.*;
@@ -199,14 +202,14 @@ public class RequisitionRepository {
   }
 
   public List<Rnr> getApprovedRequisitionsForCriteriaAndPageNumber(String searchType, String searchVal, Integer pageNumber,
-                                                                   Integer pageSize, Long userId, Right right, String sortBy,
+                                                                   Integer pageSize, Long userId, String rightName, String sortBy,
                                                                    String sortDirection) {
     return requisitionMapper.getApprovedRequisitionsForCriteriaAndPageNumber(searchType, searchVal, pageNumber, pageSize,
-      userId, right, sortBy, sortDirection);
+      userId, rightName, sortBy, sortDirection);
   }
 
-  public Integer getCountOfApprovedRequisitionsForCriteria(String searchType, String searchVal, Long userId, Right right) {
-    return requisitionMapper.getCountOfApprovedRequisitionsForCriteria(searchType, searchVal, userId, right);
+  public Integer getCountOfApprovedRequisitionsForCriteria(String searchType, String searchVal, Long userId, String rightName) {
+    return requisitionMapper.getCountOfApprovedRequisitionsForCriteria(searchType, searchVal, userId, rightName);
   }
 
   public Long getFacilityId(Long id) {

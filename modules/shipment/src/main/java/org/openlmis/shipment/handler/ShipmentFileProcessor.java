@@ -15,6 +15,7 @@ import org.apache.log4j.Logger;
 import org.openlmis.core.domain.EDIFileColumn;
 import org.openlmis.core.domain.EDIFileTemplate;
 import org.openlmis.core.exception.DataException;
+import org.openlmis.order.domain.Order;
 import org.openlmis.order.service.OrderService;
 import org.openlmis.shipment.ShipmentLineItemTransformer;
 import org.openlmis.shipment.domain.ShipmentLineItem;
@@ -39,7 +40,6 @@ import java.nio.file.Paths;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.util.*;
 
-import static java.lang.Long.parseLong;
 import static org.supercsv.prefs.CsvPreference.STANDARD_PREFERENCE;
 
 /**
@@ -81,7 +81,7 @@ public class ShipmentFileProcessor {
     Path path = Paths.get(shipmentFile.getPath());
     BasicFileAttributes attributes = Files.readAttributes(path, BasicFileAttributes.class);
     Date creationDate = new Date(attributes.creationTime().toMillis());
-    Set<Long> orderIds = new HashSet<>();
+    Set<String> orderNumbers = new HashSet<>();
 
     EDIFileTemplate shipmentFileTemplate = shipmentFileTemplateService.get();
 
@@ -90,21 +90,21 @@ public class ShipmentFileProcessor {
 
       ignoreFirstLineIfHeadersArePresent(shipmentFileTemplate, listReader);
 
-      getSpringProxy().processShipmentLineItem(listReader, shipmentFileTemplate, orderIds, creationDate);
+      getSpringProxy().processShipmentLineItem(listReader, shipmentFileTemplate, orderNumbers, creationDate);
       logger.debug("Successfully processed file " + shipmentFile.getName());
 
     } catch (Exception e) {
       successfullyProcessed = false;
     }
 
-    shipmentFilePostProcessHandler.process(orderIds, shipmentFile, successfullyProcessed);
+    shipmentFilePostProcessHandler.process(orderNumbers, shipmentFile, successfullyProcessed);
   }
 
   //  TODO: important add unit test fot this method
   @Transactional
   public void processShipmentLineItem(ICsvListReader listReader,
                                       EDIFileTemplate shipmentFileTemplate,
-                                      Set<Long> orderSet,
+                                      Set<String> orderSet,
                                       Date creationDate) throws Exception {
     boolean status = true;
 
@@ -133,20 +133,20 @@ public class ShipmentFileProcessor {
     }
   }
 
-  private boolean addShippableOrder(Set<Long> orderIds, ShipmentLineItemDTO dto) {
+  private boolean addShippableOrder(Set<String> orderNumbers, ShipmentLineItemDTO dto) {
     boolean status = true;
     try {
-      Long orderId = parseLong(dto.getOrderId());
+      String orderNumber = dto.getOrderNumber();
 
-      if (!orderIds.contains(orderId)) {
-        if (orderService.isShippable(orderId)) {
-          orderIds.add(orderId);
+      if (!orderNumbers.contains(orderNumber)) {
+        if (orderService.isShippable(orderNumber)) {
+          orderNumbers.add(orderNumber);
         } else {
           status = false;
         }
       }
     } catch (NumberFormatException e) {
-      logger.warn("invalid orderId: " + dto.getOrderId() + " in shipment file");
+      logger.warn("invalid orderId: " + dto.getOrderNumber() + " in shipment file");
       status = false;
     }
 
@@ -159,10 +159,12 @@ public class ShipmentFileProcessor {
                                Date creationDate) {
     boolean savedSuccessfully = true;
     try {
+      Order order = orderService.getByOrderNumber(dto.getOrderNumber());
+      dto.setOrderId(order.getId());
       ShipmentLineItem lineItem = transformer.transform(dto, packedDateFormat, shippedDateFormat, creationDate);
       shipmentService.save(lineItem);
     } catch (DataException e) {
-      logger.warn("Error in processing shipment file for orderId: " + dto.getOrderId(), e);
+      logger.warn("Error in processing shipment file for orderId: " + dto.getOrderNumber(), e);
       savedSuccessfully = false;
     }
 

@@ -88,10 +88,12 @@ public class PODControllerTest {
     OrderPOD createdPOD = new OrderPOD();
     mockStatic(OrderPODDTO.class);
 
-    whenNew(OrderPOD.class).withArguments(orderId, USER_ID).thenReturn(orderPOD);
+    whenNew(OrderPOD.class).withArguments(orderId, "OrdNum", USER_ID).thenReturn(orderPOD);
     when(service.getPODByOrderId(orderId)).thenReturn(null);
     when(service.createPOD(orderPOD)).thenReturn(createdPOD);
+
     Order order = new Order(orderId);
+    order.setOrderNumber("OrdNum");
     OrderPODDTO orderPODDTO = mock(OrderPODDTO.class);
     when(orderService.getOrder(orderId)).thenReturn(order);
     when(OrderPODDTO.getOrderDetailsForPOD(order)).thenReturn(orderPODDTO);

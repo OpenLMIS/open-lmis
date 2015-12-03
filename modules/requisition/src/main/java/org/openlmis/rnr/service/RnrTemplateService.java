@@ -60,6 +60,6 @@ public class RnrTemplateService {
   }
 
   public ProgramRnrTemplate fetchProgramTemplateForRequisition(Long programId) {
-    return new ProgramRnrTemplate(programId ,fetchColumnsForRequisition(programId));
+    return new ProgramRnrTemplate(programId, fetchColumnsForRequisition(programId));
   }
 }

@@ -11,14 +11,13 @@
 package org.openlmis.core.service;
 
 import lombok.NoArgsConstructor;
-import org.openlmis.core.domain.Product;
-import org.openlmis.core.domain.ProductGroup;
-import org.openlmis.core.domain.ProgramProduct;
+import org.openlmis.core.domain.*;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.core.repository.ProductGroupRepository;
 import org.openlmis.core.repository.ProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -37,25 +36,35 @@ public class ProductService {
   private ProductGroupRepository productGroupRepository;
 
   @Autowired
-  private ProductCategoryService categoryService;
+  private ProgramProductService programProductService;
 
   @Autowired
-  ProgramProductService programProductService;
+  private ProductGroupService productGroupService;
 
   @Autowired
-  ProgramService programService;
+  private ProgramService programService;
 
+  @Autowired
+  private ProductFormService productFormService;
+
+  @Transactional
   public void save(Product product) {
 
     product.validate();
-//  validateAndSetProductCategory(product);
+
+    ProductGroup productGroup = productGroupService.validateAndReturn(product.getProductGroup());
+    product.setProductGroup(productGroup);
+
+    ProductForm productForm = productFormService.validateAndReturn(product.getForm());
+    product.setForm(productForm);
+
+    DosageUnit dosageUnit = validateAndReturnDosageUnit(product.getDosageUnit());
+    product.setDosageUnit(dosageUnit);
 
     if (product.getId() == null) {
       repository.insert(product);
       return;
     }
-
-    setReferenceDataForProduct(product);
 
     List<ProgramProduct> existingProgramProducts = programProductService.getByProductCode(product.getCode());
 
@@ -64,26 +73,24 @@ public class ProductService {
     notifyProgramCatalogChange(product, existingProgramProducts);
   }
 
-  private void notifyProgramCatalogChange(Product product, List<ProgramProduct> existingProgramProducts) {
-    for (ProgramProduct existingProgramProduct : existingProgramProducts) {
-      if (existingProgramProduct.isActive() && (existingProgramProduct.getProduct().getActive() != product.getActive())) {
-        programService.setFeedSendFlag(existingProgramProduct.getProgram(), true);
-      }
-    }
+  private DosageUnit validateAndReturnDosageUnit(DosageUnit dosageUnit) {
+    if (dosageUnit == null) return null;
+
+    String dosageUnitCode = dosageUnit.getCode();
+    if (dosageUnitCode == null || dosageUnitCode.isEmpty()) return null;
+
+    dosageUnit = repository.getDosageUnitByCode(dosageUnitCode);
+    if (dosageUnit == null)
+      throw new DataException("error.reference.data.invalid.dosage.unit");
+
+    return dosageUnit;
   }
 
-  private void setReferenceDataForProduct(Product product) {
-    if (product.getForm() != null) {
-      product.getForm().setId(repository.getProductFormIdForCode(product.getForm().getCode()));
-    }
-    if (product.getDosageUnit() != null) {
-      product.getDosageUnit().setId(repository.getDosageUnitIdForCode(product.getDosageUnit().getCode()));
-    }
-    if (product.getProductGroup() != null) {
-      ProductGroup productGroup = productGroupRepository.getByCode(product.getProductGroup().getCode());
-      if (productGroup == null) throw new DataException("error.reference.data.invalid.product.group");
-      product.getProductGroup().setId(productGroup.getId());
-
+  private void notifyProgramCatalogChange(Product product, List<ProgramProduct> existingProgramProducts) {
+    for (ProgramProduct existingProgramProduct : existingProgramProducts) {
+      if (existingProgramProduct.getActive() && (existingProgramProduct.getProduct().getActive() != product.getActive())) {
+        programService.setFeedSendFlag(existingProgramProduct.getProgram(), true);
+      }
     }
   }
 
@@ -97,5 +104,17 @@ public class ProductService {
 
   public boolean isActive(String code) {
     return repository.isActive(code);
+  }
+
+  public Integer getTotalSearchResultCount(String searchParam) {
+    return repository.getTotalSearchResultCount(searchParam);
+  }
+
+  public List<DosageUnit> getAllDosageUnits() {
+    return repository.getAllDosageUnits();
+  }
+
+  public Product getById(Long id) {
+    return repository.getById(id);
   }
 }

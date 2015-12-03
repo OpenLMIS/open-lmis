@@ -1,0 +1,22 @@
+RG Code,Name of RG,Description,Supervisory Node
+RG3,Requisition Group 3,Supports Vaccines(M),N2
+RG4,Requisition Group 4,"Supports EM(Q1M),HIV(Q1M), TB(M)",N1
+RG5,Requisition Group 5,"Supports EM(Q1M),HIV(Q1M), TB(M)",N1
+RG6,Requisition Group 8,"Supports EM(Q1M),HIV(Q1M), TB(M)",N2
+RG7,Requisition Group 7,"Supports EM(Q1M),HIV(Q1M), TB(M)",N1
+RG8,Requisition Group 6,"Supports EM(Q1M),HIV(Q1M), TB(M)",N2
+RG9,Requisition Group 9,"Supports EM(Q1M),HIV(Q1M), TB(M)",N1
+RG10,Requisition Group 10,"Supports EM(Q1M),HIV(Q1M), TB(M)",N2
+RG11,Requisition Group 11,"Supports EM(Q1M),HIV(Q1M), TB(M)",N1
+RG12,Requisition Group 12,"Supports EM(Q1M),HIV(Q1M), TB(M)",N1
+RG13,Requisition Group 13,"Supports EM(Q1M),HIV(Q1M), TB(M)",N1
+RG14,Requisition Group 14,"Supports EM(Q1M),HIV(Q1M), TB(M)",N2
+RG15,Requisition Group 15,"Supports EM(Q1M),HIV(Q1M), TB(M)",N1
+RG16,Requisition Group 16,"Supports EM(Q1M),HIV(Q1M), TB(M)",N1
+RG17,Requisition Group 17,"Supports EM(Q1M),HIV(Q1M), TB(M)",N2
+RG18,Requisition Group 18,"Supports EM(Q1M),HIV(Q1M), TB(M)",N1
+RG19,Requisition Group 19,"Supports EM(Q1M),HIV(Q1M), TB(M)",N2
+RG20,Requisition Group 20,"Supports EM(Q1M),HIV(Q1M), TB(M)",N2
+RG21,Requisition Group 20,"Supports EM(Q1M),HIV(Q1M), TB(M)",N2
+RG22,Requisition Group 20,"Supports EM(Q1M),HIV(Q1M), TB(M)",N1
+RG2,Requisition Group 2,"Supports EM(Q1M),HIV(Q1M), TB(M)",N2

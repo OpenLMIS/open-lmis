@@ -10,9 +10,10 @@
 
 angular.module('edi', ['openlmis', 'ui.sortable']).config(['$routeProvider', function ($routeProvider) {
   $routeProvider.
-    when('/configure-edi-file', { templateUrl: 'partials/configure-edi-file.html' }).
+    when('/configure-system-settings', { templateUrl: 'partials/configure-system-settings.html' }).
     when('/configure-order-file', { controller: OrderFileTemplateController, templateUrl: 'partials/order-file-template-form.html', resolve: OrderFileTemplateController.resolve }).
     when('/configure-shipment-file', { controller: ShipmentFileTemplateController, templateUrl: 'partials/shipment-file-template-form.html',resolve: ShipmentFileTemplateController.resolve }).
     when('/configure-budget-file', { controller: BudgetFileTemplateController, templateUrl: 'partials/budget-file-template-form.html',resolve: BudgetFileTemplateController.resolve }).
+    when('/configure-order-number', { controller: OrderNumberConfigurationController, templateUrl: 'partials/order-number-configuration-form.html',resolve: OrderNumberConfigurationController.resolve }).
     otherwise({redirectTo: '/configure-order-file'});
 }]);

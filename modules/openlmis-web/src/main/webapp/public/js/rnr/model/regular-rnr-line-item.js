@@ -74,7 +74,7 @@ var RegularRnrLineItem = base2.Base.extend({
     var orderQuantity;
 
     if (this.statusBeforeAuthorized()) orderQuantity =
-      isUndefined(this.quantityRequested) ? this.calculatedOrderQuantity : this.quantityRequested;
+        isUndefined(this.quantityRequested) ? this.calculatedOrderQuantity : this.quantityRequested;
     else orderQuantity = this.quantityApproved;
 
     this.calculatePacksToShip(orderQuantity);
@@ -83,7 +83,16 @@ var RegularRnrLineItem = base2.Base.extend({
 
   fillNormalizedConsumption: function () {
     this.calculateNormalizedConsumption();
+    this.fillPeriodNormalizedConsumption();
     this.fillAMC();
+  },
+
+  fillPeriodNormalizedConsumption: function () {
+    if (isUndefined(this.normalizedConsumption)) {
+      this.periodNormalizedConsumption = null;
+      return;
+    }
+    this.periodNormalizedConsumption = this.normalizedConsumption * this.numberOfMonths;
   },
 
   fillAMC: function () {
@@ -109,8 +118,8 @@ var RegularRnrLineItem = base2.Base.extend({
       var totalLossesAndAdjustments = utils.parseIntWithBaseTen(this.totalLossesAndAdjustments);
       var stockInHand = utils.parseIntWithBaseTen(this.stockInHand);
       return (utils.isNumber(quantityDispensed) && utils.isNumber(beginningBalance) && utils.isNumber(quantityReceived) &&
-        utils.isNumber(totalLossesAndAdjustments) && utils.isNumber(stockInHand)) ?
-        quantityDispensed != (beginningBalance + quantityReceived + totalLossesAndAdjustments - stockInHand) : null;
+          utils.isNumber(totalLossesAndAdjustments) && utils.isNumber(stockInHand)) ?
+          quantityDispensed != (beginningBalance + quantityReceived + totalLossesAndAdjustments - stockInHand) : null;
     }
     return false;
   },
@@ -120,7 +129,7 @@ var RegularRnrLineItem = base2.Base.extend({
     var rnrLineItem = this;
     $(this.lossesAndAdjustments).each(function (index, lossAndAdjustmentObject) {
       rnrLineItem.updateTotalLossesAndAdjustment(lossAndAdjustmentObject.quantity,
-        lossAndAdjustmentObject.type.additive);
+          lossAndAdjustmentObject.type.additive);
     });
   },
 
@@ -178,6 +187,9 @@ var RegularRnrLineItem = base2.Base.extend({
   },
 
   calculateConsumption: function () {
+    if (this.rnrStatus === 'AUTHORIZED' || this.rnrStatus === 'IN_APPROVAL' || this.rnrStatus === 'APPROVED' || this.rnrStatus === 'RELEASED') {
+      return;
+    }
     if (this.getSource('quantityDispensed') !== 'CALCULATED') return;
 
     if (utils.isNumber(this.beginningBalance) && utils.isNumber(this.quantityReceived) && utils.isNumber(this.totalLossesAndAdjustments) && utils.isNumber(this.stockInHand)) {
@@ -188,6 +200,9 @@ var RegularRnrLineItem = base2.Base.extend({
   },
 
   calculateStockInHand: function () {
+    if (this.rnrStatus === 'AUTHORIZED' || this.rnrStatus === 'IN_APPROVAL' || this.rnrStatus === 'APPROVED' || this.rnrStatus === 'RELEASED') {
+      return;
+    }
     if (this.getSource('stockInHand') !== 'CALCULATED') return;
 
     if (utils.isNumber(this.beginningBalance) && utils.isNumber(this.quantityReceived) && utils.isNumber(this.quantityDispensed)) {
@@ -198,6 +213,9 @@ var RegularRnrLineItem = base2.Base.extend({
   },
 
   calculateNormalizedConsumption: function () {
+    if (this.rnrStatus === 'AUTHORIZED' || this.rnrStatus === 'IN_APPROVAL' || this.rnrStatus === 'APPROVED' || this.rnrStatus === 'RELEASED') {
+      return;
+    }
     this.reportingDays = utils.getValueFor(this.reportingDays);
     this.stockOutDays = utils.getValueFor(this.stockOutDays);
     this.newPatientCount = utils.getValueFor(this.newPatientCount);
@@ -212,9 +230,14 @@ var RegularRnrLineItem = base2.Base.extend({
     var dosesPerDispensingUnit = utils.parseIntWithBaseTen(this.dosesPerDispensingUnit);
     dosesPerDispensingUnit = Math.max(dosesPerDispensingUnit, 1);
     var consumptionAdjustedWithStockOutDays = ((this.reportingDays) - this.stockOutDays) <= 0 ?
-      this.quantityDispensed :
-      ((this.quantityDispensed * 30) / ((this.reportingDays) - this.stockOutDays));
-    var adjustmentForNewPatients = (this.newPatientCount * Math.round(this.dosesPerMonth / dosesPerDispensingUnit) );
+        this.quantityDispensed :
+        ((this.quantityDispensed * 30) / ((this.reportingDays) - this.stockOutDays));
+    var adjustmentForNewPatients;
+    if (_.findWhere(this.programRnrColumnList, {name: 'newPatientCount'}).configuredOption.name === "newPatientCount") {
+      adjustmentForNewPatients = (this.newPatientCount * Math.round(this.dosesPerMonth / dosesPerDispensingUnit) );
+    } else {
+      adjustmentForNewPatients = this.newPatientCount;
+    }
     this.normalizedConsumption = Math.round(consumptionAdjustedWithStockOutDays + adjustmentForNewPatients);
   },
 
@@ -285,7 +308,7 @@ var RegularRnrLineItem = base2.Base.extend({
   },
 
   validateRequiredFieldsForNonFullSupply: function () {
-    if (_.findWhere(this.programRnrColumnList, {name: 'quantityRequested'}).visible) {
+    if (_.findWhere(this.programRnrColumnList, {name: 'quantityRequested'})) {
       return !(isUndefined(this.quantityRequested) || isUndefined(this.reasonForRequestedQuantity));
     }
     return false;
@@ -297,17 +320,17 @@ var RegularRnrLineItem = base2.Base.extend({
     var visibleColumns = _.where(this.programRnrColumnList, {"visible": true});
 
     $(visibleColumns).each(function (i, column) {
-        var nonMandatoryColumns = ["reasonForRequestedQuantity", "remarks", "lossesAndAdjustments", "quantityApproved", "skipped"];
-        if (column.source.name != 'USER_INPUT' || _.contains(nonMandatoryColumns, column.name)) return;
-        if (column.name === 'quantityRequested') {
-          valid = isUndefined(rnrLineItem.quantityRequested) || !isUndefined(rnrLineItem.reasonForRequestedQuantity);
-        } else if (column.name == 'expirationDate') {
-          valid = !rnrLineItem.expirationDateInvalid();
-        } else {
-          valid = !isUndefined(rnrLineItem[column.name]);
+          var nonMandatoryColumns = ["reasonForRequestedQuantity", "remarks", "lossesAndAdjustments", "quantityApproved", "skipped"];
+          if (column.source.name != 'USER_INPUT' || _.contains(nonMandatoryColumns, column.name)) return;
+          if (column.name === 'quantityRequested') {
+            valid = isUndefined(rnrLineItem.quantityRequested) || !isUndefined(rnrLineItem.reasonForRequestedQuantity);
+          } else if (column.name == 'expirationDate') {
+            valid = !rnrLineItem.expirationDateInvalid();
+          } else {
+            valid = !isUndefined(rnrLineItem[column.name]);
+          }
+          return valid;
         }
-        return valid;
-      }
     );
 
     return valid;

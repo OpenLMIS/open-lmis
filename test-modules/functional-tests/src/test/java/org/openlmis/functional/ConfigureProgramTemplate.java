@@ -20,6 +20,7 @@ import java.io.IOException;
 import java.sql.SQLException;
 import java.util.List;
 
+import static com.thoughtworks.selenium.SeleneseTestBase.*;
 import static java.util.Arrays.asList;
 
 @Listeners(CaptureScreenshotOnFailureListener.class)
@@ -31,25 +32,26 @@ public class ConfigureProgramTemplate extends TestCaseHelper {
   @BeforeMethod(groups = {"admin"})
   public void setUp() throws InterruptedException, SQLException, IOException {
     super.setup();
+    dbWrapper.removeAllExistingRights("Admin");
+    dbWrapper.assignRight("Admin", "CONFIGURE_RNR");
     loginPage = PageObjectFactory.getLoginPage(testWebDriver, baseUrlGlobal);
   }
 
   @Test(groups = {"admin"}, dataProvider = "Data-Provider-Program-Not-Configured")
   public void testVerifyProgramNotConfigured(String program, String userSIC, String password) throws SQLException {
     List<String> rightsList = asList("CREATE_REQUISITION", "VIEW_REQUISITION");
-    setupTestDataToInitiateRnR(false, program, userSIC, "200", rightsList);
+    setupTestDataToInitiateRnR(false, program, userSIC, rightsList);
 
     HomePage homePage = loginPage.loginAs(userSIC, password);
     homePage.navigateAndInitiateRnr(program);
     InitiateRnRPage initiateRnRPage = homePage.clickProceed();
     initiateRnRPage.verifyTemplateNotConfiguredMessage();
-
   }
 
   @Test(groups = {"admin"}, dataProvider = "Data-Provider-Verify-On-Rnr-Screen")
   public void testVerifyImpactOfChangesInConfigScreenOnRnRScreen(String program, String userSIC, String password, String[] credentials) throws SQLException {
     List<String> rightsList = asList("CREATE_REQUISITION", "VIEW_REQUISITION");
-    setupTestDataToInitiateRnR(true, program, userSIC, "200", rightsList);
+    setupTestDataToInitiateRnR(true, program, userSIC, rightsList);
 
     HomePage homePage = loginPage.loginAs(credentials[0], credentials[1]);
     TemplateConfigPage templateConfigPage = homePage.selectProgramToConfigTemplate(program);
@@ -59,6 +61,14 @@ public class ConfigureProgramTemplate extends TestCaseHelper {
     templateConfigPage.checkSkip();
     templateConfigPage.setSkipTextBox("Product Skip");
     templateConfigPage.alterBeginningBalanceLabel(newColumnHeading);
+    assertTrue(templateConfigPage.isPatientOption1Selected());
+    assertFalse(templateConfigPage.isPatientOption2Selected());
+    testWebDriver.sleep(1000);
+    templateConfigPage.selectPatientOption2();
+    testWebDriver.sleep(1000);
+    assertTrue(templateConfigPage.isPatientOption2Selected());
+    assertFalse(templateConfigPage.isPatientOption1Selected());
+    templateConfigPage.saveConfiguration();
 
     homePage.logout(baseUrlGlobal);
     HomePage homePageSic = loginPage.loginAs(userSIC, password);
@@ -73,6 +83,8 @@ public class ConfigureProgramTemplate extends TestCaseHelper {
     initiateRnRPage.verifyColumnsHeadingPresent(tableFrozenXpathTillTr, "Product Skip\n" + "All | None", columns);
     initiateRnRPage.verifyColumnsHeadingPresent(tableFrozenXpathTillTr, "Product", columns);
     initiateRnRPage.verifyColumnsHeadingPresent(tableFrozenXpathTillTr, "Product Code", columns);
+    assertEquals("2", dbWrapper.getAttributeFromTable("program_rnr_columns", "rnrOptionId", "label", "New Patients"));
+
   }
 
   @Test(groups = {"admin"}, dataProvider = "Data-Provider-Column-Label-Source")
@@ -96,6 +108,8 @@ public class ConfigureProgramTemplate extends TestCaseHelper {
   public void tearDown() throws SQLException {
     HomePage homePage = PageObjectFactory.getHomePage(testWebDriver);
     homePage.logout(baseUrlGlobal);
+    dbWrapper.removeAllExistingRights("Admin");
+    dbWrapper.insertAllAdminRightsAsSeedData();
     dbWrapper.deleteData();
     dbWrapper.closeConnection();
   }

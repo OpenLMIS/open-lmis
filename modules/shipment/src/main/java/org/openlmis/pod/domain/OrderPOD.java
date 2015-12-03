@@ -44,10 +44,11 @@ import static org.joda.time.format.DateTimeFormat.forPattern;
 public class OrderPOD extends BaseModel {
 
   private Long orderId;
+  private String orderNumber;
   private Long facilityId;
   private Long programId;
   private Long periodId;
-  private List<OrderPODLineItem> podLineItems;
+  private List<OrderPODLineItem> podLineItems = new ArrayList<>();
   private String deliveredBy;
   private String receivedBy;
 
@@ -58,14 +59,15 @@ public class OrderPOD extends BaseModel {
     this.id = id;
   }
 
-  public OrderPOD(Long orderId, Long userId) {
+  public OrderPOD(Long orderId, String orderNumber, Long userId) {
     this.orderId = orderId;
+    this.orderNumber = orderNumber;
     this.createdBy = userId;
     this.modifiedBy = userId;
   }
 
   public void validate() {
-    if (orderId == null || podLineItems == null || podLineItems.size() == 0) {
+    if (orderId == null) {
       throw new DataException("error.mandatory.fields.missing");
     }
     for (OrderPODLineItem lineItem : podLineItems) {

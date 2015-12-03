@@ -10,7 +10,7 @@
 
 package org.openlmis.authentication.web;
 
-import org.openlmis.authentication.UserToken;
+import org.openlmis.authentication.domain.UserToken;
 import org.openlmis.authentication.service.UserAuthenticationService;
 import org.openlmis.core.domain.User;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,7 +23,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * This class is acts as a authentication provider.
+ * This class acts as an authentication provider. It authenticates user credentials.
  */
 
 public class UserAuthenticationProvider implements AuthenticationProvider {

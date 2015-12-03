@@ -8,7 +8,6 @@
 
 package org.openlmis.order.repository;
 
-import org.openlmis.core.domain.Right;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.core.repository.helper.CommaSeparator;
 import org.openlmis.order.domain.Order;
@@ -42,16 +41,16 @@ public class OrderRepository {
     }
   }
 
-  public List<Order> getOrdersForPage(int page, int pageSize, Long userId, Right right) {
-    return orderMapper.getOrders(pageSize, (page - 1) * pageSize, userId, right);
+  public List<Order> getOrdersForPage(int page, int pageSize, Long userId, String rightName) {
+    return orderMapper.getOrders(pageSize, (page - 1) * pageSize, userId, rightName);
   }
 
   public Order getById(Long id) {
     return orderMapper.getById(id);
   }
 
-  public void updateStatusAndShipmentIdForOrder(Long orderId, OrderStatus status, Long shipmentId) {
-    orderMapper.updateShipmentAndStatus(orderId, status, shipmentId);
+  public void updateStatusAndShipmentIdForOrder(String orderNumber, OrderStatus status, Long shipmentId) {
+    orderMapper.updateShipmentAndStatus(orderNumber, status, shipmentId);
   }
 
   public List<OrderFileColumn> getOrderFileTemplate() {
@@ -71,8 +70,8 @@ public class OrderRepository {
     orderMapper.updateOrderStatus(order);
   }
 
-  public OrderStatus getStatus(long orderId) {
-    return orderMapper.getStatus(orderId);
+  public OrderStatus getStatus(String orderNumber) {
+    return orderMapper.getStatus(orderNumber);
   }
 
   public Integer getNumberOfPages(int pageSize) {
@@ -85,5 +84,9 @@ public class OrderRepository {
 
   private String format(String listString) {
     return listString.replace('[', '{').replace(']', '}');
+  }
+
+  public Order getByOrderNumber(String orderNumber) {
+    return orderMapper.getByOrderNumber(orderNumber);
   }
 }

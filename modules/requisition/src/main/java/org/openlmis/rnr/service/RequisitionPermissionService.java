@@ -20,10 +20,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Set;
 
+import static com.google.common.collect.Iterables.any;
 import static org.apache.commons.collections.CollectionUtils.exists;
-import static org.openlmis.core.domain.Right.*;
+import static org.openlmis.core.domain.RightName.*;
+import static org.openlmis.core.utils.RightUtil.with;
 import static org.openlmis.rnr.domain.RnrStatus.*;
 
 /**
@@ -41,21 +42,21 @@ public class RequisitionPermissionService {
   @Autowired
   ProgramSupportedService programSupportedService;
 
-  public Boolean hasPermission(Long userId, Facility facility, Program program, Right right) {
+  public Boolean hasPermission(Long userId, Facility facility, Program program, String rightName) {
     ProgramSupported programSupported = programSupportedService.getByFacilityIdAndProgramId(facility.getId(), program.getId());
     if (!(programSupported != null && programSupported.getActive() && programSupported.getProgram().getActive())) {
       return false;
     }
 
-    Set<Right> userRights = roleRightsService.getRightsForUserAndFacilityProgram(userId, facility, program);
-    return userRights.contains(right);
+    List<Right> userRights = roleRightsService.getRightsForUserAndFacilityProgram(userId, facility, program);
+    return any(userRights, with(rightName));
   }
 
-  public Boolean hasPermission(Long userId, Rnr rnr, Right right) {
-    if (right.equals(APPROVE_REQUISITION))
+  public Boolean hasPermission(Long userId, Rnr rnr, String rightName) {
+    if (rightName.equals(APPROVE_REQUISITION))
       return hasPermissionToApprove(userId, rnr);
 
-    return hasPermission(userId, rnr.getFacility(), rnr.getProgram(), right);
+    return hasPermission(userId, rnr.getFacility(), rnr.getProgram(), rightName);
   }
 
   public boolean hasPermissionToSave(Long userId, Rnr rnr) {
@@ -77,7 +78,7 @@ public class RequisitionPermissionService {
     });
   }
 
-  public boolean hasPermission(Long userId, Right right) {
-    return roleRightsService.getRights(userId).contains(right);
+  public boolean hasPermission(Long userId, String rightName) {
+    return any(roleRightsService.getRights(userId), with(rightName));
   }
 }

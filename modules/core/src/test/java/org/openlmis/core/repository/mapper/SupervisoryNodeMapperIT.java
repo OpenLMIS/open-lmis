@@ -35,12 +35,11 @@ import static org.junit.Assert.assertTrue;
 import static org.openlmis.core.builder.ProgramBuilder.defaultProgram;
 import static org.openlmis.core.builder.ProgramBuilder.programCode;
 import static org.openlmis.core.builder.RequisitionGroupBuilder.defaultRequisitionGroup;
-import static org.openlmis.core.builder.SupervisoryNodeBuilder.SUPERVISORY_NODE_CODE;
-import static org.openlmis.core.builder.SupervisoryNodeBuilder.code;
+import static org.openlmis.core.builder.SupervisoryNodeBuilder.*;
 import static org.openlmis.core.builder.UserBuilder.defaultUser;
 import static org.openlmis.core.builder.UserBuilder.facilityId;
-import static org.openlmis.core.domain.Right.CONFIGURE_RNR;
-import static org.openlmis.core.domain.Right.CREATE_REQUISITION;
+import static org.openlmis.core.domain.RightName.CONFIGURE_RNR;
+import static org.openlmis.core.domain.RightName.CREATE_REQUISITION;
 
 @Category(IntegrationTests.class)
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -84,7 +83,6 @@ public class SupervisoryNodeMapperIT {
     assertThat(resultSupervisoryNode, is(notNullValue()));
     assertThat(resultSupervisoryNode.getCode(), CoreMatchers.is(SUPERVISORY_NODE_CODE));
     assertThat(resultSupervisoryNode.getName(), CoreMatchers.is(SupervisoryNodeBuilder.SUPERVISORY_NODE_NAME));
-    assertThat(resultSupervisoryNode.getModifiedDate(), CoreMatchers.is(SupervisoryNodeBuilder.SUPERVISORY_NODE_DATE));
     assertThat(resultSupervisoryNode.getFacility().getId(), is(facility.getId()));
   }
 
@@ -96,15 +94,16 @@ public class SupervisoryNodeMapperIT {
     supervisoryNodeParent.setFacility(facility);
     supervisoryNodeMapper.insert(supervisoryNodeParent);
 
+    supervisoryNode.setCode("updated code");
     supervisoryNode.setName("updated name");
     supervisoryNode.setDescription("updated description");
-
     supervisoryNode.setParent(supervisoryNodeParent);
+
     supervisoryNodeMapper.update(supervisoryNode);
 
     SupervisoryNode resultSupervisoryNode = supervisoryNodeMapper.getSupervisoryNode(supervisoryNode.getId());
-
     assertThat(resultSupervisoryNode, is(notNullValue()));
+    assertThat(resultSupervisoryNode.getCode(), is("updated code"));
     assertThat(resultSupervisoryNode.getName(), is("updated name"));
     assertThat(resultSupervisoryNode.getDescription(), is("updated description"));
     assertThat(resultSupervisoryNode.getParent().getId(), is(supervisoryNodeParent.getId()));
@@ -264,6 +263,169 @@ public class SupervisoryNodeMapperIT {
     assertThat(result.get(0).getId(), is(supervisoryNode3.getId()));
     assertThat(result.get(1).getId(), is(supervisoryNode2.getId()));
     assertThat(result.get(2).getId(), is(supervisoryNode1.getId()));
+  }
+
+  @Test
+  public void shouldGetPaginatedSupervisoryNodesByNameSearch() {
+    insertSupervisoryNode(supervisoryNode);
+
+    SupervisoryNode supervisoryNode1 = make(a(SupervisoryNodeBuilder.defaultSupervisoryNode, with(code, "SN1"), with(name, "Approval Point 2")));
+    supervisoryNode1.setFacility(facility);
+    insertSupervisoryNode(supervisoryNode1);
+
+    SupervisoryNode supervisoryNode2 = make(a(SupervisoryNodeBuilder.defaultSupervisoryNode, with(code, "CN1"), with(name, "Not Matching Search")));
+    supervisoryNode2.setFacility(facility);
+    insertSupervisoryNode(supervisoryNode2);
+
+    Pagination pagination = new Pagination(1, 10);
+    List<SupervisoryNode> searchResults = supervisoryNodeMapper.getSupervisoryNodesBy("Approval", pagination);
+
+    assertThat(searchResults.size(), is(2));
+  }
+
+  @Test
+  public void shouldGetPaginatedSupervisoryNodesByParentNameSearch() {
+    SupervisoryNode supervisoryNode1 = make(a(SupervisoryNodeBuilder.defaultSupervisoryNode, with(code, "SN1"), with(name, "Parent")));
+    supervisoryNode1.setFacility(facility);
+    insertSupervisoryNode(supervisoryNode1);
+
+    supervisoryNode.setParent(supervisoryNode1);
+    insertSupervisoryNode(supervisoryNode);
+
+    SupervisoryNode supervisoryNode2 = make(a(SupervisoryNodeBuilder.defaultSupervisoryNode, with(code, "CN1"), with(name, "Another")));
+    supervisoryNode2.setFacility(facility);
+    insertSupervisoryNode(supervisoryNode2);
+
+    SupervisoryNode supervisoryNode3 = make(a(SupervisoryNodeBuilder.defaultSupervisoryNode, with(code, "CN2"), with(name, "Child with not matching")));
+    supervisoryNode3.setFacility(facility);
+    supervisoryNode3.setParent(supervisoryNode2);
+    insertSupervisoryNode(supervisoryNode3);
+
+    Pagination pagination = new Pagination(1, 10);
+    List<SupervisoryNode> searchResults = supervisoryNodeMapper.getSupervisoryNodesBy("Parent", pagination);
+
+    assertThat(searchResults.size(), is(1));
+  }
+
+  @Test
+  public void shouldGetSupervisoryNodesCountByNameSearch() {
+    insertSupervisoryNode(supervisoryNode);
+
+    SupervisoryNode supervisoryNode1 = make(a(SupervisoryNodeBuilder.defaultSupervisoryNode, with(code, "SN1"), with(name, "Approval Point 2")));
+    supervisoryNode1.setFacility(facility);
+    insertSupervisoryNode(supervisoryNode1);
+
+    SupervisoryNode supervisoryNode2 = make(a(SupervisoryNodeBuilder.defaultSupervisoryNode, with(code, "CN1"), with(name, "Not Matching Search")));
+    supervisoryNode2.setFacility(facility);
+    insertSupervisoryNode(supervisoryNode2);
+
+    Integer resultCount = supervisoryNodeMapper.getTotalSearchResultCount("Approval");
+
+    assertThat(resultCount, is(2));
+  }
+
+  @Test
+  public void shouldGetSupervisoryNodesCountByParentNameSearch() {
+    SupervisoryNode supervisoryNode1 = make(a(SupervisoryNodeBuilder.defaultSupervisoryNode, with(code, "SN1"), with(name, "Parent")));
+    supervisoryNode1.setFacility(facility);
+    insertSupervisoryNode(supervisoryNode1);
+
+    supervisoryNode.setParent(supervisoryNode1);
+    insertSupervisoryNode(supervisoryNode);
+
+    SupervisoryNode supervisoryNode2 = make(a(SupervisoryNodeBuilder.defaultSupervisoryNode, with(code, "CN1"), with(name, "Another")));
+    supervisoryNode2.setFacility(facility);
+    insertSupervisoryNode(supervisoryNode2);
+
+    SupervisoryNode supervisoryNode3 = make(a(SupervisoryNodeBuilder.defaultSupervisoryNode, with(code, "CN2"), with(name, "Child with not matching")));
+    supervisoryNode3.setFacility(facility);
+    supervisoryNode3.setParent(supervisoryNode2);
+    insertSupervisoryNode(supervisoryNode3);
+
+    Integer resultCount = supervisoryNodeMapper.getTotalParentSearchResultCount("Parent");
+
+    assertThat(resultCount, is(1));
+
+  }
+
+  @Test
+  public void shouldGetSupervisoryNodeWithParentAndAssociatedFacility() {
+    SupervisoryNode supervisoryNode1 = make(a(SupervisoryNodeBuilder.defaultSupervisoryNode, with(code, "SN1"), with(name, "Parent")));
+    supervisoryNode1.setFacility(facility);
+    insertSupervisoryNode(supervisoryNode1);
+
+    supervisoryNode.setParent(supervisoryNode1);
+    insertSupervisoryNode(supervisoryNode);
+
+    SupervisoryNode savedNode = supervisoryNodeMapper.getSupervisoryNode(supervisoryNode.getId());
+
+    assertThat(savedNode.getParent(), is(supervisoryNode1));
+  }
+
+  @Test
+  public void shouldFilterSupervisoryNodesByName() {
+    SupervisoryNode supervisoryNode1 = make(a(SupervisoryNodeBuilder.defaultSupervisoryNode, with(code, "SN1"), with(name, "gillAge Dispensary")));
+    supervisoryNode1.setFacility(facility);
+    insertSupervisoryNode(supervisoryNode1);
+
+    SupervisoryNode supervisoryNode2 = make(a(SupervisoryNodeBuilder.defaultSupervisoryNode, with(code, "SN2"), with(name, "Village 2 Dispensary")));
+    supervisoryNode2.setFacility(facility);
+    insertSupervisoryNode(supervisoryNode2);
+
+    SupervisoryNode supervisoryNode3 = make(a(SupervisoryNodeBuilder.defaultSupervisoryNode, with(code, "SN3"), with(name, "City Dispensary")));
+    supervisoryNode3.setFacility(facility);
+    insertSupervisoryNode(supervisoryNode3);
+
+    SupervisoryNode supervisoryNode4 = make(a(SupervisoryNodeBuilder.defaultSupervisoryNode, with(code, "SN4"), with(name, "Village 1 Dispensary")));
+    supervisoryNode4.setFacility(facility);
+    insertSupervisoryNode(supervisoryNode4);
+
+    SupervisoryNode supervisoryNode5 = make(a(SupervisoryNodeBuilder.defaultSupervisoryNode, with(code, "SN5"), with(name, "Central Hospital")));
+    supervisoryNode5.setFacility(facility);
+    insertSupervisoryNode(supervisoryNode5);
+
+    String param = "age";
+
+    List<SupervisoryNode> supervisoryNodeList = supervisoryNodeMapper.getFilteredSupervisoryNodesByName(param);
+
+    assertThat(supervisoryNodeList.size(), is(3));
+    assertThat(supervisoryNodeList.get(0), is(supervisoryNode1));
+    assertThat(supervisoryNodeList.get(1), is(supervisoryNode4));
+    assertThat(supervisoryNodeList.get(2), is(supervisoryNode2));
+  }
+
+  @Test
+  public void shouldSearchTopLevelSupervisoryNodesByName() {
+    SupervisoryNode supervisoryNode1 = make(a(SupervisoryNodeBuilder.defaultSupervisoryNode, with(code, "SN1"), with(name, "gillAge Dispensary")));
+    supervisoryNode1.setFacility(facility);
+    insertSupervisoryNode(supervisoryNode1);
+
+    SupervisoryNode supervisoryNode2 = make(a(SupervisoryNodeBuilder.defaultSupervisoryNode, with(code, "SN2"), with(name, "Village 2 Dispensary")));
+    supervisoryNode2.setFacility(facility);
+    insertSupervisoryNode(supervisoryNode2);
+
+    SupervisoryNode supervisoryNode3 = make(a(SupervisoryNodeBuilder.defaultSupervisoryNode, with(code, "SN3"), with(name, "City Dispensary")));
+    supervisoryNode3.setFacility(facility);
+    supervisoryNode3.setParent(supervisoryNode1);
+    insertSupervisoryNode(supervisoryNode3);
+
+    SupervisoryNode supervisoryNode4 = make(a(SupervisoryNodeBuilder.defaultSupervisoryNode, with(code, "SN4"), with(name, "Village 1 Dispensary")));
+    supervisoryNode4.setFacility(facility);
+    insertSupervisoryNode(supervisoryNode4);
+
+    SupervisoryNode supervisoryNode5 = make(a(SupervisoryNodeBuilder.defaultSupervisoryNode, with(code, "SN5"), with(name, "Central Hospital")));
+    supervisoryNode5.setFacility(facility);
+    supervisoryNode5.setParent(supervisoryNode1);
+    insertSupervisoryNode(supervisoryNode5);
+
+    String param = "age";
+
+    List<SupervisoryNode> supervisoryNodeList = supervisoryNodeMapper.searchTopLevelSupervisoryNodesByName(param);
+
+    assertThat(supervisoryNodeList.size(), is(3));
+    assertThat(supervisoryNodeList.get(0), is(supervisoryNode1));
+    assertThat(supervisoryNodeList.get(1), is(supervisoryNode4));
+    assertThat(supervisoryNodeList.get(2), is(supervisoryNode2));
   }
 
   private SupervisoryNode insertSupervisoryNode(SupervisoryNode supervisoryNode) {

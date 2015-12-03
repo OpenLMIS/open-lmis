@@ -11,7 +11,7 @@
 describe('CreateRequisitionController', function () {
 
   var scope, rootScope, ctrl, httpBackend, location, routeParams, controller, localStorageService, mockedRequisition, rnrColumns, regimenColumnList, pageSize,
-    lossesAndAdjustmentTypes, facilityApprovedProducts, requisitionRights, rnrLineItem, messageService, regimenTemplate, requisitionService, categoryList, requisitions;
+    lossesAndAdjustmentTypes, facilityApprovedNFSProducts, requisitionRights, rnrLineItem, messageService, regimenTemplate, requisitionService, categoryList, requisitions;
   beforeEach(module('openlmis'));
 
   beforeEach(module('ui.bootstrap.dialog'));
@@ -55,7 +55,9 @@ describe('CreateRequisitionController', function () {
     };
 
     rnrColumns = [
-      {"testField": "test"}
+      {"testField": "test"},
+      {name: "requestedQuantity"},
+      {name: "reasonForRequestedQuantity"}
     ];
 
     regimenColumnList = [
@@ -84,28 +86,28 @@ describe('CreateRequisitionController', function () {
     var facilityApprovedProduct4 = {"programProduct": {"product": product4}};
     var facilityApprovedProduct5 = {"programProduct": {"product": product5}};
 
-    facilityApprovedProducts = [facilityApprovedProduct1, facilityApprovedProduct2, facilityApprovedProduct3, facilityApprovedProduct4, facilityApprovedProduct5];
+    facilityApprovedNFSProducts = [facilityApprovedProduct1, facilityApprovedProduct2, facilityApprovedProduct3, facilityApprovedProduct4, facilityApprovedProduct5];
 
     httpBackend.when('GET', '/rnr/1/columns.json').respond(rnrColumns);
     httpBackend.when('GET', '/programId/1/regimenColumns.json').respond(regimenColumnList);
     httpBackend.when('GET', '/reference-data/currency.json').respond({"currency": "$"});
     httpBackend.when('GET', '/requisitions/lossAndAdjustments/reference-data.json').respond(200, lossesAndAdjustmentTypes);
-    httpBackend.when('GET', '/facilityApprovedProducts/facility/1/program/1/nonFullSupply.json').respond(200, {"nonFullSupplyProducts": facilityApprovedProducts});
+    httpBackend.when('GET', '/facilityApprovedProducts/facility/1/program/1/nonFullSupply.json').respond(200, {"nonFullSupplyProducts": facilityApprovedNFSProducts});
 
     $rootScope.fixToolBar = function () {
     };
     rnrLineItem = new RegularRnrLineItem({"fullSupply": true});
 
     requisitionRights = [
-      {right: 'CREATE_REQUISITION'},
-      {right: 'AUTHORIZE_REQUISITION'}
+      {name: 'CREATE_REQUISITION'},
+      {name: 'AUTHORIZE_REQUISITION'}
     ];
 
     pageSize = "2";
 
-    ctrl = controller(CreateRequisitionController, {$scope: scope, $location: location, requisition: mockedRequisition,
+    ctrl = controller(CreateRequisitionController, {$scope: scope, $location: location, requisitionData: {rnr: mockedRequisition},
       rnrColumns: rnrColumns, regimenTemplate: regimenTemplate, currency: '$', lossesAndAdjustmentsTypes: lossesAndAdjustmentTypes,
-      facilityApprovedProducts: facilityApprovedProducts, requisitionRights: requisitionRights, $routeParams: routeParams,
+      facilityApprovedNFSProducts: facilityApprovedNFSProducts, requisitionRights: requisitionRights, $routeParams: routeParams,
       $rootScope: rootScope, localStorageService: localStorageService, pageSize: pageSize});
 
   }));
@@ -136,9 +138,7 @@ describe('CreateRequisitionController', function () {
   });
 
   it('should get list of Rnr Columns for program', function () {
-    expect([
-      {"testField": "test"}
-    ]).toEqual(scope.programRnrColumnList);
+    expect(rnrColumns).toEqual(scope.programRnrColumnList);
   });
 
   it('should get lossesAndAdjustments types', function () {
@@ -146,7 +146,7 @@ describe('CreateRequisitionController', function () {
   });
 
   it('should get facility approved products', function () {
-    expect(facilityApprovedProducts).toEqual(scope.facilityApprovedProducts);
+    expect(facilityApprovedNFSProducts).toEqual(scope.facilityApprovedNFSProducts);
   });
 
   it('should set visible columns for regimen', function () {
@@ -222,7 +222,7 @@ describe('CreateRequisitionController', function () {
 
     httpBackend.expect('PUT', '/requisitions/rnrId/save.json').respond(200);
 
-    httpBackend.expectGET('/public/pages/partials/dialogbox.html').respond(200);
+    httpBackend.expectGET('/public/pages/template/dialog/dialogbox.html').respond(200);
     scope.submitRnr();
     httpBackend.flush();
 
@@ -318,7 +318,7 @@ describe('CreateRequisitionController', function () {
   it('should display confirm modal if submit button is clicked and rnr valid', function () {
     spyOn(scope.rnr, 'validateFullSupply').andReturn('');
     spyOn(scope.rnr, 'validateNonFullSupply').andReturn('');
-    httpBackend.expect('GET', '/public/pages/partials/dialogbox.html').respond(200);
+    httpBackend.expect('GET', '/public/pages/template/dialog/dialogbox.html').respond(200);
 
     scope.submitRnr();
 
@@ -395,8 +395,8 @@ describe('CreateRequisitionController', function () {
   it('should not set disable flag if rnr is initiated and user has create right', function () {
     var rnr = {id: "rnrId", fullSupplyLineItems: [], regimenLineItems: [], status: "INITIATED"};
 
-    ctrl = controller(CreateRequisitionController, {$scope: scope, $location: location, requisition: rnr, rnrColumns: [], regimenTemplate: regimenTemplate,
-      currency: '$', pageSize: pageSize, lossesAndAdjustmentsTypes: lossesAndAdjustmentTypes, facilityApprovedProducts: facilityApprovedProducts,
+    ctrl = controller(CreateRequisitionController, {$scope: scope, $location: location, requisitionData: {rnr: rnr}, rnrColumns: rnrColumns, regimenTemplate: regimenTemplate,
+      currency: '$', pageSize: pageSize, lossesAndAdjustmentsTypes: lossesAndAdjustmentTypes, facilityApprovedNFSProducts: facilityApprovedNFSProducts,
       requisitionRights: requisitionRights, $routeParams: routeParams, $rootScope: rootScope, localStorageService: localStorageService});
 
     expect(scope.formDisabled).toEqual(false);
@@ -405,8 +405,8 @@ describe('CreateRequisitionController', function () {
   it('should not set disable flag if rnr is submitted and user have authorize right', function () {
     var rnr = {id: "rnrId", fullSupplyLineItems: [], regimenLineItems: [], status: "SUBMITTED"};
 
-    ctrl = controller(CreateRequisitionController, {$scope: scope, $location: location, requisition: rnr, rnrColumns: [], regimenTemplate: regimenTemplate,
-      currency: '$', pageSize: pageSize, lossesAndAdjustmentsTypes: lossesAndAdjustmentTypes, facilityApprovedProducts: facilityApprovedProducts,
+    ctrl = controller(CreateRequisitionController, {$scope: scope, $location: location, requisitionData: {rnr: rnr}, rnrColumns: rnrColumns, regimenTemplate: regimenTemplate,
+      currency: '$', pageSize: pageSize, lossesAndAdjustmentsTypes: lossesAndAdjustmentTypes, facilityApprovedNFSProducts: facilityApprovedNFSProducts,
       requisitionRights: requisitionRights, $routeParams: routeParams, $rootScope: rootScope, localStorageService: localStorageService});
 
     expect(scope.formDisabled).toEqual(false);
@@ -415,8 +415,8 @@ describe('CreateRequisitionController', function () {
   it('should set disable flag if rnr is not initiated/submitted', function () {
     var rnr = {id: "rnrId", fullSupplyLineItems: [], regimenLineItems: [], status: "some random status"};
 
-    ctrl = controller(CreateRequisitionController, {$scope: scope, $location: location, requisition: rnr, rnrColumns: [], regimenTemplate: regimenTemplate,
-      currency: '$', pageSize: pageSize, lossesAndAdjustmentsTypes: lossesAndAdjustmentTypes, facilityApprovedProducts: facilityApprovedProducts,
+    ctrl = controller(CreateRequisitionController, {$scope: scope, $location: location, requisitionData: {rnr: rnr}, rnrColumns: rnrColumns, regimenTemplate: regimenTemplate,
+      currency: '$', pageSize: pageSize, lossesAndAdjustmentsTypes: lossesAndAdjustmentTypes, facilityApprovedNFSProducts: facilityApprovedNFSProducts,
       requisitionRights: requisitionRights, $routeParams: routeParams, $rootScope: rootScope, localStorageService: localStorageService});
 
     expect(scope.formDisabled).toEqual(true);
@@ -424,12 +424,12 @@ describe('CreateRequisitionController', function () {
 
   it('should make rnr in scope as Rnr Instance', function () {
     var spyRnr = spyOn(window, 'Rnr').andCallThrough();
-    ctrl = controller(CreateRequisitionController, {$scope: scope, $location: location, requisition: mockedRequisition, rnrColumns: rnrColumns, regimenTemplate: regimenTemplate,
-      currency: '$', pageSize: pageSize, lossesAndAdjustmentsTypes: lossesAndAdjustmentTypes, facilityApprovedProducts: facilityApprovedProducts,
+    ctrl = controller(CreateRequisitionController, {$scope: scope, $location: location, requisitionData: {rnr: mockedRequisition, numberOfMonths: 5}, rnrColumns: rnrColumns, regimenTemplate: regimenTemplate,
+      currency: '$', pageSize: pageSize, lossesAndAdjustmentsTypes: lossesAndAdjustmentTypes, facilityApprovedNFSProducts: facilityApprovedNFSProducts,
       requisitionRights: requisitionRights, $routeParams: routeParams, $rootScope: rootScope, localStorageService: localStorageService});
 
     expect(scope.rnr instanceof Rnr).toBeTruthy();
-    expect(spyRnr).toHaveBeenCalledWith(mockedRequisition, rnrColumns);
+    expect(spyRnr).toHaveBeenCalledWith(mockedRequisition, rnrColumns, 5);
   });
 
   it('should set message while saving if set message flag true', function () {
@@ -505,7 +505,7 @@ describe('CreateRequisitionController', function () {
     spyOn(scope.rnr, 'validateFullSupply').andReturn('');
     spyOn(scope.rnr, 'validateNonFullSupply').andReturn('');
 
-    httpBackend.expectGET('/public/pages/partials/dialogbox.html').respond(200);
+    httpBackend.expectGET('/public/pages/template/dialog/dialogbox.html').respond(200);
     scope.authorizeRnr();
     httpBackend.flush();
 
@@ -524,7 +524,7 @@ describe('CreateRequisitionController', function () {
 
     httpBackend.expect('PUT', '/requisitions/rnrId/save.json').respond(200);
 
-    httpBackend.expectGET('/public/pages/partials/dialogbox.html').respond(200);
+    httpBackend.expectGET('/public/pages/template/dialog/dialogbox.html').respond(200);
     scope.authorizeRnr();
     httpBackend.flush();
 
@@ -589,7 +589,7 @@ describe('CreateRequisitionController', function () {
   it('should display confirm modal if authorize button is clicked and rnr valid', function () {
     spyOn(scope.rnr, 'validateFullSupply').andReturn('');
     spyOn(scope.rnr, 'validateNonFullSupply').andReturn('');
-    httpBackend.expectGET('/public/pages/partials/dialogbox.html').respond(200);
+    httpBackend.expectGET('/public/pages/template/dialog/dialogbox.html').respond(200);
 
     scope.authorizeRnr();
 
@@ -645,8 +645,8 @@ describe('CreateRequisitionController', function () {
 
   it('should set requisition rights in scope', function () {
     expect(scope.requisitionRights).toEqual([
-      {right: 'CREATE_REQUISITION'},
-      {right: 'AUTHORIZE_REQUISITION'}
+      {name: 'CREATE_REQUISITION'},
+      {name: 'AUTHORIZE_REQUISITION'}
     ]);
   });
 

@@ -38,7 +38,7 @@ import static java.util.Arrays.asList;
 
 public class ConvertToOrderPagination extends TestCaseHelper {
 
-  @BeforeMethod(groups = "requisition")
+  @BeforeMethod(groups = "orderAndPod")
   public void setUp() throws InterruptedException, SQLException, IOException {
     super.setup();
   }
@@ -94,7 +94,7 @@ public class ConvertToOrderPagination extends TestCaseHelper {
     assertTrue("Number of line items on view order screen should be equal to " + Integer.parseInt(requisitions), numberOfLineItems == Integer.parseInt(requisitions));
   }
 
-  @Test(groups = {"requisition"}, dataProvider = "Data-Provider-Function-Positive")
+  @Test(groups = {"orderAndPod"}, dataProvider = "Data-Provider-Function-Positive")
   public void shouldConvertOnlyCurrentPageRequisitions(String program, String userSIC, String password) throws SQLException {
     setUpData(program, userSIC);
     dbWrapper.insertRequisitions(50, "MALARIA", true, "2012-12-01", "2015-12-01", "F10", false);
@@ -110,20 +110,20 @@ public class ConvertToOrderPagination extends TestCaseHelper {
     LoginPage loginPage = PageObjectFactory.getLoginPage(testWebDriver, baseUrlGlobal);
     HomePage homePage = loginPage.loginAs(userSIC, password);
     ConvertOrderPage convertOrderPage = homePage.navigateConvertToOrder();
-    verifyNumberOfPageLinks(51, 50);
-    verifyNextAndLastLinksEnabled();
-    verifyPreviousAndFirstLinksDisabled();
+    verifyNumberOFPageLinksDisplayed(51, 50);
+    verifyNextAndLastPageLinksEnabled();
+    verifyPreviousAndFirstPageLinksDisabled();
 
     clickPageNumberLink(2);
     verifyPageLinksFromLastPage();
-    verifyPreviousAndFirstLinksEnabled();
-    verifyNextAndLastLinksDisabled();
+    verifyPreviousAndFirstPageLinksEnabled();
+    verifyNextAndLastPageLinksDisabled();
 
     convertOrderPage.selectRequisitionToBeConvertedToOrder(1);
     clickPageNumberLink(1);
     convertOrderPage.selectRequisitionToBeConvertedToOrder(1);
     convertToOrder();
-    verifyNumberOfPageLinks(49, 50);
+    verifyNumberOFPageLinksDisplayed(49, 50);
 
     ViewOrdersPage viewOrdersPage = homePage.navigateViewOrders();
     int numberOfLineItems = viewOrdersPage.getNumberOfLineItems();
@@ -136,7 +136,7 @@ public class ConvertToOrderPagination extends TestCaseHelper {
     testWebDriver.sleep(2000);
   }
 
-  @Test(groups = {"requisition"}, dataProvider = "Data-Provider-Function-Positive")
+  @Test(groups = {"orderAndPod"}, dataProvider = "Data-Provider-Function-Positive")
   public void shouldVerifyIntroductionOfPagination(String program, String userSIC, String password) throws SQLException {
     setUpData(program, userSIC);
     dbWrapper.insertRequisitions(49, "MALARIA", true, "2012-12-01", "2015-12-01", "F10", false);
@@ -147,17 +147,17 @@ public class ConvertToOrderPagination extends TestCaseHelper {
     LoginPage loginPage = PageObjectFactory.getLoginPage(testWebDriver, baseUrlGlobal);
     HomePage homePage = loginPage.loginAs(userSIC, password);
     homePage.navigateConvertToOrder();
-    verifyNumberOfPageLinks(49, 50);
+    verifyNumberOFPageLinksDisplayed(49, 50);
 
     dbWrapper.insertRequisitions(2, "HIV", true, "2012-12-01", "2015-12-01", "F10", false);
     dbWrapper.updateRequisitionStatus("SUBMITTED", userSIC, "HIV");
     dbWrapper.updateRequisitionStatus("APPROVED", userSIC, "HIV");
     homePage.navigateHomePage();
     homePage.navigateConvertToOrder();
-    verifyNumberOfPageLinks(51, 50);
+    verifyNumberOFPageLinksDisplayed(51, 50);
   }
 
-  @Test(groups = {"requisition"}, dataProvider = "Data-Provider-Function-Positive")
+  @Test(groups = {"orderAndPod"}, dataProvider = "Data-Provider-Function-Positive")
   public void shouldVerifyIntroductionOfPaginationForBoundaryValue(String program, String userSIC, String password) throws SQLException {
     setUpData(program, userSIC);
     dbWrapper.insertRequisitions(50, "MALARIA", true, "2012-12-01", "2015-12-01", "F10", false);
@@ -168,7 +168,7 @@ public class ConvertToOrderPagination extends TestCaseHelper {
     LoginPage loginPage = PageObjectFactory.getLoginPage(testWebDriver, baseUrlGlobal);
     HomePage homePage = loginPage.loginAs(userSIC, password);
     homePage.navigateConvertToOrder();
-    verifyNumberOfPageLinks(50, 50);
+    verifyNumberOFPageLinksDisplayed(50, 50);
     verifyPageLinkNotPresent(2);
 
     dbWrapper.insertRequisitions(1, "HIV", true, "2012-12-01", "2015-12-01", "F10", false);
@@ -176,10 +176,10 @@ public class ConvertToOrderPagination extends TestCaseHelper {
     dbWrapper.updateRequisitionStatus("APPROVED", userSIC, "HIV");
     homePage.navigateHomePage();
     homePage.navigateConvertToOrder();
-    verifyNumberOfPageLinks(51, 50);
+    verifyNumberOFPageLinksDisplayed(51, 50);
   }
 
-  @Test(groups = {"requisition"}, dataProvider = "Data-Provider-Function-Positive")
+  @Test(groups = {"orderAndPod"}, dataProvider = "Data-Provider-Function-Positive")
   public void shouldVerifySearch(String program, String userSIC, String password) throws SQLException {
     setUpData(program, userSIC);
     dbWrapper.insertRequisitions(55, "MALARIA", true, "2012-12-01", "2015-12-01", "F10", false);
@@ -193,17 +193,17 @@ public class ConvertToOrderPagination extends TestCaseHelper {
     LoginPage loginPage = PageObjectFactory.getLoginPage(testWebDriver, baseUrlGlobal);
     HomePage homePage = loginPage.loginAs(userSIC, password);
     ConvertOrderPage convertOrderPage = homePage.navigateConvertToOrder();
-    verifyNumberOfPageLinks(80, 50);
+    verifyNumberOFPageLinksDisplayed(80, 50);
     convertOrderPage.searchWithOption("All", "TB");
-    verifyNumberOfPageLinks(40, 50);
+    verifyNumberOFPageLinksDisplayed(40, 50);
     verifyProgramInGrid(40, 50, "TB");
     verifyPageLinkNotPresent(2);
     convertOrderPage.searchWithOption("All", "MALARIA");
-    verifyNumberOfPageLinks(55, 50);
+    verifyNumberOFPageLinksDisplayed(55, 50);
     verifyProgramInGrid(55, 50, "MALARIA");
   }
 
-  @Test(groups = {"requisition"}, dataProvider = "Data-Provider-Function-Positive")
+  @Test(groups = {"orderAndPod"}, dataProvider = "Data-Provider-Function-Positive")
   public void shouldVerifySearchWithDifferentOptions(String program, String userSIC, String password) throws SQLException {
     setUpData(program, userSIC);
     dbWrapper.insertRequisitions(55, "MALARIA", true, "2012-12-01", "2015-12-01", "F10", false);
@@ -218,7 +218,7 @@ public class ConvertToOrderPagination extends TestCaseHelper {
     HomePage homePage = loginPage.loginAs(userSIC, password);
     ConvertOrderPage convertOrderPage = homePage.navigateConvertToOrder();
     convertOrderPage.searchWithIndex(5, "Village Dispensary");
-    verifyNumberOfPageLinks(55, 50);
+    verifyNumberOFPageLinksDisplayed(55, 50);
     verifySupplyingDepotInGrid(55, 50, "Village Dispensary");
   }
 
@@ -228,9 +228,9 @@ public class ConvertToOrderPagination extends TestCaseHelper {
     dbWrapper.configureTemplate(program);
     List<String> rightsList = asList("CONVERT_TO_ORDER", "VIEW_ORDER");
 
-    setupTestUserRoleRightsData("200", userSIC, rightsList);
+    setupTestUserRoleRightsData(userSIC, rightsList);
     dbWrapper.insertSupervisoryNode("F10", "N1", "Node 1", "null");
-    dbWrapper.insertRoleAssignment("200", "store in-charge");
+    dbWrapper.insertRoleAssignment(userSIC, "store in-charge");
     dbWrapper.insertSchedule("Q1stM", "QuarterMonthly", "QuarterMonth");
     dbWrapper.insertSchedule("M", "Monthly", "Month");
     dbWrapper.insertProcessingPeriod("Period1", "first period", "2012-12-01", "2013-01-15", 1, "Q1stM");
@@ -287,7 +287,7 @@ public class ConvertToOrderPagination extends TestCaseHelper {
     assertTrue("Link number" + i + " should not appear", flag);
   }
 
-  @Test(groups = {"requisition"}, dataProvider = "Data-Provider-Function-Positive")
+  @Test(groups = {"orderAndPod"}, dataProvider = "Data-Provider-Function-Positive")
   public void VerifyConvertToOrderAccessOnRequisition(String program, String userSIC, String password) throws SQLException {
     setUpData(program, userSIC);
     dbWrapper.insertRequisitions(50, "MALARIA", true, "2012-12-01", "2015-12-01", "F10", false);
@@ -304,7 +304,7 @@ public class ConvertToOrderPagination extends TestCaseHelper {
     assertEquals("No requisitions to be converted to orders", convertOrderPage.getNoRequisitionPendingMessage());
   }
 
-  @AfterMethod(groups = "requisition")
+  @AfterMethod(groups = "orderAndPod")
   public void tearDown() throws SQLException {
     testWebDriver.sleep(500);
     if (!testWebDriver.getElementById("username").isDisplayed()) {

@@ -18,7 +18,6 @@ import org.openlmis.core.domain.Role;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
-import java.util.Set;
 
 /**
  * RoleRightsMapper maps the roles to rights entity to corresponding representation in database.
@@ -27,13 +26,19 @@ import java.util.Set;
 public interface RoleRightsMapper {
 
   @Insert("INSERT INTO role_rights(roleId, rightName, createdBy) VALUES " +
-    "(#{role.id}, #{right}, #{role.modifiedBy})")
-  int createRoleRight(@Param(value = "role") Role role, @Param(value = "right") Right right);
+    "(#{role.id}, #{rightName}, #{role.modifiedBy})")
+  int createRoleRight(@Param(value = "role") Role role, @Param(value = "rightName") String rightName);
 
   //used below
   @SuppressWarnings("unused")
-  @Select("SELECT rightName FROM role_rights RR WHERE roleId = #{roleId}")
-  Set<Right> getAllRightsForRole(Long roleId);
+  @Select({"SELECT rightName, displayNameKey,rightType FROM role_rights RR",
+    "INNER JOIN rights R on R.name = RR.rightName",
+    "WHERE roleId = #{roleId}"})
+  @Results(value = {
+    @Result(property = "name", column = "rightName"),
+    @Result(property = "type", column = "rightType"),
+  })
+  List<Right> getAllRightsForRole(Long roleId);
 
   @Insert({"INSERT INTO roles",
     "(name, description, createdBy,modifiedBy,createdDate,modifiedDate) VALUES",
@@ -45,7 +50,7 @@ public interface RoleRightsMapper {
   @Select("SELECT * FROM roles WHERE id = #{id}")
   @Results(value = {
     @Result(property = "id", column = "id"),
-    @Result(property = "rights", javaType = Set.class, column = "id",
+    @Result(property = "rights", javaType = List.class, column = "id",
       many = @Many(select = "getAllRightsForRole"))
   })
   Role getRole(Long id);
@@ -53,7 +58,7 @@ public interface RoleRightsMapper {
   @Select("SELECT * FROM roles ORDER BY id")
   @Results(value = {
     @Result(property = "id", column = "id"),
-    @Result(property = "rights", javaType = Set.class, column = "id",
+    @Result(property = "rights", javaType = List.class, column = "id",
       many = @Many(select = "getAllRightsForRole"))
   })
   List<Role> getAllRoles();
@@ -64,27 +69,42 @@ public interface RoleRightsMapper {
   @Delete("DELETE FROM role_rights WHERE roleId=#{roleId}")
   int deleteAllRightsForRole(Long roleId);
 
-  @Select({"SELECT DISTINCT(RR.rightName)",
+  @Select({"SELECT DISTINCT(R.name), R.rightType",
     "FROM (SELECT userId, roleId FROM role_assignments UNION ALL SELECT userId, roleId FROM fulfillment_role_assignments) A",
     "INNER JOIN users U ON A.userId = U.id",
     "INNER JOIN role_rights RR ON A.roleId = RR.roleId",
+    "INNER JOIN rights R on R.name = RR.rightName",
     "WHERE A.userId = #{userId}"})
-  Set<Right> getAllRightsForUserById(@Param("userId") Long userId);
+  @Results(value = {
+    @Result(property = "type", column = "rightType")
+  })
+  List<Right> getAllRightsForUserById(@Param("userId") Long userId);
 
   @Select({"SELECT DISTINCT RR.rightName " +
     "FROM role_rights RR INNER JOIN role_assignments RA ON RR.roleId = RA.roleId " +
     "WHERE RA.userId = #{userId} AND RA.supervisoryNodeId = ANY(#{commaSeparatedSupervisoryNodeIds}::INTEGER[]) AND RA.programId = #{program.id}"})
+  @Results(value = {
+    @Result(property = "name", column = "rightName")
+  })
   List<Right> getRightsForUserOnSupervisoryNodeAndProgram(@Param("userId") Long userId, @Param("commaSeparatedSupervisoryNodeIds") String commaSeparatedSupervisoryNodeIds, @Param("program") Program program);
 
   @Select({"SELECT DISTINCT RR.rightName " +
     "FROM role_rights RR INNER JOIN role_assignments RA ON RR.roleId = RA.roleId " +
     "WHERE RA.userId = #{userId} AND RA.supervisoryNodeId IS NULL AND RA.programId = #{program.id}"})
+  @Results(value = {
+    @Result(property = "name", column = "rightName")
+  })
   List<Right> getRightsForUserOnHomeFacilityAndProgram(@Param("userId") Long userId, @Param("program") Program program);
+
 
   @Select({"SELECT R.rightType from rights R INNER JOIN role_rights RR ON RR.rightName = R.name AND RR.roleId = #{roleId} LIMIT 1"})
   RightType getRightTypeForRoleId(Long roleId);
 
-  @Select({"SELECT DISTINCT RR.rightName FROM role_rights RR INNER JOIN fulfillment_role_assignments FRA ON RR.roleId = FRA.roleId " ,
+  @Select({"SELECT DISTINCT RR.rightName FROM role_rights RR INNER JOIN fulfillment_role_assignments FRA ON RR.roleId = FRA.roleId ",
     "WHERE FRA.userId = #{userId} AND FRA.facilityId = #{warehouseId}"})
-  Set<Right> getRightsForUserAndWarehouse(@Param("userId")Long userId, @Param("warehouseId")Long warehouseId);
+  @Results(value = {
+    @Result(property = "name", column = "rightName")
+  })
+  List<Right> getRightsForUserAndWarehouse(@Param("userId") Long userId, @Param("warehouseId") Long warehouseId);
+
 }

@@ -133,6 +133,7 @@ public class RnrLineItemMapperIT {
     lineItem.setBeginningBalance(5);
     lineItem.setFullSupply(true);
     lineItem.setReportingDays(10);
+    lineItem.setPreviousStockInHand(5);
     rnrLineItemMapper.insert(lineItem, lineItem.getPreviousNormalizedConsumptions().toString());
 
     LossesAndAdjustments lossesAndAdjustmentsClinicReturn = new LossesAndAdjustments();
@@ -167,6 +168,7 @@ public class RnrLineItemMapperIT {
     assertThat(rnrLineItem.getPackSize(), is(10));
     assertThat(rnrLineItem.getPrice().compareTo(new Money("12.5")), is(0));
     assertThat(rnrLineItem.getBeginningBalance(), is(5));
+    assertThat(rnrLineItem.getPreviousStockInHand(), is(5));
     assertThat(rnrLineItem.getProductCategory(), is("Category 1"));
     assertThat(rnrLineItem.getReportingDays(), is(10));
   }
@@ -213,6 +215,8 @@ public class RnrLineItemMapperIT {
     lineItem.setModifiedBy(anotherModifiedBy);
     lineItem.setBeginningBalance(43);
     lineItem.setTotalLossesAndAdjustments(20);
+    lineItem.setNormalizedConsumption(12);
+    lineItem.setPeriodNormalizedConsumption(12);
     lineItem.setExpirationDate("12/2014");
     lineItem.setReasonForRequestedQuantity("Quantity Requested more in liu of coming rains");
     lineItem.setReportingDays(5);
@@ -225,6 +229,8 @@ public class RnrLineItemMapperIT {
     assertThat(rnrLineItems.get(0).getBeginningBalance(), is(43));
     assertThat(rnrLineItems.get(0).getTotalLossesAndAdjustments(), is(20));
     assertThat(rnrLineItems.get(0).getProduct(), is("Primary Name Tablet strength mg"));
+    assertThat(rnrLineItems.get(0).getNormalizedConsumption(), is(12));
+    assertThat(rnrLineItems.get(0).getPeriodNormalizedConsumption(), is(12));
     assertThat(rnrLineItems.get(0).getExpirationDate(), is("12/2014"));
     assertThat(rnrLineItems.get(0).getReportingDays(), is(5));
     assertThat(rnrLineItems.get(0).getReasonForRequestedQuantity(),

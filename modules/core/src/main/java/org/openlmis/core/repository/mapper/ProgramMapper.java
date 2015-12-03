@@ -15,6 +15,7 @@ import org.openlmis.core.domain.Program;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+
 /**
  * ProgramMapper maps the Program entity to corresponding representation in database. Apart from basic CRUD operations
  * provides methods like getting user supervised/home facility active programs, getting programs for a user and facility
@@ -23,10 +24,34 @@ import java.util.List;
 @Repository
 public interface ProgramMapper {
 
-  @Insert({"INSERT INTO programs(code, name, description, active, push)",
-    "VALUES (#{code}, #{name}, #{description}, #{active}, #{push})"})
+  @Insert({"INSERT INTO programs(code"
+    , ", name"
+    , ", description"
+    , ", active"
+    , ", budgetingApplies"
+    , ", templateConfigured"
+    , ", regimenTemplateConfigured, push)"
+    , "  VALUES (#{code}"
+    , ", #{name}"
+    , ", #{description}"
+    , ", #{active}"
+    , ", #{budgetingApplies}"
+    , ", #{templateConfigured}"
+    , ", #{regimenTemplateConfigured}"
+    , ", #{push})"})
   @Options(useGeneratedKeys = true)
   Integer insert(Program program);
+
+  @Update({"UPDATE programs SET name = #{name}"
+    , ", code = #{code}"
+    , ", description = #{description}"
+    , ", active = #{active}"
+    , ", budgetingApplies = #{budgetingApplies}"
+    , ", templateConfigured = #{templateConfigured}"
+    , ", regimenTemplateConfigured = #{regimenTemplateConfigured}"
+    , ", push = #{push}"
+    , " WHERE id = #{id}"})
+  void update(Program p);
 
   @Select({"SELECT P.*",
     "FROM programs P, programs_supported PS",
@@ -36,10 +61,10 @@ public interface ProgramMapper {
     "P.active = true"})
   List<Program> getActiveByFacility(Long facilityId);
 
-  @Select("SELECT * FROM programs WHERE push = FALSE ORDER BY templateConfigured DESC, name ")
+  @Select("SELECT * FROM programs WHERE push = FALSE ORDER BY name ")
   List<Program> getAllPullPrograms();
 
-  @Select("SELECT * FROM programs WHERE push = TRUE ORDER BY templateConfigured DESC, name ")
+  @Select("SELECT * FROM programs WHERE push = TRUE ORDER BY name ")
   List<Program> getAllPushPrograms();
 
   @Select({"SELECT",
@@ -52,7 +77,6 @@ public interface ProgramMapper {
     "p.id = ps.programId AND",
     "ps.facilityId = #{facilityId}"})
   List<Program> getByFacilityId(Long facilityId);
-
 
   @Select("SELECT id FROM programs WHERE LOWER(code) = LOWER(#{code})")
   Long getIdForCode(String code);
@@ -117,13 +141,8 @@ public interface ProgramMapper {
   @Select("SELECT * FROM programs ORDER BY templateConfigured DESC, name")
   List<Program> getAll();
 
-
-
   @Select("SELECT * FROM programs WHERE LOWER(code) = LOWER(#{code})")
   Program getByCode(String code);
-
-  @Select("SELECT * FROM programs ORDER BY regimenTemplateConfigured DESC, name")
-  List<Program> getAllByRegimenTemplate();
 
   @Update("UPDATE programs SET regimenTemplateConfigured = true WHERE id = #{id}")
   void setRegimenTemplateConfigured(Long id);

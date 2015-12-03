@@ -23,12 +23,12 @@ import org.openlmis.rnr.dto.RequisitionStatusFeedDTO;
 @Data
 @EqualsAndHashCode(callSuper = false)
 public class OrderStatusFeedDTO extends RequisitionStatusFeedDTO {
-  private Long orderId;
+  private String orderId;
   private OrderStatus orderStatus;
 
   public OrderStatusFeedDTO(Order order) {
     super(order.getRnr());
-    this.orderId = order.getId();
+    this.orderId = order.getOrderNumber();
     this.orderStatus = order.getStatus();
   }
 }

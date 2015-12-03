@@ -36,7 +36,7 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-import static org.openlmis.core.domain.Right.MANAGE_DISTRIBUTION;
+import static org.openlmis.core.domain.RightName.MANAGE_DISTRIBUTION;
 import static org.openlmis.web.controller.DeliveryZoneController.DELIVERY_ZONES;
 
 @Category(UnitTests.class)

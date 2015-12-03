@@ -1,0 +1,214 @@
+<!--
+  ~ This program is part of the OpenLMIS logistics management information system platform software.
+  ~ Copyright © 2013 VillageReach
+  ~
+  ~ This program is free software: you can redistribute it and/or modify it under the terms of the GNU Affero General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
+  ~
+  ~ This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Affero General Public License for more details.
+  ~ You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org.
+  -->
+<div ng-controller="CreateFacilityApprovedProductController">
+<div id="facilityApprovedProductsModal" modal="facilityApprovedProductsModal"
+     options="{ backdrop: 'static', escape: false}">
+<div class="modal-header">
+  <h3 id="addFacilityApprovedProductHeader"
+      openlmis-message="label.add.facility.approved.products|program.name|facilityType.name"></h3>
+</div>
+
+<div class="modal-body">
+  <div class="row-fluid">
+    <div class="span11">
+      <label id="categoryLabel" for="productCategory">
+        <span openlmis-message="label.category"></span>&colon;
+      </label>
+      <select ui-select2 class="span11 bottom-spacer" id="productCategory"
+              ng-model="productCategorySelected" name="productCategory"
+              openlmis-message="placeholder.select.category"
+              ng-options="category.name for category in productCategories | orderBy: 'name'"
+              ng-change="filterProductsByCategory();">
+        <option></option>
+      </select>
+    </div>
+  </div>
+
+  <div class="row-fluid">
+    <div class="span11">
+      <label id="productLabel" for="product">
+        <span openlmis-message="label.product.code"></span>
+      </label>
+      <select ui-select2="{formatResult: formatResult, formatSelection: formatSelection}"
+              class="span11 bottom-spacer"
+              id="product"
+              ng-model="productSelected" name="product"
+              openlmis-message="placeholder.select.product">
+        <option></option>
+        <option value="header" class="option-header" disabled="disabled" ng-show="products.length"
+                ng-bind="getHeader()"></option>
+        <option value={{product}} ng-repeat="product in products | orderBy: ['primaryName','code']">
+          {{product.code}} | {{product.primaryName}} | {{product.strength}} | {{product.dosageUnit.code}} |
+          {{product.fullSupply}}
+        </option>
+      </select>
+    </div>
+  </div>
+
+  <div class="row-fluid">
+    <div class="span3">
+      <label id="maxMonthsOfStockLabel" for="facilityTypeApprovedProduct.maxMonthsOfStock">
+        <span openlmis-message="header.max.months.of.stock"></span>
+        <span class="label-required">*</span>
+      </label>
+        <span class="position-relative">
+          <input type="text" class="span12 right-justified" name="maxMonthsOfStock"
+                 ng-model="newFacilityTypeApprovedProduct.maxMonthsOfStock"
+                 id="facilityTypeApprovedProduct.maxMonthsOfStock"
+                 numeric-validator="positiveNumericValue,2,2" ng-trim="false" maxlength="5"/><br>
+          <span class="rnr-form-error" style="display:none;" id="maxMonthsOfStock"
+                openlmis-message="error.number.only">
+          </span>
+        </span>
+    </div>
+
+    <div class="span3">
+      <label id="minMonthsOfStockLabel" for="facilityTypeApprovedProduct.minMonthsOfStock"
+             openlmis-message="header.min.months.of.stock"></label>
+        <span class="position-relative">
+          <input type="text" class="span12 right-justified" name="minMonthsOfStock"
+                 ng-model="newFacilityTypeApprovedProduct.minMonthsOfStock"
+                 id="facilityTypeApprovedProduct.minMonthsOfStock"
+                 numeric-validator="positiveNumericValue,2,2" ng-trim="false" maxlength="5"/><br>
+          <span class="rnr-form-error" style="display:none;" id="minMonthsOfStock"
+                openlmis-message="error.number.only">
+          </span>
+        </span>
+    </div>
+
+    <div class="span3">
+      <label id="eopLabel" for="facilityTypeApprovedProduct.eop"
+             openlmis-message="label.emergency.order.point"></label>
+        <span class="position-relative">
+          <input type="text" class="span12 right-justified" name="emergencyOrderPoint"
+                 ng-model="newFacilityTypeApprovedProduct.eop"
+                 id="facilityTypeApprovedProduct.eop"
+                 numeric-validator="positiveNumericValue,2,2" ng-trim="false" maxlength="5"/><br>
+          <span class="rnr-form-error" style="display:none;" id="emergencyOrderPoint"
+                openlmis-message="error.number.only">
+          </span>
+        </span>
+    </div>
+
+    <div class="span2">
+      <label>&nbsp;</label>
+      <input type="button" href="" id="addFacilityTypeApprovedProduct" class="btn btn-primary"
+             ng-click="addFacilityTypeApprovedProduct()"
+             ng-disabled="isAddDisabled()" openlmis-message="button.add"/>
+    </div>
+  </div>
+
+  <hr/>
+
+  <div class="product-list" ng-show="addedFacilityTypeApprovedProducts.length">
+    <div class="row-fluid product-list-header">
+      <div id="addedProductHeader" class="span5 fluid-grid-cell">
+        <span openlmis-message="header.product.code"></span>&nbsp;|&nbsp;
+        <span openlmis-message="label.name"></span>
+      </div>
+      <div class="span2 fluid-grid-cell">
+        <label id="addedMaxMonthsOfStockHeader">
+          <span openlmis-message="header.max.months.of.stock"></span>
+          <span class="label-required">*</span>
+        </label>
+      </div>
+      <div class="span2 fluid-grid-cell">
+        <label id="addedMinMonthsOfStockHeader" openlmis-message="header.min.months.of.stock"></label>
+      </div>
+      <div class="span2 fluid-grid-cell">
+        <label id="addedEopHeader" openlmis-message="label.emergency.order.point"></label>
+      </div>
+    </div>
+    <div class="row-fluid"
+         ng-repeat="facilityTypeApprovedProduct in addedFacilityTypeApprovedProducts">
+
+      <div id="addedProductCategory{{$index}}" class="row-fluid productCategory"
+           ng-show="showCategory(addedFacilityTypeApprovedProducts, $index)">
+        <div class="fluid-grid-cell"
+             ng-bind="facilityTypeApprovedProduct.programProduct.productCategory.name"></div>
+      </div>
+      <div class="row-fluid">
+
+        <div class="span5">
+          <div class="fluid-grid-cell" id="facilityTypeApprovedProductCodeAndName">
+            <label id="facilityTypeApprovedProductNameLabel{{$index}}"
+                   ng-bind="facilityTypeApprovedProduct.programProduct.product.code+' | '+facilityTypeApprovedProduct.programProduct.product.primaryName"></label>
+          </div>
+        </div>
+
+        <div class="span2">
+          <div class="fluid-grid-cell">
+            <span class="position-relative">
+              <input id="facilityTypeApprovedProduct.maxMonthsOfStock{{$index}}" type="text"
+                     ng-class="{'required-error' : (facilityTypeApprovedProduct && !facilityTypeApprovedProduct.maxMonthsOfStock)}"
+                     class="right-justified"
+                     name="addedMaxMonthsOfStock{{$index}}"
+                     numeric-validator="positiveNumericValue,2,2" maxlength="5"
+                     ng-required="true" ng-model="facilityTypeApprovedProduct.maxMonthsOfStock"/>
+              <span class="rnr-form-error" style="display:none;"
+                    id="addedMaxMonthsOfStock{{$index}}" openlmis-message="error.number.only">
+              </span>
+            </span>
+          </div>
+        </div>
+
+        <div class="span2">
+          <div class="fluid-grid-cell">
+            <span class="position-relative">
+              <input id="facilityTypeApprovedProduct.minMonthsOfStock{{$index}}" type="text"
+                     class="right-justified"
+                     name="addedMinMonthsOfStock{{$index}}"
+                     numeric-validator="positiveNumericValue,2,2" maxlength="5"
+                     ng-model="facilityTypeApprovedProduct.minMonthsOfStock"/>
+              <span class="rnr-form-error" style="display:none;"
+                    id="addedMinMonthsOfStock{{$index}}" openlmis-message="error.number.only">
+              </span>
+            </span>
+          </div>
+        </div>
+
+        <div class="span2">
+          <div class="fluid-grid-cell">
+            <span class="position-relative">
+              <input id="facilityTypeApprovedProduct.eop{{$index}}" type="text"
+                     class="right-justified"
+                     name="addedEop{{$index}}"
+                     numeric-validator="positiveNumericValue,2,2" maxlength="5"
+                     ng-model="facilityTypeApprovedProduct.eop"/>
+              <span class="rnr-form-error" style="display:none;"
+                    id="addedEop{{$index}}" openlmis-message="error.number.only">
+              </span>
+            </span>
+          </div>
+        </div>
+
+        <div class="span1">
+          <div class="fluid-grid-cell delete-role">
+            <a id="crossButton{{$index}}" href="" class="close" value="delete"
+               ng-click="removeFacilityTypeApprovedProduct($index)">&times;</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="alert alert-danger" id="modalErrorMessage" ng-show="modalError" openlmis-message="modalError"></div>
+
+<div class="modal-footer">
+  <input type="button" id="doneFacilityApprovedProductAdd" class="btn btn-primary"
+         ng-click="addFacilityTypeApprovedProducts()"
+         openlmis-message="button.done"/>
+
+  <input type="button" id="cancelFacilityApprovedProductAdd" class="btn btn-cancel"
+         ng-click="cancelFacilityTypeApprovedProducts();modalError=''"
+         openlmis-message="button.cancel"/>
+</div>
+</div>
+</div>

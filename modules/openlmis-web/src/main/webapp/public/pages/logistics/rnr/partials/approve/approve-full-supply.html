@@ -67,7 +67,7 @@
                 <tbody ng-repeat="rnrLineItem in page.fullSupply">
                 <tr>
                     <td class="productCategory" colspan="{{visibleColumns.fullSupply.scrollable.length}}"
-                        ng-show="showCategory($index)"></td>
+              ng-show="showCategory($index)"></td>
                 </tr>
                 <tr>
                     <td class="cell-input col-{{ column.name }}"
@@ -82,7 +82,7 @@
                 </div>
               </span>
 
-              <span ng-switch-when="quantityApproved" class="input-error-parent-cell">
+              <span ng-switch-when="quantityApproved" class="position-relative">
                 <input ng-change='rnr.fillPacksToShip(rnrLineItem)' ng-required="true" type="text"
                        ng-model="rnrLineItem[column.name]" numeric-validator="positiveInteger" maxlength="8"
                        name="quantityApproved{{$parent.$parent.$index}}" ng-disabled="rnrLineItem['skipped']"

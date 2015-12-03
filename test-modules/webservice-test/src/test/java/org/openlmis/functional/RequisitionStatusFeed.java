@@ -41,7 +41,7 @@ public class RequisitionStatusFeed extends JsonUtility {
     super.setupDataRequisitionApprove();
     createVirtualFacilityThroughApi("V10", "F10");
     dbWrapper.insertProcessingPeriod("current", "current period", "2013-01-30", "2016-01-30", 1, "M");
-    dbWrapper.insertRoleAssignmentForSupervisoryNodeForProgramId1("700", "store in-charge", "N1");
+    dbWrapper.insertRoleAssignmentForSupervisoryNodeForProgramId("commTrack", "store in-charge", "N1");
     dbWrapper.insertFulfilmentRoleAssignment("commTrack", "store in-charge", "F10");
     dbWrapper.updateRestrictLogin("commTrack", true);
   }
@@ -83,7 +83,7 @@ public class RequisitionStatusFeed extends JsonUtility {
     responseEntity = client.SendJSON("", URL + "recent", "GET", "", "");
     assertEquals(200, responseEntity.getStatus());
     feedJSONList = XmlUtils.getNodeValues(responseEntity.getResponse(), "content");
-    checkOrderStatusOnFeed("READY_TO_PACK", feedJSONList.get(0), id);
+    checkOrderStatusOnFeed("READY_TO_PACK", feedJSONList.get(0), generateOrderNumberForIdAndDefaultConfiguration(id, "HIV"), id);
 
     dbWrapper.assignRight("store in-charge", "MANAGE_POD");
 
@@ -92,7 +92,7 @@ public class RequisitionStatusFeed extends JsonUtility {
     OrderPODFromJson.getPodLineItems().get(0).setProductCode("P10");
 
     client.SendJSON(getJsonStringFor(OrderPODFromJson),
-      format(POD_URL, id),
+      format(POD_URL, generateOrderNumberForIdAndDefaultConfiguration(id, "HIV")),
       "POST",
       "commTrack",
       "Admin123");
@@ -100,7 +100,7 @@ public class RequisitionStatusFeed extends JsonUtility {
     responseEntity = client.SendJSON("", URL + "recent", "GET", "", "");
     assertEquals(200, responseEntity.getStatus());
     feedJSONList = XmlUtils.getNodeValues(responseEntity.getResponse(), "content");
-    checkOrderStatusOnFeed("RECEIVED", feedJSONList.get(1), id);
+    checkOrderStatusOnFeed("RECEIVED", feedJSONList.get(1), generateOrderNumberForIdAndDefaultConfiguration(id, "HIV"), id);
   }
 
   @Test(groups = {"webservice"})
@@ -131,13 +131,16 @@ public class RequisitionStatusFeed extends JsonUtility {
     responseEntity = waitForOrderStatusUpdatedOrTimeOut(0);
     assertEquals(200, responseEntity.getStatus());
     feedJSONList = XmlUtils.getNodeValues(responseEntity.getResponse(), "content");
-    checkOrderStatusOnFeed("IN_ROUTE", feedJSONList.get(0), id);
+    checkOrderStatusOnFeed("IN_ROUTE", feedJSONList.get(0), generateOrderNumberForIdAndDefaultConfiguration(id, "HIV"), id);
 
     responseEntity = waitForOrderStatusUpdatedOrTimeOut(1);
     assertEquals(200, responseEntity.getStatus());
     feedJSONList = XmlUtils.getNodeValues(responseEntity.getResponse(), "content");
-    checkOrderStatusOnFeed("TRANSFER_FAILED", feedJSONList.get(1), id);
+    checkOrderStatusOnFeed("TRANSFER_FAILED", feedJSONList.get(1), generateOrderNumberForIdAndDefaultConfiguration(id, "HIV"), id);
+  }
 
+  private String generateOrderNumberForIdAndDefaultConfiguration(Long id, String programCode) {
+    return "O" + programCode + String.format("%08d", id) + "R";
   }
 
   @Test(groups = {"webservice"})
@@ -169,14 +172,13 @@ public class RequisitionStatusFeed extends JsonUtility {
     responseEntity = client.SendJSON("", URL + "recent", "GET", "", "");
     assertEquals(200, responseEntity.getStatus());
     feedJSONList = XmlUtils.getNodeValues(responseEntity.getResponse(), "content");
-    checkOrderStatusOnFeed("IN_ROUTE", feedJSONList.get(0), id);
+    checkOrderStatusOnFeed("IN_ROUTE", feedJSONList.get(0), generateOrderNumberForIdAndDefaultConfiguration(id, "HIV"), id);
 
     responseEntity = waitForOrderStatusUpdatedOrTimeOut(1);
     assertEquals(200, responseEntity.getStatus());
     feedJSONList = XmlUtils.getNodeValues(responseEntity.getResponse(), "content");
-    checkOrderStatusOnFeed("RELEASED", feedJSONList.get(1), id);
+    checkOrderStatusOnFeed("RELEASED", feedJSONList.get(1), generateOrderNumberForIdAndDefaultConfiguration(id, "HIV"), id);
   }
-
 
   private void checkRequisitionStatusOnFeed(String requisitionStatus, String feedString, Long id) {
     assertTrue("feed json list : " + feedString, feedString.contains("\"requisitionId\":" + id));
@@ -191,7 +193,7 @@ public class RequisitionStatusFeed extends JsonUtility {
     assertFalse("Response entity : " + feedString, feedString.contains("\"orderID\""));
   }
 
-  private void checkOrderStatusOnFeed(String orderStatus, String feedString, Long id) {
+  private void checkOrderStatusOnFeed(String orderStatus, String feedString, String orderNumber, Long id) {
     assertTrue("feed json list : " + feedString, feedString.contains("\"requisitionId\":" + id));
     assertTrue("feed json list : " + feedString, feedString.contains("\"requisitionStatus\":\"RELEASED\""));
     assertTrue("Response entity : " + feedString, feedString.contains("\"emergency\":false"));
@@ -200,7 +202,7 @@ public class RequisitionStatusFeed extends JsonUtility {
     assertTrue("Response entity : " + feedString, feedString.contains("\"stringStartDate\":\"30-01-2013\""));
     assertTrue("Response entity : " + feedString, feedString.contains("\"stringEndDate\":\"30-01-2016\""));
     assertTrue("Response entity : " + feedString, feedString.contains("\"orderStatus\":\"" + orderStatus + "\""));
-    assertTrue("Response entity : " + feedString, feedString.contains("\"orderId\":" + id));
+    assertTrue("Response entity : " + feedString, feedString.contains("\"orderId\":\"" + orderNumber + "\""));
   }
 
   private ResponseEntity waitForOrderStatusUpdatedOrTimeOut(int index) throws ParserConfigurationException, SAXException, InterruptedException {

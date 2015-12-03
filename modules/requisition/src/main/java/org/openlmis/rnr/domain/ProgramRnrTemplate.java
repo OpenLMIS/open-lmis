@@ -23,7 +23,7 @@ import java.util.Map;
 import static java.util.Arrays.asList;
 
 /**
- * This class corresponds to Rnr Template for a program and is a container for columns in that Template.
+ * ProgramRnrTemplate corresponds to Rnr Template for a program and is a container for columns in that Template.
  */
 
 @NoArgsConstructor

@@ -24,6 +24,7 @@ import java.util.Date;
 import java.util.TimeZone;
 
 import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.nullValue;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -32,7 +33,6 @@ import static org.mockito.Mockito.when;
 @RunWith(PowerMockRunner.class)
 @PrepareForTest(TimeZone.class)
 public class DateDeserializerTest {
-
 
   JsonParser jsonParser = mock(JsonParser.class);
 
@@ -45,17 +45,26 @@ public class DateDeserializerTest {
     Date date = new Date();
     when(jsonParser.getText()).thenReturn(String.valueOf(date.getTime()));
 
-    Date deserializedDate = dateDeserializer.deserialize(jsonParser, deserializationContext);
+    Date deSerializedDate = dateDeserializer.deserialize(jsonParser, deserializationContext);
 
-    assertThat(deserializedDate.getTime(), is(date.getTime()));
+    assertThat(deSerializedDate.getTime(), is(date.getTime()));
   }
 
   @Test
   public void shouldConvertStringToDate() throws IOException {
     String date = "1985-11-01";
     when(jsonParser.getText()).thenReturn(date);
-    Date deserializedDate = dateDeserializer.deserialize(jsonParser, deserializationContext);
+    Date deSerializedDate = dateDeserializer.deserialize(jsonParser, deserializationContext);
 
-    assertThat(deserializedDate.toString().contains("Fri Nov 01 00:00:00"), is(true));
+    assertThat(deSerializedDate.toString().contains("Fri Nov 01 00:00:00"), is(true));
+  }
+
+  @Test
+  public void shouldConvertEmptyStringToNull() throws IOException {
+    String date = "";
+    when(jsonParser.getText()).thenReturn(date);
+    Date deSerializedDate = dateDeserializer.deserialize(jsonParser, deserializationContext);
+
+    assertThat(deSerializedDate, is(nullValue()));
   }
 }

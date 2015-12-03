@@ -15,18 +15,18 @@ describe("Role", function () {
 
   describe("Create Role", function () {
     var ctrl, scope, $httpBackend, rights, dialog, messageService;
-    beforeEach(inject(function ($rootScope, _$httpBackend_, $controller,
-                                _$dialog_, _messageService_) {
+    beforeEach(inject(function ($rootScope, _$httpBackend_, $controller, _$dialog_, _messageService_) {
       scope = $rootScope.$new();
       dialog = _$dialog_;
       $httpBackend = _$httpBackend_;
       messageService = _messageService_;
       rights = [
-        {"right": "CONFIGURE_RNR", "name": "configure rnr", "type": "ADMIN"},
-        {"right": "MANAGE_FACILITY", "name": "manage facility", "type": "ADMIN"},
-        {"right": "CREATE_REQUISITION", "name": "create requisition", "type": "REQUISITION"},
-        {"right": "VIEW_REQUISITION", "name": "view requisition", "type": "REQUISITION"},
-        {"right": "FILL_SHIPMENT", "name": "fill shipment", "type": "FULFILLMENT"}
+        {"name": "CONFIGURE_RNR", "displayNameKey": "configure rnr", "type": "ADMIN"},
+        {"name": "MANAGE_FACILITY", "displayNameKey": "manage facility", "type": "ADMIN"},
+        {"name": "CREATE_REQUISITION", "displayNameKey": "create requisition", "type": "REQUISITION"},
+        {"name": "VIEW_REQUISITION", "displayNameKey": "view requisition", "type": "REQUISITION"},
+        {"name": "FILL_SHIPMENT", "displayNameKey": "fill shipment", "type": "FULFILLMENT"},
+        {"name": "REPORTING", "displayNameKey": "reporting right", "type": "REPORTING"}
       ];
       $httpBackend.when('GET', '/rights.json').respond(200, {"rights": rights});
       ctrl = $controller(RoleController, {$scope: scope, $dialog: dialog});
@@ -36,16 +36,20 @@ describe("Role", function () {
       $httpBackend.flush();
       expect(scope.rights).toEqual(rights);
       expect(scope.adminRights).toEqual([
-        {"right": "CONFIGURE_RNR", "name": "configure rnr", "type": "ADMIN"},
-        {"right": "MANAGE_FACILITY", "name": "manage facility", "type": "ADMIN"}
+        {"name": "CONFIGURE_RNR", "displayNameKey": "configure rnr", "type": "ADMIN"},
+        {"name": "MANAGE_FACILITY", "displayNameKey": "manage facility", "type": "ADMIN"}
       ]);
       expect(scope.requisitionRights).toEqual([
-        {"right": "CREATE_REQUISITION", "name": "create requisition", "type": "REQUISITION"},
-        {"right": "VIEW_REQUISITION", "name": "view requisition", "type": "REQUISITION"}
+        {"name": "CREATE_REQUISITION", "displayNameKey": "create requisition", "type": "REQUISITION"},
+        {"name": "VIEW_REQUISITION", "displayNameKey": "view requisition", "type": "REQUISITION"}
       ]);
       expect(scope.fulfillmentRights).toEqual([
-        {"right": "FILL_SHIPMENT", "name": "fill shipment", "type": "FULFILLMENT"}
+        {"name": "FILL_SHIPMENT", "displayNameKey": "fill shipment", "type": "FULFILLMENT"}
       ]);
+      expect(scope.reportingRights).toEqual([
+        {"name": "REPORTING", "displayNameKey": "reporting right", "type": "REPORTING"}
+      ]);
+
     });
 
     it('should create a role', function () {
@@ -83,7 +87,7 @@ describe("Role", function () {
 
     it("should display role type modal when radio button is clicked", function () {
       scope.roleTypeModal = false;
-      $httpBackend.expectGET('/public/pages/partials/dialogbox.html').respond(200);
+      $httpBackend.expectGET('/public/pages/template/dialog/dialogbox.html').respond(200);
       scope.showRoleTypeModal('true');
       expect(window.selected).toBeTruthy();
     });
@@ -91,26 +95,34 @@ describe("Role", function () {
 
   describe("Edit Role", function () {
 
-    var ctrl, scope, httpBackend, location;
+    var ctrl, scope, httpBackend, location, role, rightList;
+
     it('should update a role', function () {
-      inject(function ($rootScope, _$httpBackend_, $controller, $location,
-                       _$dialog_) {
+      inject(function ($rootScope, _$httpBackend_, $controller, $location, _$dialog_) {
+        role = {"id": 123, "name": "Admin", "adminRole": 'true', "rights": [
+          {"name": "CONFIGURE_RNR", "displayNameKey": "configure rnr"}
+        ]};
+        rightList = [
+          {"name": "CONFIGURE_RNR", "displayNameKey": "configure rnr"}
+        ];
         scope = $rootScope.$new();
         httpBackend = _$httpBackend_;
         location = $location;
-        httpBackend.expectGET('/roles/123.json').respond({"role": {"name": "test role", "adminRole": false}, "right_type": 'ADMIN'});
-        httpBackend.expectGET('/rights.json').respond({"rights": "test Rights"});
-        ctrl = $controller(RoleController, {$scope: scope, $routeParams: {id: 123}, $location: location, $dialog: _$dialog_});
+        httpBackend.when('GET', '/rights.json').respond({"rights": rightList});
+        httpBackend.when('GET', '/roles/123.json').respond({"role": role, "right_type": "ADMIN"});
+        ctrl = $controller(RoleController, {$scope: scope, $routeParams: {id: 123}, $location: location, $dialog: _$dialog_ });
       });
-
-      httpBackend.expectPUT('/roles/123.json').respond(
+      httpBackend.expectPUT('/roles/123.json').respond(200,
         {"success": "success"});
       scope.role.name = "name";
-      scope.role.rights = ["right1"];
+      scope.role.rights = rightList;
+
       scope.saveRole();
+
       httpBackend.flush();
       expect(scope.message).toEqual("success");
       expect(location.path()).toEqual("/list");
+
     });
   });
 
@@ -119,28 +131,36 @@ describe("Role", function () {
 
     beforeEach(inject(function ($rootScope, _$httpBackend_, $controller) {
       role = {"id": 1, "name": "Admin", "adminRole": 'true', "rights": [
-        {"right": "CONFIGURE_RNR", "name": "configure rnr"},
-        {"right": "MANAGE_FACILITY", "name": "manage facility"}
+        {"name": "CONFIGURE_RNR", "displayNameKey": "configure rnr"},
+        {"name": "MANAGE_FACILITY", "displayNameKey": "manage facility"}
       ]};
       rightList = [
-        {"right": "CONFIGURE_RNR", "name": "configure rnr"},
-        {"right": "MANAGE_FACILITY", "name": "manage facility"},
-        {"right": "CREATE_REQUISITION", "name": "create requisition"},
-        {"right": "VIEW_REQUISITION", "name": "view requisition"}
+        {"name": "CONFIGURE_RNR", "displayNameKey": "configure rnr"},
+        {"name": "MANAGE_FACILITY", "displayNameKey": "manage facility"},
+        {"name": "CREATE_REQUISITION", "displayNameKey": "create requisition"},
+        {"name": "VIEW_REQUISITION", "displayNameKey": "view requisition"}
       ];
       scope = $rootScope.$new();
       $httpBackend = _$httpBackend_;
-      $httpBackend.expectGET('/roles/123.json').respond({"role": role, "right_type": 'ADMIN'});
       $httpBackend.expectGET('/rights.json').respond({"rights": rightList});
+      $httpBackend.expectGET('/roles/123.json').respond({"role": role, "right_type": "ADMIN"});
       ctrl = $controller(RoleController, {$scope: scope, $routeParams: {id: 123} });
       $httpBackend.flush();
       expect(scope.role).toEqual(role);
+      expect(scope.role.id).toEqual(role.id);
       expect(scope.currentRightType).toEqual('ADMIN');
-      expect(scope.rights).toEqual(rightList);
     }));
 
+    it('should set the scope', function () {
+      expect(scope.rights.length).toEqual(4);
+      expect(scope.rights[0].name).toEqual(rightList[0].name);
+      expect(scope.rights[0].selected).toBeTruthy();
+      expect(scope.rights[2].name).toEqual(rightList[2].name);
+      expect(scope.rights[2].selected).toBeUndefined();
+    });
+
     it('should add the selected rights to the role', function () {
-      scope.updateRights(true, rightList[3]);
+      scope.updateRights(rightList[3]);
 
       expect(scope.role.rights.length).toEqual(3);
       expect(scope.showRightError).toBeFalsy();
@@ -150,24 +170,26 @@ describe("Role", function () {
     });
 
     it('should remove the right from role, if not selected', function () {
-      scope.updateRights(false, rightList[1]);
+      var right = {"name": "MANAGE_FACILITY", "displayNameKey": "manage facility", "selected": true};
+      scope.updateRights(right);
       expect(scope.role.rights.length).toEqual(1);
       expect(scope.role.rights[0]).toEqual(rightList[0]);
     });
 
     it('should add dependent right to role', function () {
-      scope.updateRights(true, rightList[2]);
+      scope.updateRights(rightList[2]);
       expect(scope.role.rights.length).toEqual(4);
-      expect(scope.role.rights[2]).toEqual(rightList[2]);
-      expect(scope.role.rights[3]).toEqual(rightList[3]);
+      expect(scope.role.rights[2].name).toEqual(rightList[2].name);
+      expect(scope.role.rights[3].name).toEqual(rightList[3].name);
     });
 
     it('should not remove dependent right to role on deselection', function () {
-      scope.updateRights(true, rightList[2]);
+
+      scope.updateRights(rightList[2]);
       expect(scope.role.rights.length).toEqual(4);
-      scope.updateRights(false, rightList[2]);
+      scope.updateRights(rightList[2]);
       expect(scope.role.rights.length).toEqual(3);
-      expect(scope.role.rights[2]).toEqual(rightList[3]);
+      expect(scope.role.rights[2].name).toEqual(rightList[3].name);
     });
 
     it("should return true when rights that this right depends upon is selected", function () {
@@ -183,7 +205,7 @@ describe("Role", function () {
       scope.role.rights.push(rightList[3]);
       expect(scope.role.rights.length).toEqual(3);
 
-      scope.updateRights(true, rightList[2]);
+      scope.updateRights(rightList[2]);
 
       expect(scope.role.rights.length).toEqual(4);
       expect(scope.role.rights[0]).toEqual(rightList[0]);
@@ -191,9 +213,6 @@ describe("Role", function () {
       expect(scope.role.rights[2]).toEqual(rightList[3]);
       expect(scope.role.rights[3]).toEqual(rightList[2]);
     });
-
-    it('should ')
-
   });
 });
 

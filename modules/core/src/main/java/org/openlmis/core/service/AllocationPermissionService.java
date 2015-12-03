@@ -18,7 +18,7 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 import static org.apache.commons.collections.CollectionUtils.exists;
-import static org.openlmis.core.domain.Right.MANAGE_DISTRIBUTION;
+import static org.openlmis.core.domain.RightName.MANAGE_DISTRIBUTION;
 
 /**
  * Exposes the services for determining user permissions on DeliveryZone entity.
