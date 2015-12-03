@@ -39,12 +39,12 @@ describe('ViewLoadAmountController', function () {
 
   it('should set no records found message if no facilities are found', function () {
     controller(ViewLoadAmountController, {$scope: scope, facilities: [], period: {}, deliveryZone: {}, fridges: {}});
-    expect(scope.message).toEqual("msg.delivery.zone.no.record");
+    expect(scope.message).toEqual("msg.no.records.found");
   });
 
   it('should set no records found message if no facilities are undefined', function () {
     controller(ViewLoadAmountController, {$scope: scope, facilities: undefined, period: {}, deliveryZone: {}, fridges: {}});
-    expect(scope.message).toEqual("msg.delivery.zone.no.record");
+    expect(scope.message).toEqual("msg.no.records.found");
   });
 
   it('should set Geographic zone level name', function () {
