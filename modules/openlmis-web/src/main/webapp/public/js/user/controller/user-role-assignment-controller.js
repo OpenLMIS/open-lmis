@@ -9,7 +9,7 @@
  */
 
 function UserRoleAssignmentController($scope, $dialog, messageService, DeliveryZonePrograms) {
-
+  $scope.programsToDisplay = [];
   $scope.selectSuperviseProgramMessage = 'label.select.program';
   $scope.selectSupervisoryNodeMessage = 'label.select.node';
   $scope.selectWarehouseMessage = 'label.select.warehouse';
@@ -95,7 +95,7 @@ function UserRoleAssignmentController($scope, $dialog, messageService, DeliveryZ
 
     $scope.selectedProgramMessage = (programsToDisplay.length) ? messageService.get('label.select.program') : messageService.get('label.noProgramLeft');
 
-    return programsToDisplay;
+    $scope.programsToDisplay = programsToDisplay;
   };
 
   $scope.availableWarehouses = function () {
@@ -108,7 +108,11 @@ function UserRoleAssignmentController($scope, $dialog, messageService, DeliveryZ
   };
 
   $scope.showHomeFacilityRoleAssignmentOptions = function () {
-    return ($scope.user !== null && $scope.user.facilityId !== null);
+    var showHomeFacilityAccordion =  ($scope.user !== null && $scope.user.facilityId !== null);
+    if(showHomeFacilityAccordion) {
+      $scope.availableSupportedProgramsWithStatus();
+    }
+    return showHomeFacilityAccordion;
   };
 
   $scope.addHomeFacilityRole = function () {

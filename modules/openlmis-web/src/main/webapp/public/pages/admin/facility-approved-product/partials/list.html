@@ -1,0 +1,197 @@
+<!--
+  ~ This program is part of the OpenLMIS logistics management information system platform software.
+  ~ Copyright © 2013 VillageReach
+  ~
+  ~ This program is free software: you can redistribute it and/or modify it under the terms of the GNU Affero General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
+  ~
+  ~ This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Affero General Public License for more details.
+  ~ You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org.
+  -->
+
+<div xmlns="http://www.w3.org/1999/html">
+  <h2 id="facilityApprovedProductsHeader" openlmis-message="header.facility.approved.products"></h2>
+
+  <div class="row-fluid">
+    <div class="span12">
+      <label id="programLabel" openlmis-message="label.program"></label>
+    </div>
+  </div>
+  <div class="row-fluid section-divider">
+    <select ui-select2 class="select2-container bottom-spacer span3" name="programs" id="programs"
+            ng-model="program" ng-change="clearSearch()"
+            ng-options="pgm as pgm.name for pgm in programs">
+      <option value="" openlmis-message="label.select.program"></option>
+    </select>
+  </div>
+
+  <div class="row-fluid">
+    <div class="span12">
+      <label id="facilityTypeLabel" openlmis-message="label.facility.type"></label>
+    </div>
+  </div>
+  <div class="row-fluid">
+    <div class="span12">
+      <select ui-select2 class="select2-container bottom-spacer span3" name="facilityType" id="facilityType"
+              ng-model="facilityType" ng-change="clearSearch()"
+              ng-options="ft as ft.name for ft in facilityTypes">
+        <option value="" openlmis-message="create.facility.select.facilityType"></option>
+      </select>
+    </div>
+  </div>
+
+  <em id="selectionMandatoryMessage" openlmis-message="msg.please.select.program.facility.type" class="note"
+      ng-hide="showResults"></em>
+
+  <h2 ng-show="showResults">
+    <span id="searchFacilityApprovedProductLabel" openlmis-message="label.search.products"></span>
+    <a href="" class="pull-right btn btn-primary" ng-click="openFacilityApprovedProductsModal();">
+      <span id="facilityApprovedProductAddNew" openlmis-message="button.add.new"></span>
+    </a>
+  </h2>
+
+  <div id="searchControl" class="row-fluid" ng-show="showResults">
+    <div class="span5 search-in-category">
+      <div class="input-append input-prepend">
+        <div class="btn-group">
+        </div>
+        <input id='searchFacilityApprovedProduct' type="text" class="span5" ng-model="query" maxlength="50"
+               openlmis-message="msg.enter.product.code.name" autocomplete="off"
+               ng-keydown="triggerSearch($event)"/>
+        <button class="btn" ng-click="loadProducts(1)">
+          <i id='searchIcon' class="icon-search"></i>
+        </button>
+
+        <button id="clearProductSearch" class="btn" ng-click="clearSearch()" ng-disabled="!query"
+                openlmis-message="label.clear.search"></button>
+      </div>
+    </div>
+  </div>
+
+  <div class="alert alert-success" id="saveSuccessMsgDiv" ng-show="message" fade-out="3000" style="margin: 10px 0 5px;"
+       ng-bind="message"></div>
+
+  <div class="table-container">
+    <table id="facilityApprovedProductTable" class="table table-bordered search-list" ng-show="showResults">
+      <thead>
+      <tr class="gradient-header resultCountHeader">
+        <th colspan="11">
+          <span ng-switch on="totalItems" ng-show="searchedQuery">
+            <h3 id="noResultMessage" ng-switch-when="0" openlmis-message="msg.no.matches|searchedQuery"></h3>
+            <h3 id="oneResultMessage" ng-switch-when="1" openlmis-message="msg.one.match|searchedQuery"></h3>
+            <h3 id="nResultsMessage" ng-switch-default openlmis-message="msg.many.matches|totalItems|searchedQuery"></h3>
+          </span>
+
+          <h3 id="noRecordsMessage" ng-show="!searchedQuery && totalItems === 0"
+              openlmis-message="msg.no.records.found"></h3>
+
+          <h3 id="nRecordsMessage" ng-show="!searchedQuery && totalItems"
+              openlmis-message="msg.records.found|totalItems"></h3>
+        </th>
+      </tr>
+      <tr class="gradient-header" ng-show="facilityApprovedProducts.length">
+        <th id="fullSupply" class="col-full-supply" openlmis-message="header.full.supply"></th>
+        <th id="code" class="col-product-code" openlmis-message="header.code"></th>
+        <th id="name" class="col-name" openlmis-message="header.name"></th>
+        <th id="strength" class="col-strength" openlmis-message="header.strength"></th>
+        <th id="unitOfMeasure" class="col-unit-measure" openlmis-message="header.unit.of.measure"></th>
+        <th id="maxMonthStocks" class="col-max-months-stock">
+          <span openlmis-message="header.max.months.of.stock"></span>
+          <span class="label-required">*</span>
+        </th>
+        <th id="minMonthStocks" class="col-min-months-stock" openlmis-message="header.min.months.of.stock"></th>
+        <th id="eop" class="col-eop" openlmis-message="label.emergency.order.point"></th>
+        <th id="globalActive" class="col-icon-ok" openlmis-message="header.global.active"></th>
+        <th id="activeAtProgram" class="col-icon-ok" openlmis-message="header.active.at.program"></th>
+        <th class="col-action"></th>
+      </tr>
+      </thead>
+      <tbody ng-repeat="facilityApprovedProduct in facilityApprovedProducts">
+      <tr>
+        <td id="category{{$index}}" class="productCategory" colspan="11"
+            ng-show="showCategory(facilityApprovedProducts, $index)"
+            ng-bind="facilityApprovedProduct.programProduct.productCategory.name"></td>
+      </tr>
+      <tr ng-class="{'save-row-active': facilityApprovedProduct.underEdit}">
+        <td class="center-justified">
+          <i id="fullSupply{{$index}}"
+             ng-class="{'icon-ok': facilityApprovedProduct.programProduct.product.fullSupply}"></i>
+        </td>
+        <td id="code{{$index}}" ng-bind="facilityApprovedProduct.programProduct.product.code"></td>
+        <td id="name{{$index}}" ng-bind="facilityApprovedProduct.programProduct.product.primaryName"></td>
+        <td id="strength{{$index}}" ng-bind="facilityApprovedProduct.programProduct.product.strength"></td>
+        <td id="unit{{$index}}" ng-bind="facilityApprovedProduct.programProduct.product.dosageUnit.code"></td>
+        <td id="maxMonthsOfStock{{$index}}" class="right-justified col-max-months-stock">
+          <span class="position-relative">
+            <span ng-if="!facilityApprovedProduct.underEdit" ng-bind="facilityApprovedProduct.maxMonthsOfStock"></span>
+
+            <input id="editMaxMonthsOfStock{{$index}}" type="text" ng-if="facilityApprovedProduct.underEdit"
+                   name="list.maxMonthsOfStock{{$index}}"
+                   ng-model="facilityApprovedProduct.maxMonthsOfStock" class="right-justified"
+                   ng-class="{'required-error' : (facilityApprovedProduct && !facilityApprovedProduct.maxMonthsOfStock)}"
+                   numeric-validator="positiveNumericValue,2,2" ng-trim="false" maxlength="5"/>
+            <span class="rnr-form-error" style="display:none;" id="list.maxMonthsOfStock{{$index}}"
+                  openlmis-message="error.number.only"></span>
+          </span>
+        </td>
+        <td id="minMonthsOfStock{{$index}}" class="right-justified position-relative col-min-months-stock">
+          <span class="position-relative">
+            <span ng-if="!facilityApprovedProduct.underEdit" ng-bind="facilityApprovedProduct.minMonthsOfStock"></span>
+
+            <input id="editMinMonthsOfStock{{$index}}" type="text" ng-if="facilityApprovedProduct.underEdit"
+                   name="list.minMonthsOfStock{{$index}}"
+                   ng-model="facilityApprovedProduct.minMonthsOfStock" class="right-justified"
+                   numeric-validator="positiveNumericValue,2,2" ng-trim="false" maxlength="5"/>
+            <span class="rnr-form-error" style="display:none;" id="list.minMonthsOfStock{{$index}}"
+                  openlmis-message="error.number.only"></span>
+          </span>
+        <td id="eop{{$index}}" class="right-justified position-relative col-eop">
+          <span class="position-relative">
+            <span ng-if="!facilityApprovedProduct.underEdit" ng-bind="facilityApprovedProduct.eop"></span>
+
+            <input id="editEop{{$index}}" type="text" ng-if="facilityApprovedProduct.underEdit"
+                   name="list.eop{{$index}}"
+                   ng-model="facilityApprovedProduct.eop" class="right-justified"
+                   numeric-validator="positiveNumericValue,2,2" ng-trim="false" maxlength="5"/>
+            <span class="rnr-form-error" style="display:none;" id="list.eop{{$index}}"
+                  openlmis-message="error.number.only"></span>
+          </span>
+        </td>
+        <td class="center-justified">
+          <i id="GlobalActive{{$index}}"
+             ng-class="{'icon-ok': facilityApprovedProduct.programProduct.product.active}"></i>
+        </td>
+        <td class="center-justified">
+          <i id="activeAtProgram{{$index}}"
+             ng-class="{'icon-ok': facilityApprovedProduct.programProduct.active}"></i>
+        </td>
+        <td>
+          <input id="editButton{{$index}}" ng-hide="facilityApprovedProduct.underEdit" type="button"
+                 class="btn btn-primary btn-small"
+                 openlmis-message="button.edit"
+                 ng-click="edit(facilityApprovedProduct)"/>
+          <input id="deleteButton{{$index}}" ng-hide="facilityApprovedProduct.underEdit" type="button"
+                 class="btn btn-danger btn-small"
+                 openlmis-message="button.delete"
+                 ng-click="confirmDelete(facilityApprovedProduct)"/>
+        </td>
+      </tr>
+      <tr ng-if="facilityApprovedProduct.underEdit" class="save-cancel-row">
+        <td colspan="11">
+          <input id="save{{$index}}" type="submit" class="btn btn-primary btn-small"
+                 ng-click="update(facilityApprovedProduct)"
+                 openlmis-message="button.save"/>
+          <input id="cancel{{$index}}" type="button" class="btn btn-cancel btn-small" openlmis-message="button.cancel"
+                 ng-click="cancel(facilityApprovedProduct)"/>
+          <span class="toolbar-error clear-floats" id="saveErrorMsgDiv" ng-show="facilityApprovedProduct.error"
+                openlmis-message="facilityApprovedProduct.error"></span>
+        </td>
+      </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <pagination total-items="totalItems" page="currentPage" max-size="5" items-per-page="pagination.limit"
+              direction-links="false" ng-show="facilityApprovedProducts.length" class="pagination-sm"></pagination>
+
+  <ng-include src="'/public/pages/admin/facility-approved-product/partials/create.html'"></ng-include>
+</div>

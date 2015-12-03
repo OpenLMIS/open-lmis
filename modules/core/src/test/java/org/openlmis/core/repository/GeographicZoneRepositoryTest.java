@@ -20,10 +20,10 @@ import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.openlmis.core.domain.GeographicLevel;
 import org.openlmis.core.domain.GeographicZone;
-import org.openlmis.core.repository.mapper.GeographicLevelMapper;
 import org.openlmis.core.repository.mapper.GeographicZoneMapper;
 import org.openlmis.db.categories.UnitTests;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.dao.DuplicateKeyException;
 
 import java.util.Date;
 
@@ -45,13 +45,13 @@ public class GeographicZoneRepositoryTest {
   private GeographicZoneMapper mapper;
 
   @Mock
-  private GeographicLevelMapper geographicLevelMapper;
+  private GeographicLevelRepository geographicLevelRepository;
 
   private GeographicZone geographicZone;
 
   @Before
   public void setUp() throws Exception {
-    repository = new GeographicZoneRepository(mapper, geographicLevelMapper);
+    repository = new GeographicZoneRepository(mapper, geographicLevelRepository);
     geographicZone = new GeographicZone();
     geographicZone.setCode("some code");
     geographicZone.setModifiedDate(new Date());
@@ -61,11 +61,6 @@ public class GeographicZoneRepositoryTest {
 
   @Test
   public void shouldThrowErrorIfIncorrectDataLengthWhileInserting() throws Exception {
-    when(mapper.getGeographicLevelByCode(geographicZone.getLevel().getCode())).thenReturn(
-      new GeographicLevel(1L, "abc", "abc", 1));
-    when(mapper.getGeographicZoneByCode(geographicZone.getParent().getCode())).thenReturn(
-      new GeographicZone(1L, "xyz", "xyz", null, null));
-
     expectedEx.expect(dataExceptionMatcher("error.incorrect.length"));
 
     doThrow(new DataIntegrityViolationException("Incorrect Data Length")).when(mapper).insert(geographicZone);
@@ -74,12 +69,17 @@ public class GeographicZoneRepositoryTest {
   }
 
   @Test
+  public void shouldThrowErrorIfDuplicateZoneInsert() throws Exception {
+    expectedEx.expect(dataExceptionMatcher("error.duplicate.geographic.zone.code"));
+
+    doThrow(new DuplicateKeyException("duplicate key")).when(mapper).insert(geographicZone);
+
+    repository.save(geographicZone);
+  }
+
+  @Test
   public void shouldThrowErrorIfIncorrectDataLengthWhileUpdating() throws Exception {
     geographicZone.setId(1l);
-    when(mapper.getGeographicLevelByCode(geographicZone.getLevel().getCode())).thenReturn(
-      new GeographicLevel(1L, "abc", "abc", 1));
-    when(mapper.getGeographicZoneByCode(geographicZone.getParent().getCode())).thenReturn(
-      new GeographicZone(1L, "xyz", "xyz", null, null));
 
     expectedEx.expect(dataExceptionMatcher("error.incorrect.length"));
 
@@ -101,19 +101,8 @@ public class GeographicZoneRepositoryTest {
 
   @Test
   public void shouldGetLowestGeographicLevel() {
-    when(geographicLevelMapper.getLowestGeographicLevel()).thenReturn(1);
+    when(geographicLevelRepository.getLowestGeographicLevel()).thenReturn(1);
     assertThat(repository.getLowestGeographicLevel(), is(1));
-  }
-
-  @Test
-  public void shouldGetLevelByCode() throws Exception {
-    GeographicLevel level = new GeographicLevel();
-    when(mapper.getGeographicLevelByCode("code")).thenReturn(level);
-
-    GeographicLevel actualLevel = repository.getGeographicLevelByCode("code");
-
-    assertThat(actualLevel, is(level));
-    verify(mapper).getGeographicLevelByCode("code");
   }
 
   @Test

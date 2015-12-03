@@ -51,6 +51,7 @@ public class OrderDTOTest {
     order1.setRnr(make(a(defaultRequisition)));
     order1.setShipmentFileInfo(new ShipmentFileInfo("1.csv", false));
     order1.setSupplyLine(supplyLine);
+    order1.setOrderNumber("OrdHIV00000001R");
     final Order order2 = new Order();
     order2.setRnr(make(a(defaultRequisition, with(RequisitionBuilder.periodId, 2L), with(RequisitionBuilder.program, new Program(11L)))));
     order2.setShipmentFileInfo(new ShipmentFileInfo("2.csv", true));
@@ -71,8 +72,9 @@ public class OrderDTOTest {
 
     assertThat(orderDTOs.get(0).getRnr(), is(dtoForOrder1));
     assertThat(orderDTOs.get(1).getRnr(), is(dtoForOrder2));
-    assertThat(orderDTOs.get(0).getStringCreatedDate(), is(new SimpleDateFormat("dd/MM/yyyy hh:mm:ss").format(createdDate)));
+    assertThat(orderDTOs.get(0).getStringCreatedDate(), is(new SimpleDateFormat("dd/MM/yyyy HH:mm:ss").format(createdDate)));
     assertThat(orderDTOs.get(0).getShipmentError(), is(false));
     assertThat(orderDTOs.get(0).getSupplyLine(), is(supplyLine));
+    assertThat(orderDTOs.get(0).getOrderNumber(), is(order1.getOrderNumber()));
   }
 }

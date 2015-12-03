@@ -62,7 +62,7 @@ public class ShipmentFilePostProcessHandlerTest {
 
   @Test
   public void shouldAddShipmentFileInfo() throws Exception {
-    Set<Long> orderIds = new HashSet<>();
+    Set<String> orderNumbers = new HashSet<>();
     boolean success = true;
     Boolean failure = false;
     File shipmentFile = mock(File.class);
@@ -72,17 +72,17 @@ public class ShipmentFilePostProcessHandlerTest {
     when(shipmentFile.getName()).thenReturn(fileName);
     whenNew(ShipmentFileInfo.class).withArguments(fileName, failure).thenReturn(shipmentFileInfo);
 
-    shipmentFilePostProcessHandler.process(orderIds, shipmentFile, success);
+    shipmentFilePostProcessHandler.process(orderNumbers, shipmentFile, success);
 
     verify(shipmentService).insertShipmentFileInfo(shipmentFileInfo);
-    verify(orderService).updateStatusAndShipmentIdForOrders(orderIds, shipmentFileInfo);
+    verify(orderService).updateStatusAndShipmentIdForOrders(orderNumbers, shipmentFileInfo);
     verify(ftpErrorChannel, never()).send(any(Message.class));
     verify(ftpArchiveOutputChannel).send(any(Message.class));
   }
 
   @Test
   public void shouldAddShipmentFileInfoAndSendFileToFtpOutputChannelWhenFileHasError() throws Exception {
-    Set<Long> orderIds = new HashSet<>();
+    Set<String> orderNumbers = new HashSet<>();
     boolean failure = true;
     boolean success = false;
     File shipmentFile = mock(File.class);
@@ -92,10 +92,10 @@ public class ShipmentFilePostProcessHandlerTest {
     when(shipmentFile.getName()).thenReturn(fileName);
     whenNew(ShipmentFileInfo.class).withArguments(fileName, failure).thenReturn(shipmentFileInfo);
 
-    shipmentFilePostProcessHandler.process(orderIds, shipmentFile, success);
+    shipmentFilePostProcessHandler.process(orderNumbers, shipmentFile, success);
 
     verify(shipmentService).insertShipmentFileInfo(shipmentFileInfo);
-    verify(orderService).updateStatusAndShipmentIdForOrders(orderIds, shipmentFileInfo);
+    verify(orderService).updateStatusAndShipmentIdForOrders(orderNumbers, shipmentFileInfo);
     verify(ftpErrorChannel).send(any(Message.class));
     verify(ftpArchiveOutputChannel, never()).send(any(Message.class));
   }

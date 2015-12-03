@@ -38,27 +38,27 @@ function LoginController($scope, $http, localStorageService, messageService) {
       data: data,
       headers: {'Content-Type': 'application/x-www-form-urlencoded'}
     }).success(function (data) {
-        $scope.disableSignInButton = false;
-        if (data.error || !data.authenticated) {
-          $scope.loginError = data.error;
-          return;
-        }
-        localStorageService.add(localStorageKeys.RIGHT, getRights(data.rights));
-        localStorageService.add(localStorageKeys.USERNAME, data.name);
-        if (window.location.href.indexOf("login.html") != -1) {
-          window.location = HOME_PAGE;
-          return;
-        }
-        if (!$scope.loginConfig.preventReload) {
-          location.reload();
-          return;
-        }
-        $scope.loginConfig.modalShown = false;
-        $scope.loginConfig.preventReload = false;
-      }).error(function (data) {
-        $scope.disableSignInButton = false;
+      $scope.disableSignInButton = false;
+      if (data.error || !data.authenticated) {
         $scope.loginError = data.error;
-      });
+        return;
+      }
+      localStorageService.add(localStorageKeys.RIGHT, getRights(data.rights));
+      localStorageService.add(localStorageKeys.USERNAME, data.name);
+      if (window.location.href.indexOf("login.html") != -1) {
+        window.location = HOME_PAGE;
+        return;
+      }
+      if (!$scope.loginConfig.preventReload) {
+        location.reload();
+        return;
+      }
+      $scope.loginConfig.modalShown = false;
+      $scope.loginConfig.preventReload = false;
+    }).error(function (data) {
+      $scope.disableSignInButton = false;
+      $scope.loginError = data.error;
+    });
   };
 
   $scope.goToForgotPassword = function () {
@@ -68,9 +68,9 @@ function LoginController($scope, $http, localStorageService, messageService) {
   function getRights(rightList) {
     var rights = [];
     if (!rightList) return rights;
-    $.each(rightList, function (index, right) {
-      rights.push(right.right);
+    $.each(rightList, function (index,right) {
+      rights.push({name: right.name, type: right.type});
     });
-    return rights;
+    return JSON.stringify(rights);
   }
 }

@@ -56,7 +56,7 @@ describe('CreateNonFullSupplyController', function () {
     $rootScope.fixToolBar = function () {
     };
 
-    scope.facilityApprovedProducts = facilityApprovedProducts;
+    scope.facilityApprovedNFSProducts = facilityApprovedProducts;
     ctrl = controller(CreateNonFullSupplyController, {$scope: scope, $location: location, $routeParams: routeParams,
       localStorageService: localStorageService});
 
@@ -67,7 +67,7 @@ describe('CreateNonFullSupplyController', function () {
   });
 
   it('should display non full supply addition modal window', function () {
-    scope.facilityApprovedProducts = [];
+    scope.facilityApprovedNFSProducts = [];
     spyOn(scope, 'resetNonFullSupplyModal');
 
     scope.showAddNonFullSupplyModal();
@@ -196,7 +196,10 @@ describe('CreateNonFullSupplyController', function () {
     scope.nonFullSupplyProductCategory = {displayOrder: 5};
 
     scope.facilityApprovedProduct = facilityApprovedProduct1;
-    scope.newNonFullSupply = new RegularRnrLineItem({"quantityRequested": 20, "reasonForRequestedQuantity": "Bad Weather"});
+    scope.programRnrColumnList = [
+      {"name": "newPatientCount", "source": {"name": "USER_INPUT"}, "configuredOption": {"name": "newPatientCount"}}
+    ];
+    scope.newNonFullSupply = new RegularRnrLineItem({"quantityRequested": 20, "reasonForRequestedQuantity": "Bad Weather"}, null, scope.programRnrColumnList);
     scope.addedNonFullSupplyProducts = [];
     spyOn(scope, 'updateNonFullSupplyProductsToDisplay').andReturn(true);
     scope.addNonFullSupplyProductsByCategory();

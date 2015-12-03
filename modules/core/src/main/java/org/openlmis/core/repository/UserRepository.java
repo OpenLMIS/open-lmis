@@ -11,8 +11,8 @@
 package org.openlmis.core.repository;
 
 import lombok.NoArgsConstructor;
+import org.openlmis.core.domain.Pagination;
 import org.openlmis.core.domain.Program;
-import org.openlmis.core.domain.Right;
 import org.openlmis.core.domain.SupervisoryNode;
 import org.openlmis.core.domain.User;
 import org.openlmis.core.exception.DataException;
@@ -47,8 +47,12 @@ public class UserRepository {
     this.userMapper = userMapper;
   }
 
-  public List<User> getUsersWithRightInNodeForProgram(Program program, SupervisoryNode node, Right right) {
-    return userMapper.getUsersWithRightInNodeForProgram(program, node, right);
+  public List<User> getUsersWithRightInNodeForProgram(Program program, SupervisoryNode node, String rightName) {
+    return userMapper.getUsersWithRightInNodeForProgram(program, node, rightName);
+  }
+
+  public List<User> getUsersWithRightInHierarchyUsingBaseNode(Long nodeId, Long programId, String rightName) {
+    return userMapper.getUsersWithRightInHierarchyUsingBaseNode(nodeId, programId, rightName);
   }
 
   public void create(User user) {
@@ -101,8 +105,8 @@ public class UserRepository {
     return userMapper.getByEmail(email);
   }
 
-  public List<User> searchUser(String userSearchParam) {
-    return userMapper.getUserWithSearchedName(userSearchParam);
+  public List<User> searchUser(String searchParam, Pagination pagination) {
+    return userMapper.search(searchParam, pagination);
   }
 
   public User getById(Long id) {
@@ -133,15 +137,19 @@ public class UserRepository {
     userMapper.insertEmailNotification(emailMessage.getTo()[0], emailMessage.getSubject(), emailMessage.getText());
   }
 
-  public void updateUserPassword(Long userId, String password) {
-    userMapper.updateUserPassword(userId, password);
-  }
-
   public void disable(Long userId, Long modifiedBy) {
     userMapper.disable(userId, modifiedBy);
   }
 
   public User getByUserName(String userName) {
     return userMapper.getByUserName(userName);
+  }
+
+  public List<User> getUsersWithRightOnWarehouse(Long id, String rightName) {
+    return userMapper.getUsersWithRightOnWarehouse(id, rightName);
+  }
+
+  public Integer getTotalSearchResultCount(String searchParam) {
+    return userMapper.getTotalSearchResultCount(searchParam);
   }
 }

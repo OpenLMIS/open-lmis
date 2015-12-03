@@ -11,10 +11,18 @@
 package org.openlmis.core.service;
 
 import lombok.NoArgsConstructor;
+import org.openlmis.core.domain.GeographicLevel;
 import org.openlmis.core.domain.GeographicZone;
+import org.openlmis.core.domain.Pagination;
+import org.openlmis.core.repository.GeographicLevelRepository;
 import org.openlmis.core.repository.GeographicZoneRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
+
+import static java.util.Collections.emptyList;
 
 /**
  * Exposes the services for handling GeographicZone entity.
@@ -24,15 +32,25 @@ import org.springframework.stereotype.Service;
 @NoArgsConstructor
 public class GeographicZoneService {
 
+  private Integer pageSize;
+
   @Autowired
   GeographicZoneRepository repository;
 
+  @Autowired
+  GeographicLevelRepository geoLevelRepo;
+
+  @Autowired
+  public void setPageSize(@Value("${search.page.size}") String pageSize) {
+    this.pageSize = Integer.parseInt(pageSize);
+  }
+
   public void save(GeographicZone geographicZone) {
-    geographicZone.setLevel(repository.getGeographicLevelByCode(geographicZone.getLevel().getCode()));
+    geographicZone.validateMandatoryFields();
+    geographicZone.setLevel(geoLevelRepo.getGeographicLevelByCode(geographicZone.getLevel().getCode()));
     geographicZone.validateLevel();
 
     if (!geographicZone.isRootLevel()) {
-      geographicZone.validateParentExists();
       geographicZone.setParent(repository.getByCode(geographicZone.getParent().getCode()));
       geographicZone.validateParentExists();
       geographicZone.validateParentIsHigherInHierarchy();
@@ -45,7 +63,47 @@ public class GeographicZoneService {
     return repository.getByCode(geographicZone.getCode());
   }
 
-  public GeographicZone getById(long id) {
+  public GeographicZone getById(Long id) {
     return repository.getById(id);
+  }
+
+  public List<GeographicZone> searchBy(String searchParam, String columnName, Integer page) {
+    if (columnName.equals("parentName")) {
+      return repository.searchByParentName(searchParam, getPagination(page));
+    }
+    if (columnName.equals("name")) {
+      return repository.searchByName(searchParam, getPagination(page));
+    }
+    return emptyList();
+  }
+
+  public List<GeographicLevel> getAllGeographicLevels() {
+    return repository.getAllGeographicLevels();
+  }
+
+  public List<GeographicZone> getAllGeographicZonesAbove(GeographicLevel level) {
+    return repository.getAllGeographicZonesAbove(level);
+  }
+
+  public Pagination getPagination(Integer page) {
+    return new Pagination(page, pageSize);
+  }
+
+  public Integer getTotalSearchResultCount(String param, String columnName) {
+    if (columnName.equals("parentName")) {
+      return repository.getTotalParentSearchResultCount(param);
+    }
+    if (columnName.equals("name")) {
+      return repository.getTotalSearchResultCount(param);
+    }
+    return 0;
+  }
+
+  public List<GeographicZone> getGeographicZonesByCodeOrName(String searchParam) {
+    return repository.getGeographicZonesByCodeOrName(searchParam);
+  }
+
+  public Integer getGeographicZonesCountBy(String searchParam) {
+    return repository.getGeographicZonesCountBy(searchParam);
   }
 }

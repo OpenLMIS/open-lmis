@@ -124,7 +124,7 @@ describe('InitiateRnrController', function () {
     scope.selectedProgram = {"code": "hiv", "id": 2};
     scope.selectedFacilityId = 1;
     $httpBackend.expectGET('/facility/1/program/2/rights.json').respond({rights: [
-      {right: 'CREATE_REQUISITION'}
+      {name: 'CREATE_REQUISITION'}
     ]});
     $httpBackend.expectGET('/requisitions/1.json').respond({"rnr": {"id": 1, status: "INITIATED"}});
 
@@ -133,7 +133,7 @@ describe('InitiateRnrController', function () {
 
     expect(location.url()).toEqual("/create-rnr/1/1/2?supplyType=fullSupply&page=1");
     expect(scope.error).toEqual("");
-    expect(scope.$parent.rnr).toEqual({"id": 1, status: 'INITIATED'});
+    expect(scope.$parent.rnrData.rnr).toEqual({"id": 1, status: 'INITIATED'});
   });
 
   it('should give error if user has authorize only access and an rnr is not submitted yet', function () {
@@ -141,7 +141,7 @@ describe('InitiateRnrController', function () {
     scope.selectedFacilityId = 1;
     spyOn(rootScope, 'hasPermission').andReturn(false);
     $httpBackend.expectGET('/facility/1/program/2/rights.json').respond({rights: [
-      {right: 'AUTHORIZE_REQUISITION'}
+      {name: 'AUTHORIZE_REQUISITION'}
     ]});
     $httpBackend.expectGET('/requisitions/1.json').respond({"rnr": {"id": 1, status: "INITIATED"}});
 
@@ -161,7 +161,7 @@ describe('InitiateRnrController', function () {
     scope.selectedFacilityId = 1;
     spyOn(rootScope, 'hasPermission').andReturn(true);
     $httpBackend.expectGET('/facility/1/program/2/rights.json').respond({rights: [
-      {right: 'CREATE_REQUISITION'}
+      {name: 'CREATE_REQUISITION'}
     ]});
 
     $httpBackend.expectPOST('/requisitions.json?emergency=false&facilityId=1&periodId=3&programId=2').respond(400, {"error": "errorMessage"});
@@ -176,7 +176,7 @@ describe('InitiateRnrController', function () {
     scope.selectedProgram = {"code": "hiv", "id": 2};
     scope.selectedFacilityId = 1;
     $httpBackend.expectGET('/facility/1/program/2/rights.json').respond({rights: [
-      {right: 'CREATE_REQUISITION'}
+      {name: 'CREATE_REQUISITION'}
     ]});
 
     $httpBackend.expectPOST('/requisitions.json?emergency=false&facilityId=1&periodId=3&programId=2').respond({"rnr": {"id": 1, status: "INITIATED"}});
@@ -186,14 +186,14 @@ describe('InitiateRnrController', function () {
 
     expect(location.url()).toEqual("/create-rnr/1/1/2?supplyType=fullSupply&page=1");
     expect(scope.error).toEqual("");
-    expect(scope.$parent.rnr).toEqual({"id": 1, status: 'INITIATED'});
+    expect(scope.$parent.rnrData.rnr).toEqual({"id": 1, status: 'INITIATED'});
   });
 
   it('should not create a rnr if rnr not already initiated and user does not have create requisition permission', function () {
     scope.selectedProgram = {"code": "hiv", "id": 2};
     scope.selectedFacilityId = 1;
     $httpBackend.expectGET('/facility/1/program/2/rights.json').respond({rights: [
-      {right: 'AUTHORIZE_REQUISITION'}
+      {name: 'AUTHORIZE_REQUISITION'}
     ]});
 
     spyOn(rootScope, 'hasPermission').andReturn(false);
@@ -215,7 +215,7 @@ describe('InitiateRnrController', function () {
     var testData = {selectedType: scope.selectedType, selectedProgram: scope.selectedProgram, selectedFacilityId: scope.selectedFacilityId, isNavigatedBack: true};
     spyOn(navigateBackService, 'setData');
     $httpBackend.expectGET('/facility/1/program/2/rights.json').respond({rights: [
-      {right: 'CREATE_REQUISITION'}
+      {name: 'CREATE_REQUISITION'}
     ]});
     $httpBackend.expectGET('/requisitions/1.json').respond({"rnr": {"id": 1, status: "INITIATED"}});
     scope.initRnr({"id": 3, rnrId: 1});

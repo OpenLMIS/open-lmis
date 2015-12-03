@@ -38,7 +38,7 @@
                     <div class="form-row clearfix">
                         <div class="form-cell">
                             <label openlmis-message="label.refrigerator.temperature"></label>
-            <span class="input-error-parent-cell">
+            <span class="position-relative">
               <input type="text" name="temperature{{$index}}" ng-model="refrigeratorReading.temperature.value"
                      numeric-validator="numericValue,3,1"
                      error-holder="temperatureError{{$index}}"
@@ -90,7 +90,7 @@
                     <div class="form-row clearfix">
                         <div class="form-cell">
                             <label class="form-questions" openlmis-message="label.number.high.alarms"></label>
-            <span class="input-error-parent-cell">
+            <span class="position-relative">
               <input name="highAlarmEvent{{$index}}" type="text" ng-model="refrigeratorReading.highAlarmEvents.value"
                      numeric-validator="positiveInteger" maxlength="3" error-holder="highAlarmError{{$index}}"
                      class="right-justified" ng-trim="false"/>
@@ -108,7 +108,7 @@
                     <div class="form-row clearfix">
                         <div class="form-cell">
                             <label openlmis-message="label.number.low.alarms"></label>
-            <span class="input-error-parent-cell">
+            <span class="position-relative">
               <input type="text" name="lowAlarmEvent{{$index}}" ng-model="refrigeratorReading.lowAlarmEvents.value"
                      numeric-validator="positiveInteger" ng-trim="false" maxlength="3"
                      error-holder="lowAlarmError{{$index}}" class="right-justified"/>

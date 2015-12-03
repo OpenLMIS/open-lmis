@@ -26,118 +26,104 @@ describe("User Search Controller", function () {
     ctrl('UserSearchController', {$scope: scope, messageService: messageService});
   }));
 
-  it('should get all users depending on search criteria when three characters are entered in search', function () {
+  it('should get all users in a page depending on search criteria', function () {
     var user = {"id": 1, "firstName": "john", "lastName": "Doe", "email": "john_doe@gmail.com"};
-    var userResponse = {"userList": [user]};
-    scope.query = "joh";
+    var pagination = {"page": 1, "pageSize": 10, "numberOfPages": 10, "totalRecords": 100};
+    var response = {"userList": [user], "pagination": pagination};
+    scope.query = "j";
+    $httpBackend.when('GET', '/users.json?page=1&searchParam=' + scope.query).respond(response);
 
-    $httpBackend.when('GET', '/users.json?param=' + scope.query).respond(userResponse);
-    scope.showUserSearchResults();
+    scope.loadUsers(1);
     $httpBackend.flush();
 
     expect(scope.userList).toEqual([user]);
-    expect(scope.resultCount).toEqual(1);
+    expect(scope.pagination).toEqual(pagination);
+    expect(scope.currentPage).toEqual(1);
+    expect(scope.showResults).toEqual(true);
+    expect(scope.totalItems).toEqual(100);
   });
 
-  it('should filter users when more than 3 characters are entered for search with first 3 characters matching previous search', function () {
-    scope.previousQuery = "joh";
-    scope.query = "john_d";
+  it('should get all users in a page depending on search criteria and lastQuery', function () {
     var user = {"id": 1, "firstName": "john", "lastName": "Doe", "email": "john_doe@gmail.com"};
-    scope.userList = [user];
+    var pagination = {"page": 1, "pageSize": 10, "numberOfPages": 10, "totalRecords": 100};
+    var response = {"userList": [user], "pagination": pagination};
+    scope.query = "j";
+    var lastQuery = "anotherQuery";
+    $httpBackend.when('GET', '/users.json?page=1&searchParam=' + lastQuery).respond(response);
 
-    scope.showUserSearchResults();
-
-    expect(scope.filteredUsers).toEqual([user]);
-    expect(scope.resultCount).toEqual(1);
-  });
-
-  it("should get and filter users when more than 3 characters are pasted for search and first 3 chars does not match " +
-      "with previous query's first three chars", function () {
-    scope.previousQuery = "abcd";
-    scope.query = "lokesh";
-
-    var user1 = {"id": 2, "userName": "lok", "firstName": "lokesh", "lastName": "Doe", "email": "lokesh_doe@gmail.com"};
-    var user2 = {"id": 2, "userName": "loke", "firstName": "lokaaahh", "lastName": "Doe", "email": "lokaaahh_doe@gmail.com"};
-    var userResponse = {"userList": [user1, user2]};
-    $httpBackend.when('GET', '/users.json?param=lok').respond(userResponse);
-
-    scope.showUserSearchResults(searchTextId);
+    scope.loadUsers(1, "anotherQuery");
     $httpBackend.flush();
 
-    expect(scope.userList).toEqual([user1, user2]);
-    expect(scope.filteredUsers).toEqual([user1]);
-    expect(scope.resultCount).toEqual(1);
+    expect(scope.userList).toEqual([user]);
+    expect(scope.pagination).toEqual(pagination);
+    expect(scope.currentPage).toEqual(1);
+    expect(scope.showResults).toEqual(true);
+    expect(scope.totalItems).toEqual(100);
   });
 
-  it("should save query into shared service on clicking edit link", function () {
+  it('should return if query is null', function () {
+    scope.query = "";
+    var httpBackendSpy = spyOn($httpBackend, 'expectGET');
+
+    scope.loadUsers(1);
+
+    expect(httpBackendSpy).not.toHaveBeenCalled();
+  });
+
+  it('should clear search param and result list', function () {
+    var userList = [{"id": 1, "firstName": "john", "lastName": "Doe", "email": "john_doe@gmail.com"}];
+
+    scope.query = "j";
+    scope.totalItems = 100;
+    scope.userList = userList;
+    scope.showResults = true;
+
+    scope.clearSearch();
+
+    expect(scope.showResults).toEqual(false);
+    expect(scope.query).toEqual("");
+    expect(scope.totalItems).toEqual(0);
+    expect(scope.userList).toEqual([]);
+  });
+
+  it('should set query according to navigate back service', function () {
+    scope.query = '';
+    navigateBackService.query = 'query';
+
+    scope.$emit('$viewContentLoaded');
+
+    expect(scope.query).toEqual("query");
+  });
+
+  it('should trigger search on enter key', function () {
+    var event = {"keyCode": 13};
+    var searchSpy = spyOn(scope, 'loadUsers');
+
+    scope.triggerSearch(event);
+
+    expect(searchSpy).toHaveBeenCalledWith(1);
+  });
+
+  it('should get results according to specified page', function () {
+    scope.currentPage = 5;
+    scope.searchedQuery = "query";
+    var searchSpy = spyOn(scope, 'loadUsers');
+
+    scope.$apply(function () {
+      scope.currentPage = 6;
+    });
+
+    expect(searchSpy).toHaveBeenCalledWith(6,scope.searchedQuery);
+  });
+
+  it("should save query into shared service on clicking edit link",function(){
     spyOn(navigateBackService, 'setData');
     spyOn(location, 'path');
-    scope.query = "lokesh";
-    scope.editUser(2);
-    expect(navigateBackService.setData).toHaveBeenCalledWith({query: "lokesh"});
-    expect(location.path).toHaveBeenCalledWith('edit/2');
+    scope.query = "john";
+
+    scope.edit(1);
+
+    expect(navigateBackService.setData).toHaveBeenCalledWith({query: "john"});
+    expect(location.path).toHaveBeenCalledWith('edit/1');
   });
-
-  it("should retain previous query value and update filtered query list when dom is loaded", function () {
-    var query = "lok";
-    navigateBackService.setData({query: query});
-    $httpBackend.expect('GET', '/users.json?param=lok').respond(200, {});
-
-    ctrl('UserSearchController', {$scope: scope});
-
-    $httpBackend.flush();
-    expect(query).toEqual(scope.query);
-  });
-
-  it("should open reset password modal", function () {
-    var user = {id: 1, firstName: "User", active: true};
-    scope.changePassword(user);
-    expect(scope.password1).toEqual("");
-    expect(scope.password2).toEqual("");
-    expect(scope.message).toEqual("");
-    expect(scope.error).toEqual("");
-    expect(scope.changePasswordModal).toEqual(true);
-    expect(scope.user).toEqual(user);
-  });
-
-  it("should not open reset password modal if user is inactive", function () {
-    var user = {id: 1, firstName: "User", active: false};
-    scope.changePassword(user);
-    expect(scope.changePasswordModal).toBeUndefined();
-  });
-
-  it("should reset password modal", function () {
-    scope.resetPasswordModal();
-    expect(scope.changePasswordModal).toEqual(false);
-    expect(scope.user).toEqual(undefined);
-  });
-
-  it("should update user password if password matches and is valid",function () {
-    scope.password1 = scope.password2 = "Abcd1234!";
-    scope.user = {id: 1, firstName: "User"};
-
-    $httpBackend.expect('PUT', '/admin/resetPassword/1.json').respond(200, {success: "password updated"});
-    scope.updatePassword();
-    $httpBackend.flush();
-    expect(scope.message).toEqual("password updated")
-    expect(scope.error).toEqual(undefined)
-  });
-
-  it("should update show error if password is not valid",function () {
-    scope.password1 = scope.password2 = "invalid";
-    scope.user = {id: 1, firstName: "User"};
-    spyOn(messageService, 'get');
-    scope.updatePassword();
-    expect(messageService.get).toHaveBeenCalledWith("error.password.invalid");
-  });
-
-  it("should update show error if passwords do not match" ,function () {
-    scope.password1 = "Abcd1234!";
-  scope.password2 = "invalid";
-    scope.user = {id: 1, firstName: "User"};
-    spyOn(messageService, 'get');
-    scope.updatePassword();
-    expect(messageService.get).toHaveBeenCalledWith("error.password.mismatch");
-  });
-
 });

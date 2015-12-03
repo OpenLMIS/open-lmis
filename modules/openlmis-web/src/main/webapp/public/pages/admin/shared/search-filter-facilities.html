@@ -1,0 +1,56 @@
+<!--
+  ~ This program is part of the OpenLMIS logistics management information system platform software.
+  ~ Copyright © 2013 VillageReach
+  ~
+  ~ This program is free software: you can redistribute it and/or modify it under the terms of the GNU Affero General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
+  ~
+  ~ This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Affero General Public License for more details.
+  ~ You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org.
+  -->
+
+<div id="searchAndFilter" class="searchAndFilter" ng-controller="FacilitySearchFilterController">
+  <div class="clearfix position-relative">
+    <div id="search" class="pull-left">
+      <div class="form-group clear-bottom">
+        <h3 class="main-heading" openlmis-message="search.facility.header"></h3>
+      </div>
+
+      <div id="searchControl" class="row-fluid">
+        <div class="span3 input-append input-prepend">
+          <input id="searchFacility" type="text" ng-model="facilitySearchParam" maxlength="50"
+                 ng-keydown="triggerSearch($event)" autocomplete="off"
+                 openlmis-message="placeholder.facility.search"/>
+          <button id="searchButton" class="btn" ng-click="showFacilitySearchResults()">
+            <i id="searchFacilityIcon" class="icon-search"></i>
+          </button>
+        </div>
+      </div>
+
+      <div id="searchFacilityList" class="search-list slider" slider="facilityResultCount >= 0">
+        <div ng-switch on="resultCount">
+          <h3 ng-switch-when="0">
+            <span id="noFacilityResultMessage" ng-show="!message"
+                  openlmis-message="msg.no.matches|facilityQuery"></span>
+            <span id="tooManyFacilityResultsMessage" ng-show="message" openlmis-message="message"></span>
+          </h3>
+
+          <h3 id="oneFacilityResultMessage" ng-switch-when="1" openlmis-message="msg.one.match|facilityQuery"></h3>
+
+          <h3 id="nFacilityResultsMessage" ng-switch-default
+              openlmis-message="msg.many.matches|resultCount|facilityQuery"></h3>
+        </div>
+        <a class="close-btn" id="closeButton" href="" ng-click="clearFacilitySearch()"></a>
+        <ul>
+          <li ng-repeat="facility in facilityList">
+            <a id="facilityResult{{$index}}" href="" ng-click="associate(facility)">{{facility.code}} -
+              {{facility.name}}</a>
+          </li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="separator" class="pull-left"></div>
+
+    <ng-include src="'/public/pages/admin/shared/facility-sub-filters.html'"></ng-include>
+  </div>
+</div>

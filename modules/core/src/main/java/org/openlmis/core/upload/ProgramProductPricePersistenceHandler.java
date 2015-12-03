@@ -17,6 +17,10 @@ import org.openlmis.core.service.ProgramProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+/**
+ * ProgramProductPricePersistenceHandler is used for uploads of ProgramProductPrice. It uploads each ProgramProductPrice
+ * record by record.
+ */
 @Component
 public class ProgramProductPricePersistenceHandler extends AbstractModelPersistenceHandler {
 

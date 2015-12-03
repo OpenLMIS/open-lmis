@@ -13,6 +13,11 @@ package org.openlmis.rnr.domain;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+import org.codehaus.jackson.map.annotate.JsonSerialize;
+
+import java.util.List;
+
+import static org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion.NON_EMPTY;
 
 /**
  * This class represents a column configured in rnr template for a program.
@@ -32,7 +37,11 @@ public class RnrColumn extends Column {
   private boolean mandatory;
   private String description;
   private boolean formulaValidationRequired = true;
+  private RnrColumnOption configuredOption;
   private Long createdBy;
+
+  @JsonSerialize(include = NON_EMPTY)
+  private List<RnrColumnOption> rnrColumnOptions;
 
   @SuppressWarnings(value = "unused")
   public void setSourceString(String sourceString) {

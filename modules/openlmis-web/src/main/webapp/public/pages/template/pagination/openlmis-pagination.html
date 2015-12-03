@@ -1,0 +1,21 @@
+<div id="pagination" class="pagination" align="right" tab-scroll bottom-offset="180">
+  <!--
+    ~ This program is part of the OpenLMIS logistics management information system platform software.
+    ~ Copyright © 2013 VillageReach
+    ~
+    ~ This program is free software: you can redistribute it and/or modify it under the terms of the GNU Affero General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
+    ~  
+    ~ This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Affero General Public License for more details.
+    ~ You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org. 
+  -->
+
+  <ul>
+    <li ng-class="{disabled: noPrevious()}"><a id="firstPageLink" href="" ng-click="selectPage(1)">&laquo;</a></li>
+    <li ng-class="{disabled: noPrevious()}"><a id="previousPageLink" href="" ng-click="selectPrevious()">&lt;</a></li>
+    <li ng-repeat="page in pages" ng-class="{active: isActive(page), errorPage: hasErrorOnPage(page)}">
+      <a href="" id="{{ page }}" ng-click="selectPage(page)">{{page}}</a>
+    </li>
+    <li ng-class="{disabled: noNext()}"><a id="nextPageLink" href="" ng-click="selectNext()">&gt;</a></li>
+    <li ng-class="{disabled: noNext()}"><a id="lastPageLink" href="" ng-click="selectPage(numPages)">&raquo;</a></li>
+  </ul>
+</div>

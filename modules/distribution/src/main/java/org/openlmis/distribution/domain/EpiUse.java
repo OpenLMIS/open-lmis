@@ -56,6 +56,10 @@ public class EpiUse {
     }
   }
 
+  /**
+   *  ProductNameComparator represents a comparator for comparing code of two EpiUseLineItem.
+   */
+
   private class ProductNameComparator implements Comparator<EpiUseLineItem> {
     @Override
     public int compare(EpiUseLineItem lineItem1, EpiUseLineItem lineItem2) {

@@ -16,6 +16,10 @@ import org.openlmis.core.service.ProductCategoryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+/**
+ * ProductCategoryPersistenceHandler is used for uploads of ProductCategory. It uploads each ProductCategory
+ * record by record.
+ */
 @Component
 public class ProductCategoryPersistenceHandler extends AbstractModelPersistenceHandler {
 

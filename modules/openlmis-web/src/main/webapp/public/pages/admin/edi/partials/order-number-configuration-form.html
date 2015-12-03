@@ -1,0 +1,102 @@
+<!--
+  ~ This program is part of the OpenLMIS logistics management information system platform software.
+  ~ Copyright © 2013 VillageReach
+  ~
+  ~ This program is free software: you can redistribute it and/or modify it under the terms of the GNU Affero General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
+  ~  
+  ~ This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Affero General Public License for more details.
+  ~ You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org. 
+  -->
+
+<div xmlns="http://www.w3.org/1999/html" tab-scroll>
+  <h2 openlmis-message="header.configure.order.number"></h2>
+
+  <form ng-submit="saveOrderNumberConfiguration()" id="configureOrderNumber" name="configureOrderNumber"
+        novalidate>
+
+    <div class="row-fluid">
+      <div class="span6">
+        <div id="orderConfigurationOptions">
+          <div class="list-header-container">
+            <div class="row-fluid list-header">
+              <div class="span2">
+                <span class="first-column" openlmis-message="label.include"></span>
+              </div>
+              <div class="span6" openlmis-message="header.field"></div>
+            </div>
+          </div>
+
+          <div class="rnr-template-columns list-container">
+            <div class="row-fluid list-row">
+              <div class="span2">
+                <span class="first-column checkbox-column">
+                  <input id="includeOrderNumberPrefix" type="checkbox"
+                         ng-model="orderNumberConfiguration.includeOrderNumberPrefix"/>
+                </span>
+              </div>
+              <div class="span6">
+                <span openlmis-message="label.order.number.prefix"></span>
+              </div>
+              <div class="span4">
+                  <input type="text" id="orderPrefix" maxlength="8" ng-disabled="!orderNumberConfiguration.includeOrderNumberPrefix" ng-model="orderNumberConfiguration.orderNumberPrefix">
+              </div>
+            </div>
+
+            <div class="row-fluid list-row">
+              <div class="span2">
+                <span class="first-column checkbox-column">
+                  <input id="includeProgramCode" type="checkbox"
+                         ng-model="orderNumberConfiguration.includeProgramCode"/>
+                </span>
+              </div>
+              <div class="span6">
+                <span openlmis-message="header.program.code"></span>
+              </div>
+
+            </div>
+
+
+            <div class="row-fluid list-row">
+              <div class="span2">
+                <span class="first-column checkbox-column">
+                  <input id="includeSequenceCode" type="checkbox"
+                         ng-model="orderNumberConfiguration.includeSequenceCode" ng-disabled="true"/>
+                </span>
+              </div>
+              <div class="span6">
+                <span openlmis-message="label.sequence.code"></span>
+              </div>
+            </div>
+
+
+            <div class="row-fluid list-row">
+              <div class="span2">
+                <span class="first-column checkbox-column">
+                  <input id="includeRnrTypeSuffix" type="checkbox"
+                         ng-model="orderNumberConfiguration.includeRnrTypeSuffix"/>
+                </span>
+              </div>
+              <div class="span6">
+                <span openlmis-message="label.rnr.type.suffix"></span>
+              </div>
+            </div>
+
+
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div form-toolbar id="action_buttons" class="action-buttons">
+      <div class="form-cell button-row">
+        <input id='saveOrderNumberConfig' type="submit" class="btn btn-primary save-button"
+               openlmis-message="button.save"/>
+        <a id='cancelOrderNumberConfig' ng-click="cancelOrderNumberConfigurationSave()" class="btn btn-cancel cancel-button"
+           openlmis-message="button.cancel"></a>
+      </div>
+      <div class="toolbar-error" id="saveErrorMsgDiv" openlmis-message="error" ng-show="error"></div>
+
+    </div>
+
+  </form>
+</div>

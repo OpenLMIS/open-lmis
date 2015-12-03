@@ -41,11 +41,11 @@ public class RequisitionGroupProgramScheduleRepository {
 
   @Autowired
   public RequisitionGroupProgramScheduleRepository(
-      RequisitionGroupProgramScheduleMapper requisitionGroupProgramScheduleMapper,
-      RequisitionGroupMapper requisitionGroupMapper,
-      ProgramRepository programRepository,
-      ProcessingScheduleMapper processingScheduleMapper,
-      FacilityMapper facilityMapper) {
+    RequisitionGroupProgramScheduleMapper requisitionGroupProgramScheduleMapper,
+    RequisitionGroupMapper requisitionGroupMapper,
+    ProgramRepository programRepository,
+    ProcessingScheduleMapper processingScheduleMapper,
+    FacilityMapper facilityMapper) {
 
     this.mapper = requisitionGroupProgramScheduleMapper;
     this.requisitionGroupMapper = requisitionGroupMapper;
@@ -81,23 +81,23 @@ public class RequisitionGroupProgramScheduleRepository {
 
   private void populateIdsForRequisitionProgramScheduleEntities(RequisitionGroupProgramSchedule requisitionGroupProgramSchedule) {
     requisitionGroupProgramSchedule.getRequisitionGroup().setId(
-        requisitionGroupMapper.getIdForCode(
-            requisitionGroupProgramSchedule.getRequisitionGroup().getCode()));
+      requisitionGroupMapper.getIdForCode(
+        requisitionGroupProgramSchedule.getRequisitionGroup().getCode()));
 
     requisitionGroupProgramSchedule.getProgram().setId(
-        programRepository.getIdByCode(
-            requisitionGroupProgramSchedule.getProgram().getCode()));
+      programRepository.getIdByCode(
+        requisitionGroupProgramSchedule.getProgram().getCode()));
 
     requisitionGroupProgramSchedule.getProcessingSchedule().setId(
-        processingScheduleMapper.getIdForCode(
-            requisitionGroupProgramSchedule.getProcessingSchedule().getCode()));
+      processingScheduleMapper.getIdForCode(
+        requisitionGroupProgramSchedule.getProcessingSchedule().getCode()));
 
     Facility dropOffFacility = requisitionGroupProgramSchedule.getDropOffFacility();
 
     if (dropOffFacility != null)
       requisitionGroupProgramSchedule.getDropOffFacility().setId(
-          facilityMapper.getIdForCode(
-              dropOffFacility.getCode()));
+        facilityMapper.getIdForCode(
+          dropOffFacility.getCode()));
   }
 
   private void validateRequisitionGroupSchedule(RequisitionGroupProgramSchedule requisitionGroupProgramSchedule) {
@@ -106,9 +106,6 @@ public class RequisitionGroupProgramScheduleRepository {
 
     if (requisitionGroupProgramSchedule.getProcessingSchedule().getId() == null)
       throw new DataException("error.schedule.not.exists");
-
-    if (requisitionGroupProgramSchedule.isDirectDelivery() && requisitionGroupProgramSchedule.getDropOffFacility() != null)
-      throw new DataException("error.direct.delivery.drop.off.facility.combination.incorrect");
 
     if (!requisitionGroupProgramSchedule.isDirectDelivery() && requisitionGroupProgramSchedule.getDropOffFacility() == null)
       throw new DataException("error.drop.off.facility.not.defined");
@@ -127,5 +124,13 @@ public class RequisitionGroupProgramScheduleRepository {
 
   public RequisitionGroupProgramSchedule getScheduleForRequisitionGroupCodeAndProgramCode(String requisitionGroupCode, String programCode) {
     return mapper.getScheduleForRequisitionGroupCodeAndProgramCode(requisitionGroupCode, programCode);
+  }
+
+  public List<RequisitionGroupProgramSchedule> getByRequisitionGroupId(Long requisitionGroupId) {
+    return mapper.getByRequisitionGroupId(requisitionGroupId);
+  }
+
+  public void deleteRequisitionGroupProgramSchedulesFor(Long requisitionGroupId) {
+    mapper.deleteRequisitionGroupProgramSchedulesFor(requisitionGroupId);
   }
 }

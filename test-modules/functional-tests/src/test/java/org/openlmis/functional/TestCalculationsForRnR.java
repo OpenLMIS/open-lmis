@@ -44,7 +44,7 @@ public class TestCalculationsForRnR extends TestCaseHelper {
   public void setUp() throws InterruptedException, SQLException, IOException {
     super.setup();
     List<String> rightsList = asList("CREATE_REQUISITION", "VIEW_REQUISITION", "AUTHORIZE_REQUISITION", "APPROVE_REQUISITION");
-    setupTestDataToInitiateRnR(true, program, userSIC, "200", rightsList);
+    setupTestDataToInitiateRnR(true, program, userSIC, rightsList);
     dbWrapper.updateFieldValue("products", "fullSupply", "true", "code", "P11");
     loginPage = PageObjectFactory.getLoginPage(testWebDriver, baseUrlGlobal);
     homePage = PageObjectFactory.getHomePage(testWebDriver);
@@ -52,7 +52,8 @@ public class TestCalculationsForRnR extends TestCaseHelper {
   }
 
   @Test(groups = "requisition")
-  public void testEffectOfChangingPackSize() throws SQLException {
+  public void testPatientOptionAndEffectOfChangingPackSize() throws SQLException {
+    dbWrapper.updateFieldValue("program_rnr_columns", "rnrOptionId", "2", "label", "New Patients");
     dbWrapper.updateFieldValue("products", "fullSupply", "false", "code", "P11");
     dbWrapper.updateFieldValue("products", "packSize", "5", "code", "P10");
     dbWrapper.updateFieldValue("products", "packSize", "15", "code", "P11");
@@ -62,7 +63,8 @@ public class TestCalculationsForRnR extends TestCaseHelper {
     InitiateRnRPage initiateRnRPage = homePage.clickProceed();
 
     enterDetailsForFirstProduct(10, 5, null, 14, 0, 5);
-    assertEquals("18", initiateRnRPage.getPacksToShip());
+    assertEquals("19", initiateRnRPage.getPeriodicNormalisedConsumption());
+    assertEquals("12", initiateRnRPage.getPacksToShip());
     initiateRnRPage.verifyPacksToShip(5);
 
     initiateRnRPage.addNonFullSupplyLineItems("95", "reason", "antibiotic", "P11", "Antibiotics");
@@ -79,16 +81,71 @@ public class TestCalculationsForRnR extends TestCaseHelper {
 
     ApprovePage approvePage = homePage.navigateToApprove();
     approvePage.clickRequisitionPresentForApproval();
-    approvePage.editFullSupplyApproveQuantity("100");
-    assertEquals("20", approvePage.getPacksToShip());
+    assertEquals("12", approvePage.getPacksToShip());
+    approvePage.editFullSupplyApproveQuantity("6");
+    assertEquals("2", approvePage.getPacksToShip());
+    approvePage.accessNonFullSupplyTab();
+    assertEquals("7", approvePage.getPacksToShip());
     approvePage.editNonFullSupplyApproveQuantity("75");
     assertEquals("5", approvePage.getPacksToShip());
     approvePage.clickApproveButton();
     approvePage.clickOk();
 
     Long rnrId = (long) dbWrapper.getMaxRnrID();
-    assertEquals("20", dbWrapper.getRequisitionLineItemFieldValue(rnrId, "packsToShip", "P10"));
+    assertEquals("2", dbWrapper.getRequisitionLineItemFieldValue(rnrId, "packsToShip", "P10"));
     assertEquals("5", dbWrapper.getRequisitionLineItemFieldValue(rnrId, "packsToShip", "P11"));
+    dbWrapper.updateFieldValue("program_rnr_columns", "rnrOptionId", "1", "label", "New Patients");
+  }
+
+  @Test(groups = "requisition")
+  public void testEffectOfChangingPatientOption() throws SQLException {
+    dbWrapper.updateFieldValue("program_rnr_columns", "rnrOptionId", "2", "label", "New Patients");
+    dbWrapper.updateFieldValue("products", "fullSupply", "false", "code", "P11");
+    dbWrapper.updateFieldValue("products", "packSize", "5", "code", "P10");
+    dbWrapper.updateFieldValue("products", "packSize", "15", "code", "P11");
+
+    HomePage homePage = loginPage.loginAs(userSIC, password);
+    homePage.navigateInitiateRnRScreenAndSelectingRequiredFields(program, "Regular");
+    InitiateRnRPage initiateRnRPage = homePage.clickProceed();
+
+    enterDetailsForFirstProduct(10, 5, null, 14, 0, 5);
+    assertEquals("19", initiateRnRPage.getPeriodicNormalisedConsumption());
+    assertEquals("12", initiateRnRPage.getPacksToShip());
+    initiateRnRPage.verifyPacksToShip(5);
+
+    initiateRnRPage.addNonFullSupplyLineItems("95", "reason", "antibiotic", "P11", "Antibiotics");
+    assertEquals("7", initiateRnRPage.getPacksToShip());
+
+    initiateRnRPage.submitRnR();
+    initiateRnRPage.clickOk();
+
+    dbWrapper.updateFieldValue("program_rnr_columns", "rnrOptionId", "1", "label", "New Patients");
+    testWebDriver.refresh();
+    initiateRnRPage.clickFullSupplyTab();
+    assertEquals("29", initiateRnRPage.getPeriodicNormalisedConsumption());
+    assertEquals("18", initiateRnRPage.getPacksToShip());
+
+    initiateRnRPage.authorizeRnR();
+    initiateRnRPage.clickOk();
+
+    dbWrapper.updateFieldValue("program_rnr_columns", "rnrOptionId", "2", "label", "New Patients");
+    testWebDriver.refresh();
+    ApprovePage approvePage = homePage.navigateToApprove();
+    approvePage.clickRequisitionPresentForApproval();
+    assertEquals("18", approvePage.getPacksToShip());
+    approvePage.editFullSupplyApproveQuantity("50");
+    assertEquals("10", approvePage.getPacksToShip());
+    approvePage.accessNonFullSupplyTab();
+    assertEquals("7", approvePage.getPacksToShip());
+    approvePage.editNonFullSupplyApproveQuantity("75");
+    assertEquals("5", approvePage.getPacksToShip());
+    approvePage.clickApproveButton();
+    approvePage.clickOk();
+
+    Long rnrId = (long) dbWrapper.getMaxRnrID();
+    assertEquals("10", dbWrapper.getRequisitionLineItemFieldValue(rnrId, "packsToShip", "P10"));
+    assertEquals("5", dbWrapper.getRequisitionLineItemFieldValue(rnrId, "packsToShip", "P11"));
+    dbWrapper.updateFieldValue("program_rnr_columns", "rnrOptionId", "1", "label", "New Patients");
   }
 
   @Test(groups = "requisition")
@@ -110,6 +167,7 @@ public class TestCalculationsForRnR extends TestCaseHelper {
 
     initiateRnRPage.authorizeRnR();
     initiateRnRPage.clickOk();
+    dbWrapper.updateFieldValue("products", "packSize", "100", "code", "P10");
 
     ApprovePage approvePage = homePage.navigateToApprove();
     approvePage.clickRequisitionPresentForApproval();
@@ -131,7 +189,7 @@ public class TestCalculationsForRnR extends TestCaseHelper {
     homePage.navigateInitiateRnRScreenAndSelectingRequiredFields(program, "Regular");
     InitiateRnRPage initiateRnRPage = homePage.clickProceed();
 
-    enterDetailsForFirstProduct(0, 0, null, 0, 0, 0);
+    enterDetailsForFirstProduct(0, 0, null, 0, 0, null);
     assertEquals("0", initiateRnRPage.getPacksToShip());
     initiateRnRPage.verifyPacksToShip(10);
 
@@ -211,6 +269,9 @@ public class TestCalculationsForRnR extends TestCaseHelper {
     homePage.navigateInitiateRnRScreenAndSelectingRequiredFields(program, "Regular");
     InitiateRnRPage initiateRnRPage = homePage.clickProceed();
 
+    assertEquals(null, dbWrapper.getAttributeFromTable("requisition_line_items", "previousStockInHand", "productCode", "P10"));
+    assertEquals(null, dbWrapper.getAttributeFromTable("requisition_line_items", "beginningBalance", "productCode", "P10"));
+
     enterDetailsForFirstProduct(10, 5, null, 14, 0, 5);
     assertEquals("9", initiateRnRPage.getPacksToShip());
     initiateRnRPage.verifyPacksToShip(10);
@@ -220,6 +281,9 @@ public class TestCalculationsForRnR extends TestCaseHelper {
 
     initiateRnRPage.submitRnR();
     initiateRnRPage.clickOk();
+
+    assertEquals(null, dbWrapper.getAttributeFromTable("requisition_line_items", "previousStockInHand", "productCode", "P10"));
+    assertEquals(10, dbWrapper.getAttributeFromTable("requisition_line_items", "beginningBalance", "productCode", "P10"));
 
     dbWrapper.updateFieldValue("products", "packRoundingThreshold", "7", "code", "P10");
     dbWrapper.updateFieldValue("products", "packRoundingThreshold", "9", "code", "P11");
@@ -260,6 +324,7 @@ public class TestCalculationsForRnR extends TestCaseHelper {
     submitAndAuthorizeRnR();
 
     verifyNormalizedConsumptionAndAmcInDatabase(164, 164, "P10");
+    assertEquals("164", dbWrapper.getAttributeFromTable("requisition_line_items", "periodNormalizedConsumption", "productCode", "P10"));
   }
 
   @Test(groups = "requisition")
@@ -296,8 +361,8 @@ public class TestCalculationsForRnR extends TestCaseHelper {
     dbWrapper.updateConfigureTemplate("ESS_MEDS", "source", "U", "true", "stockInHand");
     dbWrapper.updateConfigureTemplate("ESS_MEDS", "source", "C", "false", "normalizedConsumption");
     dbWrapper.updateConfigureTemplate("ESS_MEDS", "source", "C", "false", "amc");
-    dbWrapper.insertRequisitionGroupProgramScheduleForProgram("RG1", "ESS_MEDS", "M");
-    dbWrapper.insertRoleAssignmentForSupervisoryNode(dbWrapper.getAttributeFromTable("users", "id", "userName", userSIC), "store in-charge", null, "ESS_MEDS");
+    dbWrapper.insertRequisitionGroupProgramScheduleForProgramAfterDelete("RG1", "ESS_MEDS", "M");
+    dbWrapper.insertRoleAssignmentForSupervisoryNode(userSIC, "store in-charge", null, "ESS_MEDS");
     dbWrapper.updateFieldValue("products", "fullSupply", "false", "code", "P11");
 
     HomePage homePage = loginPage.loginAs(userSIC, password);
@@ -372,9 +437,9 @@ public class TestCalculationsForRnR extends TestCaseHelper {
     initiateRnRPage.verifyAmcForFirstProduct(54);
     verifyNormalizedConsumptionAndAmcInDatabase(54, 54, "P10");
 
-    dbWrapper.insertSupervisoryNodeSecond("F11", "N2", "Node2", "N1");
+    dbWrapper.insertSupervisoryNode("F11", "N2", "Node2", "N1");
     dbWrapper.updateSupervisoryNodeForRequisitionGroup("RG2", "N2");
-    dbWrapper.insertRoleAssignmentForSupervisoryNode(dbWrapper.getAttributeFromTable("users", "id", "userName", userSIC), "store in-charge", "N2", "HIV");
+    dbWrapper.insertRoleAssignmentForSupervisoryNode(userSIC, "store in-charge", "N2", "HIV");
 
     homePage.navigateAndInitiateRnrForSupervisedFacility("HIV");
     homePage.selectFacilityForSupervisoryNodeRnR("F11 - Central Hospital");
@@ -401,6 +466,7 @@ public class TestCalculationsForRnR extends TestCaseHelper {
     HomePage homePage = loginPage.loginAs(userSIC, password);
     homePage.navigateInitiateRnRScreenAndSelectingRequiredFields(program, "Regular");
     InitiateRnRPage initiateRnRPage = homePage.clickProceed();
+    testWebDriver.waitForAjax();
 
     enterDetailsForFirstProduct(10, 5, null, 8, 20, 0);
     submitAndAuthorizeRnR();
@@ -413,9 +479,16 @@ public class TestCalculationsForRnR extends TestCaseHelper {
 
     homePage.navigateInitiateRnRScreenAndSelectingRequiredFields(program, "Regular");
     initiateRnRPage = homePage.clickProceed();
+    testWebDriver.waitForAjax();
+
+    assertEquals("7", dbWrapper.getAttributeFromTable("requisition_line_items", "previousStockInHand", "rnrId", String.valueOf(dbWrapper.getMaxRnrID())));
+    assertEquals("7", dbWrapper.getAttributeFromTable("requisition_line_items", "beginningBalance", "rnrId", String.valueOf(dbWrapper.getMaxRnrID())));
 
     enterDetailsForFirstProduct(10, 5, null, 10, 0, 2);
     submitAndAuthorizeRnR();
+
+    assertEquals("7", dbWrapper.getAttributeFromTable("requisition_line_items", "previousStockInHand", "rnrId", String.valueOf(dbWrapper.getMaxRnrID())));
+    assertEquals("10", dbWrapper.getAttributeFromTable("requisition_line_items", "beginningBalance", "rnrId", String.valueOf(dbWrapper.getMaxRnrID())));
 
     initiateRnRPage.verifyNormalizedConsumptionForFirstProduct(16);
     initiateRnRPage.verifyAmcForFirstProduct(20);
@@ -425,6 +498,7 @@ public class TestCalculationsForRnR extends TestCaseHelper {
 
     homePage.navigateInitiateRnRScreenAndSelectingRequiredFields(program, "Regular");
     initiateRnRPage = homePage.clickProceed();
+    testWebDriver.waitForAjax();
 
     enterDetailsForFirstProduct(10, 5, null, 5, 20, 0);
     submitAndAuthorizeRnR();
@@ -437,6 +511,7 @@ public class TestCalculationsForRnR extends TestCaseHelper {
 
     homePage.navigateInitiateRnRScreenAndSelectingRequiredFields(program, "Regular");
     initiateRnRPage = homePage.clickProceed();
+    testWebDriver.waitForAjax();
 
     enterDetailsForFirstProduct(5, 5, null, 0, 20, 0);
     submitAndAuthorizeRnR();
@@ -493,6 +568,7 @@ public class TestCalculationsForRnR extends TestCaseHelper {
 
   @Test(groups = "requisition")
   public void testCalculationTrackingOfAmcWhenMIs3() throws SQLException {
+    dbWrapper.updateConfigureTemplate("HIV", "source", "C", "true", "periodNormalizedConsumption");
     dbWrapper.updateFieldValue("products", "fullSupply", "false", "code", "P11");
     dbWrapper.deleteRowFromTable("processing_periods", "name", "Period2");
     dbWrapper.insertProcessingPeriod("feb13", "feb13", "2013-01-31", "2013-02-28", 3, "M");
@@ -504,11 +580,13 @@ public class TestCalculationsForRnR extends TestCaseHelper {
     InitiateRnRPage initiateRnRPage = homePage.clickProceed();
 
     enterDetailsForFirstProduct(10, 5, null, 8, 0, 1);
+    assertEquals("18", initiateRnRPage.getPeriodicNormalisedConsumption());
     submitAndAuthorizeRnR();
 
     initiateRnRPage.verifyNormalizedConsumptionForFirstProduct(6);
     initiateRnRPage.verifyAmcForFirstProduct(6);
     verifyNormalizedConsumptionAndAmcInDatabase(6, 6, "P10");
+    assertEquals("18", dbWrapper.getRequisitionLineItemFieldValue((long) dbWrapper.getMaxRnrID(), "periodNormalizedConsumption", "P10"));
 
     dbWrapper.updateCreatedDateInRequisitionStatusChanges("2013-02-08", (long) dbWrapper.getMaxRnrID());
 
@@ -516,11 +594,13 @@ public class TestCalculationsForRnR extends TestCaseHelper {
     initiateRnRPage = homePage.clickProceed();
 
     enterDetailsForFirstProduct(10, 5, null, 1, 1, 0);
+    assertEquals("0", initiateRnRPage.getPeriodicNormalisedConsumption());
     submitAndAuthorizeRnR();
 
     initiateRnRPage.verifyNormalizedConsumptionForFirstProduct(0);
     initiateRnRPage.verifyAmcForFirstProduct(0);
     verifyNormalizedConsumptionAndAmcInDatabase(0, 0, "P10");
+    assertEquals("0", dbWrapper.getRequisitionLineItemFieldValue((long) dbWrapper.getMaxRnrID(), "periodNormalizedConsumption", "P10"));
   }
 
   @Test(groups = "requisition")
@@ -691,7 +771,7 @@ public class TestCalculationsForRnR extends TestCaseHelper {
     dbWrapper.insertProcessingPeriod("feb13", "feb13", "2013-01-31", "2013-02-28", 2, "M");
     dbWrapper.insertRole("fulfilment", "convert to order");
     dbWrapper.assignRight("fulfilment", "CONVERT_TO_ORDER");
-    dbWrapper.insertRoleAssignment(dbWrapper.getAttributeFromTable("users", "id", "userName", userSIC), "store in-charge");
+    dbWrapper.insertRoleAssignment(userSIC, "store in-charge");
     dbWrapper.insertFulfilmentRoleAssignment(userSIC, "fulfilment", "F10");
 
     HomePage homePage = loginPage.loginAs(userSIC, password);

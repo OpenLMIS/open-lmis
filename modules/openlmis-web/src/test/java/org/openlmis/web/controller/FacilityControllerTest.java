@@ -16,9 +16,9 @@ import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.openlmis.core.domain.*;
 import org.openlmis.core.exception.DataException;
+import org.openlmis.core.repository.FacilityOperatorRepository;
 import org.openlmis.core.service.FacilityService;
 import org.openlmis.core.service.MessageService;
 import org.openlmis.core.service.ProgramService;
@@ -29,58 +29,66 @@ import org.powermock.modules.junit4.PowerMockRunner;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.mock.web.MockHttpServletRequest;
-import org.springframework.mock.web.MockHttpSession;
 import org.springframework.ui.ModelMap;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import static java.lang.Integer.parseInt;
 import static java.util.Arrays.asList;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
+import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.*;
+import static org.mockito.MockitoAnnotations.initMocks;
 import static org.openlmis.authentication.web.UserAuthenticationSuccessHandler.USER;
 import static org.openlmis.authentication.web.UserAuthenticationSuccessHandler.USER_ID;
-import static org.openlmis.core.domain.Right.*;
+import static org.openlmis.core.domain.RightName.*;
 import static org.openlmis.web.model.FacilityReferenceData.*;
-import static org.powermock.api.mockito.PowerMockito.mockStatic;
+import static org.powermock.api.mockito.PowerMockito.mock;
+import static org.powermock.api.mockito.PowerMockito.*;
 import static org.powermock.api.mockito.PowerMockito.when;
 
 @Category(UnitTests.class)
 @RunWith(PowerMockRunner.class)
-@PrepareForTest(Facility.class)
+@PrepareForTest({FacilityController.class, Facility.class})
 public class FacilityControllerTest {
 
-  public static final Long userId = 1L;
+  private static final Long userId = 1L;
+
   @Mock
   private ProgramService programService;
+
   @Mock
   private FacilityService facilityService;
+
+  @Mock
+  private FacilityOperatorRepository facilityOperatorRepository;
 
   @Mock
   private MessageService messageService;
 
   @InjectMocks
+  @SuppressWarnings("unused")
   private FacilityController facilityController;
 
-  private MockHttpServletRequest httpServletRequest = new MockHttpServletRequest();
+  private MockHttpServletRequest request;
 
   @Before
-  public void setUp() throws Exception {
-    MockHttpSession mockHttpSession = new MockHttpSession();
-    httpServletRequest.setSession(mockHttpSession);
-    mockHttpSession.setAttribute(USER, USER);
-    mockHttpSession.setAttribute(USER_ID, userId);
+  public void setUp() {
+    initMocks(this);
+    request = new MockHttpServletRequest(USER, USER);
+    request.getSession().setAttribute(USER_ID, userId);
   }
 
   @Test
-  public void shouldFetchRequiredReferenceDataForFacility() throws Exception {
+  public void shouldFetchRequiredReferenceDataForFacility() {
 
     List<FacilityOperator> facilityOperators = new ArrayList<>();
-    when(facilityService.getAllOperators()).thenReturn(facilityOperators);
+    when(facilityOperatorRepository.getAll()).thenReturn(facilityOperators);
     List<FacilityType> facilityTypes = new ArrayList<>();
     when(facilityService.getAllTypes()).thenReturn(facilityTypes);
     List<GeographicZone> allZones = new ArrayList<>();
@@ -91,7 +99,7 @@ public class FacilityControllerTest {
 
     Map referenceData = facilityController.getReferenceData();
 
-    verify(facilityService).getAllOperators();
+    verify(facilityOperatorRepository).getAll();
     assertThat((List<FacilityOperator>) referenceData.get(FACILITY_OPERATORS), is(equalTo(facilityOperators)));
     verify(facilityService).getAllTypes();
     assertThat((List<FacilityType>) referenceData.get(FACILITY_TYPES), is(equalTo(facilityTypes)));
@@ -102,13 +110,13 @@ public class FacilityControllerTest {
   }
 
   @Test
-  public void shouldInsertFacilityAndTagWithModifiedBy() throws Exception {
+  public void shouldInsertFacilityAndTagWithModifiedBy() {
     Facility facility = new Facility();
     facility.setName("test facility");
     when(messageService.message("message.facility.created.success",
       facility.getName())).thenReturn("Facility 'test facility' created successfully");
 
-    ResponseEntity responseEntity = facilityController.insert(facility, httpServletRequest);
+    ResponseEntity responseEntity = facilityController.insert(facility, request);
 
     assertThat(responseEntity.getStatusCode(), is(HttpStatus.OK));
     OpenLmisResponse response = (OpenLmisResponse) responseEntity.getBody();
@@ -118,11 +126,12 @@ public class FacilityControllerTest {
 
   @Test
   public void
-  shouldUpdateFacilityAndTagWithModifiedByAndModifiedDate() throws Exception {
+  shouldUpdateFacilityAndTagWithModifiedByAndModifiedDate() {
     Facility facility = new Facility(1234L);
     facility.setName("test facility");
-    when(messageService.message("message.facility.updated.success", facility.getName())).thenReturn("Facility 'test facility' updated successfully");
-    ResponseEntity responseEntity = facilityController.update(1234L, facility, httpServletRequest);
+    when(messageService.message("message.facility.updated.success", facility.getName())).thenReturn(
+      "Facility 'test facility' updated successfully");
+    ResponseEntity responseEntity = facilityController.update(1234L, facility, request);
     assertThat(responseEntity.getStatusCode(), is(HttpStatus.OK));
     OpenLmisResponse response = (OpenLmisResponse) responseEntity.getBody();
     assertThat(response.getSuccessMsg(), is("Facility 'test facility' updated successfully"));
@@ -131,24 +140,23 @@ public class FacilityControllerTest {
   }
 
   @Test
-  public void shouldReturnErrorMessageIfInsertFails() throws Exception {
+  public void shouldReturnErrorMessageIfInsertFails() {
     Facility facility = new Facility();
     doThrow(new DataException("error message")).when(facilityService).update(facility);
-    ResponseEntity responseEntity = facilityController.insert(facility, httpServletRequest);
+    ResponseEntity responseEntity = facilityController.insert(facility, request);
     assertThat(responseEntity.getStatusCode(), is(HttpStatus.BAD_REQUEST));
     OpenLmisResponse response = (OpenLmisResponse) responseEntity.getBody();
     assertThat(response.getErrorMsg(), is("error message"));
-    MockHttpServletRequest httpServletRequest = httpRequest();
 
-    facilityController.insert(facility, httpServletRequest);
+    facilityController.insert(facility, request);
   }
 
   @Test
-  public void shouldReturnErrorMessageIfUpdateFails() throws Exception {
+  public void shouldReturnErrorMessageIfUpdateFails() {
     Facility facility = new Facility(1234L);
     doThrow(new DataException("error message")).when(facilityService).update(facility);
 
-    ResponseEntity responseEntity = facilityController.update(1234L, facility, httpServletRequest);
+    ResponseEntity responseEntity = facilityController.update(1234L, facility, request);
 
     assertThat(responseEntity.getStatusCode(), is(HttpStatus.BAD_REQUEST));
     OpenLmisResponse response = (OpenLmisResponse) responseEntity.getBody();
@@ -160,7 +168,7 @@ public class FacilityControllerTest {
     Facility facility = mock(Facility.class);
     when(facilityService.getHomeFacility(userId)).thenReturn(facility);
 
-    List<Facility> facilities = facilityController.getHomeFacility(httpServletRequest);
+    List<Facility> facilities = facilityController.getHomeFacility(request);
     assertTrue(facilities.contains(facility));
   }
 
@@ -180,8 +188,10 @@ public class FacilityControllerTest {
   public void shouldReturnUserSupervisedFacilitiesForAProgram() {
     Long programId = 1L;
     List<Facility> facilities = new ArrayList<>();
-    when(facilityService.getUserSupervisedFacilities(userId, programId, CREATE_REQUISITION, AUTHORIZE_REQUISITION)).thenReturn(facilities);
-    ResponseEntity<ModelMap> responseEntity = facilityController.getUserSupervisedFacilitiesSupportingProgram(programId, httpServletRequest);
+    when(facilityService.getUserSupervisedFacilities(userId, programId, CREATE_REQUISITION,
+      AUTHORIZE_REQUISITION)).thenReturn(facilities);
+    ResponseEntity<ModelMap> responseEntity = facilityController.getUserSupervisedFacilitiesSupportingProgram(programId,
+      request);
     verify(facilityService).getUserSupervisedFacilities(userId, programId, CREATE_REQUISITION, AUTHORIZE_REQUISITION);
     ModelMap map = responseEntity.getBody();
     assertThat((List<Facility>) map.get("facilities"), is(facilities));
@@ -189,29 +199,80 @@ public class FacilityControllerTest {
   }
 
   @Test
-  public void shouldSearchFacilitiesByCodeOrName() throws Exception {
-    List<Facility> facilities = asList(new Facility());
-    Boolean virtualFacility = false;
-    when(facilityService.searchFacilitiesByCodeOrNameAndVirtualFacilityFlag("searchParam", virtualFacility)).thenReturn(facilities);
+  public void shouldSearchFacilitiesBySearchParam() throws Exception {
+    String searchParam = "FAC";
+    String columnName = "facility";
+    Integer page = 1;
+    String limit = "5";
+    List<Facility> facilities = new ArrayList<>();
+    Integer totalResultCount = 10;
+    Pagination pagination = new Pagination(0, 0);
 
-    List<Facility> returnedFacilities = facilityController.get("searchParam", virtualFacility);
+    whenNew(Pagination.class).withArguments(page, parseInt(limit)).thenReturn(pagination);
+    when(facilityService.getTotalSearchResultCountByColumnName(searchParam, columnName)).thenReturn(totalResultCount);
+    when(facilityService.searchBy(searchParam, columnName, pagination)).thenReturn(facilities);
 
-    assertThat(returnedFacilities, is(facilities));
+    ResponseEntity<OpenLmisResponse> response = facilityController.get(searchParam, columnName, page, limit);
+
+    assertThat((List<Facility>) response.getBody().getData().get(FacilityController.FACILITIES), is(facilities));
+    assertThat((Pagination) response.getBody().getData().get("pagination"), is(pagination));
+    assertThat(pagination.getTotalRecords(), is(totalResultCount));
+    verify(facilityService).getTotalSearchResultCountByColumnName(searchParam, columnName);
+    verify(facilityService).searchBy(searchParam, columnName, pagination);
   }
 
   @Test
-  public void shouldGetListOfFacilityForUserForViewing() throws Exception {
+  public void shouldReturnSearchedFacilitiesIfLessThanLimit() {
+    String searchParam = "searchParam";
+    Long facilityTypeId = 1L;
+    Long geoZoneId = 2L;
+    Integer count = 1;
+    Boolean virtualFacility = false;
+    Boolean enabled = true;
+    List<Facility> facilities = asList(new Facility());
+    when(facilityService.getFacilitiesCountBy(searchParam, facilityTypeId, geoZoneId, virtualFacility, enabled)).thenReturn(count);
+    when(facilityService.searchFacilitiesBy(searchParam, facilityTypeId, geoZoneId, virtualFacility, enabled)).thenReturn(facilities);
+
+    ResponseEntity<OpenLmisResponse> responseEntity = facilityController.getFilteredFacilities(
+      searchParam,
+      facilityTypeId, geoZoneId,
+      virtualFacility, enabled, "2");
+
+    assertThat((List<Facility>) responseEntity.getBody().getData().get("facilityList"), is(facilities));
+    verify(facilityService).getFacilitiesCountBy(searchParam, facilityTypeId, geoZoneId,virtualFacility ,enabled );
+    verify(facilityService).searchFacilitiesBy(searchParam, facilityTypeId, geoZoneId, virtualFacility, enabled);
+  }
+
+  @Test
+  public void shouldNotReturnSearchedFacilitiesIfMoreThanLimit() {
+    String searchParam = "searchParam";
+    Long facilityTypeId = 1L;
+    Long geoZoneId = 2L;
+    Integer count = 3;
+    Boolean virtualFacility = false;
+    Boolean enabled = true;
+    when(facilityService.getFacilitiesCountBy(searchParam, facilityTypeId, geoZoneId,virtualFacility ,enabled)).thenReturn(count);
+
+    ResponseEntity<OpenLmisResponse> responseEntity = facilityController.getFilteredFacilities(searchParam, facilityTypeId, geoZoneId, virtualFacility, enabled, "2");
+
+    assertThat((String) responseEntity.getBody().getData().get("message"), is("too.many.results.found"));
+    verify(facilityService).getFacilitiesCountBy(searchParam, facilityTypeId, geoZoneId, virtualFacility, enabled);
+    verify(facilityService, never()).searchFacilitiesBy(searchParam, facilityTypeId, geoZoneId, virtualFacility, enabled);
+  }
+
+  @Test
+  public void shouldGetListOfFacilityForUserForViewing() {
     List<Facility> facilities = new ArrayList<>();
     when(facilityService.getForUserAndRights(userId, VIEW_REQUISITION)).thenReturn(facilities);
 
-    ResponseEntity<OpenLmisResponse> response = facilityController.listForViewing(httpServletRequest);
+    ResponseEntity<OpenLmisResponse> response = facilityController.listForViewing(request);
 
     assertThat((List<Facility>) response.getBody().getData().get("facilities"), is(facilities));
     verify(facilityService).getForUserAndRights(userId, VIEW_REQUISITION);
   }
 
   @Test
-  public void shouldSoftDeleteFacility() throws Exception {
+  public void shouldSoftDeleteFacility() {
     Facility facility = new Facility();
     facility.setId(1L);
     facility.setName("Test Facility");
@@ -220,9 +281,10 @@ public class FacilityControllerTest {
     when(Facility.createFacilityToBeDeleted(1L, 1L)).thenReturn(facility);
 
     when(facilityService.getById(facility.getId())).thenReturn(facility);
-    when(messageService.message("disable.facility.success", facility.getName(), facility.getCode())).thenReturn("\"Test Facility\" / \"Test Code\" deleted successfully");
+    when(messageService.message("disable.facility.success", facility.getName(), facility.getCode())).thenReturn(
+      "\"Test Facility\" / \"Test Code\" deleted successfully");
 
-    ResponseEntity<OpenLmisResponse> responseEntity = facilityController.softDelete(httpServletRequest, 1L);
+    ResponseEntity<OpenLmisResponse> responseEntity = facilityController.softDelete(request, 1L);
 
     assertThat(responseEntity.getBody().getSuccessMsg(), is("\"Test Facility\" / \"Test Code\" deleted successfully"));
     assertThat((Facility) responseEntity.getBody().getData().get("facility"), is(facility));
@@ -230,7 +292,7 @@ public class FacilityControllerTest {
   }
 
   @Test
-  public void shouldRestoreFacilityAndSetActiveToTrue() throws Exception {
+  public void shouldRestoreFacilityAndSetActiveToTrue() {
     Facility facility = new Facility();
     facility.setId(1L);
     facility.setName("Test Facility");
@@ -238,9 +300,10 @@ public class FacilityControllerTest {
     mockStatic(Facility.class);
     when(Facility.createFacilityToBeRestored(1L, 1L)).thenReturn(facility);
     when(facilityService.getById(facility.getId())).thenReturn(facility);
-    when(messageService.message("enable.facility.success", facility.getName(), facility.getCode())).thenReturn("\"Test Facility\" / \"Test Code\" restored successfully");
+    when(messageService.message("enable.facility.success", facility.getName(), facility.getCode())).thenReturn(
+      "\"Test Facility\" / \"Test Code\" restored successfully");
 
-    ResponseEntity<OpenLmisResponse> responseEntity = facilityController.restore(httpServletRequest, 1L);
+    ResponseEntity<OpenLmisResponse> responseEntity = facilityController.restore(request, 1L);
 
     assertThat(responseEntity.getBody().getSuccessMsg(), is("\"Test Facility\" / \"Test Code\" restored successfully"));
     assertThat((Facility) responseEntity.getBody().getData().get("facility"), is(facility));
@@ -248,10 +311,10 @@ public class FacilityControllerTest {
   }
 
   @Test
-  public void shouldGetFacilitiesForDeliveryZoneAndProgram() throws Exception {
+  public void shouldGetFacilitiesForDeliveryZoneAndProgram() {
     mockStatic(Facility.class);
     List<Facility> facilities = new ArrayList<>();
-    Mockito.when(facilityService.getAllForDeliveryZoneAndProgram(1l, 1l)).thenReturn(facilities);
+    when(facilityService.getAllForDeliveryZoneAndProgram(1l, 1l)).thenReturn(facilities);
     when(Facility.filterForActiveProducts(facilities)).thenReturn(facilities);
 
     ResponseEntity<OpenLmisResponse> responseEntity = facilityController.getFacilitiesForDeliveryZoneAndProgram(1l, 1l);
@@ -261,7 +324,7 @@ public class FacilityControllerTest {
   }
 
   @Test
-  public void shouldGetWarehouses() throws Exception {
+  public void shouldGetWarehouses() {
 
     List<Facility> facilities = new ArrayList<>();
     facilities.add(new Facility());
@@ -273,16 +336,16 @@ public class FacilityControllerTest {
 
     verify(facilityService).getEnabledWarehouses();
     assertThat((List<Facility>) warehouses.getBody().getData().get("enabledWarehouses"), is(facilities));
-
   }
 
-  private MockHttpServletRequest httpRequest() {
-    MockHttpServletRequest httpServletRequest = new MockHttpServletRequest();
-    MockHttpSession mockHttpSession = new MockHttpSession();
-    httpServletRequest.setSession(mockHttpSession);
-    mockHttpSession.setAttribute(USER, USER);
-    return httpServletRequest;
+  @Test
+  public void shouldGetAllFacilityTypes() {
+    List<FacilityType> types = new ArrayList<>();
+    when(facilityService.getAllTypes()).thenReturn(types);
+
+    List<FacilityType> facilityTypes = facilityController.getFacilityTypes();
+
+    verify(facilityService).getAllTypes();
+    assertThat(facilityTypes, is(types));
   }
-
-
 }

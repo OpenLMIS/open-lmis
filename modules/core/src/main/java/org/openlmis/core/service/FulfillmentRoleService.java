@@ -15,7 +15,6 @@
 package org.openlmis.core.service;
 
 import org.openlmis.core.domain.FulfillmentRoleAssignment;
-import org.openlmis.core.domain.Right;
 import org.openlmis.core.domain.User;
 import org.openlmis.core.repository.FulfillmentRoleAssignmentRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,7 +40,7 @@ public class FulfillmentRoleService {
     fulfillmentRoleAssignmentRepository.insertFulfillmentRoles(user);
   }
 
-  public List<FulfillmentRoleAssignment> getRolesWithRight(Long userId, Right right) {
-    return fulfillmentRoleAssignmentRepository.getRolesWithRight(userId, right);
+  public List<FulfillmentRoleAssignment> getRolesWithRight(Long userId, String rightName) {
+    return fulfillmentRoleAssignmentRepository.getRolesWithRight(userId, rightName);
   }
 }

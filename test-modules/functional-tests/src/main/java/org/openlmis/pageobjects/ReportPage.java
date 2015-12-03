@@ -14,15 +14,25 @@ package org.openlmis.pageobjects;
 import org.openlmis.UiUtils.TestWebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
+import org.openqa.selenium.support.How;
 import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.pagefactory.AjaxElementLocatorFactory;
 
-import static com.thoughtworks.selenium.SeleneseTestBase.assertTrue;
 import static org.openqa.selenium.support.How.ID;
-import static org.openqa.selenium.support.How.XPATH;
 
+public class ReportPage extends Page {
 
-public class ReportPage extends RequisitionPage {
+  @FindBy(how = ID, using = "reportHeader")
+  private static WebElement reportHeader = null;
+
+  @FindBy(how = ID, using = "noReportsMessage")
+  private static WebElement noReportsMessage = null;
+
+  @FindBy(how = ID, using = "reportNameHeader")
+  private static WebElement reportNameHeader = null;
+
+  @FindBy(how = ID, using = "descriptionHeader")
+  private static WebElement descriptionHeader = null;
 
   @FindBy(how = ID, using = "addNew")
   private static WebElement addNewButton = null;
@@ -30,8 +40,20 @@ public class ReportPage extends RequisitionPage {
   @FindBy(how = ID, using = "addNewHeader")
   private static WebElement addNewReportTitle = null;
 
+  @FindBy(how = ID, using = "nameLabel")
+  private static WebElement reportNameLabel = null;
+
+  @FindBy(how = ID, using = "descriptionLabel")
+  private static WebElement reportDescriptionLabel = null;
+
+  @FindBy(how = ID, using = "uploadFileLabel")
+  private static WebElement uploadFieldLabel = null;
+
   @FindBy(how = ID, using = "name")
   private static WebElement reportNameTextField = null;
+
+  @FindBy(how = ID, using = "description")
+  private static WebElement reportDescriptionTextField = null;
 
   @FindBy(how = ID, using = "file")
   private static WebElement uploadField = null;
@@ -48,29 +70,79 @@ public class ReportPage extends RequisitionPage {
   @FindBy(how = ID, using = "error")
   private static WebElement saveErrorMessage = null;
 
-  @FindBy(how = XPATH, using = "//a[contains(text(),'PDF')]")
-  private static WebElement PDF = null;
+  @FindBy(how = ID, using = "pdfButton")
+  private static WebElement pdfButton = null;
 
-  @FindBy(how = XPATH, using = "//a[contains(text(),'XLS')]")
-  private static WebElement XLS = null;
+  @FindBy(how = ID, using = "xlsButton")
+  private static WebElement xlsButton = null;
 
-  @FindBy(how = XPATH, using = "//a[contains(text(),'CSV')]")
-  private static WebElement CSV = null;
+  @FindBy(how = ID, using = "csvButton")
+  private static WebElement csvButton = null;
 
-  @FindBy(how = XPATH, using = "//a[contains(text(),'HTML')]")
-  private static WebElement HTML = null;
+  @FindBy(how = ID, using = "htmlButton")
+  private static WebElement htmlButton = null;
 
-  @FindBy(how = XPATH, using = "(//span[contains(text(),'Please fill this value')])[1]")
+  @FindBy(how = ID, using = "pdfTableButton")
+  private static WebElement pdfTableButton = null;
+
+  @FindBy(how = ID, using = "xlsTableButton")
+  private static WebElement xlsTableButton = null;
+
+  @FindBy(how = ID, using = "csvTableButton")
+  private static WebElement csvTableButton = null;
+
+  @FindBy(how = ID, using = "htmlTableButton")
+  private static WebElement htmlTableButton = null;
+
+  @FindBy(how = ID, using = "reportNameError")
   private static WebElement errorReportName = null;
 
-  @FindBy(how = XPATH, using = "(//span[contains(text(),'Please fill this value')])[2]")
+  @FindBy(how = ID, using = "fileError")
   private static WebElement errorFile = null;
 
+  @FindBy(how = ID, using = "reportName")
+  private static WebElement reportName = null;
+
+  @FindBy(how = How.XPATH, using = "//span[contains(text(),'Prev')]")
+  private static WebElement prevCalender = null;
+
+  @FindBy(how = How.XPATH, using = "//a[@class='ui-state-default' and contains(text(),'1')]")
+  private static WebElement dateInCalender = null;
 
   public ReportPage(TestWebDriver driver) {
     super(driver);
     PageFactory.initElements(new AjaxElementLocatorFactory(TestWebDriver.getDriver(), 10), this);
     testWebDriver.setImplicitWait(10);
+  }
+
+  public String getReportHeader() {
+    testWebDriver.waitForElementToAppear(reportHeader);
+    return reportHeader.getText();
+  }
+
+  public String getReportNameHeader() {
+    testWebDriver.waitForElementToAppear(reportNameHeader);
+    return reportNameHeader.getText();
+  }
+
+  public String getDescriptionHeader() {
+    testWebDriver.waitForElementToAppear(descriptionHeader);
+    return descriptionHeader.getText();
+  }
+
+  public String getNameLabel() {
+    testWebDriver.waitForElementToAppear(reportNameLabel);
+    return reportNameLabel.getText();
+  }
+
+  public String getDescriptionLabel() {
+    testWebDriver.waitForElementToAppear(reportDescriptionLabel);
+    return reportDescriptionLabel.getText();
+  }
+
+  public String getUploadFileLabel() {
+    testWebDriver.waitForElementToAppear(uploadFieldLabel);
+    return uploadFieldLabel.getText();
   }
 
   public void clickAddNewButton() {
@@ -80,30 +152,20 @@ public class ReportPage extends RequisitionPage {
     testWebDriver.waitForElementToAppear(addNewReportTitle);
   }
 
-  public void verifyItemsOnReportUploadScreen() {
-    assertTrue("Report Name field missing", reportNameTextField.isDisplayed());
-    assertTrue("Upload field missing", uploadField.isDisplayed());
-    assertTrue("Save button missing", saveButton.isDisplayed());
-    assertTrue("Cancel button missing", cancelButton.isDisplayed());
-  }
-
-  public void verifyItemsOnReportListScreen() {
-    assertTrue("PDF link missing", PDF.isDisplayed());
-    assertTrue("XLS link missing", XLS.isDisplayed());
-    assertTrue("CSV link missing", CSV.isDisplayed());
-    assertTrue("HTML link missing", HTML.isDisplayed());
-  }
-
   public void enterReportName(String reportName) {
     testWebDriver.waitForElementToAppear(reportNameTextField);
-    reportNameTextField.clear();
-    reportNameTextField.sendKeys(reportName);
+    sendKeys(reportNameTextField, reportName);
+  }
+
+  public void enterReportDescription(String reportName) {
+    testWebDriver.waitForElementToAppear(reportDescriptionTextField);
+    sendKeys(reportDescriptionTextField, reportName);
   }
 
   public void uploadFile(String fileName) {
     String uploadFilePath;
     uploadFilePath = this.getClass().getClassLoader().getResource(fileName).getFile();
-    uploadField.sendKeys(uploadFilePath);
+    sendKeys(uploadField, uploadFilePath);
   }
 
   public void clickSaveButton() {
@@ -116,29 +178,201 @@ public class ReportPage extends RequisitionPage {
     cancelButton.click();
   }
 
-  public void verifySuccessMessageDiv() {
-    testWebDriver.sleep(500);
-    assertTrue("Report created successfully message not displayed", saveSuccessMessage.isDisplayed());
+  public boolean isSaveButtonDisplayed() {
+    testWebDriver.waitForElementToAppear(saveButton);
+    return saveButton.isDisplayed();
   }
 
-  public void verifyErrorMessageDivFooter() {
-    testWebDriver.sleep(2500);
-    assertTrue("Report with same name already exists message should show up", saveErrorMessage.isDisplayed());
+  public boolean isCancelButtonDisplayed() {
+    testWebDriver.waitForElementToAppear(cancelButton);
+    return cancelButton.isDisplayed();
   }
 
-  public void verifyErrorMessageDivReportName() {
-    testWebDriver.sleep(500);
-    assertTrue("Error message 'Please fill this value' should show up", errorReportName.isDisplayed());
+  public boolean isPDFLinkDisplayed() {
+    testWebDriver.waitForElementToAppear(pdfButton);
+    return pdfButton.isDisplayed();
   }
 
-  public void verifyErrorMessageDivUploadFile() {
-    testWebDriver.sleep(500);
-    assertTrue("Error message 'Please fill this value' should show up", errorFile.isDisplayed());
+  public boolean isHTMLLinkDisplayed() {
+    testWebDriver.waitForElementToAppear(htmlButton);
+    return htmlButton.isDisplayed();
   }
 
-  public void verifyReportNameInList(String reportName, int reportIndex) {
-    WebElement element = testWebDriver.getElementByXpath("//div[@id='wrap']/div/div/div/table/tbody/tr[" + reportIndex + "]/td[1]/div");
+  public boolean isCSVLinkDisplayed() {
+    testWebDriver.waitForElementToAppear(csvButton);
+    return csvButton.isDisplayed();
+  }
+
+  public boolean isXLSLinkDisplayed() {
+    testWebDriver.waitForElementToAppear(xlsButton);
+    return xlsButton.isDisplayed();
+  }
+
+  public boolean isPDFTableLinkDisplayed() {
+    testWebDriver.waitForElementToAppear(pdfTableButton);
+    return pdfTableButton.isDisplayed();
+  }
+
+  public boolean isHTMLTableLinkDisplayed() {
+    testWebDriver.waitForElementToAppear(htmlTableButton);
+    return htmlTableButton.isDisplayed();
+  }
+
+  public boolean isCSVTableLinkDisplayed() {
+    testWebDriver.waitForElementToAppear(csvTableButton);
+    return csvTableButton.isDisplayed();
+  }
+
+  public boolean isXLSTableLinkDisplayed() {
+    testWebDriver.waitForElementToAppear(xlsTableButton);
+    return xlsTableButton.isDisplayed();
+  }
+
+  public String getSaveSuccessMessage() {
+    testWebDriver.waitForElementToAppear(saveSuccessMessage);
+    return saveSuccessMessage.getText();
+  }
+
+  public String getSaveErrorMessage() {
+    testWebDriver.waitForElementToAppear(saveErrorMessage);
+    return saveErrorMessage.getText();
+  }
+
+  public String getErrorReportNameMessage() {
+    testWebDriver.waitForElementToAppear(errorReportName);
+    return errorReportName.getText();
+  }
+
+  public String getErrorFileMessage() {
+    testWebDriver.waitForElementToAppear(errorFile);
+    return errorFile.getText();
+  }
+
+  public String getReportName(int reportIndex) {
+    WebElement element = testWebDriver.getElementById("reportName" + (reportIndex - 1));
     testWebDriver.waitForElementToAppear(element);
-    assertTrue("Report Name '" + reportName + "' should display in list", element.getText().trim().equalsIgnoreCase(reportName));
+    return element.getText().trim();
+  }
+
+  public String getNoReportsMessage() {
+    testWebDriver.waitForElementToAppear(noReportsMessage);
+    return noReportsMessage.getText();
+  }
+
+  public String getReportDescription(int reportIndex) {
+    WebElement element = testWebDriver.getElementById("reportDescription" + (reportIndex - 1));
+    testWebDriver.waitForElementToAppear(element);
+    return element.getText().trim();
+  }
+
+  public void clickReport(int reportIndex) {
+    WebElement element = testWebDriver.getElementById("reportName" + (reportIndex - 1));
+    testWebDriver.waitForElementToAppear(element);
+    element.click();
+  }
+
+  public String getReportName() {
+    testWebDriver.waitForElementToAppear(reportName);
+    return reportName.getText();
+  }
+
+  public String getParameterDisplayName(String displayName) {
+    WebElement element = testWebDriver.getElementById("displayName_" + displayName);
+    testWebDriver.waitForElementToAppear(element);
+    return element.getText().trim();
+  }
+
+  public String getParameterDescription(String displayName) {
+    WebElement element = testWebDriver.getElementById("description_" + displayName);
+    testWebDriver.waitForElementToAppear(element);
+    return element.getText().trim();
+  }
+
+  public String getParameterDate(String displayName) {
+    WebElement element = testWebDriver.getElementById("date_" + displayName);
+    testWebDriver.waitForElementToAppear(element);
+    return element.getAttribute("value");
+  }
+
+  public boolean isParameterTrueOptionSelected(String displayName) {
+    WebElement element = testWebDriver.getElementById("true_" + displayName);
+    testWebDriver.waitForElementToAppear(element);
+    return element.isSelected();
+  }
+
+  public boolean isParameterFalseOptionSelected(String displayName) {
+    WebElement element = testWebDriver.getElementById("false_" + displayName);
+    testWebDriver.waitForElementToAppear(element);
+    return element.isSelected();
+  }
+
+  public String getParameterString(String displayName) {
+    WebElement element = testWebDriver.getElementById("string_" + displayName);
+    testWebDriver.waitForElementToAppear(element);
+    return element.getAttribute("value");
+  }
+
+  public String getParameterInt(String displayName) {
+    WebElement element = testWebDriver.getElementById("integer_" + displayName);
+    testWebDriver.waitForElementToAppear(element);
+    return element.getAttribute("value");
+  }
+
+  public String getParameterFloat(String displayName) {
+    WebElement element = testWebDriver.getElementById("float_" + displayName);
+    testWebDriver.waitForElementToAppear(element);
+    return element.getAttribute("value");
+  }
+
+  public String getUnSupportedDataTypeText(String displayName) {
+    WebElement element = testWebDriver.getElementById("unSupportedDataType_" + displayName);
+    testWebDriver.waitForElementToAppear(element);
+    return element.getText();
+  }
+
+  public void selectParameterDate(String displayName) {
+    WebElement element = testWebDriver.getElementById("date_" + displayName);
+    testWebDriver.waitForElementToAppear(element);
+    testWebDriver.sleep(1500);
+    element.click();
+    testWebDriver.waitForElementToAppear(prevCalender);
+    prevCalender.click();
+    testWebDriver.waitForElementToAppear(dateInCalender);
+    dateInCalender.click();
+    testWebDriver.sleep(500);
+  }
+
+  public void selectParameterFalseOption(String displayName) {
+    WebElement element = testWebDriver.getElementById("false_" + displayName);
+    testWebDriver.waitForElementToAppear(element);
+    element.click();
+  }
+
+  public void enterStringParameterInput(String displayName, String input) {
+    WebElement element = testWebDriver.getElementById("string_" + displayName);
+    testWebDriver.waitForElementToAppear(element);
+    sendKeys(element, input);
+  }
+
+  public void enterIntParameterInput(String displayName, String input) {
+    WebElement element = testWebDriver.getElementById("integer_" + displayName);
+    testWebDriver.waitForElementToAppear(element);
+    sendKeys(element, input);
+  }
+
+  public void enterFloatParameterInput(String displayName, String input) {
+    WebElement element = testWebDriver.getElementById("float_" + displayName);
+    testWebDriver.waitForElementToAppear(element);
+    sendKeys(element, input);
+  }
+
+  public void clickCsvLink() {
+    testWebDriver.waitForElementToAppear(csvButton);
+    csvButton.click();
+  }
+
+  public void clickCsvTableLink() {
+    testWebDriver.waitForElementToAppear(csvTableButton);
+    csvTableButton.click();
   }
 }

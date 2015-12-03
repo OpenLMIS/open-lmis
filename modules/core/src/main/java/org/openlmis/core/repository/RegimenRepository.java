@@ -36,10 +36,6 @@ public class RegimenRepository {
     return mapper.getByProgram(programId);
   }
 
-  public List<RegimenCategory> getAllRegimenCategories() {
-    return regimenCategoryMapper.getAll();
-  }
-
   public void save(List<Regimen> regimens, Long userId) {
     for (Regimen regimen : regimens) {
       regimen.setModifiedBy(userId);

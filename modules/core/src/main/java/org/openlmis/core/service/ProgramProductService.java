@@ -10,17 +10,22 @@
 
 package org.openlmis.core.service;
 
+import com.google.common.base.Predicate;
 import lombok.NoArgsConstructor;
 import org.openlmis.core.domain.*;
 import org.openlmis.core.exception.DataException;
-import org.openlmis.core.repository.FacilityRepository;
+import org.openlmis.core.repository.FacilityTypeRepository;
 import org.openlmis.core.repository.ProgramProductRepository;
 import org.openlmis.core.repository.ProgramRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
+import static com.google.common.collect.Iterables.all;
+import static com.google.common.collect.Iterables.filter;
+import static com.google.common.collect.Lists.newArrayList;
 import static org.apache.commons.lang3.StringUtils.trimToEmpty;
 import static org.apache.commons.lang3.StringUtils.trimToNull;
 
@@ -28,7 +33,7 @@ import static org.apache.commons.lang3.StringUtils.trimToNull;
  * Exposes the services for handling ProgramProduct entity.
  */
 
-@Component
+@Service
 @NoArgsConstructor
 public class ProgramProductService {
 
@@ -45,10 +50,13 @@ public class ProgramProductService {
   private ProgramRepository programRepository;
 
   @Autowired
-  private FacilityRepository facilityRepository;
+  private FacilityTypeRepository facilityTypeRepository;
 
   @Autowired
   private ProductCategoryService categoryService;
+
+  @Autowired
+  private FacilityApprovedProductService facilityApprovedProductService;
 
   public Long getIdByProgramIdAndProductId(Long programId, Long productId) {
     return programProductRepository.getIdByProgramIdAndProductId(programId, productId);
@@ -74,11 +82,11 @@ public class ProgramProductService {
     validateAndSetProductCategory(programProduct);
     if (programProduct.getId() == null) {
       boolean globalProductStatus = productService.isActive(programProduct.getProduct().getCode());
-      if (globalProductStatus && programProduct.isActive())
+      if (globalProductStatus && programProduct.getActive())
         programService.setFeedSendFlag(programProduct.getProgram(), true);
     } else {
       ProgramProduct existingProgramProduct = programProductRepository.getById(programProduct.getId());
-      if (existingProgramProduct.getProduct().getActive() && (existingProgramProduct.isActive() != programProduct.isActive())) {
+      if (existingProgramProduct.getProduct().getActive() && (existingProgramProduct.getActive() != programProduct.getActive())) {
         programService.setFeedSendFlag(programProduct.getProgram(), true);
       }
     }
@@ -111,9 +119,10 @@ public class ProgramProductService {
   public List<ProgramProduct> getProgramProductsBy(String programCode, String facilityTypeCode) {
     FacilityType facilityType = new FacilityType();
     if ((facilityTypeCode = trimToNull(facilityTypeCode)) != null) {
-      facilityType = facilityRepository.getFacilityTypeByCode(new FacilityType(facilityTypeCode));
+      facilityType = facilityTypeRepository.getByCodeOrThrowException(facilityTypeCode);
     }
-    return programProductRepository.getProgramProductsBy(programRepository.getIdByCode(trimToEmpty(programCode)), facilityType.getCode());
+    return programProductRepository.getProgramProductsBy(programRepository.getIdByCode(trimToEmpty(programCode)),
+      facilityType.getCode());
   }
 
   public List<ProgramProduct> getNonFullSupplyProductsForProgram(Program program) {
@@ -134,5 +143,53 @@ public class ProgramProductService {
 
   public ProgramProduct getByProgramAndProductId(Long programId, Long productId) {
     return programProductRepository.getByProgramAndProductId(programId, productId);
+  }
+
+  public List<ProgramProduct> search(String searchParam, Pagination pagination, String column) {
+    if (column.equalsIgnoreCase("Program")) {
+      return programProductRepository.searchByProgram(searchParam, pagination);
+    }
+    return programProductRepository.searchByProduct(searchParam, pagination);
+  }
+
+  public List<ProgramProduct> getUnapprovedProgramProducts(Long facilityTypeId, Long programId) {
+    final List<ProgramProduct> allProgramProducts = getByProgram(new Program(programId));
+    final List<FacilityTypeApprovedProduct> approvedProducts = facilityApprovedProductService.getAllBy(facilityTypeId,
+      programId, "", new Pagination());
+
+    Iterable<ProgramProduct> programProducts = filter(allProgramProducts, new Predicate<ProgramProduct>() {
+      @Override
+      public boolean apply(ProgramProduct programProduct) {
+        return isApproved(programProduct, approvedProducts);
+      }
+    });
+    return newArrayList(programProducts);
+  }
+
+  private boolean isApproved(final ProgramProduct programProduct, List<FacilityTypeApprovedProduct> approvedProducts) {
+    return all(approvedProducts, new Predicate<FacilityTypeApprovedProduct>() {
+      @Override
+      public boolean apply(final FacilityTypeApprovedProduct approvedProduct) {
+        return !programProduct.getId().equals(
+          approvedProduct.getProgramProduct().getId());
+      }
+    });
+  }
+
+  public Integer getTotalSearchResultCount(String searchParam, String column) {
+    if (column.equalsIgnoreCase("Program")) {
+      return programProductRepository.getTotalSearchResultCount(searchParam);
+    }
+    return productService.getTotalSearchResultCount(searchParam);
+  }
+
+  @Transactional
+  public void saveAll(List<ProgramProduct> programProducts, Product product) {
+    for (ProgramProduct programProduct : programProducts) {
+      programProduct.setProduct(product);
+      programProduct.setCreatedBy(product.getCreatedBy());
+      programProduct.setModifiedBy(product.getModifiedBy());
+      save(programProduct);
+    }
   }
 }

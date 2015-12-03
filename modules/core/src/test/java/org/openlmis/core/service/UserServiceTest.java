@@ -20,10 +20,7 @@ import org.junit.runner.RunWith;
 import org.mockito.ArgumentMatcher;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.openlmis.core.domain.FulfillmentRoleAssignment;
-import org.openlmis.core.domain.RoleAssignment;
-import org.openlmis.core.domain.SupervisoryNode;
-import org.openlmis.core.domain.User;
+import org.openlmis.core.domain.*;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.core.hash.Encoder;
 import org.openlmis.core.repository.UserRepository;
@@ -34,11 +31,11 @@ import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 import org.springframework.mail.SimpleMailMessage;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import static com.natpryce.makeiteasy.MakeItEasy.*;
 import static java.util.Arrays.asList;
-import static junit.framework.Assert.assertTrue;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 import static org.junit.rules.ExpectedException.none;
@@ -196,15 +193,18 @@ public class UserServiceTest {
     List<FulfillmentRoleAssignment> fulfillmentRoleAssignments = asList(new FulfillmentRoleAssignment());
     when(roleAssignmentService.getFulfilmentRoles(userId)).thenReturn(fulfillmentRoleAssignments);
     RoleAssignment adminRole = new RoleAssignment();
+    RoleAssignment reportingRole = new RoleAssignment();
     when(roleAssignmentService.getAdminRole(userId)).thenReturn(adminRole);
+    when(roleAssignmentService.getReportingRole(userId)).thenReturn(reportingRole);
 
-    User returnedUser = userService.getById(userId);
+    User returnedUser = userService.getUserWithRolesById(userId);
 
     assertThat(returnedUser, is(user));
     assertThat(returnedUser.getHomeFacilityRoles(), is(homeFacilityRoles));
     assertThat(returnedUser.getSupervisorRoles(), is(supervisorRoles));
     assertThat(returnedUser.getAllocationRoles(), is(allocationRoles));
     assertThat(returnedUser.getAdminRole(), is(adminRole));
+    assertThat(returnedUser.getReportingRole(), is(reportingRole));
     assertThat(returnedUser.getFulfillmentRoles(), is(fulfillmentRoleAssignments));
   }
 
@@ -230,18 +230,23 @@ public class UserServiceTest {
     verify(emailService).send(any(SimpleMailMessage.class));
   }
 
+  @Test
+  public void shouldReturnSearchResults() {
+    String searchParam = "abc";
+    Pagination pagination = new Pagination(1,2);
+
+    userService.searchUser(searchParam,pagination);
+
+    verify(userRepository).searchUser(searchParam,pagination);
+  }
 
   @Test
-  public void shouldReturnSearchResultsWhenUserExists() throws Exception {
-    User user = new User();
-    String userSearchParam = "abc";
-    List<User> listOfUsers = asList(new User());
+  public void shouldReturnTotalResultCount(){
+    String searchParam = "abc";
 
-    when(userRepository.searchUser(userSearchParam)).thenReturn(listOfUsers);
+    userService.getTotalSearchResultCount(searchParam);
 
-    List<User> listOfReturnedUsers = userService.searchUser(userSearchParam);
-
-    assertTrue(listOfReturnedUsers.contains(user));
+    verify(userRepository).getTotalSearchResultCount(searchParam);
   }
 
   @Test
@@ -317,7 +322,7 @@ public class UserServiceTest {
 
     userService.updateUserPassword(userId, newPassword);
 
-    verify(userRepository).updateUserPassword(userId, hashedPassword);
+    verify(userRepository).updateUserPasswordAndActivate(userId, hashedPassword);
   }
 
   @Test
@@ -326,5 +331,28 @@ public class UserServiceTest {
     userService.disable(userId, 1L);
     verify(userRepository).disable(userId, 1L);
     verify(userRepository).deletePasswordResetTokenForUser(userId);
+  }
+
+  @Test
+  public void shouldFilterActiveUsers() {
+    User user1 = new User(1L, "user1");
+    user1.setActive(true);
+
+    User user2 = new User(2L, "user2");
+    user2.setActive(false);
+
+    User user3 = new User(3L, "user3");
+    user3.setActive(true);
+
+    ArrayList<User> users = new ArrayList<>();
+    users.add(user1);
+    users.add(user2);
+    users.add(user3);
+
+    ArrayList<User> activeUsers = userService.filterForActiveUsers(users);
+
+    assertThat(activeUsers.size(), is(2));
+    assertThat(activeUsers.get(0), is(user1));
+    assertThat(activeUsers.get(1), is(user3));
   }
 }

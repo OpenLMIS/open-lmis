@@ -32,7 +32,7 @@ import java.text.ParseException;
 import java.util.Date;
 import java.util.List;
 
-import static org.openlmis.core.domain.Right.MANAGE_POD;
+import static org.openlmis.core.domain.RightName.MANAGE_POD;
 import static org.openlmis.order.domain.OrderStatus.*;
 
 /**
@@ -64,9 +64,9 @@ public class PODService {
     Rnr requisition = requisitionService.getFullRequisitionById(orderPOD.getOrderId());
     orderPOD.fillPOD(requisition);
 
-    if (orderService.hasStatus(orderPOD.getOrderId(), RELEASED, READY_TO_PACK, TRANSFER_FAILED)) {
+    if (orderService.hasStatus(orderPOD.getOrderNumber(), RELEASED, READY_TO_PACK, TRANSFER_FAILED)) {
       orderPOD.fillPODLineItems(requisition.getAllLineItems());
-    } else if (orderService.hasStatus(orderPOD.getOrderId(), PACKED)) {
+    } else if (orderService.hasStatus(orderPOD.getOrderNumber(), PACKED)) {
       List<ShipmentLineItem> shipmentLineItems = shipmentService.getLineItems(orderPOD.getOrderId());
       orderPOD.fillPODLineItems(shipmentLineItems);
     }
@@ -76,6 +76,7 @@ public class PODService {
 
   public void updateOrderStatus(OrderPOD orderPod) {
     Order order = new Order(orderPod.getOrderId());
+    order.setOrderNumber(orderPod.getOrderNumber());
     order.setStatus(OrderStatus.RECEIVED);
     orderService.updateOrderStatus(order);
   }
@@ -108,7 +109,7 @@ public class PODService {
   @Transactional
   public OrderPOD save(OrderPOD orderPOD) throws ParseException {
     OrderPOD existingPod = repository.getPOD(orderPOD.getId());
-    if (orderService.hasStatus(existingPod.getOrderId(), OrderStatus.RECEIVED)) {
+    if (orderService.hasStatus(existingPod.getOrderNumber(), OrderStatus.RECEIVED)) {
       throw new DataException("error.pod.already.submitted");
     }
     checkPermissions(existingPod);
@@ -123,13 +124,15 @@ public class PODService {
     OrderPOD orderPOD = repository.getPOD(podId);
     orderPOD.setModifiedBy(userId);
 
-    if (orderService.hasStatus(orderPOD.getOrderId(), OrderStatus.RECEIVED)) {
+    if (orderService.hasStatus(orderPOD.getOrderNumber(), OrderStatus.RECEIVED)) {
       throw new DataException("error.pod.already.submitted");
     }
     checkPermissions(orderPOD);
     orderPOD.validate();
 
-    orderService.updateOrderStatus(new Order(orderPOD.getOrderId(), RECEIVED));
+    Order order = new Order(orderPOD.getOrderId(), RECEIVED);
+    order.setOrderNumber(orderPOD.getOrderNumber());
+    orderService.updateOrderStatus(order);
 
     return repository.update(orderPOD);
   }

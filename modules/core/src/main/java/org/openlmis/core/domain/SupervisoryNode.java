@@ -13,8 +13,12 @@ package org.openlmis.core.domain;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.codehaus.jackson.map.annotate.JsonSerialize;
+import org.openlmis.core.exception.DataException;
 import org.openlmis.upload.Importable;
 import org.openlmis.upload.annotation.ImportField;
+
+import static org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion.NON_NULL;
 
 /**
  * SupervisoryNode represents the Supervisory Node in a system. Also defines contract to upload SupervisoryNode.
@@ -22,6 +26,7 @@ import org.openlmis.upload.annotation.ImportField;
 @Getter
 @Setter
 @NoArgsConstructor
+@JsonSerialize(include = NON_NULL)
 public class SupervisoryNode extends BaseModel implements Importable {
 
   @ImportField(name = "Supervisory Node Code", mandatory = true)
@@ -56,5 +61,10 @@ public class SupervisoryNode extends BaseModel implements Importable {
   @Override
   public int hashCode() {
     return id.hashCode();
+  }
+
+  public void validateParent() {
+    if (this.code.equals(this.parent.code) || this.id == this.parent.id)
+      throw new DataException("error.supervisory.node.parent.invalid");
   }
 }

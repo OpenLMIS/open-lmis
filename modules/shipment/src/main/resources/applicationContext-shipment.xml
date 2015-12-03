@@ -43,7 +43,7 @@
     <property name="port" value="${shipment.ftp.server.port}"/>
     <property name="username" value="${shipment.ftp.server.username}"/>
     <property name="password" value="${shipment.ftp.server.password}"/>
-    <property name="clientMode" value="0"/>
+    <property name="clientMode" value="2"/>
     <property name="fileType" value="2"/>
     <property name="bufferSize" value="100000"/>
   </bean>

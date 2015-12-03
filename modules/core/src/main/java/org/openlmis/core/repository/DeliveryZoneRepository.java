@@ -12,7 +12,6 @@ package org.openlmis.core.repository;
 
 import org.openlmis.core.domain.DeliveryZone;
 import org.openlmis.core.domain.Program;
-import org.openlmis.core.domain.Right;
 import org.openlmis.core.repository.mapper.DeliveryZoneMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
@@ -41,8 +40,8 @@ public class DeliveryZoneRepository {
     return mapper.getByCode(code);
   }
 
-  public List<DeliveryZone> getByUserForRight(Long userId, Right right) {
-    return mapper.getByUserForRight(userId, right);
+  public List<DeliveryZone> getByUserForRight(Long userId, String rightName) {
+    return mapper.getByUserForRight(userId, rightName);
   }
 
   public List<Program> getPrograms(Long id) {

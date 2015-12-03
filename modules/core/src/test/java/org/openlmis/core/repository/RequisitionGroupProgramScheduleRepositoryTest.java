@@ -189,14 +189,6 @@ public class RequisitionGroupProgramScheduleRepositoryTest {
   }
 
   @Test
-  public void shouldGiveErrorWhenDropOffFacilityIsProvidedAndDirectDeliveryIsTrue() {
-    requisitionGroupProgramSchedule.setDirectDelivery(true);
-    requisitionGroupProgramSchedule.setDropOffFacility(dropOffFacility);
-    expectedEx.expect(dataExceptionMatcher("error.direct.delivery.drop.off.facility.combination.incorrect"));
-    repository.insert(requisitionGroupProgramSchedule);
-  }
-
-  @Test
   public void shouldGiveErrorWhenDropOffFacilityIsNotProvidedAndDirectDeliveryIsFalse() {
     requisitionGroupProgramSchedule.setDirectDelivery(false);
 

@@ -10,9 +10,14 @@
 
 package org.openlmis.core.repository.mapper;
 
+import org.apache.ibatis.annotations.Insert;
+import org.apache.ibatis.annotations.Options;
 import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.Update;
 import org.openlmis.core.domain.DosageUnit;
 import org.springframework.stereotype.Repository;
+
+import java.util.List;
 
 /**
  * DosageUnitMapper maps the DosageUnit entity to corresponding representation in database.
@@ -20,8 +25,26 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface DosageUnitMapper {
 
-  // Used by mapper
+  @Insert({"INSERT INTO dosage_units",
+    "(code, displayOrder, createdBy, createdDate, modifiedBy, modifiedDate)",
+    "VALUES",
+    "(#{code}, #{displayOrder}, #{createdBy}, NOW(), #{modifiedBy}, NOW())"})
+  @Options(useGeneratedKeys = true)
+  void insert(DosageUnit dosageUnit);
+
+  @Update({"UPDATE dosage_units SET code = #{code},",
+    "displayOrder = #{displayOrder},",
+    "modifiedBy=#{modifiedBy},",
+    "modifiedDate=NOW()",
+    "WHERE id = #{id}"})
+  void update(DosageUnit dosageUnit);
+
   @Select("SELECT * FROM dosage_units WHERE id = #{id}")
   DosageUnit getById(Long id);
 
+  @Select("SELECT * FROM dosage_units")
+  List<DosageUnit> getAll();
+  
+  @Select("SELECT * FROM dosage_units WHERE LOWER(code) = LOWER(#{code})")
+  DosageUnit getByCode(String code);
 }

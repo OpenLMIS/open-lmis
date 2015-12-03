@@ -16,10 +16,6 @@ var DistributionStatus = {
   DUPLICATE: 'is-duplicate'
 };
 
-String.prototype.endsWith = function (suffix) {
-  return this.indexOf(suffix, this.length - suffix.length) !== -1;
-};
-
 var distributionModule = angular.module('distribution',
   ['openlmis', 'IndexedDB', 'ui.bootstrap.dialog', 'ui.bootstrap.modal']);
 

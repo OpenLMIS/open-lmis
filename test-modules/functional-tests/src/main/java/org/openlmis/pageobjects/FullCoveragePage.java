@@ -65,9 +65,6 @@ public class FullCoveragePage extends DistributionTab {
   @FindBy(how = ID, using = "CoverageFormApplyNRToAll")
   public static WebElement fullCoverageFormApplyNRToAll = null;
 
-  @FindBy(how = ID, using = "coverageFemaleHC")
-  public static WebElement femaleHealthCenterNR = null;
-
   @FindBy(how = ID, using = "coverageFemaleMB")
   public static WebElement femaleMobileBrigadeNR = null;
 
@@ -168,12 +165,6 @@ public class FullCoveragePage extends DistributionTab {
     testWebDriver.waitForElementToAppear(fullCoverageFormApplyNRToAll);
     fullCoverageFormApplyNRToAll.click();
     clickOkButton();
-  }
-
-  public void toggleApplyNRToFemaleHealthCenter() {
-    testWebDriver.waitForElementToAppear(femaleHealthCenterNR);
-    femaleHealthCenterNR.click();
-    removeFocusFromElement();
   }
 
   public void toggleApplyNRToMaleHealthCenter() {

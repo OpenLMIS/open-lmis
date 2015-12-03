@@ -16,6 +16,8 @@ import org.openlmis.core.repository.ProductCategoryRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 /**
  * Exposes the services for handling ProductCategory entity.
  */
@@ -24,32 +26,34 @@ import org.springframework.stereotype.Service;
 @NoArgsConstructor
 public class ProductCategoryService {
 
-
-  private ProductCategoryRepository productCategoryRepository;
+  private ProductCategoryRepository repository;
 
   @Autowired
-  public ProductCategoryService(ProductCategoryRepository productCategoryRepository) {
-    this.productCategoryRepository = productCategoryRepository;
+  public ProductCategoryService(ProductCategoryRepository repository) {
+    this.repository = repository;
   }
 
   public Long getProductCategoryIdByCode(String code) {
-    return productCategoryRepository.getProductCategoryIdByCode(code);
+    return repository.getIdByCode(code);
   }
 
   public ProductCategory getByCode(String code) {
-    return productCategoryRepository.getByCode(code);
+    return repository.getByCode(code);
   }
 
   public void save(ProductCategory productCategory) {
     if (productCategory.getId() != null) {
-      productCategoryRepository.update(productCategory);
+      repository.update(productCategory);
       return;
     }
-    productCategoryRepository.insert(productCategory);
+    repository.insert(productCategory);
   }
 
   public ProductCategory getExisting(ProductCategory productCategory) {
-    return productCategoryRepository.getExisting(productCategory);
+    return repository.getExisting(productCategory);
   }
 
+  public List<ProductCategory> getAll() {
+    return repository.getAll();
+  }
 }

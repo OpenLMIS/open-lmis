@@ -21,7 +21,7 @@ import java.util.List;
 
 import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
-import static org.openlmis.core.domain.Right.*;
+import static org.openlmis.core.domain.RightName.*;
 import static org.openlmis.rnr.domain.RnrStatus.*;
 import static org.springframework.util.CollectionUtils.isEmpty;
 
@@ -89,6 +89,8 @@ public class RequisitionService {
   private DbMapper dbMapper;
   @Autowired
   private BudgetLineItemService budgetLineItemService;
+  @Autowired
+  private StatusChangeEventService statusChangeEventService;
 
   private RequisitionSearchStrategyFactory requisitionSearchStrategyFactory;
 
@@ -240,8 +242,6 @@ public class RequisitionService {
   }
 
   public void releaseRequisitionsAsOrder(List<Rnr> requisitions, Long userId) {
-    if (!requisitionPermissionService.hasPermission(userId, CONVERT_TO_ORDER))
-      throw new DataException(RNR_OPERATION_UNAUTHORIZED);
     for (Rnr requisition : requisitions) {
       Rnr loadedRequisition = requisitionRepository.getById(requisition.getId());
       fillSupportingInfo(loadedRequisition);
@@ -395,10 +395,33 @@ public class RequisitionService {
 
   private void logStatusChangeAndNotify(Rnr requisition, boolean notifyStatusChange, String name) {
     requisitionRepository.logStatusChange(requisition, name);
-
     if (notifyStatusChange) {
       requisitionEventService.notifyForStatusChange(requisition);
     }
+
+    sendRequisitionStatusChangeMail(requisition);
+  }
+
+  private void sendRequisitionStatusChangeMail(Rnr requisition) {
+    List<User> userList = new ArrayList<>();
+
+    if (requisition.getStatus().equals(SUBMITTED)) {
+      Long supervisoryNodeId = supervisoryNodeService.getFor(requisition.getFacility(), requisition.getProgram()).getId();
+      userList = userService.getUsersWithRightInHierarchyUsingBaseNode(supervisoryNodeId, requisition.getProgram(), AUTHORIZE_REQUISITION);
+      userList.addAll(userService.getUsersWithRightInNodeForProgram(requisition.getProgram(), new SupervisoryNode(), AUTHORIZE_REQUISITION));
+    } else if (requisition.getStatus().equals(AUTHORIZED) || requisition.getStatus().equals(IN_APPROVAL)) {
+      userList = userService.getUsersWithRightInNodeForProgram(requisition.getProgram(), new SupervisoryNode(requisition.getSupervisoryNodeId()), APPROVE_REQUISITION);
+    } else if (requisition.getStatus().equals(APPROVED)) {
+      SupervisoryNode baseSupervisoryNode = supervisoryNodeService.getFor(requisition.getFacility(), requisition.getProgram());
+      SupplyLine supplyLine = supplyLineService.getSupplyLineBy(new SupervisoryNode(baseSupervisoryNode.getId()), requisition.getProgram());
+      if (supplyLine != null) {
+        userList = userService.getUsersWithRightOnWarehouse(supplyLine.getSupplyingFacility().getId(), CONVERT_TO_ORDER);
+      }
+    }
+
+    ArrayList<User> activeUsersWithRight = userService.filterForActiveUsers(userList);
+    statusChangeEventService.notifyUsers(activeUsersWithRight, requisition.getId(), requisition.getFacility(),
+      requisition.getProgram(), requisition.getPeriod(), requisition.getStatus().toString());
   }
 
   private void insert(Rnr requisition) {
@@ -437,7 +460,7 @@ public class RequisitionService {
   }
 
   public List<Rnr> getApprovedRequisitionsForCriteriaAndPageNumber(String searchType, String searchVal, Integer pageNumber,
-                                                                   Integer totalNumberOfPages, Long userId, Right right,
+                                                                   Integer totalNumberOfPages, Long userId, String rightName,
                                                                    String sortBy, String sortDirection) {
     if (pageNumber.equals(1) && totalNumberOfPages.equals(0))
       return new ArrayList<>();
@@ -448,15 +471,15 @@ public class RequisitionService {
     Integer pageSize = Integer.parseInt(staticReferenceDataService.getPropertyValue(CONVERT_TO_ORDER_PAGE_SIZE));
 
     List<Rnr> requisitions = requisitionRepository.getApprovedRequisitionsForCriteriaAndPageNumber(searchType, searchVal,
-      pageNumber, pageSize, userId, right, sortBy, sortDirection);
+      pageNumber, pageSize, userId, rightName, sortBy, sortDirection);
 
     fillFacilityPeriodProgramWithAuditFields(requisitions);
     fillSupplyingFacility(requisitions.toArray(new Rnr[requisitions.size()]));
     return requisitions;
   }
 
-  public Integer getNumberOfPagesOfApprovedRequisitionsForCriteria(String searchType, String searchVal, Long userId, Right right) {
-    Integer approvedRequisitionsByCriteria = requisitionRepository.getCountOfApprovedRequisitionsForCriteria(searchType, searchVal, userId, right);
+  public Integer getNumberOfPagesOfApprovedRequisitionsForCriteria(String searchType, String searchVal, Long userId, String rightName) {
+    Integer approvedRequisitionsByCriteria = requisitionRepository.getCountOfApprovedRequisitionsForCriteria(searchType, searchVal, userId, rightName);
     Integer pageSize = Integer.parseInt(staticReferenceDataService.getPropertyValue(CONVERT_TO_ORDER_PAGE_SIZE));
     return (int) Math.ceil(approvedRequisitionsByCriteria.doubleValue() / pageSize.doubleValue());
   }
@@ -499,6 +522,10 @@ public class RequisitionService {
 
   public RnrLineItem getNonSkippedLineItem(Long rnrId, String productCode) {
     return requisitionRepository.getNonSkippedLineItem(rnrId, productCode);
+  }
+
+  public Integer findM(ProcessingPeriod period) {
+    return processingScheduleService.findM(period);
   }
 
   public Long getProgramId(Long rnrId) {
