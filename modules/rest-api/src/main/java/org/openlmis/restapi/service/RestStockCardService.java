@@ -6,6 +6,8 @@ import org.openlmis.core.exception.DataException;
 import org.openlmis.core.repository.FacilityRepository;
 import org.openlmis.core.repository.StockAdjustmentReasonRepository;
 import org.openlmis.core.service.ProductService;
+import org.openlmis.restapi.domain.StockCardDTO;
+import org.openlmis.restapi.domain.StockCardMovementDTO;
 import org.openlmis.stockmanagement.domain.StockCard;
 import org.openlmis.stockmanagement.domain.StockCardEntry;
 import org.openlmis.stockmanagement.domain.StockCardEntryType;
@@ -103,7 +105,27 @@ public class RestStockCardService {
     return stockAdjustmentReasonRepository.getAdjustmentReasonByName(stockEvent.getReasonName()) != null;
   }
 
-  public List<StockCard> queryStockCardByMovementDate(long facilityId, Date startTime, Date endTime) {
-    return stockCardService.queryStockCardByMovementDate(facilityId, startTime, endTime);
+  public List<StockCardDTO> queryStockCardByMovementDate(long facilityId, Date startTime, Date endTime) {
+    List<StockCard> stockCards = stockCardService.queryStockCardByMovementDate(facilityId, startTime, endTime);
+
+    return transformStockCardsToDTOs(stockCards);
+  }
+
+  private List<StockCardDTO> transformStockCardsToDTOs(List<StockCard> stockCards) {
+    List<StockCardDTO> stockCardDTOs = new ArrayList<>();
+    for (StockCard stockCard : stockCards){
+      StockCardDTO stockCardDTO = new StockCardDTO(stockCard);
+      stockCardDTOs.add(stockCardDTO);
+      stockCardDTO.setStockMovementItems(transformStockCardEntries(stockCard.getEntries()));
+    }
+    return stockCardDTOs;
+  }
+
+  private List<StockCardMovementDTO> transformStockCardEntries(List<StockCardEntry> stockCardEntries) {
+    ArrayList<StockCardMovementDTO> stockCardMovementDTOs = new ArrayList<>();
+    for (StockCardEntry stockCardEntry : stockCardEntries) {
+      stockCardMovementDTOs.add(new StockCardMovementDTO(stockCardEntry));
+    }
+    return stockCardMovementDTOs;
   }
 }

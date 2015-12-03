@@ -17,10 +17,14 @@ import org.openlmis.core.exception.DataException;
 import org.openlmis.core.repository.FacilityRepository;
 import org.openlmis.core.repository.StockAdjustmentReasonRepository;
 import org.openlmis.core.service.ProductService;
+import org.openlmis.core.utils.DateUtil;
 import org.openlmis.db.categories.UnitTests;
+import org.openlmis.restapi.domain.StockCardDTO;
+import org.openlmis.restapi.domain.StockCardMovementDTO;
 import org.openlmis.stockmanagement.builder.StockEventBuilder;
 import org.openlmis.stockmanagement.domain.StockCard;
 import org.openlmis.stockmanagement.domain.StockCardEntry;
+import org.openlmis.stockmanagement.domain.StockCardEntryKV;
 import org.openlmis.stockmanagement.dto.StockEvent;
 import org.openlmis.stockmanagement.service.StockCardService;
 import org.powermock.modules.junit4.PowerMockRunner;
@@ -32,6 +36,7 @@ import java.util.HashMap;
 import java.util.List;
 
 import static com.natpryce.makeiteasy.MakeItEasy.*;
+import static java.util.Arrays.asList;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.*;
 import static org.mockito.Matchers.anyList;
@@ -341,6 +346,38 @@ public class RestStockCardServiceTest {
     verify(stockCardService).getOrCreateStockCard(facilityId, productCode); //should only invoke once
   }
 
+
+  @Test
+  public void shouldTransformStockCardToDTOWhenQueryStockCard() {
+    setupStockData();
+    StockCard stockCard = new StockCard();
+    Product product = new Product();
+    product.setId(1L);
+    product.setCode("08ZH5");
+    stockCard.setTotalQuantityOnHand(10L);
+    stockCard.setProduct(product);
+    long quantity = 1L;
+    String signature = "myname";
+    String expirationDates = "2015-10-01";
+    stockCard.setEntries(asList(setupStockCardEntryData(quantity, signature, expirationDates)));
+
+    Date start = DateUtil.parseDate("2015-10-10", DateUtil.FORMAT_DATE);
+    Date end = DateUtil.parseDate("2015-10-11", DateUtil.FORMAT_DATE);
+
+
+    when(stockCardService.queryStockCardByMovementDate(facilityId,start,end)).thenReturn(asList(stockCard));
+    List<StockCardDTO> stockCardDTOs = restStockCardService.queryStockCardByMovementDate(facilityId, start, end);
+    StockCardDTO stockCardDTO = stockCardDTOs.get(0);
+
+    assertThat(product.getCode(), is(stockCardDTO.getProduct().getCode()));
+    assertThat(product.getId(), is(stockCardDTO.getProduct().getId()));
+    assertThat(stockCard.getTotalQuantityOnHand(), is(stockCardDTO.getStockOnHand()));
+    StockCardMovementDTO stockCardMovementDTO = stockCardDTO.getStockMovementItems().get(0);
+    assertThat(quantity, is(stockCardMovementDTO.getMovementQuantity()));
+    assertThat(signature, is(stockCardMovementDTO.getExtensions().get("signature")));
+    assertThat(expirationDates, is(stockCardMovementDTO.getExtensions().get("expirationdates")));
+  }
+
   private void setupStockData() {
     facilityId = 1L;
     productCode = "P123";
@@ -363,4 +400,23 @@ public class RestStockCardServiceTest {
     ));
     stockEventList.add(stockEvent2);
   }
+
+
+    private StockCardEntry setupStockCardEntryData(long quantity, String signature, String expirationDates) {
+        StockCardEntry stockCardEntry = new StockCardEntry();
+        stockCardEntry.setQuantity(quantity);
+        stockCardEntry.setAdjustmentReason(new StockAdjustmentReason());
+        ArrayList<StockCardEntryKV> extensions = new ArrayList<>();
+        extensions.add(stockCArdEntryBuilder("signature", signature, 0));
+        extensions.add(stockCArdEntryBuilder("expirationdates", expirationDates, 1));
+        stockCardEntry.setExtensions(extensions);
+        return stockCardEntry;
+    }
+
+    private StockCardEntryKV stockCArdEntryBuilder(String key, String value, int index) {
+        StockCardEntryKV element = new StockCardEntryKV();
+        element.setKey(key);
+        element.setValue(value);
+        return element;
+    }
 }

@@ -11,6 +11,8 @@ import org.mockito.Mockito;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.core.utils.DateUtil;
 import org.openlmis.db.categories.UnitTests;
+import org.openlmis.restapi.domain.StockCardDTO;
+import org.openlmis.restapi.domain.StockCardMovementDTO;
 import org.openlmis.restapi.response.RestResponse;
 import org.openlmis.restapi.service.RestStockCardService;
 import org.openlmis.stockmanagement.domain.StockCard;
@@ -28,8 +30,7 @@ import java.util.List;
 
 import static java.util.Arrays.asList;
 import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertThat;
+import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 import static org.openlmis.restapi.response.RestResponse.*;
 import static org.powermock.api.mockito.PowerMockito.mockStatic;
@@ -93,23 +94,30 @@ public class RestStockCardControllerTest {
         assertThat((String) response.getBody().getData().get(ERROR), is("invalid data"));
     }
 
-
     @Test
-    public void shouldReturnStockMovementsIfNoException() throws Exception {
+    public void shouldReturnStockCardDTOListIfNoException() throws Exception {
+        //given
         setupStockData();
-        StockCard stockEvent=new StockCard();
+        StockCardDTO stockCard = new StockCardDTO();
 
-        List<StockCard> stockCards = asList(stockEvent);
+
+        stockCard.setStockMovementItems(asList(new StockCardMovementDTO()));
+        List<StockCardDTO> stockCards = asList(stockCard);
+
         String startTime = "2015-10-10";
         String endTime = "2015-10-11";
         Date start = DateUtil.parseDate(startTime, DateUtil.FORMAT_DATE);
         Date end = DateUtil.parseDate(endTime, DateUtil.FORMAT_DATE);
-
         when(restStockCardService.queryStockCardByMovementDate(facilityId, start, end)).thenReturn(stockCards);
 
-        ResponseEntity<RestResponse> response = restStockCardController.getStockMovements(facilityId, startTime, endTime);
+        //when
+        ResponseEntity<RestResponse> response = restStockCardController.getStockMovements(facilityId, start, end);
+
+        //then
         assertEquals(HttpStatus.OK, response.getStatusCode());
-        assertEquals(stockCards, response.getBody().getData().get("stockCards"));
+
+        List<StockCardDTO> responseStockCardDTOs = (List<StockCardDTO>) (response.getBody().getData().get("stockCards"));
+        assertNotNull(responseStockCardDTOs);
     }
 
     @Test
@@ -129,7 +137,7 @@ public class RestStockCardControllerTest {
         Mockito.when(RestResponse.error(dataException.getOpenLmisMessage(), BAD_REQUEST)).thenReturn(expectedResponse);
         when(restStockCardService.queryStockCardByMovementDate(facilityId, start, end)).thenThrow(dataException);
 
-        ResponseEntity<RestResponse> response = restStockCardController.getStockMovements(facilityId, startTime, endTime);
+        ResponseEntity<RestResponse> response = restStockCardController.getStockMovements(facilityId, start, end);
         assertThat(response.getStatusCode(), is(HttpStatus.BAD_REQUEST));
         assertThat((String) response.getBody().getData().get(ERROR), is(errorMessage));
     }
