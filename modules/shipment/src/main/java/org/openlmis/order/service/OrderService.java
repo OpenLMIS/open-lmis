@@ -12,13 +12,10 @@ package org.openlmis.order.service;
 
 import lombok.NoArgsConstructor;
 import org.apache.commons.collections.Transformer;
-import org.openlmis.core.domain.FulfillmentRoleAssignment;
-import org.openlmis.core.domain.OrderConfiguration;
-import org.openlmis.core.domain.Right;
-import org.openlmis.core.domain.SupervisoryNode;
+import org.openlmis.core.domain.*;
 import org.openlmis.core.repository.OrderConfigurationRepository;
-import org.openlmis.core.service.RoleAssignmentService;
-import org.openlmis.core.service.SupplyLineService;
+import org.openlmis.core.service.*;
+import org.openlmis.fulfillment.shared.FulfillmentPermissionService;
 import org.openlmis.order.domain.DateFormat;
 import org.openlmis.order.domain.Order;
 import org.openlmis.order.domain.OrderStatus;
@@ -30,6 +27,7 @@ import org.openlmis.rnr.service.RequisitionService;
 import org.openlmis.shipment.domain.ShipmentFileInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -42,6 +40,8 @@ import static java.util.Arrays.asList;
 import static java.util.Collections.sort;
 import static org.apache.commons.collections.CollectionUtils.collect;
 import static org.apache.commons.lang.ArrayUtils.contains;
+import static org.openlmis.core.domain.RightName.FACILITY_FILL_SHIPMENT;
+import static org.openlmis.core.domain.RightName.MANAGE_POD;
 import static org.openlmis.order.domain.OrderStatus.*;
 
 /**
@@ -70,9 +70,21 @@ public class OrderService {
   @Autowired
   RoleAssignmentService roleAssignmentService;
 
+  @Autowired
+  FulfillmentPermissionService fulfillmentPermissionService;
+
+  @Autowired
+  private ProgramService programService;
+
+  @Autowired
+  private StatusChangeEventService statusChangeEventService;
+
+  @Autowired
+  private UserService userService;
+
   public static String SUPPLY_LINE_MISSING_COMMENT = "order.ftpComment.supplyline.missing";
 
-  private int pageSize;
+  private Integer pageSize;
 
   @Autowired
   public void setPageSize(@Value("${order.page.size}") String pageSize) {
@@ -87,7 +99,11 @@ public class OrderService {
       rnr = requisitionService.getLWById(rnr.getId());
       rnr.setModifiedBy(userId);
       order = new Order(rnr);
-      order.setSupplyLine(supplyLineService.getSupplyLineBy(new SupervisoryNode(rnr.getSupervisoryNodeId()), rnr.getProgram()));
+      SupplyLine supplyLine = supplyLineService.getSupplyLineBy(new SupervisoryNode(rnr.getSupervisoryNodeId()), rnr.getProgram());
+      order.setSupplyLine(supplyLine);
+      if (!fulfillmentPermissionService.hasPermissionOnWarehouse(userId, supplyLine.getSupplyingFacility().getId(), RightName.CONVERT_TO_ORDER)) {
+        throw new AccessDeniedException("user.not.authorized");
+      }
       OrderStatus status;
       if (order.getSupplyLine() == null) {
         status = TRANSFER_FAILED;
@@ -96,14 +112,33 @@ public class OrderService {
         status = order.getSupplyLine().getExportOrders() ? IN_ROUTE : READY_TO_PACK;
       }
       order.setStatus(status);
+      order.setOrderNumber(getOrderNumberConfiguration().getOrderNumberFor(rnr.getId(), programService.getById(rnr.getProgram().getId()), rnr.isEmergency()));
       orderRepository.save(order);
       order.setRnr(requisitionService.getFullRequisitionById(order.getRnr().getId()));
+
+      sendOrderStatusChangeMail(order);
       orderEventService.notifyForStatusChange(order);
     }
   }
 
-  public List<Order> getOrdersForPage(int page, Long userId, Right right) {
-    List<Order> orders = orderRepository.getOrdersForPage(page, pageSize, userId, right);
+  private void sendOrderStatusChangeMail(Order order) {
+    Rnr requisition = order.getRnr();
+    List<User> usersWithRight = new ArrayList<>();
+    Facility supplyingFacility = order.getSupplyLine().getSupplyingFacility();
+
+    if (order.getStatus().equals(READY_TO_PACK)) {
+      usersWithRight = userService.getUsersWithRightOnWarehouse(supplyingFacility.getId(), FACILITY_FILL_SHIPMENT);
+    } else if (order.getStatus().equals(PACKED)) {
+      usersWithRight = userService.getUsersWithRightOnWarehouse(supplyingFacility.getId(), MANAGE_POD);
+    }
+
+    ArrayList<User> activeUsersWithRight = userService.filterForActiveUsers(usersWithRight);
+    statusChangeEventService.notifyUsers(activeUsersWithRight, null, requisition.getFacility(),
+      requisition.getProgram(), requisition.getPeriod(), order.getStatus().toString());
+  }
+
+  public List<Order> getOrdersForPage(int page, Long userId, String rightName) {
+    List<Order> orders = orderRepository.getOrdersForPage(page, pageSize, userId, rightName);
     return fillOrders(orders);
   }
 
@@ -125,12 +160,14 @@ public class OrderService {
     requisition.setNonFullSupplyLineItems(getLineItemsForOrder(nonFullSupplyLineItems));
   }
 
-  public void updateStatusAndShipmentIdForOrders(Set<Long> orderIds, ShipmentFileInfo shipmentFileInfo) {
-    for (Long orderId : orderIds) {
+  public void updateStatusAndShipmentIdForOrders(Set<String> orderNumbers, ShipmentFileInfo shipmentFileInfo) {
+    for (String orderNumber : orderNumbers) {
       OrderStatus status = (shipmentFileInfo.isProcessingError()) ? RELEASED : PACKED;
-      orderRepository.updateStatusAndShipmentIdForOrder(orderId, status, shipmentFileInfo.getId());
-      Order order = orderRepository.getById(orderId);
+      orderRepository.updateStatusAndShipmentIdForOrder(orderNumber, status, shipmentFileInfo.getId());
+      Order order = orderRepository.getByOrderNumber(orderNumber);
       order.setRnr(requisitionService.getFullRequisitionById(order.getRnr().getId()));
+
+      sendOrderStatusChangeMail(order);
       orderEventService.notifyForStatusChange(order);
     }
   }
@@ -147,6 +184,16 @@ public class OrderService {
     orderRepository.saveOrderFileColumns(orderFileTemplateDTO.getOrderFileColumns(), userId);
   }
 
+  public OrderNumberConfiguration getOrderNumberConfiguration() {
+    return orderConfigurationRepository.getOrderNumberConfiguration();
+  }
+
+  @Transactional
+  public void updateOrderNumberConfiguration(OrderNumberConfiguration orderNumberConfiguration) {
+    orderNumberConfiguration.validate();
+    orderConfigurationRepository.updateOrderNumberConfiguration(orderNumberConfiguration);
+  }
+
   public Set<DateFormat> getAllDateFormats() {
     TreeSet<DateFormat> dateFormats = new TreeSet<>();
     dateFormats.addAll(asList(DateFormat.values()));
@@ -159,8 +206,8 @@ public class OrderService {
     orderEventService.notifyForStatusChange(order);
   }
 
-  public boolean isShippable(Long orderId) {
-    return hasStatus(orderId, RELEASED);
+  public boolean isShippable(String orderNumber) {
+    return hasStatus(orderNumber, RELEASED);
   }
 
   public Integer getNumberOfPages() {
@@ -171,8 +218,8 @@ public class OrderService {
     return pageSize;
   }
 
-  public List<Order> searchByStatusAndRight(Long userId, Right right, List<OrderStatus> statuses) {
-    List<FulfillmentRoleAssignment> fulfilmentRolesWithRight = roleAssignmentService.getFulfilmentRolesWithRight(userId, right);
+  public List<Order> searchByStatusAndRight(Long userId, String rightName, List<OrderStatus> statuses) {
+    List<FulfillmentRoleAssignment> fulfilmentRolesWithRight = roleAssignmentService.getFulfilmentRolesWithRight(userId, rightName);
 
     List<Order> orders = orderRepository.searchByWarehousesAndStatuses((List<Long>) collect(fulfilmentRolesWithRight, new Transformer() {
       @Override
@@ -207,7 +254,11 @@ public class OrderService {
     return lineItemsForOrder;
   }
 
-  public boolean hasStatus(Long orderId, OrderStatus... statuses) {
-    return contains(statuses, orderRepository.getStatus(orderId));
+  public boolean hasStatus(String orderNumber, OrderStatus... statuses) {
+    return contains(statuses, orderRepository.getStatus(orderNumber));
+  }
+
+  public Order getByOrderNumber(String orderNumber) {
+    return orderRepository.getByOrderNumber(orderNumber);
   }
 }

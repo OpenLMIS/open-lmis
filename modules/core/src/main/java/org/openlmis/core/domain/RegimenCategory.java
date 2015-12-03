@@ -14,6 +14,8 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+import org.openlmis.upload.Importable;
+import org.openlmis.upload.annotation.ImportField;
 
 /**
  * RegimenCategory represents category for a regimen (for eg. Adult or Child)
@@ -22,10 +24,15 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = false)
-public class RegimenCategory extends BaseModel {
+public class RegimenCategory extends BaseModel implements Importable {
 
+  @ImportField(name="Regimen Category Code", mandatory=true)
   private String code;
+
+  @ImportField(name="Name", mandatory=true)
   private String name;
+
+  @ImportField(name="Display Order", mandatory=true)
   private Integer displayOrder;
 
 }

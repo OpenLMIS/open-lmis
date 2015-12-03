@@ -17,20 +17,27 @@ import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.runners.MockitoJUnitRunner;
 import org.openlmis.core.domain.GeographicLevel;
 import org.openlmis.core.domain.GeographicZone;
+import org.openlmis.core.domain.Pagination;
+import org.openlmis.core.repository.GeographicLevelRepository;
 import org.openlmis.core.repository.GeographicZoneRepository;
 import org.openlmis.db.categories.UnitTests;
+import org.powermock.core.classloader.annotations.PrepareForTest;
+import org.powermock.modules.junit4.PowerMockRunner;
 
+import java.util.List;
+
+import static java.util.Collections.EMPTY_LIST;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 import static org.openlmis.core.matchers.Matchers.dataExceptionMatcher;
+import static org.powermock.api.mockito.PowerMockito.whenNew;
 
 @Category(UnitTests.class)
-@RunWith(MockitoJUnitRunner.class)
+@RunWith(PowerMockRunner.class)
+@PrepareForTest(GeographicZoneService.class)
 public class GeographicZoneServiceTest {
 
   @Rule
@@ -39,11 +46,16 @@ public class GeographicZoneServiceTest {
   @Mock
   GeographicZoneRepository repository;
 
+  @Mock
+  GeographicLevelRepository geoLevelRepo;
+
   @InjectMocks
   GeographicZoneService service;
 
   public static final String ROOT_GEOGRAPHIC_ZONE_CODE = "Root";
   public static final String ROOT_GEOGRAPHIC_ZONE_NAME = "Root";
+
+  private Integer pageSize = 11;
 
   @Test
   public void shouldSaveGeographicZone() throws Exception {
@@ -52,12 +64,12 @@ public class GeographicZoneServiceTest {
     GeographicLevel childLevel = new GeographicLevel(2345L, "child level", "child level", 2);
     GeographicZone childZone = new GeographicZone(null, "child zone", "child zone", childLevel, rootZone);
 
-    when(repository.getGeographicLevelByCode(childZone.getLevel().getCode())).thenReturn(childLevel);
+    when(geoLevelRepo.getGeographicLevelByCode(childZone.getLevel().getCode())).thenReturn(childLevel);
     when(repository.getByCode(childZone.getParent().getCode())).thenReturn(rootZone);
 
     service.save(childZone);
 
-    verify(repository).getGeographicLevelByCode("child level");
+    verify(geoLevelRepo).getGeographicLevelByCode("child level");
     verify(repository).getByCode("root zone");
     assertThat(childZone.getLevel().getId(), is(2345L));
     assertThat(childZone.getParent().getId(), is(1234L));
@@ -71,7 +83,7 @@ public class GeographicZoneServiceTest {
     GeographicLevel childLevel = new GeographicLevel(2345L, "child level", "child level", 2);
     GeographicZone childZone = new GeographicZone(null, "child zone", "child zone", childLevel, invalidZone);
 
-    when(repository.getGeographicLevelByCode(childZone.getLevel().getCode())).thenReturn(childLevel);
+    when(geoLevelRepo.getGeographicLevelByCode(childZone.getLevel().getCode())).thenReturn(childLevel);
     when(repository.getByCode(childZone.getParent().getCode())).thenReturn(null);
 
     expectedEx.expect(dataExceptionMatcher("error.geo.zone.parent.invalid"));
@@ -92,11 +104,26 @@ public class GeographicZoneServiceTest {
   }
 
   @Test
+  public void shouldThrowAnExceptionIfGeographicZoneCodeIsMissing() throws Exception {
+    GeographicZone geoZone = new GeographicZone();
+    expectedEx.expect(dataExceptionMatcher("error.mandatory.fields.missing"));
+    service.save(geoZone);
+  }
+
+  @Test
+  public void shouldThrowAnExceptionIfGeographicZoneNameIsMissing() throws Exception {
+    GeographicZone geoZone = new GeographicZone();
+    geoZone.setCode("code");
+    expectedEx.expect(dataExceptionMatcher("error.mandatory.fields.missing"));
+    service.save(geoZone);
+  }
+
+  @Test
   public void shouldThrowExceptionIfLevelIsNotRootAndStillParentIsNull() throws Exception {
     GeographicLevel level = new GeographicLevel(1L, "abc", "abc", 2);
     GeographicZone zone = new GeographicZone(1L, "xyz", "xyz", level, null);
 
-    when(repository.getGeographicLevelByCode(zone.getLevel().getCode())).thenReturn(level);
+    when(geoLevelRepo.getGeographicLevelByCode(zone.getLevel().getCode())).thenReturn(level);
 
     expectedEx.expect(dataExceptionMatcher("error.invalid.hierarchy"));
 
@@ -110,7 +137,7 @@ public class GeographicZoneServiceTest {
     GeographicLevel childLevel = new GeographicLevel(2345L, "child level", "child level", 2);
     GeographicZone childZone = new GeographicZone(2345L, "child zone", "child zone", childLevel, rootZone);
 
-    when(repository.getGeographicLevelByCode(childZone.getLevel().getCode())).thenReturn(childLevel);
+    when(geoLevelRepo.getGeographicLevelByCode(childZone.getLevel().getCode())).thenReturn(childLevel);
     when(repository.getByCode(childZone.getParent().getCode())).thenReturn(rootZone);
 
     childZone.setName("new name");
@@ -138,7 +165,7 @@ public class GeographicZoneServiceTest {
     GeographicZone parent = new GeographicZone(1L, "xyz", "xyz", null, null);
     GeographicZone country = new GeographicZone(1L, "xyz", "xyz", level, parent);
 
-    when(repository.getGeographicLevelByCode(country.getLevel().getCode())).thenReturn(level);
+    when(geoLevelRepo.getGeographicLevelByCode(country.getLevel().getCode())).thenReturn(level);
     when(repository.getByCode(country.getParent().getCode())).thenReturn(parent);
 
     expectedEx.expect(dataExceptionMatcher("error.invalid.hierarchy"));
@@ -151,7 +178,7 @@ public class GeographicZoneServiceTest {
     GeographicZone country1 = new GeographicZone(1L, "xyz", "xyz", level, null);
     GeographicZone country2 = new GeographicZone(1L, "xyz", "xyz", level, country1);
 
-    when(repository.getGeographicLevelByCode(country2.getLevel().getCode())).thenReturn(level);
+    when(geoLevelRepo.getGeographicLevelByCode(country2.getLevel().getCode())).thenReturn(level);
     when(repository.getByCode(country2.getParent().getCode())).thenReturn(country1);
 
     expectedEx.expect(dataExceptionMatcher("error.invalid.hierarchy"));
@@ -165,10 +192,68 @@ public class GeographicZoneServiceTest {
     GeographicZone country1 = new GeographicZone(1L, "xyz", "xyz", lowerLevel, null);
     GeographicZone country2 = new GeographicZone(1L, "xyz", "xyz", higherLevel, country1);
 
-    when(repository.getGeographicLevelByCode(country2.getLevel().getCode())).thenReturn(higherLevel);
+    when(geoLevelRepo.getGeographicLevelByCode(country2.getLevel().getCode())).thenReturn(higherLevel);
     when(repository.getByCode(country2.getParent().getCode())).thenReturn(country1);
 
     expectedEx.expect(dataExceptionMatcher("error.invalid.hierarchy"));
     service.save(country2);
+  }
+
+  @Test
+  public void shouldSearchByParentNameIfSearchCriteriaIsParentName() throws Exception {
+    service.setPageSize(String.valueOf(pageSize));
+    Pagination pagination = new Pagination(0, 0);
+    whenNew(Pagination.class).withArguments(7, pageSize).thenReturn(pagination);
+
+    service.searchBy("name", "parentName", 7);
+
+    verify(repository).searchByParentName("name", pagination);
+  }
+
+  @Test
+  public void shouldSearchByGeoZoneNameIfSearchCriteriaIsName() throws Exception {
+    service.setPageSize(String.valueOf(pageSize));
+    Pagination pagination = new Pagination(0, 0);
+    whenNew(Pagination.class).withArguments(7, pageSize).thenReturn(pagination);
+
+    service.searchBy("name", "name", 7);
+
+    verify(repository).searchByName("name", pagination);
+  }
+
+  @Test
+  public void shouldReturnEmptyListIfSearchCriteriaIsInvalid() throws Exception {
+    service.setPageSize(String.valueOf(pageSize));
+    Pagination pagination = new Pagination(0, 0);
+    whenNew(Pagination.class).withArguments(7, pageSize).thenReturn(pagination);
+
+    List<GeographicZone> geographicZones = service.searchBy("name", "invalidName", 7);
+
+    assertThat(geographicZones, is(EMPTY_LIST));
+    verify(repository, never()).searchByName("name", pagination);
+    verify(repository, never()).searchByParentName("name", pagination);
+  }
+
+  @Test
+  public void shouldReturnTotalParentSearchResultCountIfSearchCriteriaIsParentName() throws Exception {
+    service.getTotalSearchResultCount("name", "parentName");
+
+    verify(repository).getTotalParentSearchResultCount("name");
+  }
+
+  @Test
+  public void shouldReturnTotalGeoZoneNameSearchResultCountIfSearchCriteriaIsName() throws Exception {
+    service.getTotalSearchResultCount("name", "name");
+
+    verify(repository).getTotalSearchResultCount("name");
+  }
+
+  @Test
+  public void shouldReturnTotalCountAsZeroIfSearchCriteriaIsInvalid() throws Exception {
+    Integer count = service.getTotalSearchResultCount("name", "invalidName");
+
+    assertThat(count, is(0));
+    verify(repository, never()).getTotalSearchResultCount("name");
+    verify(repository, never()).getTotalParentSearchResultCount("name");
   }
 }

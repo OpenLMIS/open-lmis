@@ -12,7 +12,6 @@ package org.openlmis.core.repository;
 
 import lombok.NoArgsConstructor;
 import org.openlmis.core.domain.Program;
-import org.openlmis.core.domain.Right;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.core.message.OpenLmisMessage;
 import org.openlmis.core.repository.mapper.ProgramMapper;
@@ -21,7 +20,7 @@ import org.springframework.stereotype.Component;
 
 import java.util.List;
 
-import static org.openlmis.core.domain.Right.commaSeparateRightNames;
+import static org.openlmis.core.domain.RightName.commaSeparateRightNames;
 
 /**
  * ProgramRepository is Repository class for Program related database operations.
@@ -40,6 +39,14 @@ public class ProgramRepository {
     this.mapper = programMapper;
   }
 
+  public void insert(Program p) {
+    mapper.insert(p);
+  }
+
+  public void update(Program p) {
+    mapper.update(p);
+  }
+
   public List<Program> getByFacility(Long facilityId) {
     return mapper.getByFacilityId(facilityId);
   }
@@ -53,12 +60,12 @@ public class ProgramRepository {
   }
 
 
-  public List<Program> getUserSupervisedActiveProgramsWithRights(Long userId, Right... rights) {
-    return mapper.getUserSupervisedActivePrograms(userId, commaSeparateRightNames(rights));
+  public List<Program> getUserSupervisedActiveProgramsWithRights(Long userId, String... rightNames) {
+    return mapper.getUserSupervisedActivePrograms(userId, commaSeparateRightNames(rightNames));
   }
 
-  public List<Program> getProgramsSupportedByUserHomeFacilityWithRights(Long facilityId, Long userId, Right... rights) {
-    return mapper.getProgramsSupportedByUserHomeFacilityWithRights(facilityId, userId, commaSeparateRightNames(rights));
+  public List<Program> getProgramsSupportedByUserHomeFacilityWithRights(Long facilityId, Long userId, String... rightNames) {
+    return mapper.getProgramsSupportedByUserHomeFacilityWithRights(facilityId, userId, commaSeparateRightNames(rightNames));
   }
 
   public Long getIdByCode(String code) {
@@ -71,8 +78,8 @@ public class ProgramRepository {
     return programId;
   }
 
-  public List<Program> getActiveProgramsForUserWithRights(Long userId, Right... rights) {
-    return mapper.getActiveProgramsForUserWithRights(userId, commaSeparateRightNames(rights));
+  public List<Program> getActiveProgramsForUserWithRights(Long userId, String... rightNames) {
+    return mapper.getActiveProgramsForUserWithRights(userId, commaSeparateRightNames(rightNames));
   }
 
   public Program getById(Long id) {
@@ -83,8 +90,8 @@ public class ProgramRepository {
     mapper.setTemplateConfigured(id);
   }
 
-  public List<Program> getProgramsForUserByFacilityAndRights(Long facilityId, Long userId, Right... rights) {
-    return mapper.getProgramsForUserByFacilityAndRights(facilityId, userId, commaSeparateRightNames(rights));
+  public List<Program> getProgramsForUserByFacilityAndRights(Long facilityId, Long userId, String... rightNames) {
+    return mapper.getProgramsForUserByFacilityAndRights(facilityId, userId, commaSeparateRightNames(rightNames));
   }
 
   public List<Program> getAll() {

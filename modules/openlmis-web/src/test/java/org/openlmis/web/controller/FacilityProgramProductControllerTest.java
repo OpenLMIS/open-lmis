@@ -35,8 +35,6 @@ public class FacilityProgramProductControllerTest {
   @Mock
   private FacilityProgramProductService service;
 
-  public static final Long userId = 1L;
-
   private MockHttpServletRequest httpServletRequest;
 
   private MockHttpSession session;
@@ -75,4 +73,6 @@ public class FacilityProgramProductControllerTest {
 
     verify(service).updateISA(programProductISA);
   }
+
+
 }

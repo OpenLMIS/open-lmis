@@ -10,7 +10,6 @@
 
 package org.openlmis.pageobjects;
 
-import com.thoughtworks.selenium.SeleneseTestNgHelper;
 import org.openlmis.UiUtils.TestWebDriver;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
@@ -24,9 +23,6 @@ import static org.openqa.selenium.support.How.ID;
 import static org.openqa.selenium.support.How.XPATH;
 
 public class ViewOrdersPage extends RequisitionPage {
-
-  @FindBy(how = XPATH, using = "//div[@class='ngCellText ng-scope col0 colt0']/span")
-  private static WebElement orderNumberOnViewOrdersScreen = null;
 
   @FindBy(how = XPATH, using = "//div[@class='ngCellText ng-scope col2 colt2']/span")
   private static WebElement programOnViewOrderScreen = null;
@@ -64,9 +60,9 @@ public class ViewOrdersPage extends RequisitionPage {
     testWebDriver.setImplicitWait(10);
   }
 
-  public void verifyNoRequisitionReleasedAsOrderMessage() {
+  public boolean verifyNoRequisitionReleasedAsOrderMessage() {
     testWebDriver.waitForPageToLoad();
-    noRequisitionReleasedAsOrderYet.isDisplayed();
+    return noRequisitionReleasedAsOrderYet.isDisplayed();
   }
 
   public void isFirstRowPresent() {
@@ -74,11 +70,11 @@ public class ViewOrdersPage extends RequisitionPage {
     assertTrue("First row should show up", programOnViewOrderScreen.isDisplayed());
   }
 
-  public void verifyOrderListElements(String program, long orderId, String facilityCodeName, String periodDetails, String supplyFacilityName, String orderStatus, boolean downloadLinkPresent) {
+  public void verifyOrderListElements(String program, String orderNumber, String facilityCodeName, String periodDetails, String supplyFacilityName, String orderStatus, boolean downloadLinkPresent) {
     testWebDriver.refresh();
     testWebDriver.waitForElementToAppear(programOnViewOrderScreen);
     assertEquals(programOnViewOrderScreen.getText().trim(), program);
-    assertEquals(orderNumberOnViewOrdersScreen.getText().trim(), String.valueOf(orderId));
+    assertTrue(getOrderNumber(1).contains(orderNumber));
     assertEquals(facilityCodeNameOnOrderScreen.getText().trim(), facilityCodeName);
     assertEquals(periodDetailsOnViewOrderScreen.getText().trim(), periodDetails);
     assertEquals(supplyDepotOnViewOrderScreen.getText().trim(), supplyFacilityName);
@@ -107,12 +103,18 @@ public class ViewOrdersPage extends RequisitionPage {
   public void verifyProgram(int row, String program) {
     testWebDriver.waitForElementToAppear(testWebDriver.getElementByXpath("(//div[@class='ngCellText ng-scope col2 colt2']/span)[" + row + "]"));
     String actualProgram = testWebDriver.getElementByXpath("(//div[@class='ngCellText ng-scope col2 colt2']/span)[" + row + "]").getText();
-    SeleneseTestNgHelper.assertEquals(actualProgram, program);
+    assertEquals(actualProgram, program);
   }
 
   public String getOrderStatus(int rowNumber) {
     WebElement orderStatus = testWebDriver.getElementByXpath("(//div[@id='orderStatus'])[" + rowNumber + "]");
     testWebDriver.waitForElementToAppear(orderStatus);
     return orderStatus.getText();
+  }
+
+  public String getOrderNumber(int rowNumber) {
+    WebElement orderNumber = testWebDriver.getElementById("order" + (rowNumber - 1));
+    testWebDriver.waitForElementToAppear(orderNumber);
+    return orderNumber.getText();
   }
 }

@@ -1,0 +1,82 @@
+<!doctype html>
+<!--
+  ~ This program is part of the OpenLMIS logistics management information system platform software.
+  ~ Copyright © 2013 VillageReach
+  ~
+  ~  This program is free software: you can redistribute it and/or modify it under the terms of the GNU Affero General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
+  ~
+  ~  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Affero General Public License for more details.
+  ~  You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org.
+  -->
+<html lang="en" ng-app="requisitionGroup">
+<head>
+  <title openlmis-message="app.title"></title>
+  <link rel="icon" href="/public/favicon.ico" type="image/x-icon"/>
+  <script src="/public/lib/jquery/jquery-2.0.0.min.js"></script>
+  <script src="/public/lib/jquery/jquery-ui-1.9.2.custom.min.js"></script>
+  <script src="/public/lib/angular/angular.min.js"></script>
+  <script src="/public/lib/angular/angular-route.min.js"></script>
+  <script src="/public/lib/angular/angular-cookies.js"></script>
+  <script src="/public/lib/angular/angular-resource.min.js"></script>
+  <script src="/public/lib/bootstrap/js/bootstrap.min.js"></script>
+  <script src="/public/lib/underscore/underscore-min.js"></script>
+  <link rel="stylesheet" href="/public/lib/bootstrap/css/bootstrap.min.css">
+  <link rel="stylesheet" href="/public/lib/select2/select2.css">
+  <script src="/public/lib/angular-ui/angular-ui.min.js"></script>
+  <script src="/public/lib/angular-ui/bootstrap/ui-bootstrap-0.1.0.min.js"></script>
+  <script src="/public/lib/angular-ui/bootstrap/ui-bootstrap-pagination-0.10.0.min.js"></script>
+  <link rel="stylesheet" href="/public/lib/angular-ui/angular-ui.min.css">
+
+  <script src="/public/js/shared/util.js"></script>
+  <script src="/public/js/shared/accordion.js"></script>
+  <script src="/public/js/shared/open-lmis-dialog.js"></script>
+  <script src="/public/js/shared/services/services.js"></script>
+  <script type="text/javascript" src="/public/js/shared/services/message-service.js"></script>
+  <script type="text/javascript" src="/public/js/shared/services/authorization-service.js"></script>
+  <script src="/public/js/shared/app.js"></script>
+
+  <!-- App directives -->
+  <script src="/public/js/shared/directives/form-toolbar.js"></script>
+  <script src="/public/js/shared/directives/openlmis-message.js"></script>
+  <script src="/public/js/shared/directives/placeholder.js"></script>
+  <script src="/public/js/shared/directives/ui-nav.js"></script>
+  <script src="/public/js/shared/directives/tab-scroll.js"></script>
+  <script src="/public/js/shared/directives/modal-events.js"></script>
+  <script src="/public/js/shared/directives/fade-out.js"></script>
+  <script src="/public/js/shared/directives/slider.js"></script>
+
+  <link rel="stylesheet" href="/public/css/app.css">
+  <script src="/public/js/shared/services/navigate-back-service.js"></script>
+  <script src="/public/js/shared/controller/login-controller.js"></script>
+  <script src="/public/js/shared/controller/locale-controller.js"></script>
+  <script src="/public/js/shared/controller/header-controller.js"></script>
+  <script src="/public/js/shared/controller/navigation-controller.js"></script>
+  <script src="/public/js/shared/controller/manage-menu-controller.js"></script>
+
+  <script src="/public/js/requisition-group/module/requisition-group-module.js"></script>
+  <script src="/public/js/requisition-group/controller/requisition-group-search-controller.js"></script>
+  <script src="/public/js/requisition-group/controller/requisition-group-controller.js"></script>
+  <script src="/public/js/shared/controller/multiple-facility-search-filter-controller.js"></script>
+  <script src="/public/js/shared/controller/facility-search-filter-controller.js"></script>
+  <script src="/public/js/shared/controller/facility-sub-filters-controller.js"></script>
+  <script src="/public/lib/localstorage/localStorage.js"></script>
+  <script src="/public/lib/select2/select2.js"></script>
+  <script src="/public/js/shared/select2-ext.js"></script>
+  <script src="/public/js/shared/localStorageKeys.js"></script>
+  <link type="text/css" rel="stylesheet" charset="UTF-8" href="/public/css/app.css">
+  <!--[if IE 9]>
+  <link rel="stylesheet" href="/public/css/ie9.css"/>
+  <![endif]-->
+
+</head>
+<body onunload="">
+<div id="wrap">
+  <ng-include src="'/public/pages/header.html'"></ng-include>
+  <ng-include src="'/public/pages/navigation.html'"></ng-include>
+  <div class="content">
+    <ng-include src="'/public/pages/admin/shared/manage-menu.html'"></ng-include>
+    <div ng-view></div>
+  </div>
+</div>
+</body>
+</html>

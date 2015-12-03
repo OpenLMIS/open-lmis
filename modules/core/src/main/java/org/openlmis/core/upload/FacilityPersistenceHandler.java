@@ -20,6 +20,9 @@ import org.springframework.stereotype.Component;
 
 import java.util.List;
 
+/**
+ * FacilityPersistenceHandler is used for uploads of Facility. It uploads each Facility record by record.
+ */
 @Component
 @NoArgsConstructor
 public class FacilityPersistenceHandler extends AbstractModelPersistenceHandler {

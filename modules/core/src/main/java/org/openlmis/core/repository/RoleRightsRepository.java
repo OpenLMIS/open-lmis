@@ -19,9 +19,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Repository;
 
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 /**
  * RoleRightsRepository is Repository class for RoleRights related database operations.
@@ -61,18 +59,9 @@ public class RoleRightsRepository {
   }
 
   private void createRoleRights(Role role) {
-    for (Right right : getRightsWithItsDependents(role.getRights())) {
-      roleRightsMapper.createRoleRight(role, right);
+    for (Right right : role.getRights()) {
+      roleRightsMapper.createRoleRight(role, right.getName());
     }
-  }
-
-  private Set<Right> getRightsWithItsDependents(Set<Right> rightList) {
-    Set<Right> rights = new HashSet<>();
-    for (Right right : rightList) {
-      rights.add(right);
-      rights.addAll(right.getDefaultRights());
-    }
-    return rights;
   }
 
   public List<Role> getAllRoles() {
@@ -84,7 +73,7 @@ public class RoleRightsRepository {
   }
 
 
-  public Set<Right> getAllRightsForUser(Long userId) {
+  public List<Right> getAllRightsForUser(Long userId) {
     return roleRightsMapper.getAllRightsForUserById(userId);
   }
 
@@ -100,7 +89,7 @@ public class RoleRightsRepository {
     return roleRightsMapper.getRightTypeForRoleId(roleId);
   }
 
-  public Set<Right> getRightsForUserAndWarehouse(Long userId, Long warehouseId) {
+  public List<Right> getRightsForUserAndWarehouse(Long userId, Long warehouseId) {
     return roleRightsMapper.getRightsForUserAndWarehouse(userId, warehouseId);
   }
 }

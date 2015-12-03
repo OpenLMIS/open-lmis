@@ -20,7 +20,6 @@ import org.openlmis.pageobjects.ForgotPasswordPage;
 import org.openlmis.pageobjects.HomePage;
 import org.openlmis.pageobjects.LoginPage;
 import org.openlmis.pageobjects.PageObjectFactory;
-import org.openqa.selenium.NoSuchElementException;
 import org.testng.annotations.*;
 
 import java.sql.SQLException;
@@ -37,6 +36,7 @@ public class ForgotPassword extends TestCaseHelper {
   @BeforeMethod(groups = "admin")
   public void setUp() throws Exception {
     super.setup();
+    dbWrapper.removeAllExistingRights("Admin");
     loginPage = PageObjectFactory.getLoginPage(testWebDriver, baseUrlGlobal);
     forgotPasswordPage = PageObjectFactory.getForgotPasswordPage(testWebDriver);
   }
@@ -137,8 +137,8 @@ public class ForgotPassword extends TestCaseHelper {
     verifyEmailSendSuccessfullyMessage();
   }
 
-  @Test(groups = {"admin"}, dataProvider = "Data-Provider-Function")
-  public void testVerifyBlankEmailAndUserName(String userName, String email) {
+  @Test(groups = {"admin"})
+  public void testVerifyBlankEmailAndUserName() {
     ForgotPasswordPage forgotPasswordPage = loginPage.clickForgotPasswordLink();
     verifyElementsOnForgotPasswordScreen();
     forgotPasswordPage.enterEmail("");
@@ -173,6 +173,8 @@ public class ForgotPassword extends TestCaseHelper {
 
   @AfterMethod(groups = "admin")
   public void tearDown() throws SQLException {
+    testWebDriver.sleep(500);
+    dbWrapper.insertAllAdminRightsAsSeedData();
     try {
       if (!testWebDriver.getElementById("username").isDisplayed()) {
         HomePage homePage = PageObjectFactory.getHomePage(testWebDriver);
@@ -180,7 +182,9 @@ public class ForgotPassword extends TestCaseHelper {
         dbWrapper.deleteData();
         dbWrapper.closeConnection();
       }
-    } catch (NoSuchElementException e) {
+    } catch (Exception e) {
+      dbWrapper.deleteData();
+      dbWrapper.closeConnection();
     }
   }
 

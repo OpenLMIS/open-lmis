@@ -14,16 +14,18 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+import org.codehaus.jackson.annotate.JsonIgnoreProperties;
 import org.openlmis.upload.Importable;
 import org.openlmis.upload.annotation.ImportField;
 
 /**
- * RequisitionGroupProgramSchedule represents the schedule to be
+ * RequisitionGroupProgramSchedule represents the schedule to be mapped for a given program and requisition group
  */
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode(callSuper = false)
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class RequisitionGroupProgramSchedule extends BaseModel implements Importable {
 
   @ImportField(mandatory = true, name = "RG Code", nested = "code")

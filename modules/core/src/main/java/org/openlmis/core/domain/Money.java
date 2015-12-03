@@ -23,7 +23,7 @@ import java.math.BigDecimal;
 import static java.math.BigDecimal.ROUND_HALF_UP;
 
 /**
- * Money represents data type for all monetary entities. Provides methods to add, multiply, compare monetary entitie.
+ * Money represents data type for all monetary entities. Provides methods to add, multiply, compare monetary entity.
  */
 @Data
 @JsonSerialize(using = MoneySerializer.class)

@@ -11,10 +11,7 @@
 package org.openlmis.pageobjects;
 
 import org.openlmis.UiUtils.TestWebDriver;
-import org.openqa.selenium.By;
-import org.openqa.selenium.ElementNotVisibleException;
-import org.openqa.selenium.NoSuchElementException;
-import org.openqa.selenium.WebElement;
+import org.openqa.selenium.*;
 import org.openqa.selenium.support.FindBy;
 
 import java.text.SimpleDateFormat;
@@ -114,6 +111,14 @@ public class RequisitionPage extends Page {
   @FindBy(how = XPATH, using = "//table[@id='regimenTable']/tbody[1]/tr[2]/td[6]/ng-switch/span/input")
   private static WebElement remarksInputField = null;
 
+  @FindBy(how = ID, using = "printButton")
+  private static WebElement printButtonFullView = null;
+
+  @FindBy(how = ID, using = "resizeViewButton")
+  private static WebElement resizeViewButton = null;
+
+  @FindBy(how = ID, using = "printButtonOnHeader")
+  private static WebElement printButtonOnHeader = null;
 
   protected RequisitionPage(TestWebDriver driver) {
     super(driver);
@@ -254,8 +259,8 @@ public class RequisitionPage extends Page {
 
     WebElement element = testWebDriver.getElementById(tableIdColumnMapper.get(columnNumber) + "_" + (row - 1));
     testWebDriver.waitForElementToAppear(element);
-    element.clear();
-    element.sendKeys(value);
+    sendKeys(element, value);
+    element.sendKeys(Keys.TAB);
   }
 
   public String getPatientsOnTreatmentValue() {
@@ -316,7 +321,6 @@ public class RequisitionPage extends Page {
 
   public void verifySubmitSuccessMsg() {
     testWebDriver.waitForElementToAppear(submitSuccessMessage);
-
     assertTrue("RnR Submit Success message not displayed", submitSuccessMessage.isDisplayed());
   }
 
@@ -326,7 +330,6 @@ public class RequisitionPage extends Page {
 
   public void verifyApproveErrorDiv() {
     testWebDriver.waitForElementToAppear(errorMessage);
-
     assertTrue("RnR Approved error message not displayed", errorMessage.isDisplayed());
   }
 
@@ -349,5 +352,22 @@ public class RequisitionPage extends Page {
     assertTrue(skipCheckBox.isSelected());
     skipCheckBox = testWebDriver.getElementById("skip_" + (rowNumber));
     assertFalse(skipCheckBox.isSelected());
+  }
+
+  public void clickPrintButton() {
+    testWebDriver.waitForElementToAppear(printButtonOnHeader);
+    printButtonOnHeader.click();
+    testWebDriver.sleep(1000);
+  }
+
+  public void clickFullViewPrintButton() {
+    testWebDriver.waitForElementToAppear(printButtonFullView);
+    printButtonFullView.click();
+    testWebDriver.sleep(1000);
+  }
+
+  public void clickResizeViewButton() {
+    testWebDriver.waitForElementToAppear(resizeViewButton);
+    resizeViewButton.click();
   }
 }

@@ -12,12 +12,15 @@ package org.openlmis.core.domain;
 
 import org.junit.Rule;
 import org.junit.Test;
+import org.junit.experimental.categories.Category;
 import org.junit.rules.ExpectedException;
+import org.openlmis.db.categories.UnitTests;
 
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.openlmis.core.matchers.Matchers.dataExceptionMatcher;
 
+@Category(UnitTests.class)
 public class GeographicZoneTest {
 
   @Rule
@@ -87,6 +90,25 @@ public class GeographicZoneTest {
     expectedEx.expect(dataExceptionMatcher("error.geo.level.invalid"));
 
     geographicZone.validateLevel();
+  }
+
+  @Test
+  public void shouldThrowExceptionIfGeoZoneCodeEmpty() throws Exception {
+    GeographicZone geographicZone = new GeographicZone();
+
+    expectedEx.expect(dataExceptionMatcher("error.mandatory.fields.missing"));
+
+    geographicZone.validateMandatoryFields();
+  }
+
+  @Test
+  public void shouldThrowExceptionIfGeoZoneNameEmpty() throws Exception {
+    GeographicZone geographicZone = new GeographicZone();
+    geographicZone.setCode("code");
+
+    expectedEx.expect(dataExceptionMatcher("error.mandatory.fields.missing"));
+
+    geographicZone.validateMandatoryFields();
   }
 
   @Test

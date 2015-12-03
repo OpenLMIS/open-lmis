@@ -11,6 +11,7 @@
 package org.openlmis.email.domain;
 
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import org.springframework.mail.SimpleMailMessage;
 
 /**
@@ -19,6 +20,7 @@ import org.springframework.mail.SimpleMailMessage;
  */
 
 @Data
+@EqualsAndHashCode(callSuper = false)
 public class OpenlmisEmailMessage extends SimpleMailMessage {
 
   private Long id;

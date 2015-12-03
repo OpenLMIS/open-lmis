@@ -143,7 +143,7 @@ AdultCoverageLineItem.prototype.totalTetanus = function () {
 
 AdultCoverageLineItem.prototype.coverageRate = function () {
   if (isUndefined(this.targetGroup) || this.targetGroup === 0) return null;
-  return Math.round((this.totalTetanus() / this.targetGroup) * 100);
+  return Math.round((this.totalTetanus2To5() / this.targetGroup) * 100);
 };
 
 function OpenedVialLineItem(lineItem) {

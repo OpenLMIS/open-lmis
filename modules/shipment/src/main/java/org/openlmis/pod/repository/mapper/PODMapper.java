@@ -40,8 +40,8 @@ public interface PODMapper {
   List<OrderPODLineItem> getPODLineItemsByPODId(Long podId);
 
   @Insert(
-    {"INSERT INTO pod (orderId, facilityId, programId, periodId, receivedDate, deliveredBy, receivedBy, createdBy, modifiedBy) VALUES ",
-      "(#{orderId}, #{facilityId}, #{programId}, #{periodId}, #{receivedDate}, #{deliveredBy}, #{receivedBy}, #{createdBy}, #{modifiedBy} )"})
+    {"INSERT INTO pod (orderId, orderNumber, facilityId, programId, periodId, receivedDate, deliveredBy, receivedBy, createdBy, modifiedBy) VALUES ",
+      "(#{orderId}, #{orderNumber}, #{facilityId}, #{programId}, #{periodId}, #{receivedDate}, #{deliveredBy}, #{receivedBy}, #{createdBy}, #{modifiedBy} )"})
   @Options(useGeneratedKeys = true)
   void insertPOD(OrderPOD orderPod);
 

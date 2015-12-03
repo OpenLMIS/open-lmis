@@ -41,16 +41,16 @@ public class CreateTestRequisition extends TestCaseHelper {
   public String program, userSIC, password;
 
 
-  @BeforeMethod(groups = "createTestRequisition")
+  @BeforeMethod(groups = "requisition")
   public void setUp() throws InterruptedException, SQLException, IOException {
     super.setup();
   }
 
-  @Test(groups = {"createTestRequisition"}, dataProvider = "Data-Provider-Function-Including-Regimen")
+  @Test(groups = {"requisition"}, dataProvider = "Data-Provider-Function-Including-Regimen")
   public void testCreateRequisitionWithEmergencyStatus(String program, String userSIC, String categoryCode, String password,
                                                        String regimenCode, String regimenName, String regimenCode2, String regimenName2) throws SQLException {
     List<String> rightsList = asList("CREATE_REQUISITION", "VIEW_REQUISITION");
-    setupTestDataToInitiateRnR(true, program, userSIC, "200", rightsList);
+    setupTestDataToInitiateRnR(true, program, userSIC, rightsList);
     dbWrapper.insertRegimenTemplateConfiguredForProgram(program, categoryCode, regimenCode, regimenName, true);
     dbWrapper.insertRegimenTemplateConfiguredForProgram(program, categoryCode, regimenCode2, regimenName2, false);
     dbWrapper.insertRegimenTemplateColumnsForProgram(program);
@@ -75,12 +75,14 @@ public class CreateTestRequisition extends TestCaseHelper {
     dbWrapper.updateRequisitionStatusByRnrId(IN_APPROVAL, userSIC, dbWrapper.getMaxRnrID());
 
     ApprovePage approvePage = homePage.navigateToApprove();
-    approvePage.clickRequisitionPresentForApproval();
     approvePage.verifyNoRequisitionMessage();
+    approvePage.clickRequisitionPresentForApproval();
+    testWebDriver.waitForAjax();
     approvePage.editFullSupplyApproveQuantity("20");
     approvePage.clickRegimenTab();
     approvePage.approveRequisition();
     approvePage.clickOk();
+    testWebDriver.refresh();
 
     ConvertOrderPage convertOrderPage = homePage.navigateConvertToOrder();
     convertOrderPage.convertToOrder();
@@ -115,7 +117,7 @@ public class CreateTestRequisition extends TestCaseHelper {
     dbWrapper.updateRequisitionStatusByRnrId(SUBMITTED, userSIC, dbWrapper.getMaxRnrID());
   }
 
-  @AfterMethod(groups = "createTestRequisition")
+  @AfterMethod(groups = "requisition")
   public void tearDown() throws SQLException {
     testWebDriver.sleep(500);
     if (!testWebDriver.getElementById("username").isDisplayed()) {

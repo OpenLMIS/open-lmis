@@ -13,7 +13,6 @@
 package org.openlmis.order.repository.mapper;
 
 import org.apache.ibatis.annotations.*;
-import org.openlmis.core.domain.Right;
 import org.openlmis.core.domain.SupplyLine;
 import org.openlmis.order.domain.Order;
 import org.openlmis.order.domain.OrderFileColumn;
@@ -30,7 +29,8 @@ import java.util.List;
 @Repository
 public interface OrderMapper {
 
-  @Insert("INSERT INTO orders(id, status, ftpcomment, supplyLineId, createdBy, modifiedBy) VALUES (#{rnr.id}, #{status}, #{ftpComment}, #{supplyLine.id}, #{createdBy}, #{createdBy})")
+  @Insert({"INSERT INTO orders(id, orderNumber, status, ftpcomment, supplyLineId, createdBy, modifiedBy) ",
+    "VALUES (#{rnr.id}, #{orderNumber}, #{status}, #{ftpComment}, #{supplyLine.id}, #{createdBy}, #{createdBy})"})
   void insert(Order order);
 
   @Select({"SELECT DISTINCT O.* FROM orders O INNER JOIN supply_lines S ON O.supplyLineId = S.id ",
@@ -45,7 +45,7 @@ public interface OrderMapper {
     @Result(property = "supplyLine", javaType = SupplyLine.class, column = "supplyLineId",
       one = @One(select = "org.openlmis.core.repository.mapper.SupplyLineMapper.getById"))
   })
-  List<Order> getOrders(@Param("limit") int limit, @Param("offset") int offset, @Param("userId") Long userId, @Param("right") Right right);
+  List<Order> getOrders(@Param("limit") int limit, @Param("offset") int offset, @Param("userId") Long userId, @Param("right") String rightName);
 
   @Select("SELECT * FROM orders WHERE id = #{id}")
   @Results({
@@ -59,9 +59,9 @@ public interface OrderMapper {
   @Update({"UPDATE orders SET",
     "shipmentId = #{shipmentId},",
     "status = #{status},",
-    "modifiedDate = DEFAULT",
-    "WHERE id = #{orderId}"})
-  void updateShipmentAndStatus(@Param("orderId") Long orderId,
+    "modifiedDate = CURRENT_TIMESTAMP",
+    "WHERE orderNumber = #{orderNumber}"})
+  void updateShipmentAndStatus(@Param("orderNumber") String orderNumber,
                                @Param("status") OrderStatus status,
                                @Param("shipmentId") Long shipmentId);
 
@@ -76,11 +76,11 @@ public interface OrderMapper {
   void insertOrderFileColumn(OrderFileColumn orderFileColumn);
 
 
-  @Update("UPDATE orders SET status = #{status}, ftpComment = #{ftpComment}, modifiedDate = DEFAULT WHERE id = #{id}")
+  @Update("UPDATE orders SET status = #{status}, ftpComment = #{ftpComment}, modifiedDate = CURRENT_TIMESTAMP WHERE id = #{id}")
   void updateOrderStatus(Order order);
 
-  @Select("SELECT status FROM orders WHERE id = #{id}")
-  OrderStatus getStatus(Long id);
+  @Select("SELECT status FROM orders WHERE orderNumber = #{orderNumber}")
+  OrderStatus getStatus(String orderNumber);
 
   @Select("SELECT ceil(count(*)::float/#{pageSize}) FROM orders")
   Integer getNumberOfPages(int pageSize);
@@ -97,4 +97,13 @@ public interface OrderMapper {
       one = @One(select = "org.openlmis.core.repository.mapper.SupplyLineMapper.getById"))
   })
   List<Order> getByWarehouseIdsAndStatuses(@Param("facilityIds") String facilityIds, @Param("statuses") String statuses);
+
+  @Select("SELECT * FROM orders WHERE orderNumber = #{orderNumber}")
+  @Results({
+    @Result(property = "id", column = "id"),
+    @Result(property = "rnr.id", column = "id"),
+    @Result(property = "supplyLine", javaType = SupplyLine.class, column = "supplyLineId",
+      one = @One(select = "org.openlmis.core.repository.mapper.SupplyLineMapper.getById"))
+  })
+  Order getByOrderNumber(String orderNumber);
 }

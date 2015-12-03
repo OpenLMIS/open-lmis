@@ -13,6 +13,7 @@ package org.openlmis.UiUtils;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.remote.UnreachableBrowserException;
+import org.testng.AssertJUnit;
 
 import java.io.*;
 import java.math.BigDecimal;
@@ -94,15 +95,16 @@ public class TestCaseHelper {
     testWebDriver = new TestWebDriver(driverFactory.loadDriver(browser));
   }
 
-  public void setupTestDataToInitiateRnR(boolean configureTemplate, String program, String user, String userId, List<String> rightsList) throws SQLException {
+  public void setupTestDataToInitiateRnR(boolean configureTemplate, String program, String user, List<String> rightsList) throws SQLException {
     setupProductTestData("P10", "P11", program, "lvl3_hospital");
     dbWrapper.insertFacilities("F10", "F11");
     if (configureTemplate)
       dbWrapper.configureTemplate(program);
 
-    setupTestUserRoleRightsData(userId, user, rightsList);
+    setupTestUserRoleRightsData(user, rightsList);
+    dbWrapper.deleteSupervisoryNodes();
     dbWrapper.insertSupervisoryNode("F10", "N1", "Node 1", "null");
-    dbWrapper.insertRoleAssignment(userId, "store in-charge");
+    dbWrapper.insertRoleAssignment(user, "store in-charge");
     dbWrapper.insertSchedule("Q1stM", "QuarterMonthly", "QuarterMonth");
     dbWrapper.insertSchedule("M", "Monthly", "Month");
     dbWrapper.insertProcessingPeriod("Period1", "first period", "2012-12-01", "2013-01-15", 1, "Q1stM");
@@ -111,34 +113,34 @@ public class TestCaseHelper {
     dbWrapper.insertSupplyLines("N1", program, "F10", true);
   }
 
-  public void setupTestUserRoleRightsData(String userId, String userSIC, List<String> rightsList) throws SQLException {
+  public void setupTestUserRoleRightsData(String userSIC, List<String> rightsList) throws SQLException {
     dbWrapper.insertRole("store in-charge", "");
     dbWrapper.insertRole("district pharmacist", "");
     for (String rights : rightsList) {
       dbWrapper.assignRight("store in-charge", rights);
     }
     String passwordUsers = "TQskzK3iiLfbRVHeM1muvBCiiKriibfl6lh8ipo91hb74G3OvsybvkzpPI4S3KIeWTXAiiwlUU0iiSxWii4wSuS8mokSAieie";
-    dbWrapper.insertUser(userId, userSIC, passwordUsers, "F10", "Fatima_Doe@openlmis.com");
+    dbWrapper.insertUser(userSIC, passwordUsers, "F10", "Fatima_Doe@openlmis.com");
   }
 
-  protected void createUserAndAssignRoleRights(String userId, String user, String email, String homeFacility, String role, List<String> rightsList) throws SQLException {
+  protected void createUserAndAssignRoleRights(String user, String email, String homeFacility, String role, List<String> rightsList) throws SQLException {
     dbWrapper.insertRole(role, "");
     for (String rights : rightsList) {
       dbWrapper.assignRight(role, rights);
     }
     String passwordUsers = "TQskzK3iiLfbRVHeM1muvBCiiKriibfl6lh8ipo91hb74G3OvsybvkzpPI4S3KIeWTXAiiwlUU0iiSxWii4wSuS8mokSAieie";
-    dbWrapper.insertUser(userId, user, passwordUsers, homeFacility, email);
-    dbWrapper.insertRoleAssignment(userId, role);
+    dbWrapper.insertUser(user, passwordUsers, homeFacility, email);
+    dbWrapper.insertRoleAssignment(user, role);
   }
 
   public void setupRnRTestDataRnRForCommTrack(boolean configureGenericTemplate, String program, String user,
-                                              String userId, List<String> rightsList) throws SQLException {
+                                              List<String> rightsList) throws SQLException {
     setupProductTestData("P10", "P11", program, "lvl3_hospital");
     dbWrapper.insertFacilities("F10", "F11");
 
-    setupTestUserRoleRightsData(userId, user, rightsList);
+    setupTestUserRoleRightsData(user, rightsList);
     dbWrapper.insertSupervisoryNode("F10", "N1", "Node 1", "null");
-    dbWrapper.insertRoleAssignment(userId, "store in-charge");
+    dbWrapper.insertRoleAssignment(user, "store in-charge");
     dbWrapper.insertSchedule("Q1stM", "QuarterMonthly", "QuarterMonth");
     dbWrapper.insertSchedule("M", "Monthly", "Month");
     setupRequisitionGroupData("RG1", "RG2", "N1", "N2", "F10", "F11");
@@ -155,13 +157,13 @@ public class TestCaseHelper {
     }
   }
 
-  public void setupTestDataToApproveRnR(String user, String userId, List<String> rightsList) throws SQLException {
+  public void setupTestDataToApproveRnR(String user, List<String> rightsList) throws SQLException {
     for (String rights : rightsList)
       dbWrapper.assignRight("store in-charge", rights);
     String passwordUsers = "TQskzK3iiLfbRVHeM1muvBCiiKriibfl6lh8ipo91hb74G3OvsybvkzpPI4S3KIeWTXAiiwlUU0iiSxWii4wSuS8mokSAieie";
-    dbWrapper.insertUser(userId, user, passwordUsers, "F10", "");
-    dbWrapper.insertSupervisoryNodeSecond("F10", "N2", "Node 2", "N1");
-    dbWrapper.insertRoleAssignmentForSupervisoryNodeForProgramId1(userId, "store in-charge", "N1");
+    dbWrapper.insertUser(user, passwordUsers, "F10", "");
+    dbWrapper.insertSupervisoryNode("F10", "N2", "Node 2", "N1");
+    dbWrapper.insertRoleAssignmentForSupervisoryNodeForProgramId(user, "store in-charge", "N1");
   }
 
   public void setupProductTestData(String product1, String product2, String program, String facilityTypeCode) throws SQLException {
@@ -172,13 +174,11 @@ public class TestCaseHelper {
     dbWrapper.insertFacilityApprovedProduct(product2, program, facilityTypeCode);
   }
 
-  public void setupProgramProductTestDataWithCategories(String categoryCode,
-                                                        String categoryName, String product,
-                                                        String productName,
+  public void setupProgramProductTestDataWithCategories(String categoryCode, String categoryName, String product, String productName,
                                                         String program) throws SQLException {
     dbWrapper.insertProductCategory(categoryCode, categoryName);
     dbWrapper.insertProduct(product, productName);
-    dbWrapper.insertProgramProductsWithCategory(product, program);
+    dbWrapper.insertProgramProductsWithCategory(product, program, "C1", 1);
   }
 
   public void setupProgramProductISA(String program, String product, String whoRatio, String dosesPerYear, String wastageFactor,
@@ -204,14 +204,14 @@ public class TestCaseHelper {
   public void setupTestData(boolean isPreviousPeriodRnRRequired) throws SQLException {
     List<String> rightsList = asList("CREATE_REQUISITION", "VIEW_REQUISITION", "AUTHORIZE_REQUISITION");
     if (isPreviousPeriodRnRRequired)
-      setupRnRTestDataRnRForCommTrack(false, "HIV", "commTrack", "700", rightsList);
+      setupRnRTestDataRnRForCommTrack(false, "HIV", "commTrack", rightsList);
     else
-      setupRnRTestDataRnRForCommTrack(true, "HIV", "commTrack", "700", rightsList);
+      setupRnRTestDataRnRForCommTrack(true, "HIV", "commTrack", rightsList);
   }
 
   public void setupDataRequisitionApprove() throws SQLException {
     List<String> rightsList = asList("APPROVE_REQUISITION", "CONVERT_TO_ORDER");
-    setupTestDataToApproveRnR("commTrack1", "701", rightsList);
+    setupTestDataToApproveRnR("commTrack1", rightsList);
   }
 
   public void setupDataForDeliveryZone(boolean multipleFacilityInstances, String deliveryZoneCodeFirst, String deliveryZoneCodeSecond,
@@ -245,7 +245,7 @@ public class TestCaseHelper {
     dbWrapper.insertDeliveryZoneMembers(deliveryZoneCodeFirst, facilityCodeFourth);
   }
 
-  public void setupTestDataToInitiateRnRAndDistribution(String facilityCode1, String facilityCode2, boolean configureTemplate, String program, String user, String userId,
+  public void setupTestDataToInitiateRnRAndDistribution(String facilityCode1, String facilityCode2, boolean configureTemplate, String program, String user,
                                                         List<String> rightsList, String programCode, String geoLevel1, String geoLevel2,
                                                         String parentGeoLevel) throws SQLException {
     setupProductTestData("P10", "P11", program, "lvl3_hospital");
@@ -254,9 +254,10 @@ public class TestCaseHelper {
     if (configureTemplate)
       dbWrapper.configureTemplate(program);
 
-    setupTestUserRoleRightsData(userId, user, rightsList);
+    setupTestUserRoleRightsData(user, rightsList);
+    dbWrapper.deleteSupervisoryNodes();
     dbWrapper.insertSupervisoryNode(facilityCode1, "N1", "Node 1", "null");
-    dbWrapper.insertRoleAssignment(userId, "store in-charge");
+    dbWrapper.insertRoleAssignment(user, "store in-charge");
     dbWrapper.insertSchedule("Q1stM", "QuarterMonthly", "QuarterMonth");
     dbWrapper.insertSchedule("M", "Monthly", "Month");
     setupRequisitionGroupData("RG1", "RG2", "N1", "N2", facilityCode1, facilityCode2);
@@ -365,7 +366,7 @@ public class TestCaseHelper {
       }
     } catch (FileNotFoundException e) {
       e.printStackTrace();
-      assertFalse("Order file not downloaded", true);
+      assertFalse("File not downloaded", true);
     } finally {
       if (br != null) {
         try {
@@ -449,30 +450,30 @@ public class TestCaseHelper {
   }
 
   public void verifyPageLinksFromLastPage() {
-    verifyNextAndLastLinksDisabled();
-    verifyPreviousAndFirstLinksEnabled();
+    verifyNextAndLastPageLinksDisabled();
+    verifyPreviousAndFirstPageLinksEnabled();
 
     testWebDriver.getElementById("firstPageLink").click();
-    verifyNextAndLastLinksEnabled();
-    verifyPreviousAndFirstLinksDisabled();
+    verifyNextAndLastPageLinksEnabled();
+    verifyPreviousAndFirstPageLinksDisabled();
 
     testWebDriver.getElementById("nextPageLink").click();
-    verifyNextAndLastLinksDisabled();
-    verifyPreviousAndFirstLinksEnabled();
+    verifyNextAndLastPageLinksDisabled();
+    verifyPreviousAndFirstPageLinksEnabled();
 
     testWebDriver.getElementById("previousPageLink").click();
-    verifyNextAndLastLinksEnabled();
-    verifyPreviousAndFirstLinksDisabled();
+    verifyNextAndLastPageLinksEnabled();
+    verifyPreviousAndFirstPageLinksDisabled();
 
     testWebDriver.getElementById("lastPageLink").click();
-    verifyNextAndLastLinksDisabled();
-    verifyPreviousAndFirstLinksEnabled();
+    verifyNextAndLastPageLinksDisabled();
+    verifyPreviousAndFirstPageLinksEnabled();
   }
 
-  public void verifyNumberOfPageLinks(int numberOfProducts, int numberOfLineItemsPerPage) {
+  public void verifyNumberOFPageLinksDisplayed(int numberOfItems, int numberOfLineItemsPerPage) {
     testWebDriver.waitForAjax();
-    int numberOfPages = numberOfProducts / numberOfLineItemsPerPage;
-    if (numberOfProducts % numberOfLineItemsPerPage != 0) {
+    int numberOfPages = numberOfItems / numberOfLineItemsPerPage;
+    if (numberOfItems % numberOfLineItemsPerPage != 0) {
       numberOfPages = numberOfPages + 1;
     }
     for (int i = 1; i <= numberOfPages; i++) {
@@ -481,7 +482,13 @@ public class TestCaseHelper {
     }
   }
 
-  public void verifyNextAndLastLinksEnabled() {
+  public void verifyPageNumberSelected(int pageNumber) {
+    WebElement page = testWebDriver.getElementById(String.valueOf(pageNumber));
+    testWebDriver.waitForElementToAppear(page);
+    AssertJUnit.assertEquals("rgba(96, 172, 175, 1)", page.getCssValue("background-color"));
+  }
+
+  public void verifyNextAndLastPageLinksEnabled() {
     testWebDriver.waitForAjax();
     WebElement nextPageLink = testWebDriver.getElementById("nextPageLink");
 
@@ -489,26 +496,63 @@ public class TestCaseHelper {
     assertEquals(testWebDriver.getElementById("lastPageLink").getCssValue("color"), "rgba(119, 119, 119, 1)");
   }
 
-  public void verifyPreviousAndFirstLinksEnabled() {
+  public void verifyPreviousAndFirstPageLinksEnabled() {
     testWebDriver.waitForPageToLoad();
     testWebDriver.waitForElementToAppear(testWebDriver.getElementById("previousPageLink"));
     assertEquals(testWebDriver.getElementById("previousPageLink").getCssValue("color"), "rgba(119, 119, 119, 1)");
     assertEquals(testWebDriver.getElementById("firstPageLink").getCssValue("color"), "rgba(119, 119, 119, 1)");
   }
 
-  public void verifyNextAndLastLinksDisabled() {
+  public void verifyNextAndLastPageLinksDisabled() {
     testWebDriver.waitForPageToLoad();
     testWebDriver.waitForElementToAppear(testWebDriver.getElementById("nextPageLink"));
     assertEquals(testWebDriver.getElementById("nextPageLink").getCssValue("color"), "rgba(204, 204, 204, 1)");
     assertEquals(testWebDriver.getElementById("lastPageLink").getCssValue("color"), "rgba(204, 204, 204, 1)");
   }
 
-  public void verifyPreviousAndFirstLinksDisabled() {
+  public void verifyPageNumberLinksDisplayed() {
+    assertTrue(testWebDriver.getElementById("firstPageLink").isDisplayed());
+    assertTrue(testWebDriver.getElementById("previousPageLink").isDisplayed());
+    assertTrue(testWebDriver.getElementById("nextPageLink").isDisplayed());
+    assertTrue(testWebDriver.getElementById("lastPageLink").isDisplayed());
+  }
+
+  public void verifyPreviousAndFirstPageLinksDisabled() {
     testWebDriver.waitForAjax();
     WebElement firstPageLink = testWebDriver.getElementById("firstPageLink");
 
     assertEquals(firstPageLink.getCssValue("color"), "rgba(204, 204, 204, 1)");
     assertEquals(testWebDriver.getElementById("previousPageLink").getCssValue("color"), "rgba(204, 204, 204, 1)");
+  }
+
+  public void navigateToPage(int pageNumber) {
+    WebElement page = testWebDriver.getElementById(String.valueOf(pageNumber));
+    testWebDriver.waitForElementToAppear(page);
+    page.click();
+  }
+
+  public void navigateToNextPage() {
+    WebElement nextPageLink = testWebDriver.getElementById("nextPageLink");
+    testWebDriver.waitForElementToAppear(nextPageLink);
+    nextPageLink.click();
+  }
+
+  public void navigateToFirstPage() {
+    WebElement firstPageLink = testWebDriver.getElementById("firstPageLink");
+    testWebDriver.waitForElementToAppear(firstPageLink);
+    firstPageLink.click();
+  }
+
+  public void navigateToLastPage() {
+    WebElement lastPageLink = testWebDriver.getElementById("lastPageLink");
+    testWebDriver.waitForElementToAppear(lastPageLink);
+    lastPageLink.click();
+  }
+
+  public void navigateToPreviousPage() {
+    WebElement previousPageLink = testWebDriver.getElementById("previousPageLink");
+    testWebDriver.waitForElementToAppear(previousPageLink);
+    previousPageLink.click();
   }
 
   public void setupDataForDistributionTest(Map<String, String> dataMap) throws SQLException {
@@ -521,7 +565,7 @@ public class TestCaseHelper {
     String userSIC = dataMap.get("user");
 
     List<String> rightsList = asList("MANAGE_DISTRIBUTION");
-    setupTestDataToInitiateRnRAndDistribution(facilityCodeFirst, facilityCodeSecond, true, programFirst, userSIC, "200", rightsList,
+    setupTestDataToInitiateRnRAndDistribution(facilityCodeFirst, facilityCodeSecond, true, programFirst, userSIC, rightsList,
       programSecond, "District1", "Ngorongoro", "Ngorongoro");
 
     setupDataForDeliveryZone(true, deliveryZoneCodeFirst, deliveryZoneCodeSecond, dataMap.get("firstDeliveryZoneName"),
@@ -745,5 +789,3 @@ public class TestCaseHelper {
     assertEquals(adultOpenedVialLineItem.getString("openedVials"), (String) null);
   }
 }
-
-

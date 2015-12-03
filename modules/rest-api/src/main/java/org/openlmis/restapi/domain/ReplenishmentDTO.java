@@ -38,7 +38,7 @@ import static org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion.NON_EMPT
 @JsonSerialize(include = NON_EMPTY)
 @EqualsAndHashCode(callSuper = true)
 public class ReplenishmentDTO extends RnrDTO {
-  private Long orderId;
+  private String orderId;
   private String orderStatus;
   private String supplyingFacilityCode;
 
@@ -69,7 +69,7 @@ public class ReplenishmentDTO extends RnrDTO {
       }
     }));
     if (order != null) {
-      replenishmentDTO.orderId = order.getId();
+      replenishmentDTO.orderId = order.getOrderNumber();
       replenishmentDTO.orderStatus = order.getStatus().name();
       Facility supplyingFacility = order.getSupplyingFacility();
       replenishmentDTO.supplyingFacilityCode = supplyingFacility == null ? null : supplyingFacility.getCode();

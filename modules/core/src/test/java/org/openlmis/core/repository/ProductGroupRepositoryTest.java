@@ -15,12 +15,12 @@ import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
+import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.openlmis.core.domain.ProductGroup;
 import org.openlmis.core.repository.mapper.ProductGroupMapper;
 import org.openlmis.db.categories.UnitTests;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.DuplicateKeyException;
 
@@ -35,7 +35,7 @@ public class ProductGroupRepositoryTest {
   @Rule
   public ExpectedException expectedEx = ExpectedException.none();
 
-  @Autowired
+  @InjectMocks
   ProductGroupRepository repository;
 
   @Mock
@@ -44,7 +44,6 @@ public class ProductGroupRepositoryTest {
   @Test
   public void shouldSaveProductGroup() throws Exception {
     ProductGroup productGroup = new ProductGroup();
-    repository = new ProductGroupRepository(mapper);
 
     repository.insert(productGroup);
     verify(mapper).insert(productGroup);
@@ -53,7 +52,6 @@ public class ProductGroupRepositoryTest {
   @Test
   public void shouldUpdateProductGroup() throws Exception {
     ProductGroup productGroup = new ProductGroup();
-    repository = new ProductGroupRepository(mapper);
 
     repository.update(productGroup);
     verify(mapper).update(productGroup);
@@ -63,7 +61,6 @@ public class ProductGroupRepositoryTest {
   public void shouldThrowDuplicateKeyExceptionWhenDuplicateProductGroupCodeFound() throws Exception {
     expectedEx.expect(dataExceptionMatcher("error.duplicate.product.group.code"));
 
-    repository = new ProductGroupRepository(mapper);
     ProductGroup productGroup = new ProductGroup();
     doThrow(new DuplicateKeyException("")).when(mapper).insert(productGroup);
     repository.insert(productGroup);
@@ -76,7 +73,7 @@ public class ProductGroupRepositoryTest {
     ProductGroup productGroup = new ProductGroup();
     doThrow(new DataIntegrityViolationException("violates not-null constraint")).when(mapper).insert(productGroup);
 
-    new ProductGroupRepository(mapper).insert(productGroup);
+    repository.insert(productGroup);
   }
 
   @Test
@@ -87,6 +84,12 @@ public class ProductGroupRepositoryTest {
 
     doThrow(new DataIntegrityViolationException("")).when(mapper).insert(productGroup);
 
-    new ProductGroupRepository(mapper).insert(productGroup);
+    repository.insert(productGroup);
+  }
+
+  @Test
+  public void shouldGetAll() {
+    repository.getAll();
+    verify(mapper).getAll();
   }
 }

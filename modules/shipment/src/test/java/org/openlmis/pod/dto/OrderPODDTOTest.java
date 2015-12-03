@@ -38,17 +38,19 @@ public class OrderPODDTOTest {
   public void shouldGetOrderDetailsForPOD() throws Exception {
     Rnr rnr = make(a(RequisitionBuilder.defaultRequisition, with(id, 2L), with(program, make(a(defaultProgram, with(ProgramBuilder.programName, "HIV"))))));
     Order order = new Order(rnr);
+    order.setOrderNumber("OYELL_FVR00000001R");
     order.setSupplyLine(make(a(defaultSupplyLine, with(SupplyLineBuilder.facility, make(a(FacilityBuilder.defaultFacility, with(name, "F10")))))));
     order.setStatus(OrderStatus.IN_ROUTE);
     OrderPODDTO orderPODDTO = OrderPODDTO.getOrderDetailsForPOD(order);
 
     assertThat(orderPODDTO.getFacilityCode(), is(rnr.getFacility().getCode()));
     assertThat(orderPODDTO.getPeriodStartDate(), is(rnr.getPeriod().getStringStartDate()));
-    String createdDate = order.getCreatedDate() == null ? null : new SimpleDateFormat("dd/MM/yyyy hh:mm:ss").format(order.getCreatedDate());
+    String createdDate = order.getCreatedDate() == null ? null : new SimpleDateFormat("dd/MM/yyyy HH:mm:ss").format(order.getCreatedDate());
     assertThat(orderPODDTO.getStringCreatedDate(), is(createdDate));
     assertThat(orderPODDTO.getId(), is(order.getId()));
     assertThat(orderPODDTO.getEmergency(), is(rnr.isEmergency()));
     assertThat(orderPODDTO.getAlreadyReceived(), is(false));
+    assertThat(orderPODDTO.getOrderNumber(), is("OYELL_FVR00000001R"));
   }
 
   @Test

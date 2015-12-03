@@ -16,10 +16,10 @@ import org.junit.experimental.categories.Category;
 import org.junit.rules.ExpectedException;
 import org.openlmis.db.categories.UnitTests;
 
-import java.util.HashSet;
+import java.util.ArrayList;
 
 import static java.util.Arrays.asList;
-import static org.openlmis.core.domain.Right.*;
+import static org.openlmis.core.domain.RightName.*;
 import static org.openlmis.core.matchers.Matchers.dataExceptionMatcher;
 
 @Category(UnitTests.class)
@@ -39,17 +39,16 @@ public class RoleTest {
 
   @Test
   public void shouldGiveErrorIfRoleHasEmptyRightsList() {
-    Role role = new Role("role test", "description", new HashSet<Right>());
+    Role role = new Role("role test", "description", new ArrayList<Right>());
 
     expectedEx.expect(dataExceptionMatcher("error.role.without.rights"));
 
     role.validate();
   }
 
-
   @Test
   public void shouldGiveErrorIfRoleDoesNotHaveAnyName() throws Exception {
-    Role role = new Role("", "description", new HashSet<>(asList(CREATE_REQUISITION)));
+    Role role = new Role("", "description", asList(new Right(CREATE_REQUISITION, RightType.REQUISITION)));
 
     expectedEx.expect(dataExceptionMatcher("error.role.without.name"));
     role.validate();
@@ -60,17 +59,8 @@ public class RoleTest {
   }
 
   @Test
-  public void shouldGiveErrorIfRelatedRightsAreNotSelectedForAdmin() {
-    Role role = new Role("Admin", "admin", new HashSet<>(asList(MANAGE_REPORT)));
-
-    expectedEx.expect(dataExceptionMatcher("error.role.related.right.not.selected"));
-
-    role.validate();
-  }
-
-  @Test
   public void shouldGiveErrorIfRelatedRightsAreNotSelectedForRequisition() {
-    Role role = new Role("Admin", "admin", new HashSet<>(asList(CREATE_REQUISITION, AUTHORIZE_REQUISITION)));
+    Role role = new Role("Admin", "admin", asList(new Right(CREATE_REQUISITION, RightType.REQUISITION), new Right(AUTHORIZE_REQUISITION, RightType.REQUISITION)));
 
     expectedEx.expect(dataExceptionMatcher("error.role.related.right.not.selected"));
 
@@ -79,7 +69,7 @@ public class RoleTest {
 
   @Test
   public void shouldGiveErrorIfRelatedRightsAreNotSelectedForShipment() {
-    Role role = new Role("Admin", "admin", new HashSet<>(asList(CONVERT_TO_ORDER)));
+    Role role = new Role("Admin", "admin",  asList(new Right(CONVERT_TO_ORDER, RightType.ADMIN)));
 
     expectedEx.expect(dataExceptionMatcher("error.role.related.right.not.selected"));
 

@@ -8,18 +8,18 @@
  * You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org. 
  */
 
-function CreateRequisitionController($scope, requisition, pageSize, rnrColumns, lossesAndAdjustmentsTypes, facilityApprovedProducts, requisitionRights, regimenTemplate, $location, Requisitions, $routeParams, $dialog, requisitionService, $q) {
+function CreateRequisitionController($scope, requisitionData, pageSize, rnrColumns, lossesAndAdjustmentsTypes, facilityApprovedNFSProducts, requisitionRights, regimenTemplate, $location, Requisitions, $routeParams, $dialog, requisitionService, $q) {
 
   var NON_FULL_SUPPLY = 'nonFullSupply';
   var FULL_SUPPLY = 'fullSupply';
 
   $scope.pageSize = pageSize;
-  $scope.rnr = new Rnr(requisition, rnrColumns);
+  $scope.rnr = new Rnr(requisitionData.rnr, rnrColumns, requisitionData.numberOfMonths);
 
   resetCostsIfNull();
 
   $scope.lossesAndAdjustmentTypes = lossesAndAdjustmentsTypes;
-  $scope.facilityApprovedProducts = facilityApprovedProducts;
+  $scope.facilityApprovedNFSProducts = facilityApprovedNFSProducts;
 
   $scope.visibleColumns = requisitionService.getMappedVisibleColumns(rnrColumns, RegularRnrLineItem.frozenColumns,
       ['quantityApproved']);
@@ -28,7 +28,7 @@ function CreateRequisitionController($scope, requisition, pageSize, rnrColumns, 
   $scope.requisitionRights = requisitionRights;
   $scope.regimenColumns = regimenTemplate ? regimenTemplate.columns : [];
   $scope.visibleRegimenColumns = _.where($scope.regimenColumns, {'visible': true});
-  $scope.addNonFullSupplyLineItemButtonShown = _.findWhere($scope.programRnrColumnList, {'name': 'quantityRequested'});
+  $scope.addNonFullSupplyLineItemButtonShown = facilityApprovedNFSProducts.length > 0;
   $scope.errorPages = {fullSupply: [], nonFullSupply: []};
   $scope.regimenCount = $scope.rnr.regimenLineItems.length;
 
@@ -41,7 +41,7 @@ function CreateRequisitionController($scope, requisition, pageSize, rnrColumns, 
   }
   $scope.hasPermission = function (permission) {
     return _.find($scope.requisitionRights, function (right) {
-      return right.right === permission;
+      return right.name === permission;
     });
   };
 
@@ -254,23 +254,24 @@ function CreateRequisitionController($scope, requisition, pageSize, rnrColumns, 
 
     //Who wrote this? This is awesome!!
     rnr[$scope.visibleTab + 'LineItems'] = transform($scope.page[$scope.visibleTab]);
+    rnr.nonFullSupplyLineItems = transform($scope.rnr.nonFullSupplyLineItems);
 
     return rnr;
   }
 }
 
 CreateRequisitionController.resolve = {
-  requisition: function ($q, $timeout, Requisitions, $route, $rootScope) {
+  requisitionData: function ($q, $timeout, Requisitions, $route, $rootScope) {
     var deferred = $q.defer();
     $timeout(function () {
-      var rnr = $rootScope.rnr;
-      if (rnr) {
-        deferred.resolve(rnr);
-        $rootScope.rnr = undefined;
+      var rnrData = $rootScope.rnrData;
+      if (rnrData) {
+        deferred.resolve(rnrData);
+        $rootScope.rnrData = undefined;
         return;
       }
       Requisitions.get({id: $route.current.params.rnr}, function (data) {
-        deferred.resolve(data.rnr);
+        deferred.resolve(data);
       }, {});
     }, 100);
     return deferred.promise;
@@ -306,13 +307,15 @@ CreateRequisitionController.resolve = {
     return deferred.promise;
   },
 
-  facilityApprovedProducts: function ($q, $timeout, $route, FacilityApprovedProducts) {
+  facilityApprovedNFSProducts: function ($q, $timeout, $route, FacilityApprovedNonFullSupplyProducts) {
     var deferred = $q.defer();
     $timeout(function () {
-      FacilityApprovedProducts.get({facilityId: $route.current.params.facility, programId: $route.current.params.program},
-          function (data) {
-            deferred.resolve(data.nonFullSupplyProducts);
-          }, {});
+      FacilityApprovedNonFullSupplyProducts.get(
+        {facilityId: $route.current.params.facility, programId: $route.current.params.program},
+        function (data) {
+          deferred.resolve(data.nonFullSupplyProducts);
+        },
+        {} );
     }, 100);
     return deferred.promise;
   },

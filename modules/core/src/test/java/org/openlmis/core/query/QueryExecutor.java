@@ -60,4 +60,10 @@ public class QueryExecutor {
       return id;
     }
   }
+
+  public void executeQuery(String query) throws SQLException {
+    Connection connection = DataSourceUtils.getConnection(dataSource);
+    Statement statement = connection.createStatement();
+    statement.execute(query);
+  }
 }
