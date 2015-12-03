@@ -16,13 +16,15 @@ import org.openlmis.core.domain.BaseModel;
 public class AppInfo extends BaseModel {
     private Long facilityId;
     private String facilityCode;
+    private String userName;
     private String appVersion;
 
     public AppInfo() {
     }
 
-    public AppInfo(Long facilityId, String appVersion) {
+    public AppInfo(Long facilityId, String userName, String appVersion) {
         this.facilityId = facilityId;
+        this.userName = userName;
         this.appVersion = appVersion;
     }
 }

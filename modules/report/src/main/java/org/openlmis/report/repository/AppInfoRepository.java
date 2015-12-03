@@ -29,6 +29,6 @@ public class AppInfoRepository {
     }
 
     public AppInfo getAppInfoByFacilityCode(String facilityCode) {
-        return appInfoMapper.queryVersionByFacilityCode(facilityCode);
+        return appInfoMapper.queryByFacilityCode(facilityCode);
     }
 }

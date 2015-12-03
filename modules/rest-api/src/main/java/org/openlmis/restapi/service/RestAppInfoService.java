@@ -12,6 +12,7 @@ package org.openlmis.restapi.service;
 import org.openlmis.core.repository.FacilityRepository;
 import org.openlmis.report.model.dto.AppInfo;
 import org.openlmis.report.repository.AppInfoRepository;
+import org.openlmis.restapi.domain.RestAppInfoRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -23,14 +24,14 @@ public class RestAppInfoService {
     @Autowired
     FacilityRepository facilityRepository;
 
-    public int createOrUpdateVersion(String facilityCode, String version) {
-        AppInfo appInfo = appInfoRepository.getAppInfoByFacilityCode(facilityCode);
+    public int createOrUpdateVersion(RestAppInfoRequest appInfoRequest) {
+        AppInfo appInfo = appInfoRepository.getAppInfoByFacilityCode(appInfoRequest.getFacilityCode());
 
         if(appInfo == null) {
-            appInfo = new AppInfo(facilityRepository.getIdForCode(facilityCode), version);
+            appInfo = new AppInfo(facilityRepository.getIdForCode(appInfoRequest.getFacilityCode()), appInfoRequest.getUserName(), appInfoRequest.getVersion());
             return appInfoRepository.create(appInfo);
         } else {
-            appInfo.setAppVersion(version);
+            appInfo.setAppVersion(appInfoRequest.getVersion());
             return appInfoRepository.update(appInfo);
         }
     }

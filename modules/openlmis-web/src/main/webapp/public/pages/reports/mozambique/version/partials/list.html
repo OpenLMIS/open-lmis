@@ -4,10 +4,10 @@
     <table class="table table-condensed table-bordered table-striped">
         <tr class="gradient-header">
             <th>Number</th>
-            <th ng-click="sortType = 'user'; sortReverse = !sortReverse">User
-                <span ng-show="sortType != 'user'" class="icon-sort"></span>
-                <span ng-show="sortType == 'user' && !sortReverse" class="icon-sort-up"></span>
-                <span ng-show="sortType == 'user' && sortReverse" class="icon-sort-down"></span>
+            <th ng-click="sortType = 'userName'; sortReverse = !sortReverse">User
+                <span ng-show="sortType != 'userName'" class="icon-sort"></span>
+                <span ng-show="sortType == 'userName' && !sortReverse" class="icon-sort-up"></span>
+                <span ng-show="sortType == 'userName' && sortReverse" class="icon-sort-down"></span>
             </th>
 
             <th ng-click="sortType = 'facilityCode'; sortReverse = !sortReverse">Facility Name
@@ -24,7 +24,7 @@
         </tr>
         <tr ng-repeat="tabletVersion in tabletVersions| orderBy:sortType:sortReverse">
             <td>{{$index+1}}</td>
-            <td>{{tabletVersion.user}}</td>
+            <td>{{tabletVersion.userName}}</td>
             <td>{{tabletVersion.facilityCode}}</td>
             <td>{{tabletVersion.appVersion}}</td>
         </tr>

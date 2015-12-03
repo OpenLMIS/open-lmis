@@ -33,7 +33,7 @@ public class RestAppInfoController extends BaseController {
 
     @RequestMapping(value = "/rest-api/update-app-info", method = RequestMethod.POST, headers = ACCEPT_JSON)
     public ResponseEntity<RestResponse> updateAppInfo(@RequestBody RestAppInfoRequest restAppInfoRequest) {
-        int result = restAppInfoService.createOrUpdateVersion(restAppInfoRequest.getFacilityCode(), restAppInfoRequest.getVersion());
+        int result = restAppInfoService.createOrUpdateVersion(restAppInfoRequest);
         if (result > 0) {
             return new ResponseEntity(HttpStatus.OK);
         } else {

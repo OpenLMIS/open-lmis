@@ -20,6 +20,7 @@ import org.openlmis.core.repository.FacilityRepository;
 import org.openlmis.db.categories.UnitTests;
 import org.openlmis.report.model.dto.AppInfo;
 import org.openlmis.report.repository.AppInfoRepository;
+import org.openlmis.restapi.domain.RestAppInfoRequest;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 import org.powermock.modules.junit4.PowerMockRunnerDelegate;
@@ -47,7 +48,7 @@ public class RestAppInfoServiceTest {
     public void shouldCreateAppInfo() {
         when(appInfoRepository.getAppInfoByFacilityCode(anyString())).thenReturn(null);
         when(facilityRepository.getIdForCode(anyString())).thenReturn(1L);
-        service.createOrUpdateVersion("F10", "1.0");
+        service.createOrUpdateVersion(new RestAppInfoRequest());
 
         verify(appInfoRepository).create(any(AppInfo.class));
     }
@@ -56,9 +57,8 @@ public class RestAppInfoServiceTest {
     public void shouldUpdateAppInfo() {
         AppInfo appInfo = new AppInfo();
         when(appInfoRepository.getAppInfoByFacilityCode(anyString())).thenReturn(appInfo);
-        service.createOrUpdateVersion("F10", "1.0");
+        service.createOrUpdateVersion(new RestAppInfoRequest());
 
         verify(appInfoRepository).update(any(AppInfo.class));
-
     }
 }

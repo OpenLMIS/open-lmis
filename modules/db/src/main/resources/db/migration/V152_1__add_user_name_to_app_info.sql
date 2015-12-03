@@ -1,0 +1,1 @@
+ALTER TABLE moz_app_info ADD COLUMN userName VARCHAR ;

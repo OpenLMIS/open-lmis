@@ -84,7 +84,7 @@ public class SimpleTableController extends BaseController {
 
 	@RequestMapping(value = "/tablet-version-report", method = GET, headers = BaseController.ACCEPT_JSON)
 	public ResponseEntity<OpenLmisResponse> tabletVersionReport() {
-			return OpenLmisResponse.response("tablet_versions", appInfoMapper.getAll());
+			return OpenLmisResponse.response("tablet_versions", appInfoMapper.queryAll());
 	}
 
 	@InitBinder

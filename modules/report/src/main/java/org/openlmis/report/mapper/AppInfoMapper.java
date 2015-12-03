@@ -21,16 +21,16 @@ import java.util.List;
 @Repository
 public interface AppInfoMapper {
 
-    @Insert("INSERT INTO moz_app_info (facilityId, appVersion) VALUES(#{facilityId}, #{appVersion})")
+    @Insert("INSERT INTO moz_app_info (facilityId, userName, appVersion) VALUES(#{facilityId}, #{userName}, #{appVersion})")
     @Options(useGeneratedKeys = true)
     int insert(AppInfo appInfo);
 
     @Update("UPDATE moz_app_info SET appVersion = #{appVersion} WHERE id = #{id}")
     int update(AppInfo appInfo);
 
-    @Select("SELECT * FROM moz_app_info, facilities WHERE facilities.code = #{facilityCode} ")
-    AppInfo queryVersionByFacilityCode(String facilityCode);
+    @Select("SELECT * FROM moz_app_info, facilities WHERE facilities.code = #{facilityCode} AND facilities.id = moz_app_info.facilityId")
+    AppInfo queryByFacilityCode(String facilityCode);
 
     @Select("SELECT moz_app_info.*, facilities.code facilityCode FROM moz_app_info, facilities WHERE moz_app_info.facilityId = facilities.id")
-    List<AppInfo> getAll();
+    List<AppInfo> queryAll();
 }

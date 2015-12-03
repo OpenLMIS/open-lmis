@@ -39,10 +39,10 @@ public class AppInfoMapperTest {
         Facility facility = initFacility();
         facilityMapper.insert(facility);
 
-        AppInfo appInfo = new AppInfo(facility.getId(), "1.0");
+        AppInfo appInfo = new AppInfo(facility.getId(), "testUser", "1.0");
         mapper.insert(appInfo);
 
-        AppInfo queryAppInfo = mapper.queryVersionByFacilityCode(facility.getCode());
+        AppInfo queryAppInfo = mapper.queryByFacilityCode(facility.getCode());
 
         assertThat(queryAppInfo.getAppVersion(), is(appInfo.getAppVersion()));
     }
@@ -52,13 +52,13 @@ public class AppInfoMapperTest {
 
         Facility facility = initFacility();
         facilityMapper.insert(facility);
-        AppInfo appInfo = new AppInfo(facility.getId(), "1.0");
+        AppInfo appInfo = new AppInfo(facility.getId(), "testUser", "1.0");
         mapper.insert(appInfo);
 
         appInfo.setAppVersion("2.0");
         mapper.update(appInfo);
 
-        AppInfo queryAppInfo = mapper.queryVersionByFacilityCode(facility.getCode());
+        AppInfo queryAppInfo = mapper.queryByFacilityCode(facility.getCode());
 
         assertThat(queryAppInfo.getAppVersion(), is(appInfo.getAppVersion()));
 

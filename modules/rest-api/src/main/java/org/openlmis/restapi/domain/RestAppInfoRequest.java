@@ -8,8 +8,8 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @JsonDeserialize
 public class RestAppInfoRequest {
-
     private String facilityCode;
+    private String userName;
     private String version;
 
 }
