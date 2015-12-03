@@ -18,11 +18,12 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.openlmis.core.repository.FacilityRepository;
 import org.openlmis.db.categories.UnitTests;
-import org.openlmis.restapi.domain.AppInfo;
-import org.openlmis.restapi.repository.AppInfoRepository;
+import org.openlmis.report.model.dto.AppInfo;
+import org.openlmis.report.repository.AppInfoRepository;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 import org.powermock.modules.junit4.PowerMockRunnerDelegate;
+
 import static org.mockito.Mockito.*;
 
 @Category(UnitTests.class)

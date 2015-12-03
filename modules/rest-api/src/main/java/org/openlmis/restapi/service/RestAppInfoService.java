@@ -10,8 +10,8 @@
 package org.openlmis.restapi.service;
 
 import org.openlmis.core.repository.FacilityRepository;
-import org.openlmis.restapi.domain.AppInfo;
-import org.openlmis.restapi.repository.AppInfoRepository;
+import org.openlmis.report.model.dto.AppInfo;
+import org.openlmis.report.repository.AppInfoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

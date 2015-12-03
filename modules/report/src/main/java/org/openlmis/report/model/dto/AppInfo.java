@@ -7,23 +7,21 @@
  * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Affero General Public License for more details.
  * You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org. 
  */
-package org.openlmis.restapi.repository.mapper;
+package org.openlmis.report.model.dto;
 
-import org.apache.ibatis.annotations.*;
-import org.openlmis.restapi.domain.AppInfo;
-import org.springframework.stereotype.Repository;
+import lombok.Data;
+import org.openlmis.core.domain.BaseModel;
 
-@Repository
-public interface  AppInfoMapper {
+@Data
+public class AppInfo extends BaseModel {
+    private Long facilityId;
+    private String appVersion;
 
-    @Insert("INSERT INTO moz_app_info (facilityId, appVersion) VALUES(#{facilityId}, #{appVersion})")
-    @Options(useGeneratedKeys = true)
-    int insert(AppInfo appInfo);
+    public AppInfo() {
+    }
 
-    @Update("UPDATE moz_app_info SET appVersion = #{appVersion} WHERE id = #{id}")
-    int update(AppInfo appInfo);
-
-    @Select("SELECT * FROM moz_app_info, facilities WHERE facilities.code = #{facilityCode} ")
-    AppInfo queryVersionByFacilityCode(String facilityCode);
-
+    public AppInfo(Long facilityId, String appVersion) {
+        this.facilityId = facilityId;
+        this.appVersion = appVersion;
+    }
 }
