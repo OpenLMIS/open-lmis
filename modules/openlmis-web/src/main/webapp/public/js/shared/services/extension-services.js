@@ -1333,6 +1333,10 @@ services.factory('RequisitionReportService', function($resource){
     return $resource('/reports/requisition-report.json',{},{});
 });
 
+services.factory('VersionReportService', function($resource){
+    return $resource('/reports/tablet-version-report.json',{},{});
+});
+
 services.factory('ProductReportService', function ($resource) {
     return {
         loadAllProducts: function () {

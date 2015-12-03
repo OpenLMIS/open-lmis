@@ -27,6 +27,7 @@ import lombok.NoArgsConstructor;
 import org.openlmis.core.utils.DateUtil;
 import org.openlmis.core.web.OpenLmisResponse;
 import org.openlmis.core.web.controller.BaseController;
+import org.openlmis.report.mapper.AppInfoMapper;
 import org.openlmis.report.mapper.RequisitionReportsMapper;
 import org.openlmis.report.service.FacilityProductsReportDataProvider;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -54,6 +55,8 @@ public class SimpleTableController extends BaseController {
 	@Autowired
 	private FacilityProductsReportDataProvider facilityProductsReportDataProvider;
 
+	@Autowired
+	private AppInfoMapper appInfoMapper;
 
 	@RequestMapping(value = "/requisition-report", method = GET, headers = BaseController.ACCEPT_JSON)
 	public ResponseEntity<OpenLmisResponse> requisitionReport(
@@ -79,6 +82,10 @@ public class SimpleTableController extends BaseController {
 		return OpenLmisResponse.response("products", facilityProductsReportDataProvider.getReportDataForAllProducts(facilityId, endTime));
 	}
 
+	@RequestMapping(value = "/tablet-version-report", method = GET, headers = BaseController.ACCEPT_JSON)
+	public ResponseEntity<OpenLmisResponse> tabletVersionReport() {
+			return OpenLmisResponse.response("tablet_versions", appInfoMapper.getAll());
+	}
 
 	@InitBinder
 	public void initBinder(WebDataBinder binder) {

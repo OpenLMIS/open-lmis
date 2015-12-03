@@ -16,6 +16,11 @@ angular.module('requisition-report', ['openlmis', 'angularCombine', 'ngTable', '
                     templateUrl: 'all-products/partials/list.html',
                     reloadOnSearch: false
                 }).
+                when('/version-of-tablet', {
+                    controller: VersionReportController,
+                    templateUrl: 'version/partials/list.html',
+                    reloadOnSearch: false
+                }).
                 otherwise({redirectTo: '/'});
         }]).run(
     function ($rootScope, AuthorizationService) {

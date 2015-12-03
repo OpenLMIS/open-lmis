@@ -16,6 +16,8 @@ import org.apache.ibatis.annotations.Update;
 import org.openlmis.report.model.dto.AppInfo;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 @Repository
 public interface AppInfoMapper {
 
@@ -29,4 +31,6 @@ public interface AppInfoMapper {
     @Select("SELECT * FROM moz_app_info, facilities WHERE facilities.code = #{facilityCode} ")
     AppInfo queryVersionByFacilityCode(String facilityCode);
 
+    @Select("SELECT moz_app_info.*, facilities.code facilityCode FROM moz_app_info, facilities WHERE moz_app_info.facilityId = facilities.id")
+    List<AppInfo> getAll();
 }
