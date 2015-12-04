@@ -93,6 +93,22 @@ INSERT INTO role_assignments (userId, roleId, deliveryZoneId, programId) VALUES
     id
   FROM programs
   WHERE name = 'VACCINES')),
+((SELECT
+    id
+  FROM USERS
+  WHERE username = 'superuser'),
+ (SELECT
+    id
+  FROM roles
+  WHERE name = 'FieldCoordinator'),
+ (SELECT
+    id
+  FROM delivery_zones
+  WHERE code = 'DZ6'),
+ (SELECT
+    id
+  FROM programs
+  WHERE name = 'VACCINES')),
 
 ((SELECT
     id

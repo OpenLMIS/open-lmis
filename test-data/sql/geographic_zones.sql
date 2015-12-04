@@ -8,16 +8,8 @@
 -- You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org. 
 --
 
-\i ../../test-data/sql/geographic_zones.sql
-\i ../../test-data/sql/products.sql
-\i ../../test-data/sql/facilities.sql
-\i ../../test-data/sql/rnr_template.sql
-\i ../../test-data/sql/users.sql
-\i ../../test-data/sql/processing_schedules.sql
-\i ../../test-data/sql/requisition_groups.sql
-\i ../../test-data/sql/regimens.sql
-\i ../../test-data/sql/delivery_zones.sql
-\i ../../test-data/sql/allocation_users.sql
-\i ../../test-data/sql/budget.sql
-\i ../../test-data/sql/coverage_target_group_products.sql
-\i ../../test-data/sql/coverage_product_vials.sql
+INSERT INTO geographic_zones(code, name, levelId, parentId)
+VALUES ('Niassa', 'Niassa', (SELECT id FROM geographic_levels WHERE code = 'province'), (SELECT id FROM geographic_zones WHERE code = 'Mozambique'));
+
+INSERT INTO geographic_zones(code, name, levelId, parentId)
+VALUES ('District10', 'District10', (SELECT id FROM geographic_levels WHERE code = 'district'), (SELECT id FROM geographic_zones WHERE code = 'Niassa'));

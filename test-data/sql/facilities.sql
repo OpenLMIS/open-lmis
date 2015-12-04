@@ -278,6 +278,12 @@ VALUES
                                                                                    WHERE code = 'District9'), 2, 70000,
    22.3, 1.2, 3.3, 3, 9.9, 6.6, 'TRUE', 'TRUE', 'TRUE', 'TRUE', 'TRUE', 'TRUE', 'TRUE', '11/11/12', '11/11/2012',
    'FALSE', 'fc', 'TRUE', 'FALSE', '11/11/2012'),
+  ('F17A', 'Facility17A', 'Village Clinic', 'G7646', 9876234981, 'fax', 'A', 'B', (SELECT
+                                                                                       id
+                                                                                     FROM geographic_zones
+                                                                                     WHERE code = 'District10'), 2, 70000,
+     22.3, 1.2, 3.3, 3, 9.9, 6.6, 'TRUE', 'TRUE', 'TRUE', 'TRUE', 'TRUE', 'TRUE', 'TRUE', '11/11/12', '11/11/2012',
+     'FALSE', 'fc', 'TRUE', 'FALSE', '11/11/2012'),
 
   ('W15', 'Warehouse15', 'Warehouse Province Norte', 'G7646', 9876234981, 'fax', 'A', 'B', 4, 2, 0, 22.3, 1.2, 3.3, 3,
    9.9, 6.6, 'TRUE', 'TRUE', 'TRUE', 'TRUE', 'TRUE', 'TRUE', 'TRUE', '11/11/12', '11/11/2012', 'FALSE', 'fc', 'TRUE',
@@ -497,6 +503,10 @@ INSERT INTO programs_supported (facilityId, programId, startDate, active, modifi
       id
     FROM facilities
     WHERE code = 'F16C'), 5, '11/11/12', TRUE, 1),
+  ((SELECT
+      id
+    FROM facilities
+    WHERE code = 'F17A'), 5, '11/11/12', TRUE, 1),
   ((SELECT
       id
     FROM facilities
