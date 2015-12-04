@@ -10,7 +10,7 @@
 
 <div>
   <h2 id="warehouseLoadAmountLabel" openlmis-message="label.warehouse.load.amount">
-    <span class="indicator">
+    <span class="indicator" ng-show="viewColdChainStatusAvailable">
       <span class="span2">
         <img src="/public/images/refrigator3.png">&nbsp;<span id="labelIndicatorGreen" openlmis-message="label.indicator.green"></span>
       </span>
@@ -110,7 +110,7 @@
           <thead ng-model="facilityMap[geoZoneName]">
           <tr>
             <th></th>
-            <th class="main-heading">
+            <th class="main-heading" ng-show="viewColdChainStatusAvailable">
               <span id="coldChainLabel{{$index}}" openlmis-message="label.cold.chain"></span>
             </th>
             <th></th>
@@ -124,7 +124,7 @@
             <th>
               <span id="facilityLabel{{$index}}" openlmis-message="label.facility"></span>
             </th>
-            <th>
+            <th ng-show="viewColdChainStatusAvailable">
               <span id="equipmentStatusLabel{{$index}}" openlmis-message="label.cold.chain.equipment.status"></span></th>
             <th>
               <span id="populationLabel{{$index}}" openlmis-message="label.population"></span>
@@ -140,7 +140,7 @@
               <span id="facilityName{{$parent.$index}}{{$index}}"ng-bind="facility.name"></span>
               <span id="facilityCode{{$parent.$index}}{{$index}}"ng-bind="facility.code"></span>
             </td>
-            <td class="equipment-status">
+            <td class="equipment-status" ng-show="viewColdChainStatusAvailable">
               <a ng-hide="apimessage || !isDataAvailable(facility.id)" ng-href="{{getURL(facility.id)}}"><img src="/public/images/refrigator{{getFacitilityStatus(facility.id)}}.png"/></a>
             </td>
             <td>
@@ -155,7 +155,7 @@
               <span id="geoZoneNameLabel{{$index}}" ng-bind="geoZoneName"></span>
               <span id="totalLabel{{$index}}" openlmis-message="label.total"></span>
             </td>
-            <td></td>
+            <td ng-show="viewColdChainStatusAvailable"></td>
             <td>
               <span id="population{{$index}}" ng-bind="aggregateMap[geoZoneName]['totalPopulation']"></span>
             </td>

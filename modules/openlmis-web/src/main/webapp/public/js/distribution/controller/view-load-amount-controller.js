@@ -18,51 +18,59 @@ function ViewLoadAmountController($scope, facilities, period, deliveryZone, frid
     var otherGroupName = "";
     $scope.geoZoneLevelName = facilities[0].geographicZone.level.name;
 
+    $scope.provincesForColdChainStatus = ['Gaza', 'Tete', 'Niassa'];
+    $scope.viewColdChainStatusAvailable = false;
+    $scope.checkViewColdChainStatus = function () {
+      $scope.parentZoneName = $scope.facilities[0].geographicZone.parent.name;
+      $scope.viewColdChainStatusAvailable = _.contains($scope.provincesForColdChainStatus, $scope.parentZoneName);
+    };
+    $scope.checkViewColdChainStatus();
+
     $scope.aggregateMap = {};
+    if ($scope.viewColdChainStatusAvailable) {
+      if (!fridges.coldTraceData) {
+        $scope.apimessage = "message.api.error";
+      } else if (fridges.coldTraceData) {
+        $scope.fridges = fridges.coldTraceData.fridges;
 
-    if (isUndefined(fridges)) {
-      $scope.apimessage = "message.api.error";
-    } else {
-      $scope.fridges = fridges.fridges;
-
-      $scope.getFacitilityStatus = function (id) {
-        if (!isUndefined(id)) {
-            for (var i = 0; i < $scope.fridges.length; i++) {
-                var fridge = $scope.fridges[i];
-                if (fridge.FacilityID == id) {
-                    return fridge.Status;
-                }
-            }
-        }
-        return 1;
-      };
-
-      $scope.isDataAvailable = function (id) {
+        $scope.getFacitilityStatus = function (id) {
           if (!isUndefined(id)) {
               for (var i = 0; i < $scope.fridges.length; i++) {
                   var fridge = $scope.fridges[i];
                   if (fridge.FacilityID == id) {
-                      return true;
+                      return fridge.Status;
                   }
               }
           }
-          $scope.apimessage = "message.api.error.no.data";
-          return false;
-      };
+          return 1;
+        };
 
-      $scope.getURL = function (id) {
-        if (!isUndefined(id)) {
-            for (var i = 0; i < $scope.fridges.length; i++) {
-                var fridge = $scope.fridges[i];
-                if (fridge.FacilityID == id) {
-                    return fridge.URL;
+        $scope.isDataAvailable = function (id) {
+            if (!isUndefined(id)) {
+                for (var i = 0; i < $scope.fridges.length; i++) {
+                    var fridge = $scope.fridges[i];
+                    if (fridge.FacilityID == id) {
+                        return true;
+                    }
                 }
             }
-        }
-        return ".";
-      };
-    }
+            $scope.apimessage = "message.api.error.no.data";
+            return false;
+        };
 
+        $scope.getURL = function (id) {
+          if (!isUndefined(id)) {
+              for (var i = 0; i < $scope.fridges.length; i++) {
+                  var fridge = $scope.fridges[i];
+                  if (fridge.FacilityID == id) {
+                      return fridge.URL;
+                  }
+              }
+          }
+          return ".";
+        };
+      }
+    }
     $(facilities).each(function (i, facility) {
       var totalForGeoZone = $scope.aggregateMap[facility.geographicZone.name];
       if (isUndefined(totalForGeoZone)) {
@@ -257,7 +265,7 @@ ViewLoadAmountController.resolve = {
     var deferred = $q.defer();
     $timeout(function () {
       Fridges.get({deliveryZoneId: $route.current.params.deliveryZoneId}, function (data) {
-        deferred.resolve(data.coldTraceData);
+        deferred.resolve(data);
       }, {});
     }, 100);
 
