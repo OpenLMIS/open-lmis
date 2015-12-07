@@ -1,0 +1,47 @@
+<!--
+  ~ This program is part of the OpenLMIS logistics management information system platform software.
+  ~ Copyright © 2013 VillageReach
+  ~
+  ~ This program is free software: you can redistribute it and/or modify it under the terms of the GNU Affero General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
+  ~  
+  ~ This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Affero General Public License for more details.
+  ~ You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org. 
+  -->
+
+<div>
+    <h2 openlmis-message="link.admin.export"></h2>
+    <div class="row-fluid">
+        <div class="span4">
+            <span openlmis-message="label.date.range"></span>
+
+            <div class="row-fluid date-range">
+                <div class="span6">
+                    <label for="startDate">
+                        <span openlmis-message="label.from"></span>
+                        <span class="label-required"> *&nbsp;</span>
+                    </label>
+                    <input name="startDate" id="startDate" type="text"
+                           ui-date="{dateFormat: 'dd/mm/yy', changeYear: true}" ui-date-format="mm-dd-yy"
+                           readonly ng-model="startDate"
+                           ng-change="setEndDateOffset()" ng-required="true"/>
+                </div>
+
+                <div class="span6">
+                    <label for="endDate">
+                        <span openlmis-message="label.to"></span>
+                        <span class="label-required"> *&nbsp;</span>
+                    </label>
+                    <input name="endDate" id="endDate" type="text"
+                           ui-date="{minDate:endDateOffset, dateFormat: 'dd/mm/yy', changeYear: true}"
+                           ui-date-format="mm-dd-yy"
+                           readonly
+                           ng-model="endDate" ng-required="true"
+                           ng-disabled="!startDate"/>
+                </div>
+            </div>
+        </div>
+
+    </div>
+    <input id="uploadButton" type="submit" openlmis-message="link.admin.export" class="btn btn-primary"
+           ng-disabled="inProgress">
+</div>
