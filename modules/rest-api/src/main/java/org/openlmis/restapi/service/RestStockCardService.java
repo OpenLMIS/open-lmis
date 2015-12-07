@@ -76,6 +76,7 @@ public class RestStockCardService {
     entry.setAdjustmentReason(stockAdjustmentReason);
     entry.setCreatedBy(userId);
     entry.setModifiedBy(userId);
+    entry.setCreatedDate(stockEvent.getCreatedTime());
 
     Map<String, String> customProps = stockEvent.getCustomProps();
     if (null != customProps) {
