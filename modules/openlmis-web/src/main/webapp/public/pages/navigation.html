@@ -211,7 +211,7 @@
                openlmis-message="link.admin.upload"></a>
           </li>
 
-          <li >
+          <li ng-show="hasPermission('EXPORTS')">
             <a id='export' href="/public/pages/admin/export/index.html"
                openlmis-message="link.admin.export"></a>
           </li>
