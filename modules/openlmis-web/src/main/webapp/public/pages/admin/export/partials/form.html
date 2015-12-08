@@ -10,38 +10,46 @@
 
 <div>
     <h2 openlmis-message="link.admin.export"></h2>
-    <div class="row-fluid">
-        <div class="span4">
-            <span openlmis-message="label.date.range"></span>
 
-            <div class="row-fluid date-range">
-                <div class="span6">
-                    <label for="startDate">
-                        <span openlmis-message="label.from"></span>
-                        <span class="label-required"> *&nbsp;</span>
-                    </label>
-                    <input name="startDate" id="startDate" type="text"
-                           ui-date="{dateFormat: 'dd/mm/yy', changeYear: true}" ui-date-format="mm-dd-yy"
-                           readonly ng-model="startDate"
-                           ng-change="setEndDateOffset()" ng-required="true"/>
-                </div>
+    <form name="exportReportForm" id="exportReportForm"
+          ng-submit="requestAndExportReports()" novalidate>
+        <div class="row-fluid">
+            <div class="span4">
+                <span openlmis-message="label.date.range"></span>
 
-                <div class="span6">
-                    <label for="endDate">
-                        <span openlmis-message="label.to"></span>
-                        <span class="label-required"> *&nbsp;</span>
-                    </label>
-                    <input name="endDate" id="endDate" type="text"
-                           ui-date="{minDate:endDateOffset, dateFormat: 'dd/mm/yy', changeYear: true}"
-                           ui-date-format="mm-dd-yy"
-                           readonly
-                           ng-model="endDate" ng-required="true"
-                           ng-disabled="!startDate"/>
+                <div class="row-fluid date-range">
+                    <div class="span6">
+                        <label for="startDate">
+                            <span openlmis-message="label.from"></span>
+                        </label>
+                        <input name="startDate" id="startDate" type="text"
+                               ui-date="{dateFormat: 'dd/mm/yy', changeYear: true}" ui-date-format="mm-dd-yy"
+                               readonly ng-model="startDate"
+                               ng-change="setEndDateOffset()" ng-required="true"/>
+                    </div>
+
+                    <div class="span6">
+                        <label for="endDate">
+                            <span openlmis-message="label.to"></span>
+                        </label>
+                        <input name="endDate" id="endDate" type="text"
+                               ui-date="{minDate:endDateOffset, dateFormat: 'dd/mm/yy', changeYear: true}"
+                               ui-date-format="mm-dd-yy"
+                               readonly
+                               ng-model="endDate" ng-required="true"
+                               ng-disabled="!startDate"/>
+                    </div>
                 </div>
             </div>
         </div>
 
-    </div>
-    <input id="uploadButton" type="submit" openlmis-message="link.admin.export" class="btn btn-primary"
-           ng-disabled="inProgress">
+        <div class="row-fluid">
+            <div class="span12">
+                <input id="exportButton" type="submit" class="btn btn-primary"
+                       openlmis-message="link.admin.export" ng-disabled="inProgress"/>
+            </div>
+        </div>
+
+    </form>
+
 </div>
