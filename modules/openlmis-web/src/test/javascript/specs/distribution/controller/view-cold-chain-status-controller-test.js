@@ -9,7 +9,7 @@
  */
 
 describe('ViewColdChainStatusController', function () {
-  var scope, controller, httpBackend, program1, facilities;
+  var scope, controller, httpBackend, program1, facilities, fridges;
 
   beforeEach(module('openlmis'));
   beforeEach(inject(function ($rootScope, $controller, $httpBackend) {
@@ -24,22 +24,34 @@ describe('ViewColdChainStatusController', function () {
           {product: {id: 4, name: 'blank', productGroup: {name: ''}}}
         ];
     facilities = [
-          {id: 'F10', name: 'Village Dispensary', geographicZone: {id: 1, name: 'Ngrogoro', level: {name: 'City' }}, catchmentPopulation: 200,
+          {id: 'F10', name: 'Village Dispensary', geographicZone: {id: 1, name: 'Ngrogoro', level: {name: 'City 1' }, parent: { name: 'Province 1' }}, catchmentPopulation: 200,
             supportedPrograms: [
               {program: program1, programProducts: programProducts}
             ]},
-          {id: 'F11', name: 'Central Hospital', geographicZone: {id: 1, name: 'District 1', level: {name: 'City' }}, catchmentPopulation: 150,
+          {id: 'F11', name: 'Central Hospital', geographicZone: {id: 1, name: 'District 1', level: {name: 'City 2' }, parent: { name: 'Province 2' }}, catchmentPopulation: 150,
             supportedPrograms: [
               {program: program1, programProducts: programProducts}
             ]}
-        ];
+        ],
+    fridges = {
+        fridges: [
+            { Status: 1 }, { Status: 2 }, { Status: 3 }, { Status: 4 }
+        ]
+    };
 
-    controller(ViewColdChainStatusController, {$scope: scope, facilities: facilities, period: {id: 1, name: 'period 1'}, deliveryZone: {id: 1}, fridges : {}});
+    controller(ViewColdChainStatusController, {$scope: scope, facilities: facilities, period: {id: 1, name: 'period 1'}, deliveryZone: {id: 1}, fridges : fridges});
   }));
 
   it('should set no records found message if no facilities are found', function () {
     controller(ViewColdChainStatusController, {$scope: scope, facilities: [], period: {}, deliveryZone: {}, fridges : {}});
     expect(scope.message).toEqual("msg.delivery.zone.no.record");
+  });
+
+  it('should set api error message if fridges is undefined', function () {
+    controller(ViewColdChainStatusController, {$scope: scope, facilities: facilities, period: {}, deliveryZone: {}, fridges : undefined});
+    expect(scope.apimessage).toEqual("message.api.error");
+    expect(scope.message).toEqual("");
+    expect(scope.apiError).toEqual(true);
   });
 
   it('should set no records found message if no facilities are undefined', function () {
@@ -63,6 +75,52 @@ describe('ViewColdChainStatusController', function () {
 
   it('should set period', function () {
     expect(scope.period).toEqual({id: 1, name: 'period 1'});
+  });
+
+  it('should find facility by id', function () {
+    var i;
+
+    for (i = 0; i < facilities.length; i += 1) {
+        expect(scope.getFacilityById(facilities[i].id)).toEqual(facilities[i]);
+    }
+  });
+
+  it('should find facility name by id', function () {
+    var i;
+
+    for (i = 0; i < facilities.length; i += 1) {
+        expect(scope.getFacilityNameById(facilities[i].id)).toEqual(facilities[i].name);
+    }
+  });
+
+  it('should find district name by facility id', function () {
+    var i;
+
+    for (i = 0; i < facilities.length; i += 1) {
+        expect(scope.getDistrictNameByFacilityId(facilities[i].id)).toEqual(facilities[i].geographicZone.name);
+    }
+  });
+
+  it('should find province name by facility id', function () {
+    var i;
+
+    for (i = 0; i < facilities.length; i += 1) {
+        expect(scope.getProvinceNameByFacilityId(facilities[i].id)).toEqual(facilities[i].geographicZone.parent.name);
+    }
+  });
+
+  it('should split fridges by status', function () {
+    expect(scope.failedRefrigerators.length).toEqual(1);
+    expect(scope.failedRefrigerators[0]).toEqual({ Status: 1 });
+
+    expect(scope.followUpRefrigerators.length).toEqual(1);
+    expect(scope.followUpRefrigerators[0]).toEqual({ Status: 2 });
+
+    expect(scope.workingRefrigerators.length).toEqual(1);
+    expect(scope.workingRefrigerators[0]).toEqual({ Status: 3 });
+
+    expect(scope.noDataRefrigerators.length).toEqual(1);
+    expect(scope.noDataRefrigerators[0]).toEqual({ Status: 4 });
   });
 
 });

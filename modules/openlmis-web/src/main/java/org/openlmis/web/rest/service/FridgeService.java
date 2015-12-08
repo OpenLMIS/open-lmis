@@ -28,6 +28,8 @@ public class FridgeService {
             for (Fridge f : coldTraceData.getFridges()) {
                 f.updateURL(user, pwd);
             }
+        } catch (RuntimeException e) {
+            throw e; // runtime exceptions should not be catched.
         } catch (Exception e) {
             coldTraceData = null;
         }
@@ -49,4 +51,5 @@ public class FridgeService {
     public void setUrl(String url) {
         this.url = String.format("%s?delivery_zone={deliveryZoneId}", url);
     }
+
 }
