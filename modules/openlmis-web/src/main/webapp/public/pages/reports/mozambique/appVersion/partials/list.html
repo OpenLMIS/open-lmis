@@ -1,6 +1,6 @@
 <div>
-    <h3>Version of Tablet Report</h3>
-    <h4>Total : {{tabletVersions.length}} row(s)</h4>
+    <h3>App Version</h3>
+    <h4>Total : {{appVersions.length}} row(s)</h4>
     <table class="table table-condensed table-bordered table-striped">
         <tr class="gradient-header">
             <th>Number</th>
@@ -10,23 +10,23 @@
                 <span ng-show="sortType == 'userName' && sortReverse" class="icon-sort-down"></span>
             </th>
 
-            <th ng-click="sortType = 'facilityCode'; sortReverse = !sortReverse">Facility Name
-                <span ng-show="sortType != 'facilityCode'" class="icon-sort"></span>
-                <span ng-show="sortType == 'facilityCode' && !sortReverse" class="icon-sort-up"></span>
-                <span ng-show="sortType == 'facilityCode' && sortReverse" class="icon-sort-down"></span>
+            <th ng-click="sortType = 'facilityName'; sortReverse = !sortReverse">Facility Name
+                <span ng-show="sortType != 'facilityName'" class="icon-sort"></span>
+                <span ng-show="sortType == 'facilityName' && !sortReverse" class="icon-sort-up"></span>
+                <span ng-show="sortType == 'facilityName' && sortReverse" class="icon-sort-down"></span>
             </th>
 
-            <th ng-click="sortType = 'appVersion'; sortReverse = !sortReverse">Version of tablet
+            <th ng-click="sortType = 'appVersion'; sortReverse = !sortReverse">App Version
                 <span ng-show="sortType != 'appVersion'" class="icon-sort"></span>
                 <span ng-show="sortType == 'appVersion' && !sortReverse" class="icon-sort-up"></span>
                 <span ng-show="sortType == 'appVersion' && sortReverse" class="icon-sort-down"></span></th>
 
         </tr>
-        <tr ng-repeat="tabletVersion in tabletVersions| orderBy:sortType:sortReverse">
+        <tr ng-repeat="appVersion in appVersions| orderBy:sortType:sortReverse">
             <td>{{$index+1}}</td>
-            <td>{{tabletVersion.userName}}</td>
-            <td>{{tabletVersion.facilityCode}}</td>
-            <td>{{tabletVersion.appVersion}}</td>
+            <td>{{appVersion.userName}}</td>
+            <td>{{appVersion.facilityName}}</td>
+            <td>{{appVersion.appVersion}}</td>
         </tr>
     </table>
 </div>

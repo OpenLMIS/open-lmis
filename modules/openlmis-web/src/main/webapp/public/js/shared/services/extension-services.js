@@ -1334,7 +1334,7 @@ services.factory('RequisitionReportService', function($resource){
 });
 
 services.factory('VersionReportService', function($resource){
-    return $resource('/reports/tablet-version-report.json',{},{});
+    return $resource('/reports/app-version-report.json',{},{});
 });
 
 services.factory('ProductReportService', function ($resource) {

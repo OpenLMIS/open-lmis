@@ -31,6 +31,6 @@ public interface AppInfoMapper {
     @Select("SELECT * FROM moz_app_info, facilities WHERE facilities.code = #{facilityCode} AND facilities.id = moz_app_info.facilityId")
     AppInfo queryByFacilityCode(String facilityCode);
 
-    @Select("SELECT moz_app_info.*, facilities.code facilityCode FROM moz_app_info, facilities WHERE moz_app_info.facilityId = facilities.id")
+    @Select("SELECT moz_app_info.*, facilities.name facilityName FROM moz_app_info, facilities WHERE moz_app_info.facilityId = facilities.id")
     List<AppInfo> queryAll();
 }

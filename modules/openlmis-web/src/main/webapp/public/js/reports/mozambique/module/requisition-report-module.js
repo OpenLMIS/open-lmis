@@ -16,9 +16,9 @@ angular.module('requisition-report', ['openlmis', 'angularCombine', 'ngTable', '
                     templateUrl: 'all-products/partials/list.html',
                     reloadOnSearch: false
                 }).
-                when('/version-of-tablet', {
+                when('/app-version', {
                     controller: VersionReportController,
-                    templateUrl: 'version/partials/list.html',
+                    templateUrl: 'appVersion/partials/list.html',
                     reloadOnSearch: false
                 }).
                 otherwise({redirectTo: '/'});

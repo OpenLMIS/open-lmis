@@ -5,7 +5,7 @@ function VersionReportController($scope, VersionReportService) {
 
     $scope.loadUserSummary = function () {
         VersionReportService.get(function (data) {
-            $scope.tabletVersions = data.tablet_versions;
+            $scope.appVersions = data.app_versions;
             $scope.sortType = 'userName';
         });
     };
