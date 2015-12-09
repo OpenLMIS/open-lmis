@@ -1,0 +1,1 @@
+UPDATE rights SET description = 'Permission to Export', displaynamekey = 'right.export' WHERE name = 'EXPORTS';
