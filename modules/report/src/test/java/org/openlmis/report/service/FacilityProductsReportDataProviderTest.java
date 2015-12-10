@@ -147,7 +147,7 @@ public class FacilityProductsReportDataProviderTest {
 
     ArrayList<StockCardEntryKV> keyValues = new ArrayList<>();
     keyValues.add(new StockCardEntryKV(FacilityProductReportEntry.EXPIRATION_DATES, null, null));
-    stockCardEntry.setExtensions(keyValues);
+    stockCardEntry.setKeyValues(keyValues);
 
     List<StockCardEntry> entries = asList(stockCardEntry);
     stockCard.setEntries(entries);
@@ -164,7 +164,7 @@ public class FacilityProductsReportDataProviderTest {
     stockCardEntry.setCreatedDate(DateUtil.parseDate("2011-10-10 10:10:10"));
     ArrayList<StockCardEntryKV> keyValues = new ArrayList<>();
     keyValues.add(new StockCardEntryKV(FacilityProductReportEntry.EXPIRATION_DATES, null, null));
-    stockCardEntry.setExtensions(keyValues);
+    stockCardEntry.setKeyValues(keyValues);
     secondStockCard.setEntries(asList(stockCardEntry));
     return secondStockCard;
   }
@@ -184,7 +184,7 @@ public class FacilityProductsReportDataProviderTest {
     stockCard.setEntries(entries);
     ArrayList<StockCardEntryKV> keyValues = new ArrayList<>();
     keyValues.add(new StockCardEntryKV(FacilityProductReportEntry.EXPIRATION_DATES, null, null));
-    stockCardEntry.setExtensions(keyValues);
+    stockCardEntry.setKeyValues(keyValues);
 
     secondFacilityStockCards.add(stockCard);
   }
