@@ -108,7 +108,7 @@ public class RestStockCardControllerTest {
         String endTime = "2015-10-11";
         Date start = DateUtil.parseDate(startTime, DateUtil.FORMAT_DATE);
         Date end = DateUtil.parseDate(endTime, DateUtil.FORMAT_DATE);
-        when(restStockCardService.queryStockCardByMovementDate(facilityId, start, end)).thenReturn(stockCards);
+        when(restStockCardService.queryStockCardByOccurred(facilityId, start, end)).thenReturn(stockCards);
 
         //when
         ResponseEntity<RestResponse> response = restStockCardController.getStockMovements(facilityId, start, end);
@@ -135,7 +135,7 @@ public class RestStockCardControllerTest {
         ResponseEntity<RestResponse> expectedResponse = new ResponseEntity<>(new RestResponse(ERROR, errorMessage), BAD_REQUEST);
 
         Mockito.when(RestResponse.error(dataException.getOpenLmisMessage(), BAD_REQUEST)).thenReturn(expectedResponse);
-        when(restStockCardService.queryStockCardByMovementDate(facilityId, start, end)).thenThrow(dataException);
+        when(restStockCardService.queryStockCardByOccurred(facilityId, start, end)).thenThrow(dataException);
 
         ResponseEntity<RestResponse> response = restStockCardController.getStockMovements(facilityId, start, end);
         assertThat(response.getStatusCode(), is(HttpStatus.BAD_REQUEST));

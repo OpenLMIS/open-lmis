@@ -53,7 +53,7 @@ public class RestStockCardController extends BaseController {
                                             @RequestParam(value = "endTime", required = false)@DateTimeFormat(pattern="yyyy-MM-dd") final Date endTime) {
         List<StockCardDTO> stockCards;
         try {
-            stockCards = restStockCardService.queryStockCardByMovementDate(facilityId,startTime,endTime);
+            stockCards = restStockCardService.queryStockCardByOccurred(facilityId,startTime,endTime);
         } catch (DataException e) {
             return error(e.getOpenLmisMessage(), BAD_REQUEST);
         }

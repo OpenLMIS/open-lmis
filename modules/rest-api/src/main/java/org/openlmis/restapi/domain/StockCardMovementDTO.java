@@ -1,18 +1,24 @@
 package org.openlmis.restapi.domain;
 
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.databind.ser.std.DateSerializer;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.openlmis.core.utils.DateUtil;
 import org.openlmis.stockmanagement.domain.StockCardEntry;
 import org.openlmis.stockmanagement.domain.StockCardEntryKV;
 import org.openlmis.stockmanagement.domain.StockCardEntryType;
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
 
+import static com.fasterxml.jackson.databind.annotation.JsonSerialize.Inclusion.NON_EMPTY;
 import static java.lang.Math.abs;
 
 @Data
 @NoArgsConstructor
+@JsonSerialize(include = NON_EMPTY)
 public class StockCardMovementDTO {
 
     String documentNumber;
@@ -27,15 +33,17 @@ public class StockCardMovementDTO {
 
     Date createdDate;
 
-    Date movementDate;
+    String occurred;
 
     public StockCardMovementDTO(StockCardEntry stockCardEntry) {
         this.documentNumber = stockCardEntry.getReferenceNumber();
         this.movementQuantity = abs(stockCardEntry.getQuantity());
         this.reason = stockCardEntry.getAdjustmentReason().getName();
         this.initCustomProps(stockCardEntry);
-        this.movementDate = stockCardEntry.getOccurred();
         this.createdDate = stockCardEntry.getCreatedDate();
+        if (stockCardEntry.getOccurred() != null) {
+            this.occurred = new SimpleDateFormat(DateUtil.FORMAT_DATE).format(stockCardEntry.getOccurred());
+        }
         this.type = stockCardEntry.getType();
     }
 

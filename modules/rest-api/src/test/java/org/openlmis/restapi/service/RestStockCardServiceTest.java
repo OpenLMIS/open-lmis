@@ -365,8 +365,8 @@ public class RestStockCardServiceTest {
     Date end = DateUtil.parseDate("2015-10-11", DateUtil.FORMAT_DATE);
 
 
-    when(stockCardService.queryStockCardByMovementDate(facilityId,start,end)).thenReturn(asList(stockCard));
-    List<StockCardDTO> stockCardDTOs = restStockCardService.queryStockCardByMovementDate(facilityId, start, end);
+    when(stockCardService.queryStockCardByOccurred(facilityId,start,end)).thenReturn(asList(stockCard));
+    List<StockCardDTO> stockCardDTOs = restStockCardService.queryStockCardByOccurred(facilityId, start, end);
     StockCardDTO stockCardDTO = stockCardDTOs.get(0);
 
     assertThat(product.getCode(), is(stockCardDTO.getProduct().getCode()));

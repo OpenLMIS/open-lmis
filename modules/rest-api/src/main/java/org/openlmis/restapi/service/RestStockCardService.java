@@ -106,8 +106,8 @@ public class RestStockCardService {
     return stockAdjustmentReasonRepository.getAdjustmentReasonByName(stockEvent.getReasonName()) != null;
   }
 
-  public List<StockCardDTO> queryStockCardByMovementDate(long facilityId, Date startTime, Date endTime) {
-    List<StockCard> stockCards = stockCardService.queryStockCardByMovementDate(facilityId, startTime, endTime);
+  public List<StockCardDTO> queryStockCardByOccurred(long facilityId, Date startTime, Date endTime) {
+    List<StockCard> stockCards = stockCardService.queryStockCardByOccurred(facilityId, startTime, endTime);
 
     return transformStockCardsToDTOs(stockCards);
   }
