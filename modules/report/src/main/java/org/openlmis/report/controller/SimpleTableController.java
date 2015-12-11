@@ -24,6 +24,7 @@
 package org.openlmis.report.controller;
 
 import lombok.NoArgsConstructor;
+import org.apache.commons.io.IOUtils;
 import org.openlmis.core.utils.DateUtil;
 import org.openlmis.core.web.OpenLmisResponse;
 import org.openlmis.core.web.controller.BaseController;
@@ -32,15 +33,25 @@ import org.openlmis.report.mapper.RequisitionReportsMapper;
 import org.openlmis.report.service.FacilityProductsReportDataProvider;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.client.RestTemplate;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.*;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.text.SimpleDateFormat;
-import java.util.Date;
+import java.util.*;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipOutputStream;
 
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
 
@@ -85,6 +96,103 @@ public class SimpleTableController extends BaseController {
 	@RequestMapping(value = "/app-version-report", method = GET, headers = BaseController.ACCEPT_JSON)
 	public ResponseEntity<OpenLmisResponse> appVersionReport() {
 			return OpenLmisResponse.response("app_versions", appInfoMapper.queryAll());
+	}
+
+	@RequestMapping(value = "/export", method = GET, headers = BaseController.ACCEPT_JSON)
+	public void export(HttpServletRequest request, HttpServletResponse response) throws URISyntaxException, IOException {
+
+		String zipName = "export_" + UUID.randomUUID() + ".zip";
+
+		String starDate = request.getParameter("startDate");
+		String endDate = request.getParameter("endDate");
+
+		response.setContentType("Content-type: application/zip");
+		response.setHeader("Content-Disposition", "attachment; filename=" + zipName);
+
+		File zipFile = generateZipFile(zipName);
+
+        if (zipFile != null) {
+            FileInputStream fileInputStream = new FileInputStream(zipFile);
+            IOUtils.copy(fileInputStream, response.getOutputStream());
+            response.flushBuffer();
+            fileInputStream.close();
+
+            zipFile.delete();
+        }
+	}
+
+	private File generateZipFile(String zipName) {
+        File zipFile = null;
+
+		try {
+			List<File> files = generateFiles();
+
+			zipFile = new File(zipName);
+
+			byte[] buffer = new byte[1024];
+			FileOutputStream fileOutputStream = new FileOutputStream(zipFile);
+			ZipOutputStream zipOutputStream = new ZipOutputStream(fileOutputStream);
+
+			for (File srcFile : files) {
+				FileInputStream fileInputStream = new FileInputStream(srcFile);
+				zipOutputStream.putNextEntry(new ZipEntry(srcFile.getName()));
+
+				int length;
+				while ((length = fileInputStream.read(buffer)) > 0) {
+					zipOutputStream.write(buffer, 0, length);
+				}
+
+				zipOutputStream.closeEntry();
+				fileInputStream.close();
+
+				srcFile.delete();
+			}
+			zipOutputStream.close();
+		}
+		catch (IOException ioe) {
+			System.out.println("Error creating zip file: " + ioe);
+		} catch (URISyntaxException e) {
+			e.printStackTrace();
+		}
+
+        return zipFile;
+	}
+
+	private HashMap<String, URI> getURIMaps() {
+		HashMap<String, URI> map = new HashMap<>();
+		try {
+			map.put("facilities.csv", new URI("http://localhost:5555/cube/facilities/facts?format=csv"));
+			map.put("products.csv", new URI("http://localhost:5555/cube/requisition_line_items/members/products?format=csv"));
+			map.put("latest_stock_at_different_facilities.csv", new URI("http://localhost:5555/cube/stock_cards/members/stock?cut=stock:expirationdates&format=csv"));
+			map.put("movement_history.csv", new URI("http://localhost:5555/cube/stock_cards/members/movement?cut=movement:signature&format=csv"));
+			map.put("requisition_mmia.csv", new URI("http://localhost:5555/cube/requisition_line_items/facts?cut=products:MMIA&format=csv"));
+			map.put("requisition_via.csv", new URI("http://localhost:5555/cube/requisition_line_items/facts?cut=products:ESS_MEDS&format=csv"));
+			map.put("regimens.csv", new URI("http://localhost:5555/cube/requisitions/members/regimen?format=csv"));
+			map.put("patient_quantification.csv", new URI("http://localhost:5555/cube/requisitions/members/patient_quantification?format=csv"));
+		} catch (URISyntaxException e) {
+			e.printStackTrace();
+		}
+		return map;
+	}
+
+	private List<File> generateFiles() throws URISyntaxException {
+		List<File> files = new ArrayList<>();
+		RestTemplate restTemplate = new RestTemplate();
+
+		for (Map.Entry<String, URI> iterator : getURIMaps().entrySet()) {
+			try {
+				File tempFile = new File(iterator.getKey());
+				OutputStreamWriter outputStreamWriter = new OutputStreamWriter(new FileOutputStream(tempFile));
+				Writer w = new BufferedWriter(outputStreamWriter);
+				w.write(restTemplate.exchange(iterator.getValue(), HttpMethod.GET, new HttpEntity<>(""), String.class).getBody());
+				w.close();
+
+				files.add(tempFile);
+			} catch (IOException e) {
+				System.err.println("Problem writing to the files");
+			}
+		}
+		return files;
 	}
 
 	@InitBinder

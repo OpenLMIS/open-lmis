@@ -11,8 +11,7 @@
 <div>
     <h2 openlmis-message="link.admin.export"></h2>
 
-    <form name="exportReportForm" id="exportReportForm"
-          ng-submit="requestAndExportReports()" novalidate>
+    <form name="exportReportForm" id="exportReportForm" action="/reports/export" method="get" novalidate>
         <div class="row-fluid">
             <div class="span4">
                 <span openlmis-message="label.date.range"></span>
@@ -46,7 +45,7 @@
         <div class="row-fluid">
             <div class="span12">
                 <input id="exportButton" type="submit" class="btn btn-primary"
-                       openlmis-message="link.admin.export" ng-disabled="inProgress"/>
+                       openlmis-message="link.admin.export"/>
             </div>
         </div>
 
