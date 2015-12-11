@@ -60,6 +60,7 @@ import static org.springframework.web.bind.annotation.RequestMethod.GET;
 @RequestMapping(value = "/reports")
 public class SimpleTableController extends BaseController {
 
+	public static final String APP_TOMCAT_OPENLMIS_TMP = "/app/tomcat/openlmis/tmp/";
 	@Autowired
 	private RequisitionReportsMapper requisitionReportsMapper;
 
@@ -127,9 +128,9 @@ public class SimpleTableController extends BaseController {
 		try {
 			List<File> files = generateFiles();
 
-			zipFile = new File(zipName);
+			zipFile = new File(APP_TOMCAT_OPENLMIS_TMP + zipName);
 
-			byte[] buffer = new byte[1024];
+			byte[] buffer = new byte[8 * 1024];
 			FileOutputStream fileOutputStream = new FileOutputStream(zipFile);
 			ZipOutputStream zipOutputStream = new ZipOutputStream(fileOutputStream);
 
@@ -181,7 +182,7 @@ public class SimpleTableController extends BaseController {
 
 		for (Map.Entry<String, URI> iterator : getURIMaps().entrySet()) {
 			try {
-				File tempFile = new File(iterator.getKey());
+				File tempFile = new File(APP_TOMCAT_OPENLMIS_TMP +iterator.getKey());
 				OutputStreamWriter outputStreamWriter = new OutputStreamWriter(new FileOutputStream(tempFile));
 				Writer w = new BufferedWriter(outputStreamWriter);
 				w.write(restTemplate.exchange(iterator.getValue(), HttpMethod.GET, new HttpEntity<>(""), String.class).getBody());
