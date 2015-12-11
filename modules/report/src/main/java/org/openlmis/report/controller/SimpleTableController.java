@@ -24,6 +24,7 @@
 package org.openlmis.report.controller;
 
 import lombok.NoArgsConstructor;
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.openlmis.core.utils.DateUtil;
 import org.openlmis.core.web.OpenLmisResponse;
@@ -60,146 +61,162 @@ import static org.springframework.web.bind.annotation.RequestMethod.GET;
 @RequestMapping(value = "/reports")
 public class SimpleTableController extends BaseController {
 
-	public static final String APP_TOMCAT_OPENLMIS_TMP = "/app/tomcat/openlmis/tmp/";
-	@Autowired
-	private RequisitionReportsMapper requisitionReportsMapper;
+    public static final String APP_TOMCAT_OPENLMIS_TMP = "/app/tomcat/openlmis/tmp/";
+    @Autowired
+    private RequisitionReportsMapper requisitionReportsMapper;
 
-	@Autowired
-	private FacilityProductsReportDataProvider facilityProductsReportDataProvider;
+    @Autowired
+    private FacilityProductsReportDataProvider facilityProductsReportDataProvider;
 
-	@Autowired
-	private AppInfoMapper appInfoMapper;
+    @Autowired
+    private AppInfoMapper appInfoMapper;
 
-	@RequestMapping(value = "/requisition-report", method = GET, headers = BaseController.ACCEPT_JSON)
-	public ResponseEntity<OpenLmisResponse> requisitionReport(
-					@RequestParam (value = "startTime", required = true) Date startTime,
-					@RequestParam(value = "endTime", required = true) Date endTime) {
-		return OpenLmisResponse.response("rnr_list", requisitionReportsMapper
-            .getRequisitionList(startTime, endTime));
-	}
+    @RequestMapping(value = "/requisition-report", method = GET, headers = BaseController.ACCEPT_JSON)
+    public ResponseEntity<OpenLmisResponse> requisitionReport(
+            @RequestParam(value = "startTime", required = true) Date startTime,
+            @RequestParam(value = "endTime", required = true) Date endTime) {
+        return OpenLmisResponse.response("rnr_list", requisitionReportsMapper
+                .getRequisitionList(startTime, endTime));
+    }
 
 
-	@RequestMapping(value = "/single-product-report", method = GET, headers = BaseController.ACCEPT_JSON)
-	public ResponseEntity<OpenLmisResponse> singleProductReport(
-			@RequestParam(value = "geographicZoneId", required = false) Long geographicZoneId,
-			@RequestParam(value = "productId") final Long productId,
-			@RequestParam(value = "endTime", required = false) final Date endTime) {
-		return OpenLmisResponse.response("products", facilityProductsReportDataProvider.getReportDataForSingleProduct(geographicZoneId, productId, endTime));
-	}
+    @RequestMapping(value = "/single-product-report", method = GET, headers = BaseController.ACCEPT_JSON)
+    public ResponseEntity<OpenLmisResponse> singleProductReport(
+            @RequestParam(value = "geographicZoneId", required = false) Long geographicZoneId,
+            @RequestParam(value = "productId") final Long productId,
+            @RequestParam(value = "endTime", required = false) final Date endTime) {
+        return OpenLmisResponse.response("products", facilityProductsReportDataProvider.getReportDataForSingleProduct(geographicZoneId, productId, endTime));
+    }
 
-	@RequestMapping(value = "/all-products-report",method = GET,headers = BaseController.ACCEPT_JSON)
-	public ResponseEntity<OpenLmisResponse> allProductsReport(
-			@RequestParam(value = "facilityId",required = true) Long facilityId,
-			@RequestParam(value = "endTime", required = false) final Date endTime){
-		return OpenLmisResponse.response("products", facilityProductsReportDataProvider.getReportDataForAllProducts(facilityId, endTime));
-	}
+    @RequestMapping(value = "/all-products-report", method = GET, headers = BaseController.ACCEPT_JSON)
+    public ResponseEntity<OpenLmisResponse> allProductsReport(
+            @RequestParam(value = "facilityId", required = true) Long facilityId,
+            @RequestParam(value = "endTime", required = false) final Date endTime) {
+        return OpenLmisResponse.response("products", facilityProductsReportDataProvider.getReportDataForAllProducts(facilityId, endTime));
+    }
 
-	@RequestMapping(value = "/app-version-report", method = GET, headers = BaseController.ACCEPT_JSON)
-	public ResponseEntity<OpenLmisResponse> appVersionReport() {
-			return OpenLmisResponse.response("app_versions", appInfoMapper.queryAll());
-	}
+    @RequestMapping(value = "/app-version-report", method = GET, headers = BaseController.ACCEPT_JSON)
+    public ResponseEntity<OpenLmisResponse> appVersionReport() {
+        return OpenLmisResponse.response("app_versions", appInfoMapper.queryAll());
+    }
 
-	@RequestMapping(value = "/export", method = GET, headers = BaseController.ACCEPT_JSON)
-	public void export(HttpServletRequest request, HttpServletResponse response) throws URISyntaxException, IOException {
+    @RequestMapping(value = "/export", method = GET, headers = BaseController.ACCEPT_JSON)
+    public void export(HttpServletRequest request, HttpServletResponse response) throws URISyntaxException, IOException {
 
-		String zipName = "export_" + UUID.randomUUID() + ".zip";
+        String zipDirectory = UUID.randomUUID().toString() + "/";
 
-		String starDate = request.getParameter("startDate");
-		String endDate = request.getParameter("endDate");
+        File directory = new File(APP_TOMCAT_OPENLMIS_TMP + zipDirectory);
+        directory.mkdirs();
 
-		response.setContentType("Content-type: application/zip");
-		response.setHeader("Content-Disposition", "attachment; filename=" + zipName);
+        String zipName = "export.zip";
 
-		File zipFile = generateZipFile(zipName);
+        String starDate = request.getParameter("startDate");
+        String endDate = request.getParameter("endDate");
+
+        response.setContentType("Content-type: application/zip");
+        response.setHeader("Content-Disposition", "attachment; filename=" + zipName);
+
+        File zipFile = generateZipFile(zipDirectory, zipName);
 
         if (zipFile != null) {
             FileInputStream fileInputStream = new FileInputStream(zipFile);
             IOUtils.copy(fileInputStream, response.getOutputStream());
             response.flushBuffer();
             fileInputStream.close();
-
-            zipFile.delete();
         }
-	}
 
-	private File generateZipFile(String zipName) {
+        FileUtils.deleteDirectory(directory);
+    }
+
+    private File generateZipFile(String zipDirectory, String zipName) {
         File zipFile = null;
 
-		try {
-			List<File> files = generateFiles();
+        ZipOutputStream zipOutputStream = null;
 
-			zipFile = new File(APP_TOMCAT_OPENLMIS_TMP + zipName);
 
-			byte[] buffer = new byte[8 * 1024];
-			FileOutputStream fileOutputStream = new FileOutputStream(zipFile);
-			ZipOutputStream zipOutputStream = new ZipOutputStream(fileOutputStream);
+        try {
+            List<File> files = generateFiles(zipDirectory);
+            zipFile = new File(APP_TOMCAT_OPENLMIS_TMP + zipDirectory + zipName);
 
-			for (File srcFile : files) {
-				FileInputStream fileInputStream = new FileInputStream(srcFile);
-				zipOutputStream.putNextEntry(new ZipEntry(srcFile.getName()));
+            byte[] buffer = new byte[8 * 1024];
+            FileOutputStream fileOutputStream = new FileOutputStream(zipFile);
+            zipOutputStream = new ZipOutputStream(fileOutputStream);
 
-				int length;
-				while ((length = fileInputStream.read(buffer)) > 0) {
-					zipOutputStream.write(buffer, 0, length);
-				}
+            for (File srcFile : files) {
+                FileInputStream fileInputStream = new FileInputStream(srcFile);
+                zipOutputStream.putNextEntry(new ZipEntry(srcFile.getName()));
 
-				zipOutputStream.closeEntry();
-				fileInputStream.close();
-
-				srcFile.delete();
-			}
-			zipOutputStream.close();
-		}
-		catch (IOException ioe) {
-			System.out.println("Error creating zip file: " + ioe);
-		} catch (URISyntaxException e) {
-			e.printStackTrace();
-		}
+                int length;
+                while ((length = fileInputStream.read(buffer)) > 0) {
+                    zipOutputStream.write(buffer, 0, length);
+                }
+                zipOutputStream.closeEntry();
+                fileInputStream.close();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (zipOutputStream != null) {
+                    zipOutputStream.close();
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
 
         return zipFile;
-	}
+    }
 
-	private HashMap<String, URI> getURIMaps() {
-		HashMap<String, URI> map = new HashMap<>();
-		try {
-			map.put("facilities.csv", new URI("http://localhost:5555/cube/facilities/facts?format=csv"));
-			map.put("products.csv", new URI("http://localhost:5555/cube/requisition_line_items/members/products?format=csv"));
-			map.put("latest_stock_at_different_facilities.csv", new URI("http://localhost:5555/cube/stock_cards/members/stock?cut=stock:expirationdates&format=csv"));
-			map.put("movement_history.csv", new URI("http://localhost:5555/cube/stock_cards/members/movement?cut=movement:signature&format=csv"));
-			map.put("requisition_mmia.csv", new URI("http://localhost:5555/cube/requisition_line_items/facts?cut=products:MMIA&format=csv"));
-			map.put("requisition_via.csv", new URI("http://localhost:5555/cube/requisition_line_items/facts?cut=products:ESS_MEDS&format=csv"));
-			map.put("regimens.csv", new URI("http://localhost:5555/cube/requisitions/members/regimen?format=csv"));
-			map.put("patient_quantification.csv", new URI("http://localhost:5555/cube/requisitions/members/patient_quantification?format=csv"));
-		} catch (URISyntaxException e) {
-			e.printStackTrace();
-		}
-		return map;
-	}
+    private HashMap<String, URI> getURIMaps() {
+        HashMap<String, URI> map = new HashMap<>();
+        try {
+            map.put("facilities.csv", new URI("http://localhost:5555/cube/facilities/facts?format=csv"));
+            map.put("products.csv", new URI("http://localhost:5555/cube/requisition_line_items/members/products?format=csv"));
+            map.put("latest_stock_at_different_facilities.csv", new URI("http://localhost:5555/cube/stock_cards/members/stock?cut=stock:expirationdates&format=csv"));
+            map.put("movement_history.csv", new URI("http://localhost:5555/cube/stock_cards/members/movement?cut=movement:signature&format=csv"));
+            map.put("requisition_mmia.csv", new URI("http://localhost:5555/cube/requisition_line_items/facts?cut=products:MMIA&format=csv"));
+            map.put("requisition_via.csv", new URI("http://localhost:5555/cube/requisition_line_items/facts?cut=products:ESS_MEDS&format=csv"));
+            map.put("regimens.csv", new URI("http://localhost:5555/cube/requisitions/members/regimen?format=csv"));
+            map.put("patient_quantification.csv", new URI("http://localhost:5555/cube/requisitions/members/patient_quantification?format=csv"));
+        } catch (URISyntaxException e) {
+            e.printStackTrace();
+        }
+        return map;
+    }
 
-	private List<File> generateFiles() throws URISyntaxException {
-		List<File> files = new ArrayList<>();
-		RestTemplate restTemplate = new RestTemplate();
+    private List<File> generateFiles(String zipDirectory) {
+        List<File> files = new ArrayList<>();
+        RestTemplate restTemplate = new RestTemplate();
 
-		for (Map.Entry<String, URI> iterator : getURIMaps().entrySet()) {
-			try {
-				File tempFile = new File(APP_TOMCAT_OPENLMIS_TMP +iterator.getKey());
-				OutputStreamWriter outputStreamWriter = new OutputStreamWriter(new FileOutputStream(tempFile));
-				Writer w = new BufferedWriter(outputStreamWriter);
-				w.write(restTemplate.exchange(iterator.getValue(), HttpMethod.GET, new HttpEntity<>(""), String.class).getBody());
-				w.close();
+        for (Map.Entry<String, URI> iterator : getURIMaps().entrySet()) {
+            Writer bufferedWriter = null;
+            try {
+                File tempFile = new File(APP_TOMCAT_OPENLMIS_TMP + zipDirectory + iterator.getKey());
+                OutputStreamWriter outputStreamWriter = new OutputStreamWriter(new FileOutputStream(tempFile));
+                bufferedWriter = new BufferedWriter(outputStreamWriter);
+                bufferedWriter.write(restTemplate.exchange(iterator.getValue(), HttpMethod.GET, new HttpEntity<>(""), String.class).getBody());
+                bufferedWriter.close();
+                files.add(tempFile);
+            } catch (IOException e) {
+                e.printStackTrace();
+            } finally {
+                try {
+                    if (bufferedWriter != null) {
+                        bufferedWriter.close();
+                    }
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+        return files;
+    }
 
-				files.add(tempFile);
-			} catch (IOException e) {
-				System.err.println("Problem writing to the files");
-			}
-		}
-		return files;
-	}
-
-	@InitBinder
-	public void initBinder(WebDataBinder binder) {
-		SimpleDateFormat dateFormat = new SimpleDateFormat(DateUtil.FORMAT_DATE_TIME);
-		dateFormat.setLenient(false);
-		binder.registerCustomEditor(Date.class, new CustomDateEditor(dateFormat, false));
-	}
+    @InitBinder
+    public void initBinder(WebDataBinder binder) {
+        SimpleDateFormat dateFormat = new SimpleDateFormat(DateUtil.FORMAT_DATE_TIME);
+        dateFormat.setLenient(false);
+        binder.registerCustomEditor(Date.class, new CustomDateEditor(dateFormat, false));
+    }
 }
