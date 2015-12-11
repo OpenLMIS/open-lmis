@@ -33,6 +33,7 @@ import org.openlmis.report.mapper.AppInfoMapper;
 import org.openlmis.report.mapper.RequisitionReportsMapper;
 import org.openlmis.report.service.FacilityProductsReportDataProvider;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
@@ -61,7 +62,6 @@ import static org.springframework.web.bind.annotation.RequestMethod.GET;
 @RequestMapping(value = "/reports")
 public class SimpleTableController extends BaseController {
 
-    public static final String APP_TOMCAT_OPENLMIS_TMP = "/app/tomcat/openlmis/tmp/";
     @Autowired
     private RequisitionReportsMapper requisitionReportsMapper;
 
@@ -70,6 +70,9 @@ public class SimpleTableController extends BaseController {
 
     @Autowired
     private AppInfoMapper appInfoMapper;
+
+    @Value("${export.tmp.path}")
+    protected String EXPORT_TMP_PATH;
 
     @RequestMapping(value = "/requisition-report", method = GET, headers = BaseController.ACCEPT_JSON)
     public ResponseEntity<OpenLmisResponse> requisitionReport(
@@ -105,7 +108,7 @@ public class SimpleTableController extends BaseController {
 
         String zipDirectory = UUID.randomUUID().toString() + "/";
 
-        File directory = new File(APP_TOMCAT_OPENLMIS_TMP + zipDirectory);
+        File directory = new File(EXPORT_TMP_PATH + zipDirectory);
         directory.mkdirs();
 
         String zipName = "export.zip";
@@ -136,7 +139,7 @@ public class SimpleTableController extends BaseController {
 
         try {
             List<File> files = generateFiles(zipDirectory);
-            zipFile = new File(APP_TOMCAT_OPENLMIS_TMP + zipDirectory + zipName);
+            zipFile = new File(EXPORT_TMP_PATH + zipDirectory + zipName);
 
             byte[] buffer = new byte[8 * 1024];
             FileOutputStream fileOutputStream = new FileOutputStream(zipFile);
@@ -192,7 +195,7 @@ public class SimpleTableController extends BaseController {
         for (Map.Entry<String, URI> iterator : getURIMaps().entrySet()) {
             Writer bufferedWriter = null;
             try {
-                File tempFile = new File(APP_TOMCAT_OPENLMIS_TMP + zipDirectory + iterator.getKey());
+                File tempFile = new File(EXPORT_TMP_PATH + zipDirectory + iterator.getKey());
                 OutputStreamWriter outputStreamWriter = new OutputStreamWriter(new FileOutputStream(tempFile));
                 bufferedWriter = new BufferedWriter(outputStreamWriter);
                 bufferedWriter.write(restTemplate.exchange(iterator.getValue(), HttpMethod.GET, new HttpEntity<>(""), String.class).getBody());
