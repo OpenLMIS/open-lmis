@@ -80,6 +80,16 @@ app.directive('numericValidator', function () {
         return errorHolder;
       }
 
+      element.bind('keypress', function (e) {
+        var key = String.fromCharCode(e.charCode),
+            value = "".concat(ctrl.$modelValue || '').concat(key);
+
+        validationFunction(value, getErrorHolder(), integerPartLength, fractionalPartLength);
+
+        // 'e' key should not be display in input field
+        return 'e' !== key;
+      });
+
       element.bind('blur', function () {
         validationFunction(ctrl.$modelValue, getErrorHolder(), integerPartLength, fractionalPartLength);
       });
