@@ -68,9 +68,15 @@ app.directive('numericValidator', function () {
   return {
     require: '?ngModel',
     link: function (scope, element, attrs, ctrl) {
-      var validationFunction = app[attrs.numericValidator.split(',')[0]];
-      var integerPartLength = attrs.numericValidator.split(',')[1];
-      var fractionalPartLength = attrs.numericValidator.split(',')[2];
+      var validationFunction = app[attrs.numericValidator.split(',')[0]],
+          integerPartLength = attrs.numericValidator.split(',')[1],
+          fractionalPartLength = attrs.numericValidator.split(',')[2],
+          min = parseFloat(attrs.min),
+          max = parseFloat(attrs.max),
+          maxlength = parseFloat(attrs.maxlength),
+          range = !isUndefined(min) && !isUndefined(max),
+          onlyMin = !range && !isUndefined(min),
+          onlyMax = !range && !isUndefined(max);
 
       function getErrorHolder() {
         var errorHolder = element.attr('error-holder');
@@ -80,21 +86,47 @@ app.directive('numericValidator', function () {
         return errorHolder;
       }
 
+      function checkCondition(value) {
+        var condition = true;
+
+        if (maxlength) {
+          condition = value.toString().length <= maxlength;
+        } else if (range) {
+          condition = value >= min && value <= max;
+        } else if (onlyMin) {
+          condition = value >= min;
+        } else if (onlyMax) {
+          condition = value <= max;
+        }
+
+        return condition;
+      }
+
       element.bind('keypress', function (e) {
         var key = String.fromCharCode(e.charCode),
-            value = "".concat(ctrl.$modelValue || '').concat(key);
+            value = "".concat(ctrl.$modelValue || '').concat(key),
+            valueAsNumber = parseFloat(value);
 
-        validationFunction(value, getErrorHolder(), integerPartLength, fractionalPartLength);
+        if (isNaN(valueAsNumber) || checkCondition(valueAsNumber)) {
+          validationFunction(value, getErrorHolder(), integerPartLength, fractionalPartLength);
+        }
 
         // 'e' key should not be display in input field
         return 'e' !== key;
       });
 
       element.bind('blur', function () {
-        validationFunction(ctrl.$modelValue, getErrorHolder(), integerPartLength, fractionalPartLength);
+        var valueAsNumber = parseFloat(ctrl.$modelValue);
+
+        if (checkCondition(valueAsNumber)) {
+          validationFunction(valueAsNumber, getErrorHolder(), integerPartLength, fractionalPartLength);
+        }
       });
+
       ctrl.$parsers.unshift(function (viewValue) {
-        if (validationFunction(viewValue, getErrorHolder(), integerPartLength, fractionalPartLength)) {
+        var valueAsNumber = parseFloat(viewValue);
+
+        if (checkCondition(valueAsNumber) && validationFunction(viewValue, getErrorHolder(), integerPartLength, fractionalPartLength)) {
           if (viewValue === "")  viewValue = undefined;
           return viewValue;
         } else {
