@@ -202,10 +202,10 @@
               <td class="col-number-stockout-days">
                   <div>
                       <span class="position-relative">
-                          <input id="numberOfStockoutDaysInput{{$index}}" type="text"
+                          <input id="numberOfStockoutDaysInput{{$index}}" type="number"
                                  ng-model="lineItem.numberOfStockoutDays.value"
                                  name="numberOfStockoutDays{{$index}}" ng-trim="false"
-                                 numeric-validator="positiveInteger" maxlength="2"
+                                 numeric-validator="positiveInteger,2" min="0" max="99" step="1"
                                  error-holder="numberOfStockoutDaysError{{$index}}"
                                  ng-class="{'required-error': !facilityData.isDisabled('epi-use')
                                  && !(lineItem.numberOfStockoutDays.value
