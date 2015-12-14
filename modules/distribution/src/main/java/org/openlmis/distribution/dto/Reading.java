@@ -31,6 +31,7 @@ import static org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion.NON_EMPT
 @JsonDeserialize(using = DistributionReadingDeSerializer.class)
 @JsonSerialize(include = NON_EMPTY)
 public class Reading {
+  public static final Reading EMPTY = new Reading();
 
   private String value;
   private Boolean notRecorded;

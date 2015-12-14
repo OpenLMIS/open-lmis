@@ -10,6 +10,7 @@
 
 package org.openlmis.distribution.dto;
 
+import com.google.common.base.Optional;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -46,6 +47,11 @@ public class EpiUseLineItemDTO extends BaseModel {
   private Reading numberOfStockoutDays;
 
   public EpiUseLineItem transform() {
+    Integer stockoutDays = Optional
+            .fromNullable(numberOfStockoutDays)
+            .or(Reading.EMPTY)
+            .parsePositiveInt();
+
     EpiUseLineItem epiUseLineItem = new EpiUseLineItem(
             this.facilityVisitId,
             this.productGroup,
@@ -55,7 +61,7 @@ public class EpiUseLineItemDTO extends BaseModel {
             this.loss.parsePositiveInt(),
             this.distributed.parsePositiveInt(),
             this.expirationDate.getEffectiveValue(),
-            this.numberOfStockoutDays.parsePositiveInt()
+            stockoutDays
     );
 
     epiUseLineItem.setId(this.id);

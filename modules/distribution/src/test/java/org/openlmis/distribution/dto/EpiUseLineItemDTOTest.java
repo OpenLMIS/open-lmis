@@ -16,6 +16,7 @@ import org.openlmis.db.categories.UnitTests;
 import org.openlmis.distribution.domain.EpiUseLineItem;
 
 import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.nullValue;
 import static org.junit.Assert.assertThat;
 
 @Category(UnitTests.class)
@@ -23,7 +24,6 @@ public class EpiUseLineItemDTOTest {
 
   @Test
   public void shouldReturnEpiUseLineItem() throws Exception {
-
     Reading stockAtFirstOfMonth = new Reading("12345", false);
     Reading stockAtEndOfMonth = new Reading("1000", false);
     Reading received = new Reading("12345", false);
@@ -45,5 +45,32 @@ public class EpiUseLineItemDTOTest {
     assertThat(epiUseLineItem.getExpirationDate(), is("12/2013"));
     assertThat(epiUseLineItem.getFacilityVisitId(), is(facilityVisitId));
     assertThat(epiUseLineItem.getNumberOfStockoutDays(), is(25));
+  }
+
+  @Test
+  public void shouldHandleNewParameters() throws Exception {
+    Reading stockAtFirstOfMonth = new Reading("12345", false);
+    Reading stockAtEndOfMonth = new Reading("1000", false);
+    Reading received = new Reading("12345", false);
+    Reading loss = new Reading("12345", false);
+    Reading distributed = new Reading("12345", false);
+    Reading expirationDate = new Reading("12/2013", false);
+
+    // new parameter
+    Reading numberOfStockoutDays = null;
+
+    Long facilityVisitId = 1L;
+    EpiUseLineItemDTO epiUseLineItemDTO = new EpiUseLineItemDTO(facilityVisitId, null, stockAtFirstOfMonth, stockAtEndOfMonth, received, loss, distributed, expirationDate, numberOfStockoutDays);
+
+    EpiUseLineItem epiUseLineItem = epiUseLineItemDTO.transform();
+
+    assertThat(epiUseLineItem.getStockAtFirstOfMonth(), is(12345));
+    assertThat(epiUseLineItem.getStockAtEndOfMonth(), is(1000));
+    assertThat(epiUseLineItem.getReceived(), is(12345));
+    assertThat(epiUseLineItem.getLoss(), is(12345));
+    assertThat(epiUseLineItem.getDistributed(), is(12345));
+    assertThat(epiUseLineItem.getExpirationDate(), is("12/2013"));
+    assertThat(epiUseLineItem.getFacilityVisitId(), is(facilityVisitId));
+    assertThat(epiUseLineItem.getNumberOfStockoutDays(), is(nullValue()));
   }
 }
