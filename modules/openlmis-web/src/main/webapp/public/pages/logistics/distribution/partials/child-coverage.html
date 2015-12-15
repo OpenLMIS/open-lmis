@@ -74,7 +74,7 @@
                            name="coverageHealthCenter11Months{{$index}}" ng-trim=false
                            numeric-validator="positiveInteger,7" min="0" max="9999999" step="1"
                            error-holder="healthCenter11MonthsError{{$index}}"
-                           ng-class="{'required-error': !(lineItem.healthCenter11Months.value ||
+                           ng-class="{'required-error': !(lineItem.healthCenter11Months.value.hasValue() ||
                            lineItem.healthCenter11Months.notRecorded)}"/>
                     <span id="healthCenter11MonthsError{{$index}}"
                           class="rnr-form-error"
@@ -96,7 +96,7 @@
                            name="coverageOutreach11Months{{$index}}" ng-trim=false
                            numeric-validator="positiveInteger,7" min="0" max="9999999" step="1"
                            error-holder="outreach11MonthsError{{$index}}"
-                           ng-class="{'required-error': !(lineItem.outreach11Months.value ||
+                           ng-class="{'required-error': !(lineItem.outreach11Months.value.hasValue() ||
                            lineItem.outreach11Months.notRecorded)}"/>
                     <span id="outreach11MonthsError{{$index}}"
                           class="rnr-form-error"
@@ -127,7 +127,7 @@
                              name="coverageHealthCenter23Months{{$index}}" ng-trim=false
                              numeric-validator="positiveInteger,7" min="0" max="9999999" step="1"
                              error-holder="healthCenter23MonthsError{{$index}}"
-                             ng-class="{'required-error': !(lineItem.healthCenter23Months.value ||
+                             ng-class="{'required-error': !(lineItem.healthCenter23Months.value.hasValue() ||
                              lineItem.healthCenter23Months.notRecorded)}"/>
                       <span id="healthCenter23MonthsError{{$index}}"
                             class="rnr-form-error"
@@ -151,7 +151,7 @@
                              name="coverageOutreach23Months{{$index}}" ng-trim=false
                              numeric-validator="positiveInteger,7" min="0" max="9999999" step="1"
                              error-holder="outreach23MonthsError{{$index}}"
-                             ng-class="{'required-error': !(lineItem.outreach23Months.value ||
+                             ng-class="{'required-error': !(lineItem.outreach23Months.value.hasValue() ||
                              lineItem.outreach23Months.notRecorded)}"/>
                       <span id="outreach23MonthsError{{$index}}"
                             class="rnr-form-error"
@@ -186,7 +186,7 @@
                            name="coverageOpenedVial{{$parent.$index}}{{$index}}"
                            numeric-validator="positiveInteger,7" min="0" max="9999999" step="1"
                            ng-trim=false error-holder="{{product}}OpenedVialError"
-                           ng-class="{'required-error': !(openedVialMap[product].openedVial.value ||
+                           ng-class="{'required-error': !(openedVialMap[product].openedVial.value.hasValue() ||
                            openedVialMap[product].openedVial.notRecorded)}"/>
                     <span id="{{product}}OpenedVialError"
                           class="rnr-form-error"

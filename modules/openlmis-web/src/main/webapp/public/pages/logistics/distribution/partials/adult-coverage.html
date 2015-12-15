@@ -59,7 +59,7 @@
            class="right-justified" numeric-validator="positiveInteger,7"
            name="healthCenter1Nr_1"
            error-holder="pregnantWomenHealthCenterTetanus1Error"
-           ng-class="{'required-error': !(pregnantWomenCoverage.healthCenterTetanus1.value ||
+           ng-class="{'required-error': !(pregnantWomenCoverage.healthCenterTetanus1.value.hasValue() ||
            pregnantWomenCoverage.healthCenterTetanus1.notRecorded)}"/>
     <span id="pregnantWomenHealthCenterTetanus1Error"
           class="rnr-form-error"
@@ -77,7 +77,7 @@
            ng-model="pregnantWomenCoverage.outreachTetanus1.value" ng-trim="false"
            class="right-justified" name="outreach1Nr_1" numeric-validator="positiveInteger,7"
            error-holder="outreachTetanus1"
-           ng-class="{'required-error': !(pregnantWomenCoverage.outreachTetanus1.value ||
+           ng-class="{'required-error': !(pregnantWomenCoverage.outreachTetanus1.value.hasValue() ||
            pregnantWomenCoverage.outreachTetanus1.notRecorded)}"/>
     <span id="outreachTetanus1" class="rnr-form-error" openlmis-message="error.number.only"
           style="display: none"></span>
@@ -96,7 +96,7 @@
            ng-model="pregnantWomenCoverage.healthCenterTetanus2To5.value" ng-trim="false"
            class="right-justified" name="healthCenter2To5Nr_1" numeric-validator="positiveInteger,7"
            error-holder="pregnantWomenHealthCenter2To5Error"
-           ng-class="{'required-error': !(pregnantWomenCoverage.healthCenterTetanus2To5.value ||
+           ng-class="{'required-error': !(pregnantWomenCoverage.healthCenterTetanus2To5.value.hasValue() ||
            pregnantWomenCoverage.healthCenterTetanus2To5.notRecorded)}"/>
     <span id="pregnantWomenHealthCenter2To5Error" class="rnr-form-error" openlmis-message="error.number.only"
           style="display: none"></span>
@@ -110,8 +110,8 @@
     <input id="outreach2To5_1" type="number" min="0" max="9999999" step="1"
            ng-model="pregnantWomenCoverage.outreachTetanus2To5.value" ng-trim="false"
            class="right-justified" name="outreach2To5Nr_1"
-           numeric-validator="positiveInteger,7" error-holder="pregnantWomenOutReach2To5Error"
-           ng-class="{'required-error': !(pregnantWomenCoverage.outreachTetanus2To5.value ||
+           numeric-validator="positiveInteger,7" error-holder="pregnantWomenOutreach2To5Error"
+           ng-class="{'required-error': !(pregnantWomenCoverage.outreachTetanus2To5.value.hasValue() ||
            pregnantWomenCoverage.outreachTetanus2To5.notRecorded)}"/>
     <span id="pregnantWomenOutreach2To5Error" class="rnr-form-error" openlmis-message="error.number.only"
           style="display: none"></span>
@@ -136,7 +136,7 @@
            ng-trim="false"
            class="right-justified" name="openedVial"
            numeric-validator="positiveInteger,7" error-holder="openedVialError"
-           ng-class="{'required-error': !(adultCoverageOpenedVialsMap['Tetanus'].openedVial.value ||
+           ng-class="{'required-error': !(adultCoverageOpenedVialsMap['Tetanus'].openedVial.value.hasValue() ||
            adultCoverageOpenedVialsMap['Tetanus'].openedVial.notRecorded)}"/>
     <span id="openedVialError" class="rnr-form-error" openlmis-message="error.number.only"
           style="display: none"></span>
@@ -162,7 +162,7 @@
            ng-model="mifCommunityCoverage.healthCenterTetanus1.value" ng-trim="false"
            name="healthCenter1Nr_2"
            numeric-validator="positiveInteger,7" error-holder="mifCommunityHealthCenterTetanus1Error"
-           ng-class="{'required-error': !(mifCommunityCoverage.healthCenterTetanus1.value ||
+           ng-class="{'required-error': !(mifCommunityCoverage.healthCenterTetanus1.value.hasValue() ||
            mifCommunityCoverage.healthCenterTetanus1.notRecorded)}"/>
     <span id="mifCommunityHealthCenterTetanus1Error" class="rnr-form-error" openlmis-message="error.number.only"
           style="display: none"></span>
@@ -177,7 +177,7 @@
            ng-model="mifCommunityCoverage.outreachTetanus1.value" ng-trim="false"
            name="outreach1Nr_2"
            numeric-validator="positiveInteger,7" error-holder="mifCommunityOutreachTetanus1Error"
-           ng-class="{'required-error': !(mifCommunityCoverage.outreachTetanus1.value ||
+           ng-class="{'required-error': !(mifCommunityCoverage.outreachTetanus1.value.hasValue() ||
            mifCommunityCoverage.outreachTetanus1.notRecorded)}"/>
     <span id="mifCommunityOutreachTetanus1Error" class="rnr-form-error" openlmis-message="error.number.only"
           style="display: none"></span>
@@ -195,7 +195,7 @@
            ng-model="mifCommunityCoverage.healthCenterTetanus2To5.value" ng-trim="false"
            name="healthCenter2To5Nr_2"
            numeric-validator="positiveInteger,7" error-holder="mifCommunityHealthCenter2To5Error"
-           ng-class="{'required-error': !(mifCommunityCoverage.healthCenterTetanus2To5.value ||
+           ng-class="{'required-error': !(mifCommunityCoverage.healthCenterTetanus2To5.value.hasValue() ||
            mifCommunityCoverage.healthCenterTetanus2To5.notRecorded)}"/>
     <span id="mifCommunityHealthCenter2To5Error" class="rnr-form-error" openlmis-message="error.number.only"
           style="display: none"></span>
@@ -210,7 +210,7 @@
            ng-model="mifCommunityCoverage.outreachTetanus2To5.value" ng-trim="false"
            name="outreach2To5Nr_2"
            numeric-validator="positiveInteger,7" error-holder="mifCommunityOutreachTetanus2To5Error"
-           ng-class="{'required-error': !(mifCommunityCoverage.outreachTetanus2To5.value ||
+           ng-class="{'required-error': !(mifCommunityCoverage.outreachTetanus2To5.value.hasValue() ||
            mifCommunityCoverage.outreachTetanus2To5.notRecorded)}"/>
     <span id="mifCommunityOutreachTetanus2To5Error" class="rnr-form-error" openlmis-message="error.number.only"
           style="display: none"></span>
@@ -241,7 +241,7 @@
            ng-model="mifStudentCoverage.outreachTetanus1.value" ng-trim="false"
            name="outreach1Nr_3"
            numeric-validator="positiveInteger,7" error-holder="mifStudentOutreach1Error"
-           ng-class="{'required-error': !(mifStudentCoverage.outreachTetanus1.value ||
+           ng-class="{'required-error': !(mifStudentCoverage.outreachTetanus1.value.hasValue() ||
            mifStudentCoverage.outreachTetanus1.notRecorded)}"/>
     <span id="mifStudentOutreach1Error" class="rnr-form-error" openlmis-message="error.number.only"
           style="display: none"></span>
@@ -260,7 +260,7 @@
            ng-model="mifStudentCoverage.outreachTetanus2To5.value" ng-trim="false"
            name="outreach2To5Nr_3"
            numeric-validator="positiveInteger,7" error-holder="mifStudentOutreachTetanus2To5Error"
-           ng-class="{'required-error': !(mifStudentCoverage.outreachTetanus2To5.value ||
+           ng-class="{'required-error': !(mifStudentCoverage.outreachTetanus2To5.value.hasValue() ||
            mifStudentCoverage.outreachTetanus2To5.notRecorded)}"/>
     <span id="mifStudentOutreachTetanus2To5Error" class="rnr-form-error" openlmis-message="error.number.only"
           style="display: none"></span>
@@ -291,7 +291,7 @@
            ng-model="mifWorkerCoverage.outreachTetanus1.value" ng-trim="false"
            name="outreach1Nr_4"
            numeric-validator="positiveInteger,7" error-holder="mifWorkerOutreach1Error"
-           ng-class="{'required-error': !(mifWorkerCoverage.outreachTetanus1.value ||
+           ng-class="{'required-error': !(mifWorkerCoverage.outreachTetanus1.value.hasValue() ||
            mifWorkerCoverage.outreachTetanus1.notRecorded)}"/>
     <span id="mifWorkerOutreach1Error" class="rnr-form-error" openlmis-message="error.number.only"
           style="display: none"></span>
@@ -310,7 +310,7 @@
            ng-model="mifWorkerCoverage.outreachTetanus2To5.value" ng-trim="false"
            name="outreach2To5Nr_4"
            numeric-validator="positiveInteger,7" error-holder="mifWorkerOutreachTetanus2To5Error"
-           ng-class="{'required-error': !(mifWorkerCoverage.outreachTetanus2To5.value ||
+           ng-class="{'required-error': !(mifWorkerCoverage.outreachTetanus2To5.value.hasValue() ||
            mifWorkerCoverage.outreachTetanus2To5.notRecorded)}"/>
     <span id="mifWorkerOutreachTetanus2To5Error" class="rnr-form-error" openlmis-message="error.number.only"
           style="display: none"></span>
@@ -341,7 +341,7 @@
            ng-model="studentNotMIFCoverage.outreachTetanus1.value" ng-trim="false"
            name="outreach1Nr_5"
            numeric-validator="positiveInteger,7" error-holder="studentNotMIFOutreach1Error"
-           ng-class="{'required-error': !(studentNotMIFCoverage.outreachTetanus1.value ||
+           ng-class="{'required-error': !(studentNotMIFCoverage.outreachTetanus1.value.hasValue() ||
            studentNotMIFCoverage.outreachTetanus1.notRecorded)}"/>
     <span id="studentNotMIFOutreach1Error" class="rnr-form-error" openlmis-message="error.number.only"
           style="display: none"></span>
@@ -360,7 +360,7 @@
            ng-model="studentNotMIFCoverage.outreachTetanus2To5.value" ng-trim="false"
            name="outreach2To5Nr_5"
            numeric-validator="positiveInteger,7" error-holder="studentNotMIFOutreachTetanus2To5Error"
-           ng-class="{'required-error': !(studentNotMIFCoverage.outreachTetanus2To5.value ||
+           ng-class="{'required-error': !(studentNotMIFCoverage.outreachTetanus2To5.value.hasValue() ||
            studentNotMIFCoverage.outreachTetanus2To5.notRecorded)}"/>
     <span id="studentNotMIFOutreachTetanus2To5Error" class="rnr-form-error" openlmis-message="error.number.only"
           style="display: none"></span>
@@ -391,7 +391,7 @@
            ng-model="workerNotMIFCoverage.outreachTetanus1.value" ng-trim="false"
            name="outreach1Nr_6"
            numeric-validator="positiveInteger,7" error-holder="workerNotMIFOutreach1Error"
-           ng-class="{'required-error': !(workerNotMIFCoverage.outreachTetanus1.value ||
+           ng-class="{'required-error': !(workerNotMIFCoverage.outreachTetanus1.value.hasValue() ||
            workerNotMIFCoverage.outreachTetanus1.notRecorded)}"/>
     <span id="workerNotMIFOutreach1Error" class="rnr-form-error" openlmis-message="error.number.only"
           style="display: none"></span>
@@ -410,7 +410,7 @@
            ng-model="workerNotMIFCoverage.outreachTetanus2To5.value" ng-trim="false"
            name="outreach2To5Nr_6"
            numeric-validator="positiveInteger,7" error-holder="workerNotMIFOutreachTetanus2To5Error"
-           ng-class="{'required-error': !(workerNotMIFCoverage.outreachTetanus2To5.value ||
+           ng-class="{'required-error': !(workerNotMIFCoverage.outreachTetanus2To5.value.hasValue() ||
            workerNotMIFCoverage.outreachTetanus2To5.notRecorded)}"/>
     <span id="workerNotMIFOutreachTetanus2To5Error" class="rnr-form-error" openlmis-message="error.number.only"
           style="display: none"></span>
@@ -441,7 +441,7 @@
            numeric-validator="positiveInteger,7"
            name="healthCenter1Nr_7"
            error-holder="otherNotMIFHealthCenterTetanus1Error"
-           ng-class="{'required-error': !(otherNotMIFCoverage.healthCenterTetanus1.value ||
+           ng-class="{'required-error': !(otherNotMIFCoverage.healthCenterTetanus1.value.hasValue() ||
            otherNotMIFCoverage.healthCenterTetanus1.notRecorded)}"/>
     <span id="otherNotMIFHealthCenterTetanus1Error"
           class="rnr-form-error"
@@ -456,8 +456,8 @@
     <span class="position-relative">
     <input id="outreach1_7" class="right-justified" type="number" min="0" max="9999999" step="1"
            ng-model="otherNotMIFCoverage.outreachTetanus1.value" ng-trim="false"
-           name="outreach1Nr_7" numeric-validator="positiveInteger,7" error-holder="otherNotMIFOutReach1Error"
-           ng-class="{'required-error': !(otherNotMIFCoverage.outreachTetanus1.value ||
+           name="outreach1Nr_7" numeric-validator="positiveInteger,7" error-holder="otherNotMIFOutreach1Error"
+           ng-class="{'required-error': !(otherNotMIFCoverage.outreachTetanus1.value.hasValue() ||
            otherNotMIFCoverage.outreachTetanus1.notRecorded)}"/>
     <span id="otherNotMIFOutreach1Error" class="rnr-form-error" openlmis-message="error.number.only"
           style="display: none"></span>
@@ -476,7 +476,7 @@
            ng-model="otherNotMIFCoverage.healthCenterTetanus2To5.value" ng-trim="false"
            name="healthCenter2To5Nr_7" numeric-validator="positiveInteger,7"
            error-holder="otherNotMIFHealthCenter2To5Error"
-           ng-class="{'required-error': !(otherNotMIFCoverage.healthCenterTetanus2To5.value ||
+           ng-class="{'required-error': !(otherNotMIFCoverage.healthCenterTetanus2To5.value.hasValue() ||
            otherNotMIFCoverage.healthCenterTetanus2To5.notRecorded)}"/>
     <span id="otherNotMIFHealthCenter2To5Error" class="rnr-form-error" openlmis-message="error.number.only"
           style="display: none"></span>
@@ -490,8 +490,8 @@
     <input id="outreach2To5_7" class="right-justified" type="number" min="0" max="9999999" step="1"
            ng-model="otherNotMIFCoverage.outreachTetanus2To5.value" ng-trim="false"
            name="outreach2To5Nr_7"
-           numeric-validator="positiveInteger,7" error-holder="otherNotMIFOutReach2To5Error"
-           ng-class="{'required-error': !(otherNotMIFCoverage.outreachTetanus2To5.value ||
+           numeric-validator="positiveInteger,7" error-holder="otherNotMIFOutreach2To5Error"
+           ng-class="{'required-error': !(otherNotMIFCoverage.outreachTetanus2To5.value.hasValue() ||
            otherNotMIFCoverage.outreachTetanus2To5.notRecorded)}"/>
     <span id="otherNotMIFOutreach2To5Error" class="rnr-form-error" openlmis-message="error.number.only"
           style="display: none"></span>

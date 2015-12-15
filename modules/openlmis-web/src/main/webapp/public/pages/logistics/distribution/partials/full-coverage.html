@@ -46,7 +46,7 @@
                              name="coverageFemaleHC" ng-trim=false
                              numeric-validator="positiveInteger,7" min="0" max="9999999" step="1"
                              error-holder="coverageFemaleHCError"
-                             ng-class="{'required-error': !(facilityData.fullCoverage.femaleHealthCenterReading.value ||
+                             ng-class="{'required-error': !(facilityData.fullCoverage.femaleHealthCenterReading.value.hasValue() ||
                              facilityData.fullCoverage.femaleHealthCenterReading.notRecorded)}"/>
                       <span id="coverageFemaleHCError"
                             class="rnr-form-error"
@@ -68,7 +68,7 @@
                              name="coverageFemaleMB" ng-trim=false
                              numeric-validator="positiveInteger,7" min="0" max="9999999" step="1"
                              error-holder="coverageFemaleMBError"
-                             ng-class="{'required-error': !(facilityData.fullCoverage.femaleMobileBrigadeReading.value ||
+                             ng-class="{'required-error': !(facilityData.fullCoverage.femaleMobileBrigadeReading.value.hasValue() ||
                              facilityData.fullCoverage.femaleMobileBrigadeReading.notRecorded)}"/>
                       <span id="coverageFemaleMBError"
                             class="rnr-form-error"
@@ -94,7 +94,7 @@
                              name="coverageMaleHC" ng-trim=false
                              numeric-validator="positiveInteger,7" min="0" max="9999999" step="1"
                              error-holder="coverageMaleHCError"
-                             ng-class="{'required-error': !(facilityData.fullCoverage.maleHealthCenterReading.value ||
+                             ng-class="{'required-error': !(facilityData.fullCoverage.maleHealthCenterReading.value.hasValue() ||
                              facilityData.fullCoverage.maleHealthCenterReading.notRecorded)}"/>
                       <span id="coverageMaleHCError"
                             class="rnr-form-error"
@@ -116,7 +116,7 @@
                              name="coverageMaleMB" ng-trim=false
                              numeric-validator="positiveInteger,7" min="0" max="9999999" step="1"
                              error-holder="coverageMaleMBError"
-                             ng-class="{'required-error': !(facilityData.fullCoverage.maleMobileBrigadeReading.value ||
+                             ng-class="{'required-error': !(facilityData.fullCoverage.maleMobileBrigadeReading.value.hasValue() ||
                              facilityData.fullCoverage.maleMobileBrigadeReading.notRecorded)}"/>
                       <span id="coverageMaleMBError"
                             class="rnr-form-error"
