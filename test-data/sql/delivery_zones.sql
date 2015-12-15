@@ -17,7 +17,7 @@ INSERT INTO delivery_zones ( code ,name)values
 ('Norte','Norte Province'),
 ('Centro','Centro Province'),
 ('Sul','Sul Province'),
-('DZ6', 'Delivery Zone Sixth');
+('grupo1-guija', 'Grupo1 Guija');
 
 INSERT INTO delivery_zone_members ( deliveryZoneId ,facilityId )values
 ((select id from  delivery_zones where code ='DZ1'),(select id from  facilities where code ='F10')),
@@ -54,7 +54,7 @@ INSERT INTO delivery_zone_members ( deliveryZoneId ,facilityId )values
 ((select id from  delivery_zones where code ='Sul'),(select id from  facilities where code ='F16B')),
 ((select id from  delivery_zones where code ='Sul'),(select id from  facilities where code ='F16C')),
 
-((select id from  delivery_zones where code ='DZ6'),(select id from  facilities where code ='F17A'));
+((select id from  delivery_zones where code ='grupo1-guija'),(select id from  facilities where code ='F17A'));
 
 INSERT INTO delivery_zone_warehouses ( deliveryZoneId ,warehouseId )values
 ((select id from  delivery_zones where code ='Norte'),(select id from  facilities where code ='W15')),
@@ -71,4 +71,4 @@ INSERT INTO delivery_zone_program_schedules
 ((select id from delivery_zones where code='Norte'),(select id from programs where code='VACCINES'),(select id from processing_schedules where code='M')),
 ((select id from delivery_zones where code='Centro'),(select id from programs where code='VACCINES'),(select id from processing_schedules where code='M')),
 ((select id from delivery_zones where code='Sul'),(select id from programs where code='VACCINES'),(select id from processing_schedules where code='M')),
-((select id from delivery_zones where code='DZ6'),(select id from programs where code='VACCINES'),(select id from processing_schedules where code='M'));
+((select id from delivery_zones where code='grupo1-guija'),(select id from programs where code='VACCINES'),(select id from processing_schedules where code='M'));

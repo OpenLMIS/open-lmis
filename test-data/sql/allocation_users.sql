@@ -104,7 +104,7 @@ INSERT INTO role_assignments (userId, roleId, deliveryZoneId, programId) VALUES
  (SELECT
     id
   FROM delivery_zones
-  WHERE code = 'DZ6'),
+  WHERE code = 'grupo1-guija'),
  (SELECT
     id
   FROM programs
