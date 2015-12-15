@@ -108,6 +108,14 @@ public class RequisitionEmailServiceForSIMAM {
 
 	public  EmailAttachment generateRequisitionExcelForSIMAM(Rnr requisition) {
 		List<Map<String, String>> requisitionItemsData = rnrMapperForSIMAM.getRnrItemsForSIMAMImport(requisition);
+		CollectionUtils.collect(requisitionItemsData, new Transformer() {
+			@Override
+			public Map<String, String> transform(Object input) {
+				((Map<String, String>) input).put("emprest", "0");
+				return (Map<String, String>) input;
+			}
+		});
+
 		convertOpenLMISProgramCodeToSIMAMCode(requisitionItemsData);
 		Workbook workbook = singleListSheetExcelHandler.readXssTemplateFile(TEMPLATE_IMPORT_RNR_XLSX, ExcelHandler.PathType.FILE);
 		singleListSheetExcelHandler.createDataRows(workbook.getSheetAt(0), requisitionItemsData);
@@ -129,7 +137,6 @@ public class RequisitionEmailServiceForSIMAM {
 				@Override
 				public Map<String, String> transform(Object input) {
 					((Map<String, String>) input).put("movDescID", "0");
-					((Map<String, String>) input).put("emprest", "0");
 					return (Map<String, String>) input;
 				}
 			});
