@@ -20,7 +20,6 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.hamcrest.CoreMatchers.nullValue;
 import static org.junit.Assert.assertThat;
-import static org.mockito.Matchers.anyLong;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.doReturn;
@@ -61,29 +60,29 @@ public class FridgeServiceTest {
 
     @Test
     public void shouldRetrieveFridges() throws Exception {
-        doReturn(coldTraceData).when(restClient).getForObject(anyString(), eq(ColdTraceData.class), anyLong());
-        ColdTraceData fridges = service.getFridges(10L);
+        doReturn(coldTraceData).when(restClient).getForObject(anyString(), eq(ColdTraceData.class), anyString());
+        ColdTraceData fridges = service.getFridges("test-dz-code");
 
         assertThat(fridges, is(notNullValue()));
         assertThat(fridges, is(equalTo(coldTraceData)));
 
-        verify(restClient).getForObject(stringCaptor.capture(), eq(ColdTraceData.class), eq(10L));
+        verify(restClient).getForObject(stringCaptor.capture(), eq(ColdTraceData.class), eq("test-dz-code"));
 
-        assertThat(stringCaptor.getValue(), is(equalTo(URL + "?delivery_zone={deliveryZoneId}")));
+        assertThat(stringCaptor.getValue(), is(equalTo(URL + "?delivery_zone={deliveryZoneCode}")));
     }
 
     @Test
     public void shouldReturnNullIfThereWillBeProblemWithRetrievingFridges() throws Exception {
-        doThrow(IOException.class).when(restClient).getForObject(anyString(), eq(ColdTraceData.class), anyLong());
-        ColdTraceData fridges = service.getFridges(10L);
+        doThrow(IOException.class).when(restClient).getForObject(anyString(), eq(ColdTraceData.class), anyString());
+        ColdTraceData fridges = service.getFridges("test-dz-code");
 
         assertThat(fridges, is(nullValue()));
     }
 
     @Test(expected = RuntimeException.class)
     public void shouldNotCatchRuntimeException() throws Exception {
-        doThrow(RuntimeException.class).when(restClient).getForObject(anyString(), eq(ColdTraceData.class), anyLong());
-        service.getFridges(10L);
+        doThrow(RuntimeException.class).when(restClient).getForObject(anyString(), eq(ColdTraceData.class), anyString());
+        service.getFridges("test-dz-code");
     }
 
 }

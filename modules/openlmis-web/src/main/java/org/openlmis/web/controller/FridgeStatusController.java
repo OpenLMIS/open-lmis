@@ -1,6 +1,8 @@
 package org.openlmis.web.controller;
 
 import lombok.NoArgsConstructor;
+import org.openlmis.core.domain.DeliveryZone;
+import org.openlmis.core.service.DeliveryZoneService;
 import org.openlmis.web.response.OpenLmisResponse;
 import org.openlmis.web.rest.model.ColdTraceData;
 import org.openlmis.web.rest.service.FridgeService;
@@ -24,9 +26,13 @@ public class FridgeStatusController extends BaseController {
     @Autowired
     private FridgeService fridgeService;
 
+    @Autowired
+    private DeliveryZoneService deliveryZoneService;
+
     @RequestMapping(value = "/fridges/{deliveryZoneId}", method = GET)
     public ResponseEntity<OpenLmisResponse> getFridges(@PathVariable Long deliveryZoneId) {
-        ColdTraceData coldTraceData = fridgeService.getFridges(deliveryZoneId);
+        DeliveryZone deliveryZone = deliveryZoneService.getById(deliveryZoneId);
+        ColdTraceData coldTraceData = fridgeService.getFridges(deliveryZone.getCode());
         return response("coldTraceData", coldTraceData);
     }
 
