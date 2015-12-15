@@ -208,7 +208,7 @@
                                  numeric-validator="positiveInteger,2" min="0" max="99" step="1"
                                  error-holder="numberOfStockoutDaysError{{$index}}"
                                  ng-class="{'required-error': !facilityData.isDisabled('epi-use')
-                                 && !(lineItem.numberOfStockoutDays.value
+                                 && !(lineItem.numberOfStockoutDays.value.hasValue()
                                  || lineItem.numberOfStockoutDays.notRecorded)}"/>
                           <span id="numberOfStockoutDaysError{{$index}}"
                                 class="rnr-form-error"
