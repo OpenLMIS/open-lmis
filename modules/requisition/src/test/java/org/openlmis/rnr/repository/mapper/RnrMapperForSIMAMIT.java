@@ -152,6 +152,8 @@ public class RnrMapperForSIMAMIT {
     assertEquals(rnrLineItem1.getStockInHand(), itemsData.get(1).get("stock_in_hand"));
     assertEquals(rnrLineItem2.getQuantityApproved(), itemsData.get(0).get("quantity_approved"));
     assertEquals(rnrLineItem1.getQuantityApproved(), itemsData.get(1).get("quantity_approved"));
+    assertEquals(rnrLineItem2.getQuantityRequested(), itemsData.get(0).get("quantity_requested"));
+    assertEquals(rnrLineItem1.getQuantityRequested(), itemsData.get(1).get("quantity_requested"));
   }
 
   @Test

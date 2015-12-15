@@ -129,6 +129,7 @@ public class RequisitionEmailServiceForSIMAM {
 				@Override
 				public Map<String, String> transform(Object input) {
 					((Map<String, String>) input).put("movDescID", "0");
+					((Map<String, String>) input).put("emprest", "0");
 					return (Map<String, String>) input;
 				}
 			});
