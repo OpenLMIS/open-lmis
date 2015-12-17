@@ -45,15 +45,15 @@ public class FacilityProductReportEntry {
     }
 
     private String getExpirationDateFromStockCardEntry(StockCardEntry entry){
-        Optional<StockCardEntryKV> stockCardEntryKVOptional = from(entry.getExtensions()).firstMatch(new Predicate<StockCardEntryKV>() {
+        Optional<StockCardEntryKV> stockCardEntryKVOptional = from(entry.getKeyValues()).firstMatch(new Predicate<StockCardEntryKV>() {
             @Override
             public boolean apply(StockCardEntryKV input) {
-                return EXPIRATION_DATES.equalsIgnoreCase(input.getKey());
+                return EXPIRATION_DATES.equalsIgnoreCase(input.getKeyColumn());
             }
         });
 
         if (stockCardEntryKVOptional.isPresent()){
-            return stockCardEntryKVOptional.get().getValue();
+            return stockCardEntryKVOptional.get().getValueColumn();
         }
         return StringUtils.EMPTY;
     }

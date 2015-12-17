@@ -94,47 +94,6 @@ public class RestStockCardControllerTest {
     }
 
 
-    @Test
-    public void shouldReturnStockMovementsIfNoException() throws Exception {
-        setupStockData();
-        StockCard stockEvent=new StockCard();
-
-        List<StockCard> stockCards = asList(stockEvent);
-        String startTime = "2015-10-10";
-        String endTime = "2015-10-11";
-        Date start = DateUtil.parseDate(startTime, DateUtil.FORMAT_DATE);
-        Date end = DateUtil.parseDate(endTime, DateUtil.FORMAT_DATE);
-
-        when(restStockCardService.queryStockCardByMovementDate(facilityId, start, end)).thenReturn(stockCards);
-
-        ResponseEntity<RestResponse> response = restStockCardController.getStockMovements(facilityId, startTime, endTime);
-        assertEquals(HttpStatus.OK, response.getStatusCode());
-        assertEquals(stockCards, response.getBody().getData().get("stockCards"));
-    }
-
-    @Test
-    public void shouldReturnStockMovementsOnExceptionIfDataException() throws Exception {
-        setupStockData();
-        String errorMessage = "invalid data";
-        DataException dataException = new DataException(errorMessage);
-        String startTime = "2015-10-10";
-        String endTime = "2015-10-11";
-        Date start = DateUtil.parseDate(startTime, DateUtil.FORMAT_DATE);
-        Date end = DateUtil.parseDate(endTime, DateUtil.FORMAT_DATE);
-
-        mockStatic(RestResponse.class);
-
-        ResponseEntity<RestResponse> expectedResponse = new ResponseEntity<>(new RestResponse(ERROR, errorMessage), BAD_REQUEST);
-
-        Mockito.when(RestResponse.error(dataException.getOpenLmisMessage(), BAD_REQUEST)).thenReturn(expectedResponse);
-        when(restStockCardService.queryStockCardByMovementDate(facilityId, start, end)).thenThrow(dataException);
-
-        ResponseEntity<RestResponse> response = restStockCardController.getStockMovements(facilityId, startTime, endTime);
-        assertThat(response.getStatusCode(), is(HttpStatus.BAD_REQUEST));
-        assertThat((String) response.getBody().getData().get(ERROR), is(errorMessage));
-    }
-
-
     private void setupStockData() {
         stockCard = new StockCard();
         stockCard.setId(123L);

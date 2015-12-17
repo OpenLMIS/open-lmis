@@ -102,8 +102,4 @@ public class RestStockCardService {
   private boolean validAdjustmentReason(StockEvent stockEvent) {
     return stockAdjustmentReasonRepository.getAdjustmentReasonByName(stockEvent.getReasonName()) != null;
   }
-
-  public List<StockCard> queryStockCardByMovementDate(long facilityId, Date startTime, Date endTime) {
-    return stockCardService.queryStockCardByMovementDate(facilityId, startTime, endTime);
-  }
 }
