@@ -47,7 +47,7 @@ public class DistributionReadingDeSerializerTest {
   @Test
   public void shouldReturnReadingIfValueIsNotEmptyAndNRIsNull() throws Exception {
     JsonNode valueNode = mock(JsonNode.class);
-    when(valueNode.getTextValue()).thenReturn("55");
+    when(valueNode.asText()).thenReturn("55");
     when(jsonNode.get("value")).thenReturn(valueNode);
     when(jsonNode.get("notRecorded")).thenReturn(null);
 
@@ -59,7 +59,7 @@ public class DistributionReadingDeSerializerTest {
   public void shouldReturnReadingIfValueIsNotEmptyAndNRIsFalse() throws Exception {
     JsonNode valueNode = mock(JsonNode.class);
     when(jsonNode.get("value")).thenReturn(valueNode);
-    when(valueNode.getTextValue()).thenReturn("55");
+    when(valueNode.asText()).thenReturn("55");
 
     JsonNode notRecordedNode = mock(JsonNode.class);
     when(jsonNode.get("notRecorded")).thenReturn(notRecordedNode);
