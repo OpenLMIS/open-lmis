@@ -10,6 +10,7 @@
 
 package org.openlmis.distribution.dto;
 
+import com.google.common.base.Optional;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.codehaus.jackson.annotate.JsonIgnoreProperties;
@@ -36,12 +37,17 @@ public class ChildCoverageLineItemDTO extends BaseModel {
 
   public ChildCoverageLineItem transform() {
     ChildCoverageLineItem lineItem = new ChildCoverageLineItem();
-    lineItem.setHealthCenter11Months(healthCenter11Months.parsePositiveInt());
-    lineItem.setHealthCenter23Months(healthCenter23Months.parsePositiveInt());
-    lineItem.setOutreach11Months(outreach11Months.parsePositiveInt());
-    lineItem.setOutreach23Months(outreach23Months.parsePositiveInt());
+    lineItem.setHealthCenter11Months(getSafely(healthCenter11Months).parsePositiveInt());
+    lineItem.setHealthCenter23Months(getSafely(healthCenter23Months).parsePositiveInt());
+    lineItem.setOutreach11Months(getSafely(outreach11Months).parsePositiveInt());
+    lineItem.setOutreach23Months(getSafely(outreach23Months).parsePositiveInt());
     lineItem.setId(this.id);
     lineItem.setModifiedBy(this.modifiedBy);
+
     return lineItem;
+  }
+
+  private Reading getSafely(Reading input) {
+    return Optional.fromNullable(input).or(Reading.EMPTY);
   }
 }
