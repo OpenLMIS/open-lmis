@@ -14,6 +14,7 @@ function ViewRnrMmiaController($scope, $route, Requisitions, messageService) {
     });
     $scope.$on('messagesPopulated', function () {
         $scope.initMonth();
+        $scope.initPatient();
     });
 
     $scope.loadMmiaDetail = function () {
@@ -25,6 +26,7 @@ function ViewRnrMmiaController($scope, $route, Requisitions, messageService) {
             $scope.initMonth();
             $scope.initProduct();
             $scope.initRegime();
+            $scope.initPatient();
 
             parseSignature($scope.rnr.rnrSignatures);
         });
@@ -57,6 +59,30 @@ function ViewRnrMmiaController($scope, $route, Requisitions, messageService) {
         $scope.adult = fullSupplyLineItems.slice(0,12);
         $scope.children = fullSupplyLineItems.slice(12,22);
         $scope.other = fullSupplyLineItems.slice(22,24);
+    };
+
+    $scope.initPatient = function(){
+        var patientQuantifications = $scope.rnr.patientQuantifications;
+        var openlmisMessageMap = {
+            "New": "view.rnr.report.mmia.patient.new",
+            "Maintenance" : "view.rnr.report.mmia.patient.maintenance",
+            "Alteration": "view.rnr.report.mmia.patient.alteration",
+            "PTV" : "view.rnr.report.mmia.patient.ptv",
+            "PPE": "view.rnr.report.mmia.patient.ppe",
+            "Total Dispensed": "view.rnr.report.mmia.patient.dispensed",
+            "Total Patients": "view.rnr.report.mmia.patient.total",
+            "Novos": "view.rnr.report.mmia.patient.new",
+            "Manutenção" : "view.rnr.report.mmia.patient.maintenance",
+            "Alteração": "view.rnr.report.mmia.patient.alteration",
+            "Total de Meses dispensados": "view.rnr.report.mmia.patient.dispensed",
+            "Total de pacientes em TARV na US": "view.rnr.report.mmia.patient.total"
+        };
+
+        for (var i=0; i<patientQuantifications.length; i++){
+            var item = patientQuantifications[i];
+            console.log(openlmisMessageMap[item.category]);
+            item.category = messageService.get(openlmisMessageMap[item.category]);
+        }
     };
 
     var formatExpirationDate = function(theOneItem) {
