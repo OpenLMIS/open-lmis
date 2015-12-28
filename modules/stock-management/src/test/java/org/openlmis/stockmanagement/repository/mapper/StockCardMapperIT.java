@@ -223,7 +223,7 @@ public class StockCardMapperIT {
     mapper.insert(stockCard2);
 
     Timestamp date1 = new Timestamp(DateUtil.parseDate("2025-12-12 12:12:12").getTime());
-    Timestamp date2 = new Timestamp(DateUtil.parseDate("2025-11-11 11:11:11").getTime());
+    Timestamp date2 = new Timestamp(DateUtil.parseDate("2015-11-11 11:11:11").getTime());
     updateModifiedDateForStockCard(date1, stockCard1.getId());
     updateModifiedDateForStockCard(date2, stockCard2.getId());
 
