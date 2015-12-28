@@ -14,11 +14,16 @@ import org.openlmis.core.repository.FacilityRepository;
 import org.openlmis.core.repository.ProductRepository;
 import org.openlmis.db.categories.UnitTests;
 import org.openlmis.stockmanagement.domain.StockCard;
+import org.openlmis.stockmanagement.domain.StockCardEntry;
 import org.openlmis.stockmanagement.repository.mapper.StockCardMapper;
 import org.powermock.modules.junit4.PowerMockRunner;
 import org.powermock.modules.junit4.PowerMockRunnerDelegate;
 
+import java.util.Date;
+import java.util.List;
+
 import static com.natpryce.makeiteasy.MakeItEasy.*;
+import static java.util.Arrays.asList;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.verify;
@@ -70,5 +75,20 @@ public class StockCardRepositoryTest {
     verify(mapper).insert(stockCard);
     assertThat(stockCard.getFacility(), is(defaultFacility));
     assertThat(stockCard.getProduct(), is(defaultProduct));
+  }
+
+  @Test
+  public void shouldGetStockCardWithLatestEntries() {
+    StockCard dummyCard = StockCard.createZeroedStockCard(defaultFacility, defaultProduct);
+    Date startDate = new Date();
+    Date endDate = new Date();
+    Long facilityId = defaultFacility.getId();
+    when(mapper.queryStockCardBasicInfo(facilityId)).thenReturn(asList(dummyCard));
+
+    StockCardEntry entry = new StockCardEntry();
+    when(mapper.queryStockCardEntriesByDateRange(dummyCard.getId(), startDate, endDate)).thenReturn(asList(entry));
+
+    List<StockCard> stockCards = stockCardRepository.queryStockCardByOccurred(facilityId, startDate, endDate);
+    assertThat(stockCards.size(), is(1));
   }
 }

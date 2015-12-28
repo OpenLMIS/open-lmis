@@ -104,6 +104,10 @@ public class StockCardService {
     return repository.getStockCards(facilityId);
   }
 
+  public List<StockCard> queryStockCardByOccurred(Long facilityId, Date startTime, Date endTime) {
+    return repository.queryStockCardByOccurred(facilityId, startTime, endTime);
+  }
+
   @Transactional
   public void addStockCardEntry(StockCardEntry entry) {
     StockCard card = entry.getStockCard();
