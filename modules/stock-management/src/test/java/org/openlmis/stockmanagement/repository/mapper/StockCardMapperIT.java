@@ -87,26 +87,16 @@ public class StockCardMapperIT {
 
   @Test
   public void shouldInsertEntry() {
-    StockCardEntry entry = getStockCardEntry();
-    Timestamp date = new Timestamp(DateUtil.parseDate("2015-12-12 12:12:12").getTime());
-    entry.setCreatedDate(date);
+    StockCardEntry entry = new StockCardEntry(defaultCard, StockCardEntryType.CREDIT, 1L, null, null);
     mapper.insertEntry(entry);
 
     List<StockCardEntry> entries = mapper.getEntries(defaultCard.getId());
     assertThat(entries.size(), is(1));
-    assertThat(DateUtil.formatDate(entries.get(0).getCreatedDate()), is("2015-12-12 12:12:12"));
-
-  }
-
-  private StockCardEntry getStockCardEntry() {
-    StockCardEntry entry = new StockCardEntry(defaultCard, StockCardEntryType.CREDIT, 1L, null, null);
-    entry.setCreatedDate(new Date());
-    return entry;
   }
 
   @Test
   public void shouldInsertEntryKeyValues() {
-    StockCardEntry entry = getStockCardEntry();
+    StockCardEntry entry = new StockCardEntry(defaultCard, StockCardEntryType.CREDIT, 1L, null, null);
     mapper.insertEntry(entry);
     mapper.insertEntryKeyValue(entry, "vvmstatus", "1");
 
@@ -121,7 +111,7 @@ public class StockCardMapperIT {
 
   @Test
   public void shouldGetStockCardByFacilityIdAndProductCode() {
-    StockCardEntry entry = getStockCardEntry();
+    StockCardEntry entry = new StockCardEntry(defaultCard, StockCardEntryType.CREDIT, 1L, null, null);
     mapper.insertEntry(entry);
 
     StockCard stockCard = mapper.getByFacilityAndProduct(defaultFacility.getId(), defaultProduct.getCode());
@@ -132,8 +122,7 @@ public class StockCardMapperIT {
   @Test
   public void shouldSaveStockEntryOccurred() {
     Date occurred = DateUtil.parseDate("2015-10-30 00:00:00");
-    StockCardEntry entry = getStockCardEntry();
-    entry.setOccurred(occurred);
+    StockCardEntry entry = new StockCardEntry(defaultCard, StockCardEntryType.CREDIT, 1L, occurred, null);
     mapper.insertEntry(entry);
 
     List<StockCardEntry> entries = mapper.getEntries(defaultCard.getId());
@@ -144,61 +133,12 @@ public class StockCardMapperIT {
   @Test
   public void shouldSaveStockEntryDocumentNumber() {
     String referenceNumber = "110";
-    StockCardEntry entry = getStockCardEntry();
-    entry.setReferenceNumber(referenceNumber);
+    StockCardEntry entry = new StockCardEntry(defaultCard, StockCardEntryType.CREDIT, 1L, null, referenceNumber);
     mapper.insertEntry(entry);
 
     List<StockCardEntry> entries = mapper.getEntries(defaultCard.getId());
 
     assertThat(entries.get(0).getReferenceNumber(), is(referenceNumber));
-  }
-
-  @Test
-  public void shouldReturnStockCardBasicInfoWhenGiveFacilityId() throws Exception {
-
-    StockCardEntry entry = getStockCardEntry();
-    String expirationDate = "2015/1/1";
-    mapper.insertEntry(entry);
-    mapper.insertEntryKeyValue(entry, "expirationdates", expirationDate);
-
-    List<StockCard> stockCards = mapper.queryStockCardBasicInfo(defaultFacility.getId());
-    assertThat(stockCards.size(), is(1));
-    assertThat(stockCards.get(0).getProduct().getCode(), is(ProductBuilder.PRODUCT_CODE));
-  }
-
-  @Test
-  public void shouldReturnStockCardEntryByOccurredDateRange() throws Exception {
-
-    StockCardEntry entry = getStockCardEntry();
-    entry.setOccurred(DateUtil.parseDate("2015-11-12 00:00:00"));
-    mapper.insertEntry(entry);
-
-    StockCardEntry entry2 = getStockCardEntry();
-    entry2.setOccurred(DateUtil.parseDate("2015-11-13 00:00:00"));
-    mapper.insertEntry(entry2);
-
-    StockCardEntry entry3 = getStockCardEntry();
-    entry3.setOccurred(DateUtil.parseDate("2015-11-14 00:00:00"));
-    mapper.insertEntry(entry3);
-
-    Date startDate = DateUtil.parseDate("2015-11-12 00:00:00");
-    Date endDate = DateUtil.parseDate("2015-11-13 00:00:00");
-
-    List<StockCardEntry> stockCardsEntries = mapper.queryStockCardEntriesByDateRange(defaultCard.getId(),
-        startDate, endDate);
-    assertThat(stockCardsEntries.size(), is(1));
-  }
-
-
-  @Test
-  public void shouldReturnStockCardLatestExpirationDates() throws Exception {
-    StockCardEntry entry = getStockCardEntry();
-    String expirationDate = "2015/1/1";
-    mapper.insertEntry(entry);
-    mapper.insertEntryKeyValue(entry, "expirationdates", expirationDate);
-
-    String latestExpirationDates = mapper.getStockCardLatestExpirationDates(defaultCard.getId());
-    assertThat(latestExpirationDates, is(expirationDate));
   }
 
   private void updateModifiedDateForStockCard(Timestamp modifiedDate, Long stockCardId) throws SQLException {
@@ -223,7 +163,7 @@ public class StockCardMapperIT {
     mapper.insert(stockCard2);
 
     Timestamp date1 = new Timestamp(DateUtil.parseDate("2025-12-12 12:12:12").getTime());
-    Timestamp date2 = new Timestamp(DateUtil.parseDate("2025-11-11 11:11:11").getTime());
+    Timestamp date2 = new java.sql.Timestamp(DateUtil.parseDate("2015-11-11 11:11:11").getTime());
     updateModifiedDateForStockCard(date1, stockCard1.getId());
     updateModifiedDateForStockCard(date2, stockCard2.getId());
 

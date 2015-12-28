@@ -17,7 +17,6 @@ import lombok.EqualsAndHashCode;
 import org.apache.commons.lang3.StringUtils;
 import org.openlmis.core.domain.StockAdjustmentReason;
 import org.openlmis.core.serializer.DateDeserializer;
-import org.openlmis.core.serializer.DateTimeDeserializer;
 import org.openlmis.stockmanagement.domain.Lot;
 
 import java.util.Date;
@@ -34,10 +33,6 @@ public class StockEvent {
 
   @JsonDeserialize(using= DateDeserializer.class)
   private Date occurred;
-
-  @JsonDeserialize(using= DateTimeDeserializer.class)
-  private Date createdTime;
-
   private Long quantity;
   private Long lotId;
   private Lot lot;

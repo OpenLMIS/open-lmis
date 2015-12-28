@@ -11,19 +11,6 @@ import java.util.List;
 
 @Repository
 public interface StockCardMapper {
-  
-  @Select("SELECT *" +
-      " FROM stock_cards" +
-      " WHERE facilityid = #{facilityId}" )
-  @Results({
-      @Result(property = "id", column = "id"),
-      @Result(property = "facility", column = "facilityId", javaType = Facility.class,
-          one = @One(select = "org.openlmis.core.repository.mapper.FacilityMapper.getById")),
-      @Result(property = "product", column = "productId", javaType = Product.class,
-          one = @One(select = "org.openlmis.core.repository.mapper.ProductMapper.getById"))
-
-  })
-  List<StockCard> queryStockCardBasicInfo(@Param("facilityId")Long facilityId);
 
   @Select("SELECT *" +
       " FROM stock_cards" +
@@ -87,39 +74,15 @@ public interface StockCardMapper {
           " WHERE stockcardid = #{stockCardId}")
   List<StockCardEntryKV> getStockCardKeyValues(@Param("stockCardId")Long stockCardId);
 
-  @Select("SELECT keycolumn AS key" +
-      ", valuecolumn AS value" +
-      ", modifieddate AS synceddate" +
-      " FROM stock_card_entry_key_values" +
-      " WHERE stockcardentryid = #{stockCardEntryId}")
-  List<StockCardEntryKV> getStockCardEntryExtensionAttributes(@Param("stockCardEntryId") Long stockCardEntryId);
-
   @Select("SELECT *" +
       " FROM stock_card_entries" +
       " WHERE stockcardid = #{stockCardId}" +
       " ORDER BY createddate DESC")
   @Results({
-      @Result(property = "id", column = "id"),
       @Result(property = "keyValues", column = "id", javaType = List.class,
           many = @Many(select = "getEntryKeyValues"))
   })
   List<StockCardEntry> getEntries(@Param("stockCardId")Long stockCardId);
-
-  @Select("SELECT * FROM stock_card_entries" +
-      " WHERE stockcardid = #{stockCardId}" +
-      " AND occurred >= #{startDate}" +
-      " AND occurred < #{endDate}" +
-      " ORDER BY id")
-  @Results({
-      @Result(property = "id", column = "id"),
-      @Result(property = "adjustmentReason", column = "adjustmentType",
-          one = @One(select ="org.openlmis.core.repository.mapper.StockAdjustmentReasonMapper.getByName")),
-      @Result(property = "keyValues", column = "id", javaType = List.class,
-          many = @Many(select = "getStockCardEntryExtensionAttributes"))
-  })
-  List<StockCardEntry> queryStockCardEntriesByDateRange(@Param("stockCardId")Long stockCardId,
-                                                        @Param("startDate")Date startDate,
-                                                        @Param("endDate")Date endDate);
 
   @Select("SELECT keycolumn" +
           ", valuecolumn" +
@@ -127,31 +90,6 @@ public interface StockCardMapper {
           " FROM stock_card_entry_key_values" +
           " WHERE stockcardentryid = #{stockCardEntryId}")
   List<StockCardEntryKV> getEntryKeyValues(@Param("stockCardEntryId")Long stockCardEntryId);
-
-  @Select("SELECT * FROM stock_card_entries" +
-      " WHERE stockcardid = #{stockCardId}" +
-      " ORDER BY id desc" +
-      " limit 6")
-  @Results({
-      @Result(property = "id", column = "id"),
-      @Result(property = "adjustmentReason", column = "adjustmentType",
-          one = @One(select = "org.openlmis.core.repository.mapper.StockAdjustmentReasonMapper.getByName")),
-      @Result(property = "keyValues", column = "id", javaType = List.class,
-          many = @Many(select = "getStockCardEntryExtensionAttributes"))
-  })
-  List<StockCardEntry> queryLatestStockCardEntries(@Param("stockCardId") Long stockCardId);
-
-  @Select("SELECT tmp.expirationdates FROM (" +
-      " SELECT DISTINCT" +
-      " sen.createddate," +
-      " (SELECT valuecolumn FROM stock_card_entry_key_values " +
-      "   WHERE stockcardentryid = sen.id" +
-      "   AND keycolumn='expirationdates') expirationdates" +
-      " FROM stock_card_entries sen" +
-      " WHERE sen.stockcardid = #{stockCardEntryId}" +
-      " ORDER BY sen.createddate DESC" +
-      " LIMIT 1) tmp")
-  String getStockCardLatestExpirationDates(@Param("stockCardEntryId")Long stockCardEntryId);
 
   @Select("SELECT loh.*" +
           " FROM lots_on_hand loh" +
@@ -221,7 +159,7 @@ public interface StockCardMapper {
       ", #{notes}" +
       ", #{adjustmentReason.name}" +
       ", #{createdBy}" +
-      ", #{createdDate}" +
+      ", NOW()" +
       ", #{modifiedBy}" +
       ", NOW()" +
       ", #{occurred}" +
