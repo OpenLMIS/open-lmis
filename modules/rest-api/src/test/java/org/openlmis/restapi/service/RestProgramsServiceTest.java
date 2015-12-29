@@ -92,6 +92,15 @@ public class RestProgramsServiceTest {
     }
 
     @Test
+    public void shouldReturnEmptyListIfNoProgramAssociatedWithFacility() {
+        long facilityId = 123L;
+        when(programService.getByFacility(facilityId)).thenReturn(new ArrayList<Program>());
+
+        List<ProgramWithProducts> programsWithProducts = restProgramsService.getLatestProgramsWithProductsByFacilityId(facilityId,null);
+        assertEquals(0, programsWithProducts.size());
+    }
+
+    @Test
     public void shouldGetAllLatestProgramsWithProductsByFacilityIdWhenAfterUpdatedTimeIsEmpty() {
 
         // set up programs associated with this facility

@@ -26,6 +26,8 @@ public class RestProgramsController extends BaseController {
     @Autowired
     private RestProgramsService programService;
 
+    //DEPRECATE: facility code can change in openlmis
+    @Deprecated
     @RequestMapping(value = "/rest-api/programs-with-products", method = GET, headers = ACCEPT_JSON)
     public ResponseEntity<RestResponse> getProgramWithProductsByFacility(@RequestParam String facilityCode) {
         try {

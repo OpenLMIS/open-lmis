@@ -1,6 +1,7 @@
 package org.openlmis.restapi.service;
 
-import org.openlmis.core.domain.Facility;
+import com.google.common.base.Function;
+import com.google.common.collect.FluentIterable;
 import org.openlmis.core.domain.Product;
 import org.openlmis.core.domain.Program;
 import org.openlmis.core.domain.ProgramProduct;
@@ -11,7 +12,6 @@ import org.openlmis.restapi.domain.ProgramWithProducts;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -27,44 +27,41 @@ public class RestProgramsService {
     @Autowired
     private ProgramProductService programProductService;
 
+    @Deprecated
     public List<ProgramWithProducts> getAllProgramsWithProductsByFacilityCode(String facilityCode) {
-        Facility facility = facilityService.getFacilityByCode(facilityCode);
 
-        List<ProgramWithProducts> programsWithProducts = new ArrayList();
-        for (Program program : programService.getByFacility(facility.getId())) {
-            ProgramWithProducts programWithProducts = new ProgramWithProducts();
-            programWithProducts.setProgramCode(program.getCode());
-            programWithProducts.setProgramName(program.getName());
-            List<Product> products = new ArrayList();
-            for (ProgramProduct programProduct : programProductService.getByProgram(program)) {
-                products.add(programProduct.getProduct());
+        return FluentIterable.from(programService.getByFacility(facilityService.getFacilityByCode(facilityCode).getId())).transform(new Function<Program, ProgramWithProducts>() {
+            @Override
+            public ProgramWithProducts apply(Program input) {
+                return createProgramWithProducts(input);
             }
-            programWithProducts.setProducts(products);
-            programsWithProducts.add(programWithProducts);
-        }
-
-        return programsWithProducts;
+        }).toList();
     }
 
     public List<ProgramWithProducts> getLatestProgramsWithProductsByFacilityId(Long facilityId, Date afterUpdatedTime) {
-
-        List<ProgramWithProducts> programsWithProducts = new ArrayList<>();
-        for (Program program : programService.getByFacility(facilityId)) {
-            List<Product> products = new ArrayList<>();
-            for (ProgramProduct programProduct : programProductService.getByProgram(program)) {
-                products.add(programProduct.getProduct());
+        return FluentIterable.from(programService.getByFacility(facilityId)).transform(new Function<Program, ProgramWithProducts>() {
+            @Override
+            public ProgramWithProducts apply(Program input) {
+                return createProgramWithProducts(input);
             }
-
-            programsWithProducts.add(createProgramWithProducts(program, products));
-        }
-        return programsWithProducts;
+        }).toList();
     }
 
-    private ProgramWithProducts createProgramWithProducts(Program program, List<Product> products) {
+    private List<Product> getAllProductsForProgram(Program program) {
+        return FluentIterable.from(programProductService.getByProgram(program)).transform(new Function<ProgramProduct, Product>() {
+            @Override
+            public Product apply(ProgramProduct input) {
+                return input.getProduct();
+            }
+        }).toList();
+
+    }
+
+    private ProgramWithProducts createProgramWithProducts(Program program) {
         ProgramWithProducts programWithProducts = new ProgramWithProducts();
         programWithProducts.setProgramCode(program.getCode());
         programWithProducts.setProgramName(program.getName());
-        programWithProducts.setProducts(products);
+        programWithProducts.setProducts(getAllProductsForProgram(program));
         return programWithProducts;
     }
 }
