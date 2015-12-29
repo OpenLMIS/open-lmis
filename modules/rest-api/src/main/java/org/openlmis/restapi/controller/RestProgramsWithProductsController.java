@@ -5,7 +5,7 @@ import org.openlmis.core.exception.DataException;
 import org.openlmis.restapi.domain.LatestProgramsWithProducts;
 import org.openlmis.restapi.domain.ProgramWithProducts;
 import org.openlmis.restapi.response.RestResponse;
-import org.openlmis.restapi.service.RestProgramsService;
+import org.openlmis.restapi.service.RestProgramsWithProductsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -22,10 +22,10 @@ import static org.springframework.web.bind.annotation.RequestMethod.GET;
 
 @Controller
 @NoArgsConstructor
-public class RestProgramsController extends BaseController {
+public class RestProgramsWithProductsController extends BaseController {
 
     @Autowired
-    private RestProgramsService programService;
+    private RestProgramsWithProductsService programService;
 
     //DEPRECATE: facility code can change in openlmis
     @Deprecated

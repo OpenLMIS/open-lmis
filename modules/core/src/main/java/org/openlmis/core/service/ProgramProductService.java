@@ -21,6 +21,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Date;
 import java.util.List;
 
 import static com.google.common.collect.Iterables.all;
@@ -229,4 +230,7 @@ public class ProgramProductService {
       programProductRepository.updateISA(isa);
     }
 
+  public List<ProgramProduct> getProductsByProgramAfterUpdatedDate(Program program1, Date afterUpdatedTime) {
+    return null;
+  }
 }

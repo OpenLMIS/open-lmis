@@ -13,7 +13,7 @@ import org.openlmis.restapi.builder.ProgramWithProductsBuilder;
 import org.openlmis.restapi.domain.LatestProgramsWithProducts;
 import org.openlmis.restapi.domain.ProgramWithProducts;
 import org.openlmis.restapi.response.RestResponse;
-import org.openlmis.restapi.service.RestProgramsService;
+import org.openlmis.restapi.service.RestProgramsWithProductsService;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 import org.powermock.modules.junit4.PowerMockRunnerDelegate;
@@ -34,13 +34,13 @@ import static org.springframework.http.HttpStatus.BAD_REQUEST;
 @RunWith(PowerMockRunner.class)
 @PowerMockRunnerDelegate(BlockJUnit4ClassRunner.class)
 @PrepareForTest(RestResponse.class)
-public class RestProgramsControllerTest {
+public class RestProgramsWithProductsControllerTest {
 
     @InjectMocks
-    private RestProgramsController restProgramsController;
+    private RestProgramsWithProductsController restProgramsWithProductsController;
 
     @Mock
-    private RestProgramsService restProgramsService;
+    private RestProgramsWithProductsService restProgramsWithProductsService;
 
     @Mock
     private MessageService messageService;
@@ -49,11 +49,11 @@ public class RestProgramsControllerTest {
     public void shouldReturnBadRequestIfError() {
         mockStatic(RestResponse.class);
         DataException e = new DataException("error.facility.code.invalid");
-        when(restProgramsService.getAllProgramsWithProductsByFacilityCode("F10")).thenThrow(e);
+        when(restProgramsWithProductsService.getAllProgramsWithProductsByFacilityCode("F10")).thenThrow(e);
         ResponseEntity<RestResponse> expectedResponse = new ResponseEntity<>(new RestResponse(ERROR, "error.facility.code.invalid"), BAD_REQUEST);
         when(RestResponse.error(e.getOpenLmisMessage(), BAD_REQUEST)).thenReturn(expectedResponse);
 
-        ResponseEntity<RestResponse> response = restProgramsController.getProgramWithProductsByFacility("F10");
+        ResponseEntity<RestResponse> response = restProgramsWithProductsController.getProgramWithProductsByFacility("F10");
         assertEquals(expectedResponse, response);
     }
 
@@ -61,9 +61,9 @@ public class RestProgramsControllerTest {
     public void shouldReturnResponseWithListOfProgramsWithProducts() {
         List<ProgramWithProducts> programsWithProducts = new ArrayList();
         programsWithProducts.add(new ProgramWithProductsBuilder().build());
-        when(restProgramsService.getAllProgramsWithProductsByFacilityCode("F10")).thenReturn(programsWithProducts);
+        when(restProgramsWithProductsService.getAllProgramsWithProductsByFacilityCode("F10")).thenReturn(programsWithProducts);
 
-        ResponseEntity<RestResponse> response = restProgramsController.getProgramWithProductsByFacility("F10");
+        ResponseEntity<RestResponse> response = restProgramsWithProductsController.getProgramWithProductsByFacility("F10");
         assertEquals(HttpStatus.OK, response.getStatusCode());
         assertEquals(programsWithProducts, response.getBody().getData().get("programsWithProducts"));
 
@@ -74,11 +74,11 @@ public class RestProgramsControllerTest {
         mockStatic(RestResponse.class);
         DataException e = new DataException("error.facility.id.invalid");
         long facilityId = 123L;
-        when(restProgramsService.getLatestProgramsWithProductsByFacilityId(facilityId,null)).thenThrow(e);
+        when(restProgramsWithProductsService.getLatestProgramsWithProductsByFacilityId(facilityId,null)).thenThrow(e);
         ResponseEntity<RestResponse> expectedResponse = new ResponseEntity<>(new RestResponse(ERROR, "error.facility.id.invalid"), BAD_REQUEST);
         when(RestResponse.error(e.getOpenLmisMessage(), BAD_REQUEST)).thenReturn(expectedResponse);
 
-        ResponseEntity<RestResponse> response = restProgramsController.getLatestProgramWithProductsByFacility(123L,null);
+        ResponseEntity<RestResponse> response = restProgramsWithProductsController.getLatestProgramWithProductsByFacility(123L,null);
         assertEquals(expectedResponse, response);
     }
 
@@ -87,9 +87,9 @@ public class RestProgramsControllerTest {
         LatestProgramsWithProducts latestProgramsWithProducts = new LatestProgramsWithProducts(new ArrayList<ProgramWithProducts>(),new Date());
         long facilityId = 1L;
         Date afterUpdatedTime = new Date();
-        when(restProgramsService.getLatestProgramsWithProductsByFacilityId(facilityId, afterUpdatedTime)).thenReturn(latestProgramsWithProducts);
+        when(restProgramsWithProductsService.getLatestProgramsWithProductsByFacilityId(facilityId, afterUpdatedTime)).thenReturn(latestProgramsWithProducts);
 
-        ResponseEntity<RestResponse> response = restProgramsController.getLatestProgramWithProductsByFacility(facilityId,afterUpdatedTime);
+        ResponseEntity<RestResponse> response = restProgramsWithProductsController.getLatestProgramWithProductsByFacility(facilityId,afterUpdatedTime);
         assertEquals(HttpStatus.OK, response.getStatusCode());
         assertEquals(latestProgramsWithProducts, response.getBody().getData().get("latestProgramsWithProducts"));
     }
