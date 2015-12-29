@@ -13,7 +13,7 @@
 apply plugin: 'cobertura'
 
 dependencies {
-    compile  'postgresql:postgresql:9.1-901.jdbc4',
+    compile  'org.postgresql:postgresql:9.2-1002-jdbc4',
             'com.mchange:c3p0:0.9.2.1',
           'net.sf.jasperreports:jasperreports:6.1.1',
           'org.codehaus.groovy:groovy-all:2.3.9',

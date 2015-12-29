@@ -13,7 +13,7 @@
 apply plugin: 'cobertura'
 
 dependencies {
-  compile "postgresql:postgresql:9.1-901.jdbc4",
+  compile "org.postgresql:postgresql:9.2-1002-jdbc4",
       'commons-codec:commons-codec:1.7',
       project(':modules:db'),
       project(':modules:email'),
