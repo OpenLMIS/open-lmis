@@ -41,7 +41,7 @@ public class RestProgramsWithProductsController extends BaseController {
 
     @RequestMapping(value = "/rest-api/latest-programs-with-products", method = GET, headers = ACCEPT_JSON)
     public ResponseEntity<RestResponse> getLatestProgramWithProductsByFacility(@RequestParam Long facilityId,
-                                                                               @RequestParam(required = false) long afterUpdatedTime) {
+                                                                               @RequestParam(required = false) Long afterUpdatedTime) {
         try {
             Date afterUpdatedTimeInDate = new Date(afterUpdatedTime);
             LatestProgramsWithProducts latestProgramsWithProducts = programService.getLatestProgramsWithProductsByFacilityId(facilityId, afterUpdatedTimeInDate);
