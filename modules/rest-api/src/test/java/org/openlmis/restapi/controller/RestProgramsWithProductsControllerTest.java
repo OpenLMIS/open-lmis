@@ -74,11 +74,11 @@ public class RestProgramsWithProductsControllerTest {
         mockStatic(RestResponse.class);
         DataException e = new DataException("error.facility.id.invalid");
         long facilityId = 123L;
-        when(restProgramsWithProductsService.getLatestProgramsWithProductsByFacilityId(facilityId,null)).thenThrow(e);
+        when(restProgramsWithProductsService.getLatestProgramsWithProductsByFacilityId(facilityId,new Date(1L))).thenThrow(e);
         ResponseEntity<RestResponse> expectedResponse = new ResponseEntity<>(new RestResponse(ERROR, "error.facility.id.invalid"), BAD_REQUEST);
         when(RestResponse.error(e.getOpenLmisMessage(), BAD_REQUEST)).thenReturn(expectedResponse);
 
-        ResponseEntity<RestResponse> response = restProgramsWithProductsController.getLatestProgramWithProductsByFacility(123L,null);
+        ResponseEntity<RestResponse> response = restProgramsWithProductsController.getLatestProgramWithProductsByFacility(facilityId,1L);
         assertEquals(expectedResponse, response);
     }
 
@@ -86,10 +86,11 @@ public class RestProgramsWithProductsControllerTest {
     public void shouldReturnResponseWithListOfLatestProgramsWithProducts() {
         LatestProgramsWithProducts latestProgramsWithProducts = new LatestProgramsWithProducts(new ArrayList<ProgramWithProducts>(),new Date());
         long facilityId = 1L;
-        Date afterUpdatedTime = new Date();
+        long date = 1234L;
+        Date afterUpdatedTime = new Date(date);
         when(restProgramsWithProductsService.getLatestProgramsWithProductsByFacilityId(facilityId, afterUpdatedTime)).thenReturn(latestProgramsWithProducts);
 
-        ResponseEntity<RestResponse> response = restProgramsWithProductsController.getLatestProgramWithProductsByFacility(facilityId,afterUpdatedTime);
+        ResponseEntity<RestResponse> response = restProgramsWithProductsController.getLatestProgramWithProductsByFacility(facilityId,date);
         assertEquals(HttpStatus.OK, response.getStatusCode());
         assertEquals(latestProgramsWithProducts, response.getBody().getData().get("latestProgramsWithProducts"));
     }

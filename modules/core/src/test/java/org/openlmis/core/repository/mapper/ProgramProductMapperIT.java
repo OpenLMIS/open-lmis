@@ -18,6 +18,7 @@ import org.junit.runner.RunWith;
 import org.openlmis.core.builder.ProductBuilder;
 import org.openlmis.core.domain.*;
 import org.openlmis.core.query.QueryExecutor;
+import org.openlmis.core.utils.DateUtil;
 import org.openlmis.db.categories.IntegrationTests;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
@@ -26,6 +27,8 @@ import org.springframework.test.context.transaction.TransactionConfiguration;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Timestamp;
 import java.util.Date;
 import java.util.List;
 
@@ -393,6 +396,48 @@ public class ProgramProductMapperIT {
     assertThat(programProducts.get(0).getProduct().getCode(), is(programProduct2.getProduct().getCode()));
     assertThat(programProducts.get(1).getProduct().getCode(), is(programProduct4.getProduct().getCode()));
     assertThat(programProducts.get(2).getProduct().getCode(), is(programProduct1.getProduct().getCode()));
+  }
+
+  @Test
+  public void shouldGetByProgramAfterUpdatedTime() throws SQLException {
+    Product prod1 = make(a(defaultProduct, with(primaryName, "prod1"), with(code, "P1")));
+    Product prod2 = make(a(defaultProduct, with(primaryName, "prod2"), with(code, "P2")));
+    Product prod3 = make(a(defaultProduct, with(primaryName, "prod3"), with(code, "P3")));
+    productMapper.insert(prod1);
+    productMapper.insert(prod2);
+    productMapper.insert(prod3);
+
+    Program program1 = make(a(defaultProgram, with(programName, "TB1"), with(programCode, "program1")));
+    programMapper.insert(program1);
+
+    ProgramProduct programProduct1 = new ProgramProduct(program1, prod1, 10, true);
+    programProduct1.setProductCategory(productCategory);
+    programProductMapper.insert(programProduct1);
+
+    ProgramProduct programProduct2 = new ProgramProduct(program1, prod2, 10, true);
+    programProduct2.setProductCategory(productCategory);
+    programProductMapper.insert(programProduct2);
+
+    ProgramProduct programProduct3 = new ProgramProduct(program1, prod3, 10, true);
+    programProduct3.setProductCategory(productCategory);
+    programProductMapper.insert(programProduct3);
+
+    Date lastUpdatedTime = DateUtil.parseDate("2025-10-10 10:10:10");
+    Timestamp date1 = new Timestamp(DateUtil.parseDate("2025-12-12 12:12:12").getTime());
+    Timestamp date2 = new Timestamp(DateUtil.parseDate("2025-11-11 11:11:11").getTime());
+
+    updateModifiedDateForProduct(date1, prod1.getId());
+    updateModifiedDateForProduct(date2, prod3.getId());
+
+    List<ProgramProduct> programProducts = programProductMapper.getByProgramAfterUpdatedTime(program1.getId(), lastUpdatedTime);
+
+    assertThat(programProducts.size(), is(2));
+    assertThat(programProducts.get(0).getProduct().getCode(), is(programProduct3.getProduct().getCode()));
+    assertThat(programProducts.get(1).getProduct().getCode(), is(programProduct1.getProduct().getCode()));
+  }
+
+  private void updateModifiedDateForProduct(Timestamp modifiedDate, Long productId) throws SQLException {
+    executor.executeUpdate("UPDATE products SET modifieddate = ? WHERE id = ?", modifiedDate, productId);
   }
 
   private void assertContainsProgramProduct(List<ProgramProduct> returnedProducts, final ProgramProduct programProduct) {

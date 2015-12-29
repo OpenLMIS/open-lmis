@@ -241,4 +241,12 @@ public class ProgramProductRepositoryTest {
     verify(programProductMapper).getByProgramIdAndFacilityTypeCode(10L, "warehouse");
     assertThat(programProducts, is(expectedProgramProducts));
   }
+
+  @Test
+  public void shouldGetByProgramAfterUpdatedTime() {
+    Program program = new Program();
+    Date afterUpdatedTime = new Date();
+    programProductRepository.getByProgramAfterUpdatedTime(program, afterUpdatedTime);
+    verify(programProductMapper).getByProgramAfterUpdatedTime(program.getId(), afterUpdatedTime);
+  }
 }

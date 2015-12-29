@@ -1,7 +1,6 @@
 package org.openlmis.restapi.domain;
 
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import com.fasterxml.jackson.databind.ser.std.DateSerializer;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.openlmis.core.utils.DateUtil;

@@ -15,6 +15,7 @@ import org.apache.ibatis.session.RowBounds;
 import org.openlmis.core.domain.*;
 import org.springframework.stereotype.Repository;
 
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -67,6 +68,20 @@ public interface ProgramProductMapper {
       one = @One(select = "org.openlmis.core.repository.mapper.ProductCategoryMapper.getById"))
   })
   List<ProgramProduct> getByProgram(Program program);
+
+  @Select({"SELECT * FROM program_products pp ",
+          "INNER JOIN products p ON pp.productId = p.id ",
+          "WHERE pp.programId = #{programId} ",
+          "AND p.modifieddate > #{afterUpdatedTime}",
+          "ORDER BY p.modifieddate"})
+  @Results(value = {
+          @Result(property = "id", column = "id"),
+          @Result(property = "program", column = "programId", javaType = Program.class,
+                  one = @One(select = "org.openlmis.core.repository.mapper.ProgramMapper.getById")),
+          @Result(property = "product", column = "productId", javaType = Product.class,
+                  one = @One(select = "org.openlmis.core.repository.mapper.ProductMapper.getById"))
+  })
+  List<ProgramProduct> getByProgramAfterUpdatedTime(@Param("programId") Long programId, @Param("afterUpdatedTime") Date afterUpdatedTime);
 
   @Select("SELECT * FROM program_products WHERE id = #{id}")
   @Results(value = {
