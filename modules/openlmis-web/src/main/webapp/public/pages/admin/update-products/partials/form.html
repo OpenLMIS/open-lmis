@@ -1,0 +1,41 @@
+<!--
+  ~ This program is part of the OpenLMIS logistics management information system platform software.
+  ~ Copyright © 2013 VillageReach
+  ~
+  ~ This program is free software: you can redistribute it and/or modify it under the terms of the GNU Affero General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
+  ~  
+  ~ This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Affero General Public License for more details.
+  ~ You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org. 
+  -->
+
+<div>
+    <h2 openlmis-message="link.admin.update.products"></h2>
+
+    <form id="updateProductsForm" name="updateProductsForm" action="/update-products" method="POST" enctype="multipart/form-data" novalidate>
+        <div>
+            <fieldset>
+                <label for="csvFile"><span openlmis-message="upload.label.file"></span>:</label>
+                <input name="csvFile" id="csvFile" ng-model="csvFile" type="file" accept=".csv"
+                       ng-change="clearMessages()"
+                       value="Choose CSV File to upload" required/>
+                <span class="field-error" ng-show="uploadForm.csvFile.errorMessage"
+                      ng-bind="uploadForm.csvFile.errorMessage"></span>
+                <br/>
+                <br>
+
+                <div class="alert alert-error" id="saveErrorMsgDiv" ng-show="errorMsg">
+                    {{errorMsg}}
+                </div>
+                <div class="alert alert-success" id="saveSuccessMsgDiv" ng-show="successMsg">
+                    {{successMsg}}
+                </div>
+                <br>
+                <input id="updateProductsButton" type="submit" openlmis-message="link.admin.update.products" class="btn btn-primary"
+                       ng-disabled="inProgress">
+            </fieldset>
+
+        </div>
+        <div class="loader-icon" ng-show="inProgress"></div>
+    </form>
+</div>
+
