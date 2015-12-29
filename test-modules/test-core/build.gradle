@@ -18,7 +18,7 @@ dependencies {
             'org.seleniumhq.selenium:selenium-java:2.45.0',
             'org.seleniumhq.selenium:selenium-firefox-driver:2.45.0',
             'net.sf.json-lib:json-lib:0.9',
-            'postgresql:postgresql:9.0-801.jdbc4',
+            'org.postgresql:postgresql:9.2-1002-jdbc4',
             project(':modules:db')
 
     compile("org.apache.poi:poi-ooxml:3.13") {
@@ -29,7 +29,7 @@ dependencies {
             'org.testng:testng:6.8.21',
             'xml-apis:xml-apis:1.4.01',
             'net.sf.json-lib:json-lib:0.9',
-            'postgresql:postgresql:9.0-801.jdbc4',
+            'org.postgresql:postgresql:9.2-1002-jdbc4',
             project(':modules:db')
 }
 
