@@ -13,9 +13,10 @@ You should have received a copy of the GNU Affero General Public License along w
 System Requirements
 ---------------------------
 - JDK 7
-- Postgresql 9
+- Postgresql 9.2+
 - Git
 - Gradle 2.3
+- Firefox
   * **For Linux users**
     * Download the source binary directly from the gradle website.
     * Copy the downloaded folder to `/usr/bin`
@@ -81,7 +82,7 @@ Running App on embedded Jetty server
   - `testseed` puts in some test data which can be used to browse through basic functionality in the system.
   - `run` is to start the embedded jetty server.
 
-Once the system is running, you can access the home page at `http://localhost:9091/`. You can log into the default instance with: user: `Admin123`, pass: `Admin123`
+Once the system is running, you can access the home page at `http://localhost:9091/`. You can log into the default instance with: user: `Admin123`, pass: `Admin123` (case sensitive)
 
 ## Code analysis
 Analysis of Java and Javascript sources can be reported on and visualized using a SonarQube server and the included
@@ -114,7 +115,7 @@ Tech Stack
 ---------------------------------
  - Java 1.7
  - Gradle 2.3
- - Postgres 9
+ - Postgres 9.2
  - Spring
  - Mybatis
  - Angularjs
