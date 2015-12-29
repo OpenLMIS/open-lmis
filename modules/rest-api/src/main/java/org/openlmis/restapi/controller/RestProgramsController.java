@@ -11,6 +11,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import java.util.Date;
 import java.util.List;
 
 import static org.openlmis.restapi.response.RestResponse.error;
@@ -30,6 +31,17 @@ public class RestProgramsController extends BaseController {
         try {
             List<ProgramWithProducts> programsWithProducts = programService.getAllProgramsWithProductsByFacilityCode(facilityCode);
             return response("programsWithProducts", programsWithProducts);
+        } catch (DataException e) {
+            return error(e.getOpenLmisMessage(), BAD_REQUEST);
+        }
+    }
+
+    @RequestMapping(value = "/rest-api/latest-programs-with-products", method = GET, headers = ACCEPT_JSON)
+    public ResponseEntity<RestResponse> getLatestProgramWithProductsByFacility(@RequestParam Long facilityId,
+                                                                               @RequestParam(required = false) Date afterUpdatedTime) {
+        try {
+            List<ProgramWithProducts> latestProgramsWithProducts = programService.getLatestProgramsWithProductsByFacilityId(facilityId,afterUpdatedTime);
+            return response("latestProgramsWithProducts", latestProgramsWithProducts);
         } catch (DataException e) {
             return error(e.getOpenLmisMessage(), BAD_REQUEST);
         }

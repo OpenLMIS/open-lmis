@@ -9,7 +9,10 @@ import org.mockito.Mock;
 import org.openlmis.core.builder.ProductBuilder;
 import org.openlmis.core.builder.ProgramBuilder;
 import org.openlmis.core.builder.ProgramProductBuilder;
-import org.openlmis.core.domain.*;
+import org.openlmis.core.domain.Facility;
+import org.openlmis.core.domain.Product;
+import org.openlmis.core.domain.Program;
+import org.openlmis.core.domain.ProgramProduct;
 import org.openlmis.core.service.FacilityService;
 import org.openlmis.core.service.ProgramProductService;
 import org.openlmis.core.service.ProgramService;
@@ -17,7 +20,6 @@ import org.openlmis.db.categories.UnitTests;
 import org.openlmis.restapi.builder.ProgramWithProductsBuilder;
 import org.openlmis.restapi.domain.ProgramWithProducts;
 import org.openlmis.restapi.response.RestResponse;
-import org.openlmis.restapi.service.RestProgramsService;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 import org.powermock.modules.junit4.PowerMockRunnerDelegate;
@@ -83,6 +85,45 @@ public class RestProgramsServiceTest {
 
         // test
         List<ProgramWithProducts> programsWithProducts = restProgramsService.getAllProgramsWithProductsByFacilityCode("F1");
+        assertEquals(2, programsWithProducts.size());
+        assertEquals(programWithProducts1, programsWithProducts.get(0));
+        assertEquals(programWithProducts2, programsWithProducts.get(1));
+
+    }
+
+    @Test
+    public void shouldGetAllLatestProgramsWithProductsByFacilityIdWhenAfterUpdatedTimeIsEmpty() {
+
+        // set up programs associated with this facility
+        List<Program> programsInFacility = new ArrayList<>();
+        Program program1 = makeProgram("PR1", "Program 1");
+        Program program2 = makeProgram("PR2", "Program 2");
+        programsInFacility.add(program1);
+        programsInFacility.add(program2);
+
+        long facilityId = 123L;
+        when(programService.getByFacility(facilityId)).thenReturn(programsInFacility);
+
+        // set up products associated with the programs
+        Product product1 = makeProduct("PD1", "Product 1");
+        Product product2 = makeProduct("PD2", "Product 2");
+        Product product3 = makeProduct("PD3", "Product 3");
+        List<ProgramProduct> programProducts1 = new ArrayList<>();
+        programProducts1.add(makeProgramProduct(program1, product1));
+        programProducts1.add(makeProgramProduct(program1, product2));
+        List<ProgramProduct> programProducts2 = new ArrayList<>();
+        programProducts2.add(makeProgramProduct(program2, product3));
+        when(programProductService.getByProgram(program1)).thenReturn(programProducts1);
+        when(programProductService.getByProgram(program2)).thenReturn(programProducts2);
+
+        // set up expected objects
+        ProgramWithProducts programWithProducts1 = new ProgramWithProductsBuilder().withProgramCode("PR1").withProgramName("Program 1")
+                .addProduct(product1).addProduct(product2).build();
+        ProgramWithProducts programWithProducts2 = new ProgramWithProductsBuilder().withProgramCode("PR2").withProgramName("Program 2")
+                .addProduct(product3).build();
+
+        // test with null AfterUpdatedTime
+        List<ProgramWithProducts> programsWithProducts = restProgramsService.getLatestProgramsWithProductsByFacilityId(facilityId,null);
         assertEquals(2, programsWithProducts.size());
         assertEquals(programWithProducts1, programsWithProducts.get(0));
         assertEquals(programWithProducts2, programsWithProducts.get(1));
