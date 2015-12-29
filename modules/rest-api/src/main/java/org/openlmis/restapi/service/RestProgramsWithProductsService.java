@@ -8,7 +8,6 @@ import org.openlmis.core.domain.ProgramProduct;
 import org.openlmis.core.service.FacilityService;
 import org.openlmis.core.service.ProgramProductService;
 import org.openlmis.core.service.ProgramService;
-import org.openlmis.restapi.domain.LatestProgramsWithProducts;
 import org.openlmis.restapi.domain.ProgramWithProducts;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -33,9 +32,8 @@ public class RestProgramsWithProductsService {
         return getProgramWithProductsByFacilityIdAndAfterUpdatedTime(facilityService.getFacilityByCode(facilityCode).getId(), null);
     }
 
-    public LatestProgramsWithProducts getLatestProgramsWithProductsByFacilityId(Long facilityId, Date afterUpdatedTime) {
-        List<ProgramWithProducts> programsWithProducts = getProgramWithProductsByFacilityIdAndAfterUpdatedTime(facilityId, afterUpdatedTime);
-        return new LatestProgramsWithProducts(programsWithProducts, new Date());
+    public List<ProgramWithProducts> getLatestProgramsWithProductsByFacilityId(Long facilityId, Date afterUpdatedTime) {
+        return getProgramWithProductsByFacilityIdAndAfterUpdatedTime(facilityId, afterUpdatedTime);
     }
 
     private List<ProgramWithProducts> getProgramWithProductsByFacilityIdAndAfterUpdatedTime(Long facilityId, final Date afterUpdatedTime) {

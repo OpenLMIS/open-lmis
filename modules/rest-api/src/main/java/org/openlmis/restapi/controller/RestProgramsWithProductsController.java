@@ -2,11 +2,11 @@ package org.openlmis.restapi.controller;
 
 import lombok.NoArgsConstructor;
 import org.openlmis.core.exception.DataException;
-import org.openlmis.restapi.domain.LatestProgramsWithProducts;
 import org.openlmis.restapi.domain.ProgramWithProducts;
 import org.openlmis.restapi.response.RestResponse;
 import org.openlmis.restapi.service.RestProgramsWithProductsService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -43,9 +43,11 @@ public class RestProgramsWithProductsController extends BaseController {
     public ResponseEntity<RestResponse> getLatestProgramWithProductsByFacility(@RequestParam Long facilityId,
                                                                                @RequestParam(required = false) Long afterUpdatedTime) {
         try {
-            Date afterUpdatedTimeInDate = new Date(afterUpdatedTime);
-            LatestProgramsWithProducts latestProgramsWithProducts = programService.getLatestProgramsWithProductsByFacilityId(facilityId, afterUpdatedTimeInDate);
-            return response("latestProgramsWithProducts", latestProgramsWithProducts);
+            Date afterUpdatedTimeInDate = (afterUpdatedTime != null ? new Date(afterUpdatedTime) : null);
+            List<ProgramWithProducts> programsWithProducts = programService.getLatestProgramsWithProductsByFacilityId(facilityId, afterUpdatedTimeInDate);
+            RestResponse restResponse = new RestResponse("programsWithProducts", programsWithProducts);
+            restResponse.addData("latestUpdatedTime", new Date());
+            return new ResponseEntity<>(restResponse, HttpStatus.OK);
         } catch (DataException e) {
             return error(e.getOpenLmisMessage(), BAD_REQUEST);
         }

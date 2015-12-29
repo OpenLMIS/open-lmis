@@ -10,7 +10,6 @@ import org.openlmis.core.exception.DataException;
 import org.openlmis.core.service.MessageService;
 import org.openlmis.db.categories.UnitTests;
 import org.openlmis.restapi.builder.ProgramWithProductsBuilder;
-import org.openlmis.restapi.domain.LatestProgramsWithProducts;
 import org.openlmis.restapi.domain.ProgramWithProducts;
 import org.openlmis.restapi.response.RestResponse;
 import org.openlmis.restapi.service.RestProgramsWithProductsService;
@@ -25,6 +24,8 @@ import java.util.Date;
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.openlmis.restapi.response.RestResponse.ERROR;
 import static org.powermock.api.mockito.PowerMockito.mockStatic;
@@ -84,14 +85,23 @@ public class RestProgramsWithProductsControllerTest {
 
     @Test
     public void shouldReturnResponseWithListOfLatestProgramsWithProducts() {
-        LatestProgramsWithProducts latestProgramsWithProducts = new LatestProgramsWithProducts(new ArrayList<ProgramWithProducts>(),new Date());
+        List<ProgramWithProducts> programsWithProducts = new ArrayList();
+        programsWithProducts.add(new ProgramWithProductsBuilder().build());
         long facilityId = 1L;
         long date = 1234L;
         Date afterUpdatedTime = new Date(date);
-        when(restProgramsWithProductsService.getLatestProgramsWithProductsByFacilityId(facilityId, afterUpdatedTime)).thenReturn(latestProgramsWithProducts);
+        when(restProgramsWithProductsService.getLatestProgramsWithProductsByFacilityId(facilityId, afterUpdatedTime)).thenReturn(programsWithProducts);
 
         ResponseEntity<RestResponse> response = restProgramsWithProductsController.getLatestProgramWithProductsByFacility(facilityId,date);
         assertEquals(HttpStatus.OK, response.getStatusCode());
-        assertEquals(latestProgramsWithProducts, response.getBody().getData().get("latestProgramsWithProducts"));
+        assertEquals(programsWithProducts, response.getBody().getData().get("programsWithProducts"));
+        assertNotNull(response.getBody().getData().get("latestUpdatedTime"));
+    }
+
+    @Test
+    public void shouldCallLatestProgramsWithProductsWithNullTimeWhenTimeIsNotProvided() {
+        ResponseEntity<RestResponse> response = restProgramsWithProductsController.getLatestProgramWithProductsByFacility(123L,null);
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        verify(restProgramsWithProductsService).getLatestProgramsWithProductsByFacilityId(123L, null);
     }
 }
