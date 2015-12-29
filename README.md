@@ -100,9 +100,6 @@ See [SonarQube.org](http://www.sonarqube.org/) for official documentation.  For 
   project configures SonarQube see the
   [OpenLMIS sonar-configuration](https://github.com/OpenLMIS/sonar-configuration) repository.
 
-## Hi diff!
-
-
 ## Issues
 1. You may encounter a `java.lang.OutOfMemoryError: PermGen space`. This is a result of not enough memory for the Jetty JVM. One way to fix this is to export the following (or include in `$HOME/.bash_profile` or `$HOME/.profile` or `$HOME/.bashrc` or `$HOME/.zshrc`, depending on your shell).
 
