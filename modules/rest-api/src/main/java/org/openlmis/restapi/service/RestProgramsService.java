@@ -2,12 +2,14 @@ package org.openlmis.restapi.service;
 
 import com.google.common.base.Function;
 import com.google.common.collect.FluentIterable;
+import com.google.common.collect.ImmutableList;
 import org.openlmis.core.domain.Product;
 import org.openlmis.core.domain.Program;
 import org.openlmis.core.domain.ProgramProduct;
 import org.openlmis.core.service.FacilityService;
 import org.openlmis.core.service.ProgramProductService;
 import org.openlmis.core.service.ProgramService;
+import org.openlmis.restapi.domain.LatestProgramsWithProducts;
 import org.openlmis.restapi.domain.ProgramWithProducts;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -38,13 +40,14 @@ public class RestProgramsService {
         }).toList();
     }
 
-    public List<ProgramWithProducts> getLatestProgramsWithProductsByFacilityId(Long facilityId, Date afterUpdatedTime) {
-        return FluentIterable.from(programService.getByFacility(facilityId)).transform(new Function<Program, ProgramWithProducts>() {
+    public LatestProgramsWithProducts getLatestProgramsWithProductsByFacilityId(Long facilityId, Date afterUpdatedTime) {
+        ImmutableList<ProgramWithProducts> programsWithProducts = FluentIterable.from(programService.getByFacility(facilityId)).transform(new Function<Program, ProgramWithProducts>() {
             @Override
             public ProgramWithProducts apply(Program input) {
                 return createProgramWithProducts(input);
             }
         }).toList();
+        return new LatestProgramsWithProducts(programsWithProducts, new Date());
     }
 
     private List<Product> getAllProductsForProgram(Program program) {

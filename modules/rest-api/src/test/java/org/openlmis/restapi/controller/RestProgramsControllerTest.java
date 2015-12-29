@@ -10,6 +10,7 @@ import org.openlmis.core.exception.DataException;
 import org.openlmis.core.service.MessageService;
 import org.openlmis.db.categories.UnitTests;
 import org.openlmis.restapi.builder.ProgramWithProductsBuilder;
+import org.openlmis.restapi.domain.LatestProgramsWithProducts;
 import org.openlmis.restapi.domain.ProgramWithProducts;
 import org.openlmis.restapi.response.RestResponse;
 import org.openlmis.restapi.service.RestProgramsService;
@@ -83,8 +84,7 @@ public class RestProgramsControllerTest {
 
     @Test
     public void shouldReturnResponseWithListOfLatestProgramsWithProducts() {
-        List<ProgramWithProducts> latestProgramsWithProducts = new ArrayList();
-        latestProgramsWithProducts.add(new ProgramWithProductsBuilder().build());
+        LatestProgramsWithProducts latestProgramsWithProducts = new LatestProgramsWithProducts(new ArrayList<ProgramWithProducts>(),new Date());
         long facilityId = 1L;
         Date afterUpdatedTime = new Date();
         when(restProgramsService.getLatestProgramsWithProductsByFacilityId(facilityId, afterUpdatedTime)).thenReturn(latestProgramsWithProducts);

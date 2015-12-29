@@ -2,6 +2,7 @@ package org.openlmis.restapi.controller;
 
 import lombok.NoArgsConstructor;
 import org.openlmis.core.exception.DataException;
+import org.openlmis.restapi.domain.LatestProgramsWithProducts;
 import org.openlmis.restapi.domain.ProgramWithProducts;
 import org.openlmis.restapi.response.RestResponse;
 import org.openlmis.restapi.service.RestProgramsService;
@@ -42,7 +43,7 @@ public class RestProgramsController extends BaseController {
     public ResponseEntity<RestResponse> getLatestProgramWithProductsByFacility(@RequestParam Long facilityId,
                                                                                @RequestParam(required = false) Date afterUpdatedTime) {
         try {
-            List<ProgramWithProducts> latestProgramsWithProducts = programService.getLatestProgramsWithProductsByFacilityId(facilityId,afterUpdatedTime);
+            LatestProgramsWithProducts latestProgramsWithProducts = programService.getLatestProgramsWithProductsByFacilityId(facilityId,afterUpdatedTime);
             return response("latestProgramsWithProducts", latestProgramsWithProducts);
         } catch (DataException e) {
             return error(e.getOpenLmisMessage(), BAD_REQUEST);

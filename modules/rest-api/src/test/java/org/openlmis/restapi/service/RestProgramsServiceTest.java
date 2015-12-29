@@ -18,6 +18,7 @@ import org.openlmis.core.service.ProgramProductService;
 import org.openlmis.core.service.ProgramService;
 import org.openlmis.db.categories.UnitTests;
 import org.openlmis.restapi.builder.ProgramWithProductsBuilder;
+import org.openlmis.restapi.domain.LatestProgramsWithProducts;
 import org.openlmis.restapi.domain.ProgramWithProducts;
 import org.openlmis.restapi.response.RestResponse;
 import org.powermock.core.classloader.annotations.PrepareForTest;
@@ -30,6 +31,7 @@ import java.util.List;
 import static com.natpryce.makeiteasy.MakeItEasy.a;
 import static com.natpryce.makeiteasy.MakeItEasy.make;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 import static org.mockito.Mockito.when;
 
 @Category(UnitTests.class)
@@ -96,8 +98,9 @@ public class RestProgramsServiceTest {
         long facilityId = 123L;
         when(programService.getByFacility(facilityId)).thenReturn(new ArrayList<Program>());
 
-        List<ProgramWithProducts> programsWithProducts = restProgramsService.getLatestProgramsWithProductsByFacilityId(facilityId,null);
-        assertEquals(0, programsWithProducts.size());
+        LatestProgramsWithProducts latestProgramsWithProducts = restProgramsService.getLatestProgramsWithProductsByFacilityId(facilityId,null);
+        assertEquals(0, latestProgramsWithProducts.getProgramWithProductsList().size());
+        assertNotNull(latestProgramsWithProducts.getLatestUpdatedTime());
     }
 
     @Test
@@ -132,10 +135,11 @@ public class RestProgramsServiceTest {
                 .addProduct(product3).build();
 
         // test with null AfterUpdatedTime
-        List<ProgramWithProducts> programsWithProducts = restProgramsService.getLatestProgramsWithProductsByFacilityId(facilityId,null);
-        assertEquals(2, programsWithProducts.size());
-        assertEquals(programWithProducts1, programsWithProducts.get(0));
-        assertEquals(programWithProducts2, programsWithProducts.get(1));
+        LatestProgramsWithProducts latestProgramWithProducts = restProgramsService.getLatestProgramsWithProductsByFacilityId(facilityId,null);
+        assertEquals(2, latestProgramWithProducts.getProgramWithProductsList().size());
+        assertEquals(programWithProducts1, latestProgramWithProducts.getProgramWithProductsList().get(0));
+        assertEquals(programWithProducts2, latestProgramWithProducts.getProgramWithProductsList().get(1));
+        assertNotNull(latestProgramWithProducts.getLatestUpdatedTime());
 
     }
 
