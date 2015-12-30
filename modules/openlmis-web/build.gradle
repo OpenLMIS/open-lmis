@@ -152,6 +152,7 @@ build.doLast {
 
 dependencies {
     compile 'log4j:log4j:1.2.15',
+            'org.slf4j:slf4j-log4j12:1.7.5',
             'commons-fileupload:commons-fileupload:1.2.2',
             'com.itextpdf:itextpdf:5.4.0',
 

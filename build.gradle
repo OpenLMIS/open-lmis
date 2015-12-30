@@ -31,6 +31,7 @@ buildscript {
     classpath "net.saliman:gradle-cobertura-plugin:2.2.7"
     classpath 'com.github.ben-manes:gradle-versions-plugin:0.8'
     classpath "net.saliman:gradle-properties-plugin:1.4.2"
+    classpath 'org.flywaydb:flyway-gradle-plugin:3.2.1'
   }
 }
 sonarRunner {
@@ -45,6 +46,7 @@ subprojects {
   apply plugin: 'java'
   apply plugin: 'idea'
   apply plugin: 'properties'
+  apply plugin: 'org.flywaydb.flyway'
   idea {
     project {
       ext.languageLevel = '1.7'
