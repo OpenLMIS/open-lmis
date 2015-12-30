@@ -157,7 +157,7 @@ public class Product extends BaseModel implements Importable {
   @ImportField(name = "Special Transport Instructions")
   private String specialTransportInstructions;
 
-  @ImportField(mandatory = true, type = "boolean", name = "Product Is Active")
+  @ImportField(mandatory = false, type = "boolean", name = "Product Is Active")
   private Boolean active;
 
   @ImportField(mandatory = true, type = "boolean", name = "Product Is Full Supply")
