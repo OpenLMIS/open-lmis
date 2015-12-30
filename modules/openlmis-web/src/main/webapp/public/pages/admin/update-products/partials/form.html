@@ -11,7 +11,7 @@
 <div>
     <h2 openlmis-message="link.admin.update.products"></h2>
 
-    <form id="updateProductsForm" name="updateProductsForm" action="/update-products" method="POST" enctype="multipart/form-data" novalidate>
+    <form id="updateProductsForm" name="updateProductsForm" action="/upload" method="POST" enctype="multipart/form-data" novalidate>
         <div>
             <fieldset>
                 <label for="csvFile"><span openlmis-message="upload.label.file"></span>:</label>
@@ -22,6 +22,8 @@
                       ng-bind="uploadForm.csvFile.errorMessage"></span>
                 <br/>
                 <br>
+
+                <input name="model" type="hidden" id="model" value="updateProduct"/>
 
                 <div class="alert alert-error" id="saveErrorMsgDiv" ng-show="errorMsg">
                     {{errorMsg}}
