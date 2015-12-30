@@ -1,19 +1,20 @@
 package org.openlmis.restapi.service;
 
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
+import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
 import org.junit.runners.BlockJUnit4ClassRunner;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.openlmis.core.builder.FacilityBuilder;
 import org.openlmis.core.builder.ProductBuilder;
 import org.openlmis.core.builder.ProgramBuilder;
 import org.openlmis.core.builder.ProgramProductBuilder;
-import org.openlmis.core.domain.Facility;
-import org.openlmis.core.domain.Product;
-import org.openlmis.core.domain.Program;
-import org.openlmis.core.domain.ProgramProduct;
+import org.openlmis.core.domain.*;
+import org.openlmis.core.exception.DataException;
 import org.openlmis.core.service.FacilityService;
 import org.openlmis.core.service.ProgramProductService;
 import org.openlmis.core.service.ProgramService;
@@ -32,13 +33,13 @@ import java.util.List;
 
 import static com.natpryce.makeiteasy.MakeItEasy.a;
 import static com.natpryce.makeiteasy.MakeItEasy.make;
+import static com.natpryce.makeiteasy.MakeItEasy.with;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.when;
 
 @Category(UnitTests.class)
 @RunWith(PowerMockRunner.class)
 @PowerMockRunnerDelegate(BlockJUnit4ClassRunner.class)
-@PrepareForTest(RestResponse.class)
 public class RestProgramsWithProductsServiceTest {
 
     @InjectMocks
@@ -62,10 +63,18 @@ public class RestProgramsWithProductsServiceTest {
     private List<ProgramProduct> programProducts1;
     private List<ProgramProduct> programProducts2;
 
+    @Rule
+    public ExpectedException expectedException = ExpectedException.none();
+    private FacilityType facilityType;
+    private Long facilityId;
+
+
     @Before
     public void setUp() throws Exception {
         // get facility by code
-        facility = new Facility(123L);
+        facilityId = 123L;
+        facility = make(a(FacilityBuilder.defaultFacility, with(FacilityBuilder.facilityId, facilityId)));
+        facilityType = facility.getFacilityType();
         when(facilityService.getFacilityByCode("F1")).thenReturn(facility);
 
         // set up programs associated with this facility
@@ -74,7 +83,7 @@ public class RestProgramsWithProductsServiceTest {
         program2 = makeProgram("PR2", "Program 2");
         programsInFacility.add(program1);
         programsInFacility.add(program2);
-        when(programService.getByFacility(facility.getId())).thenReturn(programsInFacility);
+        when(programService.getByFacility(facilityId)).thenReturn(programsInFacility);
 
         // set up products associated with the programs
         product1 = makeProduct("PD1", "Product 1");
@@ -107,8 +116,8 @@ public class RestProgramsWithProductsServiceTest {
 
     @Test
     public void shouldReturnEmptyListIfNoProgramAssociatedWithFacility() {
-        long facilityId = 123L;
         when(programService.getByFacility(facilityId)).thenReturn(new ArrayList<Program>());
+        when(facilityService.getById(facilityId)).thenReturn(facility);
 
         List<ProgramWithProducts> latestProgramsWithProducts = restProgramsWithProductsService.getLatestProgramsWithProductsByFacilityId(facilityId, null);
         assertEquals(0, latestProgramsWithProducts.size());
@@ -121,9 +130,10 @@ public class RestProgramsWithProductsServiceTest {
                 .addProduct(product1).addProduct(product2).build();
         ProgramWithProducts programWithProducts2 = new ProgramWithProductsBuilder().withProgramCode("PR2").withProgramName("Program 2")
                 .addProduct(product3).build();
+        when(facilityService.getById(facilityId)).thenReturn(facility);
 
         // test with null AfterUpdatedTime
-        List<ProgramWithProducts> latestProgramWithProducts = restProgramsWithProductsService.getLatestProgramsWithProductsByFacilityId(facility.getId(), null);
+        List<ProgramWithProducts> latestProgramWithProducts = restProgramsWithProductsService.getLatestProgramsWithProductsByFacilityId(facilityId, null);
         assertEquals(2, latestProgramWithProducts.size());
         assertEquals(programWithProducts1, latestProgramWithProducts.get(0));
         assertEquals(programWithProducts2, latestProgramWithProducts.get(1));
@@ -132,18 +142,29 @@ public class RestProgramsWithProductsServiceTest {
     @Test
     public void shouldRetrieveProductsAfterUpdatedDate() {
         Date afterUpdatedTime = DateUtil.parseDate("2015-11-11 10:10:10");
-        when(programProductService.getProductsByProgramAfterUpdatedDateByFacilityType(program1, afterUpdatedTime)).thenReturn(programProducts1);
-        when(programProductService.getProductsByProgramAfterUpdatedDateByFacilityType(program2, afterUpdatedTime)).thenReturn(new ArrayList());
+        when(programProductService.getProductsByProgramAfterUpdatedDateByFacilityType(program1, afterUpdatedTime, facilityType)).thenReturn(programProducts1);
+        when(programProductService.getProductsByProgramAfterUpdatedDateByFacilityType(program2, afterUpdatedTime, facilityType)).thenReturn(new ArrayList());
+        when(facilityService.getById(facilityId)).thenReturn(facility);
 
         // set up expected objects
         ProgramWithProducts programWithProducts1 = new ProgramWithProductsBuilder().withProgramCode("PR1").withProgramName("Program 1")
                 .addProduct(product1).addProduct(product2).build();
 
         // test with AfterUpdatedTime
-        List<ProgramWithProducts> latestProgramWithProducts = restProgramsWithProductsService.getLatestProgramsWithProductsByFacilityId(facility.getId(), afterUpdatedTime);
+        List<ProgramWithProducts> latestProgramWithProducts = restProgramsWithProductsService.getLatestProgramsWithProductsByFacilityId(facilityId, afterUpdatedTime);
         assertEquals(2, latestProgramWithProducts.size());
         assertEquals(programWithProducts1, latestProgramWithProducts.get(0));
         assertEquals(0, latestProgramWithProducts.get(1).getProducts().size());
+    }
+
+    @Test
+    public void shouldThrowFacilityInvalidErrorIfFacilityIdDoesNotExist() {
+        expectedException.expect(DataException.class);
+        expectedException.expectMessage("error.facility.unknown");
+
+        when(facilityService.getById(facilityId)).thenReturn(null);
+
+        restProgramsWithProductsService.getLatestProgramsWithProductsByFacilityId(facilityId, null);
     }
 
     private ProgramProduct makeProgramProduct(Program program, Product product) {

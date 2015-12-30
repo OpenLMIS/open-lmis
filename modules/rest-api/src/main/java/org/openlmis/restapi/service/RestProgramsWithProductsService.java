@@ -2,9 +2,8 @@ package org.openlmis.restapi.service;
 
 import com.google.common.base.Function;
 import com.google.common.collect.FluentIterable;
-import org.openlmis.core.domain.Product;
-import org.openlmis.core.domain.Program;
-import org.openlmis.core.domain.ProgramProduct;
+import org.openlmis.core.domain.*;
+import org.openlmis.core.exception.DataException;
 import org.openlmis.core.service.FacilityService;
 import org.openlmis.core.service.ProgramProductService;
 import org.openlmis.core.service.ProgramService;
@@ -29,28 +28,33 @@ public class RestProgramsWithProductsService {
 
     @Deprecated
     public List<ProgramWithProducts> getAllProgramsWithProductsByFacilityCode(String facilityCode) {
-        return getProgramWithProductsByFacilityIdAndAfterUpdatedTime(facilityService.getFacilityByCode(facilityCode).getId(), null);
+        Facility facility = facilityService.getFacilityByCode(facilityCode);
+        return getProgramWithProductsByFacilityIdAndAfterUpdatedTime(facility.getId(), null, facility.getFacilityType());
     }
 
     public List<ProgramWithProducts> getLatestProgramsWithProductsByFacilityId(Long facilityId, Date afterUpdatedTime) {
-        return getProgramWithProductsByFacilityIdAndAfterUpdatedTime(facilityId, afterUpdatedTime);
+        Facility facility = facilityService.getById(facilityId);
+        if (facility == null) {
+            throw new DataException("error.facility.unknown");
+        }
+        return getProgramWithProductsByFacilityIdAndAfterUpdatedTime(facilityId, afterUpdatedTime, facility.getFacilityType());
     }
 
-    private List<ProgramWithProducts> getProgramWithProductsByFacilityIdAndAfterUpdatedTime(Long facilityId, final Date afterUpdatedTime) {
+    private List<ProgramWithProducts> getProgramWithProductsByFacilityIdAndAfterUpdatedTime(Long facilityId, final Date afterUpdatedTime, final FacilityType facilityType) {
         return FluentIterable.from(programService.getByFacility(facilityId)).transform(new Function<Program, ProgramWithProducts>() {
             @Override
             public ProgramWithProducts apply(Program input) {
-                return createProgramWithProducts(input, afterUpdatedTime);
+                return createProgramWithProducts(input, afterUpdatedTime, facilityType);
             }
         }).toList();
     }
 
-    private List<Product> getProductsForProgramAfterUpdatedTime(Program program, Date afterUpdatedTime) {
+    private List<Product> getProductsForProgramAfterUpdatedTime(Program program, Date afterUpdatedTime, FacilityType facilityType) {
         List<ProgramProduct> programProducts;
         if (afterUpdatedTime == null) {
             programProducts = programProductService.getByProgram(program);
         } else {
-            programProducts = programProductService.getProductsByProgramAfterUpdatedDateByFacilityType(program, afterUpdatedTime);
+            programProducts = programProductService.getProductsByProgramAfterUpdatedDateByFacilityType(program, afterUpdatedTime, facilityType);
         }
 
         return FluentIterable.from(programProducts).transform(new Function<ProgramProduct, Product>() {
@@ -61,11 +65,11 @@ public class RestProgramsWithProductsService {
         }).toList();
     }
 
-    private ProgramWithProducts createProgramWithProducts(Program program, Date afterUpdatedTime) {
+    private ProgramWithProducts createProgramWithProducts(Program program, Date afterUpdatedTime, FacilityType facilityType) {
         ProgramWithProducts programWithProducts = new ProgramWithProducts();
         programWithProducts.setProgramCode(program.getCode());
         programWithProducts.setProgramName(program.getName());
-        programWithProducts.setProducts(getProductsForProgramAfterUpdatedTime(program, afterUpdatedTime));
+        programWithProducts.setProducts(getProductsForProgramAfterUpdatedTime(program, afterUpdatedTime, facilityType));
         return programWithProducts;
     }
 }
