@@ -74,8 +74,8 @@ public interface ProgramProductMapper {
           "INNER JOIN facility_approved_products fap ON pp.id = fap.programproductid ",
           "WHERE pp.programId = #{programId} ",
           "AND fap.facilitytypeid = #{facilityTypeId} ",
-          "AND p.modifieddate > #{afterUpdatedTime}",
-          "ORDER BY p.modifieddate"})
+          "AND (p.modifieddate > #{afterUpdatedTime} OR fap.modifieddate >  #{afterUpdatedTime} OR pp.modifieddate > #{afterUpdatedTime})",
+          "ORDER BY p.code"})
   @Results(value = {
           @Result(property = "id", column = "id"),
           @Result(property = "program", column = "programId", javaType = Program.class,

@@ -408,9 +408,13 @@ public class ProgramProductMapperIT {
     Product prod1 = make(a(defaultProduct, with(primaryName, "prod1"), with(code, "P1")));
     Product prod2 = make(a(defaultProduct, with(primaryName, "prod2"), with(code, "P2")));
     Product prod3 = make(a(defaultProduct, with(primaryName, "prod3"), with(code, "P3")));
+    Product prod4 = make(a(defaultProduct, with(primaryName, "prod4"), with(code, "P4")));
+    Product prod5 = make(a(defaultProduct, with(primaryName, "prod5"), with(code, "P5")));
     productMapper.insert(prod1);
     productMapper.insert(prod2);
     productMapper.insert(prod3);
+    productMapper.insert(prod4);
+    productMapper.insert(prod5);
 
     //Make a program
     Program program1 = make(a(defaultProgram, with(programName, "TB1"), with(programCode, "program1")));
@@ -429,6 +433,14 @@ public class ProgramProductMapperIT {
     programProduct3.setProductCategory(productCategory);
     programProductMapper.insert(programProduct3);
 
+    ProgramProduct programProduct4 = new ProgramProduct(program1, prod4, 10, true);
+    programProduct4.setProductCategory(productCategory);
+    programProductMapper.insert(programProduct4);
+
+    ProgramProduct programProduct5 = new ProgramProduct(program1, prod5, 10, true);
+    programProduct5.setProductCategory(productCategory);
+    programProductMapper.insert(programProduct5);
+
     //Make facility type approved products
     Facility facility = make(a(FacilityBuilder.defaultFacility));
     facilityMapper.insert(facility);
@@ -440,6 +452,12 @@ public class ProgramProductMapperIT {
     FacilityTypeApprovedProduct facilityTypeApprovedProduct = new FacilityTypeApprovedProduct(facilityType, programProduct1, 3.0);
     facilityApprovedProductMapper.insert(facilityTypeApprovedProduct);
 
+    FacilityTypeApprovedProduct facilityTypeApprovedProduct4 = new FacilityTypeApprovedProduct(facilityType, programProduct4, 3.0);
+    facilityApprovedProductMapper.insert(facilityTypeApprovedProduct4);
+
+    FacilityTypeApprovedProduct facilityTypeApprovedProduct5 = new FacilityTypeApprovedProduct(facilityType, programProduct5, 3.0);
+    facilityApprovedProductMapper.insert(facilityTypeApprovedProduct5);
+
     //Set time
     Date lastUpdatedTime = DateUtil.parseDate("2025-10-10 10:10:10");
     Timestamp date1 = new Timestamp(DateUtil.parseDate("2025-12-12 12:12:12").getTime());
@@ -449,15 +467,31 @@ public class ProgramProductMapperIT {
     updateModifiedDateForProduct(date1, prod1.getId());
     updateModifiedDateForProduct(date2, prod3.getId());
 
+    //Update modified date for program product 4
+    updateModifiedDateForProgramProduct(date1, programProduct4.getId());
+
+    //Update modified date for facility approved product 5
+    updateModifiedDateForFacilityApprovedProgramProduct(date1, facilityTypeApprovedProduct5.getId());
+
     List<ProgramProduct> programProducts = programProductMapper.getByProgramAfterUpdatedTimeFilterByFacilityType(program1.getId(), lastUpdatedTime, facilityType.getId());
 
     //Should only get product 1 because it is after 2015-10-10 and it is approved by the facility type
-    assertThat(programProducts.size(), is(1));
+    assertThat(programProducts.size(), is(3));
     assertThat(programProducts.get(0).getProduct().getCode(), is(programProduct1.getProduct().getCode()));
+    assertThat(programProducts.get(1).getProduct().getCode(), is(programProduct4.getProduct().getCode()));
+    assertThat(programProducts.get(2).getProduct().getCode(), is(programProduct5.getProduct().getCode()));
   }
 
   private void updateModifiedDateForProduct(Timestamp modifiedDate, Long productId) throws SQLException {
     executor.executeUpdate("UPDATE products SET modifieddate = ? WHERE id = ?", modifiedDate, productId);
+  }
+
+  private void updateModifiedDateForProgramProduct(Timestamp modifiedDate, Long programProductId) throws SQLException {
+    executor.executeUpdate("UPDATE program_products SET modifieddate = ? WHERE id = ?", modifiedDate, programProductId);
+  }
+
+  private void updateModifiedDateForFacilityApprovedProgramProduct(Timestamp modifiedDate, Long facilityApprovedProductId) throws SQLException {
+    executor.executeUpdate("UPDATE facility_approved_products SET modifieddate = ? WHERE id = ?", modifiedDate, facilityApprovedProductId);
   }
 
   private void assertContainsProgramProduct(List<ProgramProduct> returnedProducts, final ProgramProduct programProduct) {
