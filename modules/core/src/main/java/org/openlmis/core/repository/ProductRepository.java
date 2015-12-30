@@ -101,4 +101,8 @@ public class ProductRepository {
   public Product getById(Long id) {
     return mapper.getById(id);
   }
+
+  public void deActiveAllProduct() {
+      mapper.deActiveAllProduct();
+  }
 }

@@ -119,6 +119,17 @@
                         <property name="recordHandler" ref="productPersistenceHandler"/>
                     </bean>
                 </entry>
+
+                <entry key="updateProduct">
+                    <bean class="org.openlmis.web.model.UploadBean">
+                        <property name="displayName" value="label.products"/>
+                        <property name="importableClass">
+                            <value type="java.lang.Class">org.openlmis.core.domain.Product</value>
+                        </property>
+                        <property name="recordHandler" ref="productsUpdateHandler"/>
+                    </bean>
+                </entry>
+
                 <entry key="facility">
                     <bean class="org.openlmis.web.model.UploadBean">
                         <property name="displayName" value="menu.header.facilities"/>

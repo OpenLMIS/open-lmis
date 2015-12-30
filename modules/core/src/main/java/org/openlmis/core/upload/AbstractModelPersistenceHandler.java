@@ -66,13 +66,13 @@ public abstract class AbstractModelPersistenceHandler implements RecordHandler<I
     }
   }
 
-  private void throwException(String key1, String key2, int rowNumber) {
+  protected void throwException(String key1, String key2, int rowNumber) {
     String param1 = messageService.message(key2);
     String param2 = Integer.toString(rowNumber - 1);
     throw new DataException(new OpenLmisMessage(messageService.message(key1, param1, param2)));
   }
 
-  private void throwExceptionIfProcessedInCurrentUpload(AuditFields auditFields, BaseModel existing) {
+  protected void throwExceptionIfProcessedInCurrentUpload(AuditFields auditFields, BaseModel existing) {
     if (existing != null) {
       if (auditFields.getCurrentTimestamp().equals(existing.getModifiedDate())) {
         throw new DataException(getMessageKey());

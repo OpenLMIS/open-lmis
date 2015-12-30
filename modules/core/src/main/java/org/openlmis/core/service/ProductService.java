@@ -117,4 +117,8 @@ public class ProductService {
   public Product getById(Long id) {
     return repository.getById(id);
   }
+
+    public BaseModel getExisting(Product product) {
+        return repository.getByCode(product.getCode());
+    }
 }
