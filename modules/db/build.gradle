@@ -104,6 +104,18 @@ task migrateDB() << {
     ant.flywayMigrate(driver: dbDriver, url: connectionString, user: dbUser, password: dbPassword)
 }
 
+//   Usage: gradle generateMigration [-PmigrationName=name_of_migration]
+//          Defaults to 'migration' as migration name
+// Example: gradle generateMigration -PmigrationName=add_column_to_users
+//          Will create a file in migration folder with name yyyyMMddHHmmssSSS_add_column_to_users.sql.
+task generateMigration << {
+    def fileName = project.hasProperty('migrationName') ? migrationName : 'migration'
+    def timestamp = new Date().format('yyyyMMddHHmmssSSS', TimeZone.getTimeZone('GMT'))
+    def fullFileName = "${timestamp}__${fileName}.sql"
+    def migrationFile = new File(sourceSets.main.resources.srcDirs.first(),'db/migration/'+fullFileName)
+    migrationFile.createNewFile()
+}
+
 task testSeed(type: Exec) {
     environment("PGPASSWORD", dbPassword)
     commandLine 'psql', '-U', dbUser, '--file', '../../test-data/sql/seed.sql', '-h', databaseHostName, '-w', dbName
