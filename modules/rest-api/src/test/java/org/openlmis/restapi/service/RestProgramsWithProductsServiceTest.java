@@ -132,8 +132,8 @@ public class RestProgramsWithProductsServiceTest {
     @Test
     public void shouldRetrieveProductsAfterUpdatedDate() {
         Date afterUpdatedTime = DateUtil.parseDate("2015-11-11 10:10:10");
-        when(programProductService.getProductsByProgramAfterUpdatedDate(program1, afterUpdatedTime)).thenReturn(programProducts1);
-        when(programProductService.getProductsByProgramAfterUpdatedDate(program2, afterUpdatedTime)).thenReturn(new ArrayList());
+        when(programProductService.getProductsByProgramAfterUpdatedDateByFacilityType(program1, afterUpdatedTime)).thenReturn(programProducts1);
+        when(programProductService.getProductsByProgramAfterUpdatedDateByFacilityType(program2, afterUpdatedTime)).thenReturn(new ArrayList());
 
         // set up expected objects
         ProgramWithProducts programWithProducts1 = new ProgramWithProductsBuilder().withProgramCode("PR1").withProgramName("Program 1")

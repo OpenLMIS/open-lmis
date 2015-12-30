@@ -19,10 +19,7 @@ import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.openlmis.core.builder.ProgramProductBuilder;
-import org.openlmis.core.domain.Product;
-import org.openlmis.core.domain.Program;
-import org.openlmis.core.domain.ProgramProduct;
-import org.openlmis.core.domain.ProgramProductPrice;
+import org.openlmis.core.domain.*;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.core.matchers.Matchers;
 import org.openlmis.core.repository.mapper.ProductMapper;
@@ -246,7 +243,8 @@ public class ProgramProductRepositoryTest {
   public void shouldGetByProgramAfterUpdatedTime() {
     Program program = new Program();
     Date afterUpdatedTime = new Date();
-    programProductRepository.getByProgramAfterUpdatedTime(program, afterUpdatedTime);
-    verify(programProductMapper).getByProgramAfterUpdatedTime(program.getId(), afterUpdatedTime);
+    FacilityType facilityType = new FacilityType();
+    programProductRepository.getByProgramAfterUpdatedTimeByFacilityType(program, afterUpdatedTime, facilityType);
+    verify(programProductMapper).getByProgramAfterUpdatedTimeFilterByFacilityType(program.getId(), afterUpdatedTime, facilityType.getId());
   }
 }

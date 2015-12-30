@@ -230,7 +230,7 @@ public class ProgramProductService {
       programProductRepository.updateISA(isa);
     }
 
-  public List<ProgramProduct> getProductsByProgramAfterUpdatedDate(Program program, Date afterUpdatedTime) {
-    return programProductRepository.getByProgramAfterUpdatedTime(program, afterUpdatedTime);
+  public List<ProgramProduct> getProductsByProgramAfterUpdatedDateByFacilityType(Program program, Date afterUpdatedTime, FacilityType facilityType) {
+    return programProductRepository.getByProgramAfterUpdatedTimeByFacilityType(program, afterUpdatedTime, facilityType);
   }
 }

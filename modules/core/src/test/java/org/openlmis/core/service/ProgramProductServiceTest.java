@@ -441,7 +441,8 @@ public class ProgramProductServiceTest {
   public void shouldGetProductsByProgramAfterUpdatedDate() {
     Program program = new Program();
     Date afterUpdatedTime = new Date();
-    service.getProductsByProgramAfterUpdatedDate(program, afterUpdatedTime);
-    verify(programProductRepository).getByProgramAfterUpdatedTime(program, afterUpdatedTime);
+    FacilityType facilityType = new FacilityType();
+    service.getProductsByProgramAfterUpdatedDateByFacilityType(program, afterUpdatedTime, facilityType);
+    verify(programProductRepository).getByProgramAfterUpdatedTimeByFacilityType(program, afterUpdatedTime, facilityType);
   }
 }

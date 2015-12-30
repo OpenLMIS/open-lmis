@@ -50,7 +50,7 @@ public class RestProgramsWithProductsService {
         if (afterUpdatedTime == null) {
             programProducts = programProductService.getByProgram(program);
         } else {
-            programProducts = programProductService.getProductsByProgramAfterUpdatedDate(program, afterUpdatedTime);
+            programProducts = programProductService.getProductsByProgramAfterUpdatedDateByFacilityType(program, afterUpdatedTime);
         }
 
         return FluentIterable.from(programProducts).transform(new Function<ProgramProduct, Product>() {

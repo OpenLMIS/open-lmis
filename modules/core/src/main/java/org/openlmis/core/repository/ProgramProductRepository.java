@@ -154,7 +154,7 @@ public class ProgramProductRepository {
     programProductIsaMapper.update(programProductISA);
   }
 
-  public List<ProgramProduct> getByProgramAfterUpdatedTime(Program program, Date afterUpdatedTime) {
-    return mapper.getByProgramAfterUpdatedTime(program.getId(), afterUpdatedTime);
+  public List<ProgramProduct> getByProgramAfterUpdatedTimeByFacilityType(Program program, Date afterUpdatedTime, FacilityType facilityType) {
+    return mapper.getByProgramAfterUpdatedTimeFilterByFacilityType(program.getId(), afterUpdatedTime, facilityType.getId());
   }
 }

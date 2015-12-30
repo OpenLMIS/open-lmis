@@ -71,7 +71,9 @@ public interface ProgramProductMapper {
 
   @Select({"SELECT * FROM program_products pp ",
           "INNER JOIN products p ON pp.productId = p.id ",
+          "INNER JOIN facility_approved_products fap ON pp.id = fap.programproductid ",
           "WHERE pp.programId = #{programId} ",
+          "AND fap.facilitytypeid = #{facilityTypeId} ",
           "AND p.modifieddate > #{afterUpdatedTime}",
           "ORDER BY p.modifieddate"})
   @Results(value = {
@@ -81,7 +83,7 @@ public interface ProgramProductMapper {
           @Result(property = "product", column = "productId", javaType = Product.class,
                   one = @One(select = "org.openlmis.core.repository.mapper.ProductMapper.getById"))
   })
-  List<ProgramProduct> getByProgramAfterUpdatedTime(@Param("programId") Long programId, @Param("afterUpdatedTime") Date afterUpdatedTime);
+  List<ProgramProduct> getByProgramAfterUpdatedTimeFilterByFacilityType(@Param("programId") Long programId, @Param("afterUpdatedTime") Date afterUpdatedTime, @Param("facilityTypeId") Long facilityTypeId);
 
   @Select("SELECT * FROM program_products WHERE id = #{id}")
   @Results(value = {
