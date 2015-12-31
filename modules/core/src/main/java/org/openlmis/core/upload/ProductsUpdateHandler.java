@@ -49,13 +49,7 @@ public class ProductsUpdateHandler extends AbstractModelPersistenceHandler {
         } catch (DataException exception) {
             throwException("upload.record.error", exception.getOpenLmisMessage().getCode(), rowNumber);
         }
-        currentRecord.setModifiedBy(auditFields.getUser());
-        currentRecord.setModifiedDate(auditFields.getCurrentTimestamp());
-        if (existing != null) {
-            currentRecord.setId(existing.getId());
-        } else {
-            currentRecord.setCreatedBy(auditFields.getUser());
-        }
+        UpdateAuditField(auditFields, currentRecord, existing);
         validateProductForm(currentRecord);
         updateProductList.add(currentRecord);
     }
