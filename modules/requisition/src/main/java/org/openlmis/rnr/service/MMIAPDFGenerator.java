@@ -20,6 +20,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
+import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.text.ParseException;
@@ -34,7 +35,7 @@ public class MMIAPDFGenerator {
   @Value("${email.attachment.cache.path}")
   protected String cachePath;
 
-  @Value("${mmia.pdf.image.path}")
+  @Value("${email.attachment.template.path}")
   protected String imagePath;
 
   protected static Logger logger = LoggerFactory.getLogger(MMIAPDFGenerator.class);
@@ -84,7 +85,7 @@ public class MMIAPDFGenerator {
    * Add Header Table!!!!
    */
 
-  private PdfPTable createHeaderTable(Facility facility, ProcessingPeriod period) throws DocumentException, ParseException, IOException {
+  protected PdfPTable createHeaderTable(Facility facility, ProcessingPeriod period) throws DocumentException, ParseException, IOException {
     PdfPTable table = new PdfPTable(4);
 
     table.setWidths(new float[]{1f, 4f, 5f, 2f});
@@ -107,13 +108,17 @@ public class MMIAPDFGenerator {
   }
 
   private void addHeaderTableFirstLine(PdfPTable table, String stringMonth) throws IOException, BadElementException {
-    Image image = Image.getInstance(imagePath + "/table-logo-moz.png");
-    image.scaleToFit(300, 300);
+    File imageFile = new File(imagePath + "/table-logo-moz.png");
 
-    PdfPCell logoCell = new PdfPCell(image);
-    logoCell.setPadding(1f);
-    logoCell.setFixedHeight(20f);
-    table.addCell(logoCell);
+    if (imageFile.exists()) {
+      Image image = Image.getInstance(imageFile.getPath());
+      image.scaleToFit(300, 300);
+
+      PdfPCell logoCell = new PdfPCell(image);
+      logoCell.setPadding(1f);
+      logoCell.setFixedHeight(20f);
+      table.addCell(logoCell);
+    }
 
     Font fontHeaderLeft = new Font(Font.FontFamily.HELVETICA, 5.0f, Font.BOLD, BaseColor.BLACK);
     Paragraph republicaCell = new Paragraph("REPUBLICA DE MOCAMBIQUE\n\n" +

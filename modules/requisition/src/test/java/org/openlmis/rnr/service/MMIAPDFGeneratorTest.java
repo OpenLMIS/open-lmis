@@ -1,6 +1,10 @@
 package org.openlmis.rnr.service;
 
+import com.itextpdf.text.DocumentException;
+import com.itextpdf.text.pdf.PdfPCell;
+import com.itextpdf.text.pdf.PdfPTable;
 import org.joda.time.LocalDate;
+import org.junit.Before;
 import org.junit.Test;
 import org.openlmis.core.builder.FacilityBuilder;
 import org.openlmis.core.builder.ProcessingPeriodBuilder;
@@ -15,28 +19,25 @@ import org.openlmis.rnr.domain.Rnr;
 import org.openlmis.rnr.domain.RnrLineItem;
 
 import java.io.IOException;
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Arrays;
 
 import static com.natpryce.makeiteasy.MakeItEasy.*;
-import static org.hamcrest.Matchers.is;
+import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertThat;
 
 public class MMIAPDFGeneratorTest {
 
-    @Test
-    public void shouldGenerateMMIAPdfWithCorrectPathName() throws IOException {
-        MMIAPDFGenerator mmiapdfGenerator = new MMIAPDFGenerator();
-        mmiapdfGenerator.cachePath = "/app/tomcat/openlmis/emailattachment/cache";
-        mmiapdfGenerator.imagePath = "/Users/kwhu/LMIS/open-lmis/modules/requisition/src/main/resources/images";
+    private MMIAPDFGenerator mmiapdfGenerator;
+    private Facility facility;
+    private ProcessingPeriod period;
+    private Rnr requisition;
 
-        String fileNameForMMIAPdf = "mmia.pdf";
-        String pathName = mmiapdfGenerator.generateMMIAPdf(createRnr(), fileNameForMMIAPdf);
-        assertThat(pathName,is(mmiapdfGenerator.cachePath + "/" + fileNameForMMIAPdf));
-    }
-
-    public Rnr createRnr() {
-        ProcessingPeriod period = make(a(ProcessingPeriodBuilder.defaultProcessingPeriod, with(ProcessingPeriodBuilder.startDate, new LocalDate("2015-11-12").toDate()))
+    @Before
+    public void setUp() throws Exception {
+        mmiapdfGenerator = new MMIAPDFGenerator();
+        period = make(a(ProcessingPeriodBuilder.defaultProcessingPeriod, with(ProcessingPeriodBuilder.startDate, new LocalDate("2015-11-12").toDate()))
                 .but(with(ProcessingPeriodBuilder.endDate, new LocalDate("2015-12-12").toDate())));
 
         GeographicZone geographicZone = new GeographicZone();
@@ -45,12 +46,25 @@ public class MMIAPDFGeneratorTest {
         parent.setName("HuBei Province");
         geographicZone.setParent(parent);
 
-        Facility facility = make(a(FacilityBuilder.defaultFacility, with(FacilityBuilder.name, "HF2"))
-                .but(with(FacilityBuilder.geographicZone, geographicZone)));
-
-        Rnr requisition = make(a(RequisitionBuilder.defaultRequisition, with(RequisitionBuilder.period, period))
+        requisition = make(a(RequisitionBuilder.defaultRequisition, with(RequisitionBuilder.period, period))
                 .but(with(RequisitionBuilder.facility, facility)));
 
+        facility = make(a(FacilityBuilder.defaultFacility, with(FacilityBuilder.name, "HF2"))
+                .but(with(FacilityBuilder.geographicZone, geographicZone)));
+    }
+
+    @Test
+    public void shouldCreateTableHeader() throws DocumentException, ParseException, IOException {
+        PdfPTable headerTable = mmiapdfGenerator.createHeaderTable(facility, period);
+        PdfPCell[] firstRow = headerTable.getRows().get(0).getCells();
+        PdfPCell[] secondRow = headerTable.getRows().get(1).getCells();
+        String healthFacilityName = firstRow[3].getPhrase().getContent();
+        String endDate = secondRow[0].getPhrase().getContent();
+        assertThat(healthFacilityName,is("Unidade Sanitaria : " + facility.getName()));
+        assertThat(endDate,is("Ano : " + period.getStringYear()));
+    }
+
+    private Rnr createRnr() {
         requisition.setFullSupplyLineItems(Arrays.asList(
                 generateRnrLineItem("08S42", "Zidovudina/Lamivudina/Nevirapi; 300mg+150mg+200mg 60Comp; Embalagem", "300mg+150mg+200mg Comp", 10, 0,"26/12/2015"),
                 generateRnrLineItem("08S18Y", "Tenofovir/Lamivudina/Efavirenz; 300mg + 300mg + 600mg 30Comp; Embalagem", "300mg+150mg+200mg Comp", 20, 100, "1/12/2015"),
