@@ -26,6 +26,9 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.transaction.TransactionConfiguration;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Date;
+import java.util.List;
+
 import static com.natpryce.makeiteasy.MakeItEasy.*;
 import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertFalse;
@@ -195,5 +198,30 @@ public class ProductMapperIT {
     Integer resultCount = productMapper.getTotalSearchResultCount(searchParam);
 
     assertThat(resultCount, is(3));
+  }
+
+
+  @Test
+  public void shouldDeActiveAllProducts() throws Exception {
+    Product product1 = make(a(defaultProduct, with(active, true), with(code, "update1")));
+    Product product2 = make(a(defaultProduct, with(active, true), with(code, "update2")));
+    Product product3 = make(a(defaultProduct, with(active, true), with(code, "update3")));
+
+    productMapper.insert(product1);
+    productMapper.insert(product2);
+    productMapper.insert(product3);
+
+    Date modifiedDateByInsert = productMapper.getByCode("update1").getModifiedDate();
+
+    productMapper.deActiveAllProduct();
+
+    Date modifiedDateByDeActive = productMapper.getByCode("update1").getModifiedDate();
+
+    List<Product> productsDeActive = productMapper.list();
+
+    assertThat(productsDeActive.size(), is(3));
+    assertThat(modifiedDateByDeActive, is(modifiedDateByInsert));
+    assertThat(productsDeActive.get(0).getActive(), is(false));
+    assertThat(productsDeActive.get(2).getActive(), is(false));
   }
 }
