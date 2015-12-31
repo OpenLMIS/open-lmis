@@ -19,16 +19,20 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 import static com.natpryce.makeiteasy.MakeItEasy.*;
+import static org.hamcrest.Matchers.is;
+import static org.junit.Assert.assertThat;
 
 public class MMIAPDFGeneratorTest {
 
     @Test
-    public void shouldGenerateMMIAPdf() throws IOException {
+    public void shouldGenerateMMIAPdfWithCorrectPathName() throws IOException {
         MMIAPDFGenerator mmiapdfGenerator = new MMIAPDFGenerator();
         mmiapdfGenerator.cachePath = "/app/tomcat/openlmis/emailattachment/cache";
         mmiapdfGenerator.imagePath = "/Users/kwhu/LMIS/open-lmis/modules/requisition/src/main/resources/images";
 
-        mmiapdfGenerator.generateMMIAPdf(createRnr(), "mmia.pdf");
+        String fileNameForMMIAPdf = "mmia.pdf";
+        String pathName = mmiapdfGenerator.generateMMIAPdf(createRnr(), fileNameForMMIAPdf);
+        assertThat(pathName,is(mmiapdfGenerator.cachePath + "/" + fileNameForMMIAPdf));
     }
 
     public Rnr createRnr() {
