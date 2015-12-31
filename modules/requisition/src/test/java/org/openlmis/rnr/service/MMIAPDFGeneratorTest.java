@@ -26,6 +26,7 @@ public class MMIAPDFGeneratorTest {
     public void shouldGenerateMMIAPdf() throws IOException {
         MMIAPDFGenerator mmiapdfGenerator = new MMIAPDFGenerator();
         mmiapdfGenerator.cachePath = "/app/tomcat/openlmis/emailattachment/cache";
+        mmiapdfGenerator.imagePath = "/Users/kwhu/LMIS/open-lmis/modules/requisition/src/main/resources/images";
 
         mmiapdfGenerator.generateMMIAPdf(createRnr(), "mmia.pdf");
     }
@@ -34,14 +35,11 @@ public class MMIAPDFGeneratorTest {
         ProcessingPeriod period = make(a(ProcessingPeriodBuilder.defaultProcessingPeriod, with(ProcessingPeriodBuilder.startDate, new LocalDate("2015-11-12").toDate()))
                 .but(with(ProcessingPeriodBuilder.endDate, new LocalDate("2015-12-12").toDate())));
 
-
         GeographicZone geographicZone = new GeographicZone();
         geographicZone.setName("guanggu");
         GeographicZone parent = new GeographicZone();
         parent.setName("HuBei Province");
         geographicZone.setParent(parent);
-
-
 
         Facility facility = make(a(FacilityBuilder.defaultFacility, with(FacilityBuilder.name, "HF2"))
                 .but(with(FacilityBuilder.geographicZone, geographicZone)));
@@ -125,7 +123,6 @@ public class MMIAPDFGeneratorTest {
         patientQuantificationLineItem.setTotal(total);
         return patientQuantificationLineItem;
     }
-
 
     private RnrLineItem generateRnrLineItem(String productCode, String primaryName, String strength, int beginningBalance, int stockOnHand, String expirationDate) {
         RnrLineItem rnrLineItem = new RnrLineItem();

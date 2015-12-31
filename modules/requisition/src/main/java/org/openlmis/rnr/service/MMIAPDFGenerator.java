@@ -15,6 +15,8 @@ import org.openlmis.rnr.domain.PatientQuantificationLineItem;
 import org.openlmis.rnr.domain.RegimenLineItem;
 import org.openlmis.rnr.domain.Rnr;
 import org.openlmis.rnr.domain.RnrLineItem;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
@@ -32,7 +34,12 @@ public class MMIAPDFGenerator {
   @Value("${email.attachment.cache.path}")
   protected String cachePath;
 
-  private Font fontBody = new Font(Font.FontFamily.HELVETICA, 9.0f, Font.NORMAL, BaseColor.BLACK);;
+  @Value("${mmia.pdf.image.path}")
+  protected String imagePath;
+
+  protected static Logger logger = LoggerFactory.getLogger(MMIAPDFGenerator.class);
+
+  private Font fontBody = new Font(Font.FontFamily.HELVETICA, 7.0f, Font.NORMAL, BaseColor.BLACK);;
 
   private BaseColor colorGray = new BaseColor(208, 208, 208);
   private BaseColor colorLightGray = new BaseColor(240, 240, 240);
@@ -42,8 +49,8 @@ public class MMIAPDFGenerator {
   private BaseColor colorBlue = new BaseColor(211, 233, 240);
   private BaseColor colorGreen = new BaseColor(199, 221, 187);
 
-  private final Font font8Normal = new Font(Font.FontFamily.HELVETICA, 8.0f, Font.NORMAL, BaseColor.BLACK);
-  private final Font font8Bold = new Font(Font.FontFamily.HELVETICA, 8.0f, Font.BOLD, BaseColor.BLACK);
+  private final Font font7Normal = new Font(Font.FontFamily.HELVETICA, 7.0f, Font.NORMAL, BaseColor.BLACK);
+  private final Font font7Bold = new Font(Font.FontFamily.HELVETICA, 7.0f, Font.BOLD, BaseColor.BLACK);
 
   public String generateMMIAPdf(Rnr requisition, String fileNameForMMIAPdf) {
     Document document = new Document();
@@ -61,9 +68,15 @@ public class MMIAPDFGenerator {
 
       document.close();
 
-    } catch (DocumentException | ParseException | IOException e) {
+    } catch (DocumentException e) {
       e.printStackTrace();
+      logger.error("Pdf document open exception");
+    } catch (ParseException e) {
+      logger.error("Date field parse exception");
+    } catch (IOException e) {
+      logger.error("Pdf IO exception");
     }
+
     return pathname;
   }
 
@@ -71,13 +84,13 @@ public class MMIAPDFGenerator {
    * Add Header Table!!!!
    */
 
-  private PdfPTable createHeaderTable(Facility facility, ProcessingPeriod period) throws DocumentException, ParseException {
+  private PdfPTable createHeaderTable(Facility facility, ProcessingPeriod period) throws DocumentException, ParseException, IOException {
     PdfPTable table = new PdfPTable(4);
 
     table.setWidths(new float[]{1f, 4f, 5f, 2f});
     table.setWidthPercentage(100f);
 
-    String stringMonth = convertDateToPortuguese(period.getStringEndDate(), "MM/dd/yyyy", "MMMM");
+    String stringMonth = convertDateToPortuguese(period.getStringEndDate(), "dd/MM/yyyy", "MMMM");
     addHeaderTableFirstLine(table, stringMonth);
     addHeaderTableSecondLine(table, facility, period);
 
@@ -85,33 +98,31 @@ public class MMIAPDFGenerator {
   }
 
   private String convertDateToPortuguese(String dateString, String originFormat, String DestFormat) throws ParseException {
+    if (dateString == null){
+      return " ";
+    }
     DateTimeFormatter formatter = DateTimeFormat.forPattern(originFormat);
     LocalDate localDate = formatter.parseLocalDate(dateString);
     return localDate.toString(DestFormat, new Locale("pt", "PT"));
   }
 
-  private void addHeaderTableFirstLine(PdfPTable table, String stringMonth) {
-    Image image = null;
-    try {
-      image = Image.getInstance(MMIAPDFGenerator.class.getClassLoader().getResource("images/table-logo-moz.png"));
-      image.scaleToFit(40, 40);
-    } catch (BadElementException | IOException e) {
-      e.printStackTrace();
-    }
+  private void addHeaderTableFirstLine(PdfPTable table, String stringMonth) throws IOException, BadElementException {
+    Image image = Image.getInstance(imagePath + "/table-logo-moz.png");
+    image.scaleToFit(300, 300);
 
     PdfPCell logoCell = new PdfPCell(image);
     logoCell.setPadding(1f);
     logoCell.setFixedHeight(20f);
     table.addCell(logoCell);
 
-    Font fontHeaderLeft = new Font(Font.FontFamily.HELVETICA, 6.0f, Font.BOLD, BaseColor.BLACK);
+    Font fontHeaderLeft = new Font(Font.FontFamily.HELVETICA, 5.0f, Font.BOLD, BaseColor.BLACK);
     Paragraph republicaCell = new Paragraph("REPUBLICA DE MOCAMBIQUE\n\n" +
             "MINISTERIO DA SAUDE\n\n" +
             "CENTRAL DE MEDICAMENTOS E ARTIGOS MEDICOS", fontHeaderLeft);
     PdfPCell headerLeft = new PdfPCell(republicaCell);
-    positioningCenter(headerLeft);
+    headerLeft.setHorizontalAlignment(Element.ALIGN_LEFT);
 
-    Font fontHeaderRight = new Font(Font.FontFamily.HELVETICA, 9.0f, Font.BOLD, BaseColor.BLACK);
+    Font fontHeaderRight = new Font(Font.FontFamily.HELVETICA, 7.0f, Font.BOLD, BaseColor.BLACK);
     PdfPCell headerRight = new PdfPCell(new Paragraph("MMIA\n\n" +
             "MAPA MENSAL DE INFORMACAO ARV", fontHeaderRight));
     positioningCenter(headerRight);
@@ -261,15 +272,15 @@ public class MMIAPDFGenerator {
     return regimeTable;
   }
   private void addRegimeTableHeaders(PdfPTable regimeTable) {
-    PdfPCell code = new PdfPCell(new Paragraph("Código", font8Bold));
+    PdfPCell code = new PdfPCell(new Paragraph("Código", font7Bold));
     positioningCenter(code);
     code.setBackgroundColor(colorLightGray);
 
-    PdfPCell regime = new PdfPCell(new Paragraph("REGIME TERAPÊUTICO", font8Bold));
+    PdfPCell regime = new PdfPCell(new Paragraph("REGIME TERAPÊUTICO", font7Bold));
     positioningCenter(regime);
     regime.setBackgroundColor(colorLightGray);
 
-    PdfPCell total = new PdfPCell(new Paragraph("Total doentes", font8Bold));
+    PdfPCell total = new PdfPCell(new Paragraph("Total doentes", font7Bold));
     positioningCenter(total);
     total.setBackgroundColor(colorLightGray);
 
@@ -405,13 +416,13 @@ public class MMIAPDFGenerator {
       }
     }
 
-    table.addCell(new PdfPCell(new Phrase("Elaborado por : " + submitter, font8Normal)));
-    table.addCell(new PdfPCell(new Phrase("Visto : " + approver, font8Normal)));
-    table.addCell(new PdfPCell(new Phrase("Data de elaboração :", font8Normal)));
+    table.addCell(new PdfPCell(new Phrase("Elaborado por : " + submitter, font7Normal)));
+    table.addCell(new PdfPCell(new Phrase("Visto : " + approver, font7Normal)));
+    table.addCell(new PdfPCell(new Phrase("Data de elaboração :", font7Normal)));
 
     PdfPCell noteCell = new PdfPCell(
             new Phrase("Nota: Mapa de Preenchimento Obrigatório Mensal HdD em Conjunto com a Farmácia da Unidade Sanitária/ ou DPM\n " +
-                    "Versão no 5 14Nov 2012", font8Normal));
+                    "Versão no 5 14Nov 2012", font7Normal));
 
     noteCell.setColspan(3);
     noBorder(noteCell);
