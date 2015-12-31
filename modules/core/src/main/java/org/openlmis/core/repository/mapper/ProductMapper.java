@@ -129,7 +129,4 @@ public interface ProductMapper {
 
   @Select("SELECT * FROM products")
   List<Product> list();
-
-  @Update({"UPDATE products SET active = false"})
-  void deActiveAllProduct();
 }

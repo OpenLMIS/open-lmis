@@ -102,7 +102,7 @@ public class ProductRepository {
     return mapper.getById(id);
   }
 
-  public void deActiveAllProduct() {
-      mapper.deActiveAllProduct();
+  public List<Product> getAllProducts(){
+    return mapper.list();
   }
 }

@@ -118,11 +118,12 @@ public class ProductService {
     return repository.getById(id);
   }
 
-  public BaseModel getExisting(Product product) {
+  public Product getExisting(Product product) {
         return repository.getByCode(product.getCode());
     }
 
-  public void deActiveAllProducts() {
-    repository.deActiveAllProduct();
+  public List<Product> getAllProducts(){
+    return repository.getAllProducts();
   }
+
 }

@@ -45,6 +45,7 @@ public class CSVParser {
       csvBeanReader = new CsvBeanReader(modelClass, inputStream);
       headers = csvBeanReader.getHeaders();
       csvBeanReader.validateHeaders();
+      auditFields.setImportFields(modelClass.getImportFields());
       Importable importedModel;
       while ((importedModel = csvBeanReader.readWithCellProcessors()) != null) {
         recordHandler.execute(importedModel, csvBeanReader.getRowNumber(), auditFields);
