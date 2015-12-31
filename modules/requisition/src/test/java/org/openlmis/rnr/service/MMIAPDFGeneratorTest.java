@@ -27,7 +27,7 @@ public class MMIAPDFGeneratorTest {
         MMIAPDFGenerator mmiapdfGenerator = new MMIAPDFGenerator();
         mmiapdfGenerator.cachePath = "/app/tomcat/openlmis/emailattachment/cache";
 
-        mmiapdfGenerator.generateMMIAPdf(createRnr(), fileNameForMMIAPdf);
+        mmiapdfGenerator.generateMMIAPdf(createRnr(), "mmia.pdf");
     }
 
     public Rnr createRnr() {

@@ -37,6 +37,7 @@ public class RequisitionEmailServiceForSIMAM {
 	public static final String TEMPLATE_IMPORT_REGIMEN_XLSX_EMPTY = "template_Simam_import_Regimen_EMPTY.xlsx";
 
 	public static final String FILE_APPLICATION_VND_MS_EXCEL = "application/excel";
+	public static final String FILE_APPLICATION_PDF = "application/pdf";
 
 	public static final String REGIMEN_FILE_NAME_PREFIX = "Regimen_Requi";
 	public static final String REQUI_FILE_NAME_PREFIX = "Requi";
@@ -125,7 +126,7 @@ public class RequisitionEmailServiceForSIMAM {
 
 		String requiFileName = fileNameForRequiItems(requisition);
 		String filePath = singleListSheetExcelHandler.createXssFile(workbook, requiFileName);
-		return generateEmailAttachment(requiFileName, filePath);
+		return generateEmailAttachment(requiFileName, filePath, FILE_APPLICATION_VND_MS_EXCEL);
 	}
 
 	private EmailAttachment generateRegimenExcelForSIMAM(Rnr requisition) {
@@ -152,7 +153,7 @@ public class RequisitionEmailServiceForSIMAM {
 
 		String regimenFileName = fileNameForRegimens(requisition);
 		String filePath = singleListSheetExcelHandler.createXssFile(workbook, regimenFileName);
-		return generateEmailAttachment(regimenFileName, filePath);
+		return generateEmailAttachment(regimenFileName, filePath, FILE_APPLICATION_VND_MS_EXCEL);
 	}
 
 	private String fileNameForRequiItems(Rnr requisition) {
@@ -188,14 +189,14 @@ public class RequisitionEmailServiceForSIMAM {
 	private EmailAttachment generateMMIAPdfForSIMAM(Rnr requisition) {
 		String fileNameForMMIAPdf = fileNameForMMIAPdf(requisition);
 		String filePathForMMIAPdf = mmiaPdfGenerator.generateMMIAPdf(requisition, fileNameForMMIAPdf);
-		return generateEmailAttachment(fileNameForMMIAPdf, filePathForMMIAPdf);
+		return generateEmailAttachment(fileNameForMMIAPdf, filePathForMMIAPdf, FILE_APPLICATION_PDF);
 	}
 
-	private EmailAttachment generateEmailAttachment(String fileName, String filePath) {
+	private EmailAttachment generateEmailAttachment(String fileName, String filePath, String fileType) {
 		EmailAttachment attachmentForRegimen = new EmailAttachment();
 		attachmentForRegimen.setAttachmentName(fileName);
 		attachmentForRegimen.setAttachmentPath(filePath);
-		attachmentForRegimen.setAttachmentFileType(FILE_APPLICATION_VND_MS_EXCEL);
+		attachmentForRegimen.setAttachmentFileType(fileType);
 		return attachmentForRegimen;
 	}
 }
