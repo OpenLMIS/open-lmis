@@ -31,6 +31,7 @@ import static java.util.Arrays.asList;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.nullValue;
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.*;
@@ -519,5 +520,23 @@ public class RnrTest {
     assertThat(rnr.getAllLineItems().size(), is(2));
     assertThat(rnr.getAllLineItems().get(0), is(lineItem1));
     assertThat(rnr.getAllLineItems().get(1), is(lineItem2));
+  }
+
+  @Test
+  public void shouldCalculateRegimeTotal() {
+    ArrayList<RegimenLineItem> regimenLineItems = new ArrayList<>();
+    RegimenLineItem firstRegimenLineItem = new RegimenLineItem();
+    firstRegimenLineItem.setPatientsOnTreatment(10);
+    RegimenLineItem secondRegimenLineItem = new RegimenLineItem();
+    secondRegimenLineItem.setPatientsOnTreatment(20);
+    RegimenLineItem thirdRegimenLineItem = new RegimenLineItem();
+    thirdRegimenLineItem.setPatientsOnTreatment(30);
+
+    regimenLineItems.add(firstRegimenLineItem);
+    regimenLineItems.add(secondRegimenLineItem);
+    regimenLineItems.add(thirdRegimenLineItem);
+
+    rnr.setRegimenLineItems(regimenLineItems);
+    assertEquals(60,rnr.calculateRegimeTotal());
   }
 }

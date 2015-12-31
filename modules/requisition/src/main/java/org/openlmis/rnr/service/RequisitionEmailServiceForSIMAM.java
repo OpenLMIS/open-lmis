@@ -55,6 +55,9 @@ public class RequisitionEmailServiceForSIMAM {
 	@Autowired
 	private SingleListSheetExcelHandler singleListSheetExcelHandler;
 
+	@Autowired
+	private MMIAPDFGenerator mmiaPdfGenerator;
+
 	public static final Map<String, String> SIMAM_PROGRAMS_MAP = MapUtils.putAll(new HashMap(),
 										new String[][]{
 											{"MMIA", "TARV"},
@@ -162,6 +165,11 @@ public class RequisitionEmailServiceForSIMAM {
                        requisition.getProgram().getName() + ".xlsx";
 	}
 
+	private String fileNameForMMIAPdf(Rnr requisition) {
+		return REQUI_FILE_NAME_PREFIX + requisition.getId() + "_" + requisition.getFacility().getName() + "_" + requisition.getPeriod().getName() + "_" +
+                       requisition.getProgram().getName() + ".pdf";
+	}
+
 	private List<EmailAttachment> prepareEmailAttachmentsForSIMAM(Rnr requisition) {
 
 		List<EmailAttachment> emailAttachments = new ArrayList<>();
@@ -171,7 +179,16 @@ public class RequisitionEmailServiceForSIMAM {
 		EmailAttachment attachmentForRegimen = generateRegimenExcelForSIMAM(requisition);
 		emailAttachments.add(attachmentForRegimen);
 
+		EmailAttachment mmiaPdfAttachment = generateMMIAPdfForSIMAM(requisition);
+		emailAttachments.add(mmiaPdfAttachment);
+
 		return emailAttachments;
+	}
+
+	private EmailAttachment generateMMIAPdfForSIMAM(Rnr requisition) {
+		String fileNameForMMIAPdf = fileNameForMMIAPdf(requisition);
+		String filePathForMMIAPdf = mmiaPdfGenerator.generateMMIAPdf(requisition, fileNameForMMIAPdf);
+		return generateEmailAttachment(fileNameForMMIAPdf, filePathForMMIAPdf);
 	}
 
 	private EmailAttachment generateEmailAttachment(String fileName, String filePath) {

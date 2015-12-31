@@ -48,6 +48,9 @@ public class RequisitionEmailServiceForSIMAMTest {
   private EmailService emailService;
 
   @Mock
+  private MMIAPDFGenerator mmiapdfGenerator;
+
+  @Mock
   ConfigurationSettingService settingService;
 
   @Mock
@@ -68,7 +71,7 @@ public class RequisitionEmailServiceForSIMAMTest {
     initUsers();
     when(settingService.getConfigurationStringValue(anyString())).thenReturn("email content");
     requisitionEmailServiceForSIMAM =
-            new RequisitionEmailServiceForSIMAM(rnrMapperForSIMAM, emailService, settingService,singleListSheetExcelHandler);
+            new RequisitionEmailServiceForSIMAM(rnrMapperForSIMAM, emailService, settingService,singleListSheetExcelHandler, mmiapdfGenerator);
   }
 
   private void initRnrItems(String programCode) {

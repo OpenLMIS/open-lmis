@@ -137,6 +137,14 @@ public class Rnr extends BaseModel {
     return totalFullSupplyCost;
   }
 
+  public int calculateRegimeTotal(){
+    int total = 0;
+    for (RegimenLineItem regimenLineItem : regimenLineItems) {
+      total += regimenLineItem.getPatientsOnTreatment();
+    }
+    return total;
+  }
+
   public void fillLineItems(List<FacilityTypeApprovedProduct> facilityTypeApprovedProducts) {
     for (FacilityTypeApprovedProduct facilityTypeApprovedProduct : facilityTypeApprovedProducts) {
       RnrLineItem requisitionLineItem = new RnrLineItem(null, facilityTypeApprovedProduct, modifiedBy, createdBy);
