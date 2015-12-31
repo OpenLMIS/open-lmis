@@ -40,6 +40,11 @@ public class ProductFormService {
     String productFormCode = form.getCode();
     if (productFormCode == null || productFormCode.isEmpty()) return null;
 
+    return checkProductFormExisting(productFormCode);
+  }
+
+  public ProductForm checkProductFormExisting(String productFormCode) {
+    ProductForm form;
     form = repository.getByCode(productFormCode);
     if (form == null) throw new DataException("error.reference.data.invalid.product.form");
 

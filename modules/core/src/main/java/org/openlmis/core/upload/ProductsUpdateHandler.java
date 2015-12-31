@@ -4,8 +4,7 @@ import org.openlmis.core.domain.BaseModel;
 import org.openlmis.core.domain.Product;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.core.message.OpenLmisMessage;
-import org.openlmis.core.repository.ProductFormRepository;
-import org.openlmis.core.repository.ProductRepository;
+import org.openlmis.core.service.ProductFormService;
 import org.openlmis.core.service.ProductService;
 import org.openlmis.upload.Importable;
 import org.openlmis.upload.model.AuditFields;
@@ -19,15 +18,12 @@ import java.util.List;
 public class ProductsUpdateHandler extends AbstractModelPersistenceHandler {
 
     @Autowired
-    private ProductService productService;
+    ProductService productService;
 
     @Autowired
-    private ProductRepository productRepository;
+    ProductFormService productFormService;
 
-    @Autowired
-    private ProductFormRepository productFormRepository;
-
-    private List<Product> updateProductList;
+    List<Product> updateProductList;
 
     public ProductsUpdateHandler() {
         updateProductList = new ArrayList<>();
@@ -45,38 +41,40 @@ public class ProductsUpdateHandler extends AbstractModelPersistenceHandler {
 
     @Override
     public void execute(Importable importable, int rowNumber, AuditFields auditFields) {
-        try {
-            Product currentRecord = (Product) importable;
-            Product existing = getExisting(currentRecord);
+        Product currentRecord = (Product) importable;
+        Product existing = getExisting(currentRecord);
 
+        try {
             throwExceptionIfProcessedInCurrentUpload(auditFields, existing);
-            currentRecord.setModifiedBy(auditFields.getUser());
-            currentRecord.setModifiedDate(auditFields.getCurrentTimestamp());
-            if (existing != null) {
-                currentRecord.setId(existing.getId());
-            } else {
-                currentRecord.setCreatedBy(auditFields.getUser());
-            }
-            updateProductList.add(currentRecord);
         } catch (DataException exception) {
             throwException("upload.record.error", exception.getOpenLmisMessage().getCode(), rowNumber);
         }
+        currentRecord.setModifiedBy(auditFields.getUser());
+        currentRecord.setModifiedDate(auditFields.getCurrentTimestamp());
+        if (existing != null) {
+            currentRecord.setId(existing.getId());
+        } else {
+            currentRecord.setCreatedBy(auditFields.getUser());
+        }
+        validateProductForm(currentRecord);
+        updateProductList.add(currentRecord);
     }
 
     @Override
     public void postProcess(AuditFields auditFields) {
-        for (Product product : updateProductList) {
-            String code = product.getForm().getCode();
-            if (null == productFormRepository.getByCode(code)) {
-                throw new DataException(new OpenLmisMessage(messageService.message("error.update.products.productForm.invalid")));
-            }
-        }
-
-        productRepository.deActiveAllProduct();
+        productService.deActiveAllProducts();
 
         for (Product productFromNet : updateProductList) {
             productFromNet.setActive(true);
             save(productFromNet);
+        }
+    }
+
+    private void validateProductForm(Product product) {
+        try {
+            productFormService.checkProductFormExisting(product.getForm().getCode());
+        } catch (DataException e) {
+            throw new DataException(new OpenLmisMessage(messageService.message("error.update.products.productForm.invalid")));
         }
     }
 }
