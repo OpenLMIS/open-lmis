@@ -1,19 +1,7 @@
 /*  * Electronic Logistics Management Information System (eLMIS) is a supply chain management system for health commodities in a developing country setting.  *  * Copyright (C) 2015  John Snow, Inc (JSI). This program was produced for the U.S. Agency for International Development (USAID). It was prepared under the USAID | DELIVER PROJECT, Task Order 4.  *  * This program is free software: you can redistribute it and/or modify it under the terms of the GNU Affero General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.  *  * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Affero General Public License for more details.  *  * You should have received a copy of the GNU Affero General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.  */
 
-configurations {
-    flyway
-    classpath
-}
-
 dependencies {
-    compile 'org.codehaus.groovy:groovy-all:2.3.9',
-            'com.googlecode.flyway:flyway-core:1.7',
-            'com.googlecode.flyway:flyway-ant:1.7',
-            project(':modules:db')
-
-    flyway 'com.googlecode.flyway:flyway-ant:1.7',
-            'org.postgresql:postgresql:9.2-1002-jdbc4'
-    classpath 'org.postgresql:postgresql:9.2-1002-jdbc4'
+    compile project(':modules:db')
 
     configurations {
         testFixtures {
@@ -32,23 +20,30 @@ dependencies {
     }
 }
 
-task setupExtensions() << {
-    ext.flyway_classpath = files(configurations.flyway)
-    ant.taskdef(name: 'flywayInit', classname: 'com.googlecode.flyway.ant.InitTask', classpath: ext.flyway_classpath.asPath)
-    ant.flywayInit(driver: 'org.postgresql.Driver', url: "jdbc:postgresql://$databaseHostName:$databasePort/$dbName", user: dbUser, password: dbPassword, table: 'migration_schema_version'  )
-    tasks.migrateExtensions.execute()
+flyway {
+    url = "$dbUrlPrefix$databaseHostName:$databasePort/$dbName"
+    driver = dbDriver
+    user = dbUser
+    password = dbPassword
+    schemas = ['public','atomfeed']
+    table = 'migration_schema_version'
+    locations = ['filesystem:'+sourceSets.main.resources.srcDirs.first().getCanonicalPath()+'/db/migration']
+    placeholderPrefix = '#['
+    placeholderSuffix = ']'
+    baselineOnMigrate = true
 }
 
 jar.doFirst {
     tasks.migrateExtensions.execute()
 }
 
+task setupExtensions() << {
+    tasks.migrateExtensions.execute()
+}
+
 task migrateExtensions() << {
-    println("Migrating database extensions")
-    ext.flyway_classpath = files(sourceSets.main.resources.srcDirs) + files(configurations.flyway)
-    ant.taskdef(name: 'flywayMigrate', classname: 'com.googlecode.flyway.ant.MigrateTask', classpath: ext.flyway_classpath.asPath)
-    ant.taskdef(name: 'flywayInit', classname: 'com.googlecode.flyway.ant.InitTask', classpath: ext.flyway_classpath.asPath)
-    ant.flywayMigrate( driver: 'org.postgresql.Driver', url: "jdbc:postgresql://$databaseHostName:$databasePort/$dbName", user: dbUser, password: dbPassword, table: 'migration_schema_version', baseDir: sourceSets.main.resources.srcDirs , basePackage: sourceSets.main.resources.srcDirs)
+    println("Migrating database extensions...")
+    tasks.flywayMigrate.execute()
 }
 
 
