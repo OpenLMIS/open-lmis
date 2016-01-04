@@ -40,7 +40,8 @@ public class MMIAPDFGenerator {
 
   protected static Logger logger = LoggerFactory.getLogger(MMIAPDFGenerator.class);
 
-  private Font fontBody = new Font(Font.FontFamily.HELVETICA, 7.0f, Font.NORMAL, BaseColor.BLACK);;
+  private Font fontBody = new Font(Font.FontFamily.HELVETICA, 7.0f, Font.NORMAL, BaseColor.BLACK);
+  private Font indexFont = new Font(Font.FontFamily.HELVETICA, 5.0f, Font.NORMAL, BaseColor.WHITE);
 
   private BaseColor colorGray = new BaseColor(208, 208, 208);
   private BaseColor colorLightGray = new BaseColor(240, 240, 240);
@@ -48,10 +49,12 @@ public class MMIAPDFGenerator {
   private BaseColor colorYellow = new BaseColor(246, 243, 145);
   private BaseColor colorLightYellow = new BaseColor(250, 248, 199);
   private BaseColor colorBlue = new BaseColor(211, 233, 240);
-  private BaseColor colorGreen = new BaseColor(199, 221, 187);
 
+  private BaseColor colorGreen = new BaseColor(199, 221, 187);
   private final Font font7Normal = new Font(Font.FontFamily.HELVETICA, 7.0f, Font.NORMAL, BaseColor.BLACK);
   private final Font font7Bold = new Font(Font.FontFamily.HELVETICA, 7.0f, Font.BOLD, BaseColor.BLACK);
+  private int productIndex;
+  private int regimenIndex;
 
   public String generateMMIAPdf(Rnr requisition, String fileNameForMMIAPdf) {
     Document document = new Document();
@@ -86,6 +89,10 @@ public class MMIAPDFGenerator {
    */
 
   protected PdfPTable createHeaderTable(Facility facility, ProcessingPeriod period) throws DocumentException, ParseException, IOException {
+    PdfPTable totalTable = new PdfPTable(2);
+    totalTable.setWidths(new float[]{1f,35f});
+    totalTable.setWidthPercentage(100f);
+
     PdfPTable table = new PdfPTable(4);
 
     table.setWidths(new float[]{1f, 4f, 5f, 2f});
@@ -95,16 +102,21 @@ public class MMIAPDFGenerator {
     addHeaderTableFirstLine(table, stringMonth);
     addHeaderTableSecondLine(table, facility, period);
 
-    return table;
+    PdfPCell cell = new PdfPCell();
+    cell.setPhrase(new Phrase("CMAM - Modelo 01", indexFont));
+    cell.setRotation(90);
+    cell.setBackgroundColor(BaseColor.BLACK);
+    totalTable.addCell(cell);
+    totalTable.addCell(table);
+
+    return totalTable;
   }
 
-  private String convertDateToPortuguese(String dateString, String originFormat, String DestFormat) throws ParseException {
-    if (dateString == null){
-      return " ";
-    }
-    DateTimeFormatter formatter = DateTimeFormat.forPattern(originFormat);
-    LocalDate localDate = formatter.parseLocalDate(dateString);
-    return localDate.toString(DestFormat, new Locale("pt", "PT"));
+  private PdfPCell createBlackCellWithText(String text) {
+    PdfPCell cell = new PdfPCell();
+    cell.setPhrase(new Phrase(text, indexFont));
+    cell.setBackgroundColor(BaseColor.BLACK);
+    return cell;
   }
 
   private void addHeaderTableFirstLine(PdfPTable table, String stringMonth) throws IOException, BadElementException {
@@ -140,6 +152,7 @@ public class MMIAPDFGenerator {
     monthCell.setVerticalAlignment(Element.ALIGN_MIDDLE);
     table.addCell(monthCell);
   }
+
   private void addHeaderTableSecondLine(PdfPTable table, Facility facility, ProcessingPeriod period) {
     PdfPCell facilityCell = new PdfPCell(new Paragraph("Unidade Sanitaria : " + facility.getName(), fontBody));
     facilityCell.setColspan(3);
@@ -158,25 +171,26 @@ public class MMIAPDFGenerator {
     table.addCell(districtCell);
     table.addCell(provinceCell);
   }
-
    /*
    * Add MMIA Table
    */
 
   private PdfPTable createMMIATable(List<RnrLineItem> fullSupplyLineItems) throws DocumentException, ParseException {
-    PdfPTable table = new PdfPTable(9);
+    productIndex = 1;
+    PdfPTable table = new PdfPTable(10);
 
     table.setWidthPercentage(100f);
     table.setSpacingBefore(2);
 
-    table.setWidths(new float[]{1f, 4f, 3f, 1f, 1f, 1f, 1f, 1f, 1f});
+    table.setWidths(new float[]{0.4f,1f, 4f, 3f, 1f, 1f, 1f, 1f, 1f, 1f});
 
     List<RnrLineItem> adultRnrLineItmes = fullSupplyLineItems.subList(0,12);
-    List<RnrLineItem> childrenRnrLineItmes = fullSupplyLineItems.subList(12,22);
+    List<RnrLineItem> childrenRnrLineItems = fullSupplyLineItems.subList(12,22);
     List<RnrLineItem> otherRnrLineItmes = fullSupplyLineItems.subList(22,24);
 
     List<String> headerList = Arrays.asList("FNM", "Medicamento", "UNIDATA de Saida", "Saldo Inicial", "Entradas", "Saidas", "Perda e ajustes", "Inventario", "Validade");
 
+    table.addCell(createBlackCellWithText(""));
     for (String header: headerList){
       getMMIATableHeaderCell(table, header);
     }
@@ -188,8 +202,8 @@ public class MMIAPDFGenerator {
     addMMIATableLineItem(table, null,colorGreen);
     addMMIATableLineItem(table, null,colorGreen);
 
-    for (RnrLineItem childrenRnrLineItme : childrenRnrLineItmes) {
-      addMMIATableLineItem(table, childrenRnrLineItme, colorLightYellow);
+    for (RnrLineItem childrenRnrLineItem : childrenRnrLineItems) {
+      addMMIATableLineItem(table, childrenRnrLineItem, colorLightYellow);
     }
     addMMIATableLineItem(table, null,colorLightYellow);
 
@@ -199,6 +213,7 @@ public class MMIAPDFGenerator {
     addMMIATableLineItem(table, null,colorBlue);
     return table;
   }
+
   private void getMMIATableHeaderCell(PdfPTable table, String name) {
     PdfPCell fnm = new PdfPCell(new Phrase(name, new Font(Font.FontFamily.HELVETICA, 7.0f, Font.NORMAL, BaseColor.BLACK)));
     fnm.setHorizontalAlignment(Element.ALIGN_CENTER);
@@ -207,6 +222,9 @@ public class MMIAPDFGenerator {
     table.addCell(fnm);
   }
   private void addMMIATableLineItem(PdfPTable table, RnrLineItem rnrLineItem, BaseColor medicineColor) throws ParseException {
+    table.addCell(createBlackCellWithText(String.valueOf(productIndex)));
+    productIndex++;
+
     addMMIATableLineCell(table, rnrLineItem == null ? " " : rnrLineItem.getProductCode(), Element.ALIGN_CENTER, medicineColor);
     addMMIATableLineCell(table, rnrLineItem == null ? " " : rnrLineItem.getProductPrimaryName(), Element.ALIGN_LEFT, medicineColor);
     addMMIATableLineCell(table, rnrLineItem == null ? " " : rnrLineItem.getProductStrength(), Element.ALIGN_CENTER, colorLightGray);
@@ -224,7 +242,6 @@ public class MMIAPDFGenerator {
     fnm.setBackgroundColor(bgcolor);
     table.addCell(fnm);
   }
-
   /*
   * Regime and Patient Table
    */
@@ -264,11 +281,11 @@ public class MMIAPDFGenerator {
   * Create Regime Table
    */
   private PdfPTable createRegimeTable(List<RegimenLineItem> regimenLineItems, int total) throws DocumentException {
-    PdfPTable regimeTable = new PdfPTable(3);
+    PdfPTable regimeTable = new PdfPTable(4);
 
     regimeTable.setWidthPercentage(50f);
     regimeTable.setSpacingBefore(2);
-    regimeTable.setWidths(new float[]{2f, 6f, 2f});
+    regimeTable.setWidths(new float[]{0.6f, 1.5f, 6.5f, 2f});
 
     addRegimeTableHeaders(regimeTable);
     addRegimeTableContents(regimeTable,regimenLineItems);
@@ -276,6 +293,7 @@ public class MMIAPDFGenerator {
 
     return regimeTable;
   }
+
   private void addRegimeTableHeaders(PdfPTable regimeTable) {
     PdfPCell code = new PdfPCell(new Paragraph("Código", font7Bold));
     positioningCenter(code);
@@ -289,11 +307,13 @@ public class MMIAPDFGenerator {
     positioningCenter(total);
     total.setBackgroundColor(colorLightGray);
 
+    regimeTable.addCell(createBlackCellWithText(""));
     regimeTable.addCell(code);
     regimeTable.addCell(regime);
     regimeTable.addCell(total);
   }
   private void addRegimeTableContents(PdfPTable regimeTable, List<RegimenLineItem> regimenLineItems) {
+    regimenIndex = 1;
     List<RegimenLineItem> adultRegimenLineItems = regimenLineItems.subList(0, 8);
     List<RegimenLineItem> childrenRegimenLineItems = regimenLineItems.subList(8, 18);
 
@@ -315,8 +335,10 @@ public class MMIAPDFGenerator {
     addRegimeItem(regimeTable, null, colorYellow);
 
   }
-
   private void addRegimeItem(PdfPTable regimeTable, RegimenLineItem regimenLineItem, BaseColor baseColor) {
+    regimeTable.addCell(createBlackCellWithText(String.valueOf(regimenIndex)));
+    regimenIndex++;
+
     PdfPCell codeCell = new PdfPCell(new Phrase(" ", fontBody));
     codeCell.setBackgroundColor(baseColor);
     regimeTable.addCell(codeCell);
@@ -327,17 +349,20 @@ public class MMIAPDFGenerator {
 
     PdfPCell totalCell = new PdfPCell(new Phrase(regimenLineItem == null ? " " : regimenLineItem.getPatientsOnTreatment().toString(), fontBody));
     totalCell.setHorizontalAlignment(Element.ALIGN_CENTER);
+
     regimeTable.addCell(totalCell);
   }
+
   private void addRegimeTableTotalCell(PdfPTable regimeTable, int total) throws DocumentException {
-    PdfPTable totalTable = new PdfPTable(4);
+    PdfPTable totalTable = new PdfPTable(5);
     totalTable.setHorizontalAlignment(Element.ALIGN_RIGHT);
     totalTable.setWidthPercentage(25f);
-    totalTable.setWidths(new float[]{2f, 4f, 2f, 2f});
+    totalTable.setWidths(new float[]{0.6f, 2f, 4f, 2f, 2f});
 
     PdfPCell cell = new PdfPCell();
     noBorder(cell);
 
+    totalTable.addCell(cell);
     totalTable.addCell(cell);
     totalTable.addCell(cell);
 
@@ -351,11 +376,10 @@ public class MMIAPDFGenerator {
     totalTable.addCell(totalValueCell);
 
     PdfPCell regimeTotalCell = new PdfPCell(totalTable);
-    regimeTotalCell.setColspan(3);
+    regimeTotalCell.setColspan(4);
     noBorder(regimeTotalCell);
     regimeTable.addCell(regimeTotalCell);
   }
-
   /*
 * Create Patient Table
 * */
@@ -436,10 +460,10 @@ public class MMIAPDFGenerator {
     return table;
   }
 
-
   /*
   * Public Stying Methods
   * */
+
 
   private void positioningCenter(PdfPCell tableHeader) {
     tableHeader.setVerticalAlignment(Element.ALIGN_MIDDLE);
@@ -448,6 +472,15 @@ public class MMIAPDFGenerator {
 
   private void noBorder(PdfPCell regimeCell) {
     regimeCell.setBorder(0);
+  }
+
+  private String convertDateToPortuguese(String dateString, String originFormat, String DestFormat) throws ParseException {
+    if (dateString == null){
+      return " ";
+    }
+    DateTimeFormatter formatter = DateTimeFormat.forPattern(originFormat);
+    LocalDate localDate = formatter.parseLocalDate(dateString);
+    return localDate.toString(DestFormat, new Locale("pt", "PT"));
   }
 
 

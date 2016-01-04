@@ -8,6 +8,7 @@ import org.apache.commons.collections.Transformer;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.openlmis.core.domain.User;
 import org.openlmis.core.service.ConfigurationSettingService;
+import org.openlmis.core.service.StaticReferenceDataService;
 import org.openlmis.email.domain.EmailAttachment;
 import org.openlmis.email.domain.EmailMessage;
 import org.openlmis.email.service.EmailService;
@@ -58,6 +59,9 @@ public class RequisitionEmailServiceForSIMAM {
 
 	@Autowired
 	private MMIAPDFGenerator mmiaPdfGenerator;
+
+	@Autowired
+	private StaticReferenceDataService staticReferenceDataService;
 
 	public static final Map<String, String> SIMAM_PROGRAMS_MAP = MapUtils.putAll(new HashMap(),
 										new String[][]{
@@ -180,8 +184,10 @@ public class RequisitionEmailServiceForSIMAM {
 		EmailAttachment attachmentForRegimen = generateRegimenExcelForSIMAM(requisition);
 		emailAttachments.add(attachmentForRegimen);
 
-		EmailAttachment mmiaPdfAttachment = generateMMIAPdfForSIMAM(requisition);
-		emailAttachments.add(mmiaPdfAttachment);
+		if (staticReferenceDataService.getBoolean("mail.attachment.mmia.pdf")) {
+			EmailAttachment mmiaPdfAttachment = generateMMIAPdfForSIMAM(requisition);
+			emailAttachments.add(mmiaPdfAttachment);
+		}
 
 		return emailAttachments;
 	}

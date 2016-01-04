@@ -12,6 +12,7 @@ import org.mockito.runners.MockitoJUnitRunner;
 import org.openlmis.core.builder.ProgramBuilder;
 import org.openlmis.core.domain.User;
 import org.openlmis.core.service.ConfigurationSettingService;
+import org.openlmis.core.service.StaticReferenceDataService;
 import org.openlmis.db.categories.UnitTests;
 import org.openlmis.email.domain.EmailMessage;
 import org.openlmis.email.service.EmailService;
@@ -56,6 +57,9 @@ public class RequisitionEmailServiceForSIMAMTest {
   @Mock
   private SingleListSheetExcelHandler singleListSheetExcelHandler;
 
+  @Mock
+  private StaticReferenceDataService staticReferenceDataService;
+
   private RequisitionEmailServiceForSIMAM requisitionEmailServiceForSIMAM = null;
 
   Rnr rnr;
@@ -71,7 +75,7 @@ public class RequisitionEmailServiceForSIMAMTest {
     initUsers();
     when(settingService.getConfigurationStringValue(anyString())).thenReturn("email content");
     requisitionEmailServiceForSIMAM =
-            new RequisitionEmailServiceForSIMAM(rnrMapperForSIMAM, emailService, settingService,singleListSheetExcelHandler, mmiapdfGenerator);
+            new RequisitionEmailServiceForSIMAM(rnrMapperForSIMAM, emailService, settingService,singleListSheetExcelHandler, mmiapdfGenerator, staticReferenceDataService);
   }
 
   private void initRnrItems(String programCode) {

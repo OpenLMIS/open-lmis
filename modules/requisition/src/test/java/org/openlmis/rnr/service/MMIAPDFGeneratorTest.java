@@ -37,6 +37,8 @@ public class MMIAPDFGeneratorTest {
     @Before
     public void setUp() throws Exception {
         mmiapdfGenerator = new MMIAPDFGenerator();
+        mmiapdfGenerator.cachePath = "/app/tomcat/openlmis/emailattachment/cache";
+        mmiapdfGenerator.imagePath = "/app/tomcat/openlmis/emailattachment/template";
         period = make(a(ProcessingPeriodBuilder.defaultProcessingPeriod, with(ProcessingPeriodBuilder.startDate, new LocalDate("2015-11-12").toDate()))
                 .but(with(ProcessingPeriodBuilder.endDate, new LocalDate("2015-12-12").toDate())));
 
@@ -46,11 +48,17 @@ public class MMIAPDFGeneratorTest {
         parent.setName("HuBei Province");
         geographicZone.setParent(parent);
 
+        facility = make(a(FacilityBuilder.defaultFacility, with(FacilityBuilder.name, "HF2"))
+                .but(with(FacilityBuilder.geographicZone, geographicZone)));
         requisition = make(a(RequisitionBuilder.defaultRequisition, with(RequisitionBuilder.period, period))
                 .but(with(RequisitionBuilder.facility, facility)));
 
-        facility = make(a(FacilityBuilder.defaultFacility, with(FacilityBuilder.name, "HF2"))
-                .but(with(FacilityBuilder.geographicZone, geographicZone)));
+        createRnr();
+    }
+
+    @Test
+    public void shouldTest() {
+        mmiapdfGenerator.generateMMIAPdf(requisition, "mmia.pdf");
     }
 
     @Test
