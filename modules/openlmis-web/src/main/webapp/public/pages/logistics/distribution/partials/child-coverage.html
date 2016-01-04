@@ -179,7 +179,7 @@
                             <td class="col-complete-vaccinated opened-vials"
                                 ng-hide="hideCell('{{lineItem.vaccination}}')"
                                 rowspan="{{productsMap[lineItem.vaccination].rowSpan}}">
-                                <div id="{{product}}Container"
+                                <div id="{{product | removeSpaces}}Container"
                                      ng-repeat="product in productsMap[lineItem.vaccination].products">
                                     <span id="{{product}}" ng-bind="product"></span>
                   <span class="position-relative">
