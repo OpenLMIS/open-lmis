@@ -43,6 +43,11 @@ public abstract class AbstractModelPersistenceHandler implements RecordHandler<I
     String messageKey;
 
     @Override
+    public void setUp() {
+
+    }
+
+    @Override
     public void execute(Importable importable, int rowNumber, AuditFields auditFields) {
         BaseModel currentRecord = (BaseModel) importable;
         BaseModel existing = getExisting(currentRecord);

@@ -18,6 +18,8 @@ import org.openlmis.upload.model.AuditFields;
 
 public interface RecordHandler<I extends Importable> {
 
+  public void setUp();
+
   public void execute(I importable, int rowNumber, AuditFields auditFields);
 
   public void postProcess(AuditFields auditFields);

@@ -2,6 +2,7 @@ package org.openlmis.core.upload;
 
 import com.google.common.base.Predicate;
 import com.google.common.collect.FluentIterable;
+import lombok.NoArgsConstructor;
 import org.openlmis.core.domain.BaseModel;
 import org.openlmis.core.domain.Product;
 import org.openlmis.core.exception.DataException;
@@ -18,6 +19,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Component
+@NoArgsConstructor
 public class ProductsUpdateHandler extends AbstractModelPersistenceHandler {
 
     @Autowired
@@ -29,7 +31,8 @@ public class ProductsUpdateHandler extends AbstractModelPersistenceHandler {
     List<Product> uploadProductList;
     private List<Field> mandatoryFields;
 
-    public ProductsUpdateHandler() {
+    @Override
+    public void setUp() {
         uploadProductList = new ArrayList<>();
     }
 
