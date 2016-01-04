@@ -63,7 +63,7 @@ function ChildCoverageController($scope, $routeParams, distributionService) {
       rowSpan: 4
     },
     "IPV": {
-      products: [],
+      products: ['IPV'],
       vaccinations: ['IPV'],
       rowSpan: 1
     },

@@ -11,6 +11,7 @@
 INSERT INTO coverage_product_vials (vial, productCode, childCoverage) VALUES ('BCG', 'BCG', true);
 INSERT INTO coverage_product_vials (vial, productCode, childCoverage) VALUES ('Polio10', 'polio10dose', true);
 INSERT INTO coverage_product_vials (vial, productCode, childCoverage) VALUES ('Polio20', 'polio20dose', true);
+INSERT INTO coverage_product_vials (vial, productCode, childCoverage) VALUES ('IPV', 'IPV', true);
 INSERT INTO coverage_product_vials (vial, productCode, childCoverage) VALUES ('Penta1', 'penta1', true);
 INSERT INTO coverage_product_vials (vial, productCode, childCoverage) VALUES ('Penta10', 'penta10', true);
 INSERT INTO coverage_product_vials (vial, productCode, childCoverage) VALUES ('PCV', 'P10', true);

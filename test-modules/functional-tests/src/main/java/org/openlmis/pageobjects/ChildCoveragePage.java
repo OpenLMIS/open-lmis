@@ -121,6 +121,9 @@ public class ChildCoveragePage extends DistributionTab {
   @FindBy(how = ID, using = "Polio20")
   private static WebElement openedVialsPolio20Label = null;
 
+  @FindBy(how = ID, using = "IPV")
+  private static WebElement openedVialsIPVLabel = null;
+
   @FindBy(how = ID, using = "Penta1")
   private static WebElement openedVialsPenta1Label = null;
 
@@ -412,6 +415,11 @@ public class ChildCoveragePage extends DistributionTab {
   public String getTextOfOpenedVialsPolio20() {
     testWebDriver.waitForElementToAppear(openedVialsPolio20Label);
     return openedVialsPolio20Label.getText();
+  }
+
+  public String getTextOfOpenedVialsIPV() {
+    testWebDriver.waitForElementToAppear(openedVialsIPVLabel);
+    return openedVialsIPVLabel.getText();
   }
 
   public String getTextOfOpenedVialsPenta1() {

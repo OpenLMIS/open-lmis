@@ -652,8 +652,8 @@ public class DistributionChildCoverageSyncTest extends TestCaseHelper {
         assertEqualsAndNulls(childCoverageDetails.getString("outreach23months"), "null");
       }
     }
-    List<String> openedVials = asList("BCG", "Polio10", "Polio20", "Penta1", "Penta10", "PCV", "RV Rotarix", "Sarampo", "MSD");
-    for (int i = 1; i <= 9; i++) {
+    List<String> openedVials = asList("BCG", "Polio10", "Polio20", "IPV", "Penta1", "Penta10", "PCV", "RV Rotarix", "Sarampo", "MSD");
+    for (int i = 1; i <= 10; i++) {
       ResultSet openedVialLineItem = dbWrapper.getChildOpenedVialLineItem(openedVials.get(i - 1), facilityVisitId);
       assertEqualsAndNulls(openedVialLineItem.getString("openedVials"), "null");
     }
@@ -788,8 +788,8 @@ public class DistributionChildCoverageSyncTest extends TestCaseHelper {
       }
     }
 
-    List<String> openedVials = asList("BCG", "Polio10", "Polio20", "Penta1", "Penta10", "PCV", "RV Rotarix", "Sarampo", "MSD");
-    for (int i = 1; i <= 9; i++) {
+    List<String> openedVials = asList("BCG", "Polio10", "Polio20", "IPV", "Penta1", "Penta10", "PCV", "RV Rotarix", "Sarampo", "MSD");
+    for (int i = 1; i <= 10; i++) {
       ResultSet openedVialLineItem = dbWrapper.getChildOpenedVialLineItem(openedVials.get(i - 1), facilityVisitId);
       assertEquals(openedVialLineItem.getString("openedVials"), String.valueOf(i * 100));
     }
@@ -813,6 +813,7 @@ public class DistributionChildCoverageSyncTest extends TestCaseHelper {
     assertEquals(childCoveragePage.getTextOfOpenedVialsBCG(), "BCG");
     assertEquals(childCoveragePage.getTextOfOpenedVialsPolio10(), "Polio10");
     assertEquals(childCoveragePage.getTextOfOpenedVialsPolio20(), "Polio20");
+    assertEquals(childCoveragePage.getTextOfOpenedVialsPolio20(), "IPV");
     assertEquals(childCoveragePage.getTextOfOpenedVialsPenta1(), "Penta1");
     assertEquals(childCoveragePage.getTextOfOpenedVialsPenta10(), "Penta10");
     assertEquals(childCoveragePage.getTextOfOpenedVialsPCV(), "PCV");
@@ -865,6 +866,7 @@ public class DistributionChildCoverageSyncTest extends TestCaseHelper {
     dbWrapper.insertTargetGroupEntityAndProductsInMappingTable("Polio 1a dose", "polio20dose", true);
     dbWrapper.insertTargetGroupEntityAndProductsInMappingTable("Polio 2a dose", "polio10dose", true);
     dbWrapper.insertTargetGroupEntityAndProductsInMappingTable("Polio 3a dose", "polio20dose", true);
+    dbWrapper.insertTargetGroupEntityAndProductsInMappingTable("IPV", "IPV", true);
     dbWrapper.insertTargetGroupEntityAndProductsInMappingTable("Penta 1a dose", "penta1", true);
     dbWrapper.insertTargetGroupEntityAndProductsInMappingTable("Penta 2a dose", "penta10", true);
     dbWrapper.insertTargetGroupEntityAndProductsInMappingTable("Penta 3a dose", "penta1", true);

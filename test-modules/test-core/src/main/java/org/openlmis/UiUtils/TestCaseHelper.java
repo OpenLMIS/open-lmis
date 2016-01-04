@@ -707,8 +707,8 @@ public class TestCaseHelper {
         assertEquals(childCoverageDetails.getString("outreach23months"), String.valueOf(i));
       }
     }
-    List<String> openedVials = asList("BCG", "Polio10", "Polio20", "Penta1", "Penta10", "PCV", "RV Rotarix", "Sarampo", "MSD");
-    for (int i = 1; i <= 9; i++) {
+    List<String> openedVials = asList("BCG", "Polio10", "Polio20", "IPV", "Penta1", "Penta10", "PCV", "RV Rotarix", "Sarampo", "MSD");
+    for (int i = 1; i <= 10; i++) {
       ResultSet openedVialLineItem = dbWrapper.getChildOpenedVialLineItem(openedVials.get(i - 1), facilityVisitId);
       assertEquals(openedVialLineItem.getString("openedVials"), String.valueOf(i));
     }

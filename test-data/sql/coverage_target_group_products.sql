@@ -13,6 +13,7 @@ INSERT INTO coverage_target_group_products (targetGroupEntity, productCode, chil
 INSERT INTO coverage_target_group_products (targetGroupEntity, productCode, childCoverage) VALUES ('Polio 1a dose', 'polio20dose', TRUE);
 INSERT INTO coverage_target_group_products (targetGroupEntity, productCode, childCoverage) VALUES ('Polio 2a dose', 'polio10dose', TRUE);
 INSERT INTO coverage_target_group_products (targetGroupEntity, productCode, childCoverage) VALUES ('Polio 3a dose', 'polio20dose', TRUE);
+INSERT INTO coverage_target_group_products (targetGroupEntity, productCode, childCoverage) VALUES ('IPV', 'IPV', TRUE);
 INSERT INTO coverage_target_group_products (targetGroupEntity, productCode, childCoverage) VALUES ('Penta 1a dose', 'penta1', TRUE);
 INSERT INTO coverage_target_group_products (targetGroupEntity, productCode, childCoverage) VALUES ('Penta 2a dose', 'penta10', TRUE);
 INSERT INTO coverage_target_group_products (targetGroupEntity, productCode, childCoverage) VALUES ('Penta 3a dose', 'penta1', TRUE);

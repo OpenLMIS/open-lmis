@@ -597,6 +597,7 @@ public class E2EDistributionTest extends TestCaseHelper {
     dbWrapper.insertTargetGroupEntityAndProductsInMappingTable("Polio 1a dose", "polio20dose", true);
     dbWrapper.insertTargetGroupEntityAndProductsInMappingTable("Polio 2a dose", "polio10dose", true);
     dbWrapper.insertTargetGroupEntityAndProductsInMappingTable("Polio 3a dose", "polio20dose", true);
+    dbWrapper.insertTargetGroupEntityAndProductsInMappingTable("IPV", "IPV", true);
     dbWrapper.insertTargetGroupEntityAndProductsInMappingTable("Penta 1a dose", "penta1", true);
     dbWrapper.insertTargetGroupEntityAndProductsInMappingTable("Penta 2a dose", "penta10", true);
     dbWrapper.insertTargetGroupEntityAndProductsInMappingTable("Penta 3a dose", "penta1", true);
@@ -613,6 +614,7 @@ public class E2EDistributionTest extends TestCaseHelper {
     dbWrapper.insertChildCoverageProductVial("BCG", "P10");
     dbWrapper.insertChildCoverageProductVial("Polio10", "P11");
     dbWrapper.insertChildCoverageProductVial("Polio20", "P10");
+    dbWrapper.insertChildCoverageProductVial("IPV", "IPV");
     dbWrapper.insertChildCoverageProductVial("Penta1", "penta1");
     dbWrapper.insertChildCoverageProductVial("Penta10", "P11");
     dbWrapper.insertChildCoverageProductVial("PCV", "P10");

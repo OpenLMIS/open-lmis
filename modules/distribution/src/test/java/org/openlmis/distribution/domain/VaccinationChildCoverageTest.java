@@ -50,7 +50,7 @@ public class VaccinationChildCoverageTest {
   }
 
   @Test
-  public void shouldCreateSixteenVaccinationChildCoverageLineItemsAndNineOpenedVialLineItems() throws Exception {
+  public void shouldCreateSixteenVaccinationChildCoverageLineItemsAndTenOpenedVialLineItems() throws Exception {
     TargetGroupProduct targetGroupProduct = new TargetGroupProduct("bcg", null, null);
     List<TargetGroupProduct> targetGroupProducts = asList(targetGroupProduct);
     ChildCoverageLineItem lineItem = new ChildCoverageLineItem();
@@ -67,7 +67,7 @@ public class VaccinationChildCoverageTest {
     VaccinationChildCoverage vaccinationChildCoverage = new VaccinationChildCoverage(facilityVisit, facility, period, targetGroupProducts, productVials);
 
     assertThat(vaccinationChildCoverage.getChildCoverageLineItems().size(), is(16));
-    assertThat(vaccinationChildCoverage.getOpenedVialLineItems().size(), is(9));
+    assertThat(vaccinationChildCoverage.getOpenedVialLineItems().size(), is(10));
   }
 
   @Test
@@ -90,13 +90,13 @@ public class VaccinationChildCoverageTest {
     VaccinationChildCoverage vaccinationChildCoverage = new VaccinationChildCoverage(facilityVisit, facility, period, targetGroupProducts, asList(productVial));
 
     assertThat(vaccinationChildCoverage.getChildCoverageLineItems().size(), is(16));
-    assertThat(vaccinationChildCoverage.getOpenedVialLineItems().size(), is(9));
+    assertThat(vaccinationChildCoverage.getOpenedVialLineItems().size(), is(10));
     assertTrue(vaccinationChildCoverage.getChildCoverageLineItems().get(0).getVaccination().equals("BCG"));
     verifyNew(ChildCoverageLineItem.class).withArguments(facilityVisit, facility, null, "BCG", 2);
   }
 
   @Test
-  public void shouldCreateNineOpenedVialLineItemsWithProductVialAsNullForInvalidProductVialName() throws Exception {
+  public void shouldCreateTenOpenedVialLineItemsWithProductVialAsNullForInvalidProductVialName() throws Exception {
     TargetGroupProduct targetGroupProduct = new TargetGroupProduct();
     targetGroupProduct.setTargetGroupEntity("BCG");
     List<TargetGroupProduct> targetGroupProducts = asList(targetGroupProduct);
@@ -117,7 +117,7 @@ public class VaccinationChildCoverageTest {
     VaccinationChildCoverage vaccinationChildCoverage = new VaccinationChildCoverage(facilityVisit, facility, period, targetGroupProducts, productVials);
 
     assertThat(vaccinationChildCoverage.getChildCoverageLineItems().size(), is(16));
-    assertThat(vaccinationChildCoverage.getOpenedVialLineItems().size(), is(9));
+    assertThat(vaccinationChildCoverage.getOpenedVialLineItems().size(), is(10));
     assertTrue(vaccinationChildCoverage.getOpenedVialLineItems().get(0).getProductVialName().equals("BCG"));
     verifyNew(OpenedVialLineItem.class).withArguments(facilityVisit, facility, null, "BCG");
   }
@@ -141,11 +141,11 @@ public class VaccinationChildCoverageTest {
     VaccinationChildCoverage vaccinationChildCoverage = new VaccinationChildCoverage(facilityVisit, facility, period, targetGroupProducts, productVials);
 
     assertThat(vaccinationChildCoverage.getChildCoverageLineItems().size(), is(16));
-    assertThat(vaccinationChildCoverage.getOpenedVialLineItems().size(), is(9));
+    assertThat(vaccinationChildCoverage.getOpenedVialLineItems().size(), is(10));
   }
 
   @Test
-  public void shouldCreateOnlyNineOpenedVialLineItemsAlthoughMoreThanNineProductVialsExist() throws Exception {
+  public void shouldCreateOnlyTenOpenedVialLineItemsAlthoughMoreThanTenProductVialsExist() throws Exception {
     List<ProductVial> productVials = new ArrayList<>();
     ProductVial productVial;
     for (int i = 0; i < 13; i++) {
@@ -164,6 +164,6 @@ public class VaccinationChildCoverageTest {
     VaccinationChildCoverage vaccinationChildCoverage = new VaccinationChildCoverage(facilityVisit, facility, period, targetGroupProducts, productVials);
 
     assertThat(vaccinationChildCoverage.getChildCoverageLineItems().size(), is(16));
-    assertThat(vaccinationChildCoverage.getOpenedVialLineItems().size(), is(9));
+    assertThat(vaccinationChildCoverage.getOpenedVialLineItems().size(), is(10));
   }
 }

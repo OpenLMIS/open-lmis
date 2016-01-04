@@ -119,6 +119,7 @@ public class ManageDistribution extends TestCaseHelper {
     dbWrapper.insertTargetGroupEntityAndProductsInMappingTable("Polio 1a dose", "polio20dose", true);
     dbWrapper.insertTargetGroupEntityAndProductsInMappingTable("Polio 2a dose", "polio10dose", true);
     dbWrapper.insertTargetGroupEntityAndProductsInMappingTable("Polio 3a dose", "polio20dose", true);
+    dbWrapper.insertTargetGroupEntityAndProductsInMappingTable("IPV", "IPV", true);
     dbWrapper.insertTargetGroupEntityAndProductsInMappingTable("Penta 1a dose", "penta1", true);
     dbWrapper.insertTargetGroupEntityAndProductsInMappingTable("Penta 2a dose", "penta10", true);
     dbWrapper.insertTargetGroupEntityAndProductsInMappingTable("Penta 3a dose", "penta1", true);
@@ -131,6 +132,7 @@ public class ManageDistribution extends TestCaseHelper {
     dbWrapper.insertTargetGroupEntityAndProductsInMappingTable("Sarampo 2a dose", "MSD", true);
     dbWrapper.insertChildCoverageProductVial("Polio10", "P11");
     dbWrapper.insertChildCoverageProductVial("Polio20", "P10");
+    dbWrapper.insertChildCoverageProductVial("IPV", "IPV");
     dbWrapper.insertChildCoverageProductVial("Penta1", "penta1");
     dbWrapper.insertChildCoverageProductVial("Penta10", "P11");
     dbWrapper.insertChildCoverageProductVial("PCV", "P10");
@@ -494,8 +496,8 @@ public class ManageDistribution extends TestCaseHelper {
         }
       }
 
-      List<String> openedVials = asList("BCG", "Polio10", "Polio20", "Penta1", "Penta10", "PCV", "RV Rotarix", "Sarampo", "MSD");
-      for (int i = 1; i <= 9; i++) {
+      List<String> openedVials = asList("BCG", "Polio10", "Polio20", "IPV", "Penta1", "Penta10", "PCV", "RV Rotarix", "Sarampo", "MSD");
+      for (int i = 1; i <= 10; i++) {
         ResultSet openedVialLineItem = dbWrapper.getChildOpenedVialLineItem(openedVials.get(i - 1), facilityVisitId);
         assertEquals(openedVialLineItem.getString("openedVials"), map.get("openedVial"));
       }
