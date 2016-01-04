@@ -1,3 +1,9 @@
+[![Build Status](http://ci.openlmis.org:8080/buildStatus/icon?job=OpenLMIS2.0)](http://ci.openlmis.org:8080/job/OpenLMIS2.0)
+
+OpenLMIS (Open Logistics Management Information System) is software for a shared, open source solution for managing medical commodity distribution in low- and middle-income countries.  For more information, see http://openlmis.org/.
+
+The OpenLMIS wiki is at https://openlmis.atlassian.net/wiki/display/OP/Developer+Guide.
+
 License Terms
 ---------------------------
 This program is part of the OpenLMIS logistics management information system platform software. Copyright © 2013, 2014, 2015 VillageReach, JSI, and ThoughtWorks.
@@ -15,8 +21,8 @@ System Requirements
 - JDK 7
 - Postgresql 9.2+
 - Git
-- Gradle 2.3
 - Firefox
+- Gradle 2.3
   * **For Linux users**
     * Download the source binary directly from the gradle website.
     * Copy the downloaded folder to `/usr/bin`
