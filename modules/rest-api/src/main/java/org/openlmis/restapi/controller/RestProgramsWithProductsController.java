@@ -1,6 +1,7 @@
 package org.openlmis.restapi.controller;
 
 import lombok.NoArgsConstructor;
+import org.openlmis.core.domain.Kit;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.restapi.domain.ProgramWithProducts;
 import org.openlmis.restapi.response.RestResponse;
@@ -9,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
@@ -19,6 +21,7 @@ import static org.openlmis.restapi.response.RestResponse.error;
 import static org.openlmis.restapi.response.RestResponse.response;
 import static org.springframework.http.HttpStatus.BAD_REQUEST;
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
+import static org.springframework.web.bind.annotation.RequestMethod.POST;
 
 @Controller
 @NoArgsConstructor
@@ -51,5 +54,11 @@ public class RestProgramsWithProductsController extends BaseController {
         } catch (DataException e) {
             return error(e.getOpenLmisMessage(), BAD_REQUEST);
         }
+    }
+
+    @RequestMapping(value = "/rest-api/kits", method = POST, headers = ACCEPT_JSON)
+    public ResponseEntity createKit(@RequestBody(required = true) Kit kit) {
+        programService.save(kit);
+        return RestResponse.success("msg.kit.createsuccess");
     }
 }

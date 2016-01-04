@@ -5,6 +5,7 @@ import com.google.common.collect.FluentIterable;
 import org.openlmis.core.domain.*;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.core.service.FacilityService;
+import org.openlmis.core.service.ProductService;
 import org.openlmis.core.service.ProgramProductService;
 import org.openlmis.core.service.ProgramService;
 import org.openlmis.restapi.domain.ProgramWithProducts;
@@ -22,6 +23,9 @@ public class RestProgramsWithProductsService {
 
     @Autowired
     private FacilityService facilityService;
+
+    @Autowired
+    private ProductService productService;
 
     @Autowired
     private ProgramProductService programProductService;
@@ -71,5 +75,9 @@ public class RestProgramsWithProductsService {
         programWithProducts.setProgramName(program.getName());
         programWithProducts.setProducts(getProductsForProgramAfterUpdatedTime(program, afterUpdatedTime, facilityType));
         return programWithProducts;
+    }
+
+    public void save(Kit kit) {
+        productService.save(kit);
     }
 }

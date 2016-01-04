@@ -16,14 +16,13 @@ import org.openlmis.core.builder.ProgramProductBuilder;
 import org.openlmis.core.domain.*;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.core.service.FacilityService;
+import org.openlmis.core.service.ProductService;
 import org.openlmis.core.service.ProgramProductService;
 import org.openlmis.core.service.ProgramService;
 import org.openlmis.core.utils.DateUtil;
 import org.openlmis.db.categories.UnitTests;
 import org.openlmis.restapi.builder.ProgramWithProductsBuilder;
 import org.openlmis.restapi.domain.ProgramWithProducts;
-import org.openlmis.restapi.response.RestResponse;
-import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 import org.powermock.modules.junit4.PowerMockRunnerDelegate;
 
@@ -31,10 +30,9 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import static com.natpryce.makeiteasy.MakeItEasy.a;
-import static com.natpryce.makeiteasy.MakeItEasy.make;
-import static com.natpryce.makeiteasy.MakeItEasy.with;
+import static com.natpryce.makeiteasy.MakeItEasy.*;
 import static org.junit.Assert.assertEquals;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @Category(UnitTests.class)
@@ -50,6 +48,9 @@ public class RestProgramsWithProductsServiceTest {
 
     @Mock
     private FacilityService facilityService;
+
+    @Mock
+    private ProductService productService;
 
     @Mock
     private ProgramProductService programProductService;
@@ -165,6 +166,14 @@ public class RestProgramsWithProductsServiceTest {
         when(facilityService.getById(facilityId)).thenReturn(null);
 
         restProgramsWithProductsService.getLatestProgramsWithProductsByFacilityId(facilityId, null);
+    }
+
+    @Test
+    public void shouldSaveKitWithValidKit() {
+        Kit kit = new Kit();
+        restProgramsWithProductsService.save(kit);
+
+        verify(productService).save(kit);
     }
 
     private ProgramProduct makeProgramProduct(Program program, Product product) {
