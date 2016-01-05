@@ -12,9 +12,9 @@ function ViewRnrMmiaController($scope, $route, Requisitions, messageService) {
     $scope.$on('$viewContentLoaded', function () {
         $scope.loadMmiaDetail();
     });
+
     $scope.$on('messagesPopulated', function () {
         $scope.initMonth();
-        $scope.initPatient();
     });
 
     $scope.loadMmiaDetail = function () {
@@ -46,7 +46,6 @@ function ViewRnrMmiaController($scope, $route, Requisitions, messageService) {
     $scope.initMonth = function () {
         var month = "month." + $scope.rnr.period.stringEndDate.substr(3, 2);
         $scope.month = messageService.get(month);
-
     };
 
     $scope.initProduct = function () {
@@ -80,7 +79,7 @@ function ViewRnrMmiaController($scope, $route, Requisitions, messageService) {
 
         for (var i=0; i<patientQuantifications.length; i++){
             var item = patientQuantifications[i];
-            item.category = messageService.get("view.rnr.mmia.patient." + openlmisMessageMap[item.category]);
+            item.category = "view.rnr.mmia.patient." + openlmisMessageMap[item.category];
         }
     };
 
