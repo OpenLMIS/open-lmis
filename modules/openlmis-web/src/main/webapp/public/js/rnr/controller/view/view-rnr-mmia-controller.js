@@ -17,8 +17,14 @@ function ViewRnrMmiaController($scope, $route, Requisitions, messageService) {
         $scope.initMonth();
     });
 
+    $scope.$on('$viewContentLoaded', function () {
+        if (typeof window.callPhantom === 'function') {
+            window.callPhantom();
+        }
+    });
+
     $scope.loadMmiaDetail = function () {
-        Requisitions.get({id: $route.current.params.rnr,operation:"skipped"}, function (data) {
+        Requisitions.get({id: $route.current.params.rnr, operation: "skipped"}, function (data) {
             $scope.rnr = data.rnr;
 
             $scope.year = data.rnr.period.stringYear;
@@ -33,11 +39,11 @@ function ViewRnrMmiaController($scope, $route, Requisitions, messageService) {
 
     };
 
-    function parseSignature(signatures){
-        _.forEach(signatures,function(signature){
-            if(signature.type == "SUBMITTER"){
+    function parseSignature(signatures) {
+        _.forEach(signatures, function (signature) {
+            if (signature.type == "SUBMITTER") {
                 $scope.submitterSignature = signature.text;
-            } else if (signature.type == "APPROVER"){
+            } else if (signature.type == "APPROVER") {
                 $scope.approverSignature = signature.text;
             }
         });
@@ -55,35 +61,35 @@ function ViewRnrMmiaController($scope, $route, Requisitions, messageService) {
             formatExpirationDate(fullSupplyLineItems[i]);
         }
 
-        $scope.adult = fullSupplyLineItems.slice(0,12);
-        $scope.children = fullSupplyLineItems.slice(12,22);
-        $scope.other = fullSupplyLineItems.slice(22,24);
+        $scope.adult = fullSupplyLineItems.slice(0, 12);
+        $scope.children = fullSupplyLineItems.slice(12, 22);
+        $scope.other = fullSupplyLineItems.slice(22, 24);
     };
 
-    $scope.initPatient = function(){
+    $scope.initPatient = function () {
         var patientQuantifications = $scope.rnr.patientQuantifications;
         var openlmisMessageMap = {
             "New": "new",
-            "Maintenance" : "maintenance",
+            "Maintenance": "maintenance",
             "Alteration": "alteration",
-            "PTV" : "ptv",
+            "PTV": "ptv",
             "PPE": "ppe",
             "Total Dispensed": "dispensed",
             "Total Patients": "total",
             "Novos": "new",
-            "Manutenção" : "maintenance",
+            "Manutenção": "maintenance",
             "Alteração": "alteration",
             "Total de Meses dispensados": "dispensed",
             "Total de pacientes em TARV na US": "total"
         };
 
-        for (var i=0; i<patientQuantifications.length; i++){
+        for (var i = 0; i < patientQuantifications.length; i++) {
             var item = patientQuantifications[i];
             item.category = "view.rnr.mmia.patient." + openlmisMessageMap[item.category];
         }
     };
 
-    var formatExpirationDate = function(theOneItem) {
+    var formatExpirationDate = function (theOneItem) {
         if (theOneItem.expirationDate) {
             var splitDate = theOneItem.expirationDate.split('/');
             theOneItem.expirationDate = splitDate[2] + "-" + splitDate[1] + "-" + splitDate[0];
@@ -99,8 +105,8 @@ function ViewRnrMmiaController($scope, $route, Requisitions, messageService) {
         calculateRegimeTotal(regimes);
     };
 
-    var calculateRegimeTotal = function(regimes){
-        for(var i = 0; i < regimes.length; i++) {
+    var calculateRegimeTotal = function (regimes) {
+        for (var i = 0; i < regimes.length; i++) {
             $scope.regimeTotal += regimes[i].patientsOnTreatment;
         }
     };

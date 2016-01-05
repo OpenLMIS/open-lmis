@@ -12,21 +12,20 @@ phantom.addCookie({
     'domain': 'localhost'
 });
 
-page.open(address, function (status) {
+page.onCallback = function (data) {
+    window.setTimeout(function () {
+        page.evaluate(function () {
+            $("#locale_pt").click();
+            $(".toggleFullScreen").hide()
+        });
+        page.render(output);
+        phantom.exit();
+    }, 500);
+};
 
+page.open(address, function (status) {
     if (status !== 'success') {
         console.log('Unable to load the address!');
         phantom.exit(1);
-    } else {
-        window.setTimeout(function () {
-            page.evaluate(function () {
-                $("#locale_pt").click();
-                $(".toggleFullScreen").hide()
-            });
-            window.setTimeout(function () {
-                page.render(output);
-                phantom.exit();
-            }, 2000);
-        }, 2000);
     }
 });
