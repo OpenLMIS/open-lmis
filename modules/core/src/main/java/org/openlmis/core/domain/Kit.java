@@ -31,6 +31,7 @@ public class Kit extends Product {
     setTracer(DEFAULT_TRACER);
     setRoundToZero(DEFAULT_ROUND_TO_ZERO);
     setPackRoundingThreshold(DEFAULT_PACK_ROUNDING_THRESHOLD);
+    setIsKit(true);
   }
 
 }

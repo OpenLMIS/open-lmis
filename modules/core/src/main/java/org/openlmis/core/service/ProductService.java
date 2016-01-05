@@ -140,7 +140,13 @@ public class ProductService {
 
   @Transactional
   public void saveKit(Kit kit) {
-    save(kit);
+    Product queryKit = getByCode(kit.getCode());
+    if (queryKit == null) {
+      save(kit);
+    } else {
+      kit.setId(queryKit.getId());
+    }
+
     updateKitProducts(kit);
   }
 

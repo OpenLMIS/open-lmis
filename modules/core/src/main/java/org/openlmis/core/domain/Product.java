@@ -175,6 +175,9 @@ public class Product extends BaseModel implements Importable {
   @ImportField(type = "boolean", name = "Has Been Archived")
   private Boolean archived;
 
+  @ImportField(type = "boolean", name = "Is a Kit")
+  private Boolean isKit;
+
   private Integer quantityInKit;
 
   public void validate() {
