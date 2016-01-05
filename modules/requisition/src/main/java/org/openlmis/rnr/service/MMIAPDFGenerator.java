@@ -36,7 +36,7 @@ public class MMIAPDFGenerator {
         String pathname = cachePath + "/" + fileNameForMMIAPdf;
 
         try {
-            phantom.generatePDF(url, sessionId, pathname);
+            phantom.generatePDF(url, pathname, sessionId);
         } catch (Exception e) {
             logger.error("error occured when calling phantom" + e.getMessage());
         }

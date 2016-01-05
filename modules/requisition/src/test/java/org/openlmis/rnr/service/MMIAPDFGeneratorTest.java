@@ -43,7 +43,7 @@ public class MMIAPDFGeneratorTest {
         //then
         verify(phantom).generatePDF(
                 "localhost:9091/public/pages/logistics/rnr/index.html#/view-requisition-mmia/1/3",
-                "helloid",
-                "/app/tomcat/openlmis/emailattachment/cache/path.pdf");
+                "/app/tomcat/openlmis/emailattachment/cache/path.pdf",
+                "helloid");
     }
 }
