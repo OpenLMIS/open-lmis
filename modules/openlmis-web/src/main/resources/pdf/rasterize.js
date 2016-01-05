@@ -7,27 +7,23 @@ var output = system.args[2];
 
 phantom.addCookie({
   'name': 'JSESSIONID',
-  'value': '8auczhujfm3cn06dhsp05elp',
+  'value': '1ifatyyj4xhmtpauoi6g2mjkc',
   'domain': 'localhost'
 });
 
 page.open(address, function(status) {
-  
+
   if (status !== 'success') {
     console.log('Unable to load the address!');
     phantom.exit(1);
   } else {
-    // page.viewportSize = {
-    //   width: 1200,
-    //   height: 800
-    // };
-    page.evaluate(function() {
-      $(".toggleFullScreen").hide()
-    });
     window.setTimeout(function() {
+      page.evaluate(function() {
+        $(".toggleFullScreen").hide()
+      });
       page.render(output);
       phantom.exit();
-    }, 200);
+    }, 500);
   }
 });
 //cookie, address, pdf file path, ubuntu run
