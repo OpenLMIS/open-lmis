@@ -245,7 +245,7 @@ public class RequisitionService {
     return update(savedRnr);
   }
 
-  @Transactional//scope of this transaction is too wide
+  @Transactional
   public Rnr authorize(Rnr rnr) {
     Rnr savedRnr = getFullRequisitionById(rnr.getId());
 
@@ -265,7 +265,8 @@ public class RequisitionService {
     calculationService.perform(savedRnr, template);
     savedRnr.setFieldsForApproval();
 
-    return update(savedRnr);
+    requisitionRepository.update(savedRnr);
+    return savedRnr;
   }
 
   @Transactional
@@ -482,7 +483,7 @@ public class RequisitionService {
     return requisition;
   }
 
-  private void logStatusChangeAndNotify(Rnr requisition, boolean notifyStatusChange, String name) {
+  public void logStatusChangeAndNotify(Rnr requisition, boolean notifyStatusChange, String name) {
     requisitionRepository.logStatusChange(requisition, name);
     if (notifyStatusChange) {
       requisitionEventService.notifyForStatusChange(requisition);

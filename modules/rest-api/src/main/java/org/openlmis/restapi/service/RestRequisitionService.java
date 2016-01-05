@@ -73,7 +73,7 @@ public class RestRequisitionService {
   private FacilityApprovedProductService facilityApprovedProductService;
   private List<FacilityTypeApprovedProduct> nonFullSupplyFacilityApprovedProductByFacilityAndProgram;
 
-  @Transactional//todo: scope of this transaction is too wide
+  @Transactional
   public Rnr submitReport(Report report, Long userId) {
     report.validate();
 
@@ -103,6 +103,10 @@ public class RestRequisitionService {
     rnr = requisitionService.submit(rnr);
 
     return requisitionService.authorize(rnr);
+  }
+
+  public void notifySubmittedEvent(Rnr rnr){
+    requisitionService.logStatusChangeAndNotify(rnr,true,null);
   }
 
   private void updateClientFields(Report report, Rnr rnr) {
