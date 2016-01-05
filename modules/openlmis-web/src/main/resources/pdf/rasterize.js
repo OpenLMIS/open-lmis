@@ -19,11 +19,13 @@ page.open(address, function(status) {
   } else {
     window.setTimeout(function() {
       page.evaluate(function() {
+        $("#locale_pt").click();
         $(".toggleFullScreen").hide()
       });
-      page.render(output);
-      phantom.exit();
-    }, 500);
+      window.setTimeout(function() {
+        page.render(output);
+        phantom.exit();
+      }, 2000);
+    }, 2000);
   }
 });
-//cookie, address, pdf file path, ubuntu run
