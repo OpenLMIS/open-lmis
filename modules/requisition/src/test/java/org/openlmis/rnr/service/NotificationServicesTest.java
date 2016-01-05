@@ -84,7 +84,7 @@ public class NotificationServicesTest {
 
     notificationServices.notifyStatusChange(rnr);
 
-    verify(requisitionEmailServiceForSIMAM).sendRequisitionEmailWithAttachment(rnr, userList);
+    verify(requisitionEmailServiceForSIMAM).queueRequisitionEmailWithAttachment(rnr, userList);
   }
 
   @Test
@@ -114,6 +114,6 @@ public class NotificationServicesTest {
 
     notificationServices.notifyStatusChange(rnr);
 
-    verify(requisitionEmailServiceForSIMAM,never()).sendRequisitionEmailWithAttachment(rnr, userList);
+    verify(requisitionEmailServiceForSIMAM,never()).queueRequisitionEmailWithAttachment(rnr, userList);
   }
 }

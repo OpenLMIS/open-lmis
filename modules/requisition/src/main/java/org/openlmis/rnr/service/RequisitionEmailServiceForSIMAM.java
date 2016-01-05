@@ -69,7 +69,7 @@ public class RequisitionEmailServiceForSIMAM {
 											{"ESS_MEDS", "Medicamentos Essenciais"}
 										});
 
-	public void sendRequisitionEmailWithAttachment(Rnr requisition, List<User> users) {
+	public void queueRequisitionEmailWithAttachment(Rnr requisition, List<User> users) {
 		if (!requisition.getStatus().equals(RnrStatus.AUTHORIZED) || users.size() <= 0) {
 			return;
 		}

@@ -245,7 +245,7 @@ public class RequisitionService {
     return update(savedRnr);
   }
 
-  @Transactional
+  @Transactional//scope of this transaction is too wide
   public Rnr authorize(Rnr rnr) {
     Rnr savedRnr = getFullRequisitionById(rnr.getId());
 

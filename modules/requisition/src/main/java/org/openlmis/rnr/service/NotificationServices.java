@@ -81,7 +81,7 @@ public class NotificationServices {
       if (staticReferenceDataService.getBoolean("toggle.email.attachment.simam")) {
         //catch all the issues when creating file
         try {
-          requisitionEmailServiceForSIMAM.sendRequisitionEmailWithAttachment(requisition, users);
+          requisitionEmailServiceForSIMAM.queueRequisitionEmailWithAttachment(requisition, users);
         } catch (Throwable t) {
           LOGGER.error("There is a error when creating requisition email: " + t.getMessage());
         }
