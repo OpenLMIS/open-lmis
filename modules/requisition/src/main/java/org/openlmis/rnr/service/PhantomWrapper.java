@@ -11,10 +11,10 @@ import java.nio.file.Paths;
 @Component
 public class PhantomWrapper {
     public void generatePDF(String url, String pdfPath, String sessionid) throws IOException, URISyntaxException, InterruptedException {
-        URL resource = this.getClass().getClassLoader().getResource("rasterize.js");
+        URL resource = this.getClass().getClassLoader().getResource("pdf/rasterize.js");
         File file = Paths.get(resource.toURI()).toFile();
 
         ProcessBuilder pb = new ProcessBuilder("phantomjs", file.getAbsolutePath(), url, pdfPath, sessionid);
-        pb.start().waitFor();
+        pb.start();
     }
 }
