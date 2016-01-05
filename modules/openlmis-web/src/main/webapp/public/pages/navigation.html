@@ -415,8 +415,8 @@
                 </div>
             </li>
 
-          <li ng-show="hasPermission('MANAGE_PRODUCT')">
-            <a id='update-products' href="/public/pages/admin/update-products/index.html?xx"
+          <li ng-show="hasPermission('MANAGE_PRODUCT') && isUpdateProductToggleOff()">
+            <a id='update-products' href="/public/pages/admin/update-products/index.html"
                openlmis-message="link.admin.update.products"></a>
           </li>
 
