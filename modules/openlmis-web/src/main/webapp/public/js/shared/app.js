@@ -116,17 +116,18 @@ app.directive('numericValidator', function () {
       });
 
       element.bind('blur', function () {
-        var valueAsNumber = parseFloat(ctrl.$modelValue);
+        var value = ctrl.$modelValue;
+        var valueAsNumber = parseFloat(value);
 
-        if (checkCondition(valueAsNumber)) {
-          validationFunction(valueAsNumber, getErrorHolder(), integerPartLength, fractionalPartLength);
+        if (isNaN(valueAsNumber) || checkCondition(valueAsNumber)) {
+          validationFunction(value, getErrorHolder(), integerPartLength, fractionalPartLength);
         }
       });
 
       ctrl.$parsers.unshift(function (viewValue) {
         var valueAsNumber = parseFloat(viewValue);
 
-        if (checkCondition(valueAsNumber) && validationFunction(viewValue, getErrorHolder(), integerPartLength, fractionalPartLength)) {
+        if ((isNaN(valueAsNumber) || checkCondition(valueAsNumber)) && validationFunction(viewValue, getErrorHolder(), integerPartLength, fractionalPartLength)) {
           if (viewValue === "")  viewValue = undefined;
           return viewValue;
         } else {
