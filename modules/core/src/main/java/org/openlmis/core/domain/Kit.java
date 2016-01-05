@@ -4,6 +4,8 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.List;
+
 import static com.fasterxml.jackson.databind.annotation.JsonSerialize.Inclusion.NON_EMPTY;
 
 @Getter
@@ -18,6 +20,8 @@ public class Kit extends Product {
   private final static Boolean DEFAULT_TRACER = false;
   private final static Boolean DEFAULT_ROUND_TO_ZERO = false;
   private final static Integer DEFAULT_PACK_ROUNDING_THRESHOLD = 0;
+
+  private List<Product> products;
 
   public Kit() {
     setDispensingUnit(DEFAULT_KIT_UNIT);

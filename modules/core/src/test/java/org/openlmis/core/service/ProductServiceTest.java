@@ -18,14 +18,13 @@ import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
-import org.openlmis.core.domain.DosageUnit;
-import org.openlmis.core.domain.Product;
-import org.openlmis.core.domain.Program;
-import org.openlmis.core.domain.ProgramProduct;
+import org.openlmis.core.domain.*;
+import org.openlmis.core.repository.KitProductRepository;
 import org.openlmis.core.repository.ProductRepository;
 import org.openlmis.db.categories.UnitTests;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import static com.natpryce.makeiteasy.MakeItEasy.*;
@@ -56,6 +55,9 @@ public class ProductServiceTest {
 
   @Mock
   ProgramProductService programProductService;
+
+  @Mock
+  private KitProductRepository kitProductRepository;
 
   @Mock
   private ProductGroupService productGroupService;
@@ -294,5 +296,44 @@ public class ProductServiceTest {
     service.getTotalSearchResultCount("search-param");
 
     verify(repository).getTotalSearchResultCount("search-param");
+  }
+
+  @Test
+  public void shouldUpdateKitProductsWhenProductExisted() throws Exception {
+    Product product = new Product();
+    product.setId(1234L);
+    product.setCode("S12345");
+    product.setPackSize(1);
+    product.setQuantityInKit(200);
+
+    Kit kit = new Kit();
+    kit.setId(100L);
+    kit.setProducts(Arrays.asList(product));
+
+    when(repository.getByCode("S12345")).thenReturn(product);
+
+    service.updateKitProducts(kit);
+
+    verify(repository, never()).insert(any(Product.class));
+    verify(kitProductRepository).insert(any(KitProduct.class));
+  }
+
+  @Test
+  public void shouldSaveProductAndUpdateKitProductsWhenProductNotExisted() throws Exception {
+    Product product = new Product();
+    product.setCode("S12345");
+    product.setPackSize(1);
+    product.setQuantityInKit(200);
+
+    Kit kit = new Kit();
+    kit.setId(100L);
+    kit.setProducts(Arrays.asList(product));
+
+    when(repository.getByCode("S12345")).thenReturn(null);
+
+    service.updateKitProducts(kit);
+
+    verify(repository).insert(any(Product.class));
+    verify(kitProductRepository).insert(any(KitProduct.class));
   }
 }

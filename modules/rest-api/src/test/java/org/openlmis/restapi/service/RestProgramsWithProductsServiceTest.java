@@ -173,7 +173,7 @@ public class RestProgramsWithProductsServiceTest {
         Kit kit = new Kit();
         restProgramsWithProductsService.save(kit);
 
-        verify(productService).save(kit);
+        verify(productService).saveKit(kit);
     }
 
     private ProgramProduct makeProgramProduct(Program program, Product product) {

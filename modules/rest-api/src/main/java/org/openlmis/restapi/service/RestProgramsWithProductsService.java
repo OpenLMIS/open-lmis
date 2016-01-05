@@ -78,6 +78,6 @@ public class RestProgramsWithProductsService {
     }
 
     public void save(Kit kit) {
-        productService.save(kit);
+        productService.saveKit(kit);
     }
 }

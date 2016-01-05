@@ -13,6 +13,7 @@ package org.openlmis.core.service;
 import lombok.NoArgsConstructor;
 import org.openlmis.core.domain.*;
 import org.openlmis.core.exception.DataException;
+import org.openlmis.core.repository.KitProductRepository;
 import org.openlmis.core.repository.ProductGroupRepository;
 import org.openlmis.core.repository.ProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -46,6 +47,9 @@ public class ProductService {
 
   @Autowired
   private ProductFormService productFormService;
+
+  @Autowired
+  private KitProductRepository kitProductRepository;
 
   @Transactional
   public void save(Product product) {
@@ -116,6 +120,28 @@ public class ProductService {
 
   public Product getById(Long id) {
     return repository.getById(id);
+  }
+
+  @Transactional
+  public void updateKitProducts(Kit kit) {
+    for (Product product : kit.getProducts()) {
+      int quantityInKit = product.getQuantityInKit();
+
+      Product productByCode = getByCode(product.getCode());
+      if (productByCode == null) {
+        save(product);
+        productByCode = product;
+      }
+
+      KitProduct kitProduct = new KitProduct(kit, productByCode, quantityInKit);
+      kitProductRepository.insert(kitProduct);
+    }
+  }
+
+  @Transactional
+  public void saveKit(Kit kit) {
+    save(kit);
+    updateKitProducts(kit);
   }
 
   public Product getExisting(Product product) {

@@ -11,10 +11,7 @@
 package org.openlmis.core.repository.mapper;
 
 import org.apache.ibatis.annotations.*;
-import org.openlmis.core.domain.DosageUnit;
-import org.openlmis.core.domain.Product;
-import org.openlmis.core.domain.ProductForm;
-import org.openlmis.core.domain.ProductGroup;
+import org.openlmis.core.domain.*;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -112,6 +109,9 @@ public interface ProductMapper {
       property = "form", column = "formId", javaType = DosageUnit.class,
       one = @One(select = "org.openlmis.core.repository.mapper.ProductFormMapper.getById"))})
   Product getById(Long id);
+
+  @Select("SELECT id, primaryName, code FROM products WHERE id=#{id}")
+  Kit getKitById(Long id);
 
   @Select("SELECT active FROM products WHERE LOWER(code) = LOWER(#{code})")
   boolean isActive(String code);
