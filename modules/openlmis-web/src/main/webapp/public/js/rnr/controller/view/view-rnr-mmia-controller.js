@@ -17,12 +17,6 @@ function ViewRnrMmiaController($scope, $route, Requisitions, messageService) {
         $scope.initMonth();
     });
 
-    $scope.$on('$viewContentLoaded', function () {
-        if (typeof window.callPhantom === 'function') {
-            window.callPhantom();
-        }
-    });
-
     $scope.loadMmiaDetail = function () {
         Requisitions.get({id: $route.current.params.rnr, operation: "skipped"}, function (data) {
             $scope.rnr = data.rnr;
