@@ -19,6 +19,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.openlmis.core.domain.*;
+import org.openlmis.core.exception.DataException;
 import org.openlmis.core.repository.ProductRepository;
 import org.openlmis.db.categories.UnitTests;
 
@@ -314,12 +315,11 @@ public class ProductServiceTest {
 
     service.updateKitProducts(kit);
 
-    verify(repository, never()).insert(any(Product.class));
     verify(kitProductService).insert(any(KitProduct.class));
   }
 
-  @Test
-  public void shouldSaveProductAndUpdateKitProductsWhenProductNotExisted() throws Exception {
+  @Test(expected = DataException.class)
+  public void shouldThrowDataExceptionWhenProductNotExisted() throws Exception {
     Product product = new Product();
     product.setCode("S12345");
     product.setPackSize(1);
@@ -333,8 +333,7 @@ public class ProductServiceTest {
 
     service.updateKitProducts(kit);
 
-    verify(repository).insert(any(Product.class));
-    verify(kitProductService).insert(any(KitProduct.class));
+    verify(kitProductService, never()).insert(any(KitProduct.class));
   }
 
   @Test

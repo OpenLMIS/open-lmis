@@ -129,8 +129,7 @@ public class ProductService {
 
       Product productByCode = getByCode(product.getCode());
       if (productByCode == null) {
-        save(product);
-        productByCode = product;
+        throw new DataException("error.kit.product.not.exist");
       }
 
       KitProduct kitProduct = new KitProduct(kit, productByCode, quantityInKit);
