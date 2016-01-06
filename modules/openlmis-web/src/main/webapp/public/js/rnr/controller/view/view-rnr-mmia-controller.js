@@ -1,4 +1,4 @@
-function ViewRnrMmiaController($scope, $route, Requisitions, messageService) {
+function ViewRnrMmiaController($scope, $route, $filter, Requisitions, messageService) {
     $scope.adult = [];
     $scope.children = [];
     $scope.other = [];
@@ -86,10 +86,18 @@ function ViewRnrMmiaController($scope, $route, Requisitions, messageService) {
     var formatExpirationDate = function (theOneItem) {
         if (theOneItem.expirationDate) {
             var splitDate = theOneItem.expirationDate.split('/');
-            theOneItem.expirationDate = splitDate[2] + "-" + splitDate[1] + "-" + splitDate[0];
-            theOneItem.expirationDate = new Date(theOneItem.expirationDate);
+            var yearNumber = splitDate[2];
+            var monthNumber = splitDate[1];
+
+            var monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun",
+                "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"
+            ];
+
+            theOneItem.expirationDate = monthNames[monthNumber - 1] + " " + yearNumber;
         }
     };
+
+
 
     $scope.initRegime = function () {
         var regimes = $scope.rnr.regimenLineItems;
