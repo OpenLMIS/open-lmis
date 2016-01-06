@@ -13,13 +13,13 @@ package org.openlmis.core.service;
 import lombok.NoArgsConstructor;
 import org.openlmis.core.domain.*;
 import org.openlmis.core.exception.DataException;
-import org.openlmis.core.repository.KitProductRepository;
 import org.openlmis.core.repository.ProductGroupRepository;
 import org.openlmis.core.repository.ProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -49,7 +49,7 @@ public class ProductService {
   private ProductFormService productFormService;
 
   @Autowired
-  private KitProductRepository kitProductRepository;
+  private KitProductService kitProductService;
 
   @Transactional
   public void save(Product product) {
@@ -134,7 +134,7 @@ public class ProductService {
       }
 
       KitProduct kitProduct = new KitProduct(kit, productByCode, quantityInKit);
-      kitProductRepository.insert(kitProduct);
+      kitProductService.insert(kitProduct);
     }
   }
 
@@ -158,4 +158,7 @@ public class ProductService {
     return repository.getAllProducts();
   }
 
+  public List<Kit> getLatestKits(Date afterUpdatedTime) {
+    return afterUpdatedTime == null ? repository.getAllKits() : repository.getLatestKits(afterUpdatedTime);
+  }
 }

@@ -17,6 +17,7 @@ import org.junit.experimental.categories.Category;
 import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
 import org.openlmis.core.domain.DosageUnit;
+import org.openlmis.core.domain.Kit;
 import org.openlmis.core.domain.Product;
 import org.openlmis.db.categories.IntegrationTests;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -200,4 +201,45 @@ public class ProductMapperIT {
     assertThat(resultCount, is(3));
   }
 
+  @Test
+  public void shouldGetKits() {
+
+    Product product = make(a(defaultProduct));
+    productMapper.insert(product);
+
+    Kit kit = generateKit("Kit 1", "Kit 1 name");
+    productMapper.insert(kit);
+
+    List<Kit> kits = productMapper.listAllKits();
+
+    assertEquals(kits.size(), 1);
+    assertEquals(kits.get(0).getCode(), kit.getCode());
+  }
+
+  @Test
+  public void shouldGetLatestKits() {
+    long currentMillions = System.currentTimeMillis();
+    long twoDays = 1000 * 60 * 60 * 24 * 2;
+
+    Kit usKit = generateKit("Kit 1", "Kit 1 name");
+    usKit.setModifiedDate(new Date(currentMillions - twoDays));
+    productMapper.insert(usKit);
+
+    Kit apeKit = generateKit("Kit 2", "Kit 2 name");
+    apeKit.setModifiedDate(new Date(currentMillions + twoDays));
+    productMapper.insert(apeKit);
+
+    List<Kit> kits = productMapper.listLatestKits(new Date(currentMillions));
+
+    assertEquals(kits.size(), 1);
+    assertEquals(kits.get(0).getCode(), apeKit.getCode());
+  }
+
+  private Kit generateKit(String code, String primaryName) {
+    Kit kit = new Kit();
+    kit.setCode(code);
+    kit.setPrimaryName(primaryName);
+    kit.setActive(true);
+    return kit;
+  }
 }

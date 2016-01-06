@@ -1,5 +1,7 @@
 CREATE TABLE kit_products_relation (
   kitId INTEGER NOT NULL REFERENCES products(id),
   productId INTEGER NOT NULL REFERENCES products(id),
-  quantity INTEGER NOT NULL
+  quantity INTEGER NOT NULL,
+  createdDate TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  modifiedDate TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );

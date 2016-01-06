@@ -22,6 +22,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
@@ -78,7 +79,7 @@ public class RestProgramsWithProductsControllerTest {
         mockStatic(RestResponse.class);
         DataException e = new DataException("error.facility.id.invalid");
         long facilityId = 123L;
-        when(restProgramsWithProductsService.getLatestProgramsWithProductsByFacilityId(facilityId,new Date(1L))).thenThrow(e);
+        when(restProgramsWithProductsService.getLatestProgramsWithProductsByFacilityId(facilityId, new Date(1L))).thenThrow(e);
         ResponseEntity<RestResponse> expectedResponse = new ResponseEntity<>(new RestResponse(ERROR, "error.facility.id.invalid"), BAD_REQUEST);
         when(RestResponse.error(e.getOpenLmisMessage(), BAD_REQUEST)).thenReturn(expectedResponse);
 
@@ -100,6 +101,22 @@ public class RestProgramsWithProductsControllerTest {
         assertEquals(programsWithProducts, response.getBody().getData().get("programsWithProducts"));
         assertNotNull(response.getBody().getData().get("latestUpdatedTime"));
     }
+
+    @Test
+    public void shouldReturnResponseWithListOfKits() {
+        List<Kit> kits = Arrays.asList(new Kit());
+
+        long date = 1234L;
+        Date afterUpdatedTime = new Date(1234L);
+
+        when(restProgramsWithProductsService.getLatestKits(afterUpdatedTime)).thenReturn(kits);
+
+        ResponseEntity<RestResponse> response = restProgramsWithProductsController.getLatestProgramWithProductsByFacility(1L, date);
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertEquals(kits, response.getBody().getData().get("kits"));
+        assertNotNull(response.getBody().getData().get("latestUpdatedTime"));
+    }
+
 
     @Test
     public void shouldCallLatestProgramsWithProductsWithNullTimeWhenTimeIsNotProvided() {

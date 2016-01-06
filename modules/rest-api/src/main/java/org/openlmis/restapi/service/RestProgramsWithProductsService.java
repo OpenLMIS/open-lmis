@@ -4,10 +4,7 @@ import com.google.common.base.Function;
 import com.google.common.collect.FluentIterable;
 import org.openlmis.core.domain.*;
 import org.openlmis.core.exception.DataException;
-import org.openlmis.core.service.FacilityService;
-import org.openlmis.core.service.ProductService;
-import org.openlmis.core.service.ProgramProductService;
-import org.openlmis.core.service.ProgramService;
+import org.openlmis.core.service.*;
 import org.openlmis.restapi.domain.ProgramWithProducts;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -29,6 +26,9 @@ public class RestProgramsWithProductsService {
 
     @Autowired
     private ProgramProductService programProductService;
+
+    @Autowired
+    private KitProductService kitProductService;
 
     @Deprecated
     public List<ProgramWithProducts> getAllProgramsWithProductsByFacilityCode(String facilityCode) {
@@ -79,5 +79,15 @@ public class RestProgramsWithProductsService {
 
     public void save(Kit kit) {
         productService.saveKit(kit);
+    }
+
+    public List<Kit> getLatestKits(final Date afterUpdatedTime) {
+        return FluentIterable.from(productService.getLatestKits(afterUpdatedTime)).transform(new Function<Kit, Kit>() {
+            @Override
+            public Kit apply(Kit kit) {
+                kit.setProducts(kitProductService.getProductsForKitAfterUpdatedTime(kit.getId(), afterUpdatedTime));
+                return kit;
+            }
+        }).toList();
     }
 }

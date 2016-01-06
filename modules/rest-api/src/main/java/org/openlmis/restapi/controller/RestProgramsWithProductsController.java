@@ -46,9 +46,11 @@ public class RestProgramsWithProductsController extends BaseController {
     public ResponseEntity<RestResponse> getLatestProgramWithProductsByFacility(@RequestParam Long facilityId,
                                                                                @RequestParam(required = false) Long afterUpdatedTime) {
         try {
-            Date afterUpdatedTimeInDate = (afterUpdatedTime != null ? new Date(afterUpdatedTime) : null);
+            Date afterUpdatedTimeInDate = (afterUpdatedTime == null ? null : new Date(afterUpdatedTime));
             List<ProgramWithProducts> programsWithProducts = programService.getLatestProgramsWithProductsByFacilityId(facilityId, afterUpdatedTimeInDate);
             RestResponse restResponse = new RestResponse("programsWithProducts", programsWithProducts);
+            List<Kit> latestKits = programService.getLatestKits(afterUpdatedTimeInDate);
+            restResponse.addData("kits", latestKits);
             restResponse.addData("latestUpdatedTime", new Date());
             return new ResponseEntity<>(restResponse, HttpStatus.OK);
         } catch (DataException e) {

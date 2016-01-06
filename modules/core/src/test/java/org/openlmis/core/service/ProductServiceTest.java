@@ -19,12 +19,12 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.openlmis.core.domain.*;
-import org.openlmis.core.repository.KitProductRepository;
 import org.openlmis.core.repository.ProductRepository;
 import org.openlmis.db.categories.UnitTests;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 
 import static com.natpryce.makeiteasy.MakeItEasy.*;
@@ -57,7 +57,7 @@ public class ProductServiceTest {
   ProgramProductService programProductService;
 
   @Mock
-  private KitProductRepository kitProductRepository;
+  private KitProductService kitProductService;
 
   @Mock
   private ProductGroupService productGroupService;
@@ -315,7 +315,7 @@ public class ProductServiceTest {
     service.updateKitProducts(kit);
 
     verify(repository, never()).insert(any(Product.class));
-    verify(kitProductRepository).insert(any(KitProduct.class));
+    verify(kitProductService).insert(any(KitProduct.class));
   }
 
   @Test
@@ -334,6 +334,22 @@ public class ProductServiceTest {
     service.updateKitProducts(kit);
 
     verify(repository).insert(any(Product.class));
-    verify(kitProductRepository).insert(any(KitProduct.class));
+    verify(kitProductService).insert(any(KitProduct.class));
+  }
+
+  @Test
+  public void shoudGetLatestKitsWithUpdatedTime() throws Exception {
+    Date afterUpdatedTime = new Date(12345L);
+
+    service.getLatestKits(afterUpdatedTime);
+
+    verify(repository).getLatestKits(afterUpdatedTime);
+  }
+
+  @Test
+  public void shouldGetAllKitsWhenUpdatedTimeIsNull() throws Exception {
+    service.getLatestKits(null);
+
+    verify(repository).getAllKits();
   }
 }

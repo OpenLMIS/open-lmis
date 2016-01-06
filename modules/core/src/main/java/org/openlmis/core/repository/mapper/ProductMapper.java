@@ -14,6 +14,7 @@ import org.apache.ibatis.annotations.*;
 import org.openlmis.core.domain.*;
 import org.springframework.stereotype.Repository;
 
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -129,4 +130,13 @@ public interface ProductMapper {
 
   @Select("SELECT * FROM products")
   List<Product> list();
+
+  @Select({"SELECT * FROM products " +
+          "WHERE isKit = true " +
+          "AND modifieddate > #{afterUpdatedTime}"})
+  List<Kit> listLatestKits(Date afterUpdatedTime);
+
+  @Select({"SELECT * FROM products WHERE isKit = true"})
+  List<Kit> listAllKits();
+
 }

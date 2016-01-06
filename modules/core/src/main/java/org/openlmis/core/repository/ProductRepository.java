@@ -12,6 +12,7 @@ package org.openlmis.core.repository;
 
 import lombok.NoArgsConstructor;
 import org.openlmis.core.domain.DosageUnit;
+import org.openlmis.core.domain.Kit;
 import org.openlmis.core.domain.Product;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.core.repository.mapper.DosageUnitMapper;
@@ -22,6 +23,7 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Component;
 
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -104,5 +106,13 @@ public class ProductRepository {
 
   public List<Product> getAllProducts(){
     return mapper.list();
+  }
+
+  public List<Kit> getLatestKits(Date afterUpdatedTime) {
+    return mapper.listLatestKits(afterUpdatedTime);
+  }
+
+  public List<Kit> getAllKits() {
+    return mapper.listAllKits();
   }
 }

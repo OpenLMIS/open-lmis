@@ -30,6 +30,8 @@ import org.openlmis.db.categories.UnitTests;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.DuplicateKeyException;
 
+import java.util.Date;
+
 import static com.natpryce.makeiteasy.MakeItEasy.a;
 import static com.natpryce.makeiteasy.MakeItEasy.make;
 import static org.hamcrest.core.Is.is;
@@ -150,5 +152,19 @@ public class ProductRepositoryTest {
   public void shouldGetById() {
     repository.getById(1l);
     verify(mockedMapper).getById(1l);
+  }
+
+  @Test
+  public void shouldGetLatestKits() {
+    Date updatedTime = new Date(1234L);
+    repository.getLatestKits(updatedTime);
+
+    verify(mockedMapper).listLatestKits(updatedTime);
+  }
+  @Test
+  public void shouldAllKits() {
+    repository.getAllKits();
+
+    verify(mockedMapper).listAllKits();
   }
 }
