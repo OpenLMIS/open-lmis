@@ -14,14 +14,16 @@ describe("NavigationController", function () {
   var scope, ctrl, $httpBackend, $location, window, rights;
   beforeEach(module('openlmis'));
 
-  beforeEach(inject(function ($rootScope, $controller, _localStorageService_, _$httpBackend_, _$location_) {
+  beforeEach(inject(function ($rootScope, $controller, _localStorageService_, _$httpBackend_, _$location_,_FeatureToggleService_) {
     $httpBackend = _$httpBackend_;
     $location = _$location_;
     window = {};
     scope = $rootScope.$new();
     localStorageService = _localStorageService_;
+    FeatureToggleService = _FeatureToggleService_;
     rights = [{name:'MANAGE_FACILITY',type:'ADMIN'},{name:'UPLOADS', type: 'REPORTING'}];
     spyOn(localStorageService, 'get').andReturn(JSON.stringify(rights));
+    spyOn(FeatureToggleService,'get').andReturn({"key":true});
     ctrl = $controller(NavigationController, {$scope: scope, localStorageService: localStorageService, $window: window});
   }));
 

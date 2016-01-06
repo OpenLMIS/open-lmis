@@ -8,25 +8,23 @@
  * You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org. 
  */
 
-function NavigationController($scope, ConfigSettingsByKey, localStorageService, Locales, $location, $window, $resource) {
+function NavigationController($scope, ConfigSettingsByKey, localStorageService, Locales, $location, $window, FeatureToggleService) {
 
   ConfigSettingsByKey.get({key: 'LOGIN_SUCCESS_DEFAULT_LANDING_PAGE'}, function (data){
     $scope.homePage =  data.settings.value;
   });
 
-  var loadToggle = function () {
-      var toggleService = $resource('/reference-data/toggle/:key.json', {key: 'update.product.view'});
-      toggleService.get(function (result) {
-          $scope.isToggleOff = result.key;
-      })
-  }
+   $scope.loadToggle = function () {
+    var toggleKey = {key: 'update.product.view'};
+    FeatureToggleService.get(toggleKey, function (result) {
+      $scope.isUpdateProductsToggleOn = result.key;
+    });
+  }();
 
   $scope.loadRights = function () {
     $scope.rights = localStorageService.get(localStorageKeys.RIGHT);
 
     $(".navigation > ul").show();
-
-    loadToggle();
   }();
 
   $scope.showSubmenu = function () {
@@ -55,10 +53,6 @@ function NavigationController($scope, ConfigSettingsByKey, localStorageService, 
       return rightNames.indexOf(permission) > -1;
     }
     return false;
-  };
-
-  $scope.isUpdateProductToggleOff = function () {
-      return $scope.isToggleOff;
   };
 
   $scope.goOnline = function () {

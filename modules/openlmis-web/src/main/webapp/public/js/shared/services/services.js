@@ -456,3 +456,7 @@ services.factory('ProgramsToViewVaccineOrderRequisitions', function ($resource) 
 services.factory('VaccineOrderRequisitionsForViewing', function ($resource) {
   return $resource('/vaccine/orderRequisition/search.json', {}, {});
 });
+
+services.factory('FeatureToggleService', function ($q, $timeout, $resource) {
+  return $resource('/reference-data/toggle/:key.json', {key: '@key'});
+});
