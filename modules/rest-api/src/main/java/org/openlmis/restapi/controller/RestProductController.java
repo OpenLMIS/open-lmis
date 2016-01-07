@@ -41,7 +41,7 @@ public class RestProductController extends BaseController {
     try {
       Date afterUpdatedTimeInDate = (afterUpdatedTime == null ? null : new Date(afterUpdatedTime));
       List<ProductResponse> products = restProductService.getLatestProductsAfterUpdatedTime(afterUpdatedTimeInDate);
-      RestResponse restResponse = new RestResponse("products", products);
+      RestResponse restResponse = new RestResponse("latestProducts", products);
       restResponse.addData("latestUpdatedTime", new Date());
       return new ResponseEntity<>(restResponse, HttpStatus.OK);
     } catch (DataException e) {
