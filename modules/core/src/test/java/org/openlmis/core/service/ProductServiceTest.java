@@ -295,4 +295,12 @@ public class ProductServiceTest {
 
     verify(repository).getTotalSearchResultCount("search-param");
   }
+
+  @Test
+  public void shouldGetProductsAfterUpdatedTime() throws Exception {
+    Date date = new Date();
+    service.getProductsAfterUpdatedDate(date);
+
+    verify(repository).getProductsAfterUpdatedTime(date);
+  }
 }

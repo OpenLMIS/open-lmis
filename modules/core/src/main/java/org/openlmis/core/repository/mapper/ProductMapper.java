@@ -126,9 +126,25 @@ public interface ProductMapper {
   Integer getTotalSearchResultCount(String searchParam);
 
   @Select("SELECT * FROM products")
+  @Results(value = {
+      @Result(property = "code", column = "code"),
+      @Result(property = "kitProductList", column = "code", javaType = List.class,
+          many = @Many(select = "org.openlmis.core.repository.mapper.ProductMapper.getKitProductsByKitCode"))
+  })
   List<Product> list();
+
+  @Select("SELECT * FROM kit_products_relation WHERE kitCode = #{kitCode}")
+  List<KitProduct> getKitProductsByKitCode(String kitCode);
 
   @Insert({"INSERT INTO kit_products_relation(kitCode, productCode, quantity)",
       "VALUES(#{kitCode}, #{productCode}, #{quantity})"})
   Long insertKitProduct(KitProduct kitProduct);
+
+  @Select("SELECT * FROM products WHERE modifieddate > #{date}")
+  @Results(value = {
+      @Result(property = "code", column = "code"),
+      @Result(property = "kitProductList", column = "code", javaType = List.class,
+          many = @Many(select = "org.openlmis.core.repository.mapper.ProductMapper.getKitProductsByKitCode"))
+  })
+  List<Product> listProductsAfterUpdatedTime(Date date);
 }

@@ -11,6 +11,8 @@
 package org.openlmis.core.repository.mapper;
 
 
+import org.hamcrest.CoreMatchers;
+import org.junit.Assert;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
@@ -21,6 +23,8 @@ import org.openlmis.core.builder.ProductBuilder;
 import org.openlmis.core.domain.DosageUnit;
 import org.openlmis.core.domain.KitProduct;
 import org.openlmis.core.domain.Product;
+import org.openlmis.core.query.QueryExecutor;
+import org.openlmis.core.utils.DateUtil;
 import org.openlmis.db.categories.IntegrationTests;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -30,6 +34,9 @@ import org.springframework.test.context.transaction.TransactionConfiguration;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.sql.SQLException;
+import java.sql.Timestamp;
+import java.util.Date;
+import java.util.List;
 
 import static com.natpryce.makeiteasy.MakeItEasy.*;
 import static junit.framework.Assert.assertEquals;
@@ -70,6 +77,9 @@ public class ProductMapperIT {
 
   @Autowired
   ProductCategoryMapper productCategoryMapper;
+
+  @Autowired
+  private QueryExecutor queryExecutor;
 
   @Test
   public void shouldNotSaveProductWithoutMandatoryFields() throws Exception {
@@ -218,6 +228,43 @@ public class ProductMapperIT {
         with(KitProductBuilder.quantity, 100)));
 
     productMapper.insertKitProduct(kitProduct1);
-    //should no exception
+
+    List<Product> productList = productMapper.list();
+
+    assertThat(productList.size(), is(2));
+    assertThat(productList.get(0).getCode(), is("KIT"));
+    assertThat(productList.get(0).getPrimaryName(), is("Primary Name"));
+    assertThat(productList.get(1).getCode(), is("P1"));
+    assertThat(productList.get(0).getKitProductList().size(), is(1));
+    assertThat(productList.get(1).getKitProductList().size(), is(0));
+  }
+
+  @Test
+  public void shouldListProductsAfterUpdatedTime() throws SQLException {
+    Product product = make(a(ProductBuilder.defaultProduct, with(ProductBuilder.code, "KIT")));
+    productMapper.insert(product);
+
+    Product product1 = make(a(ProductBuilder.defaultProduct, with(ProductBuilder.code, "P1")));
+    productMapper.insert(product1);
+
+    KitProduct kitProduct1 = make(a(KitProductBuilder.defaultKit,
+        with(KitProductBuilder.kitCode, "KIT"),
+        with(KitProductBuilder.productCode, "P1"),
+        with(KitProductBuilder.quantity, 100)));
+
+    Timestamp date1 = new Timestamp(DateUtil.parseDate("2025-12-12 12:12:12").getTime());
+    updateModifiedDateForProducts(date1, product.getId());
+
+    productMapper.insertKitProduct(kitProduct1);
+
+    List<Product> productList = productMapper.listProductsAfterUpdatedTime(new Date());
+
+    assertThat(productList.size(), is(1));
+    assertThat(productList.get(0).getCode(), is("KIT"));
+    assertThat(productList.get(0).getKitProductList().size(), is(1));
+  }
+
+  private void updateModifiedDateForProducts(Timestamp modifiedDate, Long productId) throws SQLException {
+    queryExecutor.executeUpdate("UPDATE products SET modifieddate = ? WHERE id = ?", modifiedDate, productId);
   }
 }

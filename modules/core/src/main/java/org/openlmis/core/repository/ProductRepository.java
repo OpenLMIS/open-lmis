@@ -112,4 +112,8 @@ public class ProductRepository {
   public List<Product> getAllProducts(){
     return mapper.list();
   }
+
+  public List<Product> getProductsAfterUpdatedTime(Date date) {
+    return mapper.listProductsAfterUpdatedTime(date);
+  }
 }

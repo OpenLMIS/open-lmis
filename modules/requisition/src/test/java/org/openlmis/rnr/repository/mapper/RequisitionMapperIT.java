@@ -152,6 +152,7 @@ public class RequisitionMapperIT {
     requisition.setAllocatedBudget(new BigDecimal(123.45));
     requisition.setStatus(INITIATED);
     requisition.setId(1L);
+    requisition.setEmergency(true);
 
     String submitterText = "submitter";
     Signature submitterSignature = new Signature(Signature.Type.SUBMITTER, submitterText);
@@ -191,6 +192,8 @@ public class RequisitionMapperIT {
     Rnr fetchedRequisition = mapper.getById(requisition.getId());
 
     assertThat(fetchedRequisition.getId(), is(requisition.getId()));
+    assertThat(fetchedRequisition.isEmergency(), is(true));
+
     assertThat(fetchedRequisition.getProgram().getId(), is(equalTo(program.getId())));
     assertThat(fetchedRequisition.getFacility().getId(), is(equalTo(facility.getId())));
     assertThat(fetchedRequisition.getPeriod().getId(), is(equalTo(processingPeriod1.getId())));

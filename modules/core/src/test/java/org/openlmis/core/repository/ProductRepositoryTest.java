@@ -180,5 +180,13 @@ public class ProductRepositoryTest {
 
     verify(mockedMapper, never()).insertKitProduct(any(KitProduct.class));
   }
+
+  @Test
+  public void shouldCallGetProductsAfterUpdatedTime() {
+    Date date = new Date();
+    repository.getProductsAfterUpdatedTime(date);
+
+    verify(mockedMapper).listProductsAfterUpdatedTime(date);
+  }
 }
 

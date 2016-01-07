@@ -128,6 +128,6 @@ public class ProductService {
   }
 
   public List<Product> getProductsAfterUpdatedDate(Date afterUpdatedTime) {
-    return null;
+    return repository.getProductsAfterUpdatedTime(afterUpdatedTime);
   }
 }
