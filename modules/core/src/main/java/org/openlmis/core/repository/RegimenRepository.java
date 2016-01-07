@@ -48,10 +48,6 @@ public class RegimenRepository {
   }
    public Regimen getById(Long id){return mapper.getById(id);}
 
-  public List<RegimenCategory> getAllRegimenCategories() {
-    return regimenCategoryMapper.getAll();
-  }
-
   public void save(List<Regimen> regimens, Long userId) {
     for (Regimen regimen : regimens) {
       regimen.setModifiedBy(userId);

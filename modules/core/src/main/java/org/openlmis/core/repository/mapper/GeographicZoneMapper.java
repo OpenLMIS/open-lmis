@@ -35,9 +35,6 @@ public interface GeographicZoneMapper {
   @Options(useGeneratedKeys = true)
   Integer insert(GeographicZone geographicZone);
 
-  @Select("SELECT * FROM geographic_levels WHERE LOWER(code) = LOWER(#{code})")
-  GeographicLevel getGeographicLevelByCode(String code);
-
   @Select({"SELECT GZ.id, GZ.code, GZ.name, GL.id AS levelId, GL.code AS levelCode, GL.name AS levelName, GL.levelNumber AS levelNumber ",
     "FROM geographic_zones GZ, geographic_levels GL ",
     "WHERE GZ.levelId = GL.id AND LOWER(GZ.code) <> 'root' AND ",

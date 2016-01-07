@@ -57,11 +57,43 @@ public interface TemplateMapper {
     "INNER JOIN role_assignments ra ON ra.roleId = rr.roleId WHERE ra.userId = #{userId}"})
   List<Template> getAllTemplatesForUser(@Param("userId") Long userId);
 
-  @Insert({"INSERT INTO template_parameters(templateId, name, displayName, defaultValue, dataType, description, createdBy)",
-    "VALUES (#{templateId}, #{name}, #{displayName}, #{defaultValue}, #{dataType}, #{description}, #{createdBy})"})
+  @Insert({"INSERT INTO template_parameters(templateId" +
+    ", name" +
+    ", displayName" +
+    ", defaultValue" +
+    ", dataType" +
+    ", selectSql" +
+    ", description" +
+    ", createdBy)",
+    "VALUES (#{templateId}" +
+    ", #{name}" +
+    ", #{displayName}" +
+    ", #{defaultValue}" +
+    ", #{dataType}" +
+    ", #{selectSql}" +
+    ", #{description}" +
+    ", #{createdBy})"})
   @Options(useGeneratedKeys = true)
   void insertParameter(TemplateParameter parameter);
 
   @Select("SELECT * FROM template_parameters WHERE templateId = #{templateId}")
   List<TemplateParameter> getParametersByTemplateId(Long templateId);
+
+  /**
+   * Runs arbitrary SQL, for use in executing the select SQL on template parameters.
+   * @param sql the SQL to execute of the form: select statement, select's one column, does not include terminating
+   *            SQL semi-colon.  This parameter is <strong>NOT</strong> checked.
+   * @return a non-null List of String's that are the result of running the select SQL. List may be empty.
+   */
+  @SelectProvider(type=SqlProvider.class, method="arbitrarySql")
+  List<String> runSelectSql(String sql);
+
+  /**
+   * Sql provider to be used internally to run arbitrary SQL
+   */
+  public class SqlProvider {
+    public static String arbitrarySql(String sql) {
+      return sql + ";";
+    }
+  }
 }

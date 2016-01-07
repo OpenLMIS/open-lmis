@@ -10,6 +10,7 @@
 
 package org.openlmis.web.controller;
 
+import org.joda.time.LocalDate;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
@@ -29,6 +30,7 @@ import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpSession;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import static java.util.Arrays.asList;
@@ -76,15 +78,16 @@ public class DeliveryZoneProgramScheduleControllerTest {
     ProcessingPeriod period1 = new ProcessingPeriod(1L);
     ProcessingPeriod period2 = new ProcessingPeriod(2L);
     List<ProcessingPeriod> expectedPeriods = asList(period1, period2);
+    Date elevenDaysFromNow = LocalDate.now().plusDays(11).toDate();
     Long zoneId = 1L;
     Long programId = 3L;
-    when(scheduleService.getPeriodsForDeliveryZoneAndProgram(zoneId, programId)).thenReturn(expectedPeriods);
+    when(scheduleService.getPeriodsForDeliveryZoneAndProgram(zoneId, programId, elevenDaysFromNow)).thenReturn(expectedPeriods);
     when(distributionService.getSyncedPeriodsForDeliveryZoneAndProgram(zoneId, programId)).thenReturn(asList(1L));
 
     ResponseEntity<OpenLmisResponse> response = controller.getPeriodsForProgramInDeliveryZone(request, ZONE_ID, programId);
 
     assertThat((List<ProcessingPeriod>) response.getBody().getData().get("periods"), is(asList(period2)));
-    verify(scheduleService).getPeriodsForDeliveryZoneAndProgram(zoneId, programId);
+    verify(scheduleService).getPeriodsForDeliveryZoneAndProgram(zoneId, programId, elevenDaysFromNow);
     verify(distributionService).getSyncedPeriodsForDeliveryZoneAndProgram(zoneId, programId);
   }
 

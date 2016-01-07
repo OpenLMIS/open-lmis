@@ -48,7 +48,7 @@ public abstract class BaseModel {
   public BaseModel(Long id) {
     this.id = id;
   }
-
+  
   protected static String getFormattedDate(Date date)
   {
     return DateUtil.getFormattedDate(date, "yyyy-dd-MM");

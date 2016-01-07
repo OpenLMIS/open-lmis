@@ -60,8 +60,17 @@ public class FacilityProgramProduct extends ProgramProduct {
     return null;
   }
 
-  public Integer calculateIsa(Long population, Integer numberOfMonthsInPeriod)
-  {
+  /**
+   * Calculates the ideal stock amount (ISA) the facility should be stocked to
+   * with the associated product.
+   * @param population the population of the facility that will be served by the
+   *   product's stock.
+   * @param numberOfMonthsInPeriod the number of months the ideal stock amount
+   *   will need to serve the facility.
+   * @return the ideal stock amount of the associated product for the associated
+   *   facility or null if the ISA is not calculable.
+   */
+  public Integer calculateIsa(Long population, Integer numberOfMonthsInPeriod) {
     if(population == null)
       return null;
 
@@ -73,8 +82,23 @@ public class FacilityProgramProduct extends ProgramProduct {
     else
       return null;
 
-    idealQuantity = Math.round(idealQuantity * ((float) numberOfMonthsInPeriod / this.getProduct().getPackSize()));
+    idealQuantity = idealQuantity * numberOfMonthsInPeriod;
     return idealQuantity < 0 ? 0 : idealQuantity;
+  }
+
+  /**
+   * Calculates the ideal stock amount (ISA) in terms of pack size.  i.e. the
+   * number of whole deliverable units that a facility would be stocked to for the associated
+   * product.
+   * @return the number of whole deliverable units of the associated product that meets or
+   * exceeds the ISA or null if the ISA is not calculable.
+   * @see #calculateIsa(Long, Integer)
+   */
+  public Integer calculateIsaByPackSize(Long population, Integer numberOfMonthsInPeriod) {
+    Integer idealQuantity = calculateIsa(population, numberOfMonthsInPeriod);
+    if (idealQuantity == null) return null;
+
+    return new Double(Math.ceil( (float) idealQuantity / this.getProduct().getPackSize() )).intValue();
   }
 
 
@@ -86,7 +110,7 @@ public class FacilityProgramProduct extends ProgramProduct {
     else if(this.programProductIsa != null)
       return programProductIsa.getWhoRatio();
     else
-      return null;
+    return null;
   }
 
   public static List<FacilityProgramProduct> filterActiveProducts(List<FacilityProgramProduct> programProducts) {

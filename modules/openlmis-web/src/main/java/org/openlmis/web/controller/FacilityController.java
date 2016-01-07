@@ -15,6 +15,7 @@ import org.openlmis.core.domain.Facility;
 import org.openlmis.core.domain.FacilityType;
 import org.openlmis.core.domain.Pagination;
 import org.openlmis.core.exception.DataException;
+import org.openlmis.core.repository.FacilityOperatorRepository;
 import org.openlmis.core.service.FacilityService;
 import org.openlmis.core.service.ProgramService;
 import org.openlmis.core.service.RequisitionGroupService;
@@ -59,6 +60,9 @@ public class FacilityController extends BaseController {
   public static final String FACILITIES = "facilities";
   @Autowired
   private FacilityService facilityService;
+
+  @Autowired
+  private FacilityOperatorRepository facilityOperatorRepository;
 
   @Autowired
   private ProgramService programService;
@@ -107,7 +111,7 @@ public class FacilityController extends BaseController {
   public Map getReferenceData() {
     FacilityReferenceData facilityReferenceData = new FacilityReferenceData();
     return facilityReferenceData.addFacilityTypes(facilityService.getAllTypes()).
-      addFacilityOperators(facilityService.getAllOperators()).
+      addFacilityOperators(facilityOperatorRepository.getAll()).
       addGeographicZones(facilityService.getAllZones()).
       addPrograms(programService.getAll()).get();
   }

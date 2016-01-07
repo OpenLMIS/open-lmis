@@ -39,6 +39,18 @@ public class ProgramRepository {
     this.mapper = programMapper;
   }
 
+  public void insert(Program p) {
+    mapper.insert(p);
+  }
+
+  public Program update(Program program) {
+    if(program.getBudgetingApplies() == false)
+      program.setUsePriceSchedule(false);
+
+    mapper.update(program);
+    return mapper.getById(program.getId());
+  }
+
   public List<Program> getByFacility(Long facilityId) {
     return mapper.getByFacilityId(facilityId);
   }
@@ -113,15 +125,6 @@ public class ProgramRepository {
 
   public List<Program> getProgramsForNotification() {
     return mapper.getProgramsForNotification();
-  }
-
-  public Program update(Program program) {
-
-      if(program.getBudgetingApplies() == false)
-          program.setUsePriceSchedule(false);
-
-    mapper.update(program);
-    return mapper.getById(program.getId());
   }
 
   public List<Program> getAllIvdPrograms() {

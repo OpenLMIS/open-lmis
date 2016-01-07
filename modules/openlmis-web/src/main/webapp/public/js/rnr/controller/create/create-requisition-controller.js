@@ -8,7 +8,7 @@
  * You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org. 
  */
 
-function CreateRequisitionController($scope, requisitionData, comments , pageSize, rnrColumns, lossesAndAdjustmentsTypes, facilityApprovedProducts, requisitionRights, equipmentOperationalStatus , regimenTemplate, $location, DeleteRequisition, SkipRequisition,Requisitions, $routeParams, $dialog, requisitionService, $q) {
+function CreateRequisitionController($scope, requisitionData, comments , pageSize, rnrColumns, lossesAndAdjustmentsTypes, facilityApprovedNFSProducts, requisitionRights, equipmentOperationalStatus , regimenTemplate, $location, DeleteRequisition, SkipRequisition,Requisitions, $routeParams, $dialog, requisitionService, $q) {
 
   var NON_FULL_SUPPLY = 'nonFullSupply';
   var FULL_SUPPLY = 'fullSupply';
@@ -76,7 +76,7 @@ function CreateRequisitionController($scope, requisitionData, comments , pageSiz
   resetCostsIfNull();
 
   $scope.lossesAndAdjustmentTypes = lossesAndAdjustmentsTypes;
-  $scope.facilityApprovedProducts = facilityApprovedProducts;
+  $scope.facilityApprovedNFSProducts = facilityApprovedNFSProducts;
   $scope.equipmentOperationalStatus = equipmentOperationalStatus;
 
   $scope.visibleColumns = requisitionService.getMappedVisibleColumns(rnrColumns, RegularRnrLineItem.frozenColumns,
@@ -86,7 +86,7 @@ function CreateRequisitionController($scope, requisitionData, comments , pageSiz
   $scope.requisitionRights = requisitionRights;
   $scope.regimenColumns = regimenTemplate ? regimenTemplate.columns : [];
   $scope.visibleRegimenColumns = _.where($scope.regimenColumns, {'visible': true});
-  $scope.addNonFullSupplyLineItemButtonShown = _.findWhere($scope.programRnrColumnList, {'name': 'quantityRequested'});
+  $scope.addNonFullSupplyLineItemButtonShown = facilityApprovedNFSProducts.length > 0;
   $scope.errorPages = {fullSupply: [], nonFullSupply: [], regimen: [], equipment: []};
   $scope.regimenCount = $scope.rnr.regimenLineItems.length;
   $scope.equipmentCount = $scope.rnr.equipmentLineItems.length;
@@ -107,7 +107,7 @@ function CreateRequisitionController($scope, requisitionData, comments , pageSiz
   $scope.toggleSkipFlag = function () {
     _.each($scope.page.fullSupply, function (rnrLineItem) {
       if(rnrLineItem.canSkip()){
-        rnrLineItem.skipped = $scope.rnr.skipAll;
+      rnrLineItem.skipped = $scope.rnr.skipAll;
       }
     });
     $scope.rnr.calculateFullSupplyItemsSubmittedCost();
@@ -192,7 +192,7 @@ function CreateRequisitionController($scope, requisitionData, comments , pageSiz
     $scope.fullSupplyTabError = !!fullSupplyError;
     $scope.nonFullSupplyTabError = !!nonFullSupplyError;
     $scope.equipmentTabError = !!equipmentError;
-    
+
     if ($scope.rnr.regimenLineItems)
       validateRegimenLineItems();
     var regimenError;
@@ -213,13 +213,13 @@ function CreateRequisitionController($scope, requisitionData, comments , pageSiz
     $.each($scope.rnr.regimenLineItems, function (index, regimenLineItem) {
       regimenLineItem.hasError = false;
       if(!regimenLineItem.skipped) {
-        $.each($scope.visibleRegimenColumns, function (index, regimenColumn) {
+      $.each($scope.visibleRegimenColumns, function (index, regimenColumn) {
           if ((regimenColumn.name !== "remarks" && isUndefined(regimenLineItem[regimenColumn.name]))) {
             regimenLineItem.hasError = true;
-            setError = true;
-            $scope.regimenLineItemInValid = true;
-          }
-        });
+          setError = true;
+          $scope.regimenLineItemInValid = true;
+        }
+      });
       }
     });
     if (!setError)
@@ -395,13 +395,15 @@ CreateRequisitionController.resolve = {
     return deferred.promise;
   },
 
-  facilityApprovedProducts: function ($q, $timeout, $route, FacilityApprovedProducts) {
+  facilityApprovedNFSProducts: function ($q, $timeout, $route, FacilityApprovedNonFullSupplyProducts) {
     var deferred = $q.defer();
     $timeout(function () {
-      FacilityApprovedProducts.get({facilityId: $route.current.params.facility, programId: $route.current.params.program},
+      FacilityApprovedNonFullSupplyProducts.get(
+        {facilityId: $route.current.params.facility, programId: $route.current.params.program},
           function (data) {
             deferred.resolve(data.nonFullSupplyProducts);
-          }, {});
+        },
+        {} );
     }, 100);
     return deferred.promise;
   },

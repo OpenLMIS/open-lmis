@@ -12,28 +12,66 @@ package org.openlmis.core.repository;
 
 import lombok.NoArgsConstructor;
 import org.openlmis.core.domain.ProductForm;
+import org.openlmis.core.exception.DataException;
 import org.openlmis.core.repository.mapper.ProductFormMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
 /**
- * ProductFormRepository is Repository class for ProductForm related database operations.
+ * Repository relating to persisting {@link org.openlmis.core.domain.ProductForm} entities.
  */
-
 @Repository
 @NoArgsConstructor
 public class ProductFormRepository {
 
   @Autowired
-  ProductFormMapper mapper;
+  private ProductFormMapper pfMapper;
 
+  ProductFormRepository(ProductFormMapper productFormMapper) {this.pfMapper = productFormMapper;}
+
+  /**
+   * Gets existing {@link org.openlmis.core.domain.ProductForm} by it's code.
+   * @param code the ProductForm's code.
+   * @return The ProductForm that has that code, or null if no such ProductForm
+   * exists with the given code.
+   */
+  public ProductForm getByCode(String code) {return pfMapper.getByCode(code);}
+
+  /**
+   * Insert a new {@link org.openlmis.core.domain.ProductForm}.
+   * @param pf {@link org.openlmis.core.domain.ProductForm} to insert.
+   * @throws DataException if entity is invalid or already exists.
+   */
+  public void insert(ProductForm pf) {
+    pf.isValid();
+    if(getByCode(pf.getCode()) != null) throw new DataException("error.duplicate.dosage.unit.code");
+
+    try {
+      pfMapper.insert(pf);
+    } catch(DataIntegrityViolationException dive) {
+      throw new DataException("error.incorrect.length", dive);
+    }
+  }
+  
   public List<ProductForm> getAll() {
-    return mapper.getAll();
+    return pfMapper.getAll();
   }
 
-  public ProductForm getByCode(String code) {
-    return mapper.getByCode(code);
+  /**
+   * Updates an existing {@link org.openlmis.core.domain.ProductForm}.
+   * @param pf {@link org.openlmis.core.domain.ProductForm} to update.
+   * @throws DataException if entity is invalid.
+   */
+  public void update(ProductForm pf) {
+    pf.isValid();
+
+    try {
+      pfMapper.update(pf);
+    } catch(DataIntegrityViolationException dive) {
+      throw new DataException("error.incorrect.length", dive);
+    }
   }
 }

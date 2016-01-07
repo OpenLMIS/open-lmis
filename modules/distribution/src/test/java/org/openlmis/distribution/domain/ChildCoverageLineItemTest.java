@@ -71,7 +71,7 @@ public class ChildCoverageLineItemTest {
     ChildCoverageLineItem childCoverageLineItem = new ChildCoverageLineItem(facilityVisit, facility, targetGroupProduct, "BCG", period.getNumberOfMonths());
 
     assertThat(childCoverageLineItem.getVaccination(), is("BCG"));
-    assertThat(childCoverageLineItem.getTargetGroup(), is(44));
+    assertThat(childCoverageLineItem.getTargetGroup(), is(43));
     assertThat(childCoverageLineItem.getFacilityVisitId(), is(3L));
   }
 
