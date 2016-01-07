@@ -11,7 +11,7 @@ import java.nio.file.Paths;
 public class PhantomWrapper {
 
     public void generatePDF(String url, String pdfPath, String sessionid) throws IOException, URISyntaxException, InterruptedException {
-        URL pdfScriptUrl = this.getClass().getClassLoader().getResource("pdf/rasterize.js");
+        URL pdfScriptUrl = this.getClass().getClassLoader().getResource("pdf/mmia-pdf-renderer.js");
         String pdfScriptpath = Paths.get(pdfScriptUrl.toURI()).toFile().getAbsolutePath();
         ProcessBuilder phantomjs = new ProcessBuilder("phantomjs", "--ignore-ssl-errors=yes", pdfScriptpath, url, pdfPath, sessionid);
         phantomjs.start().waitFor();
