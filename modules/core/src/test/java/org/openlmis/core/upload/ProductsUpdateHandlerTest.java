@@ -9,8 +9,10 @@ import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
+import org.openlmis.core.domain.DosageUnit;
 import org.openlmis.core.domain.Product;
 import org.openlmis.core.domain.ProductForm;
+import org.openlmis.core.repository.DosageUnitRepository;
 import org.openlmis.core.service.MessageService;
 import org.openlmis.core.service.ProductFormService;
 import org.openlmis.core.service.ProductService;
@@ -41,6 +43,9 @@ public class ProductsUpdateHandlerTest {
     @Mock
     private MessageService messageService;
 
+    @Mock
+    private DosageUnitRepository dosageUnitRepository;
+
     private ProductsUpdateHandler handler;
 
     @Rule
@@ -67,6 +72,7 @@ public class ProductsUpdateHandlerTest {
 
         handler = new ProductsUpdateHandler();
         handler.productService = productService;
+        handler.dosageUnitRepository = dosageUnitRepository;
         handler.productFormService = productFormService;
         handler.messageService = messageService;
         List<Product> products = new ArrayList<>();
@@ -207,10 +213,48 @@ public class ProductsUpdateHandlerTest {
         assertThat(existingProduct.getFormId(),is(10l));
     }
 
+    @Test
+    public void shouldSetFormAndDosageUnit(){
+        //given
+        Product product = initProduct();
+        Product existingProduct = initProduct();
+        handler.uploadProductList.add(product);
+
+        DosageUnit dosageUnit = new DosageUnit();
+        String dosageUnitCode = "dosageUnit code";
+        dosageUnit.setCode(dosageUnitCode);
+        dosageUnit.setDisplayOrder(2);
+
+        ArrayList<Product> existingProducts = new ArrayList<>();
+        existingProducts.add(existingProduct);
+        existingProduct.setPrimaryName("new name");
+        when(productService.getAllProducts()).thenReturn(existingProducts);
+        when(productService.getExisting(product)).thenReturn(existingProduct);
+        ProductForm existingProductForm = new ProductForm();
+        existingProductForm.setCode("form code");
+        existingProductForm.setDisplayOrder(2);
+
+        when(productFormService.getProductForm(existingProduct.getForm().getCode())).thenReturn(existingProductForm);
+        when(dosageUnitRepository.getByCode(dosageUnitCode)).thenReturn(dosageUnit);
+        //when
+
+        handler.postProcess(auditFields);
+
+        //then
+        assertThat(existingProduct.getDosageUnit().getDisplayOrder(),is(2));
+        assertThat(existingProduct.getForm().getDisplayOrder(),is(2));
+    }
+
+
+
     private Product initProduct() {
         Product product = new Product();
         product.setCode("code");
         product.setPrimaryName("Primary name");
+
+        DosageUnit dosageUnit = new DosageUnit();
+        dosageUnit.setCode("dosageUnit code");
+        product.setDosageUnit(dosageUnit);
         product.setDispensingUnit("Dispensing Units");
         product.setDosesPerDispensingUnit(1);
         product.setPackSize(1);

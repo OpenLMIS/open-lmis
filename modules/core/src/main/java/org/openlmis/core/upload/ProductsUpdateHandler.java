@@ -7,6 +7,7 @@ import org.openlmis.core.domain.BaseModel;
 import org.openlmis.core.domain.Product;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.core.message.OpenLmisMessage;
+import org.openlmis.core.repository.DosageUnitRepository;
 import org.openlmis.core.service.ProductFormService;
 import org.openlmis.core.service.ProductService;
 import org.openlmis.upload.Importable;
@@ -27,6 +28,9 @@ public class ProductsUpdateHandler extends AbstractModelPersistenceHandler {
 
     @Autowired
     ProductFormService productFormService;
+
+    @Autowired
+    DosageUnitRepository dosageUnitRepository;
 
     List<Product> uploadProductList;
     private List<Field> mandatoryFields;
@@ -91,9 +95,15 @@ public class ProductsUpdateHandler extends AbstractModelPersistenceHandler {
             if (existingProduct == null) {
                 save(uploadProduct);
             } else if (!matchProduct(uploadProduct, existingProduct)) {
+                SetFormAndDosageUnitByCode(existingProduct);
                 save(existingProduct);
             }
         }
+    }
+
+    private void SetFormAndDosageUnitByCode(Product existingProduct) {
+        existingProduct.setForm(productFormService.getProductForm(existingProduct.getForm().getCode()));
+        existingProduct.setDosageUnit(dosageUnitRepository.getByCode(existingProduct.getDosageUnit().getCode()));
     }
 
     private boolean hasUpload(Product existingProduct) {

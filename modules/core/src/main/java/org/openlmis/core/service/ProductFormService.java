@@ -45,9 +45,14 @@ public class ProductFormService {
 
   public ProductForm checkProductFormExisting(String productFormCode) {
     ProductForm form;
-    form = repository.getByCode(productFormCode);
+    form = getProductForm(productFormCode);
     if (form == null) throw new DataException("error.reference.data.invalid.product.form");
 
     return form;
   }
+
+  public ProductForm getProductForm(String productFormCode) {
+    return repository.getByCode(productFormCode);
+  }
+
 }
