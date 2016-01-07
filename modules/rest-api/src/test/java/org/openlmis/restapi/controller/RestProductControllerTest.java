@@ -42,7 +42,7 @@ public class RestProductControllerTest {
     PowerMockito.when(RestResponse.success(successMsg)).thenReturn(expectedResponse);
 
     Product fakeKit = new Product();
-    ResponseEntity<RestResponse> response = restProductController.createKit(fakeKit);
+    ResponseEntity<RestResponse> response = restProductController.createProduct(fakeKit);
 
     assertEquals(HttpStatus.OK, response.getStatusCode());
     verify(restProductService).buildAndSave(fakeKit);

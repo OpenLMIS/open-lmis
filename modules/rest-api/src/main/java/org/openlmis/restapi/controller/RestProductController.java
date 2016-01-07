@@ -15,13 +15,13 @@ import static org.springframework.web.bind.annotation.RequestMethod.POST;
 
 @Controller
 @NoArgsConstructor
-public class RestProductController extends BaseController{
+public class RestProductController extends BaseController {
 
   @Autowired
   private RestProductService restProductService;
 
-  @RequestMapping(value = "/rest-api/kits", method = POST, headers = ACCEPT_JSON)
-  public ResponseEntity createKit(@RequestBody(required = true) Product kit) {
+  @RequestMapping(value = "/rest-api/products", method = POST, headers = ACCEPT_JSON)
+  public ResponseEntity createProduct(@RequestBody(required = true) Product kit) {
     restProductService.buildAndSave(kit);
     return RestResponse.success("msg.kit.createsuccess");
   }
