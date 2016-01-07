@@ -10,6 +10,7 @@ import org.openlmis.core.service.ProgramProductService;
 import org.openlmis.restapi.domain.ProductResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -31,6 +32,7 @@ public class RestProductService {
   @Autowired
   private ProgramProductService programProductSevice;
 
+  @Transactional
   public Product buildAndSave(Product product) {
     productService.save(buildKit(product));
     return product;
