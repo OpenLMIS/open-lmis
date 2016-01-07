@@ -33,17 +33,17 @@ describe('ViewLoadAmountController', function () {
           {program: program1, programProducts: programProducts}
         ]}
     ];
-    controller(ViewLoadAmountController, {$scope: scope, facilities: facilities, period: {id: 1, name: 'period 1'}, deliveryZone: {id: 1}, fridges: {}});
+    controller(ViewLoadAmountController, {$scope: scope, facilities: facilities, period: {id: 1, name: 'period 1'}, deliveryZone: {id: 1}, fridges: {}, nexleafDeliveryZones: []});
 
   }));
 
   it('should set no records found message if no facilities are found', function () {
-    controller(ViewLoadAmountController, {$scope: scope, facilities: [], period: {}, deliveryZone: {}, fridges: {}});
+    controller(ViewLoadAmountController, {$scope: scope, facilities: [], period: {}, deliveryZone: {}, fridges: {}, nexleafDeliveryZones: []});
     expect(scope.message).toEqual("msg.no.records.found");
   });
 
   it('should set no records found message if no facilities are undefined', function () {
-    controller(ViewLoadAmountController, {$scope: scope, facilities: undefined, period: {}, deliveryZone: {}, fridges: {}});
+    controller(ViewLoadAmountController, {$scope: scope, facilities: undefined, period: {}, deliveryZone: {}, fridges: {}, nexleafDeliveryZones: []});
     expect(scope.message).toEqual("msg.no.records.found");
   });
 

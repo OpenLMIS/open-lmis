@@ -8,7 +8,7 @@
  * You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org. 
  */
 
-function DistributionController($scope, $rootScope, deliveryZones, DeliveryZoneActivePrograms, messageService, DeliveryZoneProgramPeriods, navigateBackService, $http, $dialog, $location, distributionService, DeliveryZoneFacilities) {
+function DistributionController($scope, $rootScope, deliveryZones, DeliveryZoneActivePrograms, messageService, DeliveryZoneProgramPeriods, navigateBackService, $http, $dialog, $location, distributionService, DeliveryZoneFacilities, NexleafDeliveryZones) {
   $scope.deliveryZones = deliveryZones;
   var DELIVERY_ZONE_LABEL = messageService.get('label.select.deliveryZone');
   var NONE_ASSIGNED_LABEL = messageService.get('label.noneAssigned');
@@ -16,7 +16,7 @@ function DistributionController($scope, $rootScope, deliveryZones, DeliveryZoneA
   var DEFAULT_PERIOD_MESSAGE = messageService.get('label.select.period');
 
   $scope.zonePlaceholder = !!$scope.deliveryZones.length ? DELIVERY_ZONE_LABEL : NONE_ASSIGNED_LABEL;
-  $scope.provincesForColdChainStatus = ['Gaza', 'Tete', 'Niassa'];
+  $scope.provincesForColdChainStatus = [];
 
   $scope.reload = function() {
     window.location.reload();
@@ -60,6 +60,14 @@ function DistributionController($scope, $rootScope, deliveryZones, DeliveryZoneA
 
   $scope.periodOptionMessage = function () {
     return optionMessage($scope.periods, DEFAULT_PERIOD_MESSAGE);
+  };
+
+  $scope.getNexleafDeliveryZones = function () {
+    NexleafDeliveryZones.get(function (data) {
+      $scope.provincesForColdChainStatus = data.deliveryZones;
+    }, function (data) {
+      $scope.error = data.data.error;
+    });
   };
 
   $scope.checkViewColdChainStatus = function () {

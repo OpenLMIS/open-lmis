@@ -8,7 +8,7 @@
  * You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org. 
  */
 
-function ViewLoadAmountController($scope, facilities, period, deliveryZone, fridges) {
+function ViewLoadAmountController($scope, facilities, period, deliveryZone, fridges, nexleafDeliveryZones) {
   if (!isUndefined(facilities) && facilities.length > 0) {
     $scope.message = "";
     $scope.program = facilities[0].supportedPrograms[0].program;
@@ -18,7 +18,7 @@ function ViewLoadAmountController($scope, facilities, period, deliveryZone, frid
     var otherGroupName = "";
     $scope.geoZoneLevelName = facilities[0].geographicZone.level.name;
 
-    $scope.provincesForColdChainStatus = ['Gaza', 'Tete', 'Niassa'];
+    $scope.provincesForColdChainStatus = nexleafDeliveryZones;
     $scope.viewColdChainStatusAvailable = false;
     $scope.checkViewColdChainStatus = function () {
       $scope.parentZoneName = $scope.facilities[0].geographicZone.parent.name;
@@ -270,5 +270,18 @@ ViewLoadAmountController.resolve = {
     }, 100);
 
     return deferred.promise;
-  }
+  },
+
+  nexleafDeliveryZones: function (NexleafDeliveryZones, $route, $timeout, $q) {
+    var deferred = $q.defer();
+    $timeout(function () {
+      NexleafDeliveryZones.get(function (data) {
+        deferred.resolve(data.deliveryZones);
+      }, function (data) {
+        deferred.resolve([]);
+      });
+    }, 100);
+
+    return deferred.promise;
+  },
 };
