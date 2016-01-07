@@ -17,6 +17,9 @@ import org.openlmis.core.exception.DataException;
 import org.openlmis.upload.Importable;
 import org.openlmis.upload.annotation.ImportField;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import static com.fasterxml.jackson.databind.annotation.JsonSerialize.Inclusion.NON_EMPTY;
 
 /**
@@ -178,7 +181,7 @@ public class Product extends BaseModel implements Importable {
   @ImportField(type = "boolean", name = "Is a Kit")
   private Boolean isKit;
 
-  private Integer quantityInKit;
+  private List<KitProduct> kitProductList = new ArrayList<>();
 
   public void validate() {
     if (this.packSize <= 0) {

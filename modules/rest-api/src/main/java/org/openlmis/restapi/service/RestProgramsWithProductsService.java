@@ -27,9 +27,6 @@ public class RestProgramsWithProductsService {
     @Autowired
     private ProgramProductService programProductService;
 
-    @Autowired
-    private KitProductService kitProductService;
-
     @Deprecated
     public List<ProgramWithProducts> getAllProgramsWithProductsByFacilityCode(String facilityCode) {
         Facility facility = facilityService.getFacilityByCode(facilityCode);
@@ -75,19 +72,5 @@ public class RestProgramsWithProductsService {
         programWithProducts.setProgramName(program.getName());
         programWithProducts.setProducts(getProductsForProgramAfterUpdatedTime(program, afterUpdatedTime, facilityType));
         return programWithProducts;
-    }
-
-    public void save(Kit kit) {
-        productService.saveKit(kit);
-    }
-
-    public List<Kit> getLatestKits(final Date afterUpdatedTime) {
-        return FluentIterable.from(productService.getLatestKits(afterUpdatedTime)).transform(new Function<Kit, Kit>() {
-            @Override
-            public Kit apply(Kit kit) {
-                kit.setProducts(kitProductService.getProductsForKitAfterUpdatedTime(kit.getId(), afterUpdatedTime));
-                return kit;
-            }
-        }).toList();
     }
 }

@@ -48,9 +48,6 @@ public class ProductService {
   @Autowired
   private ProductFormService productFormService;
 
-  @Autowired
-  private KitProductService kitProductService;
-
   @Transactional
   public void save(Product product) {
 
@@ -122,33 +119,6 @@ public class ProductService {
     return repository.getById(id);
   }
 
-  @Transactional
-  public void updateKitProducts(Kit kit) {
-    for (Product product : kit.getProducts()) {
-      int quantityInKit = product.getQuantityInKit();
-
-      Product productByCode = getByCode(product.getCode());
-      if (productByCode == null) {
-        throw new DataException("error.kit.product.not.exist");
-      }
-
-      KitProduct kitProduct = new KitProduct(kit, productByCode, quantityInKit);
-      kitProductService.insert(kitProduct);
-    }
-  }
-
-  @Transactional
-  public void saveKit(Kit kit) {
-    Product queryKit = getByCode(kit.getCode());
-    if (queryKit == null) {
-      save(kit);
-    } else {
-      kit.setId(queryKit.getId());
-    }
-
-    updateKitProducts(kit);
-  }
-
   public Product getExisting(Product product) {
         return repository.getByCode(product.getCode());
     }
@@ -157,7 +127,4 @@ public class ProductService {
     return repository.getAllProducts();
   }
 
-  public List<Kit> getLatestKits(Date afterUpdatedTime) {
-    return afterUpdatedTime == null ? repository.getAllKits() : repository.getLatestKits(afterUpdatedTime);
-  }
 }

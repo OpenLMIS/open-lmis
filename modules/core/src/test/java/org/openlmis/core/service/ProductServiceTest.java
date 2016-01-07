@@ -58,9 +58,6 @@ public class ProductServiceTest {
   ProgramProductService programProductService;
 
   @Mock
-  private KitProductService kitProductService;
-
-  @Mock
   private ProductGroupService productGroupService;
 
   @Mock
@@ -297,58 +294,5 @@ public class ProductServiceTest {
     service.getTotalSearchResultCount("search-param");
 
     verify(repository).getTotalSearchResultCount("search-param");
-  }
-
-  @Test
-  public void shouldUpdateKitProductsWhenProductExisted() throws Exception {
-    Product product = new Product();
-    product.setId(1234L);
-    product.setCode("S12345");
-    product.setPackSize(1);
-    product.setQuantityInKit(200);
-
-    Kit kit = new Kit();
-    kit.setId(100L);
-    kit.setProducts(Arrays.asList(product));
-
-    when(repository.getByCode("S12345")).thenReturn(product);
-
-    service.updateKitProducts(kit);
-
-    verify(kitProductService).insert(any(KitProduct.class));
-  }
-
-  @Test(expected = DataException.class)
-  public void shouldThrowDataExceptionWhenProductNotExisted() throws Exception {
-    Product product = new Product();
-    product.setCode("S12345");
-    product.setPackSize(1);
-    product.setQuantityInKit(200);
-
-    Kit kit = new Kit();
-    kit.setId(100L);
-    kit.setProducts(Arrays.asList(product));
-
-    when(repository.getByCode("S12345")).thenReturn(null);
-
-    service.updateKitProducts(kit);
-
-    verify(kitProductService, never()).insert(any(KitProduct.class));
-  }
-
-  @Test
-  public void shoudGetLatestKitsWithUpdatedTime() throws Exception {
-    Date afterUpdatedTime = new Date(12345L);
-
-    service.getLatestKits(afterUpdatedTime);
-
-    verify(repository).getLatestKits(afterUpdatedTime);
-  }
-
-  @Test
-  public void shouldGetAllKitsWhenUpdatedTimeIsNull() throws Exception {
-    service.getLatestKits(null);
-
-    verify(repository).getAllKits();
   }
 }

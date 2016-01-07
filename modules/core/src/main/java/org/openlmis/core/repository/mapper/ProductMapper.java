@@ -111,9 +111,6 @@ public interface ProductMapper {
       one = @One(select = "org.openlmis.core.repository.mapper.ProductFormMapper.getById"))})
   Product getById(Long id);
 
-  @Select("SELECT id, primaryName, code FROM products WHERE id=#{id}")
-  Kit getKitById(Long id);
-
   @Select("SELECT active FROM products WHERE LOWER(code) = LOWER(#{code})")
   boolean isActive(String code);
 
@@ -131,12 +128,7 @@ public interface ProductMapper {
   @Select("SELECT * FROM products")
   List<Product> list();
 
-  @Select({"SELECT * FROM products " +
-          "WHERE isKit = true " +
-          "AND modifieddate > #{afterUpdatedTime}"})
-  List<Kit> listLatestKits(Date afterUpdatedTime);
-
-  @Select({"SELECT * FROM products WHERE isKit = true"})
-  List<Kit> listAllKits();
-
+  @Insert({"INSERT INTO kit_products_relation(kitCode, productCode, quantity)",
+      "VALUES(#{kitCode}, #{productCode}, #{quantity})"})
+  Long insertKitProduct(KitProduct kitProduct);
 }

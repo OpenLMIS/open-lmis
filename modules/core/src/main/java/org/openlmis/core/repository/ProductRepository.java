@@ -12,7 +12,7 @@ package org.openlmis.core.repository;
 
 import lombok.NoArgsConstructor;
 import org.openlmis.core.domain.DosageUnit;
-import org.openlmis.core.domain.Kit;
+import org.openlmis.core.domain.KitProduct;
 import org.openlmis.core.domain.Product;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.core.repository.mapper.DosageUnitMapper;
@@ -46,6 +46,11 @@ public class ProductRepository {
   public void insert(Product product) {
     try {
       mapper.insert(product);
+      if (!product.getKitProductList().isEmpty()) {
+        for (KitProduct kitProduct: product.getKitProductList()) {
+          mapper.insertKitProduct(kitProduct);
+        }
+      }
     } catch (DuplicateKeyException duplicateKeyException) {
       throw new DataException("error.duplicate.product.code");
     } catch (DataIntegrityViolationException dataIntegrityViolationException) {
@@ -106,13 +111,5 @@ public class ProductRepository {
 
   public List<Product> getAllProducts(){
     return mapper.list();
-  }
-
-  public List<Kit> getLatestKits(Date afterUpdatedTime) {
-    return mapper.listLatestKits(afterUpdatedTime);
-  }
-
-  public List<Kit> getAllKits() {
-    return mapper.listAllKits();
   }
 }

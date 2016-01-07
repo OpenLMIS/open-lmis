@@ -1,6 +1,6 @@
 CREATE TABLE kit_products_relation (
-  kitId INTEGER NOT NULL REFERENCES products(id),
-  productId INTEGER NOT NULL REFERENCES products(id),
+  kitCode VARCHAR(50) NOT NULL REFERENCES products(code),
+  productCode VARCHAR(50) NOT NULL REFERENCES products(code),
   quantity INTEGER NOT NULL,
   createdDate TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   modifiedDate TIMESTAMP DEFAULT CURRENT_TIMESTAMP

@@ -13,13 +13,7 @@ import static com.fasterxml.jackson.databind.annotation.JsonSerialize.Inclusion.
 @JsonSerialize(include = NON_EMPTY)
 public class KitProduct extends BaseModel {
 
-    private Kit kit;
-    private Product product;
+    private String kitCode;
+    private String productCode;
     private Integer quantity;
-
-    public KitProduct(Kit kit, Product product, Integer quantity) {
-        this.kit = kit;
-        this.product = product;
-        this.quantity = quantity;
-    }
 }

@@ -1,7 +1,7 @@
 package org.openlmis.restapi.controller;
 
 import lombok.NoArgsConstructor;
-import org.openlmis.core.domain.Kit;
+import org.openlmis.core.domain.Product;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.restapi.domain.ProgramWithProducts;
 import org.openlmis.restapi.response.RestResponse;
@@ -49,8 +49,6 @@ public class RestProgramsWithProductsController extends BaseController {
             Date afterUpdatedTimeInDate = (afterUpdatedTime == null ? null : new Date(afterUpdatedTime));
             List<ProgramWithProducts> programsWithProducts = programService.getLatestProgramsWithProductsByFacilityId(facilityId, afterUpdatedTimeInDate);
             RestResponse restResponse = new RestResponse("programsWithProducts", programsWithProducts);
-            List<Kit> latestKits = programService.getLatestKits(afterUpdatedTimeInDate);
-            restResponse.addData("kits", latestKits);
             restResponse.addData("latestUpdatedTime", new Date());
             return new ResponseEntity<>(restResponse, HttpStatus.OK);
         } catch (DataException e) {
@@ -58,9 +56,4 @@ public class RestProgramsWithProductsController extends BaseController {
         }
     }
 
-    @RequestMapping(value = "/rest-api/kits", method = POST, headers = ACCEPT_JSON)
-    public ResponseEntity createKit(@RequestBody(required = true) Kit kit) {
-        programService.save(kit);
-        return RestResponse.success("msg.kit.createsuccess");
-    }
 }

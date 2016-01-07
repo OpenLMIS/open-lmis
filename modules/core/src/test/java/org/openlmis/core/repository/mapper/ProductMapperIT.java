@@ -16,8 +16,10 @@ import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
+import org.openlmis.core.builder.KitProductBuilder;
+import org.openlmis.core.builder.ProductBuilder;
 import org.openlmis.core.domain.DosageUnit;
-import org.openlmis.core.domain.Kit;
+import org.openlmis.core.domain.KitProduct;
 import org.openlmis.core.domain.Product;
 import org.openlmis.db.categories.IntegrationTests;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,13 +29,14 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.transaction.TransactionConfiguration;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Date;
-import java.util.List;
+import java.sql.SQLException;
 
 import static com.natpryce.makeiteasy.MakeItEasy.*;
 import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertFalse;
-import static org.hamcrest.CoreMatchers.*;
+import static org.hamcrest.CoreMatchers.not;
+import static org.hamcrest.CoreMatchers.nullValue;
+import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 import static org.openlmis.core.builder.ProductBuilder.*;
@@ -202,44 +205,19 @@ public class ProductMapperIT {
   }
 
   @Test
-  public void shouldGetKits() {
-
-    Product product = make(a(defaultProduct));
+  public void shouldInsertKitProduct() throws SQLException {
+    Product product = make(a(ProductBuilder.defaultProduct, with(ProductBuilder.code, "KIT")));
     productMapper.insert(product);
 
-    Kit kit = generateKit("Kit 1", "Kit 1 name");
-    productMapper.insert(kit);
+    Product product1 = make(a(ProductBuilder.defaultProduct, with(ProductBuilder.code, "P1")));
+    productMapper.insert(product1);
 
-    List<Kit> kits = productMapper.listAllKits();
+    KitProduct kitProduct1 = make(a(KitProductBuilder.defaultKit,
+        with(KitProductBuilder.kitCode, "KIT"),
+        with(KitProductBuilder.productCode, "P1"),
+        with(KitProductBuilder.quantity, 100)));
 
-    assertEquals(kits.size(), 1);
-    assertEquals(kits.get(0).getCode(), kit.getCode());
-  }
-
-  @Test
-  public void shouldGetLatestKits() {
-    long currentMillions = System.currentTimeMillis();
-    long twoDays = 1000 * 60 * 60 * 24 * 2;
-
-    Kit usKit = generateKit("Kit 1", "Kit 1 name");
-    usKit.setModifiedDate(new Date(currentMillions - twoDays));
-    productMapper.insert(usKit);
-
-    Kit apeKit = generateKit("Kit 2", "Kit 2 name");
-    apeKit.setModifiedDate(new Date(currentMillions + twoDays));
-    productMapper.insert(apeKit);
-
-    List<Kit> kits = productMapper.listLatestKits(new Date(currentMillions));
-
-    assertEquals(kits.size(), 1);
-    assertEquals(kits.get(0).getCode(), apeKit.getCode());
-  }
-
-  private Kit generateKit(String code, String primaryName) {
-    Kit kit = new Kit();
-    kit.setCode(code);
-    kit.setPrimaryName(primaryName);
-    kit.setActive(true);
-    return kit;
+    productMapper.insertKitProduct(kitProduct1);
+    //should no exception
   }
 }

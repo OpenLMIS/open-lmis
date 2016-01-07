@@ -20,7 +20,9 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.runners.MockitoJUnitRunner;
+import org.openlmis.core.builder.KitProductBuilder;
 import org.openlmis.core.builder.ProductBuilder;
+import org.openlmis.core.domain.KitProduct;
 import org.openlmis.core.domain.Product;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.core.repository.mapper.DosageUnitMapper;
@@ -34,10 +36,11 @@ import java.util.Date;
 
 import static com.natpryce.makeiteasy.MakeItEasy.a;
 import static com.natpryce.makeiteasy.MakeItEasy.make;
+import static com.natpryce.makeiteasy.MakeItEasy.with;
+import static java.util.Arrays.asList;
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertThat;
-import static org.mockito.Mockito.doThrow;
-import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.*;
 import static org.openlmis.core.matchers.Matchers.dataExceptionMatcher;
 import static org.powermock.api.mockito.PowerMockito.when;
 
@@ -155,16 +158,27 @@ public class ProductRepositoryTest {
   }
 
   @Test
-  public void shouldGetLatestKits() {
-    Date updatedTime = new Date(1234L);
-    repository.getLatestKits(updatedTime);
+  public void shouldInsertKitProductsIfProductHasKitProducts() {
+    KitProduct kitProduct1 = make(a(KitProductBuilder.defaultKit,
+        with(KitProductBuilder.kitCode, product.getCode()),
+        with(KitProductBuilder.productCode, "P1")));
+    KitProduct kitProduct2 = make(a(KitProductBuilder.defaultKit,
+        with(KitProductBuilder.kitCode, product.getCode()),
+        with(KitProductBuilder.productCode, "P2")));
+    product.setKitProductList(asList(kitProduct1, kitProduct2));
 
-    verify(mockedMapper).listLatestKits(updatedTime);
+    repository.insert(product);
+
+    verify(mockedMapper).insertKitProduct(kitProduct1);
+    verify(mockedMapper).insertKitProduct(kitProduct2);
+
   }
-  @Test
-  public void shouldAllKits() {
-    repository.getAllKits();
 
-    verify(mockedMapper).listAllKits();
+  @Test
+  public void shouldNotCallInsertKitProductsIfProductHasNoKitProducts() {
+    repository.insert(product);
+
+    verify(mockedMapper, never()).insertKitProduct(any(KitProduct.class));
   }
 }
+

@@ -6,7 +6,6 @@ import org.junit.runner.RunWith;
 import org.junit.runners.BlockJUnit4ClassRunner;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.openlmis.core.domain.Kit;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.core.service.MessageService;
 import org.openlmis.db.categories.UnitTests;
@@ -103,41 +102,9 @@ public class RestProgramsWithProductsControllerTest {
     }
 
     @Test
-    public void shouldReturnResponseWithListOfKits() {
-        List<Kit> kits = Arrays.asList(new Kit());
-
-        long date = 1234L;
-        Date afterUpdatedTime = new Date(1234L);
-
-        when(restProgramsWithProductsService.getLatestKits(afterUpdatedTime)).thenReturn(kits);
-
-        ResponseEntity<RestResponse> response = restProgramsWithProductsController.getLatestProgramWithProductsByFacility(1L, date);
-        assertEquals(HttpStatus.OK, response.getStatusCode());
-        assertEquals(kits, response.getBody().getData().get("kits"));
-        assertNotNull(response.getBody().getData().get("latestUpdatedTime"));
-    }
-
-
-    @Test
     public void shouldCallLatestProgramsWithProductsWithNullTimeWhenTimeIsNotProvided() {
         ResponseEntity<RestResponse> response = restProgramsWithProductsController.getLatestProgramWithProductsByFacility(123L,null);
         assertEquals(HttpStatus.OK, response.getStatusCode());
         verify(restProgramsWithProductsService).getLatestProgramsWithProductsByFacilityId(123L, null);
-    }
-
-    @Test
-    public void shouldCallSaveKit() {
-        Kit kit = new Kit();
-
-        mockStatic(RestResponse.class);
-        String successMsg = "msg.kit.createsuccess";
-        ResponseEntity<RestResponse> expectedResponse = new ResponseEntity<>(new RestResponse(SUCCESS, successMsg), HttpStatus.OK);
-        PowerMockito.when(RestResponse.success(successMsg)).thenReturn(expectedResponse);
-
-        ResponseEntity<RestResponse> response = restProgramsWithProductsController.createKit(kit);
-
-        verify(restProgramsWithProductsService).save(kit);
-        assertEquals(HttpStatus.OK, response.getStatusCode());
-        assertThat(response.getBody().getSuccess(), is(successMsg));
     }
 }

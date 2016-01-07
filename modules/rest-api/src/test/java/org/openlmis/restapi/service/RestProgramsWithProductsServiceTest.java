@@ -18,7 +18,7 @@ import org.openlmis.core.exception.DataException;
 import org.openlmis.core.service.*;
 import org.openlmis.core.utils.DateUtil;
 import org.openlmis.db.categories.UnitTests;
-import org.openlmis.restapi.builder.KitBuilder;
+import org.openlmis.core.builder.KitProductBuilder;
 import org.openlmis.restapi.builder.ProgramWithProductsBuilder;
 import org.openlmis.restapi.domain.ProgramWithProducts;
 import org.powermock.modules.junit4.PowerMockRunner;
@@ -51,9 +51,6 @@ public class RestProgramsWithProductsServiceTest {
 
     @Mock
     private ProductService productService;
-
-    @Mock
-    private KitProductService kitProductService;
 
     @Mock
     private ProgramProductService programProductService;
@@ -169,36 +166,6 @@ public class RestProgramsWithProductsServiceTest {
         when(facilityService.getById(facilityId)).thenReturn(null);
 
         restProgramsWithProductsService.getLatestProgramsWithProductsByFacilityId(facilityId, null);
-    }
-
-    @Test
-    public void shouldFetchLatestKitsWithUpdatedTime() {
-        Date date = new Date(1234567L);
-
-        Kit usKit = make(a(KitBuilder.defaultKit, with(KitBuilder.kitId, 100L)).but(with(KitBuilder.code, "S00001")));
-        Kit apeKit = make(a(KitBuilder.defaultKit, with(KitBuilder.kitId, 200L)).but(with(KitBuilder.code, "S00002")));
-        List<Kit> kits = Arrays.asList(usKit, apeKit);
-
-        when(productService.getLatestKits(date)).thenReturn(kits);
-
-        List<Product> products = Arrays.asList(new Product(), new Product());
-
-        when(kitProductService.getProductsForKitAfterUpdatedTime(100L, date)).thenReturn(products);
-        when(kitProductService.getProductsForKitAfterUpdatedTime(200L, date)).thenReturn(null);
-
-        List<Kit> actualKits = restProgramsWithProductsService.getLatestKits(date);
-
-        assertEquals(2, actualKits.size());
-        assertEquals(products, actualKits.get(0).getProducts());
-        assertNull(actualKits.get(1).getProducts());
-    }
-
-    @Test
-    public void shouldSaveKitWithValidKit() {
-        Kit kit = new Kit();
-        restProgramsWithProductsService.save(kit);
-
-        verify(productService).saveKit(kit);
     }
 
     private ProgramProduct makeProgramProduct(Program program, Product product) {
