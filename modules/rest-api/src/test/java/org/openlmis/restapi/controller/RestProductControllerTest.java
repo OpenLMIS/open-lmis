@@ -65,7 +65,7 @@ public class RestProductControllerTest {
 
     ResponseEntity<RestResponse> response = restProductController.getLatestProducts(date);
     assertEquals(HttpStatus.OK, response.getStatusCode());
-    assertEquals(products, response.getBody().getData().get("products"));
+    assertEquals(products, response.getBody().getData().get("latestProducts"));
     assertNotNull(response.getBody().getData().get("latestUpdatedTime"));
   }
 
