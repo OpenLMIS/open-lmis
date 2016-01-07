@@ -1,24 +1,42 @@
 package org.openlmis.restapi.service;
 
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
 import org.junit.runners.BlockJUnit4ClassRunner;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.openlmis.core.builder.ProductBuilder;
+import org.openlmis.core.builder.ProgramBuilder;
+import org.openlmis.core.builder.ProgramProductBuilder;
 import org.openlmis.core.domain.KitProduct;
 import org.openlmis.core.domain.Product;
+import org.openlmis.core.domain.Program;
+import org.openlmis.core.domain.ProgramProduct;
 import org.openlmis.core.repository.ProductRepository;
+import org.openlmis.core.service.ProductService;
+import org.openlmis.core.service.ProgramProductService;
+import org.openlmis.core.utils.DateUtil;
 import org.openlmis.db.categories.UnitTests;
+import org.openlmis.restapi.domain.ProductResponse;
 import org.powermock.modules.junit4.PowerMockRunner;
 import org.powermock.modules.junit4.PowerMockRunnerDelegate;
 
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 
+import static com.natpryce.makeiteasy.MakeItEasy.a;
+import static com.natpryce.makeiteasy.MakeItEasy.make;
+import static java.util.Arrays.asList;
 import static org.hamcrest.Matchers.is;
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
+import static org.mockito.Mockito.after;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 @Category(UnitTests.class)
 @RunWith(PowerMockRunner.class)
@@ -28,10 +46,13 @@ public class RestProductServiceTest {
   @InjectMocks
   RestProductService restProductService;
 
-  @Mock
-  ProductRepository productRepository;
-
   private Product product = new Product();
+
+  @Mock
+  private ProductService productService;
+
+  @Mock
+  private ProgramProductService programProductService;
 
   @Before
   public void setUp() throws Exception {
@@ -78,7 +99,77 @@ public class RestProductServiceTest {
 
     restProductService.buildAndSave(product);
 
-    verify(productRepository).insert(product);
+    verify(productService).save(product);
 
+  }
+
+  @Test
+  public void shouldGetAllLatestProgramsWithProductsByFacilityIdWhenAfterUpdatedTimeIsEmpty() {
+    Product product1 = makeProduct("P1", "product 1");
+    Product product2 = makeProduct("P2", "product 2");
+
+    Program program1 = makeProgram("PR1", "program 1");
+    Program program2 = makeProgram("PR2", "program 2");
+    ProgramProduct programProduct1 = makeProgramProduct(program1, product1);
+    ProgramProduct programProduct2 = makeProgramProduct(program2, product1);
+    ProgramProduct programProduct3 = makeProgramProduct(program1, product2);
+
+    when(productService.getAllProducts()).thenReturn(asList(product1, product2));
+    when(programProductService.getByProductCode("P1")).thenReturn(asList(programProduct1, programProduct2));
+    when(programProductService.getByProductCode("P2")).thenReturn(asList(programProduct3));
+
+    List<ProductResponse> products = restProductService.getLatestProductsAfterUpdatedTime(null);
+
+    assertEquals(2, products.size());
+    assertEquals("PR1", products.get(0).getSupportedPrograms().get(0));
+    assertEquals("PR2", products.get(0).getSupportedPrograms().get(1));
+    assertEquals("PR1", products.get(1).getSupportedPrograms().get(0));
+  }
+
+  @Test
+  public void shouldRetrieveProductsAfterUpdatedDate() {
+    Date afterUpdatedTime = DateUtil.parseDate("2015-11-11 10:10:10");
+
+    Product product1 = makeProduct("P1", "product 1");
+    Product product2 = makeProduct("P2", "product 2");
+
+    Program program1 = makeProgram("PR1", "program 1");
+    Program program2 = makeProgram("PR2", "program 2");
+    ProgramProduct programProduct1 = makeProgramProduct(program1, product1);
+    ProgramProduct programProduct2 = makeProgramProduct(program2, product1);
+    ProgramProduct programProduct3 = makeProgramProduct(program1, product2);
+
+    when(productService.getProductsAfterUpdatedDate(afterUpdatedTime)).thenReturn(asList(product1, product2));
+    when(programProductService.getByProductCode("P1")).thenReturn(asList(programProduct1, programProduct2));
+    when(programProductService.getByProductCode("P2")).thenReturn(asList(programProduct3));
+
+    List<ProductResponse> products = restProductService.getLatestProductsAfterUpdatedTime(afterUpdatedTime);
+
+    assertEquals(2, products.size());
+    assertEquals("PR1", products.get(0).getSupportedPrograms().get(0));
+    assertEquals("PR2", products.get(0).getSupportedPrograms().get(1));
+    assertEquals("PR1", products.get(1).getSupportedPrograms().get(0));
+
+  }
+
+  private ProgramProduct makeProgramProduct(Program program, Product product) {
+    ProgramProduct programProduct = make(a(ProgramProductBuilder.defaultProgramProduct));
+    programProduct.setProgram(program);
+    programProduct.setProduct(product);
+    return programProduct;
+  }
+
+  private Program makeProgram(String code, String name) {
+    Program program = make(a(ProgramBuilder.defaultProgram));
+    program.setCode(code);
+    program.setName(name);
+    return program;
+  }
+
+  private Product makeProduct(String code, String name) {
+    Product product = make(a(ProductBuilder.defaultProduct));
+    product.setCode(code);
+    product.setPrimaryName(name);
+    return product;
   }
 }

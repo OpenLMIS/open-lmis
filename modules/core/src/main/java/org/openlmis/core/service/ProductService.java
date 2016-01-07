@@ -127,4 +127,7 @@ public class ProductService {
     return repository.getAllProducts();
   }
 
+  public List<Product> getProductsAfterUpdatedDate(Date afterUpdatedTime) {
+    return null;
+  }
 }

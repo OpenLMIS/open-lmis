@@ -8,6 +8,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.openlmis.core.domain.Product;
 import org.openlmis.db.categories.UnitTests;
+import org.openlmis.restapi.domain.ProductResponse;
 import org.openlmis.restapi.response.RestResponse;
 import org.openlmis.restapi.service.RestProductService;
 import org.powermock.api.mockito.PowerMockito;
@@ -17,8 +18,14 @@ import org.powermock.modules.junit4.PowerMockRunnerDelegate;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
-import static org.junit.Assert.*;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 import static org.openlmis.restapi.response.RestResponse.SUCCESS;
 import static org.powermock.api.mockito.PowerMockito.mockStatic;
 
@@ -46,5 +53,26 @@ public class RestProductControllerTest {
 
     assertEquals(HttpStatus.OK, response.getStatusCode());
     verify(restProductService).buildAndSave(fakeKit);
+  }
+
+  @Test
+  public void shouldReturnResponseWithListOfLatestProgramsWithProducts() {
+    List<ProductResponse> products = new ArrayList();
+    products.add(new ProductResponse());
+    long date = 1234L;
+    Date afterUpdatedTime = new Date(date);
+    when(restProductService.getLatestProductsAfterUpdatedTime(afterUpdatedTime)).thenReturn(products);
+
+    ResponseEntity<RestResponse> response = restProductController.getLatestProducts(date);
+    assertEquals(HttpStatus.OK, response.getStatusCode());
+    assertEquals(products, response.getBody().getData().get("products"));
+    assertNotNull(response.getBody().getData().get("latestUpdatedTime"));
+  }
+
+  @Test
+  public void shouldCallLatestProgramsWithProductsWithNullTimeWhenTimeIsNotProvided() {
+    ResponseEntity<RestResponse> response = restProductController.getLatestProducts(null);
+    assertEquals(HttpStatus.OK, response.getStatusCode());
+    verify(restProductService).getLatestProductsAfterUpdatedTime(null);
   }
 }
