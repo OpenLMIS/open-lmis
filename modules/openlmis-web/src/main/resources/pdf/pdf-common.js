@@ -70,5 +70,15 @@ function monitorResponses(page, address, onLoaded) {
     });
 }
 
-exports.extractDomain = extractDomain;
+function addCookie(url, sessionId) {
+    var domain = extractDomain(url);
+
+    phantom.addCookie({
+        'name': 'JSESSIONID',
+        'value': sessionId,
+        'domain': domain
+    });
+}
+
 exports.monitorResponses = monitorResponses;
+exports.addCookie = addCookie;

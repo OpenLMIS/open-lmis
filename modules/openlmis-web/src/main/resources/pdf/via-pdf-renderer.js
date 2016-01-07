@@ -6,15 +6,18 @@ var page = require('webpage').create(),
 var address = system.args[1];
 var output = system.args[2];
 var sessionId = system.args[3];
-var domain = common.extractDomain(address);
 
-phantom.addCookie({
-    'name': 'JSESSIONID',
-    'value': sessionId,
-    'domain': domain
-});
-
+common.addCookie(address, sessionId);
 common.monitorResponses(page, address, onLoaded);
+
+function onLoaded() {
+    console.log("message loaded, prepare to render");
+    window.setTimeout(function () {
+        adjustPageForRender();
+        page.render(output);
+        phantom.exit();
+    }, 200);
+}
 
 function adjustPageForRender() {
     page.evaluate(function () {
@@ -49,14 +52,4 @@ function adjustPageForRender() {
         var pages = capturePages();
         combineMutiplePages(pages);
     });
-}
-
-function onLoaded() {
-    console.log("message loaded, prepare to render");
-
-    window.setTimeout(function () {
-        adjustPageForRender();
-        page.render(output);
-        phantom.exit();
-    }, 200);
 }
