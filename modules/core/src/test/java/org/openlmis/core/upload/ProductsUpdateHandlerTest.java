@@ -190,6 +190,7 @@ public class ProductsUpdateHandlerTest {
         ArrayList<Product> existingList = new ArrayList<>();
         Product existingProduct = initProduct();
         existingProduct.setSpecialStorageInstructions("SpecialStorageInstructions");
+        existingProduct.setFormId(10l);
         existingList.add(existingProduct);
         when(productService.getAllProducts()).thenReturn(existingList);
         when(productService.getExisting(product)).thenReturn(existingProduct);
@@ -203,6 +204,7 @@ public class ProductsUpdateHandlerTest {
         verify(productService).save(existingProduct);
         assertThat(existingProduct.getPrimaryName(),is("new name"));
         assertThat(existingProduct.getSpecialStorageInstructions(),is("SpecialStorageInstructions"));
+        assertThat(existingProduct.getFormId(),is(10l));
     }
 
     private Product initProduct() {

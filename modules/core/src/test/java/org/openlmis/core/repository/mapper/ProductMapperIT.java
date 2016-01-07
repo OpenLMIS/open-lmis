@@ -41,6 +41,7 @@ import java.util.List;
 import static com.natpryce.makeiteasy.MakeItEasy.*;
 import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertFalse;
+import static junit.framework.TestCase.assertNotNull;
 import static org.hamcrest.CoreMatchers.not;
 import static org.hamcrest.CoreMatchers.nullValue;
 import static org.hamcrest.core.Is.is;
@@ -237,6 +238,16 @@ public class ProductMapperIT {
     assertThat(productList.get(1).getCode(), is("P1"));
     assertThat(productList.get(0).getKitProductList().size(), is(1));
     assertThat(productList.get(1).getKitProductList().size(), is(0));
+  }
+
+  @Test
+  public void shouldGetAllProductsWithFormAndDosageUnit() {
+    Product product = make(a(defaultProduct));
+    productMapper.insert(product);
+
+    List<Product> products = productMapper.list();
+    assertNotNull(products.get(0).getForm());
+    assertNotNull(products.get(0).getDosageUnit());
   }
 
   @Test
