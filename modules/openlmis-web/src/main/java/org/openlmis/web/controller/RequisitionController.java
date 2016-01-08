@@ -160,7 +160,7 @@ public class RequisitionController extends BaseController {
     File directory = new File(directoryStr);
     directory.mkdirs();
 
-    String pdfPathName = pdfGenerator.generateMMIAPdf(id, programId, directoryStr);
+    String pdfPathName = pdfGenerator.generatePdf(id, programId, directoryStr);
     response.setContentType("Content-type: application/pdf");
     response.setHeader("Content-Disposition", "attachment; filename=" + pdfGenerator.getNameForPdf());
 

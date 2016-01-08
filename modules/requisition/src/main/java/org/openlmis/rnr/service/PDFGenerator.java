@@ -35,7 +35,7 @@ public class PDFGenerator {
     @Getter
     private String nameForPdf;
 
-    public String generateMMIAPdf(Long rnrId, Long programId, String path) {
+    public String generatePdf(Long rnrId, Long programId, String path) {
         String url = staticReferenceDataService.getPropertyValue("app.url") +
                 "/public/pages/logistics/rnr/index.html#/view-requisition-" +
                 programService.getById(programId).getCode().toLowerCase() + "/" +

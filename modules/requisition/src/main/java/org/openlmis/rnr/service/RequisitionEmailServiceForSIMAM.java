@@ -185,17 +185,17 @@ public class RequisitionEmailServiceForSIMAM {
 		EmailAttachment attachmentForRegimen = generateRegimenExcelForSIMAM(requisition);
 		emailAttachments.add(attachmentForRegimen);
 
-		if (staticReferenceDataService.getBoolean("mail.attachment.mmia.pdf")) {
-			EmailAttachment mmiaPdfAttachment = generateMMIAPdfForSIMAM(requisition);
-			emailAttachments.add(mmiaPdfAttachment);
+		if (staticReferenceDataService.getBoolean("email.attachment.form.pdf")) {
+			EmailAttachment formPdfAttachment = generatePdfForSIMAM(requisition);
+			emailAttachments.add(formPdfAttachment);
 		}
 
 		return emailAttachments;
 	}
 
-	private EmailAttachment generateMMIAPdfForSIMAM(Rnr requisition) {
-		String filePathForMMIAPdf = pdfGenerator.generateMMIAPdf(requisition.getId(), requisition.getProgram().getId(), pdfDirectory);
-		return generateEmailAttachment(pdfGenerator.getNameForPdf(), filePathForMMIAPdf, FILE_APPLICATION_PDF);
+	private EmailAttachment generatePdfForSIMAM(Rnr requisition) {
+		String filePathForPdf = pdfGenerator.generatePdf(requisition.getId(), requisition.getProgram().getId(), pdfDirectory);
+		return generateEmailAttachment(pdfGenerator.getNameForPdf(), filePathForPdf, FILE_APPLICATION_PDF);
 	}
 
 	private EmailAttachment generateEmailAttachment(String fileName, String filePath, String fileType) {

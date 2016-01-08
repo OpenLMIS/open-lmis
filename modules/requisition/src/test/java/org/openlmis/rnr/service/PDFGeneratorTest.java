@@ -55,7 +55,7 @@ public class PDFGeneratorTest {
         RequestContextHolder.setRequestAttributes(attributes);
 
         //when
-        PDFGenerator.generateMMIAPdf(requisition.getId(), requisition.getProgram().getId(), "/app/tomcat/openlmis/emailattachment/cache");
+        PDFGenerator.generatePdf(requisition.getId(), requisition.getProgram().getId(), "/app/tomcat/openlmis/emailattachment/cache");
 
         //then
         verify(phantom).generatePDF(
