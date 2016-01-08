@@ -1,4 +1,4 @@
-function ViewRnrMmiaController($scope, $route, $filter, Requisitions, messageService) {
+function ViewRnrMmiaController($scope, $route, Requisitions, messageService) {
     $scope.adult = [];
     $scope.children = [];
     $scope.other = [];
@@ -31,6 +31,10 @@ function ViewRnrMmiaController($scope, $route, $filter, Requisitions, messageSer
             parseSignature($scope.rnr.rnrSignatures);
         });
 
+    };
+
+    $scope.downloadPdf = function() {
+        location.href = "/requisitions/" + $scope.rnr.id + "/" + $scope.rnr.program.id + "/pdf";
     };
 
     function parseSignature(signatures) {

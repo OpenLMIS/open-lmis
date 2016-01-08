@@ -13,6 +13,8 @@ package org.openlmis.web.controller;
 import lombok.NoArgsConstructor;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
+import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.IOUtils;
 import org.openlmis.core.domain.Facility;
 import org.openlmis.core.domain.ProcessingPeriod;
 import org.openlmis.core.domain.Program;
@@ -29,6 +31,7 @@ import org.openlmis.rnr.service.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PostAuthorize;
@@ -41,7 +44,12 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
 import java.util.List;
+import java.util.UUID;
 
 import static org.openlmis.core.domain.RightName.APPROVE_REQUISITION;
 import static org.openlmis.core.domain.RightName.CONVERT_TO_ORDER;
@@ -86,6 +94,11 @@ public class RequisitionController extends BaseController {
   private RegimenColumnService regimenColumnService;
   @Autowired
   private RequisitionPermissionService requisitionPermissionService;
+  @Autowired
+  private PDFGenerator pdfGenerator;
+
+  @Value("${export.tmp.path}")
+  protected String EXPORT_TMP_PATH;
 
   @RequestMapping(value = "/requisitions", method = POST, headers = ACCEPT_JSON)
   public ResponseEntity<OpenLmisResponse> initiateRnr(@RequestParam("facilityId") Long facilityId,
@@ -138,6 +151,29 @@ public class RequisitionController extends BaseController {
     } catch (DataException dataException) {
       return error(dataException, NOT_FOUND);
     }
+  }
+
+  @RequestMapping(value = "/requisitions/{id}/{programId}/pdf", method = GET)
+  @PostAuthorize("@requisitionPermissionService.hasPermission(principal, returnObject.body.data.get(\"rnr\"), 'VIEW_REQUISITION')")
+  public void getPDFFile(@PathVariable Long id,@PathVariable Long programId, HttpServletResponse response) throws IOException {
+    String directoryStr = EXPORT_TMP_PATH + "/" + UUID.randomUUID().toString();
+    File directory = new File(directoryStr);
+    directory.mkdirs();
+
+    String pdfPathName = pdfGenerator.generateMMIAPdf(id, programId, directoryStr);
+    response.setContentType("Content-type: application/pdf");
+    response.setHeader("Content-Disposition", "attachment; filename=" + pdfGenerator.getNameForPdf());
+
+    try {
+      FileInputStream fileInputStream = new FileInputStream(new File(pdfPathName));
+      IOUtils.copy(fileInputStream, response.getOutputStream());
+      fileInputStream.close();
+      response.flushBuffer();
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
+
+    FileUtils.deleteDirectory(directory);
   }
 
   @RequestMapping(value = "/requisitions/{id}/save", method = PUT, headers = ACCEPT_JSON)
