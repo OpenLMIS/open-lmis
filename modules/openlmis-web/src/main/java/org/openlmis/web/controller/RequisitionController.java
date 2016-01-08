@@ -154,7 +154,7 @@ public class RequisitionController extends BaseController {
   }
 
   @RequestMapping(value = "/requisitions/{id}/pdf", method = GET)
-  @PostAuthorize("@requisitionPermissionService.hasPermission(principal, returnObject.body.data.get(\"rnr\"), 'VIEW_REQUISITION')")
+  @PreAuthorize("@permissionEvaluator.hasPermission(principal,'VIEW_REQUISITION')")
   public void getPDFFile(@PathVariable Long id, HttpServletResponse response) throws IOException {
     String directoryStr = EXPORT_TMP_PATH + "/" + UUID.randomUUID().toString();
     File directory = new File(directoryStr);
