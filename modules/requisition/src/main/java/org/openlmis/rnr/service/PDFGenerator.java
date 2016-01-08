@@ -36,9 +36,11 @@ public class PDFGenerator {
     private String nameForPdf;
 
     public String generatePdf(Long rnrId, Long programId, String path) {
+        RnrProgram rnrProgram = RnrProgram.valueOf(programService.getById(programId).getCode());
+
         String url = staticReferenceDataService.getPropertyValue("app.url") +
                 "/public/pages/logistics/rnr/index.html#/view-requisition-" +
-                programService.getById(programId).getCode().toLowerCase() + "/" +
+                rnrProgram.toString() + "/" +
                 rnrId + "/" + programId;
 
         String sessionId = RequestContextHolder.currentRequestAttributes().getSessionId();
@@ -46,7 +48,7 @@ public class PDFGenerator {
         String pathname = path + "/" + nameForPdf;
 
         try {
-            phantom.generatePDF(url, pathname, sessionId);
+            phantom.generatePDF(url, pathname, sessionId, rnrProgram.toString());
         } catch (Exception e) {
             logger.error("error occured when calling phantom" + e.getMessage());
         }
@@ -57,5 +59,21 @@ public class PDFGenerator {
     private String getNameForPdf(Rnr requisition) {
         return RequisitionEmailServiceForSIMAM.REQUI_FILE_NAME_PREFIX + requisition.getId() + "_" + requisition.getFacility().getName() + "_" + requisition.getPeriod().getName() + "_" +
                 requisition.getProgram().getName() + ".pdf";
+    }
+
+    public enum RnrProgram {
+        MMIA("mmia"),
+        ESS_MEDS("via");
+
+        private String programName;
+
+        RnrProgram(String programName) {
+            this.programName = programName;
+        }
+
+        @Override
+        public String toString() {
+            return programName;
+        }
     }
 }

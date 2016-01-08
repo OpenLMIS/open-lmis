@@ -12,6 +12,9 @@ import org.openlmis.rnr.domain.Rnr;
 import org.springframework.web.context.request.RequestAttributes;
 import org.springframework.web.context.request.RequestContextHolder;
 
+import java.io.IOException;
+import java.net.URISyntaxException;
+
 import static com.natpryce.makeiteasy.MakeItEasy.a;
 import static com.natpryce.makeiteasy.MakeItEasy.make;
 import static com.natpryce.makeiteasy.MakeItEasy.with;
@@ -44,11 +47,16 @@ public class PDFGeneratorTest {
 
     @Test
     public void shouldCallPhantomToGeneratePDF() throws Exception {
+        testParameterParsingForPhantom("MMIA", "mmia");
+        testParameterParsingForPhantom("ESS_MEDS", "via");
+    }
+
+    private void testParameterParsingForPhantom(String programCode, String urlPart) throws IOException, URISyntaxException, InterruptedException {
         //given
         when(attributes.getSessionId()).thenReturn("helloid");
         when(staticReferenceDataService.getPropertyValue("app.url")).thenReturn("localhost:9091");
         Program program = new Program();
-        program.setCode("MMIA");
+        program.setCode(programCode);
         when(programService.getById(anyLong())).thenReturn(program);
         when(requisitionService.getFullRequisitionById(requisition.getId())).thenReturn(requisition);
 
@@ -59,8 +67,8 @@ public class PDFGeneratorTest {
 
         //then
         verify(phantom).generatePDF(
-                "localhost:9091/public/pages/logistics/rnr/index.html#/view-requisition-mmia/1/3",
+                "localhost:9091/public/pages/logistics/rnr/index.html#/view-requisition-" + urlPart + "/1/3",
                 "/app/tomcat/openlmis/emailattachment/cache/Requi1_HF2_Month1_Yellow Fever.pdf",
-                "helloid");
+                "helloid", urlPart);
     }
 }
