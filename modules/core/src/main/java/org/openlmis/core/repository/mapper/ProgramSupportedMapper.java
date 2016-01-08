@@ -53,10 +53,11 @@ public interface ProgramSupportedMapper {
     //TODO use COALESCE for modifiedDate
   void update(ProgramSupported programSupported);
 
-  @Select({"SELECT P.code FROM programs_supported PS INNER JOIN programs P ON P.id = PS.programId ",
+  @Select({"SELECT P.code, P.name FROM programs_supported PS INNER JOIN programs P ON P.id = PS.programId ",
     "WHERE PS.facilityId = #{facilityId} AND PS.active = TRUE AND P.active = TRUE"})
   @Results({
-    @Result(property = "program.code", column = "code")
+    @Result(property = "program.code", column = "code"),
+      @Result(property = "program.name", column = "name")
   })
   List<ProgramSupported> getActiveProgramsByFacilityId(Long facilityId);
 

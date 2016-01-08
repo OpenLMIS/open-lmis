@@ -32,9 +32,9 @@ public class LoginInformation {
 
     private Long facilityId;
 
-    private List<Program> facilitySupportedPrograms;
+    private List<String> facilitySupportedPrograms;
 
-    public static LoginInformation prepareForREST(final User user, final Facility facility, List<Program> programs) {
+    public static LoginInformation prepareForREST(final User user, final Facility facility, List<String> programs) {
         LoginInformation loginInformation = new LoginInformation();
         loginInformation.setUserFirstName(user.getFirstName());
         loginInformation.setUserLastName(user.getLastName());

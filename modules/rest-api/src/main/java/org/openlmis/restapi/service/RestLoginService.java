@@ -62,10 +62,10 @@ public class RestLoginService {
 
         if (facilityId != null) {
             Facility facility = facilityService.getById(facilityId);
-            List<Program> programs = FluentIterable.from(programSupportedService.getActiveByFacilityId(facilityId)).transform(new Function<ProgramSupported, Program>() {
+            List<String> programs = FluentIterable.from(programSupportedService.getActiveByFacilityId(facilityId)).transform(new Function<ProgramSupported, String>() {
                 @Override
-                public Program apply(ProgramSupported input) {
-                    return input.getProgram();
+                public String apply(ProgramSupported input) {
+                    return input.getProgram().getCode();
                 }
             }).toList();
             return LoginInformation.prepareForREST(user, facility, programs);

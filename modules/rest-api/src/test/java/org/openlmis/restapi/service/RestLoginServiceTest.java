@@ -76,7 +76,7 @@ public class RestLoginServiceTest {
         assertEquals("123", loginInformation.getFacilityCode());
         assertEquals("Charles", loginInformation.getUserFirstName());
         assertEquals("Xavier", loginInformation.getUserLastName());
-        assertEquals("P_CD", loginInformation.getFacilitySupportedPrograms().get(0).getCode());
+        assertEquals("P_CD", loginInformation.getFacilitySupportedPrograms().get(0));
     }
 
     @Test
