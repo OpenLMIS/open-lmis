@@ -35,11 +35,11 @@ function tryToSwitchToPtLanguage(page) {
             var ptButton = $("#locale_pt");
             if ($(ptButton[0]).attr("id") !== undefined) {
                 ptButton.click();
+                $(".toggleFullScreen").hide();
                 console.log("found pt button, clicked");
             } else {
                 console.log("can not find pt button");
             }
-            $(".toggleFullScreen").hide()
         });
     }, 100);
 }

@@ -13,6 +13,9 @@ common.monitorResponses(page, address, onLoaded);
 function onLoaded() {
     console.log("message loaded, prepare to render");
     window.setTimeout(function () {
+        page.evaluate(function () {
+            $('.btn-download').hide();
+        });
         page.render(output);
         phantom.exit();
     }, 200);
