@@ -34,7 +34,7 @@ function ViewRnrMmiaController($scope, $route, Requisitions, messageService) {
     };
 
     $scope.downloadPdf = function() {
-        location.href = "/requisitions/" + $scope.rnr.id + "/" + $scope.rnr.program.id + "/pdf";
+        location.href = "/requisitions/" + $scope.rnr.id + "/pdf";
     };
 
     function parseSignature(signatures) {
