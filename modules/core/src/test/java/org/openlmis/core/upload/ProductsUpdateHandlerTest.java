@@ -12,7 +12,6 @@ import org.mockito.runners.MockitoJUnitRunner;
 import org.openlmis.core.domain.DosageUnit;
 import org.openlmis.core.domain.Product;
 import org.openlmis.core.domain.ProductForm;
-import org.openlmis.core.repository.DosageUnitRepository;
 import org.openlmis.core.service.MessageService;
 import org.openlmis.core.service.ProductFormService;
 import org.openlmis.core.service.ProductService;
@@ -241,7 +240,6 @@ public class ProductsUpdateHandlerTest {
         handler.postProcess(auditFields);
 
         //then
-        assertThat(existingProduct.getDosageUnit().getDisplayOrder(),is(2));
         assertThat(existingProduct.getForm().getDisplayOrder(),is(2));
     }
 

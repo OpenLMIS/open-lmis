@@ -29,6 +29,4 @@ public interface DosageUnitMapper {
   @Select("SELECT * FROM dosage_units")
   List<DosageUnit> getAll();
 
-  @Select("SELECT * FROM dosage_units WHERE id = #{code}")
-  DosageUnit getByCode(String code);
 }
