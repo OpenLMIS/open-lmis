@@ -1,5 +1,6 @@
 package org.openlmis.restapi.service;
 
+import com.natpryce.makeiteasy.MakeItEasy;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
@@ -10,10 +11,12 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.openlmis.authentication.domain.UserToken;
 import org.openlmis.authentication.service.UserAuthenticationService;
+import org.openlmis.core.builder.ProgramSupportedBuilder;
 import org.openlmis.core.domain.Facility;
+import org.openlmis.core.domain.ProgramSupported;
 import org.openlmis.core.domain.User;
-import org.openlmis.core.exception.DataException;
 import org.openlmis.core.service.FacilityService;
+import org.openlmis.core.service.ProgramSupportedService;
 import org.openlmis.core.service.UserService;
 import org.openlmis.db.categories.UnitTests;
 import org.openlmis.restapi.domain.LoginInformation;
@@ -23,9 +26,12 @@ import org.powermock.modules.junit4.PowerMockRunner;
 import org.powermock.modules.junit4.PowerMockRunnerDelegate;
 import org.springframework.security.authentication.BadCredentialsException;
 
+import java.util.List;
+
+import static com.natpryce.makeiteasy.MakeItEasy.a;
+import static java.util.Arrays.asList;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.when;
 
 @Category(UnitTests.class)
@@ -44,6 +50,8 @@ public class RestLoginServiceTest {
     private UserAuthenticationService userAuthenticationService;
     @Mock
     private FacilityService facilityService;
+    @Mock
+    private ProgramSupportedService programSupportedService;
 
     @Test
     public void shouldReturnLoginInformationIfUsernameAndPasswordAreCorrect() {
@@ -59,6 +67,8 @@ public class RestLoginServiceTest {
         when(userAuthenticationService.authenticateUser(any(User.class))).thenReturn(new UserToken("username", 1L, true));
         when(userService.getByUserName("username")).thenReturn(user);
         when(facilityService.getById(123L)).thenReturn(facility);
+        List<ProgramSupported> programsSupportedByFacility = asList(MakeItEasy.make(a(ProgramSupportedBuilder.defaultProgramSupported)));
+        when(programSupportedService.getActiveByFacilityId(123L)).thenReturn(programsSupportedByFacility);
 
         LoginInformation loginInformation = restLoginService.login("username", "password");
         assertEquals("username", loginInformation.getUserName());
@@ -66,6 +76,7 @@ public class RestLoginServiceTest {
         assertEquals("123", loginInformation.getFacilityCode());
         assertEquals("Charles", loginInformation.getUserFirstName());
         assertEquals("Xavier", loginInformation.getUserLastName());
+        assertEquals("P_CD", loginInformation.getFacilitySupportedPrograms().get(0).getCode());
     }
 
     @Test

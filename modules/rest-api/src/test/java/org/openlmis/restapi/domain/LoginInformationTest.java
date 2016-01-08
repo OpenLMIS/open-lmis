@@ -34,7 +34,7 @@ public class LoginInformationTest {
         when(facility.getCode()).thenReturn("code");
         when(facility.getName()).thenReturn("name");
 
-        LoginInformation loginInformation = LoginInformation.prepareForREST(user, facility);
+        LoginInformation loginInformation = LoginInformation.prepareForREST(user, facility, null);
         assertEquals("username", loginInformation.getUserName());
         assertEquals("first", loginInformation.getUserFirstName());
         assertEquals("last", loginInformation.getUserLastName());
@@ -48,7 +48,7 @@ public class LoginInformationTest {
         when(user.getFirstName()).thenReturn("first");
         when(user.getLastName()).thenReturn("last");
 
-        LoginInformation loginInformation = LoginInformation.prepareForREST(user, null);
+        LoginInformation loginInformation = LoginInformation.prepareForREST(user, null, null);
         assertEquals("username", loginInformation.getUserName());
         assertEquals("first", loginInformation.getUserFirstName());
         assertEquals("last", loginInformation.getUserLastName());

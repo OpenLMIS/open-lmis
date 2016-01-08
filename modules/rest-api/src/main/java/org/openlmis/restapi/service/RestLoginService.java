@@ -1,17 +1,24 @@
 package org.openlmis.restapi.service;
 
+import com.google.common.base.Function;
+import com.google.common.collect.FluentIterable;
 import org.openlmis.authentication.domain.UserToken;
 import org.openlmis.authentication.service.UserAuthenticationService;
 import org.openlmis.core.domain.Facility;
+import org.openlmis.core.domain.Program;
+import org.openlmis.core.domain.ProgramSupported;
 import org.openlmis.core.domain.User;
 import org.openlmis.core.service.FacilityService;
 import org.openlmis.core.service.MessageService;
+import org.openlmis.core.service.ProgramSupportedService;
 import org.openlmis.core.service.UserService;
 import org.openlmis.restapi.domain.LoginInformation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 public class RestLoginService {
@@ -23,6 +30,8 @@ public class RestLoginService {
     private UserService userService;
     @Autowired
     private FacilityService facilityService;
+    @Autowired
+    private ProgramSupportedService programSupportedService;
 
     public LoginInformation login(String username, String password) {
         authenticateUser(username, password);
@@ -53,9 +62,15 @@ public class RestLoginService {
 
         if (facilityId != null) {
             Facility facility = facilityService.getById(facilityId);
-            return LoginInformation.prepareForREST(user, facility);
+            List<Program> programs = FluentIterable.from(programSupportedService.getActiveByFacilityId(facilityId)).transform(new Function<ProgramSupported, Program>() {
+                @Override
+                public Program apply(ProgramSupported input) {
+                    return input.getProgram();
+                }
+            }).toList();
+            return LoginInformation.prepareForREST(user, facility, programs);
         } else {
-            return LoginInformation.prepareForREST(user, null);
+            return LoginInformation.prepareForREST(user, null, null);
         }
     }
 }

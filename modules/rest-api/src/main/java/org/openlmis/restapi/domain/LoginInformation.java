@@ -4,7 +4,14 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.openlmis.core.domain.Facility;
+import org.openlmis.core.domain.Program;
 import org.openlmis.core.domain.User;
+import org.openlmis.core.repository.ProgramRepository;
+import org.openlmis.core.service.ProgramProductService;
+import org.openlmis.core.service.ProgramSupportedService;
+import org.springframework.beans.factory.annotation.Autowired;
+
+import java.util.List;
 
 import static com.fasterxml.jackson.databind.annotation.JsonSerialize.Inclusion.NON_EMPTY;
 
@@ -25,7 +32,9 @@ public class LoginInformation {
 
     private Long facilityId;
 
-    public static LoginInformation prepareForREST(final User user, final Facility facility) {
+    private List<Program> facilitySupportedPrograms;
+
+    public static LoginInformation prepareForREST(final User user, final Facility facility, List<Program> programs) {
         LoginInformation loginInformation = new LoginInformation();
         loginInformation.setUserFirstName(user.getFirstName());
         loginInformation.setUserLastName(user.getLastName());
@@ -35,10 +44,7 @@ public class LoginInformation {
             loginInformation.setFacilityId(facility.getId());
             loginInformation.setFacilityCode(facility.getCode());
             loginInformation.setFacilityName(facility.getName());
-        } else {
-            loginInformation.setFacilityId(null);
-            loginInformation.setFacilityCode(null);
-            loginInformation.setFacilityName(null);
+            loginInformation.setFacilitySupportedPrograms(programs);
         }
 
         return loginInformation;
