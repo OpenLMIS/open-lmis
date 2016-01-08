@@ -31,6 +31,10 @@ function ViewRnrViaDetailController($scope, $route, $location, Requisitions) {
 
             refreshItems();
             parseSignature($scope.rnr.rnrSignatures);
+
+            $scope.downloadPdf = function() {
+                location.href = "/requisitions/" + $scope.rnr.id + "/pdf";
+            };
         });
 
     };
