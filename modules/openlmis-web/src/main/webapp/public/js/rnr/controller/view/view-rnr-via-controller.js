@@ -1,4 +1,4 @@
-function ViewRnrViaDetailController($scope, $route, $location, Requisitions) {
+function ViewRnrViaDetailController($scope, $route, $location, Requisitions, FeatureToggleService) {
     $scope.pageSize = 20;
     $scope.currentPage = 1;
     $scope.rnrItemsVisible = [];
@@ -14,6 +14,7 @@ function ViewRnrViaDetailController($scope, $route, $location, Requisitions) {
         }
     }
 
+    $(".btn-download").hide();
     $scope.loadRequisitionDetail = function () {
         Requisitions.get({id: $route.current.params.rnr, operation:"skipped"}, function (data) {
             $scope.rnr = data.rnr;
@@ -32,11 +33,21 @@ function ViewRnrViaDetailController($scope, $route, $location, Requisitions) {
             refreshItems();
             parseSignature($scope.rnr.rnrSignatures);
 
-            $scope.downloadPdf = function() {
-                location.href = "/requisitions/" + $scope.rnr.id + "/pdf";
-            };
+            $scope.initDownloadPdfButton();
         });
 
+    };
+
+    $scope.initDownloadPdfButton = function(){
+        var toggleKey = {key: 'download.pdf'};
+        FeatureToggleService.get(toggleKey, function (result) {
+            if (result.key) {
+                $scope.downloadPdf = function () {
+                    location.href = "/requisitions/" + $scope.rnr.id + "/pdf";
+                };
+                $(".btn-download").show();
+            }
+        });
     };
 
     function parseSignature(signatures){

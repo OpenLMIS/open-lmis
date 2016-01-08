@@ -1,4 +1,4 @@
-function ViewRnrMmiaController($scope, $route, Requisitions, messageService) {
+function ViewRnrMmiaController($scope, $route, Requisitions, messageService, FeatureToggleService) {
     $scope.adult = [];
     $scope.children = [];
     $scope.other = [];
@@ -17,6 +17,7 @@ function ViewRnrMmiaController($scope, $route, Requisitions, messageService) {
         $scope.initMonth();
     });
 
+    $(".btn-download").hide();
     $scope.loadMmiaDetail = function () {
         Requisitions.get({id: $route.current.params.rnr, operation: "skipped"}, function (data) {
             $scope.rnr = data.rnr;
@@ -30,9 +31,19 @@ function ViewRnrMmiaController($scope, $route, Requisitions, messageService) {
 
             parseSignature($scope.rnr.rnrSignatures);
 
-            $scope.downloadPdf = function() {
-                location.href = "/requisitions/" + $scope.rnr.id + "/pdf";
-            };
+            $scope.initDownloadPdfButton();
+        });
+    };
+
+    $scope.initDownloadPdfButton = function(){
+        var toggleKey = {key: 'download.pdf'};
+        FeatureToggleService.get(toggleKey, function (result) {
+            if (result.key) {
+                $scope.downloadPdf = function () {
+                    location.href = "/requisitions/" + $scope.rnr.id + "/pdf";
+                };
+                $(".btn-download").show();
+            }
         });
     };
 
@@ -99,7 +110,6 @@ function ViewRnrMmiaController($scope, $route, Requisitions, messageService) {
             theOneItem.expirationDate = monthNames[monthNumber - 1] + " " + yearNumber;
         }
     };
-
 
 
     $scope.initRegime = function () {
