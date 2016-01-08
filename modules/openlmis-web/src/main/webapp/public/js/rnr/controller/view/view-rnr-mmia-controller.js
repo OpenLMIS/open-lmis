@@ -29,12 +29,11 @@ function ViewRnrMmiaController($scope, $route, Requisitions, messageService) {
             $scope.initPatient();
 
             parseSignature($scope.rnr.rnrSignatures);
+
+            $scope.downloadPdf = function() {
+                location.href = "/requisitions/" + $scope.rnr.id + "/pdf";
+            };
         });
-
-    };
-
-    $scope.downloadPdf = function() {
-        location.href = "/requisitions/" + $scope.rnr.id + "/pdf";
     };
 
     function parseSignature(signatures) {
