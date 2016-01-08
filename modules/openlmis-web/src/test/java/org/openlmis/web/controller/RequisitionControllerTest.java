@@ -38,6 +38,7 @@ import org.powermock.modules.junit4.PowerMockRunnerDelegate;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.mock.web.MockHttpServletRequest;
+import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.mock.web.MockHttpSession;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -51,6 +52,7 @@ import static java.util.Arrays.asList;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.*;
+import static org.mockito.Matchers.*;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
@@ -156,6 +158,27 @@ public class RequisitionControllerTest {
     assertThat((Integer) response.getBody().getData().get(NUMBER_OF_MONTHS), is(5));
     verify(requisitionService).getFullRequisitionById(1L);
     verify(requisitionService).findM(period);
+  }
+
+  @Test
+  public void shouldGetPdfDownloadByRnRIdAndProgramId() throws Exception {
+    //given
+    Long rnrId = 1L;
+    Long programId = 2L;
+    controller.pdfGenerator = mock(PDFGenerator.class);
+    controller.EXPORT_TMP_PATH = "/tmp";
+
+    //when
+    MockHttpServletResponse mockHttpServletResponse = new MockHttpServletResponse();
+
+    when(requisitionService.getProgramId(rnrId)).thenReturn(programId);
+    when(controller.pdfGenerator.getNameForPdf()).thenReturn("");
+    when(controller.pdfGenerator.generatePdf(eq(rnrId), eq(programId) , anyString())).thenReturn("");
+
+    controller.getPDFFile(rnrId, mockHttpServletResponse);
+
+    //then
+    verify(controller.pdfGenerator).generatePdf(eq(rnrId), eq(programId), anyString());
   }
 
   @Test

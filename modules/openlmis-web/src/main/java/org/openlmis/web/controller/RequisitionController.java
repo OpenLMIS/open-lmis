@@ -95,7 +95,7 @@ public class RequisitionController extends BaseController {
   @Autowired
   private RequisitionPermissionService requisitionPermissionService;
   @Autowired
-  private PDFGenerator pdfGenerator;
+  protected PDFGenerator pdfGenerator;
 
   @Value("${export.tmp.path}")
   protected String EXPORT_TMP_PATH;
@@ -153,14 +153,14 @@ public class RequisitionController extends BaseController {
     }
   }
 
-  @RequestMapping(value = "/requisitions/{id}/{programId}/pdf", method = GET)
+  @RequestMapping(value = "/requisitions/{id}/pdf", method = GET)
   @PostAuthorize("@requisitionPermissionService.hasPermission(principal, returnObject.body.data.get(\"rnr\"), 'VIEW_REQUISITION')")
-  public void getPDFFile(@PathVariable Long id,@PathVariable Long programId, HttpServletResponse response) throws IOException {
+  public void getPDFFile(@PathVariable Long id, HttpServletResponse response) throws IOException {
     String directoryStr = EXPORT_TMP_PATH + "/" + UUID.randomUUID().toString();
     File directory = new File(directoryStr);
     directory.mkdirs();
 
-    String pdfPathName = pdfGenerator.generatePdf(id, programId, directoryStr);
+    String pdfPathName = pdfGenerator.generatePdf(id, requisitionService.getProgramId(id), directoryStr);
     response.setContentType("Content-type: application/pdf");
     response.setHeader("Content-Disposition", "attachment; filename=" + pdfGenerator.getNameForPdf());
 
