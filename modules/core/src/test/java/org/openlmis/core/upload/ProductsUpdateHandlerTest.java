@@ -42,8 +42,6 @@ public class ProductsUpdateHandlerTest {
     @Mock
     private MessageService messageService;
 
-    @Mock
-    private DosageUnitRepository dosageUnitRepository;
 
     private ProductsUpdateHandler handler;
 
@@ -71,7 +69,6 @@ public class ProductsUpdateHandlerTest {
 
         handler = new ProductsUpdateHandler();
         handler.productService = productService;
-        handler.dosageUnitRepository = dosageUnitRepository;
         handler.productFormService = productFormService;
         handler.messageService = messageService;
         List<Product> products = new ArrayList<>();
@@ -234,7 +231,6 @@ public class ProductsUpdateHandlerTest {
         existingProductForm.setDisplayOrder(2);
 
         when(productFormService.getProductForm(existingProduct.getForm().getCode())).thenReturn(existingProductForm);
-        when(dosageUnitRepository.getByCode(dosageUnitCode)).thenReturn(dosageUnit);
         //when
 
         handler.postProcess(auditFields);
