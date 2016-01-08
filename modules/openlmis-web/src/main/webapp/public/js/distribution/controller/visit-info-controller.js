@@ -12,6 +12,14 @@ function VisitInfoController($scope, distributionService, $routeParams) {
   $scope.distribution = distributionService.distribution;
   $scope.selectedFacility = $routeParams.facility;
 
+  $scope.convertToDateObject = function (dateText) {
+    var dateParts = dateText.split('/');
+
+    return new Date(dateParts[2], dateParts[1] - 1, dateParts[0]);
+  };
+
+  $scope.startDate = $scope.convertToDateObject($scope.distribution.period.stringStartDate);
+
   $scope.reasons = {
     badWeather: "ROAD_IMPASSABLE",
     noTransport: "TRANSPORT_UNAVAILABLE",
@@ -22,5 +30,13 @@ function VisitInfoController($scope, distributionService, $routeParams) {
     noRefrigerators: "NO_REFRIGERATORS",
     notPartOfProgram: "HEALTH_CENTER_NOT_IN_DLS",
     other: "OTHER"
+  };
+
+  $scope.beforeDatepickerShowDay = function (date) {
+    if (!$("#visitDate").val().length && $scope.startDate.getTime() == date.getTime()) {
+      return [true, "ui-state-active"];
+    }
+
+    return [true, ""];
   };
 }
