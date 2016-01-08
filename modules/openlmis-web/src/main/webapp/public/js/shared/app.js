@@ -111,8 +111,8 @@ app.directive('numericValidator', function () {
           validationFunction(value, getErrorHolder(), integerPartLength, fractionalPartLength);
         }
 
-        // 'e' key should not be display in input field
-        return 'e' !== key;
+        // firefox does allow to enter letters in number input by default so we need to restrict allowed keys here
+        return $.inArray(key, ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9']) !== -1 && 'e' !== key;
       });
 
       element.bind('blur', function () {
