@@ -66,7 +66,8 @@ Please see attached screenshots, log output and database snapshot.
 ```
 
 ## Feature Roadmap
-Todo:  where to find and describe work priortization, link to jira issues
+The Living Roadmap can be found here: https://openlmis.atlassian.net/wiki/display/OP/Living+Product+Roadmap
+The backlog can be found here: https://openlmis.atlassian.net/secure/RapidBoard.jspa?rapidView=33&projectKey=OLMIS&view=planning&selectedIssue=OLMIS-65&epics=visible
 
 ## Contributing Code
 The OpenLMIS community welcomes code contributions and we encourage you to fix a bug or implement a new feature.  
