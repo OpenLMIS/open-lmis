@@ -20,6 +20,7 @@ import org.openlmis.rnr.repository.mapper.RnrMapperForSIMAM;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -58,10 +59,13 @@ public class RequisitionEmailServiceForSIMAM {
 	private SingleListSheetExcelHandler singleListSheetExcelHandler;
 
 	@Autowired
-	private MMIAPDFGenerator mmiaPdfGenerator;
+	private PDFGenerator pdfGenerator;
 
 	@Autowired
 	private StaticReferenceDataService staticReferenceDataService;
+
+    @Value("${email.attachment.cache.path}")
+    protected String pdfDirectory;
 
 	public static final Map<String, String> SIMAM_PROGRAMS_MAP = MapUtils.putAll(new HashMap(),
 										new String[][]{
@@ -170,10 +174,7 @@ public class RequisitionEmailServiceForSIMAM {
                        requisition.getProgram().getName() + ".xlsx";
 	}
 
-	private String fileNameForMMIAPdf(Rnr requisition) {
-		return REQUI_FILE_NAME_PREFIX + requisition.getId() + "_" + requisition.getFacility().getName() + "_" + requisition.getPeriod().getName() + "_" +
-                       requisition.getProgram().getName() + ".pdf";
-	}
+
 
 	private List<EmailAttachment> prepareEmailAttachmentsForSIMAM(Rnr requisition) {
 
@@ -193,9 +194,8 @@ public class RequisitionEmailServiceForSIMAM {
 	}
 
 	private EmailAttachment generateMMIAPdfForSIMAM(Rnr requisition) {
-		String fileNameForMMIAPdf = fileNameForMMIAPdf(requisition);
-		String filePathForMMIAPdf = mmiaPdfGenerator.generateMMIAPdf(requisition, fileNameForMMIAPdf);
-		return generateEmailAttachment(fileNameForMMIAPdf, filePathForMMIAPdf, FILE_APPLICATION_PDF);
+		String filePathForMMIAPdf = pdfGenerator.generateMMIAPdf(requisition.getId(), requisition.getProgram().getId(), pdfDirectory);
+		return generateEmailAttachment(pdfGenerator.getNameForPdf(), filePathForMMIAPdf, FILE_APPLICATION_PDF);
 	}
 
 	private EmailAttachment generateEmailAttachment(String fileName, String filePath, String fileType) {
