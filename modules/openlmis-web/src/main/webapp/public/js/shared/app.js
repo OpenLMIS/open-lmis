@@ -103,16 +103,108 @@ app.directive('numericValidator', function () {
       }
 
       element.bind('keypress', function (e) {
-        var key = String.fromCharCode(e.charCode),
+        var keyCode = e.charCode ? e.charCode : e.keyCode ? e.keyCode : 0,
+            key = String.fromCharCode(keyCode),
             value = "".concat(ctrl.$modelValue || '').concat(key),
-            valueAsNumber = parseFloat(value);
+            valueAsNumber = parseFloat(value),
+            allow = false;
 
         if (isNaN(valueAsNumber) || checkCondition(valueAsNumber)) {
           validationFunction(value, getErrorHolder(), integerPartLength, fractionalPartLength);
         }
 
-        // firefox does allow to enter letters in number input by default so we need to restrict allowed keys here
-        return $.inArray(key, ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9']) !== -1 && 'e' !== key;
+        // allow enter/return key
+        if (keyCode == 13) {
+            return true;
+        } else if(keyCode == 35 || keyCode == 36 || keyCode == 37) {
+            //dont allow #, $, %
+            return false;
+        }
+
+        // allow Ctrl+A
+        if ((e.ctrlKey && keyCode == 97 /* firefox */) || (e.ctrlKey && keyCode == 65) /* opera */) {
+            return true;
+        }
+
+        // allow Ctrl+X (cut)
+        if ((e.ctrlKey && keyCode == 120 /* firefox */) || (e.ctrlKey && keyCode == 88) /* opera */) {
+            return true;
+        }
+
+        // allow Ctrl+C (copy)
+        if ((e.ctrlKey && keyCode == 99 /* firefox */) || (e.ctrlKey && keyCode == 67) /* opera */) {
+            return true;
+        }
+
+        // allow Ctrl+Z (undo)
+        if ((e.ctrlKey && keyCode == 122 /* firefox */) || (e.ctrlKey && keyCode == 90) /* opera */) {
+            return true;
+        }
+
+        // allow or deny Ctrl+V (paste), Shift+Ins
+        if ((e.ctrlKey && keyCode == 118 /* firefox */) || (e.ctrlKey && keyCode == 86) /* opera */ || (e.shiftKey && keyCode == 45)) {
+            return true;
+        }
+
+        // if a number was not pressed
+        if(keyCode < 48 || keyCode > 57)
+        {
+            /* '-' only allowed at start */
+            if($.inArray('-', value.split('')) !== 0 && keyCode == 45 && (value.length === 0 || valueAsNumber === 0)) {
+                return true;
+            }
+
+            /* only one decimal separator allowed */
+            if(key == '.' && $.inArray('.', value.split('')) != -1) {
+                allow = false;
+            }
+
+            // check for other keys that have special purposes
+            if(
+                keyCode != 8 /* backspace */ &&
+                keyCode != 9 /* tab */ &&
+                keyCode != 13 /* enter */ &&
+                keyCode != 35 /* end */ &&
+                keyCode != 36 /* home */ &&
+                keyCode != 37 /* left */ &&
+                keyCode != 39 /* right */ &&
+                keyCode != 46 /* del */
+            ) {
+                allow = false;
+            } else {
+                // for detecting special keys
+                // IE does not support 'charCode' and ignores them in keypress anyway
+                if (typeof e.charCode != "undefined") {
+                    // special keys have 'keyCode' and 'which' the same (e.g. backspace)
+                    if (e.keyCode == e.which && e.which !== 0) {
+                        allow = true;
+
+                        // . and delete share the same code, don't allow . (will be set to true later if it is the decimal point)
+                        if(e.which == 46) {
+                            allow = false;
+                        }
+                    }
+
+                    // or keyCode != 0 and 'charCode'/'which' = 0
+                    else if(e.keyCode !== 0 && e.charCode === 0 && e.which === 0) {
+                        allow = true;
+                    }
+                }
+            }
+
+            // if key pressed is the decimal and it is not already in the field
+            if(key == '.') {
+                if($.inArray('.', value.split('')) == -1) {
+                    allow = true;
+                } else {
+                    allow = false;
+                }
+            }
+        } else {
+            allow = true;
+        }
+
+        return allow;
       });
 
       element.bind('blur', function () {
