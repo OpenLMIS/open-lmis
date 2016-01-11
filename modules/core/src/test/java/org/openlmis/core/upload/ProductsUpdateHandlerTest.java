@@ -15,6 +15,7 @@ import org.openlmis.core.domain.ProductForm;
 import org.openlmis.core.service.MessageService;
 import org.openlmis.core.service.ProductFormService;
 import org.openlmis.core.service.ProductService;
+import org.openlmis.core.utils.DateUtil;
 import org.openlmis.db.categories.UnitTests;
 import org.openlmis.upload.annotation.ImportField;
 import org.openlmis.upload.model.AuditFields;
@@ -27,6 +28,7 @@ import java.util.List;
 
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -153,11 +155,11 @@ public class ProductsUpdateHandlerTest {
         verify(productService).getAllProducts();
         assertThat(existingProduct.getActive(), is(false));
 
-        ArgumentCaptor<Product> captor=ArgumentCaptor.forClass(Product.class);
-        verify(productService,times(2)).save(captor.capture());
+        ArgumentCaptor<Product> captor = ArgumentCaptor.forClass(Product.class);
+        verify(productService, times(2)).save(captor.capture());
         List<Product> captorAllValues = captor.getAllValues();
-        assertEquals(existingProduct,captorAllValues.get(0));
-        assertEquals(uploadProduct,captorAllValues.get(1));
+        assertEquals(existingProduct, captorAllValues.get(0));
+        assertEquals(uploadProduct, captorAllValues.get(1));
     }
 
     @Test
@@ -204,26 +206,23 @@ public class ProductsUpdateHandlerTest {
         verify(productService).getAllProducts();
         assertThat(product.getActive(), is(true));
         verify(productService).save(existingProduct);
-        assertThat(existingProduct.getPrimaryName(),is("new name"));
-        assertThat(existingProduct.getSpecialStorageInstructions(),is("SpecialStorageInstructions"));
-        assertThat(existingProduct.getFormId(),is(10l));
+        assertThat(existingProduct.getPrimaryName(), is("new name"));
+        assertThat(existingProduct.getSpecialStorageInstructions(), is("SpecialStorageInstructions"));
+        assertThat(existingProduct.getFormId(), is(10l));
     }
 
     @Test
-    public void shouldSetFormAndDosageUnit(){
+    public void shouldSetFormAndDate() {
         //given
         Product product = initProduct();
-        Product existingProduct = initProduct();
         handler.uploadProductList.add(product);
 
-        DosageUnit dosageUnit = new DosageUnit();
-        String dosageUnitCode = "dosageUnit code";
-        dosageUnit.setCode(dosageUnitCode);
-        dosageUnit.setDisplayOrder(2);
-
         ArrayList<Product> existingProducts = new ArrayList<>();
-        existingProducts.add(existingProduct);
+        Product existingProduct = initProduct();
+        existingProduct.setModifiedDate(DateUtil.parseDate("2025-12-12 12:12:12"));
         existingProduct.setPrimaryName("new name");
+        existingProducts.add(existingProduct);
+
         when(productService.getAllProducts()).thenReturn(existingProducts);
         when(productService.getExisting(product)).thenReturn(existingProduct);
         ProductForm existingProductForm = new ProductForm();
@@ -231,14 +230,14 @@ public class ProductsUpdateHandlerTest {
         existingProductForm.setDisplayOrder(2);
 
         when(productFormService.getProductForm(existingProduct.getForm().getCode())).thenReturn(existingProductForm);
-        //when
 
+        //when
         handler.postProcess(auditFields);
 
         //then
-        assertThat(existingProduct.getForm().getDisplayOrder(),is(2));
+        assertThat(existingProduct.getForm().getDisplayOrder(), is(2));
+        assertNotEquals(DateUtil.parseDate("2025-12-12 12:12:12"), existingProduct.getModifiedDate());
     }
-
 
 
     private Product initProduct() {

@@ -16,6 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 @Component
@@ -76,9 +77,11 @@ public class ProductsUpdateHandler extends AbstractModelPersistenceHandler {
     private void updateExistingProducts() {
         for (Product existingProduct : productService.getAllProducts()) {
             if (!hasUpload(existingProduct)) {
+                existingProduct.setModifiedDate(new Date());
                 existingProduct.setActive(false);
                 save(existingProduct);
             } else if (!existingProduct.getActive()) {
+                existingProduct.setModifiedDate(new Date());
                 existingProduct.setActive(true);
                 save(existingProduct);
             }
@@ -92,6 +95,7 @@ public class ProductsUpdateHandler extends AbstractModelPersistenceHandler {
                 save(uploadProduct);
             } else if (!matchProduct(uploadProduct, existingProduct)) {
                 SetFormAndDosageUnitByCode(existingProduct);
+                existingProduct.setModifiedDate(new Date());
                 save(existingProduct);
             }
         }
