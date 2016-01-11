@@ -1,4 +1,4 @@
-function ViewRnrMmiaController($scope, $route, Requisitions, messageService, FeatureToggleService) {
+function ViewRnrMmiaController($scope, $route, Requisitions, messageService, FeatureToggleService, $window) {
     $scope.adult = [];
     $scope.children = [];
     $scope.other = [];
@@ -40,7 +40,7 @@ function ViewRnrMmiaController($scope, $route, Requisitions, messageService, Fea
         FeatureToggleService.get(toggleKey, function (result) {
             if (result.key) {
                 $scope.downloadPdf = function () {
-                    location.href = "/requisitions/" + $scope.rnr.id + "/pdf";
+                    $window.location.href = "/requisitions/" + $scope.rnr.id + "/pdf";
                 };
                 $(".btn-download").show();
             }

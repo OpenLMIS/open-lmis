@@ -1,4 +1,4 @@
-function ViewRnrViaDetailController($scope, $route, $location, Requisitions, FeatureToggleService) {
+function ViewRnrViaDetailController($scope, $route, $location, Requisitions, FeatureToggleService, $window) {
     $scope.pageSize = 20;
     $scope.currentPage = 1;
     $scope.rnrItemsVisible = [];
@@ -43,7 +43,7 @@ function ViewRnrViaDetailController($scope, $route, $location, Requisitions, Fea
         FeatureToggleService.get(toggleKey, function (result) {
             if (result.key) {
                 $scope.downloadPdf = function () {
-                    location.href = "/requisitions/" + $scope.rnr.id + "/pdf";
+                    $window.location.href = "/requisitions/" + $scope.rnr.id + "/pdf";
                 };
                 $(".btn-download").show();
             }

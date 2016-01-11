@@ -76,12 +76,17 @@ describe('ViewRnrViaDetailController', function () {
     }
   };
 
+  var windowObj = {location: {href: ''}};
+
   beforeEach(module('openlmis'));
+  beforeEach(module(function($provide) {
+    $provide.value('$window', windowObj);
+  }));
   beforeEach(inject(function ($httpBackend, $rootScope, $controller, _messageService_) {
     httpBackend = $httpBackend;
     scope = $rootScope.$new();
     requisition = {lineItems: [], nonFullSupplyLineItems: [], regimenLineItems: [], equipmentLineItems :[], period: {numberOfMonths: 3}};
-    route = {current: {params:{'programId': 2, 'rnr': 1, 'supplyType': 'fullSupply'}}}
+    route = {current: {params:{'programId': 2, 'rnr': 1, 'supplyType': 'fullSupply'}}};
     messageService =  _messageService_;
     $controller(ViewRnrMmiaController, {$scope: scope, $route: route});
   }));
@@ -132,6 +137,32 @@ describe('ViewRnrViaDetailController', function () {
     expect(scope.regimeAdult.length).toBe(8);
     expect(scope.regimeChildren.length).toBe(10);
 
+  });
+
+  it('should show download button when toggle on', function(){
+    var expectedUrl = "/reference-data/toggle/download.pdf.json";
+    httpBackend.expect('GET', expectedUrl).respond(200, "{\"key\":true}");
+
+    expect(scope.initDownloadPdfButton).toBeDefined();
+    scope.rnr = {"id":1};
+    scope.initDownloadPdfButton();
+    httpBackend.flush();
+
+    expect(scope.downloadPdf).toBeDefined();
+    scope.downloadPdf();
+    expect(windowObj.location.href).toEqual('/requisitions/1/pdf');
+  });
+
+  it('should show download button when toggle on', function(){
+    var expectedUrl = "/reference-data/toggle/download.pdf.json";
+    httpBackend.expect('GET', expectedUrl).respond(200, "{\"key\":false}");
+
+    expect(scope.initDownloadPdfButton).toBeDefined();
+    scope.rnr = {"id":1};
+    scope.initDownloadPdfButton();
+    httpBackend.flush();
+
+    expect(scope.downloadPdf).toBeUndefined();
   });
 
   function initMockRequisition() {
