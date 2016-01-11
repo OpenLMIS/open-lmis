@@ -169,11 +169,10 @@ public class RequisitionController extends BaseController {
       IOUtils.copy(fileInputStream, response.getOutputStream());
       fileInputStream.close();
       response.flushBuffer();
+      FileUtils.deleteDirectory(directory);
     } catch (IOException e) {
       e.printStackTrace();
     }
-
-    FileUtils.deleteDirectory(directory);
   }
 
   @RequestMapping(value = "/requisitions/{id}/save", method = PUT, headers = ACCEPT_JSON)
