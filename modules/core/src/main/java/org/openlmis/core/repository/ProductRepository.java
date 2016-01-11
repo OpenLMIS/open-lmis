@@ -116,4 +116,13 @@ public class ProductRepository {
   public List<Product> getProductsAfterUpdatedTime(Date date) {
     return mapper.listProductsAfterUpdatedTime(date);
   }
+
+
+  public List<Product> getProductCodeForUpdateStatus(){
+    return mapper.getAllProductWithCode();
+  }
+
+  public void updateProductStatus(boolean active, long id){
+    mapper.updateProductActiveStatus(active, id);
+  }
 }

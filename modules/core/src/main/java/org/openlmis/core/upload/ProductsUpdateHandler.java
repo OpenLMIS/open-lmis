@@ -75,15 +75,11 @@ public class ProductsUpdateHandler extends AbstractModelPersistenceHandler {
     }
 
     private void updateExistingProducts() {
-        for (Product existingProduct : productService.getAllProducts()) {
+        for (Product existingProduct : productService.getProductsForUpdateStatus()) {
             if (!hasUpload(existingProduct)) {
-                existingProduct.setModifiedDate(new Date());
-                existingProduct.setActive(false);
-                save(existingProduct);
+                productService.updateProductStatus(false,existingProduct.getId());
             } else if (!existingProduct.getActive()) {
-                existingProduct.setModifiedDate(new Date());
-                existingProduct.setActive(true);
-                save(existingProduct);
+                productService.updateProductStatus(true,existingProduct.getId());
             }
         }
     }

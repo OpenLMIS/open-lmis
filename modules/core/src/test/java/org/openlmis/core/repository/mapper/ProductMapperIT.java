@@ -45,6 +45,7 @@ import static junit.framework.TestCase.assertNotNull;
 import static org.hamcrest.CoreMatchers.not;
 import static org.hamcrest.CoreMatchers.nullValue;
 import static org.hamcrest.core.Is.is;
+import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 import static org.openlmis.core.builder.ProductBuilder.*;
@@ -273,6 +274,21 @@ public class ProductMapperIT {
     assertThat(productList.size(), is(1));
     assertThat(productList.get(0).getCode(), is("KIT"));
     assertThat(productList.get(0).getKitProductList().size(), is(1));
+  }
+
+  @Test
+  public void shouldUpdateProductStatus(){
+    Product prod = make(a(defaultProduct, with(primaryName, "prod"), with(code, "pro")));
+      Date modifiedDate = DateUtil.parseDate("2015-10-10 12:00:00", DateUtil.FORMAT_DATE_TIME);
+      prod.setModifiedDate(modifiedDate);
+    prod.setActive(false);
+    productMapper.insert(prod);
+
+    productMapper.updateProductActiveStatus(true,prod.getId());
+
+    Product product = productMapper.getById(prod.getId());
+    assertThat(product.getActive(),is(true));
+    assertNotEquals(DateUtil.formatDate(product.getModifiedDate()), is(DateUtil.formatDate(modifiedDate)));
   }
 
   private void updateModifiedDateForProducts(Timestamp modifiedDate, Long productId) throws SQLException {

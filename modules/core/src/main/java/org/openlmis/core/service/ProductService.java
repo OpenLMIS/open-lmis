@@ -130,4 +130,13 @@ public class ProductService {
   public List<Product> getProductsAfterUpdatedDate(Date afterUpdatedTime) {
     return repository.getProductsAfterUpdatedTime(afterUpdatedTime);
   }
+
+
+  public List<Product> getProductsForUpdateStatus(){
+    return repository.getProductCodeForUpdateStatus();
+  }
+
+  public void updateProductStatus(boolean active, long id){
+    repository.updateProductStatus(active, id);
+  }
 }

@@ -30,7 +30,6 @@ import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertThat;
-import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
@@ -102,7 +101,6 @@ public class ProductsUpdateHandlerTest {
         product.setActive(true);
         products.add(product);
         when(productService.getExisting(product)).thenReturn(null);
-        when(productService.getAllProducts()).thenReturn(new ArrayList<Product>());
 
         handler.uploadProductList = products;
         //when
@@ -122,14 +120,13 @@ public class ProductsUpdateHandlerTest {
         ArrayList<Product> existingList = new ArrayList<>();
         Product existingProduct = initProduct();
         existingList.add(existingProduct);
-        when(productService.getAllProducts()).thenReturn(existingList);
+        when(productService.getProductsForUpdateStatus()).thenReturn(existingList);
         when(productService.getExisting(product)).thenReturn(existingProduct);
 
         //when
         handler.postProcess(auditFields);
 
         //then
-        verify(productService).getAllProducts();
         assertThat(product.getActive(), is(true));
         verify(productService).save(existingProduct);
     }
@@ -142,24 +139,24 @@ public class ProductsUpdateHandlerTest {
 
         ArrayList<Product> existingList = new ArrayList<>();
         Product existingProduct = initProduct();
+        existingProduct.setId(1l);
         existingProduct.setActive(true);
         existingProduct.setCode("Diff Code");
         existingList.add(existingProduct);
-        when(productService.getAllProducts()).thenReturn(existingList);
+        when(productService.getProductsForUpdateStatus()).thenReturn(existingList);
         when(productService.getExisting(uploadProduct)).thenReturn(null);
 
         //when
         handler.postProcess(auditFields);
 
         //then
-        verify(productService).getAllProducts();
-        assertThat(existingProduct.getActive(), is(false));
+        verify(productService).getProductsForUpdateStatus();
+        verify(productService).updateProductStatus(false,1l);
 
         ArgumentCaptor<Product> captor = ArgumentCaptor.forClass(Product.class);
-        verify(productService, times(2)).save(captor.capture());
+        verify(productService).save(captor.capture());
         List<Product> captorAllValues = captor.getAllValues();
-        assertEquals(existingProduct, captorAllValues.get(0));
-        assertEquals(uploadProduct, captorAllValues.get(1));
+        assertEquals(uploadProduct, captorAllValues.get(0));
     }
 
     @Test
@@ -168,20 +165,20 @@ public class ProductsUpdateHandlerTest {
         Product product = initProduct();
         handler.uploadProductList.add(product);
 
-        ArrayList<Product> exisitingList = new ArrayList<>();
+        ArrayList<Product> existingList = new ArrayList<>();
         Product existingProduct = initProduct();
         existingProduct.setActive(false);
-        exisitingList.add(existingProduct);
-        when(productService.getAllProducts()).thenReturn(exisitingList);
+        existingProduct.setId(1l);
+        existingList.add(existingProduct);
+        when(productService.getProductsForUpdateStatus()).thenReturn(existingList);
         when(productService.getExisting(product)).thenReturn(existingProduct);
 
         //when
         handler.postProcess(auditFields);
 
         //then
-        verify(productService).getAllProducts();
-        assertThat(product.getActive(), is(true));
-        verify(productService).save(existingProduct);
+        verify(productService).getProductsForUpdateStatus();
+        verify(productService).updateProductStatus(true,1l);
     }
 
     @Test
@@ -196,14 +193,14 @@ public class ProductsUpdateHandlerTest {
         existingProduct.setSpecialStorageInstructions("SpecialStorageInstructions");
         existingProduct.setFormId(10l);
         existingList.add(existingProduct);
-        when(productService.getAllProducts()).thenReturn(existingList);
+        when(productService.getProductsForUpdateStatus()).thenReturn(existingList);
         when(productService.getExisting(product)).thenReturn(existingProduct);
 
         //when
         handler.postProcess(auditFields);
 
         //then
-        verify(productService).getAllProducts();
+        verify(productService).getProductsForUpdateStatus();
         assertThat(product.getActive(), is(true));
         verify(productService).save(existingProduct);
         assertThat(existingProduct.getPrimaryName(), is("new name"));
@@ -219,11 +216,11 @@ public class ProductsUpdateHandlerTest {
 
         ArrayList<Product> existingProducts = new ArrayList<>();
         Product existingProduct = initProduct();
+        existingProduct.setId(1l);
         existingProduct.setModifiedDate(DateUtil.parseDate("2025-12-12 12:12:12"));
         existingProduct.setPrimaryName("new name");
         existingProducts.add(existingProduct);
 
-        when(productService.getAllProducts()).thenReturn(existingProducts);
         when(productService.getExisting(product)).thenReturn(existingProduct);
         ProductForm existingProductForm = new ProductForm();
         existingProductForm.setCode("form code");

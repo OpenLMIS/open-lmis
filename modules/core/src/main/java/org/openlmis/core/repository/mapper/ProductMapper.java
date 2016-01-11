@@ -157,4 +157,10 @@ public interface ProductMapper {
           property = "dosageUnit", column = "dosageUnitId", javaType = DosageUnit.class,
           many = @Many(select = "org.openlmis.core.repository.mapper.DosageUnitMapper.getById"))})
   List<Product> listProductsAfterUpdatedTime(Date date);
+
+  @Update("UPDATE products SET modifiedDate=CURRENT_TIMESTAMP,ACTIVE=#{active} WHERE id=#{id} ")
+  void updateProductActiveStatus(@Param("active") boolean active, @Param("id") long id);
+
+    @Select("SELECT id,code,active from products")
+  List<Product> getAllProductWithCode();
 }
