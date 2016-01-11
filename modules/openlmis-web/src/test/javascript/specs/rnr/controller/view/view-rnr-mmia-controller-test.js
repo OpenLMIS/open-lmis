@@ -153,12 +153,11 @@ describe('ViewRnrViaDetailController', function () {
     expect(windowObj.location.href).toEqual('/requisitions/1/pdf');
   });
 
-  it('should show download button when toggle on', function(){
+  it('should show download button when toggle off', function(){
     var expectedUrl = "/reference-data/toggle/download.pdf.json";
     httpBackend.expect('GET', expectedUrl).respond(200, "{\"key\":false}");
 
     expect(scope.initDownloadPdfButton).toBeDefined();
-    scope.rnr = {"id":1};
     scope.initDownloadPdfButton();
     httpBackend.flush();
 
