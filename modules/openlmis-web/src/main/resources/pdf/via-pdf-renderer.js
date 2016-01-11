@@ -7,6 +7,8 @@ var address = system.args[1];
 var output = system.args[2];
 var sessionId = system.args[3];
 
+page.viewportSize = { width: 1680, height: 1050 };
+
 common.addCookie(address, sessionId);
 common.monitorResponses(page, address, onLoaded);
 
