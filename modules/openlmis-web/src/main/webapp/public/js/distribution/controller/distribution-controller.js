@@ -33,6 +33,8 @@ function DistributionController($scope, $rootScope, deliveryZones, DeliveryZoneA
       if ($scope.selectedProgram && $scope.fromBackNavigation) {
         $scope.selectedProgram = _.where($scope.programs, {id: $scope.selectedProgram.id})[0];
         $scope.loadPeriods();
+      } else {
+        $scope.selectedProgram = "";
       }
     }, function (data) {
       $scope.error = data.data.error;
