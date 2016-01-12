@@ -1,6 +1,7 @@
 package org.openlmis.vaccine.dto;
 
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import org.openlmis.core.domain.BaseModel;
 import org.openlmis.core.domain.Facility;
@@ -12,6 +13,7 @@ import org.openlmis.upload.annotation.ImportField;
 
 @Data
 @NoArgsConstructor
+@EqualsAndHashCode(callSuper=false)
 public class FacilityProgramProductISADTO extends BaseModel implements Importable {
 
     @ImportField(name = "Facility Code", type = "String", nested = "code", mandatory = true)

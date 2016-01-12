@@ -13,12 +13,13 @@
 package org.openlmis.equipment.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.openlmis.core.domain.BaseModel;
 
-@Data
+import java.util.Objects;
+
+@Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @JsonIgnoreProperties(ignoreUnknown = true)
@@ -44,4 +45,8 @@ public class EquipmentInventoryStatus extends BaseModel {
     }
   }
 
+  @Override
+  public int hashCode() {
+    return Objects.hash(statusId, notFunctionalStatusId);
+  }
 }

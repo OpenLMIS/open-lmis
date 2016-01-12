@@ -15,6 +15,6 @@ INSERT INTO budget_line_items (periodId, budgetFileId, facilityId, programId, pe
      id
    FROM processing_periods
    WHERE name = 'Dec2013'),
-  (SELECT id FROM budget_file_info WHERE id = 1),
+  (SELECT id FROM budget_file_info WHERE filename = 'abc.csv'),
   (SELECT id FROM facilities WHERE code = 'F10'),
   (SELECT id FROM programs WHERE code = 'MALARIA'), now(), 123);

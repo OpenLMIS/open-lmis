@@ -12,11 +12,10 @@ package org.openlmis.rnr.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.util.List;
+import java.util.Objects;
 
 import static com.fasterxml.jackson.databind.annotation.JsonSerialize.Inclusion.NON_EMPTY;
 
@@ -24,9 +23,9 @@ import static com.fasterxml.jackson.databind.annotation.JsonSerialize.Inclusion.
  * This class represents a column configured in rnr template for a program.
  */
 
-@Data
+@Getter
+@Setter
 @NoArgsConstructor
-@EqualsAndHashCode(callSuper = true)
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class RnrColumn extends Column {
 
@@ -97,4 +96,8 @@ public class RnrColumn extends Column {
     return (this.name.equals(rnrColumn.getName()));
   }
 
+  @Override
+  public int hashCode() {
+    return Objects.hash(this.name);
+  }
 }
