@@ -102,99 +102,102 @@ app.directive('numericValidator', function () {
         return condition;
       }
 
-      element.bind('keypress', function (e) {
-        var keyCode = e.charCode ? e.charCode : e.keyCode ? e.keyCode : 0,
-            key = String.fromCharCode(keyCode),
-            value = "".concat(ctrl.$modelValue || '').concat(key),
-            valueAsNumber = parseFloat(value),
-            allow = false;
+      function allowKey(e) {
+        var decimal = ".",
+            negative = true,
+            decimalPlaces = -1,
+            elem = $(element);
 
-        if (isNaN(valueAsNumber) || checkCondition(valueAsNumber)) {
-          validationFunction(value, getErrorHolder(), integerPartLength, fractionalPartLength);
-        }
+        // get the key that was pressed
+        var key = e.charCode ? e.charCode : e.keyCode ? e.keyCode : 0;
 
-        // allow enter/return key
-        if (keyCode == 13) {
+        // allow enter/return key (only when in an input box)
+        if (key == 13 && elem.prop('nodeName').toLowerCase() == "input") {
             return true;
-        } else if(keyCode == 35 || keyCode == 36 || keyCode == 37) {
+        } else if (key == 13) {
+            return false;
+        } else if (e.shiftKey && (key == 35 || key == 36 || key == 37)) {
             //dont allow #, $, %
             return false;
         }
 
+        var allow = false;
+
         // allow Ctrl+A
-        if ((e.ctrlKey && keyCode == 97 /* firefox */) || (e.ctrlKey && keyCode == 65) /* opera */) {
+        if ((e.ctrlKey && key == 97 /* firefox */) || (e.ctrlKey && key == 65) /* opera */) {
             return true;
         }
 
         // allow Ctrl+X (cut)
-        if ((e.ctrlKey && keyCode == 120 /* firefox */) || (e.ctrlKey && keyCode == 88) /* opera */) {
+        if ((e.ctrlKey && key == 120 /* firefox */) || (e.ctrlKey && key == 88) /* opera */) {
             return true;
         }
 
         // allow Ctrl+C (copy)
-        if ((e.ctrlKey && keyCode == 99 /* firefox */) || (e.ctrlKey && keyCode == 67) /* opera */) {
+        if ((e.ctrlKey && key == 99 /* firefox */) || (e.ctrlKey && key == 67) /* opera */) {
             return true;
         }
 
         // allow Ctrl+Z (undo)
-        if ((e.ctrlKey && keyCode == 122 /* firefox */) || (e.ctrlKey && keyCode == 90) /* opera */) {
+        if ((e.ctrlKey && key == 122 /* firefox */) || (e.ctrlKey && key == 90) /* opera */) {
             return true;
         }
 
         // allow or deny Ctrl+V (paste), Shift+Ins
-        if ((e.ctrlKey && keyCode == 118 /* firefox */) || (e.ctrlKey && keyCode == 86) /* opera */ || (e.shiftKey && keyCode == 45)) {
+        if ((e.ctrlKey && key == 118 /* firefox */) || (e.ctrlKey && key == 86) /* opera */ || (e.shiftKey && key == 45)) {
             return true;
         }
 
         // if a number was not pressed
-        if(keyCode < 48 || keyCode > 57)
-        {
-            /* '-' only allowed at start */
-            if($.inArray('-', value.split('')) !== 0 && keyCode == 45 && (value.length === 0 || valueAsNumber === 0)) {
+        if (key < 48 || key > 57) {
+            var value = elem.val();
+
+            /* '-' only allowed at start and if negative numbers allowed */
+            if($.inArray('-', value.split('')) !== 0 && negative && key == 45 && (value.length === 0 || parseInt($.fn.getSelectionStart(elem), 10) === 0)) {
                 return true;
             }
 
             /* only one decimal separator allowed */
-            if(key == '.' && $.inArray('.', value.split('')) != -1) {
+            if(decimal && key == decimal.charCodeAt(0) && $.inArray(decimal, value.split('')) != -1) {
                 allow = false;
             }
 
             // check for other keys that have special purposes
             if(
-                keyCode != 8 /* backspace */ &&
-                keyCode != 9 /* tab */ &&
-                keyCode != 13 /* enter */ &&
-                keyCode != 35 /* end */ &&
-                keyCode != 36 /* home */ &&
-                keyCode != 37 /* left */ &&
-                keyCode != 39 /* right */ &&
-                keyCode != 46 /* del */
+                key != 8 /* backspace */ &&
+                key != 9 /* tab */ &&
+                key != 13 /* enter */ &&
+                key != 35 /* end */ &&
+                key != 36 /* home */ &&
+                key != 37 /* left */ &&
+                key != 38 /* up */ &&
+                key != 39 /* right */ &&
+                key != 40 /* down */ &&
+                key != 46 /* del */
             ) {
                 allow = false;
             } else {
-                // for detecting special keys
+                // for detecting special keys (listed above)
                 // IE does not support 'charCode' and ignores them in keypress anyway
-                if (typeof e.charCode != "undefined") {
+                if(typeof e.charCode != "undefined") {
                     // special keys have 'keyCode' and 'which' the same (e.g. backspace)
-                    if (e.keyCode == e.which && e.which !== 0) {
+                    if(e.keyCode == e.which && e.which !== 0) {
                         allow = true;
 
                         // . and delete share the same code, don't allow . (will be set to true later if it is the decimal point)
                         if(e.which == 46) {
                             allow = false;
                         }
-                    }
-
-                    // or keyCode != 0 and 'charCode'/'which' = 0
-                    else if(e.keyCode !== 0 && e.charCode === 0 && e.which === 0) {
+                    } else if(e.keyCode !== 0 && e.charCode === 0 && e.which === 0) {
+                        // or keyCode != 0 and 'charCode'/'which' = 0
                         allow = true;
                     }
                 }
             }
 
             // if key pressed is the decimal and it is not already in the field
-            if(key == '.') {
-                if($.inArray('.', value.split('')) == -1) {
+            if(decimal && key == decimal.charCodeAt(0)) {
+                if($.inArray(decimal, value.split('')) == -1) {
                     allow = true;
                 } else {
                     allow = false;
@@ -202,6 +205,33 @@ app.directive('numericValidator', function () {
             }
         } else {
             allow = true;
+
+            // remove extra decimal places
+            if(decimal && decimalPlaces > 0) {
+                var selectionStart = $.fn.getSelectionStart(elem);
+                var selectionEnd = $.fn.getSelectionEnd(elem);
+                var dot = $.inArray(decimal, elem.val().split(''));
+
+                if (selectionStart === selectionEnd && dot >= 0 && selectionStart > dot && elem.val().length > dot + decimalPlaces) {
+                    allow = false;
+                }
+            }
+
+        }
+
+        return allow;
+      }
+
+      element.bind('keypress', function (e) {
+        var allow = allowKey(e),
+            errorHolder = getErrorHolder(),
+            value = allow ? (ctrl.$modelValue || '') : '',
+            valueAsNumber = parseFloat(value);
+
+        if (allow && (isNaN(valueAsNumber) || checkCondition(valueAsNumber))) {
+          validationFunction(value.toString(), errorHolder, integerPartLength, fractionalPartLength);
+        } else {
+          document.getElementById(errorHolder).style.display = allow ? 'none' : 'block';
         }
 
         return allow;
