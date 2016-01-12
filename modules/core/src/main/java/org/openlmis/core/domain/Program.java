@@ -54,15 +54,15 @@ public class Program extends BaseModel implements Importable {
 
   private Boolean isEquipmentConfigured;
 
-  private Boolean enableSkipPeriod;
+  private Boolean enableSkipPeriod = false;
 
-  private Boolean showNonFullSupplyTab;
+  private Boolean showNonFullSupplyTab = true;
 
-  private Boolean hideSkippedProducts;
+  private Boolean hideSkippedProducts = false;
 
-  private Boolean enableIvdForm;
+  private Boolean enableIvdForm = false;
 
-  private Boolean usePriceSchedule;
+  private Boolean usePriceSchedule = false;
 
   public Program(Long id) {
     this.id = id;
