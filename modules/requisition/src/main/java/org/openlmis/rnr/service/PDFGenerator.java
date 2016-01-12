@@ -50,7 +50,7 @@ public class PDFGenerator {
         try {
             phantom.generatePDF(url, pathname, sessionId, rnrProgram.toString());
         } catch (Exception e) {
-            logger.error("error occured when calling phantom" + e.getMessage());
+            logger.error("error occurred when calling phantom" + e.getMessage());
         }
 
         return pathname;

@@ -155,7 +155,7 @@ public class RequisitionController extends BaseController {
 
   @RequestMapping(value = "/requisitions/{id}/pdf", method = GET)
   @PreAuthorize("@permissionEvaluator.hasPermission(principal,'VIEW_REQUISITION')")
-  public void getPDFFile(@PathVariable Long id, HttpServletResponse response) throws IOException {
+  public void getPDFFile(@PathVariable Long id, HttpServletResponse response) {
     String directoryStr = EXPORT_TMP_PATH + "/" + UUID.randomUUID().toString();
     File directory = new File(directoryStr);
     directory.mkdirs();
@@ -171,7 +171,7 @@ public class RequisitionController extends BaseController {
       response.flushBuffer();
       FileUtils.deleteDirectory(directory);
     } catch (IOException e) {
-      e.printStackTrace();
+      logger.error("error occurred when download pdf file" + e.getMessage());
     }
   }
 

@@ -32,6 +32,8 @@ import org.openlmis.core.web.controller.BaseController;
 import org.openlmis.report.mapper.AppInfoMapper;
 import org.openlmis.report.mapper.RequisitionReportsMapper;
 import org.openlmis.report.service.FacilityProductsReportDataProvider;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
@@ -74,6 +76,8 @@ public class SimpleTableController extends BaseController {
     @Value("${export.tmp.path}")
     protected String EXPORT_TMP_PATH;
 
+    private static final Logger logger = LoggerFactory.getLogger(SimpleTableController.class);
+
     @RequestMapping(value = "/requisition-report", method = GET, headers = BaseController.ACCEPT_JSON)
     public ResponseEntity<OpenLmisResponse> requisitionReport(
             @RequestParam(value = "startTime", required = true) Date startTime,
@@ -104,7 +108,7 @@ public class SimpleTableController extends BaseController {
     }
 
     @RequestMapping(value = "/export", method = GET, headers = BaseController.ACCEPT_JSON)
-    public void export(HttpServletRequest request, HttpServletResponse response) throws URISyntaxException, IOException {
+    public void export(HttpServletRequest request, HttpServletResponse response) {
 
         String zipDirectory = UUID.randomUUID().toString() + "/";
 
@@ -113,22 +117,23 @@ public class SimpleTableController extends BaseController {
 
         String zipName = "export.zip";
 
-        String starDate = request.getParameter("startDate");
-        String endDate = request.getParameter("endDate");
-
         response.setContentType("Content-type: application/zip");
         response.setHeader("Content-Disposition", "attachment; filename=" + zipName);
 
         File zipFile = generateZipFile(zipDirectory, zipName);
 
         if (zipFile != null) {
+            try {
             FileInputStream fileInputStream = new FileInputStream(zipFile);
             IOUtils.copy(fileInputStream, response.getOutputStream());
-            response.flushBuffer();
-            fileInputStream.close();
+                response.flushBuffer();
+                fileInputStream.close();
+                FileUtils.deleteDirectory(directory);
+            } catch (IOException e) {
+                logger.error("error occurred when download export.zip" + e.getMessage());
+            }
         }
 
-        FileUtils.deleteDirectory(directory);
     }
 
     private File generateZipFile(String zipDirectory, String zipName) {
@@ -157,14 +162,14 @@ public class SimpleTableController extends BaseController {
                 fileInputStream.close();
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error(e.getMessage());
         } finally {
             try {
                 if (zipOutputStream != null) {
                     zipOutputStream.close();
                 }
             } catch (IOException e) {
-                e.printStackTrace();
+                logger.error(e.getMessage());
             }
         }
 
@@ -183,7 +188,7 @@ public class SimpleTableController extends BaseController {
             map.put("regimens.csv", new URI("http://localhost:5555/cube/requisitions/members/regimen?format=csv"));
             map.put("patient_quantification.csv", new URI("http://localhost:5555/cube/requisitions/members/patient_quantification?format=csv"));
         } catch (URISyntaxException e) {
-            e.printStackTrace();
+            logger.error(e.getMessage());
         }
         return map;
     }
@@ -202,14 +207,14 @@ public class SimpleTableController extends BaseController {
                 bufferedWriter.close();
                 files.add(tempFile);
             } catch (IOException e) {
-                e.printStackTrace();
+                logger.error(e.getMessage());
             } finally {
                 try {
                     if (bufferedWriter != null) {
                         bufferedWriter.close();
                     }
                 } catch (IOException e) {
-                    e.printStackTrace();
+                    logger.error(e.getMessage());
                 }
             }
         }
