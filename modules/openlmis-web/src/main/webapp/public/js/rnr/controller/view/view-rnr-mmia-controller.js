@@ -1,4 +1,4 @@
-function ViewRnrMmiaController($scope, $route, Requisitions, messageService, FeatureToggleService, $window) {
+function ViewRnrMmiaController($scope, $route, Requisitions, messageService, downloadPdfService) {
     $scope.adult = [];
     $scope.children = [];
     $scope.other = [];
@@ -31,19 +31,7 @@ function ViewRnrMmiaController($scope, $route, Requisitions, messageService, Fea
 
             parseSignature($scope.rnr.rnrSignatures);
 
-            $scope.initDownloadPdfButton();
-        });
-    };
-
-    $scope.initDownloadPdfButton = function(){
-        var toggleKey = {key: 'download.pdf'};
-        FeatureToggleService.get(toggleKey, function (result) {
-            if (result.key) {
-                $scope.downloadPdf = function () {
-                    $window.location.href = "/requisitions/" + $scope.rnr.id + "/pdf";
-                };
-                $(".btn-download").show();
-            }
+            downloadPdfService.init($scope, $scope.rnr.id);
         });
     };
 

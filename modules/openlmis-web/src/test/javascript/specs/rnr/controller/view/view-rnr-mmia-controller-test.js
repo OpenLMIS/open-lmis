@@ -10,7 +10,7 @@
 
 
 describe('ViewRnrViaDetailController', function () {
-  var httpBackend, scope, route, requisition, messageService;
+  var httpBackend, scope, route, requisition, messageService, downloadPdfService;
 
   var submitterText = "submitterText";
   var approverText = "approverText";
@@ -76,18 +76,16 @@ describe('ViewRnrViaDetailController', function () {
     }
   };
 
-  var windowObj = {location: {href: ''}};
-
   beforeEach(module('openlmis'));
-  beforeEach(module(function($provide) {
-    $provide.value('$window', windowObj);
-  }));
-  beforeEach(inject(function ($httpBackend, $rootScope, $controller, _messageService_) {
+
+  beforeEach(inject(function ($httpBackend, $rootScope, $controller, _messageService_, _downloadPdfService_) {
     httpBackend = $httpBackend;
     scope = $rootScope.$new();
     requisition = {lineItems: [], nonFullSupplyLineItems: [], regimenLineItems: [], equipmentLineItems :[], period: {numberOfMonths: 3}};
     route = {current: {params:{'programId': 2, 'rnr': 1, 'supplyType': 'fullSupply'}}};
     messageService =  _messageService_;
+    downloadPdfService = _downloadPdfService_;
+    spyOn(downloadPdfService, "init").andReturn(function(a,b){});
     $controller(ViewRnrMmiaController, {$scope: scope, $route: route});
   }));
 
@@ -139,35 +137,9 @@ describe('ViewRnrViaDetailController', function () {
 
   });
 
-  it('should show download button when toggle on', function(){
-    var expectedUrl = "/reference-data/toggle/download.pdf.json";
-    httpBackend.expect('GET', expectedUrl).respond(200, "{\"key\":true}");
-
-    expect(scope.initDownloadPdfButton).toBeDefined();
-    scope.rnr = {"id":1};
-    scope.initDownloadPdfButton();
-    httpBackend.flush();
-
-    expect(scope.downloadPdf).toBeDefined();
-    scope.downloadPdf();
-    expect(windowObj.location.href).toEqual('/requisitions/1/pdf');
-  });
-
-  it('should show download button when toggle off', function(){
-    var expectedUrl = "/reference-data/toggle/download.pdf.json";
-    httpBackend.expect('GET', expectedUrl).respond(200, "{\"key\":false}");
-
-    expect(scope.initDownloadPdfButton).toBeDefined();
-    scope.initDownloadPdfButton();
-    httpBackend.flush();
-
-    expect(scope.downloadPdf).toBeUndefined();
-  });
-
   function initMockRequisition() {
     var expectedUrl = "/requisitions/1/skipped.json";
     httpBackend.expect('GET', expectedUrl).respond(200, mockedRnrItem);
-    scope.initDownloadPdfButton = function(){};
     scope.loadMmiaDetail();
     httpBackend.flush();
   }

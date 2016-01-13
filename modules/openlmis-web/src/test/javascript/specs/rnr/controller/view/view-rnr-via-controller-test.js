@@ -10,7 +10,7 @@
 
 
 describe('ViewRnrViaDetailController', function () {
-  var httpBackend, scope, route, location, requisition, requisitionService;
+  var httpBackend, scope, route, location, requisition, requisitionService, downloadPdfService;
 
   var rnrItemsVisible = [];
 
@@ -44,19 +44,17 @@ describe('ViewRnrViaDetailController', function () {
     }
   };
 
-  var windowObj = {location: {href: ''}};
-
   beforeEach(module('openlmis'));
-  beforeEach(module(function($provide) {
-    $provide.value('$window', windowObj);
-  }));
-  beforeEach(inject(function ($httpBackend, $rootScope, $controller, $location, _requisitionService_) {
+
+  beforeEach(inject(function ($httpBackend, $rootScope, $controller, $location, _requisitionService_, _downloadPdfService_) {
     httpBackend = $httpBackend;
     scope = $rootScope.$new();
     location = $location;
     requisition = {lineItems: [], nonFullSupplyLineItems: [], regimenLineItems: [], equipmentLineItems :[], period: {numberOfMonths: 3}};
     route = {current: {params:{'programId': 2, 'rnr': 1, 'supplyType': 'fullSupply'}}};
     requisitionService =  _requisitionService_;
+    downloadPdfService = _downloadPdfService_;
+    spyOn(downloadPdfService, "init").andReturn(function(a,b){});
     $controller(ViewRnrViaDetailController, {$scope: scope, $route: route, $location:$location});
   }));
 
@@ -126,31 +124,6 @@ describe('ViewRnrViaDetailController', function () {
 
     expect(scope.submitterSignature).toEqual(submitterText);
     expect(scope.approverSignature).toEqual(approverText);
-  });
-
-  it('should show download button when toggle on', function(){
-    var expectedUrl = "/reference-data/toggle/download.pdf.json";
-    httpBackend.expect('GET', expectedUrl).respond(200, "{\"key\":true}");
-
-    expect(scope.initDownloadPdfButton).toBeDefined();
-    scope.rnr = {"id":1};
-    scope.initDownloadPdfButton();
-    httpBackend.flush();
-
-    expect(scope.downloadPdf).toBeDefined();
-    scope.downloadPdf();
-    expect(windowObj.location.href).toEqual('/requisitions/1/pdf');
-  });
-
-  it('should show download button when toggle off', function(){
-    var expectedUrl = "/reference-data/toggle/download.pdf.json";
-    httpBackend.expect('GET', expectedUrl).respond(200, "{\"key\":false}");
-
-    expect(scope.initDownloadPdfButton).toBeDefined();
-    scope.initDownloadPdfButton();
-    httpBackend.flush();
-
-    expect(scope.downloadPdf).toBeUndefined();
   });
 
   function initMockRequisition(rnrItems) {
