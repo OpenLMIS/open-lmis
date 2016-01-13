@@ -12,8 +12,6 @@
 describe('ViewRnrViaDetailController', function () {
   var httpBackend, scope, route, location, requisition, requisitionService, downloadPdfService;
 
-  var rnrItemsVisible = [];
-
   var rnrItemsForPagination = {
     rnr: {
       facility: {code: "F10", name: "Health Facility 1"},
@@ -44,6 +42,18 @@ describe('ViewRnrViaDetailController', function () {
     }
   };
 
+  var rnrItemsWithKits = {
+    rnr: {
+      facility: {code: "F10", name: "Health Facility 1"},
+      fullSupplyLineItems: [
+        {quantityReceived: 10, quantityDispensed: 3, isKit: true, productCode: 'SCOD10'},
+        {quantityReceived: 5, quantityDispensed: 2, isKit: true, productCode: 'SCOD12'},
+        {quantityReceived: 20, quantityDispensed: 3, isKit: false, productCode: 'P1'}
+      ],
+      period: {stringStartDate: "01/01/2014", stringEndDate: "31/01/2014"}
+    }
+  }
+
   beforeEach(module('openlmis'));
 
   beforeEach(inject(function ($httpBackend, $rootScope, $controller, $location, _requisitionService_, _downloadPdfService_) {
@@ -69,7 +79,7 @@ describe('ViewRnrViaDetailController', function () {
     };
 
     initMockRequisition(rnrItems);
-    expect(scope.rnrItems.length).toEqual(20);
+    expect(scope.regularRnrItems.length).toEqual(20);
   });
 
   it('should get numberPages is 2 ',function(){
@@ -105,6 +115,26 @@ describe('ViewRnrViaDetailController', function () {
     initMockRequisition(rnrItemsForPagination);
 
     expect(scope.rnrItemsVisible).toEqual(expectRnrList);
+  });
+
+  it('should get visible rnr items excluding kits and populate rnr kit items', function() {
+    scope.currentPage = 1;
+    scope.rnrItemsVisible = [];
+    var expectedUrl = "/requisitions/1/skipped.json";
+    httpBackend.expect('GET', expectedUrl).respond(200, rnrItemsWithKits);
+    scope.initDownloadPdfButton = function(){};
+    scope.loadRequisitionDetail();
+    httpBackend.flush();
+
+    expect(scope.rnrItemsVisible.length).toEqual(20);
+    expect(scope.rnrItemsVisible[0].productCode).toEqual('P1');
+    expect(scope.usKitItem.quantityDispensed).toEqual(3);
+    expect(scope.usKitItem.productCode).toEqual('SCOD10');
+    expect(scope.usKitItem.quantityReceived).toEqual(10);
+    expect(scope.apeKitItem.quantityDispensed).toEqual(2);
+    expect(scope.apeKitItem.quantityReceived).toEqual(5);
+    expect(scope.apeKitItem.productCode).toEqual('SCOD12');
+
   });
 
   it('should get the correct submitter and approver on via view',function(){

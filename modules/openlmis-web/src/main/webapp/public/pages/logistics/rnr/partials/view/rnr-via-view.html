@@ -89,11 +89,11 @@
                     <td tag="col3" class="border-all-thin"></td>
                     <td tag="col4" class="border-all-thin"></td>
                     <td tag="col5" class="border-all-thin" width="70px"><span openlmis-message="view.rnr.via.2"></span></td>
-                    <td tag="col6" class="border-all-thin" width="70px"></td>
+                    <td tag="col6" class="border-all-thin" width="70px">{{usKitItem.quantityReceived}}</td>
                     <td tag="col7" class="border-all-thin" width="25px"><span openlmis-message="view.rnr.via.HF"></span></td>
                     <td tag="col8" class="border-all-thin" width="25px"></td>
                     <td tag="col9" class="border-all-thin" width="30px"><span openlmis-message="view.rnr.via.CHW"></span></td>
-                    <td tag="col10" class="border-all-thin" width="70px"></td>
+                    <td tag="col10" class="border-all-thin" width="70px">{{apeKitItem.quantityReceived}}</td>
                 </tr>
                 <tr>
 
@@ -101,11 +101,11 @@
                     <td class="border-all-thin"><span openlmis-message="view.rnr.via.consultation"></span>:</td>
                     <td class="border-all-thin">{{rnr.patientQuantifications[0].total}}</td>
                     <td class="border-all-thin" width="70px"><span openlmis-message="view.rnr.via.3"></span></td>
-                    <td class="border-all-thin"></td>
+                    <td class="border-all-thin">{{usKitItem.quantityDispensed}}</td>
                     <td class="border-all-thin"><span openlmis-message="view.rnr.via.HF"></span></td>
                     <td class="border-all-thin"></td>
                     <td class="border-all-thin"><span openlmis-message="view.rnr.via.CHW"></span></td>
-                    <td class="border-all-thin"></td>
+                    <td class="border-all-thin">{{apeKitItem.quantityDispensed}}</td>
                 </tr>
             </table>
             <div class="view-table-spacing"></div>

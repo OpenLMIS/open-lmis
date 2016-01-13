@@ -10,33 +10,49 @@ function ViewRnrViaDetailController($scope, $route, $location, Requisitions, dow
 
     function generateEmptyRows(extraRows) {
         for (var i = 0; i < $scope.pageSize - extraRows; i++) {
-            $scope.rnrItems.push({});
+            $scope.regularRnrItems.push({});
         }
     }
 
     $(".btn-download").hide();
+
     $scope.loadRequisitionDetail = function () {
         Requisitions.get({id: $route.current.params.rnr, operation:"skipped"}, function (data) {
             $scope.rnr = data.rnr;
-            $scope.rnrItems = data.rnr.fullSupplyLineItems;
 
-            var extraRows = $scope.rnrItems.length % $scope.pageSize;
-            if ($scope.rnrItems.length === 0) {
-                generateEmptyRows($scope.pageSize);
-            }
-            if (extraRows !== 0) {
+            populateKitItems(data.rnr.fullSupplyLineItems);
+
+            var extraRows = $scope.regularRnrItems.length % $scope.pageSize;
+            if ($scope.regularRnrItems.length === 0) {
+                generateEmptyRows(0);
+            } else {
                 generateEmptyRows(extraRows);
+                refreshItems();
             }
 
-            $scope.numPages = $scope.rnrItems.length / $scope.pageSize;
-
-            refreshItems();
             parseSignature($scope.rnr.rnrSignatures);
 
             downloadPdfService.init($scope, $scope.rnr.id);
+            $scope.numPages = $scope.regularRnrItems.length / $scope.pageSize;
         });
 
     };
+
+    function populateKitItems(rnrItems) {
+        $scope.regularRnrItems = [];
+        for (var i = 0; i < rnrItems.length; i++) {
+            var currentItem = rnrItems[i];
+            if (currentItem.isKit) {
+                if (currentItem.productCode === 'SCOD10') {
+                    $scope.usKitItem = currentItem;
+                } else if (currentItem.productCode === 'SCOD12') {
+                    $scope.apeKitItem = currentItem;
+                }
+            } else {
+                $scope.regularRnrItems.push(currentItem);
+            }
+        }
+    }
 
     function parseSignature(signatures){
         _.forEach(signatures,function(signature){
@@ -49,11 +65,12 @@ function ViewRnrViaDetailController($scope, $route, $location, Requisitions, dow
     }
 
     $scope.$on('$routeUpdate', refreshItems);
+
     function refreshItems() {
         var index = ($scope.currentPage - 1) * $scope.pageSize;
         $scope.rnrItemsVisible = [];
         for (var i = 0; i < $scope.pageSize; i++) {
-            $scope.rnrItemsVisible.push($scope.rnrItems[i + index]);
+            $scope.rnrItemsVisible.push($scope.regularRnrItems[i + index]);
         }
     }
 
