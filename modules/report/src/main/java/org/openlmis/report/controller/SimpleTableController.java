@@ -130,7 +130,7 @@ public class SimpleTableController extends BaseController {
                 fileInputStream.close();
                 FileUtils.deleteDirectory(directory);
             } catch (IOException e) {
-                logger.error("error occurred when download export.zip" + e.getMessage());
+                logger.error("error occurred when download export.zip : " + e.getMessage());
             }
         }
 

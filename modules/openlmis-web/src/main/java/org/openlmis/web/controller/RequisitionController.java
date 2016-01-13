@@ -171,7 +171,7 @@ public class RequisitionController extends BaseController {
       response.flushBuffer();
       FileUtils.deleteDirectory(directory);
     } catch (IOException e) {
-      logger.error("error occurred when download pdf file" + e.getMessage());
+      logger.error("error occurred when download pdf file : " + e.getMessage());
     }
   }
 
