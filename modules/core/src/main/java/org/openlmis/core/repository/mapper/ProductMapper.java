@@ -146,10 +146,15 @@ public interface ProductMapper {
   Long insertKitProduct(KitProduct kitProduct);
 
   @Select("SELECT * FROM products WHERE modifieddate > #{date}")
-  @Results(value = {
+  @Results({
       @Result(property = "code", column = "code"),
       @Result(property = "kitProductList", column = "code", javaType = List.class,
-          many = @Many(select = "org.openlmis.core.repository.mapper.ProductMapper.getKitProductsByKitCode"))
-  })
+          many = @Many(select = "org.openlmis.core.repository.mapper.ProductMapper.getKitProductsByKitCode")),
+      @Result(
+          property = "form", column = "formId", javaType = ProductForm.class,
+          many = @Many(select = "org.openlmis.core.repository.mapper.ProductFormMapper.getById")),
+      @Result(
+          property = "dosageUnit", column = "dosageUnitId", javaType = DosageUnit.class,
+          many = @Many(select = "org.openlmis.core.repository.mapper.DosageUnitMapper.getById"))})
   List<Product> listProductsAfterUpdatedTime(Date date);
 }
