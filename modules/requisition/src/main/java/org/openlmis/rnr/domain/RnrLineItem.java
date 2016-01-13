@@ -72,6 +72,7 @@ public class RnrLineItem extends LineItem {
   private String dispensingUnit;
   private Double maxMonthsOfStock;
   private Boolean fullSupply;
+  private Boolean isKit;
   private Integer quantityReceived;
   private Integer quantityDispensed;
   private Integer previousStockInHand;
@@ -112,6 +113,7 @@ public class RnrLineItem extends LineItem {
     this.productCategoryDisplayOrder = category.getDisplayOrder();
     this.populateFromProduct(programProduct);
     this.dosesPerMonth = programProduct.getDosesPerMonth();
+    this.isKit = programProduct.getProduct().getIsKit();
 
     this.modifiedBy = modifiedBy;
     this.createdBy = createdBy;
