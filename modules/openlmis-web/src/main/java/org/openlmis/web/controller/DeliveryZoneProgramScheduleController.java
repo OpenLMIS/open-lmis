@@ -12,6 +12,7 @@ package org.openlmis.web.controller;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
+import org.joda.time.LocalDate;
 import org.openlmis.core.domain.ProcessingPeriod;
 import org.openlmis.core.service.AllocationPermissionService;
 import org.openlmis.core.service.DeliveryZoneProgramScheduleService;
@@ -27,6 +28,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.Collection;
+import java.util.Date;
 import java.util.List;
 
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
@@ -53,7 +55,8 @@ public class DeliveryZoneProgramScheduleController extends BaseController {
   public ResponseEntity<OpenLmisResponse> getPeriodsForProgramInDeliveryZone(HttpServletRequest request, @PathVariable long zoneId,
                                                                              @PathVariable final long programId) {
     if (permissionService.hasPermissionOnZone(loggedInUserId(request), zoneId)) {
-      List<ProcessingPeriod> periodsForDeliveryZoneAndProgram = scheduleService.getPeriodsForDeliveryZoneAndProgram(zoneId, programId);
+      Date elevenDaysFromNow = LocalDate.now().plusDays(11).toDate();
+      List<ProcessingPeriod> periodsForDeliveryZoneAndProgram = scheduleService.getPeriodsForDeliveryZoneAndProgram(zoneId, programId, elevenDaysFromNow);
       final List<Long> syncedPeriods = distributionService.getSyncedPeriodsForDeliveryZoneAndProgram(zoneId, programId);
       Collection unsyncedPeriodsForZoneAndProgram = CollectionUtils.select(periodsForDeliveryZoneAndProgram, new Predicate() {
         @Override

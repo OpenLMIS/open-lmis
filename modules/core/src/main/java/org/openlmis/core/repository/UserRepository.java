@@ -135,10 +135,6 @@ public class UserRepository {
     userMapper.insertEmailNotification(emailMessage.getTo()[0], emailMessage.getSubject(), emailMessage.getText());
   }
 
-  public void updateUserPassword(Long userId, String password) {
-    userMapper.updateUserPassword(userId, password);
-  }
-
   public void disable(Long userId, Long modifiedBy) {
     userMapper.disable(userId, modifiedBy);
   }

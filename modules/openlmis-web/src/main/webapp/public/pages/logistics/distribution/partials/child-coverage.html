@@ -116,7 +116,7 @@
               </td>
               <td class="col-complete-vaccinated col-coverage-rate">
                 <span id="coverageRateCalculated{{$index}}"
-                      ng-bind="calculateCoverageRate(getTotal(lineItem.healthCenter11Months, lineItem.outreach11Months), lineItem.targetGroup)"></span>
+                      ng-bind="getFormattedAsPercent(calculateCoverageRate(getTotal(lineItem.healthCenter11Months, lineItem.outreach11Months), lineItem.targetGroup))"></span>
               </td>
               <td class="col-complete-vaccinated">
                 <span ng-hide="lineItem.vaccination == 'Polio (Newborn)'">
@@ -206,7 +206,7 @@
                   ng-hide="hideCell('{{lineItem.vaccination}}')"
                   rowspan="{{productsMap[lineItem.vaccination].rowSpan}}">
                 <span id="wastageRateCalculated{{$index}}"
-                      ng-bind="calculateWastageRate(productsMap[lineItem.vaccination])"></span>
+                      ng-bind="getFormattedAsPercent(calculateWastageRate(productsMap[lineItem.vaccination]))"></span>
               </td>
             </tr>
             </tbody>

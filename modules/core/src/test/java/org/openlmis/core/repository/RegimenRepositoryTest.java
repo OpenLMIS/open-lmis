@@ -17,7 +17,6 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.openlmis.core.domain.Regimen;
-import org.openlmis.core.domain.RegimenCategory;
 import org.openlmis.core.repository.mapper.RegimenCategoryMapper;
 import org.openlmis.core.repository.mapper.RegimenMapper;
 import org.openlmis.db.categories.UnitTests;
@@ -27,7 +26,6 @@ import java.util.List;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
-import static org.mockito.Matchers.isNotNull;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -93,16 +91,4 @@ public class RegimenRepositoryTest {
     assertThat(regimens, is(expectedRegimens));
     verify(mapper).getByProgram(programId);
   }
-
-  @Test
-  public void shouldGetAllRegimenCategories() {
-    List<RegimenCategory> expectedRegimenCategories = new ArrayList<>();
-    when(regimenCategoryMapper.getAll()).thenReturn(expectedRegimenCategories);
-
-    List<RegimenCategory> regimenCategories = repository.getAllRegimenCategories();
-
-    assertThat(regimenCategories, is(expectedRegimenCategories));
-    verify(regimenCategoryMapper).getAll();
-  }
-
 }

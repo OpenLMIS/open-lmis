@@ -15,6 +15,8 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import org.openlmis.upload.Importable;
+import org.openlmis.upload.annotation.ImportField;
 
 import static com.fasterxml.jackson.databind.annotation.JsonSerialize.Inclusion.NON_EMPTY;
 
@@ -26,22 +28,41 @@ import static com.fasterxml.jackson.databind.annotation.JsonSerialize.Inclusion.
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = false)
 @JsonSerialize(include = NON_EMPTY)
-public class Program extends BaseModel {
+public class Program extends BaseModel implements Importable {
 
+  @ImportField(name="Program Code", mandatory=true)
   private String code;
+
+  @ImportField(name="Name", mandatory=true)
   private String name;
+
+  @ImportField(name="Description")
   private String description;
-  private Boolean active;
-  private Boolean budgetingApplies;
+
+  @ImportField(name="Active", mandatory=true, type="boolean")
+  private Boolean active = true;
+
+  @ImportField(name="Budgeting Applies", type="boolean")
+  private Boolean budgetingApplies = false;
+
   private Boolean templateConfigured;
+
   private Boolean regimenTemplateConfigured;
-  private Boolean isEquipmentConfigured;
-  private Boolean enableSkipPeriod;
-  private Boolean showNonFullSupplyTab;
-  private Boolean hideSkippedProducts;
-  private Boolean enableIvdForm;
+
+  @ImportField(name="Push", mandatory=true, type="boolean")
   private Boolean push;
-  private Boolean usePriceSchedule;
+
+  private Boolean isEquipmentConfigured;
+
+  private Boolean enableSkipPeriod = false;
+
+  private Boolean showNonFullSupplyTab = true;
+
+  private Boolean hideSkippedProducts = false;
+
+  private Boolean enableIvdForm = false;
+
+  private Boolean usePriceSchedule = false;
 
   public Program(Long id) {
     this.id = id;

@@ -15,7 +15,9 @@ import org.openlmis.core.repository.DeliveryZoneProgramScheduleRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
 import java.util.List;
+
 
 /**
  * Exposes the services for handling DeliveryZoneProgramSchedule entity.
@@ -81,8 +83,12 @@ public class DeliveryZoneProgramScheduleService {
   }
 
   public List<ProcessingPeriod> getPeriodsForDeliveryZoneAndProgram(Long zoneId, Long programId) {
+    return getPeriodsForDeliveryZoneAndProgram(zoneId, programId, null);
+  }
+
+  public List<ProcessingPeriod> getPeriodsForDeliveryZoneAndProgram(Long zoneId, Long programId, Date finalPeriodBeginningDate) {
     ProcessingSchedule schedule = repository.getProcessingScheduleByZoneAndProgram(zoneId, programId);
-    return scheduleService.getAllPeriodsBefore(schedule.getId(), null);
+    return scheduleService.getAllPeriodsBefore(schedule.getId(), finalPeriodBeginningDate);
   }
 
   public ProcessingSchedule getProcessingScheduleByZoneAndProgram(long zoneId, long programId) {
