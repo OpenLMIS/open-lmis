@@ -73,12 +73,7 @@ function DistributionController($scope, $rootScope, deliveryZones, DeliveryZoneA
   };
 
   $scope.checkViewColdChainStatus = function () {
-    DeliveryZoneFacilities.get({deliveryZoneId: $scope.selectedZone.id, programId: $scope.selectedProgram.id}, function (data) {
-      $scope.parentZoneName = data.facilities[0].geographicZone.parent.name;
-      $scope.viewColdChainStatusAvailable = _.contains($scope.provincesForColdChainStatus, $scope.parentZoneName);
-    }, function (data) {
-      $scope.error = data.data.error;
-    });
+    $scope.viewColdChainStatusAvailable = _.contains($scope.provincesForColdChainStatus, $scope.selectedZone.code);
   };
 
   function confirmCaching(data, message) {
