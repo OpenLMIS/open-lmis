@@ -167,9 +167,7 @@ to `copyright VillageReach, <insert name here>`
 
 ### Adding new code in a new file
 - Copy the license file header template to the top of the new file.
-- Add your name or your organization's name to the license header. e.g. if it reads `copyright VillageReach`, update it
-to `copyright VillageReach, <insert name here>`
-- Add the copyright year
+- Add the year and your name or your organization's name to the license header. e.g. if it reads `Copyright © <INSERT YEAR AND COPYRIGHT HOLDER HERE>`, update it to `Copyright © 2016 MyOrganization`
 
 For complete licensing details be sure to reference the LICENSE file that comes with this project.
 
