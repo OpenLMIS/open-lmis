@@ -10,19 +10,15 @@
 
 package org.openlmis.distribution.domain;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Getter;
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import org.openlmis.distribution.serializer.StatusDeSerializer;
-import org.openlmis.distribution.serializer.StatusSerializer;
 
 /**
  *  Enum for statuses of a distribution. These distribution statuses are used to get/set the current status of an
  *  initiated distribution.
  */
 
-@JsonSerialize(using = StatusSerializer.class)
-@JsonDeserialize(using = StatusDeSerializer.class)
+@JsonFormat(shape=JsonFormat.Shape.OBJECT)
 public enum DistributionStatus {
 
   INITIATED("msg.status.initiated"),
@@ -36,4 +32,7 @@ public enum DistributionStatus {
     this.statusKey = statusKey;
   }
 
+  public String getName() {
+    return name();
+  }
 }
