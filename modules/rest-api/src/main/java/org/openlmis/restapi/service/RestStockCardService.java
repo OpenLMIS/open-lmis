@@ -15,6 +15,7 @@ import org.openlmis.stockmanagement.dto.StockEvent;
 import org.openlmis.stockmanagement.service.StockCardService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
 
@@ -34,6 +35,7 @@ public class RestStockCardService {
   @Autowired
   private StockCardService stockCardService;
 
+  @Transactional
   public List<StockCardEntry> adjustStock(Long facilityId, List<StockEvent> stockEventList, Long userId) {
     if (!validFacility(facilityId)) {
       throw new DataException("error.facility.unknown");
@@ -130,7 +132,16 @@ public class RestStockCardService {
     return stockCardMovementDTOs;
   }
 
+  @Transactional
   public void updateStockCardSyncTime(Long facilityId, List<String> stockCardProductCodeList) {
+    if (facilityId == null || stockCardProductCodeList == null) {
+      throw new DataException("");
+    }
 
+    if (stockCardProductCodeList.isEmpty()) {
+      stockCardService.updateAllStockCardSyncTimeForFacility(facilityId);
+    } else {
+      stockCardService.updateStockCardSyncTime(facilityId, stockCardProductCodeList);
+    }
   }
 }
