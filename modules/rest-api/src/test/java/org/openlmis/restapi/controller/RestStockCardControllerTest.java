@@ -142,6 +142,19 @@ public class RestStockCardControllerTest {
         assertThat((String) response.getBody().getData().get(ERROR), is(errorMessage));
     }
 
+    @Test
+    public void shouldReturnSuccessIfUpdateSuccessfully() {
+        ResponseEntity response = restStockCardController.updateStockCardsUpdatedTime(123L, new ArrayList<String>());
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+    }
+
+    @Test
+    public void shouldReturnDataErrorIfUpdateNotSuccessful() {
+        ArrayList<String> stockCardProductCodeList = new ArrayList<>();
+        doThrow(new DataException("")).when(restStockCardService).updateStockCardSyncTime(123L, stockCardProductCodeList);
+        ResponseEntity response = restStockCardController.updateStockCardsUpdatedTime(123L, stockCardProductCodeList);
+        assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
+    }
 
     private void setupStockData() {
         stockCard = new StockCard();

@@ -378,6 +378,11 @@ public class RestStockCardServiceTest {
     assertThat(expirationDates, is(stockCardMovementDTO.getExtensions().get("expirationdates")));
   }
 
+  @Test
+  public void shouldUpdateAllStockCardsUpdateDateWhenListIsEmpty() throws Exception{
+
+  }
+
   private void setupStockData() {
     facilityId = 1L;
     productCode = "P123";

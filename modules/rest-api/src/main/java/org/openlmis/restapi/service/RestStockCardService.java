@@ -114,7 +114,7 @@ public class RestStockCardService {
 
   private List<StockCardDTO> transformStockCardsToDTOs(List<StockCard> stockCards) {
     List<StockCardDTO> stockCardDTOs = new ArrayList<>();
-    for (StockCard stockCard : stockCards){
+    for (StockCard stockCard : stockCards) {
       StockCardDTO stockCardDTO = new StockCardDTO(stockCard);
       stockCardDTOs.add(stockCardDTO);
       stockCardDTO.setStockMovementItems(transformStockCardEntries(stockCard.getEntries()));
@@ -128,5 +128,9 @@ public class RestStockCardService {
       stockCardMovementDTOs.add(new StockCardMovementDTO(stockCardEntry));
     }
     return stockCardMovementDTOs;
+  }
+
+  public void updateStockCardSyncTime(Long facilityId, List<String> stockCardProductCodeList) {
+
   }
 }
