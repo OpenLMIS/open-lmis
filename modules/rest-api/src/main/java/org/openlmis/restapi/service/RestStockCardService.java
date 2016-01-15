@@ -139,9 +139,9 @@ public class RestStockCardService {
     }
 
     if (stockCardProductCodeList.isEmpty()) {
-      stockCardService.updateAllStockCardSyncTimeForFacility(facilityId);
+      stockCardService.updateAllStockCardSyncTimeForFacilityToNow(facilityId);
     } else {
-      stockCardService.updateStockCardSyncTime(facilityId, stockCardProductCodeList);
+      stockCardService.updateStockCardSyncTimeToNow(facilityId, stockCardProductCodeList);
     }
   }
 }
