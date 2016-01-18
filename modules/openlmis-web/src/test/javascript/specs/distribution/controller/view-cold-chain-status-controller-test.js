@@ -24,11 +24,11 @@ describe('ViewColdChainStatusController', function () {
           {product: {id: 4, name: 'blank', productGroup: {name: ''}}}
         ];
     facilities = [
-          {id: 'F10', name: 'Village Dispensary', geographicZone: {id: 1, name: 'Ngrogoro', level: {name: 'City 1' }, parent: { name: 'Province 1' }}, catchmentPopulation: 200,
+          {code: 'F10', name: 'Village Dispensary', geographicZone: {id: 1, name: 'Ngrogoro', level: {name: 'City 1' }, parent: { name: 'Province 1' }}, catchmentPopulation: 200,
             supportedPrograms: [
               {program: program1, programProducts: programProducts}
             ]},
-          {id: 'F11', name: 'Central Hospital', geographicZone: {id: 1, name: 'District 1', level: {name: 'City 2' }, parent: { name: 'Province 2' }}, catchmentPopulation: 150,
+          {code: 'F11', name: 'Central Hospital', geographicZone: {id: 1, name: 'District 1', level: {name: 'City 2' }, parent: { name: 'Province 2' }}, catchmentPopulation: 150,
             supportedPrograms: [
               {program: program1, programProducts: programProducts}
             ]}
@@ -81,7 +81,7 @@ describe('ViewColdChainStatusController', function () {
     var i;
 
     for (i = 0; i < facilities.length; i += 1) {
-        expect(scope.getFacilityById(facilities[i].id)).toEqual(facilities[i]);
+        expect(scope.getFacilityById(facilities[i].code)).toEqual(facilities[i]);
     }
   });
 
@@ -89,7 +89,7 @@ describe('ViewColdChainStatusController', function () {
     var i;
 
     for (i = 0; i < facilities.length; i += 1) {
-        expect(scope.getFacilityNameById(facilities[i].id)).toEqual(facilities[i].name);
+        expect(scope.getFacilityNameById(facilities[i].code)).toEqual(facilities[i].name);
     }
   });
 
@@ -97,7 +97,7 @@ describe('ViewColdChainStatusController', function () {
     var i;
 
     for (i = 0; i < facilities.length; i += 1) {
-        expect(scope.getDistrictNameByFacilityId(facilities[i].id)).toEqual(facilities[i].geographicZone.name);
+        expect(scope.getDistrictNameByFacilityId(facilities[i].code)).toEqual(facilities[i].geographicZone.name);
     }
   });
 
@@ -105,7 +105,7 @@ describe('ViewColdChainStatusController', function () {
     var i;
 
     for (i = 0; i < facilities.length; i += 1) {
-        expect(scope.getProvinceNameByFacilityId(facilities[i].id)).toEqual(facilities[i].geographicZone.parent.name);
+        expect(scope.getProvinceNameByFacilityId(facilities[i].code)).toEqual(facilities[i].geographicZone.parent.name);
     }
   });
 

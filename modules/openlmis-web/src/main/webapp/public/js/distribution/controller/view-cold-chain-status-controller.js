@@ -71,7 +71,7 @@ function ViewColdChainStatusController($scope, facilities, period, deliveryZone,
         if (!isUndefined(id)) {
             for (var i = 0; i < $scope.facilities.length; i++) {
                 var facility = $scope.facilities[i];
-                if (facility.id == id) {
+                if (facility.code == id) {
                     return facility;
                 }
             }
