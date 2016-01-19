@@ -20,7 +20,20 @@ function ViewColdChainStatusController($scope, facilities, period, deliveryZone,
       $scope.apiError = true;
     } else {
         if (!isUndefined(fridges.fridges) && fridges.fridges.length > 0) {
-            $scope.data = fridges.fridges;
+            $scope.data = [];
+            var i = 0;
+
+            for (i = 0; i < fridges.fridges.length; i += 1) {
+              if (fridges.fridges[i].Status !== 0) {
+                $scope.data.push(fridges.fridges[i]);
+              }
+            }
+
+            if ($scope.data.length === 0) {
+              $scope.message = "label.no.cold.chain.status.information";
+            } else {
+              $scope.message = "";
+            }
         } else {
             $scope.message = "label.no.cold.chain.status.information";
         }
