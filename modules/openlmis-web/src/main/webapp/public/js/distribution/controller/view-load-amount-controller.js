@@ -19,12 +19,7 @@ function ViewLoadAmountController($scope, facilities, period, deliveryZone, frid
     $scope.geoZoneLevelName = facilities[0].geographicZone.level.name;
 
     $scope.provincesForColdChainStatus = nexleafDeliveryZones;
-    $scope.viewColdChainStatusAvailable = false;
-    $scope.checkViewColdChainStatus = function () {
-      $scope.parentZoneName = $scope.facilities[0].geographicZone.parent.name;
-      $scope.viewColdChainStatusAvailable = _.contains($scope.provincesForColdChainStatus, $scope.parentZoneName);
-    };
-    $scope.checkViewColdChainStatus();
+    $scope.viewColdChainStatusAvailable = _.contains(nexleafDeliveryZones, deliveryZone.code);
 
     $scope.aggregateMap = {};
     if ($scope.viewColdChainStatusAvailable) {
@@ -33,11 +28,11 @@ function ViewLoadAmountController($scope, facilities, period, deliveryZone, frid
       } else if (fridges.coldTraceData) {
         $scope.fridges = fridges.coldTraceData.fridges;
 
-        $scope.getFacitilityStatus = function (id) {
-          if (!isUndefined(id)) {
+        $scope.getFacitilityStatus = function (code) {
+          if (!isUndefined(code)) {
               for (var i = 0; i < $scope.fridges.length; i++) {
                   var fridge = $scope.fridges[i];
-                  if (fridge.FacilityID == id) {
+                  if (fridge.FacilityID == code) {
                       return fridge.Status;
                   }
               }
@@ -45,11 +40,11 @@ function ViewLoadAmountController($scope, facilities, period, deliveryZone, frid
           return 1;
         };
 
-        $scope.isDataAvailable = function (id) {
-            if (!isUndefined(id)) {
+        $scope.isDataAvailable = function (code) {
+            if (!isUndefined(code)) {
                 for (var i = 0; i < $scope.fridges.length; i++) {
                     var fridge = $scope.fridges[i];
-                    if (fridge.FacilityID == id) {
+                    if (fridge.FacilityID == code) {
                         return true;
                     }
                 }
@@ -58,11 +53,11 @@ function ViewLoadAmountController($scope, facilities, period, deliveryZone, frid
             return false;
         };
 
-        $scope.getURL = function (id) {
-          if (!isUndefined(id)) {
+        $scope.getURL = function (code) {
+          if (!isUndefined(code)) {
               for (var i = 0; i < $scope.fridges.length; i++) {
                   var fridge = $scope.fridges[i];
-                  if (fridge.FacilityID == id) {
+                  if (fridge.FacilityID == code) {
                       return fridge.URL;
                   }
               }
