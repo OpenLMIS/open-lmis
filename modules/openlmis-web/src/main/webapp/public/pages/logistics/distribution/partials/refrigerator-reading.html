@@ -39,10 +39,9 @@
             <div class="form-cell">
               <label openlmis-message="label.refrigerator.temperature"></label>
             <span class="position-relative">
-              <input type="text" name="temperature{{$index}}" ng-model="refrigeratorReading.temperature.value"
-                     numeric-validator="numericValue,3,1"
-                     error-holder="temperatureError{{$index}}"
-                     class="right-justified"  ng-trim="false"/>
+              <input type="number" min="-999.9" max="999.9" step="0.1" name="temperature{{$index}}"
+                     ng-model="refrigeratorReading.temperature.value" numeric-validator="numericValue,3,1"
+                     error-holder="temperatureError{{$index}}" class="right-justified"  ng-trim="false"/>
               <span id="temperatureError{{$index}}" class="rnr-form-error" openlmis-message="error.number.only"
                     style="display: none"></span>
             </span>
@@ -91,9 +90,9 @@
             <div class="form-cell">
               <label class="form-questions" openlmis-message="label.number.high.alarms"></label>
             <span class="position-relative">
-              <input name="highAlarmEvent{{$index}}" type="text" ng-model="refrigeratorReading.highAlarmEvents.value"
-                     numeric-validator="positiveInteger" maxlength="3" error-holder="highAlarmError{{$index}}"
-                     class="right-justified" ng-trim="false"/>
+              <input name="highAlarmEvent{{$index}}" type="number" min="0" max="999" step="1"
+                     ng-model="refrigeratorReading.highAlarmEvents.value" numeric-validator="positiveInteger,3"
+                     error-holder="highAlarmError{{$index}}" class="right-justified" ng-trim="false"/>
               <span id="highAlarmError{{$index}}" class="rnr-form-error" openlmis-message="error.number.only"
                     style="display: none"></span>
             </span>
@@ -109,9 +108,10 @@
             <div class="form-cell">
               <label openlmis-message="label.number.low.alarms"></label>
             <span class="position-relative">
-              <input type="text" name="lowAlarmEvent{{$index}}" ng-model="refrigeratorReading.lowAlarmEvents.value"
-                     numeric-validator="positiveInteger" ng-trim="false" maxlength="3"
-                     error-holder="lowAlarmError{{$index}}" class="right-justified"/>
+              <input type="number" min="0" max="999" step="1" name="lowAlarmEvent{{$index}}"
+                     ng-model="refrigeratorReading.lowAlarmEvents.value"
+                     numeric-validator="positiveInteger,3" ng-trim="false" error-holder="lowAlarmError{{$index}}"
+                     class="right-justified"/>
               <span id="lowAlarmError{{$index}}" class="rnr-form-error" openlmis-message="error.number.only"
                     style="display: none"></span>
             </span>

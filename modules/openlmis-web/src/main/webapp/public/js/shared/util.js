@@ -76,3 +76,7 @@ String.prototype.endsWith = function (searchString) {
     return false;
   return this.indexOf(searchString, position) !== -1;
 };
+
+Number.prototype.hasValue = function () {
+  return utils.isNumber(this);
+};
