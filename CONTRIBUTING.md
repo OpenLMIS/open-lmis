@@ -175,7 +175,7 @@ For complete licensing details be sure to reference the LICENSE file that comes 
 
 * GitHub - [https://github.com/OpenLMIS/open-lmis](https://github.com/OpenLMIS/open-lmis)
 
-* JIRA Issue & Bug Tracking - 
+* JIRA Issue & Bug Tracking - [https://openlmis.atlassian.net/projects/OLMIS/issues](https://openlmis.atlassian.net/projects/OLMIS/issues)
 
 * Wiki - [https://openlmis.atlassian.net/wiki/display/OP](https://openlmis.atlassian.net/wiki/display/OP)
 
