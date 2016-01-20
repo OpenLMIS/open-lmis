@@ -69,12 +69,12 @@
                             <td class="col-complete-vaccinated">
                                 <div>
                   <span class="position-relative">
-                    <input id="healthCenter11Months{{$index}}" type="text"
+                    <input id="healthCenter11Months{{$index}}" type="number"
                            ng-model="lineItem.healthCenter11Months.value"
-                           name="coverageHealthCenter11Months{{$index}}"
-                           numeric-validator="positiveInteger" maxlength="7" ng-trim=false
+                           name="coverageHealthCenter11Months{{$index}}" ng-trim=false
+                           numeric-validator="positiveInteger,7" min="0" max="9999999" step="1"
                            error-holder="healthCenter11MonthsError{{$index}}"
-                           ng-class="{'required-error': !(lineItem.healthCenter11Months.value ||
+                           ng-class="{'required-error': !(lineItem.healthCenter11Months.value.hasValue() ||
                            lineItem.healthCenter11Months.notRecorded)}"/>
                     <span id="healthCenter11MonthsError{{$index}}"
                           class="rnr-form-error"
@@ -91,12 +91,12 @@
                             <td class="col-complete-vaccinated">
                                 <div>
                   <span class="position-relative">
-                    <input id="outreach11Months{{$index}}" type="text"
+                    <input id="outreach11Months{{$index}}" type="number"
                            ng-model="lineItem.outreach11Months.value"
-                           name="coverageOutreach11Months{{$index}}"
-                           numeric-validator="positiveInteger" maxlength="7" ng-trim=false
+                           name="coverageOutreach11Months{{$index}}" ng-trim=false
+                           numeric-validator="positiveInteger,7" min="0" max="9999999" step="1"
                            error-holder="outreach11MonthsError{{$index}}"
-                           ng-class="{'required-error': !(lineItem.outreach11Months.value ||
+                           ng-class="{'required-error': !(lineItem.outreach11Months.value.hasValue() ||
                            lineItem.outreach11Months.notRecorded)}"/>
                     <span id="outreach11MonthsError{{$index}}"
                           class="rnr-form-error"
@@ -122,12 +122,12 @@
                 <span ng-hide="lineItem.vaccination == 'Polio (Newborn)'">
                   <div>
                     <span class="position-relative">
-                      <input id="healthCenter23Months{{$index}}" type="text"
+                      <input id="healthCenter23Months{{$index}}" type="number"
                              ng-model="lineItem.healthCenter23Months.value"
-                             name="coverageHealthCenter23Months{{$index}}"
-                             numeric-validator="positiveInteger" maxlength="7" ng-trim=false
+                             name="coverageHealthCenter23Months{{$index}}" ng-trim=false
+                             numeric-validator="positiveInteger,7" min="0" max="9999999" step="1"
                              error-holder="healthCenter23MonthsError{{$index}}"
-                             ng-class="{'required-error': !(lineItem.healthCenter23Months.value ||
+                             ng-class="{'required-error': !(lineItem.healthCenter23Months.value.hasValue() ||
                              lineItem.healthCenter23Months.notRecorded)}"/>
                       <span id="healthCenter23MonthsError{{$index}}"
                             class="rnr-form-error"
@@ -146,12 +146,12 @@
                 <span ng-hide="lineItem.vaccination == 'Polio (Newborn)'">
                   <div>
                     <span class="position-relative">
-                      <input id="outreach23Months{{$index}}" type="text"
+                      <input id="outreach23Months{{$index}}" type="number"
                              ng-model="lineItem.outreach23Months.value"
-                             name="coverageOutreach23Months{{$index}}"
-                             numeric-validator="positiveInteger" maxlength="7" ng-trim=false
+                             name="coverageOutreach23Months{{$index}}" ng-trim=false
+                             numeric-validator="positiveInteger,7" min="0" max="9999999" step="1"
                              error-holder="outreach23MonthsError{{$index}}"
-                             ng-class="{'required-error': !(lineItem.outreach23Months.value ||
+                             ng-class="{'required-error': !(lineItem.outreach23Months.value.hasValue() ||
                              lineItem.outreach23Months.notRecorded)}"/>
                       <span id="outreach23MonthsError{{$index}}"
                             class="rnr-form-error"
@@ -181,12 +181,12 @@
                                      ng-repeat="product in productsMap[lineItem.vaccination].products">
                                     <span id="{{product}}" ng-bind="product"></span>
                   <span class="position-relative">
-                    <input id="openedVial{{$parent.$index}}{{$index}}" type="text"
+                    <input id="openedVial{{$parent.$index}}{{$index}}" type="number"
                            ng-model="openedVialMap[product].openedVial.value"
                            name="coverageOpenedVial{{$parent.$index}}{{$index}}"
-                           numeric-validator="positiveInteger" maxlength="7" ng-trim=false
-                           error-holder="{{product}}OpenedVialError"
-                           ng-class="{'required-error': !(openedVialMap[product].openedVial.value ||
+                           numeric-validator="positiveInteger,7" min="0" max="9999999" step="1"
+                           ng-trim=false error-holder="{{product}}OpenedVialError"
+                           ng-class="{'required-error': !(openedVialMap[product].openedVial.value.hasValue() ||
                            openedVialMap[product].openedVial.notRecorded)}"/>
                     <span id="{{product}}OpenedVialError"
                           class="rnr-form-error"
@@ -216,3 +216,4 @@
         </div>
     </div>
 </div>
+
