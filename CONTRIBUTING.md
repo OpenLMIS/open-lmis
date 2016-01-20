@@ -8,7 +8,7 @@ The OpenLMIS community is currently using a public JIRA for tracking bugs.  This
 historical bugs, what work has been done, and so on.  Reporting a bug with this tool is the best way to get the bug 
 fixed quickly and in the best manner.
 
-### Before you report a bug:
+### Before you report a bug
 - Search to see if the same bug or a similar one has already been reported.  If one already exists it saves
 you time in reporting it again and the community from investigating it twice.
 - If the bug exists but has been closed, check to see which version of OpenLMIS it was fixed on and which version you
@@ -16,7 +16,7 @@ are using.  If it is fixed in a newer version you may want to upgrade.  If you c
 the technical forums.
 - If the bug doesn't appear to be fixed, you may ask to re-open the bug report or file a new one.
 
-### Reporting a new bug:
+### Reporting a new bug
 Fixing bugs is a time-intensive process.  To speed things along and assist in fixing the bug, it greatly helps to send
 in a complete, accurate and well thought out bug report.  These steps can help that along:
 
