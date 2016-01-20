@@ -177,7 +177,7 @@ For complete licensing details be sure to reference the LICENSE file that comes 
 
 * JIRA Issue & Bug Tracking - 
 
-* Wiki - 
+* Wiki - [https://openlmis.atlassian.net/wiki/display/OP](https://openlmis.atlassian.net/wiki/display/OP)
 
 * Developer Forums - [https://groups.google.com/forum/#!forum/openlmis-dev]
 (https://groups.google.com/forum/#!forum/openlmis-dev)
