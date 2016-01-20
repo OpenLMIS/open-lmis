@@ -65,15 +65,11 @@ public class FacilityProductsReportDataProviderTest {
     when(facilityMapper.getAllReportFacilities()).thenReturn(asList(facility, secondFacility));
     when(stockCardMapper.getAllByFacility(facility.getId())).thenReturn(stockCards);
     when(stockCardMapper.getAllByFacility(secondFacility.getId())).thenReturn(secondFacilityStockCards);
-    when(stockCardMapper.getLastUpdatedTimeforStockDataByFacility(facility.getId())).thenReturn(DateUtil.parseDate("2011-11-11 11:11:11"));
-    when(stockCardMapper.getLastUpdatedTimeforStockDataByFacility(secondFacility.getId())).thenReturn(DateUtil.parseDate("2013-10-13 10:13:13"));
 
     List<FacilityProductReportEntry> entryList = facilityProductsReportDataProvider.getReportDataForSingleProduct(facility.getGeographicZone().getId(), product.getId(), DateUtil.parseDate("2018-11-11 11:11:11"));
 
     assertThat(entryList.size(), is(2));
     assertThat(entryList.get(0).getProductName(), containsString(product.getPrimaryName()));
-    assertThat(DateUtil.formatDate(entryList.get(0).getLastSyncDate()), is("2011-11-11 11:11:11"));
-    assertThat(DateUtil.formatDate(entryList.get(1).getLastSyncDate()), is("2013-10-13 10:13:13"));
     assertThat(entryList.get(0).getProductQuantity(), is(100L));
     assertThat(entryList.get(1).getProductQuantity(), is(300L));
   }
@@ -119,7 +115,6 @@ public class FacilityProductsReportDataProviderTest {
 
     when(stockCardMapper.getAllByFacility(facility.getId())).thenReturn(stockCards);
     when(facilityMapper.getById(facility.getId())).thenReturn(facility);
-    when(stockCardMapper.getLastUpdatedTimeforStockDataByFacility(facility.getId())).thenReturn(DateUtil.parseDate("2011-11-11 11:11:11"));
 
     List<FacilityProductReportEntry> entryList = facilityProductsReportDataProvider.getReportDataForAllProducts(facility.getId(),
         DateUtil.parseDate("2012-12-12 12:12:12"));
@@ -129,8 +124,6 @@ public class FacilityProductsReportDataProviderTest {
     assertThat(entryList.get(1).getProductQuantity(), is(200L));
     assertThat(entryList.get(0).getCode(), is(product.getCode()));
     assertThat(entryList.get(1).getCode(), is(secondProduct.getCode()));
-    assertThat(DateUtil.formatDate(entryList.get(0).getLastSyncDate()), is("2011-11-11 11:11:11"));
-    assertThat(DateUtil.formatDate(entryList.get(1).getLastSyncDate()), is("2011-11-11 11:11:11"));
   }
 
   private void setupOneFacilityStockCardListWithOneCardOneEntry() {

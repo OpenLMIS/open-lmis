@@ -41,6 +41,7 @@ public class FacilityProductReportEntry {
 
         assignSoonestExpirationDate(stockCardEntryList);
 
+        this.lastSyncDate = stockCard.getModifiedDate();
         this.code = stockCard.getProduct().getCode();
     }
 

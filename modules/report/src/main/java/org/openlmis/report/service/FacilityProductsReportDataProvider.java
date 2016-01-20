@@ -58,13 +58,11 @@ public class FacilityProductsReportDataProvider {
 
     public List<FacilityProductReportEntry> getReportDataForAllProducts(Long facilityId, final Date endTime) {
         List<StockCard> stockCards = stockCardMapper.getAllByFacility(facilityId);
-        final Date lastSyncedDate = stockCardMapper.getLastUpdatedTimeforStockDataByFacility(facilityId);
         final Facility facility = facilityMapper.getById(facilityId);
-        return from(stockCards).transform(getReportEntry(endTime, lastSyncedDate)).transform(new Function<FacilityProductReportEntry, FacilityProductReportEntry>() {
+        return from(stockCards).transform(getReportEntry(endTime)).transform(new Function<FacilityProductReportEntry, FacilityProductReportEntry>() {
             @Override
             public FacilityProductReportEntry apply(FacilityProductReportEntry input) {
                 input.setFacilityName(facility.getName());
-                input.setLastSyncDate(lastSyncedDate);
                 return input;
             }
         }).toList();
@@ -83,14 +81,13 @@ public class FacilityProductsReportDataProvider {
         List<FacilityProductReportEntry> reportEntryList = new ArrayList<>();
         for (Facility facility : facilities) {
             List<StockCard> stockCards = stockCardMapper.getAllByFacility(facility.getId());
-            final Date lastSyncedDate = stockCardMapper.getLastUpdatedTimeforStockDataByFacility(facility.getId());
 
             Optional<FacilityProductReportEntry> entryOptional = from(stockCards).firstMatch(new Predicate<StockCard>() {
                 @Override
                 public boolean apply(StockCard input) {
                     return input.getProduct().getId().equals(productId);
                 }
-            }).transform(getReportEntry(endTime, lastSyncedDate));
+            }).transform(getReportEntry(endTime));
 
             if (entryOptional.isPresent()) {
                 FacilityProductReportEntry entry = entryOptional.get();
@@ -101,12 +98,11 @@ public class FacilityProductsReportDataProvider {
         return reportEntryList;
     }
 
-    private Function<StockCard, FacilityProductReportEntry> getReportEntry(final Date endTime, final Date lastSyncedDate) {
+    private Function<StockCard, FacilityProductReportEntry> getReportEntry(final Date endTime) {
         return new Function<StockCard, FacilityProductReportEntry>() {
             @Override
             public FacilityProductReportEntry apply(StockCard input) {
                 FacilityProductReportEntry reportEntry = new FacilityProductReportEntry(input, endTime);
-                reportEntry.setLastSyncDate(lastSyncedDate);
                 return reportEntry;
             }
         };
