@@ -30,7 +30,7 @@ function ViewColdChainStatusController($scope, facilities, period, deliveryZone,
             }
 
             if ($scope.data.length === 0) {
-              $scope.message = "label.no.cold.chain.status.information";
+              $scope.message = "message.api.error";
             } else {
               $scope.message = "";
             }
