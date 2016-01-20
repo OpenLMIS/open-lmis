@@ -28,35 +28,47 @@ public class ChildCoveragePage extends DistributionTab {
   @FindBy(how = ID, using = "colPolio (Newborn)")
   private static WebElement regimenPolioNewborn = null;
 
-  @FindBy(how = ID, using = "colPolio 1st dose")
+  @FindBy(how = ID, using = "colPolio 1a dose")
   private static WebElement regimenPolioDose1 = null;
 
-  @FindBy(how = ID, using = "colPolio 2nd dose")
+  @FindBy(how = ID, using = "colPolio 2a dose")
   private static WebElement regimenPolioDose2 = null;
 
-  @FindBy(how = ID, using = "colPolio 3rd dose")
+  @FindBy(how = ID, using = "colPolio 3a dose")
   private static WebElement regimenPolioDose3 = null;
 
-  @FindBy(how = ID, using = "colPenta 1st dose")
+  @FindBy(how = ID, using = "colIPV")
+  private static WebElement regimenIPV = null;
+
+  @FindBy(how = ID, using = "colPenta 1a dose")
   private static WebElement regimenPentaDose1 = null;
 
-  @FindBy(how = ID, using = "colPenta 2nd dose")
+  @FindBy(how = ID, using = "colPenta 2a dose")
   private static WebElement regimenPentaDose2 = null;
 
-  @FindBy(how = ID, using = "colPenta 3rd dose")
+  @FindBy(how = ID, using = "colPenta 3a dose")
   private static WebElement regimenPentaDose3 = null;
 
-  @FindBy(how = ID, using = "colPCV10 1st dose")
+  @FindBy(how = ID, using = "colPCV10 1a dose")
   private static WebElement regimenPCV10Dose1 = null;
 
-  @FindBy(how = ID, using = "colPCV10 2nd dose")
+  @FindBy(how = ID, using = "colPCV10 2a dose")
   private static WebElement regimenPCV10Dose2 = null;
 
-  @FindBy(how = ID, using = "colPCV10 3rd dose")
+  @FindBy(how = ID, using = "colPCV10 3a dose")
   private static WebElement regimenPCV10Dose3 = null;
 
-  @FindBy(how = ID, using = "colMeasles")
-  private static WebElement regimenMeasles = null;
+  @FindBy(how = ID, using = "colRV Rotarix 1a dose")
+  private static WebElement regimenRVRotarixDose1 = null;
+
+  @FindBy(how = ID, using = "colRV Rotarix 2a dose")
+  private static WebElement regimenRVRotarixDose2 = null;
+
+  @FindBy(how = ID, using = "colSarampo 1a dose")
+  private static WebElement regimenSarampoDose1 = null;
+
+  @FindBy(how = ID, using = "colSarampo 2a dose")
+  private static WebElement regimenSarampoDose2 = null;
 
   @FindBy(how = ID, using = "vaccination")
   private static WebElement headerChildVaccination = null;
@@ -109,6 +121,9 @@ public class ChildCoveragePage extends DistributionTab {
   @FindBy(how = ID, using = "Polio20")
   private static WebElement openedVialsPolio20Label = null;
 
+  @FindBy(how = ID, using = "IPV")
+  private static WebElement openedVialsIPVLabel = null;
+
   @FindBy(how = ID, using = "Penta1")
   private static WebElement openedVialsPenta1Label = null;
 
@@ -118,14 +133,35 @@ public class ChildCoveragePage extends DistributionTab {
   @FindBy(how = ID, using = "PCV")
   private static WebElement openedVialsPCVLabel = null;
 
-  @FindBy(how = ID, using = "Measles")
-  private static WebElement openedVialsMeaslesLabel = null;
+  @FindBy(how = ID, using = "RV Rotarix")
+  private static WebElement openedVialsRVRotarixLabel = null;
+
+  @FindBy(how = ID, using = "Sarampo")
+  private static WebElement openedVialsSarampoLabel = null;
+
+  @FindBy(how = ID, using = "MSD")
+  private static WebElement openedVialsMSDLabel = null;
 
   @FindBy(how = ID, using = "coverageOpenedVial00")
   private static WebElement openedVialsBcgNR = null;
 
   @FindBy(how = ID, using = "coverageOpenedVial11")
   private static WebElement openedVialsPolioNR = null;
+
+  @FindBy(how = ID, using = "coverageOpenedVial61")
+  private static WebElement openedVialsPentaNR = null;
+
+  @FindBy(how = ID, using = "coverageOpenedVial90")
+  private static WebElement openedVialsPcvNR = null;
+
+  @FindBy(how = ID, using = "coverageOpenedVial120")
+  private static WebElement openedVialsRVRotarixNR = null;
+
+  @FindBy(how = ID, using = "coverageOpenedVial140")
+  private static WebElement openedVialsSarampoNR = null;
+
+  @FindBy(how = ID, using = "coverageOpenedVial150")
+  private static WebElement openedVialsMSDNR = null;
 
   @FindBy(how = ID, using = "childCoverageTable")
   private static WebElement childCoverageTable = null;
@@ -154,10 +190,13 @@ public class ChildCoveragePage extends DistributionTab {
   @Override
   public void enterValues(List<Map<String, String>> data) {
     Map<String, String> dataMap = data.get(0);
-    for (int rowNumber = 1; rowNumber <= 12; rowNumber++) {
-      enterHealthCenter11MonthsDataForGivenRow(rowNumber, dataMap.get("healthCenter11"));
-      enterOutreach11MonthsDataForGivenRow(rowNumber, dataMap.get("outreach11"));
-      if (rowNumber != 2) {
+    for (int rowNumber = 1; rowNumber <= 16; rowNumber++) {
+      if (rowNumber != 16) {
+        enterHealthCenter11MonthsDataForGivenRow(rowNumber, dataMap.get("healthCenter11"));
+        enterOutreach11MonthsDataForGivenRow(rowNumber, dataMap.get("outreach11"));
+      }
+
+      if (rowNumber != 2 && rowNumber != 6) {
         enterHealthCenter23MonthsDataForGivenRow(rowNumber, dataMap.get("healthCenter23"));
         enterOutreach23MonthsDataForGivenRow(rowNumber, dataMap.get("outreach23"));
       }
@@ -238,6 +277,11 @@ public class ChildCoveragePage extends DistributionTab {
     return regimenPolioDose3.getText();
   }
 
+  public String getTextOfRegimenIPV() {
+    testWebDriver.waitForElementToAppear(regimenIPV);
+    return regimenIPV.getText();
+  }
+
   public String getTextOfRegimenPentaDose1() {
     testWebDriver.waitForElementToAppear(regimenPentaDose1);
     return regimenPentaDose1.getText();
@@ -268,9 +312,24 @@ public class ChildCoveragePage extends DistributionTab {
     return regimenPCV10Dose3.getText();
   }
 
-  public String getTextOfRegimenMeasles() {
-    testWebDriver.waitForElementToAppear(regimenMeasles);
-    return regimenMeasles.getText();
+  public String getTextOfRegimenRVRotarixDose1() {
+    testWebDriver.waitForElementToAppear(regimenRVRotarixDose1);
+    return regimenRVRotarixDose1.getText();
+  }
+
+  public String getTextOfRegimenRVRotarixDose2() {
+    testWebDriver.waitForElementToAppear(regimenRVRotarixDose2);
+    return regimenRVRotarixDose2.getText();
+  }
+
+  public String getTextOfRegimenSarampoDose1() {
+    testWebDriver.waitForElementToAppear(regimenSarampoDose1);
+    return regimenSarampoDose1.getText();
+  }
+
+  public String getTextOfRegimenSarampoDose2() {
+    testWebDriver.waitForElementToAppear(regimenSarampoDose2);
+    return regimenSarampoDose2.getText();
   }
 
   public String getTextOfHeaderChildrenVaccination() {
@@ -358,6 +417,11 @@ public class ChildCoveragePage extends DistributionTab {
     return openedVialsPolio20Label.getText();
   }
 
+  public String getTextOfOpenedVialsIPV() {
+    testWebDriver.waitForElementToAppear(openedVialsIPVLabel);
+    return openedVialsIPVLabel.getText();
+  }
+
   public String getTextOfOpenedVialsPenta1() {
     testWebDriver.waitForElementToAppear(openedVialsPenta1Label);
     return openedVialsPenta1Label.getText();
@@ -373,9 +437,19 @@ public class ChildCoveragePage extends DistributionTab {
     return openedVialsPCVLabel.getText();
   }
 
-  public String getTextOfOpenedVialsMeasles() {
-    testWebDriver.waitForElementToAppear(openedVialsMeaslesLabel);
-    return openedVialsMeaslesLabel.getText();
+  public String getTextOfOpenedVialsRVRotarix() {
+    testWebDriver.waitForElementToAppear(openedVialsRVRotarixLabel);
+    return openedVialsRVRotarixLabel.getText();
+  }
+
+  public String getTextOfOpenedVialsSarampo() {
+    testWebDriver.waitForElementToAppear(openedVialsSarampoLabel);
+    return openedVialsSarampoLabel.getText();
+  }
+
+  public String getTextOfOpenedVialsMSD() {
+    testWebDriver.waitForElementToAppear(openedVialsMSDLabel);
+    return openedVialsMSDLabel.getText();
   }
 
   public String getTextOfTargetGroupValue(int rowNumber) {
@@ -502,6 +576,36 @@ public class ChildCoveragePage extends DistributionTab {
   public void applyNrToPolioOpenedVials() {
     testWebDriver.waitForElementToAppear(openedVialsPolioNR);
     openedVialsPolioNR.click();
+    removeFocusFromElement();
+  }
+
+  public void applyNrToPentaOpenedVials() {
+    testWebDriver.waitForElementToAppear(openedVialsPentaNR);
+    openedVialsPentaNR.click();
+    removeFocusFromElement();
+  }
+
+  public void applyNrToPcvOpenedVials() {
+    testWebDriver.waitForElementToAppear(openedVialsPcvNR);
+    openedVialsPcvNR.click();
+    removeFocusFromElement();
+  }
+
+  public void applyNrToRVRotarixOpenedVials() {
+    testWebDriver.waitForElementToAppear(openedVialsRVRotarixNR);
+    openedVialsRVRotarixNR.click();
+    removeFocusFromElement();
+  }
+
+  public void applyNrToSarampoOpenedVials() {
+    testWebDriver.waitForElementToAppear(openedVialsSarampoNR);
+    openedVialsSarampoNR.click();
+    removeFocusFromElement();
+  }
+
+  public void applyNrToMSDOpenedVials() {
+    testWebDriver.waitForElementToAppear(openedVialsMSDNR);
+    openedVialsMSDNR.click();
     removeFocusFromElement();
   }
 

@@ -36,6 +36,10 @@ ChildCoverage.prototype.computeStatus = function () {
       $(mandatoryFields).each(function (index, field) {
         if (lineItem.vaccination === 'Polio (Newborn)' && ['healthCenter23Months', 'outreach23Months'].indexOf(field) !== -1)
           return true;
+        if (lineItem.vaccination === 'IPV' && ['healthCenter23Months', 'outreach23Months'].indexOf(field) !== -1)
+          return true;
+        if (lineItem.vaccination === 'Sarampo 2a dose' && ['healthCenter11Months', 'outreach11Months'].indexOf(field) !== -1)
+          return true;
         if ((status === DistributionStatus.COMPLETE || !status) && isValid(lineItem[field])) {
           status = DistributionStatus.COMPLETE;
           return true;
