@@ -9,6 +9,7 @@
  */
 package org.openlmis.core.service;
 
+import org.joda.time.LocalDate;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -32,6 +33,7 @@ import org.openlmis.core.service.ProgramService;
 import org.openlmis.db.categories.UnitTests;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import static com.natpryce.makeiteasy.MakeItEasy.a;
@@ -156,15 +158,17 @@ public class DeliveryZoneProgramScheduleServiceTest {
   public void shouldGetPeriodsForProgramAndDeliveryZone() throws Exception {
     ProcessingSchedule expectedSchedule = new ProcessingSchedule();
     Long scheduleId = 3l;
+    Date elevenDaysFromNow = LocalDate.now().plusDays(11).toDate();
+
     expectedSchedule.setId(scheduleId);
     List<ProcessingPeriod> periods = new ArrayList<>();
     when(scheduleService.getAllPeriodsBefore(scheduleId, null)).thenReturn(periods);
     when(repository.getProcessingScheduleByZoneAndProgram(1l, 2l)).thenReturn(expectedSchedule);
 
-    List<ProcessingPeriod> returnedPeriods = service.getPeriodsForDeliveryZoneAndProgram(1l, 2l);
+    List<ProcessingPeriod> returnedPeriods = service.getPeriodsForDeliveryZoneAndProgram(1l, 2l, elevenDaysFromNow);
 
     assertThat(returnedPeriods, is(periods));
-    verify(scheduleService).getAllPeriodsBefore(scheduleId, null);
+    verify(scheduleService).getAllPeriodsBefore(scheduleId, elevenDaysFromNow);
     verify(repository).getProcessingScheduleByZoneAndProgram(1l, 2l);
   }
 }
