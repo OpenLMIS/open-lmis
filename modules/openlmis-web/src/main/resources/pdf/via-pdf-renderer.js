@@ -42,7 +42,7 @@ function adjustPageForRender() {
             return viaPages;
         }
 
-        function combineMutiplePages(pages) {
+        function combineMultiplePages(pages) {
             var body = $(document.body);
             body.empty();
             pages.forEach(function (viaPage) {
@@ -54,6 +54,6 @@ function adjustPageForRender() {
         }
 
         var pages = capturePages();
-        combineMutiplePages(pages);
+        combineMultiplePages(pages);
     });
 }
