@@ -44,7 +44,7 @@ function ViewLoadAmountController($scope, facilities, period, deliveryZone, frid
             if (!isUndefined(code)) {
                 for (var i = 0; i < $scope.fridges.length; i++) {
                     var fridge = $scope.fridges[i];
-                    if (fridge.FacilityID == code) {
+                    if (fridge.FacilityID == code && fridge.Status !== 0) {
                         return true;
                     }
                 }
