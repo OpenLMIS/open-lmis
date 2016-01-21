@@ -1,5 +1,4 @@
 "use strict";
-var hasTriedToSwitchLanguage = false;
 
 function extractDomain(url) {
     var domain;
@@ -12,7 +11,7 @@ function extractDomain(url) {
     return domain;
 }
 
-function isLanguageJsonLoaded(response) {
+function hasSwitchedToPtLanguage(response) {
     //this request is the pt language json, we can only render pdf after it's loaded
     return responseUrlContains(response, 'messages.json');
 }
@@ -42,7 +41,6 @@ function tryToSwitchToPtLanguage(page) {
                 console.log("can not find pt button");
             }
         });
-        hasTriedToSwitchLanguage = true;
     }, 100);
 }
 
@@ -54,7 +52,7 @@ function monitorResponses(page, address, onLoaded) {
     page.onResourceReceived = function (response) {
         if (response.stage === 'end') {
             console.log(response.url + "   " + response.stage);
-            if (hasTriedToSwitchLanguage && isLanguageJsonLoaded(response)) {
+            if (hasSwitchedToPtLanguage(response)) {
                 onLoaded();
             }
             if (isXhrFinished(response)) {
