@@ -1,0 +1,152 @@
+.tree-grid-animate-enter,.tree-grid-row.ng-enter {
+  position: relative;
+  display: block;
+  opacity: 0;
+  max-height:0;
+}
+.tree-grid-animate-enter.tree-grid-animate-enter-active,.tree-grid-row.ng-enter-active {
+  opacity: 1;
+  max-height:30px;
+}
+.tree-grid-animate-leave,.tree-grid-row.ng-leave {
+  position: relative;
+  display: block;
+  height:30px;
+  max-height: 30px;
+  opacity: 1;
+}
+.tree-grid-animate-leave.tree-grid-animate-leave-active,.tree-grid-row.ng-leave-active {
+  height: 0;
+  max-height:0;
+  opacity: 0;
+}
+.tree-grid {
+  .tree-grid-row {
+    padding: 0;
+    margin:0;
+    td {
+      padding: 1px;
+      margin:0;
+    }
+    a {
+      padding: 3px 10px;
+    }
+  }
+  i.indented {
+    padding: 2px;
+  }
+  .level-1 {
+    .indented {
+      position: relative;
+      left: 0;
+    }
+  }
+  .level-2 {
+    .indented {
+      position: relative;
+      left: 20px;
+    }
+  }
+  .level-3 {
+    .indented {
+      position: relative;
+      left: 40px;
+    }
+  }
+  .level-4 {
+    .indented {
+      position: relative;
+      left: 60px;
+    }
+  }
+  .level-5 {
+    .indented {
+      position: relative;
+      left: 80px;
+    }
+  }
+  .level-6 {
+    .indented {
+      position: relative;
+      left: 100px;
+    }
+  }
+  .level-7 {
+    .indented {
+      position: relative;
+      left: 120px;
+    }
+  }
+  .level-8 {
+    .indented {
+      position: relative;
+      left: 140px;
+    }
+  }
+  .level-9 {
+    .indented {
+      position: relative;
+      left: 160px;
+    }
+  }
+}
+.tree-grid .tree-icon,.tree-label {
+  cursor: pointer;
+}
+table.tree-grid {
+  max-height: 500px;
+  overflow-y: scroll;
+}.tree-link-a {
+   color: #078f97 !important;
+   font-size: 1.2em !important;
+ }
+.tree-link-a:hover {
+  color: #055e74;
+  text-decoration: underline;
+}
+#help-content-container{
+  position: relative;
+  height: auto;
+
+
+}
+#help-content-container #help-content{
+  position: relative;
+
+}
+#help-content-container #help-content #help-content-tree{
+  position: absolute;
+  top: 40px;
+  width: 48%;
+  overflow: scroll;
+  height: 600px;
+
+}
+#help-content-container #help-content #tree-action-link{
+  position: absolute;
+  top: 0px;
+  width: 50%;
+  padding-top: 20px;
+}
+#help-content-container #help-content #tree-table-action-link{
+  position: relative;
+  left: 50%;
+  width: 50%;
+  top: 0px;
+  padding-top: 20px;
+
+
+
+
+}
+
+#help-content-container #help-content #help-content-table{
+  position: relative;
+  left: 50%;
+  width: 50%;
+
+  overflow: scroll;
+  height: 600px;
+  top: 0px;
+
+}

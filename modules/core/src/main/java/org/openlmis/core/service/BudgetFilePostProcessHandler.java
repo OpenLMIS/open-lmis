@@ -14,15 +14,15 @@ import lombok.NoArgsConstructor;
 import org.apache.log4j.Logger;
 import org.openlmis.core.domain.BudgetFileInfo;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.integration.Message;
-import org.springframework.integration.MessageChannel;
+import org.springframework.messaging.Message;
+import org.springframework.messaging.MessageChannel;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.io.File;
 
 import static org.apache.commons.io.FileUtils.deleteQuietly;
-import static org.springframework.integration.support.MessageBuilder.withPayload;
+import static org.springframework.messaging.support.MessageBuilder.withPayload;
 
 /**
  * Exposes the services for saving budget file information and storing the budget file in archive/error directory.

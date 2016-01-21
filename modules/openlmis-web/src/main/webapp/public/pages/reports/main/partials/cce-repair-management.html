@@ -1,0 +1,176 @@
+<!--
+  ~ Electronic Logistics Management Information System (eLMIS) is a supply chain management system for health commodities in a developing country setting.
+  ~
+  ~ Copyright (C) 2015  John Snow, Inc (JSI). This program was produced for the U.S. Agency for International Development (USAID). It was prepared under the USAID | DELIVER PROJECT, Task Order 4.
+  ~
+  ~ This program is free software: you can redistribute it and/or modify it under the terms of the GNU Affero General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
+  ~
+  ~ This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Affero General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU Affero General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
+  -->
+<style>
+ #repair-management{
+    width:180px;
+    height:180px;
+   margin:0px 0px;
+    position:relative;
+    }
+#repairManagementReportLegend{clear:both}
+    #repair-management  .flot-base{
+    margin:0px 0px;
+    position:relative;}
+
+  tbody  tr:hover {
+    background-color: #EEE;
+    }
+
+    #equipmentDialogDiv {
+    margin: -250px 0 0 -620px;
+    overflow: auto;
+
+    }
+    user agent stylesheetdiv {
+    display: block;
+    }
+</style>
+
+<div class="alert alert-success" id="saveSuccessMsgDiv" ng-bind="message" ng-show="message"/>
+<div class="row-fluid sortable ui-sortable">
+    <div class="box span12">
+        <div class="box-header">
+            <h2 openlmis-message="report.title.repair.management">
+                <i class="icon-edit"></i>
+                <span class="break"></span></h2>
+            <div class="box-icon">
+                <a ng-click="section(0)" ng-show="show(1)" class="btn-minimize"><i class="icon-chevron-up"></i></a>
+                <a ng-click="section(1)"  ng-show="show(0)" class="btn-minimize"><i class="icon-chevron-down"></i></a>
+                <a ng-show="!aggregate" id="pdf-button" href="#list" ng-click="exportReport('pdf')" class='btn-small btn-info'>PDF</a>
+                <a ng-show="!aggregate" id="xls-button" href="#list" ng-click="exportReport('xls')" class='btn-small btn-info'>Excel</a>
+            </div>
+        </div>
+        <div>
+            <div class="app-form"  style="padding: 1px;">
+                <form ng-submit="filterGrid()"  name="filterForm" novalidate>
+                    <div filter-container class="clearfix">
+                        <program-filter class="form-cell horizontalFilters"></program-filter>
+                        <facility-level-filter class="form-cell horizontalFilters"></facility-level-filter>
+                        <div class="form-cell horizontalFilters">
+                            <label class="labels"><span openlmis-message="label.repair.management.type"></span></label>
+                            <div class="form-field">
+                                <select ui-select2 ng-model="filter.aggregate" ng-change="filterChanged()" style="width:200px;" name="status"   >
+                                    <option ng-selected="option.value==filter.aggregate.default"  ng-repeat="option in types" value="{{ option.value }}">{{ option.name }}</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+       <div> <strong>Sorting:</strong>
+        <table client-side-sort-pagination class="table table-bordered" ng-show="data == undefined || data.length == 0">
+            <tr>
+                <td><span openlmis-message="label.report.nodata"></span></td>
+            </tr>
+        </table>
+      </div>
+        <div ng-show="datarows.length > 0">
+            <div class="row-fluid">
+                <div ng-class="{true:'span8',false:'span12'}[pieChart]">
+                    <div client-side-sort-pagination class="pull-right legend">Page: {{tableParams.page}},
+                        Showing records {{ ((tableParams.page - 1) * tableParams.count) + 1 }}
+                        to {{ tableParams.page*tableParams.count > tableParams.total ? tableParams.total : tableParams.page*tableParams.count }}
+                        of {{tableParams.total}}
+                    </div>
+                <table ng-show="datarows.length > 0" class="table-bordered table table-striped pull-right" ng-table="tableParams">
+                    <tbody>
+                    <tr  ng-repeat="row in datarows" ng-click="loadPieChart(row)" style="cursor:pointer">
+                        <td  data-title="'#'" class="number" style="width:20px" >{{ row.no }}</td>
+                        <td  data-title="getLocalMessage('label.repair.management.facilityname')" style="max-width:80px" sortable="facility_name" ng-show="!aggregate" >{{ row.facility_name}}</td>
+                        <td data-title="getLocalMessage('label.repair.management.facilitytype')" style="max-width:80px" sortable="facility_type" ng-show="!aggregate" >{{ row.facility_type}}</td>
+                        <td data-title="getLocalMessage('label.repair.management.facilitytype')" style="max-width:80px" sortable="facility_type" ng-show="aggregate" ><span openlmis-message="label.facility.type.all"></span> {{aggregateType }}</td>
+                        <td data-title="getLocalMessage('label.repair.management.functional')" style="max-width:80px" sortable="functional" >{{ row.functional}}</td>
+                        <td data-title="getLocalMessage('label.repair.management.notfunctional')" style="max-width:100px" sortable="not_functional" >{{ row.not_functional }}</td>
+                        <td data-title="getLocalMessage('label.repair.management.functionalnotinstalled')" style="max-width:150px" sortable="functional_not_installed" >{{ row.functional_not_installed }}</td>
+                        <td data-title="getLocalMessage('label.repair.management.electricity')" style="max-width:80px" sortable="electricity"  >{{ row.electricity }}</td>
+                        <td data-title="getLocalMessage('label.repair.management.solar')" style="max-width:100px" sortable="solar"  >{{ row.solar }}</td>
+                        <td data-title="getLocalMessage('label.repair.management.gas')" style="max-width:100px" sortable="gas"  >{{ row.gas }}</td>
+                        <td data-title="getLocalMessage('label.repair.management.kerosene')" style="max-width:100px" sortable="kerosene"  >{{ row.kerosene }}</td>
+                    </tr>
+                    </tbody>
+                </table>
+                </div>
+                <div ng-class="{true:'span4',false:''}[pieChart]" ng-show="pieChart">
+                 <div ng-show="RepairManagementPieChartData.length > 0">
+
+                     <label class="labels" style="text-align: center;font-family: bold" >{{facilityName}}</span></label>
+
+                     <dv style="float:left">
+                         <a-float id="repair-management" style="align-items: center" af-option="RepairManagementPieChartOption" af-data="RepairManagementPieChartData" class="chart"></a-float>
+                     </dv>
+
+                     <dv style="float:right" ng-show="notFunctional">
+                         <a-float id="repair-management" style="align-items: center" af-option="RepairManagementNotFunctionalPieChartOption" af-data="RepairManagementNotFunctionalPieChartData" class="chart"></a-float>
+                     </dv>
+                     <div id="repairManagementReportLegend" class="chartLegend"></div>
+                     <div id="repairManagementNotFunctionalReportLegend" class="chartLegend"></div>
+                 </div>
+                 </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+<div id="equipmentDialogDiv" style="width:auto" modal="equipmentDialogModal" options="{'backdrop':'static', 'escape':false}">
+    <div class="modal-header" style="clear:both">
+        <div class="box-header">
+             <h2 openlmis-message="label.equipment.list"></h2>
+            <div class="box-icon" >
+                <a id="pdf-button2" href="#list" ng-click="exportList('pdf')" class='btn-small btn-info'>PDF</a>
+                <a id="xls-button2" href="#list" ng-click="exportList('xls')" class='btn-small btn-info'>Excel</a>
+            </div>
+        </div>
+    </div>
+    <div class="modal-body">
+        <form name="addEquipmentForm">
+                <div class="row-fluid">
+                    <div class="span12">
+                    <div class="pull-right legend" >Page: {{equipments.page}}, Showing records {{ ((tableParams.page - 1) * tableParams.count) + 1 }} to {{ (tableParams.page ) * tableParams.count }} of {{equipments.total}} </div>
+                    <table ng-show="equipments.rows.length > 0" class="table-bordered table table-striped pull-right" ng-table="tableParams">
+                        <tbody>
+                        <tr  ng-repeat="row in equipments.rows"  style="cursor:pointer">
+                            <td  data-title="'#'" class="number" style="width:20px" >{{row.no}}</td>
+                            <td  data-title="getLocalMessage('label.region')" style="max-width:80px" sortable="region"  >{{ row.region}}</td>
+                            <td data-title="getLocalMessage('label.district')" style="max-width:80px" sortable="district"  >{{ row.district}}</td>
+                            <td data-title="getLocalMessage('label.facility.name')" style="max-width:80px" sortable="facility_name"  >{{ row.facility_name }}</td>
+                            <td data-title="getLocalMessage('label.facility.type')" style="max-width:80px" sortable="facility_type" >{{ row.facility_type}}</td>
+                            <td data-title="getLocalMessage('label.equipment.manufacturer')" style="max-width:100px" sortable="manufacturer" >{{ row.manufacturer }}</td>
+                            <td data-title="getLocalMessage('label.equipment.model')" style="max-width:150px" sortable="model" >{{ row.model }}</td>
+                            <td data-title="getLocalMessage('label.equipment.capacity')" style="max-width:150px" sortable="capacity" >{{ row.capacity }}</td>
+                            <td data-title="getLocalMessage('label.equipment.working.status')" style="max-width:80px" sortable="working_status"  >{{ row.working_status }}</td>
+                            <td data-title="getLocalMessage('label.equipment.breakdown')" style="max-width:100px" sortable="break_down"  >{{ row.break_down }}</td>
+                        </tr>
+                        </tbody>
+                    </table>
+                        <h4 >
+                            <span  class="label label-default"><span openlmis-message="label.repair.management.totalcapacity"></span>:</span>
+                            <span  class="label label-primary">{{capacity[0].totalCapacity}}</span>
+                        </h4>
+                    </div>
+                </div>
+        </form>
+
+    </div>
+
+    <div class="modal-footer">
+        <input type="button"  ng-click="closeModal()"  class="btn btn-cancel" openlmis-message="button.close"/>
+    </div>
+
+</div>
+
+
+
+</div>
+
+
+

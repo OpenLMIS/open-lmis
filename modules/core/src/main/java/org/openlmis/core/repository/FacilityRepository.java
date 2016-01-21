@@ -12,9 +12,14 @@ package org.openlmis.core.repository;
 
 import lombok.NoArgsConstructor;
 import org.openlmis.core.domain.*;
+import org.openlmis.core.dto.FacilityContact;
+import org.openlmis.core.dto.FacilityGeoTreeDto;
+import org.openlmis.core.dto.FacilityImages;
+import org.openlmis.core.dto.FacilitySupervisor;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.core.repository.helper.CommaSeparator;
 import org.openlmis.core.repository.mapper.FacilityMapper;
+import org.openlmis.core.service.PriceScheduleService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.DuplicateKeyException;
@@ -55,12 +60,20 @@ public class FacilityRepository {
     this.facilityOperatorRepository = facilityOperatorRepository;
   }
 
+  @Autowired
+  private PriceScheduleService priceScheduleService;
+  
+  public List<Facility> getMailingLabels(){
+    return mapper.getMailingLabels();
+  }
+
   public void save(Facility facility) {
     try {
       validateAndSetFacilityOperatedBy(facility);
       validateAndSetFacilityType(facility);
       validateGeographicZone(facility);
       validateEnabledAndActive(facility);
+      validateAndSetPriceScheduleCategory(facility);
       if (facility.getId() == null) {
         mapper.insert(facility);
       } else {
@@ -76,6 +89,16 @@ public class FacilityRepository {
       throw new DataException("error.incorrect.length");
     }
   }
+
+    private void validateAndSetPriceScheduleCategory(Facility facility) {
+
+        PriceSchedule priceSchedule = facility.getPriceSchedule();
+        if (priceSchedule == null || priceSchedule.getId() != null)
+          return;
+
+        priceSchedule = priceScheduleService.getByCode(facility.getPriceSchedule().getCode());
+        facility.setPriceSchedule(priceSchedule);
+    }
 
   private void validateEnabledAndActive(Facility facility) {
     if (facility.getEnabled() == Boolean.FALSE && facility.getActive() == Boolean.TRUE)
@@ -145,6 +168,10 @@ public class FacilityRepository {
     return mapper.getAllInRequisitionGroups(commaSeparator.commaSeparateIds(requisitionGroups));
   }
 
+  public List<Facility> getAllByFacilityTypeCode(String typeCode) {
+    return mapper.getAllByFacilityTypeCode(typeCode);
+  }
+
   public Long getIdForCode(String code) {
     Long facilityId = mapper.getIdForCode(code);
 
@@ -210,4 +237,35 @@ public class FacilityRepository {
   public List<Facility> searchBy(String searchParam, String columnName, Pagination pagination) {
     return mapper.search(searchParam,columnName,pagination);
   }
+
+  public List<FacilityContact> getEmailContacts(Long facilityId) {
+    return mapper.getEmailContacts(facilityId);
+  }
+
+  public List<FacilityContact> getSmsContacts(Long facilityId) {
+    return mapper.getSmsContacts(facilityId);
+  }
+
+  public List<FacilitySupervisor> getFacilitySupervisors(Long facilityId) {  return mapper.getFacilitySupervisors(facilityId); }
+
+  public List<FacilityImages> getFacilityImages(Long facilityId) {
+    return mapper.getFacilityImages(facilityId);
+  }
+
+  public List<Facility> getAllForGeographicZone(Long geographicZoneId){
+      return mapper.getForGeographicZone(geographicZoneId);
+  }
+  public List<Facility> getFacilityByTypeAndRequisitionGroupId(Long facilityTypeId, Long rgroupId){
+      return mapper.getFacilitiesByTypeAndRequisitionGroupId(facilityTypeId, rgroupId);
+  }
+
+    public List<FacilityGeoTreeDto> getGeoRegionFacilityTree(Long userId) {
+        return mapper.getGeoRegionFacilityTree(userId);
+    }
+
+    public List<FacilityGeoTreeDto> getGeoDistrictFacility(Long userId)  {
+        return mapper.getGeoTreeDistricts(userId);
+    }
+
+    public List<FacilityGeoTreeDto> getGeoFlatFacilityTree(Long userId) {   return mapper.getGeoTreeFlatFacilities(userId);  }
 }

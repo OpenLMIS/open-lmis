@@ -50,7 +50,6 @@
         <filter-name>springSecurityFilterChain</filter-name>
         <url-pattern>/*</url-pattern>
     </filter-mapping>
-
     <servlet>
         <servlet-name>open-lmis</servlet-name>
         <servlet-class>org.openlmis.web.DispatcherServlet</servlet-class>

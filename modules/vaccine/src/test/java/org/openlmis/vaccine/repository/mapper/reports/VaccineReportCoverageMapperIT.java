@@ -1,0 +1,182 @@
+/*
+ * Electronic Logistics Management Information System (eLMIS) is a supply chain management system for health commodities in a developing country setting.
+ *
+ * Copyright (C) 2015  John Snow, Inc (JSI). This program was produced for the U.S. Agency for International Development (USAID). It was prepared under the USAID | DELIVER PROJECT, Task Order 4.
+ *
+ * This program is free software: you can redistribute it and/or modify it under the terms of the GNU Affero General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
+package org.openlmis.vaccine.repository.mapper.reports;
+
+import org.junit.Before;
+import org.junit.Test;
+import org.junit.experimental.categories.Category;
+import org.junit.runner.RunWith;
+
+import static com.natpryce.makeiteasy.MakeItEasy.a;
+import static com.natpryce.makeiteasy.MakeItEasy.make;
+import static com.natpryce.makeiteasy.MakeItEasy.with;
+import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.notNullValue;
+import static org.junit.Assert.*;
+import static org.openlmis.core.builder.ProcessingPeriodBuilder.defaultProcessingPeriod;
+import static org.openlmis.core.builder.ProcessingPeriodBuilder.scheduleId;
+
+import org.openlmis.core.builder.FacilityBuilder;
+import org.openlmis.core.builder.ProcessingPeriodBuilder;
+import org.openlmis.core.builder.ProcessingScheduleBuilder;
+import org.openlmis.core.builder.ProductBuilder;
+import org.openlmis.core.domain.Facility;
+import org.openlmis.core.domain.ProcessingPeriod;
+import org.openlmis.core.domain.ProcessingSchedule;
+import org.openlmis.core.domain.Product;
+import org.openlmis.core.repository.mapper.FacilityMapper;
+import org.openlmis.core.repository.mapper.ProcessingPeriodMapper;
+import org.openlmis.core.repository.mapper.ProcessingScheduleMapper;
+import org.openlmis.core.repository.mapper.ProductMapper;
+import org.openlmis.db.categories.IntegrationTests;
+import org.openlmis.vaccine.builders.reports.VaccineReportBuilder;
+import org.openlmis.vaccine.domain.VaccineProductDose;
+import org.openlmis.vaccine.domain.reports.VaccineCoverageItem;
+import org.openlmis.vaccine.domain.reports.VaccineReport;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.test.context.transaction.TransactionConfiguration;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
+
+
+@Category(IntegrationTests.class)
+@RunWith(SpringJUnit4ClassRunner.class)
+@ContextConfiguration(locations = "classpath*:test-applicationContext-vaccine.xml")
+@Transactional
+@TransactionConfiguration(defaultRollback = true, transactionManager = "openLmisTransactionManager")
+public class VaccineReportCoverageMapperIT {
+
+  @Autowired
+  VaccineReportCoverageMapper mapper;
+
+  @Autowired
+  VaccineReportMapper vaccineReportMapper;
+
+  @Autowired
+  ProcessingScheduleMapper processingScheduleMapper;
+
+  @Autowired
+  ProcessingPeriodMapper processingPeriodMapper;
+
+  @Autowired
+  ProductMapper productMapper;
+
+  @Autowired
+  FacilityMapper facilityMapper;
+
+
+  private VaccineReport report;
+
+  private Product product;
+
+  @Before
+  public void setUp() throws Exception {
+    Facility facility = make(a(FacilityBuilder.defaultFacility));
+    facilityMapper.insert(facility);
+
+    ProcessingSchedule processingSchedule = make(a(ProcessingScheduleBuilder.defaultProcessingSchedule));
+    processingScheduleMapper.insert(processingSchedule);
+
+    ProcessingPeriod processingPeriod = make(a(defaultProcessingPeriod,
+      with(scheduleId, processingSchedule.getId()),
+      with(ProcessingPeriodBuilder.name, "Period1")));
+
+    processingPeriodMapper.insert(processingPeriod);
+
+    report = make(a(VaccineReportBuilder.defaultVaccineReport));
+    report.setPeriodId(processingPeriod.getId());
+    report.setFacilityId(facility.getId());
+
+    vaccineReportMapper.insert(report);
+
+    product = make(a(ProductBuilder.defaultProduct));
+    productMapper.insert(product);
+  }
+
+  private VaccineCoverageItem getVaccineCoverageItem() {
+    VaccineCoverageItem item = new VaccineCoverageItem();
+    item.setReportId(report.getId());
+    item.setDoseId(1L);
+    item.setDisplayName("the name");
+    item.setDisplayOrder(1L);
+    item.setTrackMale(true);
+    item.setTrackFemale(false);
+    item.setProductId(product.getId());
+    return item;
+  }
+
+  @Test
+  public void shouldInsert() throws Exception {
+    VaccineCoverageItem item = getVaccineCoverageItem();
+
+    Integer count = mapper.insert(item);
+    assertThat(count, is(1));
+    assertThat(item.getId(), is(notNullValue()));
+  }
+
+
+
+  @Test
+  public void shouldUpdate() throws Exception {
+    VaccineCoverageItem item = getVaccineCoverageItem();
+    mapper.insert(item);
+
+    item.setDisplayName("something different");
+    mapper.update(item);
+
+    VaccineCoverageItem returned = mapper.getById(item.getId());
+    assertThat(returned.getDisplayName(), is(item.getDisplayName()));
+  }
+
+  @Test
+  public void shouldGetById() throws Exception {
+    VaccineCoverageItem item = getVaccineCoverageItem();
+    mapper.insert(item);
+
+    VaccineCoverageItem returned = mapper.getById(item.getId());
+    assertThat(returned.getDisplayName(), is(item.getDisplayName()));
+  }
+
+  @Test
+  public void shouldGetCoverageByReportProductDosage() throws Exception {
+    VaccineCoverageItem item = getVaccineCoverageItem();
+    mapper.insert(item);
+
+    VaccineCoverageItem returned = mapper.getCoverageByReportProductDosage(report.getId(), product.getId(), 1L);
+    assertThat(returned.getDisplayName(), is(item.getDisplayName()));
+  }
+
+  @Test
+  public void shouldGetLineItems() throws Exception {
+    VaccineCoverageItem item = getVaccineCoverageItem();
+    mapper.insert(item);
+
+    List<VaccineCoverageItem> returned = mapper.getLineItems(report.getId());
+    assertThat(returned.size(), is(1));
+  }
+
+  @Test
+  public void shouldGetVaccineDoseDetail() throws Exception{
+    VaccineCoverageItem item = getVaccineCoverageItem();
+    mapper.insert(item);
+
+    //TODO: insert the right program products
+    //Irregardless of the note above, this test should serve some purpose because if it does not throw error,
+    //it means that the schema is compatible with this code.
+    VaccineProductDose dose = mapper.getVaccineDoseDetail(item.getId());
+
+  }
+}

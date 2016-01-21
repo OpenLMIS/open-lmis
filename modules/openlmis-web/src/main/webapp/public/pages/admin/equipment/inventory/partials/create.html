@@ -1,0 +1,391 @@
+<!--
+  ~ Electronic Logistics Management Information System (eLMIS) is a supply chain management system for health commodities in a developing country setting.
+  ~
+  ~ Copyright (C) 2015  John Snow, Inc (JSI). This program was produced for the U.S. Agency for International Development (USAID). It was prepared under the USAID | DELIVER PROJECT, Task Order 4.
+  ~
+  ~ This program is free software: you can redistribute it and/or modify it under the terms of the GNU Affero General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
+  ~
+  ~ This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Affero General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU Affero General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
+  -->
+<div xmlns="http://www.w3.org/1999/html">
+  <h2>
+    <span ng-show="inventory.id" openlmis-message="label.equipment.inventory.edit"></span>
+    <span ng-show="inventory.id == undefined" openlmis-message="label.equipment.inventory.add"></span>
+  </h2>
+
+  <div class="clearfix"></div>
+
+  <form ng-submit="saveInventory()" name="inventoryForm" novalidate>
+    <div class="app-form">
+      <h3 id="basicInformationLabel" openlmis-message="label.basicInformation"></h3>
+
+      <div class="form-group">
+        <div class="form-row clearfix">
+          <div class="form-cell">
+            <label for="facility">
+              <span openlmis-message="label.equipment.facility"></span>
+              <span class="label-required">*</span>
+            </label>
+
+            <div class="form-field" ng-if="from == 0">
+              <input type="text" ng-model="facilityDisplayName" readonly="readonly" />
+              <input type="hidden" ng-model="inventory.facilityId" id="facility" name="facility" />
+            </div>
+            <div class="form-field" ng-if="from == 1 && screenType == 'edit'">
+              <select style="width: 250px;" ui-select2 ng-model="inventory.facilityId" id="facility"
+                      name="facility" disabled>
+                <option ng-repeat="facility in facilities" ng-selected="facility.id == inventory.facilityId"
+                        value="{{facility.id}}">
+                  {{facility.name}}
+                </option>
+              </select>
+              <input type="hidden" ng-model="inventory.facilityId" id="facility" name="facility" />
+            </div>
+            <div class="form-field" ng-if="from == 1 && screenType != 'edit'">
+              <select style="width: 250px;" ui-select2 ng-model="inventory.facilityId" id="facility"
+                      name="facility" ng-required="true">
+                <option ng-repeat="facility in facilities" ng-selected="facility.id == inventory.facilityId"
+                        value="{{facility.id}}">
+                  {{facility.name}}
+                </option>
+              </select>
+              <span class="field-error" ng-show="inventoryForm.facility.$error.required && showError"
+                    openlmis-message="missing.value"></span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div ng-if="equipmentType.coldChain == true">
+        <div class="form-group">
+          <div class="form-row clearfix">
+            <div class="form-cell">
+              <label for="manufacturer">
+                <span openlmis-message="label.equipment.manufacturer"></span>
+                <span class="label-required">*</span>
+              </label>
+              <div class="form-field">
+                <div ng-if="screenType === 'create'">
+                  <select style="width: 250px;" ui-select2 ng-model="selected.manufacturer" id="manufacturer"
+                          name="manufacturer" ng-change="updateModels()" ng-required="true">
+                    <option value=""> </option>
+                    <option ng-repeat="manufacturer in manufacturers"
+                            ng-selected="manufacturer == inventory.equipment.manufacturer" value="{{manufacturer}}">
+                      {{manufacturer}}
+                    </option>
+                  </select>
+                </div>
+                <div ng-if="screenType === 'edit'">
+                  <input type="text" ng-model="inventory.equipment.manufacturer" id="manufacturer" name="manufacturer"
+                         readonly="readonly" />
+                </div>
+              <span class="field-error" ng-show="inventoryForm.manufacturer.$error.required && showError"
+                    openlmis-message="missing.value"></span>
+              </div>
+            </div>
+
+            <div class="form-cell">
+              <label for="type">
+                <span openlmis-message="label.equipment.equipment"></span>
+                <span class="label-required">*</span>
+              </label>
+              <div class="form-field">
+                <input type="text" ng-model="inventory.equipment.name" readonly="readonly" />
+                <input type="hidden" ng-model="inventory.equipmentId" id="type" name="type" ng-required="true" />
+              <span class="field-error" ng-show="inventoryForm.type.$error.required && showError"
+                    openlmis-message="missing.value"></span>
+              </div>
+            </div>
+          </div>
+
+          <div class="form-row clearfix">
+            <div class="form-cell">
+              <label for="model">
+                <span openlmis-message="label.equipment.model"></span>
+                <span class="label-required">*</span>
+              </label>
+              <div class="form-field">
+                <div ng-if="screenType === 'create'">
+                  <select style="width: 250px;" ui-select2 ng-model="selected.model" id="model"
+                          name="model" ng-change="updateEquipmentInfo()" ng-required="true">
+                    <option ng-repeat="model in models"
+                            ng-selected="model == inventory.equipment.model" value="{{model}}">
+                      {{model}}
+                    </option>
+                  </select>
+                </div>
+                <div ng-if="screenType === 'edit'">
+                  <input type="text" ng-model="inventory.equipment.model" id="model" name="model" readonly="readonly" />
+                </div>
+              <span class="field-error" ng-show="inventoryForm.model.$error.required && showError"
+                    openlmis-message="missing.value"></span>
+              </div>
+            </div>
+
+            <div class="form-cell">
+              <label for="source">
+                <span openlmis-message="label.equipment.energy.source"></span>
+              </label>
+              <div class="form-field">
+                <input ng-model="inventory.equipment.energyType.name" name="source" id="source" type="text" maxlength="50"
+                       readonly="readonly"/>
+              <span class="field-error" ng-show="inventoryForm.source.$error.required && showError"
+                    openlmis-message="missing.value"></span>
+              </div>
+            </div>
+          </div>
+          <div class="form-row clearfix">
+            <div class="form-cell">
+              <label for="serialNumber">
+                <span openlmis-message="label.equipment.serial"></span>
+              </label>
+              <div class="form-field">
+                <input ng-model="inventory.serialNumber" name="serialNumber" id="serialNumber" type="text"
+                       maxlength="50"/>
+              <span class="field-error" ng-show="inventoryForm.serialNumber.$error.required && showError"
+                    openlmis-message="missing.value"></span>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+        <div class="form-group">
+          <div class="form-row clearfix">
+            <div class="form-cell">
+              <label for="operationalStatus">
+                <span openlmis-message="label.equipment.status"></span>
+                <span class="label-required">*</span>
+              </label>
+              <div class="form-field">
+                <select style="width: 250px;" ui-select2 ng-model="inventory.operationalStatusId" id="operationalStatus"
+                        name="operationalStatus" ng-required="true" ng-change="checkForBadStatus()">
+                  <option value="{{status.id}}" ng-repeat="status in cceOperationalStatusList | orderBy: 'displayOrder'"
+                          ng-selected="status.id == inventory.operationalStatusId">{{status.name}}
+                  </option>
+                </select>
+              <span class="field-error" ng-show="inventoryForm.operationalStatus.$error.required && showError"
+                    openlmis-message="missing.value"></span>
+              </div>
+            </div>
+
+            <div class="form-cell" ng-if="badStatusSelected">
+              <label for="notFunctionalStatus">
+                <span openlmis-message="label.equipment.cce.not.functional.status"></span>
+                <span class="label-required">*</span>
+              </label>
+              <div class="form-field">
+                <select style="width: 250px;" ui-select2 ng-model="inventory.notFunctionalStatusId" id="notFunctionalStatus"
+                        name="notFunctionalStatus" ng-required="true">
+                  <option value="{{status.id}}" ng-repeat="status in cceNotFunctionalStatusList | orderBy: 'displayOrder'"
+                          ng-selected="status.id == inventory.notFunctionalStatusId">{{status.name}}
+                  </option>
+                </select>
+              <span class="field-error" ng-show="inventoryForm.notFunctionalStatus.$error.required && showError"
+                    openlmis-message="missing.value"></span>
+              </div>
+            </div>
+          </div>
+
+          <div class="form-row clearfix">
+            <div class="form-cell">
+              <label for="isActive">
+                <input ng-model="inventory.isActive" name="isActive" id="isActive" type="checkbox"
+                       ng-checked="!badStatusSelected"/>
+                <span openlmis-message="label.equipment.is.active"></span>
+              </label>
+            </div>
+
+            <div class="form-cell">
+              <label for="dateDecommissioned">
+                <span openlmis-message="label.equipment.date.decommissioned"></span>
+              </label>
+              <div class="form-field">
+                <input ng-model="inventory.dateDecommissionedString" ng-disabled="inventory.isActive"
+                       name="dateDecommissioned" ui-date="{dateFormat: 'dd/mm/yy', changeYear: true}"
+                       ui-date-format="yy-mm-dd" id="dateDecommissioned">
+                <span class="field-error" ng-show="inventoryForm.dateDecommissionedString.$error.required && showError"
+                      openlmis-message="missing.value"></span>
+              </div>
+            </div>
+          </div>
+
+          <div class="form-row clearfix">
+            <div class="form-cell">
+              <label for="year">
+                <span openlmis-message="label.equipment.year.of.installation"></span>
+              </label>
+              <div class="form-field">
+                <input ng-model="inventory.yearOfInstallation" name="year" id="year" type="number" min="1950"
+                       max="{{max_year}}"/>
+              <span class="field-error" ng-show="inventoryForm.year.$error.required && showError"
+                    openlmis-message="missing.value"></span>
+              <span class="field-error"
+                    ng-show="(inventoryForm.year.$error.min || inventoryForm.year.$error.max) && showError">Enter a valid Year</span>
+              </div>
+            </div>
+
+          </div>
+
+          <div class="form-row clearfix">
+            <div class="form-cell">
+              <label for="hasStabilizer">
+                <input ng-model="inventory.hasStabilizer" name="hasStabilizer" id="hasStabilizer" type="checkbox" />
+                <span openlmis-message="label.equipment.has.stabilizer"></span>
+              </label>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="form-group" ng-if="equipmentType.coldChain != true">
+        <div class="form-row clearfix">
+          <div class="form-cell">
+            <label for="equipmentType">
+              <span openlmis-message="label.equipment.type"></span>
+              <span class="label-required">*</span>
+            </label>
+
+            <div class="form-field">
+              <input type="text" ng-model="inventory.equipment.equipmentType.name" readonly="readonly" />
+              <input type="hidden" ng-model="inventory.equipment.equipmentTypeId" id="equipmentType" name="equipmentType" />
+              <span class="field-error" ng-show="inventoryForm.equipmentType.$error.required && showError"
+                    openlmis-message="missing.value"></span>
+            </div>
+          </div>
+          <div class="form-cell">
+            <label for="model">
+              <span openlmis-message="label.equipment.model"></span>
+              <span class="label-required">*</span>
+            </label>
+
+            <div class="form-field">
+              <input ng-model="inventory.equipment.model" id="model" name="model" type="text" maxlength="200" ng-required="true"/>
+              <span class="field-error" ng-show="inventoryForm.model.$error.required && showError"
+                    openlmis-message="missing.value"></span>
+            </div>
+          </div>
+        </div>
+        <div class="form-row clearfix">
+          <div class="form-cell">
+            <label for="operationalStatus">
+              <span openlmis-message="label.equipment.status"></span>
+              <span class="label-required">*</span>
+            </label>
+
+            <div class="form-field">
+              <select style="width: 250px;" ui-select2 ng-model="inventory.operationalStatusId" id="operationalStatus"
+                      name="operationalStatus" ng-required="true">
+                <option value="{{status.id}}" ng-repeat="status in labOperationalStatusList | orderBy: 'displayOrder'"
+                        ng-selected="status.id == inventory.operationalStatusId">{{status.name}}
+                </option>
+              </select>
+              <span class="field-error" ng-show="inventoryForm.operationalStatus.$error.required && showError"
+                    openlmis-message="missing.value"></span>
+            </div>
+          </div>
+          <div class="form-cell">
+            <label for="serialNumber">
+              <span openlmis-message="label.equipment.serial"></span>
+            </label>
+
+            <div class="form-field">
+              <input ng-model="inventory.serialNumber" name="serialNumber" id="serialNumber" type="text"
+                     maxlength="50"/>
+              <span class="field-error" ng-show="inventoryForm.serialNumber.$error.required && showError"
+                    openlmis-message="missing.value"></span>
+            </div>
+          </div>
+        </div>
+        <div class="form-row clearfix">
+          <div class="form-cell">
+            <label for="manufacturer">
+              <span openlmis-message="label.equipment.manufacturer"></span>
+              <span class="label-required">*</span>
+            </label>
+
+            <div class="form-field">
+              <input ng-model="inventory.equipment.manufacturer" name="manufacturer" id="manufacturer" type="text"
+                     maxlength="50" ng-required="true"/>
+              <span class="field-error" ng-show="inventoryForm.manufacturer.$error.required && showError"
+                    openlmis-message="missing.value"></span>
+            </div>
+          </div>
+          <div class="form-cell">
+            <label for="source">
+              <span openlmis-message="label.equipment.energy.source"></span>
+            </label>
+
+            <div class="form-field">
+              <select style="width: 250px;" ui-select2 ng-model="inventory.equipment.energyTypeId" id="source"
+                      name="source">
+                <option value="{{type.id}}" ng-repeat="type in energyTypes"
+                        ng-selected="type.id == inventory.equipment.energyTypeId">{{type.name}}
+                </option>
+              </select>
+              <span class="field-error" ng-show="inventoryForm.source.$error.required && showError"
+                    openlmis-message="missing.value"></span>
+            </div>
+          </div>
+        </div>
+        <div class="clearfix"></div>
+        <div class="container-fluid">
+          <div class="row-fluid">
+            <div class="accordion">
+              <div class="pull-right control-accordion">
+                <a id="expandAll" href="" onClick="accordion.expandCollapse('expand')"
+                   openlmis-message="label.expand.all"></a>
+                &nbsp;/
+                <a id="collapseAll" href="" onClick="accordion.expandCollapse('collapse')"
+                   openlmis-message="label.collapse.all"></a>
+              </div>
+
+              <div class="clearfix"></div>
+              <div class="accordion-section">
+                <div class="accordion-heading" onClick="accordion.expandCollapseToggle(this)">
+                <span>
+                  <strong>+</strong>
+                  <a id="fundingInformation" href="" openlmis-message="label.equipment.group.funding.information"></a>
+                </span>
+                </div>
+                <div class="accordion-body">
+                  <ng-include
+                    src="'/public/pages/admin/equipment/inventory/partials/funding-information.html'"></ng-include>
+                </div>
+              </div>
+              <div class="clearfix"></div>
+              <div class="accordion-section">
+                <div class="accordion-heading" onClick="accordion.expandCollapseToggle(this)">
+                <span>
+                  <strong>+</strong>
+                  <a id="assessmentInformation" href=""
+                     openlmis-message="label.equipment.group.assessment.information"></a>
+                </span>
+                </div>
+                <div class="accordion-body">
+                  <ng-include
+                    src="'/public/pages/admin/equipment/inventory/partials/assessment-information.html'"></ng-include>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+
+      <div form-toolbar id="action_buttons" class="action-buttons">
+        <div class="form-cell button-row">
+          <input id="saveButton" type="submit" id="save-button" class="btn btn-primary save-button"
+                 openlmis-message="button.save"/>
+          <input id="cancelButton" type="button" class="btn btn-cancel cancel-button" openlmis-message="button.cancel"
+                 ng-click="cancelCreateInventory()"/>
+        </div>
+
+        <div class="toolbar-error" id="saveErrorMsgDiv" ng-bind="error" ng-show="error"/>
+        <div class="toolbar-success" id="saveSuccessMsgDiv" openlmis-message="message" ng-show="message"></div>
+      </div>
+    </div>
+  </form>
+</div>

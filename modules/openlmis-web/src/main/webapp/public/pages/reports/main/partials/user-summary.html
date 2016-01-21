@@ -1,0 +1,144 @@
+<!--
+  ~ Electronic Logistics Management Information System (eLMIS) is a supply chain management system for health commodities in a developing country setting.
+  ~
+  ~ Copyright (C) 2015  John Snow, Inc (JSI). This program was produced for the U.S. Agency for International Development (USAID). It was prepared under the USAID | DELIVER PROJECT, Task Order 4.
+  ~
+  ~ This program is free software: you can redistribute it and/or modify it under the terms of the GNU Affero General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
+  ~
+  ~ This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Affero General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU Affero General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
+  -->
+
+<div class="alert alert-success" id="saveSuccessMsgDiv" ng-bind="message" ng-show="message"/>
+<div class="container-fluid">
+    <div class="box row-fluid">
+        <div class="box-header">
+            <h2 openlmis-message="report.title.user.summary"><i class="icon-edit"></i><span class="break"></span></h2>
+
+            <div class="box-icon">
+              <a id="pdf-button" ng-show="filterForm.$valid" href="" ng-click="exportReport('PDF')" class='btn-small btn-info'><span openlmis-message="label.pdf"></span></a>
+              <a id="xls-button" ng-show="filterForm.$valid" href="" ng-click="exportReport('XLS')" class='btn-small btn-info'><span openlmis-message="label.excel"></span></a>
+            </div>
+        </div>
+        <div>
+            <div class="row-fluid">
+                <div class="sidebar">
+                    <div class="app-form" style="padding: 5px;">
+                        <form ng-submit="filterGrid()" name="filterForm" novalidate>
+                            <div filter-container class="clearfix">
+
+                                <div class="clearfix ">
+                                    <div class="form-cell horizontalFilters">
+                                        <label class="labels" openlmis-message="label.supervisory.node"><span
+                                                class="label-required">*</span></label>
+
+                                        <div class="form-fields">
+                                            <select ng-selected="filterObject.supervisoryNodeId==option.id" ui-select2
+                                                    style="width:200px;" class="large-input" name="supervisoryNode"
+                                                    ng-model="filterObject.supervisoryNodeId"
+                                                    ng-change="processSupervisoryNodeChange()">
+
+                                                <option ng-repeat="option in supervisoryNodes" value="{{option.id}}">
+                                                    {{option.name}}
+                                                </option>
+                                            </select>
+                                        </div>
+                                    </div>
+
+                                </div>
+                                <div class="clearfix ">
+                                    <div class="form-cell horizontalFilters">
+                                        <label class="labels" openlmis-message="label.role"><span
+                                                class="label-required">*</span></label>
+
+                                        <div class="form-fields">
+                                            <select ng-selected="filterObject.roleId==option.id" ui-select2
+                                                    style="width:200px;" class="large-input" name="role"
+                                                    ng-change="processSupervisoryNodeChange()"
+                                                    ng-model="filterObject.roleId">
+
+                                                <option ng-repeat="option in roles" value="{{option.id}}">
+                                                    {{option.name}}
+                                                </option>
+                                            </select>
+                                        </div>
+                                    </div>
+
+                                </div>
+                                <div class="clearfix ">
+                                    <div class="form-cell horizontalFilters">
+                                        <label class="labels" openlmis-message="label.program"><span
+                                                class="label-required">*</span></label>
+
+                                        <div class="form-fields">
+                                            <select ng-selected="filterObject.programId==option.id" ui-select2
+                                                    style="width:200px;" class="large-input" name="program"
+                                                    ng-change="processSupervisoryNodeChange()"
+                                                    ng-model="filterObject.programId">
+
+                                                <option ng-repeat="option in programs" value="{{option.id}}">
+                                                    {{option.name}}
+                                                </option>
+                                            </select>
+                                        </div>
+                                    </div>
+
+                                </div>
+
+
+                            </div>
+
+                        </form>
+                    </div>
+                </div>
+                <div class="content-body">
+                    <div class="span8">
+                        <div ng-show="UserRolePieChartData.length==0">
+                            <label class="chart-note">
+                                No data to render chart
+
+                            </label>
+                        </div>
+
+                        <div ng-show="UserRolePieChartData.length>0">
+                            <label class="labels" style="text-align: center;font-family: bold"
+                                   openlmis-message="label.no.users"></span></label>
+
+                            <div id="userSummaryReportLegend" class="chartLegend"></div>
+                            <div></div>
+                            <a-float id="stocked-out-reporting" style="align-items: center"
+                                     af-option="userSummaryPieChartOption" af-data="UserRolePieChartData"
+                                     class="chart"></a-float>
+                        </div>
+                    </div>
+                    <ng-div class="span4">
+                        <div ng-show="datarows.length > 0">
+                            <table ng-show="datarows.length > 0" class="table-bordered table table-striped"
+                                   ng-table="tableParams">
+
+                                <tbody>
+                                <tr ng-repeat="row in datarows">
+
+                                    <td data-title="'Role Name'" class="number" style="width:20px">{{ row.roleName }}
+                                    </td>
+                                    <td data-title="'Total Users'" class="number" style="width:20px">{{ row.totalRoles
+                                        }}
+                                    </td>
+                                </tr>
+                                </tbody>
+
+
+                        </div>
+                    </ng-div>
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+</div>

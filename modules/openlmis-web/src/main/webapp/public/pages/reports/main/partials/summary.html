@@ -1,0 +1,105 @@
+<!--
+  ~ Electronic Logistics Management Information System (eLMIS) is a supply chain management system for health commodities in a developing country setting.
+  ~
+  ~ Copyright (C) 2015  John Snow, Inc (JSI). This program was produced for the U.S. Agency for International Development (USAID). It was prepared under the USAID | DELIVER PROJECT, Task Order 4.
+  ~
+  ~ This program is free software: you can redistribute it and/or modify it under the terms of the GNU Affero General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
+  ~
+  ~ This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Affero General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU Affero General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
+  -->
+
+<div class="container-fluid">
+  <div class="box row-fluid">
+    <div class="box-header">
+      <h2><i class="icon-edit"></i><span class="break"></span> <span openlmis-message="label.report.aggregate.summary"></span></h2>
+
+      <div class="box-icon">
+        <a id="pdf-button" ng-show="filterForm.$valid" href="" ng-click="exportReport('PDF')" class='btn-small btn-info'><span openlmis-message="label.pdf"></span></a>
+        <a id="xls-button" ng-show="filterForm.$valid" href="" ng-click="exportReport('XLS')" class='btn-small btn-info'><span openlmis-message="label.excel"></span></a>
+      </div>
+    </div>
+    <div>
+      <div class="row-fluid">
+        <div class="sidebar">
+          <div class="app-form" style="padding: 5px;">
+            <form ng-submit="filterGrid()" name="filterForm" novalidate>
+              <div filter-container class="clearfix">
+
+                <program-filter class="form-cell horizontalFilters" required="true"></program-filter>
+                <schedule-filter class="form-cell horizontalFilters" required="true"></schedule-filter>
+                <year-filter class="form-cell horizontalFilters" required="true"></year-filter>
+                <period-filter class="form-cell horizontalFilters" required="true"></period-filter>
+                <div class="form-cell horizontalFilters pull-right">
+                  <label><span openlmis-message="label.report.view.disaggregated"></span> <input type="checkbox" ng-model="filter.disaggregated"
+                                                   ng-change="filterChanged()"/></label>
+                </div>
+                <div ng-hide="showMoreFilters" class="clearfix form-cell horizontalFilters">
+                  <br/>
+                  <a class="button" href="javascript:void()" ng-click="toggleMoreFilters()" openlmis-message="link.report.show.more.filters"></a>
+                </div>
+
+                <div ng-hide="!showMoreFilters">
+                  <zone-filter class="form-cell horizontalFilters"></zone-filter>
+                  <facility-type-filter class="form-cell horizontalFilters"></facility-type-filter>
+                  <facility-filter class="form-cell horizontalFilters"></facility-filter>
+                  <product-category-filter class="form-cell horizontalFilters"></product-category-filter>
+                  <product-filter class="form-cell horizontalFilters"></product-filter>
+                  <div class="clearfix form-cell horizontalFilters">
+                    <br/>
+                    <a class="button" href="javascript:void()" ng-click="toggleMoreFilters()">Less Filters</a>
+                  </div>
+                </div>
+
+              </div>
+            </form>
+          </div>
+        </div>
+        <div class="content-body">
+
+          <table client-side-sort-pagination class="table table-bordered"
+                 ng-show="data == undefined || data.length == 0">
+            <tr>
+              <td openlmis-message="label.report.no.data.to.show"></td>
+            </tr>
+          </table>
+
+          <table ng-show="datarows.length > 0" class="table-bordered table table-striped" ng-table="tableParams">
+
+            <tbody>
+            <tr ng-repeat="row in datarows">
+              <td ng-show="filter.disaggregated" sortable="facilityCode" data-title="getLocalMessage('label.facility.code')">{{ row.facilityCode}} </td>
+              <td ng-show="filter.disaggregated" sortable="facility" data-title="getLocalMessage('label.facility')">{{ row.facility}} </td>
+              <td ng-show="filter.disaggregated" sortable="facilityType" data-title="getLocalMessage('label.facility.type')">{{
+                                                                                                     row.facilityType}} </td>
+              <td data-title="getLocalMessage('label.product.code')" sortable="code">{{ row.code }}</td>
+              <td data-title="getLocalMessage('label.product')" sortable="product">{{ row.product }}</td>
+              <td class="number" sortable="openingBalance" data-title="getLocalMessage('label.opening.balance')">{{ row.openingBalance |
+                                                                                     number}}</td>
+              <td class="number" sortable="receipts" data-title="getLocalMessage('label.receipts')">{{ row.receipts | number}}</td>
+              <td class="number" sortable="issues" data-title="getLocalMessage('label.consumption')">{{ row.issues | number}}</td>
+              <td class="number" sortable="adjustments" data-title="getLocalMessage('label.adjustments')">{{ row.adjustments | number}}</td>
+              <td class="number" sortable="closingBalance" data-title="getLocalMessage('label.closing.balance')">{{ row.closingBalance |
+                                                                                    number}}</td>
+              <td class="number" sortable="reorderAmount" data-title="getLocalMessage('label.reorder.amount')">{{ row.reorderAmount |
+                                                                                        number}}</td>
+            </tr>
+            </tbody>
+          </table>
+
+        </div>
+        <div class="pull-right">
+          <a
+            ng-href="/public/pages/reports/reporting-rate/index.html#/list?schedule={{filter.schedule}}&year={{filter.schedule}}&program={{filter.program}}&period={{filter.period}}">
+            View Reporting Rate
+          </a>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+</div>
+
+</div>

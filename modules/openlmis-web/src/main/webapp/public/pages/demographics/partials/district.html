@@ -1,0 +1,176 @@
+<!--
+  ~ Electronic Logistics Management Information System (eLMIS) is a supply chain management system for health commodities in a developing country setting.
+  ~
+  ~ Copyright (C) 2015  John Snow, Inc (JSI). This program was produced for the U.S. Agency for International Development (USAID). It was prepared under the USAID | DELIVER PROJECT, Task Order 4.
+  ~
+  ~ This program is free software: you can redistribute it and/or modify it under the terms of the GNU Affero General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
+  ~
+  ~ This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Affero General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU Affero General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
+  -->
+
+<div class="content-body">
+  <h2>
+    <span openlmis-message="header.demographic.district"></span>
+  </h2>
+</div>
+<div>
+  <div class="form-inline">
+    <div class="pull-right checkbox">
+
+      <label>
+        <input ng-model="showFacilityAggregate" type="checkbox">
+        <span>Show Facility Aggregate</span>
+      </label>
+
+      <label>
+        <input ng-model="autoCalculate" type="checkbox">
+        <span openlmis-message="label.demographic.estimate.auto.calculate"></span>
+      </label>
+    </div>
+    <div class="pull-left padding2px">
+      <label openlmis-message="label.program"></label>
+      <select style="width:200px" ui-select2="{dropdownAutoWidth : true}" ng-model="program"
+              ng-change="onParamChanged()">
+        <option ng-repeat="p in programs" value="{{p.id}}">{{p.name}}</option>
+      </select>
+    </div>
+    <div class="form-inline padding2px">
+      <label>
+        <span openlmis-message="label.demographic.parameter.year"></span>
+      </label>
+      <select style="width:200px" ui-select2="{dropdownAutoWidth : true}" ng-change="onParamChanged();" ng-model="year"
+              placeholder="year">
+        <option ng-repeat="y in years" ng-selected="year == y" value="{{y}}">{{y}}</option>
+      </select>
+    </div>
+  </div>
+  <div class="padding2px"></div>
+  <div class="padding2px"></div>
+
+
+  <div class="clearfix padding2px"></div>
+  <div  class="rnr-table">
+
+    <div adjust-height bottom-offset="180" tab-scroll>
+      <div class="float-left left-table parent">
+        <table class="table table-bordered scrollable">
+          <thead>
+          <tr style="height: 40px;"  class="text-row gradient-header">
+            <th class="span1">
+              <span openlmis-message="label.demographic.district.code"></span>
+            </th>
+            <th class="span3">
+              <span openlmis-message="label.demographic.district.name"></span>
+            </th>
+          </tr>
+          </thead>
+          <tbody>
+          <tr class="text-row gradient-header" ng-repeat-start="facility in form.estimateLineItems" ng-show="showParent($index)">
+            <th colspan="2">Region: {{facility.parentName}}</th>
+          </tr>
+          <tr class="text-row">
+            <td class="cell-input">
+              <span class="cell-text">{{facility.code}}</span>
+            </td>
+            <td class="cell-input">
+              <span class="cell-text">
+                {{facility.name}}
+              </span>
+            </td>
+          </tr>
+          <tr ng-repeat-end></tr>
+          </tbody>
+        </table>
+      </div>
+
+
+    <div class="float-left right-table parent" custom-horizontal-scroll">
+      <table class="table table-bordered scrollable">
+        <thead>
+        <tr style="height: 40px;" class="text-row gradient-header">
+          <th ng-repeat="category in categories" colspan="{{showFacilityAggregate == true ? 2 : 1 }}">
+            {{category.name}}
+          </th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr class="text-row gradient-header" ng-repeat-start="facility in form.estimateLineItems" ng-show="showParent($index)">
+          <th  ng-repeat-start="category in categories" ng-show="showFacilityAggregate"></th>
+          <th  ng-repeat-end class="number">
+            {{districtSummary.getSummary(facility.parentId, category, year) | number : 0}}</th>
+        </tr>
+        <tr class="text-row">
+          <td ng-repeat-start="category in categories" ng-show="showFacilityAggregate" class="number cell-input padding2px">
+            <span class="cell-text">{{facility.getFacilityAggregateByCategory(category, year).value}}</span>
+          </td>
+          <td ng-repeat-end class="cell-input number"  style="text-align: right">
+              <span class="ng-scope" ng-if="category.isPrimaryEstimate">
+                <span class="position-relative ng-scope">
+                  <input
+                    ng-disabled="facility.getByCategory(category, year).isFinal"
+                    class="number numeric-input"
+                    maxlength="8"
+                    ng-change="facility.populationChanged(autoCalculate)"
+                    ng-model="facility.getByCategory(category, year).value"
+                    numeric-validator="positiveInteger"
+                    type="text"/>
+                </span>
+              </span>
+              <span class="ng-scope" ng-if="!category.isPrimaryEstimate">
+                <span class="position-relative ng-scope">
+                  <input
+                    ng-disabled="facility.getByCategory(category, year).isFinal"
+                    class="number numeric-input"
+                    maxlength="8"
+                    ng-model="facility.getByCategory(category, year).value"
+                    numeric-validator="positiveInteger"
+                    type="text"/>
+                </span>
+              </span>
+          </td>
+        </tr>
+        <tr ng-repeat-end></tr>
+        </tbody>
+      </table>
+    </div>
+    <openlmis-pagination num-pages="pageCount" current-page="currentPage" max-size="10"
+                         check-error-on-page="checkErrorOnPage(page)"></openlmis-pagination>
+  </div>
+  <div form-toolbar id="action_buttons" class="action-buttons">
+    <div class="form-cell button-row">
+      <input ng-disabled="isFinalized"
+             class="btn btn-primary save-button"
+             id="save-button" id="saveButton"
+             ng-click="save()"
+             openlmis-message="button.save"
+             type="submit"/>
+      <input ng-disabled="isFinalized"
+             ng-show="hasPermission('FINALIZE_DEMOGRAPHIC_ESTIMATES')"
+             class="btn btn-primary save-button"
+             id="finalizeButton"
+             ng-click="finalize()"
+             openlmis-message="button.finalize"
+             type="submit"/>
+      <input ng-disabled="!isFinalized"
+             ng-show="hasPermission('UNLOCK_FINALIZED_DEMOGRAPHIC_ESTIMATES')"
+             class="btn btn-primary save-button"
+             id="undoFinalizeButton"
+             ng-click="undoFinalize()"
+             openlmis-message="button.undo.finalize"
+             type="submit"/>
+      <input id="cancelButton"
+             type="button"
+             class="btn btn-cancel cancel-button"
+             openlmis-message="button.cancel"
+             ng-click="cancel()"/>
+    </div>
+
+    <div class="toolbar-error" id="saveErrorMsgDiv">
+      <span openlmis-message="error" ng-show="error"></span>&nbsp;
+      <span ng-show="errorProgram" ng-bind="errorProgram"></span>
+    </div>
+    <div class="toolbar-success" id="saveSuccessMsgDiv" openlmis-message="message" ng-show="message"></div>
+  </div>
+</div>

@@ -1,0 +1,51 @@
+<!--
+  ~ Electronic Logistics Management Information System (eLMIS) is a supply chain management system for health commodities in a developing country setting.
+  ~
+  ~ Copyright (C) 2015  John Snow, Inc (JSI). This program was produced for the U.S. Agency for International Development (USAID). It was prepared under the USAID | DELIVER PROJECT, Task Order 4.
+  ~
+  ~ This program is free software: you can redistribute it and/or modify it under the terms of the GNU Affero General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
+  ~
+  ~ This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Affero General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU Affero General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
+  -->
+
+<div>
+  <h2>
+    <span openlmis-message="label.equipment.history"></span>
+  </h2>
+
+  <ng-include src="'/public/pages/admin/equipment/shared/log-header.html'"></ng-include>
+
+  <div class="content-body">
+    <table class="table table-bordered table-scrollable">
+      <thead class="gradient-header">
+      <tr>
+        <th><span openlmis-message="label.date"></span></th>
+        <th><span openlmis-message="label.equipment.status"></span></th>
+        <th><span openlmis-message="label.remarks"></span>
+        </th>
+      </tr>
+      </thead>
+      <tr ng-repeat="row in logs">
+        <td>{{row.dateString}}</td>
+        <td><strong>{{row.type}}</strong> - {{row.reason}}</td>
+        <td>{{row.comment}}</td>
+      </tr>
+      <tr ng-show="logs.length == 0">
+        <td colspan="3" openlmis-message="msg.no.records.found"></td>
+      </tr>
+    </table>
+  </div>
+  <div form-toolbar id="action_buttons" class="action-buttons">
+    <div class="form-cell button-row">
+      <input id="cancelButton" type="button" class="btn btn-cancel cancel-button" openlmis-message="button.cancel"
+             ng-click="cancel()"/>
+    </div>
+    <div class="toolbar-error" id="saveErrorMsgDiv">
+      <span openlmis-message="error" ng-show="error"></span>&nbsp;
+      <span ng-show="errorMessage" ng-bind="errorMessage"></span>
+    </div>
+    <div class="toolbar-success" id="saveSuccessMsgDiv" openlmis-message="message" ng-show="message"></div>
+  </div>
+</div>

@@ -25,11 +25,14 @@ import java.util.List;
 @Repository
 public interface ProgramProductMapper {
 
-  @Insert({"INSERT INTO program_products(programId, productId, dosesPerMonth, active, productCategoryId, displayOrder, createdBy, modifiedBy, modifiedDate)",
+  @Insert({"INSERT INTO program_products(programId, productId, dosesPerMonth, active, productCategoryId, displayOrder, fullSupply, currentprice, createdBy, modifiedBy, modifiedDate)",
     "VALUES (#{program.id},",
-    "#{product.id}, #{dosesPerMonth}, #{active}, #{productCategory.id}, #{displayOrder}, #{createdBy}, #{modifiedBy}, COALESCE(#{modifiedDate}, CURRENT_TIMESTAMP))"})
+    "#{product.id}, #{dosesPerMonth}, #{active}, #{productCategory.id}, #{displayOrder}, #{fullSupply}, #{currentPrice}, #{createdBy}, #{modifiedBy}, COALESCE(#{modifiedDate}, CURRENT_TIMESTAMP))"})
   @Options(useGeneratedKeys = true)
   Integer insert(ProgramProduct programProduct);
+
+  @Delete("DELETE FROM program_products WHERE id=#{id}")
+  public void deleteById(Long id);
 
   @Select(("SELECT id FROM program_products WHERE programId = #{programId} AND productId = #{productId}"))
   Long getIdByProgramAndProductId(@Param("programId") Long programId, @Param("productId") Long productId);
@@ -45,10 +48,10 @@ public interface ProgramProductMapper {
   ProgramProduct getByProgramAndProductId(@Param("programId") Long programId, @Param("productId") Long productId);
 
   @Update({"UPDATE program_products SET dosesPerMonth = #{dosesPerMonth}, productCategoryId = #{productCategory.id}, ",
-    "displayOrder = #{displayOrder}, active = #{active}, modifiedBy = #{modifiedBy}, ",
+    "displayOrder = #{displayOrder}, active = #{active}, modifiedBy = #{modifiedBy}, fullSupply = #{fullSupply}, currentprice = #{currentPrice}, ",
     "modifiedDate = COALESCE(#{modifiedDate}, CURRENT_TIMESTAMP) ",
     "WHERE programId = #{program.id} AND productId = #{product.id}"})
-  void update(ProgramProduct programProduct);
+    void update(ProgramProduct programProduct);
 
   @Select({"SELECT * FROM program_products pp INNER JOIN products p ON pp.productId = p.id WHERE pp.programId = #{id} ",
     "ORDER BY pp.displayOrder NULLS LAST, LOWER(p.code)"})
@@ -114,7 +117,7 @@ public interface ProgramProductMapper {
                                                          @Param("facilityTypeCode") String facilityTypeCode);
 
   @Select({"SELECT * FROM program_products pp INNER JOIN products p ON pp.productId = p.id",
-    "WHERE programId = #{id} AND p.fullSupply = FALSE"})
+    "WHERE programId = #{id} AND pp.fullSupply = FALSE"})
   @Results(value = {
     @Result(property = "id", column = "id"),
     @Result(property = "product", column = "productId", javaType = Product.class,
@@ -157,4 +160,28 @@ public interface ProgramProductMapper {
       one = @One(select = "org.openlmis.core.repository.mapper.ProductCategoryMapper.getById"))
   })
   List<ProgramProduct> searchByProgram(String searchParam, Pagination pagination);
+
+  @Select({"SELECT PP.*, PD.* FROM program_products PP INNER JOIN products PD ON PP.productId = PD.id",
+    "WHERE PP.programId = #{id} AND PP.active = TRUE AND PD.active = TRUE",
+    "ORDER BY PP.displayOrder NULLS LAST, LOWER(PD.code)"})
+  @Results(value = {
+    @Result(property = "id", column = "id"),
+    @Result(property = "program", column = "programId", javaType = Program.class,
+      one = @One(select = "org.openlmis.core.repository.mapper.ProgramMapper.getById")),
+    @Result(property = "product", column = "productId", javaType = Product.class,
+      one = @One(select = "org.openlmis.core.repository.mapper.ProductMapper.getById")),
+    @Result(property = "programProductIsa", column = "id", javaType = ProgramProductISA.class,
+      one = @One(select = "org.openlmis.core.repository.mapper.ProgramProductIsaMapper.getIsaByProgramProductId")),
+    @Result(property = "productCategory", column = "productCategoryId", javaType = Product.class,
+      one = @One(select = "org.openlmis.core.repository.mapper.ProductCategoryMapper.getById"))
+  })
+  List<ProgramProduct> getActiveByProgram(Long programId);
+
+    @Select({"SELECT * FROM program_products pp INNER JOIN products p ON pp.productId = p.id"})
+    @Results(value = {
+            @Result(property = "id", column = "id"),
+            @Result(property = "program.id", column = "programid"),
+            @Result(property = "product.id", column = "productid")
+    })
+  List<ProgramProduct> getAll();
 }

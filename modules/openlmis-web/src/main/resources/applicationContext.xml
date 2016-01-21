@@ -10,32 +10,38 @@
   ~ You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org. 
   -->
 
-<beans xmlns="http://www.springframework.org/schema/beans"
-       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:mvc="http://www.springframework.org/schema/mvc"
+<beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:mvc="http://www.springframework.org/schema/mvc"
        xmlns:context="http://www.springframework.org/schema/context"
-       xmlns:aop="http://www.springframework.org/schema/aop" xmlns:task="http://www.springframework.org/schema/task"
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xmlns="http://www.springframework.org/schema/beans"
        xsi:schemaLocation="http://www.springframework.org/schema/beans
        http://www.springframework.org/schema/beans/spring-beans.xsd
        http://www.springframework.org/schema/mvc
-        http://www.springframework.org/schema/mvc/spring-mvc-3.1.xsd
+        http://www.springframework.org/schema/mvc/spring-mvc-4.1.xsd
         http://www.springframework.org/schema/context
-        http://www.springframework.org/schema/context/spring-context-3.1.xsd
+        http://www.springframework.org/schema/context/spring-context-4.1.xsd
         http://www.springframework.org/schema/aop
-        http://www.springframework.org/schema/aop/spring-aop-3.1.xsd
-        http://www.springframework.org/schema/task http://www.springframework.org/schema/task/spring-task-3.1.xsd">
+        http://www.springframework.org/schema/aop/spring-aop-4.1.xsd
+      ">
 
-    <context:annotation-config/>
-    <mvc:annotation-driven/>
-    <aop:aspectj-autoproxy/>
-    <task:annotation-driven/>
-    <context:component-scan base-package="org.openlmis.web"/>
+    <context:annotation-config  />
+    <mvc:annotation-driven  />
+    <aop:aspectj-autoproxy expose-proxy="false" />
+
+
+    <bean class="org.openlmis.config.MySwaggerConfig"></bean>
+
+    <context:component-scan base-package="org.openlmis.web" />
 
     <bean id="applicationProperties" class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
 
+        <property name="ignoreResourceNotFound" value="true"/>
         <property name="locations">
             <list>
                 <value>classpath:/default.properties</value>
-                <value>classpath:${environmentName}/app.properties</value>
+                <value>classpath:/app.properties</value>
+                <value>classpath:/database-config.properties</value>
             </list>
         </property>
 
@@ -54,7 +60,7 @@
     <bean id="localeResolver"
           class="org.springframework.web.servlet.i18n.CookieLocaleResolver">
         <property name="cookieName" value="lang"/>
-        <property name="defaultLocale" value="en"/>
+        <property name="defaultLocale" value="${defaultLocale}"/>
         <property name="cookieMaxAge" value="0x7fffffff"/>
     </bean>
 
@@ -64,7 +70,13 @@
     <import resource="classpath:/applicationContext-restapi.xml"/>
     <import resource="classpath:/applicationContext-shipment.xml"/>
     <import resource="classpath:/applicationContext-reporting.xml"/>
+    <import resource="classpath:/applicationContext-report.xml"/>
     <import resource="classpath:/applicationContext-distribution.xml"/>
+    <import resource="classpath:/applicationContext-equipment.xml" />
+    <import resource="classpath:/applicationContext-help.xml" />
+    <import resource="classpath:/applicationContext-demographics.xml"/>
+    <import resource="classpath:/applicationContext-vaccine.xml" />
+    <import resource="classpath:/applicationContext-stock-management.xml" />
 
     <bean id="userAuthenticationProvider" class="org.openlmis.authentication.web.UserAuthenticationProvider"/>
 
@@ -216,6 +228,15 @@
                         <property name="recordHandler" ref="productCategoryPersistenceHandler"/>
                     </bean>
                 </entry>
+                <entry key="priceSchedule">
+                    <bean class="org.openlmis.web.model.UploadBean">
+                        <property name="displayName" value="label.price.schedule"/>
+                        <property name="importableClass">
+                            <value type="java.lang.Class">org.openlmis.core.domain.ProductPriceSchedule</value>
+                        </property>
+                        <property name="recordHandler" ref="priceSchedulePersistenceHandler"/>
+                    </bean>
+                </entry>
                 <entry key="geographicZone">
                     <bean class="org.openlmis.web.model.UploadBean">
                         <property name="displayName" value="label.geographic.zones"/>
@@ -340,6 +361,33 @@
                             <value type="java.lang.Class">org.openlmis.core.domain.RegimenCategory</value>
                         </property>
                         <property name="recordHandler" ref="regimenCategoryPersistenceHandler"/>
+                    </bean>
+                </entry>
+                <entry key="stockAdjustmentReason">
+                    <bean class="org.openlmis.web.model.UploadBean">
+                        <property name="displayName" value="label.stock.adjustment.reason"/>
+                        <property name="importableClass">
+                            <value type="java.lang.Class">org.openlmis.core.domain.StockAdjustmentReason</value>
+                        </property>
+                        <property name="recordHandler" ref="stockAdjustmentReasonHandler"/>
+                    </bean>
+                </entry>
+                <entry key="stockAdjustmentReasonProgram">
+                    <bean class="org.openlmis.web.model.UploadBean">
+                        <property name="displayName" value="label.stock.adjustment.reason.program"/>
+                        <property name="importableClass">
+                            <value type="java.lang.Class">org.openlmis.core.domain.StockAdjustmentReasonProgram</value>
+                        </property>
+                        <property name="recordHandler" ref="stockAdjustmentReasonProgramHandler"/>
+                    </bean>
+                </entry>
+                <entry key="facilityProgramProductISA">
+                    <bean class="org.openlmis.web.model.UploadBean">
+                        <property name="displayName" value="label.facility.program.product.isa"/>
+                        <property name="importableClass">
+                            <value type="java.lang.Class">org.openlmis.vaccine.dto.FacilityProgramProductISADTO</value>
+                        </property>
+                        <property name="recordHandler" ref="facilityProgramProductISAHandler"/>
                     </bean>
                 </entry>
             </map>

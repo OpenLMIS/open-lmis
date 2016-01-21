@@ -8,11 +8,34 @@
  * You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org. 
  */
 
-function ManagePODController($scope, OrdersForManagePOD, messageService, OrderPOD, $location) {
+function ManagePODController($scope, OrdersForManagePOD, messageService, OrderPOD, CreateRequisitionProgramList, UserSupervisedFacilitiesForProgram, $location) {
 
-  OrdersForManagePOD.get({}, function (data) {
-    $scope.orders = data.ordersForPOD || [];
+  $scope.option = {all: false};
+
+  CreateRequisitionProgramList.get(function(data){
+    $scope.programs = data.programList;
   });
+
+  $scope.onParamChanged = function(){
+    $scope.orders = [];
+    if(!angular.isUndefined($scope.filter.program) && $scope.filter.program !== null){
+      UserSupervisedFacilitiesForProgram.get({programId: $scope.filter.program}, function (data) {
+        $scope.facilities = data.facilities;
+      });
+
+      if($scope.option.all){
+        OrdersForManagePOD.get({program: $scope.filter.program}, function (data) {
+          $scope.orders = data.ordersForPOD;
+        });
+      }
+    }
+  };
+
+  $scope.onFacilityChanged = function(){
+    OrdersForManagePOD.get({program: $scope.filter.program, facility: $scope.filter.facility}, function (data) {
+      $scope.orders = data.ordersForPOD;
+    });
+  };
 
   $scope.gridOptions = { data: 'orders',
     showFooter: false,

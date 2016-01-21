@@ -1,0 +1,136 @@
+<!--
+  ~ Electronic Logistics Management Information System (eLMIS) is a supply chain management system for health commodities in a developing country setting.
+  ~
+  ~ Copyright (C) 2015  John Snow, Inc (JSI). This program was produced for the U.S. Agency for International Development (USAID). It was prepared under the USAID | DELIVER PROJECT, Task Order 4.
+  ~
+  ~ This program is free software: you can redistribute it and/or modify it under the terms of the GNU Affero General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
+  ~
+  ~ This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Affero General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU Affero General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
+  -->
+
+<div class="row-fluid" ng-init="setImageFilePath('/public/images/')">
+
+  <div class="span12">
+
+    <div class="box-header">
+      <h2 openlmis-message="report.title.lab.equipment.by.location"></h2>
+    </div>
+
+    <div class="row show-grid offset1 indicator-list">
+      <div class="span2">
+        <strong>Key Indicators:</strong>
+      </div>
+      <div class="span3"><img alt="Not Functioning" src="/public/images/not-functioning-marker.png">
+        <strong>All not functioning</strong>
+      </div>
+      <div class="span3"><img alt="Some Functioning" src="/public/images/some-functioning-marker.png">
+        <strong>Some not functioning</strong>
+      </div>
+      <div class="span3"><img alt="Functioning" src="/public/images/all-functioning-marker.png">
+        <strong>All functioning</strong>
+      </div>
+    </div>
+    <hr/>
+    <div class="row-fluid">
+
+      <div class="sidebar">
+        <div class="app-form form-wider">
+
+          <form name="filterForm" ng-submit="filterGrid()" novalidate>
+            <div class="clearfix" filter-container>
+              <program-filter class="form-cell horizontalFilters" required="true"></program-filter>
+              <zone-filter class="form-cell horizontalFilters"></zone-filter>
+              <facility-type-filter class="form-cell horizontalFilters"></facility-type-filter>
+              <facility-filter class="form-cell horizontalFilters"></facility-filter>
+              <equipment-type-filter class="form-cell horizontalFilters"></equipment-type-filter>
+              <equipment-filter class="form-cell horizontalFilters"></equipment-filter>
+            </div>
+          </form>
+        </div>
+      </div>
+<!-- Ends side bar -->
+
+<!-- Start content -->
+      <div class="content-body">
+
+        <div class="span8">
+          <div class="leaflet-middle">
+            <leaflet geojson="geojson" height="600px" layers="layers" legend="legend" markers="markers" width="100%"></leaflet>
+          </div>
+        </div>
+
+        <div class="span4" ng-show="showSummary === true">
+
+          <div class="box-header">
+            <h2>Equipment Status Summary</h2>
+          </div>
+
+          <a-float af-data="pieChartSummary" af-option="equipmentStatusSummaryPieChartOption" class="chart" id="equipment-status-summary"></a-float>
+
+          <div class="container-legend-drifted span12 chartLegend" id="facilityLabEquipmentStatusSummary"></div>
+
+          <div class="box-header sub-content">
+            <h2>Detailed Equipment Reports</h2>
+          </div>
+
+          <ul>
+            <li>
+              <strong>
+                <a class="sub-content-decorated" href="/public/pages/reports/lab-equipments-non-functioning/index.html#/list?{{urlParams}}">Non Functioning Equipment with service contract status</a>
+              </strong>
+            </li>
+            <li>
+              <strong>
+                <a class="sub-content-decorated" href="/public/pages/reports/lab-equipments-functioning/index.html#/list?{{urlParams}}">Functioning Equipment with service contract status</a>
+              </strong>
+            </li>
+          </ul>
+        </div>
+
+      </ng-div>
+<!-- End content -->
+
+    </div>
+
+  </div>
+
+</div>
+
+<div class="success-modal-wide" id="popup-box" modal="facilitySummaryModal">
+
+  <div class="modal-header">
+    <h3>{{ title }}</h3>
+  </div>
+  <div class="modal-body">
+    <table class="table table-bordered">
+      <thead>
+        <tr>
+          <th openlmis-message="label.facility.code"></th>
+          <th openlmis-message="label.facility.name"></th>
+          <th openlmis-message="label.facility.type"></th>
+          <th openlmis-message="label.district"></th>
+          <th openlmis-message="label.equipment.details"></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr ng-repeat="f in facilitiesEquipmentStatus">
+          <td>{{f.facility_code}}</td>
+          <td>{{f.facility_name}}</td>
+          <td>{{f.facility_type}}</td>
+          <td>{{f.disrict}}</td>
+          <td>
+            <a href="{{f.url}}">View</a>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="modal-footer">
+    <a class="btn btn-primary pull-right" ng-click="facilitySummaryModal=false;">Close</a>
+  </div>
+</div>
+
+</div>

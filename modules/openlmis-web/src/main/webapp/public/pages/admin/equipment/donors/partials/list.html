@@ -1,0 +1,54 @@
+<!--
+  ~ Electronic Logistics Management Information System (eLMIS) is a supply chain management system for health commodities in a developing country setting.
+  ~
+  ~ Copyright (C) 2015  John Snow, Inc (JSI). This program was produced for the U.S. Agency for International Development (USAID). It was prepared under the USAID | DELIVER PROJECT, Task Order 4.
+  ~
+  ~ This program is free software: you can redistribute it and/or modify it under the terms of the GNU Affero General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
+  ~
+  ~ This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Affero General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU Affero General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
+  -->
+
+<div xmlns="http://www.w3.org/1999/html">
+  <h2><span openlmis-message="label.donor.list"></span>
+        <a href="#/create-donor" class="pull-right btn btn-primary"><span id="donor-add-new" openlmis-message="label.donor.add"></span></a>
+  </h2>
+
+  <div class="alert alert-success" id="saveSuccessMsgDiv" ng-show="donorId">
+    <span ng-bind="message"></span>
+  </div>
+  <input id="txtFilterDonors" class="search-query input-xlarge" type="text" ng-model="query" placeholder="Enter donor name" />
+  <div>
+    <h3 ng-show="query.length>0">
+        <ng-pluralize count="resultCount"
+                      when="{ 0: 'No matches found for \'{{query}}\'',
+                        1: '1 match found for \'{{query}}\'',
+                        other: '{} matches found for \'{{query}}\''}">
+        </ng-pluralize>
+    </h3>
+ 
+    <table class="table table-striped table-bordered">
+      <thead>
+        <tr class="gradient-header">
+          <th class="col-row-number">#</th>
+          <th><span openlmis-message="label.donor.code"></span></th>
+          <th><span openlmis-message="label.donor.short.name"></span></th>
+          <th><span openlmis-message="label.donor.name"></span></th>
+          <th><span openlmis-message="label.donor.donation.count"></span></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr ng-repeat="donor in donors | filter : query">
+          <td>{{$index + 1}}</td>
+          <td><div>{{donor.code}}</div></td>
+          <td><a href="" ng-click="editDonor(donor.id, donor.countOfDonations)">{{donor.shortName}}</a></td>
+          <td>{{donor.longName}}</td>
+          <td><div>{{donor.countOfDonations}}</div></td>
+        </tr>
+      </tbody>
+    </table>
+
+  </div>
+
+</div>

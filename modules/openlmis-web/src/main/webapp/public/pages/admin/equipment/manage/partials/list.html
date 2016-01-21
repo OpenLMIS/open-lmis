@@ -1,0 +1,122 @@
+<!--
+  ~ Electronic Logistics Management Information System (eLMIS) is a supply chain management system for health commodities in a developing country setting.
+  ~
+  ~ Copyright (C) 2015  John Snow, Inc (JSI). This program was produced for the U.S. Agency for International Development (USAID). It was prepared under the USAID | DELIVER PROJECT, Task Order 4.
+  ~
+  ~ This program is free software: you can redistribute it and/or modify it under the terms of the GNU Affero General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
+  ~
+  ~ This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Affero General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU Affero General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
+  -->
+<div xmlns="http://www.w3.org/1999/html">
+  <h2>
+    <span openlmis-message="label.equipment.manage"></span>
+    <a ng-hide="equipmentTypeId === undefined || equipmentTypeId ==='' " id="add-new-equipment" href="#/create" class="pull-right btn btn-primary" openlmis-message="button.add.new"></a>
+  </h2>
+
+  <div class="alert alert-success clearfix" ng-show="message">
+    <span ng-bind="message"></span>
+  </div>
+  <div class="alert alert-error clearfix" ng-show="error">
+    <span ng-bind="error"></span>
+  </div>
+  <div class="content-body">
+    <div class="">
+      <div class="row clearfix" ng-hide="false">
+        <div class="span6">
+          <label for="programList">
+            <span openlmis-message="label.equipment.program"></span>
+          </label>
+          <div>
+            <select ui-select2 id="programList" class="span3" ng-change="getAllEquipmentTypesByProgram(true)" ng-model="programId" >
+              <option value="0"><span openlmis-message="label.equipment.choose.all-programs"></span></option>
+              <option ng-repeat="program in programs" ng-selected="program.id == programId" value="{{ program.id }}">{{ program.name }}</option>
+            </select>
+          </div>
+        </div>
+        <div class="span6" >
+          <label for="equipmentTypeList">
+            <span openlmis-message="label.equipment.type"></span>
+          </label>
+          <div>
+            <select ui-select2 class="span3" id="equipmentTypeList" ng-change="listEquipments(true)" ng-model="equipmentTypeId" >
+              <option value=""><span openlmis-message="label.equipment.choose.type"></span></option>
+              <option ng-repeat="type in equipmentTypes" ng-selected="type.id == equipmentTypeId" value="{{ type.id }}">{{ type.name }}</option>
+            </select>
+          </div>
+        </div>
+      </div>
+    </div>
+    <br />
+    <div ng-show="equipments.length == 0">
+      <span openlmis-message="label.equipment.list.none.found"></span>
+    </div>
+    <div ng-show="equipments.length > 0 && equipmentTypeId !==undefined">
+    <table ng-show="equipment_type.coldChain != undefined && !equipment_type.coldChain" class="table table-bordered table-striped">
+      <thead>
+      <tr class="gradient-header">
+        <th style="width:30px;">#</th>
+        <th><a openlmis-message="label.equipment.name" ng-click="sortBy('name')"></a></th>
+        <th><a openlmis-message="label.equipment.manufacturer" ng-click="sortBy('manufacturer')"></a></th>
+        <th><a openlmis-message="label.equipment.model" ng-click="sortBy('model')"></a></th>
+        <th openlmis-message="label.equipment.energy-type"></th>
+        <th openlmis-message="label.equipment.type"></th>
+        <th openlmis-message="label.equipment.action"></th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr ng-repeat="eq in equipments | orderBy:orderTitle">
+        <td style="width:30px;">{{$index + 1}}</td>
+        <td><a ng-href="#/edit/{{eq.id}}/{{equipmentTypeId}}">{{eq.name}}</a></td>
+        <td>{{eq.manufacturer}}</td>
+        <td>{{eq.model}}</td>
+        <td>{{eq.energyType.name}}</td>
+        <td>{{eq.equipmentType.code}}</td>
+        <td><a openlmis-message="label.equipment.remove" href="" ng-click="showRemoveEquipmentConfirmDialog(eq.id)" ng-hide="eq.inventoryCount > 0"></a></td>
+      </tr>
+      </tbody>
+    </table>
+    <table ng-show="equipment_type.coldChain != undefined && equipment_type.coldChain" class="table table-bordered table-striped">
+      <thead>
+      <tr class="gradient-header">
+        <th style="width:10px">#</th>
+        <th ><a openlmis-message="label.equipment.designation" ng-click="sortBy('designation.name')"></a></th>
+        <th ><a openlmis-message="label.equipment.model" ng-click="sortBy('model')"></a></th>
+        <th ><a openlmis-message="label.equipment.manufacturer" ng-click="sortBy('manufacturer')"></a></th>
+        <th ><a openlmis-message="label.equipment.energy-type" ng-click="sortBy('energyType.name')"></a></th>
+        <th openlmis-message="label.equipment.refrigerator-capacity" ></th>
+        <th openlmis-message="label.equipment.freezer-capacity"></th>
+        <th openlmis-message="label.equipment.temperature-zone"></th>
+        <th openlmis-message="label.equipment.pqs-status" ></th>
+        <th openlmis-message="label.equipment.pqs-code"></th>
+        <th><a openlmis-message="label.equipment.action"></a></th>
+
+      </tr>
+      </thead>
+      <tbody>
+      <tr ng-repeat="eq in equipments | orderBy:orderTitle">
+        <td style="width:10px">{{$index + 1}}</td>
+        <td>{{eq.designation.name}}</td>
+        <td><a ng-href="#/edit/{{eq.id}}/{{equipmentTypeId}}">{{eq.model}}</a></td>
+        <td>{{eq.manufacturer}}</td>
+        <td>{{eq.energyType.name}}</td>
+        <td>{{eq.refrigeratorCapacity}}</td>
+        <td>{{eq.freezerCapacity}}</td>
+        <td>{{eq.temperatureZone}}</td>
+        <td>
+          <select style="width:120px;height:28px; margin:0px" ng-model="eq.pqsStatusId"  ng-change="updatePqsStatus(eq)">
+            <option ng-repeat="status in pqsStatus" ng-selected="status.id == eq.pqsStatus.id" value="{{status.id}}">{{status.name}}</option>
+          </select>
+          <span class="fadeout clearfix" ng-show="eq.showSuccess == true">Status Saved</span>
+        </td>
+        <td>{{eq.pqsCode}}</td>
+        <td><a openlmis-message="label.equipment.remove" href="" ng-click="showRemoveEquipmentConfirmDialog(eq.id)" ng-hide="eq.inventoryCount > 0"></a></td>
+      </tr>
+      </tbody>
+    </table>
+      <pagination total-items="totalItems" page="currentPage" max-size="5" items-per-page="pagination.limit"
+                  direction-links="false" ng-show="true" class="pagination-sm"></pagination>
+    </div>
+  </div>
+</div>

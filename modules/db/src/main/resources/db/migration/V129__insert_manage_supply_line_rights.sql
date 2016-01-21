@@ -8,5 +8,12 @@
 -- You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org. 
 --
 
-INSERT INTO rights (name, rightType, description) VALUES
-  ('MANAGE_SUPPLY_LINE', 'ADMIN', 'Permission to manage supply lines');
+DO
+$do$
+BEGIN
+  IF NOT EXISTS (SELECT 1 FROM rights where name = 'MANAGE_SUPPLY_LINE') THEN
+    INSERT INTO rights (name, rightType, description) VALUES
+      ('MANAGE_SUPPLY_LINE', 'ADMIN', 'Permission to manage supply lines');
+  END IF;
+END
+$do$

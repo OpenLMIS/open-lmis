@@ -14,6 +14,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
+import org.junit.runners.BlockJUnit4ClassRunner;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.openlmis.db.categories.UnitTests;
@@ -23,8 +24,9 @@ import org.openlmis.shipment.handler.ShipmentFilePostProcessHandler;
 import org.openlmis.shipment.service.ShipmentService;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
-import org.springframework.integration.Message;
-import org.springframework.integration.MessageChannel;
+import org.powermock.modules.junit4.PowerMockRunnerDelegate;
+import org.springframework.messaging.Message;
+import org.springframework.messaging.MessageChannel;
 
 import java.io.File;
 import java.util.HashSet;
@@ -36,6 +38,7 @@ import static org.powermock.api.mockito.PowerMockito.whenNew;
 
 @Category(UnitTests.class)
 @RunWith(PowerMockRunner.class)
+@PowerMockRunnerDelegate(BlockJUnit4ClassRunner.class)
 @PrepareForTest(ShipmentFilePostProcessHandler.class)
 public class ShipmentFilePostProcessHandlerTest {
 

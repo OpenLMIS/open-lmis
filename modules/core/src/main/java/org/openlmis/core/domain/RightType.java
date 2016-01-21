@@ -20,5 +20,6 @@ public enum RightType {
   ALLOCATION,
   REQUISITION,
   FULFILLMENT,
-  REPORTING
+  REPORTING,
+  REPORT
 }

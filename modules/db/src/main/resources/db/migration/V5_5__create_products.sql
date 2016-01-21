@@ -26,7 +26,7 @@ CREATE TABLE products (
   alternateName VARCHAR(100),
   description VARCHAR(250),
   strength VARCHAR(14),
-  formId INTEGER REFERENCES product_forms(id),
+  formID INTEGER REFERENCES product_forms(id),
   dosageUnitId INTEGER REFERENCES dosage_units(id),
   categoryId INTEGER REFERENCES product_categories(id),
   productGroupId INTEGER REFERENCES product_groups(id),

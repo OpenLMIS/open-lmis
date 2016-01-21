@@ -17,9 +17,12 @@ import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
+import org.openlmis.core.domain.ConfigurationSetting;
+import org.openlmis.core.domain.ConfigurationSettingKey;
+import org.openlmis.core.service.ConfigurationSettingService;
 import org.openlmis.core.service.MessageService;
 import org.openlmis.db.categories.UnitTests;
-import org.openlmis.web.response.OpenLmisResponse;
+import org.openlmis.core.web.OpenLmisResponse;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.servlet.support.RequestContextUtils;
 
@@ -46,6 +49,9 @@ public class HomeControllerTest {
   HttpSession session;
 
   @Mock
+  ConfigurationSettingService settingService;
+
+  @Mock
   MessageService messageService;
 
   @InjectMocks
@@ -58,8 +64,9 @@ public class HomeControllerTest {
 
   @Test
   public void shouldRedirectToHomePage() {
+    when(settingService.getConfigurationStringValue(ConfigurationSettingKey.LOGIN_SUCCESS_DEFAULT_LANDING_PAGE)).thenReturn("/public/site/index.html#/home");
     String homePageURl = homeController.homeDefault();
-    assertEquals("redirect:/public/pages/index.html", homePageURl);
+    assertEquals("redirect:/public/site/index.html#/home", homePageURl);
   }
 
   @Test

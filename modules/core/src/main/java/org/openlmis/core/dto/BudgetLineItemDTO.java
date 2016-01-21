@@ -12,8 +12,9 @@
 package org.openlmis.core.dto;
 
 import lombok.AllArgsConstructor;
-import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.openlmis.core.domain.EDIFileColumn;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.core.message.OpenLmisMessage;
@@ -30,7 +31,8 @@ import static org.apache.commons.lang3.StringUtils.isBlank;
  * BudgetLineItemDTO is Data transfer object for BudgetLineItems, consolidates user provided information like
  * facilityCode, programCode etc., to be later referenced using Ids in BudgetLineItem.
  */
-@Data
+@Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 public class BudgetLineItemDTO {
@@ -54,7 +56,7 @@ public class BudgetLineItemDTO {
         field.set(lineItemDTO, fieldsInOneRow.get(position - 1).trim());
       } catch (Exception e) {
         logger.error("Unable to set field '" + name +
-          "' in BudgetLinetItemDTO, check mapping between DTO and BudgetFileColumn", e);
+            "' in BudgetLinetItemDTO, check mapping between DTO and BudgetFileColumn", e);
       }
     }
     return lineItemDTO;

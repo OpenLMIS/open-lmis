@@ -14,6 +14,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
+import org.junit.runners.BlockJUnit4ClassRunner;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.openlmis.core.exception.DataException;
@@ -27,10 +28,13 @@ import org.openlmis.restapi.service.RestRequisitionService;
 import org.openlmis.rnr.domain.Rnr;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
+import org.powermock.modules.junit4.PowerMockRunnerDelegate;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
 import java.security.Principal;
+import java.util.ArrayList;
+import java.util.List;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
@@ -44,6 +48,7 @@ import static org.springframework.http.HttpStatus.*;
 
 @Category(UnitTests.class)
 @RunWith(PowerMockRunner.class)
+@PowerMockRunnerDelegate(BlockJUnit4ClassRunner.class)
 @PrepareForTest({RestResponse.class, ReplenishmentDTO.class})
 public class RestRequisitionControllerTest {
 
@@ -80,6 +85,22 @@ public class RestRequisitionControllerTest {
 
     assertThat((Long) response.getBody().getData().get(RNR), is(1L));
   }
+
+  @Test
+  public void shouldSubmitSDPRequisitionForACommTrackUser() throws Exception {
+    Report report = new Report();
+
+    Rnr requisition = new Rnr();
+    requisition.setId(1L);
+    when(service.submitSdpReport(report, 1L)).thenReturn(requisition);
+    ResponseEntity<RestResponse> expectResponse = new ResponseEntity<>(new RestResponse(RNR, requisition.getId()), OK);
+    when(RestResponse.response(RNR, requisition.getId(), HttpStatus.CREATED)).thenReturn(expectResponse);
+
+    ResponseEntity<RestResponse> response = controller.submitSDPRequisition(report, principal);
+
+    assertThat((Long) response.getBody().getData().get(RNR), is(1L));
+  }
+
 
   @Test
   public void shouldGiveErrorMessageIfReportInvalid() throws Exception {
@@ -199,4 +220,34 @@ public class RestRequisitionControllerTest {
 
     assertThat(response, is(expectedResponse));
   }
+
+  @Test
+  public void shouldReturnSuccessCodeAndRequisitionListIfNoException() {
+    String facilityCode = "F1";
+
+    List<Report> expectedRequisitions = new ArrayList<>();
+    when(service.getRequisitionsByFacility(facilityCode)).thenReturn(expectedRequisitions);
+    String requisitionsKey = "requisitions";
+    ResponseEntity<RestResponse> expectedResponse = new ResponseEntity<>(new RestResponse(requisitionsKey, expectedRequisitions), OK);
+    when(RestResponse.response(requisitionsKey, expectedRequisitions, HttpStatus.OK)).thenReturn(expectedResponse);
+
+    ResponseEntity<RestResponse> response = controller.getRequisitionsByFacility(facilityCode);
+    assertThat(response.getStatusCode(), is(HttpStatus.OK));
+    assertThat((List<Report>) response.getBody().getData().get(requisitionsKey), is(expectedRequisitions));
+  }
+
+  @Test
+  public void shouldReturnErrorIfCodeAndRequisitionThrowsException() {
+    String facilityCode = "F1";
+
+    DataException exception = new DataException("some error");
+    doThrow(exception).when(service).getRequisitionsByFacility(facilityCode);
+
+    ResponseEntity<RestResponse> expectedResponse = new ResponseEntity<>(new RestResponse(ERROR, messageService.message("some error")), BAD_REQUEST);
+    when(error(exception.getOpenLmisMessage(), BAD_REQUEST)).thenReturn(expectedResponse);
+
+    ResponseEntity<RestResponse> response = controller.getRequisitionsByFacility(facilityCode);
+    assertThat(response.getStatusCode(), is(HttpStatus.BAD_REQUEST));
+  }
+
 }

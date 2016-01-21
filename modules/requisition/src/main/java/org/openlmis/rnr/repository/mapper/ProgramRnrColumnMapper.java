@@ -27,11 +27,11 @@ public interface ProgramRnrColumnMapper {
 
   @Insert({"INSERT INTO program_rnr_columns",
       "(programId, masterColumnId, rnrOptionId, visible, label,",
-      "position, source, formulaValidationRequired," +
+      "position, source, formulaValidationRequired, calculationOption, " +
       "createdBy, modifiedBy)",
       "VALUES",
       "(#{programId}, #{rnrColumn.id}, #{rnrColumn.configuredOption.id}, #{rnrColumn.visible}, #{rnrColumn.label},",
-      "#{rnrColumn.position}, #{rnrColumn.source.code}, #{rnrColumn.formulaValidationRequired}," +
+      "#{rnrColumn.position}, #{rnrColumn.source.code}, #{rnrColumn.formulaValidationRequired}, #{rnrColumn.calculationOption}," +
       "#{rnrColumn.createdBy}, #{rnrColumn.modifiedBy})"})
   int insert(@Param("programId") Long programId, @Param("rnrColumn") RnrColumn rnrColumn);
 
@@ -42,19 +42,23 @@ public interface ProgramRnrColumnMapper {
   RnrColumnOption getRnrColumnOptionById(Integer id);
 
   @Select({"SELECT m.id, m.name, m.description, m.formula, m.indicator, m.used, m.mandatory, m.sourceConfigurable,",
-      "p.rnrOptionId, p.position, p.label, p.visible, p.source as sourceString, p.formulaValidationRequired",
+      "p.rnrOptionId, p.position, p.label, p.visible, p.source as sourceString, p.formulaValidationRequired, m.calculationOption cOptions, p.calculationOption ",
       "FROM program_rnr_columns p INNER JOIN master_rnr_columns m",
       "ON p.masterColumnId = m.id",
       "WHERE p.programId = #{programId}",
       "ORDER BY visible DESC, position"})
   @Results(value = {
-    @Result(property = "id", column = "id"),
-    @Result(property = "configuredOption",  javaType = RnrColumnOption.class, column = "rnrOptionId",
-      many = @Many(select = "org.openlmis.rnr.repository.mapper.ProgramRnrColumnMapper.getRnrColumnOptionById")),
-    @Result(property = "rnrColumnOptions",  javaType = List.class, column = "id",
-      many = @Many(select = "org.openlmis.rnr.repository.mapper.ProgramRnrColumnMapper.getRnrColumnOptionsByMasterRnrColumnId"))
+      @Result(property = "id", column = "id"),
+      @Result(property = "options", column = "cOptions" ),
+      @Result(property = "configuredOption",  javaType = RnrColumnOption.class, column = "rnrOptionId",
+          many = @Many(select = "org.openlmis.rnr.repository.mapper.ProgramRnrColumnMapper.getRnrColumnOptionById")),
+      @Result(property = "rnrColumnOptions",  javaType = List.class, column = "id",
+          many = @Many(select = "org.openlmis.rnr.repository.mapper.ProgramRnrColumnMapper.getRnrColumnOptionsByMasterRnrColumnId"))
   })
   List<RnrColumn> fetchDefinedRnrColumnsForProgram(Long programId);
+
+
+
 
   @Update("UPDATE program_rnr_columns SET " +
       "visible = #{rnrColumn.visible}, " +
@@ -64,12 +68,13 @@ public interface ProgramRnrColumnMapper {
       "source = #{rnrColumn.source.code}, " +
       "formulaValidationRequired = #{rnrColumn.formulaValidationRequired}," +
       "modifiedBy = #{rnrColumn.modifiedBy}," +
+      "calculationOption = #{rnrColumn.calculationOption}, " +
       "modifiedDate = NOW() " +
       "WHERE programId = #{programId} AND masterColumnId = #{rnrColumn.id}")
   void update(@Param("programId") Long programId, @Param("rnrColumn") RnrColumn rnrColumn);
 
   @Select({"SELECT m.id, m.name, m.description, m.used, m.mandatory, m.formula, m.indicator,",
-      "p.position, p.label, p.visible , p.source as sourceString, p.formulaValidationRequired",
+      "p.position, p.label, p.visible , p.source as sourceString, p.formulaValidationRequired, p.calculationOption",
       "FROM program_rnr_columns p INNER JOIN master_rnr_columns m",
       "ON p.masterColumnId = m.id",
       "WHERE p.programId = #{programId} AND p.visible = 'true'",

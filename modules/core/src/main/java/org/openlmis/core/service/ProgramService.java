@@ -53,12 +53,25 @@ public class ProgramService {
     return programRepository.getAllPushPrograms();
   }
 
+  public List<Program> getAllIvdPrograms(){
+    return programRepository.getAllIvdPrograms();
+  }
+
   public List<Program> getProgramsSupportedByUserHomeFacilityWithRights(Long facilityId, Long userId, String... rightNames) {
     return programRepository.getProgramsSupportedByUserHomeFacilityWithRights(facilityId, userId, rightNames);
   }
 
+  public List<Program> getIvdProgramsSupportedByUserHomeFacilityWithRights(Long facilityId, Long userId, String... rightNames) {
+    return programRepository.getIvdProgramsSupportedByUserHomeFacilityWithRights(facilityId, userId, rightNames);
+  }
+
   public List<Program> getProgramForSupervisedFacilities(Long userId, String... rightNames) {
     return programRepository.getUserSupervisedActiveProgramsWithRights(userId, rightNames);
+  }
+
+
+  public List<Program> getIvdProgramForSupervisedFacilities(Long userId, String... rightNames) {
+    return programRepository.getUserSupervisedActiveIvdProgramsWithRights(userId, rightNames);
   }
 
   public Long getIdForCode(String code) {
@@ -120,5 +133,13 @@ public class ProgramService {
       throw new DataException("program.code.invalid");
     }
     return program;
+  }
+
+  public Program update(Program program) {
+    return programRepository.update(program);
+  }
+
+  public List<Program> getProgramsForUserByRights(Long userId, String rightName) {
+    return programRepository.getActiveProgramsForUserWithRights(userId, rightName);
   }
 }

@@ -12,6 +12,7 @@ package org.openlmis.web.controller;
 
 import org.openlmis.core.exception.DataException;
 import org.openlmis.core.message.OpenLmisMessage;
+import org.openlmis.core.web.controller.BaseController;
 import org.openlmis.db.service.DbService;
 import org.openlmis.upload.RecordHandler;
 import org.openlmis.upload.exception.UploadException;
@@ -19,7 +20,7 @@ import org.openlmis.upload.model.AuditFields;
 import org.openlmis.upload.model.ModelClass;
 import org.openlmis.upload.parser.CSVParser;
 import org.openlmis.web.model.UploadBean;
-import org.openlmis.web.response.OpenLmisResponse;
+import org.openlmis.core.web.OpenLmisResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -33,7 +34,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
-import static org.openlmis.web.response.OpenLmisResponse.response;
+import static org.openlmis.core.web.OpenLmisResponse.response;
 import static org.springframework.http.HttpStatus.OK;
 import static org.springframework.http.MediaType.TEXT_HTML_VALUE;
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
@@ -85,7 +86,7 @@ public class UploadController extends BaseController {
     } catch (DataException dataException) {
       return errorResponse(dataException.getOpenLmisMessage());
     } catch (UploadException e) {
-      return errorResponse(new OpenLmisMessage(messageService.message(e.getCode(), e.getParams())));
+      return errorResponse(new OpenLmisMessage(messageService.message(e.getCode(), (Object[])e.getParams())));
     } catch (IOException e) {
       return errorResponse(new OpenLmisMessage(e.getMessage()));
     }
@@ -94,7 +95,17 @@ public class UploadController extends BaseController {
   @RequestMapping(value = "/supported-uploads", method = GET, headers = ACCEPT_JSON)
   @PreAuthorize("@permissionEvaluator.hasPermission(principal,'UPLOADS')")
   public ResponseEntity<OpenLmisResponse> getSupportedUploads() {
-    return response(SUPPORTED_UPLOADS, uploadBeansMap);
+    // this is a hack to make the new version of jackson to work
+    // fasterxml jackson does currenly was failing to serialize
+    HashMap<String, UploadBean> beanDefinitions = new HashMap<>();
+    for(String key :uploadBeansMap.keySet()){
+      UploadBean proxy = uploadBeansMap.get(key);
+      UploadBean bean = new UploadBean();
+      bean.setDisplayName(proxy.getDisplayName());
+      beanDefinitions.put(key,bean);
+    }
+
+    return response(SUPPORTED_UPLOADS, beanDefinitions);
   }
 
   private OpenLmisMessage validateFile(String model, MultipartFile csvFile) {

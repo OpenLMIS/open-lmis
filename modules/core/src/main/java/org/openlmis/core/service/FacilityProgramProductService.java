@@ -11,10 +11,8 @@
 package org.openlmis.core.service;
 
 import org.apache.commons.collections.Closure;
-import org.openlmis.core.domain.FacilityProgramProduct;
-import org.openlmis.core.domain.Program;
-import org.openlmis.core.domain.ProgramProduct;
-import org.openlmis.core.domain.ProgramProductISA;
+import org.openlmis.core.domain.*;
+import org.openlmis.core.repository.FacilityApprovedProductRepository;
 import org.openlmis.core.repository.FacilityProgramProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -35,6 +33,12 @@ public class FacilityProgramProductService {
   private FacilityProgramProductRepository repository;
 
   @Autowired
+  private FacilityApprovedProductRepository facilityApprovedProductRepository;
+
+  @Autowired
+  private FacilityService facilityService;
+
+  @Autowired
   ProgramProductService programProductService;
 
   public List<FacilityProgramProduct> getForProgramAndFacility(Long programId, final Long facilityId) {
@@ -53,15 +57,31 @@ public class FacilityProgramProductService {
     return new FacilityProgramProduct(programProduct, facilityId, repository.getOverriddenIsa(programProduct.getId(), facilityId));
   }
 
-  public void insertISA(ProgramProductISA isa) {
-    repository.insertISA(isa);
+
+  public void insertISA(Long facilityId, ProgramProductISA isa)
+  {
+    repository.insertISA(facilityId, isa);
   }
 
-  public void updateISA(ProgramProductISA isa) {
+
+  public void deleteISA(Long facilityId, ProgramProductISA isa)
+  {
+    deleteISA(facilityId, isa.getProgramProductId());
+  }
+
+  public void deleteISA(Long facilityId, Long programProductId)
+  {
+    repository.deleteOverriddenIsa(programProductId, facilityId);
+  }
+
+
+
+  public void updateISA(ProgramProductISA isa)
+  {
     repository.updateISA(isa);
   }
 
-  public void saveOverriddenIsa(final Long facilityId, List<FacilityProgramProduct> products) {
+  public void save(final Long facilityId, List<FacilityProgramProduct> products) {
     forAllDo(products, new Closure() {
       @Override
       public void execute(Object o) {
@@ -75,4 +95,11 @@ public class FacilityProgramProductService {
   public List<FacilityProgramProduct> getActiveProductsForProgramAndFacility(Long programId, Long facilityId) {
     return FacilityProgramProduct.filterActiveProducts(getForProgramAndFacility(programId, facilityId));
   }
+
+  public ISA getOverriddenIsa(Long programProductId, Long facilityId)
+  {
+    return repository.getOverriddenIsa(programProductId, facilityId);
+  }
+
+
 }

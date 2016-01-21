@@ -13,30 +13,29 @@ package org.openlmis.core.service;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
+import org.junit.runners.BlockJUnit4ClassRunner;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.openlmis.core.domain.FacilityProgramProduct;
-import org.openlmis.core.domain.Program;
-import org.openlmis.core.domain.ProgramProduct;
-import org.openlmis.core.domain.ProgramProductISA;
+import org.openlmis.core.builder.ISABuilder;
+import org.openlmis.core.domain.*;
 import org.openlmis.core.repository.FacilityProgramProductRepository;
 import org.openlmis.db.categories.UnitTests;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
+import org.powermock.modules.junit4.PowerMockRunnerDelegate;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
-import static org.mockito.Mockito.doReturn;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 import static org.powermock.api.mockito.PowerMockito.mockStatic;
 import static org.powermock.api.mockito.PowerMockito.spy;
 
-@Category(UnitTests.class)
 @RunWith(PowerMockRunner.class)
+@PowerMockRunnerDelegate(BlockJUnit4ClassRunner.class)
+@Category(UnitTests.class)
 @PrepareForTest(FacilityProgramProduct.class)
 public class FacilityProgramProductServiceTest {
 
@@ -50,17 +49,12 @@ public class FacilityProgramProductServiceTest {
   ProgramProductService programProductService;
 
   @Test
-  public void shouldInsertIsa() throws Exception {
+  public void shouldInsertIsa() throws Exception
+  {
+    Long facilityId = 100L;
     ProgramProductISA isa = new ProgramProductISA();
-    service.insertISA(isa);
-    verify(repository).insertISA(isa);
-  }
-
-  @Test
-  public void shouldUpdateIsa() throws Exception {
-    ProgramProductISA isa = new ProgramProductISA();
-    service.updateISA(isa);
-    verify(repository).updateISA(isa);
+    service.insertISA(facilityId, isa);
+    verify(repository).insertISA(facilityId, isa);
   }
 
   @Test
@@ -79,41 +73,31 @@ public class FacilityProgramProductServiceTest {
     }};
     when(programProductService.getByProgram(new Program(1L))).thenReturn(products);
 
-    FacilityProgramProduct facilityProduct1 = new FacilityProgramProduct(programProduct, 2L, 34);
-    when(repository.getOverriddenIsa(programProduct.getId(), facilityId)).thenReturn(34);
+    ISA isa1 = ISABuilder.build();
+    isa1.setId(1L);
 
-    FacilityProgramProduct facilityProduct2 = new FacilityProgramProduct(programProduct2, 2L, 44);
-    when(repository.getOverriddenIsa(programProduct2.getId(), facilityId)).thenReturn(44);
+    ISA isa2 = ISABuilder.build();
+    isa1.setId(2L);
+
+    FacilityProgramProduct facilityProduct1 = new FacilityProgramProduct(programProduct, 2L, isa1);
+    when(repository.getOverriddenIsa(programProduct.getId(), facilityId)).thenReturn(isa1);
+
+    FacilityProgramProduct facilityProduct2 = new FacilityProgramProduct(programProduct2, 2L, isa2);
+    when(repository.getOverriddenIsa(programProduct2.getId(), facilityId)).thenReturn(isa2);
 
     List<FacilityProgramProduct> returnedProducts = service.getForProgramAndFacility(1l, facilityId);
 
     assertThat(returnedProducts.get(0), is(facilityProduct1));
-    assertThat(returnedProducts.get(0).getOverriddenIsa(), is(34));
+    assertThat(returnedProducts.get(0).getOverriddenIsa(), is(isa1));
 
     assertThat(returnedProducts.get(1), is(facilityProduct2));
-    assertThat(returnedProducts.get(1).getOverriddenIsa(), is(44));
+    assertThat(returnedProducts.get(1).getOverriddenIsa(), is(isa2));
 
     verify(programProductService).getByProgram(new Program(1L));
     verify(repository).getOverriddenIsa(programProduct.getId(), facilityId);
     verify(repository).getOverriddenIsa(programProduct2.getId(), facilityId);
   }
 
-  @Test
-  public void shouldSaveFacilityProgramProductList() throws Exception {
-    final FacilityProgramProduct facilityProduct1 = spy(new FacilityProgramProduct());
-    facilityProduct1.setId(1L);
-    final FacilityProgramProduct facilityProduct2 = spy(new FacilityProgramProduct());
-    facilityProduct1.setId(2L);
-    List<FacilityProgramProduct> facilityProgramProducts = new ArrayList<FacilityProgramProduct>() {{
-      add(facilityProduct1);
-      add(facilityProduct2);
-    }};
-
-    service.saveOverriddenIsa(1L, facilityProgramProducts);
-
-    verify(repository).save(facilityProduct1);
-    verify(repository).save(facilityProduct2);
-  }
 
   @Test
   public void shouldGetActiveFacilityProgramProductsForFacilityAndProgram() throws Exception {

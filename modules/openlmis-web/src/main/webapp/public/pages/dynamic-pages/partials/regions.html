@@ -1,0 +1,38 @@
+<!--
+  ~ Electronic Logistics Management Information System (eLMIS) is a supply chain management system for health commodities in a developing country setting.
+  ~
+  ~ Copyright (C) 2015  John Snow, Inc (JSI). This program was produced for the U.S. Agency for International Development (USAID). It was prepared under the USAID | DELIVER PROJECT, Task Order 4.
+  ~
+  ~ This program is free software: you can redistribute it and/or modify it under the terms of the GNU Affero General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
+  ~
+  ~ This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Affero General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU Affero General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
+  -->
+
+
+        <div xmlns="http://www.w3.org/1999/html" tab-scroll>
+            <h2 style="padding-top: 9px; line-height: 28px;" openlmis-message="label.list.of.regions"></h2>
+
+            <table client-side-sort-pagination class="table table-bordered" ng-show="data == undefined || data.length == 0">
+                <tr>
+                    <td openlmis-message="dynamic.pages.no.data.to.show"></td>
+                </tr>
+            </table>
+        <div style="overflow: auto;">
+            <div ng-show="datarows.length > 0">
+                <table ng-show="datarows.length > 0" class="heavyTable table table-striped "
+                       ng-table="tableParams">
+                    <tbody>
+                    <tr ng-repeat="row in datarows">
+                        <td data-title="getLocalMessage('label.zones')" class="number" style="width:20px;" sortable="zone_name">{{ row.zone_name }}</td>
+                        <td data-title="getLocalMessage('label.regions')" style="width:100px" sortable="region_name">{{ row.region_name }}</td>
+                        <td data-title="getLocalMessage('label.number.of.districts')" style="width:150px" sortable="districtcount">{{ row.districtcount }}</td>
+                        <td data-title="getLocalMessage('label.number.of.facilities')" style="width:150px" sortable="facilitycount">{{ row.facilitycount }}</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        </div>
+

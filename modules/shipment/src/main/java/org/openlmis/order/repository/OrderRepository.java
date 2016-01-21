@@ -45,6 +45,10 @@ public class OrderRepository {
     return orderMapper.getOrders(pageSize, (page - 1) * pageSize, userId, rightName);
   }
 
+  public List<Order> getOrdersForPage(int page, int pageSize, Long userId, String right, Long supplyDepot, Long program, Long period) {
+    return orderMapper.getOrdersByDepot(pageSize, (page - 1) * pageSize, userId, right, supplyDepot, program, period);
+  }
+
   public Order getById(Long id) {
     return orderMapper.getById(id);
   }
@@ -78,8 +82,15 @@ public class OrderRepository {
     return orderMapper.getNumberOfPages(pageSize);
   }
 
-  public List<Order> searchByWarehousesAndStatuses(List<Long> facilityIds, List<OrderStatus> orderStatuses) {
-    return orderMapper.getByWarehouseIdsAndStatuses(format(facilityIds.toString()), format(orderStatuses.toString()));
+  public Integer getNumberOfPages(int pageSize, Long supplyDepot, Long program, Long period) {
+    return orderMapper.getNumberOfPagesByDepot(pageSize, supplyDepot, program, period);
+  }
+
+  public List<Order> searchByWarehousesAndStatuses(List<Long> facilityIds, List<OrderStatus> orderStatuses, Long programId, Long facilityId) {
+    if (facilityId != 0 && facilityId != null) {
+      return orderMapper.getByWarehouseIdsAndStatusesByFacility(format(facilityIds.toString()), format(orderStatuses.toString()), programId, facilityId);
+    }
+    return orderMapper.getByWarehouseIdsAndStatuses(format(facilityIds.toString()), format(orderStatuses.toString()), programId);
   }
 
   private String format(String listString) {

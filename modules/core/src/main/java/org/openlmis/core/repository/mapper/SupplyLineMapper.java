@@ -29,8 +29,8 @@ import java.util.Map;
 public interface SupplyLineMapper {
 
   @Insert({"INSERT INTO supply_lines " +
-    "(description, supervisoryNodeId, programId, supplyingFacilityId, exportOrders, createdBy, modifiedBy, modifiedDate)",
-    "VALUES (#{description}, #{supervisoryNode.id}, #{program.id}, #{supplyingFacility.id}, #{exportOrders}, #{createdBy}, #{modifiedBy}, COALESCE(#{modifiedDate}, CURRENT_TIMESTAMP))"})
+    "(description, supervisoryNodeId, programId, supplyingFacilityId, exportOrders, parentId, createdBy, modifiedBy, modifiedDate)",
+    "VALUES (#{description}, #{supervisoryNode.id}, #{program.id}, #{supplyingFacility.id}, #{exportOrders}, #{parentId}, #{createdBy}, #{modifiedBy}, COALESCE(#{modifiedDate}, CURRENT_TIMESTAMP))"})
   @Options(useGeneratedKeys = true)
   Integer insert(SupplyLine supplyLine);
 
@@ -43,7 +43,7 @@ public interface SupplyLineMapper {
 
   @Update({"UPDATE supply_lines ",
     "SET description = #{description}, supervisoryNodeId = #{supervisoryNode.id}, programId = #{program.id}, ",
-    "supplyingFacilityId = #{supplyingFacility.id}, exportOrders = #{exportOrders}, modifiedBy = #{modifiedBy},",
+    "supplyingFacilityId = #{supplyingFacility.id}, exportOrders = #{exportOrders}, parentId = #{parentId}, modifiedBy = #{modifiedBy},",
     "modifiedDate = COALESCE(#{modifiedDate}, CURRENT_TIMESTAMP) ",
     "WHERE id = #{id}"})
   void update(SupplyLine supplyLine);
@@ -124,4 +124,16 @@ public interface SupplyLineMapper {
       return sql;
     }
   }
+
+  @Select( "select distinct f.id, f.name from supply_lines sl join facilities f on f.id = sl.supplyingFacilityId where sl.supplyingFacilityId in (select facilityId from fulfillment_role_assignments where userId = #{userId} )")
+  List<Facility> getSupplyingFacilities(@Param("userId") Long userId);
+
+  @Select("SELECT * FROM supply_lines WHERE supplyingFacilityId = #{facilityId} AND programId = #{programId} limit 1")
+  @Results(value = {
+      @Result(property = "supervisoryNode.id", column = "supervisoryNodeId"),
+      @Result(property = "program.id", column = "programId"),
+      @Result(property = "supplyingFacility.id", column = "supplyingFacilityId")
+  })
+  SupplyLine getByFacilityByProgram(@Param("facilityId") Long facilityId, @Param("programId") Long programId);
+
 }

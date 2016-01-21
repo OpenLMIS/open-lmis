@@ -1,0 +1,84 @@
+<form name="international_shipment">
+    <div class='form-group'>
+        <!--<h3 openlmis-message="label.basicInformation">International Shipment</h3>-->
+        <h3 >International Shipment Edit Package</h3>
+        <!--SSCC-->
+        <div class='form-row clearfix'>
+            <div class="form-cell">
+                <label>Shipment Id</label>
+                <div class="form-field">
+                    <input type="text" class="form-control" ng-model="editPackage.shipment_id">
+                </div>
+            </div>
+        </div>
+        <!--Item-->
+        <div class='form-row clearfix'>
+            <div class="form-cell">
+                <label>Item</label>
+                <div class="form-field">
+                    <select  class="form-control" ng-model="vaccine_id"  ng-change="pullPackaging(vaccine_id)">
+                        <option ng-repeat="vaccine in vaccines.vaccines" value="{{vaccine.id}}">{{vaccine.name}}</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+        <div class='form-row clearfix' ng-if="gtinSelect">
+            <!--vaccine_packagings-->
+            <div class="form-cell">
+                <label>GTIN</label>
+                <div class="form-field">
+                    <select  class="form-control" ng-model="editPackage.vaccine_packaging_id" >
+                        <option ng-repeat="vaccine in packaging.vaccine_packagings"  value="{{vaccine.id}}">{{ vaccine.gtin }}( {{ vaccine.packaging }} )</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+        <!--Manufacture Date-->
+        <div class='form-row clearfix'>
+            <div class="form-cell">
+                <label>Manufacture Date</label>
+                <div class="form-field">
+                    <input type="text" class="form-control" ng-model="editPackage.manufacture_date" ui-date="{dateFormat: 'yy-mm-dd', changeYear: true}">
+                </div>
+            </div>
+        </div>
+        <!--Expiry Date-->
+        <div class='form-row clearfix'>
+            <div class="form-cell">
+                <label>Expiry Date</label>
+                <div class="form-field">
+                    <input type="text" class="form-control" ng-model="editPackage.expiry_date" ui-date="{dateFormat: 'yy-mm-dd', changeYear: true}">
+                </div>
+            </div>
+        </div>
+        <!--Lot Number-->
+        <div class='form-row clearfix'>
+            <div class="form-cell">
+                <label>Lot Number</label>
+                <div class="form-field">
+                    <input type="text" ng-model="editPackage.lot_number" class="form-control">
+                </div>
+            </div>
+        </div>
+        <!--Quantity(Number of Doses)-->
+        <div class='form-row clearfix'>
+            <div class="form-cell">
+                <label>Quantity(Number of Doses)</label>
+                <div class="form-field">
+                    <input type="text" ng-model="editPackage.number_of_doses" class="form-control">
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="form-cell horizontalFilters">
+        <label>&nbsp;</label>
+        <div class="form-fields">
+            <input class="btn btn-danger" type="button" value="Cancel" ng-click="cancelEditpackage(editPackage)" id="cancel_edit_package"/>
+        </div>
+    </div><div class="form-cell horizontalFilters">
+    <label>&nbsp;</label>
+    <div class="form-fields">
+        <input class="btn btn-primary" type="button" value="Edit" ng-click="updatePackage(package.id,editPackage)" id="update_package_button"/>
+    </div>
+</div>
+</form>

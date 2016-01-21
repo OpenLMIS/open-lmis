@@ -20,11 +20,13 @@ import org.apache.commons.lang.ArrayUtils;
 import org.openlmis.core.domain.Facility;
 import org.openlmis.core.domain.GeographicZone;
 import org.openlmis.core.domain.Money;
+import org.openlmis.core.service.ConfigurationSettingService;
 import org.openlmis.core.service.MessageService;
 import org.openlmis.rnr.domain.*;
 import org.openlmis.web.model.PrintRnrLineItem;
 
 import java.io.IOException;
+import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -58,7 +60,9 @@ public class RequisitionPdfModel {
   private List<LossesAndAdjustmentsType> lossesAndAdjustmentsTypes;
   private MessageService messageService;
 
-  public RequisitionPdfModel(Map<String, Object> model, MessageService messageService) {
+  private ConfigurationSettingService configService;
+
+  public RequisitionPdfModel(Map<String, Object> model, MessageService messageService, ConfigurationSettingService configService) {
     this.statusChanges = (List<RequisitionStatusChange>) model.get(STATUS_CHANGES);
     this.rnrColumnList = (List<RnrColumn>) model.get(RNR_TEMPLATE);
     this.regimenColumnList = (List<RegimenColumn>) model.get(REGIMEN_TEMPLATE);
@@ -66,6 +70,7 @@ public class RequisitionPdfModel {
     this.lossesAndAdjustmentsTypes = (List<LossesAndAdjustmentsType>) model.get(LOSSES_AND_ADJUSTMENT_TYPES);
     this.numberOfMonths = (Integer) model.get(NUMBER_OF_MONTHS);
     this.messageService = messageService;
+    this.configService = configService;
   }
 
   public Paragraph getFullSupplyHeader() {
@@ -109,7 +114,13 @@ public class RequisitionPdfModel {
         printRnrLineItem.calculate(rnrColumnList, lossesAndAdjustmentsTypes, numberOfMonths, requisition.getStatus());
       }
 
-      List<PdfPCell> cells = getCells(visibleColumns, lineItem, messageService.message(LABEL_CURRENCY_SYMBOL));
+      String currencySymbol = messageService.message(LABEL_CURRENCY_SYMBOL);
+
+      if(!configService.getBoolValue("RNR_PRINT_REPEAT_CURRENCY_SYMBOL")){
+        currencySymbol = "";
+      }
+
+      List<PdfPCell> cells = getCells(visibleColumns, lineItem, currencySymbol);
       odd = !odd;
 
       for (PdfPCell cell : cells) {
@@ -178,7 +189,7 @@ public class RequisitionPdfModel {
       this.requisition.getFacility().getFacilityType().getName()), H1_FONT);
 
     PdfPCell cell = new PdfPCell(new Phrase(chunk));
-    cell.setColspan(4);
+    cell.setColspan(5);
     cell.setPadding(10);
     cell.setBorder(0);
     table.addCell(cell);
@@ -196,6 +207,7 @@ public class RequisitionPdfModel {
     text = String.format(messageService.message("label.emergency.order.point") + ": %s",
       facility.getFacilityType().getNominalEop());
     insertCell(table, text, 1);
+    insertCell(table, "", 1);
   }
 
   private void insertCell(PdfPTable table, String text, int colSpan) {
@@ -210,6 +222,9 @@ public class RequisitionPdfModel {
   private void addSecondLine(Facility facility, PdfPTable table, Boolean emergency) {
     GeographicZone geographicZone = facility.getGeographicZone();
     GeographicZone parent = geographicZone.getParent();
+    String text = String.format(messageService.message("header.facility.code") + ": %s", facility.getCode());
+    insertCell(table,text, 1);
+
     StringBuilder builder = new StringBuilder();
     builder.append(geographicZone.getLevel().getName()).append(": ").append(geographicZone.getName());
     insertCell(table, builder.toString(), 1);
@@ -229,7 +244,7 @@ public class RequisitionPdfModel {
   }
 
   private PdfPTable prepareRequisitionHeaderTable() throws DocumentException {
-    int[] columnWidths = {200, 200, 200, 200};
+    int[] columnWidths = {160, 160, 160, 160, 160};
     PdfPTable table = new PdfPTable(columnWidths.length);
     table.setWidths(columnWidths);
     table.getDefaultCell().setBackgroundColor(HEADER_BACKGROUND);
@@ -244,6 +259,8 @@ public class RequisitionPdfModel {
   public PdfPTable getSummary() throws DocumentException {
     this.requisition.fillFullSupplyCost();
     this.requisition.fillNonFullSupplyCost();
+
+    DecimalFormat formatter = new DecimalFormat("#,##0.00");
 
     PdfPTable summaryTable = new PdfPTable(2);
     summaryTable.setWidths(new int[]{30, 20});
@@ -260,17 +277,17 @@ public class RequisitionPdfModel {
     boolean showBudget = !requisition.isEmergency() && requisition.getProgram().getBudgetingApplies();
     if (showBudget) {
       summaryTable.addCell(summaryCell(textCell(messageService.message("label.allocated.budget"))));
-      PdfPCell allocatedBudgetCell = requisition.getAllocatedBudget() != null ? numberCell(messageService.message(LABEL_CURRENCY_SYMBOL) + new Money(requisition.getAllocatedBudget().toString())) :
+      PdfPCell allocatedBudgetCell = requisition.getAllocatedBudget() != null ? numberCell(messageService.message(LABEL_CURRENCY_SYMBOL) + formatter.format( new Money(requisition.getAllocatedBudget()).toDecimal())) :
         numberCell(messageService.message("msg.budget.not.allocated"));
       summaryTable.addCell(summaryCell(allocatedBudgetCell));
     }
     summaryTable.addCell(summaryCell(textCell(messageService.message("label.total.cost.full.supply.items"))));
-    summaryTable.addCell(summaryCell(numberCell(messageService.message(LABEL_CURRENCY_SYMBOL) + requisition.getFullSupplyItemsSubmittedCost())));
+    summaryTable.addCell(summaryCell(numberCell(messageService.message(LABEL_CURRENCY_SYMBOL) + formatter.format(requisition.getFullSupplyItemsSubmittedCost().toDecimal()))) );
     summaryTable.addCell(summaryCell(textCell(messageService.message("label.total.cost.non.full.supply.items"))));
-    summaryTable.addCell(summaryCell(numberCell(messageService.message(LABEL_CURRENCY_SYMBOL) + requisition.getNonFullSupplyItemsSubmittedCost())));
+    summaryTable.addCell(summaryCell(numberCell(messageService.message(LABEL_CURRENCY_SYMBOL) + formatter.format(requisition.getNonFullSupplyItemsSubmittedCost().toDecimal()))));
     summaryTable.addCell(summaryCell(textCell(messageService.message("label.total.cost"))));
-    summaryTable.addCell(summaryCell(numberCell(messageService.message(LABEL_CURRENCY_SYMBOL) + this.getTotalCost(
-      requisition).toString())));
+    summaryTable.addCell(summaryCell(numberCell(messageService.message(LABEL_CURRENCY_SYMBOL) + formatter.format(this.getTotalCost(
+      requisition).toDecimal()).toString())));
     if (showBudget && requisition.getAllocatedBudget() != null && (requisition.getAllocatedBudget().compareTo(this.getTotalCost(requisition).getValue()) == -1)) {
       summaryTable.addCell(summaryCell(textCell(messageService.message("msg.cost.exceeds.budget"))));
       summaryTable.addCell(summaryCell(textCell(" ")));

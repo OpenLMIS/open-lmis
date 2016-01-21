@@ -9,6 +9,7 @@
  */
 package org.openlmis.core.repository;
 
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
@@ -21,9 +22,6 @@ import org.openlmis.db.categories.UnitTests;
 import org.openlmis.core.domain.ProgramProductISA;
 import org.openlmis.core.repository.mapper.FacilityProgramProductMapper;
 import org.openlmis.core.repository.mapper.ProgramProductIsaMapper;
-
-import java.util.ArrayList;
-import java.util.List;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
@@ -41,14 +39,15 @@ public class FacilityProgramProductRepositoryTest {
   ProgramProductIsaMapper programProductIsaMapper;
 
   @Mock
-  FacilityProgramProductMapper mapper;
+  FacilityProgramProductMapper fppMapper;
 
 
   @Test
   public void shouldInsertISA() throws Exception {
-    ProgramProductISA isa = new ProgramProductISA();
-    repository.insertISA(isa);
-    verify(programProductIsaMapper).insert(isa);
+    Long facilityId = 100L;
+    ProgramProductISA programProductISA = new ProgramProductISA();
+    repository.insertISA(facilityId, programProductISA);
+    verify(fppMapper).insertISA(facilityId, programProductISA);
   }
 
   @Test
@@ -67,32 +66,6 @@ public class FacilityProgramProductRepositoryTest {
 
     verify(programProductIsaMapper).getIsaByProgramProductId(1l);
     assertThat(expectedIsa, is(isa));
-  }
-
-  @Test
-  public void shouldGetFacilityProgramProductWithIsaForAFacility() throws Exception {
-    Long programProductId = 1L;
-    Long facilityId = 2L;
-    when(mapper.getOverriddenIsa(programProductId, facilityId)).thenReturn(34);
-
-    Integer overriddenIsa = repository.getOverriddenIsa(programProductId, facilityId);
-
-    assertThat(overriddenIsa, is(34));
-    verify(mapper).getOverriddenIsa(programProductId, facilityId);
-  }
-
-
-  @Test
-  public void shouldReplaceAnyExistingOverriddenIsaWithNewOne() throws Exception {
-    Long facilityId = 2L;
-    ProgramProduct programProduct = new ProgramProduct();
-    programProduct.setId(1l);
-    FacilityProgramProduct product = new FacilityProgramProduct(programProduct, facilityId, 34);
-
-    repository.save(product);
-
-    verify(mapper).removeFacilityProgramProductMapping(1L, facilityId);
-    verify(mapper).insert(product);
   }
 
 }

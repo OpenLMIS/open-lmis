@@ -10,10 +10,10 @@
 
 package org.openlmis.distribution.serializer;
 
-import org.codehaus.jackson.JsonNode;
-import org.codehaus.jackson.JsonParser;
-import org.codehaus.jackson.ObjectCodec;
-import org.codehaus.jackson.map.DeserializationContext;
+import com.fasterxml.jackson.core.JsonParser;
+import com.fasterxml.jackson.core.ObjectCodec;
+import com.fasterxml.jackson.databind.DeserializationContext;
+import com.fasterxml.jackson.databind.JsonNode;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -63,7 +63,7 @@ public class DistributionReadingDeSerializerTest {
 
     JsonNode notRecordedNode = mock(JsonNode.class);
     when(jsonNode.get("notRecorded")).thenReturn(notRecordedNode);
-    when(notRecordedNode.getBooleanValue()).thenReturn(false);
+    when(notRecordedNode.booleanValue()).thenReturn(false);
 
     Reading reading = new DistributionReadingDeSerializer().deserialize(jp, mock(DeserializationContext.class));
     assertThat(reading.getValue(), is("55"));

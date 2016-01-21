@@ -1,0 +1,127 @@
+<form id="programForm" name="programForm" ng-submit="saveProgram()" novalidate>
+  <h4>
+    <span openlmis-message="admin.label.program.settings"></span>
+  </h4>
+
+  <div class="app-form" id="programFormGroup">
+    <div class="form-row clearfix row-fluid">
+      <div class="span6">
+        <div class="form-cell">
+          <label id="productCodeLabel">
+            <span openlmis-message="header.program.code"></span>
+            <span class="label-required">*</span>
+          </label>
+
+          <div class="form-field">
+            <input ng-model="program.code" name="code" id="code" type="text" maxlength="50"
+                   ng-required="true"/>
+              <span class="field-error" ng-show="!program.code && showError"
+                    openlmis-message="missing.value"></span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="form-row clearfix row-fluid">
+      <div class="span6">
+        <div class="form-cell">
+          <label for="name">
+            <span openlmis-message="admin.program.name"></span>
+            <span class="label-required"> *</span>
+          </label>
+
+          <div class="form-field">
+            <input ng-model="program.name" name="name" id="name" type="text"
+                   maxlength="150"
+                   ng-required="true"/>
+              <span class="field-error" ng-show="!program.name && showError"
+                    openlmis-message="missing.value"></span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="form-row clearfix row-fluid">
+      <div class="span4">
+        <div class="form-cell">
+          <div class="checkbox">
+            <label for="skipPeriod">
+              <input class="checkbox" ng-model="program.enableSkipPeriod" id="skipPeriod" type="checkbox"/>
+              <span openlmis-message="admin.program.enable.skip.period"></span>
+            </label>
+          </div>
+        </div>
+      </div>
+      <div class="span4">
+        <div class="form-cell">
+          <div class="checkbox">
+            <label for="hideSkippedProducts">
+              <input class="checkbox" id="hideSkippedProducts" ng-model="program.hideSkippedProducts"
+                     type="checkbox"/>
+              <span openlmis-message="admin.program.hide.skipped.products"></span>
+            </label>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="form-row clearfix row-fluid">
+      <div class="span6">
+        <div class="form-cell">
+          <div class="form-field">
+            <div class="checkbox">
+              <label for="showNonFullSupplyTab">
+                <input class="checkbox" ng-model="program.showNonFullSupplyTab" id="showNonFullSupplyTab"
+                       type="checkbox"/>
+                <span openlmis-message="admin.program.show.non.full.supply"></span>
+              </label>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="form-row clearfix row-fluid">
+      <div class="span6">
+        <div class="form-cell">
+          <div class="checkbox">
+            <label for="equipmentApplies">
+              <input class="checkbox" ng-model="program.isEquipmentConfigured" id="equipmentApplies" type="checkbox"/>
+              <span openlmis-message="admin.program.equipment.applies"></span>
+            </label>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="form-row clearfix row-fluid">
+      <div class="span4">
+        <div class="form-cell">
+          <div class="checkbox">
+            <label for="budgetingApplies">
+              <input class="checkbox" ng-model="program.budgetingApplies" id="budgetingApplies" type="checkbox"/>
+              <span openlmis-message="admin.program.budgeting.applies"></span>
+            </label>
+          </div>
+        </div>
+      </div>
+
+      <div class="span6">
+        <div class="form-cell">
+          <div class="form-field">
+            <div class="checkbox">
+              <label ng-class="{'gray':!program.budgetingApplies}" for="userPriceSchedule">
+                <input class="checkbox" ng-model="program.usePriceSchedule" id="userPriceSchedule" type="checkbox"
+                       ng-disabled="!program.budgetingApplies"/>
+                <span openlmis-message="admin.program.use.price.schedule"></span>
+              </label>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div form-toolbar id="action_buttons" class="action-buttons">
+    <div class="form-cell button-row">
+      <input type="submit" class="btn btn-primary save-button" openlmis-message="button.save"/>
+      <a ng-href="{{selectProgramUrl}}" class="btn btn-cancel cancel-button" openlmis-message="button.cancel"></a>
+    </div>
+    <div class="toolbar-error" id="saveErrorMsgDiv" openlmis-message="error" ng-show="error"></div>
+  </div>
+</form>

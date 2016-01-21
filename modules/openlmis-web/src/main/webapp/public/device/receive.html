@@ -1,0 +1,374 @@
+<!--
+  ~ This program is part of the OpenLMIS logistics management information system platform software.
+  ~
+  ~ This program is free software: you can redistribute it and/or modify it under the terms of the GNU Affero General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
+  ~  
+  ~ This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Affero General Public License for more details.
+  ~ You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org. 
+  -->
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html>
+<head>
+    <script src="js/jquery-1.11.3.min.js"></script>
+    <!--<script src="js/queryScript.js"></script>-->
+</head>
+<body style="width: 300px">
+<h1 style="background-color:#E6E6FA;">Electronic Logistics Management Information System( ELMIS )</h1>
+<div class="contents">
+    <form id="shipmentform">
+        <fieldset>
+            <legend>Scan the ShipmentID</legend>
+            <input type="text" name="shipment_id" id="shipment_id" /> &nbsp;&nbsp;&nbsp;
+            <input type="button" value="Scan"  id="scan_sscc"/>
+        </fieldset>
+    </form>
+    <div class="result"></div>
+    <p id="message"><img src="../images/ajax-loader.gif" alt=""/></p>
+</div>
+<script>
+    var PACKAGE = {
+        items: {},
+        current_items: {},
+        single_item: {},
+        current_shipment_no: "",
+        current_lot_number: "",
+        current_user: {}
+    };
+    $(document).ready(function(){
+
+        //getting user details
+        $.ajax({
+            method: 'GET',
+            url: '/user-context',
+            headers: {'Content-Type': 'application/x-www-form-urlencoded'}
+        }).success(function(data) {
+            PACKAGE.current_user = data;
+        }).error(function(data){
+            alert('error');
+        });
+
+        $("#message").hide();
+        $("#shipment_id").focus();
+        $( "#scan_sscc" ).click(function() {
+
+            $("#message").show();
+            $(".result").hide();
+            if($("#shipment_id").val() != ""){
+                var shipment_id = $("#shipment_id").val();
+                $.ajax({
+                    method: 'GET',
+                    url: '/stock/manufacture/package?filter=shipment_id:eq:'+$("#shipment_id").val()+';delivery_status:eq:Pending',
+                    headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+                }).success(function(data) {
+                    if(!data.error){
+                        if(data.manufacture_packages.length == 0){
+                            $(".result").show().html('<h5>There is no package with this package number</h5>');
+                        }else{
+                            PACKAGE.items = data.manufacture_packages;
+                            PACKAGE.current_shipment_no = shipment_id;
+                            displayPackageList();
+
+                        }
+
+                    }else{
+                        $("#message").hide();
+                    }
+                    $("#message").hide();
+
+                }).error(function(data){
+                    alert('error');
+                });
+            }
+
+        });
+
+
+    });
+
+    function getShipmentinfo(){
+        var html = "<table><tr><td colspan='3'>shipment number: "+PACKAGE.current_shipment_no+"</td> </tr>";
+        html += '<tr><td>Scan the Lot Number</td>';
+        html += '<td><input type="text" name="lot_number" id="lot_number" /> </td>';
+        html += '<td><input type="button" value="Scan"  id="scan_lot"/></td></tr>';
+        html += '<tr><td colspan="3" id="errorMessage"></td></tr></table>';
+        html += "<table border='1' cellpadding='0' cellspacing='0'>";
+        html +="<tr>";
+        html +="<th>GTIN</th>";
+        html +="<th>Item</th>";
+        html +="<th>Lot Number</th>";
+        html +="<th>Expiry</th>";
+        html +="<th>Boxes</th>";
+        html +="</tr>";
+        $.each(PACKAGE.items, function(index, element) {
+            var d = new Date(element.expire_date);
+            if(element.delivery_status == "processing"){
+                html +="<tr style='background-color: #004444'>";
+            }else{
+                html +="<tr>";
+            }
+
+            html +="<td>"+element.vaccine_packaging.gtin+"</td>";
+            html +="<td>"+element.vaccine_packaging.vaccine.name+"</td>";
+            html +="<td>"+element.lot_number+"</td>";
+            html +="<td>"+ d.toDateString()+"</td>";
+            html +="<td>"+parseInt(element.number_of_doses/(element.vaccine_packaging.doses_per_vial*element.vaccine_packaging.vials_per_box))+"</td>";
+            html +="</tr>";
+
+        });
+        html +="</table>";
+        html +=displayLastPage();
+        return html;
+    }
+
+    function getSpecificLotNumber(){
+        $("#message").show();
+        $.ajax({
+            method: 'GET',
+            url: '/stock/manufacture/package?filter=shipment_id:eq:'+PACKAGE.current_shipment_no+';lot_number:eq:'+PACKAGE.current_lot_number,
+            headers: {'Content-Type': 'application/x-www-form-urlencoded'}
+        }).success(function(data) {
+            if(data.manufacture_packages.length == 0){
+                $("#errorMessage").show().html("<p style='color:rosybrown'>There is no item with this lot number</p>").delay(3000).hide('slow');
+            }else{
+                PACKAGE.single_item = data.manufacture_packages[0];
+                var d = new Date(+PACKAGE.single_item.expire_date);
+                var boxes = parseInt(PACKAGE.single_item.number_of_doses/(PACKAGE.single_item.vaccine_packaging.doses_per_vial*PACKAGE.single_item.vaccine_packaging.vials_per_box));
+                var html = '<table border="1" cellspacing="0" cellpadding="0">';
+                html += ' <thead>';
+                html += '     <tr><th>GTN</th><th>Item</th><th>Lot</th><th>Expiry</th><th>Vials</th><th>Boxes</th></tr>';
+                html += ' </thead>';
+                html += '<tr>';
+                html += '<td>'+PACKAGE.single_item.vaccine_packaging.gtin+'</td>';
+                html += '<td>'+PACKAGE.single_item.vaccine_packaging.vaccine.name+'</td>';
+                html += '<td>'+PACKAGE.single_item.lot_number+'</td>';
+                html += '<td>'+d.toDateString()+'</td>';
+                html += '<td>'+parseInt(PACKAGE.single_item.number_of_doses/PACKAGE.single_item.vaccine_packaging.doses_per_vial)+'</td>';
+                html += '<td>'+boxes+'</td>';
+                html += '</tr>';
+                html += '</table>';
+
+                html += '</br>';
+                html += '<table>';
+                html += '<tr><td>Quantity Okay</td><td><select id="quantity"><option value="Yes">Yes</option><option value="No">No</option></select></td></tr>';
+                html += '<tr id="amount"><td>Amount Available(boxes)</td><td><input type="text" id="available_boxes"> </td></tr>';
+                html += '<tr><td>Physical Damage</td><td><select id="physical_damage"><option value="No">No</option><option value="Yes">Yes</option></select></td></tr>';
+                html += '<tr id="damage"><td>Damaged Amount(boxes)</td><td><input type="text" id="damaged_boxes"> </td></tr>';
+                html += '<tr><td>VVM Status</td><td><select id="vvm_status"><option value="I (Okey)">I (Okey)</option><option value="II (Okey)">II (Okey)</option><option value="III (Bad)">III (Bad)</option><option  value="IV (Bad)">IV (Bad)</option></select></td></tr>';
+                html += '<tr><td>Partial Boxes</td><td><select id="partial_boxes"><option>No</option><option>Yes</option></select></td></tr>';
+                html += '<tr id="partial"><td>Number of Vials in Partial Boxes</td><td><input type="text" id="parial_boxes"> </td></tr>';
+
+                html += '</table>';
+                html += '</br>';
+                html += '<table>';
+                html += '<tr>';
+                html += '<td>Comments and Observations</td>';
+                html += '</tr>';
+                html += '<tr>';
+                html += '<td><textarea id="commentss"></textarea></td>';
+                html += '</tr>';
+                html += '</table>';
+                html += '</br>';
+                html += '<table><tr><td><input type="button" value="Save" id="saveChanges"></td></tr></table>';
+
+                $(".result").show().html(html);
+                $("#amount").hide();
+                $("#damage").hide();
+                $("#partial").hide();
+                $("#quantity").change(function(){
+                    if($(this).val() == "No"){
+                        $("#amount").show("slow");
+                    }else{
+                        $("#amount").hide("slow");
+                    }
+                });
+                $("#physical_damage").change(function(){
+                    if($(this).val() == "Yes"){
+                        $("#damage").show("slow");
+                    }else{
+                        $("#damage").hide("slow");
+                    }
+                });
+                $("#partial_boxes").change(function(){
+                    if($(this).val() == "Yes"){
+                        $("#partial").show("slow");
+                    }else{
+                        $("#partial").hide("slow");
+                    }
+                });
+                saveOneItem();
+            }
+            $("#message").hide();
+        }).error(function(data){
+            alert('error');
+            $("#message").hide();
+        });
+
+
+    }
+
+
+    function displayScan(){
+        $("#shipmentform").show('slow');
+        $(".result").hide().html("");
+        $("#message").hide();
+    }
+
+    function displayPackageList(){
+        $(".result").html("");
+        $("#errorMessage").hide();
+        var html = getShipmentinfo();
+        $(".result").show().html(html);
+        $("#shipmentform").hide('slow');
+        saveAllChanges();
+        //processing package items
+        $("#lot_number").focus();
+        $("#scan_lot").click(function(){
+            if($("#lot_number").val() != "") {
+                var lot_number = $("#lot_number").val();
+                if(lot_number.length >= 24){
+                    var n = lot_number.lastIndexOf("21");
+//                console.log(lot_number.substring(27,n));
+                    PACKAGE.current_lot_number = lot_number.substring(29,n);
+                }else{
+                    PACKAGE.current_lot_number = lot_number;
+                }
+
+                getSpecificLotNumber();
+            }
+        });
+
+    }
+
+    function displayLastPage(){
+        var count = 0;
+        var num = PACKAGE.items.length;
+        var html = "";
+        $.each(PACKAGE.items, function(index, element) {
+            if(element.delivery_status == "processing"){
+                count++;
+                element.delivery_status = "processing";
+            }
+        });
+        if(count == num){
+            html += '</br>';
+            html += '<table>';
+            html += '<tr><td>Packing list </td><td><select id="packaging"><option value="Yes">Yes</option><option value="No">No</option></select></td></tr>';
+            html += '<tr><td>Release certificate</td><td><select id="release"><option value="Yes">Yes</option><option value="No">No</option></select></td></tr>';
+            html += '<tr><td>Invoice</td><td><select id="invoice"><option value="Yes">Yes</option><option value="No">No</option></select></td></tr>';
+            html += '<tr><td>Airway Bill</td><td><select id="airway_bill"><option value="Yes">Yes</option><option value="No">No</option></select></td></tr>';
+            html += '<tr><td>Coolant type </td><td><select id="coolant"><option value="Dry Ice">Dry Ice</option><option value="Ice Packs">Ice Packs</option><option value="No Coolant">No Coolant</option></select></td></tr>';
+            html += '<tr><td>Temperature monitors</td><td><select id="temprature"><option value="VVM">VVM</option><option value="Cold-chain card">Cold-chain card</option><option value="Elecronic Device">Elecronic Device</option></select></td></tr>';
+            html += '<tr><td>Comments</td><td><textarea id="general_comments"></textarea></td></tr>';
+
+            html += '</table>';
+            html += '<br><table><tr><td><input type="button" value="Save" id="saveAllChanges"></td></tr></table>';
+        }
+        return html;
+    }
+
+    function saveOneItem(){
+        $("#saveChanges").click(function(){
+
+            var boxes = parseInt(PACKAGE.single_item.number_of_doses/(PACKAGE.single_item.vaccine_packaging.doses_per_vial*PACKAGE.single_item.vaccine_packaging.vials_per_box));
+
+            var arrival = {
+                "package_number": PACKAGE.single_item.shipment_id,
+                "gtin": PACKAGE.single_item.vaccine_packaging.gtin,
+                "number_as_expected": boxes,
+                "number_recieved": ($("#available_boxes").val() != "")?$("#available_boxes").val() : 0,
+                "lot_number": PACKAGE.single_item.lot_number,
+                "physical_damage": $("#physical_damage").val(),
+                "damaged_amount":($("#damaged_boxes").val() != "")?$("#vvm_status").val() : 0,
+                "temprature_monitor": "",
+                "vvm_status": ($("#vvm_status").val() != "")?$("#vvm_status").val() : 0,
+                "problems": $("#commentss").val(),
+                "receiveing_user":      PACKAGE.current_user.userId,
+                "geographic_zone_id":   PACKAGE.current_user.preferences.DEFAULT_FACILITY,
+                "vaccine_packaging_id": PACKAGE.single_item.vaccine_packaging.id
+            }
+            $.each(PACKAGE.items, function(index, element) {
+                if(element.id == PACKAGE.single_item.id){
+                    element.arrival_item = arrival;
+                    element.delivery_status = "processing";
+                }
+            });
+            PACKAGE.single_item = {};
+            displayPackageList();
+
+        });
+    }
+
+    function saveAllChanges(){
+        $("#saveAllChanges").click(function(){
+           var var_details = {
+               "awb_number"   : PACKAGE.current_shipment_no,
+               "flight_number" : '',
+               "estimate_time_of_arrival" : '2015-07-14',
+               "actual_time_of_arrival" : '2015-07-14',
+               "number_of_items_inspected" : PACKAGE.items.length,
+               "coolant_type" : $("#coolant").val(),
+               "temperature_monitor" : $("#temprature").val(),
+               "labels" : "Yes",
+               "comments" : $("#general_comments").val(),
+               "invoice" : $("#invoice").val(),
+               "packing_list" : $("#packaging").val(),
+               "release_certificate" : $("#release").val(),
+               "airway_bill" : $("#airway_bill").val()
+           }
+            var check = PACKAGE.items.length + 1;
+            var check1 = 0;
+            var successMessage = "<h3 style='color: green'>Request Submited Successfuly</h3>";
+            successMessage += "<button id='refreshpage'>Receive Another Package</button>";
+            $.each(PACKAGE.items, function(index, element) {
+                element.delivery_status = "Received";
+                $.ajax({
+                    method: 'POST',
+                    data: JSON.stringify(element.arrival_item),
+                    url: '/stock/package/arrival',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                }).success(function(data) {
+                   check1++;
+                    if(check == check1){
+                        $(".result").show().html(successMessage);
+                       $("#refreshpage").click(function(){
+                           location.reload();
+                       });
+                    }
+                }).error(function(){
+//                    alert('error')
+                })
+            });
+            $.ajax({
+                method: 'POST',
+                data: JSON.stringify(var_details),
+                url: '/stock/var/details',
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            }).success(function(data) {
+                check1++;
+                if(check == check1){
+                    $(".result").show().html(successMessage);
+                    $("#refreshpage").click(function(){
+                        location.reload();
+                    });
+                }
+            }).error(function(){
+                check1++;
+                if(check == check1){
+                    $(".result").show().html(successMessage);
+                    $("#refreshpage").click(function(){
+                        location.reload();
+                    });
+                }
+            })
+
+        });
+    }
+</script>
+
+</body>
+</html>

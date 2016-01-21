@@ -789,6 +789,7 @@ th.col-reasonForLossesAndAdjustments {
   min-width: 280px;
 }
 
+td.col-general,
 td.col-beginningBalance,
 td.col-quantityReceived,
 td.col-quantityReturned,
@@ -802,6 +803,10 @@ td.col-quantityApproved {
     width: 89%;
     text-align: right;
   }
+}
+
+.col-row-number{
+  width: 20px;
 }
 
 td.col-expirationDate {
@@ -818,6 +823,7 @@ td.col-patientsStoppedTreatment {
   }
 }
 
+td.col-general,
 td.col-beginningBalance,
 td.col-total,
 td.col-stockInHand,
@@ -931,7 +937,7 @@ table td.cell-input .display-block, .display-block {
   display: block;
 }
 
-.cell-input input[type="text"] {
+.cell-input input[type="text"], .cell-input select {
   .size(29px, 96%);
   padding: 0 3px;
   margin: 2px 2px;
@@ -1849,6 +1855,13 @@ td .close {
   background-color: #efefef;
 }
 
+.grid-input-row-grey{
+  background-color: #efefef;
+}
+.input-adjusted {
+  height:28px !important;
+}
+
 .loader-icon {
   .square(100%);
   position: fixed;
@@ -2168,7 +2181,7 @@ input[placeholder].placeholder {
 .rights-table {
   tr {
     th, td {
-      width: 20%;
+      width: 16.66%;
       padding: 20px 9px 20px 20px;
       background-color: white;
     }
@@ -2237,9 +2250,6 @@ input[placeholder].placeholder {
     text-align: right;
   }
   div {
-    &.has-overridden-isa {
-      background-color: #FFFFE7;
-    }
     .list-row {
       &:hover {
         background-color: transparent;
@@ -3047,4 +3057,158 @@ input[type="checkbox"].facilityCheckbox {
   td {
     background: #e0e0e0 !important;
   }
+}
+
+/* Dashboard EasyChart
+=================================================================== */
+.easychart {
+  position: relative;
+  display: inline-block;
+  width: 110px;
+  height: 110px;
+  margin-top: 50px;
+  margin-bottom: 50px;
+  text-align: center;
+}
+.easychart canvas {
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+.easychart-percent {
+  display: inline-block;
+  line-height: 110px;
+  z-index: 2;
+}
+.easychart-percent:after {
+  content: '%';
+  margin-left: 0.1em;
+  font-size: .8em;
+}
+
+.angular-google-map-container { height: 400px; }
+
+.numeric-input{
+  text-align:right;
+  float:right;
+  clear:both;
+}
+
+.highlight{
+  background-color: #C9DDE1 !important;
+}
+
+
+.search-list {
+  position: relative;
+  border: 1px solid #ccc;
+  border-radius: 3px;
+  margin: 10px 0;
+  h3 {
+    padding: 8px 10px;
+    margin: 0;
+    background: #f9f9f9; /* Old browsers */
+    background: -moz-linear-gradient(top, #f9f9f9 0%, #e0e0e0 100%); /* FF3.6+ */
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(0%, #f9f9f9), color-stop(100%, #e0e0e0)); /* Chrome,Safari4+ */
+    background: -webkit-linear-gradient(top, #f9f9f9 0%, #e0e0e0 100%); /* Chrome10+,Safari5.1+ */
+    background: -o-linear-gradient(top, #f9f9f9 0%, #e0e0e0 100%); /* Opera 11.10+ */
+    background: -ms-linear-gradient(top, #f9f9f9 0%, #e0e0e0 100%); /* IE10+ */
+    background: linear-gradient(to bottom, #f9f9f9 0%, #e0e0e0 100%); /* W3C */
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#f9f9f9', endColorstr='#e0e0e0', GradientType=0); /* IE6-9 */
+    line-height: normal;
+    text-shadow: 0 1px 0 #FFF;
+    color: #444;
+  }
+  .close-btn {
+    .square(16px);
+    position: absolute;
+    top: 10px;
+    right: 11px;
+    opacity: 0.8;
+    background: url(../images/close-icon.png) no-repeat left top;
+    text-indent: -999em;
+    &:hover {
+      opacity: 1;
+    }
+  }
+  ul {
+    margin: 0;
+    list-style: none;
+
+    li {
+      position: relative;
+      border-top: 1px solid #CCC;
+      &:first-child {
+        border-top: 0;
+      }
+      > a {
+        padding: 10px;
+        display: block;
+        &:hover, &:focus {
+          + .search-actions a {
+            display: inline-block;
+          }
+        }
+      }
+      &:hover > a {
+        background-color: #f9f9f9;
+      }
+      &:hover .search-actions a {
+        display: inline-block !important;
+      }
+    }
+
+    .search-actions {
+      position: absolute;
+      right: 10px;
+      top: 0;
+      padding: 6px 0;
+      display: inline-block;
+      a {
+        display: none;
+        margin-right: 5px;
+      }
+    }
+  }
+}
+.vaccine-report {
+  .table th, .table td {
+    padding: 5px;
+    line-height: 15px;
+  }
+  .accordion {
+    .accordion-heading{
+      font-size: 1em;
+    }
+  }
+  .red{
+    color: red;
+  }
+  .green{
+    color: #008000;
+  }
+  .blue{
+    color: #0000ff;
+  }
+  .gradient-header th {
+    min-width: 0px;
+  }
+  /*.flot-y-axis > .flot-tick-label{
+    left:20px !important;
+
+  }*/
+}
+.vaccine-report-popover{
+  .table th, .table td {
+    padding: 4px;
+    line-height: 6px;
+  }
+}
+
+.number, td.number, th.number{
+  text-align: right;
+}
+
+.text-row, tr.text-row{
+  height: 35px;
 }

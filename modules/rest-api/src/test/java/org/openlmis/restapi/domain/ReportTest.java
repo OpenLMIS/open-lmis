@@ -14,19 +14,33 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.junit.rules.ExpectedException;
+import org.openlmis.core.builder.FacilityBuilder;
+import org.openlmis.core.builder.ProcessingPeriodBuilder;
 import org.openlmis.core.builder.ProductBuilder;
+import org.openlmis.core.builder.ProgramBuilder;
+import org.openlmis.core.domain.Facility;
+import org.openlmis.core.domain.ProcessingPeriod;
+import org.openlmis.core.domain.Program;
+import org.openlmis.core.domain.Signature;
 import org.openlmis.core.exception.DataException;
+import org.openlmis.core.utils.DateUtil;
 import org.openlmis.db.categories.UnitTests;
 import org.openlmis.restapi.builder.ReportBuilder;
+import org.openlmis.rnr.builder.PatientQuantificationsBuilder;
+import org.openlmis.rnr.builder.RegimenLineItemBuilder;
 import org.openlmis.rnr.builder.RnrLineItemBuilder;
+import org.openlmis.rnr.domain.PatientQuantificationLineItem;
+import org.openlmis.rnr.domain.RegimenLineItem;
 import org.openlmis.rnr.domain.Rnr;
 import org.openlmis.rnr.domain.RnrLineItem;
 
+import java.util.Date;
 import java.util.List;
 
 import static com.natpryce.makeiteasy.MakeItEasy.*;
 import static java.util.Arrays.asList;
 import static org.hamcrest.core.Is.is;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertThat;
 import static org.openlmis.restapi.builder.ReportBuilder.approverName;
 import static org.openlmis.restapi.builder.ReportBuilder.products;
@@ -46,6 +60,15 @@ public class ReportTest {
     expectedException.expect(DataException.class);
     expectedException.expectMessage("error.mandatory.fields.missing");
 
+    report.validate();
+  }
+
+  @Test
+  public void shouldNotThrowExceptionIfReportContainsAgentCodeAndProgramCode() {
+    Report report = make(a(ReportBuilder.defaultReport, with(ReportBuilder.agentCode, "123")));
+    report.setProgramCode("abc");
+
+    //should not throw an exception here
     report.validate();
   }
 
@@ -161,6 +184,67 @@ public class ReportTest {
     expectedException.expectMessage("error.mandatory.fields.missing");
 
     report.validateForApproval();
+  }
+
+  @Test
+  public void shouldConvertRnrToReportForRestResponse() {
+    Rnr rnr = new Rnr();
+    Facility facility = make(a(FacilityBuilder.defaultFacility));
+    Program program = make(a(ProgramBuilder.defaultProgram));
+    rnr.setFacility(facility);
+    rnr.setProgram(program);
+    rnr.setClientSubmittedNotes("abc");
+    List<RnrLineItem> rnrLineItems = asList(make(a(RnrLineItemBuilder.defaultRnrLineItem, with(RnrLineItemBuilder.productCode, "P1"))),
+        make(a(RnrLineItemBuilder.defaultRnrLineItem, with(RnrLineItemBuilder.productCode, "P2"))),
+        make(a(RnrLineItemBuilder.defaultRnrLineItem, with(RnrLineItemBuilder.productCode, "P3"))));
+    rnr.setFullSupplyLineItems(rnrLineItems);
+    List<RegimenLineItem> regimenLineItems = asList(make(a(RegimenLineItemBuilder.defaultRegimenLineItem)),
+        make(a(RegimenLineItemBuilder.defaultRegimenLineItem)));
+    rnr.setRegimenLineItems(regimenLineItems);
+    List<PatientQuantificationLineItem> patientQuantificationLineItems = asList(make(a(PatientQuantificationsBuilder.defaultPatientQuantificationLineItem)),
+        make(a(PatientQuantificationsBuilder.defaultPatientQuantificationLineItem)));
+    rnr.setPatientQuantifications(patientQuantificationLineItems);
+    rnr.setPeriod(new ProcessingPeriod());
+    rnr.setRnrSignatures(asList(new Signature(Signature.Type.SUBMITTER, "abc")));
+
+    Report report = Report.prepareForREST(rnr);
+
+    assertThat(report.getAgentCode(), is(rnr.getFacility().getCode()));
+    assertThat(report.getProgramCode(), is(rnr.getProgram().getCode()));
+    assertThat(report.getClientSubmittedNotes(), is(rnr.getClientSubmittedNotes()));
+    assertThat(report.getProducts().size(), is(3));
+    assertThat(report.getProducts().get(0).getProductCode(), is("P1"));
+    assertThat(report.getRegimens().size(), is(2));
+    assertThat(report.getPatientQuantifications().size(), is(2));
+    assertNull(report.getClientSubmittedTime());
+    assertThat(report.getRnrSignatures().get(0).getText(), is("abc"));
+  }
+
+  @Test
+  public void shouldConvertClientSubmittedTimeIfExists() {
+    Rnr rnr = new Rnr();
+    Date date = DateUtil.parseDate("2011-11-11 11:11:11");
+    rnr.setFacility(make(a(FacilityBuilder.defaultFacility)));
+    rnr.setProgram(make(a(ProgramBuilder.defaultProgram)));
+    rnr.setClientSubmittedTime(date);
+    rnr.setPeriod(new ProcessingPeriod());
+
+    Report report = Report.prepareForREST(rnr);
+    assertThat(report.getClientSubmittedTime().getTime(), is(date.getTime()));
+  }
+
+  @Test
+  public void shouldRetrievePeriodStartDateForARequisitionIfExists() {
+    Rnr rnr = new Rnr();
+    Date date = DateUtil.parseDate("2011-11-11 11:11:11");
+    rnr.setFacility(make(a(FacilityBuilder.defaultFacility)));
+    rnr.setProgram(make(a(ProgramBuilder.defaultProgram)));
+    rnr.setClientSubmittedTime(date);
+    ProcessingPeriod period = make(a(ProcessingPeriodBuilder.defaultProcessingPeriod));
+    rnr.setPeriod(period);
+
+    Report report = Report.prepareForREST(rnr);
+    assertThat(report.getPeriodStartDate(), is(period.getStartDate()));
   }
 }
 

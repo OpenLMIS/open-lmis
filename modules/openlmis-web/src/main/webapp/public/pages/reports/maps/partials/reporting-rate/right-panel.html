@@ -1,0 +1,50 @@
+<!--
+  ~ This program was produced for the U.S. Agency for International Development. It was prepared by the USAID | DELIVER PROJECT, Task Order 4. It is part of a project which utilizes code originally licensed under the terms of the Mozilla Public License (MPL) v2 and therefore is licensed under MPL v2 or later.
+  ~
+  ~ This program is free software: you can redistribute it and/or modify it under the terms of the Mozilla Public License as published by the Mozilla Foundation, either version 2 of the License, or (at your option) any later version.
+  ~
+  ~ This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the Mozilla Public License for more details.
+  ~
+  ~ You should have received a copy of the Mozilla Public License along with this program. If not, see http://www.mozilla.org/MPL/
+  -->
+
+<div class="row">
+  <div class="span7">
+    <div style="padding-left: 30px;">
+      <leaflet width="100%" height="600px" legend="legend" geojson="geojson" layers="layers"></leaflet>
+    </div>
+  </div>
+  <div class="span5">
+    <div style="" ng-show="features && (features | filter:expectedFilter).length > 0">
+      <p class="grey pull-right">
+        You can click on the chart to see list of facilities
+      </p><br/>
+      <table class="table table-striped table-scrollable scroll">
+        <thead>
+        <tr>
+          <th style="width:35%" openlmis-message="label.district"></th>
+          <th style="width:10%" class="number" openlmis-message="label.expected"></th>
+          <th style="width:10% !important;" class="number" openlmis-message="label.reported"></th>
+          <th style="width: 30%; text-align: right" openlmis-message="label.percent.reported"></th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr ng-repeat="feature in features | filter:expectedFilter">
+          <td style="width:35% !important;">{{feature.name}}</td>
+          <td style="width:10% !important;" class="number">{{feature.expected}}</td>
+          <td style="width:10% !important;" class="number">{{feature.period}}</td>
+          <td style="width:30% !important;" class="number">
+            <div class="number" style="float:right;">{{((feature.period / feature.expected) * 100).toFixed(0)}} %</div>
+            <div class="progress" style="margin-bottom:0px;width:68%">
+              <div class="bar bar-success leaflet-clickable" ng-click="onDetailClicked(feature, this)"
+                   style="width: {{((feature.period / feature.expected) * 100).toFixed(2)}}%"></div>
+              <div class="bar bar-danger leaflet-clickable" ng-click="onDetailClicked(feature, this)"
+                   style="width: {{(100 - ((feature.period / feature.expected) * 100).toFixed(2))}}%"></div>
+            </div>
+          </td>
+        </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>

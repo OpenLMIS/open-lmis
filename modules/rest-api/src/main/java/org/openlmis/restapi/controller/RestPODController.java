@@ -1,5 +1,6 @@
 package org.openlmis.restapi.controller;
 
+import com.wordnik.swagger.annotations.Api;
 import lombok.NoArgsConstructor;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.pod.domain.OrderPOD;
@@ -24,6 +25,7 @@ import static org.springframework.web.bind.annotation.RequestMethod.POST;
 
 @Controller
 @NoArgsConstructor
+@Api(value="PoD", description = "Allows Submission of Proof of Delivery", position = 2)
 public class RestPODController extends BaseController {
 
   @Autowired

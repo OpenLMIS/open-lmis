@@ -1,0 +1,119 @@
+<!--
+  ~ Electronic Logistics Management Information System (eLMIS) is a supply chain management system for health commodities in a developing country setting.
+  ~
+  ~ Copyright (C) 2015  John Snow, Inc (JSI). This program was produced for the U.S. Agency for International Development (USAID). It was prepared under the USAID | DELIVER PROJECT, Task Order 4.
+  ~
+  ~ This program is free software: you can redistribute it and/or modify it under the terms of the GNU Affero General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
+  ~
+  ~ This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Affero General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU Affero General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
+  -->
+
+<style>
+    .ng-table th.sortable div {
+        /* css-3 */
+        white-space: -o-pre-wrap;
+        word-wrap: break-word;
+        white-space: pre-wrap;
+        white-space: -moz-pre-wrap;
+        white-space: -pre-wrap;
+    }
+
+</style>
+
+<div class="alert alert-success" id="saveSuccessMsgDiv" ng-bind="message" ng-show="message"/>
+<div class="container-fluid">
+    <div class="box row-fluid">
+        <div class="box-header">
+            <h2 openlmis-message="report.title.regimen.distribution.by.facility"><i class="icon-edit"></i><span class="break"></span></h2>
+
+            <div class="box-icon">
+              <a id="pdf-button" ng-show="filterForm.$valid" href="" ng-click="exportReport('PDF')" class='btn-small btn-info'><span openlmis-message="label.pdf"></span></a>
+              <a id="xls-button" ng-show="filterForm.$valid" href="" ng-click="exportReport('XLS')" class='btn-small btn-info'><span openlmis-message="label.excel"></span></a>
+            </div>
+        </div>
+        <div>
+            <div class="row-fluid">
+                <div class="sidebar">
+                    <div class="app-form" style="padding: 5px;">
+                        <form ng-submit="filterGrid()" name="filterForm" novalidate>
+                            <div filter-container class="clearfix">
+                              <program-filter class="form-cell horizontalFilters" regimen="true"
+                                                         required="true"></program-filter>
+                                <schedule-filter class="form-cell horizontalFilters" required="true"></schedule-filter>
+                                <year-filter class="form-cell horizontalFilters" required="true"></year-filter>
+                                <period-filter class="form-cell horizontalFilters" required="true"></period-filter>
+                                <div ng-hide="showMoreFilters"  class="clearfix form-cell horizontalFilters" >
+                                    <br />
+                                    <a ng-click="toggleMoreFilters()" class="button" openlmis-message="label.show.more.filters" ></a>
+                                </div>
+                                <div ng-hide="!showMoreFilters">
+                                <zone-filter class="form-cell horizontalFilters"></zone-filter>
+
+                                    <facility-type-filter class="form-cell horizontalFilters" ></facility-type-filter>
+                                <facility-filter class="form-cell horizontalFilters"></facility-filter>
+                                <regimen-category-filter class="form-cell horizontalFilters"></regimen-category-filter>
+                                <regimen-filter class="form-cell horizontalFilters"></regimen-filter>
+                                <div  class="clearfix form-cell horizontalFilters" >
+                                    <br />
+                                    <a class="button" ng-click="toggleMoreFilters()" openlmis-message="label.show.less.filters"></a>
+                                </div>
+                            </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+                <div class="content-body">
+                    <table client-side-sort-pagination class="table table-bordered"
+                           ng-show="data == undefined || data.length == 0">
+                        <tr>
+                            <td>No data to show under selected filters</td>
+                        </tr>
+                    </table>
+
+                    <div ng-show="datarows.length > 0">
+                        <div class="pull-right legend">Page: {{tableParams.page}}, Showing records {{ ((tableParams.page
+                            - 1) * tableParams.count) + 1 }} to {{ (tableParams.page ) * tableParams.count }} of
+                            {{tableParams.total}}
+                            <br/>
+                        </div>
+                        <table id="reportTable" ng-show="datarows.length > 0" class="table-bordered table table-striped"
+                               ng-table="tableParams">
+                            <tbody>
+                            <tr ng-repeat="row in datarows">
+                                <td data-title="'#'" class="number" style="width:20px">{{ row.no }}</td>
+                                <td data-title="getLocalMessage('label.facility.code')" sortable="facilityCode" style="width:40px">{{ row.facilityCode }}</td>
+
+                                <td data-title="getLocalMessage('label.facility')" sortable="facilityName" style="width:80px">{{ row.facilityName }}</td>
+                                <td data-title="getLocalMessage('label.district')" sortable="district" style="width:40px">{{ row.district }}</td>
+                                <td data-title="getLocalMessage('label.region')" sortable="region" style="width:40px">{{ row.region }}</td>
+                                <td data-title="getLocalMessage('label.zone')" sortable="zone" style="width:100px">{{ row.zone }}</td>
+                                <td data-title="getLocalMessage('label.regimen')" style="width:100px" sortable="regimen" >{{ row.regimen }}</td>
+                                <td data-title="'No. of Patients On Treatment'" style="width:20px;" class="number" sortable="patientsontreatment">
+                                    {{ row.patientsontreatment | number}}
+                                </td>
+
+                                <td data-title="getLocalMessage('label.patient.initiate.treatment')" class="number" style="width:20px;"
+                                    sortable="patientstoinitiatetreatment">{{ row.patientstoinitiatetreatment | number
+                                    }}
+                                </td>
+
+                                <td data-title="getLocalMessage('label.stopped.treatments')" style="width:20px;" class="number"
+                                    sortable="patientsstoppedtreatment">{{ row.patientsstoppedtreatment | number}}
+                                </td>
+
+
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div>

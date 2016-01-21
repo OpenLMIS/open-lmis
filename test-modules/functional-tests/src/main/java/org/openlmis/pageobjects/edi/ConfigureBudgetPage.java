@@ -76,7 +76,7 @@ public class ConfigureBudgetPage extends Page {
   @FindBy(how = XPATH, using = "//div[@id='select2-drop']/ul/li[1]/div")
   private static WebElement periodStartDateSelectBoxSelectableElement = null;
 
-  @FindBy(how = XPATH, using = "//div[@id='s2id_autogen5']/a/div/b")
+  @FindBy(how = XPATH, using = "//div[@id='s2id_autogen5']/a")
   private static WebElement periodStartDateSelectBoxClickAbleLink = null;
 
   @FindBy(how = XPATH, using = "//div[@id='s2id_autogen5']/a/span")

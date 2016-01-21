@@ -20,7 +20,9 @@ import org.openlmis.core.domain.GeographicLevel;
 import org.openlmis.core.repository.mapper.GeographicLevelMapper;
 import org.openlmis.db.categories.UnitTests;
 
+import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.verify;
+import static org.powermock.api.mockito.PowerMockito.when;
 
 @Category(UnitTests.class)
 @RunWith(MockitoJUnitRunner.class)
@@ -52,5 +54,17 @@ public class GeographicLevelRepositoryTest {
 
     repo.save(geoLevel);
     verify(mapper).insert(geoLevel);
+  }
+
+  @Test
+  public void shouldGetGeographicLevel() throws Exception {
+    GeographicLevel expectedLevel = new GeographicLevel();
+    expectedLevel.setCode("code");
+    when(mapper.getGeographicLevelById(1)).thenReturn(expectedLevel);
+
+    GeographicLevel actual = repo.getGeographicLevel(1);
+
+    verify(mapper).getGeographicLevelById(1);
+    assertEquals(actual.getCode(), "code");
   }
 }

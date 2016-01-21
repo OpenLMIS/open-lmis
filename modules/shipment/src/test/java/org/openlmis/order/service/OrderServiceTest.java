@@ -16,6 +16,7 @@ import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
+import org.junit.runners.BlockJUnit4ClassRunner;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.openlmis.core.builder.FacilityBuilder;
@@ -39,6 +40,7 @@ import org.openlmis.rnr.service.RequisitionService;
 import org.openlmis.shipment.domain.ShipmentFileInfo;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
+import org.powermock.modules.junit4.PowerMockRunnerDelegate;
 import org.springframework.security.access.AccessDeniedException;
 
 import java.util.ArrayList;
@@ -64,6 +66,7 @@ import static org.powermock.api.mockito.PowerMockito.whenNew;
 
 @Category(UnitTests.class)
 @RunWith(PowerMockRunner.class)
+@PowerMockRunnerDelegate(BlockJUnit4ClassRunner.class)
 @PrepareForTest(OrderService.class)
 public class OrderServiceTest {
 
@@ -382,6 +385,7 @@ public class OrderServiceTest {
 
     Rnr rnr = new Rnr();
     rnr.setId(rnrId);
+    rnr.setProgram(make(a(defaultProgram)));
     RnrLineItem rnrLineItem = new RnrLineItem();
     List<RnrLineItem> lineItems = new ArrayList<>();
     rnrLineItem.setPacksToShip(0);
@@ -390,6 +394,8 @@ public class OrderServiceTest {
     rnr.setNonFullSupplyLineItems(lineItems);
     order.setRnr(rnr);
 
+    order.setRnr(rnr);
+    when(programService.getById(rnr.getProgram().getId())).thenReturn(rnr.getProgram());
     when(orderRepository.getById(orderId)).thenReturn(order);
     when(requisitionService.getFullRequisitionById(rnr.getId())).thenReturn(rnr);
 
@@ -508,9 +514,9 @@ public class OrderServiceTest {
     List<Order> expectedOrders = asList(order);
     when(roleAssignmentService.getFulfilmentRolesWithRight(3L, MANAGE_POD)).thenReturn(asList(new FulfillmentRoleAssignment(3L, 4l, new ArrayList<Long>())));
     when(requisitionService.getFullRequisitionById(13L)).thenReturn(new Rnr());
-    when(orderRepository.searchByWarehousesAndStatuses(asList(4l), asList(RELEASED, PACKED, TRANSFER_FAILED, READY_TO_PACK))).thenReturn(expectedOrders);
+    when(orderRepository.searchByWarehousesAndStatuses(asList(4l), asList(RELEASED, PACKED, TRANSFER_FAILED, READY_TO_PACK),1L,0L)).thenReturn(expectedOrders);
 
-    List<Order> returnedOrders = orderService.searchByStatusAndRight(3l, MANAGE_POD, asList(RELEASED, PACKED, TRANSFER_FAILED, READY_TO_PACK));
+    List<Order> returnedOrders = orderService.searchByStatusAndRight(3l, MANAGE_POD, asList(RELEASED, PACKED, TRANSFER_FAILED, READY_TO_PACK),1L,0L);
 
     assertThat(returnedOrders, is(expectedOrders));
   }
@@ -535,9 +541,9 @@ public class OrderServiceTest {
     when(requisitionService.getFullRequisitionById(2L)).thenReturn(rnrForHIV);
     when(requisitionService.getFullRequisitionById(4L)).thenReturn(rnrForTB);
     when(requisitionService.getFullRequisitionById(6L)).thenReturn(rnrForMalaria);
-    when(orderRepository.searchByWarehousesAndStatuses(asList(4l), asList(RELEASED, PACKED, TRANSFER_FAILED, READY_TO_PACK))).thenReturn(expectedOrders);
+    when(orderRepository.searchByWarehousesAndStatuses(asList(4l), asList(RELEASED, PACKED, TRANSFER_FAILED, READY_TO_PACK),1L,0L)).thenReturn(expectedOrders);
 
-    List<Order> returnedOrders = orderService.searchByStatusAndRight(3l, MANAGE_POD, asList(RELEASED, PACKED, TRANSFER_FAILED, READY_TO_PACK));
+    List<Order> returnedOrders = orderService.searchByStatusAndRight(3l, MANAGE_POD, asList(RELEASED, PACKED, TRANSFER_FAILED, READY_TO_PACK),1L,0L);
 
     assertThat(returnedOrders.get(0).getId(), is(2L));
     assertThat(returnedOrders.get(1).getId(), is(6L));

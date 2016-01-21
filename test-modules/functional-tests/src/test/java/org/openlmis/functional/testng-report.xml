@@ -1,0 +1,47 @@
+<!--
+  ~ Electronic Logistics Management Information System (eLMIS) is a supply chain management system for health commodities in a developing country setting.
+  ~
+  ~ Copyright (C) 2015  John Snow, Inc (JSI). This program was produced for the U.S. Agency for International Development (USAID). It was prepared under the USAID | DELIVER PROJECT, Task Order 4.
+  ~
+  ~ This program is free software: you can redistribute it and/or modify it under the terms of the GNU Affero General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
+  ~
+  ~ This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Affero General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU Affero General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
+  -->
+<suite name="eLMIS Funtional Test" verbose="10" allow-return-values="true">
+  <test name="eLMIS functional test">
+    <groups>
+      <run>
+        <include name="report"/>
+      </run>
+    </groups>
+    <classes preserver-order="true">
+      <class name="org.openlmis.extension.functional.reports.ReportPermission">
+      </class>
+      <class name="org.openlmis.extension.functional.reports.FacilityMailingListReport">
+      </class>
+      <class name="org.openlmis.extension.functional.reports.DistrictConsumptionComparison">
+      </class>
+      <class name="org.openlmis.extension.functional.reports.E2EViewReport">
+      </class>
+      <class name="org.openlmis.extension.functional.reports.ConsumptionAverageByProductReport">
+      </class>
+      <class name="org.openlmis.extension.functional.reports.NonReportingFacilitiesReport">
+      </class>
+      <class name="org.openlmis.extension.functional.reports.StockedOutReport">
+      </class>
+      <class name="org.openlmis.extension.functional.reports.StockImbalanceByFacilityReport">
+      </class>
+      <class name="org.openlmis.extension.functional.reports.SummaryReport">
+      </class>
+      <class name="org.openlmis.extension.functional.reports.SupplyStatusByFacilityReprot">
+      </class>
+      <class name="org.openlmis.extension.functional.reports.ReportingRateReport">
+      </class>
+      <class name="org.openlmis.extension.functional.reports.AdjustmentSummaryReport">
+      </class>
+    </classes>
+  </test>
+</suite>
+

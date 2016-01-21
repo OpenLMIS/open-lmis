@@ -48,6 +48,13 @@ public interface RequisitionGroupMemberMapper {
     "requisitionGroupId = #{requisitionGroup.id} AND facilityId = #{facility.id}")
   void update(RequisitionGroupMember requisitionGroupMember);
 
+  @Delete("DELETE from requisition_group_members WHERE " +
+          "requisitionGroupId = #{requisitionGroup.id} AND facilityId = #{facility.id}")
+  void removeRequisitionGroupMember(
+  @Param(value = "requisitionGroup") RequisitionGroup requisitionGroup,
+  @Param(value="facility") Facility facility);
+
+
   @Select("SELECT * FROM requisition_group_members WHERE facilityId = #{facilityId}")
   @Results(value = {
     @Result(property = "facility.id", column = "facilityId"),

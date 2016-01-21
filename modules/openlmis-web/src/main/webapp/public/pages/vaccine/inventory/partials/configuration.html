@@ -1,0 +1,107 @@
+<!--
+  ~ Electronic Logistics Management Information System (eLMIS) is a supply chain management system for health commodities in a developing country setting.
+  ~
+  ~ Copyright (C) 2015  John Snow, Inc (JSI). This program was produced for the U.S. Agency for International Development (USAID). It was prepared under the USAID | DELIVER PROJECT, Task Order 4.
+  ~
+  ~ This program is free software: you can redistribute it and/or modify it under the terms of the GNU Affero General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
+  ~
+  ~ This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Affero General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU Affero General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
+  -->
+
+<div tab-scroll xmlns="http://www.w3.org/1999/html">
+    <form ng-submit="saveSettings()" id="setting-form" name="settingForm" novalidate>
+
+        <div>
+            <h2>
+                <span>Configuration Settings</span>
+            </h2>
+
+            <div class="rnr-tabs clearfix">
+                <ul>
+                    <li ng-class="{'selected': (visibleTab == key || visibleTab ==undefined) }">
+                        <a href="" ng-click="changeTab('PRODUCT')">PRODUCT</a>
+                    </li>
+
+                </ul>
+            </div>
+            <div>
+                <br/>
+
+                <div ng-show="visibleTab == 'PRODUCT' || visibleTab ==undefined" class="tab-content">
+                    <div class="span10 alert alert-warning">
+                        <div class="span3 ">
+                            <select style="min-width:200px !important" ui-select2 ng-model="configToAdd.product"
+                                    ng-options="obj.product as obj.product.primaryName for obj in productsToDisplay">
+                                <option value="">--Select Product--</option>
+                            </select>
+                        </div>
+                        <div class="span2">
+                            <input ng-disabled="(configToAdd.product ===undefined || configToAdd.product===null)"
+                                   type="checkbox" ng-checked="false" ng-model="configToAdd.batchTracked"/>
+                            <span>isBatchTracked?</span>
+                        </div>
+                        <div class="span2">
+                            <input ng-disabled="(configToAdd.product ===undefined || configToAdd.product===null)"
+                                   type="checkbox" ng-checked="false" ng-model="configToAdd.vvmTracked"/>
+                            <span>isVVMTracked?</span>
+                        </div>
+                        <div class="span2">
+                            <input ng-disabled="(configToAdd.product ===undefined || configToAdd.product===null)"
+                                   type="checkbox" ng-checked="false" ng-model="configToAdd.survivingInfants"/>
+                            <span>isSurvivingInfants Applied?</span>
+                        </div>
+
+                        <div class="span2"><input
+                                ng-disabled="(configToAdd.product ===undefined || configToAdd.product===null)"
+                                type="submit" class="btn btn-primary" value="Add"
+                                ng-click="addConfiguration(configToAdd)"></div>
+                    </div>
+                    <br/>
+                    <table id="podTable" class="table table-bordered" fixed-table-header>
+                        <thead>
+                        <tr>
+                            <th class="col-product " openlmis-message="label.products"></th>
+                            <th class="col-lot"><span openlmis-message="batchTracked"></span></th>
+                            <th class="col-available"><span openlmis-message="vvmTracked"></span></th>
+                            <th class="col-survivingInfants"><span openlmis-message="survivingInfants"></span></th>
+                            <th width="150px"><span openlmis-message="label.vaccine.coverage.denominator"></span></th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr ng-repeat="setting in configurations">
+                            <td class="col-product ">{{setting.product.primaryName}}</td>
+                            <td class="col-lot"><input type="checkbox" ng-model="setting.batchTracked"/></td>
+                            <td class="col-available"><input type="checkbox" ng-model="setting.vvmTracked"/></td>
+                            <td class="col-survivingInfants"><input type="checkbox" ng-model="setting.survivingInfants"/></td>
+                            <td class="col-general cell-input">
+                                <select ng-model="setting.denominatorEstimateCategoryId">
+                                    <option ng-selected="c.id == setting.denominatorEstimateCategoryId" ng-repeat="c in demographicCategories" value="{{c.id}}" openlmis-message="c.name"></option>
+                                </select>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+            </div>
+        </div>
+
+        <div form-toolbar id="action_buttons" class="action-buttons">
+            <div class="form-cell button-row">
+                <input ng-click="saveConfigurations()" ng-disabled="saveDisabled" type="submit" id="save-button"
+                       class="btn btn-primary save-button"
+                       openlmis-message="button.save"/>
+            </div>
+
+
+            <div class="toolbar-error" id="saveErrorMsgDiv">
+                <span openlmis-message="error" ng-show="error"></span>&nbsp;
+                <span ng-show="errorProgram" ng-bind="errorProgram"></span>
+            </div>
+            <div class="toolbar-success" id="saveSuccessMsgDiv" openlmis-message="message" ng-show="message"></div>
+        </div>
+    </form>
+
+</div>

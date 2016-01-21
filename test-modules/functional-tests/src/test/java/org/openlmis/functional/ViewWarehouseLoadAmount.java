@@ -105,7 +105,7 @@ public class ViewWarehouseLoadAmount extends TestCaseHelper {
 
   @And("^I have following ISA values:$")
   public void setProgramProductISA(DataTable tableData) throws SQLException {
-    for (Map<String, String> map : tableData.asMaps()) {
+    for (Map<String, String> map : tableData.asMaps(String.class, String.class)) {
       dbWrapper.insertProgramProductISA(map.get("Program"), map.get("Product"), map.get("whoRatio"),
         map.get("dosesPerYear"), map.get("wastageFactor"), map.get("bufferPercentage"), map.get("minimumValue"),
         map.get("maximumValue"), map.get("adjustmentValue"));
@@ -114,7 +114,7 @@ public class ViewWarehouseLoadAmount extends TestCaseHelper {
 
   @And("^I have following override ISA values:$")
   public void setOverrideISA(DataTable tableData) throws SQLException {
-    for (Map<String, String> map : tableData.asMaps()) {
+    for (Map<String, String> map : tableData.asMaps(String.class, String.class)) {
       dbWrapper.InsertOverriddenIsa(map.get("Facility Code"), map.get("Program"),
         map.get("Product"), Integer.parseInt(map.get("ISA")));
     }
@@ -153,7 +153,7 @@ public class ViewWarehouseLoadAmount extends TestCaseHelper {
   @And("^I verify ISA values for Product1 as:$")
   public void verifyISAForProduct1(DataTable dataTable) {
     warehouseLoadAmountPage = PageObjectFactory.getWarehouseLoadAmountPage(testWebDriver);
-    List<Map<String, String>> facilityProductISAMaps = dataTable.asMaps();
+    List<Map<String, String>> facilityProductISAMaps = dataTable.asMaps(String.class, String.class);
     for (Map<String, String> facilityProductISAMap : facilityProductISAMaps) {
       assertEquals(facilityProductISAMap.get("Facility1"), warehouseLoadAmountPage.getProductIsa(1, 1, 1));
       assertEquals(facilityProductISAMap.get("Facility2"), warehouseLoadAmountPage.getProductIsa(1, 2, 1));
@@ -163,7 +163,7 @@ public class ViewWarehouseLoadAmount extends TestCaseHelper {
   @And("^I verify ISA values for Product2 as:$")
   public void verifyISAForProduct2(DataTable dataTable) {
     warehouseLoadAmountPage = PageObjectFactory.getWarehouseLoadAmountPage(testWebDriver);
-    List<Map<String, String>> facilityProductISAMaps = dataTable.asMaps();
+    List<Map<String, String>> facilityProductISAMaps = dataTable.asMaps(String.class, String.class);
     for (Map<String, String> facilityProductISAMap : facilityProductISAMaps) {
       assertEquals(facilityProductISAMap.get("Facility1"), warehouseLoadAmountPage.getProductIsa(1, 1, 2));
       assertEquals(facilityProductISAMap.get("Facility2"), warehouseLoadAmountPage.getProductIsa(1, 2, 2));

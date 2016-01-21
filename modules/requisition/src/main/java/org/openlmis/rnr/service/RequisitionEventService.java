@@ -29,9 +29,12 @@ public class RequisitionEventService {
   @Autowired
   private EventService eventService;
 
+  @Autowired
+  NotificationServices notificationServices;
+  
   public void notifyForStatusChange(Rnr requisition) {
     try {
-      eventService.notify(new RequisitionStatusChangeEvent(requisition));
+      eventService.notify(new RequisitionStatusChangeEvent(requisition, notificationServices));
     } catch (URISyntaxException e) {
       throw new DataException("error.malformed.uri");
     }

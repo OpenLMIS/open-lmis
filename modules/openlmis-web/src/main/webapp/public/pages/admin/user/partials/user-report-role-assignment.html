@@ -1,0 +1,21 @@
+<!--
+  ~ Copyright © 2013 VillageReach.  All Rights Reserved.  This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
+  ~
+  ~ If a copy of the MPL was not distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
+  -->
+
+<div ng-controller="UserRoleAssignmentController" tab-scroll>
+  <div class="fluid-grid">
+    <div class="row-fluid">
+      <div class="span6">
+        <div class="fluid-grid-cell">
+          <select id="reportRoles" ui-select2 ng-model="user.reportRoles.roleIds" openlmis-message="placeholder.add.role"
+                  multiple="multiple" name="roles" id="roles" ng-options="role.id as role.name for role in rolesMap.REPORT" >
+          </select>
+          <span ng-show="roleAssignment.roleIds.length == 0" class="field-error" openlmis-message="missing.value">
+          </span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

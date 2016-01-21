@@ -8,7 +8,7 @@
  * You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org. 
  */
 
-function SaveRnrTemplateController($scope, rnrTemplateForm, program, messageService, $routeParams, RnRColumnList,
+function SaveRnrTemplateController($scope, rnrTemplateForm, program, messageService, $routeParams, RnRColumnList, UpdateProgram,
                                    $location) {
   $scope.rnrColumns = rnrTemplateForm.rnrColumns;
   $scope.sources = rnrTemplateForm.sources;
@@ -36,6 +36,7 @@ function SaveRnrTemplateController($scope, rnrTemplateForm, program, messageServ
   };
 
   $scope.rnrColumns.forEach(function(column) {
+
     if(column.rnrColumnOptions) {
       column.configuredOption = column.configuredOption ? _.findWhere(column.rnrColumnOptions, {name: column.configuredOption.name}) : column.rnrColumnOptions[0];
     }
@@ -59,15 +60,25 @@ function SaveRnrTemplateController($scope, rnrTemplateForm, program, messageServ
     });
   };
 
+  $scope.saveProgram = function(){
+    UpdateProgram.update($scope.program, function(){
+      $scope.$parent.message = messageService.get("template.save.success");
+      $scope.error = "";
+      $scope.errorMap = undefined;
+      $location.path('select-program');
+    });
+  };
+
   function updatePosition() {
+
     $scope.rnrColumns.forEach(function (rnrColumn, index) {
+      if(rnrColumn.options !== undefined){
+        delete rnrColumn.options;
+      }
+
       rnrColumn.position = index + 1;
     });
   }
-
-//  $scope.sources.forEach(function (source) {
-//    source.description = messageService.get(source.description);
-//  });
 
 
   $scope.setArithmeticValidationMessageShown = function () {

@@ -8,5 +8,12 @@
 -- You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org. 
 --
 
-INSERT INTO rights (name, rightType, description) VALUES
-  ('MANAGE_REQUISITION_GROUP', 'ADMIN', 'Permission to manage requisition groups');
+DO
+$do$
+BEGIN
+  IF NOT EXISTS (SELECT 1 FROM rights where name = 'MANAGE_REQUISITION_GROUP') THEN
+    INSERT INTO rights (name, rightType, description) VALUES
+    ('MANAGE_REQUISITION_GROUP', 'ADMIN', 'Permission to manage requisition groups');
+  END IF;
+END
+$do$

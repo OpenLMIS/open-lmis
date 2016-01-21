@@ -90,7 +90,7 @@ public class FacilityProgramDateRangeSearchTest {
     List<ProcessingPeriod> periods = new ArrayList<>();
     List<Rnr> requisitions = new ArrayList<>();
 
-    when(processingScheduleService.getAllPeriodsForDateRange(facility, program, dateRangeStart, dateRangeEnd)).thenReturn(periods);
+    when(processingScheduleService.getUsedPeriodsForDateRange(facility, program, dateRangeStart, dateRangeEnd)).thenReturn(periods);
     when(requisitionRepository.getPostSubmitRequisitions(facility, program, periods)).thenReturn(requisitions);
     when(requisitionPermissionService.hasPermission(userId, facility, program, VIEW_REQUISITION)).thenReturn(true);
 
@@ -98,7 +98,7 @@ public class FacilityProgramDateRangeSearchTest {
     List<Rnr> actualRequisitions = facilityProgramDateRangeSearch.search();
 
     assertThat(actualRequisitions, is(requisitions));
-    verify(processingScheduleService).getAllPeriodsForDateRange(facility, program, dateRangeStart, dateRangeEnd);
+    verify(processingScheduleService).getUsedPeriodsForDateRange(facility, program, dateRangeStart, dateRangeEnd);
     verify(requisitionRepository).getPostSubmitRequisitions(facility, program, periods);
   }
 

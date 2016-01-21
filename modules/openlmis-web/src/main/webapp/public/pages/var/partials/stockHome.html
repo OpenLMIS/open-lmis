@@ -1,0 +1,94 @@
+<div class="col-md-12 app-form">
+    <form name="international_shipment">
+        <div class='form-group'>
+            <h3 openlmis-message="label.basicInformation">International Shipment</h3>
+            <!--SSCC-->
+            <div class='form-row clearfix'>
+                <div class="form-cell">
+                    <label>SSCC</label>
+                    <div class="form-field">
+                        <input type="text" class="form-control">
+                    </div>
+                </div>
+            </div>
+            <!--Item-->
+            <div class='form-row clearfix'>
+                <div class="form-cell">
+                    <label>Item</label>
+                    <div class="form-field">
+                        <select  class="form-control">
+                            <option>Vaccine 1</option>
+                            <option>Vaccine 2</option>
+                            <option>Vaccine 3</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <!--Manufacture Date-->
+            <div class='form-row clearfix'>
+                <div class="form-cell">
+                    <label>Manufacture Date</label>
+                    <div class="form-field">
+                        <input type="text" class="form-control" ui-date="{dateFormat: 'dd/mm/yy', changeYear: true}">
+                    </div>
+                </div>
+            </div>
+            <!--Expiry Date-->
+            <div class='form-row clearfix'>
+                <div class="form-cell">
+                    <label>Expiry Date</label>
+                    <div class="form-field">
+                        <input type="text" class="form-control" ui-date="{dateFormat: 'dd/mm/yy', changeYear: true}">
+                    </div>
+                </div>
+            </div>
+            <!--Lot Number-->
+            <div class='form-row clearfix'>
+                <div class="form-cell">
+                    <label>Lot Number</label>
+                    <div class="form-field">
+                        <input type="text" class="form-control">
+                    </div>
+                </div>
+            </div>
+            <!--Quantity(Number of Doses)-->
+            <div class='form-row clearfix'>
+                <div class="form-cell">
+                    <label>Quantity(Number of Doses)</label>
+                    <div class="form-field">
+                        <input type="text" class="form-control">
+                    </div>
+                </div>
+            </div>
+
+            <div class='form-row clearfix'>
+                <div class="form-cell">
+                    <label>Lot Number</label>
+                    <div class="form-field">
+                        <input type="text" class="form-control">
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+
+
+
+        <div form-toolbar="" id="action_buttons" class="action-buttons" style="width: 1494px;">
+            <div class="form-cell button-row">
+                <input id="saveButton" type="submit" class="btn btn-primary save-button" openlmis-message="button.save" value="Save">
+                <input id="cancelButton" type="button" class="btn btn-cancel cancel-button" openlmis-message="button.cancel" ng-click="cancel()" value="Cancel">
+                <input id="enableButton" type="button" class="btn btn-primary enable-button ng-hide" ng-show="facility.id!=null &amp;&amp; !facility.enabled" ng-click="showConfirmFacilityEnable()" openlmis-message="button.enable" value="Enable">
+                <input id="disableButton" type="button" class="btn btn-danger delete-button ng-hide" ng-show="facility.id != null &amp;&amp; facility.enabled" ng-click="showConfirmFacilityDisableWindow()" openlmis-message="button.disable" value="Disable">
+            </div>
+
+
+            <div class="toolbar-error" id="saveErrorMsgDiv">
+                <span openlmis-message="error" ng-show="error" class="ng-hide">error</span>&nbsp;
+                <span ng-show="errorProgram" ng-bind="errorProgram" class="ng-binding ng-hide"></span>
+            </div>
+            <div class="toolbar-success ng-hide" id="saveSuccessMsgDiv" openlmis-message="message" ng-show="message">message</div>
+        </div>
+    </form>
+</div>

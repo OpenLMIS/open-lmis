@@ -1,12 +1,12 @@
 /*
- * This program is part of the OpenLMIS logistics management information system platform software.
- * Copyright © 2013 VillageReach
- *
- * This program is free software: you can redistribute it and/or modify it under the terms of the GNU Affero General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Affero General Public License for more details.
- * You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org. 
- */
+* This program is part of the OpenLMIS logistics management information system platform software.
+* Copyright © 2013 VillageReach
+*
+* This program is free software: you can redistribute it and/or modify it under the terms of the GNU Affero General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
+*
+* This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Affero General Public License for more details.
+* You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org. 
+*/
 
 package org.openlmis.functional;
 
@@ -64,7 +64,7 @@ public class ManageUser extends TestCaseHelper {
   public void createUser(DataTable userTable) {
     HomePage homePage = PageObjectFactory.getHomePage(testWebDriver);
     UserPage userPage = homePage.navigateToUser();
-    List<Map<String, String>> data = userTable.asMaps();
+    List<Map<String, String>> data = userTable.asMaps(String.class, String.class);
     for (Map map : data)
       userPage.enterUserDetails(map.get("UserName").toString(), map.get("Email").toString(),
         map.get("FirstName").toString(), map.get("LastName").toString());
@@ -446,7 +446,7 @@ public class ManageUser extends TestCaseHelper {
 
     userPage.clickSupervisoryRolesAccordion();
     testWebDriver.sleep(500);
-    userPage.verifyRolePresent(LAB_IN_CHARGE);
+         userPage.verifyRolePresent(LAB_IN_CHARGE);
     userPage.removeRole(1, false);
     userPage.verifyRoleNotPresent(LAB_IN_CHARGE);
     userPage.clickRemoveButtonWithOk(2);

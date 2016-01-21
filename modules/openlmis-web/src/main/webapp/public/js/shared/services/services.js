@@ -17,6 +17,10 @@ services.factory('Programs', function ($resource) {
   return $resource('/programs/:type.json', {type: '@type'}, {});
 });
 
+services.factory('UpdateProgram', function ($resource) {
+  return $resource('/programs/save.json', {}, update);
+});
+
 services.factory('RnRColumnList', function ($resource) {
   return $resource('/program/:programId/rnr-template.json', {}, {});
 });
@@ -73,6 +77,11 @@ services.factory('ProgramSupportedByFacility', function ($resource) {
   return $resource('/facilities/:facilityId/programs.json', {}, {});
 });
 
+services.factory('ManageEquipmentInventoryProgramList', function ($resource) {
+  return $resource('/equipment/inventory/programs.json', {}, {});
+});
+
+
 services.factory('FacilityReferenceData', function ($resource) {
   return $resource('/facilities/reference-data.json', {}, {});
 });
@@ -83,6 +92,10 @@ services.factory('Rights', function ($resource) {
 
 services.factory('Roles', function ($resource) {
   return $resource('/roles/:id.json', {id: '@id'}, update);
+});
+
+services.factory('RolesFlat', function ($resource) {
+  return $resource('/roles-flat', {id: '@id'}, update);
 });
 
 services.factory('CreateRequisitionProgramList', function ($resource) {
@@ -119,6 +132,22 @@ services.factory('RequisitionForConvertToOrder', function ($resource) {
 
 services.factory('LossesAndAdjustmentsReferenceData', function ($resource) {
   return $resource('/requisitions/lossAndAdjustments/reference-data.json', {}, {});
+});
+
+services.factory('DeleteRequisition', function ($resource) {
+  return $resource('/requisitions/delete/:id.json', {id: '@id'}, {post: {method: 'POST', isArray: false}});
+});
+
+services.factory('SkipRequisition', function ($resource) {
+  return $resource('/requisitions/skip/:id.json', {id: '@id'}, {post: {method: 'POST', isArray: false}});
+});
+
+services.factory('ReOpenRequisition', function ($resource) {
+  return $resource('/requisitions/reopen/:id.json', {id: '@id'}, {post: {method: 'POST', isArray: false}});
+});
+
+services.factory('RejectRequisition', function ($resource) {
+  return $resource('/requisitions/reject/:id.json', {id: '@id'}, {post: {method: 'POST', isArray: false}});
 });
 
 services.factory('Schedule', function ($resource) {
@@ -200,11 +229,17 @@ services.factory('ProgramProducts', function ($resource) {
 });
 
 services.factory('FacilityProgramProducts', function ($resource) {
-  return $resource('/facility/:facilityId/program/:programId/isa.json', {}, {update: {method: 'PUT'}});
+  return $resource('/facility/:facilityId/program/:programId.json', {}, {update: {method: 'PUT'}});
 });
 
 services.factory('ProgramProductsISA', function ($resource) {
   return $resource('/programProducts/:programProductId/isa/:isaId.json', {isaId: '@isaId'}, update);
+});
+
+services.factory('FacilityProgramProductsISA', function ($resource)
+{
+  //return $resource('/facility/:facilityId/programProducts/:programProductId/isa/:isaId.json', {isaId: '@isaId', facilityId: '@facilityId'}, update);
+  return $resource('/facility/:facilityId/programProducts/:programProductId/isa.json', {}, update);
 });
 
 services.factory('AllocationProgramProducts', function ($resource) {
@@ -390,5 +425,34 @@ services.factory('ProductCategories', function ($resource) {
 });
 
 
+services.factory('EquipmentOperationalStatus', function ($resource) {
+  return $resource('/equipment/type/operational-status.json',{},  {});
+});
 
+services.factory('FacilityImages', function($resource){
+  return $resource('/facility-images.json', {},{});
+});
 
+services.factory('ConfigSettingsByKey',function($resource){
+  return $resource('/settings/:key.json',{},{});
+});
+
+services.factory('Supplylines', function ($resource) {
+  return $resource('/supplylines.json', {});
+});
+
+services.factory('SupplyingDepots', function ($resource) {
+  return $resource('/supplyLines/supplying-depots.json', {});
+});
+
+services.factory('UserFacilityWithViewVaccineOrderRequisition', function ($resource) {
+  return $resource('/user/facilities/view-order-requisition.json', {}, {});
+});
+
+services.factory('ProgramsToViewVaccineOrderRequisitions', function ($resource) {
+  return $resource('/facility/:facilityId/view/vaccine-order-requisition/programs.json', {}, {});
+});
+
+services.factory('VaccineOrderRequisitionsForViewing', function ($resource) {
+  return $resource('/vaccine/orderRequisition/search.json', {}, {});
+});

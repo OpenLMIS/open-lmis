@@ -27,11 +27,14 @@ public class RegimenColumn extends Column {
 
   private String dataType;
 
-  public RegimenColumn(Long programId, String name, String label, String dataType, Boolean visible, Long createdBy) {
+  private Integer displayOrder;
+
+  public RegimenColumn(Long programId, String name, String label, String dataType, Boolean visible, Integer dispOrder, Long createdBy) {
     super(name, label, visible);
     this.programId = programId;
     this.dataType = dataType;
     this.createdBy = createdBy;
+    this.displayOrder = dispOrder;
   }
 
   @Override
@@ -46,7 +49,9 @@ public class RegimenColumn extends Column {
   public ColumnType getColumnType() {
     if (this.getName().equals("name") || this.getName().equals("code") || this.getName().equals("remarks")) {
       return ColumnType.TEXT;
-    } else {
+    } else if(this.getName().equals("skipped")) {
+      return ColumnType.BOOLEAN;
+    }else {
       return ColumnType.NUMERIC;
     }
   }

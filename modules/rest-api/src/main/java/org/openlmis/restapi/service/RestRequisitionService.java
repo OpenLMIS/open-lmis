@@ -10,18 +10,25 @@
 
 package org.openlmis.restapi.service;
 
+import com.google.common.base.Function;
+import com.google.common.collect.FluentIterable;
 import lombok.NoArgsConstructor;
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
+import org.apache.commons.collections.Transformer;
 import org.apache.log4j.Logger;
-import org.openlmis.core.domain.Facility;
-import org.openlmis.core.domain.Program;
+import org.apache.lucene.util.CollectionUtil;
+import org.openlmis.core.domain.*;
 import org.openlmis.core.exception.DataException;
+import org.openlmis.core.service.FacilityApprovedProductService;
 import org.openlmis.core.service.FacilityService;
+import org.openlmis.core.service.ProcessingPeriodService;
 import org.openlmis.core.service.ProgramService;
 import org.openlmis.order.service.OrderService;
 import org.openlmis.restapi.domain.ReplenishmentDTO;
 import org.openlmis.restapi.domain.Report;
 import org.openlmis.rnr.domain.*;
+import org.openlmis.rnr.search.criteria.RequisitionSearchCriteria;
 import org.openlmis.rnr.service.RequisitionService;
 import org.openlmis.rnr.service.RnrTemplateService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,8 +36,12 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.lang.reflect.Field;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.Iterator;
 import java.util.List;
 
+import static java.util.Arrays.asList;
 import static org.apache.commons.collections.CollectionUtils.find;
 import static org.openlmis.restapi.domain.ReplenishmentDTO.prepareForREST;
 
@@ -43,26 +54,24 @@ import static org.openlmis.restapi.domain.ReplenishmentDTO.prepareForREST;
 public class RestRequisitionService {
 
   public static final boolean EMERGENCY = false;
-
+  private static final Logger logger = Logger.getLogger(RestRequisitionService.class);
   @Autowired
   private RequisitionService requisitionService;
-
   @Autowired
   private OrderService orderService;
-
   @Autowired
   private FacilityService facilityService;
-
   @Autowired
   private ProgramService programService;
-
   @Autowired
   private RnrTemplateService rnrTemplateService;
-
   @Autowired
   private RestRequisitionCalculator restRequisitionCalculator;
-
-  private static final Logger logger = Logger.getLogger(RestRequisitionService.class);
+  @Autowired
+  private ProcessingPeriodService processingPeriodService;
+  @Autowired
+  private FacilityApprovedProductService facilityApprovedProductService;
+  private List<FacilityTypeApprovedProduct> nonFullSupplyFacilityApprovedProductByFacilityAndProgram;
 
   @Transactional
   public Rnr submitReport(Report report, Long userId) {
@@ -73,7 +82,7 @@ public class RestRequisitionService {
 
     restRequisitionCalculator.validatePeriod(reportingFacility, reportingProgram);
 
-    Rnr rnr = requisitionService.initiate(reportingFacility, reportingProgram, userId, EMERGENCY);
+    Rnr rnr = requisitionService.initiate(reportingFacility, reportingProgram, userId, EMERGENCY, null);
 
     restRequisitionCalculator.validateProducts(report.getProducts(), rnr);
 
@@ -86,10 +95,111 @@ public class RestRequisitionService {
 
     requisitionService.save(rnr);
 
+    updateClientFields(report, rnr);
+    insertPatientQuantificationLineItems(report, rnr);
+
+    insertRnrSignatures(report, rnr, userId);
+
     rnr = requisitionService.submit(rnr);
 
     return requisitionService.authorize(rnr);
   }
+
+  private void updateClientFields(Report report, Rnr rnr) {
+    Date clientSubmittedTime = report.getClientSubmittedTime();
+    rnr.setClientSubmittedTime(clientSubmittedTime);
+
+    String clientSubmittedNotes = report.getClientSubmittedNotes();
+    rnr.setClientSubmittedNotes(clientSubmittedNotes);
+
+    requisitionService.updateClientFields(rnr);
+  }
+
+  @Transactional
+  public Rnr submitSdpReport(Report report, Long userId) {
+    report.validate();
+
+    Facility reportingFacility = facilityService.getOperativeFacilityByCode(report.getAgentCode());
+    Program reportingProgram = programService.getValidatedProgramByCode(report.getProgramCode());
+    ProcessingPeriod period = processingPeriodService.getById(report.getPeriodId());
+
+
+    Rnr rnr;
+    List<Rnr> rnrs = null;
+
+    RequisitionSearchCriteria searchCriteria = new RequisitionSearchCriteria();
+    searchCriteria.setProgramId(reportingProgram.getId());
+    searchCriteria.setFacilityId(reportingFacility.getId());
+    searchCriteria.setWithoutLineItems(true);
+    searchCriteria.setUserId(userId);
+
+    if(report.getPeriodId() != null) {
+      //check if the requisition has already been initiated / submitted / authorized.
+      restRequisitionCalculator.validateCustomPeriod(reportingFacility, reportingProgram, period, userId);
+      rnrs = requisitionService.getRequisitionsFor(searchCriteria, asList(period));
+    }
+
+
+    if(rnrs != null && rnrs.size() > 0){
+      rnr = requisitionService.getFullRequisitionById( rnrs.get(0).getId() );
+
+    }else{
+      rnr = requisitionService.initiate(reportingFacility, reportingProgram, userId, report.getEmergency(), period);
+    }
+
+    List<RnrLineItem> fullSupplyProducts = new ArrayList<>();
+    List<RnrLineItem> nonFullSupplyProducts = new ArrayList<>();
+    Iterator<RnrLineItem> iterator = report.getProducts().iterator();
+    nonFullSupplyFacilityApprovedProductByFacilityAndProgram = facilityApprovedProductService.getNonFullSupplyFacilityApprovedProductByFacilityAndProgram( reportingFacility.getId(), reportingProgram.getId() );
+
+    // differentiate between full supply and non full supply products
+    while(iterator.hasNext()){
+      final RnrLineItem lineItem = iterator.next();
+      if(lineItem.getFullSupply()){
+        fullSupplyProducts.add(lineItem);
+      }else{
+
+        setNonFullSupplyCreatorFields(lineItem);
+        nonFullSupplyProducts.add(lineItem);
+      }
+    }
+    report.setProducts(fullSupplyProducts);
+    report.setNonFullSupplyProducts(nonFullSupplyProducts);
+    restRequisitionCalculator.validateProducts(report.getProducts(), rnr);
+
+    markSkippedLineItems(rnr, report);
+
+
+    copyRegimens(rnr, report);
+    // if you have come this far, then do it, it is your day. make the submission.
+    // i cannot believe we do all of these three at the same time.
+    // but then this is what zambia specifically asked.
+    requisitionService.save(rnr);
+    rnr = requisitionService.submit(rnr);
+    return requisitionService.authorize(rnr);
+  }
+
+  private void setNonFullSupplyCreatorFields(final RnrLineItem lineItem) {
+
+    FacilityTypeApprovedProduct p = (FacilityTypeApprovedProduct) find(nonFullSupplyFacilityApprovedProductByFacilityAndProgram, new Predicate() {
+      @Override
+      public boolean evaluate(Object product) {
+        return ((FacilityTypeApprovedProduct) product).getProgramProduct().getProduct().getCode().equals(lineItem.getProductCode());
+      }
+    });
+    if(p == null){
+      return;
+    }
+    lineItem.setDispensingUnit(p.getProgramProduct().getProduct().getDispensingUnit());
+    lineItem.setMaxMonthsOfStock(p.getMaxMonthsOfStock());
+    lineItem.setDosesPerMonth(p.getProgramProduct().getDosesPerMonth());
+    lineItem.setDosesPerDispensingUnit(p.getProgramProduct().getProduct().getDosesPerDispensingUnit());
+    lineItem.setPackSize(p.getProgramProduct().getProduct().getPackSize());
+    lineItem.setRoundToZero(p.getProgramProduct().getProduct().getRoundToZero());
+    lineItem.setPackRoundingThreshold(p.getProgramProduct().getProduct().getPackRoundingThreshold());
+    lineItem.setPrice(p.getProgramProduct().getCurrentPrice());
+  }
+
 
   private void copyRegimens(Rnr rnr, Report report) {
     if (report.getRegimens() != null) {
@@ -102,6 +212,28 @@ public class RestRequisitionService {
     }
   }
 
+  private void insertPatientQuantificationLineItems(Report report, Rnr rnr) {
+    if (report.getPatientQuantifications() != null) {
+      rnr.setPatientQuantifications(report.getPatientQuantifications());
+      requisitionService.insertPatientQuantificationLineItems(rnr);
+    }
+  }
+
+  private void insertRnrSignatures(Report report, Rnr rnr, final Long userId) {
+    if (report.getRnrSignatures() != null) {
+
+      List<Signature> rnrSignatures = new ArrayList(CollectionUtils.collect(report.getRnrSignatures(), new Transformer() {
+            @Override
+            public Object transform(Object input) {
+              ((Signature)input).setCreatedBy(userId);
+              ((Signature)input).setModifiedBy(userId);
+              return input;
+            }
+          }));
+          rnr.setRnrSignatures(rnrSignatures);
+      requisitionService.insertRnrSignatures(rnr);
+    }
+  }
 
   @Transactional
   public void approve(Report report, Long requisitionId, Long userId) {
@@ -146,6 +278,26 @@ public class RestRequisitionService {
 
       copyInto(savedLineItem, reportedLineItem, rnrTemplate);
     }
+
+
+    savedLineItems = rnr.getNonFullSupplyLineItems();
+    reportedProducts = report.getNonFullSupplyProducts();
+    if(reportedProducts != null) {
+      for (final RnrLineItem reportedLineItem : reportedProducts) {
+        RnrLineItem savedLineItem = (RnrLineItem) find(savedLineItems, new Predicate() {
+          @Override
+          public boolean evaluate(Object product) {
+            return ((RnrLineItem) product).getProductCode().equals(reportedLineItem.getProductCode());
+          }
+        });
+        if (savedLineItem == null && reportedLineItem != null) {
+          rnr.getNonFullSupplyLineItems().add(reportedLineItem);
+        } else {
+          copyInto(savedLineItem, reportedLineItem, rnrTemplate);
+        }
+      }
+    }
+
   }
 
   private void copyInto(RnrLineItem savedLineItem, RnrLineItem reportedLineItem, ProgramRnrTemplate rnrTemplate) {
@@ -168,5 +320,21 @@ public class RestRequisitionService {
         logger.error("could not copy field: " + column.getName());
       }
     }
+  }
+
+  public List<Report> getRequisitionsByFacility(String facilityCode) {
+    Facility facility = facilityService.getFacilityByCode(facilityCode);
+    if (facility == null) {
+      throw new DataException("error.facility.unknown");
+    }
+
+    List<Rnr> rnrList = requisitionService.getRequisitionsByFacility(facility);
+
+    return FluentIterable.from(rnrList).transform(new Function<Rnr, Report>() {
+      @Override
+      public Report apply(Rnr input) {
+        return Report.prepareForREST(input);
+      }
+    }).toList();
   }
 }

@@ -32,7 +32,7 @@ import org.openlmis.upload.model.AuditFields;
 import org.openlmis.upload.model.ModelClass;
 import org.openlmis.upload.parser.CSVParser;
 import org.openlmis.web.model.UploadBean;
-import org.openlmis.web.response.OpenLmisResponse;
+import org.openlmis.core.web.OpenLmisResponse;
 import org.springframework.http.ResponseEntity;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpSession;
@@ -178,7 +178,7 @@ public class UploadControllerTest {
   public void shouldGetListOfUploadsSupported() throws Exception {
     ResponseEntity<OpenLmisResponse> responseEntity = controller.getSupportedUploads();
     Map<String, UploadBean> result = (Map<String, UploadBean>) responseEntity.getBody().getData().get("supportedUploads");
-    assertThat(result, is(uploadBeansMap));
+    assertThat(result.size(), is(uploadBeansMap.size()));
   }
 
   @Test

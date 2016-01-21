@@ -10,11 +10,12 @@
 
 package org.openlmis.web.controller;
 
+import com.wordnik.swagger.annotations.Api;
 import org.openlmis.core.domain.FacilityProgramProduct;
 import org.openlmis.core.domain.ProgramProductISA;
 import org.openlmis.core.service.FacilityProgramProductService;
-import org.openlmis.web.form.FacilityProgramProductList;
-import org.openlmis.web.response.OpenLmisResponse;
+import org.openlmis.core.web.controller.BaseController;
+import org.openlmis.core.web.OpenLmisResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -29,10 +30,14 @@ import java.util.List;
 import static org.springframework.web.bind.annotation.RequestMethod.*;
 
 /**
- * This controller handles endpoint related to get,override ISA for a given facility, program. Also has endpoints to create, update ISA.
+ * This controller allows for the management (creation and retrieval) of FacilityProgramProducts. It also allows
+ * for the management of ISA (Ideal Stock Amount) values associated with a given FacilityProgramProduct. Although
+ * ISAs are specified at the ProgramProduct level, this controller allows them to be overridden at the more specific
+ * FacilityProgramProduct level.
  */
 
 @Controller
+@Api(value = "facility-program-products", description = "Provides operations related to ProgramProducts at a specific facility")
 public class FacilityProgramProductController extends BaseController {
 
   @Autowired
@@ -40,42 +45,40 @@ public class FacilityProgramProductController extends BaseController {
 
   public static final String PROGRAM_PRODUCT_LIST = "programProductList";
 
-  @RequestMapping(value = "/facility/{facilityId}/program/{programId}/isa", method = GET, headers = ACCEPT_JSON)
+  @RequestMapping(value = "/facility/{facilityId}/program/{programId}", method = GET, headers = ACCEPT_JSON)
   @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_PROGRAM_PRODUCT')")
   public ResponseEntity<OpenLmisResponse> getProgramProductsByProgramAndFacility(@PathVariable Long programId,
                                                                                  @PathVariable Long facilityId) {
-    List<FacilityProgramProduct> programProductsByProgram = service.getActiveProductsForProgramAndFacility(programId,
-      facilityId);
+    List<FacilityProgramProduct> programProductsByProgram = service.getActiveProductsForProgramAndFacility(programId, facilityId);
     return OpenLmisResponse.response(PROGRAM_PRODUCT_LIST, programProductsByProgram);
   }
 
-  @RequestMapping(value = "/facility/{facilityId}/program/{programId}/isa", method = PUT, headers = ACCEPT_JSON)
+
+  @RequestMapping(value = "/facility/{facilityId}/program/{programId}", method = PUT, headers = ACCEPT_JSON)
   @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_FACILITY')")
-  public void overrideIsa(@PathVariable Long facilityId, @RequestBody FacilityProgramProductList products) {
-    service.saveOverriddenIsa(facilityId, products);
+  public void saveFacilityProgramProducts(@PathVariable Long facilityId, @RequestBody List<FacilityProgramProduct> products)
+  {
+    service.save(facilityId, products);
   }
 
-  @RequestMapping(value = "/programProducts/{programProductId}/isa", method = POST, headers = ACCEPT_JSON)
+
+  @RequestMapping(value = "/facility/{facilityId}/programProducts/{programProductId}/isa", method = POST, headers = ACCEPT_JSON)
   @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_PROGRAM_PRODUCT')")
-  public void insertIsa(@PathVariable Long programProductId,
+  public void insertIsa(@PathVariable Long facilityId,
+                        @PathVariable Long programProductId,
                         @RequestBody ProgramProductISA programProductISA,
                         HttpServletRequest request) {
     programProductISA.setCreatedBy(loggedInUserId(request));
     programProductISA.setModifiedBy(loggedInUserId(request));
     programProductISA.setProgramProductId(programProductId);
-    service.insertISA(programProductISA);
+    service.insertISA(facilityId, programProductISA);
   }
 
-  @RequestMapping(value = "/programProducts/{programProductId}/isa/{isaId}", method = PUT, headers = ACCEPT_JSON)
+  @RequestMapping(value = "/facility/{facilityId}/programProducts/{programProductId}/isa", method = DELETE, headers = ACCEPT_JSON)
   @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_PROGRAM_PRODUCT')")
-  public void updateIsa(@PathVariable Long isaId,
-                        @PathVariable Long programProductId,
-                        @RequestBody ProgramProductISA programProductISA,
-                        HttpServletRequest request) {
-    programProductISA.setId(isaId);
-    programProductISA.setProgramProductId(programProductId);
-    programProductISA.setModifiedBy(loggedInUserId(request));
-    service.updateISA(programProductISA);
+  public void deleteIsa(@PathVariable Long facilityId, @PathVariable Long programProductId, HttpServletRequest request)
+  {
+    service.deleteISA(facilityId, programProductId);
   }
 
 

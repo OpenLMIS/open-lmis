@@ -35,9 +35,17 @@ public class ShipmentLineItem extends LineItem {
 
   private Long orderId;
 
+  private String concatenatedOrderId;
+
+  private String facilityCode;
+
+  private String programCode;
+
   private String orderNumber;
 
   private String productCode;
+
+  private Integer quantityOrdered;
 
   private String replacedProductCode;
 
@@ -53,6 +61,14 @@ public class ShipmentLineItem extends LineItem {
 
   private BigDecimal cost;
 
+  private String substitutedProductCode;
+
+  private String substitutedProductName;
+
+  private Integer substitutedProductQuantityShipped;
+
+  private Integer packSize;
+  
   private Date packedDate;
 
   private Date shippedDate;

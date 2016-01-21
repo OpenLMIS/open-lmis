@@ -1,0 +1,60 @@
+
+<div class="rnr-tabs clearfix">
+  <!--  <h2><span openlmis-message="label.vaccine.distribution"></span>
+    </h2> -->
+   <span openlmis-message="label.vaccine.distribution"></span>
+  <span class="pull-right">
+    <a id="resizeViewButton" full-screen href="" class="btn">
+        <i class="icon-resize-full"></i>
+    </a>
+  </span>
+
+</div>
+
+
+
+<div class="info-box padding2px">
+    <div class="requisition-head-block">
+        <div class="row-fluid">
+            <div class="span8" style="padding: 10px;">
+                <div class="row-fluid">
+
+                    <div class="span2">
+                            <span>
+                            <label for='facilityLabel' openlmis-message="label.vaccine.stock.distributed.to"> </label>&nbsp;<span
+                                    id='facilityLabel' ng-model="stockCardsByCategory[0].toFacilityName" ng-bind="toFacilityName"></span>
+                            </span>
+                    </div>
+
+
+                    <div class="span4">
+                        <span id="visitDateContainer">
+                            <label for="issueDate2" openlmis-message="label.vaccine.issue.date"></label>
+                             <input required id="issueDate2" type="text" ui-date="{dateFormat: 'dd/mm/yy', changeYear: true}"
+                                    ui-date-format="dd-mm-yy"
+                                    readonly ng-model="stockCardsByCategory[0].issueDate"
+                                    />
+                        </span>
+
+                    </div>
+
+                    <div class="span4" ng-init="stockCardsByCategory[0].issueVoucher==true">
+                        <label for="date">
+                            <span openlmis-message="label.vaccine.stock.issue.voucher"></span>
+
+                        </label>
+                        <input id="date" required type="text" ng-bind="value"   ng-model="stockCardsByCategory[0].issueVoucher"/>
+                    </div>
+
+
+
+                </div>
+
+
+            </div>
+            <div class="span4">
+
+            </div>
+        </div>
+    </div>
+</div>

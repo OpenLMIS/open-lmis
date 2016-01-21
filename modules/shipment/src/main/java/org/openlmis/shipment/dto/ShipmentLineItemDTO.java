@@ -33,12 +33,20 @@ import static org.apache.commons.lang3.StringUtils.isBlank;
 public class ShipmentLineItemDTO {
 
   private static Logger logger = Logger.getLogger(ShipmentLineItemDTO.class);
-  private Long orderId;
   private String orderNumber;
+  private Long orderId;
+  private String concatenatedOrderId;
+  private String facilityCode;
+  private String programCode;
   private String productCode;
+  private String quantityOrdered;
   private String replacedProductCode;
   private String quantityShipped;
   private String cost;
+  private String substitutedProductCode;
+  private String substitutedProductName;
+  private String substitutedProductQuantityShipped;
+  private String packSize;
   private String packedDate;
   private String shippedDate;
 

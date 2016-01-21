@@ -1,0 +1,108 @@
+<!doctype html>
+<!--
+  ~ This program is part of the OpenLMIS logistics management information system platform software.
+  ~ Copyright © 2013 VillageReach
+  ~
+  ~ This program is free software: you can redistribute it and/or modify it under the terms of the GNU Affero General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
+  ~  
+  ~ This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Affero General Public License for more details.
+  ~ You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org. 
+  -->
+
+<html lang="en" ng-app="rnr">
+<head>
+  <meta charset="utf-8">
+  <title openlmis-message="app.title"></title>
+  <link rel="icon" href="/public/favicon.ico" type="image/x-icon"/>
+  <script src="/public/lib/jquery/jquery-2.0.0.min.js"></script>
+  <script src="/public/lib/base2.js"></script>
+  <script src="/public/lib/jquery/jquery-ui-1.9.2.custom.min.js"></script>
+  <script src="/public/lib/underscore/underscore-min.js"></script>
+  <script src="/public/lib/angular/angular.min.js"></script>
+  <script src="/public/lib/angular/angular-route.min.js"></script>
+  <script src="/public/lib/angular/angular-cookies.js"></script>
+  <script src="/public/lib/angular/angular-resource.min.js"></script>
+  <script src="/public/lib/bootstrap/js/bootstrap.min.js"></script>
+  <script src="/public/lib/angular-ui/bootstrap/ui-bootstrap-0.1.0.min.js"></script>
+  <link rel="stylesheet" href="/public/lib/bootstrap/css/bootstrap.min.css">
+  <link rel="stylesheet" href="/public/lib/select2/select2.css">
+  <script src="/public/lib/angular-ui/angular-ui.min.js"></script>
+  <link rel="stylesheet" href="/public/lib/angular-ui/angular-ui.min.css">
+  <script src="/public/lib/angular-ui/ng-grid/ng-grid-2.0.7.min.js"></script>
+
+  <script src="/public/js/shared/util.js"></script>
+  <script src="/public/js/shared/services/services.js"></script>
+  <script type="text/javascript" src="/public/js/shared/services/message-service.js"></script>
+  <script type="text/javascript" src="/public/js/shared/services/authorization-service.js"></script>
+  <script src="/public/js/shared/controller/header-controller.js"></script>
+  <script src="/public/js/shared/controller/login-controller.js"></script>
+  <script src="/public/js/shared/controller/locale-controller.js"></script>
+  <script src="/public/js/shared/services/navigate-back-service.js"></script>
+  <script src="/public/js/shared/app.js"></script>
+  <!-- App directives -->
+  <script src="/public/js/shared/directives/tab-scroll.js"></script>
+  <script src="/public/js/shared/directives/form-toolbar.js"></script>
+  <script src="/public/js/shared/directives/openlmis-message.js"></script>
+  <script src="/public/js/shared/directives/openlmis-pagination.js"></script>
+  <script src="/public/js/shared/directives/placeholder.js"></script>
+  <script src="/public/js/shared/directives/ui-nav.js"></script>
+  <script src="/public/js/shared/directives/modal-events.js"></script>
+  <script src="/public/js/shared/directives/ng-grid-events.js"></script>
+  <script src="/public/js/shared/directives/fade-out.js"></script>
+  <script src="/public/js/shared/directives/fixed-table-header.js"></script>
+
+  <script src="/public/js/rnr/module/rnr-module.js"></script>
+
+  <!--Rnr directives-->
+  <script src="/public/js/rnr/directives/comment-box.js"></script>
+  <script src="/public/js/rnr/directives/display-cost.js"></script>
+  <script src="/public/js/rnr/directives/full-screen.js"></script>
+  <script src="/public/js/rnr/directives/custom-horizontal-scroll.js"></script>
+  <script src="/public/js/rnr/directives/adjust-height.js"></script>
+  <script src="/public/js/rnr/directives/set-focus.js"></script>
+
+  <script src="/public/js/rnr/controller/create/initiate-rnr-controller.js"></script>
+  <script src="/public/js/rnr/controller/create/create-requisition-controller.js"></script>
+  <script src="/public/js/rnr/controller/create/create-full-supply-controller.js"></script>
+  <script src="/public/js/rnr/controller/create/create-non-full-supply-controller.js"></script>
+  <script src="/public/js/rnr/controller/create/create-regimen-line-item-controller.js"></script>
+  <script src="/public/js/rnr/controller/create/create-equipment-line-item-controller.js"></script>
+  <script src="/public/js/rnr/controller/approve/approve-rnr-list-controller.js"></script>
+  <script src="/public/js/rnr/controller/approve/approve-rnr-controller.js"></script>
+  <script src="/public/js/rnr/controller/approve/approve-full-supply-controller.js"></script>
+  <script src="/public/js/rnr/controller/approve/approve-regimen-line-item-controller.js"></script>
+  <script src="/public/js/rnr/controller/approve/approve-equipment-line-item-controller.js"></script>
+  <script src="/public/js/rnr/controller/convert-to-order-list-controller.js"></script>
+  <script src="/public/js/rnr/controller/view/view-rnr-list-controller.js"></script>
+  <script src="/public/js/rnr/controller/view/view-rnr-controller.js"></script>
+  <script src="/public/js/rnr/controller/view/view-full-supply-controller.js"></script>
+  <script src="/public/js/rnr/controller/view/view-regimen-line-item-controller.js"></script>
+  <script src="/public/js/rnr/controller/view/view-equipment-line-item-controller.js"></script>
+  <script src="/public/js/rnr/services/requisition-service.js"></script>
+  <script src="/public/js/shared/controller/navigation-controller.js"></script>
+  <script src="/public/js/shared/open-lmis-dialog.js"></script>
+  <script src="/public/lib/localstorage/localStorage.js"></script>
+  <script src="/public/lib/select2/select2.js"></script>
+  <script src="/public/js/shared/localStorageKeys.js"></script>
+  <script src="/public/js/rnr/model/regular-rnr-line-item.js"></script>
+  <script src="/public/js/rnr/model/loss-and-adjustment.js"></script>
+  <script src="/public/js/rnr/model/rnr.js"></script>
+  <link type="text/css" rel="stylesheet" charset="UTF-8" href="/public/css/ng-grid.css"/>
+  <link type="text/css" rel="stylesheet" charset="UTF-8" href="/public/css/app.css"/>
+
+  <!--[if IE 9]>
+  <link rel="stylesheet" href="/public/css/ie9.css"/>
+  <![endif]-->
+
+</head>
+<body>
+
+<!--
+<ng-include src="'/public/pages/header.html'"></ng-include>
+<ng-include src="'/public/pages/navigation.html'"></ng-include>
+-->
+<div class="content rnr-content">
+  <div ng-view></div>
+</div>
+</body>
+</html>

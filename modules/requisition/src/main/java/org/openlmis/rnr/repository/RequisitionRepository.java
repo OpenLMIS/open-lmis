@@ -10,13 +10,14 @@
 
 package org.openlmis.rnr.repository;
 
-import org.openlmis.core.domain.Facility;
-import org.openlmis.core.domain.ProcessingPeriod;
-import org.openlmis.core.domain.Program;
-import org.openlmis.core.domain.RoleAssignment;
+import org.openlmis.core.domain.*;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.core.repository.helper.CommaSeparator;
+import org.openlmis.core.repository.mapper.SignatureMapper;
+import org.openlmis.equipment.domain.EquipmentInventoryStatus;
+import org.openlmis.equipment.repository.mapper.EquipmentInventoryStatusMapper;
 import org.openlmis.rnr.domain.*;
+import org.openlmis.rnr.dto.RnrDTO;
 import org.openlmis.rnr.repository.mapper.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
@@ -54,12 +55,55 @@ public class RequisitionRepository {
   @Autowired
   private RegimenLineItemMapper regimenLineItemMapper;
 
+  @Autowired
+  private EquipmentLineItemMapper equipmentLineItemMapper;
+
+  @Autowired
+  private EquipmentInventoryStatusMapper equipmentInventoryStatusMapper;
+
+  @Autowired
+  private PatientQuantificationLineItemMapper patientQuantificationLineItemMapper;
+
+  @Autowired
+  private SignatureMapper signatureMapper;
+
+
   public void insert(Rnr requisition) {
     requisition.setStatus(INITIATED);
     requisitionMapper.insert(requisition);
     insertLineItems(requisition, requisition.getFullSupplyLineItems());
     insertLineItems(requisition, requisition.getNonFullSupplyLineItems());
     insertRegimenLineItems(requisition, requisition.getRegimenLineItems());
+    insertEquipmentStatus(requisition, requisition.getEquipmentLineItems());
+  }
+
+  public void insertPatientQuantificationLineItems(Rnr rnr) {
+    for (PatientQuantificationLineItem patientQuantificationLineItem : rnr.getPatientQuantifications()) {
+      patientQuantificationLineItem.setRnrId(rnr.getId());
+      patientQuantificationLineItem.setModifiedBy(rnr.getModifiedBy());
+      patientQuantificationLineItem.setCreatedBy(rnr.getCreatedBy());
+      patientQuantificationLineItemMapper.insert(patientQuantificationLineItem);
+    }
+  }
+
+  private void insertEquipmentStatus(Rnr requisition, List<EquipmentLineItem> equipmentLineItems) {
+    for (EquipmentLineItem equipmentLineItem : equipmentLineItems) {
+      EquipmentInventoryStatus status = getStatusFromEquipmentLineItem(equipmentLineItem);
+      equipmentInventoryStatusMapper.insert(status);
+      equipmentLineItem.setInventoryStatusId(status.getId());
+
+      equipmentLineItem.setRnrId(requisition.getId());
+      equipmentLineItem.setModifiedBy(requisition.getModifiedBy());
+      equipmentLineItemMapper.insert(equipmentLineItem);
+    }
+  }
+
+  private EquipmentInventoryStatus getStatusFromEquipmentLineItem(EquipmentLineItem equipmentLineItem) {
+    EquipmentInventoryStatus status = new EquipmentInventoryStatus();
+    status.setId(equipmentLineItem.getInventoryStatusId());
+    status.setInventoryId(equipmentLineItem.getEquipmentInventoryId());
+    status.setStatusId(equipmentLineItem.getOperationalStatusId());
+    return status;
   }
 
   private void insertRegimenLineItems(Rnr requisition, List<RegimenLineItem> regimenLineItems) {
@@ -84,6 +128,16 @@ public class RequisitionRepository {
     updateNonFullSupplyLineItems(rnr);
     if (!(rnr.getStatus() == AUTHORIZED || rnr.getStatus() == IN_APPROVAL)) {
       updateRegimenLineItems(rnr);
+      updateEquipmentLineItems(rnr);
+    }
+  }
+
+  private void updateEquipmentLineItems(Rnr rnr) {
+    for(EquipmentLineItem item : rnr.getEquipmentLineItems()){
+      equipmentLineItemMapper.update(item);
+
+      EquipmentInventoryStatus status = getStatusFromEquipmentLineItem(item);
+      equipmentInventoryStatusMapper.update(status);
     }
   }
 
@@ -111,6 +165,7 @@ public class RequisitionRepository {
         updateLineItem(rnr, lineItem);
         continue;
       }
+      lineItem.setRnrId(rnr.getId());
       rnrLineItemMapper.insertNonFullSupply(lineItem);
     }
   }
@@ -164,8 +219,13 @@ public class RequisitionRepository {
     return requisition;
   }
 
+  @Deprecated
   public List<Rnr> getAuthorizedRequisitions(RoleAssignment roleAssignment) {
     return requisitionMapper.getAuthorizedRequisitions(roleAssignment);
+  }
+
+  public List<RnrDTO> getAuthorizedRequisitionsDTOs(RoleAssignment roleAssignment){
+    return requisitionMapper.getAuthorizedRequisitionsDTO(roleAssignment);
   }
 
   public Rnr getLastRegularRequisitionToEnterThePostSubmitFlow(Long facilityId, Long programId) {
@@ -205,7 +265,7 @@ public class RequisitionRepository {
                                                                    Integer pageSize, Long userId, String rightName, String sortBy,
                                                                    String sortDirection) {
     return requisitionMapper.getApprovedRequisitionsForCriteriaAndPageNumber(searchType, searchVal, pageNumber, pageSize,
-      userId, rightName, sortBy, sortDirection);
+            userId, rightName, sortBy, sortDirection);
   }
 
   public Integer getCountOfApprovedRequisitionsForCriteria(String searchType, String searchVal, Long userId, String rightName) {
@@ -234,5 +294,24 @@ public class RequisitionRepository {
 
   public Long getProgramId(Long rnrId) {
     return requisitionMapper.getProgramId(rnrId);
+  }
+
+  public String deleteRnR(Long rnrId) {
+    return requisitionMapper.deleteRnR(rnrId.intValue());
+  }
+
+  public void updateClientFields(Rnr rnr) {
+    requisitionMapper.updateClientFields(rnr);
+  }
+
+  public List<Rnr> getRequisitionDetailsByFacility(Facility facility) {
+    return requisitionMapper.getRequisitionsWithLineItemsByFacility(facility);
+  }
+
+  public void insertRnrSignatures(Rnr rnr) {
+    for (Signature signature: rnr.getRnrSignatures()) {
+      signatureMapper.insertSignature(signature);
+      requisitionMapper.insertRnrSignature(rnr, signature);
+    }
   }
 }

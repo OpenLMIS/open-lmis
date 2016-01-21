@@ -11,6 +11,7 @@
 package org.openlmis.order.task;
 
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
@@ -20,6 +21,7 @@ import org.openlmis.core.domain.Facility;
 import org.openlmis.core.domain.FacilityFtpDetails;
 import org.openlmis.core.domain.OrderConfiguration;
 import org.openlmis.core.domain.SupplyLine;
+import org.openlmis.core.service.ConfigurationSettingService;
 import org.openlmis.core.service.FacilityFtpDetailsService;
 import org.openlmis.core.service.SupplyLineService;
 import org.openlmis.db.categories.UnitTests;
@@ -29,6 +31,8 @@ import org.openlmis.order.helper.OrderCsvHelper;
 import org.openlmis.order.service.OrderService;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
+import org.powermock.modules.junit4.PowerMockRunnerDelegate;
+import org.powermock.modules.junit4.rule.PowerMockRule;
 
 import java.io.File;
 import java.io.FileWriter;
@@ -38,12 +42,19 @@ import static java.util.Arrays.asList;
 import static org.mockito.Mockito.*;
 import static org.openlmis.order.domain.OrderStatus.TRANSFER_FAILED;
 import static org.openlmis.order.task.OrderFtpTask.FTP_CREDENTIAL_MISSING_COMMENT;
+import static org.powermock.api.mockito.PowerMockito.mockStatic;
 import static org.powermock.api.mockito.PowerMockito.whenNew;
 
 @Category(UnitTests.class)
 @RunWith(PowerMockRunner.class)
-@PrepareForTest(OrderFtpTask.class)
+@PrepareForTest({OrderFtpTask.class, ConfigurationSettingService.class})
 public class OrderFtpTaskTest {
+
+  @Rule
+  public PowerMockRule rule = new PowerMockRule();
+
+  @Mock
+  ConfigurationSettingService configurationSettingService;
 
   @Mock
   OrderService orderService;
@@ -79,7 +90,10 @@ public class OrderFtpTaskTest {
 
   @Test
   public void shouldProcessOrders() throws Exception {
+
     SupplyLine supplyLine = mock(SupplyLine.class);
+    when(configurationSettingService.getBoolValue("USE_FTP_TO_SEND_ORDERS")).thenReturn(true);
+    when(configurationSettingService.getConfigurationStringValue("LOCAL_ORDER_EXPORT_DIRECTORY")).thenReturn("./local-order-ftp-data");
     when(orderService.getOrder(order.getId())).thenReturn(fullOrder);
     when(fullOrder.getId()).thenReturn(1l);
     when(fullOrder.getSupplyLine()).thenReturn(supplyLine);
@@ -110,6 +124,9 @@ public class OrderFtpTaskTest {
 
   @Test
   public void shouldUpdateOrderAsTransferFailedIfFacilityFtpDetailsDoesNotExist() {
+    when(configurationSettingService.getBoolValue("USE_FTP_TO_SEND_ORDERS")).thenReturn(true);
+    when(configurationSettingService.getConfigurationStringValue("LOCAL_ORDER_EXPORT_DIRECTORY")).thenReturn("./local-order-ftp-data");
+
     SupplyLine supplyLine = mock(SupplyLine.class);
     when(orderService.getOrder(order.getId())).thenReturn(fullOrder);
     when(fullOrder.getSupplyLine()).thenReturn(supplyLine);

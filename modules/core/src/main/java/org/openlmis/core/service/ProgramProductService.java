@@ -93,6 +93,28 @@ public class ProgramProductService {
     programProductRepository.save(programProduct);
   }
 
+  public void saveAndLogPriceChange(ProgramProduct programProduct){
+    ProgramProduct existingProgramProduct = null;
+
+    if (programProduct.getId() != null) {
+      existingProgramProduct = programProductRepository.getById(programProduct.getId());
+    }
+    save(programProduct);
+    if( ( existingProgramProduct == null && programProduct.getActive() ) || (existingProgramProduct != null && programProduct.getCurrentPrice().compareTo( existingProgramProduct.getCurrentPrice()) != 0)){
+      programProductRepository.save(programProduct);
+      // now log the price change if it has to be logged.
+      logPriceChange(programProduct);
+    }
+  }
+
+  private void logPriceChange(ProgramProduct programProduct) {
+      ProgramProductPrice priceChange = new ProgramProductPrice();
+      priceChange.setProgramProduct( programProduct );
+      priceChange.setPricePerDosage( programProduct.getCurrentPrice() );
+      this.updateProgramProductPrice( priceChange );
+
+  }
+
   public ProgramProduct getByProgramAndProductCode(ProgramProduct programProduct) {
     return programProductRepository.getByProgramAndProductCode(programProduct);
   }
@@ -139,6 +161,10 @@ public class ProgramProductService {
       throw new DataException("error.reference.data.invalid.product");
     }
     category.setId(categoryId);
+  }
+  
+  public List<ProgramProduct> getActiveByProgram(Long programId) {
+    return programProductRepository.getActiveByProgram(programId);
   }
 
   public ProgramProduct getByProgramAndProductId(Long programId, Long productId) {
@@ -192,4 +218,15 @@ public class ProgramProductService {
       save(programProduct);
     }
   }
+
+    public void insertISA(ProgramProductISA isa)
+    {
+      programProductRepository.insertISA(isa);
+    }
+
+    public void updateISA(ProgramProductISA isa)
+    {
+      programProductRepository.updateISA(isa);
+    }
+
 }

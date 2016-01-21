@@ -43,6 +43,9 @@
               <span ng-switch-when="code">
                 <span ng-bind="regimenLineItem.code" class="cell-text"></span>
               </span>
+             <span style="text-align: center;width: 100%;" ng-switch-when="skipped">
+                <input ng-model="regimenLineItem.skipped" ng-disabled="true" type="checkbox" />
+              </span>
               <span ng-switch-default>
                 <span ng-bind="regimenLineItem[regimenColumn.name]" class="cell-text"></span>
               </span>

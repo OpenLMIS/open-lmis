@@ -14,9 +14,9 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import org.apache.commons.collections.Predicate;
-import org.codehaus.jackson.annotate.JsonIgnore;
-import org.codehaus.jackson.annotate.JsonIgnoreProperties;
-import org.codehaus.jackson.map.annotate.JsonSerialize;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import org.openlmis.core.domain.*;
 import org.openlmis.core.exception.DataException;
 
@@ -28,7 +28,7 @@ import java.util.List;
 
 import static org.apache.commons.collections.CollectionUtils.find;
 import static org.apache.commons.collections.CollectionUtils.selectRejected;
-import static org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion.NON_NULL;
+import static com.fasterxml.jackson.databind.annotation.JsonSerialize.Inclusion.NON_NULL;
 import static org.openlmis.rnr.domain.ProgramRnrTemplate.BEGINNING_BALANCE;
 import static org.openlmis.rnr.domain.RnrStatus.*;
 
@@ -44,6 +44,7 @@ import static org.openlmis.rnr.domain.RnrStatus.*;
 @EqualsAndHashCode(callSuper = false)
 public class Rnr extends BaseModel {
 
+  public static final String RNR_VALIDATION_ERROR = "error.rnr.validation";
   private boolean emergency;
   private Facility facility;
   private Program program;
@@ -51,23 +52,25 @@ public class Rnr extends BaseModel {
   private RnrStatus status;
   private Money fullSupplyItemsSubmittedCost = new Money("0");
   private Money nonFullSupplyItemsSubmittedCost = new Money("0");
-
   private List<RnrLineItem> fullSupplyLineItems = new ArrayList<>();
   private List<RnrLineItem> nonFullSupplyLineItems = new ArrayList<>();
   private List<RegimenLineItem> regimenLineItems = new ArrayList<>();
-
+  private List<EquipmentLineItem> equipmentLineItems = new ArrayList<>();
+  private List<PatientQuantificationLineItem> patientQuantifications = new ArrayList<>();
   private BigDecimal allocatedBudget;
-
-  public static final String RNR_VALIDATION_ERROR = "error.rnr.validation";
-
   @Transient
   @JsonIgnore
   private List<RnrLineItem> allLineItems = new ArrayList<>();
 
   private Facility supplyingDepot;
+  private Long supplyingDepotId;
   private Long supervisoryNodeId;
   private Date submittedDate;
+  private Date clientSubmittedTime;
+  private String clientSubmittedNotes;
   private List<Comment> comments = new ArrayList<>();
+
+  private List<Signature> rnrSignatures;
 
   public Rnr(Facility facility, Program program, ProcessingPeriod period, Boolean emergency, Long modifiedBy, Long createdBy) {
     this.facility = facility;
@@ -85,17 +88,6 @@ public class Rnr extends BaseModel {
     fillActiveRegimenLineItems(regimens);
   }
 
-  private void fillActiveRegimenLineItems(List<Regimen> regimens) {
-    for (Regimen regimen : regimens) {
-      if (regimen.getActive()) {
-        RegimenLineItem regimenLineItem = new RegimenLineItem(regimen.getId(), regimen.getCategory(), createdBy, modifiedBy);
-        regimenLineItem.setCode(regimen.getCode());
-        regimenLineItem.setName(regimen.getName());
-        regimenLineItems.add(regimenLineItem);
-      }
-    }
-  }
-
   public Rnr(Facility facility, Program program, ProcessingPeriod period) {
     this.facility = facility;
     this.program = program;
@@ -104,6 +96,18 @@ public class Rnr extends BaseModel {
 
   public Rnr(Long id) {
     this.id = id;
+  }
+
+  private void fillActiveRegimenLineItems(List<Regimen> regimens) {
+    for (Regimen regimen : regimens) {
+      if (regimen.getActive()) {
+        RegimenLineItem regimenLineItem = new RegimenLineItem(regimen.getId(), regimen.getCategory(), createdBy, modifiedBy);
+        regimenLineItem.setCode(regimen.getCode());
+        regimenLineItem.setName(regimen.getName());
+        regimenLineItem.setRegimenDisplayOrder(regimen.getDisplayOrder());
+        regimenLineItems.add(regimenLineItem);
+      }
+    }
   }
 
   public void add(RnrLineItem rnrLineItem, Boolean fullSupply) {
@@ -154,6 +158,7 @@ public class Rnr extends BaseModel {
     for (RnrLineItem currentLineItem : this.fullSupplyLineItems) {
       RnrLineItem previousLineItem = previousRequisition.findCorrespondingLineItem(currentLineItem);
       currentLineItem.setBeginningBalanceWhenPreviousStockInHandAvailable(previousLineItem, beginningBalanceVisible);
+      currentLineItem.setSkippedValueWhenPreviousLineItemIsAvailable(previousLineItem);
     }
   }
 
@@ -181,7 +186,7 @@ public class Rnr extends BaseModel {
   }
 
   public void fillBasicInformation(Facility facility, Program program, ProcessingPeriod period) {
-    this.program = program.basicInformation();
+    this.program = program;
     this.period = period;
     this.facility = facility.basicInformation();
   }
@@ -260,6 +265,7 @@ public class Rnr extends BaseModel {
   }
 
   private void copyCreatorEditableFieldsForNonFullSupply(Rnr rnr, ProgramRnrTemplate template, List<ProgramProduct> programProducts) {
+    this.allLineItems.clear();
     for (final RnrLineItem lineItem : rnr.nonFullSupplyLineItems) {
       RnrLineItem savedLineItem = this.findCorrespondingLineItem(lineItem);
       if (savedLineItem == null) {
@@ -355,7 +361,9 @@ public class Rnr extends BaseModel {
   public void validateRegimenLineItems(RegimenTemplate regimenTemplate) {
     for (RegimenLineItem regimenLineItem : this.regimenLineItems) {
       try {
-        regimenLineItem.validate(regimenTemplate);
+        if(!regimenLineItem.getSkipped()) {
+          regimenLineItem.validate(regimenTemplate);
+        }
       } catch (NoSuchFieldException | IllegalAccessException e) {
         throw new DataException(RNR_VALIDATION_ERROR);
       }
@@ -366,6 +374,5 @@ public class Rnr extends BaseModel {
   public boolean isBudgetingApplicable() {
     return !this.emergency && this.program.getBudgetingApplies();
   }
-
 }
 

@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ~ Electronic Logistics Management Information System (eLMIS) is a supply chain management system for health commodities in a developing country setting.
+  ~
+  ~ Copyright (C) 2015  John Snow, Inc (JSI). This program was produced for the U.S. Agency for International Development (USAID). It was prepared under the USAID | DELIVER PROJECT, Task Order 4.
+  ~
+  ~ This program is free software: you can redistribute it and/or modify it under the terms of the GNU Affero General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
+  ~
+  ~ This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Affero General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU Affero General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
+  -->
+
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="facility-mailing-list" language="groovy" columnCount="4" printOrder="Horizontal" pageWidth="842" pageHeight="595" orientation="Landscape" columnWidth="173" columnSpacing="20" leftMargin="40" rightMargin="40" topMargin="20" bottomMargin="20" uuid="ed759f09-4d2c-46c9-b606-42da2355eabd">
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="177"/>
+	<property name="ireport.y" value="0"/>
+	<property name="com.jaspersoft.studio.unit." value="pixel"/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="eLMIS"/>
+	<parameter name="SUBREPORT_DIR" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA["./"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="REPORT_NAME" class="java.lang.String"/>
+	<parameter name="REPORT_TITLE" class="java.lang.String"/>
+	<parameter name="COUNTRY_NAME" class="java.lang.String"/>
+	<parameter name="GENERATED_BY" class="java.lang.String"/>
+	<parameter name="REPORT_VERSION" class="java.lang.String"/>
+	<parameter name="REPORT_ID" class="java.lang.String"/>
+	<parameter name="LOGO" class="java.io.InputStream"/>
+	<parameter name="REPORT_MESSAGE_WHEN_NO_DATA" class="java.lang.String"/>
+	<queryString>
+		<![CDATA[SELECT F.code, F.name facilityName, F.active as active, F.address1, F.address2 , FT.name as facilityType, GZ.name as region, FO.code as owner, F.latitude::text ||',' ||  F.longitude::text  ||', ' || F.altitude::text gpsCoordinates, CASE WHEN U.officePhone IS NULL THEN '' ELSE U.officePhone || ' ,' END || CASE WHEN U.cellPhone IS NULL THEN '' ELSE U.cellPhone || ' ,' END || F.mainPhone as phoneNumber, U.email email, F.fax as fax, U.firstName || ' ' || U.lastName || ', ' || jobtitle contact
+FROM facilities F
+JOIN facility_types FT on FT.id = F.typeid
+LEFT OUTER JOIN geographic_zones GZ on GZ.id = F.geographiczoneid
+LEFT OUTER JOIN facility_operators FO on FO.id = F.operatedbyid
+LEFT OUTER JOIN Users U on U.facilityId = F.id
+ORDER BY F.code asc, F.typeid asc]]>
+	</queryString>
+	<field name="code" class="java.lang.String"/>
+	<field name="facilityName" class="java.lang.String"/>
+	<field name="active" class="java.lang.Boolean"/>
+	<field name="address1" class="java.lang.String"/>
+	<field name="address2" class="java.lang.String"/>
+	<field name="facilityType" class="java.lang.String"/>
+	<field name="region" class="java.lang.String"/>
+	<field name="owner" class="java.lang.String"/>
+	<field name="gpsCoordinates" class="java.lang.String"/>
+	<field name="phoneNumber" class="java.lang.String"/>
+	<field name="email" class="java.lang.String"/>
+	<field name="fax" class="java.lang.String"/>
+	<field name="contact" class="java.lang.String"/>
+	<variable name="TOTAL_PAGES" class="java.lang.Integer">
+		<variableExpression><![CDATA[$V{PAGE_NUMBER}]]></variableExpression>
+	</variable>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<columnHeader>
+		<band height="21" splitType="Stretch"/>
+	</columnHeader>
+	<detail>
+		<band height="141" splitType="Stretch">
+			<textField>
+				<reportElement uuid="70398d5f-5738-4cd7-a74a-753dfae2455d" x="3" y="121" width="759" height="20" forecolor="#006666">
+					<printWhenExpression><![CDATA[$P{REPORT_MESSAGE_WHEN_NO_DATA} != null]]></printWhenExpression>
+				</reportElement>
+				<textElement textAlignment="Center" verticalAlignment="Top">
+					<font size="14" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{REPORT_MESSAGE_WHEN_NO_DATA}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement uuid="9a174af8-d2cb-46c8-b19f-0b17e1be585b" mode="Opaque" x="1" y="0" width="761" height="124" backcolor="#F4F4F4">
+					<printWhenExpression><![CDATA[false == true]]></printWhenExpression>
+				</reportElement>
+				<textElement/>
+				<text><![CDATA[]]></text>
+			</staticText>
+			<line>
+				<reportElement uuid="83a87452-92e8-46d4-bcdd-314f90e18dc7" x="0" y="140" width="780" height="1" forecolor="#3D9297">
+					<property name="local_mesure_unitheight" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<graphicElement>
+					<pen lineWidth="0.2" lineStyle="Dotted"/>
+				</graphicElement>
+			</line>
+			<textField>
+				<reportElement uuid="bfb4bcfa-8252-4952-afb3-b95e63bcab6d" x="0" y="10" width="217" height="20"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{facilityName}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement uuid="fe267d29-19cd-4136-8346-5e38977e19e6" x="0" y="30" width="31" height="20"/>
+				<textElement/>
+				<text><![CDATA[Attn:]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement uuid="3a2b7683-021a-4077-bf7a-e6b58dc2fc74" x="31" y="30" width="186" height="20"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{contact} == "NULL" ? " -" :$F{contact}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement uuid="9495406b-e628-4926-9144-3eb9f378721d" x="31" y="49" width="186" height="20"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[($F{address1}.toUpperCase() == "NULL"? "-":$F{address1})]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="426481ca-2938-4b7d-8b6d-1ae62cab25e6" x="0" y="88" width="217" height="20"/>
+				<textElement/>
+				<textFieldExpression><![CDATA["Phone No: " + ($F{phoneNumber}=="NULL"?"-":$F{phoneNumber})]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement uuid="a9ba7617-81ae-4d93-aa37-fad2af1e9ff9" x="0" y="108" width="217" height="20"/>
+				<textElement/>
+				<textFieldExpression><![CDATA["Fax: " + ($F{fax}.toUpperCase()=="NULL"?"-":$F{fax})]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement uuid="0ee48ba8-0abc-4547-98de-42c556c646ed" x="0" y="49" width="31" height="20"/>
+				<textElement/>
+				<text><![CDATA[Add:]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement uuid="f37710d1-f218-4c4b-83da-ecfc493e4afb" x="31" y="68" width="186" height="20"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[($F{address2}.toUpperCase() == "NULL"? "-":$F{address2})]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+</jasperReport>

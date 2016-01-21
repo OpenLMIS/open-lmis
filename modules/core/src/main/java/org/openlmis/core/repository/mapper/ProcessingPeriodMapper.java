@@ -70,6 +70,20 @@ public interface ProcessingPeriodMapper {
                                                    @Param("startDate") Date startDate,
                                                    @Param("endDate") Date endDate);
 
+  @Select({"SELECT * FROM processing_periods WHERE id in ( select periodId from requisitions where programId  = #{programId} and facilityId = #{facilityId}) ",
+      "AND (( startDate<=#{startDate} AND endDate>=#{startDate}) OR (startDate<=#{endDate} AND endDate>=#{endDate})",
+      "OR (startDate>=#{startDate} AND endDate<=#{endDate}))"})
+  List<ProcessingPeriod> getRnrPeriodsForDateRange(@Param("facilityId") Long facilityId,
+                                                   @Param("programId") Long programId,
+                                                   @Param("startDate") Date startDate,
+                                                   @Param("endDate") Date endDate
+                                                   );
+
+  @Select({"SELECT * FROM processing_periods where id in " +
+                                                  " ( select periodId from requisitions where facilityId = #{facilityId} and programId = #{programId} and emergency = false and status in ( 'INITIATED' , 'SUBMITTED' ) ) " +
+                                                 " "})
+  List<ProcessingPeriod> getOpenPeriods(@Param("facilityId") Long facilityId, @Param("programId") Long programId, @Param("startPeriodId") Long startPeriodId);
+
 
   @Select({"SELECT * FROM processing_periods",
     "WHERE scheduleId = #{scheduleId}",
@@ -92,4 +106,8 @@ public interface ProcessingPeriodMapper {
     "AND endDate > #{date}"
   })
   ProcessingPeriod getPeriodForDate(@Param("scheduleId") Long scheduleId, @Param("date") Date date);
+
+  @Select("SELECT * FROM processing_periods WHERE scheduleId = #{scheduleId} AND extract('year' from startdate) = #{year}  ORDER BY startDate DESC")
+  List<ProcessingPeriod> getAllPeriodsForScheduleAndYear(@Param("scheduleId")Long scheduleId, @Param("year") Long year);
+
 }

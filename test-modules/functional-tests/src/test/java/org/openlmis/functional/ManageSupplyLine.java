@@ -1,12 +1,12 @@
 /*
- * This program is part of the OpenLMIS logistics management information system platform software.
- * Copyright © 2013 VillageReach
- *
- * This program is free software: you can redistribute it and/or modify it under the terms of the GNU Affero General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Affero General Public License for more details.
- * You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org. 
- */
+* This program is part of the OpenLMIS logistics management information system platform software.
+* Copyright © 2013 VillageReach
+*
+* This program is free software: you can redistribute it and/or modify it under the terms of the GNU Affero General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
+*
+* This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Affero General Public License for more details.
+* You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org. 
+*/
 
 package org.openlmis.functional;
 
@@ -156,6 +156,7 @@ public class ManageSupplyLine extends TestCaseHelper {
     verifyNumberOfLineItemsVisibleOnPage(10);
 
     supplyLinePage.closeSearchResults();
+      testWebDriver.sleep(1000);
     assertFalse(supplyLinePage.isProgramHeaderPresent());
   }
 
@@ -239,7 +240,7 @@ public class ManageSupplyLine extends TestCaseHelper {
     dbWrapper.updateFieldValue("facilities", "active", "false", "code", "F11");
     dbWrapper.updateFieldValue("programs", "active", "false", "code", "HIV");
     HomePage homePage = loginPage.loginAs(testData.get(ADMIN), testData.get(PASSWORD));
-    supplyLinePage = homePage.navigateToSupplyLine();
+      supplyLinePage = homePage.navigateToSupplyLine();
     supplyLinePage.clickAddNewButton();
 
     assertEquals("Add supply line", supplyLinePage.getAddSupplyLineHeader());
@@ -404,7 +405,8 @@ public class ManageSupplyLine extends TestCaseHelper {
   @AfterMethod(groups = {"admin"})
   public void tearDown() throws SQLException {
     HomePage homePage = PageObjectFactory.getHomePage(testWebDriver);
-    homePage.logout(baseUrlGlobal);
+      testWebDriver.sleep(1000);
+      homePage.logout(baseUrlGlobal);
     dbWrapper.updateFieldValue("programs", "name", "MALARIA", "code", "MALARIA");
     dbWrapper.removeAllExistingRights("Admin");
     dbWrapper.insertAllAdminRightsAsSeedData();

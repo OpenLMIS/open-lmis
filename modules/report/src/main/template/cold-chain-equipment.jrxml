@@ -1,0 +1,321 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ~ Electronic Logistics Management Information System (eLMIS) is a supply chain management system for health commodities in a developing country setting.
+  ~
+  ~ Copyright (C) 2015  John Snow, Inc (JSI). This program was produced for the U.S. Agency for International Development (USAID). It was prepared under the USAID | DELIVER PROJECT, Task Order 4.
+  ~
+  ~ This program is free software: you can redistribute it and/or modify it under the terms of the GNU Affero General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
+  ~
+  ~ This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Affero General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU Affero General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
+  -->
+
+<!-- Created with Jaspersoft Studio version 6.1.0.final using JasperReports Library version 6.1.0  -->
+<!-- 2015-07-02T17:59:09 -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="openlmis-report-master-landscape" language="groovy" pageWidth="1645" pageHeight="595" orientation="Landscape" columnWidth="1605" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="ed759f09-4d2c-46c9-b606-42da2355eabd">
+	<property name="ireport.zoom" value="1.0000000000000007"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<property name="com.jaspersoft.studio.unit." value="pixel"/>
+	<parameter name="SUBREPORT_DIR" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA["./"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="REPORT_NAME" class="java.lang.String"/>
+	<parameter name="REPORT_TITLE" class="java.lang.String"/>
+	<parameter name="COUNTRY_NAME" class="java.lang.String"/>
+	<parameter name="GENERATED_BY" class="java.lang.String"/>
+	<parameter name="REPORT_VERSION" class="java.lang.String"/>
+	<parameter name="REPORT_ID" class="java.lang.String"/>
+	<parameter name="LOGO" class="java.io.InputStream"/>
+	<parameter name="REPORT_OUTPUT_OPTION" class="java.lang.String"/>
+	<parameter name="OPERATOR_LOGO" class="java.io.InputStream"/>
+	<parameter name="REPORT_SUB_TITLE" class="java.lang.String"/>
+	<parameter name="REPORT_FILTER_PARAM_VALUES" class="java.lang.String"/>
+	<parameter name="REPORT_MESSAGE_WHEN_NO_DATA" class="java.lang.String"/>
+	<parameter name="OPERATOR_NAME" class="java.lang.String"/>
+	<queryString>
+		<![CDATA[]]>
+	</queryString>
+	<field name="model" class="java.lang.String">
+		<fieldDescription><![CDATA[model]]></fieldDescription>
+	</field>
+	<field name="facilityName" class="java.lang.String">
+		<fieldDescription><![CDATA[facilityName]]></fieldDescription>
+	</field>
+	<field name="geozoneId" class="java.lang.Integer">
+		<fieldDescription><![CDATA[geozoneId]]></fieldDescription>
+	</field>
+	<field name="yearOfInstallation" class="java.lang.Integer">
+		<fieldDescription><![CDATA[yearOfInstallation]]></fieldDescription>
+	</field>
+	<field name="yearOfReplacement" class="java.lang.Integer">
+		<fieldDescription><![CDATA[yearOfReplacement]]></fieldDescription>
+	</field>
+	<field name="geozoneName" class="java.lang.String">
+		<fieldDescription><![CDATA[geozoneName]]></fieldDescription>
+	</field>
+	<field name="class" class="java.lang.Class">
+		<fieldDescription><![CDATA[class]]></fieldDescription>
+	</field>
+	<field name="energyTypeName" class="java.lang.String">
+		<fieldDescription><![CDATA[energyTypeName]]></fieldDescription>
+	</field>
+	<field name="equipmentAge" class="java.lang.Double">
+		<fieldDescription><![CDATA[equipmentAge]]></fieldDescription>
+	</field>
+	<field name="refrigerant" class="java.lang.String">
+		<fieldDescription><![CDATA[refrigerant]]></fieldDescription>
+	</field>
+	<field name="facilityId" class="java.lang.Integer">
+		<fieldDescription><![CDATA[facilityId]]></fieldDescription>
+	</field>
+	<field name="facilityOperator" class="java.lang.String">
+		<fieldDescription><![CDATA[facilityOperator]]></fieldDescription>
+	</field>
+	<field name="equipmentOperationalStatusName" class="java.lang.String">
+		<fieldDescription><![CDATA[equipmentOperationalStatusName]]></fieldDescription>
+	</field>
+	<field name="facilityHasElectricity" class="java.lang.Boolean">
+		<fieldDescription><![CDATA[facilityHasElectricity]]></fieldDescription>
+	</field>
+	<field name="facilityTypeName" class="java.lang.String">
+		<fieldDescription><![CDATA[facilityTypeName]]></fieldDescription>
+	</field>
+	<field name="equipmentColdChainEquipmentsCode" class="java.lang.String">
+		<fieldDescription><![CDATA[equipmentColdChainEquipmentsCode]]></fieldDescription>
+	</field>
+	<field name="freezerCapacity" class="java.lang.Integer">
+		<fieldDescription><![CDATA[freezerCapacity]]></fieldDescription>
+	</field>
+	<field name="manufacturer" class="java.lang.String">
+		<fieldDescription><![CDATA[manufacturer]]></fieldDescription>
+	</field>
+	<field name="refrigeratorCapacity" class="java.lang.Integer">
+		<fieldDescription><![CDATA[refrigeratorCapacity]]></fieldDescription>
+	</field>
+	<field name="geozoneHierarchy" class="java.util.List">
+		<fieldDescription><![CDATA[geozoneHierarchy]]></fieldDescription>
+	</field>
+	<field name="equipmentId" class="java.lang.Integer">
+		<fieldDescription><![CDATA[equipmentId]]></fieldDescription>
+	</field>
+	<field name="facilityAddress2" class="java.lang.String">
+		<fieldDescription><![CDATA[facilityAddress2]]></fieldDescription>
+	</field>
+	<field name="facilityAddress1" class="java.lang.String">
+		<fieldDescription><![CDATA[facilityAddress1]]></fieldDescription>
+	</field>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="81" splitType="Stretch">
+			<subreport>
+				<reportElement x="0" y="0" width="1620" height="79" isRemoveLineWhenBlank="true" uuid="c576bd49-9432-4ebb-a897-b64a7ec0183e">
+					<printWhenExpression><![CDATA[$P{REPORT_OUTPUT_OPTION}.toUpperCase() != "XLS"]]></printWhenExpression>
+				</reportElement>
+				<subreportParameter name="PAGE_NO">
+					<subreportParameterExpression><![CDATA[$V{PAGE_NUMBER}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="REPORT_TITLE">
+					<subreportParameterExpression><![CDATA[$P{REPORT_TITLE}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="LOGO">
+					<subreportParameterExpression><![CDATA[$P{LOGO}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="OPERATOR_NAME">
+					<subreportParameterExpression><![CDATA[$P{OPERATOR_NAME}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="REPORT_SUB_TITLE">
+					<subreportParameterExpression><![CDATA[$P{REPORT_SUB_TITLE}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="REPORT_NAME">
+					<subreportParameterExpression><![CDATA[$P{REPORT_NAME}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="REPORT_FILTER_PARAM_VALUES">
+					<subreportParameterExpression><![CDATA[$P{REPORT_FILTER_PARAM_VALUES}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="OPERATOR_LOGO">
+					<subreportParameterExpression><![CDATA[$P{OPERATOR_LOGO}]]></subreportParameterExpression>
+				</subreportParameter>
+				<dataSourceExpression><![CDATA[new net.sf.jasperreports.engine.JREmptyDataSource()]]></dataSourceExpression>
+				<subreportExpression><![CDATA["openlmis-report-header-landscape.jasper"]]></subreportExpression>
+			</subreport>
+		</band>
+	</title>
+	<columnHeader>
+		<band height="21" splitType="Stretch">
+			<staticText>
+				<reportElement mode="Opaque" x="0" y="1" width="1620" height="19" forecolor="#FFFFFF" backcolor="#3D9297" uuid="e587f413-b748-4b6c-8a34-93bb08817a0b">
+					<property name="net.sf.jasperreports.export.xls.ignore.graphics" value="false"/>
+				</reportElement>
+				<text><![CDATA[]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="2" y="1" width="100" height="19" uuid="e01e1b91-2543-49cc-a051-98444e75d2b4"/>
+				<textFieldExpression><![CDATA[$R{label.region}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="104" y="1" width="116" height="19" uuid="4ebcf240-7c5d-4f2e-960a-489714d01749"/>
+				<textFieldExpression><![CDATA[$R{label.district}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="223" y="1" width="100" height="19" uuid="1128e9de-b581-417e-aea3-8a75213da5de"/>
+				<textFieldExpression><![CDATA[$R{label.location}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="327" y="1" width="100" height="19" uuid="c8f2c7d6-977d-4be2-9b3a-81e55fd8c6d7"/>
+				<textFieldExpression><![CDATA[$R{label.facility.name}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="426" y="1" width="100" height="19" uuid="a77f9a6a-b646-4571-b0ef-562cc357b4c1"/>
+				<textFieldExpression><![CDATA[$R{label.facility.type}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="543" y="1" width="100" height="19" uuid="eb24d005-1a18-4949-b4e8-28515e343a13"/>
+				<textFieldExpression><![CDATA[$R{label.ownership}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="651" y="1" width="100" height="19" uuid="0aa0e6e9-41ba-480b-83d5-780527a1f6f3"/>
+				<textFieldExpression><![CDATA[$R{label.manufacturer}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="760" y="1" width="100" height="19" uuid="804133bc-5ceb-4f0a-a182-c7d3fbc7c697"/>
+				<textFieldExpression><![CDATA[$R{label.refrigerator.model}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="841" y="1" width="100" height="19" uuid="db8c6b3d-886f-4c71-90db-420ae0c3766a"/>
+				<textFieldExpression><![CDATA[$R{label.equipment.code}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="948" y="1" width="100" height="19" uuid="5cc696fb-bbec-4afa-af27-e7da76cb3773"/>
+				<textFieldExpression><![CDATA[$R{label.equipment.refrigerant}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="1057" y="1" width="115" height="19" uuid="33884087-313a-4b3d-aaa7-00a8e7f7f8f0"/>
+				<textFieldExpression><![CDATA[$R{label.equipment.refrigerator-capacity}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="1172" y="1" width="75" height="19" uuid="f9833683-9659-458d-8041-031d5bb428e4"/>
+				<textFieldExpression><![CDATA[$R{label.equipment.freezer-capacity}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="1247" y="1" width="127" height="19" uuid="c4d20ab9-ffbf-4a30-9352-906a7e3c08f0"/>
+				<textFieldExpression><![CDATA[$R{label.status}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="1395" y="1" width="100" height="19" uuid="2a46007b-d3b1-4ec8-b88b-9c7e662a9c27"/>
+				<textFieldExpression><![CDATA[$R{label.equipment.energy.source}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="1501" y="1" width="100" height="19" uuid="84440f02-3c41-4d24-b7df-d5a5fd3806e5"/>
+				<textFieldExpression><![CDATA[$R{label.equipment.year.of.installation}]]></textFieldExpression>
+			</textField>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="20" splitType="Stretch">
+			<textField>
+				<reportElement x="72" y="0" width="1620" height="20" forecolor="#006666" uuid="497dba92-6949-4bb2-9beb-1f85a98456e5">
+					<printWhenExpression><![CDATA[$P{REPORT_MESSAGE_WHEN_NO_DATA} != null]]></printWhenExpression>
+				</reportElement>
+				<textElement textAlignment="Center" verticalAlignment="Top">
+					<font size="14" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{REPORT_MESSAGE_WHEN_NO_DATA}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement mode="Opaque" x="0" y="0" width="1620" height="20" backcolor="#F4F4F4" uuid="9a174af8-d2cb-46c8-b19f-0b17e1be585b">
+					<printWhenExpression><![CDATA[$V{REPORT_COUNT}%2 == 0]]></printWhenExpression>
+				</reportElement>
+				<text><![CDATA[]]></text>
+			</staticText>
+			<line>
+				<reportElement x="0" y="19" width="1620" height="1" forecolor="#3D9297" uuid="83a87452-92e8-46d4-bcdd-314f90e18dc7"/>
+				<graphicElement>
+					<pen lineWidth="0.5"/>
+				</graphicElement>
+			</line>
+			<textField>
+				<reportElement x="13" y="0" width="81" height="20" uuid="1efbb955-a0ae-48a5-a50b-b1cf4d027ddf">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textElement verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[($F{geozoneHierarchy} != null && $F{geozoneHierarchy}.size() > 0)  ? $F{geozoneHierarchy}.toArray()[0] : ""]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement x="104" y="0" width="116" height="20" uuid="5c136f43-efcc-4b64-a697-0965e505dee1"/>
+				<textElement verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[($F{geozoneHierarchy} != null && $F{geozoneHierarchy}.size() > 0)  ? $F{geozoneHierarchy}.toArray()[1] : ""]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement x="223" y="0" width="100" height="20" uuid="b7f916b2-c71b-4ab3-91ee-8c8200e73377"/>
+				<textElement verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{facilityAddress1} + ", " + $F{facilityAddress2}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement x="327" y="0" width="100" height="20" uuid="e24b4517-08a5-4837-9348-cf5991e0d1e0"/>
+				<textElement verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{facilityName}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement x="426" y="0" width="114" height="20" uuid="14c8d065-ad93-49cf-90be-1106a1a91a33"/>
+				<textElement verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{facilityTypeName}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement x="543" y="0" width="100" height="20" uuid="f471d28a-3fec-4166-a747-b25140563ec0"/>
+				<textElement verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{facilityOperator}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement x="651" y="0" width="100" height="20" uuid="6ab3ae8f-5b18-47cb-91a9-02ca3068c417"/>
+				<textElement verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{manufacturer}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement x="760" y="0" width="100" height="20" uuid="c721c368-86e3-4c9b-81d8-438b27e1c5fc"/>
+				<textElement verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{model}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement x="841" y="0" width="100" height="20" uuid="9d8c56f3-dcf4-4a12-90c8-8a9cddb30b92"/>
+				<textElement verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{equipmentColdChainEquipmentsCode}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement x="948" y="0" width="100" height="20" uuid="b48aa75c-8842-46bf-8870-90f554af5849"/>
+				<textElement verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{refrigerant}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement x="1057" y="0" width="100" height="20" uuid="bc8dd715-884d-4aca-a593-c8f2c37d04c2"/>
+				<textElement verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{refrigeratorCapacity}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement x="1172" y="0" width="75" height="20" uuid="29c1775c-8613-41c7-a554-ebf096e3a307">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<textElement verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{freezerCapacity}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement x="1247" y="0" width="148" height="20" uuid="82e867e0-0b58-4fc6-ad9e-987a540b105e"/>
+				<textElement verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{equipmentOperationalStatusName}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement x="1395" y="0" width="100" height="20" uuid="85c1239f-3851-4bd6-b6ca-10a60f729b57"/>
+				<textElement verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{energyTypeName}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement x="1501" y="0" width="100" height="20" uuid="636faace-f0a3-4872-a555-325c5f86e2b0"/>
+				<textElement verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{yearOfInstallation}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+</jasperReport>

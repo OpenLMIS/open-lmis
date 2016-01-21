@@ -25,15 +25,10 @@ import org.openlmis.core.domain.ProductForm;
 import org.openlmis.core.domain.ProductGroup;
 import org.openlmis.core.domain.ProgramProduct;
 import org.openlmis.core.exception.DataException;
-import org.openlmis.core.service.MessageService;
-import org.openlmis.core.service.ProductCategoryService;
-import org.openlmis.core.service.ProductFormService;
-import org.openlmis.core.service.ProductGroupService;
-import org.openlmis.core.service.ProductService;
-import org.openlmis.core.service.ProgramProductService;
+import org.openlmis.core.service.*;
 import org.openlmis.db.categories.UnitTests;
 import org.openlmis.web.form.ProductDTO;
-import org.openlmis.web.response.OpenLmisResponse;
+import org.openlmis.core.web.OpenLmisResponse;
 import org.springframework.http.ResponseEntity;
 import org.springframework.mock.web.MockHttpServletRequest;
 
@@ -67,6 +62,9 @@ public class ProductControllerTest {
 
   @Mock
   private ProductCategoryService productCategoryService;
+
+  @Mock
+  private ProductPriceScheduleService priceScheduleService;
 
   @Mock
   private MessageService messageService;
@@ -123,6 +121,7 @@ public class ProductControllerTest {
 
     when(service.getById(1L)).thenReturn(product);
     when(programProductService.getByProductCode("p10")).thenReturn(programProducts);
+    when(priceScheduleService.getByProductId(1L)).thenReturn(null);
 
     ProductDTO productDTO = controller.getById(1L);
 
@@ -199,6 +198,8 @@ public class ProductControllerTest {
 
     doNothing().when(service).save(product);
     doNothing().when(programProductService).saveAll(programProducts, product);
+    doNothing().when(priceScheduleService).saveAll(productDTO.getProductPriceSchedules(), product);
+
     when(messageService.message("message.product.updated.success", productDTO.getProduct().getName())).thenReturn("updated");
 
     ResponseEntity<OpenLmisResponse> response = controller.update(productDTO, 1L, request);

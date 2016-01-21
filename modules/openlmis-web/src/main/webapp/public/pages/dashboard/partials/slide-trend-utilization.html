@@ -1,0 +1,55 @@
+<!-- trend dispensed -->
+<slide>
+    <accordion>
+        <accordion-group class="gray-cascade" is-open="product.utilizationChart.openPanel">
+            <accordion-heading >
+                <div class="accordion-title">
+                    <div class="caption">
+
+                        <span ><span openlmis-message="title.utilization.trend"></span> : {{product.name}}  </span>
+                    </div>
+                    <div class="tools">
+                        <i  ng-class="'icon-info-sign'" ns-popover ns-popover-template="utilization-chart-info" ns-popover-trigger="mouseenter" ns-popover-theme="ns-popover-tooltip-theme" ns-popover-placement="bottom|right"></i>
+                        <i  ng-class="{'icon-minus-sign': product.utilizationChart.openPanel, 'icon-plus-sign': !product.utilizationChart.openPanel}"></i>
+                    </div>
+                </div>
+            </accordion-heading>
+            <c3chart bindto-id="{{product.name}}_utilization_chart">
+                <chart-tooltip value-format-function="formatValue" />
+                <chart-axes values-x="x" />
+                <chart-axis >
+                    <chart-axis-x axis-position="outer-center" axis-label="Period" axis-height="40"
+                                  axis-type="category" >
+                        <!--<chart-axis-x-tick tick-rotate="50" />-->
+                    </chart-axis-x>
+                    <chart-axis-y>
+                        <chart-axis-y-tick tick-format-function="formatValue" />
+                    </chart-axis-y>
+                </chart-axis>
+
+                <chart-column column-id="Beginning Balance"
+                              column-values="{{product.beginningBalance}}"
+                              column-type="bar"/>
+                <chart-column column-id="Received"
+                              column-values="{{product.received}}"
+                              column-type="bar"/>
+                 <chart-column column-id="Consumption"
+                              column-values="{{product.consumption}}"
+                              column-type="bar"/>
+                <chart-column column-id="Expired"
+                              column-values="{{product.quantityExpired}}"
+                              column-type="bar"/>
+                <chart-column column-id="Lost"
+                              column-values="{{product.quantityLost}}"
+                              column-type="bar"/>
+                <chart-column column-id="Damaged"
+                              column-values="{{product.quantityDamaged}}"
+                              column-type="bar"/>
+                 <chart-column column-id="x"
+                              column-values="{{product.periods}}"/>
+                <chart-group group-values="Beginning Balance,Received"/>
+                <chart-group group-values="Consumption,Expired,Lost,Damaged"/>
+            </c3chart>
+        </accordion-group>
+    </accordion>
+</slide>

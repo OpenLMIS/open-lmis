@@ -10,10 +10,7 @@
 
 package org.openlmis.core.repository;
 
-import org.openlmis.core.domain.Pagination;
-import org.openlmis.core.domain.Program;
-import org.openlmis.core.domain.SupervisoryNode;
-import org.openlmis.core.domain.SupplyLine;
+import org.openlmis.core.domain.*;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.core.repository.mapper.SupplyLineMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -62,5 +59,13 @@ public class SupplyLineRepository {
 
   public Integer getTotalSearchResultCount(String searchParam, String column) {
     return mapper.getSearchedSupplyLinesCount(searchParam, column);
+  }
+
+  public List<Facility> getSupplyingFacilities(Long userId){
+    return mapper.getSupplyingFacilities(userId);
+  }
+
+  public SupplyLine getSupplyLineByFacilityProgram(Long facilityId, Long programId) {
+    return mapper.getByFacilityByProgram(facilityId, programId);
   }
 }

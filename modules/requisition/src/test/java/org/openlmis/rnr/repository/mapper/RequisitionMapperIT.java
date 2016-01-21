@@ -34,17 +34,16 @@ import org.springframework.transaction.annotation.Transactional;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.sql.SQLException;
-import java.util.Calendar;
-import java.util.Collections;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 import static com.natpryce.makeiteasy.MakeItEasy.*;
 import static java.util.Arrays.asList;
 import static org.hamcrest.CoreMatchers.*;
 import static org.joda.time.DateTime.now;
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
+import static org.openlmis.core.builder.FacilityBuilder.FACILITY_CODE;
 import static org.openlmis.core.builder.FacilityBuilder.defaultFacility;
 import static org.openlmis.core.builder.FacilityBuilder.name;
 import static org.openlmis.core.builder.ProcessingPeriodBuilder.*;
@@ -67,14 +66,20 @@ import static org.openlmis.rnr.domain.RnrStatus.*;
 public class RequisitionMapperIT {
   public static final Long MODIFIED_BY = 1L;
   public static final Long USER_ID = 2L;
-
+  @Autowired
+  LossesAndAdjustmentsMapper lossesAndAdjustmentsMapper;
+  @Autowired
+  SupervisoryNodeMapper supervisoryNodeMapper;
+  @Autowired
+  SupplyLineMapper supplyLineMapper;
+  @Autowired
+  RequisitionStatusChangeMapper requisitionStatusChangeMapper;
   private Facility facility;
   private ProcessingSchedule processingSchedule;
   private ProcessingPeriod processingPeriod1;
   private ProcessingPeriod processingPeriod2;
   private ProcessingPeriod processingPeriod3;
   private Program program;
-
   @Autowired
   private UserMapper userMapper;
   @Autowired
@@ -88,13 +93,9 @@ public class RequisitionMapperIT {
   @Autowired
   private RnrLineItemMapper lineItemMapper;
   @Autowired
-  LossesAndAdjustmentsMapper lossesAndAdjustmentsMapper;
-  @Autowired
   private ProcessingPeriodMapper processingPeriodMapper;
   @Autowired
   private ProcessingScheduleMapper processingScheduleMapper;
-  @Autowired
-  SupervisoryNodeMapper supervisoryNodeMapper;
   @Autowired
   private ProductMapper productMapper;
   @Autowired
@@ -106,16 +107,13 @@ public class RequisitionMapperIT {
   @Autowired
   private CommentMapper commentMapper;
   @Autowired
-  SupplyLineMapper supplyLineMapper;
-  @Autowired
   private ProductCategoryMapper productCategoryMapper;
-  @Autowired
-  RequisitionStatusChangeMapper requisitionStatusChangeMapper;
-
   private SupervisoryNode supervisoryNode;
   private Role role;
   private Date modifiedDate;
   private ProductCategory productCategory;
+  @Autowired
+  private SignatureMapper signatureMapper;
 
   @Before
   public void setUp() {
@@ -153,8 +151,24 @@ public class RequisitionMapperIT {
     Rnr requisition = new Rnr(new Facility(facility.getId()), new Program(program.getId()), processingPeriod1, false, MODIFIED_BY, 1L);
     requisition.setAllocatedBudget(new BigDecimal(123.45));
     requisition.setStatus(INITIATED);
+    requisition.setId(1L);
 
+    String submitterText = "submitter";
+    Signature submitterSignature = new Signature(Signature.Type.SUBMITTER, submitterText);
+    String approverText = "approver";
+    Signature approverSignature = new Signature(Signature.Type.APPROVER, approverText);
+
+    ArrayList<Signature> rnrSignatures = new ArrayList<>();
+    rnrSignatures.add(submitterSignature);
+    rnrSignatures.add(approverSignature);
+
+    requisition.setRnrSignatures(rnrSignatures);
+
+    signatureMapper.insertSignature(submitterSignature);
+    signatureMapper.insertSignature(approverSignature);
     mapper.insert(requisition);
+    mapper.insertRnrSignature(requisition, submitterSignature);
+    mapper.insertRnrSignature(requisition, approverSignature);
 
     Product product = insertProduct(true, "P1");
     RnrLineItem fullSupplyLineItem = make(a(defaultRnrLineItem, with(fullSupply, true), with(productCode, product.getCode())));
@@ -163,6 +177,10 @@ public class RequisitionMapperIT {
     nonFullSupplyLineItem.setRnrId(requisition.getId());
     lineItemMapper.insert(fullSupplyLineItem, Collections.EMPTY_LIST.toString());
     lineItemMapper.insert(nonFullSupplyLineItem, Collections.EMPTY_LIST.toString());
+
+    ProgramProduct programProduct = new ProgramProduct(program, product, 1, true);
+    programProduct.setProductCategory(productCategory);
+    programProductMapper.insert(programProduct);
 
     User author = new User();
     author.setId(1L);
@@ -181,6 +199,38 @@ public class RequisitionMapperIT {
     assertThat(fetchedRequisition.getFullSupplyLineItems().size(), is(1));
     assertThat(fetchedRequisition.getNonFullSupplyLineItems().size(), is(1));
     assertThat(fetchedRequisition.getAllocatedBudget(), is(new BigDecimal(123.45).setScale(2, RoundingMode.FLOOR)));
+    assertThat(fetchedRequisition.getRnrSignatures().size(), is(2));
+    assertThat(fetchedRequisition.getRnrSignatures().get(0).getType(), is(Signature.Type.SUBMITTER));
+    assertThat(fetchedRequisition.getRnrSignatures().get(0).getText(), is(submitterText));
+    assertThat(fetchedRequisition.getRnrSignatures().get(1).getType(), is(Signature.Type.APPROVER));
+    assertThat(fetchedRequisition.getRnrSignatures().get(1).getText(), is(approverText));
+  }
+
+  @Test
+  public void shouldGetRequisitionsByFacilityAndProgram() {
+    String facilityCode = "F10";
+    String programCode = "MMIA";
+
+    Facility queryFacility = new Facility(facility.getId());
+    queryFacility.setCode(facilityCode);
+
+    Program queryProgram = new Program(program.getId());
+    queryProgram.setCode(programCode);
+
+    Rnr requisition = new Rnr(queryFacility, queryProgram, processingPeriod1, false, MODIFIED_BY, 4L);
+    requisition.setAllocatedBudget(new BigDecimal(123.45));
+    requisition.setStatus(INITIATED);
+
+    mapper.insert(requisition);
+
+    List<Rnr> rnrList = mapper.getRequisitionsWithLineItemsByFacility(queryFacility);
+    assertThat(rnrList.size(), is(1));
+
+    Facility anotherFacility = new Facility(122L);
+    facility.setCode(FACILITY_CODE);
+
+    rnrList = mapper.getRequisitionsWithLineItemsByFacility(anotherFacility);
+    assertThat(rnrList.size(), is(0));
   }
 
   @Test
@@ -199,6 +249,35 @@ public class RequisitionMapperIT {
     assertThat(updatedRequisition.getId(), is(requisition.getId()));
     assertThat(updatedRequisition.getSupervisoryNodeId(), is(requisition.getSupervisoryNodeId()));
     assertThat(updatedRequisition.getModifiedBy(), is(equalTo(USER_ID)));
+  }
+
+  @Test
+  public void shouldUpdateClientSubmittedTime() {
+    Rnr requisition = insertRequisition(processingPeriod1, program, INITIATED, false, facility, supervisoryNode, modifiedDate);
+
+    Date clientSubmittedTime = new Date();
+    requisition.setClientSubmittedTime(clientSubmittedTime);
+
+    mapper.updateClientFields(requisition);
+
+    Rnr updatedRequisition = mapper.getById(requisition.getId());
+
+    assertThat(updatedRequisition.getId(), is(requisition.getId()));
+    assertThat(updatedRequisition.getClientSubmittedTime(), is(clientSubmittedTime));
+
+  }
+
+  @Test
+  public void shouldUpdateClientSubmittedNotes() throws Exception {
+    Rnr requisition = insertRequisition(processingPeriod1, program, INITIATED, false, facility, supervisoryNode, modifiedDate);
+    requisition.setClientSubmittedNotes("xyz");
+
+    mapper.updateClientFields(requisition);
+
+    Rnr updatedRequisition = mapper.getById(requisition.getId());
+
+    assertThat(updatedRequisition.getId(), is(requisition.getId()));
+    assertEquals("xyz", updatedRequisition.getClientSubmittedNotes());
   }
 
   @Test
@@ -320,8 +399,8 @@ public class RequisitionMapperIT {
     DateTime date2 = date1.plusMonths(1);
 
     ProcessingPeriod processingPeriod4 = make(a(defaultProcessingPeriod,
-      with(scheduleId, processingSchedule.getId()),
-      with(ProcessingPeriodBuilder.name, "Period4")));
+        with(scheduleId, processingSchedule.getId()),
+        with(ProcessingPeriodBuilder.name, "Period4")));
     processingPeriod4.setStartDate(new Date());
 
     processingPeriodMapper.insert(processingPeriod4);
@@ -353,7 +432,6 @@ public class RequisitionMapperIT {
 
   @Test
   public void shouldGetLastRegularRequisitionForFacilityAndProgram() throws Exception {
-    insertRequisition(processingPeriod1, program, INITIATED, false, facility, supervisoryNode, modifiedDate);
     Rnr expectedRnr = insertRequisition(processingPeriod1, program, INITIATED, false, facility, supervisoryNode, modifiedDate);
 
     Rnr lastRequisition = mapper.getLastRegularRequisition(facility, program);
@@ -784,6 +862,36 @@ public class RequisitionMapperIT {
     assertThat(mapper.getProgramId(requisition.getId()), is(requisition.getProgram().getId()));
   }
 
+  @Test
+  public void shouldInsertRnrSignatures() throws Exception {
+    Rnr requisition = insertRequisition(processingPeriod1, program, INITIATED, false, facility, supervisoryNode, modifiedDate);
+
+    Signature submitterSignature = new Signature(Signature.Type.SUBMITTER, "Mystique");
+
+    signatureMapper.insertSignature(submitterSignature);
+    mapper.insertRnrSignature(requisition, submitterSignature);
+
+    List<Signature> dbRnrSignatures = mapper.getRnrSignaturesByRnrId(requisition.getId());
+    assertThat(dbRnrSignatures.size(), is(1));
+    assertThat(dbRnrSignatures.get(0).getText(), is("Mystique"));
+  }
+
+  @Test
+  public void shouldReturnSignaturesInRequisitions() {
+    Rnr requisition = insertRequisition(processingPeriod1, program, INITIATED, false, facility, supervisoryNode, modifiedDate);
+
+    Signature submitterSignature = new Signature(Signature.Type.SUBMITTER, "Mystique");
+
+    signatureMapper.insertSignature(submitterSignature);
+    mapper.insertRnrSignature(requisition, submitterSignature);
+
+    List<Rnr> rnrs = mapper.getRequisitionsWithLineItemsByFacility(facility);
+    List<Signature> rnrSignatures = rnrs.get(0).getRnrSignatures();
+
+    assertThat(rnrSignatures.size(), is(1));
+    assertThat(rnrSignatures.get(0).getText(), is("Mystique"));
+  }
+
   private void insertRoleForApprovedRequisitions(Long facilityId, Long userId) throws SQLException {
     queryExecutor.executeUpdate("INSERT INTO fulfillment_role_assignments (userId,facilityId,roleId) values (?,?,?)", userId, facilityId, role.getId());
   }
@@ -848,6 +956,7 @@ public class RequisitionMapperIT {
   private ProgramProduct insertProgramProductWithProductCategory(Product product, Program program) {
     ProgramProduct programProduct = new ProgramProduct(program, product, 30, true, new Money("12.5000"));
     programProduct.setProductCategory(productCategory);
+    programProduct.setFullSupply(product.getFullSupply());
     programProductMapper.insert(programProduct);
     return programProduct;
   }

@@ -11,15 +11,13 @@
 package org.openlmis.order.domain;
 
 /**
- *  Enum for Date Formats. Date formats used for Order Date have orderDate attribute set to true by default.
+ * Enum for Date Formats. Date formats used for Order Date have orderDate attribute set to true by default.
  */
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Getter;
-import org.codehaus.jackson.map.annotate.JsonSerialize;
-import org.openlmis.order.serializer.DateFormatSerializer;
 
-@JsonSerialize(using = DateFormatSerializer.class)
-
+@JsonFormat(shape = JsonFormat.Shape.OBJECT)
 public enum DateFormat {
 
   DATE_1("MM/yy", false),

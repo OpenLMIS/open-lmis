@@ -10,14 +10,15 @@
 
 package org.openlmis.rnr.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
-import org.codehaus.jackson.map.annotate.JsonSerialize;
 
 import java.util.List;
 
-import static org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion.NON_EMPTY;
+import static com.fasterxml.jackson.databind.annotation.JsonSerialize.Inclusion.NON_EMPTY;
 
 /**
  * This class represents a column configured in rnr template for a program.
@@ -26,6 +27,7 @@ import static org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion.NON_EMPT
 @Data
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = true)
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class RnrColumn extends Column {
 
   private int position;
@@ -35,6 +37,11 @@ public class RnrColumn extends Column {
   private String indicator;
   private boolean used;
   private boolean mandatory;
+  private String calculationOption;
+
+
+  private FormulaOption options;
+
   private String description;
   private boolean formulaValidationRequired = true;
   private RnrColumnOption configuredOption;
@@ -46,6 +53,11 @@ public class RnrColumn extends Column {
   @SuppressWarnings(value = "unused")
   public void setSourceString(String sourceString) {
     this.source = RnRColumnSource.getValueOf(sourceString);
+  }
+
+  @SuppressWarnings(value = "unused")
+  public void setOptions(String opt) {
+    this.options = new FormulaOption(opt);
   }
 
   @Override

@@ -23,10 +23,10 @@ import java.util.List;
 @Repository
 public interface RegimenLineItemMapper {
 
-  @Insert({"INSERT INTO regimen_line_items(code, name, regimenDisplayOrder, regimenCategory, regimenCategoryDisplayOrder, rnrId, modifiedBy, createdBy) values " +
-    "(#{code}, #{name}, #{regimenDisplayOrder}, #{category.name}, #{category.displayOrder}, #{rnrId}, #{modifiedBy}, #{createdBy})"})
+  @Insert({"INSERT INTO regimen_line_items(code, name, regimenDisplayOrder, regimenCategory, regimenCategoryDisplayOrder, rnrId, skipped, modifiedBy, createdBy) values " +
+    "(#{code}, #{name}, #{regimenDisplayOrder}, #{category.name}, #{category.displayOrder}, #{rnrId}, #{skipped}, #{modifiedBy}, #{createdBy})"})
   @Options(useGeneratedKeys = true)
-  public void insert(RegimenLineItem regimenLineItem);
+   void insert(RegimenLineItem regimenLineItem);
 
   @Select("SELECT * FROM regimen_line_items WHERE rnrId = #{rnrId} ORDER BY regimenCategoryDisplayOrder, regimenDisplayOrder")
   @Results(value = {
@@ -34,16 +34,39 @@ public interface RegimenLineItemMapper {
     @Result(property = "code", column = "code"),
     @Result(property = "name", column = "name"),
     @Result(property = "patientsOnTreatment", column = "patientsOnTreatment"),
+
     @Result(property = "patientsToInitiateTreatment", column = "patientsToInitiateTreatment"),
     @Result(property = "remarks", column = "remarks"),
     @Result(property = "patientsStoppedTreatment", column = "patientsStoppedTreatment"),
+
+    @Result(property = "patientsOnTreatmentAdult", column = "patientsOnTreatmentAdult"),
+    @Result(property = "patientsToInitiateTreatmentAdult", column = "patientsToInitiateTreatmentAdult"),
+    @Result(property = "patientsStoppedTreatmentAdult", column = "patientsStoppedTreatmentAdult"),
+
+    @Result(property = "patientsOnTreatmentChildren", column = "patientsOnTreatmentChildren"),
+    @Result(property = "patientsToInitiateTreatmentChildren", column = "patientsToInitiateTreatmentChildren"),
+    @Result(property = "patientsStoppedTreatmentChildren", column = "patientsStoppedTreatmentChildren"),
+
     @Result(property = "regimenDisplayOrder", column = "regimenDisplayOrder"),
     @Result(property = "category.name", column = "regimenCategory"),
     @Result(property = "category.displayOrder", column = "regimenCategoryDisplayOrder"),
   })
-  public List<RegimenLineItem> getRegimenLineItemsByRnrId(Long rnrId);
+   List<RegimenLineItem> getRegimenLineItemsByRnrId(Long rnrId);
 
-  @Update("UPDATE regimen_line_items set patientsOnTreatment = #{patientsOnTreatment},patientsToInitiateTreatment = #{patientsToInitiateTreatment}," +
-    "patientsStoppedTreatment = #{patientsStoppedTreatment},remarks = #{remarks},modifiedBy = #{modifiedBy}, modifiedDate =CURRENT_TIMESTAMP where id=#{id}")
+  @Update("UPDATE regimen_line_items set skipped = #{skipped}, " +
+
+    "patientsOnTreatment = #{patientsOnTreatment}, " +
+    "patientsToInitiateTreatment = #{patientsToInitiateTreatment}, " +
+    "patientsStoppedTreatment = #{patientsStoppedTreatment} ," +
+
+    "patientsOnTreatmentAdult = #{patientsOnTreatmentAdult}, " +
+    "patientsToInitiateTreatmentAdult = #{patientsToInitiateTreatmentAdult}, " +
+    "patientsStoppedTreatmentAdult = #{patientsStoppedTreatmentAdult} ," +
+
+    "patientsOnTreatmentChildren = #{patientsOnTreatmentChildren}, " +
+    "patientsToInitiateTreatmentChildren = #{patientsToInitiateTreatmentChildren}, " +
+    "patientsStoppedTreatmentChildren = #{patientsStoppedTreatmentChildren} ," +
+
+    "remarks = #{remarks},modifiedBy = #{modifiedBy}, modifiedDate =CURRENT_TIMESTAMP where id=#{id}")
   void update(RegimenLineItem regimenLineItem);
 }

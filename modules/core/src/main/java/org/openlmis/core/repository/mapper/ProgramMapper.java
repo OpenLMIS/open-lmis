@@ -50,8 +50,17 @@ public interface ProgramMapper {
     , ", templateConfigured = #{templateConfigured}"
     , ", regimenTemplateConfigured = #{regimenTemplateConfigured}"
     , ", push = #{push}"
+    , ", isEquipmentConfigured = #{isEquipmentConfigured}"
+    , ", showNonFullSupplyTab = #{showNonFullSupplyTab}"
+    , ", hideSkippedProducts = #{hideSkippedProducts}"
+    , ", enableSkipPeriod = #{enableSkipPeriod}"
+    , ", enableIvdForm = #{enableIvdForm}"
+    , ", usepriceschedule = #{usePriceSchedule}"
     , " WHERE id = #{id}"})
   void update(Program p);
+
+  @Delete("DELETE FROM programs WHERE code=#{code}")
+  public void deleteByCode(String code);
 
   @Select({"SELECT P.*",
     "FROM programs P, programs_supported PS",
@@ -96,6 +105,20 @@ public interface ProgramMapper {
   List<Program> getUserSupervisedActivePrograms(@Param(value = "userId") Long userId,
                                                 @Param(value = "commaSeparatedRights") String commaSeparatedRights);
 
+  @Select({"SELECT DISTINCT p.*",
+    "FROM programs p",
+    "INNER JOIN role_assignments ra ON p.id = ra.programId",
+    "INNER JOIN role_rights rr ON ra.roleId = rr.roleId",
+    "WHERE ra.userId = #{userId}",
+    "AND rr.rightName = ANY (#{commaSeparatedRights}::VARCHAR[])",
+    "AND ra.supervisoryNodeId IS NOT NULL",
+    "AND p.active = TRUE " ,
+    "AND p.enableIvdForm = TRUE ",
+    "AND p.push = FALSE"})
+  List<Program> getUserSupervisedActiveIvdPrograms(@Param(value = "userId") Long userId,
+                                                @Param(value = "commaSeparatedRights") String commaSeparatedRights);
+
+
   @Select({"SELECT DISTINCT p.* ",
     "FROM programs p",
     "INNER JOIN programs_supported ps ON p.id = ps.programId",
@@ -111,6 +134,24 @@ public interface ProgramMapper {
   List<Program> getProgramsSupportedByUserHomeFacilityWithRights(@Param("facilityId") Long facilityId,
                                                                  @Param("userId") Long userId,
                                                                  @Param("commaSeparatedRights") String commaSeparatedRights);
+
+  @Select({"SELECT DISTINCT p.* ",
+    "FROM programs p",
+    "INNER JOIN programs_supported ps ON p.id = ps.programId",
+    "INNER JOIN role_assignments ra ON ra.programId = p.id",
+    "INNER JOIN role_rights rr ON rr.roleId = ra.roleId",
+    "WHERE ra.supervisoryNodeId IS NULL",
+    "AND p.active = TRUE",
+    "AND p.push = FALSE",
+    "AND ps.active= TRUE",
+    "AND ra.userId = #{userId}",
+    "AND p.enableIvdForm = TRUE ",
+    "AND ps.facilityId = #{facilityId}",
+    "AND rr.rightName = ANY(#{commaSeparatedRights}::VARCHAR[])"})
+  List<Program> getIvdProgramsSupportedByUserHomeFacilityWithRights(@Param("facilityId") Long facilityId,
+                                                                 @Param("userId") Long userId,
+                                                                 @Param("commaSeparatedRights") String commaSeparatedRights);
+
 
   @Select({"SELECT DISTINCT p.*",
     "FROM programs p",
@@ -152,4 +193,9 @@ public interface ProgramMapper {
 
   @Select("SELECT * FROM programs WHERE sendFeed = TRUE")
   List<Program> getProgramsForNotification();
+
+  @Select("SELECT * FROM programs " +
+    " where enableIvdForm = true " +
+    " order by name")
+  List<Program> getAllIvdPrograms();
 }

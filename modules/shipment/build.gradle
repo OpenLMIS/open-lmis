@@ -12,14 +12,8 @@ apply plugin: 'cobertura'
 
 dependencies {
 
-    compile 'org.springframework:spring-core:3.1.1.RELEASE',
-            'org.springframework:spring-aspects:3.1.1.RELEASE',
-            'org.aspectj:aspectjrt:1.7.0',
-            'javax.servlet:servlet-api:2.5',
-            'commons-lang:commons-lang:2.6',
-            'org.slf4j:slf4j-api:1.7.5',
-            'org.springframework.integration:spring-integration-ftp:2.2.3.RELEASE',
-            'org.springframework.security:spring-security-core:3.1.2.RELEASE',
+    compile 'org.slf4j:slf4j-api:1.7.5',
+
             'org.apache.camel:camel-core:2.11.1',
             'org.apache.camel:camel-spring:2.11.1',
             'org.apache.camel:camel-ftp:2.11.1',
@@ -31,8 +25,7 @@ dependencies {
         exclude module: 'commons-beanutils'
     }
 
-    testCompile 'org.springframework:spring-test:3.1.1.RELEASE',
-            'org.ict4h:atomfeed-commons:0.9.2',
+    testCompile  'org.ict4h:atomfeed-commons:0.9.2',
             'org.ict4h:atomfeed-server:0.9.2',
             'org.ict4h:atomfeed-spring-server:0.9.2',
             project(path: ':modules:core', configuration: 'testFixtures'),
@@ -57,4 +50,5 @@ dependencies {
 
 cobertura {
     coverageFormats << 'xml'
+    coverageIgnoreTrivial = true
 }

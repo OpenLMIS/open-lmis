@@ -14,12 +14,11 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
-import org.codehaus.jackson.annotate.JsonIgnore;
-import org.codehaus.jackson.map.annotate.JsonSerialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import org.openlmis.upload.Importable;
 import org.openlmis.upload.annotation.ImportField;
 
-import static org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion.NON_EMPTY;
+import static com.fasterxml.jackson.databind.annotation.JsonSerialize.Inclusion.NON_EMPTY;
 
 /**
  * Program represents a Program and its attributes.
@@ -46,12 +45,24 @@ public class Program extends BaseModel implements Importable {
   @ImportField(name="Budgeting Applies", type="boolean")
   private Boolean budgetingApplies = false;
 
-  private boolean templateConfigured;
+  private Boolean templateConfigured;
 
-  private boolean regimenTemplateConfigured;
+  private Boolean regimenTemplateConfigured;
 
   @ImportField(name="Push", mandatory=true, type="boolean")
-  private boolean push;
+  private Boolean push;
+
+  private Boolean isEquipmentConfigured;
+
+  private Boolean enableSkipPeriod = false;
+
+  private Boolean showNonFullSupplyTab = true;
+
+  private Boolean hideSkippedProducts = false;
+
+  private Boolean enableIvdForm = false;
+
+  private Boolean usePriceSchedule = false;
 
   public Program(Long id) {
     this.id = id;

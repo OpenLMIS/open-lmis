@@ -175,7 +175,8 @@ public class ProgramProductMapperIT {
     programProduct3.setDisplayOrder(2);
     programProductMapper.insert(programProduct3);
 
-    ProgramProductISA programProductISA = new ProgramProductISA(programProduct1.getId(), 1d, 2, 3.3, 5.6, 4, 5, 5);
+    ISA isa = new ISA(1d, 2, 3.3, 5.6, 4, 5, 5, null);
+    ProgramProductISA programProductISA = new ProgramProductISA(programProduct1.getId(), isa);
 
     programProductISAMapper.insert(programProductISA);
 

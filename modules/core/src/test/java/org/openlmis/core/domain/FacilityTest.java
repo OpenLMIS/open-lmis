@@ -15,10 +15,12 @@ import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
+import org.junit.runners.BlockJUnit4ClassRunner;
 import org.openlmis.core.builder.FacilityBuilder;
 import org.openlmis.db.categories.UnitTests;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
+import org.powermock.modules.junit4.PowerMockRunnerDelegate;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -37,8 +39,10 @@ import static org.openlmis.core.builder.ProgramSupportedBuilder.defaultProgramSu
 import static org.openlmis.core.builder.ProgramSupportedBuilder.supportedProgram;
 import static org.powermock.api.mockito.PowerMockito.mockStatic;
 
-@Category(UnitTests.class)
+
 @RunWith(PowerMockRunner.class)
+@PowerMockRunnerDelegate(BlockJUnit4ClassRunner.class)
+@Category(UnitTests.class)
 @PrepareForTest(FacilityProgramProduct.class)
 public class FacilityTest {
 

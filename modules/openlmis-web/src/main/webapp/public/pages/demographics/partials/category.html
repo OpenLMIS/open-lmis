@@ -1,0 +1,50 @@
+<!--
+  ~ Electronic Logistics Management Information System (eLMIS) is a supply chain management system for health commodities in a developing country setting.
+  ~
+  ~ Copyright (C) 2015  John Snow, Inc (JSI). This program was produced for the U.S. Agency for International Development (USAID). It was prepared under the USAID | DELIVER PROJECT, Task Order 4.
+  ~
+  ~ This program is free software: you can redistribute it and/or modify it under the terms of the GNU Affero General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
+  ~
+  ~ This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Affero General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU Affero General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
+  -->
+
+<div class="content-body">
+  <h2>
+    <span openlmis-message="header.demographic.categories"></span>
+  </h2>
+
+</div>
+<div class="row">
+  <div class="span10">
+
+    <a href="#/category/add" class="pull-right btn btn-primary"><span openlmis-message="link.add.new"></span></a>
+    <span openlmis-message="label.demographic.category.intro"></span>
+    <div class="clearfix"></div>
+    <br />
+    <table class="table table-bordered table-striped">
+      <thead>
+      <tr class="gradient-header">
+        <th class="span1">#</th>
+        <th class="span5 number"><span openlmis-message="label.demographic.name"></span></th>
+        <th><span openlmis-message="label.demographic.default.conversion.factor"></span></th>
+        <th></th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr ng-repeat="category in categories">
+        <th>{{$index + 1}}</th>
+        <td>
+          <a ng-href="#/category/edit/{{category.id}}">{{category.name}}</a>
+        </td>
+        <td class="number" ng-class="{'text-info': category.isPrimaryEstimate}"><span>{{category.defaultConversionFactor}} %</span>
+        </td>
+        <td>
+          <span ng-show="category.isPrimaryEstimate" openlmis-message="label.demographic.is.primary.estimate"></span>
+        </td>
+      </tr>
+      </tbody>
+    </table>
+  </div>
+</div>

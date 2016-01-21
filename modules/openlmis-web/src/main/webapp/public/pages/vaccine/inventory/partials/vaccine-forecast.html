@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<!--
+  ~ This program is part of the OpenLMIS logistics management information system platform software.
+  ~ Copyright © 2013 VillageReach
+  ~
+  ~  This program is free software: you can redistribute it and/or modify it under the terms of the GNU Affero General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
+  ~
+  ~  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Affero General Public License for more details.
+  ~  You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org.
+  -->
+
+<style>
+    .red {
+        color: red;
+    }
+
+    .black {
+        color: black;
+    }
+
+    .yellow {
+        color: yellow;
+    }
+
+    .green {
+        color: green;
+    }
+
+</style>
+
+
+
+<h2 id="podPageTitle"><span openlmis-message="label.title.vaccine.forecasting"></span> </h2>
+<!--
+<ng-include src="'/public/pages/vaccine/order-requisition/partials/header.html'"></ng-include>
+<div class="clearfix"></div>-->
+
+<form name="orderRequisitionForm">
+
+    <div ng-hide="pageLineItems.length"  class="alert alert-info" openlmis-message="label.no.products"></div>
+
+
+    <div id="pod" class="rnr-table" ng-show="pageLineItems.length > 0">
+        <table id="podTable" class="table table-bordered" fixed-table-header>
+            <thead>
+            <tr>
+                <th class="col-product "><span openlmis-message="header.routine.vaccine"></span></th>
+                <th class="col-maximumStock "><span openlmis-message="header.annual.needs"></span></th>
+                <th class="col-quarterlyNeeds"><span openlmis-message="header.quaterly.needs"></span></th>
+                <th class="col-reOrderLevel"><span openlmis-message="header.reOrder.level"></span></th>
+                <th class="col-bufferStock"><span openlmis-message="header.buffer.stock"></span></th>
+                <th class="col-maximumStock"><span openlmis-message="header.maximum.stock"></span></th>
+
+            </tr>
+            </thead>
+
+            <tbody>
+
+
+            <tr ng-repeat-start = "category in pageLineItems">
+                <td class="productCategory" id="productCategoryName{{$index}}" colspan="6"   ng-show="$index == 0 || ( $index > 0 && category.productCategory != pageLineItems[$index - 1].productCategory)"
+                 ng-bind="category.productCategory" >
+                </td>
+            </tr>
+
+            <tr  ng-repeat-end ng-repeat=" item in category.stockRequirements">
+
+                <td class="cell-input col-product">
+                    <span ng-bind="item.productName" id="productName{{$index}}" class="cell-text"></span>
+                </td>
+                <td class="cell-input col-maximumStock">
+                        <span ng-bind="item.annualNeed | number" id="item.isaCoefficients.annualNeed{{$index}}"
+                              class="cell-text"></span>
+                </td>
+                <td class="cell-input">
+                        <span ng-bind="item.quarterlyNeed | number"  id="item.isaCoefficients.quarterlyNeed{{$index}}"
+                              class="cell-text"></span>
+                </td>
+                <td class="cell-input">
+                        <span ng-bind="item.ReorderLevel" id="item.ReorderLevel{{$index}}"
+                              class="cell-text"></span>
+                </td>
+
+                <td class="cell-input col-bufferStock">
+                        <span ng-bind="item.MinimumStock | number" id="bufferStock{{$index}}"
+                              class="cell-text"></span>
+                </td>
+
+                <td class="cell-input col-MaximumStock">
+                        <span ng-bind="item.MaximumStock | number" id="maximumStock{{$index}}"
+                              class="cell-text"></span>
+                </td>
+
+            </tr>
+            </tbody>
+        </table>
+    </div>
+    <openlmis-pagination ng-show="pageLineItems.length" num-pages="numberOfPages" current-page="currentPage"
+                         max-size="10"
+                         error-pages="errorPages"></openlmis-pagination>
+
+
+    <div form-toolbar id="action_buttons" class="action-buttons">
+        <div class="form-cell button-row">
+
+             <!--  <span> <a id="printButton" class="btn btn-primary submit-button"  ng-click="print(report.id)"
+                         openlmis-message="button.print"
+                         target="_blank" ng-disabled="selectedType==1"></a>
+                </span>-->
+
+        </div>
+        &nbsp;&nbsp;&nbsp;
+        <div class="toolbar-error" id="saveFailMessage" fade-out="3000" openlmis-message="error"
+             ng-show="error"></div>
+        &nbsp;&nbsp;&nbsp;
+        <div class="toolbar-success" id="saveSuccessMsgDiv" fade-out="3000" openlmis-message="message"
+             ng-show="message"></div>
+
+
+    </div>
+</form>
+</div>

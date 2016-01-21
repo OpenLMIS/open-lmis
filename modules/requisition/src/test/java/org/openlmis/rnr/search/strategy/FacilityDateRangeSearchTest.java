@@ -105,8 +105,8 @@ public class FacilityDateRangeSearchTest {
     List<ProcessingPeriod> periodsForProgram2 = new ArrayList<>();
     ArrayList<Rnr> requisitionsForProgram2 = new ArrayList<>();
     when(programService.getProgramsForUserByFacilityAndRights(1L, 1L, VIEW_REQUISITION)).thenReturn(programs);
-    when(scheduleService.getAllPeriodsForDateRange(facility, program1, startDate, endDate)).thenReturn(periodsForProgram1);
-    when(scheduleService.getAllPeriodsForDateRange(facility, program2, startDate, endDate)).thenReturn(periodsForProgram2);
+    when(scheduleService.getUsedPeriodsForDateRange(facility, program1, startDate, endDate)).thenReturn(periodsForProgram1);
+    when(scheduleService.getUsedPeriodsForDateRange(facility, program2, startDate, endDate)).thenReturn(periodsForProgram2);
     when(repository.getPostSubmitRequisitions(facility, program1, periodsForProgram1)).thenReturn(requisitions);
     when(repository.getPostSubmitRequisitions(facility, program2, periodsForProgram2)).thenReturn(requisitionsForProgram2);
     when(requisitionPermissionService.hasPermission(userId, facility, program1, VIEW_REQUISITION)).thenReturn(true);
@@ -117,8 +117,8 @@ public class FacilityDateRangeSearchTest {
     requisitions.addAll(requisitionsForProgram2);
     assertThat(actualRequisitions, is(requisitions));
     verify(programService).getProgramsForUserByFacilityAndRights(1L, 1L, VIEW_REQUISITION);
-    verify(scheduleService).getAllPeriodsForDateRange(facility, program1, startDate, endDate);
-    verify(scheduleService).getAllPeriodsForDateRange(facility, program2, startDate, endDate);
+    verify(scheduleService).getUsedPeriodsForDateRange(facility, program1, startDate, endDate);
+    verify(scheduleService).getUsedPeriodsForDateRange(facility, program2, startDate, endDate);
     verify(repository).getPostSubmitRequisitions(facility, program1, periodsForProgram1);
     verify(repository).getPostSubmitRequisitions(facility, program2, periodsForProgram2);
     verify(requisitionPermissionService).hasPermission(userId, facility, program1, VIEW_REQUISITION);

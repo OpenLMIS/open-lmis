@@ -11,35 +11,56 @@
 
 
 apply plugin: 'idea'
-apply plugin: 'versions'
+apply plugin: 'com.github.ben-manes.versions'
 apply plugin: 'properties'
+apply plugin: 'sonar-runner'
 
 
 idea.project.languageLevel = '1.7'
 idea.project.jdkName = '1.7'
 
+repositories {
+    jcenter()
+}
 buildscript {
   repositories {
     mavenCentral()
+    jcenter()
   }
   dependencies {
-    classpath "net.saliman:gradle-cobertura-plugin:1.2.0"
-    classpath 'com.github.ben-manes:gradle-versions-plugin:0.3'
-    classpath 'net.saliman:gradle-properties-plugin:1.2.0'
-
-
+    classpath "net.saliman:gradle-cobertura-plugin:2.2.7"
+    classpath 'com.github.ben-manes:gradle-versions-plugin:0.8'
+    classpath "net.saliman:gradle-properties-plugin:1.4.2"
+    classpath 'org.flywaydb:flyway-gradle-plugin:3.2.1'
+  }
+}
+sonarRunner {
+    sonarProperties {
+	  property "sonar.host.url", "$sonarServer"
+	  property "sonar.jdbc.url", "$sonarJdbc"
+	  property "sonar.projectName", "$sonarProject"
+      property "sonar.projectVersion", "$sonarProjectVersion"
   }
 }
 subprojects {
+  apply plugin: 'java'
   apply plugin: 'idea'
   apply plugin: 'properties'
+  apply plugin: 'org.flywaydb.flyway'
   idea {
     project {
       ext.languageLevel = '1.7'
       ext.jdkName = '1.7'
     }
   }
-  apply plugin: 'java'
+  
+  sonarRunner {
+    sonarProperties {
+	  property "sonar.junit.reportsPath", "$buildDir/test-results/"
+	  property "sonar.java.coveragePlugin", "cobertura"
+	  property "sonar.cobertura.reportPath", "$buildDir/reports/cobertura/coverage.xml"
+    }
+  }
 
   [compileJava, compileTestJava]*.options*.encoding = 'UTF-8'
 
@@ -48,18 +69,61 @@ subprojects {
     maven {
       url "http://repo.springsource.org/plugins-release/"
     }
+    maven { url "http://repo.spring.io/release" }
+    maven { url "http://jaspersoft.artifactoryonline.com/jaspersoft/third-party-ce-artifacts/" }
+    maven { url "http://jasperreports.sourceforge.net/maven2/" }
   }
   dependencies {
-    compile 'org.projectlombok:lombok:0.10.8',
+    compile 'cglib:cglib:3.1',
+        'org.aspectj:aspectjrt:1.8.5',
+
+        'org.springframework:spring-webmvc:4.1.5.RELEASE',
+        'org.springframework:spring-core:4.1.5.RELEASE',
+        'org.springframework:spring-web:4.1.5.RELEASE',
+        'org.springframework:spring-aspects:4.1.5.RELEASE',
+        //'org.springframework:spring-aop:4.1.5.RELEASE',
+        'org.springframework:spring-messaging:4.1.5.RELEASE',
+        'org.springframework:spring-context-support:4.1.5.RELEASE',
+        'org.springframework:spring-tx:4.1.5.RELEASE',
+
+        'org.springframework.security:spring-security-taglibs:3.2.6.RELEASE',
+        'org.springframework.security:spring-security-core:3.2.6.RELEASE',
+        'org.springframework.security:spring-security-web:3.2.6.RELEASE',
+        'org.springframework.security:spring-security-config:3.2.6.RELEASE',
+
+        'org.springframework.integration:spring-integration-core:4.1.2.RELEASE',
+        'org.springframework.integration:spring-integration-jdbc:4.1.2.RELEASE',
+        'org.springframework.integration:spring-integration-ftp:4.1.2.RELEASE',
+
+        'xml-apis:xml-apis:2.0.2',
+        'commons-collections:commons-collections:3.2.1',
+        'org.apache.commons:commons-collections4:4.0',
+        'javax.servlet:javax.servlet-api:3.1.0',
+
+        'org.projectlombok:lombok:1.16.2',
+
+        'com.fasterxml.jackson.core:jackson-databind:2.5.1',
+        'com.fasterxml.jackson.core:jackson-core:2.5.1',
+        'com.fasterxml.jackson.core:jackson-annotations:2.5.1',
+
+        'javax.mail:javax.mail-api:1.5.2',
+        'com.sun.mail:javax.mail:1.5.2',
+
+        'commons-codec:commons-codec:1.10',
+        'commons-lang:commons-lang:2.6',
       'commons-io:commons-io:2.4'
 
-
-    testCompile 'org.hamcrest:hamcrest-all:1.3',
-      'org.mockito:mockito-all:1.9.5',
-      'junit:junit:4.8.2',
-      'cglib:cglib:2.2.2',
-      'org.powermock:powermock-mockito-release-full:1.5',
-      'com.natpryce:make-it-easy:3.1.0'
+    testCompile 'junit:junit:4.12',
+        'org.mockito:mockito-core:1.10.19',
+      'org.hamcrest:hamcrest-all:1.3',
+        'cglib:cglib-nodep:3.1',
+        'org.powermock:powermock-module-junit4-rule-agent:1.6.2',
+        'org.powermock:powermock-module-junit4-rule:1.6.2',
+            'org.powermock:powermock-classloading-xstream:1.6.2',
+        'org.powermock:powermock-module-junit4:1.6.2',
+        'org.powermock:powermock-api-mockito:1.6.2',
+        'com.natpryce:make-it-easy:3.1.0',
+        'org.springframework:spring-test:4.1.5.RELEASE'
   }
 
   test {
@@ -70,6 +134,10 @@ subprojects {
       includeCategories 'org.openlmis.db.categories.UnitTests'
       includeCategories 'org.openlmis.db.categories.IntegrationTests'
     }
+  }
+
+  task showMeCache << {
+    configurations.compile.each { println it}
   }
 
   task IntegrationTests(type: Test) {

@@ -116,6 +116,7 @@ public class SupervisoryNodeService {
     return supervisoryNodeRepository.getAll();
   }
 
+  //Returns the specified SupervisoryNode along with all of its ancestor nodes.
   public List<SupervisoryNode> getAllParentSupervisoryNodesInHierarchy(SupervisoryNode supervisoryNode) {
     return supervisoryNodeRepository.getAllParentSupervisoryNodesInHierarchy(supervisoryNode);
   }
@@ -145,5 +146,9 @@ public class SupervisoryNodeService {
 
   public List<SupervisoryNode> searchTopLevelSupervisoryNodesByName(String param) {
     return supervisoryNodeRepository.searchTopLevelSupervisoryNodesByName(param);
+  }
+
+  public Long getTotalUnassignedSupervisoryNodeOfUserBy(Long userId, Long programId){
+    return supervisoryNodeRepository.getTotalUnassignedSupervisoryNodeOfUserBy(userId, programId);
   }
 }

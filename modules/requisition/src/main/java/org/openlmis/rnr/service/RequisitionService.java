@@ -5,7 +5,10 @@ import org.openlmis.core.exception.DataException;
 import org.openlmis.core.message.OpenLmisMessage;
 import org.openlmis.core.service.*;
 import org.openlmis.db.repository.mapper.DbMapper;
+import org.openlmis.equipment.domain.EquipmentInventory;
+import org.openlmis.equipment.service.EquipmentInventoryService;
 import org.openlmis.rnr.domain.*;
+import org.openlmis.rnr.dto.RnrDTO;
 import org.openlmis.rnr.repository.RequisitionRepository;
 import org.openlmis.rnr.search.criteria.RequisitionSearchCriteria;
 import org.openlmis.rnr.search.factory.RequisitionSearchStrategyFactory;
@@ -15,9 +18,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
@@ -91,8 +92,15 @@ public class RequisitionService {
   private BudgetLineItemService budgetLineItemService;
   @Autowired
   private StatusChangeEventService statusChangeEventService;
+  @Autowired
+  private EquipmentInventoryService equipmentInventoryService;
+  @Autowired
+  private ConfigurationSettingService configurationSettingsService;
 
   private RequisitionSearchStrategyFactory requisitionSearchStrategyFactory;
+
+  @Autowired
+  private ProductPriceScheduleService priceScheduleService;
 
   @Autowired
   public void setRequisitionSearchStrategyFactory(RequisitionSearchStrategyFactory requisitionSearchStrategyFactory) {
@@ -100,7 +108,8 @@ public class RequisitionService {
   }
 
   @Transactional
-  public Rnr initiate(Facility facility, Program program, Long modifiedBy, Boolean emergency) {
+  public Rnr initiate(Facility facility, Program program, Long modifiedBy, Boolean emergency, ProcessingPeriod proposedPeriod) {
+
     if (!requisitionPermissionService.hasPermission(modifiedBy, facility, program, CREATE_REQUISITION)) {
       throw new DataException(RNR_OPERATION_UNAUTHORIZED);
     }
@@ -113,8 +122,20 @@ public class RequisitionService {
     program = programService.getById(program.getId());
     ProcessingPeriod period = findPeriod(facility, program, emergency);
 
+    if(proposedPeriod != null){
+      if(proposedPeriod.getId() != period.getId()){
+        // take caution in this case.
+        // todo: log a warning here.
+        period = proposedPeriod;
+      }
+    }
+
     List<FacilityTypeApprovedProduct> facilityTypeApprovedProducts = facilityApprovedProductService.getFullSupplyFacilityApprovedProductByFacilityAndProgram(
       facility.getId(), program.getId());
+
+     //N:B If usePriceSchedule is selected for the selected program, use the product price from price_schedule table
+    if(program.getUsePriceSchedule())
+        populateProductsPriceBasedOnPriceSchedule(facility.getId(), program.getId(), facilityTypeApprovedProducts); //non intrusive on the legacy setup
 
     List<Regimen> regimens = regimenService.getByProgram(program.getId());
     RegimenTemplate regimenTemplate = regimenColumnService.getRegimenTemplateByProgramId(program.getId());
@@ -125,11 +146,48 @@ public class RequisitionService {
 
     calculationService.fillFieldsForInitiatedRequisition(requisition, rnrTemplate, regimenTemplate);
     calculationService.fillReportingDays(requisition);
+    if(configurationSettingsService.getBoolValue("RNR_COPY_SKIPPED_FROM_PREVIOUS_RNR")) {
+      calculationService.copySkippedFieldFromPreviousPeriod(requisition);
+    }
+    // if program supports equipments, initialize it here.
+    if(program.getIsEquipmentConfigured()){
+       populateEquipments(requisition);
+    }
 
     insert(requisition);
     requisition = requisitionRepository.getById(requisition.getId());
 
     return fillSupportingInfo(requisition);
+  }
+
+    public void populateProductsPriceBasedOnPriceSchedule(Long facilityId, Long programId, List<FacilityTypeApprovedProduct> facilityTypeApprovedProducts) {
+        List<ProductPriceSchedule> productPriceSchedules = priceScheduleService.getPriceScheduleFullSupplyFacilityApprovedProduct(programId, facilityId);
+
+        for(ProductPriceSchedule productPriceSchedule : productPriceSchedules){
+            for(FacilityTypeApprovedProduct facilityTypeApprovedProduct : facilityTypeApprovedProducts) {
+                if (productPriceSchedule.getProduct().getId().equals(facilityTypeApprovedProduct.getProgramProduct().getProduct().getId()))
+                    facilityTypeApprovedProduct.getProgramProduct().setCurrentPrice(new Money(BigDecimal.valueOf(productPriceSchedule.getPrice())));
+            }
+        }
+    }
+
+
+    private void populateEquipments(Rnr requisition) {
+    List<EquipmentInventory> inventories = equipmentInventoryService.getInventoryForFacility(requisition.getFacility().getId(), requisition.getProgram().getId());
+    requisition.setEquipmentLineItems(new ArrayList<EquipmentLineItem>());
+    for(EquipmentInventory inv : inventories){
+      EquipmentLineItem lineItem = new EquipmentLineItem();
+      lineItem.setRnrId(requisition.getId());
+      lineItem.setEquipmentSerial(inv.getSerialNumber());
+      lineItem.setEquipmentInventoryId(inv.getId());
+      lineItem.setCode(inv.getEquipment().getEquipmentType().getCode());
+      lineItem.setEquipmentCategory(inv.getEquipment().getEquipmentType().getName());
+      lineItem.setOperationalStatusId(inv.getOperationalStatusId());
+      lineItem.setEquipmentName(inv.getEquipment().getName());
+      lineItem.setDaysOutOfUse(0L);
+
+      requisition.getEquipmentLineItems().add(lineItem);
+    }
   }
 
   private void populateAllocatedBudget(Rnr requisition) {
@@ -153,9 +211,12 @@ public class RequisitionService {
 
     if (savedRnr.getStatus() == AUTHORIZED || savedRnr.getStatus() == IN_APPROVAL) {
       savedRnr.copyApproverEditableFields(rnr, rnrTemplate);
+
     } else {
       List<ProgramProduct> programProducts = programProductService.getNonFullSupplyProductsForProgram(savedRnr.getProgram());
       savedRnr.copyCreatorEditableFields(rnr, rnrTemplate, regimenTemplate, programProducts);
+      //TODO: copy only the editable fields.
+      savedRnr.setEquipmentLineItems(rnr.getEquipmentLineItems());
     }
 
     requisitionRepository.update(savedRnr);
@@ -338,14 +399,31 @@ public class RequisitionService {
 
     Long periodIdOfLastRequisitionToEnterPostSubmitFlow = lastRequisitionToEnterThePostSubmitFlow == null ? null : lastRequisitionToEnterThePostSubmitFlow.getPeriod().getId();
 
-    if (periodIdOfLastRequisitionToEnterPostSubmitFlow != null) {
-      ProcessingPeriod currentPeriod = processingScheduleService.getCurrentPeriod(facilityId, programId, programStartDate);
-      if (currentPeriod != null && periodIdOfLastRequisitionToEnterPostSubmitFlow.equals(currentPeriod.getId())) {
-        throw new DataException("error.current.rnr.already.post.submit");
+
+    List<ProcessingPeriod> periods = processingScheduleService.getAllPeriodsAfterDateAndPeriod(facilityId, programId, programStartDate, periodIdOfLastRequisitionToEnterPostSubmitFlow);
+
+    List<ProcessingPeriod> rejected = processingScheduleService.getOpenPeriods(facilityId, programId, periodIdOfLastRequisitionToEnterPostSubmitFlow);
+
+    if(periods == null || periods.isEmpty()){
+      periods = rejected;
+    }else {
+      if(rejected != null && !rejected.isEmpty()){
+        periods.addAll(rejected);
       }
     }
 
-    return processingScheduleService.getAllPeriodsAfterDateAndPeriod(facilityId, programId, programStartDate, periodIdOfLastRequisitionToEnterPostSubmitFlow);
+    // find the distinct list
+    Set<ProcessingPeriod> finalList = new HashSet<ProcessingPeriod> (periods);
+    periods = new ArrayList<ProcessingPeriod>(finalList);
+    // sort the list of periods by start date
+    Collections.sort(periods, new Comparator<ProcessingPeriod>() {
+
+      public int compare(ProcessingPeriod o1, ProcessingPeriod o2) {
+        return o1.getStartDate().compareTo(o2.getStartDate());
+      }
+    });
+
+    return periods;
   }
 
   private Rnr fillSupportingInfo(Rnr requisition) {
@@ -372,6 +450,7 @@ public class RequisitionService {
     }
   }
 
+  @Deprecated
   public List<Rnr> listForApproval(Long userId) {
     List<RoleAssignment> assignments = roleAssignmentService.getRoleAssignments(APPROVE_REQUISITION, userId);
     List<Rnr> requisitionsForApproval = new ArrayList<>();
@@ -380,6 +459,16 @@ public class RequisitionService {
       requisitionsForApproval.addAll(requisitions);
     }
     fillFacilityPeriodProgramWithAuditFields(requisitionsForApproval);
+    return requisitionsForApproval;
+  }
+
+  public List<RnrDTO> listForApprovalDto(Long userId) {
+    List<RoleAssignment> assignments = roleAssignmentService.getRoleAssignments(APPROVE_REQUISITION, userId);
+    List<RnrDTO> requisitionsForApproval = new ArrayList<>();
+    for (RoleAssignment assignment : assignments) {
+      final List<RnrDTO> requisitions = requisitionRepository.getAuthorizedRequisitionsDTOs(assignment);
+      requisitionsForApproval.addAll(requisitions);
+    }
     return requisitionsForApproval;
   }
 
@@ -399,10 +488,14 @@ public class RequisitionService {
       requisitionEventService.notifyForStatusChange(requisition);
     }
 
-    sendRequisitionStatusChangeMail(requisition);
+    // the function call above (notify for status implements sending of notificaiton email.
+    // the benefit of the above call is that the email template is being taken from the administrative settings.
+    // a call to the following method will do the same thing but takes the message template from the messages.properties file.
+    //send RequisitionStatusChangeMail ( requisition );
   }
 
   private void sendRequisitionStatusChangeMail(Rnr requisition) {
+
     List<User> userList = new ArrayList<>();
 
     if (requisition.getStatus().equals(SUBMITTED)) {
@@ -421,7 +514,7 @@ public class RequisitionService {
 
     ArrayList<User> activeUsersWithRight = userService.filterForActiveUsers(userList);
     statusChangeEventService.notifyUsers(activeUsersWithRight, requisition.getId(), requisition.getFacility(),
-      requisition.getProgram(), requisition.getPeriod(), requisition.getStatus().toString());
+        requisition.getProgram(), requisition.getPeriod(), requisition.getStatus().toString());
   }
 
   private void insert(Rnr requisition) {
@@ -524,12 +617,69 @@ public class RequisitionService {
     return requisitionRepository.getNonSkippedLineItem(rnrId, productCode);
   }
 
+  public String deleteRnR(Long rnrId) {
+    return requisitionRepository.deleteRnR(rnrId);
+  }
+
+  public void skipRnR(Long rnrId, Long userId) {
+    Rnr rnr = this.getFullRequisitionById(rnrId);
+    for(RnrLineItem li : rnr.getFullSupplyLineItems()){
+      li.setSkipped(true);
+    }
+    rnr.setModifiedBy(userId);
+    rnr.setStatus(RnrStatus.SKIPPED);
+    this.save(rnr);
+    requisitionRepository.update(rnr);
+    logStatusChangeAndNotify(rnr, false, RnrStatus.SKIPPED.toString());
+  }
+
+
+  public void reOpenRnR(Long rnrId, Long userId) {
+    Rnr rnr = this.getFullRequisitionById(rnrId);
+    rnr.setModifiedBy(userId);
+    for(RnrLineItem li : rnr.getFullSupplyLineItems()){
+      li.setSkipped(false);
+    }
+    rnr.setStatus(RnrStatus.INITIATED);
+    requisitionRepository.update(rnr);
+    this.save(rnr);
+    logStatusChangeAndNotify(rnr, false, RnrStatus.INITIATED.toString());
+  }
+
+  public void rejectRnR(Long rnrId, Long userId) {
+    Rnr rnr = this.getFullRequisitionById(rnrId);
+    rnr.setModifiedBy(userId);
+    rnr.setStatus(RnrStatus.INITIATED);
+    requisitionRepository.update(rnr);
+    logStatusChangeAndNotify(rnr, false, RnrStatus.INITIATED.toString());
+  }
+
   public Integer findM(ProcessingPeriod period) {
     return processingScheduleService.findM(period);
   }
 
   public Long getProgramId(Long rnrId) {
     return requisitionRepository.getProgramId(rnrId);
+  }
+
+  @Transactional
+  public void updateClientFields(Rnr rnr) {
+    requisitionRepository.updateClientFields(rnr);
+  }
+
+  @Transactional
+  public void insertPatientQuantificationLineItems(Rnr rnr) {
+    requisitionRepository.insertPatientQuantificationLineItems(rnr);
+  }
+
+
+  public List<Rnr> getRequisitionsByFacility(Facility facility) {
+    return requisitionRepository.getRequisitionDetailsByFacility(facility);
+  }
+
+  @Transactional
+  public void insertRnrSignatures(Rnr rnr) {
+    requisitionRepository.insertRnrSignatures(rnr);
   }
 }
 

@@ -15,7 +15,8 @@ import org.openlmis.core.domain.Pagination;
 import org.openlmis.core.domain.SupervisoryNode;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.core.service.SupervisoryNodeService;
-import org.openlmis.web.response.OpenLmisResponse;
+import org.openlmis.core.web.OpenLmisResponse;
+import org.openlmis.core.web.controller.BaseController;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -47,6 +48,11 @@ public class SupervisoryNodeController extends BaseController {
   @RequestMapping(value = "/supervisory-nodes", method = GET)
   @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_USER')")
   public ResponseEntity<OpenLmisResponse> getAll() {
+    return OpenLmisResponse.response(SUPERVISORY_NODES, supervisoryNodeService.getAll());
+  }
+
+  @RequestMapping(value = "/supervisory-nodes/list", method = GET)
+  public ResponseEntity<OpenLmisResponse> getAllReadOnly() {
     return OpenLmisResponse.response(SUPERVISORY_NODES, supervisoryNodeService.getAll());
   }
 

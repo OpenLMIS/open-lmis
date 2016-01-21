@@ -10,8 +10,7 @@
 
 package org.openlmis.core.service;
 
-import org.openlmis.core.domain.Regimen;
-import org.openlmis.core.domain.RegimenCategory;
+import org.openlmis.core.domain.*;
 import org.openlmis.core.repository.RegimenCategoryRepository;
 import org.openlmis.core.repository.RegimenRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -47,4 +46,21 @@ public class RegimenService {
     return regimenCategoryRepository.getAll();
   }
 
+  public Regimen getById(Long id){return repository.getById(id);}
+
+  public List<DosageFrequency> getAllDosageFrequencies(){
+      return repository.getAllDosageFrequencies();
+  }
+
+  public List<RegimenProductCombination> getAllRegimenProductCombinations(){
+      return repository.getAllRegimenProductCombinations();
+  }
+
+  public List<RegimenCombinationConstituent> getAllRegimenCombinationConstituents(){
+        return repository.getAllRegimenCombinationConstituents();
+  }
+
+  public List<RegimenConstituentDosage> getAllRegimenConstituentDosages(){
+        return repository.getAllRegimenConstituentsDosages();
+  }
 }

@@ -1,0 +1,141 @@
+<!--
+  ~ Electronic Logistics Management Information System (eLMIS) is a supply chain management system for health commodities in a developing country setting.
+  ~
+  ~ Copyright (C) 2015  John Snow, Inc (JSI). This program was produced for the U.S. Agency for International Development (USAID). It was prepared under the USAID | DELIVER PROJECT, Task Order 4.
+  ~
+  ~ This program is free software: you can redistribute it and/or modify it under the terms of the GNU Affero General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
+  ~
+  ~ This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Affero General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU Affero General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
+  -->
+
+<div ng-controller="AlertsController" >
+    <div class="row-fluid">
+        <div class="span6">
+            <accordion>
+                <accordion-group class="yellow-gold" is-open="alertsPanel.openAlertPanel">
+                    <accordion-heading >
+                        <div class="accordion-title">
+                            <div class="caption">
+                                <i class="flaticon-alert"></i> <span openlmis-message="title.alert"></span>
+                            </div>
+                            <div class="tools">
+                                <i  ng-class="{'icon-minus-sign': alertsPanel.openAlertPanel, 'icon-plus-sign': !alertsPanel.openAlertPanel}"></i>
+                            </div>
+                        </div>
+                    </accordion-heading>
+                    <div class="filter-value">
+                        <ul>
+                            <li><span openlmis-message="label.program"></span>:<span class="filter-label" >{{formFilter.programName}}</span></li>
+                            <li><span openlmis-message="label.period"></span>:<span class="filter-label" >{{formFilter.periodName}}</span></li>
+                            <li><span openlmis-message="label.zone"></span>:<span class="filter-label"  >{{formFilter.zoneName}}</span></li>
+                        </ul>
+                    </div>
+                    <table class="table-bordered table table-striped" ng-show="dataRows.alert == undefined || dataRows.alert.length == 0">
+                        <thead>
+                        <tr class="gradient-header">
+                            <th openlmis-message="title.alerts" style="text-align: center"></th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr>
+                            <td>No data to show under selected filters</td>
+                        </tr>
+                        </tbody>
+
+                    </table>
+                    <div ng-show="dataRows.alert.length > 0">
+                        <table ng-show="dataRows.alert.length > 0" class="table-bordered table table-striped pull-right"
+                               ng-table="alertTableParams"  >
+                            <tbody >
+                            <tr ng-repeat="alert in dataRows.alert" >
+                                <td data-title="Alerts">
+                                    {{ alert.staticsValue }} {{ alert.description}}
+                                </td>
+                                <td><a href="" ng-click="showAlertDetails(alert.detailTable)" openlmis-message="button.view.detail"></a></td>
+                            </tr>
+                            </tbody>
+                        </table>
+                        <div class="clearfix"></div>
+                    </div>
+
+                </accordion-group>
+            </accordion>
+        </div>
+        <div  class="span6">
+            <accordion>
+                <accordion-group class="red-sunglo" is-open="alertsPanel.openStockPanel">
+                    <accordion-heading>
+                        <div class="accordion-title">
+                            <div class="caption">
+                                <i  class="flaticon-alert"></i><span openlmis-message="title.stock.outs"></span>
+                            </div>
+                            <div class="tools">
+
+                                <i  ng-class="{'icon-minus-sign': alertsPanel.openStockPanel, 'icon-plus-sign': !alertsPanel.openStockPanel}"></i>
+                            </div>
+                        </div>
+                    </accordion-heading>
+                    <div class="filter-value">
+                        <ul>
+                            <li><span openlmis-message="label.program"></span>:<span class="filter-label" >{{formFilter.programName}}</span></li>
+                            <li><span openlmis-message="label.period"></span>:<span class="filter-label" >{{formFilter.periodName}}</span></li>
+                            <li><span openlmis-message="label.zone"></span>:<span class="filter-label"  >{{formFilter.zoneName}}</span></li>
+                        </ul>
+                    </div>
+
+                    <table class="table table-bordered" ng-show="dataRows.stock == undefined || dataRows.stock.length == 0">
+                        <thead>
+                        <tr class="gradient-header" >
+                            <th openlmis-message="title.stock.outs" style="text-align: center"></th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr>
+                            <td>No data to show under selected filters</td>
+                        </tr>
+                        </tbody>
+
+                    </table>
+
+                    <div ng-show="dataRows.stock.length > 0">
+                        <table ng-show="dataRows.stock.length > 0" class="table-bordered table table-striped pull-right"
+                               ng-table="stockOutsTableParams"  >
+                            <tbody >
+                            <tr ng-repeat="stock in dataRows.stock" >
+                                <td data-title="'Stock outs'">
+                                    {{stock.staticsValue}} {{stock.description}}
+                                </td>
+                                <td><a href="" ng-click="showStockedOutAlertDetails(stock.detailTable,stock.productId)" openlmis-message="button.view.detail"></a></td>
+                            </tr>
+                            </tbody>
+                        </table>
+                        <div class="clearfix"></div>
+                    </div>
+
+                </accordion-group>
+            </accordion>
+        </div>
+
+    </div>
+    <div class="row-fluid">
+
+        <div class="alert-summary">
+            <ul>
+                <li ng-repeat="summary in alertSummary" ng-class="summary.alertType">
+                    {{ summary.staticsValue }} {{ summary.description }}
+                    <div><a href="" ng-click="showAlertDetails(summary.detailTable,summary.id)" openlmis-message="button.view.detail"></a></div>
+                </li>
+            </ul>
+        </div>
+
+    </div>
+
+</div>
+
+
+
+
+
+

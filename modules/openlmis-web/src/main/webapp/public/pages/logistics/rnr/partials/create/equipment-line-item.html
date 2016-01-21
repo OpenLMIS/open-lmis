@@ -1,0 +1,112 @@
+<!--
+  ~ This program is part of the OpenLMIS logistics management information system platform software.
+  ~ Copyright © 2013 VillageReach
+  ~
+  ~ This program is free software: you can redistribute it and/or modify it under the terms of the GNU Affero General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
+  ~  
+  ~ This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Affero General Public License for more details.
+  ~ You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org. 
+  -->
+
+<div ng-controller="CreateEquipmentLineItemController">
+  <div>
+    {{rnr.equipmentErrorMessage}}
+    </div>
+    <div class="rnr-table regimen-table" tab-scroll bottom-offset="180">
+        <table id="equipmentTable" fixed-table-header class="table table-bordered scrollable">
+            <thead>
+            <tr>
+                <th class="col-code" >
+                    <div class="regimen-heading">
+                        <span openlmis-message="rnr.equipment.code"></span>
+                    </div>
+                </th>
+                <th class="col-product" >
+                    <div class="regimen-heading">
+                        <span openlmis-message="rnr.equipment.equipment.name"></span>
+                    </div>
+                </th>
+                <th class="span1" >
+                    <div class="regimen-heading">
+                        <span openlmis-message="rnr.equipment.model"></span>
+                    </div>
+                </th>
+                <th class="span1" >
+                    <div class="regimen-heading">
+                        <span openlmis-message="rnr.equipment.serial"></span>
+                    </div>
+                </th>
+                <th class="span1" >
+                    <div class="regimen-heading">
+                        <span openlmis-message="rnr.equipment.status"></span>
+                    </div>
+                </th>
+                <th class="span1" >
+                    <div class="regimen-heading">
+                        <span openlmis-message="rnr.equipment.test.count"></span>
+                    </div>
+                </th>
+                <th class="span1" >
+                    <div class="regimen-heading">
+                        <span openlmis-message="rnr.equipment.total.count"></span>
+                    </div>
+                </th>
+                <th class="span1" >
+                    <div class="regimen-heading">
+                        <span openlmis-message="rnr.equipment.days.out.of.use"></span>
+                    </div>
+                </th>
+                <th class="col-remarks" >
+                    <div class="regimen-heading">
+                        <span openlmis-message="rnr.equipment.remarks"></span>
+                    </div>
+                </th>
+            </tr>
+            </thead>
+            <tbody ng-repeat="equipmentLineItem in page.equipment">
+            <tr ng-show="showCategory($index)">
+                <td class="productCategory" colspan="9" ng-show="showCategory($index)"
+                    ng-bind="equipmentLineItem.equipmentCategory"></td>
+            </tr>
+            <tr>
+                <td class="cell-input">
+                    <span ng-bind="equipmentLineItem.equipmentName" class="cell-text"></span>
+                </td>
+                <td class="cell-input">
+                    <span ng-bind="equipmentLineItem.equipmentName" class="cell-text"></span>
+                </td>
+                <td class="cell-input">
+                    <span ng-bind="equipmentLineItem.equipmentModel" class="cell-text"></span>
+                </td>
+                <td class="cell-input">
+                    <span ng-bind="equipmentLineItem.equipmentSerial" class="cell-text"></span>
+                </td>
+                <td class="cell-input" style="padding-top:5px;">
+                     <select ng-disabled="formDisabled" class="cell-text" ng-model="equipmentLineItem.operationalStatusId" ng-change="equipmentStatusChanged(equipmentLineItem);">
+                         <option  ng-repeat="status in equipmentOperationalStatus" value="{{status.id}}" ng-selected="equipmentLineItem.operationalStatusId == status.id">{{status.name}}</option>
+                     </select>
+                </td>
+                <td class="cell-input">
+                    <input ng-disabled="formDisabled" class="cell-text" ng-disable="disableForm || !equipmentLineItem.enableTestCount" type="text" ng-model="equipmentLineItem.testCount">
+                </td>
+                <td class="cell-input">
+                    <input ng-disabled="formDisabled" class="cell-text" ng-disable="disableForm || !equipmentLineItem.enableTotalCount" type="text" ng-model="equipmentLineItem.totalCount">
+                </td>
+                <td class="cell-input">
+                    <input ng-disabled="formDisabled" class="cell-text" type="text" ng-model="equipmentLineItem.daysOutOfUse">
+                </td>
+                <td class="cell-input" >
+                  <span  ng-class="( ( equipmentLineItem.remarks == undefined || equipmentLineItem.remarks == '' ) && equipmentLineItem.operationalStatusId == 3)?'cell-error-highlight':''" class="input-error-parent-cell" >
+                    <input ng-disabled="formDisabled" class="cell-text" type="text" ng-model="equipmentLineItem.remarks">
+                  </span>
+                  <span
+                        class="alert alert-warning warning-alert"
+                        ng-show="( ( equipmentLineItem.remarks == undefined || equipmentLineItem.remarks == '' ) && equipmentLineItem.operationalStatusId == 3)"
+                        openlmis-message="equipment.error.related.products.ordered">
+                  </span>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>

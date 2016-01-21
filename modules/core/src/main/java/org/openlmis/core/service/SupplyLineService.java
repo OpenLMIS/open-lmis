@@ -10,10 +10,7 @@
 
 package org.openlmis.core.service;
 
-import org.openlmis.core.domain.Pagination;
-import org.openlmis.core.domain.Program;
-import org.openlmis.core.domain.SupervisoryNode;
-import org.openlmis.core.domain.SupplyLine;
+import org.openlmis.core.domain.*;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.core.repository.FacilityRepository;
 import org.openlmis.core.repository.ProgramRepository;
@@ -75,7 +72,11 @@ public class SupplyLineService {
     populateIdsForSupplyLine(supplyLine);
     return repository.getSupplyLineBy(supplyLine.getSupervisoryNode(), supplyLine.getProgram());
   }
-
+  
+  public List<Facility> getSupplyingFacilities(Long userId){
+    return repository.getSupplyingFacilities(userId);
+  }
+  
   public SupplyLine getById(Long id) {
     return repository.getById(id);
   }
@@ -86,5 +87,10 @@ public class SupplyLineService {
 
   public Integer getTotalSearchResultCount(String searchParam, String column) {
     return repository.getTotalSearchResultCount(searchParam, column);
+  }
+
+
+  public SupplyLine getByFacilityProgram(Long facilityId, Long programId){
+    return repository.getSupplyLineByFacilityProgram(facilityId, programId);
   }
 }

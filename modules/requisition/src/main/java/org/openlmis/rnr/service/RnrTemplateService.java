@@ -11,6 +11,7 @@
 package org.openlmis.rnr.service;
 
 import org.openlmis.core.message.OpenLmisMessage;
+import org.openlmis.core.service.ConfigurationSettingService;
 import org.openlmis.core.service.ProgramService;
 import org.openlmis.rnr.domain.ProgramRnrTemplate;
 import org.openlmis.rnr.domain.RnrColumn;
@@ -34,6 +35,11 @@ public class RnrTemplateService {
 
   @Autowired
   private ProgramService programService;
+
+  @Autowired
+  private ConfigurationSettingService configService;
+
+
 
   public List<RnrColumn> fetchAllRnRColumns(Long programId) {
     return rnrRepository.fetchRnrTemplateColumnsOrMasterColumns(programId);
@@ -60,6 +66,9 @@ public class RnrTemplateService {
   }
 
   public ProgramRnrTemplate fetchProgramTemplateForRequisition(Long programId) {
-    return new ProgramRnrTemplate(programId, fetchColumnsForRequisition(programId));
+    ProgramRnrTemplate template =  new ProgramRnrTemplate(programId ,fetchColumnsForRequisition(programId));
+    // read if system should populate 0 or not
+    template.setApplyDefaultZero(Boolean.parseBoolean(configService.getConfigurationStringValue("DEFAULT_ZERO") ));
+    return template;
   }
 }

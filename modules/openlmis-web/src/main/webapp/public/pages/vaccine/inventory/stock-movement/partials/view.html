@@ -1,0 +1,52 @@
+<!--
+  ~ This program is part of the OpenLMIS logistics management information system platform software.
+  ~ Copyright © 2013 VillageReach
+  ~
+  ~ This program is free software: you can redistribute it and/or modify it under the terms of the GNU Affero General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
+  ~
+  ~ This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Affero General Public License for more details.
+  ~ You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org.
+  -->
+
+<div xmlns="http://www.w3.org/1999/html">
+    <h2><span id="searchProductsHeaderLabel">Pending Requisition(s)</span>
+        <a href="#/create" class="">
+        </a>
+    </h2>
+
+    <div class="alert alert-success" id="saveSuccessMsgDiv" ng-show="message">
+        <span ng-bind="message"></span>.&nbsp;&nbsp;
+        <a id="viewHereLink" href="" ng-click="edit(productId)" openlmis-message="title.view.pending"></a>
+    </div>
+
+
+    <div class="span7">
+        <form name="pendingForm" novalidate>
+
+        <table ng-show="facilities.length > 0"
+               class="table table-bordered table-scrollable pull-right">
+            <thead>
+            <tr>
+                <th>Store Name</th>
+                <th>Date Submitted</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr ng-repeat="row in facilities">
+                <td style="width: 20%;">
+                    {{row.facility.name}}
+                </td>
+                <td style="width: 40%;">{{row.submittedDate}}</td>
+
+                <td> <input id="saveButton" type="submit" id="save-button" class="btn btn-primary save-button"
+                        value="Issue"   ng-click="issueRequisition(row)"/></td>
+            </tr>
+
+            </tbody>
+
+        </table>
+        </form>
+    </div>
+
+
+</div>

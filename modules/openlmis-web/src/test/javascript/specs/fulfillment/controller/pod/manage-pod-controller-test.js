@@ -14,6 +14,8 @@ describe('ManagePODController', function () {
   beforeEach(module('openlmis'));
   beforeEach(inject(function ($rootScope, $controller, _messageService_, _$httpBackend_, $location) {
     scope = $rootScope.$new();
+    scope.option = {all : true};
+    scope.filter = {program : 1};
     location = $location;
     spyOn(location, 'url');
 
@@ -26,13 +28,23 @@ describe('ManagePODController', function () {
       {id: 1}
     ]};
 
-    $httpBackend.expect('GET', '/manage-pod-orders').respond(200, data);
+    var programs = {programList: [{id: 1, name: 'ARV'}]};
+
+    $httpBackend.when('GET', '/create/requisition/programs.json').respond(200, programs);
+    $httpBackend.when('GET', '/manage-pod-orders').respond(200, data);
     controller(ManagePODController, {$scope: scope});
     $httpBackend.flush();
 
   }));
 
   it('should set orders for manage pod in scope', function () {
+    //
+    scope.option.all = true;
+    var facilities = {facilities :[]};
+    $httpBackend.when('GET', '/create/requisition/supervised/1/facilities.json').respond(200, facilities);
+    $httpBackend.when('GET', '/manage-pod-orders?program=1').respond(200, data);
+    scope.onParamChanged();
+    $httpBackend.flush();
     expect(scope.orders).toEqual(data.ordersForPOD);
   });
 

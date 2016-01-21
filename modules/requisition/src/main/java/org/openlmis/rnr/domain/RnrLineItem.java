@@ -13,7 +13,7 @@ import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import org.apache.commons.collections.Predicate;
 import org.apache.commons.lang3.StringUtils;
-import org.codehaus.jackson.map.annotate.JsonSerialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import org.openlmis.core.domain.*;
 import org.openlmis.core.exception.DataException;
 import org.slf4j.Logger;
@@ -30,7 +30,7 @@ import static java.lang.Math.round;
 import static java.math.BigDecimal.valueOf;
 import static java.math.RoundingMode.HALF_UP;
 import static org.apache.commons.collections.CollectionUtils.find;
-import static org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion.NON_EMPTY;
+import static com.fasterxml.jackson.databind.annotation.JsonSerialize.Inclusion.NON_EMPTY;
 import static org.openlmis.rnr.domain.ProgramRnrTemplate.*;
 import static org.openlmis.rnr.domain.Rnr.RNR_VALIDATION_ERROR;
 import static org.openlmis.rnr.domain.RnrStatus.AUTHORIZED;
@@ -50,13 +50,20 @@ public class RnrLineItem extends LineItem {
   public static final BigDecimal NUMBER_OF_DAYS = new BigDecimal(30);
 
   public static final MathContext MATH_CONTEXT = new MathContext(12, HALF_UP);
-  private static Logger logger = LoggerFactory.getLogger(RnrLineItem.class);
+  public static final String DISPENSED_PLUS_NEW_PATIENTS = "DISPENSED_PLUS_NEW_PATIENTS";
+  public static final String DISPENSED_X_90 = "DISPENSED_X_90";
+  public static final String DEFAULT = "DEFAULT";
+  public static final String DISPENSED_X_2 = "DISPENSED_X_2";
+  public static final String CONSUMPTION_X_2 = "CONSUMPTION_X_2";
+  private static final Logger LOGGER = LoggerFactory.getLogger(RnrLineItem.class);
   //TODO : hack to display it on UI. This is concatenated string of Product properties like name, strength, form and dosage unit
   private String product;
   private Integer productDisplayOrder;
   private String productCode;
+  private String productPrimaryName;
   private String productCategory;
   private Integer productCategoryDisplayOrder;
+  private String productStrength;
   private Boolean roundToZero;
   private Integer packRoundingThreshold;
   private Integer packSize;
@@ -105,6 +112,7 @@ public class RnrLineItem extends LineItem {
     this.productCategoryDisplayOrder = category.getDisplayOrder();
     this.populateFromProduct(programProduct);
     this.dosesPerMonth = programProduct.getDosesPerMonth();
+
     this.modifiedBy = modifiedBy;
     this.createdBy = createdBy;
   }
@@ -120,6 +128,7 @@ public class RnrLineItem extends LineItem {
       this.stockOutDays = null;
       this.newPatientCount = null;
       this.quantityRequested = null;
+      this.quantityApproved = null;
       this.reasonForRequestedQuantity = null;
       this.normalizedConsumption = null;
       this.periodNormalizedConsumption = null;
@@ -127,7 +136,9 @@ public class RnrLineItem extends LineItem {
       this.remarks = null;
       this.expirationDate = null;
     }
-    quantityApproved = fullSupply ? calculatedOrderQuantity : quantityRequested;
+    if(quantityApproved == null){
+      quantityApproved = (quantityRequested == null) ? calculatedOrderQuantity : quantityRequested;
+    }
   }
 
   public void setBeginningBalanceWhenPreviousStockInHandAvailable(RnrLineItem previousLineItem,
@@ -140,9 +151,29 @@ public class RnrLineItem extends LineItem {
     this.previousStockInHand = previousLineItem.getStockInHand();
   }
 
+  public void setSkippedValueWhenPreviousLineItemIsAvailable(RnrLineItem previousLineItem){
+    if(previousLineItem != null){
+      this.setSkipped(previousLineItem.getSkipped());
+    }
+  }
+
   public void setLineItemFieldsAccordingToTemplate(ProgramRnrTemplate template) {
     if (!template.columnsVisible(QUANTITY_RECEIVED)) quantityReceived = 0;
     if (!template.columnsVisible(QUANTITY_DISPENSED)) quantityDispensed = 0;
+    totalLossesAndAdjustments = 0;
+    newPatientCount = 0;
+    stockOutDays = 0;
+
+    if(template.getApplyDefaultZero()){
+      quantityReceived = quantityDispensed = stockInHand = calculatedOrderQuantity = 0;
+
+      if(beginningBalance == null){
+        beginningBalance = 0;
+      } else{
+        stockInHand = beginningBalance;
+      }
+    }
+
 
     totalLossesAndAdjustments = newPatientCount = stockOutDays = 0;
   }
@@ -202,9 +233,11 @@ public class RnrLineItem extends LineItem {
     calculatePeriodNormalizedConsumption(numberOfMonths);
 
     if (rnrStatus == AUTHORIZED) {
-      calculateAmc();
-      calculateMaxStockQuantity();
-      calculateOrderQuantity();
+      calculateAmc(numberOfMonths);
+      calculateMaxStockQuantity(template);
+      if (!(template.getRnrColumnsMap().get(CALCULATED_ORDER_QUANTITY) != null && template.columnsUserInput(CALCULATED_ORDER_QUANTITY))) {
+        calculateOrderQuantity();
+      }
     }
 
     calculatePacksToShip();
@@ -214,12 +247,13 @@ public class RnrLineItem extends LineItem {
     periodNormalizedConsumption = normalizedConsumption * numberOfMonths;
   }
 
-  public void calculateAmc() {
+  public void calculateAmc(Integer numberOfMonths) {
     Integer sumOfNCs = normalizedConsumption;
     for (Integer previousNC : previousNormalizedConsumptions) {
       sumOfNCs += previousNC;
     }
-    BigDecimal countOfNCs = new BigDecimal(previousNormalizedConsumptions.size() + 1);
+
+    BigDecimal countOfNCs = new BigDecimal((previousNormalizedConsumptions.size() + 1) * numberOfMonths);
 
     amc = new BigDecimal(sumOfNCs).divide(countOfNCs, MATH_CONTEXT).setScale(0, HALF_UP).intValue();
   }
@@ -231,8 +265,20 @@ public class RnrLineItem extends LineItem {
     }
   }
 
-  public void calculateMaxStockQuantity() {
-    maxStockQuantity = (int) round(maxMonthsOfStock * amc);
+  public void calculateMaxStockQuantity( ProgramRnrTemplate template) {
+    RnrColumn column = template.getRnrColumnsMap().get("maxStockQuantity");
+    String columnOption = DEFAULT;
+    if(column != null){
+      columnOption = column.getCalculationOption();
+    }
+    if(CONSUMPTION_X_2.equalsIgnoreCase(columnOption)){
+      maxStockQuantity = this.normalizedConsumption * 2;
+    }else if(DISPENSED_X_2.equalsIgnoreCase(columnOption)){
+      maxStockQuantity = this.quantityDispensed * 2;
+    } else{
+      // apply the default calculation if there was no other calculation that works here
+      maxStockQuantity = (int) round(maxMonthsOfStock * amc);
+    }
   }
 
   public void calculateOrderQuantity() {
@@ -242,16 +288,50 @@ public class RnrLineItem extends LineItem {
   }
 
   public void calculateNormalizedConsumption(ProgramRnrTemplate template) {
-    BigDecimal dosesPerDispensingUnit = new BigDecimal(Math.max(1, this.dosesPerDispensingUnit));
 
-    normalizedConsumption = calculateNormalizedConsumption(
-      new BigDecimal(stockOutDays),
-      new BigDecimal(quantityDispensed),
-      new BigDecimal(newPatientCount),
-      new BigDecimal(dosesPerMonth), dosesPerDispensingUnit, reportingDays, template);
+    prepareFieldsForCalculation();
+    RnrColumn column = template.getRnrColumnsMap().get("normalizedConsumption");
+    String selectedColumnOption = DEFAULT;
+    if (column != null) {
+      selectedColumnOption = column.getCalculationOption();
+    }
+    if (DISPENSED_PLUS_NEW_PATIENTS.equalsIgnoreCase(selectedColumnOption)) {
+      normalizedConsumption = quantityDispensed + newPatientCount;
+    } else if (DISPENSED_X_90.equalsIgnoreCase(selectedColumnOption)) {
+      if (stockOutDays < 90) {
+        normalizedConsumption = (new BigDecimal(90 * quantityDispensed)
+            .divide(
+                new BigDecimal(90 - stockOutDays)
+                , MATH_CONTEXT)
+        ).intValue();
+      } else {
+        normalizedConsumption = (90 * quantityDispensed);
+      }
+    } else {
+      BigDecimal dosesPerDispensingUnit = new BigDecimal(Math.max(1, this.dosesPerDispensingUnit));
+
+      normalizedConsumption = calculateNormalizedConsumption(
+          new BigDecimal(stockOutDays),
+          new BigDecimal(quantityDispensed),
+          new BigDecimal(newPatientCount),
+          new BigDecimal(dosesPerMonth), dosesPerDispensingUnit, reportingDays, template);
+    }
+  }
+
+  private void prepareFieldsForCalculation() {
+    // prepare fields for calculation
+    if(stockOutDays == null){
+      stockOutDays = 0;
+    }
+    if(newPatientCount == null){
+      newPatientCount = 0;
+    }
   }
 
   public void calculateTotalLossesAndAdjustments(List<LossesAndAdjustmentsType> lossesAndAdjustmentsTypes) {
+    if (lossesAndAdjustments.isEmpty()) {
+      return;
+    }
     Integer total = 0;
     for (LossesAndAdjustments lossAndAdjustment : lossesAndAdjustments) {
       if (getAdditive(lossAndAdjustment, lossesAndAdjustmentsTypes)) {
@@ -299,7 +379,7 @@ public class RnrLineItem extends LineItem {
   }
 
   public void copyApproverEditableFields(RnrLineItem lineItem, ProgramRnrTemplate template) {
-    String[] approverEditableFields = {QUANTITY_APPROVED, REMARKS};
+    String[] approverEditableFields = {QUANTITY_APPROVED, REMARKS, SKIPPED};
 
     for (String fieldName : approverEditableFields) {
       copyField(fieldName, lineItem, template);
@@ -319,7 +399,7 @@ public class RnrLineItem extends LineItem {
                                                  ProgramRnrTemplate template) {
 
     BigDecimal newPatientFactor;
-    if (template.getRnrColumnsMap().get("newPatientCount").getConfiguredOption().getName().equals("newPatientCount")) {
+    if (template.getRnrColumnsMap().get("newPatientCount").getConfiguredOption() != null && template.getRnrColumnsMap().get("newPatientCount").getConfiguredOption().getName().equals("newPatientCount")) {
       newPatientFactor = newPatientCount.multiply(dosesPerMonth.divide(dosesPerDispensingUnit, MATH_CONTEXT)
         .setScale(0, HALF_UP));
     } else {
@@ -345,7 +425,7 @@ public class RnrLineItem extends LineItem {
       Field field = this.getClass().getDeclaredField(fieldName);
       field.set(this, field.get(lineItem));
     } catch (Exception e) {
-      logger.error("Error in copying RnrLineItem's field", e);
+      LOGGER.error("Error in copying RnrLineItem's field", e);
     }
   }
 
@@ -363,7 +443,8 @@ public class RnrLineItem extends LineItem {
     this.roundToZero = product.getRoundToZero();
     this.packRoundingThreshold = product.getPackRoundingThreshold();
     this.product = product.getName();
-    this.fullSupply = product.getFullSupply();
+    // use the program product setting instead of the one on the product table.
+    this.fullSupply = programProduct.isFullSupply();
     this.productDisplayOrder = programProduct.getDisplayOrder();
   }
 
@@ -381,7 +462,7 @@ public class RnrLineItem extends LineItem {
       Field field = this.getClass().getDeclaredField(fieldName);
       value = field.get(this);
     } catch (Exception e) {
-      logger.error("Error in reading RnrLineItem's field", e);
+      LOGGER.error("Error in reading RnrLineItem's field", e);
     }
     return value;
   }

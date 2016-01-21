@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+
+<!--
+  ~ Electronic Logistics Management Information System (eLMIS) is a supply chain management system for health commodities in a developing country setting.
+  ~
+  ~ Copyright (C) 2015  John Snow, Inc (JSI). This program was produced for the U.S. Agency for International Development (USAID). It was prepared under the USAID | DELIVER PROJECT, Task Order 4.
+  ~
+  ~ This program is free software: you can redistribute it and/or modify it under the terms of the GNU Affero General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
+  ~
+  ~ This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Affero General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU Affero General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
+  -->
+
+<script id="template/accordion/accordion.html" type="text/ng-template">
+    <div class="accordion" ng-transclude></div>
+</script>
+
+<script id="template/accordion/accordion-group.html" type="text/ng-template">
+    <div class="accordion-group">
+        <div class="accordion-heading" style="margin-bottom:0; border-bottom:0">
+            <a style="bottom:0" class="accordion-toggle" ng-class="{'collapsed':!isOpen,'open':isOpen}" ng-click="isOpen = !isOpen" accordion-transclude="heading">{{heading}}</a>
+        </div>
+        <div class="accordion-body" style="display:block; margin-bottom:0" collapse="!isOpen">
+
+            <div class="accordion-inner" ng-transclude></div>  </div>
+    </div>
+</script>
+
+
+<script type="text/ng-template" id="product-summary">
+    <div style="width: 600px;">
+        <div class="triangle"></div>
+        <div class="ns-popover-tooltip">
+
+            <tabset class="table">
+                <tab>
+                    <tab-heading style="cursor: pointer;"><span openlmis-message="title.overview"></span></tab-heading>
+                    <table style="width: 100%;">
+                        <thead>
+                        <tr class="gradient-header">
+                            <th openlmis-message="label.items"></th>
+                            <th openlmis-message="label.this.period"></th>
+                            <th openlmis-message="label.last.period"></th>
+                        </tr>
+
+                        </thead>
+                        <tr ng-repeat="item in productSummary">
+                            <td>{{item.label}}</td>
+                            <td>{{item.this_period}}</td>
+                            <td>{{item.last_period}}</td>
+                        </tr>
+                    </table>
+
+                </tab>
+                <tab>
+                    <tab-heading style="cursor: pointer;"><span openlmis-message="title.legend"></span></tab-heading>
+                    <table class="table">
+                        <thead>
+                        <tr class="gradient-header">
+                            <th openlmis-message="title.legend"></th>
+                            <th openlmis-message="title.definition"></th>
+                        </tr>
+                        </thead>
+                        <tr ng-repeat="def in definitions">
+                            <td>{{def.label}}</td>
+                            <td>{{def.definition}}</td>
+                        </tr>
+                    </table>
+
+                </tab>
+            </tabset>
+
+        </div>
+    </div>
+
+</script>
+
+<script type="text/ng-template" id="consumption-chart-info">
+    <!--<div class="triangle" style="margin-left: -7px;"></div>-->
+    <div class="ns-popover-tooltip">
+        <span openlmis-message="message.consumption.chart.info"></span>
+    </div>
+</script>
+<script type="text/ng-template" id="utilization-chart-info">
+    <!--<div class="triangle" style="margin-left: -7px;"></div>-->
+    <div class="ns-popover-tooltip">
+        <span openlmis-message="message.utilization.chart.info"></span>
+    </div>
+</script>
+<script type="text/ng-template" id="stocking-chart-info">
+    <!--<div class="triangle" style="margin-left: -7px;"></div>-->
+    <div class="ns-popover-tooltip">
+        <span openlmis-message="message.stocking.chart.info"></span>
+    </div>
+</script>
+<script type="text/ng-template" id="losses-chart-info">
+    <!--<div class="triangle" style="margin-left: -7px;"></div>-->
+    <div class="ns-popover-tooltip">
+        <span openlmis-message="message.losses.chart.info"></span>
+    </div>
+</script>
+
+<script type="text/ng-template" id="facilities-stock-out">
+    <div style="width: 600px;">
+        <div class="triangle"></div>
+        <div class="ns-popover-tooltip" style="max-height: 300px; overflow-y: scroll;">
+            <table ng-show="facilities == undefined || facilities.length == 0" >
+                <tbody><tr>
+                    <td>No data to show under selected filters</td>
+                </tr>
+                </tbody>
+            </table>
+            <table ng-show="facilities != undefined && facilities.length > 0 " class="table-bordered table table-striped">
+                <thead class="compact-header">
+                <tr >
+                    <th openlmis-message="label.facility" rowspan="2" ></th>
+                    <th openlmis-message="label.stock.on.hand" colspan="2"></th>
+                </tr>
+                <tr >
+                    <th openlmis-message="label.this.period" ></th>
+                    <th openlmis-message="label.last.period"></th>
+                </tr>
+
+                </thead>
+                <tbody>
+                <tr ng-repeat="facility in facilities">
+                    <td>{{facility.facility_name}}</td>
+                    <td class="number">{{facility.stock_in_hand | number}}</td>
+                    <td class="number">{{facility.previous_stock_in_hand | number}}</td>
+                </tr>
+                </tbody>
+
+            </table>
+
+        </div>
+    </div>
+
+</script>
+
+<div xmlns="http://www.w3.org/1999/html">
+
+    <ng-include src="'/public/pages/dashboard/shared/dashboard-header_new.html'"></ng-include>
+    <div class="reporting-header">
+        <span style="margin-right: 10px; font-size: 1.2em;"><span openlmis-message="title.dashboard.reporting.rate"></span></span>
+        <span><span openlmis-message="label.total"></span>: {{reportingPerformance.total | number}}</span>
+        <span><span openlmis-message="label.expected.to.report"></span>: {{reportingPerformance.expected | number}}</span>
+        <span><span openlmis-message="label.ever.reported"></span>: {{reportingPerformance.ever | number}}</span>
+        <span><span openlmis-message="label.reported.this.period"></span>: {{reportingPerformance.period}} ( {{(reportingPerformance.period/reportingPerformance.expected)*100 | number:0}}%)</span>
+        <span><span openlmis-message="label.late.reported"></span>: {{reportingPerformance.late}} ({{(reportingPerformance.late/reportingPerformance.period)*100 | number:0}}%)</span>
+        <span><span openlmis-message="label.reporting.on.time"></span>: {{(reportingPerformance.period - reportingPerformance.late)}} ({{((reportingPerformance.period - reportingPerformance.late)/reportingPerformance.period)*100 | number:0}}%)</span>
+    </div>
+    <div class="row-fluid">
+        <div class="span2" style="border-right: solid 1px #EAEFF3">
+            <div>
+                <div ng-repeat="product in productsTrend">
+                    <div style="padding: 10px 30px; border-bottom: solid 1px #EAEFF3; max-width: 100px;">
+
+                        <div style="text-align: center; cursor: pointer;">
+                            <input type="checkbox" ng-model="product.selected" ng-change="setProductSelected(product.code,product.selected)"  style="float: left; margin-top: 3px"/>
+                            <span  ns-popover ng-click="getProductSummary(product.code)"
+                                   ns-popover-template="product-summary"
+                                   ns-popover-trigger="click"
+                                   ns-popover-theme="ns-popover-tooltip-theme"
+                                   ns-popover-timeout="1000"
+                                   ns-popover-placement="{{adjustPlacement($index)}}"
+                                   ns-popover-hide-on-inside-click="false"
+                                   ns-popover-hide-on-outside-click="true"
+                                   ns-popover-hide-on-button-click="true" style="cursor: pointer; padding: 10px 0px;"> {{product.name}}</span>
+
+                        </div>
+                        <spark-line af-data="product.sohTrend" af-option="sparkOption" style="margin-top:5px;"></spark-line>
+                        <div style="margin-top:5px; text-align: center">
+                            <div ns-popover ng-click="getFacilitiesStockedOut(product.code)"
+                                 ns-popover-template="facilities-stock-out"
+                                 ns-popover-trigger="click"
+                                 ns-popover-theme="ns-popover-tooltip-theme"
+                                 ns-popover-timeout="1000"
+                                 ns-popover-placement="{{adjustPlacement($index)}}"
+                                 ns-popover-hide-on-inside-click="false"
+                                 ns-popover-hide-on-outside-click="true"
+                                 ns-popover-hide-on-button-click="true" style="cursor: pointer; padding: 10px 0px;">
+                                <span class="bg-red"
+                                      style="  color:white; padding:2px 20px; border-radius:10px; font-size:12px;">{{product.facilityStockedOut | number}}</span>
+                            </div>
+
+                        </div>
+
+
+                    </div>
+
+                </div>
+            </div>
+        </div>
+        <div class="span10">
+            <!-- body -->
+            <div  ng-if="productsTrend.length > 0" class="row-fluid">
+                <div class="span4" ng-repeat="carousel in carousels">
+                    <div id="{{carousel.id}}" class="carousel-play-control">
+                        <button id="{{carousel.id}}_play" type="button" class="btn btn-default btn-xs" ng-class="{'carousel-playing': carousel.isPlaying, '': !carousel.isPlaying}"  ng-click="carousel.play()" alt="this si">
+                            <span class="icon-play"></span>
+                        </button>
+                        <button id="{{carousel.id}}_pause" type="button" class="btn btn-default btn-xs"  ng-class="{'carousel-paused': !carousel.isPlaying, '': carousel.isPlaying}" ng-click="carousel.pause()">
+                            <span class="icon-pause"></span>
+                        </button>
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="row-fluid" >
+                <!-- column trend -->
+                <div class="span4" >
+                    <div ng-repeat="product in productsTrend" ng-if="product.selected" >
+                        <carousel  interval="setInterval('trend')">
+                            <ng-include src="'/public/pages/dashboard/partials/slide-trend-dispensed.html'"></ng-include>
+                            <ng-include src="'/public/pages/dashboard/partials/slide-trend-utilization.html'"></ng-include>
+                            <ng-include src="'/public/pages/dashboard/partials/slide-trend-stocking-efficiency.html'"></ng-include>
+                            <ng-include src="'/public/pages/dashboard/partials/slide-trend-losses.html'"></ng-include>
+                        </carousel>
+                    </div>
+
+                    <!-- column District -->
+                </div>
+                <div class="span4" >
+                    <div  ng-repeat="product in productsDistrict" ng-if="product.selected" >
+                        <carousel  interval="setInterval('district')">
+                            <ng-include src="'/public/pages/dashboard/partials/slide-district-dispensed.html'"></ng-include>
+                            <ng-include src="'/public/pages/dashboard/partials/slide-district-losses.html'"></ng-include>
+                            <ng-include src="'/public/pages/dashboard/partials/slide-district-stockedout.html'"></ng-include>
+                            <ng-include src="'/public/pages/dashboard/partials/slide-district-overstocked.html'"></ng-include>
+                            <ng-include src="'/public/pages/dashboard/partials/slide-district-understocked.html'"></ng-include>
+                            <ng-include src="'/public/pages/dashboard/partials/slide-district-adequatelystocked.html'"></ng-include>
+                        </carousel>
+                    </div>
+                </div>
+                <!-- Column Facility  -->
+                <div class="span4">
+                    <div ng-repeat="product in productsFacility" ng-if="product.selected">
+                        <carousel  interval="setInterval('facility')">
+                            <ng-include src="'/public/pages/dashboard/partials/slide-facility-dispensed.html'"></ng-include>
+                            <ng-include src="'/public/pages/dashboard/partials/slide-facility-losses.html'"></ng-include>
+                            <ng-include src="'/public/pages/dashboard/partials/slide-facility-fillrate.html'"></ng-include>
+                        </carousel>
+
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+</div>

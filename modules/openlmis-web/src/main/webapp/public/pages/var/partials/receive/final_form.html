@@ -1,0 +1,73 @@
+
+    <div class ="form-row clearfix">
+
+        <div class ="form-row clearfix">
+            <h4>DOCUMENTS ACCOMPANYING THE SHIPMENT & STATUS OF SHIPPING INDICATORS</h4>
+
+                <div class='span2'>
+                    <label> Packing list <br>  </label>
+                    <select class="form-control" ng-model="package.packing_list">
+                        <option value="Yes">Yes</option>
+                        <option value="No">No</option>
+                    </select>
+                </div>
+                <div class='span2'>
+                    <label> Release certificate<br>  </label>
+                    <select class="form-control" ng-model="package.release_certificate">
+                        <option value="Yes">Yes</option>
+                        <option value="No">No</option>
+                    </select>
+                </div>
+                <div class='span2'>
+                    <label> Invoice <br>  </label>
+                    <select class="form-control" ng-model="package.invoice">
+                        <option value="Yes">Yes</option>
+                        <option value="No">No</option>
+                    </select>
+                </div>
+                <div class='span2'>
+                    <label> Airway bill <br>  </label>
+                    <select class="form-control" ng-model="package.airway_bill">
+                        <option value="Yes">Yes</option>
+                        <option value="No">No</option>
+                    </select>
+                </div>
+            <div class='span2'>
+                    <label> All labels available <br>  </label>
+                    <select class="form-control" ng-model="package.labels">
+                        <option value="Yes">Yes</option>
+                        <option value="No">No</option>
+                    </select>
+                </div>
+                <div class='span2'>
+                    <label> Coolant type <br>   </label>
+                    <select class="form-control" ng-model="package.collant_type">
+                        <option value="Dry Ice">Dry ice</option>
+                        <option value="Icepacks">Icepacks</option>
+                        <option value="No Coolant">No coolant</option>
+                    </select>
+                </div>
+                <div class='span2'>
+                    <label> Temperature monitors <br>  </label>
+                        <select class="form-control" ng-model="package.temp_monitor">
+                            <option value="VVM">VVM</option>
+                            <option value="Cold-Chain Card">Cold-chain card</option>
+                            <option value="Electronic Device">Electronic device</option>
+                        </select>
+                </div>
+            <div class='span12'>
+                    <label> Comments <br>  </label>
+                        <textarea rows="3" cols="10" ng-model="package.comments"></textarea>
+                </div>
+        </div>
+
+        <div class='span12 form-group text-center'>
+            <input type="button" class="btn btn-primary" value="save" ng-click="saveVAR()">
+            <input type="submit" class="btn btn-info" value="Preview Report" ng-click="displaySummary()" ng-if="!showReport">
+            <input type="submit" class="btn btn-info" value="Hide Report" ng-click="hideSummary()" ng-if="showReport">
+            <button class="btn btn-xs btn-warning" ng-click="cancelPackageProcessing()">Cancel</button>
+        </div>
+        <h5 style="text-align: center" ng-if="doneSaving"> <img src ="/public/images/ajax-loader.gif"> Saving items Information </h5>
+
+
+    </div>

@@ -1,0 +1,149 @@
+<!--
+  ~ Electronic Logistics Management Information System (eLMIS) is a supply chain management system for health commodities in a developing country setting.
+  ~
+  ~ Copyright (C) 2015  John Snow, Inc (JSI). This program was produced for the U.S. Agency for International Development (USAID). It was prepared under the USAID | DELIVER PROJECT, Task Order 4.
+  ~
+  ~ This program is free software: you can redistribute it and/or modify it under the terms of the GNU Affero General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
+  ~
+  ~ This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Affero General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU Affero General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
+  -->
+
+<div class="rnr-table">
+
+  <h2><span openlmis-message="label.vaccine.adverse.effect"></span></h2>
+
+  <div class="clearfix padding2px"></div>
+  <div ng-show="report.adverseEffectLineItems.length > 0">
+    <table class="table table-bordered">
+      <thead>
+      <tr class="text-row">
+        <th><span openlmis-message="label.vaccine.adverse.effect.product"></span></th>
+        <th><span openlmis-message="label.vaccine.adverse.effect.date"></span></th>
+        <th><span openlmis-message="label.vaccine.adverse.effect.manufacturer"></span></th>
+        <th><span openlmis-message="label.vaccine.adverse.effect.batch"></span></th>
+        <th><span openlmis-message="label.vaccine.adverse.effect.expiry.date"></span></th>
+        <th><span openlmis-message="label.vaccine.adverse.effect.cases"></span></th>
+        <th><span openlmis-message="label.vaccine.adverse.effect.investigation"></span></th>
+        <th><span openlmis-message="label.vaccine.adverse.effect.notes"></span></th>
+        <th></th>
+      </tr>
+      </thead>
+      <tr ng-repeat="effect in report.adverseEffectLineItems">
+        <td style="height: 35px" class="cell-input"><span class="cell-text">{{effect.productName}}</span></td>
+        <td style="height: 35px" class="cell-input"><span
+          class="cell-text">{{effect.date | date : 'dd MMM, yyyy'}}</span></td>
+        <td class="cell-input cell-text"><span class="cell-text">{{effect.manufacturer}}</span></td>
+        <td class="cell-input cell-text"><span class="cell-text">{{effect.batch}}</span></td>
+        <td class="cell-input cell-text"><span class="cell-text">{{effect.expiry | date : 'MMM, yyyy'}}</span></td>
+        <td class="number cell-input" style="text-align: right;"><span
+          class="cell-text">{{effect.cases | number: 0}}</span></td>
+        <td class="cell-input cell-text" style="text-align: center;">
+        <span class="cell-text" ng-show="effect.isInvestigated"
+              openlmis-message="label.vaccine.adverse.effect.investigated.yes">
+        </span>
+        <span class="cell-text" ng-show="!effect.isInvestigated"
+              openlmis-message="label.vaccine.adverse.effect.investigated.no">
+        </span>
+        </td>
+        <td class="cell-input cell-text"><span class="cell-text">{{effect.notes}}</span></td>
+        <td class="cell-input cell-text">
+          <div class="cell-text">
+            <a href="" ng-click="showAdverseEffect(effect, true)"><span openlmis-message="link.view"></span></a>
+          </div>
+        </td>
+      </tr>
+
+    </table>
+  </div>
+  <div ng-show="report.adverseEffectLineItems.length == 0">
+    <span openlmis-message="label.vaccine.adverse.effect.none.found"></span>
+  </div>
+</div>
+
+<div id="adverseEffectModal" modal="adverseEffectModal" close="closeAdverseEffectsModal()"
+     options="{ backdrop: 'static', escape: false}">
+  <div class="modal-header">
+    <h3>
+      <span openlmis-message="label.vaccine.adverse.effect.add.edit"></span>
+    </h3>
+  </div>
+  <div class="modal-body app-form">
+    <div>
+      <form name="adverseEffectForm" id="adverseEffectForm">
+        <div class="row-fluid">
+          <div class="span6">
+            <label for="product">
+              <span openlmis-message="label.product"></span>
+              <span class="label-required"> *</span>
+            </label>
+            <select disabled required id="product"
+                    ng-model="currentEffect.productId">
+              <option ng-repeat="product in report.logisticsLineItems" value="{{product.productId}}">
+                {{product.productName}}
+              </option>
+            </select>
+          </div>
+          <div class="span6">
+            <label for="date">
+              <span openlmis-message="label.vaccine.adverse.effect.date"></span>
+              <span class="label-required"> *</span>
+            </label>
+            <input disabled id="date" required type="date" ng-model="currentEffect.date"/>
+          </div>
+        </div>
+        <div class="row-fluid">
+          <div class="span6">
+            <label for="cases">
+              <span openlmis-message="label.vaccine.adverse.effect.cases"></span>
+              <span class="label-required"> *</span>
+            </label>
+            <input disabled id="cases" numeric-validator="positiveInteger" maxlength="8" required type="text"
+                   ng-model="currentEffect.cases"/>
+          </div>
+        </div>
+        <div class="row-fluid">
+          <div class="span6">
+            <label for="manufacturer">
+              <span openlmis-message="label.vaccine.adverse.effect.manufacturer"></span>
+              <span class="label-required"> *</span>
+            </label>
+            <input disabled type="text" id="manufacturer" required ng-model="currentEffect.manufacturer"/>
+          </div>
+          <div class="span6">
+            <label><span openlmis-message="label.vaccine.adverse.effect.batch"></span></label>
+            <input disabled type="text" ng-model="currentEffect.batch"/>
+          </div>
+
+        </div>
+        <div class="row-fluid">
+          <div class="span6">
+            <label>
+              <span openlmis-message="label.vaccine.adverse.effect.expiry.date"></span>
+              <span class="label-required"> *</span>
+            </label>
+
+            <input disabled required type="date" ng-model="currentEffect.expiry"/>
+          </div>
+          <div class="span6">
+            <label><span openlmis-message="label.vaccine.adverse.effect.investigation.yes.no"></span></label>
+            <input disabled type="checkbox" ng-model="currentEffect.isInvestigated"/>
+          </div>
+        </div>
+        <div class="row-fluid">
+          <div class="span12">
+            <label><span openlmis-message="label.vaccine.adverse.effect.notes"></span></label>
+            <textarea class="span12" disabled type="text" ng-model="currentEffect.notes"></textarea>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+  <div class="modal-footer">
+    <input type="button" href="" class="btn btn-primary"
+           ng-click="closeAdverseEffectsModal()"
+           openlmis-message="button.cancel"/>
+  </div>
+</div>
+</div>

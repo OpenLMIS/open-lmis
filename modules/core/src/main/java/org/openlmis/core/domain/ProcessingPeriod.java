@@ -13,9 +13,9 @@ package org.openlmis.core.domain;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
-import org.codehaus.jackson.annotate.JsonIgnoreProperties;
-import org.codehaus.jackson.map.annotate.JsonDeserialize;
-import org.codehaus.jackson.map.annotate.JsonSerialize;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import org.joda.time.DateTime;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.core.serializer.DateDeserializer;
@@ -25,7 +25,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import static org.apache.commons.lang.StringUtils.isBlank;
-import static org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion.NON_EMPTY;
+import static com.fasterxml.jackson.databind.annotation.JsonSerialize.Inclusion.NON_EMPTY;
 import static org.joda.time.format.DateTimeFormat.forPattern;
 
 /**
@@ -97,6 +97,11 @@ public class ProcessingPeriod extends BaseModel {
   public String getStringEndDate() throws ParseException {
     SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd/MM/yyyy");
     return simpleDateFormat.format(this.endDate);
+  }
+
+  public String getStringYear(){
+    SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy");
+    return simpleDateFormat.format(this.startDate);
   }
 
   public String getNextStartDate() {

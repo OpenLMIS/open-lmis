@@ -1,0 +1,123 @@
+<!--
+  ~ Electronic Logistics Management Information System (eLMIS) is a supply chain management system for health commodities in a developing country setting.
+  ~
+  ~ Copyright (C) 2015  John Snow, Inc (JSI). This program was produced for the U.S. Agency for International Development (USAID). It was prepared under the USAID | DELIVER PROJECT, Task Order 4.
+  ~
+  ~ This program is free software: you can redistribute it and/or modify it under the terms of the GNU Affero General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
+  ~
+  ~ This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Affero General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU Affero General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
+  -->
+
+<div id="help-content-container" xmlns="http://www.w3.org/1999/html" tab-scroll>
+    <div><h2 id="helpTopicTreeViewHeader" openlmis-message="label.help.helptopic.helpTopicTreeView"></h2></div>
+
+
+    <div class="app-form">
+
+        <div class="form-group">
+
+            <h3 openlmis-message="header.help.helptopic.selectedTopic"></h3>
+
+            <div class="form-row clearfix">
+                <div class="form-cell">
+                    <label for="name" openlmis-message="label.help.helptopic.name"><span class="label-required">*</span></label>
+
+                    <div class="form-field">
+                        <input ng-model="selectedHelpTopic.name" disabled="true" name="name" id="name" type="text"
+                               maxlength="50" ng-required="true"/>
+        <span class="field-error" ng-show="facilityForm.code.$error.required && showError"
+              openlmis-message="missing.value">
+
+        </span>
+                    </div>
+                </div>
+
+                <div class="form-cell">
+                    <label for="level" openlmis-message="label.help.helptopic.level"></label>
+
+                    <div class="form-field">
+                        <input disabled="true" ng-model="selectedHelpTopic.level" id="level" type="text"
+                               maxlength="30"/>
+                    </div>
+                </div>
+            </div>
+
+
+        </div>
+
+    </div>
+    <div id="help-content" ng-model="showMinDir" ng-value="false">
+        <div id="tree-table-action-link">
+            <span openlmis-message="link.help.helptopic.helpDocumentList"></span>
+            <a class="pull-right" href="#uploadDocument" id="country-add-new"
+               openlmis-message="link.help.helptopic.attachNewFile"></a>
+        </div>
+        <div id="help-content-table">
+
+            <div>
+                <table class="table table-striped table-bordered" ng-table="tableParams">
+                    <thead>
+                    <tr class="gradient-header">
+
+                        <th>Url
+                        </th>
+
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr ng-repeat="hd in helpDocumentList ">
+                        <td>
+                            <div>{{hd.fileUrl}}</div>
+                        </td>
+
+
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div id="tree-action-link" class="pull-left control-accordion">
+            <a ng-click="my_tree.expand_all()" href="javascript:void(0);"
+               openlmis-message="link.help.helptopic.expandAll"></a>|
+            <a ng-click="my_tree.collapse_all()" href="javascript:void(0);"
+               openlmis-message="link.help.helptopic.collapseAll"></a>
+        </div>
+        <div id="help-content-tree">
+
+            <div>
+                <tree-grid tree-data="tree_data" tree-control="my_tree" col-defs="col_defs"
+                           expand-on="expanding_property"
+                           on-select="my_tree_handler(branch)" expand-level="2"
+                           icon-leaf="glyphicon glyphicon-globe"></tree-grid>
+            </div>
+
+            <div form-toolbar id="action_buttons" class="action-buttons">
+                <div class="form-cell button-row">
+                    <input ng-click="add_help_topic()" id="addTopic" type="button" id="add-topic-button"
+                           class="btn btn-primary save-button"
+                           openlmis-message="button.help.helptopic.addNewTopic"/>
+                    <input ng-click="editHelpTopic()" id="editTopic" type="button" id="edit-topic-button"
+                           class="btn btn-primary save-button"
+                           openlmis-message="button.help.helptopic.editTopic"/>
+                    <input ng-click="add_help_content()" id="AddHelpContent" type="button" id="add-content-button"
+                           class="btn btn-primary save-button"
+                           openlmis-message="button.help.helptopic.addNewContent"/>
+
+                    <input id="disableButton" type="button" class="btn btn-danger delete-button"
+                           ng-show="facility.id != null && facility.enabled"
+                           ng-click="showConfirmFacilityDisableWindow()" openlmis-message="button.disable"/>
+                </div>
+
+
+                <div class="toolbar-error" id="saveErrorMsgDiv">
+                    <span openlmis-message="error" ng-show="error"></span>&nbsp;
+                    <span ng-show="errorProgram" ng-bind="errorProgram"></span>
+                </div>
+                <div class="toolbar-success" id="saveSuccessMsgDiv" openlmis-message="message" ng-show="message"></div>
+            </div>
+
+        </div>
+
+    </div>

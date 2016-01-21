@@ -1,0 +1,69 @@
+<!doctype html>
+<!--
+  ~ This program is part of the OpenLMIS logistics management information system platform software.
+  ~ Copyright © 2013 VillageReach
+  ~
+  ~ This program is free software: you can redistribute it and/or modify it under the terms of the GNU Affero General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
+  ~  
+  ~ This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Affero General Public License for more details.
+  ~ You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org. 
+  -->
+
+<html lang="en" ng-app="openlmis" xmlns="http://www.w3.org/1999/html">
+<head>
+  <meta charset="utf-8">
+  <title openlmis-message="app.title"></title>
+  <link rel="icon" href="/favicon.ico" type="image/x-icon"/>
+  <script src="/public/lib/jquery/jquery-1.8.2.min.js"></script>
+  <script src="/public/lib/angular/angular.min.js"></script>
+  <script src="/public/lib/angular/angular-cookies.min.js"></script>
+  <script src="/public/lib/angular/angular-resource.min.js"></script>
+  <script src="/public/lib/bootstrap/js/bootstrap.min.js"></script>
+  <link rel="stylesheet" href="/public/lib/bootstrap/css/bootstrap.min.css">
+  <script src="/public/lib/angular-ui/angular-ui.min.js"></script>
+  <link rel="stylesheet" href="/public/lib/angular-ui/angular-ui.min.css">
+
+  <script src="/public/js/shared/app.js"></script>
+  <!-- App directives -->
+  <script src="/public/js/shared/directives/form-toolbar.js"></script>
+  <script src="/public/js/shared/directives/openlmis-message.js"></script>
+  <script src="/public/js/shared/directives/openlmis-pagination.js"></script>
+  <script src="/public/js/shared/directives/placeholder.js"></script>
+  <script src="/public/js/shared/directives/ui-nav.js"></script>
+  <script src="/public/js/shared/directives/tab-scroll.js"></script>
+
+  <link rel="stylesheet" href="/public/css/app.css">
+  <script src="/public/js/shared/services/services.js"></script>
+  <script src="/public/js/shared/controller/locale-controller.js"></script>
+  <script type="text/javascript" src="/public/js/shared/services/message-service.js"></script>
+  <script src="/public/js/shared/controller/login-controller.js"></script>
+  <script src="/public/js/shared/controller/locale-controller.js"></script>
+  <script src="/public/js/shared/controller/header-controller.js"></script>
+  <script src="/public/js/shared/controller/navigation-controller.js"></script>
+  <script src="/public/lib/localstorage/localStorage.js"></script>
+  <script src="/public/js/shared/localStorageKeys.js"></script>
+
+  <!--[if IE 9]>
+  <link rel="stylesheet" href="/public/css/ie9.css"/>
+  <![endif]-->
+
+</head>
+<!-- TODO: onunload clears cache for safari. It is a hack. Find better alternative -->
+<body class="home-background" onunload="">
+<ng-include src="'/public/pages/header.html'"></ng-include>
+<ng-include src="'/public/pages/navigation.html'"></ng-include>
+<div class="home-content">
+    <div>
+        Version: <a href="http://build.elmis-dev.org/jenkins/job/open-lmis/{version}/" >{version}</a>
+    </div>
+    <div>
+        Release Notes : <a href="http://build.elmis-dev.org/jenkins/job/open-lmis/changes" >All Versions</a>
+    </div>
+
+</div>
+
+</body>
+</html>
+
+
+-

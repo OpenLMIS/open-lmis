@@ -197,8 +197,8 @@ public class FacilityPage extends Page {
   @FindBy(how = ID, using = "calculated-isa0")
   private static WebElement calculatedIsaTextField = null;
 
-  @FindBy(how = ID, using = "use-calculated-button0")
-  private static WebElement useCalculatedIsaButton = null;
+  @FindBy(how = ID, using = "override-isa-values-button0")
+  private static WebElement overrideISAValuesButton = null;
 
   @FindBy(how = ID, using = "isaDoneButton")
   private static WebElement doneIsaButton = null;
@@ -272,6 +272,7 @@ public class FacilityPage extends Page {
   public String enterValuesInFacility(String facilityCodePrefix, String facilityNamePrefix, String program,
                                       String geoZone, String facilityTypeValue, String operatedByValue,
                                       String population, boolean push) {
+
     Date dObj = new Date();
     SimpleDateFormat formatter_date_time = new SimpleDateFormat("yyyyMMdd-hhmmss");
     String date_time = formatter_date_time.format(dObj);
@@ -294,10 +295,15 @@ public class FacilityPage extends Page {
     sendKeys(address1, "Address1");
     sendKeys(address2, "Address2");
 
-    testWebDriver.selectByVisibleText(geographicZone, geoZone);
+
     testWebDriver.selectByVisibleText(facilityType, facilityTypeValue);
 
+    testWebDriver.scrollToElement(geographicZone);
     testWebDriver.sleep(500);
+
+    testWebDriver.selectByVisibleText(geographicZone, geoZone);
+    testWebDriver.sleep(500);
+
     goLiveDate.click();
     testWebDriver.sleep(500);
     goLiveDateCalender.click();
@@ -306,22 +312,26 @@ public class FacilityPage extends Page {
     testWebDriver.sleep(500);
     goDownDateCalender.click();
 
-    testWebDriver.handleScrollByPixels(0, 1000);
     addProgram(program, push);
 
+    testWebDriver.scrollToElement(altitude);
+    testWebDriver.sleep(500);
     sendKeys(catchmentPopulation, population);
     sendKeys(latitude, "-555.5555");
     sendKeys(longitude, "444.4444");
     sendKeys(altitude, "4545.4545");
 
+    testWebDriver.scrollToElement(coldStorageGrossCapacity);
+    testWebDriver.sleep(500);
     sendKeys(coldStorageGrossCapacity, "3434.3434");
     sendKeys(coldStorageNetCapacity, "3535.3535");
     coldStorageNetCapacity.sendKeys(Keys.TAB);
 
+
     hasElectricityTrue.click();
     isOnlineTrue.click();
     testWebDriver.handleScrollByPixels(0, 2000);
-
+    testWebDriver.sleep(500);
     hasElectronicSccTrue.click();
     hasElectronicDarTrue.click();
     facilitySuppliesOthersYes.click();
@@ -404,8 +414,8 @@ public class FacilityPage extends Page {
   }
 
   public void clickUseCalculatedIsaButton() {
-    testWebDriver.waitForElementToAppear(useCalculatedIsaButton);
-    useCalculatedIsaButton.click();
+    testWebDriver.waitForElementToAppear(overrideISAValuesButton);
+    overrideISAValuesButton.click();
   }
 
   public void verifyOverriddenIsa(String expectedIsa) {

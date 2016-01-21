@@ -24,7 +24,7 @@ import org.openlmis.core.service.AllocationPermissionService;
 import org.openlmis.core.service.DeliveryZoneProgramScheduleService;
 import org.openlmis.db.categories.UnitTests;
 import org.openlmis.distribution.service.DistributionService;
-import org.openlmis.web.response.OpenLmisResponse;
+import org.openlmis.core.web.OpenLmisResponse;
 import org.springframework.http.ResponseEntity;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpSession;
@@ -38,7 +38,7 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-import static org.openlmis.web.controller.BaseController.FORBIDDEN_EXCEPTION;
+import static org.openlmis.core.web.controller.BaseController.FORBIDDEN_EXCEPTION;
 import static org.springframework.http.HttpStatus.UNAUTHORIZED;
 
 @Category(UnitTests.class)

@@ -1,0 +1,62 @@
+<!--
+  ~ Electronic Logistics Management Information System (eLMIS) is a supply chain management system for health commodities in a developing country setting.
+  ~
+  ~ Copyright (C) 2015  John Snow, Inc (JSI). This program was produced for the U.S. Agency for International Development (USAID). It was prepared under the USAID | DELIVER PROJECT, Task Order 4.
+  ~
+  ~ This program is free software: you can redistribute it and/or modify it under the terms of the GNU Affero General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
+  ~
+  ~ This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Affero General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU Affero General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
+  -->
+
+<div tab-scroll>
+    <form ng-submit="saveSettings()" id="setting-form" name="settingForm" novalidate>
+        <div ng-hide="settings" openlmis-message="msg.loading"></div>
+        <div ng-show="settings">
+            <h2>
+                <span>Configuration Settings</span>
+            </h2>
+          <div class="rnr-tabs clearfix">
+            <ul>
+              <li ng-class="{'selected': visibleTab == grp }" ng-repeat="(grp, things) in grouped_settings">
+                <a href="" ng-click="changeTab(grp)">{{grp}}</a>
+              </li>
+            </ul>
+          </div>
+            <div ng-repeat="(grp, things) in grouped_settings" heading="{{grp}}">
+              <div ng-show="visibleTab == grp" class="tab-content">
+                      <div ng-repeat="setting in things">
+                          <h3 style="padding-left: -30px;" ng-show="$index == 0 || ($index > 0 && grouped_settings[$index].groupName != grouped_settings[$index - 1].groupName)">{{setting.groupName}}</h3>
+                          <div class="control-group">
+                              <div class="row">
+                                  <div class="span4 col-desc">
+                                     {{setting.name}}
+                                  </div>
+                                  <div class="span8">
+                                      <setting  ng-model="setting"></setting>
+                                  </div>
+                              </div>
+                          </div>
+                      </div>
+              </div>
+            </div>
+          </div>
+
+
+        <div form-toolbar id="action_buttons" class="action-buttons">
+            <div class="form-cell button-row">
+                <input ng-disabled="saveDisabled" type="submit" id="save-button" class="btn btn-primary save-button"
+                       openlmis-message="button.save"/>
+            </div>
+
+
+            <div class="toolbar-error" id="saveErrorMsgDiv">
+                <span openlmis-message="error" ng-show="error"></span>&nbsp;
+                <span ng-show="errorProgram" ng-bind="errorProgram"></span>
+            </div>
+            <div class="toolbar-success" id="saveSuccessMsgDiv" openlmis-message="message" ng-show="message"></div>
+        </div>
+    </form>
+
+</div>

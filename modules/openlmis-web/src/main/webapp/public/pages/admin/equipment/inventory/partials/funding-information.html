@@ -1,0 +1,77 @@
+<!--
+  ~ Electronic Logistics Management Information System (eLMIS) is a supply chain management system for health commodities in a developing country setting.
+  ~
+  ~ Copyright (C) 2015  John Snow, Inc (JSI). This program was produced for the U.S. Agency for International Development (USAID). It was prepared under the USAID | DELIVER PROJECT, Task Order 4.
+  ~
+  ~ This program is free software: you can redistribute it and/or modify it under the terms of the GNU Affero General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
+  ~
+  ~ This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Affero General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU Affero General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
+  -->
+
+<div class="form-body">
+  <div class="form-row clearfix">
+    <div class="form-cell">
+      <label for="donor">
+        <span openlmis-message="label.equipment.primary.donor"></span>
+      </label>
+
+      <div class="form-field">
+        <select style="width: 250px;" ui-select2 ng-model="inventory.primaryDonorId" id="donor"
+                name="donor">
+          <option ng-repeat="type in donors" ng-selected="type.id == inventory.primaryDonorId"
+                  value="{{type.id}}">{{type.shortName}}
+          </option>
+        </select>
+              <span class="field-error" ng-show="inventoryForm.donor.$error.required && showError"
+                    openlmis-message="missing.value"></span>
+      </div>
+    </div>
+
+    <div class="form-cell">
+      <label for="sourceOfFund">
+        <span openlmis-message="label.equipment.source.of.fund"></span>
+      </label>
+
+      <div class="form-field">
+        <input ng-model="inventory.sourceOfFund" name="sourceOfFund" id="sourceOfFund" type="text" maxlength="50"
+          />
+              <span class="field-error" ng-show="inventoryForm.sourceOfFund.$error.required && showError"
+                    openlmis-message="missing.value"></span>
+      </div>
+    </div>
+  </div>
+  <div class="form-row clearfix">
+
+    <div class="form-cell">
+      <label for="purchasePrice">
+        <span openlmis-message="label.equipment.purchase.price"></span>
+      </label>
+
+      <div class="form-field">
+        <input ng-model="inventory.purchasePrice" name="purchasePrice" id="purchasePrice" type="number"
+               maxlength="50" min="0"/>
+              <span class="field-error" ng-show="inventoryForm.purchasePrice.$error.required && showError"
+                    openlmis-message="missing.value"></span>
+              <span class="field-error"
+                    ng-show="inventoryForm.purchasePrice.$error.min && !inventoryForm.purchasePrice.$error.required && showError">Enter a valid purchase price</span>
+      </div>
+    </div>
+
+    <div class="form-cell">
+      <label for="year">
+        <span openlmis-message="label.equipment.year.of.installation"></span>
+      </label>
+
+      <div class="form-field">
+        <input ng-model="inventory.yearOfInstallation" name="year" id="year" type="number" min="1950"
+               max="{{max_year}}"/>
+              <span class="field-error" ng-show="inventoryForm.year.$error.required && showError"
+                    openlmis-message="missing.value"></span>
+              <span class="field-error"
+                    ng-show="(inventoryForm.year.$error.min || inventoryForm.year.$error.max) && showError">Enter a valid Year</span>
+      </div>
+    </div>
+  </div>
+</div>

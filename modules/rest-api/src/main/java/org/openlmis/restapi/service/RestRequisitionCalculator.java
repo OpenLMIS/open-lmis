@@ -53,10 +53,31 @@ public class RestRequisitionCalculator {
       searchCriteria.setProgramId(reportingProgram.getId());
       searchCriteria.setFacilityId(reportingFacility.getId());
 
-      if (!requisitionService.getCurrentPeriod(searchCriteria).getId().equals
-        (requisitionService.getPeriodForInitiating(reportingFacility, reportingProgram).getId())) {
+      if (requisitionService.getCurrentPeriod(searchCriteria) != null && !requisitionService.getCurrentPeriod(searchCriteria).getId().equals
+          (requisitionService.getPeriodForInitiating(reportingFacility, reportingProgram).getId())) {
         throw new DataException("error.rnr.previous.not.filled");
       }
+    }
+  }
+
+  public void validateCustomPeriod(Facility reportingFacility, Program reportingProgram, ProcessingPeriod period, Long userId) {
+
+    if (period == null) {
+      throw new DataException("error.rnr.period.provided.is.invalid");
+    }
+
+    RequisitionSearchCriteria searchCriteria = new RequisitionSearchCriteria();
+    searchCriteria.setProgramId(reportingProgram.getId());
+    searchCriteria.setFacilityId(reportingFacility.getId());
+
+    List<ProcessingPeriod> periods = new ArrayList<ProcessingPeriod>();
+    periods.add(period);
+
+    searchCriteria.setWithoutLineItems(true);
+    searchCriteria.setUserId(userId);
+    List<Rnr> list = requisitionService.getRequisitionsFor(searchCriteria, periods);
+    if (list != null && !list.isEmpty() && !list.get(0).preAuthorize()) {
+      throw new DataException("error.rnr.already.submitted.for.this.period");
     }
   }
 
@@ -68,11 +89,11 @@ public class RestRequisitionCalculator {
     List<String> invalidProductCodes = new ArrayList<>();
     for (final RnrLineItem product : products) {
       RnrLineItem correspondingLineItem = savedRequisition.findCorrespondingLineItem(product);
-      if (correspondingLineItem == null || correspondingLineItem.getSkipped()) {
+      if (correspondingLineItem == null) {
         invalidProductCodes.add(product.getProductCode());
       }
     }
-    if (invalidProductCodes.size() != 0) {
+    if (!invalidProductCodes.isEmpty()) {
       throw new DataException("invalid.product.codes", invalidProductCodes.toString());
     }
   }
@@ -83,7 +104,7 @@ public class RestRequisitionCalculator {
     List<ProcessingPeriod> nPreviousPeriods = processingScheduleService.getNPreviousPeriodsInDescOrder(requisition.getPeriod(), 2);
     Date trackingDate = requisition.getPeriod().getStartDate();
 
-    if (nPreviousPeriods.size() != 0) {
+    if (!nPreviousPeriods.isEmpty()) {
       trackingDate = M >= 3 ? nPreviousPeriods.get(0).getStartDate() : nPreviousPeriods.get(nPreviousPeriods.size() - 1).getStartDate();
     }
 
@@ -100,7 +121,7 @@ public class RestRequisitionCalculator {
 
     List<OrderPODLineItem> nOrderPodLineItems = podService.getNPreviousOrderPodLineItems(rnrLineItem.getProductCode(), requisition, 1, trackingDate);
 
-    Integer quantityReceived = nOrderPodLineItems.size() != 0 ? nOrderPodLineItems.get(0).getQuantityReceived() : 0;
+    Integer quantityReceived = !nOrderPodLineItems.isEmpty() ? nOrderPodLineItems.get(0).getQuantityReceived() : 0;
 
     rnrLineItem.setQuantityReceived(quantityReceived);
   }
@@ -108,7 +129,7 @@ public class RestRequisitionCalculator {
   private void setBeginningBalance(RnrLineItem rnrLineItem, Rnr requisition, Date trackingDate) {
     List<RnrLineItem> nRnrLineItems = requisitionService.getNRnrLineItems(rnrLineItem.getProductCode(), requisition, 1, trackingDate);
 
-    if (nRnrLineItems.size() != 0) {
+    if (!nRnrLineItems.isEmpty()) {
       if (rnrLineItem.getBeginningBalance() != null) {
         rnrLineItem.setPreviousStockInHand(nRnrLineItems.get(0).getStockInHand());
       } else {

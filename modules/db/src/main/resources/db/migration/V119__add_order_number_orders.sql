@@ -9,4 +9,4 @@
 --
 
 ALTER TABLE orders
-    ADD COLUMN orderNumber VARCHAR(100) NOT NULL;
+    ADD COLUMN orderNumber VARCHAR(100) NOT NULL DEFAULT 0;

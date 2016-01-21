@@ -60,7 +60,7 @@ public class UploadPage extends Page {
   }
 
   public void uploadFile(String fileName) {
-    uploadFilePath = this.getClass().getClassLoader().getResource(fileName).getFile();
+    uploadFilePath = this.getClass().getClassLoader().getResource(fileName).toExternalForm();//.getFile();
     setCsvPath.sendKeys(uploadFilePath);
     uploadButton.click();
     testWebDriver.sleep(500);

@@ -12,7 +12,7 @@
   <div id="programAssociationTable" class="prog-role-grid">
   <div class="fluid-grid">
     <div class="row-fluid fluid-grid-header">
-      <div class="span3">
+      <div class="span2">
         <div id="programHeader" class="fluid-grid-cell" openlmis-message="program.header"></div>
       </div>
       <div class="span3">
@@ -21,14 +21,20 @@
       <div class="span1">
         <div id="activeHeader" class="fluid-grid-cell" openlmis-message="label.active"></div>
       </div>
+      <div class="span1">
+        <div id="fullSupplyHeader" class="fluid-grid-cell" openlmis-message="label.product.fullSupply"></div>
+      </div>
       <div class="span3">
         <div class="row-fluid">
-          <div class="span6">
+          <div class="span4">
             <div id="displayOrderHeader" class="fluid-grid-cell" openlmis-message="label.display.order"></div>
           </div>
-          <div class="span6">
-            <div id="dosesPerMonthHeader" class="fluid-grid-cell" openlmis-message="label.doses.per.month"></div>
-          </div>
+            <div class="span4">
+                <div id="dosesPerMonthHeader" class="fluid-grid-cell" openlmis-message="label.doses.per.month"></div>
+            </div>
+            <div class="span4">
+                <div id="dosesPerMonthHeader" class="fluid-grid-cell" openlmis-message="label.price.per.pack"></div>
+            </div>
         </div>
       </div>
       <div class="span2">
@@ -37,73 +43,101 @@
     </div>
 
     <div class="row-fluid" ng-repeat="programProduct in programProducts" tab-scroll>
-      <div class="span3">
-        <div class="fluid-grid-cell">
-          <span id="programSelected{{$index}}" ng-bind="programProduct.program.name"></span>
-        </div>
-      </div>
-
-      <div class="span3">
-        <div class="fluid-grid-cell">
-          <div ng-show="!programProduct.underEdit">
-            <span id="categorySelected{{$index}}" ng-bind="programProduct.productCategory.name"></span>
-          </div>
-          <div ng-show="programProduct.underEdit">
-            <select class="select2-container bottom-spacer span10"
-                    id="category{{$index}}"
-                    ng-change="updateCategory($index)"
-                    ng-options="category.id as category.name for category in categories | orderBy: 'name'"
-                    ng-model="programProduct.productCategory.id">
-              <option value="" openlmis-message="placeholder.select.category"></option>
-            </select>
-          </div>
-        </div>
-      </div>
-
-      <div class="span1">
-        <div class="fluid-grid-cell">
-          <i id="activeIcon{{$index}}" class="icon icon-ok"
-             ng-show="programProduct.active && !programProduct.underEdit"></i>
-          <input type="checkbox" id="active{{$index}}" ng-model="programProduct.active"
-                 ng-show="programProduct.underEdit"/>
-        </div>
-      </div>
-
-      <div class="span3">
-        <div class="row-fluid">
-          <div class="span6">
+        <div class="span2">
             <div class="fluid-grid-cell">
-              <div id="displayOrderLabel{{$index}}" ng-bind="programProduct.displayOrder" class="right-justified"
-                    ng-show="!programProduct.underEdit"></div>
+                <span id="programSelected{{$index}}" ng-bind="programProduct.program.name"></span>
+            </div>
+        </div>
 
-              <div class="position-relative">
-                <input id="displayOrderInput{{$index}}" type="text" ng-model="programProduct.displayOrder"
-                       name="displayOrder{{$index}}" numeric-validator="positiveInteger" maxlength="10"
-                       class="right-justified" ng-show="programProduct.underEdit"/>
+        <div class="span3">
+            <div class="fluid-grid-cell">
+                <div ng-show="!programProduct.underEdit">
+                    <span id="categorySelected{{$index}}" ng-bind="programProduct.productCategory.name"></span>
+                </div>
+                <div ng-show="programProduct.underEdit">
+                    <select class="select2-container bottom-spacer span10"
+                            id="category{{$index}}"
+                            ng-change="updateCategory($index)"
+                            ng-options="category.id as category.name for category in categories | orderBy: 'name'"
+                            ng-model="programProduct.productCategory.id">
+                        <option value="" openlmis-message="placeholder.select.category"></option>
+                    </select>
+                </div>
+            </div>
+        </div>
+
+        <div class="span1">
+            <div class="fluid-grid-cell">
+                <i id="activeIcon{{$index}}" class="icon icon-ok"
+                   ng-show="programProduct.active && !programProduct.underEdit"></i>
+                <input type="checkbox" id="active{{$index}}" ng-model="programProduct.active"
+                       ng-show="programProduct.underEdit"/>
+            </div>
+        </div>
+        <div class="span1">
+            <div class="fluid-grid-cell">
+                <i id="fullSupplyIcon{{$index}}" class="icon icon-ok"
+                   ng-show="programProduct.fullSupply && !programProduct.underEdit"></i>
+                <input type="checkbox" id="fullSupply{{$index}}" ng-model="programProduct.fullSupply"
+                       ng-show="programProduct.underEdit"/>
+            </div>
+        </div>
+
+        <div class="span3">
+            <div class="row-fluid">
+                <div class="span4">
+                    <div class="fluid-grid-cell">
+                        <div id="displayOrderLabel{{$index}}" ng-bind="programProduct.displayOrder" class="right-justified"
+                             ng-show="!programProduct.underEdit"></div>
+
+                        <div class="position-relative">
+                            <input id="displayOrderInput{{$index}}" type="text" ng-model="programProduct.displayOrder"
+                                   name="displayOrder{{$index}}" numeric-validator="positiveInteger" maxlength="10"
+                                   class="right-justified" ng-show="programProduct.underEdit"/>
                 <span class="rnr-form-error" style="display:none;" id="displayOrder{{$index}}"
                       openlmis-message="error.number.only"></span>
-              </div>
-            </div>
-          </div>
+                        </div>
+                    </div>
+                </div>
 
-          <div class="span6">
-            <div class="fluid-grid-cell">
-              <div id="dosesPerMonthLabel{{$index}}" ng-bind="programProduct.dosesPerMonth" class="right-justified"
-                    ng-show="!programProduct.underEdit"></div>
+                <div class="span4">
+                    <div class="fluid-grid-cell">
+                        <div id="dosesPerMonthLabel{{$index}}" ng-bind="programProduct.dosesPerMonth" class="right-justified"
+                             ng-show="!programProduct.underEdit"></div>
 
-              <div class="position-relative">
-                <input id="dosesPerMonthInput{{$index}}" type="text" ng-model="programProduct.dosesPerMonth"
-                       numeric-validator="positiveInteger" maxlength="10" name="dosesPerMonth{{$index}}"
-                       class="right-justified" ng-show="programProduct.underEdit"/>
+                        <div class="position-relative">
+                            <input id="dosesPerMonthInput{{$index}}" type="text" ng-model="programProduct.dosesPerMonth"
+                                   numeric-validator="positiveInteger" maxlength="10" name="dosesPerMonth{{$index}}"
+                                   class="right-justified" ng-show="programProduct.underEdit"/>
                 <span class="rnr-form-error" style="display:none;" id="dosesPerMonth{{$index}}"
                       openlmis-message="error.number.only"></span>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
+                        </div>
+                    </div>
+                </div>
 
-      <div class="span2">
+                <div class="span4">
+                    <div class="fluid-grid-cell">
+                        <div id="currentPriceLabel{{$index}}" ng-bind="programProduct.currentPrice" class="right-justified"
+                             ng-show="!programProduct.underEdit"></div>
+
+                        <div class="position-relative">
+                            <input id="currentPriceInput{{$index}}" type="text" ng-model="programProduct.currentPrice"
+                                     maxlength="10" name="currentPrice{{$index}}"
+                                   class="right-justified" ng-show="programProduct.underEdit"/>
+                <span class="rnr-form-error" style="display:none;" id="currentPrice{{$index}}"
+                      openlmis-message="error.number.only"></span>
+                        </div>
+                    </div>
+                </div>
+
+
+
+
+
+            </div>
+        </div>
+
+        <div class="span2">
         <span ng-show="!programProduct.underEdit">
           <input id="programProductEdit{{$index}}" type="button"
                  class="btn program-schedules-btn btn-small btn-primary pull-right"
@@ -122,11 +156,11 @@
                  ng-click="programProduct.underEdit = false;" ng-disabled="mandatoryFieldsNotFilled(programProduct)"
                  openlmis-message="button.done"/>
         </span>
-      </div>
+        </div>
     </div>
 
     <div class="row-fluid add-program-schedule" tab-scroll>
-      <div class="span3 fluid-grid-cell">
+      <div class="span2 fluid-grid-cell">
         <select class="select2-container span10" id="addProgramSelect"
                 ng-options="program as program.name for program in programs | orderBy: 'name'"
                 ng-model="newProgramProduct.program">
@@ -145,10 +179,13 @@
       <div class="span1 fluid-grid-cell">
         <input type="checkbox" id="activeAdd" ng-model="newProgramProduct.active" ng-false-value="false"/>
       </div>
+      <div class="span1 fluid-grid-cell">
+        <input type="checkbox" id="fullSupply" ng-model="newProgramProduct.fullSupply" ng-false-value="false"/>
+      </div>
 
       <div class="span3">
         <div class="row-fluid">
-          <div class="span6 fluid-grid-cell">
+          <div class="span4 fluid-grid-cell">
             <div class="position-relative">
               <input type="text" id="displayOrderAdd" ng-model="newProgramProduct.displayOrder"
                      class="right-justified"
@@ -158,7 +195,7 @@
             </div>
           </div>
 
-          <div class="span6 fluid-grid-cell">
+          <div class="span4 fluid-grid-cell">
             <div class="position-relative">
               <input type="text" id="dosesPerMonthAdd" ng-model="newProgramProduct.dosesPerMonth"
                      class="right-justified"
@@ -167,6 +204,16 @@
                     openlmis-message="error.number.only"></span>
             </div>
           </div>
+
+            <div class="span4 fluid-grid-cell">
+                <div class="position-relative">
+                    <input type="text" id="currentPriceAdd" ng-model="newProgramProduct.currentPrice"
+                           class="right-justified"
+                             maxlength="10" name="addCurrentPrice"/>
+              <span class="rnr-form-error" style="display:none;" id="addCurrentPrice"
+                    openlmis-message="error.number.only"></span>
+                </div>
+            </div>
         </div>
       </div>
 

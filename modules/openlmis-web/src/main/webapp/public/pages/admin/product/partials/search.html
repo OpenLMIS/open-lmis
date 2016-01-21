@@ -48,7 +48,7 @@
     <table id="programProductTable" class="table table-bordered search-list" ng-show="showResults">
       <thead>
       <tr class="gradient-header resultCountHeader">
-        <th colspan="10">
+        <th colspan="11">
         <span ng-switch on="totalItems" ng-show="searchedQuery">
           <h3 id="noResultMessage" ng-switch-when="0" openlmis-message="msg.no.matches|searchedQuery"></h3>
           <h3 id="oneResultMessage" ng-switch-when="1" openlmis-message="msg.one.match|searchedQuery"></h3>
@@ -69,15 +69,16 @@
         <th id="packSize" openlmis-message="header.pack.size"></th>
         <th id="globalActive" openlmis-message="header.global.active"></th>
         <th id="activeAtProgram" openlmis-message="header.active.at.program"></th>
+        <th id="rationing" openlmis-message="header.rationing"></th>
       </tr>
       </thead>
       <tbody ng-repeat="programProduct in programProducts">
       <tr ng-if="programProduct.productCategory">
-        <td id="category{{$index}}" class="productCategory" colspan="10"
+        <td id="category{{$index}}" class="productCategory" colspan="11"
             ng-show="showCategory($index)"
             ng-bind="programProduct.productCategory.name"></td>
       <tr ng-if="!programProduct.productCategory">
-        <td id="category{{$index}}" class="productCategory" colspan="10"
+        <td id="category{{$index}}" class="productCategory" colspan="11"
             ng-show="showCategory($index)"
             openlmis-message="label.no.category"></td>
       </tr>
@@ -100,6 +101,14 @@
         <td class="center-justified" ng-show="programProduct.active != undefined">
           <i id="activeAtProgram{{$index}}"
              ng-class="{'icon-ok': programProduct.active}"></i>
+        </td>
+        <td class="center-justified">
+            <a ng-hide="isAdjustmentExists(programProduct.product.id)" href="" ng-click="addRationing(programProduct.product.id)" class="btn btn-primary">
+              <span id="addRationing" openlmis-message="button.add"></span>
+            </a>
+            <a ng-show="isAdjustmentExists(programProduct.product.id)" ng-click="addRationing(programProduct.product.id)" class="btn btn-primary">
+              <span id="editRationing" openlmis-message="button.edit"></span>
+            </a>
         </td>
         <td class="center-justified" id="undefinedActive{{$index}}" ng-show="programProduct.active == undefined">NA</td>
       </tr>

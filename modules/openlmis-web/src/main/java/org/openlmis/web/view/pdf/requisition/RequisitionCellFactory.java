@@ -12,6 +12,7 @@ package org.openlmis.web.view.pdf.requisition;
 
 import com.itextpdf.text.*;
 import com.itextpdf.text.pdf.PdfPCell;
+import org.apache.commons.lang.NumberUtils;
 import org.apache.log4j.Logger;
 import org.openlmis.rnr.domain.Column;
 import org.openlmis.rnr.domain.ColumnType;
@@ -21,6 +22,7 @@ import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -81,19 +83,29 @@ public class RequisitionCellFactory {
                                  ColumnType columnType,
                                  String columnValue,
                                  String currency) throws IOException, BadElementException {
+    DecimalFormat moneyFormatter = new DecimalFormat("#,##0.00");
+    DecimalFormat formatter = new DecimalFormat("#,##0");
     switch (columnType) {
       case TEXT:
         result.add(textCell(columnValue));
         break;
-      case NUMERIC:
-        result.add(numberCell(columnValue));
-        break;
-      case CURRENCY:
-        result.add(numberCell(currency + columnValue));
-        break;
       case BOOLEAN:
         PdfPCell pdfPCell = Boolean.valueOf(columnValue) ? imageCell() : textCell("");
         result.add(pdfPCell);
+        break;
+      case NUMERIC:
+        if(!columnValue.isEmpty() && NumberUtils.isNumber(columnValue.toString()))
+          result.add(numberCell(formatter.format(Double.parseDouble(columnValue.toString())).toString()));
+        else
+          result.add(numberCell(columnValue));
+        break;
+      case CURRENCY:
+        if(!columnValue.isEmpty() && NumberUtils.isNumber(columnValue.toString()))
+          result.add(numberCell(currency + moneyFormatter.format(Double.parseDouble(columnValue.toString())).toString()));
+        else
+          result.add(numberCell(currency));
+          break;
+
     }
   }
 

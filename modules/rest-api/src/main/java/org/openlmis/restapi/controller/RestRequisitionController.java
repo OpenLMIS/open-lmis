@@ -10,6 +10,7 @@
 
 package org.openlmis.restapi.controller;
 
+import com.wordnik.swagger.annotations.Api;
 import lombok.NoArgsConstructor;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.restapi.domain.Report;
@@ -22,12 +23,12 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import java.security.Principal;
 
 import static org.openlmis.restapi.response.RestResponse.*;
-import static org.springframework.http.HttpStatus.BAD_REQUEST;
-import static org.springframework.http.HttpStatus.CREATED;
+import static org.springframework.http.HttpStatus.*;
 import static org.springframework.web.bind.annotation.RequestMethod.*;
 
 /**
@@ -39,6 +40,7 @@ import static org.springframework.web.bind.annotation.RequestMethod.*;
 
 @Controller
 @NoArgsConstructor
+@Api(value="Requisitions", description = "Submit Requisitions", position = 5)
 public class RestRequisitionController extends BaseController {
 
   public static final String RNR = "requisitionId";
@@ -52,6 +54,17 @@ public class RestRequisitionController extends BaseController {
 
     try {
       requisition = restRequisitionService.submitReport(report, loggedInUserId(principal));
+    } catch (DataException e) {
+      return error(e.getOpenLmisMessage(), BAD_REQUEST);
+    }
+    return response(RNR, requisition.getId(), CREATED);
+  }
+
+  @RequestMapping(value = "/rest-api/sdp-requisitions", method = POST, headers = ACCEPT_JSON)
+  public ResponseEntity<RestResponse> submitSDPRequisition(@RequestBody Report report, Principal principal) {
+    Rnr requisition;
+    try {
+      requisition = restRequisitionService.submitSdpReport(report, loggedInUserId(principal));
     } catch (DataException e) {
       return error(e.getOpenLmisMessage(), BAD_REQUEST);
     }
@@ -73,6 +86,15 @@ public class RestRequisitionController extends BaseController {
   public ResponseEntity<RestResponse> getReplenishment(@PathVariable Long id) {
     try {
       return response("requisition", restRequisitionService.getReplenishmentDetails(id));
+    } catch (DataException e) {
+      return error(e.getOpenLmisMessage(), BAD_REQUEST);
+    }
+  }
+
+  @RequestMapping(value="/rest-api/requisitions", method = GET, headers = ACCEPT_JSON)
+  public ResponseEntity<RestResponse> getRequisitionsByFacility(@RequestParam(value="facilityCode") String facilityCode) {
+    try {
+      return response("requisitions", restRequisitionService.getRequisitionsByFacility(facilityCode), OK);
     } catch (DataException e) {
       return error(e.getOpenLmisMessage(), BAD_REQUEST);
     }

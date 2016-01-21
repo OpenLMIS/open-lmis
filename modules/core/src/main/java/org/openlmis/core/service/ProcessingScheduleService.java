@@ -85,6 +85,10 @@ public class ProcessingScheduleService {
       startingPeriodId, programStartDate, new Date());
   }
 
+  public List<ProcessingPeriod> getOpenPeriods(Long facilityId, Long programId, Long startingPeriodId){
+    return periodRepository.getOpenPeriods(facilityId, programId, startingPeriodId);
+  };
+
   private RequisitionGroupProgramSchedule getSchedule(Facility facility, Program program) {
     RequisitionGroup requisitionGroup = requisitionGroupRepository.getRequisitionGroupForProgramAndFacility(program, facility);
     if (requisitionGroup == null)
@@ -100,6 +104,11 @@ public class ProcessingScheduleService {
   public List<ProcessingPeriod> getAllPeriodsForDateRange(Facility facility, Program program, Date startDate, Date endDate) {
     RequisitionGroupProgramSchedule requisitionGroupProgramSchedule = getSchedule(facility, program);
     return periodRepository.getAllPeriodsForDateRange(requisitionGroupProgramSchedule.getProcessingSchedule().getId(), startDate, endDate);
+  }
+
+  public List<ProcessingPeriod> getUsedPeriodsForDateRange(Facility facility, Program program, Date startDate, Date endDate) {
+
+    return periodRepository.getRnrPeriodsForDateRange(facility.getId(),program.getId(), startDate, endDate);
   }
 
   public ProcessingSchedule getByCode(String code) {
@@ -131,4 +140,8 @@ public class ProcessingScheduleService {
     }
     return period.getNumberOfMonths();
   }
+
+  public List<ProcessingPeriod> getAllPeriodsForScheduleAndYear(Long scheduleId, Long year) {
+        return periodRepository.getAllPeriodsForScheduleAndYear(scheduleId, year);
+    }
 }

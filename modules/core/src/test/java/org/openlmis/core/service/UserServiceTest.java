@@ -17,6 +17,7 @@ import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
+import org.junit.runners.BlockJUnit4ClassRunner;
 import org.mockito.ArgumentMatcher;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
@@ -29,6 +30,7 @@ import org.openlmis.email.exception.EmailException;
 import org.openlmis.email.service.EmailService;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
+import org.powermock.modules.junit4.PowerMockRunnerDelegate;
 import org.springframework.mail.SimpleMailMessage;
 
 import java.util.ArrayList;
@@ -49,8 +51,9 @@ import static org.openlmis.email.builder.EmailMessageBuilder.*;
 import static org.powermock.api.mockito.PowerMockito.mock;
 import static org.powermock.api.mockito.PowerMockito.*;
 
-@Category(UnitTests.class)
 @RunWith(PowerMockRunner.class)
+@PowerMockRunnerDelegate(BlockJUnit4ClassRunner.class)
+@Category(UnitTests.class)
 @PrepareForTest({Encoder.class, UserService.class})
 public class UserServiceTest {
 
@@ -135,7 +138,7 @@ public class UserServiceTest {
 
     userService.sendForgotPasswordEmail(user, FORGET_PASSWORD_LINK);
 
-    verify(emailService).send(argThat(emailMessageMatcher(emailMessage)));
+    verify(emailService).queueMessage(argThat(emailMessageMatcher(emailMessage)));
     verify(userRepository).getByEmail(user.getEmail());
     verify(userRepository).insertPasswordResetToken(eq(user), anyString());
   }
@@ -146,7 +149,7 @@ public class UserServiceTest {
     user.setEmail("x@y.com");
     User userWithoutEmail = make(a(defaultUser, with(email, "")));
     when(userRepository.getByEmail("x@y.com")).thenReturn(userWithoutEmail);
-    doThrow(new EmailException("")).when(emailService).send(any(SimpleMailMessage.class));
+    doThrow(new EmailException("")).when(emailService).queueMessage(any(SimpleMailMessage.class));
 
     expectedException.expect(DataException.class);
     expectedException.expectMessage(UserService.USER_EMAIL_NOT_FOUND);
@@ -227,7 +230,7 @@ public class UserServiceTest {
 
     userService.create(user, FORGET_PASSWORD_LINK);
 
-    verify(emailService).send(any(SimpleMailMessage.class));
+    verify(emailService).queueMessage(any(SimpleMailMessage.class));
   }
 
   @Test
@@ -298,6 +301,24 @@ public class UserServiceTest {
 
     verify(userRepository).create(user);
     verify(userRepository).insertEmailNotification(emailMessage);
+    verify(emailService, never()).send(emailMessage);
+    verify(roleAssignmentService).saveRolesForUser(user);
+  }
+
+  @Test
+  public void shouldCreateMobileUserWithoutSendEmail() throws Exception {
+    User user = new User();
+    user.setIsMobileUser(true);
+
+    SimpleMailMessage emailMessage = new SimpleMailMessage();
+    whenNew(SimpleMailMessage.class).withNoArguments().thenReturn(emailMessage);
+
+    when(messageService.message("account.created.email.subject")).thenReturn("Account created message");
+
+    userService.createUser(user, "resetPasswordLink");
+
+    verify(userRepository).create(user);
+    //verify(userRepository).insertEmailNotification(emailMessage);
     verify(emailService, never()).send(emailMessage);
     verify(roleAssignmentService).saveRolesForUser(user);
   }

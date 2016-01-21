@@ -1,0 +1,75 @@
+
+    <form name="international_shipment">
+        <div class='form-group'>
+
+            <!--Item-->
+            <div class='form-row clearfix'>
+                <div class="form-cell">
+                    <label>Item</label>
+                    <div class="form-field">
+                        <select  class="form-control" ng-model="data.package.vaccine_id">
+                            <option ng-repeat="vaccine in vaccines" value="{{vaccine.id}}">{{vaccine.name}}</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <!--gitn-->
+            <div class='form-row clearfix'>
+                <div class="form-cell">
+                    <label>GTIN</label>
+                    <div class="form-field">
+                        <input type="text" class="form-control" ng-model="data.package.gtin">
+                    </div>
+                </div>
+            </div>
+            <!--Manufacture-->
+            <div class='form-row clearfix'>
+                <div class="form-cell">
+                    <label>Manufacture</label>
+                    <div class="form-field">
+                        <select  class="form-control" ng-model="data.package.manufacturer_id">
+                            <option ng-repeat="manufacturer in data.manufactures" value="{{manufacturer.name}}">{{manufacturer.name}}</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <!--Doses Per Vial-->
+            <div class='form-row clearfix'>
+                <div class="form-cell">
+                    <label>Doses Per Vial</label>
+                    <div class="form-field">
+                        <input type="number" class="form-control" ng-model="data.package.doses_per_vial">
+                    </div>
+                </div>
+            </div>
+            <!--Vials Per Box-->
+            <div class='form-row clearfix'>
+                <div class="form-cell">
+                    <label>Vials Per Box</label>
+                    <div class="form-field">
+                        <input type="number" class="form-control" ng-model="data.package.vials_per_box" >
+                    </div>
+                </div>
+            </div>
+
+            <!--Boxes Per Box<-->
+            <div class='form-row clearfix'>
+                <div class="form-cell">
+                    <label>Boxes Per Box</label>
+                    <div class="form-field">
+                        <input type="text" ng-model="data.package.boxes_per_box" class="form-control">
+                    </div>
+                </div>
+            </div>
+
+        </div>
+        <div class="form-cell horizontalFilters">
+            <div class="form-fields">
+                <input class="btn btn-danger" type="button" value="Cancel" ng-click="cancelAdd()" id="cancel_package_package"/>
+                <input class="btn btn-primary" type="button" value="Add" ng-click="addNewPackage(data.package)" id="add_package_button"/>            </div>
+                <span ng-if="adding"><img src="/public/images/ajax-loader.gif" > Adding...</span>
+        </div>
+
+    </form>
+</div>

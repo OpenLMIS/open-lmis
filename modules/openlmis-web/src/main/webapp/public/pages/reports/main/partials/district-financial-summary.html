@@ -1,0 +1,83 @@
+<!--
+  ~ Electronic Logistics Management Information System (eLMIS) is a supply chain management system for health commodities in a developing country setting.
+  ~
+  ~ Copyright (C) 2015  John Snow, Inc (JSI). This program was produced for the U.S. Agency for International Development (USAID). It was prepared under the USAID | DELIVER PROJECT, Task Order 4.
+  ~
+  ~ This program is free software: you can redistribute it and/or modify it under the terms of the GNU Affero General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
+  ~
+  ~ This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Affero General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU Affero General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
+  -->
+
+<div class="alert alert-success" id="saveSuccessMsgDiv" ng-bind="message" ng-show="message"/>
+<div class="container-fluid">
+    <div class="box row-fluid">
+        <div class="box-header">
+            <h2 openlmis-message="report.title.district.order.compilation"><i class="icon-edit"></i><span class="break"></span></h2>
+
+            <div class="box-icon">
+              <a id="pdf-button" ng-show="filterForm.$valid" href="" ng-click="exportReport('PDF')" class='btn-small btn-info'><span openlmis-message="label.pdf"></span></a>
+              <a id="xls-button" ng-show="filterForm.$valid" href="" ng-click="exportReport('XLS')" class='btn-small btn-info'><span openlmis-message="label.excel"></span></a>
+            </div>
+        </div>
+        <div>
+            <div class="row-fluid">
+                <div class="sidebar">
+                    <div class="app-form" style="padding: 5px;">
+                        <form ng-submit="filterGrid()" name="filterForm" novalidate>
+                            <div filter-container class="clearfix">
+                                <program-filter class="form-cell horizontalFilters" budget="true" required="true"></program-filter>
+                                <schedule-filter class="form-cell horizontalFilters"></schedule-filter>
+                                <year-filter class="form-cell horizontalFilters" required="true"></year-filter>
+                                <period-filter class="form-cell horizontalFilters" required="true"></period-filter>
+                                <zone-filter  class="form-cell horizontalFilters"></zone-filter>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+                <div class="content-body">
+
+                    <table client-side-sort-pagination class="table table-bordered"
+                           ng-show="data == undefined || data.length == 0">
+                        <tr>
+                            <td>No data to show under selected filters</td>
+                        </tr>
+                    </table>
+
+                    <div ng-show="datarows.length > 0">
+                        <div class="pull-right legend">Page: {{tableParams.page}}, Showing records {{ ((tableParams.page
+                            - 1) * tableParams.count) + 1 }} to {{ (tableParams.page ) * tableParams.count }} of
+                            {{tableParams.total}}
+                        </div>
+                        <table ng-show="datarows.length > 0" class="table-bordered table table-striped pull-right"
+                               ng-table="tableParams">
+                            <tbody>
+                            <tr ng-repeat="row in datarows">
+                                <td data-title="'#'" class="number" style="width:20px">{{ row.no }}</td>
+                                <td data-title="getLocalMessage('label.facility.code')" style="width:100px" sortable="facilitycode">{{
+                                    row.facilitycode }}
+                                </td>
+                                <td data-title="getLocalMessage('label.facility.name')" style="width:100px" sortable="facility">{{ row.facility
+                                    }}
+                                </td>
+                                <td data-title="getLocalMessage('label.facility.type')" style="width:150px" sortable="facilitytype">{{
+                                    row.facilitytype}}
+                                </td>
+                                <td data-title="getLocalMessage('label.district')" style="width:100px" sortable="region">{{ row.region }}</td>
+                                <td data-title="getLocalMessage('label.approved.total.cost')" class="number" style="width:150px" sortable="totalcost">{{
+                                    row.totalcost | number }}
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div>

@@ -11,6 +11,7 @@
 package org.openlmis.core.service;
 
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -19,6 +20,7 @@ import org.openlmis.core.message.ExposedMessageSourceImpl;
 import org.openlmis.core.message.OpenLmisMessage;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
+import org.powermock.modules.junit4.rule.PowerMockRule;
 
 import java.util.Locale;
 import java.util.Set;
@@ -29,9 +31,11 @@ import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.verify;
 import static org.powermock.api.mockito.PowerMockito.*;
 
-@RunWith(PowerMockRunner.class)
 @PrepareForTest({Locale.class, MessageService.class})
 public class MessageServiceTest {
+
+  @Rule
+  public PowerMockRule rule = new PowerMockRule();
 
   @Mock
   ExposedMessageSourceImpl messageSource;

@@ -20,6 +20,7 @@ import org.joda.time.DateTime;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
+import org.junit.runners.BlockJUnit4ClassRunner;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.openlmis.core.service.MessageService;
@@ -27,6 +28,7 @@ import org.openlmis.db.categories.UnitTests;
 import org.openlmis.web.view.pdf.PdfPageEventHandler;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
+import org.powermock.modules.junit4.PowerMockRunnerDelegate;
 
 import java.io.ByteArrayOutputStream;
 import java.util.Date;
@@ -40,8 +42,9 @@ import static org.powermock.api.mockito.PowerMockito.doReturn;
 import static org.powermock.api.mockito.PowerMockito.when;
 import static org.powermock.api.mockito.PowerMockito.*;
 
-@RunWith(PowerMockRunner.class)
 @Category(UnitTests.class)
+@RunWith(PowerMockRunner.class)
+@PowerMockRunnerDelegate(BlockJUnit4ClassRunner.class)
 @PrepareForTest({PdfPageEventHandler.class, BaseFont.class})
 public class PdfPageEventHandlerTest {
 

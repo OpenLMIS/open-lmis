@@ -8,5 +8,12 @@
 -- You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org. 
 --
 
-INSERT INTO rights (name, rightType, description) VALUES
-('MANAGE_SUPERVISORY_NODE', 'ADMIN', 'Permission to manage supervisory nodes');
+DO
+$do$
+BEGIN
+  IF NOT EXISTS (SELECT 1 FROM rights where name = 'MANAGE_SUPERVISORY_NODE') THEN
+    INSERT INTO rights (name, rightType, description) VALUES
+    ('MANAGE_SUPERVISORY_NODE', 'ADMIN', 'Permission to manage supervisory nodes');
+  END IF;
+END
+$do$
