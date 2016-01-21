@@ -1,4 +1,6 @@
 "use strict";
+var finishedRequestUrls = [];
+var triedSwitch = false;
 
 function extractDomain(url) {
     var domain;
@@ -11,21 +13,27 @@ function extractDomain(url) {
     return domain;
 }
 
-function hasSwitchedToPtLanguage(response) {
+function isLanguageJsonLoaded() {
     //this request is the pt language json, we can only render pdf after it's loaded
-    return responseUrlContains(response, 'messages.json');
+    return lastResponseUrlContains('messages.json');
 }
 
-function isXhrFinished(response) {
+function isXhrFinished() {
     //the following 3 requests are critical for the page to render, we need to wait
     //for them to finish loading then we can click pt button
-    return responseUrlContains(response, 'reports.html') ||
-        responseUrlContains(response, 'skipped.json') ||
-        responseUrlContains(response, 'locales.json');
+    return responseUrlContains('reports.html') &&
+        responseUrlContains('skipped.json') &&
+        responseUrlContains('locales.json');
 }
 
-function responseUrlContains(response, str) {
-    return response.url.indexOf(str) > -1;
+function responseUrlContains(str) {
+    return finishedRequestUrls.some(function (elem) {
+        return elem.indexOf(str) > -1;
+    });
+}
+
+function lastResponseUrlContains(str) {
+    return finishedRequestUrls[finishedRequestUrls.length - 1].indexOf(str) > -1;
 }
 
 function tryToSwitchToPtLanguage(page) {
@@ -41,6 +49,7 @@ function tryToSwitchToPtLanguage(page) {
                 console.log("can not find pt button");
             }
         });
+        triedSwitch = true;
     }, 100);
 }
 
@@ -52,11 +61,14 @@ function monitorResponses(page, address, onLoaded) {
     page.onResourceReceived = function (response) {
         if (response.stage === 'end') {
             console.log(response.url + "   " + response.stage);
-            if (hasSwitchedToPtLanguage(response)) {
-                onLoaded();
-            }
-            if (isXhrFinished(response)) {
+            finishedRequestUrls.push(response.url);
+
+            if (!triedSwitch && isXhrFinished()) {
                 tryToSwitchToPtLanguage(page);
+            }
+
+            if (triedSwitch && isLanguageJsonLoaded()) {
+                onLoaded();
             }
         }
     };
