@@ -11,6 +11,7 @@
 function ViewColdChainStatusController($scope, facilities, period, deliveryZone, fridges) {
   if (!isUndefined(facilities) && facilities.length > 0) {
     $scope.message = "";
+    $scope.apimessage = "";
     $scope.program = facilities[0].supportedPrograms[0].program;
     $scope.period = period;
     $scope.deliveryZone = deliveryZone;
@@ -21,18 +22,24 @@ function ViewColdChainStatusController($scope, facilities, period, deliveryZone,
     } else {
         if (!isUndefined(fridges.fridges) && fridges.fridges.length > 0) {
             $scope.data = [];
-            var i = 0;
+            var i = 0, zeroStatusReceived = 0, notCompleteDataReceived = 0;
+
 
             for (i = 0; i < fridges.fridges.length; i += 1) {
               if (fridges.fridges[i].Status !== 0) {
+                if (isUndefined(fridges.fridges[i].LowAlarmCount) || isUndefined(fridges.fridges[i].HighAlarmCount) || isUndefined(fridges.fridges[i].URL)) {
+                  notCompleteDataReceived = 1;
+                }
                 $scope.data.push(fridges.fridges[i]);
+              } else {
+                zeroStatusReceived = 1;
               }
             }
 
             if ($scope.data.length === 0) {
               $scope.apimessage = "message.api.error";
-            } else {
-              $scope.apimessage = "";
+            } else if ($scope.apimessage === "" && (zeroStatusReceived || notCompleteDataReceived || ($scope.data.length !== fridges.fridges.length))) {
+              $scope.apimessage = "message.api.error.not.all.data";
             }
         } else {
             $scope.message = "label.no.cold.chain.status.information";
@@ -120,6 +127,14 @@ function ViewColdChainStatusController($scope, facilities, period, deliveryZone,
             }
         }
         return "No facitility ID";
+    };
+
+    $scope.getAlarmCountsSum = function(fridge) {
+        if (!isUndefined(fridge.LowAlarmCount) && !isUndefined(fridge.HighAlarmCount)) {
+            return fridge.LowAlarmCount + fridge.HighAlarmCount;
+        }
+
+        return "";
     };
 }
 

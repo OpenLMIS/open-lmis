@@ -24,6 +24,8 @@
       </div>
     </div>
   </div>
+  <div class="alert alert-info" ng-show="message"><span openlmis-message="message"></span></div>
+  <div class="alert alert-danger" ng-show="apimessage"><span id="apimessage" openlmis-message="apimessage"></span></div>
   <div class="cold-chain-refrigerators-list" ng-show=data>
     <div class="cold-chain-refrigerators-table" ng-show="failedRefrigerators.length > 0">
       <h2><span id="failedRefrigeratorsLabel" openlmis-message="label.failed.refrigerators"></span></h2>
@@ -46,8 +48,8 @@
           <td>{{getDistrictNameByFacilityId(failedRefrigerator.FacilityID)}}</td>
           <td>{{getFacilityNameById(failedRefrigerator.FacilityID)}}</td>
           <td>{{failedRefrigerator.FridgeID}}</td>
-          <td>{{failedRefrigerator.LowAlarmCount + failedRefrigerator.HighAlarmCount}}</td>
-          <td><a ng-href="{{failedRefrigerator.URL}}">View</a></td>
+          <td>{{getAlarmCountsSum(failedRefrigerator)}}</td>
+          <td><a ng-show="{{failedRefrigerator.URL}}" ng-href="{{failedRefrigerator.URL}}">View</a></td>
         </tr>
         </tbody>
       </table>
@@ -73,8 +75,8 @@
           <td>{{getDistrictNameByFacilityId(followUpRefrigerator.FacilityID)}}</td>
           <td>{{getFacilityNameById(followUpRefrigerator.FacilityID)}}</td>
           <td>{{followUpRefrigerator.FridgeID}}</td>
-          <td>{{followUpRefrigerator.LowAlarmCount + followUpRefrigerator.HighAlarmCount}}</td>
-          <td><a ng-href="{{followUpRefrigerator.URL}}">View</a></td>
+          <td>{{getAlarmCountsSum(followUpRefrigerator)}}</td>
+          <td><a ng-show="{{followUpRefrigerator.URL}}" ng-href="{{followUpRefrigerator.URL}}">View</a></td>
         </tr>
         </tbody>
       </table>
@@ -101,7 +103,7 @@
           <td>{{getFacilityNameById(noDataRefrigerator.FacilityID)}}</td>
           <td>{{noDataRefrigerator.FridgeID}}</td>
           <td class="noDataRefrigeratorTime">{{getDaysFromMinutes(noDataRefrigerator.MinutesNoData)}}</td>
-          <td><a ng-href="{{noDataRefrigerator.URL}}">View</a></td>
+          <td><a ng-show="{{noDataRefrigerator.URL}}" ng-href="{{noDataRefrigerator.URL}}">View</a></td>
         </tr>
         </tbody>
       </table>
@@ -124,12 +126,10 @@
           <td>{{getDistrictNameByFacilityId(workingRefrigerator.FacilityID)}}</td>
           <td>{{getFacilityNameById(workingRefrigerator.FacilityID)}}</td>
           <td>{{workingRefrigerator.FridgeID}}</td>
-          <td><a ng-href="{{workingRefrigerator.URL}}">View</a></td>
+          <td><a ng-show="{{workingRefrigerator.URL}}" ng-href="{{workingRefrigerator.URL}}">View</a></td>
         </tr>
         </tbody>
       </table>
     </div>
   </div>
-  <div class="alert alert-info" ng-show="message"><span openlmis-message="message"></span></div>
-  <div class="alert alert-danger" ng-show="apimessage"><span id="apimessage" openlmis-message="apimessage"></span></div>
 </div>
