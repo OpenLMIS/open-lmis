@@ -219,6 +219,7 @@
         <td></td>
         <td class="text-align-right">
             <button class="btn btn-primary btn-download" ng-click="downloadPdf()" openlmis-message="view.rnr.mmia.download.button"></button>
+            <label class="page-num-pdf">{{currentPage}}</label>
             <openlmis-pagination num-pages="numPages" current-page="currentPage" max-size="4"></openlmis-pagination>
         </td>
     </tr>

@@ -49,6 +49,8 @@ function adjustPageForRender() {
                 body.append(viaPage);
             });
             $('.btn-download').hide();
+            $('.pagination').hide();
+            $('.page-num-pdf').show();
         }
 
         var pages = capturePages();
