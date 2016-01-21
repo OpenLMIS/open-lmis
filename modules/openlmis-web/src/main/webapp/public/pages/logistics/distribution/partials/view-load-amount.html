@@ -141,7 +141,7 @@
               <span id="facilityCode{{$parent.$index}}{{$index}}"ng-bind="facility.code"></span>
             </td>
             <td class="equipment-status" ng-show="viewColdChainStatusAvailable">
-              <a ng-hide="apimessage || !isDataAvailable(facility.code)" ng-href="{{getURL(facility.code)}}"><img src="/public/images/refrigator{{getFacitilityStatus(facility.code)}}.png"/></a>
+              <a ng-show="isDataAvailable(facility.code)" ng-href="{{getURL(facility.code)}}"><img src="/public/images/refrigator{{getFacitilityStatus(facility.code)}}.png"/></a>
             </td>
             <td>
               <span id="population{{$parent.$index}}{{$index}}" ng-bind="facility.catchmentPopulation"></span>
