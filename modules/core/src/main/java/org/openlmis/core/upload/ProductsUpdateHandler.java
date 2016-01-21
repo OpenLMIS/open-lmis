@@ -61,7 +61,6 @@ public class ProductsUpdateHandler extends AbstractModelPersistenceHandler {
         UpdateAuditField(auditFields, currentRecord, existing);
         validateProductForm(currentRecord);
 
-        currentRecord.setActive(true);
         uploadProductList.add(currentRecord);
     }
 
@@ -78,8 +77,6 @@ public class ProductsUpdateHandler extends AbstractModelPersistenceHandler {
         for (Product existingProduct : productService.getProductsForUpdateStatus()) {
             if (!hasUpload(existingProduct)) {
                 productService.updateProductStatus(false,existingProduct.getId());
-            } else if (!existingProduct.getActive()) {
-                productService.updateProductStatus(true,existingProduct.getId());
             }
         }
     }

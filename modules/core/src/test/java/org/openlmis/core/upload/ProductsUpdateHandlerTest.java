@@ -90,7 +90,6 @@ public class ProductsUpdateHandlerTest {
 
         //then
         assertThat(handler.uploadProductList.size(), is(1));
-        assertThat(product.getActive(), is(true));
     }
 
     @Test
@@ -157,28 +156,6 @@ public class ProductsUpdateHandlerTest {
         verify(productService).save(captor.capture());
         List<Product> captorAllValues = captor.getAllValues();
         assertEquals(uploadProduct, captorAllValues.get(0));
-    }
-
-    @Test
-    public void shouldReActiveProduct() throws Exception {
-        //given
-        Product product = initProduct();
-        handler.uploadProductList.add(product);
-
-        ArrayList<Product> existingList = new ArrayList<>();
-        Product existingProduct = initProduct();
-        existingProduct.setActive(false);
-        existingProduct.setId(1l);
-        existingList.add(existingProduct);
-        when(productService.getProductsForUpdateStatus()).thenReturn(existingList);
-        when(productService.getExisting(product)).thenReturn(existingProduct);
-
-        //when
-        handler.postProcess(auditFields);
-
-        //then
-        verify(productService).getProductsForUpdateStatus();
-        verify(productService).updateProductStatus(true,1l);
     }
 
     @Test
