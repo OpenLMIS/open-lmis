@@ -27,7 +27,7 @@ public class AuditFields {
 
   private Long user;
   private Date currentTimestamp;
-  private List<Field> importFields;
+  private List<String> headers;
 
   public AuditFields(Date currentTimestamp) {
     this.currentTimestamp = currentTimestamp;
@@ -36,9 +36,5 @@ public class AuditFields {
   public AuditFields(Long user, Date currentTimestamp) {
     this.user = user;
     this.currentTimestamp = currentTimestamp;
-  }
-
-  public void setImportFields(List<Field> importFields) {
-    this.importFields = importFields;
   }
 }

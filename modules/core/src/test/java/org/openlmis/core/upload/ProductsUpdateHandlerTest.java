@@ -59,13 +59,12 @@ public class ProductsUpdateHandlerTest {
 
         auditFields = new AuditFields();
 
-        ArrayList<Field> importFields = new ArrayList<>();
-        for (java.lang.reflect.Field field : Arrays.asList(Product.class.getDeclaredFields())) {
-            if (field.getAnnotation(ImportField.class) != null) {
-                importFields.add(new Field(field, field.getAnnotation(ImportField.class)));
-            }
-        }
-        auditFields.setImportFields(importFields);
+        ArrayList<String> headers = new ArrayList<>();
+        headers.add("Product Code");
+        headers.add("Product Primary Name");
+        headers.add("Product Form");
+        headers.add("Product Is Active");
+        auditFields.setHeaders(headers);
         auditFields.setCurrentTimestamp(new Date());
 
         handler = new ProductsUpdateHandler();
@@ -74,6 +73,7 @@ public class ProductsUpdateHandlerTest {
         handler.messageService = messageService;
         List<Product> products = new ArrayList<>();
         handler.uploadProductList = products;
+        handler.setUp();
     }
 
     @Test
@@ -211,6 +211,35 @@ public class ProductsUpdateHandlerTest {
         //then
         assertThat(existingProduct.getForm().getDisplayOrder(), is(2));
         assertNotEquals(DateUtil.parseDate("2025-12-12 12:12:12"), existingProduct.getModifiedDate());
+    }
+
+
+    @Test
+    public void shouldSetProductsBeReActiveWhenExistingProductIsDeActive() throws Exception {
+        //given
+        Product uploadProduct = initProduct();
+        handler.uploadProductList.add(uploadProduct);
+
+        ArrayList<Product> existingList = new ArrayList<>();
+        Product existingProduct = initProduct();
+        existingProduct.setId(1l);
+        existingProduct.setActive(false);
+        existingProduct.setCode("code");
+        existingList.add(existingProduct);
+        when(productService.getProductsForUpdateStatus()).thenReturn(existingList);
+        when(productService.getExisting(uploadProduct)).thenReturn(existingProduct);
+        ProductForm existingProductForm = new ProductForm();
+        existingProductForm.setCode("form code");
+        existingProductForm.setDisplayOrder(2);
+        when(productFormService.getProductForm(existingProduct.getForm().getCode())).thenReturn(existingProductForm);
+
+        //when
+        handler.postProcess(auditFields);
+
+
+        //then
+        verify(productService).save(existingProduct);
+        assertThat(existingProduct.getActive(),is(true));
     }
 
 
