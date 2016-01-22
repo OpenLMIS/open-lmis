@@ -20,7 +20,6 @@ import java.util.Date;
 import java.util.List;
 
 @Component
-@NoArgsConstructor
 public class ProductsUpdateHandler extends AbstractModelPersistenceHandler {
 
     @Autowired
@@ -36,7 +35,11 @@ public class ProductsUpdateHandler extends AbstractModelPersistenceHandler {
     @Override
     public void setUp() {
         uploadProductList = new ArrayList<>();
+    }
+
+    public ProductsUpdateHandler() {
         importFields = new ArrayList<>();
+        loadImportFields();
     }
 
     @Override

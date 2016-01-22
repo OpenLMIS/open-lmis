@@ -73,7 +73,6 @@ public class ProductsUpdateHandlerTest {
         handler.messageService = messageService;
         List<Product> products = new ArrayList<>();
         handler.uploadProductList = products;
-        handler.setUp();
     }
 
     @Test
