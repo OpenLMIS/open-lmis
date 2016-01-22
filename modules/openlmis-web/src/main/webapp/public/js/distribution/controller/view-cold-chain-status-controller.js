@@ -129,6 +129,22 @@ function ViewColdChainStatusController($scope, facilities, period, deliveryZone,
         return "No facitility ID";
     };
 
+    $scope.getFridgeId = function(fridge) {
+        if (!isUndefined(fridge) && !isUndefined(fridge.FridgeID) && fridge.FridgeID != 0) {
+            return fridge.FridgeID;
+        }
+
+        return "";
+    }
+
+    $scope.getFridgeURL = function(fridge) {
+        if (!isUndefined(fridge) && !isUndefined(fridge.URL) && fridge.URL != 0) {
+            return fridge.URL;
+        }
+
+        return "";
+    }
+
     $scope.getAlarmCountsSum = function(fridge) {
         if (!isUndefined(fridge.LowAlarmCount) && !isUndefined(fridge.HighAlarmCount)) {
             return fridge.LowAlarmCount + fridge.HighAlarmCount;

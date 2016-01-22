@@ -47,9 +47,9 @@
         <tr ng-repeat="failedRefrigerator in failedRefrigerators">
           <td>{{getDistrictNameByFacilityId(failedRefrigerator.FacilityID)}}</td>
           <td>{{getFacilityNameById(failedRefrigerator.FacilityID)}}</td>
-          <td>{{failedRefrigerator.FridgeID}}</td>
+          <td>{{getFridgeId(failedRefrigerator)}}</td>
           <td>{{getAlarmCountsSum(failedRefrigerator)}}</td>
-          <td><a ng-show="{{failedRefrigerator.URL}}" ng-href="{{failedRefrigerator.URL}}">View</a></td>
+          <td><a ng-show="{{getFridgeURL(failedRefrigerator)}}" ng-href="{{getFridgeURL(failedRefrigerator)}}">View</a></td>
         </tr>
         </tbody>
       </table>
@@ -74,9 +74,9 @@
         <tr ng-repeat="followUpRefrigerator in followUpRefrigerators">
           <td>{{getDistrictNameByFacilityId(followUpRefrigerator.FacilityID)}}</td>
           <td>{{getFacilityNameById(followUpRefrigerator.FacilityID)}}</td>
-          <td>{{followUpRefrigerator.FridgeID}}</td>
+          <td>{{getFridgeId(followUpRefrigerator)}}</td>
           <td>{{getAlarmCountsSum(followUpRefrigerator)}}</td>
-          <td><a ng-show="{{followUpRefrigerator.URL}}" ng-href="{{followUpRefrigerator.URL}}">View</a></td>
+          <td><a ng-show="{{getFridgeURL(followUpRefrigerator)}}" ng-href="{{getFridgeURL(followUpRefrigerator)}}">View</a></td>
         </tr>
         </tbody>
       </table>
@@ -101,9 +101,9 @@
         <tr ng-repeat="noDataRefrigerator in noDataRefrigerators">
           <td>{{getDistrictNameByFacilityId(noDataRefrigerator.FacilityID)}}</td>
           <td>{{getFacilityNameById(noDataRefrigerator.FacilityID)}}</td>
-          <td>{{noDataRefrigerator.FridgeID}}</td>
+          <td>{{getFridgeId(noDataRefrigerator)}}</td>
           <td class="noDataRefrigeratorTime">{{getDaysFromMinutes(noDataRefrigerator.MinutesNoData)}}</td>
-          <td><a ng-show="{{noDataRefrigerator.URL}}" ng-href="{{noDataRefrigerator.URL}}">View</a></td>
+          <td><a ng-show="{{getFridgeURL(noDataRefrigerator)}}" ng-href="{{getFridgeURL(noDataRefrigerator)}}">View</a></td>
         </tr>
         </tbody>
       </table>
@@ -125,8 +125,8 @@
         <tr ng-repeat="workingRefrigerator in workingRefrigerators">
           <td>{{getDistrictNameByFacilityId(workingRefrigerator.FacilityID)}}</td>
           <td>{{getFacilityNameById(workingRefrigerator.FacilityID)}}</td>
-          <td>{{workingRefrigerator.FridgeID}}</td>
-          <td><a ng-show="{{workingRefrigerator.URL}}" ng-href="{{workingRefrigerator.URL}}">View</a></td>
+          <td>{{getFridgeId(workingRefrigerator)}}</td>
+          <td><a ng-show="{{getFridgeURL(workingRefrigerator)}}" ng-href="{{getFridgeURL(workingRefrigerator)}}">View</a></td>
         </tr>
         </tbody>
       </table>
