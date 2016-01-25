@@ -134,7 +134,7 @@ public class ProductsUpdateHandler extends AbstractModelPersistenceHandler {
                     field.setAccessible(true);
                     Object uploadValue = field.get(uploadProduct);
                     Object existingValue = field.get(existingProduct);
-                    if (!uploadValue.equals(existingValue)) {
+                    if (uploadValue!= null && !uploadValue.equals(existingValue)) {
                         isEqual = false;
                         field.set(existingProduct, uploadValue);
                     }
