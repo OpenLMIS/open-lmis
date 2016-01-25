@@ -82,7 +82,7 @@ public class ProductsUpdateHandler extends AbstractModelPersistenceHandler {
 
     public void loadImportFields() {
         for (java.lang.reflect.Field field : Arrays.asList(Product.class.getDeclaredFields())) {
-            if (field.getAnnotation(ImportField.class) != null) {
+            if (field.getAnnotation(ImportField.class) != null && field.getName() != "code") {
                 importFields.add(new Field(field, field.getAnnotation(ImportField.class)));
             }
         }
@@ -134,7 +134,7 @@ public class ProductsUpdateHandler extends AbstractModelPersistenceHandler {
                     field.setAccessible(true);
                     Object uploadValue = field.get(uploadProduct);
                     Object existingValue = field.get(existingProduct);
-                    if (uploadValue!= null && !uploadValue.equals(existingValue)) {
+                    if (uploadValue != null && !uploadValue.equals(existingValue)) {
                         isEqual = false;
                         field.set(existingProduct, uploadValue);
                     }

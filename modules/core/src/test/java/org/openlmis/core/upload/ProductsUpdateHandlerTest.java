@@ -214,7 +214,7 @@ public class ProductsUpdateHandlerTest {
 
 
     @Test
-    public void shouldSetProductsBeReActiveWhenExistingProductIsDeActive() throws Exception {
+    public void shouldReactiveProductButNotChangeProductCodeWhenJustHasCaseChange() throws Exception {
         //given
         Product uploadProduct = initProduct();
         handler.uploadProductList.add(uploadProduct);
@@ -223,7 +223,7 @@ public class ProductsUpdateHandlerTest {
         Product existingProduct = initProduct();
         existingProduct.setId(1l);
         existingProduct.setActive(false);
-        existingProduct.setCode("code");
+        existingProduct.setCode("Code");
         existingList.add(existingProduct);
         when(productService.getProductsForUpdateStatus()).thenReturn(existingList);
         when(productService.getExisting(uploadProduct)).thenReturn(existingProduct);
@@ -239,6 +239,7 @@ public class ProductsUpdateHandlerTest {
         //then
         verify(productService).save(existingProduct);
         assertThat(existingProduct.getActive(),is(true));
+        assertThat(existingProduct.getCode(),is("Code"));
     }
 
 
