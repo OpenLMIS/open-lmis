@@ -71,7 +71,6 @@ public class ProductsUpdateHandler extends AbstractModelPersistenceHandler {
 
     @Override
     public void postProcess(AuditFields auditFields) {
-        loadImportFields();
 
         headers = lowerCase(auditFields.getHeaders());
 
@@ -80,7 +79,7 @@ public class ProductsUpdateHandler extends AbstractModelPersistenceHandler {
         saveUploadProduct();
     }
 
-    public void loadImportFields() {
+    private void loadImportFields() {
         for (java.lang.reflect.Field field : Arrays.asList(Product.class.getDeclaredFields())) {
             if (field.getAnnotation(ImportField.class) != null && field.getName() != "code") {
                 importFields.add(new Field(field, field.getAnnotation(ImportField.class)));
