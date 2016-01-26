@@ -27,9 +27,7 @@ import java.util.Date;
 import java.util.List;
 
 import static org.hamcrest.Matchers.is;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotEquals;
-import static org.junit.Assert.assertThat;
+import static org.junit.Assert.*;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
@@ -64,6 +62,7 @@ public class ProductsUpdateHandlerTest {
         headers.add("Product Primary Name");
         headers.add("Product Form");
         headers.add("Product Is Active");
+        headers.add("Product Strength");
         auditFields.setHeaders(headers);
         auditFields.setCurrentTimestamp(new Date());
 
@@ -240,6 +239,7 @@ public class ProductsUpdateHandlerTest {
         verify(productService).save(existingProduct);
         assertThat(existingProduct.getActive(),is(true));
         assertThat(existingProduct.getCode(),is("Code"));
+        assertNull(existingProduct.getStrength());
     }
 
 
@@ -258,7 +258,7 @@ public class ProductsUpdateHandlerTest {
         product.setTracer(false);
         product.setPackRoundingThreshold(1);
         product.setRoundToZero(false);
-        product.setStrength("strength");
+        product.setStrength(null);
         product.setDescription("des");
 
         product.setActive(true);
