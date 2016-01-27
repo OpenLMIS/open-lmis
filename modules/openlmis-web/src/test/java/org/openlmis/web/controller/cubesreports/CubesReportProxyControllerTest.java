@@ -28,13 +28,30 @@ public class CubesReportProxyControllerTest {
     private CubesReportProxyController controller;
 
     @Test
-    public void shouldRedirectWildCardRequestToCubesServer() throws Exception {
+    public void shouldRedirectDecodedWildCardRequestToCubesServer() throws Exception {
         //given
         MockHttpServletRequest request = new MockHttpServletRequest();
         request.setRequestURI("/cubesreports/abc");
-        request.setQueryString("xxx=a&yyy=b");
+        request.setQueryString("cut%3ddrug%40default%3a08R01Z");
 
-        when(restTemplate.exchange("http://localhost:5555/abc?xxx=a&yyy=b", HttpMethod.GET, HttpEntity.EMPTY, String.class))
+        when(restTemplate.exchange("http://localhost:5555/abc?cut=drug@default:08R01Z", HttpMethod.GET, HttpEntity.EMPTY, String.class))
+                .thenReturn(new ResponseEntity<String>("hello from cubes", HttpStatus.OK));
+
+        //when
+        ResponseEntity<String> responseEntity = controller.redirect(request);
+
+        //then
+        assertThat(responseEntity.getBody(), is("hello from cubes"));
+    }
+
+    @Test
+    public void shouldRedirectWildCardRequestToCubesServerWithoutQueryString() throws Exception {
+        //given
+        MockHttpServletRequest request = new MockHttpServletRequest();
+        request.setRequestURI("/cubesreports/abc");
+        request.setQueryString(null);
+
+        when(restTemplate.exchange("http://localhost:5555/abc", HttpMethod.GET, HttpEntity.EMPTY, String.class))
                 .thenReturn(new ResponseEntity<String>("hello from cubes", HttpStatus.OK));
 
         //when
