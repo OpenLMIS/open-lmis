@@ -14,13 +14,17 @@ function MultipleFacilitySearchFilterController($scope, Facilities) {
   $scope.zone = {};
   $scope.disableAddFacility = true;
   $scope.tempFacilities = [];
+  var defaultSearchParam='%';
+  $scope.showCloseButton = false;
+
 
   $scope.showFacilitySearchResults = function () {
-    if (!$scope.multipleFacilitiesSearchParam) return;
+    if (!($scope.multipleFacilitiesSearchParam || defaultSearchParam)) return;
+
     $scope.tempFacilities = [];
     $scope.$parent.$parent.duplicateFacilityName = undefined;
     $scope.disableAddFacility = true;
-    $scope.multipleFacilitiesQuery = $scope.multipleFacilitiesSearchParam.trim();
+    $scope.multipleFacilitiesQuery = $scope.multipleFacilitiesSearchParam ? $scope.multipleFacilitiesSearchParam.trim() : defaultSearchParam;
     Facilities.get({
         "searchParam": $scope.multipleFacilitiesQuery,
         "facilityTypeId": $scope.type.id,
@@ -29,11 +33,21 @@ function MultipleFacilitySearchFilterController($scope, Facilities) {
         "enabled": $scope.extraMultipleParams.enabled},
       function (data) {
         $scope.multipleFacilities = data.facilityList;
-        $scope.multipleFacilitiesResultCount = isUndefined($scope.multipleFacilities) ? 0 : $scope.multipleFacilities.length;
         $scope.multipleFacilitiesMessage = data.message;
-        $scope.resultCount = $scope.multipleFacilitiesResultCount;
+        $scope.resultCount = isUndefined($scope.multipleFacilities) ? 0 : $scope.multipleFacilities.length;
       });
+    if($scope.multipleFacilitiesQuery === '%'){
+      $scope.showCloseButton = false;
+    }else {
+      $scope.showCloseButton = true;
+    }
   };
+
+  $scope.$watch('showMultipleFacilitiesSlider', function() {
+    if($scope.showMultipleFacilitiesSlider){
+      $scope.showFacilitySearchResults();
+    }
+  });
 
   $scope.triggerSearch = function (event) {
     if (event.keyCode === 13) {
@@ -44,10 +58,10 @@ function MultipleFacilitySearchFilterController($scope, Facilities) {
   $scope.clearMultiSelectFacilitySearch = function () {
     $scope.multipleFacilitiesSearchParam = undefined;
     $scope.multipleFacilities = undefined;
-    $scope.multipleFacilitiesResultCount = undefined;
     $scope.disableAddFacility = true;
     $scope.tempFacilities = [];
     angular.element('#searchFacility').focus();
+    $scope.showFacilitySearchResults();
   };
 
   $scope.addToFacilityList = function (facility) {
