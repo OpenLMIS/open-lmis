@@ -1,0 +1,135 @@
+<!--
+  ~ This program is part of the OpenLMIS logistics management information system platform software.
+  ~ Copyright © 2013 VillageReach
+  ~
+  ~ This program is free software: you can redistribute it and/or modify it under the terms of the GNU Affero General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
+  ~  
+  ~ This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Affero General Public License for more details.
+  ~ You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org. 
+  -->
+
+<div>
+  <h2 id="coldChainStatusSummaryLabel" openlmis-message="label.cold.chain.status.summary"></h2>
+
+  <div class="info-box">
+    <div class="row-fluid">
+      <div class="span3">
+        <strong id="deliveryZoneLabel" openlmis-message="label.delivery.zone"> </strong> :&nbsp;<span id="deliveryZoneName" ng-bind="deliveryZone.name"></span>
+      </div>
+      <div class="span3">
+        <strong id="programLabel" openlmis-message="label.program"> </strong> :&nbsp;<span id="programName" ng-bind="program.name"></span>
+      </div>
+      <div class="span3">
+        <strong id="periodLabel" openlmis-message="label.period"> </strong> :&nbsp;<span id="periodName" ng-bind="period.name"></span>
+      </div>
+    </div>
+  </div>
+  <div class="alert alert-info" ng-show="message"><span openlmis-message="message"></span></div>
+  <div class="alert alert-danger" ng-show="apimessage"><span id="apimessage" openlmis-message="apimessage"></span></div>
+  <div class="cold-chain-refrigerators-list" ng-show=data>
+    <div class="cold-chain-refrigerators-table" ng-show="failedRefrigerators.length > 0">
+      <h2><span id="failedRefrigeratorsLabel" openlmis-message="label.failed.refrigerators"></span></h2>
+      <table ng-show=failedRefrigerators class="table table-bordered table-striped aggregate-table" id="failedRefrigeratorsTable">
+        <thead>
+        <tr>
+          <th ng-repeat="tableHeader in getCommonTableHeaders()">
+            <span id="failedRefrigeratorsTableHeader{{$index}}" openlmis-message=tableHeader></span>
+          </th>
+          <th>
+            <span id="failedRefrigeratorsAlarmLabel" openlmis-message="label.alarms"></span>
+          </th>
+          <th>
+            <span id="failedRefrigeratorsViewLabel" openlmis-message="label.view"></span>
+          </th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr ng-repeat="failedRefrigerator in failedRefrigerators">
+          <td>{{getDistrictNameByFacilityId(failedRefrigerator.FacilityID)}}</td>
+          <td>{{getFacilityNameById(failedRefrigerator.FacilityID)}}</td>
+          <td>{{getFridgeId(failedRefrigerator)}}</td>
+          <td>{{getAlarmCountsSum(failedRefrigerator)}}</td>
+          <td><a ng-show="{{getFridgeURL(failedRefrigerator)}}" ng-href="{{getFridgeURL(failedRefrigerator)}}">View</a></td>
+        </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="cold-chain-refrigerators-table" ng-show="followUpRefrigerators.length > 0">
+      <h2><span id="followUpRefrigeratorsLabel" openlmis-message="label.followup.refrigerators"></span></h2>
+      <table ng-show=followUpRefrigerators class="table table-bordered table-striped aggregate-table" id="followUpRefrigeratorsTable">
+        <thead>
+        <tr>
+          <th ng-repeat="tableHeader in getCommonTableHeaders()">
+            <span id="followUpRefrigeratorsTableHeader{{$index}}" openlmis-message=tableHeader></span>
+          </th>
+          <th>
+            <span id="followUpRefrigeratorsAlarmLabel" openlmis-message="label.alarms"></span>
+          </th>
+          <th>
+            <span id="followUpRefrigeratorsViewLabel" openlmis-message="label.view"></span>
+          </th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr ng-repeat="followUpRefrigerator in followUpRefrigerators">
+          <td>{{getDistrictNameByFacilityId(followUpRefrigerator.FacilityID)}}</td>
+          <td>{{getFacilityNameById(followUpRefrigerator.FacilityID)}}</td>
+          <td>{{getFridgeId(followUpRefrigerator)}}</td>
+          <td>{{getAlarmCountsSum(followUpRefrigerator)}}</td>
+          <td><a ng-show="{{getFridgeURL(followUpRefrigerator)}}" ng-href="{{getFridgeURL(followUpRefrigerator)}}">View</a></td>
+        </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="cold-chain-refrigerators-table" ng-show="noDataRefrigerators.length > 0">
+      <h2><span id="noDataRefrigeratorsLabel" openlmis-message="label.nodata.refrigerators"></span></h2>
+      <table ng-show=noDataRefrigerators class="table table-bordered table-striped aggregate-table" id="noDataRefrigeratorsTable">
+        <thead>
+        <tr>
+          <th ng-repeat="tableHeader in getCommonTableHeaders()">
+            <span id="noDataRefrigeratorsTableHeader{{$index}}" openlmis-message=tableHeader></span>
+          </th>
+          <th>
+            <span id="totalDaysWithNoDataLabel" openlmis-message="label.total.days.with.no.data"></span>
+          </th>
+          <th>
+            <span id="noDataRefrigeratorsViewLabel" openlmis-message="label.view"></span>
+          </th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr ng-repeat="noDataRefrigerator in noDataRefrigerators">
+          <td>{{getDistrictNameByFacilityId(noDataRefrigerator.FacilityID)}}</td>
+          <td>{{getFacilityNameById(noDataRefrigerator.FacilityID)}}</td>
+          <td>{{getFridgeId(noDataRefrigerator)}}</td>
+          <td class="noDataRefrigeratorTime">{{getDaysFromMinutes(noDataRefrigerator.MinutesNoData)}}</td>
+          <td><a ng-show="{{getFridgeURL(noDataRefrigerator)}}" ng-href="{{getFridgeURL(noDataRefrigerator)}}">View</a></td>
+        </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="cold-chain-refrigerators-table" ng-show="workingRefrigerators.length > 0">
+      <h2><span id="workingRefrigeratorsLabel" openlmis-message="label.working.refrigerators"></span></h2>
+      <table ng-show=workingRefrigerators class="table table-bordered table-striped aggregate-table" id="workingRefrigeratorsTable">
+        <thead>
+        <tr>
+          <th ng-repeat="tableHeader in getCommonTableHeaders()">
+            <span id="workingRefrigeratorsTableHeader{{$index}}" openlmis-message=tableHeader></span>
+          </th>
+          <th>
+            <span id="workingRefrigeratorsViewLabel" openlmis-message="label.view"></span>
+          </th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr ng-repeat="workingRefrigerator in workingRefrigerators">
+          <td>{{getDistrictNameByFacilityId(workingRefrigerator.FacilityID)}}</td>
+          <td>{{getFacilityNameById(workingRefrigerator.FacilityID)}}</td>
+          <td>{{getFridgeId(workingRefrigerator)}}</td>
+          <td><a ng-show="{{getFridgeURL(workingRefrigerator)}}" ng-href="{{getFridgeURL(workingRefrigerator)}}">View</a></td>
+        </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>

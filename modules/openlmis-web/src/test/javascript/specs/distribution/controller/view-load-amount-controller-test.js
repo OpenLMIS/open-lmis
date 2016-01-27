@@ -24,26 +24,26 @@ describe('ViewLoadAmountController', function () {
       {product: {id: 4, name: 'blank', productGroup: {name: ''}}}
     ];
     facilities = [
-      {id: 'F10', name: 'Village Dispensary', geographicZone: {id: 1, name: 'Ngrogoro', level: {name: 'City' }}, catchmentPopulation: 200,
+      {id: 'F10', name: 'Village Dispensary', geographicZone: {id: 1, name: 'Ngrogoro', level: {name: 'City' }, parent: { name: 'Monduli' }}, catchmentPopulation: 200,
         supportedPrograms: [
           {program: program1, programProducts: programProducts}
         ]},
-      {id: 'F11', name: 'Central Hospital', geographicZone: {id: 1, name: 'District 1', level: {name: 'City' }}, catchmentPopulation: 150,
+      {id: 'F11', name: 'Central Hospital', geographicZone: {id: 1, name: 'District 1', level: {name: 'City' }, parent: { name: 'District 2' }}, catchmentPopulation: 150,
         supportedPrograms: [
           {program: program1, programProducts: programProducts}
         ]}
     ];
-    controller(ViewLoadAmountController, {$scope: scope, facilities: facilities, period: {id: 1, name: 'period 1'}, deliveryZone: {id: 1}});
+    controller(ViewLoadAmountController, {$scope: scope, facilities: facilities, period: {id: 1, name: 'period 1'}, deliveryZone: {id: 1}, fridges: {}, nexleafDeliveryZones: []});
 
   }));
 
   it('should set no records found message if no facilities are found', function () {
-    controller(ViewLoadAmountController, {$scope: scope, facilities: [], period: {}, deliveryZone: {}});
+    controller(ViewLoadAmountController, {$scope: scope, facilities: [], period: {}, deliveryZone: {}, fridges: {}, nexleafDeliveryZones: []});
     expect(scope.message).toEqual("msg.no.records.found");
   });
 
   it('should set no records found message if no facilities are undefined', function () {
-    controller(ViewLoadAmountController, {$scope: scope, facilities: undefined, period: {}, deliveryZone: {}});
+    controller(ViewLoadAmountController, {$scope: scope, facilities: undefined, period: {}, deliveryZone: {}, fridges: {}, nexleafDeliveryZones: []});
     expect(scope.message).toEqual("msg.no.records.found");
   });
 

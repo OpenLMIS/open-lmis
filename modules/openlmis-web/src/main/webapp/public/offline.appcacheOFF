@@ -77,6 +77,7 @@ CACHE:
 /public/js/distribution/controller/distribution-list-controller.js
 /public/js/distribution/controller/distribution-controller.js
 /public/js/distribution/controller/view-load-amount-controller.js
+/public/js/distribution/controller/view-cold-chain-status-controller.js
 /public/js/distribution/controller/record-facility-menu-controller.js
 /public/js/distribution/controller/record-facility-data-controller.js
 /public/js/distribution/controller/refrigerator-controller.js

@@ -8,7 +8,7 @@
  * You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org. 
  */
 
-function DistributionController($scope, $rootScope, deliveryZones, DeliveryZoneActivePrograms, messageService, DeliveryZoneProgramPeriods, navigateBackService, $http, $dialog, $location, distributionService) {
+function DistributionController($scope, $rootScope, deliveryZones, DeliveryZoneActivePrograms, messageService, DeliveryZoneProgramPeriods, navigateBackService, $http, $dialog, $location, distributionService, DeliveryZoneFacilities, NexleafDeliveryZones) {
   $scope.deliveryZones = deliveryZones;
   var DELIVERY_ZONE_LABEL = messageService.get('label.select.deliveryZone');
   var NONE_ASSIGNED_LABEL = messageService.get('label.noneAssigned');
@@ -16,6 +16,7 @@ function DistributionController($scope, $rootScope, deliveryZones, DeliveryZoneA
   var DEFAULT_PERIOD_MESSAGE = messageService.get('label.select.period');
 
   $scope.zonePlaceholder = !!$scope.deliveryZones.length ? DELIVERY_ZONE_LABEL : NONE_ASSIGNED_LABEL;
+  $scope.provincesForColdChainStatus = [];
 
   $scope.reload = function() {
     window.location.reload();
@@ -32,6 +33,8 @@ function DistributionController($scope, $rootScope, deliveryZones, DeliveryZoneA
       if ($scope.selectedProgram && $scope.fromBackNavigation) {
         $scope.selectedProgram = _.where($scope.programs, {id: $scope.selectedProgram.id})[0];
         $scope.loadPeriods();
+      } else {
+        $scope.selectedProgram = "";
       }
     }, function (data) {
       $scope.error = data.data.error;
@@ -59,6 +62,18 @@ function DistributionController($scope, $rootScope, deliveryZones, DeliveryZoneA
 
   $scope.periodOptionMessage = function () {
     return optionMessage($scope.periods, DEFAULT_PERIOD_MESSAGE);
+  };
+
+  $scope.getNexleafDeliveryZones = function () {
+    NexleafDeliveryZones.get(function (data) {
+      $scope.provincesForColdChainStatus = data.deliveryZones;
+    }, function (data) {
+      $scope.error = data.data.error;
+    });
+  };
+
+  $scope.checkViewColdChainStatus = function () {
+    $scope.viewColdChainStatusAvailable = _.contains($scope.provincesForColdChainStatus, $scope.selectedZone.code);
   };
 
   function confirmCaching(data, message) {
@@ -123,6 +138,18 @@ function DistributionController($scope, $rootScope, deliveryZones, DeliveryZoneA
     };
     navigateBackService.setData(data);
     var path = "/view-load-amounts/".concat($scope.selectedZone.id).concat("/")
+        .concat($scope.selectedProgram.id).concat("/").concat($scope.selectedPeriod.id);
+    $location.path(path);
+  };
+
+  $scope.viewColdChainStatus = function () {
+    var data = {
+      deliveryZone: $scope.selectedZone,
+      program: $scope.selectedProgram,
+      period: $scope.selectedPeriod
+    };
+    navigateBackService.setData(data);
+    var path = "/view-cold-chain-status/".concat($scope.selectedZone.id).concat("/")
         .concat($scope.selectedProgram.id).concat("/").concat($scope.selectedPeriod.id);
     $location.path(path);
   };

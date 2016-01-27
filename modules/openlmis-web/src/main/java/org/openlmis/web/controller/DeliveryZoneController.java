@@ -67,4 +67,9 @@ public class DeliveryZoneController extends BaseController {
     return response(DELIVERY_ZONES, service.getAll());
   }
 
+  @RequestMapping(value = "deliveryZones/nexleaf", method = GET, headers = ACCEPT_JSON)
+  @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_DISTRIBUTION')")
+  public ResponseEntity<OpenLmisResponse> getNexleafDeliveryZones() {
+    return response(DELIVERY_ZONES, service.getNexleafDeliveryZones());
+  }
 }

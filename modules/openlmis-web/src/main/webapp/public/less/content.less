@@ -62,6 +62,26 @@
   }
 }
 
+.indicator {
+  float: right;
+  font-size: 14px !important;
+  color: #333 !important;
+}
+
+.span2 {
+  margin-right: 2px !important;
+  margin-left: 0px !important;
+}
+
+
+#cold-status {
+  margin-top: 0;
+  font-size: 1.4em;
+  font-weight: normal;
+  color: #333 !important;
+  border-bottom: none !important;
+}
+
 .content {
   min-height: 200px;
   padding: 10px 15px 40px;
@@ -616,6 +636,9 @@ span[class^="tpl-"] {
       }
     }
   }
+}
+.noDataRefrigeratorTime {
+  width: 10%;
 }
 
 .rnr-table td, #facilityApprovedProductTable td, #facilityApprovedProductsModal,
@@ -2269,6 +2292,56 @@ input[placeholder].placeholder {
   }
 }
 
+.cold-chain-refrigerators-list h5{
+  text-transform: uppercasez
+}
+
+#failedRefrigeratorsLabel {
+  color: #D50404;
+}
+
+#followUpRefrigeratorsLabel {
+  color: #D2C31E;
+}
+
+#noDataRefrigeratorsLabel {
+  color: #020202;
+}
+
+#workingRefrigeratorsLabel {
+  color: #038B06;
+}
+
+.cold-chain-refrigerators-table {
+  overflow: auto;
+}
+.cold-chain-refrigerators-table tr th {
+  background: #f9f9f9;
+  background: -moz-linear-gradient(top, #f9f9f9 0%, #e0e0e0 100%);
+  /* FF3.6+ */
+  background: -webkit-gradient(linear, left top, left bottom, color-stop(0%, #f9f9f9), color-stop(100%, #e0e0e0));
+  /* Chrome,Safari4+ */
+  background: -webkit-linear-gradient(top, #f9f9f9 0%, #e0e0e0 100%);
+  /* Chrome10+,Safari5.1+ */
+  background: -o-linear-gradient(top, #f9f9f9 0%, #e0e0e0 100%);
+  /* Opera 11.10+ */
+  background: -ms-linear-gradient(top, #f9f9f9 0%, #e0e0e0 100%);
+  /* IE10+ */
+  background: linear-gradient(to bottom, #f9f9f9 0%, #e0e0e0 100%);
+  /* W3C */
+  font-size: 0.9em;
+  text-shadow: 0 1px 0 white;
+}
+.cold-chain-refrigerators-table th {
+  border-top: 1px solid #ececec;
+  border-left: 1px solid #ececec;
+  background: #e0e0e0;
+  text-align: center;
+}
+.cold-chain-refrigerators-table td {
+  text-align: left;
+}
+
 .facilities-isa-amount-table {
   overflow: auto;
   tr {
@@ -2310,7 +2383,12 @@ input[placeholder].placeholder {
   .main-heading {
     text-align: center;
   }
-
+  .main-heading-left {
+    text-align: left;
+  }
+  td.equipment-status {
+    text-align: center;
+  }
 }
 
 .manage-distribution, .distribution-grid {

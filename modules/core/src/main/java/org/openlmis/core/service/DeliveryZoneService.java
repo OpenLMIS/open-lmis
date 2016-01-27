@@ -14,9 +14,11 @@ import org.openlmis.core.domain.DeliveryZone;
 import org.openlmis.core.domain.Program;
 import org.openlmis.core.repository.DeliveryZoneRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -31,6 +33,8 @@ public class DeliveryZoneService {
 
   @Autowired
   ProgramService programService;
+
+  private List<String> nexleafDeliveryZones = new ArrayList<>();
 
   public void save(DeliveryZone zone) {
     if (zone.getId() != null)
@@ -76,5 +80,14 @@ public class DeliveryZoneService {
       fullPrograms.add(programService.getById(program.getId()));
     }
     return fullPrograms;
+  }
+
+  public List<String> getNexleafDeliveryZones() {
+    return nexleafDeliveryZones;
+  }
+
+  @Value("${nexleaf.deliveryZones}")
+  public void setNexleafDeliveryZones(String deliveryZones) {
+    this.nexleafDeliveryZones = Arrays.asList(deliveryZones.replaceAll("\\s+","").split(","));
   }
 }
