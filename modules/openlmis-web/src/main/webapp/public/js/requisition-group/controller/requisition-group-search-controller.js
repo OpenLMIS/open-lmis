@@ -15,8 +15,9 @@ function RequisitionGroupSearchController($scope, RequisitionGroups, $location, 
     {value: "supervisoryNode", name: "option.value.supervisory.node"}
   ];
 
-  $scope.showResults = false;
+  $scope.showCloseButton = false;
   $scope.currentPage = 1;
+  $scope.searchedQuery = '%'
   $scope.selectedSearchOption = navigateBackService.selectedSearchOption || $scope.searchOptions[0];
 
   $scope.selectSearchType = function (searchOption) {
@@ -51,7 +52,11 @@ function RequisitionGroupSearchController($scope, RequisitionGroups, $location, 
       $scope.pagination = data.pagination;
       $scope.totalItems = $scope.pagination.totalRecords;
       $scope.currentPage = $scope.pagination.page;
-      $scope.showResults = true;
+      if($scope.searchedQuery === '%'){
+        $scope.showCloseButton = false;
+      }else {
+        $scope.showCloseButton = true;
+      }
     }, {});
   }
 
@@ -59,8 +64,11 @@ function RequisitionGroupSearchController($scope, RequisitionGroups, $location, 
     $scope.query = "";
     $scope.totalItems = 0;
     $scope.requisitionGroupList = [];
-    $scope.showResults = false;
+    $scope.showCloseButton = false;
     angular.element("#searchRequisitionGroup").focus();
+    $scope.searchedQuery= "%";
+    $scope.currentPage = 1;
+    $scope.search($scope.currentPage, $scope.searchedQuery);
   };
 
   $scope.triggerSearch = function (event) {
