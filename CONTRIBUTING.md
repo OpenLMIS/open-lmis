@@ -128,6 +128,11 @@ branching strategy based on Vincent Driessen's
 which we encourage contributors to follow as well to ease the task of reviewing and accepting contribution 
 submissions.
 
+In short we utilize the following branches:
+* `master` - is where all OpenLMIS stable releases are.  Code here is of the highest quality for the project and is ready to be used
+in an implementation.  Pull requests should not be made against this branch.  If a bug-fix is needed on a released version, a pull-request should be made to that version's release branch.
+* `dev` - is where all active development occurs.  Code that's here **should** always build and pass tests, however it may not be stable and it is not suitable yet for a release.  Contributions for the next release should be made here via pull requests.
+
 A short example of contributing would look like this:
 
 1. *Communicate* using JIRA, the wiki, or the developer forums!
