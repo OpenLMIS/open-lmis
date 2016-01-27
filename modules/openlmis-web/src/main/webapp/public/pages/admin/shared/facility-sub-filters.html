@@ -77,20 +77,18 @@
         </div>
       </div>
 
-      <div id="geoZoneSearchList" class="search-list slider" slider="showResults">
-        <div ng-switch on="geoZonesResultCount">
-          <h3 ng-switch-when="0">
-            <span id="noGeoZoneResult" ng-show="!manyGeoZoneMessage"
-                  openlmis-message="msg.no.matches|geoZoneQuery"></span>
-            <span id="tooManyGeoZoneResults" ng-show="manyGeoZoneMessage" openlmis-message="manyGeoZoneMessage"></span>
-          </h3>
-
-          <h3 id="oneGeoZoneResult" ng-switch-when="1" openlmis-message="msg.one.match|geoZoneQuery"></h3>
-
-          <h3 id="nGeoZoneResults" ng-switch-default
-              openlmis-message="msg.many.matches|geoZonesResultCount|geoZoneQuery"></h3>
+      <div id="geoZoneSearchList" class="search-list">
+        <div ng-switch on="geoZoneQuery">
+          <span ng-switch-when="%">
+            <h3 id="allResultsMessage" openlmis-message="msg.all.matches|geoZonesResultCount"></h3>
+          </span>
+          <span ng-switch-default ng-switch on="geoZonesResultCount">
+            <h3 id="noResultMessage" ng-switch-when="0" openlmis-message="msg.no.matches|geoZoneQuery"></h3>
+            <h3 id="oneResultMessage" ng-switch-when="1" openlmis-message="msg.one.match|geoZoneQuery"></h3>
+            <h3 id="nResultsMessage" ng-switch-default openlmis-message="msg.many.matches|geoZonesResultCount|geoZoneQuery"></h3>
+          </span>
         </div>
-        <a href="" class="close-btn" id="geoZoneSearchCloseButton" ng-click="clearGeoZoneSearch()"></a>
+        <a href="" class="close-btn" id="geoZoneSearchCloseButton" ng-click="clearGeoZoneSearch()" ng-show="showCloseButton"></a>
         <ul>
           <li ng-repeat="geoZone in geoZoneList">
             <div class="productCategory" ng-show="showLevel($index)" ng-bind="geoZone.level.name"></div>

@@ -9,17 +9,23 @@
  */
 
 function FacilitySubFiltersController($scope, GeographicZoneSearch, FacilityTypes, messageService) {
+  var defaultSearchParam='%';
+  $scope.showCloseButton = false;
 
   $scope.searchGeoZone = function () {
-    if (!$scope.geoZoneSearchParam) return;
-    $scope.geoZoneQuery = $scope.geoZoneSearchParam.trim();
+    if (!($scope.geoZoneSearchParam || defaultSearchParam)) return;
+    $scope.geoZoneQuery = $scope.geoZoneSearchParam ? $scope.geoZoneSearchParam.trim() : defaultSearchParam;
 
     GeographicZoneSearch.get({"searchParam": $scope.geoZoneQuery}, function (data) {
       $scope.geoZoneList = data.geoZones;
       $scope.geoZonesResultCount = isUndefined($scope.geoZoneList) ? 0 : $scope.geoZoneList.length;
       $scope.manyGeoZoneMessage = data.message;
       $scope.levels = _.uniq(_.pluck(_.pluck($scope.geoZoneList, 'level'), 'name'));
-      $scope.showResults = true;
+      if($scope.geoZoneQuery === '%'){
+        $scope.showCloseButton = false;
+      }else {
+        $scope.showCloseButton = true;
+      }
     });
   };
 
@@ -60,10 +66,10 @@ function FacilitySubFiltersController($scope, GeographicZoneSearch, FacilityType
   };
 
   $scope.clearGeoZoneSearch = function () {
-    $scope.showResults = false;
     $scope.geoZoneList = [];
   $scope.geoZoneSearchParam = undefined;
     angular.element('#geoZoneSearchList').focus();
+    $scope.searchGeoZone();
   };
 
   $scope.cancelFilters = function () {
@@ -83,4 +89,10 @@ function FacilitySubFiltersController($scope, GeographicZoneSearch, FacilityType
 
   $scope.$on('singleSelectSearchCleared', clearFilters);
   $scope.$on('multiSelectSearchCleared', clearFilters);
+
+  $scope.$watch('filterModal', function() {
+    if($scope.filterModal){
+      $scope.searchGeoZone();
+    }
+  });
 }
