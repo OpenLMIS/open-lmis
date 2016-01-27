@@ -9,8 +9,9 @@
  */
 
 function UserSearchController($scope, $location, Users, navigateBackService) {
-  $scope.showResults = false;
+  $scope.showCloseButton = false;
   $scope.currentPage = 1;
+  $scope.searchedQuery = '%'
 
   $scope.loadUsers = function (page, lastQuery) {
     if (!($scope.query || lastQuery)) return;
@@ -25,7 +26,11 @@ function UserSearchController($scope, $location, Users, navigateBackService) {
       $scope.pagination = data.pagination;
       $scope.totalItems = $scope.pagination.totalRecords;
       $scope.currentPage = $scope.pagination.page;
-      $scope.showResults = true;
+      if($scope.searchedQuery === '%'){
+        $scope.showCloseButton = false;
+      }else {
+        $scope.showCloseButton = true;
+      }
     }, {});
   }
 
@@ -43,8 +48,11 @@ function UserSearchController($scope, $location, Users, navigateBackService) {
     $scope.query = "";
     $scope.totalItems = 0;
     $scope.userList = [];
-    $scope.showResults = false;
+    $scope.showCloseButton = false;
     angular.element("#searchUser").focus();
+    $scope.searchedQuery= "%";
+    $scope.currentPage = 1;
+    $scope.loadUsers($scope.currentPage, $scope.searchedQuery);
   };
 
   $scope.edit = function (id) {
