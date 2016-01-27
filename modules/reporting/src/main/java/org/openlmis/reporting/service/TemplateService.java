@@ -180,7 +180,7 @@ public class TemplateService {
 
   public Map<String, Object> getParametersMap(Template template, int userId, HttpServletRequest request, String format) throws ParseException {
     List<TemplateParameter> templateParameters = template.getParameters();
-    Map<String, String> requestParameterMap = request.getParameterMap();
+    Map<String, String[]> requestParameterMap = request.getParameterMap();
     Map<String, Object> map = new HashMap<>();
 
     if (templateParameters != null) {

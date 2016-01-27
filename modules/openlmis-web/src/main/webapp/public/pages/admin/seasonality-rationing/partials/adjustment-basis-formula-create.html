@@ -1,0 +1,111 @@
+<!--
+  ~ Electronic Logistics Management Information System (eLMIS) is a supply chain management system for health commodities in a developing country setting.
+  ~
+  ~ Copyright (C) 2015  John Snow, Inc (JSI). This program was produced for the U.S. Agency for International Development (USAID). It was prepared under the USAID | DELIVER PROJECT, Task Order 4.
+  ~
+  ~ This program is free software: you can redistribute it and/or modify it under the terms of the GNU Affero General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
+  ~
+  ~ This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Affero General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU Affero General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
+  -->
+
+<div xmlns="http://www.w3.org/1999/html" tab-scroll>
+    <div >
+        <h2 openlmis-message="label.seasonalityRationingAdjustmentType.header"></h2>
+    </div>
+
+    <form ng-submit="createAdjustmentBasisFormula()" id="adjustmentBasisForm" name="adjustmentBasisForm"
+          select2-blur>
+        <div class="app-form">
+            <div class="form-group">
+                <h3 openlmis-message="label.basicInformation"></h3>
+                <div class="form-row clearfix">
+                    <div class="form-cell">
+
+                        <label for="typeName" openlmis-message="label.adjustmentBasis.name"> <span class="label-required"> *</span></label>
+
+                        <div class="form-field">
+                            <input  ng-model="adjustmentFactor.name" name="typeName" id="typeName" type="text"
+                                    maxlength="50"
+                                    ng-required="true" />
+                                  <span class="field-error" ng-show="adjustmentBasisForm.typeName.$error.required && showError"
+                                        openlmis-message="missing.value">
+                                  </span>
+
+                                  <span class="field-error" ng-show="typeNameInvalid">
+                                     Invalid Name for Adjustment Basis
+                                  </span>
+                        </div>
+                    </div>
+                    <div class="form-cell">
+
+                        <label for="typeDescription" openlmis-message="label.adjustmentBasis.description"> <span class="label-required"> *</span></label>
+
+                        <div class="form-field">
+                            <input  ng-model="adjustmentFactor.description" name="typeDescription" id="typeDescription" type="text"
+                                    maxlength="50"
+                                    ng-required="true" />
+                                  <span class="field-error" ng-show="adjustmentBasisForm.typeDescription.$error.required && showError"
+                                        openlmis-message="missing.value">
+                                  </span>
+
+                                  <span class="field-error" ng-show="typeDescriptionInvalid">
+                                     Invalid Description for Adjustment Basis
+                                  </span>
+                        </div>
+                    </div>
+                    <div class="form-cell">
+
+                        <label for="displayOrder" openlmis-message="label.adjustmentBasis.displayOrder"> <span class="label-required"> *</span></label>
+
+                        <div class="form-field">
+                            <input  ng-model="adjustmentFactor.displayOrder" name="displayOrder" id="displayOrder" type="number"
+                                    maxlength="50"
+                                    ng-required="true" />
+                                  <span class="field-error" ng-show="adjustmentBasisForm.displayOrder.$error.required && showError"
+                                        openlmis-message="missing.value">
+                                  </span>
+
+                                  <span class="field-error" ng-show="displayOrderInvalid">
+                                     Invalid Value for DisplayOrder
+                                  </span>
+                        </div>
+                    </div>
+                    <div class="form-cell">
+
+                        <label for="formulaBased" openlmis-message="label.adjustmentBasis.formulaBasis"> <span class="label-required"> *</span></label>
+
+                        <div class="form-field">
+                            <input  ng-model="adjustmentFactor.basedOnFormula" name="maxMinBased" id="maxMinBased" type="radio"
+
+                                    >  <span openlmis-message="label.adjustmentBasis.minMaxBased"/></input>
+                            <input  ng-model="adjustmentFactor.basedOnFormula" name="formulaBased" id="formulaBased" type="radio"
+                                    ng-value="true"    > <span openlmis-message="label.adjustmentBasis.formulaBased"/></input>
+                        </div>
+                    </div>
+
+
+                </div>
+                <div class="form-cell button-row" >
+
+
+                </div>
+            </div>
+            <div form-toolbar id="action_buttons" class="action-buttons">
+                <div class="form-cell button-row">
+                    <input ng-disabled="seasonalityRationingForm.$invalid" type="submit" class="btn btn-primary save-button" openlmis-message="button.save"/>
+                    <a ng-click="cancelCreate()" class="btn btn-cancel cancel-button"><span
+                            openlmis-message="button.cancel"></span></a>
+                </div>
+                <div class="toolbar-error" id="saveErrorMsgDiv" ng-show="showError || error">{{ errorMessage }}</div>
+            </div>
+        </div>
+
+    </form>
+
+
+
+</div>
+
+

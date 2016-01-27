@@ -16,14 +16,12 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
+import org.junit.runners.BlockJUnit4ClassRunner;
 import org.mockito.ArgumentMatcher;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.openlmis.authentication.web.UserAuthenticationSuccessHandler;
-import org.openlmis.core.domain.Facility;
-import org.openlmis.core.domain.ProcessingPeriod;
-import org.openlmis.core.domain.Program;
-import org.openlmis.core.domain.RightName;
+import org.openlmis.core.domain.*;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.core.message.OpenLmisMessage;
 import org.openlmis.core.service.MessageService;
@@ -33,9 +31,10 @@ import org.openlmis.rnr.domain.*;
 import org.openlmis.rnr.dto.RnrDTO;
 import org.openlmis.rnr.search.criteria.RequisitionSearchCriteria;
 import org.openlmis.rnr.service.*;
-import org.openlmis.web.response.OpenLmisResponse;
+import org.openlmis.core.web.OpenLmisResponse;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
+import org.powermock.modules.junit4.PowerMockRunnerDelegate;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.mock.web.MockHttpServletRequest;
@@ -64,6 +63,7 @@ import static org.powermock.api.mockito.PowerMockito.*;
 
 @Category(UnitTests.class)
 @RunWith(PowerMockRunner.class)
+@PowerMockRunnerDelegate(BlockJUnit4ClassRunner.class)
 @PrepareForTest({RnrDTO.class, RequisitionController.class})
 public class RequisitionControllerTest {
 
@@ -131,12 +131,12 @@ public class RequisitionControllerTest {
     Program program = new Program(2L);
     ProcessingPeriod period = new ProcessingPeriod();
     Rnr initiatedRnr = new Rnr(facility, program, period);
-    when(requisitionService.initiate(facility, program, USER_ID, false)).thenReturn(initiatedRnr);
+    when(requisitionService.initiate(facility, program, USER_ID, false, null)).thenReturn(initiatedRnr);
     when(requisitionService.findM(period)).thenReturn(5);
 
     ResponseEntity<OpenLmisResponse> response = controller.initiateRnr(1L, 2L, false, request);
 
-    verify(requisitionService).initiate(facility, program, USER_ID, false);
+    verify(requisitionService).initiate(facility, program, USER_ID, false, null);
     verify(requisitionService).findM(period);
     assertThat((Rnr) response.getBody().getData().get(RNR), is(initiatedRnr));
     assertThat((Integer) response.getBody().getData().get(NUMBER_OF_MONTHS), is(5));
@@ -211,7 +211,7 @@ public class RequisitionControllerTest {
   @Test
   public void shouldGiveErrorIfInitiatingFails() throws Exception {
     String errorMessage = "error-message";
-    doThrow(new DataException(errorMessage)).when(requisitionService).initiate(new Facility(1L), new Program(2L), USER_ID, false);
+    doThrow(new DataException(errorMessage)).when(requisitionService).initiate(new Facility(1L), new Program(2L), USER_ID, false, null);
     ResponseEntity<OpenLmisResponse> response = controller.initiateRnr(1L, 2L, false, request);
     assertThat(response.getBody().getErrorMsg(), is(equalTo(errorMessage)));
   }
@@ -302,18 +302,15 @@ public class RequisitionControllerTest {
 
   @Test
   public void shouldReturnListOfUserSupervisedRnrForApproval() {
-    final Rnr requisition = createRequisition();
-    final List<Rnr> requisitions = new ArrayList<Rnr>() {{
+    final RnrDTO requisition = new RnrDTO();
+    final List<RnrDTO> requisitions = new ArrayList<RnrDTO>() {{
       add(requisition);
     }};
-    when(requisitionService.listForApproval(USER_ID)).thenReturn(requisitions);
+    when(requisitionService.listForApprovalDto(USER_ID)).thenReturn(requisitions);
     final ResponseEntity<OpenLmisResponse> response = controller.listForApproval(request);
     assertThat(response.getStatusCode(), is(HttpStatus.OK));
     final List<RnrDTO> requisitionsList = (List<RnrDTO>) response.getBody().getData().get(RNR_LIST);
-    assertThat(requisitionsList.get(0).getFacilityName(), is(FACILITY_NAME));
-    assertThat(requisitionsList.get(0).getFacilityCode(), is(FACILITY_CODE));
-    assertThat(requisitionsList.get(0).getProgramName(), is(PROGRAM_NAME));
-    verify(requisitionService).listForApproval(USER_ID);
+    verify(requisitionService).listForApprovalDto(USER_ID);
   }
 
   @Test
@@ -510,6 +507,12 @@ public class RequisitionControllerTest {
     final Facility facility = new Facility();
     facility.setCode(FACILITY_CODE);
     facility.setName(FACILITY_NAME);
+    facility.setFacilityType(new FacilityType());
+    facility.setGeographicZone(new GeographicZone());
+
+    facility.getFacilityType().setId(1L);
+    facility.getGeographicZone().setId(1L);
+
     final Program program = new Program();
     program.setName(PROGRAM_NAME);
     final ProcessingPeriod period = new ProcessingPeriod();

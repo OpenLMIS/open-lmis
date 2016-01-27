@@ -1,0 +1,166 @@
+<!--
+  ~ Electronic Logistics Management Information System (eLMIS) is a supply chain management system for health commodities in a developing country setting.
+  ~
+  ~ Copyright (C) 2015  John Snow, Inc (JSI). This program was produced for the U.S. Agency for International Development (USAID). It was prepared under the USAID | DELIVER PROJECT, Task Order 4.
+  ~
+  ~ This program is free software: you can redistribute it and/or modify it under the terms of the GNU Affero General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
+  ~
+  ~ This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Affero General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU Affero General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
+  -->
+
+<div>
+
+  <h2><span openlmis-message="label.vaccine.monthly.reporting"></span></h2>
+  <div class="info-box" style="margin-top: -10px;">
+    <div>
+      <div class="row-fluid">
+        <div class="span5" style="padding: 10px;">
+          <div class="info-box" style="margin-bottom: 0px;" >
+            <div class="row-fluid">
+              <div class="span6">
+                <strong id='facilityLabel' openlmis-message="label.facility"> </strong>:&nbsp;<span
+                  id='facility' ng-bind="report.facility.code + ' - ' + report.facility.name"></span>
+              </div>
+              <div class="span6">
+                <strong id='operatedByLabel' openlmis-message="label.facility.operatedBy"></strong>: &nbsp;<span
+                  id='operatedBy' ng-bind="report.facility.operatedBy.text"></span>
+              </div>
+            </div>
+            <div class="row-fluid">
+              <div class="span6">
+                <strong><span id='geographicZoneLabel'><span openlmis-message="label.district"></span></span>:
+                </strong><span
+                  id='geographicZone' ng-bind="report.facility.geographicZone.name"></span>
+              </div>
+              <div class="span6">
+                <strong><span id='parentLevelLabel'><span openlmis-message="label.region"></span></span>:
+                </strong><span
+                  id='parentLevel' ng-bind="report.facility.geographicZone.parent.name"></span>
+              </div>
+            </div>
+            <div class="row-fluid" style="padding-bottom: 5px">
+              <div class="span6">
+                <strong id='reportingPeriodLabel' openlmis-message="label.facility.reportingPeriod"></strong>:&nbsp;<span
+                  id='reportingPeriod' ng-bind="report.period.name"></span>
+              </div>
+              <div class="span6">
+                <strong id='submittedDate' openlmis-message="label.facility.submitted.date"></strong>:&nbsp;
+                <input type="text" style="width: 100px;"
+                       ng-model="report.submissionDate"
+                       ui-date="{dateFormat: 'dd/mm/yy', maxDate: 'today', changeYear: true}"
+                       ui-date-format="yy-mm-dd"
+                       readonly
+                       ng-required="true"
+                      />
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="span7" style="padding: 10px;">
+          <div class="row-fluid">
+            <table class="table" style="margin-bottom: 0;">
+              <thead>
+              <tr>
+                <th></th>
+                <th class="number" ng-repeat="r in report.facilityDemographicEstimates">
+                  {{r.category.name}}
+                </th>
+              </tr>
+              </thead>
+              <tbody>
+              <tr>
+                <td><strong>Monthly</strong></td>
+                <td class="number" ng-repeat="r in report.facilityDemographicEstimates">
+                  <span ng-show="!r.category.isPrimaryEstimate">{{r.value / 12 | number : 0}}</span>
+                </td>
+              </tr>
+              <tr>
+                <td><strong>Annual</strong></td>
+                <td class="number" ng-repeat="r in report.facilityDemographicEstimates">
+                  <span class="number" style="text-align: right" >{{r.value | number : 0}}</span>
+                </td>
+              </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="rnr-tabs clearfix">
+    <ul class="clearfix">
+      <li ng-show="tabVisibility.TARGET_TAB" ng-class="{'selected': (visibleTab == 'target' || visibleTab == undefined)}">
+        <a href="" ng-click="visibleTab = 'target'"><span openlmis-message="label.vaccine.tab.target"></span></a>
+      </li>
+      <li ng-show="tabVisibility.DISEASE_TRACKING_TAB" ng-class="{'selected': visibleTab == 'disease'}">
+        <a href="" ng-click="visibleTab = 'disease'"><span openlmis-message="label.vaccine.tab.disease"></span></a>
+      </li>
+      <li ng-show="tabVisibility.COVERAGE_TAB" ng-class="{'selected': (visibleTab == 'coverage')}">
+        <a href="" ng-click="visibleTab = 'coverage'"><span openlmis-message="label.vaccine.tab.coverage"></span></a>
+      </li>
+      <li ng-show="tabVisibility.VITAMIN_SUPPLEMENTATION_TAB" ng-class="{'selected': visibleTab == 'vitamin'}">
+        <a href="" ng-click="visibleTab = 'vitamin'"><span openlmis-message="label.vaccine.tab.vitamin.supplementation"></span></a>
+      </li>
+      <li ng-show="tabVisibility.STOCK_STATUS_TAB" ng-class="{'selected': (visibleTab == 'stockMovement' )}">
+        <a href="" ng-click="visibleTab ='stockMovement'"><span
+          openlmis-message="label.vaccine.tab.stock.status"></span></a>
+      </li>
+      <li ng-show="tabVisibility.COLD_CHAIN_TAB" ng-class="{'selected': visibleTab == 'coldChain'}">
+        <a href="" ng-click="visibleTab = 'coldChain'"><span openlmis-message="label.vaccine.tab.cold.chain"></span></a>
+      </li>
+      <li ng-show="tabVisibility.AEFI_REPORTING_TAB" ng-class="{'selected': visibleTab == 'incident'}">
+        <a href="" ng-click="visibleTab = 'incident'"><span
+          openlmis-message="label.vaccine.tab.adverse.effect.tracking"></span></a>
+      </li>
+      <li ng-show="tabVisibility.CAMPAIGN_TAB" ng-class="{'selected': visibleTab == 'campaign'}">
+        <a href="" ng-click="visibleTab = 'campaign'"><span openlmis-message="label.vaccine.tab.campaign"></span></a>
+      </li>
+
+    </ul>
+
+  </div>
+  <span ng-show="visibleTab == 'stockMovement' ">
+    <ng-include src="'/public/pages/vaccine/report/partials/create/stock-movement.html'"></ng-include>
+  </span>
+  <span ng-show="visibleTab == 'coverage'">
+    <ng-include src="'/public/pages/vaccine/report/partials/create/coverage.html'"></ng-include>
+  </span>
+  <span ng-show="visibleTab == 'disease'">
+    <ng-include src="'/public/pages/vaccine/report/partials/create/disease.html'"></ng-include>
+  </span>
+  <span ng-show="visibleTab == 'vitamin'">
+    <ng-include src="'/public/pages/vaccine/report/partials/create/vitamin-supplementation.html'"></ng-include>
+  </span>
+  <span ng-show="visibleTab == 'incident'">
+    <ng-include src="'/public/pages/vaccine/report/partials/create/incident.html'"></ng-include>
+  </span>
+  <span ng-show="visibleTab == 'coldChain'">
+    <ng-include src="'/public/pages/vaccine/report/partials/create/cold-chain.html'"></ng-include>
+  </span>
+  <span ng-show="visibleTab == 'campaign'">
+      <ng-include src="'/public/pages/vaccine/report/partials/create/campaign.html'"></ng-include>
+  </span>
+  <span ng-show="visibleTab == 'target' || visibleTab == undefined">
+      <ng-include src="'/public/pages/vaccine/report/partials/create/target.html'"></ng-include>
+  </span>
+
+</div>
+  <div form-toolbar id="action_buttons" class="action-buttons">
+    <div class="form-cell button-row">
+      <input id="saveButton" type="submit" id="save-button" class="btn btn-primary save-button"
+             openlmis-message="button.save" ng-click="save()"/>
+      <input id="submitButton" type="submit" id="submit-button" class="btn btn-primary save-button"
+             openlmis-message="button.submit" ng-click="submit()"/>
+      <input id="cancelButton" type="button" class="btn btn-cancel cancel-button" openlmis-message="button.cancel"
+             ng-click="cancel()"/>
+    </div>
+
+    <div class="toolbar-error" id="saveErrorMsgDiv">
+      <span openlmis-message="error" ng-show="error"></span>&nbsp;
+      <span ng-show="errorProgram" ng-bind="errorProgram"></span>
+    </div>
+    <div class="toolbar-success" id="saveSuccessMsgDiv" openlmis-message="message" ng-show="message"></div>
+  </div>
+</div>

@@ -13,6 +13,7 @@ package org.openlmis.core.service;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
+import org.junit.runners.BlockJUnit4ClassRunner;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.openlmis.core.domain.Facility;
@@ -20,10 +21,11 @@ import org.openlmis.core.domain.ProcessingPeriod;
 import org.openlmis.core.domain.Program;
 import org.openlmis.core.domain.User;
 import org.openlmis.db.categories.UnitTests;
+import org.openlmis.email.domain.EmailMessage;
 import org.openlmis.email.service.EmailService;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
-import org.springframework.mail.SimpleMailMessage;
+import org.powermock.modules.junit4.PowerMockRunnerDelegate;
 
 import java.util.ArrayList;
 
@@ -36,8 +38,9 @@ import static org.openlmis.core.builder.FacilityBuilder.defaultFacility;
 import static org.openlmis.core.builder.ProcessingPeriodBuilder.defaultProcessingPeriod;
 import static org.openlmis.core.builder.ProgramBuilder.defaultProgram;
 
-@Category(UnitTests.class)
 @RunWith(PowerMockRunner.class)
+@PowerMockRunnerDelegate(BlockJUnit4ClassRunner.class)
+@Category(UnitTests.class)
 @PrepareForTest(StatusChangeEventService.class)
 public class StatusChangeEventServiceTest {
   @Mock
@@ -62,13 +65,15 @@ public class StatusChangeEventServiceTest {
     User user = new User();
     ArrayList<User> userList = new ArrayList<>();
     userList.add(user);
-    SimpleMailMessage emailMessage = new SimpleMailMessage();
+    EmailMessage emailMessage = new EmailMessage();
     String actionUrl = baseUrl + "public/pages/logistics/rnr/index.html#/create-rnr/{0}/{2}/{1}?supplyType=fullSupply&page=1";
+    String newLine = System.getProperty("line.separator");
+    String paragraphSeparator = newLine.concat(newLine);
 
     when(messageService.message("msg.email.notification.subject")).thenReturn("subject");
     when(messageService.message(actionUrl, rnrId, program.getId(), facility.getId())).thenReturn("actionUrl");
-    when(messageService.message("msg.email.notification.body", null, "\n\n", facility.getName(),
-      period.getName(), null, "\n\n", "actionUrl", "\n\n")).thenReturn("body");
+    when(messageService.message("msg.email.notification.body", null, paragraphSeparator, facility.getName(),
+      period.getName(), null, paragraphSeparator, "actionUrl", paragraphSeparator)).thenReturn("body");
 
     emailMessage.setTo(user.getEmail());
     emailMessage.setSubject("subject");

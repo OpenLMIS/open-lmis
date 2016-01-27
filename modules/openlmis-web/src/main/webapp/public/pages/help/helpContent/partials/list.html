@@ -1,0 +1,79 @@
+<!--
+  ~ Electronic Logistics Management Information System (eLMIS) is a supply chain management system for health commodities in a developing country setting.
+  ~
+  ~ Copyright (C) 2015  John Snow, Inc (JSI). This program was produced for the U.S. Agency for International Development (USAID). It was prepared under the USAID | DELIVER PROJECT, Task Order 4.
+  ~
+  ~ This program is free software: you can redistribute it and/or modify it under the terms of the GNU Affero General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
+  ~
+  ~ This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Affero General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU Affero General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
+  -->
+
+<div xmlns="http://www.w3.org/1999/html" tab-scroll>
+    <h2><span>{{title}}</span>
+        <a href="#create" id="help-category-add-new"
+           class="pull-right btn btn-primary"
+           ng-disabled="AddEditMode"
+                >Add New</a>
+    </h2>
+
+    <div class="alert alert-success" id="saveSuccessMsgDiv" ng-bind="message" ng-show="message"/>
+
+    <div class="box-content">
+        <form ng-submit="" name="filterForm" novalidate>
+            <!--<div class="clearfix ">-->
+            <!--<div class="form-cell horizontalFilters">-->
+            <!--<label class="labels">Program</label>-->
+
+            <!--<div class="form-fields">-->
+            <!--<select ui-select2 style="width:200px;" class="large-input"-->
+            <!--ng-change="filterProductsByProgram()"-->
+            <!--ng-model="program" ng-options="option.id as option.name for option in programs">-->
+            <!--<option value="">All Programs</option>-->
+            <!--<option ng-repeat="option in programs" value="{{ option.id }}">{{ option.name }}</option>-->
+            <!--</select>-->
+            <!--<input-->
+            <!--ng-change="filterProductsByProgram()"-->
+            <!--ng-model="productName" placeholder="Product Name"></input>-->
+            <!--</div>-->
+
+            <!--</div>-->
+
+            <!--</div>-->
+        </form>
+    </div>
+
+    <div>
+        <table class="table table-striped table-bordered">
+            <thead>
+            <tr class="gradient-header">
+
+
+                <th>Name</th>
+                <th> Html Content</th>
+
+            </tr>
+            </thead>
+            <tbody>
+            <tr ng-repeat="ht in helpContentList | orderBy:['displayOrder','name']">
+
+                <td>
+                    <a href="" ng-click="editHelpContent(ht.id)">{{ht.name}}</a>
+                </td>
+                <td>
+                    <div>{{ht.htmlContent}}</div>
+                </td>
+
+
+            </tr>
+            </tbody>
+        </table>
+    </div>
+
+
+</div>
+
+
+
+

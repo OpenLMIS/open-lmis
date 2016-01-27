@@ -13,13 +13,13 @@ package org.openlmis.core.domain;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
-import org.codehaus.jackson.annotate.JsonIgnoreProperties;
-import org.codehaus.jackson.map.annotate.JsonSerialize;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.upload.Importable;
 import org.openlmis.upload.annotation.ImportField;
 
-import static org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion.NON_EMPTY;
+import static com.fasterxml.jackson.databind.annotation.JsonSerialize.Inclusion.NON_EMPTY;
 
 /**
  * ProgramProduct represents a product available under a program and program-product specific attributes like currentPrice and dosesPerMonth.
@@ -46,6 +46,11 @@ public class ProgramProduct extends BaseModel implements Importable {
 
   @ImportField(mandatory = true, type = "String", name = "Product Category", nested = "code")
   private ProductCategory productCategory;
+
+  private Long productCategoryId;
+
+  @ImportField(name = "Full Supply", type = "boolean", mandatory = true)
+  private boolean fullSupply;
 
   @ImportField(name = "Display Order", type = "int")
   private Integer displayOrder;
@@ -86,5 +91,6 @@ public class ProgramProduct extends BaseModel implements Importable {
     this.currentPrice = programProduct.currentPrice;
     this.programProductIsa = programProduct.programProductIsa;
     this.displayOrder = programProduct.displayOrder;
+    this.fullSupply = programProduct.fullSupply;
   }
 }

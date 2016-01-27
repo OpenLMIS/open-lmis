@@ -10,11 +10,12 @@
 
 package org.openlmis.rnr.serializer;
 
-import org.codehaus.jackson.JsonNode;
-import org.codehaus.jackson.JsonParser;
-import org.codehaus.jackson.ObjectCodec;
-import org.codehaus.jackson.map.DeserializationContext;
-import org.codehaus.jackson.map.JsonDeserializer;
+
+import com.fasterxml.jackson.core.JsonParser;
+import com.fasterxml.jackson.core.ObjectCodec;
+import com.fasterxml.jackson.databind.DeserializationContext;
+import com.fasterxml.jackson.databind.JsonDeserializer;
+import com.fasterxml.jackson.databind.JsonNode;
 import org.openlmis.rnr.domain.RnRColumnSource;
 
 import java.io.IOException;
@@ -29,6 +30,6 @@ public class RnrColumnSourceDeSerializer extends JsonDeserializer<RnRColumnSourc
   public RnRColumnSource deserialize(JsonParser jsonParser, DeserializationContext ctxt) throws IOException {
     ObjectCodec oc = jsonParser.getCodec();
     JsonNode node = oc.readTree(jsonParser);
-    return RnRColumnSource.getValueOf(node.get("code").getTextValue());
+    return RnRColumnSource.getValueOf(node.get("code").textValue());
   }
 }

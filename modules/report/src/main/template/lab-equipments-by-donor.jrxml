@@ -1,0 +1,277 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ~ Electronic Logistics Management Information System (eLMIS) is a supply chain management system for health commodities in a developing country setting.
+  ~
+  ~ Copyright (C) 2015  John Snow, Inc (JSI). This program was produced for the U.S. Agency for International Development (USAID). It was prepared under the USAID | DELIVER PROJECT, Task Order 4.
+  ~
+  ~ This program is free software: you can redistribute it and/or modify it under the terms of the GNU Affero General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
+  ~
+  ~ This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Affero General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU Affero General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
+  -->
+
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="openlmis-report-master-landscape" language="groovy" pageWidth="842" pageHeight="595" orientation="Landscape" columnWidth="802" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="ed759f09-4d2c-46c9-b606-42da2355eabd">
+	<property name="ireport.zoom" value="1.000000000000001"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<parameter name="SUBREPORT_DIR" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA["./"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="REPORT_NAME" class="java.lang.String"/>
+	<parameter name="REPORT_TITLE" class="java.lang.String"/>
+	<parameter name="COUNTRY_NAME" class="java.lang.String"/>
+	<parameter name="GENERATED_BY" class="java.lang.String"/>
+	<parameter name="REPORT_VERSION" class="java.lang.String"/>
+	<parameter name="REPORT_ID" class="java.lang.String"/>
+	<parameter name="LOGO" class="java.io.InputStream"/>
+	<parameter name="REPORT_OUTPUT_OPTION" class="java.lang.String"/>
+	<parameter name="OPERATOR_LOGO" class="java.io.InputStream"/>
+	<parameter name="REPORT_SUB_TITLE" class="java.lang.String"/>
+	<parameter name="REPORT_FILTER_PARAM_VALUES" class="java.lang.String"/>
+	<parameter name="REPORT_MESSAGE_WHEN_NO_DATA" class="java.lang.String"/>
+	<parameter name="OPERATOR_NAME" class="java.lang.String"/>
+	<queryString>
+		<![CDATA[SELECT
+geographic_zones.name AS district,
+facilities.name AS facilityname,
+Donors.longname AS donor,
+equipment_inventories.sourceoffund,
+equipments.name AS equipment_name,
+equipments.model,
+equipment_inventories.yearofinstallation,
+CASE
+    WHEN equipment_inventories.isactive = true THEN 'Yes'::text
+    ELSE 'No'::text
+END AS isactive,
+CASE
+    WHEN equipment_inventories.datedecommissioned is null THEN '-'::text
+    ELSE equipment_inventories.datedecommissioned::text END datedecommissioned,
+CASE
+    WHEN equipment_inventories.replacementrecommended = false THEN 'No'::text
+    ELSE 'Yes'::text
+END AS replacementrecommended
+FROM equipments
+JOIN equipment_inventories ON equipment_inventories.equipmentid = equipments.id
+JOIN programs ON equipment_inventories.programid = programs.id
+JOIN facilities ON facilities.id = equipment_inventories.facilityid
+JOIN facility_types ON facilities.typeid = facility_types.id
+JOIN equipment_types ON equipment_types.id = equipments.equipmenttypeid
+JOIN equipment_status_line_items ON equipment_types.code::text = equipment_status_line_items.code::text
+JOIN equipment_inventory_statuses ON equipment_inventory_statuses.id = equipment_status_line_items.inventorystatusid
+JOIN requisitions ON requisitions.programid = programs.id AND equipment_status_line_items.rnrid = requisitions.id
+JOIN processing_periods ON requisitions.periodid = processing_periods.id
+JOIN processing_schedules ON processing_periods.scheduleid = processing_schedules.id
+JOIN geographic_zones ON geographic_zones.id = facilities.geographiczoneid
+JOIN requisition_group_members ON requisition_group_members.facilityid = facilities.id
+JOIN Donors ON Donors.id = equipment_inventories.primarydonorid
+ORDER BY geographic_zones.name, facilities.name, equipment_inventory_statuses.statusid;]]>
+	</queryString>
+	<field name="district" class="java.lang.String"/>
+	<field name="facilityname" class="java.lang.String"/>
+	<field name="donor" class="java.lang.String"/>
+	<field name="sourceoffund" class="java.lang.String"/>
+	<field name="equipment_name" class="java.lang.String"/>
+	<field name="model" class="java.lang.String"/>
+	<field name="yearofinstallation" class="java.lang.String"/>
+	<field name="hasservicecontract" class="java.lang.String"/>
+	<field name="servicecontractenddate" class="java.lang.String"/>
+	<field name="isactive" class="java.lang.String"/>
+	<field name="datedecommissioned" class="java.lang.String"/>
+	<field name="replacementrecommended" class="java.lang.String"/>
+	<variable name="TOTAL_PAGES" class="java.lang.Integer">
+		<variableExpression><![CDATA[$V{PAGE_NUMBER}]]></variableExpression>
+	</variable>
+	<group name="district-group">
+		<groupExpression><![CDATA[$F{district}]]></groupExpression>
+		<groupHeader>
+			<band height="24">
+				<textField>
+					<reportElement uuid="54b3bbe1-fdfb-4328-9949-a756654ab147" x="2" y="4" width="100" height="20"/>
+					<textElement/>
+					<textFieldExpression><![CDATA[$F{district}]]></textFieldExpression>
+				</textField>
+			</band>
+		</groupHeader>
+	</group>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="79" splitType="Stretch">
+			<subreport>
+				<reportElement uuid="c576bd49-9432-4ebb-a897-b64a7ec0183e" x="0" y="0" width="802" height="79" isRemoveLineWhenBlank="true">
+					<printWhenExpression><![CDATA[$P{REPORT_OUTPUT_OPTION}.toUpperCase() != "XLS"]]></printWhenExpression>
+				</reportElement>
+				<subreportParameter name="PAGE_NO">
+					<subreportParameterExpression><![CDATA[$V{PAGE_NUMBER}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="REPORT_TITLE">
+					<subreportParameterExpression><![CDATA[$P{REPORT_TITLE}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="LOGO">
+					<subreportParameterExpression><![CDATA[$P{LOGO}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="OPERATOR_NAME">
+					<subreportParameterExpression><![CDATA[$P{OPERATOR_NAME}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="REPORT_SUB_TITLE">
+					<subreportParameterExpression><![CDATA[$P{REPORT_SUB_TITLE}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="REPORT_NAME">
+					<subreportParameterExpression><![CDATA[$P{REPORT_NAME}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="REPORT_FILTER_PARAM_VALUES">
+					<subreportParameterExpression><![CDATA[$P{REPORT_FILTER_PARAM_VALUES}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="OPERATOR_LOGO">
+					<subreportParameterExpression><![CDATA[$P{OPERATOR_LOGO}]]></subreportParameterExpression>
+				</subreportParameter>
+				<dataSourceExpression><![CDATA[new net.sf.jasperreports.engine.JREmptyDataSource()]]></dataSourceExpression>
+				<subreportExpression><![CDATA["openlmis-report-header-landscape.jasper"]]></subreportExpression>
+			</subreport>
+		</band>
+	</title>
+	<columnHeader>
+		<band height="28" splitType="Stretch">
+			<staticText>
+				<reportElement uuid="e587f413-b748-4b6c-8a34-93bb08817a0b" mode="Opaque" x="-1" y="1" width="802" height="27" forecolor="#FFFFFF" backcolor="#3D9297">
+					<property name="net.sf.jasperreports.export.xls.ignore.graphics" value="false"/>
+				</reportElement>
+				<textElement/>
+				<text><![CDATA[]]></text>
+			</staticText>
+			<textField>
+				<reportElement uuid="cf33b371-7a82-46c1-ad72-9f977e61fa8d" x="102" y="1" width="50" height="27"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$R{label.equipment.primary.donor}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="f2a08438-e702-4d4e-8111-bb8aa7d35253" x="152" y="1" width="64" height="27"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$R{label.funding.source}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="9d99426c-23ee-4f17-b3ad-ac5021ef6197" x="216" y="1" width="83" height="27"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$R{label.equipment.name}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="78f25a22-cb8d-4fa3-a2fb-e522bbf82a46" x="299" y="1" width="100" height="27"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$R{label.equipment.model}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="4d6ca5bb-ee66-4fab-b44b-aa31ae1f92dd" x="399" y="1" width="75" height="27"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$R{label.equipment.year.of.installation}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="45f0db79-eb0b-457c-8357-28b8537c3acd" x="474" y="1" width="62" height="27"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$R{label.equipment.has.service.contract}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="d423eeb6-612f-43b9-a705-775d0b7710b1" x="536" y="1" width="86" height="27"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$R{label.equipment.end.date.of.service.contract}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="cebfc0b4-e662-4a2d-9d9b-36b24d026471" x="622" y="1" width="41" height="27"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$R{label.equipment.is.active}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="4ea9e96f-294f-4888-b60a-a96ddb3a8fa2" x="663" y="1" width="58" height="27"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$R{label.equipment.date.decommissioned}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="c7bbb56c-d350-414f-99bd-6a54d9ab1cd4" x="721" y="1" width="80" height="27"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$R{label.equipment.replacement.recommended}]]></textFieldExpression>
+			</textField>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="20" splitType="Stretch">
+			<textField>
+				<reportElement uuid="497dba92-6949-4bb2-9beb-1f85a98456e5" x="72" y="0" width="759" height="20" forecolor="#006666">
+					<printWhenExpression><![CDATA[$P{REPORT_MESSAGE_WHEN_NO_DATA} != null]]></printWhenExpression>
+				</reportElement>
+				<textElement textAlignment="Center" verticalAlignment="Top">
+					<font size="14" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{REPORT_MESSAGE_WHEN_NO_DATA}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement uuid="9a174af8-d2cb-46c8-b19f-0b17e1be585b" mode="Opaque" x="0" y="0" width="801" height="20" backcolor="#F4F4F4">
+					<printWhenExpression><![CDATA[$V{REPORT_COUNT}%2 == 0]]></printWhenExpression>
+				</reportElement>
+				<textElement/>
+				<text><![CDATA[]]></text>
+			</staticText>
+			<line>
+				<reportElement uuid="83a87452-92e8-46d4-bcdd-314f90e18dc7" x="0" y="19" width="801" height="1" forecolor="#3D9297"/>
+				<graphicElement>
+					<pen lineWidth="0.5"/>
+				</graphicElement>
+			</line>
+			<textField>
+				<reportElement uuid="2d571c77-4c10-4c13-a1f4-43946e9fb2da" x="0" y="0" width="100" height="20"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{facilityname}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="b4fbe1a2-9e5b-465e-b2e8-4ede2eb2eb34" x="102" y="0" width="50" height="20"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{donor}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="61ea9f4c-a637-4c27-950a-5ad6630252ef" x="152" y="0" width="64" height="20"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{sourceoffund}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="6e67458a-cb15-40da-b996-cede3f5fc46e" x="216" y="0" width="83" height="20"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{equipment_name}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="30ed4dd8-3212-4b77-b41b-03ea73bbb1f8" x="299" y="0" width="100" height="20"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{model}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="f9eab606-389d-438c-8b9a-bdf7728ff6aa" x="399" y="0" width="75" height="20"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{yearofinstallation}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="60c8de0f-2ca4-45af-8c21-85189777ece4" x="474" y="0" width="60" height="20"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{hasservicecontract}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="82023fe3-0abb-4dba-a430-a4cee7a8889c" x="536" y="0" width="86" height="20"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{servicecontractenddate}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="d8d00038-c120-49f7-b885-8372fbd68c5a" x="622" y="0" width="41" height="20"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{isactive}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="e8257c22-3e28-4057-836a-9472dded12d4" x="721" y="0" width="80" height="20"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{replacementrecommended}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="39b003a0-7560-4f6a-9f89-8dba99303e2e" x="663" y="0" width="58" height="20"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{datedecommissioned}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+</jasperReport>

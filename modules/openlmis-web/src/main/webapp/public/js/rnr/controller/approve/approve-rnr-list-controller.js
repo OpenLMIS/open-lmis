@@ -29,6 +29,8 @@ function ApproveRnrListController($scope, requisitionList, $location, messageSer
       {field: 'programName', displayName: messageService.get("program.header") },
       {field: 'facilityCode', displayName: messageService.get("option.value.facility.code")},
       {field: 'facilityName', displayName: messageService.get("option.value.facility.name")},
+      {field: 'facilityType', displayName: messageService.get("option.value.facility.type")},
+      {field: 'districtName', displayName: messageService.get("option.value.facility.district")},
       {field: 'stringPeriodStartDate', displayName: messageService.get("label.period.start.date")},
       {field: 'stringPeriodEndDate', displayName: messageService.get("label.period.end.date")},
       {field: 'stringSubmittedDate', displayName: messageService.get("label.date.submitted")},

@@ -96,10 +96,14 @@ public class OrderService {
     requisitionService.releaseRequisitionsAsOrder(rnrList, userId);
     Order order;
     for (Rnr rnr : rnrList) {
+      Long depotId = rnr.getSupplyingDepotId();
       rnr = requisitionService.getLWById(rnr.getId());
       rnr.setModifiedBy(userId);
       order = new Order(rnr);
       SupplyLine supplyLine = supplyLineService.getSupplyLineBy(new SupervisoryNode(rnr.getSupervisoryNodeId()), rnr.getProgram());
+      if(depotId != null && supplyLine.getSupplyingFacility().getId() != depotId){
+        supplyLine = supplyLineService.getByFacilityProgram(depotId, rnr.getProgram().getId());
+      }
       order.setSupplyLine(supplyLine);
       if (!fulfillmentPermissionService.hasPermissionOnWarehouse(userId, supplyLine.getSupplyingFacility().getId(), RightName.CONVERT_TO_ORDER)) {
         throw new AccessDeniedException("user.not.authorized");
@@ -142,12 +146,18 @@ public class OrderService {
     return fillOrders(orders);
   }
 
+  public List<Order> getOrdersForPage(int page, Long userId, String right, Long supplyDepot, Long program, Long period) {
+    List<Order> orders = orderRepository.getOrdersForPage(page, pageSize, userId, right, supplyDepot, program, period);
+    return fillOrders(orders);
+  }
+
   public Order getOrder(Long id) {
     Order order = orderRepository.getById(id);
     if (order == null) {
       return null;
     }
     Rnr requisition = requisitionService.getFullRequisitionById(order.getRnr().getId());
+    requisition.setProgram(programService.getById(requisition.getProgram().getId()));
     removeUnorderedProducts(requisition);
     order.setRnr(requisition);
     return order;
@@ -214,11 +224,15 @@ public class OrderService {
     return orderRepository.getNumberOfPages(pageSize);
   }
 
+  public Integer getNumberOfPages(Long supplyDepot, Long program, Long period) {
+    return orderRepository.getNumberOfPages(pageSize, supplyDepot, program, period);
+  }
+
   public Integer getPageSize() {
     return pageSize;
   }
 
-  public List<Order> searchByStatusAndRight(Long userId, String rightName, List<OrderStatus> statuses) {
+  public List<Order> searchByStatusAndRight(Long userId, String rightName, List<OrderStatus> statuses, Long programId, Long facilityId) {
     List<FulfillmentRoleAssignment> fulfilmentRolesWithRight = roleAssignmentService.getFulfilmentRolesWithRight(userId, rightName);
 
     List<Order> orders = orderRepository.searchByWarehousesAndStatuses((List<Long>) collect(fulfilmentRolesWithRight, new Transformer() {
@@ -226,7 +240,7 @@ public class OrderService {
       public Object transform(Object o) {
         return ((FulfillmentRoleAssignment) o).getFacilityId();
       }
-    }), statuses);
+    }), statuses, programId, facilityId);
 
     orders = fillOrders(orders);
     sort(orders);

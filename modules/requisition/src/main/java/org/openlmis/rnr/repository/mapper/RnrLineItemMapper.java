@@ -29,7 +29,7 @@ public interface RnrLineItemMapper {
     "(rnrId, productCode, product, productDisplayOrder, productCategory, productCategoryDisplayOrder, previousStockInHand, beginningBalance,",
     "quantityReceived, quantityDispensed, dispensingUnit,dosesPerMonth, dosesPerDispensingUnit, maxMonthsOfStock,",
     "totalLossesAndAdjustments, packsToShip, packSize, price, roundToZero, packRoundingThreshold, fullSupply,",
-    "newPatientCount, stockOutDays, previousNormalizedConsumptions, reportingDays, ",
+    "newPatientCount, stockOutDays, previousNormalizedConsumptions, reportingDays, skipped, ",
     "modifiedBy,createdBy)",
     "VALUES (",
     "#{lineItem.rnrId}, #{lineItem.productCode}, #{lineItem.product}, #{lineItem.productDisplayOrder}, #{lineItem.productCategory},",
@@ -37,13 +37,20 @@ public interface RnrLineItemMapper {
     "#{lineItem.dispensingUnit},#{lineItem.dosesPerMonth}, #{lineItem.dosesPerDispensingUnit}, #{lineItem.maxMonthsOfStock},",
     "#{lineItem.totalLossesAndAdjustments}, #{lineItem.packsToShip}, #{lineItem.packSize}, #{lineItem.price},#{lineItem.roundToZero},",
     "#{lineItem.packRoundingThreshold}, #{lineItem.fullSupply}, #{lineItem.newPatientCount}, #{lineItem.stockOutDays},",
-    "#{previousNormalizedConsumptions}, #{lineItem.reportingDays}, #{lineItem.modifiedBy}, #{lineItem.createdBy})"})
+    "#{previousNormalizedConsumptions}, #{lineItem.reportingDays}, #{lineItem.skipped} , #{lineItem.modifiedBy}, #{lineItem.createdBy})"})
   @Options(useGeneratedKeys = true, keyProperty = "lineItem.id")
   public Integer insert(@Param("lineItem") RnrLineItem rnrLineItem, @Param("previousNormalizedConsumptions") String previousNormalizedConsumptions);
 
-  @Select("SELECT * FROM requisition_line_items WHERE rnrId = #{rnrId} and fullSupply = true order by id")
+  @Select("SELECT requisition_line_items.*, " +
+            "products.strength FROM requisition_line_items, " +
+            "products WHERE rnrId = #{rnrId} " +
+            "and requisition_line_items.fullSupply = true " +
+            "and requisition_line_items.productcode = products.code  " +
+            "order by requisition_line_items.id;")
   @Results(value = {
     @Result(property = "id", column = "id"),
+    @Result(property = "productStrength", column = "strength"),
+    @Result(property = "productPrimaryName", column = "primaryname"),
     @Result(property = "previousNormalizedConsumptions", column = "previousNormalizedConsumptions", typeHandler = StringToList.class),
     @Result(property = "lossesAndAdjustments", javaType = List.class, column = "id",
       many = @Many(select = "org.openlmis.rnr.repository.mapper.LossesAndAdjustmentsMapper.getByRnrLineItem"))
@@ -107,6 +114,7 @@ public interface RnrLineItemMapper {
   @Update("UPDATE requisition_line_items " +
     "SET quantityApproved = #{quantityApproved}, " +
     " packsToShip = #{packsToShip}, " +
+    " skipped = #{skipped}, " +
     " remarks = #{remarks}, " +
     " modifiedBy = #{modifiedBy}, " +
     " modifiedDate = CURRENT_TIMESTAMP " +
@@ -155,4 +163,20 @@ public interface RnrLineItemMapper {
       many = @Many(select = "org.openlmis.rnr.repository.mapper.LossesAndAdjustmentsMapper.getByRnrLineItem"))
   })
   RnrLineItem getNonSkippedLineItem(@Param("rnrId") Long rnrId, @Param("productCode") String productCode);
+
+  @Select({"SELECT productCode, beginningBalance, quantityReceived, quantityDispensed, ",
+      "stockInHand, quantityRequested, calculatedOrderQuantity, quantityApproved, ",
+      "totalLossesAndAdjustments, expirationDate",
+      "FROM requisition_line_items",
+      "WHERE rnrId = #{rnrId} and fullSupply = TRUE",
+      "AND skipped = FALSE"})
+  List<RnrLineItem> getNonSkippedRnrLineItemsByRnrId(Long rnrId);
+
+  @Select({"SELECT productCode, beginningBalance, quantityReceived, quantityDispensed, ",
+      "stockInHand, quantityRequested, calculatedOrderQuantity, quantityApproved, ",
+      "totalLossesAndAdjustments, expirationDate",
+      "FROM requisition_line_items",
+      "WHERE rnrId = #{rnrId} and fullSupply = FALSE",
+      "AND skipped = FALSE"})
+  List<RnrLineItem> getNonSkippedNonFullSupplyRnrLineItemsByRnrId(Long rnrId);
 }

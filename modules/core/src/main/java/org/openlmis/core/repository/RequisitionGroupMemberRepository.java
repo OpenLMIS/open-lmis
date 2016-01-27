@@ -58,6 +58,11 @@ public class RequisitionGroupMemberRepository {
     mapper.update(requisitionGroupMember);
   }
 
+  public void removeRequisitionGroupMember(RequisitionGroup requisitionGroup, Facility facility)
+  {
+      mapper.removeRequisitionGroupMember(requisitionGroup, facility);
+  }
+
   public List<RequisitionGroupMember> getAllRequisitionGroupMembersByFacility(Long facilityId) {
     return mapper.getAllRequisitionGroupMembersByFacility(facilityId);
   }

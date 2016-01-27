@@ -14,11 +14,15 @@ import org.joda.time.DateTime;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
+import org.junit.runners.BlockJUnit4ClassRunner;
+import org.mockito.Mock;
 import org.openlmis.db.categories.UnitTests;
 import org.openlmis.rnr.domain.Rnr;
 import org.openlmis.rnr.dto.RequisitionStatusFeedDTO;
+import org.openlmis.rnr.service.NotificationServices;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
+import org.powermock.modules.junit4.PowerMockRunnerDelegate;
 
 import static com.natpryce.makeiteasy.MakeItEasy.a;
 import static com.natpryce.makeiteasy.MakeItEasy.make;
@@ -32,8 +36,12 @@ import static org.powermock.api.mockito.PowerMockito.*;
 
 @Category(UnitTests.class)
 @RunWith(PowerMockRunner.class)
+@PowerMockRunnerDelegate(BlockJUnit4ClassRunner.class)
 @PrepareForTest({DateTime.class, RequisitionStatusChangeEvent.class})
 public class RequisitionStatusChangeEventTest {
+
+  @Mock
+  NotificationServices nServices;
 
   @Test
   public void shouldCreateEventFromRequisition() throws Exception {
@@ -48,7 +56,7 @@ public class RequisitionStatusChangeEventTest {
     whenNew(RequisitionStatusFeedDTO.class).withArguments(rnr).thenReturn(feedDTO);
     when(feedDTO.getSerializedContents()).thenReturn("serializedContents");
 
-    RequisitionStatusChangeEvent event = new RequisitionStatusChangeEvent(rnr);
+    RequisitionStatusChangeEvent event = new RequisitionStatusChangeEvent(rnr, nServices);
 
     assertThat(event.getTitle(), is(FEED_TITLE));
     assertThat(event.getTimeStamp(), is(date));

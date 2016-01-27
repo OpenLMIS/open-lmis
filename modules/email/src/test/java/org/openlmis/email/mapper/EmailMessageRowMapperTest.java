@@ -7,7 +7,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.openlmis.db.categories.UnitTests;
-import org.openlmis.email.domain.OpenlmisEmailMessage;
+import org.openlmis.email.domain.EmailMessage;
 
 import java.sql.ResultSet;
 
@@ -32,7 +32,7 @@ public class EmailMessageRowMapperTest {
     when(resultSet.getString("content")).thenReturn("content");
     when(resultSet.getLong("id")).thenReturn(1L);
 
-    OpenlmisEmailMessage emailMessage = emailMessageRowMapper.mapRow(resultSet, 1);
+    EmailMessage emailMessage = emailMessageRowMapper.mapRow(resultSet, 1);
 
     assertThat(emailMessage.getTo()[0], is("receiver"));
     assertThat(emailMessage.getSubject(), is("subject"));

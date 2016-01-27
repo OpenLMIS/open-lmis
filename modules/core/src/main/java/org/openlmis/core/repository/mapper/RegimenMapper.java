@@ -34,10 +34,21 @@ public interface RegimenMapper {
       one = @One(select = "org.openlmis.core.repository.mapper.RegimenCategoryMapper.getById"))})
   List<Regimen> getByProgram(Long programId);
 
+    @Select({"SELECT * FROM regimens"})
+    @Results(value = {
+            @Result(property = "category", column = "categoryId", javaType = Long.class,
+                    one = @One(select = "org.openlmis.core.repository.mapper.RegimenCategoryMapper.getById"))})
+    List<Regimen> getAllRegimens();
+
   @Delete("DELETE FROM regimens where programId = #{programId}")
   void deleteByProgramId(Long programId);
 
   @Update({"UPDATE regimens SET code = #{code}, name = #{name}, active = #{active}, displayOrder = #{displayOrder},",
     "modifiedBy = #{modifiedBy} WHERE id = #{id}"})
   void update(Regimen regimen);
+
+    @Select("SELECT * FROM regimens WHERE id = #{id}")
+    Regimen getById(Long id);
+
+
 }

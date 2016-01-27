@@ -11,10 +11,7 @@
 package org.openlmis.core.repository;
 
 import lombok.NoArgsConstructor;
-import org.openlmis.core.domain.Pagination;
-import org.openlmis.core.domain.Program;
-import org.openlmis.core.domain.SupervisoryNode;
-import org.openlmis.core.domain.User;
+import org.openlmis.core.domain.*;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.core.message.OpenLmisMessage;
 import org.openlmis.core.repository.mapper.UserMapper;
@@ -24,6 +21,7 @@ import org.springframework.dao.DuplicateKeyException;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.stereotype.Repository;
 
+import java.util.LinkedHashMap;
 import java.util.List;
 
 /**
@@ -151,5 +149,18 @@ public class UserRepository {
 
   public Integer getTotalSearchResultCount(String searchParam) {
     return userMapper.getTotalSearchResultCount(searchParam);
+  }
+
+  public List<LinkedHashMap> getPreferences(Long userId){
+    return userMapper.getPreferences(userId);
+  }
+
+  public String updateUserPreferences(Long userId, User user, Long programId, Long facilityId, String products) {
+     userMapper.update(user);
+     return userMapper.updateUserPreferences(userId, programId, facilityId, products);
+  }
+
+  public List<String> getSupervisoryRights(Long userId) {
+    return userMapper.getSupervisoryRights(userId);
   }
 }

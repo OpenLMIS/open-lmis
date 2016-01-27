@@ -1,0 +1,182 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ~ Electronic Logistics Management Information System (eLMIS) is a supply chain management system for health commodities in a developing country setting.
+  ~
+  ~ Copyright (C) 2015  John Snow, Inc (JSI). This program was produced for the U.S. Agency for International Development (USAID). It was prepared under the USAID | DELIVER PROJECT, Task Order 4.
+  ~
+  ~ This program is free software: you can redistribute it and/or modify it under the terms of the GNU Affero General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
+  ~
+  ~ This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Affero General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU Affero General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
+  -->
+
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="openlmis-report-master" language="groovy" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="ddb5da8a-d20d-4e00-ac3e-3658cfaa024b">
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<parameter name="LOGO" class="java.io.InputStream"/>
+	<parameter name="REPORT_TITLE" class="java.lang.String"/>
+	<parameter name="REPORT_ID" class="java.lang.String"/>
+	<parameter name="REPORT_VERSION" class="java.lang.String"/>
+	<parameter name="GENERATED_BY" class="java.lang.String"/>
+	<parameter name="REPORT_NAME" class="java.lang.String"/>
+	<parameter name="COUNTRY_NAME" class="java.lang.String"/>
+	<parameter name="SUBREPORT_DIR" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA["./"]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[select * from facilities where id=2;]]>
+	</queryString>
+	<field name="id" class="java.lang.Integer"/>
+	<field name="code" class="java.lang.String"/>
+	<field name="name" class="java.lang.String"/>
+	<field name="description" class="java.lang.String"/>
+	<field name="gln" class="java.lang.String"/>
+	<field name="mainphone" class="java.lang.String"/>
+	<field name="fax" class="java.lang.String"/>
+	<field name="address1" class="java.lang.String"/>
+	<field name="address2" class="java.lang.String"/>
+	<field name="geographiczoneid" class="java.lang.Integer"/>
+	<field name="typeid" class="java.lang.Integer"/>
+	<field name="catchmentpopulation" class="java.lang.Integer"/>
+	<field name="latitude" class="java.math.BigDecimal"/>
+	<field name="longitude" class="java.math.BigDecimal"/>
+	<field name="altitude" class="java.math.BigDecimal"/>
+	<field name="operatedbyid" class="java.lang.Integer"/>
+	<field name="coldstoragegrosscapacity" class="java.math.BigDecimal"/>
+	<field name="coldstoragenetcapacity" class="java.math.BigDecimal"/>
+	<field name="suppliesothers" class="java.lang.Boolean"/>
+	<field name="sdp" class="java.lang.Boolean"/>
+	<field name="online" class="java.lang.Boolean"/>
+	<field name="satellite" class="java.lang.Boolean"/>
+	<field name="satelliteparentcode" class="java.lang.String"/>
+	<field name="haselectricity" class="java.lang.Boolean"/>
+	<field name="haselectronicscc" class="java.lang.Boolean"/>
+	<field name="haselectronicdar" class="java.lang.Boolean"/>
+	<field name="active" class="java.lang.Boolean"/>
+	<field name="golivedate" class="java.sql.Date"/>
+	<field name="godowndate" class="java.sql.Date"/>
+	<field name="comment" class="java.lang.String"/>
+	<field name="datareportable" class="java.lang.Boolean"/>
+	<field name="modifiedby" class="java.lang.Integer"/>
+	<field name="modifieddate" class="java.sql.Timestamp"/>
+	<field name="createdby" class="java.lang.Integer"/>
+	<field name="createddate" class="java.sql.Timestamp"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="44" splitType="Stretch">
+			<subreport>
+				<reportElement uuid="32586d91-d457-4708-8c9b-7fc4d745b201" x="0" y="0" width="555" height="44"/>
+				<subreportParameter name="REPORT_TITLE">
+					<subreportParameterExpression><![CDATA[$P{REPORT_TITLE}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="REPORT_NAME">
+					<subreportParameterExpression><![CDATA[$P{REPORT_NAME}]]></subreportParameterExpression>
+				</subreportParameter>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression><![CDATA[$P{SUBREPORT_DIR} + "openlmis-report-header.jasper"]]></subreportExpression>
+			</subreport>
+		</band>
+	</title>
+	<columnHeader>
+		<band height="20">
+			<staticText>
+				<reportElement uuid="dcc12e96-f1d2-4b8f-9d44-6e6e6d957c06" mode="Opaque" x="0" y="1" width="555" height="19" forecolor="#FFFFFF" backcolor="#3D9297">
+					<property name="net.sf.jasperreports.export.xls.ignore.graphics" value="false"/>
+				</reportElement>
+				<textElement/>
+				<text><![CDATA[]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="99f43f8a-a61b-45b5-a7b0-6c608f6263b3" mode="Transparent" x="72" y="0" width="102" height="20" forecolor="#000000" backcolor="#333333"/>
+				<textElement verticalAlignment="Middle">
+					<font size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Code]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="eb040395-41e0-4560-9334-0fcfe6a3c3c2" mode="Transparent" x="353" y="0" width="128" height="20" forecolor="#000000" backcolor="#333333"/>
+				<textElement verticalAlignment="Middle">
+					<font size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Facility Type]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="736aef0c-e9cb-4ad4-8f14-ed0c0f41be98" mode="Transparent" x="174" y="0" width="179" height="20" forecolor="#000000" backcolor="#333333"/>
+				<textElement verticalAlignment="Middle">
+					<font size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Facility Name]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="b48c3345-283f-4309-bff0-342f767d3d49" mode="Transparent" x="0" y="0" width="72" height="20" forecolor="#000000" backcolor="#333333"/>
+				<textElement verticalAlignment="Middle">
+					<font size="12" isBold="true"/>
+					<paragraph leftIndent="2"/>
+				</textElement>
+				<text><![CDATA[Line#]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="dcd1aecf-e61f-4e0e-975e-8c20f3f2b960" mode="Transparent" x="481" y="0" width="73" height="20" forecolor="#000000" backcolor="#333333"/>
+				<textElement verticalAlignment="Middle">
+					<font size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Is Active]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="20">
+			<staticText>
+				<reportElement uuid="278f168f-d703-4623-9bd8-0434d7f74f43" mode="Opaque" x="1" y="0" width="553" height="20" backcolor="#F4F4F4">
+					<printWhenExpression><![CDATA[$V{REPORT_COUNT}%2 == 0]]></printWhenExpression>
+				</reportElement>
+				<textElement/>
+				<text><![CDATA[]]></text>
+			</staticText>
+			<textField>
+				<reportElement uuid="5c58b48d-c84f-4d92-b141-73f674cc6d21" x="0" y="0" width="71" height="20"/>
+				<textElement verticalAlignment="Middle">
+					<paragraph leftIndent="5"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{REPORT_COUNT}]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement uuid="39b8e032-2894-4ba7-98f4-d5907f1fc60d" x="1" y="19" width="553" height="1" forecolor="#3D9297"/>
+				<graphicElement>
+					<pen lineWidth="0.5"/>
+				</graphicElement>
+			</line>
+		</band>
+	</detail>
+	<columnFooter>
+		<band height="45" splitType="Stretch"/>
+	</columnFooter>
+	<pageFooter>
+		<band height="54" splitType="Stretch">
+			<subreport>
+				<reportElement uuid="33f1a364-e33c-4d0c-a9ef-09138e77ca5a" x="0" y="0" width="555" height="54"/>
+				<subreportParameter name="PAGE_NO">
+					<subreportParameterExpression><![CDATA["Page "+$V{PAGE_NUMBER}+" of" + " " + $V{PAGE_NUMBER}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="REPORT_VERSION">
+					<subreportParameterExpression><![CDATA[$P{REPORT_VERSION}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="GENERATED_BY">
+					<subreportParameterExpression><![CDATA[$P{GENERATED_BY}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="REPORT_ID">
+					<subreportParameterExpression><![CDATA[$P{REPORT_ID}]]></subreportParameterExpression>
+				</subreportParameter>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression><![CDATA[$P{SUBREPORT_DIR} + "openlmis-report-footer.jasper"]]></subreportExpression>
+			</subreport>
+		</band>
+	</pageFooter>
+	<summary>
+		<band height="42" splitType="Stretch"/>
+	</summary>
+</jasperReport>

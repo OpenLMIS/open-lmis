@@ -13,10 +13,12 @@ package org.openlmis.rnr.dto;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
+import org.junit.runners.BlockJUnit4ClassRunner;
 import org.openlmis.db.categories.UnitTests;
 import org.openlmis.rnr.domain.Rnr;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
+import org.powermock.modules.junit4.PowerMockRunnerDelegate;
 
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
@@ -31,8 +33,10 @@ import static org.openlmis.rnr.builder.RequisitionBuilder.emergency;
 
 @Category(UnitTests.class)
 @RunWith(PowerMockRunner.class)
+@PowerMockRunnerDelegate(BlockJUnit4ClassRunner.class)
 @PrepareForTest(RnrDTO.class)
 public class RnrDTOTest {
+
   @Test
   public void shouldPrepareRequisitionsForApproval() throws Exception {
     Rnr rnr = make(a(defaultRequisition, with(emergency, true)));

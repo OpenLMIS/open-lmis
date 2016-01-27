@@ -11,20 +11,20 @@
 package org.openlmis.core.dto;
 
 
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import org.codehaus.jackson.map.annotate.JsonSerialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import lombok.Getter;
+import lombok.Setter;
 import org.openlmis.core.domain.ProgramProduct;
 
-import static org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion.NON_EMPTY;
+import static com.fasterxml.jackson.databind.annotation.JsonSerialize.Inclusion.NON_EMPTY;
 
 /**
  * ProgramProductDTO consolidates information about a product under a specific program
  * like programCode, programName, productCode, productName, etc. to be used while displaying ProgramProduct
  * information to user, for eg. in feed.
  */
-@Data
-@EqualsAndHashCode
+@Getter
+@Setter
 @JsonSerialize(include = NON_EMPTY)
 public class ProgramProductDTO {
 

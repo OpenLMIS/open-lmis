@@ -14,6 +14,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
+import org.junit.runners.BlockJUnit4ClassRunner;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.openlmis.authentication.web.UserAuthenticationSuccessHandler;
@@ -21,6 +22,7 @@ import org.openlmis.core.domain.ProgramProductISA;
 import org.openlmis.core.service.FacilityProgramProductService;
 import org.openlmis.db.categories.UnitTests;
 import org.powermock.modules.junit4.PowerMockRunner;
+import org.powermock.modules.junit4.PowerMockRunnerDelegate;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpSession;
 
@@ -30,6 +32,7 @@ import static org.mockito.Mockito.verify;
 
 @Category(UnitTests.class)
 @RunWith(PowerMockRunner.class)
+@PowerMockRunnerDelegate(BlockJUnit4ClassRunner.class)
 public class FacilityProgramProductControllerTest {
 
   @Mock
@@ -50,29 +53,18 @@ public class FacilityProgramProductControllerTest {
   }
 
   @Test
-  public void shouldInsertProgramProductISA() {
+  public void shouldInsertFacilityProgramProductISA() {
     ProgramProductISA programProductISA = new ProgramProductISA();
-    Long programProductId = 1l;
+    Long programProductId = 1L;
+    Long facilityId = 2L;
     String username = "Foo";
 
     session.setAttribute(UserAuthenticationSuccessHandler.USER, username);
 
-    controller.insertIsa(programProductId, programProductISA, httpServletRequest);
+    controller.insertIsa(facilityId, programProductId, programProductISA, httpServletRequest);
 
-    verify(service).insertISA(programProductISA);
+    verify(service).insertISA(facilityId, programProductISA);
     assertThat(programProductISA.getProgramProductId(), is(1l));
   }
-
-  @Test
-  public void shouldUpdateProgramProductISA() {
-    ProgramProductISA programProductISA = new ProgramProductISA();
-    Long isaId = 1l;
-    Long programProductId = 2l;
-
-    controller.updateIsa(isaId, programProductId, programProductISA, httpServletRequest);
-
-    verify(service).updateISA(programProductISA);
-  }
-
 
 }

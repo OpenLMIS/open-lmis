@@ -1,0 +1,110 @@
+<!--
+~ This program was produced for the U.S. Agency for International Development. It was prepared by the USAID | DELIVER PROJECT, Task Order 4. It is part of a project which utilizes code originally licensed under the terms of the Mozilla Public License (MPL) v2 and therefore is licensed under MPL v2 or later.
+~
+~ This program is free software: you can redistribute it and/or modify it under the terms of the Mozilla Public License as published by the Mozilla Foundation, either version 2 of the License, or (at your option) any later version.
+~
+~ This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the Mozilla Public License for more details.
+~
+~ You should have received a copy of the Mozilla Public License along with this program. If not, see http://www.mozilla.org/MPL/
+-->
+<style>
+    .ng-table th.sortable div {
+        word-wrap: break-word;
+        white-space: -o-pre-wrap;
+        white-space: -moz-pre-wrap;
+        white-space: pre-wrap;
+    }
+    table {
+        table-layout: fixed;
+        width: 100%
+    }
+</style>
+<div class="row-fluid">
+    <div class="box span12">
+        <div class="box-header">
+            <h2 openlmis-message="report.title.cold.chain.equipment.inventory"><i class="icon-edit"></i><span class="break"></span></h2>
+
+            <div class="box-icon">
+              <a id="pdf-button" ng-show="filterForm.$valid" href="" ng-click="exportReport('PDF')" class='btn-small btn-info'><span openlmis-message="label.pdf"></span></a>
+              <a id="xls-button" ng-show="filterForm.$valid" href="" ng-click="exportReport('XLS')" class='btn-small btn-info'><span openlmis-message="label.excel"></span></a>
+            </div>
+        </div>
+
+
+        <div style="display: none;">
+            <div class="app-form"  style="padding: 1px;">
+                <form ng-submit="filterGrid()"  name="filterForm" novalidate>
+                    (Filters go here)
+                </form>
+            </div>
+        </div>
+
+
+        <div class="content-body">
+            <table class="table table-bordered" ng-show="datarows.length < 1">
+                <tr>
+                    <td>No data to show under selected filters</td>
+                </tr>
+            </table>
+
+            <div client-side-sort-pagination class="pull-right legend" ng-show="datarows.length > 0">
+                Page: {{tableParams.page}},
+                Showing records {{ ((tableParams.page - 1) * tableParams.count) + 1 }}
+                to
+                {{ getLargestRecordShown(); }}
+                of
+                {{pages.total}}
+            </div>
+
+            <div style="overflow:scroll; clear:right;" ng-show="datarows.length > 0">
+                <table style="width:inherit;"  class="table-bordered table table-striped" ng-table="tableParams">
+                    <tbody>
+                    <tr ng-repeat="row in datarows">
+
+                        <td data-title="getLocalMessage('label.region')" sortable="geozoneHierarchy[1]">
+                            {{
+                            row.geozoneHierarchy.length > 1 ? row.geozoneHierarchy[1] : '';
+                            }}
+                        </td>
+
+                        <td data-title="getLocalMessage('label.district')" sortable="geozoneHierarchy[0]">
+                            {{
+                            row.geozoneHierarchy.length > 0 ? row.geozoneHierarchy[0] : '';
+                            }}
+                        </td>
+
+                        <td data-title="getLocalMessage('label.location')" sortable="facilityAddress1">
+                            {{
+                            getRowFacilityAddress(row);
+                            }}
+                        </td>
+
+                        <td data-title="getLocalMessage('label.facility.name')" sortable="facilityName">{{row.facilityName}}</td>
+                        <td data-title="getLocalMessage('label.facility.type')" sortable="facilityTypeName">{{row.facilityTypeName}}</td>
+
+                        <td data-title="getLocalMessage('label.ownership')" sortable="facilityOperator">{{row.facilityOperator}}</td>
+
+                        <td data-title="getLocalMessage('label.electricity')" sortable="facilityHasElectricity">{{row.facilityHasElectricity}}</td>
+                        <td data-title="getLocalMessage('label.manufacturer')" sortable="manufacturer">{{row.manufacturer}}</td>
+                        <td data-title="getLocalMessage('label.refrigerator.model')" sortable="model">{{row.model}}</td>
+                        <td data-title="getLocalMessage('label.equipment.code')" sortable="equipmentColdChainEquipmentsCode">{{row.equipmentColdChainEquipmentsCode}}</td>
+                        <td data-title="getLocalMessage('label.equipment.refrigerant')"  sortable="refrigerant">{{row.refrigerant}}</td>
+                        <td data-title="getLocalMessage('label.equipment.refrigerator-capacity')" sortable="refrigeratorCapacity">{{row.refrigeratorCapacity}}</td>
+                        <td data-title="getLocalMessage('label.equipment.freezer-capacity')" sortable="freezerCapacity">{{row.freezerCapacity}}</td>
+                        <td data-title="getLocalMessage('label.status')" sortable="equipmentOperationalStatusName">{{row.equipmentOperationalStatusName}}</td>
+
+                        <td data-title="getLocalMessage('label.equipment.energy.source')" sortable="energyTypeName">{{row.energyTypeName}}</td>
+                        <td data-title="getLocalMessage('label.equipment.year.of.installation')" sortable="yearOfInstallation">{{row.yearOfInstallation}}</td>
+                        <td data-title="getLocalMessage('label.equipment.age')" sortable="equipmentAge">{{row.equipmentAge}}</td>
+                        <td data-title="getLocalMessage('label.equipment.replacement.year')" sortable="yearOfReplacement">{{row.yearOfReplacement}}</td>
+
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+</div>

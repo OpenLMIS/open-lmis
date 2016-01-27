@@ -61,4 +61,8 @@ public class GeographicLevelRepository {
       throw new DataException("error.incorrect.length");
     }
   }
+
+  public GeographicLevel getGeographicLevel (int geographicLevelID){
+    return mapper.getGeographicLevelById(geographicLevelID);
+  }
 }

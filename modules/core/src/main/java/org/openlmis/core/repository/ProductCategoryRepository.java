@@ -71,4 +71,8 @@ public class ProductCategoryRepository {
   public List<ProductCategory> getAll() {
     return mapper.getAll();
   }
+
+  public ProductCategory getById(Long id){
+    return mapper.getById(id);
+  }
 }

@@ -10,21 +10,24 @@
 
 <ng-include src="'/public/pages/logistics/rnr/partials/header.html'"></ng-include>
 <div xmlns="http://www.w3.org/1999/html">
-
-  <div class="rnr-tabs clearfix">
-    <ul class="clearfix" set-focus>
-      <li
-        ng-class="{'selected': (visibleTab != 'nonFullSupply' && visibleTab != 'regimen'), 'has-error': fullSupplyTabError}">
-        <a href="" ng-click="switchSupplyType('fullSupply')" id="fullSupplyTab"
-           openlmis-message="label.full.supply.products"></a></li>
-      <li ng-class="{'selected': visibleTab == 'nonFullSupply', 'has-error': nonFullSupplyTabError}">
-        <a href="" ng-click="switchSupplyType('nonFullSupply')" id="nonFullSupplyTab"
-           openlmis-message="label.non.full.supply.products"></a></li>
-      <li ng-class="{'selected': visibleTab == 'regimen', 'has-error': regimenLineItemInValid}"
-          ng-show="regimenCount">
-        <a href="" ng-click="switchSupplyType('regimen')" id="regimenTab" openlmis-message="label.regimens"></a>
-      </li>
-    </ul>
+    
+    <div class="rnr-tabs clearfix">
+        <ul class="clearfix" set-focus>
+            <li ng-class="{'selected': (visibleTab == 'fullSupply' || visibleTab == undefined), 'has-error': fullSupplyTabError}">
+                <a href="" ng-click="switchSupplyType('fullSupply')" id="fullSupplyTab"
+                   openlmis-message="label.full.supply.products"></a></li>
+            <li ng-show="rnr.program.showNonFullSupplyTab" ng-class="{'selected': visibleTab == 'nonFullSupply', 'has-error': nonFullSupplyTabError}">
+                <a href="" ng-click="switchSupplyType('nonFullSupply')" id="nonFullSupplyTab"
+                   openlmis-message="label.non.full.supply.products"></a></li>
+            <li ng-class="{'selected': visibleTab == 'regimen', 'has-error': regimenLineItemInValid}"
+                ng-show="regimenCount">
+                <a href="" ng-click="switchSupplyType('regimen')" id="regimenTab" openlmis-message="label.regimens"></a>
+            </li>
+            <li ng-class="{'selected': visibleTab == 'equipment', 'has-error': equipmentTabError}"
+                ng-show="equipmentCount">
+                <a href="" ng-click="switchSupplyType('equipment')" id="equipmentTab" openlmis-message="label.equipments"></a>
+            </li>
+        </ul>
     <span class="pull-right">
       <a id="resizeViewButton" full-screen href="" class="btn">
         <i class="icon-resize-full"></i>
@@ -37,50 +40,57 @@
     </span>
   </div>
 
-  <div ng-hide="programRnrColumnList"></div>
-  <form name="saveRnrForm" action="#" id="rnr-form" novalidate>
+    <div ng-hide="programRnrColumnList"></div>
+    <form name="saveRnrForm" action="#" id="rnr-form" novalidate>
     <span ng-show="visibleTab === 'nonFullSupply'">
       <ng-include src="'/public/pages/logistics/rnr/partials/create/rnr-non-full-supply.html'"></ng-include>
     </span>
     <span ng-show="visibleTab === 'regimen'">
       <ng-include src="'/public/pages/logistics/rnr/partials/create/regimen-line-item.html'"></ng-include>
     </span>
+    <span ng-show="visibleTab === 'equipment'">
+      <ng-include src="'/public/pages/logistics/rnr/partials/create/equipment-line-item.html'"></ng-include>
+    </span>
     <span ng-show="visibleTab === 'fullSupply'">
       <ng-include src="'/public/pages/logistics/rnr/partials/create/rnr-full-supply.html'"></ng-include>
     </span>
 
-    <div ng-hide="visibleTab === 'regimen'" set-focus>
+    <div set-focus>
       <openlmis-pagination ng-show="page[visibleTab].length" num-pages="numberOfPages" current-page="currentPage"
                            max-size="10"
                            check-error-on-page="checkErrorOnPage(page)"></openlmis-pagination>
     </div>
 
-    <div form-toolbar id="action_buttons" class="action-buttons">
-      <ng-include src="'/public/pages/logistics/rnr/partials/total-cost.html'"></ng-include>
-      <div class="form-cell button-row">
-        <input id="saveRnrButton" ng-disabled="formDisabled" type="button" ng-click="saveRnr(null)"
-               class="btn btn-primary save-button"
-               openlmis-message="button.save"/>
-        <input id="submitRnrButton" ng-show="rnr.status == 'INITIATED' && hasPermission('CREATE_REQUISITION')"
-               ng-disabled="formDisabled"
-               type="button" ng-click="submitRnr()" class="btn btn-primary submit-button"
-               openlmis-message="button.submit"/>
-        <input id="authorizeRnrButton" type="button"
-               ng-show="(rnr.status == 'SUBMITTED' || rnr.status == 'AUTHORIZED') && hasPermission('AUTHORIZE_REQUISITION')"
-               ng-disabled="rnr.status == 'AUTHORIZED'" ng-click="authorizeRnr()"
-               class="btn btn-primary submit-button"
-               openlmis-message="button.authorize"/>
-        <input id="comments" type="button" ng-click="showCommentBox=!showCommentBox" class="btn comments-button"
-               openlmis-message="comments.header"/>
-        <comment-box updatable="!formDisabled" show="showCommentBox"></comment-box>
-      </div>
-      <div class="toolbar-error" id="saveFailMessage" openlmis-message="error" ng-show="error"></div>
-      <div class="toolbar-error" id="submitFailMessage" openlmis-message="submitError"
-           ng-show="submitError"></div>
-      <div class="toolbar-success" id="saveSuccessMsgDiv" fade-out="3000" openlmis-message="message"
-           ng-show="message"></div>
-      <div class="toolbar-success" id="submitSuccessMsgDiv" openlmis-message="submitMessage"
-           ng-show="submitMessage"></div>
-    </div>
-  </form>
+        <div form-toolbar id="action_buttons" class="action-buttons">
+            <ng-include src="'/public/pages/logistics/rnr/partials/total-cost.html'"></ng-include>
+            <div class="form-cell button-row">
+                <input ng-show="hasPermission('DELETE_REQUISITION') && rnr.status == 'INITIATED'"  type="button" class="btn btn-primary submit-button" ng-click="deleteRnR();" openlmis-message="button.delete" />
+                <input ng-show="rnr.status == 'INITIATED' && rnr.program.enableSkipPeriod" type="button" class="btn btn-primary submit-button" ng-click="skipRnR();" openlmis-message="button.skip.period" />
+
+                <input id="saveRnrButton" ng-disabled="formDisabled" type="button" ng-click="saveRnr(null)"
+                       class="btn btn-primary save-button"
+                       openlmis-message="button.save"/>
+                <input id="submitRnrButton" ng-show="rnr.status == 'INITIATED' && hasPermission('CREATE_REQUISITION')"
+                       ng-disabled="formDisabled"
+                       type="button" ng-click="submitRnr()" class="btn btn-primary submit-button"
+                       openlmis-message="button.submit"/>
+                <input id="authorizeRnrButton" type="button"
+                       ng-show="(rnr.status == 'SUBMITTED' || rnr.status == 'AUTHORIZED') && hasPermission('AUTHORIZE_REQUISITION')"
+                       ng-disabled="rnr.status == 'AUTHORIZED'" ng-click="authorizeRnr()"
+                       class="btn btn-primary submit-button"
+                       openlmis-message="button.authorize"/>
+                <input ng-class="{'btn-warning': rnrComments.length}" id="comments"  type="button" ng-click="showCommentBox=!showCommentBox" class="btn comments-button"
+                       openlmis-message="comments.header"/>
+
+                <comment-box updatable="!formDisabled" show="showCommentBox"></comment-box>
+            </div>
+            <div class="toolbar-error" id="saveFailMessage" openlmis-message="error" ng-show="error"></div>
+            <div class="toolbar-error" id="submitFailMessage" openlmis-message="submitError"
+                 ng-show="submitError"></div>
+            <div class="toolbar-success" id="saveSuccessMsgDiv" fade-out="3000" openlmis-message="message"
+                 ng-show="message"></div>
+            <div class="toolbar-success" id="submitSuccessMsgDiv" openlmis-message="submitMessage"
+                 ng-show="submitMessage"></div>
+        </div>
+    </form>
 </div>

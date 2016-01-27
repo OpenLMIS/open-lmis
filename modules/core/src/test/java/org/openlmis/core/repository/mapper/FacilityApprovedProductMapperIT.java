@@ -46,7 +46,7 @@ import static org.openlmis.core.builder.ProgramBuilder.programCode;
 @Category(IntegrationTests.class)
 public class FacilityApprovedProductMapperIT {
 
-  public static final Double MAX_MONTHS_OF_STOCK = 3.3;
+  public static final Double MAX_MONTHS_OF_STOCK = 3.0;
 
   @Autowired
   ProductMapper productMapper;
@@ -151,12 +151,12 @@ public class FacilityApprovedProductMapperIT {
     Product pro06 = product("PRO06", "Primary Name", true);
     Product pro07 = product("PRO07", "Primary Name", true);
 
-    ProgramProduct programProduct1 = addToProgramProduct(yellowFeverProgram, pro01, true, category1, 6);
-    ProgramProduct programProduct3 = addToProgramProduct(yellowFeverProgram, pro03, true, category3, 1);
-    ProgramProduct programProduct4 = addToProgramProduct(yellowFeverProgram, pro04, false, category4, 2);
-    ProgramProduct programProduct5 = addToProgramProduct(yellowFeverProgram, pro05, true, category1, 5);
-    ProgramProduct programProduct6 = addToProgramProduct(yellowFeverProgram, pro06, true, category6, 5);
-    ProgramProduct programProduct7 = addToProgramProduct(bpProgram, pro07, true, category2, null);
+    ProgramProduct programProduct1 = addToProgramProduct(yellowFeverProgram, pro01, true, category1, 6, true);
+    ProgramProduct programProduct3 = addToProgramProduct(yellowFeverProgram, pro03, true, category3, 1, false);
+    ProgramProduct programProduct4 = addToProgramProduct(yellowFeverProgram, pro04, false, category4, 2, true);
+    ProgramProduct programProduct5 = addToProgramProduct(yellowFeverProgram, pro05, true, category1, 5, true);
+    ProgramProduct programProduct6 = addToProgramProduct(yellowFeverProgram, pro06, true, category6, 5, true);
+    ProgramProduct programProduct7 = addToProgramProduct(bpProgram, pro07, true, category2, null, true);
 
     insertFacilityApprovedProduct(FACILITY_TYPE_ID, programProduct1);
     insertFacilityApprovedProduct(FACILITY_TYPE_ID, programProduct3);
@@ -204,7 +204,7 @@ public class FacilityApprovedProductMapperIT {
     Product product = make(a(defaultProduct));
     productMapper.insert(product);
 
-    ProgramProduct programProduct = addToProgramProduct(program, product, true, category1, null);
+    ProgramProduct programProduct = addToProgramProduct(program, product, true, category1, null, true);
 
     insertFacilityApprovedProduct(FACILITY_TYPE_ID, programProduct);
 
@@ -234,12 +234,12 @@ public class FacilityApprovedProductMapperIT {
     Product pro06 = product("aPRO06", "Primary Name", true);
     Product pro07 = product("PRO07", "Primary Name", true);
 
-    ProgramProduct programProduct1 = addToProgramProduct(yellowFeverProgram, pro01, true, category1, 6);
-    ProgramProduct programProduct3 = addToProgramProduct(yellowFeverProgram, pro03, true, category3, 1);
-    ProgramProduct programProduct4 = addToProgramProduct(yellowFeverProgram, pro04, false, category4, 2);
-    ProgramProduct programProduct5 = addToProgramProduct(yellowFeverProgram, pro05, true, category1, 5);
-    ProgramProduct programProduct6 = addToProgramProduct(yellowFeverProgram, pro06, true, category1, 5);
-    ProgramProduct programProduct7 = addToProgramProduct(bpProgram, pro07, true, category2, null);
+    ProgramProduct programProduct1 = addToProgramProduct(yellowFeverProgram, pro01, true, category1, 6, true);
+    ProgramProduct programProduct3 = addToProgramProduct(yellowFeverProgram, pro03, true, category3, 1, false);
+    ProgramProduct programProduct4 = addToProgramProduct(yellowFeverProgram, pro04, false, category4, 2, true);
+    ProgramProduct programProduct5 = addToProgramProduct(yellowFeverProgram, pro05, true, category1, 5, true);
+    ProgramProduct programProduct6 = addToProgramProduct(yellowFeverProgram, pro06, true, category1, 5, true);
+    ProgramProduct programProduct7 = addToProgramProduct(bpProgram, pro07, true, category2, null, true);
 
     insertFacilityApprovedProduct(FACILITY_TYPE_ID, programProduct1);
     insertFacilityApprovedProduct(FACILITY_TYPE_ID, programProduct3);
@@ -286,10 +286,10 @@ public class FacilityApprovedProductMapperIT {
     Product pro04 = product("PRO04", "Primary Name", true);
     Product pro05 = product("PRO05", "Primary Name", true);
 
-    ProgramProduct programProduct1 = addToProgramProduct(yellowFeverProgram, pro01, true, category1, 6);
-    ProgramProduct programProduct3 = addToProgramProduct(yellowFeverProgram, pro03, true, category2, 1);
-    ProgramProduct programProduct4 = addToProgramProduct(yellowFeverProgram, pro04, false, category3, 2);
-    ProgramProduct programProduct5 = addToProgramProduct(yellowFeverProgram, pro05, true, category1, 5);
+    ProgramProduct programProduct1 = addToProgramProduct(yellowFeverProgram, pro01, true, category1, 6,true);
+    ProgramProduct programProduct3 = addToProgramProduct(yellowFeverProgram, pro03, true, category2, 1,false);
+    ProgramProduct programProduct4 = addToProgramProduct(yellowFeverProgram, pro04, false, category3, 2,true);
+    ProgramProduct programProduct5 = addToProgramProduct(yellowFeverProgram, pro05, true, category1, 5, true);
 
     insertFacilityApprovedProduct(FACILITY_TYPE_ID, programProduct1);
     insertFacilityApprovedProduct(FACILITY_TYPE_ID, programProduct3);
@@ -333,12 +333,12 @@ public class FacilityApprovedProductMapperIT {
     Product pro06 = product("aPRO06", "Primary Name", true);
     Product pro07 = product("PRO07", "Primary Name", true);
 
-    ProgramProduct programProduct1 = addToProgramProduct(yellowFeverProgram, pro01, true, category1, 6);
-    ProgramProduct programProduct3 = addToProgramProduct(yellowFeverProgram, pro03, true, category3, 1);
-    ProgramProduct programProduct4 = addToProgramProduct(yellowFeverProgram, pro04, false, category4, 2);
-    ProgramProduct programProduct5 = addToProgramProduct(yellowFeverProgram, pro05, true, category1, 5);
-    ProgramProduct programProduct6 = addToProgramProduct(yellowFeverProgram, pro06, true, category1, 5);
-    ProgramProduct programProduct7 = addToProgramProduct(bpProgram, pro07, true, category2, null);
+    ProgramProduct programProduct1 = addToProgramProduct(yellowFeverProgram, pro01, true, category1, 6, true);
+    ProgramProduct programProduct3 = addToProgramProduct(yellowFeverProgram, pro03, true, category3, 1, false);
+    ProgramProduct programProduct4 = addToProgramProduct(yellowFeverProgram, pro04, false, category4, 2, true);
+    ProgramProduct programProduct5 = addToProgramProduct(yellowFeverProgram, pro05, true, category1, 5, true);
+    ProgramProduct programProduct6 = addToProgramProduct(yellowFeverProgram, pro06, true, category1, 5, true);
+    ProgramProduct programProduct7 = addToProgramProduct(bpProgram, pro07, true, category2, null, true);
 
     insertFacilityApprovedProduct(FACILITY_TYPE_ID, programProduct1);
     insertFacilityApprovedProduct(FACILITY_TYPE_ID, programProduct3);
@@ -372,12 +372,12 @@ public class FacilityApprovedProductMapperIT {
     Product pro06 = product("aPRO06", "Primary", true);
     Product pro07 = product("PRO07", "Primary Name", true);
 
-    ProgramProduct programProduct1 = addToProgramProduct(yellowFeverProgram, pro01, true, category1, 6);
-    ProgramProduct programProduct3 = addToProgramProduct(yellowFeverProgram, pro03, true, category3, 1);
-    ProgramProduct programProduct4 = addToProgramProduct(yellowFeverProgram, pro04, false, category4, 2);
-    ProgramProduct programProduct5 = addToProgramProduct(yellowFeverProgram, pro05, true, category1, 5);
-    ProgramProduct programProduct6 = addToProgramProduct(yellowFeverProgram, pro06, true, category1, 5);
-    ProgramProduct programProduct7 = addToProgramProduct(bpProgram, pro07, true, category2, null);
+    ProgramProduct programProduct1 = addToProgramProduct(yellowFeverProgram, pro01, true, category1, 6, true);
+    ProgramProduct programProduct3 = addToProgramProduct(yellowFeverProgram, pro03, true, category3, 1, false);
+    ProgramProduct programProduct4 = addToProgramProduct(yellowFeverProgram, pro04, false, category4, 2, true);
+    ProgramProduct programProduct5 = addToProgramProduct(yellowFeverProgram, pro05, true, category1, 5, true);
+    ProgramProduct programProduct6 = addToProgramProduct(yellowFeverProgram, pro06, true, category1, 5, true);
+    ProgramProduct programProduct7 = addToProgramProduct(bpProgram, pro07, true, category2, null, true);
 
     insertFacilityApprovedProduct(FACILITY_TYPE_ID, programProduct1);
     insertFacilityApprovedProduct(FACILITY_TYPE_ID, programProduct3);
@@ -397,7 +397,7 @@ public class FacilityApprovedProductMapperIT {
     programMapper.insert(yellowFeverProgram);
 
     Product product = product("PRO01", "Primary Name", true);
-    ProgramProduct programProduct = addToProgramProduct(yellowFeverProgram, product, true, category1, 6);
+    ProgramProduct programProduct = addToProgramProduct(yellowFeverProgram, product, true, category1, 6, true);
     FacilityTypeApprovedProduct facilityTypeApprovedProduct = insertFacilityApprovedProduct(FACILITY_TYPE_ID, programProduct);
 
     mapper.delete(facilityTypeApprovedProduct.getId());
@@ -413,7 +413,7 @@ public class FacilityApprovedProductMapperIT {
     programMapper.insert(yellowFeverProgram);
 
     Product product = product("PRO01", "Primary Name", true);
-    ProgramProduct programProduct = addToProgramProduct(yellowFeverProgram, product, true, category1, 6);
+    ProgramProduct programProduct = addToProgramProduct(yellowFeverProgram, product, true, category1, 6, true);
     FacilityTypeApprovedProduct facilityTypeApprovedProduct = insertFacilityApprovedProduct(FACILITY_TYPE_ID, programProduct);
 
     FacilityTypeApprovedProduct facilityTAProduct = mapper.get(facilityTypeApprovedProduct.getId());
@@ -442,10 +442,11 @@ public class FacilityApprovedProductMapperIT {
     return product;
   }
 
-  private ProgramProduct addToProgramProduct(Program program, Product product, boolean isActive, ProductCategory productCategory, Integer displayOrder) {
+  private ProgramProduct addToProgramProduct(Program program, Product product, boolean isActive, ProductCategory productCategory, Integer displayOrder, boolean fullSupply) {
     ProgramProduct programProduct = new ProgramProduct(program, product, 30, isActive);
     programProduct.setProductCategory(productCategory);
     programProduct.setDisplayOrder(displayOrder);
+    programProduct.setFullSupply(fullSupply);
     programProductMapper.insert(programProduct);
     return programProduct;
   }

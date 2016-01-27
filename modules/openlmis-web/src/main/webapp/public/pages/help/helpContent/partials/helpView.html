@@ -1,0 +1,32 @@
+<!--
+  ~ Electronic Logistics Management Information System (eLMIS) is a supply chain management system for health commodities in a developing country setting.
+  ~
+  ~ Copyright (C) 2015  John Snow, Inc (JSI). This program was produced for the U.S. Agency for International Development (USAID). It was prepared under the USAID | DELIVER PROJECT, Task Order 4.
+  ~
+  ~ This program is free software: you can redistribute it and/or modify it under the terms of the GNU Affero General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
+  ~
+  ~ This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Affero General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU Affero General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
+  -->
+
+<div xmlns="http://www.w3.org/1999/html" tab-scroll>
+    <div><h2 id="addNewFacilityHeader" >Help List View</h2></div>
+        <div ng-model="showMinDir" ng-value="false">
+            <div class="pull-right control-accordion">
+                <a ng-click="my_tree.expand_all()" href="javascript:void(0);">Expand All</a>|
+                <a ng-click="my_tree.collapse_all()" href="javascript:void(0);">Collapse All</a>
+                </div><div>
+                <tree-grid tree-data="tree_data" tree-control="my_tree" col-defs="col_defs"
+                           expand-on="expanding_property"
+                           on-select="my_tree_handler(branch)" expand-level="2"
+                           icon-leaf="glyphicon glyphicon-globe"></tree-grid>
+            </div>
+
+
+
+
+    </div>
+
+
+</div>

@@ -1,0 +1,123 @@
+<!--
+  ~ This program is part of the OpenLMIS logistics management information system platform software.
+  ~ Copyright © 2013 VillageReach
+  ~
+  ~ This program is free software: you can redistribute it and/or modify it under the terms of the GNU Affero General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
+  ~
+  ~ This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Affero General Public License for more details.
+  ~ You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org.
+  -->
+
+<div xmlns="http://www.w3.org/1999/html" tab-scroll>
+
+  <div ng-show="product.id">
+    <h2 id="adjustMOSHeader" openlmis-message="header.product.adjust.rationing|product.primaryName"></h2>
+  </div>
+
+  <form id="seasonalityAdjustmentForm" name="seasonalityAdjustmentForm" novalidate>
+
+    <div class="row-fluid">
+      <div class="span4">
+        <label id="facilityTypeLabel" openlmis-message="label.facility.type"></label>
+        <select  name="facilityType" id="facilityType"
+                ng-model="facilityType" ng-change="search()"
+                ng-options="ft as ft.name for ft in facilityTypes" style="width:300px;">
+          <option value="" openlmis-message="create.facility.select.facilityType"></option>
+        </select>
+      </div>
+      <div class="span4">
+        <label id="requisitionGroupLabel" openlmis-message="label.requisitionGroup"></label>
+        <select  name="requisitionGroup" id="requisitionGroup"
+                ng-model="requisitionGroup" ng-change="search()"
+                ng-options="rg as rg.name for rg in requisitionGroups" style="width:300px;">
+          <option value="" openlmis-message="placeholder.select.requisition"></option>
+        </select>
+      </div>
+    </div>
+    <div id="approveReqList" class="gridStyle" style="height: 450px; width:100%" ng-grid="gridOptions" ng-show="facilities.length > 0"></div>
+    <div id="seasonality-adjustment" class="app-form" ng-show="selectedItems.length > 0"  style="margin-top:5px;" >
+        <div class="form-group">
+          <h3 openlmis-message="header.apply.seasonality.rationing.factor"></h3>
+          <div class="row-fluid">
+            <div class="span4">
+              <label for="adjustmentType" openlmis-message="label.adjustment.type"></label>
+              <select  style="width:300px;" class="large-input" name="adjustmentType" id="adjustmentType"
+                       ng-model="seasonalityAdjustment.adjustmentType.id" >
+                <option value="" openlmis-message="select.adjustment.type"></option>
+                <option ng-repeat="option in seasonalityRationingTypeList" value="{{option.id}}">{{option.name}}</option>
+
+              </select>
+              <span class="field-error ng-hide" ng-show="seasonalityAdjustmentForm.code.$error.required &amp;&amp; showError" openlmis-message="missing.value">Please fill this value</span>
+            </div>
+            <div class="span4">
+              <label for="adjustmentFactor" openlmis-message="label.adjustment.factor"><span class="label-required">*</span></label>
+
+              <select style="width: 300px;"  name="adjustmentFactor" id="adjustmentFactor"
+                      ng-model="seasonalityAdjustment.adjustmentFactor.id">
+                <option value="" openlmis-message="select.adjustment.factor"></option>
+                <option ng-repeat="option in adjustmentFactorList" value="{{option.id}}">{{option.name}}</option>
+              </select>
+            </div>
+
+          </div>
+          <div style="margin-top:5px;" class="row-fluid">
+            <div class="span4">
+              <label for="fromDate" openlmis-message="label.from.date"><span class="label-required"> *</span></label>
+
+              <input id="fromDate" name="fromDate" type="text" ng-model="seasonalityAdjustment.startDate"
+                     readonly
+                     ui-date="{dateFormat:'dd/mm/yy', changeYear: true}"
+                     ui-date-format="yy-mm-dd"
+                     ng-required="true"/>
+                <span class="field-error" ng-show="seasonalityAdjustmentForm.fromDate.$error.required && showError"
+                      openlmis-message="missing.value">
+                </span>
+            </div>
+            <div class="span4">
+              <label for="toDate" openlmis-message="label.to.date"><span class="label-required"> *</span></label>
+
+              <input id="toDate" name="toDate" type="text" ng-model="seasonalityAdjustment.endDate"
+                     readonly
+                     ui-date="{dateFormat:'dd/mm/yy', changeYear: true}"
+                     ui-date-format="yy-mm-dd"
+                     ng-required="true"/>
+                <span class="field-error" ng-show="seasonalityAdjustmentForm.toDate.$error.required && showError"
+                      openlmis-message="missing.value">
+                </span>
+            </div>
+
+          </div>
+            <div style="margin-top:5px;" class="row-fluid">
+
+                <div style="left:430px; height: 450px; position: absolute" class="span4">
+                    <label for="discription" openlmis-message="label.description"></label>
+                    <textarea style="height:120px; width: 300px;overflow: scroll "  id="discription" name="discription" ng-model="seasonalityAdjustment.description"/>
+                </div>
+            </div>
+          <div>
+
+          </div>
+          <div>
+            <label for="maxMOS" openlmis-message="label.max.mos"></label>
+            <input type="number" min="0" id="maxMOS" name="maxMOS" ng-model="seasonalityAdjustment.maxMOS">
+          </div>
+          <div>
+            <label for="formula" openlmis-message="label.formula"></label>
+            <input type="text" id="formula" name="formula" ng-model="seasonalityAdjustment.formula">
+          </div>
+        </div>
+    </div>
+
+    <div form-toolbar id="action_buttons" class="action-buttons">
+      <div class="form-cell button-row">
+        <input id="saveButton" type="submit" class="btn btn-primary save-button" openlmis-message="button.save"
+               ng-click="save()"/>
+        <input id="cancelButton" type="button" class="btn btn-cancel cancel-button" openlmis-message="button.cancel"
+               ng-click="cancel()"/>
+      </div>
+      <div class="toolbar-error" id="saveErrorMsgDiv" openlmis-message="error" ng-show="error"></div>
+    </div>
+  </form>
+</div>
+
+

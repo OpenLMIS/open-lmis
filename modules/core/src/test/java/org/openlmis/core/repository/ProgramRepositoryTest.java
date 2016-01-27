@@ -63,6 +63,19 @@ public class ProgramRepositoryTest {
   }
 
   @Test
+  public void shouldGetIvdProgramsSupportedByFacilityForUserWithRight() throws Exception {
+    Long facilityId = 1L;
+    Long userId = 1L;
+    List<Program> programs = new ArrayList<>();
+    when(programMapper.getIvdProgramsSupportedByUserHomeFacilityWithRights(facilityId, userId, "{AUTHORIZE_REQUISITION, CREATE_REQUISITION}")).thenReturn(programs);
+
+    List<Program> result = programRepository.getIvdProgramsSupportedByUserHomeFacilityWithRights(facilityId, userId, AUTHORIZE_REQUISITION, CREATE_REQUISITION);
+
+    verify(programMapper).getIvdProgramsSupportedByUserHomeFacilityWithRights(facilityId, userId, "{AUTHORIZE_REQUISITION, CREATE_REQUISITION}");
+    assertThat(result, is(programs));
+  }
+
+  @Test
   public void shouldGetProgramsSupportedByFacilitySupervisedByUserWithRights() throws Exception {
     Long userId = 1L;
     List<Program> programs = new ArrayList<>();
@@ -155,5 +168,16 @@ public class ProgramRepositoryTest {
 
     assertThat(programs, is(returnedPrograms));
     verify(programMapper).getProgramsForNotification();
+  }
+
+  @Test
+  public void shouldGetProgramsThatSupportIVDForm() throws Exception{
+    List<Program> returnedPrograms = new ArrayList<>();
+    when(programMapper.getAllIvdPrograms()).thenReturn(returnedPrograms);
+
+    List<Program> programs = programRepository.getAllIvdPrograms();
+
+    assertThat(programs, is(returnedPrograms));
+    verify(programMapper).getAllIvdPrograms();
   }
 }

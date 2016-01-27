@@ -1,0 +1,51 @@
+<!doctype html>
+<!--
+  ~ Electronic Logistics Management Information System (eLMIS) is a supply chain management system for health commodities in a developing country setting.
+  ~
+  ~ Copyright (C) 2015  John Snow, Inc (JSI). This program was produced for the U.S. Agency for International Development (USAID). It was prepared under the USAID | DELIVER PROJECT, Task Order 4.
+  ~
+  ~ This program is free software: you can redistribute it and/or modify it under the terms of the GNU Affero General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
+  ~
+  ~ This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Affero General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU Affero General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
+  -->
+
+<html lang="en" ng-app="ils-gateway">
+<head>
+  <meta charset="utf-8">
+  <title openlmis-message="app.title"></title>
+  <!-- Icons -->
+  <link rel="icon" href="/favicon.ico" type="image/x-icon"/>
+
+
+</head>
+<body onunload="">
+<form style="opacity: 0" name="ilsgateway-login-form" method="post" action="http://ilsgateway.com/accounts/login/">
+  <table>
+    <tbody><tr>
+      <td><label for="id_username">Username</label></td>
+      <td><input id="id_username" type="hidden" name="username" value="" maxlength="30"></td>
+    </tr>
+    <tr>
+      <td><label for="id_password">Password</label></td>
+      <td><input type="hidden" name="password" value="" id="id_password"></td>
+    </tr>
+    </tbody></table>
+  <div style="display:none"><input type="hidden" name="csrfmiddlewaretoken" value="AQVUfrGIQqtZSQnuv5T0ibqurIhT7Y0y"></div>
+  <!--<input type="submit" value="login">-->
+  <input type="hidden" name="next" value="/">
+  <p>
+  </p><div class="note">Forgot your password? <a href="/accounts/password/reset/">Reset it here</a></div>
+  <p>
+
+  </p></form>
+<script>
+ // document.getElementById("ponyo_form").submit();
+  window.onload = function(){
+    document.forms['ilsgateway-login-form'].submit()
+
+  }
+</script>
+</body>
+</html>

@@ -13,6 +13,7 @@ package org.openlmis.rnr.service;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
+import org.junit.runners.BlockJUnit4ClassRunner;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.openlmis.core.service.MessageService;
@@ -23,6 +24,7 @@ import org.openlmis.rnr.domain.RegimenTemplate;
 import org.openlmis.rnr.repository.RegimenColumnRepository;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
+import org.powermock.modules.junit4.PowerMockRunnerDelegate;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -36,8 +38,9 @@ import static org.openlmis.rnr.builder.RegimenColumnBuilder.*;
 import static org.powermock.api.mockito.PowerMockito.verifyNew;
 import static org.powermock.api.mockito.PowerMockito.whenNew;
 
-@RunWith(PowerMockRunner.class)
 @PrepareForTest(RegimenColumnService.class)
+@RunWith(PowerMockRunner.class)
+@PowerMockRunnerDelegate(BlockJUnit4ClassRunner.class)
 @Category(UnitTests.class)
 public class RegimenColumnServiceTest {
 
@@ -70,8 +73,8 @@ public class RegimenColumnServiceTest {
   @Test
   public void shouldGetRegimenColumnsByProgramId() throws Exception {
     Long programId = 1L;
-    RegimenColumn regimenColumn1 = new RegimenColumn(programId, "testName1", "testLabel1", "numeric", Boolean.TRUE, 1L);
-    RegimenColumn regimenColumn2 = new RegimenColumn(programId, "testName2", "testLabel2", "numeric", Boolean.TRUE, 1L);
+    RegimenColumn regimenColumn1 = new RegimenColumn(programId, "testName1", "testLabel1", "numeric", Boolean.TRUE,1, 1L);
+    RegimenColumn regimenColumn2 = new RegimenColumn(programId, "testName2", "testLabel2", "numeric", Boolean.TRUE,2, 1L);
 
     when(repository.getRegimenColumnsByProgramId(programId)).thenReturn(asList(regimenColumn1, regimenColumn2));
 

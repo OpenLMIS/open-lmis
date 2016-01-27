@@ -1,0 +1,84 @@
+<!--
+  ~ Electronic Logistics Management Information System (eLMIS) is a supply chain management system for health commodities in a developing country setting.
+  ~
+  ~ Copyright (C) 2015  John Snow, Inc (JSI). This program was produced for the U.S. Agency for International Development (USAID). It was prepared under the USAID | DELIVER PROJECT, Task Order 4.
+  ~
+  ~ This program is free software: you can redistribute it and/or modify it under the terms of the GNU Affero General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
+  ~
+  ~ This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Affero General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU Affero General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
+  -->
+
+<div>
+  <h2 openlmis-message="label.equipment.maintenance.request.form"></h2>
+
+  <p openlmis-message="message.equipment.maintenance.request.description"></p>
+
+  <ng-include src="'/public/pages/admin/equipment/shared/log-header.html'"></ng-include>
+
+  <form ng-submit="save()" name="requestForm" novalidate>
+    <div>
+      <div class="form-row clearfix">
+        <label><span openlmis-message="label.equipment.maintenance.service.vendor"></span> <span class="label-required">*</span>
+        </label>
+
+        <div class="form-field">
+          <select name="vendor" ng-model="current.vendorId" ng-required="true">
+            <option value="{{vendor.id}}" ng-repeat="vendor in vendors">{{vendor.name}}</option>
+          </select>
+          <span class="field-error" ng-show="requestForm.vendor.$error.required && showError"
+                openlmis-message="missing.value"></span>
+        </div>
+      </div>
+      <div class="form-row clearfix">
+        <label><span openlmis-message="label.equipment.reason.for.requesting.maintenance"></span> <span
+          class="label-required">*</span>
+        </label>
+
+        <div class="form-field">
+          <textarea style="width:100%" name="reason" ng-model="current.reason" ng-required="true"></textarea>
+          <span class="field-error" ng-show="requestForm.reason.$error.required && showError"
+                openlmis-message="missing.value"></span>
+        </div>
+      </div>
+
+      <div class="form-row clearfix">
+        <label><span openlmis-message="label.equipment.recommended.maintenance.visit.date"></span><span
+          class="label-required">*</span>
+        </label>
+
+        <div class="form-field">
+          <input ng-required="true" ng-model="current.recommendedDate" name="recommendedDate" id="recommendedDate"
+                 ng-change="blurDateFields();" ui-date="{dateFormat: 'dd/mm/yy', changeYear: true}"
+                 ui-date-format="yy-dd-mm"/>
+          <span class="field-error" ng-show="requestForm.recommendedDate.$error.required && showError"
+                openlmis-message="missing.value"></span>
+        </div>
+      </div>
+
+      <div class="form-row clearfix">
+        <label openlmis-message="label.equipment.other.comments"></label>
+
+        <div class="form-field">
+          <textarea style="width:100%" ng-model="current.comment"></textarea>
+        </div>
+      </div>
+    </div>
+
+    <div form-toolbar id="action_buttons" class="action-buttons">
+      <div class="form-cell button-row">
+        <input id="saveButton" ng-disabled="!requestForm.$valid" type="submit" id="save-button"
+               class="btn btn-primary save-button" openlmis-message="button.save"/>
+        <input id="cancelButton" type="button" class="btn btn-cancel cancel-button" openlmis-message="button.cancel"
+               ng-click="cancel()"/>
+      </div>
+
+      <div class="toolbar-error" id="saveErrorMsgDiv">
+        <span openlmis-message="error" ng-show="error"></span>&nbsp;
+        <span ng-show="errorMessage" ng-bind="errorMessage"></span>
+      </div>
+      <div class="toolbar-success" id="saveSuccessMsgDiv" openlmis-message="message" ng-show="message"></div>
+    </div>
+  </form>
+</div>

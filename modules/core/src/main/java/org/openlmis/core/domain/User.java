@@ -13,9 +13,9 @@ package org.openlmis.core.domain;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
-import org.codehaus.jackson.annotate.JsonIgnore;
-import org.codehaus.jackson.annotate.JsonIgnoreProperties;
-import org.codehaus.jackson.map.annotate.JsonSerialize;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.core.hash.Encoder;
 import org.openlmis.upload.Importable;
@@ -24,7 +24,7 @@ import org.openlmis.upload.annotation.ImportField;
 import java.util.List;
 import java.util.regex.Pattern;
 
-import static org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion.NON_EMPTY;
+import static com.fasterxml.jackson.databind.annotation.JsonSerialize.Inclusion.NON_EMPTY;
 
 /**
  * User represents User of the system and its attributes. Defines the contract for creation/upload of users, mandatory
@@ -80,12 +80,17 @@ public class User extends BaseModel implements Importable {
   private List<RoleAssignment> allocationRoles;
   private List<FulfillmentRoleAssignment> fulfillmentRoles;
 
+  private RoleAssignment reportRoles;
+
   private RoleAssignment adminRole;
+  
   private RoleAssignment reportingRole;
 
   private Boolean verified;
 
   private Boolean active;
+
+  private Boolean isMobileUser = false;
 
   public User(Long id, String userName) {
     this.id = id;
@@ -94,6 +99,10 @@ public class User extends BaseModel implements Importable {
 
   public User(String userName) {
     this(null, userName);
+  }
+
+  public Boolean isMobileUser() {
+    return this.isMobileUser;
   }
 
   public void validate() {

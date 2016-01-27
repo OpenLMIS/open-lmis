@@ -108,6 +108,10 @@ public class RequisitionGroupMemberService {
     return requisitionGroupMemberRepository.getRequisitionGroupMemberForRequisitionGroupIdAndFacilityId(requisitionGroup, facility);
   }
 
+  public void removeRequisitionGroupMember(RequisitionGroup requisitionGroup, Facility facility){
+      requisitionGroupMemberRepository.removeRequisitionGroupMember(requisitionGroup, facility);
+  }
+
   public List<RequisitionGroupMember> getAllRequisitionGroupMembersByFacility(Long facilityId) {
     return requisitionGroupMemberRepository.getAllRequisitionGroupMembersByFacility(facilityId);
   }

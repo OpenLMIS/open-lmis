@@ -231,7 +231,7 @@ public class ProgramProductServiceTest {
 
     service.save(programProductForUpdate);
 
-    verify(programService, never()).setFeedSendFlag(programProductForUpdate.getProgram(), true);
+      verify(programService, never()).setFeedSendFlag(programProductForUpdate.getProgram(), true);
   }
 
   @Test

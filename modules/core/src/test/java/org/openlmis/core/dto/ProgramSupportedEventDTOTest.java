@@ -15,10 +15,12 @@ import org.joda.time.DateTime;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
+import org.junit.runners.BlockJUnit4ClassRunner;
 import org.openlmis.core.domain.ProgramSupported;
 import org.openlmis.db.categories.UnitTests;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
+import org.powermock.modules.junit4.PowerMockRunnerDelegate;
 
 import java.util.List;
 
@@ -32,10 +34,12 @@ import static org.mockito.Mockito.when;
 import static org.openlmis.core.builder.ProgramSupportedBuilder.defaultProgramSupported;
 import static org.powermock.api.mockito.PowerMockito.mockStatic;
 
-@PrepareForTest(DateTime.class)
 @RunWith(PowerMockRunner.class)
+@PowerMockRunnerDelegate(BlockJUnit4ClassRunner.class)
+@PrepareForTest(DateTime.class)
 @Category(UnitTests.class)
 public class ProgramSupportedEventDTOTest {
+
   @Test
   public void shouldCreateProgramSupportedEventDTO() throws Exception {
     ProgramSupported programSupported = make(a(defaultProgramSupported));

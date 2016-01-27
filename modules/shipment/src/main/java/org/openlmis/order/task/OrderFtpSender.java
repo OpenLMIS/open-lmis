@@ -24,6 +24,7 @@ import java.text.MessageFormat;
  * Exposes the services for creating FTP URI and sending file through FTP.
  */
 
+// todo: make the passive mode configurable.
 @Service
 public class OrderFtpSender {
   private static final String CAMEL_FTP_PATTERN = "ftp://{0}@{1}:{2}{3}?password={4}&passiveMode=true";
@@ -32,6 +33,7 @@ public class OrderFtpSender {
     CamelContext context = new DefaultCamelContext();
     ProducerTemplate template = context.createProducerTemplate();
     template.sendBodyAndHeader(createFtpUri(supplyingFacility), file, Exchange.FILE_NAME, file.getName());
+
   }
 
   private String createFtpUri(FacilityFtpDetails supplyingFacility) {

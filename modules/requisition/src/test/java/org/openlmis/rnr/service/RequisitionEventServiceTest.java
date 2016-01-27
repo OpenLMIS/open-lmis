@@ -14,6 +14,7 @@ import org.ict4h.atomfeed.server.service.EventService;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
+import org.junit.runners.BlockJUnit4ClassRunner;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.openlmis.db.categories.UnitTests;
@@ -21,6 +22,7 @@ import org.openlmis.rnr.domain.Rnr;
 import org.openlmis.rnr.event.RequisitionStatusChangeEvent;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
+import org.powermock.modules.junit4.PowerMockRunnerDelegate;
 
 import static com.natpryce.makeiteasy.MakeItEasy.a;
 import static com.natpryce.makeiteasy.MakeItEasy.make;
@@ -31,6 +33,7 @@ import static org.powermock.api.mockito.PowerMockito.whenNew;
 
 @Category(UnitTests.class)
 @RunWith(PowerMockRunner.class)
+@PowerMockRunnerDelegate(BlockJUnit4ClassRunner.class)
 @PrepareForTest(RequisitionEventService.class)
 public class RequisitionEventServiceTest {
 
@@ -40,11 +43,15 @@ public class RequisitionEventServiceTest {
   @InjectMocks
   private RequisitionEventService service;
 
+  @Mock
+  NotificationServices notificationServices;
+
   @Test
   public void shouldTriggerNotifyOnEventService() throws Exception {
     Rnr requisition = make(a(defaultRequisition));
     RequisitionStatusChangeEvent event = mock(RequisitionStatusChangeEvent.class);
-    whenNew(RequisitionStatusChangeEvent.class).withArguments(requisition).thenReturn(event);
+
+    whenNew(RequisitionStatusChangeEvent.class).withArguments(requisition, notificationServices).thenReturn(event);
 
     service.notifyForStatusChange(requisition);
 

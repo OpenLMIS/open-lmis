@@ -10,10 +10,18 @@
 
 function CreateRegimenLineItemController($scope) {
   $scope.showCategory = function (index) {
-    return !((index > 0 ) && ($scope.rnr.regimenLineItems[index].category.name == $scope.rnr.regimenLineItems[index - 1].category.name));
+    var absIndex = ($scope.pageSize * ($scope.currentPage - 1)) +  index;
+    return  !((index > 0 ) && ($scope.rnr.regimenLineItems.length > absIndex) &&  ($scope.rnr.regimenLineItems[absIndex].category.name == $scope.rnr.regimenLineItems[absIndex - 1].category.name));
   };
 
   $scope.getId = function (prefix, parent) {
     return prefix + "_" + parent.$parent.$index;
+  };
+
+  $scope.setSkipAll = function(value){
+    _.each($scope.page.regimen, function (regimen) {
+      $scope.saveRnrForm.$dirty = true;
+      regimen.skipped = value;
+    });
   };
 }

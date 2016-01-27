@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="openlmis-report-header-landscape" language="groovy" pageWidth="842" pageHeight="200" orientation="Landscape" whenNoDataType="NoDataSection" columnWidth="720" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" uuid="b1774485-8c52-493d-8b62-63c6cd58f66d">
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="118"/>
+	<property name="ireport.y" value="0"/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="One Empty Record"/>
+	<parameter name="REPORT_TITLE" class="java.lang.String"/>
+	<parameter name="REPORT_NAME" class="java.lang.String"/>
+	<parameter name="LOGO" class="java.io.InputStream"/>
+	<parameter name="PAGE_NO" class="java.lang.String"/>
+	<parameter name="OPERATOR_LOGO" class="java.io.InputStream"/>
+	<parameter name="REPORT_SUB_TITLE" class="java.lang.String"/>
+	<parameter name="REPORT_FILTER_PARAM_VALUES" class="java.lang.String"/>
+	<parameter name="CUSTOM_REPORT_TITLE" class="java.lang.String"/>
+	<parameter name="OPERATOR_NAME" class="java.lang.String"/>
+	<parameter name="VIMS_LOGO" class="java.io.InputStream"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<pageHeader>
+		<band height="105" splitType="Stretch">
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement x="207" y="66" width="348" height="20" isRemoveLineWhenBlank="true" uuid="51974f2d-08d1-44d1-bbce-2b8ba24425bb"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle" markup="none">
+					<font size="10" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{REPORT_SUB_TITLE}.toUpperCase()=="NULL"?"":$P{REPORT_SUB_TITLE}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="741" y="66" width="36" height="20" uuid="71e84ef8-ce3f-4e0a-813d-c62b5574cb0d">
+					<printWhenExpression><![CDATA[!$P{PAGE_NO}.equals("-1")]]></printWhenExpression>
+				</reportElement>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font size="9"/>
+				</textElement>
+				<text><![CDATA[Page:]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="777" y="66" width="31" height="20" forecolor="#000000" uuid="ef77094f-f5e9-4fde-8847-aaa889c3a8a2">
+					<printWhenExpression><![CDATA[!$P{PAGE_NO}.equals("-1")]]></printWhenExpression>
+				</reportElement>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font size="9" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{PAGE_NO}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement x="17" y="66" width="342" height="20" isRemoveLineWhenBlank="true" uuid="828612ae-f65b-4fa4-b46d-8317145288cc"/>
+				<textElement textAlignment="Left" markup="none">
+					<font size="9"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<textFieldExpression><![CDATA[($P{REPORT_FILTER_PARAM_VALUES} != 0)?$P{REPORT_FILTER_PARAM_VALUES}:""]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement x="207" y="45" width="348" height="21" isPrintInFirstWholeBand="true" forecolor="#3D9297" uuid="8e7e49a1-6c5e-4a50-ba77-935008c82741"/>
+				<textElement textAlignment="Center" verticalAlignment="Top" markup="none">
+					<font size="16" isBold="true"/>
+					<paragraph leftIndent="0"/>
+				</textElement>
+				<textFieldExpression><![CDATA[($P{CUSTOM_REPORT_TITLE} != null)?$P{CUSTOM_REPORT_TITLE}:$P{REPORT_TITLE}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement x="207" y="13" width="348" height="21" isPrintInFirstWholeBand="true" forecolor="#3D9297" uuid="4e714469-2ec7-46c4-ab1a-c1a75cb2f71f"/>
+				<textElement textAlignment="Center" verticalAlignment="Top" markup="none">
+					<font size="16" isBold="true"/>
+					<paragraph leftIndent="0"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{OPERATOR_NAME}]]></textFieldExpression>
+			</textField>
+			<image isUsingCache="true" onErrorType="Icon">
+				<reportElement x="17" y="13" width="62" height="42" isPrintInFirstWholeBand="true" uuid="4d69dbd2-2db0-46be-bed6-13a8e366d8ee"/>
+				<imageExpression><![CDATA[$P{LOGO}]]></imageExpression>
+			</image>
+			<image onErrorType="Icon">
+				<reportElement x="741" y="13" width="67" height="42" uuid="4b9e84f3-d0f8-408e-8dae-10c9b80ba365"/>
+				<imageExpression><![CDATA[$P{VIMS_LOGO}]]></imageExpression>
+			</image>
+		</band>
+	</pageHeader>
+</jasperReport>

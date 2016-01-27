@@ -14,6 +14,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
+import org.junit.runners.BlockJUnit4ClassRunner;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.openlmis.core.domain.FacilityType;
@@ -27,6 +28,7 @@ import org.openlmis.db.categories.UnitTests;
 import org.openlmis.restapi.response.RestResponse;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
+import org.powermock.modules.junit4.PowerMockRunnerDelegate;
 import org.springframework.http.ResponseEntity;
 
 import java.util.ArrayList;
@@ -43,6 +45,7 @@ import static org.springframework.http.HttpStatus.*;
 
 @Category(UnitTests.class)
 @RunWith(PowerMockRunner.class)
+@PowerMockRunnerDelegate(BlockJUnit4ClassRunner.class)
 @PrepareForTest(RestResponse.class)
 public class RestProgramProductControllerTest {
 

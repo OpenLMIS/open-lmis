@@ -12,12 +12,13 @@ package org.openlmis.web.controller;
 
 import org.openlmis.core.domain.OrderNumberConfiguration;
 import org.openlmis.core.exception.DataException;
+import org.openlmis.core.web.controller.BaseController;
 import org.openlmis.order.domain.DateFormat;
 import org.openlmis.order.domain.Order;
 import org.openlmis.order.dto.OrderFileTemplateDTO;
 import org.openlmis.order.service.OrderService;
 import org.openlmis.web.form.RequisitionList;
-import org.openlmis.web.response.OpenLmisResponse;
+import org.openlmis.core.web.OpenLmisResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -27,6 +28,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
+import static org.openlmis.core.domain.RightName.VIEW_ORDER;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
@@ -34,11 +36,10 @@ import java.util.Set;
 
 import static java.util.Arrays.asList;
 import static org.openlmis.core.domain.RightName.MANAGE_POD;
-import static org.openlmis.core.domain.RightName.VIEW_ORDER;
 import static org.openlmis.order.domain.OrderStatus.*;
 import static org.openlmis.order.dto.OrderDTO.getOrdersForView;
-import static org.openlmis.web.response.OpenLmisResponse.error;
-import static org.openlmis.web.response.OpenLmisResponse.response;
+import static org.openlmis.core.web.OpenLmisResponse.error;
+import static org.openlmis.core.web.OpenLmisResponse.response;
 import static org.springframework.http.HttpStatus.*;
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
 import static org.springframework.web.bind.annotation.RequestMethod.POST;
@@ -79,11 +80,26 @@ public class OrderController extends BaseController {
   @PreAuthorize("@permissionEvaluator.hasPermission(principal, 'VIEW_ORDER')")
   public ResponseEntity<OpenLmisResponse> getOrdersForPage(@RequestParam(value = "page",
     required = true,
-    defaultValue = "1") Integer page, HttpServletRequest request) {
-    ResponseEntity<OpenLmisResponse> response = response(ORDERS,
-      getOrdersForView(orderService.getOrdersForPage(page, loggedInUserId(request), VIEW_ORDER)));
-    response.getBody().addData(PAGE_SIZE, orderService.getPageSize());
-    response.getBody().addData(NUMBER_OF_PAGES, orderService.getNumberOfPages());
+    defaultValue = "1") Integer page,
+     @RequestParam(value="supplyDepot", defaultValue = "0") Long supplyDepot,
+     @RequestParam(value="period", defaultValue = "0") Long period,
+     @RequestParam(value="program", defaultValue = "0") Long program,
+     HttpServletRequest request) {
+    ResponseEntity<OpenLmisResponse> response;
+    if(supplyDepot != 0 || program != 0){
+
+      response = response(ORDERS,
+          getOrdersForView(orderService.getOrdersForPage(page, loggedInUserId(request), VIEW_ORDER, supplyDepot, program, period)));
+      response.getBody().addData(PAGE_SIZE, orderService.getPageSize());
+      response.getBody().addData(NUMBER_OF_PAGES, orderService.getNumberOfPages(supplyDepot, program,period));
+
+    }else {
+      response = response(ORDERS,
+          getOrdersForView(orderService.getOrdersForPage(page, loggedInUserId(request), VIEW_ORDER)));
+      response.getBody().addData(PAGE_SIZE, orderService.getPageSize());
+      response.getBody().addData(NUMBER_OF_PAGES, orderService.getNumberOfPages());
+    }
+
     return response;
   }
 
@@ -139,10 +155,10 @@ public class OrderController extends BaseController {
 
   @RequestMapping(value = "/manage-pod-orders", method = GET)
   @PreAuthorize("@permissionEvaluator.hasPermission(principal, 'MANAGE_POD')")
-  public ResponseEntity<OpenLmisResponse> getOrdersForPOD(HttpServletRequest request) {
+  public ResponseEntity<OpenLmisResponse> getOrdersForPOD(@RequestParam("program") Long program, @RequestParam(value = "facility", defaultValue = "0") Long facility, HttpServletRequest request) {
     List<Order> ordersForPOD = orderService.searchByStatusAndRight(loggedInUserId(request),
       MANAGE_POD,
-      asList(RELEASED, PACKED, TRANSFER_FAILED, READY_TO_PACK));
+      asList(RELEASED, PACKED, TRANSFER_FAILED, READY_TO_PACK),program, facility);
     return response(ORDERS_FOR_POD, getOrdersForView(ordersForPOD));
   }
 }

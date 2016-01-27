@@ -14,6 +14,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
+import org.junit.runners.BlockJUnit4ClassRunner;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.openlmis.authentication.web.UserAuthenticationSuccessHandler;
@@ -28,9 +29,10 @@ import org.openlmis.order.dto.OrderDTO;
 import org.openlmis.order.dto.OrderFileTemplateDTO;
 import org.openlmis.order.service.OrderService;
 import org.openlmis.web.form.RequisitionList;
-import org.openlmis.web.response.OpenLmisResponse;
+import org.openlmis.core.web.OpenLmisResponse;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
+import org.powermock.modules.junit4.PowerMockRunnerDelegate;
 import org.springframework.http.ResponseEntity;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpSession;
@@ -54,9 +56,11 @@ import static org.powermock.api.mockito.PowerMockito.when;
 import static org.springframework.http.HttpStatus.CONFLICT;
 import static org.springframework.http.HttpStatus.CREATED;
 
-@RunWith(PowerMockRunner.class)
-@PrepareForTest(OrderDTO.class)
+
 @Category(UnitTests.class)
+@RunWith(PowerMockRunner.class)
+@PowerMockRunnerDelegate(BlockJUnit4ClassRunner.class)
+@PrepareForTest(OrderDTO.class)
 public class OrderControllerTest {
 
   private static final Long USER_ID = 1L;
@@ -110,7 +114,7 @@ public class OrderControllerTest {
     List<OrderDTO> orderDTOs = new ArrayList<>();
     when(OrderDTO.getOrdersForView(orders)).thenReturn(orderDTOs);
 
-    ResponseEntity<OpenLmisResponse> fetchedOrders = orderController.getOrdersForPage(2, request);
+    ResponseEntity<OpenLmisResponse> fetchedOrders = orderController.getOrdersForPage(2,0L,0L,0L, request);
 
     verify(orderService).getOrdersForPage(2, USER_ID, RightName.VIEW_ORDER);
     assertThat((List<OrderDTO>) fetchedOrders.getBody().getData().get(ORDERS), is(orderDTOs));
@@ -120,7 +124,7 @@ public class OrderControllerTest {
   public void shouldAddPageInfoForOrders() throws Exception {
     when(orderService.getPageSize()).thenReturn(3);
 
-    ResponseEntity<OpenLmisResponse> fetchedOrders = orderController.getOrdersForPage(2, request);
+    ResponseEntity<OpenLmisResponse> fetchedOrders = orderController.getOrdersForPage(2,0L,0L,0L, request);
 
     assertThat((Integer) fetchedOrders.getBody().getData().get("pageSize"), is(3));
   }
@@ -129,7 +133,7 @@ public class OrderControllerTest {
   public void shouldAddTotalNumberOfPagesForOrders() throws Exception {
     when(orderService.getNumberOfPages()).thenReturn(5);
 
-    ResponseEntity<OpenLmisResponse> fetchedOrders = orderController.getOrdersForPage(2, request);
+    ResponseEntity<OpenLmisResponse> fetchedOrders = orderController.getOrdersForPage(2,0L,0L,0L, request);
 
     assertThat((Integer) fetchedOrders.getBody().getData().get("numberOfPages"), is(5));
   }
@@ -185,16 +189,16 @@ public class OrderControllerTest {
     List<Order> ordersForPOD = null;
     when(orderService.searchByStatusAndRight(USER_ID,
       MANAGE_POD,
-      asList(RELEASED, PACKED, TRANSFER_FAILED, READY_TO_PACK))).thenReturn(ordersForPOD);
+      asList(RELEASED, PACKED, TRANSFER_FAILED, READY_TO_PACK),1L,0L)).thenReturn(ordersForPOD);
     mockStatic(OrderDTO.class);
     List<OrderDTO> orderDTOs = new ArrayList<>();
     when(OrderDTO.getOrdersForView(ordersForPOD)).thenReturn(orderDTOs);
 
-    ResponseEntity<OpenLmisResponse> response = orderController.getOrdersForPOD(request);
+    ResponseEntity<OpenLmisResponse> response = orderController.getOrdersForPOD(1L,0L,request);
 
     assertThat((List<OrderDTO>) response.getBody().getData().get(ORDERS_FOR_POD), is(orderDTOs));
     verify(orderService).searchByStatusAndRight(USER_ID,
       MANAGE_POD,
-      asList(RELEASED, PACKED, TRANSFER_FAILED, READY_TO_PACK));
+      asList(RELEASED, PACKED, TRANSFER_FAILED, READY_TO_PACK),1L,0L);
   }
 }

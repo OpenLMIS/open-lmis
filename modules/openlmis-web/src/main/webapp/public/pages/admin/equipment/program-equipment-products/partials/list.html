@@ -1,0 +1,201 @@
+<!--
+  ~ Electronic Logistics Management Information System (eLMIS) is a supply chain management system for health commodities in a developing country setting.
+  ~
+  ~ Copyright (C) 2015  John Snow, Inc (JSI). This program was produced for the U.S. Agency for International Development (USAID). It was prepared under the USAID | DELIVER PROJECT, Task Order 4.
+  ~
+  ~ This program is free software: you can redistribute it and/or modify it under the terms of the GNU Affero General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
+  ~
+  ~ This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Affero General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU Affero General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
+  -->
+
+<div xmlns="http://www.w3.org/1999/html">
+  <h2 openlmis-message="label.equipment.associated.product"></h2>
+
+  <div class="alert alert-success" id="saveSuccessMsgDiv" ng-show="showMessage">
+    <span ng-bind="message"></span>.
+  </div>
+
+  <form ng-submit="saveProgramEquipmentChanges()" id="manipulate-program-equipment-product"
+        name="programEquipmentProduct" novalidate select2-blur>
+    <div>
+      <div>
+        <select class="large-input"
+                ng-change="listEquipmentsForProgram()"
+                ng-model="currentProgramEquipment.program" ng-options="option as option.name for option in programs">
+          <option value=""><span openlmis-message="label.equipment.choose.program"></span></option>
+          <option ng-repeat="option in programs" value="{{ option.id }}">{{ option.name }}</option>
+        </select>
+      </div>
+
+      <table class="table" style="vertical-align: top">
+        <tr>
+          <td>
+            <div>
+              <input id="equipment-add-new" type="button" value="Add New" ng-click="addNewEquipment()"
+                     ng-show="equipmentsLoaded"
+                     ng-disabled="currentProgramEquipment.program == null || currentProgramEquipment.program == undefined"
+                     class="pull-right btn btn-primary"/></div>
+            <table class="table table-hover table-bordered">
+              <thead>
+              <tr class="gradient-header">
+                <th openlmis-message="label.equipment.equipment"></th>
+                <th openlmis-message="rnr.equipment.test.count"></th>
+                <th openlmis-message="rnr.equipment.total.count"></th>
+                <th></th>
+              </tr>
+              </thead>
+              <tbody>
+              <tr ng-repeat="programEquipment in programEquipments"
+                  ng-click="setSelectedProgramEquipment(programEquipment)"
+                  style="{{getProgramEquipmentColor(programEquipment)}}">
+                <td>
+                  <div>{{programEquipment.equipmentType.name}}</div>
+                </td>
+                <td>
+                  <div>
+                    <input type="checkbox" name="testCount-enabled"
+                           ng-model="programEquipment.enableTestCount" ng-change="setDataChanged(programEquipment)"/>
+                  </div>
+                </td>
+                <td>
+                  <div>
+                    <input type="checkbox" name="totalCount-enabled"
+                           ng-model="programEquipment.enableTotalColumn" ng-change="setDataChanged(programEquipment)"/>
+                  </div>
+                </td>
+                <td>
+                  <div>
+                    <input type="button" class="btn btn-danger delete-button" value="Delete"
+                           ng-click="showRemoveProgramEquipmentConfirmDialog($index)"/>
+                  </div>
+                </td>
+                </td>
+              </tr>
+              </tbody>
+            </table>
+          </td>
+          <td>&nbsp;</td>
+          <td>
+            <div>
+              <input id="product-add-new" type="button" value="Add New" ng-click="addNewProduct()"
+
+                        ng-disabled="currentProgramEquipment.id == null || currentProgramEquipment.id == undefined"
+                        class="pull-right btn btn-primary"/></div>
+            <table class="table table-hover table-bordered">
+              <thead>
+              <tr class="gradient-header">
+                <th openlmis-message="label.product"></th>
+                <th></th>
+              </tr>
+              </thead>
+              <tbody>
+              <tr ng-repeat="programEquipmentProduct in programEquipmentProducts">
+                <td>
+                  <div>
+                    {{programEquipmentProduct.product.primaryName.concat('(').concat(programEquipmentProduct.product.fullName).concat(')')}}
+                  </div>
+                </td>
+                <td>
+                  <div>
+                    <input type="button" class="btn btn-danger delete-button" value="Delete"
+                           ng-click="showRemoveProgramEquipmentProductConfirmDialog($index)"/>
+                  </div>
+                </td>
+              </tr>
+              </tbody>
+            </table>
+          </td>
+        </tr>
+      </table>
+      <div form-toolbar id="action_buttons" class="action-buttons">
+        <div class="form-cell button-row">
+          <input type="submit" class="btn btn-primary save-button" ng-disabled="!isDataChanged" value="Save"/>
+        </div>
+        <div class="toolbar-error" id="saveErrorMsgDiv" ng-bind="error" ng-show="error"/>
+      </div>
+    </div>
+  </form>
+
+  <div id="equipmentDialogDiv" modal="equipmentDialogModal"
+       options="{'backdrop':'static', 'escape':false}">
+    <div class="modal-header">
+      <h3 openlmis-message="label.equipment.add"></h3>
+    </div>
+
+    <div class="modal-body">
+      <form name="addEquipmentForm">
+        <div>
+          <div class="row-fluid">
+            <div class="span6">
+              <label for="equipmentValue"><span openlmis-message="label.equipment.equipment"></span></label>
+            </div>
+            <div class="span4">
+              <select style="width:200px;" ng-required="true" size="7" name="equipmentValue"
+                      id="equipmentValue" ng-model="currentProgramEquipment.equipmentType.id"
+                      ng-options="option.id as option.name for option in allEquipments">
+              </select>
+            </div>
+          </div>
+
+        </div>
+      </form>
+      <div class="alert alert-error" id="equipmentSaveFailMessage" openlmis-message="equipmentErrorMessage"
+           ng-show="equipmentError">
+
+      </div>
+    </div>
+
+    <div class="modal-footer">
+      <input type="button" class="btn btn-primary save-button" value="Add"
+             ng-disabled="currentProgramEquipment.equipmentType.id == null || currentProgramEquipment.equipmentType.id == undefined"
+             ng-click="saveEquipment()"/>
+      <input type="button"
+             ng-click="closeModal();equipmentError=''"
+             class="btn btn-cancel" openlmis-message="button.cancel"/>
+    </div>
+
+  </div>
+
+
+  <div id="productsDialogDiv" modal="productDialogModal"
+       options="{'backdrop':'static', 'escape':false}">
+    <div class="modal-header">
+      <h3 openlmis-message="header.product.add.new"></h3>
+    </div>
+
+    <div class="modal-body">
+      <form name="addProductForm">
+        <div>
+          <div class="row-fluid">
+            <div class="span3">
+              <label for="productValue"><span openlmis-message="label.product"></span></label>
+            </div>
+            <div class="span9">
+              <select style="width: 100%" ng-required="true" size="7" name="productValue"
+                      id="productValue" ng-model="currentProgramEquipmentProduct.product.id"
+                      ng-options="option.id as option.code.concat(' - ( ').concat(option.fullName).concat(' )') for option in allProducts">
+              </select>
+            </div>
+          </div>
+        </div>
+      </form>
+      <div class="alert alert-error" id="productSaveFailMessage" openlmis-message="productErrorMessage"
+           ng-show="productError">
+
+      </div>
+    </div>
+
+    <div class="modal-footer">
+      <input type="button" class="btn btn-primary save-button" value="Add"
+             ng-disabled="currentProgramEquipmentProduct.product.id == null || currentProgramEquipmentProduct.product.id == undefined"
+             ng-click="saveProgramEquipmentProduct()"/>
+      <input type="button"
+             ng-click="closeModal();productError=''"
+             class="btn btn-cancel" openlmis-message="button.cancel"/>
+    </div>
+
+  </div>
+
+</div>

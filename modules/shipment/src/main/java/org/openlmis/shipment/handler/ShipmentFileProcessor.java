@@ -24,7 +24,7 @@ import org.openlmis.shipment.service.ShipmentFileTemplateService;
 import org.openlmis.shipment.service.ShipmentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
-import org.springframework.integration.Message;
+import org.springframework.messaging.Message;
 import org.springframework.integration.annotation.MessageEndpoint;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
@@ -118,6 +118,9 @@ public class ShipmentFileProcessor {
     while ((fieldsInOneRow = listReader.read()) != null) {
 
       ShipmentLineItemDTO dto = ShipmentLineItemDTO.populate(fieldsInOneRow, includedColumns);
+
+      // parse concatinated columns
+      parseConcatenatedOrderId( dto );
       status = addShippableOrder(orderSet, dto) && status;
 
       if (status) {
@@ -131,6 +134,17 @@ public class ShipmentFileProcessor {
     if (orderSet.size() == 0) {
       throw new DataException("error.mandatory.fields.missing");
     }
+  }
+
+  private void parseConcatenatedOrderId(ShipmentLineItemDTO dto) {
+      if(dto.getConcatenatedOrderId() != null && dto.getOrderId() == null){
+        // the concatenation formula is based on ZM's specification here.
+        // this needs to be refactored to support different formats of concateonation.
+        // for ZM, the concation is [3 letter Program code][6 digit number][Regular or Emergency(E/R)]
+        //TODO: the hard coded substring needs to be moved to somewhere configurable.
+        dto.setProgramCode(dto.getConcatenatedOrderId().substring(0,3));
+        dto.setOrderId( Long.parseLong(dto.getConcatenatedOrderId().substring( 3, 9)) );
+      }
   }
 
   private boolean addShippableOrder(Set<String> orderNumbers, ShipmentLineItemDTO dto) {

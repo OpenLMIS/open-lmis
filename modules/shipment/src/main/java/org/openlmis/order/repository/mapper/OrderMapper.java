@@ -30,37 +30,55 @@ import java.util.List;
 public interface OrderMapper {
 
   @Insert({"INSERT INTO orders(id, orderNumber, status, ftpcomment, supplyLineId, createdBy, modifiedBy) ",
-    "VALUES (#{rnr.id}, #{orderNumber}, #{status}, #{ftpComment}, #{supplyLine.id}, #{createdBy}, #{createdBy})"})
+      "VALUES (#{rnr.id}, #{orderNumber}, #{status}, #{ftpComment}, #{supplyLine.id}, #{createdBy}, #{createdBy})"})
   void insert(Order order);
 
   @Select({"SELECT DISTINCT O.* FROM orders O INNER JOIN supply_lines S ON O.supplyLineId = S.id ",
-    "INNER JOIN fulfillment_role_assignments FRA ON S.supplyingFacilityId = FRA.facilityId ",
-    "INNER JOIN role_rights RR ON FRA.roleId = RR.roleId",
-    "WHERE FRA.userid = #{userId} AND RR.rightName = #{right} ORDER BY O.createdDate DESC LIMIT #{limit} OFFSET #{offset}"})
+      "INNER JOIN fulfillment_role_assignments FRA ON S.supplyingFacilityId = FRA.facilityId ",
+      "INNER JOIN role_rights RR ON FRA.roleId = RR.roleId",
+      "WHERE FRA.userid = #{userId} AND RR.rightName = #{right} ORDER BY O.createdDate DESC LIMIT #{limit} OFFSET #{offset}"})
   @Results({
-    @Result(property = "id", column = "id"),
-    @Result(property = "rnr.id", column = "id"),
-    @Result(property = "shipmentFileInfo", javaType = ShipmentFileInfo.class, column = "shipmentId",
-      one = @One(select = "org.openlmis.shipment.repository.mapper.ShipmentMapper.getShipmentFileInfo")),
-    @Result(property = "supplyLine", javaType = SupplyLine.class, column = "supplyLineId",
-      one = @One(select = "org.openlmis.core.repository.mapper.SupplyLineMapper.getById"))
+      @Result(property = "id", column = "id"),
+      @Result(property = "rnr.id", column = "id"),
+      @Result(property = "shipmentFileInfo", javaType = ShipmentFileInfo.class, column = "shipmentId",
+          one = @One(select = "org.openlmis.shipment.repository.mapper.ShipmentMapper.getShipmentFileInfo")),
+      @Result(property = "supplyLine", javaType = SupplyLine.class, column = "supplyLineId",
+          one = @One(select = "org.openlmis.core.repository.mapper.SupplyLineMapper.getById"))
   })
   List<Order> getOrders(@Param("limit") int limit, @Param("offset") int offset, @Param("userId") Long userId, @Param("right") String rightName);
 
+
+  @Select({"SELECT DISTINCT O.*, f.name FROM orders O INNER JOIN supply_lines S ON O.supplyLineId = S.id ",
+      "INNER JOIN fulfillment_role_assignments FRA ON S.supplyingFacilityId = FRA.facilityId",
+      "INNER JOIN requisitions r on r.id = O.id ",
+      "INNER JOIN role_rights RR ON FRA.roleId = RR.roleId ",
+      " INNER JOIN facilities f on f.id = r.facilityid ",
+      "WHERE FRA.userid = #{userId} AND RR.rightName = #{rightName} and S.supplyingFacilityId = #{supplyDepot} and r.programId = #{program} and r.periodId = #{period} " +
+          "ORDER BY f.name ASC LIMIT #{limit} OFFSET #{offset}"})
+  @Results({
+      @Result(property = "id", column = "id"),
+      @Result(property = "rnr.id", column = "id"),
+      @Result(property = "shipmentFileInfo", javaType = ShipmentFileInfo.class, column = "shipmentId",
+          one = @One(select = "org.openlmis.shipment.repository.mapper.ShipmentMapper.getShipmentFileInfo")),
+      @Result(property = "supplyLine", javaType = SupplyLine.class, column = "supplyLineId",
+          one = @One(select = "org.openlmis.core.repository.mapper.SupplyLineMapper.getById"))
+  })
+  List<Order> getOrdersByDepot(@Param("limit") int limit, @Param("offset") int offset, @Param("userId") Long userId, @Param("rightName") String rightName, @Param("supplyDepot") Long supplyDepot, @Param("program") Long program, @Param("period") Long period);
+
   @Select("SELECT * FROM orders WHERE id = #{id}")
   @Results({
-    @Result(property = "id", column = "id"),
-    @Result(property = "rnr.id", column = "id"),
-    @Result(property = "supplyLine", javaType = SupplyLine.class, column = "supplyLineId",
-      one = @One(select = "org.openlmis.core.repository.mapper.SupplyLineMapper.getById"))
+      @Result(property = "id", column = "id"),
+      @Result(property = "rnr.id", column = "id"),
+      @Result(property = "supplyLine", javaType = SupplyLine.class, column = "supplyLineId",
+          one = @One(select = "org.openlmis.core.repository.mapper.SupplyLineMapper.getById"))
   })
   Order getById(Long id);
 
   @Update({"UPDATE orders SET",
-    "shipmentId = #{shipmentId},",
-    "status = #{status},",
-    "modifiedDate = CURRENT_TIMESTAMP",
-    "WHERE orderNumber = #{orderNumber}"})
+      "shipmentId = #{shipmentId},",
+      "status = #{status},",
+      "modifiedDate = CURRENT_TIMESTAMP",
+      "WHERE orderNumber = #{orderNumber}"})
   void updateShipmentAndStatus(@Param("orderNumber") String orderNumber,
                                @Param("status") OrderStatus status,
                                @Param("shipmentId") Long shipmentId);
@@ -72,7 +90,7 @@ public interface OrderMapper {
   void deleteOrderFileColumns();
 
   @Insert("INSERT INTO order_file_columns (dataFieldLabel, includeInOrderFile, format, columnLabel, position, openLmisField, nested, keyPath, createdBy, modifiedBy)" +
-    " VALUES (#{dataFieldLabel}, #{includeInOrderFile}, #{format}, #{columnLabel}, #{position}, #{openLmisField}, #{nested}, #{keyPath}, #{modifiedBy}, #{modifiedBy})")
+      " VALUES (#{dataFieldLabel}, #{includeInOrderFile}, #{format}, #{columnLabel}, #{position}, #{openLmisField}, #{nested}, #{keyPath}, #{modifiedBy}, #{modifiedBy})")
   void insertOrderFileColumn(OrderFileColumn orderFileColumn);
 
 
@@ -85,25 +103,43 @@ public interface OrderMapper {
   @Select("SELECT ceil(count(*)::float/#{pageSize}) FROM orders")
   Integer getNumberOfPages(int pageSize);
 
-  @Select({"SELECT O.* FROM orders O INNER JOIN supply_lines S ON O.supplyLineId = S.id",
-    "WHERE supplyingFacilityId = ANY(#{facilityIds}::INTEGER[]) AND status = ANY(#{statuses}::VARCHAR[])",
-    "ORDER BY O.createdDate"})
+  @Select("SELECT ceil(count(*)::float/#{pageSize}) FROM orders o join supply_lines s on s.id = o.supplylineid join requisitions r on r.id = o.id where r.programId = #{program} and r.periodid = #{period} and s.supplyingfacilityid = #{depot}")
+  Integer getNumberOfPagesByDepot(@Param("pageSize") int pageSize, @Param("depot") long depot, @Param("program") long program, @Param("period") long period);
+
+
+  @Select({"SELECT O.* FROM orders O INNER JOIN requisitions r on r.id = O.id INNER JOIN supply_lines S ON O.supplyLineId = S.id",
+      "WHERE r.programId = #{program} and supplyingFacilityId = ANY(#{facilityIds}::INTEGER[]) AND O.status = ANY(#{statuses}::VARCHAR[]) ",
+      "ORDER BY O.createdDate"})
   @Results({
-    @Result(property = "id", column = "id"),
-    @Result(property = "rnr.id", column = "id"),
-    @Result(property = "shipmentFileInfo", javaType = ShipmentFileInfo.class, column = "shipmentId",
-      one = @One(select = "org.openlmis.shipment.repository.mapper.ShipmentMapper.getShipmentFileInfo")),
-    @Result(property = "supplyLine", javaType = SupplyLine.class, column = "supplyLineId",
-      one = @One(select = "org.openlmis.core.repository.mapper.SupplyLineMapper.getById"))
+      @Result(property = "id", column = "id"),
+      @Result(property = "rnr.id", column = "id"),
+      @Result(property = "shipmentFileInfo", javaType = ShipmentFileInfo.class, column = "shipmentId",
+          one = @One(select = "org.openlmis.shipment.repository.mapper.ShipmentMapper.getShipmentFileInfo")),
+      @Result(property = "supplyLine", javaType = SupplyLine.class, column = "supplyLineId",
+          one = @One(select = "org.openlmis.core.repository.mapper.SupplyLineMapper.getById"))
   })
-  List<Order> getByWarehouseIdsAndStatuses(@Param("facilityIds") String facilityIds, @Param("statuses") String statuses);
+  List<Order> getByWarehouseIdsAndStatuses(@Param("facilityIds") String facilityIds, @Param("statuses") String statuses, @Param("program") Long program);
+
+  @Select({"SELECT O.* FROM orders O INNER JOIN requisitions r on r.id = O.id INNER JOIN supply_lines S ON O.supplyLineId = S.id",
+      "WHERE r.facilityId = #{facility} and r.programId = #{program} and supplyingFacilityId = ANY(#{facilityIds}::INTEGER[]) AND O.status = ANY(#{statuses}::VARCHAR[]) ",
+      "ORDER BY O.createdDate"})
+  @Results({
+      @Result(property = "id", column = "id"),
+      @Result(property = "rnr.id", column = "id"),
+      @Result(property = "shipmentFileInfo", javaType = ShipmentFileInfo.class, column = "shipmentId",
+          one = @One(select = "org.openlmis.shipment.repository.mapper.ShipmentMapper.getShipmentFileInfo")),
+      @Result(property = "supplyLine", javaType = SupplyLine.class, column = "supplyLineId",
+          one = @One(select = "org.openlmis.core.repository.mapper.SupplyLineMapper.getById"))
+  })
+  List<Order> getByWarehouseIdsAndStatusesByFacility(@Param("facilityIds") String facilityIds, @Param("statuses") String statuses, @Param("program") Long program, @Param("facility") Long facilityId);
+
 
   @Select("SELECT * FROM orders WHERE orderNumber = #{orderNumber}")
   @Results({
-    @Result(property = "id", column = "id"),
-    @Result(property = "rnr.id", column = "id"),
-    @Result(property = "supplyLine", javaType = SupplyLine.class, column = "supplyLineId",
-      one = @One(select = "org.openlmis.core.repository.mapper.SupplyLineMapper.getById"))
+      @Result(property = "id", column = "id"),
+      @Result(property = "rnr.id", column = "id"),
+      @Result(property = "supplyLine", javaType = SupplyLine.class, column = "supplyLineId",
+          one = @One(select = "org.openlmis.core.repository.mapper.SupplyLineMapper.getById"))
   })
   Order getByOrderNumber(String orderNumber);
 }

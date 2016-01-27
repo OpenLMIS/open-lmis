@@ -1,0 +1,281 @@
+<!--
+  ~ Electronic Logistics Management Information System (eLMIS) is a supply chain management system for health commodities in a developing country setting.
+  ~
+  ~ Copyright (C) 2015  John Snow, Inc (JSI). This program was produced for the U.S. Agency for International Development (USAID). It was prepared under the USAID | DELIVER PROJECT, Task Order 4.
+  ~
+  ~ This program is free software: you can redistribute it and/or modify it under the terms of the GNU Affero General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
+  ~
+  ~ This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Affero General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU Affero General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
+  -->
+<style>
+
+
+    .ng-table th {
+        text-align: left;
+        height: 20px;
+        font-weight: normal;
+
+        word-wrap: break-word;
+
+    }
+
+    #scrollable-area {
+        margin: auto;
+        width: 100%;
+        height: 150px;
+        border: 0px solid #ccc;
+        overflow-y: visible;
+    }
+
+    .success-modal-wide {
+        width: 1000px;
+
+        left: 35%;
+
+    }
+
+    .ng-table th.data-title div {
+        /* css-3 */
+        white-space: -o-pre-wrap;
+        word-wrap: break-word;
+        white-space: pre-wrap;
+        white-space: -moz-pre-wrap;
+        white-space: -pre-wrap;
+
+    }
+
+    table {
+        width: 100%
+    }
+
+    table .text-center {
+        text-align: left;
+    }
+
+
+</style>
+
+<div class="row-fluid sortable ui-sortable">
+    <div class="box span12">
+        <div class="box-header">
+            <h2 ng-hide="filter.disaggregated" openlmis-message="menu.report.vaccine.replacement.plan.summary"><i
+                    class="icon-edit"></i><span class="break"></span></h2>
+
+            <h2 ng-show="filter.disaggregated" openlmis-message="menu.report.vaccine.annual.replacement.summary"><i
+                    class="icon-edit"></i><span
+                    class="break"></span></h2>
+
+            <div class="box-icon">
+                <a ng-click="section(0)" ng-show="show(1)" class="btn-minimize"><i class="icon-chevron-up"></i></a>
+                <a ng-click="section(1)" ng-show="show(0)" class="btn-minimize"><i class="icon-chevron-down"></i></a>
+                <a id="pdf-button" ng-show="filterForm.$valid" href="#list" ng-click="exportReport('PDF');"
+                   class='btn-small btn-info'>PDF</a>
+                <a id="xls-button" ng-show="filterForm.$valid" href="#list" ng-click="exportReport('xls')"
+                   class='btn-small btn-info'>Excel</a>
+            </div>
+        </div>
+
+        <div>
+            <div class="app-form">
+
+                <form ng-submit="filterGrid()" name="filterForm" novalidate>
+                    <div filter-container class="clearfix">
+                        <program-filter class="form-cell horizontalFilters" required="true"></program-filter>
+                        <facility-level-filter class="form-cell horizontalFilters"></facility-level-filter> &nbsp;&nbsp;&nbsp;&nbsp;
+                        <div ng-show="filter.disaggregated==true" class="form-cell horizontalFilters" >
+                            <label class="labels"> Indicators </label>
+
+                            <div class="form-field" >
+                                <select  ui-select2="wideOption" class="input-large"   ng-change="filterChanged();"
+                                        style="width:220px;" name="status" ng-model="filter.status" >
+
+                                    <optgroup ng-repeat="value in statuses" value="{{ value.name }}" ng-selected="filter.status == value.name" label="{{value.name}}">
+
+                                        <option ng-repeat-end ng-repeat="v in value.children" value="{{v.name}}"> &nbsp; &nbsp; {{v.value}}</option>
+
+                                    </optgroup>
+
+                                </select>
+
+
+                            </div>
+                        </div>
+
+                        <div  class="form-cell horizontalFilters" >
+                            <label class="labels" ><span openlmis-message="label.equipment.view.annual.replacement.plan"></span> </label>
+                            <input type="checkbox" ng-model="filter.disaggregated"
+                                   ng-change="filterChanged()"/>
+
+                        </div>
+
+
+
+                    </div>
+                </form>
+            </div>
+        </div>
+
+
+        <div class="content-body">
+            <div class="span12">
+                <table class="table table-bordered" ng-show="data == undefined || data.length == 0">
+                    <tr>
+                        <td openlmis-message="label.report.no.data.to.show"></td>
+
+                    </tr>
+                </table>
+                <div ng-show="datarows.length > 0">
+                    <div client-side-sort-pagination class="pull-right legend">Page: {{tableParams.page}},
+                        Showing records {{ ((tableParams.page - 1) * tableParams.count) + 1 }}
+                        to {{ tableParams.page*tableParams.count > tableParams.total ? tableParams.total : tableParams.page*tableParams.count }}
+                        of {{tableParams.total}}
+                    </div>
+                    <div id="scrollable-area">
+                        <table ng-show="datarows.length > 0" class="table-bordered table table-striped" ng-table="tableParams">
+                            <thead>
+                            <tr>
+                                <th class="header" openlmis-message="label.number"></th>
+                                <th class="header" openlmis-message="label.region"></th>
+                                <th class="header" openlmis-message="label.district" style="text-align: left;"></th>
+                                <th class="header" openlmis-message="label.facility.name" style="text-align: left;"></th>
+                                <th class="header" openlmis-message="label.facility.type" style="text-align: left;"></th>
+
+                                <th ng-show="filter.disaggregated==true" class="header" style="text-align: center;">{{first_year}}</th>
+                                <th ng-show="!filter.disaggregated"  class="header" ng-repeat="a in years" style="text-align: center;">{{a}}</th>
+                                <th class="header" openlmis-message="label.this.year.replacement.cost"></th>
+
+                            </tr>
+
+                            </thead>
+
+                            <tbody>
+                            <tr ng-repeat="row in datarows">
+
+                                <td class="number" style="width:10px;">{{$index+1 }}
+                                </td>
+                                <td  style="width:140px;text-align: left;">{{row.region}}
+                                </td>
+                                <td  style="width:140px;text-align: left;">{{row.district}}
+                                </td>
+                                <td ng-show="filter.zone !=0" style="width:140px;text-align: left;">{{row.facilityName}}
+                                </td>
+                                <td ng-show="filter.zone==0" style="width:60px;text-align: left;">{{row.facilityName}}
+                                </td>
+                                <td ng-show="filter.zone !=0" style="width:140px;text-align: left;">{{row.facilityTypeName}}
+                                </td>
+                                <td style="text-align: center;cursor:pointer" ng-show="filter.disaggregated==true"><a
+                                        ng-click="getEquipmentList(row.facilityId,row, row.replacementYearOne);">{{row.total_year1}}</a>
+                                </td>
+
+                                <td style="text-align: center;cursor:pointer" ng-show="!filter.disaggregated"><a
+                                        ng-click="getEquipmentList(row.facilityId,row, row.replacementYearOne);">{{row.total_year1}}</a>
+                                </td>
+
+                                <td ng-show="!filter.disaggregated" style="text-align: center;cursor:pointer"><a
+                                        ng-click="getEquipmentList(row.facilityId,row, row.replacementYearTwo);">{{row.total_year2}}</a>
+                                </td>
+                                <td ng-show="!filter.disaggregated" style="text-align: center;cursor:pointer"
+                                    sortable="total_year3"><a
+                                        ng-click="getEquipmentList(row.facilityId,row, row.replacementYearThree);">{{row.total_year3}}</a>
+                                </td>
+                                <td ng-show="!filter.disaggregated" style="text-align: center;cursor:pointer"
+                                    sortable="total_year4"><a
+                                        ng-click="getEquipmentList(row.facilityId, row,row.replacementYearFour);">{{row.total_year4}}</a>
+                                </td>
+                                <td ng-show="!filter.disaggregated" style="text-align: center;cursor:pointer"><a
+                                        ng-click="getEquipmentList(row.facilityId,row, row.replacementYearFive);">{{row.total_year5}}</a>
+                                </td>
+                                <td style="width:20px;text-align: center;">{{row.this_year_cost}}
+                                </td>
+
+                            </tr>
+
+
+                            </tbody>
+                        </table>
+
+                    </div>
+                </div>
+
+            </div>
+
+
+        </div>
+
+
+    </div>
+
+</div>
+
+<div id="popup-box" modal="equipmentsForReplacementModal" class="success-modal-wide" style="width: 1200px;">
+
+    <div class="modal-header">
+        <h3>{{ title }}
+
+
+            <span style="float: right;">
+
+                   <a ng-click="section(0)" ng-show="show(1)" class="btn-minimize"><i class="icon-chevron-up"></i></a>
+                <a ng-click="section(1)" ng-show="show(0)" class="btn-minimize"><i class="icon-chevron-down"></i></a>
+                <a id="pdf-button" href="#list" ng-click="exportEquipmentNeedForReplacement('PDF')"
+                   class='btn-small btn-info'>PDF</a>
+                <a id="xls-button" href="#list" ng-click="exportEquipmentNeedForReplacement('xls')"
+                   class='btn-small btn-info'>Excel</a>
+
+        </span>
+
+        </h3>
+
+
+    </div>
+
+    <div class="modal-body">
+        <table class="table-bordered table table-striped" ng-table="tableParams">
+            <thead>
+                <tr>
+                    <th class="header" openlmis-message="label.number"></th>
+
+                    <th class="header" openlmis-message="label.region"></th>
+                    <th class="header" openlmis-message="label.district"></th>
+                    <th class="header" openlmis-message="label.facility.name"></th>
+                    <th class="header" openlmis-message="label.product.manufacturer"></th>
+                    <th class="header" openlmis-message="label.vaccine.cc.model"></th>
+                    <th class="header" openlmis-message="label.equipment.refrigerator-capacity"></th>
+                    <th class="header" openlmis-message=" label.source.of.Energy"></th>
+                    <th class="header" openlmis-message="label.equipment.serial"></th>
+                    <th class="header" openlmis-message="label.age"></th>
+                    <th class="header" openlmis-message="label.equipment.number.of.break.down"></th>
+                    <th class="header"  ng-show="!filter.disaggregated">Working Status</th>
+                    <th class="header"  ng-show="filter.disaggregated==true">Status</th>
+
+                    <th class="header" openlmis-message="label.replacement.cost"></th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr ng-repeat="f in facility">
+                    <td>{{$index+1}}</td>
+                    <td>{{f.region}}</td>
+                    <td>{{f.district}}</td>
+                    <td>{{f.facilityName}}</td>
+                    <td>{{f.brand}}</td>
+                    <td>{{f.model}}</td>
+                    <td>{{f.capacity}}</td>
+                    <td>{{f.sourceOfEnergy}}</td>
+                    <td>{{f.serialNumber}}</td>
+                    <td>{{f.total}}</td>
+                    <td>{{f.breakDown}}</td>
+                    <td  ng-show="!filter.disaggregated">{{f.workingStatus}}</td>
+                    <td  ng-show="filter.disaggregated==true" openlmis-message="label.annual.replacement.plan.{{f.status}}"></td>
+
+                    <td>{{f.purchasePrice}}</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div class="modal-footer">
+        <a class="btn btn-primary pull-right" ng-click="equipmentsForReplacementModal=false;">Close</a>
+    </div>
+</div>

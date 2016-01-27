@@ -16,13 +16,13 @@ import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
-import org.codehaus.jackson.annotate.JsonIgnore;
-import org.codehaus.jackson.annotate.JsonIgnoreProperties;
-import org.codehaus.jackson.map.annotate.JsonSerialize;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
 import java.util.List;
 
-import static org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion.NON_EMPTY;
+import static com.fasterxml.jackson.databind.annotation.JsonSerialize.Inclusion.NON_EMPTY;
 
 /**
  * FacilityProgramProduct represents product supported by given facility for a given program. This mapping is used by distribution module
@@ -38,12 +38,18 @@ public class FacilityProgramProduct extends ProgramProduct {
 
   Long facilityId;
 
-  Integer overriddenIsa;
+  ISA overriddenIsa;
 
-  public FacilityProgramProduct(ProgramProduct programProduct, Long facilityId, Integer overriddenIsa) {
+  public FacilityProgramProduct(ProgramProduct programProduct, Long facilityId)
+  {
+    this(programProduct, facilityId, null);
+  }
+
+  public FacilityProgramProduct(ProgramProduct programProduct, Long facilityId, ISA isa)
+  {
     super(programProduct);
     this.facilityId = facilityId;
-    this.overriddenIsa = overriddenIsa;
+    this.overriddenIsa = isa;
   }
 
   @JsonIgnore
@@ -65,13 +71,16 @@ public class FacilityProgramProduct extends ProgramProduct {
    *   facility or null if the ISA is not calculable.
    */
   public Integer calculateIsa(Long population, Integer numberOfMonthsInPeriod) {
+    if(population == null)
+      return null;
+
     Integer idealQuantity;
     if (this.overriddenIsa != null)
-      idealQuantity = this.overriddenIsa;
-    else if (this.programProductIsa == null || population == null)
-      return null;
-    else
+      idealQuantity = this.overriddenIsa.calculate(population);
+    else if (this.programProductIsa != null)
       idealQuantity = this.programProductIsa.calculate(population);
+    else
+      return null;
 
     idealQuantity = idealQuantity * numberOfMonthsInPeriod;
     return idealQuantity < 0 ? 0 : idealQuantity;
@@ -92,12 +101,15 @@ public class FacilityProgramProduct extends ProgramProduct {
     return new Double(Math.ceil( (float) idealQuantity / this.getProduct().getPackSize() )).intValue();
   }
 
+
   @JsonIgnore
-  public Double getWhoRatio(String productCode) {
-    ProgramProductISA programProductIsa = this.getProgramProductIsa();
-    if (this.getProduct().getCode().equals(productCode) && programProductIsa != null) {
+  public Double getWhoRatio()
+  {
+    if(this.overriddenIsa != null)
+      return overriddenIsa.getWhoRatio();
+    else if(this.programProductIsa != null)
       return programProductIsa.getWhoRatio();
-    }
+    else
     return null;
   }
 

@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<!--
+  ~ This program is part of the OpenLMIS logistics management information system platform software.
+  ~ Copyright © 2013 VillageReach
+  ~
+  ~  This program is free software: you can redistribute it and/or modify it under the terms of the GNU Affero General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
+  ~
+  ~  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Affero General Public License for more details.
+  ~  You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org.
+  -->
+
+<style>
+    .red {
+        color: red;
+    }
+
+    .black {
+        color: black;
+    }
+
+    .yellow {
+        color: yellow;
+    }
+
+    .green {
+        color: green;
+    }
+
+</style>
+
+
+<div>
+
+
+    <h2 id="podPageTitle"><span openlmis-message="title.order.requisition"></span> <span
+            ng-bind="order.programName"></span></h2>
+
+    <ng-include src="'/public/pages/vaccine/order-requisition/partials/header.html'"></ng-include>
+    <div class="clearfix"></div>
+
+    <form name="podForm">
+
+        <div id="pod" class="rnr-table">
+            <table id="podTable" class="table table-bordered" fixed-table-header>
+                <thead>
+                <tr>
+                    <th class="col-{{column.name}}" ng-repeat="column in columns">
+                        <span openlmis-message="column.label"></span>
+                    </th>
+                </tr>
+                </thead>
+
+                <tbody ng-repeat="orderRequisitionLineItem in pageLineItems.data">
+
+                <tr ng-if="orderRequisitionLineItem.name">
+                    <td class="productCategory" id="category{{$index}}" colspan="{{columns.length}}"
+                        ng-bind="orderRequisitionLineItem.name">
+                    </td>
+                </tr>
+                <tr ng-if="!orderRequisitionLineItem.name">
+                    <td class="productCategory" id="category{{$index1}}" colspan="{{columns.length}}"
+                        ng-show="isCategoryDifferentFromPreviousLineItem($index)"
+                        openlmis-message="label.default.category">
+                    </td>
+                </tr>
+                <tr ng-repeat="item in orderRequisitionLineItem.data">
+
+                    <td class="cell-input col-product">
+                        <span ng-bind="item.name" id="product{{$index}}" class="cell-text"></span>
+                    </td>
+                    <td class="cell-input col-maximumStock">
+                        <span ng-bind="item.maximumStock | number" id="maximumStock{{$index}}" class="cell-text"></span>
+                    </td>
+                    <td class="cell-input">
+                        <span ng-bind="item.reorderLevel | number" id="reorderLevel{{$index}}"
+                              class="cell-text"></span>
+                    </td>
+                    <td class="cell-input col-stockAvailable">
+                        <span class="{{(item.stockAvailable <= item.bufferStock)?'red':((item.stockAvailable > item.bufferStock) && (item.stockAvailable <= item.reorderLevel)  )?'yellow':
+
+                        ((item.stockAvailable > item.reorderLevel) && (item.reorderLevel <= item.maximumStock))?green:'black'}}  cell-text"
+                              ng-bind="item.stockAvailable | number">
+                        </span>
+
+                    </td>
+
+                    <td class="cell-input col-amountRequired">
+                        <span ng-bind="(item.maximumStock - item.stockAvailable) | number" id="amountRequired{{$index}}"
+                              class="cell-text"></span>
+                    </td>
+
+                </tr>
+                </tbody>
+            </table>
+        </div>
+        <openlmis-pagination ng-show="pageLineItems.length" num-pages="numberOfPages" current-page="currentPage"
+                             max-size="10"
+                             error-pages="errorPages"></openlmis-pagination>
+
+
+        <div form-toolbar id="action_buttons" class="action-buttons">
+            <div class="form-cell button-row">
+
+
+                <span>
+                <a id="submitButton" class="btn btn-primary submit-button"
+                   ng-href="/vaccine/report/orderRequisition/downloadPDF" openlmis-message="button.print"
+                   target="_blank"></a>
+                </span>&nbsp;&nbsp;&nbsp;
+                <span>
+                <input id="cancelButton" type="button" class="btn btn-cancel  cancel-button"
+                   ng-disabled="podAlreadySubmitted" openlmis-message="button.cancel" ng-click="cancel()"/>
+                </span>
+
+            </div>
+            &nbsp;&nbsp;&nbsp;
+            <div class="toolbar-error" id="saveFailMessage" fade-out="3000" openlmis-message="error"
+                 ng-show="error"></div>
+            &nbsp;&nbsp;&nbsp;
+            <div class="toolbar-success" id="saveSuccessMsgDiv" fade-out="3000" openlmis-message="message"
+                 ng-show="message"></div>
+
+        </div>
+    </form>
+</div>

@@ -16,6 +16,7 @@ import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
+import org.junit.runners.BlockJUnit4ClassRunner;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.openlmis.core.domain.Facility;
@@ -31,10 +32,13 @@ import org.openlmis.rnr.builder.RequisitionBuilder;
 import org.openlmis.rnr.builder.RnrLineItemBuilder;
 import org.openlmis.rnr.domain.Rnr;
 import org.openlmis.rnr.domain.RnrLineItem;
+import org.openlmis.rnr.domain.RnrStatus;
 import org.openlmis.rnr.search.criteria.RequisitionSearchCriteria;
 import org.openlmis.rnr.service.RequisitionService;
 import org.powermock.modules.junit4.PowerMockRunner;
+import org.powermock.modules.junit4.PowerMockRunnerDelegate;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -51,6 +55,7 @@ import static org.openlmis.rnr.builder.RnrLineItemBuilder.*;
 
 @Category(UnitTests.class)
 @RunWith(PowerMockRunner.class)
+@PowerMockRunnerDelegate(BlockJUnit4ClassRunner.class)
 public class RestRequisitionCalculatorTest {
 
   @Mock
@@ -98,6 +103,44 @@ public class RestRequisitionCalculatorTest {
     when(requisitionService.getPeriodForInitiating(reportingFacility, reportingProgram)).thenReturn(processingPeriod);
 
     restRequisitionCalculator.validatePeriod(reportingFacility, reportingProgram);
+  }
+
+  @Test
+  public void sdpShouldNotThrowErrorIfCurrentPeriodIsDifferentFromNextDefaultPeriod() throws Exception {
+    ProcessingPeriod currentPeriod = new ProcessingPeriod(1L);
+    ProcessingPeriod nextEligiblePeriod = new ProcessingPeriod(2L);
+    ProcessingPeriod randomPeriod = new ProcessingPeriod(3L);
+    Facility reportingFacility = new Facility();
+    Program reportingProgram = new Program();
+
+
+    when(requisitionService.getCurrentPeriod(any(RequisitionSearchCriteria.class))).thenReturn(currentPeriod);
+    when(requisitionService.getPeriodForInitiating(reportingFacility, reportingProgram)).thenReturn(nextEligiblePeriod);
+
+    restRequisitionCalculator.validateCustomPeriod(reportingFacility, reportingProgram, randomPeriod, 1L);
+  }
+
+  @Test
+  public void sdpShouldThrowErrorIfPeriodHasExistingAuthorizedRnr() throws Exception{
+    ProcessingPeriod currentPeriod = new ProcessingPeriod(1L);
+    ProcessingPeriod nextEligiblePeriod = new ProcessingPeriod(2L);
+    Facility reportingFacility = new Facility();
+    Program reportingProgram = new Program();
+
+    Rnr requisition = new Rnr();
+    requisition.setStatus(RnrStatus.APPROVED);
+
+    List<ProcessingPeriod> periods = new ArrayList<ProcessingPeriod>();
+    periods.add(nextEligiblePeriod);
+
+    when(requisitionService.getCurrentPeriod(any(RequisitionSearchCriteria.class))).thenReturn(currentPeriod);
+    when(requisitionService.getPeriodForInitiating(reportingFacility, reportingProgram)).thenReturn(nextEligiblePeriod);
+
+    when(requisitionService.getRequisitionsFor(any(RequisitionSearchCriteria.class), any(periods.getClass()))).thenReturn(asList(requisition));
+
+    expectedException.expect(DataException.class);
+
+    restRequisitionCalculator.validateCustomPeriod(reportingFacility, reportingProgram, nextEligiblePeriod, 1L);
   }
 
   @Test

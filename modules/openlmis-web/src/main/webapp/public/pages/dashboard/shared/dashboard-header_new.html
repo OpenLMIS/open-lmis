@@ -1,0 +1,25 @@
+<div class="clearfix"></div>
+<div class="dashboard-nav">
+    <ul id="dashboard-sub-tabs" class="clearfix">
+        <li ng-repeat="tab in dashboardTabs" ng-class="{'selected': currentTab == tab.id}">
+            <a ng-href="{{tab.content}}" style="display: inline-block;">
+                <span openlmis-message="{{tab.header}}"></span>
+            </a>
+            <i ng-if="tab.closable" class="icon-remove-sign" ng-click="closeTab(tab.name)"></i>
+
+        </li>
+    </ul>
+    <br/>
+    <div ng-hide="dashboardPeriodTabs"><span openlmis-message="no.periods.for.this.group"></span></div>
+    <ul ng-show="dashboardPeriodTabs" id="dashboard-period-tabs" class="clearfix">
+        <li ng-repeat="tab in dashboardPeriodTabs" ng-class="{'selected': currentSubTab == tab.id}">
+            <a ng-href="{{tab.content}}" style="display: inline-block;">
+                <span openlmis-message="{{tab.header}}"></span>
+            </a>
+            <i ng-if="tab.closable" class="icon-remove-sign" ng-click="closeTab(tab.name)"></i>
+
+        </li>
+    </ul>
+</div>
+
+<div class="clearfix"></div>

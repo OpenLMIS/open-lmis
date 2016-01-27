@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<!--
+  ~ This program is part of the OpenLMIS logistics management information system platform software.
+  ~ Copyright © 2013 VillageReach
+  ~
+  ~  This program is free software: you can redistribute it and/or modify it under the terms of the GNU Affero General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
+  ~
+  ~  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Affero General Public License for more details.
+  ~  You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org.
+  -->
+
+<style>
+    .red {
+        color: red;
+    }
+
+    .black {
+        color: black;
+    }
+
+    .yellow {
+        color: yellow;
+    }
+
+    .green {
+        color: green;
+    }
+
+</style>
+
+
+
+    <h2 id="podPageTitle"><span openlmis-message="label.title.order.requisition"></span> <span
+            ng-bind="order.programName"></span></h2>
+
+    <ng-include src="'/public/pages/vaccine/order-requisition/partials/header.html'"></ng-include>
+    <div class="clearfix"></div>
+
+    <form name="orderRequisitionForm">
+
+        <div ng-show="report.LineItemViews.length" class="alert alert-info" openlmis-message="label.no.products"></div>
+
+
+        <div id="pod" class="rnr-table" ng-hide="report.LineItemViews.length > 0">
+            <table id="podTable" class="table table-bordered" fixed-table-header>
+                <thead>
+                <tr>
+                    <th class="col-product "><span openlmis-message="label.products"></span></th>
+                    <th class="col-maximumStock "><span openlmis-message="label.maximum.stock"></span></th>
+                    <th class="col-reOrderLevel"><span openlmis-message="label.reorder.level"></span></th>
+                    <th class="col-available"><span openlmis-message="label.stock.onhand"></span></th>
+                    <th class="col-quantityRequested"><span openlmis-message="header.order.requisition.amount.required"></span></th>
+                </tr>
+                </thead>
+
+                <tbody ng-repeat="(key,items) in report.LineItemViews | orderObjectBy:'displayOrder'">
+
+                <tr>
+                    <td class="productCategory" id="key{{$index}}" colspan="5"
+                        ng-bind="items[0].productCategory.name">
+
+                    </td>
+                </tr>
+
+                <tr ng-repeat="item in items">
+
+                    <td class="cell-input col-product">
+                        <span ng-bind="item.product.primaryName" id="product{{$index}}" class="cell-text"></span>
+
+
+                    </td>
+                    <td class="cell-input col-maximumStock">
+                        <span ng-bind="item.getMaximumStock()" id="item.MaximumStock{{$index}}"
+                              class="cell-text"></span>
+                    </td>
+                    <td class="cell-input">
+                        <span ng-bind="item.getReorderLevel() | number" id="item.ReorderLevel{{$index}}"
+                              class="cell-text"></span>
+                    </td>
+                    <td class="cell-input col-stockAvailable" ng-hide="selectedType==1">
+                        <span class="{{(item.stockOnHand <= item.getBufferStock())?'red':((item.stockOnHand > item.getBufferStock()) && (item.stockOnHand <= item.getReorderLevel())  )?'yellow':
+
+                        ((item.stockOnHand > item.getReorderLevel()) && (item.getReorderLevel() <= item.getMaximumStock()))?green:'black'}}  cell-text"
+                              ng-bind="item.stockOnHand | number">
+                        </span>
+
+                    </td>
+
+                    <td class="cell-input col-stockAvailable" ng-hide="selectedType==0">
+                        <span class="{{(item.getTotalStockOnHand() <= item.getBufferStock())?'red':((item.getTotalStockOnHand() > item.getBufferStock()) && (item.getTotalStockOnHand() <= item.getReorderLevel())  )?'yellow':
+                        ((item.getTotalStockOnHand() > item.getReorderLevel()) && (item.getReorderLevel() <= item.getMaximumStock()))?green:'black'}}  cell-text "
+                              ng-bind="item.getTotalStockOnHand() | number">
+                        </span>
+
+
+                    </td>
+
+                    <td class="cell-input col-amountRequired">
+                        <span ng-bind="item.getQuantityToRequest() | number" id="amountRequired{{$index}}"
+                              class="cell-text"></span>
+                    </td>
+
+                </tr>
+                </tbody>
+            </table>
+        </div>
+        <openlmis-pagination ng-show="report.length" num-pages="numberOfPages" current-page="currentPage"
+                             max-size="10"
+                             error-pages="errorPages"></openlmis-pagination>
+
+
+        <div form-toolbar id="action_buttons" class="action-buttons">
+            <div class="form-cell button-row">
+
+                <span ng-hide="viewOrder">
+                      <input id="submitButton" type="button" class="btn btn-primary submit-button" ng-click="submit()"
+                             openlmis-message="button.submit" ng-disabled="selectedType==1"/> </span>
+                &nbsp;&nbsp;&nbsp;
+               <span> <a id="printButton" class="btn btn-primary submit-button"  ng-click="print(report.id)"
+                   openlmis-message="button.print"
+                   target="_blank" ng-disabled="selectedType==1"></a>
+                </span>
+
+            </div>
+            &nbsp;&nbsp;&nbsp;
+            <div class="toolbar-error" id="saveFailMessage" fade-out="3000" openlmis-message="error"
+                 ng-show="error"></div>
+            &nbsp;&nbsp;&nbsp;
+            <div class="toolbar-success" id="saveSuccessMsgDiv" fade-out="3000" openlmis-message="message"
+                 ng-show="message"></div>
+
+
+        </div>
+    </form>
+</div>

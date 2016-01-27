@@ -11,12 +11,11 @@
 package org.openlmis.core.domain;
 
 
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import org.codehaus.jackson.map.annotate.JsonDeserialize;
-import org.codehaus.jackson.map.annotate.JsonSerialize;
 import org.openlmis.core.serializer.MoneyDeSerializer;
-import org.openlmis.core.serializer.MoneySerializer;
 
 import java.math.BigDecimal;
 
@@ -26,10 +25,10 @@ import static java.math.BigDecimal.ROUND_HALF_UP;
  * Money represents data type for all monetary entities. Provides methods to add, multiply, compare monetary entity.
  */
 @Data
-@JsonSerialize(using = MoneySerializer.class)
+@JsonSerialize(as = BigDecimal.class)
 @JsonDeserialize(using = MoneyDeSerializer.class)
 @EqualsAndHashCode(callSuper = false)
-public class Money extends BaseModel {
+public class Money extends Number {
 
   private BigDecimal value;
 
@@ -57,8 +56,32 @@ public class Money extends BaseModel {
     return value.compareTo(other.value);
   }
 
+  public BigDecimal toDecimal() {
+    return value;
+  }
+
   @Override
   public String toString() {
     return value.toString();
+  }
+
+  @Override
+  public int intValue() {
+    return value.toBigInteger().intValue();
+  }
+
+  @Override
+  public long longValue() {
+    return value.toBigInteger().longValue();
+  }
+
+  @Override
+  public float floatValue() {
+    return value.floatValue();
+  }
+
+  @Override
+  public double doubleValue() {
+    return value.doubleValue();
   }
 }

@@ -8,7 +8,8 @@
  * You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org. 
  */
 
-function ApproveRnrController($scope, requisitionData, Requisitions, rnrColumns, regimenTemplate, $location, pageSize, $routeParams, $dialog, requisitionService, $q) {
+function ApproveRnrController($scope, requisitionData, comments, Requisitions, RejectRequisition, rnrColumns, regimenTemplate, equipmentOperationalStatus , $location, pageSize, $routeParams, $dialog, requisitionService, $q) {
+
   $scope.canApproveRnr = requisitionData.canApproveRnr;
   $scope.rnr = new Rnr(requisitionData.rnr, rnrColumns, requisitionData.numberOfMonths);
   $scope.rnrColumns = rnrColumns;
@@ -17,13 +18,45 @@ function ApproveRnrController($scope, requisitionData, Requisitions, rnrColumns,
   $scope.visibleColumns = requisitionService.getMappedVisibleColumns(rnrColumns, RegularRnrLineItem.frozenColumns, []);
   $scope.error = $scope.message = "";
   $scope.regimenCount = $scope.rnr.regimenLineItems.length;
+  $scope.equipmentCount = $scope.rnr.equipmentLineItems.length;
+
+  $scope.equipmentOperationalStatus = equipmentOperationalStatus;
 
   $scope.errorPages = {};
   $scope.shownErrorPages = [];
+  $scope.rnrComments = comments;
 
   var NON_FULL_SUPPLY = 'nonFullSupply';
 
   requisitionService.populateScope($scope, $location, $routeParams);
+
+
+  $scope.rejectRnR = function( ){
+    var callBack = function (result) {
+
+      if (result) {
+        // reject
+        RejectRequisition.post({id: $scope.rnr.id}, function(){
+          OpenLmisDialog.newDialog({
+            id: "confirmDialog",
+            header: "label.confirm.action",
+            body: 'msg.rnr.returned'
+          }, function(){
+            $location.url('/public/pages/logistics/rnr/index.html#/init-rnr');
+          }, $dialog);
+        });
+        // redirect to the main page
+      }
+    };
+
+    var options = {
+      id: "confirmDialog",
+      header: "label.confirm.action",
+      body: "label.rnr.confirm.return"
+    };
+
+    OpenLmisDialog.newDialog(options, callBack, $dialog);
+  };
 
   $scope.saveRnr = function (preventMessage) {
     var deferred = $q.defer();
@@ -91,6 +124,7 @@ function ApproveRnrController($scope, requisitionData, Requisitions, rnrColumns,
     $scope.fullSupplyTabError = !!fullSupplyError;
     $scope.nonFullSupplyTabError = !!nonFullSupplyError;
 
+
     var error = fullSupplyError || nonFullSupplyError;
 
     if (error) {
@@ -151,6 +185,16 @@ ApproveRnrController.resolve = {
     return deferred.promise;
   },
 
+  comments: function($q, $timeout, RequisitionComment, $route){
+    var deferred = $q.defer();
+    $timeout(function () {
+      RequisitionComment.get({id: $route.current.params.rnr}, function (data) {
+        deferred.resolve(data.comments);
+      }, {});
+    }, 100);
+    return deferred.promise;
+  },
+
   rnrColumns: function ($q, $timeout, ProgramRnRColumnList, $route) {
     var deferred = $q.defer();
     $timeout(function () {
@@ -170,7 +214,15 @@ ApproveRnrController.resolve = {
     }, 100);
     return deferred.promise;
   },
-
+  equipmentOperationalStatus: function ($q, $timeout, EquipmentOperationalStatus) {
+    var deferred = $q.defer();
+    $timeout(function () {
+      EquipmentOperationalStatus.get({}, function (data) {
+        deferred.resolve(data.status);
+      }, {});
+    }, 100);
+    return deferred.promise;
+  },
   regimenTemplate: function ($q, $timeout, $route, ProgramRegimenTemplate) {
     var deferred = $q.defer();
     $timeout(function () {

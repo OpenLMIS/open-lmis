@@ -15,7 +15,9 @@ import org.openlmis.core.domain.GeographicLevel;
 import org.openlmis.core.domain.GeographicZone;
 import org.openlmis.core.domain.Pagination;
 import org.openlmis.core.repository.GeographicLevelRepository;
+import org.openlmis.core.dto.GeographicZoneGeometry;
 import org.openlmis.core.repository.GeographicZoneRepository;
+import org.openlmis.core.repository.mapper.GeographicZoneGeoJSONMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -34,6 +36,9 @@ public class GeographicZoneService {
 
   private Integer pageSize;
 
+  @Autowired
+  GeographicZoneGeoJSONMapper geoJsonMapper;
+  
   @Autowired
   GeographicZoneRepository repository;
 
@@ -106,4 +111,21 @@ public class GeographicZoneService {
   public Integer getGeographicZonesCountBy(String searchParam) {
     return repository.getGeographicZonesCountBy(searchParam);
   }
+
+  public void saveGisInfo(List<GeographicZoneGeometry> geoZoneGeometries, Long userId) {
+    for(GeographicZoneGeometry geoData: geoZoneGeometries ){
+      // check if the zone has an entry
+      GeographicZoneGeometry existing = geoJsonMapper.getGeographicZoneGeoJSONbyZoneId(geoData.getZoneId());
+      geoData.setModifiedBy(userId);
+      if(existing != null){
+        geoData.setId(existing.getId());
+        geoJsonMapper.update(geoData);
+      }else{
+        geoData.setCreatedBy(userId);
+        geoJsonMapper.insert(geoData);
+      }
+    }
+  }
+
+
 }

@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+
+<!--
+  ~ Electronic Logistics Management Information System (eLMIS) is a supply chain management system for health commodities in a developing country setting.
+  ~
+  ~ Copyright (C) 2015  John Snow, Inc (JSI). This program was produced for the U.S. Agency for International Development (USAID). It was prepared under the USAID | DELIVER PROJECT, Task Order 4.
+  ~
+  ~ This program is free software: you can redistribute it and/or modify it under the terms of the GNU Affero General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
+  ~
+  ~ This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Affero General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU Affero General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
+  -->
+
+<h2><span openlmis-message="title.breakdown.facilities.stock.out.district|location|product"></span></h2>
+<div class="row-fluid">
+    <div class="span12">
+        <table class="table table-bordered" ng-show="stockedOutDetails == undefined || stockedOutDetails.length == 0">
+            <tr>
+                <td>No data to show under selected filters</td>
+            </tr>
+        </table>
+        <div ng-show ="stockedOutDetails !== undefined && stockedOutDetails.length > 0">
+            <table ng-show="stockedOutDetails.length > 0" class="table-bordered table table-striped pull-right"
+                   ng-table="tableParams">
+                <tbody>
+                <tr ng-repeat="row in stockedOutDetails">
+                    <td data-title="'Facility Code'" >{{row.facilityCode}}</td>
+                    <td data-title="'Facility Name'" >{{row.facilityName}}</td>
+                    <td data-title="'Supplied in past 6 months ?'" style="width:25px;"><div class="{{(row.suppliedInPast == true) ? 'green': 'red'}}">{{row.suppliedInPast}}</div></td>
+                    <td data-title="'MOS supplied'" class="number" style="width:25px;"><a ng-href="/public/pages/logistics/rnr/indexpop.html#/requisition/{{ row.rnrId }}/1?page=1&supplyType=fullSupply" onclick="popUp(this.href); return false;" target="newWin">{{row.mosSuppliedInPast | number}}</a></cfif></td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+
+    </div>
+
+</div>
+
+<div id="flotTip"></div>

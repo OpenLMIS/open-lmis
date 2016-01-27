@@ -1,0 +1,433 @@
+<!--
+  ~ Electronic Logistics Management Information System (eLMIS) is a supply chain management system for health commodities in a developing country setting.
+  ~
+  ~ Copyright (C) 2015  John Snow, Inc (JSI). This program was produced for the U.S. Agency for International Development (USAID). It was prepared under the USAID | DELIVER PROJECT, Task Order 4.
+  ~
+  ~ This program is free software: you can redistribute it and/or modify it under the terms of the GNU Affero General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
+  ~
+  ~ This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Affero General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU Affero General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
+  -->
+
+<div class="alert alert-success" id="saveSuccessMsgDiv" ng-bind="message" ng-show="message"/>
+
+<div class="row-fluid sortable ui-sortable">
+    <div class="box span12">
+        <div class="box-header">
+            <h2 openlmis-message="report.performance.by.dropout.rate.by.district.report"><i class="icon-edit"></i><span
+                    class="break"></span>
+            </h2>
+
+            <div class="box-icon">
+                <a id="pdf-button" ng-show="filterForm.$valid" href="" ng-click="exportReport('PDF')"
+                   class='btn-small btn-info'><span openlmis-message="label.pdf"></span></a>
+                <a id="xls-button" ng-show="filterForm.$valid" href="" ng-click="exportReport('XLS')"
+                   class='btn-small btn-info'><span openlmis-message="label.excel"></span></a>
+            </div>
+        </div>
+        <div>
+
+            <div class="app-form " style="padding: 5px;">
+
+                <form ng-submit="filterGrid()" name="filterForm" novalidate>
+                    <div filter-container class="clearfix">
+
+
+                        <vaccine-zone-filter class="form-cell horizontalFilters" stand-alone="true" required="true">*</vaccine-zone-filter>
+
+                        <vaccine-dropout-filter class="form-cell horizontalFilters" >
+
+                        </vaccine-dropout-filter>
+
+                        <div class="form-cell horizontalFilters">
+                            <label class="labels" openlmis-message="label.period"> <span
+                                    class="label-required">*</span></label>
+
+                            <div>
+                                <select ui-select2 class="input-large" ng-change="OnFilterChanged()"
+                                        ng-model="filter.periodType">
+                                    <option value="1">Current Period</option>
+                                    <option value="2">Last 3 Months</option>
+                                    <option value="3">Last 6 Months</option>
+                                    <option value="4">Last 1 Year</option>
+                                    <option value="5">Custom Range</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="form-cell horizontalFilters" ng-show="filter.periodType==5">
+                            <label class="labels"> Period Start:</label>
+
+                            <div>
+                                <input class="input-large" ng-change="OnFilterChanged()" ng-model="filter.periodStart"
+                                       ui-date-format="yy-mm-dd" ui-date/>
+                            </div>
+                        </div>
+                        <div class="form-cell horizontalFilters" ng-show="filter.periodType==5">
+                            <label class="labels"> Period End:</label>
+
+                            <div>
+                                <input class="input-large" ng-change="OnFilterChanged()" ng-model="filter.periodEnd"
+                                       ui-date-format="yy-mm-dd" ui-date/>
+                            </div>
+                        </div>
+                    </div>
+                    <br/>
+
+                    <p style="font-size: .8em"> Period Start: {{filter.periodStart| date:'MMM dd, yyyy'}} &nbsp;&nbsp;Period End: {{filter.periodEnd| date:'MMM dd, yyyy'}}</p>
+
+                    <p style="font-size: .8em; color: red"> {{error_message}}</p>
+
+                </form>
+            </div>
+
+            <div class="content-body">
+
+                <table client-side-sort-pagination class="table table-bordered"
+                       ng-show="data == undefined || data.length == 0">
+                    <tr>
+                        <td>No data to show under selected filters</td>
+                    </tr>
+                </table>
+
+                <div ng-show="datarows.length > 0">
+
+                    <table id="fullSupplyTable" ng-show="datarows.length > 0"
+                           class="table-bordered table table-striped pull-right"
+                           ng-table="tableParams">
+                        <thead>
+                        <tr>
+                            <th rowspan="2" style="text-align: center; vertical-align: middle">
+                                <span>	 Region</span>
+                            </th>
+                            <th rowspan="2"
+                                style="height:13px; text-align: center; vertical-align: middle; width: 40px">
+                                <span>	 District</span>
+                            </th>
+                            <th ng-if="reportType==true" rowspan="2"
+                                style="height:13px; text-align: center; vertical-align: middle; width: 40px">
+                                <span>	 Facility</span>
+                            </th>
+
+                            <th rowspan="2">
+                                <span>Period</span>
+
+                            </th>
+                            <th rowspan="2" style="width: 10px">
+                                <span>Target Population</span>
+
+                            </th>
+                            <th colspan="3 " style=" text-align: center; vertical-align: middle">
+                                <span>DropOut</span>
+
+                            </th>
+
+                        </tr>
+
+                        <tr>
+                            <th>
+                                <span>BCG</span>
+
+                            </th>
+                            <th>
+                                <span>MR</span>
+
+                            </th>
+                            <th>
+                                <span>%</span>
+
+                            </th>
+                        </tr>
+                        <tr style="height: 15px">
+                            <th>
+                                <span>A</span>
+
+                            </th>
+                            <th>
+                                <span>B</span>
+
+                            </th>
+                            <th ng-if="reportType==true">
+                                <span>C</span>
+
+                            </th>
+                            <th>
+                                <span>D</span>
+
+                            </th>
+                            <th>
+                                <span>E</span>
+
+                            </th>
+                            <th>
+                                <span>F</span>
+
+                            </th>
+                            <th>
+                                <span>G</span>
+
+                            </th>
+                            <th>
+                                <span>G=(E-F)/E * 100</span>
+
+                            </th>
+
+                        </tr>
+
+                        </thead>
+                        <tbody ng-repeat="row in datarows"
+                                >
+                        <tr
+                                ng-repeat="subRow in row.performanceByDropoutRateByDistrictList">
+                            <td groupable="regionName" ng-if="$first" rowspan="{{row.performanceByDropoutRateByDistrictList.length}}"
+
+                                ng-bind="row.regionName"></td>
+                            <td ng-if="$first" rowspan="{{row.performanceByDropoutRateByDistrictList.length}}"
+
+                                ng-bind="row.districtName"></td>
+                            <td ng-if="$first && reportType==true"
+                                rowspan="{{row.performanceByDropoutRateByDistrictList.length}}"
+
+                                ng-bind="row.facilityName"></td>
+                            <td ng-bind="subRow.period_name| date:'MMM-yyyy'"
+                                ng-style="{'background-color':getBackGroundColor(subRow.bcg_mr_dropout) ,'text-align':'right'}"/>
+
+                            <td ng-bind="subRow.target"
+                                ng-style="{'background-color':getBackGroundColor(subRow.bcg_mr_dropout) ,'text-align':'right'}"/>
+
+                            <td ng-bind="subRow.bcg_vaccinated"
+                                ng-style="{'background-color':getBackGroundColor(subRow.bcg_mr_dropout) ,'text-align':'right'}"/>
+
+
+                            <td ng-bind="subRow.mr_vaccinated"
+                                ng-style="{'background-color':getBackGroundColor(subRow.bcg_mr_dropout) ,'text-align':'right'}"/>
+
+
+                            <td ng-bind="concatPercentage(subRow.bcg_mr_dropout)"
+                                ng-style="{'background-color':getBackGroundColor(subRow.bcg_mr_dropout) ,'text-align':'right'}"/>
+
+
+                        </tr>
+
+
+                        </tbody>
+                        <tfoot
+                               >
+                        <td ng-if="reportType==false" colspan="2"/>
+                        <td ng-if="reportType==true" colspan="3"/>
+                        <td  ng-style="{'background-color':getBackGroundColor(calculateTotalPercentage(report.total_bcg_vaccinated,report.total_mr_vaccinated)) ,'font-weight':'bold','text-align':'right'}" style="text-align:right; " >
+                            Total
+                        </td>
+
+                        <td ng-style="{'background-color':getBackGroundColor(calculateTotalPercentage(report.total_bcg_vaccinated,report.total_mr_vaccinated)) ,'font-weight':'bold','text-align':'right'}" style="text-align:right; " ng-bind="report.total_target| number"></td>
+
+                        <td ng-style="{'background-color':getBackGroundColor(calculateTotalPercentage(report.total_bcg_vaccinated,report.total_mr_vaccinated)) ,'font-weight':'bold','text-align':'right'}" style="text-align:right; " ng-bind="report.total_bcg_vaccinated"></td>
+                        <td ng-style="{'background-color':getBackGroundColor(calculateTotalPercentage(report.total_bcg_vaccinated,report.total_mr_vaccinated)) ,'font-weight':'bold','text-align':'right'}" style="text-align:right; " ng-bind="report.total_mr_vaccinated"></td>
+                        <td ng-style="{'background-color':getBackGroundColor(calculateTotalPercentage(report.total_bcg_vaccinated,report.total_mr_vaccinated)) ,'font-weight':'bold','text-align':'right'}" style="text-align:right; "><span
+                                ng-bind="calculateTotalPercentage(report.total_bcg_vaccinated,report.total_mr_vaccinated)"/>%
+                        </td>
+
+                        </tfoot>
+                    </table>
+                    <!-- end of the table-->
+
+                </div>
+                <div ng-show="datarows.length > 0">
+
+                    <table  class="table-bordered table table-striped pull-right" border="1">
+                        <thead>
+                        <tr>
+                            <th style="height:42px"></th>
+                            <th ng-bind="column| date:'MMM-yyyy'" ng-repeat="column in columnVals">
+                            </th>
+                        </tr>
+                        </thead>
+
+                        <tbody ng-repeat="row in colValueList">
+                        <tr ng-style="{'background-color': getBackGroundColorSummary(row.rangeName)}">
+                            <td ng-style="{'background-color': getBackGroundColorSummary(row.rangeName)}" ><label>{{getColumnNameSummary(row.rangeName)}}</label></td>
+                            <!--<td ng-if="row.rangeName=='2_dropOutBetweenMidAndMin'"><label>5% < DO <=10%</label></td>-->
+                            <!--<td ng-if="row.rangeName=='3_droOputBetweenMidAndHigh'"><label> 10% < DO <=20% </label></td>-->
+                            <!--<td ng-if="row.rangeName=='4_dropoutGreaterThanHigh'"><label>DO >20%</label></td>-->
+                            <td ng-style="{'background-color': getBackGroundColorSummary(row.rangeName)}" ng-repeat="column in columnVals track by $index">
+                                    <span ng-if="row.columns[$index].value>0" ng-bind="row.columns[$index].value">
+
+                                    </span>
+                                     <span ng-if="row.columns[$index].value==0">
+                                        -
+                                    </span>
+                            </td>
+
+                        </tr>
+                        </tbody>
+                    </table>
+
+                </div>
+                <div ng-show="regionrows.length > 0">
+
+                    <table id="dropOutRegiontReport" ng-show="datarows.length > 0"
+                           class="table-bordered table table-striped pull-right"
+                           ng-table="tableParams">
+                        <thead>
+                        <tr>
+                            <th rowspan="2" style="text-align: center; vertical-align: middle">
+                                <span>	 Region</span>
+                            </th>
+
+                            <th ng-if="reportType==true" rowspan="2"
+                                style="height:13px; text-align: center; vertical-align: middle; width: 40px">
+                                <span>	 Facility</span>
+                            </th>
+
+                            <th rowspan="2">
+                                <span>Period</span>
+
+                            </th>
+                            <th rowspan="2" style="width: 10px">
+                                <span>Target Population</span>
+
+                            </th>
+                            <th colspan="3 " style=" text-align: center; vertical-align: middle">
+                                <span>DropOut</span>
+
+                            </th>
+
+                        </tr>
+
+                        <tr>
+                            <th>
+                                <span>BCG</span>
+
+                            </th>
+                            <th>
+                                <span>MR</span>
+
+                            </th>
+                            <th>
+                                <span>%</span>
+
+                            </th>
+                        </tr>
+                        <tr style="height: 15px">
+                            <th>
+                                <span>A</span>
+
+                            </th>
+
+                            <th>
+
+
+                            </th>
+                            <th>
+                                <span>E</span>
+
+                            </th>
+                            <th>
+                                <span>E</span>
+
+                            </th>
+                            <th>
+                                <span>F</span>
+
+                            </th>
+                            <th>
+                                <span>G=(E-F)/E * 100</span>
+
+                            </th>
+
+                        </tr>
+                        </thead>
+                        <tbody ng-repeat="row in  regionrows"
+                                >
+                        <tr
+                                ng-repeat="subRow in row.performanceByDropoutRateByDistrictList">
+                            <td ng-if="$first" rowspan="{{row.performanceByDropoutRateByDistrictList.length}}"
+
+                                ng-bind="row.regionName"></td>
+
+                            <td ng-if="$first && reportType==true"
+                                rowspan="{{row.performanceByDropoutRateByDistrictList.length}}"
+
+                                ng-bind="row.facilityName"></td>
+
+
+                            <td ng-bind="subRow.period_name| date:'MMM-yyyy'"
+                                ng-style="{'background-color':getBackGroundColor(subRow.bcg_mr_dropout) ,'text-align':'right'}"/>
+                            <td ng-bind="subRow.target"
+                                ng-style="{'background-color':getBackGroundColor(subRow.bcg_mr_dropout) ,'text-align':'right'}"/>
+                            <td ng-bind="subRow.bcg_vaccinated"
+                                ng-style="{'background-color':getBackGroundColor(subRow.bcg_mr_dropout) ,'text-align':'right'}"/>
+
+
+                            <td ng-bind="subRow.mr_vaccinated"
+                                ng-style="{'background-color':getBackGroundColor(subRow.bcg_mr_dropout) ,'text-align':'right'}"/>
+
+
+                            <td ng-bind="concatPercentage(subRow.bcg_mr_dropout)"
+                                ng-style="{'background-color':getBackGroundColor(subRow.bcg_mr_dropout) ,'text-align':'right'}"/>
+
+
+                        </tr>
+
+
+                        </tbody>
+                        <tfoot
+                               >
+                        <td></td>
+                        <td  ng-style="{'background-color':getBackGroundColor(calculateTotalPercentage(report.total_bcg_vaccinated,report.total_mr_vaccinated)) ,'font-weight':'bold','text-align':'right'}">
+                            Total
+                        </td>
+
+                        <td  ng-style="{'background-color':getBackGroundColor(calculateTotalPercentage(report.total_bcg_vaccinated,report.total_mr_vaccinated)) ,'font-weight':'bold','text-align':'right'}" ng-bind="report.total_target| number"></td>
+
+                        <td  ng-style="{'background-color':getBackGroundColor(calculateTotalPercentage(report.total_bcg_vaccinated,report.total_mr_vaccinated)) ,'font-weight':'bold','text-align':'right'}" ng-bind="report.total_bcg_vaccinated"></td>
+                        <td  ng-style="{'background-color':getBackGroundColor(calculateTotalPercentage(report.total_bcg_vaccinated,report.total_mr_vaccinated)) ,'font-weight':'bold','text-align':'right'}" ng-bind="report.total_mr_vaccinated"></td>
+                        <td  ng-style="{'background-color':getBackGroundColor(calculateTotalPercentage(report.total_bcg_vaccinated,report.total_mr_vaccinated)) ,'font-weight':'bold','text-align':'right'}"><span
+                                ng-bind="calculateTotalPercentage(report.total_bcg_vaccinated,report.total_mr_vaccinated)"/>%
+                        </td>
+
+                        </tfoot>
+                    </table>
+                    <!-- end of the table-->
+
+                </div>
+                <div ng-show="regionrows.length > 0">
+
+                    <table  class="table-bordered table table-striped pull-right" border="1">
+                        <thead>
+                        <tr>
+                            <th style="height:42px"></th>
+                            <th ng-bind="column| date:'MMM-yyyy'" ng-repeat="column in columnVals">
+                            </th>
+                        </tr>
+                        </thead>
+
+                        <tbody ng-repeat="row in regionColumnVals">
+                        <tr ng-style="{'background-color': getBackGroundColorSummary(row.rangeName)}">
+                            <td ng-style="{'background-color': getBackGroundColorSummary(row.rangeName)}" ><label>{{getColumnNameSummary(row.rangeName)}}</label></td>
+                            <!--<td ng-if="row.rangeName=='2_dropOutBetweenMidAndMin'"><label>5% < DO <=10%</label></td>-->
+                            <!--<td ng-if="row.rangeName=='3_droOputBetweenMidAndHigh'"><label> 10% < DO <=20% </label></td>-->
+                            <!--<td ng-if="row.rangeName=='4_dropoutGreaterThanHigh'"><label>DO >20%</label></td>-->
+                            <td ng-style="{'background-color': getBackGroundColorSummary(row.rangeName)}" ng-repeat="column in columnVals track by $index">
+                                    <span ng-if="row.columns[$index].value>0" ng-bind="row.columns[$index].value">
+
+                                    </span>
+                                     <span ng-if="row.columns[$index].value==0">
+                                        -
+                                    </span>
+                            </td>
+
+                        </tr>
+                        </tbody>
+                    </table>
+
+                </div>
+
+
+            </div>
+        </div>
+    </div>
+
+</div>
+</div>

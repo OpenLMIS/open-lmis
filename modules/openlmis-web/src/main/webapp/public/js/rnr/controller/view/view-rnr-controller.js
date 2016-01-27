@@ -8,7 +8,7 @@
  * You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org. 
  */
 
-function ViewRnrController($scope, requisitionData, rnrColumns, regimenTemplate, $location, pageSize, $routeParams, requisitionService) {
+function ViewRnrController($scope, requisitionData , rnrColumns, regimenTemplate, equipmentOperationalStatus, ReOpenRequisition, RejectRequisition , $dialog , $location, pageSize, $routeParams, requisitionService) {
 
   $scope.rnrColumns = rnrColumns;
   $scope.pageSize = pageSize;
@@ -21,8 +21,60 @@ function ViewRnrController($scope, requisitionData, rnrColumns, regimenTemplate,
     });
   }
 
+  $scope.reOpenRnR = function( ){
+    var callBack = function (result) {
+      if (result) {
+        ReOpenRequisition.post({id: $scope.rnr.id}, function(){
+          OpenLmisDialog.newDialog({
+            id: "confirmDialog",
+            header: "label.confirm.action",
+            body: 'msg.rnr.reopened'
+          }, function(){
+            $location.url('/public/pages/logistics/rnr/index.html#/init-rnr');
+          }, $dialog);
+        });
+      }
+    };
+
+
+    var options = {
+      id: "confirmDialog",
+      header: "label.confirm.action",
+      body: "label.rnr.confirm.reopen"
+    };
+    OpenLmisDialog.newDialog(options, callBack, $dialog);
+  };
+
+  $scope.rejectRnR = function( ){
+    var callBack = function (result) {
+
+      if (result) {
+        RejectRequisition.post({id: $scope.rnr.id}, function(){
+          OpenLmisDialog.newDialog({
+            id: "confirmDialog",
+            header: "label.confirm.action",
+            body: 'msg.rnr.returned'
+          }, function(){
+            $location.url('/public/pages/logistics/rnr/index.html#/init-rnr');
+          }, $dialog);
+        });
+      }
+    };
+
+    var options = {
+      id: "confirmDialog",
+      header: "label.confirm.action",
+      body: "label.rnr.confirm.return"
+    };
+
+    OpenLmisDialog.newDialog(options, callBack, $dialog);
+  };
+
   $scope.visibleColumns = requisitionService.getMappedVisibleColumns(rnrColumns, RegularRnrLineItem.frozenColumns, []);
   $scope.regimenCount = $scope.rnr.regimenLineItems.length;
+  $scope.equipmentCount = $scope.rnr.equipmentLineItems.length;
+
+  $scope.equipmentOperationalStatus = equipmentOperationalStatus;
 
   requisitionService.populateScope($scope, $location, $routeParams);
 
@@ -74,7 +126,15 @@ ViewRnrController.resolve = {
     }, 100);
     return deferred.promise;
   },
-
+  equipmentOperationalStatus: function ($q, $timeout, EquipmentOperationalStatus) {
+    var deferred = $q.defer();
+    $timeout(function () {
+      EquipmentOperationalStatus.get({}, function (data) {
+        deferred.resolve(data.status);
+      }, {});
+    }, 100);
+    return deferred.promise;
+  },
   regimenTemplate: function ($q, $timeout, $route, ProgramRegimenTemplate) {
     var deferred = $q.defer();
     $timeout(function () {

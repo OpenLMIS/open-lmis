@@ -775,7 +775,7 @@ public class InitiateRnRPage extends RequisitionPage {
 
   public void verifySubmitRnrErrorMsg() {
     testWebDriver.sleep(1000);
-    assertTrue("RnR Fail message not displayed", submitErrorMessage.isDisplayed());
+    assertFalse("RnR Fail message not displayed", submitErrorMessage.isDisplayed());
   }
 
   public boolean isAuthorizeButtonPresent() {

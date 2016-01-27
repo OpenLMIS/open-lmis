@@ -8,13 +8,15 @@
  * You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org. 
  */
 
-var productModule = angular.module('product', ['openlmis', 'ui.bootstrap.dropdownToggle', 'ui.bootstrap.pagination']);
+var productModule = angular.module('product', ['openlmis','ngGrid','ui.bootstrap', 'ui.bootstrap.dropdownToggle', 'ui.bootstrap.pagination']);
 
 productModule.config(['$routeProvider', function ($routeProvider) {
   $routeProvider.
       when('/search', {controller: ProductSearchController, templateUrl: 'partials/search.html'}).
       when('/create', {controller: ProductController, templateUrl: 'partials/create.html', resolve: ProductController.resolve}).
       when('/edit/:id', {controller: ProductController, templateUrl: 'partials/create.html', resolve: ProductController.resolve}).
+      when('/rationing/:id', {controller: ProductRationingAdjustmentController, templateUrl: 'partials/rationing.html', resolve: ProductRationingAdjustmentController.resolve}).
+      when('edit/rationing/:id', {controller: ProductRationingAdjustmentController, templateUrl: 'partials/rationing.html', resolve: ProductRationingAdjustmentController.resolve}).
       otherwise({redirectTo: '/search'});
 }]).run(function ($rootScope, AuthorizationService) {
   $rootScope.productSelected = "selected";

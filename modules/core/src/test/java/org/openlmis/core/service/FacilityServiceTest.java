@@ -20,6 +20,7 @@ import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
+import org.junit.runners.BlockJUnit4ClassRunner;
 import org.mockito.ArgumentMatcher;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
@@ -35,6 +36,7 @@ import org.openlmis.db.categories.UnitTests;
 import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
+import org.powermock.modules.junit4.PowerMockRunnerDelegate;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -58,10 +60,12 @@ import static org.powermock.api.mockito.PowerMockito.doReturn;
 import static org.powermock.api.mockito.PowerMockito.*;
 import static org.powermock.api.mockito.PowerMockito.when;
 
-@Category(UnitTests.class)
 @RunWith(PowerMockRunner.class)
+@PowerMockRunnerDelegate(BlockJUnit4ClassRunner.class)
+@Category(UnitTests.class)
 @PrepareForTest({DateTime.class, FacilityService.class, FacilityServiceTest.class})
 public class FacilityServiceTest {
+
   @Rule
   public ExpectedException expectedEx = ExpectedException.none();
 
@@ -80,6 +84,9 @@ public class FacilityServiceTest {
   private GeographicZoneRepository geographicZoneRepository;
 
   @Mock
+  private ELMISInterfaceService elmisInterfaceService;
+
+  @Mock
   private EventService eventService;
 
   @Mock
@@ -87,6 +94,18 @@ public class FacilityServiceTest {
 
   @InjectMocks
   private FacilityService facilityService;
+
+  private static Matcher<Event> eventMatcher(final UUID uuid, final String title, final DateTime timestamp,
+                                             final String uri, final String content, final String category) {
+    return new ArgumentMatcher<Event>() {
+      @Override
+      public boolean matches(Object argument) {
+        Event event = (Event) argument;
+        return event.getUuid().equals(uuid.toString()) && event.getTitle().equals(title) && event.getTimeStamp().equals(timestamp) &&
+                event.getUri().toString().equals(uri) && event.getContents().equals(content) && event.getCategory().equals(category);
+      }
+    };
+  }
 
   @Test
   public void shouldReturnNullIfUserIsNotAssignedAFacility() {
@@ -135,18 +154,6 @@ public class FacilityServiceTest {
     verify(eventService).notify(argThat(eventMatcher(uuid, "Facility", dateTime, "",
       facilityFeedDTO.getSerializedContents(), "facilities")));
 
-  }
-
-  private static Matcher<Event> eventMatcher(final UUID uuid, final String title, final DateTime timestamp,
-                                             final String uri, final String content, final String category) {
-    return new ArgumentMatcher<Event>() {
-      @Override
-      public boolean matches(Object argument) {
-        Event event = (Event) argument;
-        return event.getUuid().equals(uuid.toString()) && event.getTitle().equals(title) && event.getTimeStamp().equals(timestamp) &&
-          event.getUri().toString().equals(uri) && event.getContents().equals(content) && event.getCategory().equals(category);
-      }
-    };
   }
 
   @Test
@@ -202,6 +209,7 @@ public class FacilityServiceTest {
 
     verify(facilityRepository).save(facility);
     verify(programSupportedService).updateSupportedPrograms(facility);
+    verify(elmisInterfaceService).updateFacilityInterfaceMapping(facility);
     verify(eventService).notify(any(Event.class));
   }
 
@@ -428,6 +436,16 @@ public class FacilityServiceTest {
     Facility expectedFacility = make(a(defaultFacility, with(parentFacilityId, 333L)));
     Facility parentFacility = make(a(defaultFacility, with(facilityId, 333L)));
     when(facilityRepository.getById(333L)).thenReturn(parentFacility);
+    when(facilityRepository.getByCode("code")).thenReturn(expectedFacility);
+
+    Facility actualFacility = facilityService.getOperativeFacilityByCode("code");
+
+    assertThat(actualFacility, is(expectedFacility));
+  }
+
+  @Test
+  public void shouldGetOperativeFacilityByCodeIfNotVirtual() throws Exception {
+    Facility expectedFacility = make(a(defaultFacility));
     when(facilityRepository.getByCode("code")).thenReturn(expectedFacility);
 
     Facility actualFacility = facilityService.getOperativeFacilityByCode("code");

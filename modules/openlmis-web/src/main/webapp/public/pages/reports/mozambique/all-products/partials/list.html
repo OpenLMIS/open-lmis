@@ -1,0 +1,109 @@
+<div>
+    <div id="control-bar">
+
+        <h3 class="report-title" openlmis-message="title.all.products.report"></h3>
+
+        <div class="report-selection">
+
+            <label class="labels" openlmis-message="label.province"></label>
+
+            <div class="form-fields">
+                <select ui-select2 style="width:160px;" id="selectorProvince" class="large-input" ng-change="" name="provinces" ng-model="reportParams.provinceId">
+                    <option ng-repeat="option in provinces | provinceFilter:reportParams.provinceId" value="{{option.id}}" >{{option.name}}</option>
+                    <option value="">ALL</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="report-selection">
+
+            <label class="labels" openlmis-message="label.district"></label>
+
+            <div class="form-fields">
+                <select ui-select2 style="width:160px;" class="large-input" ng-change="fillProvince();" name="districts" ng-model="reportParams.districtId">
+                    <option ng-repeat="option in districts | districtFilter:reportParams.provinceId" value="{{option.id}}">{{option.name}}</option>
+                    <option value="">ALL</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="report-selection">
+            <label class="labels" openlmis-message="label.facility"></label>
+
+            <div class="form-fields">
+                <select ui-select2 style="width:160px;" class="large-input"  name="select-facility" ng-model="reportParams.facilityId">
+                    <option value=""></option>
+                    <option ng-repeat="option in facilities | facilityFilter:districts:reportParams.districtId:reportParams.provinceId" value="{{option.id}}">{{option.name}}</option>
+                </select>
+            </div>
+
+            <span class="field-error" ng-show="invalid" openlmis-message="report.missing.facility"></span>
+        </div>
+
+        <div class="form-cell report-selection">
+            <label>
+                <span openlmis-message="label.date"></span>
+            </label>
+
+            <div class="form-field">
+                <input name="endTime" id="endTime" type="text"
+                       ui-date
+                       ui-date-format
+                       ng-model="reportParams.endTime"
+                       ng-required="true"
+                       ng-change="checkDate()"/>
+
+              <span class="field-error" ng-show="createPeriodForm.startDate.$error.required && showErrorForCreate"
+                    openlmis-message="missing.value"></span>
+            </div>
+        </div>
+
+        <div class="report-selection">
+            <input type="submit" class="btn btn-primary" ng-click="loadReport()" openlmis-message="button.generateReport"/>
+        </div>
+
+        <div style="clear: both"></div>
+
+    </div>
+
+    <hr/>
+
+    <div id="report" ng-if="reportData">
+        <h3 class="report-title" openlmis-message="subtitle.all.product.report|reportData[0].facilityName"></h3>
+
+        <table class="table table-condensed table-bordered table-striped">
+            <tr class="gradient-header">
+                <th ng-click="sortType = 'productName'; sortReverse = !sortReverse" class="sortable sort-desc" openlmis-message="report.drug.name">
+                    <span ng-show="sortType != 'productName'" class="icon-sort"></span>
+                    <span ng-show="sortType == 'productName' && !sortReverse" class="icon-sort-up"></span>
+                    <span ng-show="sortType == 'productName' && sortReverse" class="icon-sort-down"></span></th>
+                <th ng-click="sortType = 'productQuantity'; sortReverse = !sortReverse" class="sortable sort-desc" openlmis-message="report.drug.quantity">
+                    <span ng-show="sortType != 'productQuantity'" class="icon-sort"></span>
+                    <span ng-show="sortType == 'productQuantity' && !sortReverse" class="icon-sort-up"></span>
+                    <span ng-show="sortType == 'productQuantity' && sortReverse" class="icon-sort-down"></span></th>
+                <th ng-click="sortType = 'soonestExpiryDate'; sortReverse = !sortReverse" class="sortable sort-desc" openlmis-message="report.soonest.expiry.date">
+                    <span ng-show="sortType != 'soonestExpiryDate'" class="icon-sort"></span>
+                    <span ng-show="sortType == 'soonestExpiryDate' && !sortReverse" class="icon-sort-up"></span>
+                    <span ng-show="sortType == 'soonestExpiryDate' && sortReverse" class="icon-sort-down"></span></th>
+                <th ng-click="sortType = 'lastSyncDate'; sortReverse = !sortReverse" class="sortable sort-desc" openlmis-message="report.last.update.date">
+                    <span ng-show="sortType != 'lastSyncDate'" class="icon-sort"></span>
+                    <span ng-show="sortType == 'lastSyncDate' && !sortReverse" class="icon-sort-up"></span>
+                    <span ng-show="sortType == 'lastSyncDate' && sortReverse" class="icon-sort-down"></span></th>
+            </tr>
+
+            <tr ng-repeat="entry in reportData | orderBy:sortType:sortReverse">
+                <td>{{entry.productName}} [{{entry.code}}]</td>
+                <td style="text-align: right" ng-style="entry.productQuantity == 0 && {'color':'#ab433f'}">{{entry.productQuantity | number:0}}</td>
+                <td>{{entry.soonestExpiryDate | date:'MMMM y'}}</td>
+                <td><span class="circle-icon" ng-style="checkLastSyncDate(entry.lastSyncDate)"> </span>
+                    <span>{{entry.lastSyncDate | date:'h:mm a d MMMM y'}}</span>
+                </td>
+            </tr>
+        </table>
+
+        <ng-include src="'/public/pages/reports/mozambique/product-report-footer.html'"/>
+
+    </div>
+    <label ng-show="reportData && reportData.length == 0">No Data</label>
+
+</div>

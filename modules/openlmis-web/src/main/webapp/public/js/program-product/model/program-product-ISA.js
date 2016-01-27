@@ -7,7 +7,6 @@
  * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Affero General Public License for more details.
  * You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org. 
  */
-
 var ProgramProductISA = function (isa) {
 
   $.extend(true, this, isa);
@@ -28,6 +27,9 @@ var ProgramProductISA = function (isa) {
       this.bufferPercentage = programProductIsa.bufferPercentage;
       this.minimumValue = programProductIsa.minimumValue;
       this.maximumValue = programProductIsa.maximumValue;
+
+      //For Tanzania
+      this.populationSource = programProductIsa.populationSource;
     }
   };
 
@@ -45,14 +47,26 @@ var ProgramProductISA = function (isa) {
     return((this.maximumValue && this.minimumValue) !== null && utils.parseIntWithBaseTen(this.maximumValue) < utils.parseIntWithBaseTen(this.minimumValue));
   };
 
-  ProgramProductISA.prototype.getIsaFormula = function () {
+  function getNumericDisplayVal(val)
+  {
+    if( val === undefined || isNaN(val) )
+      return '#';
+    else
+      return val;
+  }
+
+  ProgramProductISA.prototype.getIsaFormula = function() {
     var adjustmentVal = utils.parseIntWithBaseTen(this.adjustmentValue);
-    adjustmentVal = adjustmentVal > 0 ? adjustmentVal : "(" + adjustmentVal + ")";
+    adjustmentVal = adjustmentVal > 0 ? getNumericDisplayVal(adjustmentVal) : "(" + getNumericDisplayVal(adjustmentVal) + ")";
+
+    var whoRatioVal = (this.whoRatio / 100).toFixed(5);
+
+
     return "(population) * " +
-      (this.whoRatio / 100).toFixed(5) +
-      " * " + utils.parseIntWithBaseTen(this.dosesPerYear) +
-      " * " + parseFloat(this.wastageFactor).toFixed(3) +
-      " / 12 * " + (1 + this.bufferPercentage / 100).toFixed(5) +
+        getNumericDisplayVal( (this.whoRatio / 100).toFixed(5) ) +
+      " * " + getNumericDisplayVal( utils.parseIntWithBaseTen(this.dosesPerYear) ) +
+      " * " + getNumericDisplayVal( parseFloat(this.wastageFactor).toFixed(3) ) +
+      " / 12 * " + getNumericDisplayVal( (1 + this.bufferPercentage / 100).toFixed(5) ) +
       " + " + adjustmentVal;
   };
 

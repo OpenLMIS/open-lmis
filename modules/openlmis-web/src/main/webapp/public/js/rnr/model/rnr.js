@@ -8,7 +8,16 @@
  * You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org. 
  */
 
-var Rnr = function (rnr, programRnrColumns, numberOfMonths) {
+var Rnr = function (rnr, programRnrColumns, numberOfMonths, operationalStatuses) {
+  
+  // separate the skipped products from the not so skipped. 
+  rnr.allSupplyLineItems = rnr.fullSupplyLineItems;
+  if(rnr.program && rnr.program.hideSkippedProducts){
+    rnr.skippedLineItems = _.where(rnr.allSupplyLineItems, { skipped:true});
+    rnr.fullSupplyLineItems =  _.where(rnr.allSupplyLineItems, {skipped: false});
+  }
+  rnr.operationalStatusList = operationalStatuses;
+
   $.extend(true, this, rnr);
   var thisRnr = this;
   this.skipAll = false;
@@ -30,6 +39,17 @@ var Rnr = function (rnr, programRnrColumns, numberOfMonths) {
     return getInvalidLineItemIndexes(this.nonFullSupplyLineItems);
   };
 
+  Rnr.prototype.getRegimenErrorLineItemIndexes = function () {
+
+    var errorLineItems = [];
+    $(this.regimenLineItems).each(function (i, lineItem) {
+      if(lineItem.hasError){
+        errorLineItems.push(i);
+      }
+    });
+    return errorLineItems;
+  };
+
   Rnr.prototype.getErrorPages = function (pageSize) {
     function getErrorPages(lineItems) {
       var pagesWithErrors = [];
@@ -49,9 +69,15 @@ var Rnr = function (rnr, programRnrColumns, numberOfMonths) {
       return getErrorPages(nonFullSupplyErrorLIneItems);
     }
 
+    function getRegimenPagesWithError(){
+      var regimenErrorLineItems = thisRnr.getRegimenErrorLineItemIndexes();
+      return getErrorPages(regimenErrorLineItems);
+    }
+
     var errorPages = {};
     errorPages.fullSupply = getFullSupplyPagesWithError();
     errorPages.nonFullSupply = getNonFullSupplyPagesWithError();
+    errorPages.regimen = getRegimenPagesWithError();
     return errorPages;
   };
 
@@ -72,10 +98,39 @@ var Rnr = function (rnr, programRnrColumns, numberOfMonths) {
       return false;
     }
 
+    function validateEquipmentStatus(lineItem){
+      lineItem.isEquipmentValid = true;
+      if(lineItem.equipments !== undefined && ((lineItem.calculatedOrderQuantity > 0 && lineItem.quantityRequested !== 0) || lineItem.quantityRequested > 0 )){
+        for(var i = 0; i < lineItem.equipments.length; i++){
+          var status = _.findWhere(this.operationalStatusList, {'id': lineItem.equipments[i].operationalStatusId});
+          if( statis !== undefined && status.isBad === true && (lineItem.equipments[i].remarks === '' || lineItem.equipments[i].remarks === undefined)){
+            lineItem.isEquipmentValid = false;
+          }
+        }
+      }
+      return true;
+    }
+    this.equipmentErrorMessage = "";
     $(this.fullSupplyLineItems).each(function (i, lineItem) {
-      if (lineItem.skipped) return;
-      if (!validateRequiredFields(lineItem)) return false;
-      if (!validateFormula(lineItem)) return false;
+      if (lineItem.skipped)
+        return;
+      if (!validateRequiredFields(lineItem))
+        return false;
+      if (!validateFormula(lineItem))
+        return false;
+      if (!validateEquipmentStatus(lineItem))
+        return false;
+    });
+    return errorMessage;
+  };
+
+  Rnr.prototype.validateEquipments = function(){
+    var errorMessage = null;
+    $(this.equipmentLineItems).each(function(i,lineItem){
+      if(lineItem.operationalStatusId === 3 && lineItem.remarks === undefined || lineItem.remarks === ''){
+        lineItem.IsRemarkRequired = true;
+        errorMessage = 'Remarks are required for equipments that are not operational';
+      }
     });
     return errorMessage;
   };
@@ -184,6 +239,22 @@ var Rnr = function (rnr, programRnrColumns, numberOfMonths) {
     return rnr;
   };
 
+  Rnr.prototype.initEquipments = function(){
+
+    for(var i= 0; this.equipmentLineItems !== undefined && i < this.equipmentLineItems.length; i++){
+      var eqli = this.equipmentLineItems[i];
+      for(var j = 0;eqli.relatedProducts !== undefined && j < eqli.relatedProducts.length;j++){
+        var prod = eqli.relatedProducts[j];
+        var lineItem = _.findWhere(this.fullSupplyLineItems, {productCode: prod.code});
+        if(lineItem !== null && lineItem.equipments === undefined){
+            lineItem.equipments = [];
+        }else if(lineItem !== null){
+          lineItem.equipments.push(eqli);
+        }
+      }
+    }
+  };
+
   Rnr.prototype.init = function () {
     var thisRnr = this;
 
@@ -199,7 +270,8 @@ var Rnr = function (rnr, programRnrColumns, numberOfMonths) {
     this.fullSupplyLineItems = prepareLineItems(this.fullSupplyLineItems);
     this.nonFullSupplyLineItems = prepareLineItems(this.nonFullSupplyLineItems);
     this.nonFullSupplyLineItems.sort(function (lineItem1, lineItem2) {
-      if (isUndefined(lineItem1)) return 1;
+      if (isUndefined(lineItem1))
+        return 1;
       return lineItem1.compareTo(lineItem2);
     });
     this.programRnrColumnList = programRnrColumns;
@@ -209,4 +281,5 @@ var Rnr = function (rnr, programRnrColumns, numberOfMonths) {
   };
 
   this.init();
+  this.initEquipments();
 };

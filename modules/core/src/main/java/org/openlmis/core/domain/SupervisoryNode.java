@@ -13,12 +13,12 @@ package org.openlmis.core.domain;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.codehaus.jackson.map.annotate.JsonSerialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.upload.Importable;
 import org.openlmis.upload.annotation.ImportField;
 
-import static org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion.NON_NULL;
+import static com.fasterxml.jackson.databind.annotation.JsonSerialize.Inclusion.NON_NULL;
 
 /**
  * SupervisoryNode represents the Supervisory Node in a system. Also defines contract to upload SupervisoryNode.
@@ -43,6 +43,8 @@ public class SupervisoryNode extends BaseModel implements Importable {
 
   @ImportField(name = "Facility Code", mandatory = true, nested = "code")
   private Facility facility;
+
+  public Integer supervisorCount;
 
   public SupervisoryNode(Long id) {
     this.id = id;

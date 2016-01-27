@@ -1,0 +1,270 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ~ Electronic Logistics Management Information System (eLMIS) is a supply chain management system for health commodities in a developing country setting.
+  ~
+  ~ Copyright (C) 2015  John Snow, Inc (JSI). This program was produced for the U.S. Agency for International Development (USAID). It was prepared under the USAID | DELIVER PROJECT, Task Order 4.
+  ~
+  ~ This program is free software: you can redistribute it and/or modify it under the terms of the GNU Affero General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
+  ~
+  ~ This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Affero General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU Affero General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
+  -->
+
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="facilities" language="groovy" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="ead40e47-479c-4ecb-98ca-6609320f3c24">
+	<property name="ireport.zoom" value="1.5"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="87"/>
+	<property name="net.sf.jasperreports.export.xls.ignore.graphics" value="false"/>
+	<property name="net.sf.jasperreports.export.xls.ignore.cell.background" value="false"/>
+	<property name="net.sf.jasperreports.export.xls.white.page.background" value="false"/>
+	<parameter name="COUNTRY_NAME" class="java.lang.String"/>
+	<parameter name="REPORT_NAME" class="java.lang.String"/>
+	<parameter name="GENERATED_BY" class="java.lang.String"/>
+	<parameter name="REPORT_VERSION" class="java.lang.String"/>
+	<parameter name="REPORT_ID" class="java.lang.String"/>
+	<parameter name="REPORT_TITLE" class="java.lang.String"/>
+	<parameter name="LOGO" class="java.io.InputStream"/>
+	<parameter name="REPORT_MESSAGE_WHEN_NO_DATA" class="java.lang.String"/>
+	<queryString>
+		<![CDATA[]]>
+	</queryString>
+	<field name="region" class="java.lang.String"/>
+	<field name="district" class="java.lang.String"/>
+	<field name="facility_name" class="java.lang.String"/>
+	<field name="facility_type" class="java.lang.String"/>
+	<field name="working_status" class="java.lang.String"/>
+	<field name="manufacturer" class="java.lang.String"/>
+	<field name="model" class="java.lang.String"/>
+	<field name="capacity" class="java.lang.Double"/>
+	<variable name="v_totalCapacity" class="java.lang.Double" calculation="Sum">
+		<variableExpression><![CDATA[$F{capacity}]]></variableExpression>
+	</variable>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="106" splitType="Stretch">
+			<textField>
+				<reportElement x="0" y="42" width="555" height="42" isPrintInFirstWholeBand="true" forecolor="#3D9297" uuid="cd631ed0-5953-4cf6-abc5-c21ca94ed6fd"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="20" isBold="true"/>
+					<paragraph leftIndent="10"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{REPORT_TITLE}]]></textFieldExpression>
+			</textField>
+			<image>
+				<reportElement x="499" y="0" width="54" height="42" isPrintInFirstWholeBand="true" uuid="0e524336-7e15-45ca-9af1-9d68568e75ea"/>
+				<imageExpression><![CDATA[$P{LOGO}]]></imageExpression>
+			</image>
+			<textField>
+				<reportElement x="431" y="84" width="124" height="20" isPrintInFirstWholeBand="true" uuid="f957a4f0-148b-46cd-86d1-b7f57bc26ce3"/>
+				<textFieldExpression><![CDATA['Report Name: '+$P{REPORT_NAME}]]></textFieldExpression>
+			</textField>
+		</band>
+	</title>
+	<columnHeader>
+		<band height="20" splitType="Stretch">
+			<staticText>
+				<reportElement mode="Opaque" x="0" y="1" width="555" height="19" forecolor="#FFFFFF" backcolor="#3D9297" uuid="6f36c35a-7280-4d1d-b20b-892eaf2c89fe">
+					<property name="net.sf.jasperreports.export.xls.ignore.graphics" value="false"/>
+				</reportElement>
+				<text><![CDATA[]]></text>
+			</staticText>
+			<textField>
+				<reportElement mode="Transparent" x="23" y="0" width="63" height="20" forecolor="#000000" backcolor="#333333" uuid="acd5a93e-2509-45ee-999c-862cd3e94181"/>
+				<textElement verticalAlignment="Middle" markup="none">
+					<font size="12" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$R{label.region}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement mode="Transparent" x="230" y="0" width="66" height="20" forecolor="#000000" backcolor="#333333" uuid="b67527eb-82fb-43a6-815c-cea8216b64a4"/>
+				<textElement verticalAlignment="Middle" markup="none">
+					<font size="12" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$R{label.facility.type}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement mode="Transparent" x="86" y="0" width="74" height="20" forecolor="#000000" backcolor="#333333" uuid="19b28723-eba3-447f-9878-6940d741d19b"/>
+				<textElement verticalAlignment="Middle" markup="none">
+					<font size="12" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$R{label.district}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement mode="Transparent" x="0" y="0" width="24" height="20" forecolor="#000000" backcolor="#333333" uuid="263eb6ed-d743-4773-b03e-aeb29c76c621"/>
+				<textElement verticalAlignment="Middle" markup="none">
+					<font size="12" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$R{label.line.no}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement mode="Transparent" x="460" y="0" width="95" height="20" forecolor="#000000" backcolor="#333333" uuid="7b1a1132-a501-439e-8265-46b1e83fd2a7"/>
+				<textElement verticalAlignment="Middle" markup="none">
+					<font size="12" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$R{label.equipment.working.status}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement mode="Transparent" x="160" y="0" width="71" height="20" forecolor="#000000" backcolor="#333333" uuid="cf539a65-f2a9-473f-8f0b-6164df0ca248"/>
+				<textElement verticalAlignment="Middle" markup="none">
+					<font size="12" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$R{label.facility.name}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement mode="Transparent" x="296" y="0" width="55" height="20" forecolor="#000000" backcolor="#333333" uuid="4bdd7827-101e-40a6-aef0-34b2c7bb1514"/>
+				<textElement verticalAlignment="Middle" markup="none">
+					<font size="12" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$R{label.equipment.manufacturer}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement mode="Transparent" x="350" y="0" width="55" height="20" forecolor="#000000" backcolor="#333333" uuid="29c23433-0c16-4ff8-aa5c-a1bc0e08eb7b"/>
+				<textElement verticalAlignment="Middle" markup="none">
+					<font size="12" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$R{label.equipment.model}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement mode="Transparent" x="404" y="0" width="57" height="20" forecolor="#000000" backcolor="#333333" uuid="fdb28036-b019-4a5c-9edc-92625adeefe8"/>
+				<textElement verticalAlignment="Middle" markup="none">
+					<font size="12" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$R{label.equipment.capacity}]]></textFieldExpression>
+			</textField>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="20" splitType="Stretch">
+			<staticText>
+				<reportElement mode="Opaque" x="1" y="0" width="553" height="20" backcolor="#F4F4F4" uuid="72636ebb-7309-45bd-8bfb-a2e408a4f8ee">
+					<printWhenExpression><![CDATA[$V{REPORT_COUNT}%2 == 0]]></printWhenExpression>
+				</reportElement>
+				<text><![CDATA[]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="0" y="0" width="24" height="20" uuid="c9fff307-ac9a-4967-b8da-f7f0349cb8f7"/>
+				<textElement verticalAlignment="Middle">
+					<paragraph leftIndent="5"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{REPORT_COUNT}]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement x="1" y="19" width="553" height="1" forecolor="#3D9297" uuid="188f34c4-c22b-48af-8ffd-a058abbdd729"/>
+				<graphicElement>
+					<pen lineWidth="0.5"/>
+				</graphicElement>
+			</line>
+			<textField>
+				<reportElement x="24" y="0" width="62" height="20" uuid="9abf9b8c-e88d-4223-aa11-888780c9ed91"/>
+				<textElement verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{region}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="160" y="0" width="71" height="20" uuid="750a5fe9-090c-41d9-a342-2528adbe1f09"/>
+				<textElement verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{facility_name}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="230" y="0" width="67" height="20" uuid="dbab6330-b5d6-4d5f-b211-64135a1d1cc1"/>
+				<textElement verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{facility_type}]]></textFieldExpression>
+			</textField>
+			<textField pattern="" isBlankWhenNull="false">
+				<reportElement mode="Transparent" x="460" y="0" width="95" height="20" forecolor="#000000" backcolor="#FFFFFF" uuid="53badf07-4792-4efc-9464-c4811ea054e4"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle" rotation="None" markup="none">
+					<font fontName="SansSerif" size="10" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{working_status}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="86" y="0" width="74" height="20" uuid="82d6cde4-ec8c-4fb2-a8da-76259ab5b7a9"/>
+				<textElement verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{district}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="296" y="0" width="55" height="20" uuid="5430623c-c64d-4ea5-b6f7-a50abaf9fe87"/>
+				<textElement verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{manufacturer}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="350" y="0" width="55" height="20" uuid="69bfb1b9-f27b-4311-8761-0cc9b4ca142d"/>
+				<textElement verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{model}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="404" y="0" width="57" height="20" uuid="a21ab15f-808f-4821-be05-f06d3a8ae1b0"/>
+				<textElement verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{capacity}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<pageFooter>
+		<band height="110" splitType="Stretch">
+			<rectangle>
+				<reportElement x="0" y="0" width="553" height="40" forecolor="#3D9297" uuid="79af11ce-b532-4aae-a323-a2ac0379e3ca"/>
+				<graphicElement>
+					<pen lineWidth="0.5"/>
+				</graphicElement>
+			</rectangle>
+			<textField>
+				<reportElement x="0" y="61" width="173" height="20" forecolor="#666666" uuid="69096336-db67-440c-a073-d04f824c2a28"/>
+				<textElement verticalAlignment="Middle">
+					<font size="10" isBold="false"/>
+					<paragraph leftIndent="2"/>
+				</textElement>
+				<textFieldExpression><![CDATA['Generated By: '+$P{GENERATED_BY}]]></textFieldExpression>
+			</textField>
+			<textField pattern="MMMMM dd, yyyy">
+				<reportElement x="0" y="41" width="173" height="20" forecolor="#666666" uuid="a6f10fe1-2946-4242-9ef6-eca68cebab39"/>
+				<textElement verticalAlignment="Middle">
+					<font size="10" isBold="false"/>
+					<paragraph leftIndent="2"/>
+				</textElement>
+				<textFieldExpression><![CDATA['Date: '+ new java.util.Date()]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="217" y="42" width="80" height="20" forecolor="#666666" uuid="3c5793a8-b8b8-48f7-829b-0b1e0f3aa123"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA["Page "+$V{PAGE_NUMBER}+" of"]]></textFieldExpression>
+			</textField>
+			<textField evaluationTime="Report">
+				<reportElement x="296" y="42" width="40" height="20" forecolor="#666666" uuid="bb584be1-3ae1-48f6-bba8-9e4bacbf4627"/>
+				<textElement verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[" " + $V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="404" y="0" width="57" height="20" uuid="0ff24d15-f828-4170-aa0e-7034ac561cbf"/>
+				<textElement verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$V{v_totalCapacity}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement mode="Transparent" x="257" y="0" width="147" height="20" forecolor="#000000" backcolor="#333333" uuid="49d02169-b12c-4682-a4ce-1fc68d5a5139"/>
+				<textElement verticalAlignment="Middle" markup="none">
+					<font size="12" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$R{label.repair.management.totalcapacity}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="381" y="41" width="173" height="20" forecolor="#666666" uuid="fb885345-3d71-4abc-b2b8-85477976830e"/>
+				<textElement verticalAlignment="Middle">
+					<font size="10" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA['Report ID: '+$P{REPORT_ID}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="381" y="61" width="173" height="20" forecolor="#666666" uuid="a22be1b5-fd7f-44a2-947d-f9be7df66576"/>
+				<textElement verticalAlignment="Middle">
+					<font size="10" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA['Report Version: '+$P{REPORT_VERSION}]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageFooter>
+	<summary>
+		<band height="44" splitType="Stretch"/>
+	</summary>
+</jasperReport>

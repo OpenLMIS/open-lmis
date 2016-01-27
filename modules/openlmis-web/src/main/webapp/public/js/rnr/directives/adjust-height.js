@@ -61,6 +61,8 @@ rnrModule.directive('adjustHeight', function ($timeout) {
         });
       };
 
+      window.adjustHeight = adjustHeight;
+
       $(window).on('resize', function () {
         if (previousWindowWidth !== window.innerWidth) {
           adjustHeight();

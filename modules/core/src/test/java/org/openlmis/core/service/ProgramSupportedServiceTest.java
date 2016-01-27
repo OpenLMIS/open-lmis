@@ -15,6 +15,7 @@ import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
+import org.junit.runners.BlockJUnit4ClassRunner;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.openlmis.core.domain.Facility;
@@ -27,6 +28,7 @@ import org.openlmis.core.repository.ProgramSupportedRepository;
 import org.openlmis.db.categories.UnitTests;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
+import org.powermock.modules.junit4.PowerMockRunnerDelegate;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -43,8 +45,9 @@ import static org.openlmis.core.builder.ProgramSupportedBuilder.defaultProgramSu
 import static org.powermock.api.mockito.PowerMockito.when;
 import static org.powermock.api.mockito.PowerMockito.whenNew;
 
-@Category(UnitTests.class)
 @RunWith(PowerMockRunner.class)
+@PowerMockRunnerDelegate(BlockJUnit4ClassRunner.class)
+@Category(UnitTests.class)
 @PrepareForTest(ProgramSupportedService.class)
 public class ProgramSupportedServiceTest {
 
@@ -194,7 +197,7 @@ public class ProgramSupportedServiceTest {
   }
 
   @Test
-  public void shouldReturnNullIfProgramNotSupportedByFacility() throws Exception {
+  public void shouldReturnProgramSupported() throws Exception {
     ProgramSupported expectedProgram = new ProgramSupported();
     when(repository.getByFacilityIdAndProgramId(1L, 2L)).thenReturn(expectedProgram);
 

@@ -17,7 +17,8 @@ import org.openlmis.core.domain.Role;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.core.service.RightService;
 import org.openlmis.core.service.RoleRightsService;
-import org.openlmis.web.response.OpenLmisResponse;
+import org.openlmis.core.web.OpenLmisResponse;
+import org.openlmis.core.web.controller.BaseController;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -26,10 +27,11 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 
 import javax.servlet.http.HttpServletRequest;
 
-import static org.openlmis.web.response.OpenLmisResponse.*;
+import static org.openlmis.core.web.OpenLmisResponse.*;
 import static org.springframework.web.bind.annotation.RequestMethod.*;
 
 /**
@@ -56,6 +58,7 @@ public class RoleRightsController extends BaseController {
     return OpenLmisResponse.response(RIGHTS, rightService.getAll());
   }
 
+
   @RequestMapping(value = "/roles", method = POST, headers = ACCEPT_JSON)
   @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_ROLE')")
   public ResponseEntity<OpenLmisResponse> createRole(@RequestBody Role role, HttpServletRequest request) {
@@ -76,6 +79,19 @@ public class RoleRightsController extends BaseController {
     return new ResponseEntity<>(response, HttpStatus.OK);
   }
 
+  @RequestMapping(value = "/roles/list", method = GET)
+  public ResponseEntity<OpenLmisResponse> getAllReadonly() {
+    OpenLmisResponse response = new OpenLmisResponse(ROLES_MAP, roleRightsService.getAllRolesMap());
+    return new ResponseEntity<>(response, HttpStatus.OK);
+  }
+
+
+  @RequestMapping(value = "/roles-flat", method = GET)
+  @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_ROLE, MANAGE_USER')")
+  public ResponseEntity<OpenLmisResponse> getAllRolesFlat() {
+    OpenLmisResponse response = new OpenLmisResponse(ROLES_MAP, roleRightsService.getAllRoles());
+    return new ResponseEntity<>(response, HttpStatus.OK);
+  }
 
   @RequestMapping(value = "/roles/{id}", method = GET)
   @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_ROLE')")
@@ -102,4 +118,12 @@ public class RoleRightsController extends BaseController {
   public ResponseEntity<OpenLmisResponse> getRightsForUserAndFacilityProgram(@PathVariable("facilityId") Long facilityId, @PathVariable("programId") Long programId, HttpServletRequest httpServletRequest) {
     return response(RIGHTS, roleRightsService.getRightsForUserAndFacilityProgram(loggedInUserId(httpServletRequest), new Facility(facilityId), new Program(programId)));
   }
+
+
+    @RequestMapping(value="/roles/getList",method= RequestMethod.GET, headers = ACCEPT_JSON)
+    @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_ROLE')")
+    public ResponseEntity<OpenLmisResponse> getRoleList(HttpServletRequest request){
+        return OpenLmisResponse.response("roles", roleRightsService.getAllRoles());
+    }
+
 }

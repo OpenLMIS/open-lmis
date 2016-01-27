@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+
+<!--
+  ~ Electronic Logistics Management Information System (eLMIS) is a supply chain management system for health commodities in a developing country setting.
+  ~
+  ~ Copyright (C) 2015  John Snow, Inc (JSI). This program was produced for the U.S. Agency for International Development (USAID). It was prepared under the USAID | DELIVER PROJECT, Task Order 4.
+  ~
+  ~ This program is free software: you can redistribute it and/or modify it under the terms of the GNU Affero General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
+  ~
+  ~ This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Affero General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU Affero General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
+  -->
+
+<h2><span openlmis-message="title.breakdown.facilities.stock.out.district|location|product"></span></h2>
+<div class="row-fluid">
+        <div class="span6">
+            <table class="table table-bordered" ng-show="datarows == undefined || datarows.length == 0">
+                <tr>
+                    <td>No data to show under selected filters</td>
+                </tr>
+            </table>
+            <div ng-show ="datarows !== undefined && datarows.length > 0">
+                <table ng-show="datarows.length > 0" class="table-bordered table table-striped pull-right"
+                       ng-table="tableParams"   style="height: 200px; overflow: auto">
+                    <tbody>
+                    <tr ng-repeat="row in datarows">
+                        <td data-title="'Label'" >{{row.label}}</td>
+                        <td data-title="'Facility Count'" class="number" >{{row.total | number}}</td>
+                        <td data-title="'%'" class="number">{{getFacilityStockOutPercent(row.total)}}</td>
+                    </tr>
+                    <tr style="font-weight: bold"><td openlmis-message="label.total.facilities.stock.out|2"></td><td class="number">{{totalStockOuts}}</td><td></td></tr>
+                    </tbody>
+                </table>
+            </div>
+
+        </div>
+        <div class="span6">
+            <div ng-show="stockedOutPieChartData == undefined">
+                <label class="chart-note">
+                    No data to render chart
+                </label>
+            </div>
+            <div ng-show ="stockedOutPieChartData != undefined">
+                <a-float id="stocked-out-reporting" af-option="stockedOutPieChartOption" af-data="stockedOutPieChartData" class="chart"></a-float>
+                <div id="stockedOutReportLegend" class="chartLegend"></div>
+                <div style="margin-left: 10px; padding-left: 15px;font-weight: bold;" >
+                    <span openlmis-message="label.total.facilities.stock.out|2"></span><span> : {{totalStockOuts}}</span>
+                </div>
+            </div>
+        </div>
+    </div>
+<div id="flotTip"></div>

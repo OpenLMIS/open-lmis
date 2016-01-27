@@ -27,10 +27,17 @@ function CreateFullSupplyController($scope, messageService) {
     $scope.clearAndCloseLossesAndAdjustmentModal();
   };
 
+  $scope.cancelAndCloseLossesAndAdjustmentModal = function () {
+
+    // restore the old losses and adjustments because the changes have been canceled
+    $scope.currentRnrLineItem.lossesAndAdjustments = $scope.oldLossAndAdjustment;
+    $scope.currentRnrLineItem.reEvaluateTotalLossesAndAdjustments();
+    $scope.clearAndCloseLossesAndAdjustmentModal();
+  };
+
   $scope.clearAndCloseLossesAndAdjustmentModal = function () {
     $scope.lossAndAdjustment = undefined;
     $scope.lossesAndAdjustmentsModal = false;
-
     $('#' + $scope.currentLinkId).focus();
   };
 
@@ -40,6 +47,9 @@ function CreateFullSupplyController($scope, messageService) {
   };
 
   $scope.showLossesAndAdjustments = function (lineItem) {
+    // keep a copy of the old losses an adjustments for just in case the dialog box is canceled;
+
+    $scope.oldLossAndAdjustment = angular.copy(lineItem.lossesAndAdjustments);
     $scope.currentRnrLineItem = lineItem;
     updateLossesAndAdjustmentTypesToDisplayForLineItem(lineItem);
     $scope.lossesAndAdjustmentsModal = true;
@@ -55,6 +65,37 @@ function CreateFullSupplyController($scope, messageService) {
     $scope.currentRnrLineItem.addLossAndAdjustment(newLossAndAdjustment);
     updateLossesAndAdjustmentTypesToDisplayForLineItem($scope.currentRnrLineItem);
     $scope.saveRnrForm.$dirty = true;
+  };
+
+  $scope.showAddSkippedProductsModal = function(){
+    $scope.addSkippedProductsModal = true;
+  };
+
+  $scope.unskipProducts = function(rnr){
+
+    var selected = _.where(rnr.skippedLineItems, {unskip: true});
+    angular.forEach(selected, function(lineItem){
+      lineItem.skipped = false;
+      $scope.$parent.page[$scope.$parent.visibleTab].push( new RegularRnrLineItem(lineItem, rnr.numberOfMonths, rnr.programRnrColumnList, rnr.status));
+    });
+
+    $scope.saveRnrForm.$dirty = true;
+    $scope.$parent.saveRnr();
+
+    if(rnr.fullSupplyLineItems.length === 0){
+      rnr.fullSupplyLineItems = $scope.$parent.page[$scope.$parent.visibleTab];
+    }
+
+    angular.forEach(rnr.skippedLineItems, function(li){
+      if(!li.unskip){
+        li.unskip = false;
+      }
+    });
+
+    rnr.skippedLineItems = _.where(rnr.skippedLineItems, {unskip: false});
+    window.window.adjustHeight();
+    // all is said and done, close the dialog box
+    $scope.addSkippedProductsModal = false;
   };
 
   function updateLossesAndAdjustmentTypesToDisplayForLineItem(lineItem) {

@@ -1,0 +1,127 @@
+<!--
+  ~ Electronic Logistics Management Information System (eLMIS) is a supply chain management system for health commodities in a developing country setting.
+  ~
+  ~ Copyright (C) 2015  John Snow, Inc (JSI). This program was produced for the U.S. Agency for International Development (USAID). It was prepared under the USAID | DELIVER PROJECT, Task Order 4.
+  ~
+  ~ This program is free software: you can redistribute it and/or modify it under the terms of the GNU Affero General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
+  ~
+  ~ This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Affero General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU Affero General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
+  -->
+
+<div class="rnr-table">
+  <h2><span openlmis-message="label.vaccine.campaigns"></span></h2>
+  <div class="clearfix padding2px"></div>
+  <div ng-show="report.campaignLineItems.length > 0">
+    <table class="table table-bordered">
+      <thead>
+      <tr class="text-row">
+        <th><span openlmis-message="label.vaccine.campaign.name"></span></th>
+        <th><span openlmis-message="label.vaccine.campaign.venue"></span></th>
+        <th><span openlmis-message="label.vaccine.campaign.start.date"></span></th>
+        <th><span openlmis-message="label.vaccine.campaign.end.date"></span></th>
+        <th><span openlmis-message="label.vaccine.campaign.children.vaccinated"></span></th>
+        <th><span openlmis-message="label.vaccine.campaign.women.vaccinated"></span></th>
+        <th></th>
+      </tr>
+      </thead>
+      <tr ng-repeat="campaign in report.campaignLineItems">
+        <td style="height: 35px" class="span1 cell-input"><span class="cell-text">{{campaign.name}}</span></td>
+        <td class="cell-input cell-text"><span class="cell-text">{{campaign.venue}}</span></td>
+        <td class="cell-input cell-text"><span class="cell-text">{{campaign.startDate | date : 'dd MMM, yyyy'}}</span>
+        </td>
+        <td class="cell-input cell-text"><span class="cell-text">{{campaign.endDate | date : 'dd MMM, yyyy'}}</span>
+        </td>
+        <td class="cell-input cell-text"><span class="cell-text">{{campaign.childrenVaccinated}}</span></td>
+        <td class="number cell-input"><span class="cell-text">{{campaign.pregnantWomanVaccinated}}</span></td>
+        <td class="cell-input cell-text">
+          <a href="" ng-click="showCampaignForm(campaign, true)"><span class="cell-text"
+                                                                       openlmis-message="link.view"></span></a>
+        </td>
+      </tr>
+    </table>
+  </div>
+  <div ng-show="report.campaignLineItems.length == 0" openlmis-message="label.vaccine.campaign.none.found">
+
+  </div>
+</div>
+<form name="campaignForm" id="campaignForm">
+  <div id="campaignsModalBox" modal="campaignsModal" close="closeCampaign()"
+       options="{ backdrop: 'static', escape: false}">
+    <div class="modal-header"><h3><span openlmis-message="label.vaccine.campaign.add.edit"></span></h3></div>
+    <div class="modal-body app-form">
+
+      <div class="row-fluid">
+        <div class="span6">
+          <label for="name">
+            <span openlmis-message="label.vaccine.campaign.name"></span>
+            <span class="label-required"> *</span>
+          </label>
+          <input disabled required type="text" name="name" id="name" ng-model="currentCampaign.name"/>
+        </div>
+        <div class="span6">
+          <label for="venue">
+            <span openlmis-message="label.vaccine.campaign.venue"></span>
+            <span class="label-required"> *</span>
+          </label>
+          <input disabled required type="text" name="venue" id="venue" ng-model="currentCampaign.venue"/>
+        </div>
+      </div>
+
+      <div class="row-fluid">
+        <div class="span6">
+          <label>
+            <span openlmis-message="label.vaccine.campaign.start.date"></span>
+            <span class="label-required"> *</span>
+          </label>
+          <input disabled required type="date" ng-model="currentCampaign.startDate"/>
+        </div>
+        <div class="span6">
+          <label>
+            <span openlmis-message="label.vaccine.campaign.end.date"></span>
+            <span class="label-required"> *</span>
+          </label>
+          <input disabled required type="date" ng-model="currentCampaign.endDate"/>
+        </div>
+      </div>
+
+      <div class="row-fluid">
+        <div class="span6">
+          <label>
+            <span openlmis-message="label.vaccine.campaign.children.vaccinated"></span>
+            <span class="label-required"> *</span>
+          </label>
+          <input disabled required type="text" numeric-validator="positiveInteger" maxlength="8"
+                 ng-model="currentCampaign.childrenVaccinated">
+        </div>
+        <div class="span6">
+          <label>
+            <span openlmis-message="label.vaccine.campaign.women.vaccinated"></span>
+            <span class="label-required"> *</span>
+          </label>
+          <input disabled required type="text" numeric-validator="positiveInteger" maxlength="8"
+                 ng-model="currentCampaign.pregnantWomanVaccinated">
+        </div>
+      </div>
+
+      <div class="row-fluid">
+        <div class="span6">
+          <label><span openlmis-message="label.vaccine.campaign.other.objectives"></span></label>
+          <textarea disabled type="text" ng-model="currentCampaign.otherObjectives"></textarea>
+        </div>
+      </div>
+      <div class="clearfix"></div>
+
+    </div>
+    <div class="modal-footer">
+      <div>
+        <input type="button" href="" class="btn btn-primary"
+               ng-click="closeCampaign();"
+               openlmis-message="button.cancel"/>
+
+      </div>
+    </div>
+  </div>
+</form>
+</div>

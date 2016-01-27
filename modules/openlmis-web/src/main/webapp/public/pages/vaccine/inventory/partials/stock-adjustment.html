@@ -1,0 +1,330 @@
+<!--
+~ This program was produced for the U.S. Agency for International Development. It was prepared by the USAID | DELIVER PROJECT, Task Order 4. It is part of a project which utilizes code originally licensed under the terms of the Mozilla Public License (MPL) v2 and therefore is licensed under MPL v2 or later.
+~
+~ This program is free software: you can redistribute it and/or modify it under the terms of the Mozilla Public License as published by the Mozilla Foundation, either version 2 of the License, or (at your option) any later version.
+~
+~ This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the Mozilla Public License for more details.
+~
+~ You should have received a copy of the Mozilla Public License along with this program. If not, see http://www.mozilla.org/MPL/
+-->
+<!DOCTYPE html>
+<style>
+    table td.disabled, .rnr-table .table-bordered td.disabled {
+    background-color: #F0F0F0;
+
+    }
+    .rnr-table .table-bordered td.col-lot, .rnr-table .table-bordered td.col-available{
+    padding-left:10px !important;
+    padding-right:10px !important;
+
+    }
+
+    .rnr-table .table-bordered td.last-row {
+    border-bottom: 1px solid #ccc !important;
+    padding-bottom:4px !important;
+    }
+
+    .rnr-table .table-bordered tr td.col-product, .rnr-table .table-bordered tr th.col-product{
+    min-width:100px !important;
+    min-width:160px !important;
+    }
+    .rnr-table .table-bordered tr th.col-quantity,.rnr-table .table-bordered tr th.col-available, .rnr-table
+    .table-bordered tr th.col-affected{
+    min-width:100px !important;
+    min-width:100px !important;
+    }
+
+    .rnr-table .table-bordered tr td.skip{
+    background: linear-gradient(to bottom, #f9f9f9 0%, #e0e0e0 100%) !important;
+    }
+    input[type="number"]{width:130px !important;margin-bottom:2px !important;margin:2px 3px !important}
+
+</style>
+<div>
+    <h2><span openlmis-message="label.vaccine.stock.adjustment"></span></h2>
+    <div class="info-box padding2px">
+        <div class="requisition-head-block">
+            <div class="row-fluid">
+                <div class="span8" style="padding: 10px;">
+                    <div class="row-fluid">
+                        <div class="span4">
+                            <strong id='facilityLabel' openlmis-message="label.facility"> </strong>:&nbsp;<span
+                                id='facility' ng-bind="homeFacility.name"></span>
+                        </div>
+                        <div class="span4">
+                            <strong id="orderDateTimeLabel"
+                                    openlmis-message="label.stock.adjustment.date.reported"> </strong>:&nbsp;
+                            <span id="orderCreatedDate" ng-bind="date | date:'dd-MM-yyyy'"></span>
+                        </div>
+                    </div>
+
+                </div>
+                <div class="span4">
+
+                </div>
+            </div>
+        </div>
+    </div>
+    <hr/>
+    <div class="rnr-table" ng-form="adjustmentForm">
+
+        <table id="podTable" class="table table-bordered" fixed-table-header>
+            <thead>
+            <tr>
+                <th class="col-product "><span openlmis-message="label.products"></span></th>
+                <th class="col-quantity "><span openlmis-message="label.stock.total.quantity"></span></th>
+                <th class="col-lot"><span openlmis-message="label.stock.batch"></span></th>
+                <th class="col-available"><span openlmis-message="label.stock.onhand"></span></th>
+                <th class="col-count"><span openlmis-message="label.stock.physical.count"></span></th>
+                <th class="col-count"><span openlmis-message="label.stock.vvm"></span></th>
+                <th style="min-width:5px !important" class="col-skip"><span openlmis-message="label.skip"></span></th>
+                <th class="col-reason"><span openlmis-message="label.stock.adjustment.reasons"></span></th>
+                <th class="col-affected"><span openlmis-message="label.stock.amount.affected"></span></th>
+                <th class="col-validation"><span openlmis-message="label.stock.validation"></span></th>
+            </tr>
+            </thead>
+            <tbody ng-repeat="stock in stockCardsToDisplay">
+            <tr>
+                <td class="productCategory" id="vaccine" colspan="10">
+                    {{stock.productCategory}}
+                </td>
+            </tr>
+            <tr ng-repeat-start="c in stock.stockCards" style="border-bottom:2px solid #333">
+                <td rowspan="{{c.lotsOnHand.length}}" class="col-product cell-input last-row disabled">
+                    <span class="cell-text" ng-bind="c.product.primaryName"></span>
+                </td>
+                <td rowspan="{{c.lotsOnHand.length}}" class="cell-input last-row disabled">
+                    <span class="cell-text" ng-bind="c.totalQuantityOnHand"></span>
+                </td>
+
+                <td colspan="2" ng-if="c.lotsOnHand.length === 0" class="skip last-row"></td>
+
+                <td ng-if="c.lotsOnHand.length >0" class="col-lot cell-input  disabled"
+                    ng-class="{'last-row':c.lotsOnHand.length===1}">
+                    <span class="cell-text" ng-bind="c.lotsOnHand[0].lot.lotCode"></span>
+                </td>
+                <td ng-if="c.lotsOnHand.length >0" class="col-available cell-input number disabled"
+                    ng-class="{'last-row':c.lotsOnHand.length===1}">
+                    <span class="cell-text" ng-bind="c.lotsOnHand[0].quantityOnHand | number"></span>
+                </td>
+                <td class="col-count cell-input col-general"
+                    ng-class="{'disabled':(c.lotsOnHand[0].isSkipped || c.isSkipped),'':(!c.lotsOnHand[0].isSkipped || !c.isSkipped), 'last-row':(c.lotsOnHand.length===1 || c.lotsOnHand.length===0)}">
+                    <input ng-if="c.lotsOnHand.length >0" name="physical-count_0"
+                           ng-required="!c.lotsOnHand[0].isSkipped"
+                           ng-disabled="c.lotsOnHand[0].isSkipped" ng-model="c.lotsOnHand[0].quantity" maxlength="8"
+                           type="number" min="1"/>
+                    <input ng-if="c.lotsOnHand.length ===0" name="physical-count_0" ng-required="!c.isSkipped"
+                           ng-disabled="c.isSkipped" ng-model="c.quantity" maxlength="8"
+                           type="number" min="1"/>
+                </td>
+                <td ng-if="vvmTracked(c)" class="col-count cell-input col-general"
+                    ng-class="{'disabled':c.lotsOnHand[0].isSkipped,'':!c.lotsOnHand[0].isSkipped, 'last-row':c.lotsOnHand.length===1}">
+                    <select style="max-width:130px !important;min-width:130px !important" ui-select2
+                            ng-options="i.value as i.name for i in vvmStatuses" name="vvm_0"
+                            ng-disabled="c.lotsOnHand[0].isSkipped" ng-model="c.lotsOnHand[0].vvmStatus" maxlength="8"
+                            type="text">
+                        <option value="" openlmis-message="placeholder.select.vvmstatus"></option>
+                    </select>
+                </td>
+                <td ng-if="!vvmTracked(c)" class="skip last-row"></td>
+                <td class="col-skip cell-input "
+                    ng-class="{'disabled':(c.lotsOnHand[0].isSkipped || c.isSkipped),'':(!c.lotsOnHand[0].isSkipped || !c.isSkipped), 'last-row':(c.lotsOnHand.length <=1)}">
+                    <input ng-if="c.lotsOnHand.length >0"
+                           ng-disabled="c.lotsOnHand[0].quantity !==undefined && c.lotsOnHand[0].quantity !==''"
+                           style="margin-left:10px" type="checkbox" ng-model="c.lotsOnHand[0].isSkipped"/>
+
+                    <input ng-if="c.lotsOnHand.length === 0" ng-disabled="c.quantity !==undefined && c.quantity !==''"
+                           style="margin-left:10px" type="checkbox" ng-model="c.isSkipped"/>
+                </td>
+
+                <td class="col-reason cell-input "
+                    ng-class="{'disabled':(c.lotsOnHand[0].isSkipped || c.isSkipped),'':(!c.lotsOnHand[0].isSkipped || !c.isSkipped), 'last-row':(c.lotsOnHand.length <=1)}">
+
+                    <a ng-if="c.lotsOnHand.length >0" ng-hide="c.lotsOnHand[0].isSkipped" href
+                       id="lossesAndAdjustmentLink_0"
+                       ng-click="showAdjustmentReason(c.lotsOnHand[0])" class="rnr-adjustment">
+                        <span class="adjustment-value" ng-bind="c.lotsOnHand[0].totalAdjustments"></span>
+                    </a>
+
+                    <a ng-if="c.lotsOnHand.length === 0" ng-hide="c.isSkipped" href id="lossesAndAdjustmentLink_"
+                       ng-click="showAdjustmentReason(c)" class="rnr-adjustment">
+                        <span ng-init="c.totalAdjustments=0" class="adjustment-value"
+                              ng-bind="c.totalAdjustments"></span>
+                    </a>
+                </td>
+                <td class="col-affected cell-input col-general number cell-text disabled"
+                    ng-class="{'last-row':(c.lotsOnHand.length <=1)}">
+                    <span ng-show="(c.lotsOnHand[0].quantity !==undefined && c.lotsOnHand[0].quantity !=='') && !c.lotsOnHand[0].isSkipped ">{{c.lotsOnHand[0].quantity - c.lotsOnHand[0].quantityOnHand | number}}</span>
+                    <span ng-show="(c.quantity !==undefined && c.quantity !=='') && !c.isSkipped ">{{c.quantity - c.totalQuantityOnHand | number}}</span>
+                </td>
+                <td class="col-validation cell-input disabled" ng-class="{'last-row':c.lotsOnHand.length <=1}">
+                    <div ng-if="c.lotsOnHand.length >0"
+                         ng-show="!c.lotsOnHand[0].isSkipped && (c.lotsOnHand[0].quantity !==undefined && c.lotsOnHand[0].quantity !=='')">
+                        <span ng-show="c.lotsOnHand[0].quantity != undefined && (c.lotsOnHand[0].totalAdjustments === (c.lotsOnHand[0].quantity - c.lotsOnHand[0].quantityOnHand))"
+                              class="icon-ok-sign green" style="margin-left:20px"></span>
+                        <span ng-show='((c.lotsOnHand[0].quantity !=="" || c.lotsOnHand[0].quantity != undefined)  && (c.lotsOnHand[0].totalAdjustments != (c.lotsOnHand[0].quantity - c.lotsOnHand[0].quantityOnHand)))'
+                              class="icon-remove red" style="margin-left:20px"></span>
+                        <input ng-model="c.lotsOnHand[0].valid" name="validator_{{c.$index}}_0" type="hidden"
+                               ng-required="!c.lotsOnHand[0].isSkipped && ((c.lotsOnHand[0].quantity !=='' || c.lotsOnHand[0].quantity !== undefined)  && (c.lotsOnHand[0].totalAdjustments !== (c.lotsOnHand[0].quantity - c.lotsOnHand[0].quantityOnHand)))"/>
+                    </div>
+                    <div ng-if="c.lotsOnHand.length === 0"
+                         ng-show="!c.isSkipped && (c.quantity !==undefined && c.quantity !=='')">
+                        <span ng-show="c.quantity != undefined && (c.totalAdjustments === (c.quantity - c.totalQuantityOnHand))"
+                              class="icon-ok-sign green" style="margin-left:20px"></span>
+                        <span ng-show='((c.quantity !=="" || c.quantity != undefined)  && (c.totalAdjustments != (c.quantity - c.totalQuantityOnHand)))'
+                              class="icon-remove red" style="margin-left:20px"></span>
+                        <input ng-model="c.valid" name="validator_{{c.$index}}_" type="hidden"
+                               ng-required="!c.isSkipped && ((c.quantity !=='' || c.quantity !== undefined)  && (c.totalAdjustments !== (c.quantity - c.totalQuantityOnHand)))"/>
+                    </div>
+
+                </td>
+            </tr>
+            <tr ng-repeat-end ng-repeat="lot in c.lotsOnHand" ng-show="!$first">
+                <td class="col-lot  cell-input disabled" ng-class="{'last-row':$last}">
+                    <span class="cell-text" ng-bind="lot.lot.lotCode"></span>
+                </td>
+                <td class="col-available cell-input col-general number disabled" ng-class="{'last-row':$last}">
+                    <span class="cell-text" ng-bind="lot.quantityOnHand | number"></span>
+                </td>
+                <td ng-class="{'last-row':$last,'disabled':lot.isSkipped}" class="col-count cell-input col-general ">
+                    <input name="physical-count_{{lot.$index}}" ng-required="!lot.isSkipped" ng-disabled="lot.isSkipped"
+                           ng-model="lot.quantity" maxlength="5" type="number" min="1"/>
+                </td>
+                <td ng-if="vvmTracked(c)" ng-class="{'last-row':$last,'disabled':lot.isSkipped}"
+                    class="col-count cell-input col-general ">
+                    <select style="max-width:130px !important;min-width:130px !important" ui-select2
+                            ng-options="i.value as i.name for i in vvmStatuses" name="vvm_{{lot.$index}}"
+                            ng-disabled="lot.isSkipped"
+                            ng-model="lot.vvmStatus" maxlength="5" type="text">
+                        <option value="">--VVM Status--</option>
+                    </select>
+                </td>
+                <td ng-if="!vvmTracked(c)" class="skip last-row"></td>
+                <td ng-class="{'last-row':$last, 'disabled':lot.isSkipped}" class="col-skip cell-input ">
+                    <input ng-disabled="lot.quantity !==undefined && lot.quantity !==''" style="margin-left:10px"
+                           type="checkbox" ng-model="lot.isSkipped"/></td>
+                <td ng-class="{'last-row':$last, 'disabled':lot.isSkipped}" class="col-reason cell-input ">
+                    <a ng-hide="lot.isSkipped" href id="lossesAndAdjustmentLink_{{$index}}"
+                       ng-click="showAdjustmentReason(lot)" class="rnr-adjustment">
+                        <span ng-init="lot.totalAdjustments=0" class="adjustment-value"
+                              ng-bind="lot.totalAdjustments"></span>
+                    </a>
+                </td>
+                <td class="col-affected cell-input number cell-text disabled" ng-class="{'last-row':($last)}">
+                    <span ng-show="(lot.quantity !==undefined && lot.quantity !=='') && !lot.isSkipped ">{{lot.quantity - lot.quantityOnHand | number}}</span>
+                </td>
+                <td class="col-validation cell-input cell-text disabled" ng-class="{'last-row':$last}">
+                    <div ng-show="!lot.isSkipped && (lot.quantity !==undefined && lot.quantity !=='')">
+                        <span ng-show="lot.totalAdjustments === (lot.quantity - lot.quantityOnHand)"
+                              class="icon-ok-sign green" style="margin-left:20px"></span>
+                        <span ng-show="!(lot.totalAdjustments === (lot.quantity - lot.quantityOnHand))"
+                              class="icon-remove red" style="margin-left:20px"></span>
+                        <input ng-model="lot.valid" name="validator_{{$index}}_0" type="hidden"
+                               ng-required="!lot.isSkipped && ((lot.quantity !=='' || lot.quantity !== undefined)  && (lot.totalAdjustments !== (lot.quantity - lot.quantityOnHand)))"/>
+                    </div>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+
+</div>
+<div id="popupModel" modal="adjustmentReasonsDialogModal">
+    <div class="modal-header">
+        <h3 openlmis-message="label.stock.add.adjustment.reasons"></h3>
+    </div>
+
+    <div class="modal-body">
+        <h5 openlmis-message="label.stock.add.adjustment.reason"></h5>
+
+        <div class="row-fluid">
+            <div class="span4">
+                <select ng-change="change()" ng-model="adjustmentReason.type"
+                        ng-options="i as i.description for i in adjustmentReasonsToDisplay">
+                    <option value="" openlmis-message="label.select.type"></option>
+                </select>
+            </div>
+
+            <div class="span4">
+                <input ng-trim="false"
+                       type="text" name="quantity{{currentStockLot.id}}" ng-model="adjustmentReason.quantity"
+                       numeric-validator="positiveInteger" max-length="8" openlmis-message="placeholder.quantity"/>
+
+                <div class="rnr-form-error"
+                     id="quantity{{currentStockLot.id}}"
+                     style="display:none;" openlmis-message="error.number.only">
+                </div>
+            </div>
+            <div class="span2">
+                <input type="button" id="addAdjustmentReason"
+                       ng-click="addAdjustmentReason(adjustmentReason)"
+                       ng-disabled="!(adjustmentReason.type && adjustmentReason.quantity)"
+                       class="btn btn-primary"
+                       openlmis-message="button.add"/>
+            </div>
+        </div>
+
+        <hr ng-show="currentStockLot.adjustmentReasons.length > 0"/>
+        <div class="adjustment-list"
+             ng-show="currentStockLot.adjustmentReasons.length > 0">
+            <ul>
+                <li ng-repeat="adjustment in currentStockLot.adjustmentReasons"
+                    class="clearfix">
+                  <span class="tpl-adjustment-type"
+                        ng-bind="adjustment.type.description"></span>
+                  <span class="tpl-adjustment-delete">
+                    <a href="" class="close"
+                       ng-click="removeAdjustmentReason(adjustment)">&times;</a>
+                  </span>
+                  <span class="tpl-adjustment-qty">
+                    <input ng-required="true" name="{{adjustment.type.displayOrder}}" type="text"
+                           ng-model="adjustment.quantity" openlmis-message="placeholder.quantity"
+                           ng-change="reEvaluateTotalAdjustmentReasons()"
+                           numeric-validator="positiveInteger" max-length="8"
+                           ng-class="highlightRequiredFieldInModal(adjustment.quantity)" keyboard="false"/>
+
+                    <div class="rnr-form-error"
+                         id="{{adjustment.type.displayOrder}}"
+                         style="display:none;" openlmis-message="error.number.only">
+                    </div>
+                  </span>
+                </li>
+            </ul>
+        </div>
+
+        <div class="adjustment-total clearfix alert alert-warning"
+             ng-show="currentStockLot.adjustmentReasons.length > 0">
+            <span class="pull-left" openlmis-message="label.losses.total"></span><span
+                ng-bind="currentStockLot.totalAdjustments"></span>
+        </div>
+
+    </div>
+
+    <div class="modal-footer">
+        <input type="button" id="lossesAndAdjustmentsDone" class="btn btn-primary save-button"
+               ng-click="saveAdjustmentReasons()"
+               openlmis-message="button.done"/>
+        <input type="button" ng-click="closeModal();equipmentError=''" class="btn btn-cancel"
+               openlmis-message="button.cancel"/>
+    </div>
+
+</div>
+<div form-toolbar id="action_buttons" class="action-buttons">
+    <div class="form-cell button-row">
+        <input ng-disabled="adjustmentForm.$invalid" id="update" ng-click="updateStock()" type="submit"
+               id="requisition-button" class="btn btn-primary save-button"
+               openlmis-message="button.update"/>
+
+        <input id="cancel" type="submit" id="adjust-button" ng-click="cancel()" class="btn btn-primary save-button"
+               openlmis-message="button.cancel"/>
+
+    </div>
+
+
+    <div class="toolbar-error" id="saveErrorMsgDiv">
+        <span openlmis-message="error" ng-show="error"></span>&nbsp;
+        <span ng-show="errorProgram" ng-bind="errorProgram"></span>
+    </div>
+    <div class="toolbar-success" id="saveSuccessMsgDiv" openlmis-message="message.adjustment.successful"
+         ng-show="message"></div>
+</div>

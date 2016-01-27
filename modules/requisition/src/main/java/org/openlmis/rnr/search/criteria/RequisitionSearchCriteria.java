@@ -13,7 +13,7 @@ package org.openlmis.rnr.search.criteria;
 import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.codehaus.jackson.annotate.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;

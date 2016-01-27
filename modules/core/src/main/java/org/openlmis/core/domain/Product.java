@@ -10,24 +10,22 @@
 
 package org.openlmis.core.domain;
 
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
-import org.codehaus.jackson.annotate.JsonIgnore;
-import org.codehaus.jackson.map.annotate.JsonSerialize;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import lombok.*;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.upload.Importable;
 import org.openlmis.upload.annotation.ImportField;
 
-import static org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion.NON_EMPTY;
+import static com.fasterxml.jackson.databind.annotation.JsonSerialize.Inclusion.NON_EMPTY;
 
 /**
  * Product represents real world entity Product. It also defines the contract for creation/upload of product entity.
  */
-@Data
+@Getter
+@Setter
 @NoArgsConstructor
 @JsonSerialize(include = NON_EMPTY)
-@EqualsAndHashCode(callSuper = false)
 public class Product extends BaseModel implements Importable {
 
   @ImportField(mandatory = true, name = "Product Code")
@@ -75,11 +73,17 @@ public class Product extends BaseModel implements Importable {
   @ImportField(type = "String", name = "Product Form", nested = "code")
   private ProductForm form;
 
+  private Long formId;
+
   @ImportField(type = "String", name = "Product Group", nested = "code")
   private ProductGroup productGroup;
 
+  private Long productGroupId;
+
   @ImportField(type = "String", name = "Dosage Units", nested = "code")
   private DosageUnit dosageUnit;
+
+  private Long dosageUnitId;
 
   @ImportField(mandatory = true, name = "Dispensing Units")
   private String dispensingUnit;
@@ -184,4 +188,5 @@ public class Product extends BaseModel implements Importable {
       + " " + (getStrength() == null ? "" : getStrength())
       + " " + (getDosageUnit() == null || getDosageUnit().getCode() == null ? "" : getDosageUnit().getCode());
   }
+
 }

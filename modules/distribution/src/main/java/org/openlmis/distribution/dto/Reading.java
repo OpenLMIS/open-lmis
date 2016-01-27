@@ -12,13 +12,13 @@ package org.openlmis.distribution.dto;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.codehaus.jackson.map.annotate.JsonDeserialize;
-import org.codehaus.jackson.map.annotate.JsonSerialize;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.distribution.serializer.DistributionReadingDeSerializer;
 
 import static org.apache.commons.lang3.StringUtils.isBlank;
-import static org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion.NON_EMPTY;
+import static com.fasterxml.jackson.databind.annotation.JsonSerialize.Inclusion.NON_EMPTY;
 
 /**
  *  The reading class represents a composite entity containing value and notRecorded fields.

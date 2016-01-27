@@ -1,0 +1,58 @@
+<!--
+  ~ This program is part of the OpenLMIS logistics management information system platform software.
+  ~ Copyright © 2013 VillageReach
+  ~
+  ~ This program is free software: you can redistribute it and/or modify it under the terms of the GNU Affero General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
+  ~  
+  ~ This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Affero General Public License for more details.
+  ~ You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org. 
+  -->
+<div>
+<h2 id="convertToOrderHeader" openlmis-message="label.order.requisition.list"></h2>
+<div class="alert alert-error" id="saveErrorMsgDiv" ng-show="error" openlmis-message="error"></div>
+<div class="alert alert-success" id="saveSuccessMsgDiv" ng-show="message" openlmis-message="message"></div>
+<div class="alert alert-info" id="noRequisitionSelectedMsgDiv" ng-show="noRequisitionSelectedMessage"
+     openlmis-message="noRequisitionSelectedMessage"></div>
+
+<div class="row-fluid">
+    <div class="span5 offset7 search-in-category right-justified">
+        <div class="input-append input-prepend">
+
+            <input id='searchOnConvertToOrder' type="text" class="span5"
+                   ui-keypress="{13:'fetchFilteredRequisitions()'}"
+                   ui-event="{ keypress: 'inputKeypressHandler($event)' }"
+                   ng-model="query" maxlength="50" ng-change="filterName()" placeholder="Filter by Store Name"/>
+            <button class="btn" ng-click="filterName()">
+                <i id='searchIcon' class="icon-search"></i>
+            </button>
+        </div>
+    </div>
+</div>
+
+<div class="alert alert-info" id="NoRequisitionsPendingMessage" ng-show="noRequisitions">
+    <span id='noRequisitionMessage' openlmis-message="message.no.consolidated.requisition"></span>
+</div>
+
+<div class="app-form" ng-show="filteredRequisitions.length">
+    <div class="form-group">
+        <h3 openlmis-message="label.requisition.list"></h3>
+
+        <div class="alert alert-info" id="noSearchResults" ng-hide="filteredRequisitions.length">
+            <span openlmis-message="message.no.search.results"></span>
+        </div>
+        <div id="convertToOrderGrid" class="gridStyle" ng-grid="gridOptions"
+             ng-show="filteredRequisitions.length"></div>
+        <div ng-show="filteredRequisitions.length">
+            <openlmis-pagination num-pages="numberOfPages" current-page="currentPage"
+                                 max-size="maxNumberOfPages"></openlmis-pagination>
+        </div>
+        <div form-toolbar id="action_buttons" class="action-buttons">
+            <div class="form-cell button-row">
+                <input id='covertToOrderButton' type="submit" ng-click="printConsolidatedOrder()"
+                       class="btn btn-primary save-button" ng-href="/vaccine/report/consolidatedList/{facilityId}/PrintList" openlmis-message="button.print.consolidated.request"
+                       ng-disabled="filteredRequisitions.length == 0"/>
+            </div>
+        </div>
+    </div>
+</div>
+</div>

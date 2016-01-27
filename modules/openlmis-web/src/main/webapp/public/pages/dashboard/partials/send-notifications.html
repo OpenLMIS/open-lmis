@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+
+<!--
+  ~ Electronic Logistics Management Information System (eLMIS) is a supply chain management system for health commodities in a developing country setting.
+  ~
+  ~ Copyright (C) 2015  John Snow, Inc (JSI). This program was produced for the U.S. Agency for International Development (USAID). It was prepared under the USAID | DELIVER PROJECT, Task Order 4.
+  ~
+  ~ This program is free software: you can redistribute it and/or modify it under the terms of the GNU Affero General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
+  ~
+  ~ This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Affero General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU Affero General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
+  -->
+
+<script id="template/accordion/accordion.html" type="text/ng-template">
+    <div class="accordion" ng-transclude></div>
+</script>
+
+<script id="template/accordion/accordion-group.html" type="text/ng-template">
+    <div class="accordion-group">
+        <div class="accordion-heading" style="margin-bottom:0; border-bottom:0">
+            <a style="bottom:0" class="accordion-toggle" ng-class="{'collapsed':!isOpen,'open':isOpen}" ng-click="isOpen = !isOpen" accordion-transclude="heading">{{heading}}</a>
+        </div>
+        <div class="accordion-body" style="display:block; margin-bottom:0" collapse="!isOpen">
+
+            <div class="accordion-inner" ng-transclude></div>  </div>
+    </div>
+</script>
+
+<div class="row-fluid">
+    <div class="span6">
+        <table class="table">
+            <thead>
+            <tr>
+                <th><span openlmis-message="Notification"></span></th>
+                <th><span openlmis-message="Email"></span></th>
+                <th ><span openlmis-message="SMS" ></span></th>
+            </tr>
+            </thead>
+            <tbody>
+                <tr ng-repeat="notification in notifications">
+                    <td  style="border: none; font-size: 14px"><div><input type="radio" name="notificationTypeName" ng-value="notification" ng-model="formFilter.selectedAlert"  /><span style="padding-left: 3px" openlmis-message="label.alertType.{{ notification.alertType }}"></span></div></td>
+                    <td  style="border: none"><input  type="checkbox" ng-disabled="!notification.email||selectedNotification != notification" ng-model="notification.emailMethod" ng-change="notificationMethodsChange(notification)"   /></td>
+                    <td  style="border: none"><input  type="checkbox" ng-disabled="!notification.sms ||selectedNotification != notification"  ng-model="notification.smsMethod" ng-change="notificationMethodsChange(notification)"/></td>
+                </tr>
+
+            </tbody>
+
+        </table>
+    </div>
+    <div class="span6">
+        <span><label style="font-weight: bold">Email</label></span>
+        <textarea required="" ng-model="emailTemplate" cols="500" rows="5" style="width:400px"></textarea>
+        <span><label style="font-weight: bold">SMS</label></span>
+        <textarea required="" ng-model="smsTemplate" cols="500" rows="5" style="width:400px"></textarea><br/>
+        <div>SMS length {{smsTemplate.length || 0}} of {{maxSmsText}} characters.</div>
+
+    </div>
+</div>
+<div class="row-fluid">
+    <div class="span12">
+        <div style="margin-top: 2px">
+            <ng-include src="'/public/pages/dashboard/shared/dashboard-form.html'"></ng-include>
+        </div>
+        <div style="margin-top: 2px">
+            <table class="table table-bordered" ng-show="datarows == undefined || datarows.length == 0">
+                <tr>
+                    <td>No data to show under selected filters</td>
+                </tr>
+            </table>
+            <div class="alert alert-error" id="sendSuccessMsgDiv" openlmis-message="errorMessage" ng-show="errorMessage"></div>
+            <div class="alert  alert-success" id="successMsgDiv" openlmis-message="successMessage" ng-show="successMessage"></div>
+            <input style="margin: 5px 0px;" type="button" ng-click="sendNotifications()" openlmis-message="button.send" class="btn btn-primary btn-small pull-right" ng-show="datarows.length > 0"/>
+
+            <table ng-show="datarows.length > 0" class="table-bordered table table-striped pull-right" ng-table="tableParams" >
+                <thead>
+                    <tr>
+                        <th><div openlmis-message="label.select.all"></div><div><input type="checkbox" ng-model="formFilter.selectAll" ng-change="selectAllFacilities()"/></div></th>
+                        <th openlmis-message="label.facility.code"></th>
+                        <th openlmis-message="label.facility.name"></th>
+                        <th openlmis-message="label.phone"></th>
+                        <th openlmis-message="label.email"></th>
+                    </tr>
+
+                </thead>
+                <tbody >
+                <tr ng-repeat="row in datarows">
+                    <td><input type="checkbox" ng-disabled="!row.phonenumber && !row.email" ng-model="row.selected" ng-change="facilitySelectChange(row.selected)"  class="{{(!row.phonenumber && !row.email)?'highlight':''}}"/></td>
+                    <td data-title="'Facility Code'" style="width:150px" sortable="code"  class="{{(!row.phonenumber && !row.email)?'highlight':''}}">{{ row.code }}</td>
+                    <td data-title="'Facility Name'" style="width:30%" sortable="name"  class="{{(!row.phonenumber && !row.email)?'highlight':''}}">{{ row.name }}</td>
+                    <td data-title="'Phone Number'" style="width:30%" sortable="name">{{ row.phonenumber }}</td>
+                    <td data-title="'Email'" style="width:30%" sortable="name">{{ row.email }}</td>
+                </tr>
+                </tbody>
+            </table>
+
+        </div>
+
+    </div>
+
+</div>

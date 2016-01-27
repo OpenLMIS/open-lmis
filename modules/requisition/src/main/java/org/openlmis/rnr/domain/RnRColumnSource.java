@@ -10,8 +10,8 @@
 
 package org.openlmis.rnr.domain;
 
-import org.codehaus.jackson.map.annotate.JsonDeserialize;
-import org.codehaus.jackson.map.annotate.JsonSerialize;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import org.openlmis.rnr.serializer.RnrColumnSourceDeSerializer;
 import org.openlmis.rnr.serializer.RnrColumnSourceSerializer;
 

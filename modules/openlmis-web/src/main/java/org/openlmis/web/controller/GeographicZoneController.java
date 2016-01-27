@@ -15,7 +15,9 @@ import org.openlmis.core.domain.GeographicZone;
 import org.openlmis.core.domain.Pagination;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.core.service.GeographicZoneService;
-import org.openlmis.web.response.OpenLmisResponse;
+import org.openlmis.core.web.controller.BaseController;
+import org.openlmis.web.model.GeoZoneInfo;
+import org.openlmis.core.web.OpenLmisResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
@@ -30,7 +32,7 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 import static java.lang.Integer.parseInt;
-import static org.openlmis.web.response.OpenLmisResponse.success;
+import static org.openlmis.core.web.OpenLmisResponse.success;
 import static org.springframework.http.HttpStatus.BAD_REQUEST;
 import static org.springframework.web.bind.annotation.RequestMethod.*;
 
@@ -125,5 +127,12 @@ public class GeographicZoneController extends BaseController {
     } else {
       return OpenLmisResponse.response("message", messageService.message("too.many.results.found"));
     }
+  }
+
+  @RequestMapping(value = "/geographic-zone/save-gis", method = POST, headers = ACCEPT_JSON)
+  @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_GEOGRAPHIC_ZONE')")
+  public ResponseEntity<OpenLmisResponse> saveGeographicZoneGIS(@RequestBody GeoZoneInfo geoZoneGeometries, HttpServletRequest request) {
+    service.saveGisInfo(geoZoneGeometries.getFeatures(), loggedInUserId(request));
+    return OpenLmisResponse.response("status", true);
   }
 }

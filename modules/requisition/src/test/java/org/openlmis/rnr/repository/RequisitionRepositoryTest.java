@@ -19,14 +19,13 @@ import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
-import org.openlmis.core.domain.Facility;
-import org.openlmis.core.domain.ProcessingPeriod;
-import org.openlmis.core.domain.Program;
-import org.openlmis.core.domain.RoleAssignment;
+import org.openlmis.core.domain.*;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.core.repository.SupervisoryNodeRepository;
 import org.openlmis.core.repository.helper.CommaSeparator;
+import org.openlmis.core.repository.mapper.SignatureMapper;
 import org.openlmis.db.categories.UnitTests;
+import org.openlmis.rnr.builder.PatientQuantificationsBuilder;
 import org.openlmis.rnr.builder.RnrLineItemBuilder;
 import org.openlmis.rnr.domain.*;
 import org.openlmis.rnr.repository.mapper.*;
@@ -39,6 +38,7 @@ import java.util.List;
 import static com.natpryce.makeiteasy.MakeItEasy.*;
 import static java.util.Arrays.asList;
 import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.*;
@@ -80,6 +80,9 @@ public class RequisitionRepositoryTest {
   private RequisitionStatusChangeMapper requisitionStatusChangeMapper;
   @Mock
   private RegimenLineItemMapper regimenLineItemMapper;
+  @Mock
+  private PatientQuantificationLineItemMapper patientQuantificationLineItemMapper;
+
 
   @InjectMocks
   private RequisitionRepository requisitionRepository;
@@ -89,6 +92,10 @@ public class RequisitionRepositoryTest {
   private RnrLineItem rnrLineItem2;
   private Rnr rnr;
   private RegimenLineItem regimenLineItem;
+  private PatientQuantificationLineItem patientQuantificationLineItem;
+
+  @Mock
+  private SignatureMapper signatureMapper;
 
   @Before
   public void setUp() throws Exception {
@@ -128,6 +135,29 @@ public class RequisitionRepositoryTest {
     RnrLineItem rnrLineItem = rnr.getFullSupplyLineItems().get(0);
     assertThat(rnrLineItem.getRnrId(), is(1L));
     assertThat(regimenLineItem.getRnrId(), is(1L));
+  }
+
+  @Test
+  public void shouldInsertPatientQuantificationLineItems() {
+    PatientQuantificationLineItem lineItem1 = make(a(PatientQuantificationsBuilder.defaultPatientQuantificationLineItem, with(PatientQuantificationsBuilder.category, "category1")));
+    PatientQuantificationLineItem lineItem2 = make(a(PatientQuantificationsBuilder.defaultPatientQuantificationLineItem, with(PatientQuantificationsBuilder.category, "category2")));
+    List<PatientQuantificationLineItem> patientQuantifications = new PatientQuantificationsBuilder()
+            .addLineItem(lineItem1).addLineItem(lineItem2).build();
+    rnr.setPatientQuantifications(patientQuantifications);
+    rnr.setId(123L);
+
+    requisitionRepository.insertPatientQuantificationLineItems(rnr);
+
+    verify(patientQuantificationLineItemMapper).insert(lineItem1);
+    verify(patientQuantificationLineItemMapper).insert(lineItem2);
+
+    assertEquals(2, rnr.getPatientQuantifications().size());
+    assertEquals(rnr.getId(), rnr.getPatientQuantifications().get(0).getRnrId());
+    assertEquals(rnr.getId(), rnr.getPatientQuantifications().get(1).getRnrId());
+    assertEquals(rnr.getModifiedBy(), rnr.getPatientQuantifications().get(0).getModifiedBy());
+    assertEquals(rnr.getModifiedBy(), rnr.getPatientQuantifications().get(1).getModifiedBy());
+    assertEquals(rnr.getCreatedBy(), rnr.getPatientQuantifications().get(0).getCreatedBy());
+    assertEquals(rnr.getCreatedBy(), rnr.getPatientQuantifications().get(1).getCreatedBy());
   }
 
   @Test
@@ -377,14 +407,14 @@ public class RequisitionRepositoryTest {
     String sortBy = "program";
     Integer pageSize = 2;
     when(requisitionMapper.getApprovedRequisitionsForCriteriaAndPageNumber(searchType, searchVal, pageNumber, pageSize,
-        1l, CONVERT_TO_ORDER, sortBy, sortDirection)).thenReturn(expected);
+            1l, CONVERT_TO_ORDER, sortBy, sortDirection)).thenReturn(expected);
 
     List<Rnr> rnrList = requisitionRepository.getApprovedRequisitionsForCriteriaAndPageNumber(searchType, searchVal,
-        pageNumber, pageSize, 1l, CONVERT_TO_ORDER, sortBy, sortDirection);
+            pageNumber, pageSize, 1l, CONVERT_TO_ORDER, sortBy, sortDirection);
 
     assertThat(rnrList, is(expected));
     verify(requisitionMapper).getApprovedRequisitionsForCriteriaAndPageNumber(searchType, searchVal, pageNumber,
-        pageSize, 1l, CONVERT_TO_ORDER, sortBy, sortDirection);
+            pageSize, 1l, CONVERT_TO_ORDER, sortBy, sortDirection);
   }
 
   @Test
@@ -425,5 +455,33 @@ public class RequisitionRepositoryTest {
     RnrLineItem lineItem = requisitionRepository.getNonSkippedLineItem(5L, "P500");
 
     assertThat(lineItem, is(expectedLineItem));
+  }
+
+  @Test
+  public void shouldUpdateClientSubmittedFields() throws Exception {
+    Rnr rnr = new Rnr();
+    requisitionRepository.updateClientFields(rnr);
+    verify(requisitionMapper).updateClientFields(rnr);
+  }
+
+  @Test
+  public void shouldGetRequisitionsWithLineItemsByFacility() {
+    Facility facility = new Facility();
+    requisitionRepository.getRequisitionDetailsByFacility(facility);
+    verify(requisitionMapper).getRequisitionsWithLineItemsByFacility(facility);
+  }
+
+  @Test
+  public void shouldInsertRnrSignature() {
+    Rnr rnr = new Rnr();
+    Signature submitterSignature = new Signature(Signature.Type.SUBMITTER, "Mystique");
+    Signature approverSignature = new Signature(Signature.Type.APPROVER, "Magneto");
+    rnr.setRnrSignatures(asList(submitterSignature, approverSignature));
+
+    requisitionRepository.insertRnrSignatures(rnr);
+    verify(signatureMapper).insertSignature(rnr.getRnrSignatures().get(0));
+    verify(signatureMapper).insertSignature(rnr.getRnrSignatures().get(1));
+    verify(requisitionMapper).insertRnrSignature(rnr, submitterSignature);
+    verify(requisitionMapper).insertRnrSignature(rnr, approverSignature);
   }
 }

@@ -1,0 +1,220 @@
+<!--
+~ This program was produced for the U.S. Agency for International Development. It was prepared by the USAID | DELIVER PROJECT, Task Order 4. It is part of a project which utilizes code originally licensed under the terms of the Mozilla Public License (MPL) v2 and therefore is licensed under MPL v2 or later.
+~
+~ This program is free software: you can redistribute it and/or modify it under the terms of the Mozilla Public License as published by the Mozilla Foundation, either version 2 of the License, or (at your option) any later version.
+~
+~ This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the Mozilla Public License for more details.
+~
+~ You should have received a copy of the Mozilla Public License along with this program. If not, see http://www.mozilla.org/MPL/
+-->
+<!DOCTYPE html>
+<style>
+    table td.disabled, .rnr-table .table-bordered td.disabled {
+        background-color: #F0F0F0;
+
+    }
+
+    .rnr-table .table-bordered td.col-lot, .rnr-table .table-bordered td.col-available {
+        padding-left: 10px !important;
+        padding-right: 10px !important;
+
+    }
+
+    .rnr-table .table-bordered td.last-row {
+        border-bottom: 1px solid #ccc !important;
+        padding-bottom: 4px !important;
+    }
+    .red {
+        color:red;
+    }
+    .blue{
+       color:blue;
+    }
+    .orange{
+        color:orange;
+    }
+
+</style>
+<div>
+<form name="orderRequisitionForm" ng-show="stockCardsByCategory.length > 0" novalidate>
+    <div>
+
+    <ng-include src="'/public/pages/vaccine/inventory/stock-movement/partials/header.html'"></ng-include>
+    <div class="rnr-table">
+
+        <table id="podTable" class="table table-bordered" fixed-table-header>
+            <thead>
+            <tr>
+
+                <th class="col-product">
+                    <div class="regimen-heading">
+                        <span openlmis-message="label.product"></span>
+                    </div>
+                </th>
+
+                <th class="col-batch">
+                    <div class="regimen-heading">
+                        <span openlmis-message="header.batch.number"></span>
+                    </div>
+                </th>
+
+                <th class="col-quantityRemain">
+                    <div class="regimen-heading">
+                        <span openlmis-message="header.soh.per.batch"></span>
+                    </div>
+                </th>
+
+                <th class="col-expiryDate">
+                    <div class="regimen-heading">
+                        <span openlmis-message="label.expiryDate"></span>
+                    </div>
+                </th>
+                <!-- <th class="col-vvmStatus" >
+                     <div class="regimen-heading">
+                         <span openlmis-message="header.vvm.status"></span>
+                     </div>
+                 </th> -->
+
+                <th class="col-dosesRequested">
+                    <div class="regimen-heading">
+                        <span openlmis-message="header.doses.requested"></span>
+                    </div>
+                </th>
+                <th class="col-dosesIssued">
+                    <div class="regimen-heading">
+                        <span openlmis-message="header.doses.issued"></span>
+                    </div>
+                </th>
+
+                <th class="col-gap">
+                    <div class="regimen-heading">
+                        <span openlmis-message="header.gap"></span>
+                    </div>
+                </th>
+
+
+            </tr>
+            </thead>
+
+            <tbody ng-repeat="stock in stockCardsByCategory">
+            <tr>
+                <td class="productCategory" id="vaccine" colspan="9">
+                    {{stock.productCategory}}
+                </td>
+            </tr>
+            <tr ng-repeat-start="c in stock.stockCards" style="border-bottom:2px solid #333">
+                <td rowspan="{{c.lotsOnHand.length}}" class="col-product cell-input last-row disabled">
+                    <span class="cell-text" ng-bind="c.product.primaryName"></span>
+                </td>
+                <td class="col-lot cell-input  disabled number" style="text-align: left;!important;"
+                    ng-class="{'last-row':c.lotsOnHand.length===1}">
+                    <span class="cell-text" ng-bind="c.lotsOnHand[0].lot.lotCode"></span>
+                </td>
+                <td class="col-available cell-input number disabled" ng-class="{'last-row':c.lotsOnHand.length===1}">
+                    <span class="cell-text" ng-bind="c.lotsOnHand[0].quantityOnHand | number "></span>
+                </td>
+
+                <td class="col-lot cell-input  disabled number" ng-class="{'last-row':c.lotsOnHand.length===1}">
+                    <span class="cell-text" ng-bind="c.lotsOnHand[0].lot.expirationDate"></span>
+                </td>
+
+                <td rowspan="{{c.lotsOnHand.length}}" class="col-available cell-input number disabled"
+                    ng-class="{'last-row':c.lotsOnHand.length===1}">
+                    <span class="cell-text" ng-bind="c.quantityRequested "></span>
+                </td>
+
+              <!--  <td class="col-count cell-input col-general number last-row disabled"
+                    ng-class="{'last-row':c.lotsOnHand.length===1}">
+                   <span class="cell-text" style="width: 160px;!important;"> <input required max="{{c.lotsOnHand[0].quantityOnHand}}" style="width:150px;!important;"
+                           ng-model="c.lotsOnHand[0].quantity" maxlength="8" numeric-validator="positiveInteger"
+                           type="number"  ng-change="sumLots(c)" /> </span>
+                     <span class="field-error" ng-show="c.lotsOnHand[0].quantity.$error.required && showError"
+                           openlmis-message="missing.value">
+
+        </span>
+                </td>-->
+
+                <td ng-class="{'last-row':$last} " class="col-count cell-input col-general number disabled">
+                  <span class="cell-text " >
+                      <input ng-show="c.lotsOnHand.length > 0" required name="requested_{{$index}}" numeric-validator="positiveInteger" maxlength="8" max="{{c.lotsOnHand[0].quantityOnHand}}"
+                             ng-model="c.lotsOnHand[0].quantity" ng-change="sumLots(c)" type="number" style="width: 180px;!important;"/>
+                      <input ng-show="c.lotsOnHand.length ===0" required name="requested_{{$index}}" numeric-validator="positiveInteger" maxlength="8" max="{{c.totalQuantityOnHand}}"
+                             ng-model="c.quantity" ng-change="sumLots(c)" type="number" style="width: 180px;!important;"/>
+                  </span>
+                    <!--<span class="field-error" ng-show="c.lotsOnHand.length > 0 && c.lotsOnHand[0].quantity.$error.required && showError"-->
+                          <!--openlmis-message="missing.value"></span>-->
+                    <!--<span class="field-error" ng-show="c.lotsOnHand.length ===0 && c.quantity.$error.required && showError"-->
+                          <!--openlmis-message="missing.value"></span>-->
+                    <span class="field-error" ng-show="orderRequisitionForm.requested_{{$index}}.$error.max"
+                            ></span>
+
+                </td>
+
+
+                <td rowspan="{{c.lotsOnHand.length}}" id="gap" class="col-gap cell-input  last-row disabled"><span
+                        class="cell-text {{(total < c.quantityRequested)?'red':(c.sum == 0 )?'blue':'orange'}}"
+                        ng-bind="c.sum"></span></td>
+
+            </tr>
+            <tr ng-repeat-end ng-repeat="lot in c.lotsOnHand" ng-show="!$first">
+                <td class="col-lot  cell-input disabled cell-text number" style="text-align: left;!important;"
+                    ng-class="{'last-row':$last}">
+                    <span class="cell-text" ng-bind="lot.lot.lotCode"></span>
+                </td>
+                <td class="col-available cell-input col-general number disabled" ng-class="{'last-row':$last}">
+                    <span class="cell-text" ng-bind="lot.quantityOnHand | number"></span>
+                </td>
+
+                <td class="col-available cell-input col-general disabled number" ng-class="{'last-row':$last}">
+                    <span class="cell-text" ng-bind="lot.lot.expirationDate"></span>
+                </td>
+
+                <td ng-class="{'last-row':$last} " class="col-count cell-input col-general number disabled">
+                  <span class="cell-text " >
+                      <input required name="requested_{{$index}}" numeric-validator="positiveInteger" maxlength="8" max="{{lot.quantityOnHand}}"
+                             ng-model="lot.quantity" ng-change="sumLots(c)" type="number" style="width: 180px;!important;"/>
+                  </span>
+                    <span class="field-error" ng-show="c.lotsOnHand[0].quantity.$error.required && showError"
+                                 openlmis-message="missing.value"></span>
+                    <span class="field-error" ng-show="orderRequisitionForm.requested_{{$index}}.$error.max"
+                                    ></span>
+
+                </td>
+
+
+                <td rowspan="{{lot.length}}" ng-show="!$last"></td>
+
+            </tr>
+            </tbody>
+        </table>
+    </div>
+
+
+    <div class="clear-both"></div>
+
+    <openlmis-pagination ng-show="pageLineItems.length > 0" num-pages="numberOfPages" current-page="currentPage"
+                         max-size="10"
+                         error-pages="errorPages"></openlmis-pagination>
+
+
+    <div form-toolbar id="action_buttons" class="action-buttons">
+        <div class="form-cell button-row">
+            <input id="saveButton" type="submit" id="save-button" class="btn btn-primary save-button"
+                   openlmis-message="button.save" ng-click="save()"/>
+            <input id="submitButton" type="submit" id="submit-button" class="btn btn-primary save-button"
+                   openlmis-message="button.save.and.print" ng-click="submit()" />
+            <input id="cancelButton" type="button" class="btn btn-cancel cancel-button" openlmis-message="button.cancel"
+                   ng-click="cancel()"/>
+
+        </div>
+
+        <div class="toolbar-error" id="saveErrorMsgDiv">
+            <span openlmis-message="error" ng-show="error"></span>&nbsp;
+            <span ng-show="errorProgram" ng-bind="errorProgram"></span>
+        </div>
+        <div class="toolbar-success" id="saveSuccessMsgDiv" openlmis-message="message" ng-show="message"></div>
+    </div>
+
+</div>
+</form>
+</div>

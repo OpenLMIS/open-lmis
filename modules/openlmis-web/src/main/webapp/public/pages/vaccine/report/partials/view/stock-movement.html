@@ -1,0 +1,73 @@
+<!--
+  ~ Electronic Logistics Management Information System (eLMIS) is a supply chain management system for health commodities in a developing country setting.
+  ~
+  ~ Copyright (C) 2015  John Snow, Inc (JSI). This program was produced for the U.S. Agency for International Development (USAID). It was prepared under the USAID | DELIVER PROJECT, Task Order 4.
+  ~
+  ~ This program is free software: you can redistribute it and/or modify it under the terms of the GNU Affero General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
+  ~
+  ~ This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Affero General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU Affero General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
+  -->
+
+<div class="rnr-table">
+  <h2><span openlmis-message="label.vaccine.stock.status"></span></h2>
+
+
+  <table class="table table-bordered">
+    <thead>
+    <tr class="text-row">
+      <th ng-repeat-start="column in report.columnTemplate | filter : {visible:true}" ng-if="false"></th>
+      <th class="span5" ng-if="column.name == 'productName'"><span openlmis-message="label.vaccine.stock.status.product"></span></th>
+      <th ng-repeat-end="" class="span1" ng-if="column.name != 'productName' && column.name != 'skipped'">{{column.label}}</th>
+
+    </tr>
+    </thead>
+    <tbody>
+    <tr class="text-row productCategory" ng-repeat-start="product in report.logisticsLineItems"
+        ng-show="$index == 0 || ( $index > 0 && product.productCategory != report.logisticsLineItems[$index - 1].productCategory)">
+      <td colspan="14">{{product.productCategory}}</td>
+    </tr>
+    <tr ng-repeat-end >
+      <td ng-repeat-start="column in report.columnTemplate | filter : {visible:true}" ng-if="false"></td>
+        <td ng-if="column.name == 'productName'"  class="cell-input"><span class="cell-text">{{product.productName}}</span></td>
+        <td ng-if="column.name == 'openingBalance'" class="cell-input col-beginningBalance">
+          <input disabled numeric-validator="positiveInteger" maxlength="8"  ng-model="product.openingBalance" type="text" /></td>
+        <td ng-if="column.name == 'quantityReceived'" class="cell-input col-beginningBalance">
+          <input disabled numeric-validator="positiveInteger" maxlength="8" ng-model="product.quantityReceived" type="text" /></td>
+        <td ng-if="column.name == 'quantityIssued'" class="cell-input col-beginningBalance">
+          <input disabled numeric-validator="positiveInteger" maxlength="8"  ng-model="product.quantityIssued" type="text" /></td>
+        <td ng-if="column.name == 'closingBalance'" class="cell-input col-beginningBalance">
+          <input disabled numeric-validator="positiveInteger" maxlength="8" ng-model="product.closingBalance" type="text" /></td>
+        <td ng-if="column.name == 'quantityVvmAlerted'" class="cell-input col-beginningBalance">
+          <input disabled numeric-validator="positiveInteger" maxlength="8"  ng-model="product.quantityVvmAlerted" type="text" /></td>
+        <td ng-if="column.name == 'quantityFreezed'" class="cell-input col-beginningBalance">
+          <input disabled numeric-validator="positiveInteger" maxlength="8"  ng-model="product.quantityFreezed" type="text" /></td>
+        <td ng-if="column.name == 'quantityExpired'" class="cell-input col-beginningBalance">
+          <input disabled numeric-validator="positiveInteger" maxlength="8" ng-model="product.quantityExpired" type="text" /></td>
+        <td ng-if="column.name == 'quantityOtherWasted'" class="cell-input col-beginningBalance">
+          <input disabled numeric-validator="positiveInteger" maxlength="8" ng-model="product.quantityOtherWasted" type="text" /></td>
+        <td ng-if="column.name == 'quantityDiscardedUnopened'" class="cell-input col-beginningBalance">
+          <input disabled numeric-validator="positiveInteger" maxlength="8" ng-model="product.quantityDiscardedUnopened" type="text" /></td>
+        <td ng-if="column.name == 'quantityDiscardedOpened'" class="cell-input col-beginningBalance">
+          <input disabled numeric-validator="positiveInteger" maxlength="8" ng-model="product.quantityDiscardedOpened" type="text" /></td>
+        <td ng-if="column.name == 'reasonForDiscardingUnopened'" class="cell-input col-general padding2px">
+          <select disabled ng-show="!rowRequiresExplanation(product);" ng-model="product.discardingReasonId">
+            <option value="{{reason.id}}" ng-repeat="reason in discardingReasons">{{reason.name}}</option>
+          </select>
+          <span ng-show="rowRequiresExplanation(product);">
+              <input disabled style="text-align: left" ng-model="product.discardingReasonExplanation" type="text" />
+          </span>
+
+        </td>
+        <td ng-if="column.name == 'daysStockedOut'" class="cell-input col-beginningBalance">
+          <input disabled numeric-validator="positiveInteger" maxlength="8" ng-model="product.daysStockedOut" type="text" /></td>
+        <td ng-if="column.name == 'remarks'" class="cell-input col-beginningBalance"><input disabled ng-model="product.remarks" type="text" /></td>
+      <td ng-repeat-end="" ng-if="false"></td>
+    </tr>
+    </tbody>
+  </table>
+
+  <ng-include src="'/public/pages/vaccine/report/partials/report-change-status.html'"></ng-include>
+
+</div>

@@ -11,17 +11,17 @@
 package org.openlmis.rnr.dto;
 
 
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.codehaus.jackson.map.annotate.JsonSerialize;
+import org.openlmis.core.utils.DateUtil;
 import org.openlmis.rnr.domain.Rnr;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import static org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion.NON_EMPTY;
+import static com.fasterxml.jackson.databind.annotation.JsonSerialize.Inclusion.NON_EMPTY;
 
 /**
  * DTO for Rnr. It is a client side representation of Rnr with its attributes.
@@ -37,6 +37,8 @@ public class RnrDTO {
   private String programCode;
   private Long programId;
   private String facilityName;
+  private String districtName;
+  private String facilityType;
   private String facilityCode;
   private String agentCode;
   private boolean emergency;
@@ -51,16 +53,26 @@ public class RnrDTO {
   private String periodName;
   private Long facilityId;
   private String supplyingDepotName;
+  private Long supplyingDepotId;
   private List<RnrLineItemDTO> products;
   private String requisitionStatus;
   private Long modifiedBy;
 
+  @Deprecated
   public static List<RnrDTO> prepareForListApproval(List<Rnr> requisitions) {
     List<RnrDTO> result = new ArrayList<>();
     for (Rnr requisition : requisitions) {
       result.add(prepareDTOWithSupplyingDepot(requisition));
     }
     return result;
+  }
+
+  public static List<RnrDTO> prepareDTOsForListApproval(List<RnrDTO> requisitions) {
+
+    for (RnrDTO requisition : requisitions) {
+      requisition.formatDates();
+    }
+    return requisitions;
   }
 
   public static List<RnrDTO> prepareForView(List<Rnr> requisitions) {
@@ -83,6 +95,7 @@ public class RnrDTO {
     RnrDTO rnrDTO = populateDTOWithRequisition(requisition);
     if (requisition.getSupplyingDepot() != null) {
       rnrDTO.supplyingDepotName = requisition.getSupplyingDepot().getName();
+      rnrDTO.supplyingDepotId = requisition.getSupplyingDepot().getId();
     }
     return rnrDTO;
   }
@@ -93,8 +106,12 @@ public class RnrDTO {
     rnrDTO.programId = requisition.getProgram().getId();
     rnrDTO.facilityId = requisition.getFacility().getId();
     rnrDTO.programName = requisition.getProgram().getName();
+    rnrDTO.programCode = requisition.getProgram().getCode();
     rnrDTO.facilityCode = requisition.getFacility().getCode();
     rnrDTO.facilityName = requisition.getFacility().getName();
+
+    rnrDTO.facilityType = requisition.getFacility().getFacilityType().getName();
+    rnrDTO.districtName = requisition.getFacility().getGeographicZone().getName();
 
     rnrDTO.submittedDate = requisition.getSubmittedDate();
     rnrDTO.modifiedDate = requisition.getModifiedDate();
@@ -110,8 +127,14 @@ public class RnrDTO {
     return rnrDTO;
   }
 
+  private void formatDates(){
+    stringSubmittedDate   = formatDate(submittedDate);
+    stringModifiedDate    = formatDate(modifiedDate);
+    stringPeriodStartDate = formatDate(periodStartDate);
+    stringPeriodEndDate   = formatDate(periodEndDate);
+  }
+
   private static String formatDate(Date date) {
-    SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd/MM/yyyy");
-    return date == null ? null : simpleDateFormat.format(date);
+    return DateUtil.getFormattedDate(date, "dd/MM/yyyy");
   }
 }

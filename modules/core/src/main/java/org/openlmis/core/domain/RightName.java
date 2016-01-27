@@ -42,6 +42,16 @@ public class RightName {
   public static final String MANAGE_SUPPLY_LINE = "MANAGE_SUPPLY_LINE";
   public static final String MANAGE_FACILITY_APPROVED_PRODUCT = "MANAGE_FACILITY_APPROVED_PRODUCT";
   public static final String MANAGE_PRODUCT = "MANAGE_PRODUCT";
+  public static final String MANAGE_EQUIPMENT_INVENTORY = "MANAGE_EQUIPMENT_INVENTORY";
+  public static final String MANAGE_EQUIPMENT_SETTINGS = "MANAGE_EQUIPMENT_SETTINGS";
+  public static final String CREATE_IVD = "CREATE_IVD";
+  public static final String VIEW_IVD = "VIEW_IVD";
+  public static final String APPROVE_IVD = "APPROVE_IVD";
+
+  public static final String MANAGE_DEMOGRAPHIC_ESTIMATES = "MANAGE_DEMOGRAPHIC_ESTIMATES";
+  public static final String MANAGE_DEMOGRAPHIC_PARAMETERS = "MANAGE_DEMOGRAPHIC_PARAMETERS";
+  public static final String VIEW_VACCINE_ORDER_REQUISITION = "VIEW_ORDER_REQUISITION";
+
 
   public static String commaSeparateRightNames(String... rightNames) {
     return Arrays.toString(rightNames).replace("[", "{").replace("]", "}");

@@ -11,28 +11,16 @@
 import groovy.sql.Sql
 
 configurations {
-    flyway
     classpath
 }
 
 dependencies {
-    compile 'com.googlecode.flyway:flyway-core:1.7',
-            'com.googlecode.flyway:flyway-ant:1.7',
-            'postgresql:postgresql:9.1-901.jdbc4',
+    compile 'org.postgresql:postgresql:9.2-1002-jdbc4',
             'com.mchange:c3p0:0.9.2.1',
-            'org.springframework:spring-tx:3.1.1.RELEASE',
-            'org.springframework:spring-jdbc:3.1.1.RELEASE',
-            'org.springframework:spring-aspects:3.1.1.RELEASE',
-            'org.aspectj:aspectjrt:1.7.0',
-            'org.mybatis:mybatis:3.2.2',
-            'org.mybatis:mybatis-spring:1.2.0'
+            'org.mybatis:mybatis:3.2.8',
+            'org.mybatis:mybatis-spring:1.2.2'
 
-    testCompile 'org.springframework:spring-test:3.1.1.RELEASE'
-
-    flyway 'com.googlecode.flyway:flyway-ant:1.7',
-            'postgresql:postgresql:9.1-901.jdbc4'
-
-    classpath 'postgresql:postgresql:9.1-901.jdbc4'
+    classpath 'org.postgresql:postgresql:9.2-1002-jdbc4'
 
     configurations {
         testFixtures {
@@ -51,32 +39,45 @@ dependencies {
 
 }
 
-String connectionString = "$dbUrlPrefix$databaseHostName:$databasePort/$dbName"
-connectionString += (dbSslEnabled == 'true') ? "?ssl=true&sslfactory=org.postgresql.ssl.NonValidatingFactory" : ""
+flyway {
+    url = "$dbUrlPrefix$databaseHostName:$databasePort/$dbName"
+    driver = dbDriver
+    user = dbUser
+    password = dbPassword
+    schemas = ['public','atomfeed']
+    locations = ['filesystem:'+sourceSets.main.resources.srcDirs.first().getCanonicalPath()+'/db/migration']
+//    sqlMigrationPrefix = ''
+    placeholderPrefix = '#['
+    placeholderSuffix = ']'
+}
 
+jar.doFirst {
+    tasks.migrateDB.execute()
+}
 
 task setupDB << {
     tasks.dropDB.execute()
     tasks.createDB.execute()
-    executeSql('create schema atomfeed', true)
 
-    ext.flyway_classpath = files(configurations.flyway)
-    ant.taskdef(name: 'flywayInit', classname: 'com.googlecode.flyway.ant.InitTask', classpath: ext.flyway_classpath.asPath)
-    ant.flywayInit(driver: dbDriver, url: connectionString, user: dbUser, password: dbPassword)
+    println("Creating atomfeed schema...")
+    executeSql('create schema atomfeed', true)
 
     tasks.migrateDB.execute()
 }
 
 task createDB << {
-    println("Creating Database..")
+    println("Creating database...")
     executeSql("create database $dbName")
 }
 
 task dropDB << {
-    println("Dropping Database..")
-    if (!closeActiveConnections("procpid")) {
+    println("Closing active connections...")
+    if (!closeActiveConnections("pid")) {
+        println("Could not close active connections, trying again...")
         closeActiveConnections("pid")
     }
+
+    println("Dropping database...")
     executeSql("DROP DATABASE IF EXISTS $dbName")
 }
 
@@ -90,6 +91,38 @@ task createSchemas << {
     executeSql('create schema atomfeed', true)
 }
 
+task migrateDB << {
+    println("Migrating database...")
+    tasks.flywayMigrate.execute()
+}
+
+//   Usage: gradle generateMigration [-PmigrationName=name_of_migration]
+//          Defaults to 'migration' as migration name
+// Example: gradle generateMigration -PmigrationName=add_column_to_users
+//          Will create a file in migration folder with name yyyyMMddHHmmssSSS_add_column_to_users.sql.
+task generateMigration << {
+    def fileName = project.hasProperty('migrationName') ? migrationName : 'migration'
+    def timestamp = new Date().format('yyyyMMddHHmmssSSS', TimeZone.getTimeZone('GMT'))
+    def fullFileName = "${timestamp}__${fileName}.sql"
+    def migrationFile = new File(sourceSets.main.resources.srcDirs.first(),'db/migration/'+fullFileName)
+    migrationFile.createNewFile()
+}
+
+task testSeed(type: Exec) {
+    environment("PGPASSWORD", dbPassword)
+    commandLine 'psql', '-U', dbUser, '--file', '../../test-data/sql/seed.sql', '-h', databaseHostName, '-w', dbName
+}
+
+task vimsSeed(type: Exec) {
+    environment("PGPASSWORD", dbPassword)
+    commandLine 'psql', '-U', dbUser, '--file', '../../test-data/vims/seed.sql', '-h', databaseHostName, '-w', dbName
+}
+
+task seed(type: Exec) {
+    environment("PGPASSWORD", dbPassword)
+    commandLine 'psql', '-U', dbUser, '--file', 'src/main/resources/seed/seed.sql', '-h', databaseHostName, '-w', dbName
+}
+
 def boolean closeActiveConnections(String pid) {
     try {
         executeSql("SELECT pg_terminate_backend($pid) FROM pg_stat_activity WHERE datname='$dbName'")
@@ -99,39 +132,16 @@ def boolean closeActiveConnections(String pid) {
     }
 }
 
-jar.doFirst {
-    tasks.migrateDB.execute()
-}
-
-task migrateDB() << {
-    println("Migrating database..")
-    ext.flyway_classpath = files(sourceSets.main.resources.srcDirs) + files(configurations.flyway)
-    ant.taskdef(name: 'flywayMigrate', classname: 'com.googlecode.flyway.ant.MigrateTask', classpath: ext.flyway_classpath.asPath)
-    ant.flywayMigrate(driver: dbDriver, url: connectionString, user: dbUser, password: dbPassword)
-}
-
-task testSeed(type: Exec) {
-    environment("PGPASSWORD", dbPassword)
-    commandLine 'psql', '-U', dbUser, '--file', '../../test-data/sql/seed.sql', '-h', databaseHostName, '-w', dbName
-}
-
-task seed(type: Exec) {
-    environment("PGPASSWORD", dbPassword)
-    commandLine 'psql', '-U', dbUser, '--file', 'src/main/resources/seed/seed.sql', '-h', databaseHostName, '-w', dbName
-}
-
 def executeSql(String statement, Boolean includeDbName = false) {
-    def connectionString = "jdbc:postgresql://$databaseHostName:$databasePort"
+    def connectionString = "jdbc:postgresql://$databaseHostName:$databasePort/"
 
-    connectionString += (includeDbName) ? "/$dbName" : ""
+    connectionString += (includeDbName) ? "$dbName" : ""
 
     connectionString += (dbSslEnabled == 'true') ? "?ssl=true&sslfactory=org.postgresql.ssl.NonValidatingFactory" : ""
 
     configurations.classpath.each { file ->
         gradle.class.classLoader.addURL(file.toURI().toURL())
     }
-
-    Class.forName(dbDriver)
 
     Sql.newInstance(connectionString, dbUser, dbPassword, dbDriver).execute(statement)
 }

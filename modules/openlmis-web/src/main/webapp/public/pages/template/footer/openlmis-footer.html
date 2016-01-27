@@ -1,0 +1,137 @@
+
+
+<!--
+  ~ Electronic Logistics Management Information System (eLMIS) is a supply chain management system for health commodities in a developing country setting.
+  ~
+  ~   Copyright (C) 2015  John Snow, Inc (JSI). This program was produced for the U.S. Agency for International Development (USAID). It was prepared under the USAID | DELIVER PROJECT, Task Order 4.
+  ~
+  ~   This program is free software: you can redistribute it and/or modify it under the terms of the GNU Affero General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
+  ~
+  ~  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Affero General Public License for more details.
+  ~
+  ~   You should have received a copy of the GNU Affero General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
+  -->
+
+<div ng-controller="OpenLmisFooterController">
+ <div ng-show="footerSetting.value==='true'" class="footer">
+
+     <div class="link-section"  >
+         <div class="aboutus-links" >
+             <span class="footer-link-header" openlmis-message="open.static.pages.footer.link.header.about"></span>
+             <ul class="footer-link-list">
+                 <li>
+
+                     <a ng-click="navigateToPage('aboutUs')" openlmis-message="open.static.pages.footer.link.aboutus" />
+                 </li>
+                 <li>
+                     <a ng-click="navigateToPage('about-elmis')" openlmis-message="open.static.pages.footer.link.aboutelmis">   </a>
+                 </li>
+                 <li>
+                     <a ng-click="navigateToPage('about-ehealth')"  openlmis-message="open.static.pages.footer.link.aboutehealth">  </a>
+             </li>
+                 <li>
+                     <a ng-click="navigateToPage('about-openlmis')"  openlmis-message="open.static.pages.footer.link.aboutopenlmis">   </a>
+                 </li>
+             </ul>
+
+         </div>
+         <div class="distribution-links">
+             <span class="footer-link-header" openlmis-message="open.static.pages.footer.link.header.distributionSystem"></span>
+             <ul class="footer-link-list">
+                 <li>
+                     <a  openlmis-message="open.static.pages.footer.link.centralwarehouses">  </a>
+                 </li>
+                 <li>
+                     <a  openlmis-message="open.static.pages.footer.link.zonalwareHouses"> </a>
+                 </li>
+                 <li>
+                     <a  openlmis-message="open.static.pages.footer.link.regions" href="/public/pages/dynamic-pages/index.html#/regions"> </a>
+                 </li>
+                 <li>
+                     <a openlmis-message="open.static.pages.footer.link.districts" href="/public/pages/dynamic-pages/index.html#/districts"> </a>
+                 </li>
+
+
+             </ul>
+
+         </div>
+         <div class="program-commodities-links">
+             <span class="footer-link-header" openlmis-message="open.static.pages.footer.link.header.programcommodities"></span>
+             <ul class="footer-link-list">
+                 <li>
+                     <a  openlmis-message="open.static.pages.footer.link.arvcommodities">  </a>
+                 </li>
+                 <li>
+                     <a  openlmis-message="open.static.pages.footer.link.hivcommodities">   </a>
+                 </li>
+                 <li>
+                     <a  openlmis-message="open.static.pages.footer.link.ils"> </a>
+                 </li>
+                 <li>
+                     <a  openlmis-message="open.static.pages.footer.link.tb"> </a>
+                 </li>
+
+             </ul>
+
+         </div>
+         <div class="order-processing">
+             <span class="footer-link-header" openlmis-message="open.static.pages.footer.link.header.orderprocessing"></span>
+             <ul class="footer-link-list">
+                 <li>
+                     <a ng-click="navigateToPage('randr-submisssions')"  openlmis-message="open.static.pages.footer.link.rrsubmissions">   </a>
+                 </li>
+                 <li>
+                     <a ng-click="navigateToPage('order-fullfilment')"  openlmis-message="open.static.pages.footer.link.orderfulfilment"> </a>
+                 </li>
+                 <li>
+                     <a ng-click="navigateToPage('delivery')"  openlmis-message="open.static.pages.footer.link.delivery"> </a>
+                 </li>
+                 <li>
+                     <a ng-click="navigateToPage('proof-of-delivery')"  openlmis-message="open.static.pages.footer.link.proofofdelivery"> </a>
+                 </li>
+
+             </ul>
+
+         </div>
+         <div class="reports">
+             <span class="footer-link-header" openlmis-message="open.static.pages.footer.link.header.reports"></span>
+             <ul class="footer-link-list">
+                 <li>
+                  <a ng-click="navigateToPage('stock-status-summary')"  openlmis-message="open.static.pages.footer.link.stockstatussummary">  </a>
+                 </li>
+                 <li>
+                     <a ng-click="navigateToPage('consumption-trend')"  openlmis-message="open.static.pages.footer.link.consumptiontrend">    </a>
+                 </li>
+                 <li>
+                     <a ng-click="navigateToPage('dashboard')"  openlmis-message="open.static.pages.footer.link.dashboard">  </a>
+                 </li>
+                 <li>
+                     <a ng-click="navigateToPage('gis-maps')"  openlmis-message="open.static.pages.footer.link.gismaps"></a>
+                 </li>
+
+             </ul>
+
+         </div>
+         <div class="logo-link">
+<img src="/public/images/logo.png">
+         </div>
+     </div>
+     <div class="logo-section">
+         <div class="logo1">
+             <img src="http://placehold.it/60x40">
+         </div>
+         <div class="logo2">
+             <img src="http://placehold.it/60x40">
+         </div>
+         <div class="logo3">
+             <img src="http://placehold.it/60x40">
+         </div>
+         <div class="logo4">
+             <img src="http://placehold.it/60x40">
+         </div>
+     </div>
+     <div class="copyright-section">
+       <span class="footer-copyright-message">CopyRight &copy 2015</span>
+     </div>
+ </div>
+</div>

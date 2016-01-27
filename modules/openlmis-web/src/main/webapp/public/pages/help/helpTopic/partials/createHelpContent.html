@@ -1,0 +1,98 @@
+<!--
+  ~ Electronic Logistics Management Information System (eLMIS) is a supply chain management system for health commodities in a developing country setting.
+  ~
+  ~ Copyright (C) 2015  John Snow, Inc (JSI). This program was produced for the U.S. Agency for International Development (USAID). It was prepared under the USAID | DELIVER PROJECT, Task Order 4.
+  ~
+  ~ This program is free software: you can redistribute it and/or modify it under the terms of the GNU Affero General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
+  ~
+  ~ This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Affero General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU Affero General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
+  -->
+<div xmlns="http://www.w3.org/1999/html" tab-scroll>
+
+    <div class="alert alert-success" id="saveSuccessMsgDiv" ng-bind="message" ng-show="message"/>
+
+    <!-- add help content -->
+    <form ng-submit="createHelpContent()" id="createHelpContentForm" name="createHelpContentForm"
+          novalidate select2-blur>
+
+        <div style="width: 70%" class="app-form">
+
+            <div class="form-group">
+
+                <h3 openlmis-message="header.help.helpcontent.title"></h3>
+
+                <div class="form-row clearfix">
+
+                    <div class="form-cell">
+                        <label for="name" openlmis-message="label.help.helpcontent.name"><span
+                                class="label-required"> *</span></label>
+
+                        <div class="form-field" style="width: 60%;">
+                            <input ng-model="helpContent.name" name="name" id="name" type="text"
+                                   ng-required="true"/>
+        <span class="field-error"
+              ng-show="createHelpContentForm.name.$error.required && showError"
+              openlmis-message="missing.value">
+        </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="form-cell">
+                <label for="name" openlmis-message="label.help.helpcontent.HTMLContent"><span
+                        class="label-required"> *</span></label>
+
+
+            </div>
+            <div style="width: 100%" id="htmlcontent" text-angular="text-angular" name="htmlcontent"
+                 ng-model="helpContent.htmlContent"
+                    ></div>
+        </div>
+
+        <div style=" position:absolute;top:180px;right: 20px; width: 25%" class="pull-right control-accordion"
+             openlmis-message="link.help.helptopic.helpDocumentList">
+
+
+            <div style="height: 300px; overflow: scroll;">
+                <table class="table table-striped table-bordered" ng-table="tableParams">
+                    <thead>
+                    <tr class="gradient-header">
+
+                        <th>Url
+                        </th>
+
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr ng-repeat="hd in helpDocumentList ">
+                        <td>
+                            <div>{{hd.fileUrl}}</div>
+                        </td>
+
+
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div form-toolbar id="action_buttons" class="action-buttons">
+                <div class="form-cell button-row">
+                    <input type="submit" class="btn btn-primary save-button" openlmis-message="button.save"/>
+                    <a ng-href='#here' ng-click="cancelContentCreate()" class="btn btn-cancel cancel-button"><span
+                        openlmis-message="button.cancel"></span></a>
+                </div>
+
+                <div class="toolbar-error" id="saveErrorMsgDiv" ng-show="showError || error">{{ errorMessage}}
+                </div>
+            </div>
+
+</div>
+    </form>
+
+</div>
+
+
+
+

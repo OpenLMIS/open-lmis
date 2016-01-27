@@ -1,0 +1,132 @@
+<!--
+  ~ Electronic Logistics Management Information System (eLMIS) is a supply chain management system for health commodities in a developing country setting.
+  ~
+  ~ Copyright (C) 2015  John Snow, Inc (JSI). This program was produced for the U.S. Agency for International Development (USAID). It was prepared under the USAID | DELIVER PROJECT, Task Order 4.
+  ~
+  ~ This program is free software: you can redistribute it and/or modify it under the terms of the GNU Affero General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
+  ~
+  ~ This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Affero General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU Affero General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
+  -->
+
+<accordion>
+    <accordion-group class="green-haze" is-open="formPanel.openPanel">
+        <accordion-heading>
+            <div class="accordion-title">
+                <div class="caption">
+                    <i class="flaticon-filter"></i> <span openlmis-message="title.filter.form"></span>
+                </div>
+                <div class="tools">
+                    <i  ng-class="{'icon-minus-sign': formPanel.openPanel, 'icon-plus-sign': !formPanel.openPanel}"></i>
+                </div>
+            </div>
+        </accordion-heading>
+
+        <div>
+            <form  name="filterForm" novalidate>
+                <div >
+                    <div class="form-cell horizontalFilters" >
+                        <label class="labels" openlmis-message="label.program"><span class="label-required">*</span></label>
+
+                        <div class="form-fields">
+                            <select ui-select2 style="width:160px;" class="large-input" name="program"  ng-model="formFilter.programId" >
+                                <option ng-repeat="option in programs" value="{{option.id}}">{{option.name}}</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-cell horizontalFilters" ng-if="!hideScheduleFilter">
+                        <label class="labels" openlmis-message="label.schedule"></label>
+
+                        <div class="form-fields">
+                            <select ui-select2 style="width:160px;" class="large-input" name="schedule"  ng-model="formFilter.scheduleId" ng-change="changeSchedule()">
+                                <option  ng-repeat="option in schedules" value="{{ option.id }}">{{ option.name }}</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-cell horizontalFilters" ng-if="!hideYearFilter">
+                        <label class="labels" openlmis-message="label.year"></label>
+
+                        <div class="form-field">
+                            <select ui-select2 style="width:100px;" class="input-small" ng-required="true"  name="year" id="startYear" ng-model="formFilter.year" ng-change="changeScheduleByYear()">
+                                <option ng-repeat="year in startYears" value="{{year}}">{{year}}</option>
+                            </select>
+
+                        </div>
+                    </div>
+
+                    <div class="form-cell horizontalFilters" ng-if="!hidePeriodFilter">
+                        <label class="labels" openlmis-message="label.period"></label>
+
+                        <div class="form-field">
+                            <select ui-select2 style="width:180px;" ng-required="true"  name="period" ng-model="formFilter.periodId" ng-change="processPeriodFilter()">
+                                <option ng-repeat="option in periods" value="{{option.id}}">{{option.name}}</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div ng-if="showStockStatusFilter">
+                        <div class="form-cell horizontalFilters" >
+                            <label class="labels" openlmis-message="label.status"></label>
+                            <div class="form-fields">
+                                <select ui-select2 style="width:140px;" name="status"  ng-model="formFilter.status" ng-change="processStockStatusFilter()">
+                                    <option ng-repeat="option in stockStatusMapping" value="{{option.value}}">{{option.name}}</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="clearfix"></div>
+                    </div>
+
+                    <div class="form-cell horizontalFilters" >
+                        <label class="labels" openlmis-message="label.geographic.zones"></label>
+
+                        <div class="form-fields">
+                            <select class="input-large"  ng-change="processZoneFilter();" ng-model="formFilter.zoneId">
+                                <option selected="selected"></option>
+                                    <optgroup ng-repeat="value in zones.children"  label="{{value.name}}">
+                                    <option value="{{value.id}}"><b class="green">All of {{value.name}}</b></option>
+                                    <option ng-repeat-start="v in value.children" value="{{v.id}}">{{v.name}}</option>
+                                    <option ng-repeat-end ng-repeat="d in v.children" value="{{d.id}}"> &nbsp; &nbsp; {{d.name}}</option>
+                                </optgroup>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-cell horizontalFilters" ng-show="showProductsFilter" >
+                        <label class="labels" openlmis-message="label.product"><span class="label-required">*</span></label>
+
+                        <div class="form-field">
+                            <select ui-select2="productSelectOption" style="width:250px;" name="product" class="input-sm"  ng-model="formFilter.productIdList" ng-change="processProductsFilter()" openlmis-message="placeholder.select.product"
+                                    multiple="multiple" >
+                                <option  ng-repeat="option in products" value="{{ option.id }}">{{ option.name }}</option>
+                            </select>
+                        </div>
+                    </div>
+                    <!--<div class="form-cell horizontalFilters" ng-show="showFacilitiesFilter" >
+                        <label class="labels" openlmis-message="label.facility"></label>
+
+                        <div class="form-field">
+                            <select ui-select2 style="width:200px;" id="facility-name"  name="facility" ng-model="formFilter.facilityId"  required="true">
+                                <option  ng-repeat="option in allFacilities " value="{{ option.id }}">{{ option.code }} - {{ option.name }}</option>
+                            </select>
+                        </div>
+                    </div>-->
+
+
+                    <div class="clearfix"></div>
+
+                </div>
+                <div class="form-cell horizontalFilters" >
+
+                    <div class="form-field">
+                        <input type="submit" ng-click="search()" class="btn btn-primary" openlmis-message="button.search" value="Search"/>
+                    </div>
+                </div>
+
+                <div class="clearfix"></div>
+            </form>
+        </div>
+
+    </accordion-group>
+</accordion>
+

@@ -12,9 +12,44 @@
   <h2 openlmis-message="requisition.template.header"></h2>
 
   <div class="info-box">
+    <div class="pull-right">
+      <div class="form-cell">
+        <div class="checkbox">
+          <label for="enableIvd">
+            <input class="checkbox"
+                   ng-model="program.enableIvdForm"
+                   id="enableIvd" type="checkbox"/>
+            <span class="col-desc" openlmis-message="admin.program.enable.ivd"></span>
+          </label>
+        </div>
+      </div>
+    </div>
+
     <p><strong openlmis-message="template.programName"></strong> {{program.name}} <a ng-href="{{selectProgramUrl}}" openlmis-message="template.change"></a>
     </p>
+
+
   </div>
+
+  <div class="rnr-tabs clearfix">
+    <ul class="clearfix">
+      <li ng-class="{'selected': (visibleTab == 'basic')}">
+        <a href="" ng-click="visibleTab ='basic'" ><span openlmis-message="admin.label.program.settings"></span></a></li>
+      <li ng-class="{'selected': (visibleTab == 'template' || visibleTab == undefined)}">
+        <a href="" ng-click="visibleTab ='template'" ><span openlmis-message="admin.label.template"></span></a></li>
+      <li ng-show="program.enableIvdForm" ng-class="{'selected': (visibleTab == 'coverage')}">
+        <a href="" ng-click="visibleTab ='coverage'" ><span openlmis-message="label.vaccine.setting.coverage"></span></a></li>
+      <li ng-show="program.enableIvdForm" ng-class="{'selected': (visibleTab == 'ivdTabs')}">
+        <a href="" ng-click="visibleTab ='ivdTabs'" ><span openlmis-message="label.vaccine.tab.visibility"></span></a></li>
+      <li ng-show="program.enableIvdForm" ng-class="{'selected': (visibleTab == 'ivdLogisticTemplate')}">
+        <a href="" ng-click="visibleTab ='ivdLogisticTemplate'" ><span openlmis-message="label.vaccine.logistics.template"></span></a></li>
+    </ul>
+  </div>
+  <span ng-show="visibleTab == 'template' || visibleTab == undefined">
+
+    <h4>
+      <span openlmis-message="admin.label.template"></span>
+    </h4>
 
   <div class="rnr-template-head">
     <span class="tpl-visible" openlmis-message="template.header.display"></span>
@@ -22,6 +57,8 @@
     <span class="tpl-label" openlmis-message="template.header.label"></span>
     <span class="tpl-source" openlmis-message="template.header.source"></span>
   </div>
+
+
   <form name="configureRnRTemplateForm" ng-submit="save()">
     <div class="rnr-template-columns">
 
@@ -88,6 +125,13 @@
               </select>
             </span>
           </span>
+
+          <span class="tpl-source" ng-show="rnrColumn.options.formulas != undefined">
+              <span openlmis-message="rnrColumn.column.options"></span>
+              <select ng-model="rnrColumn.calculationOption" ng-options="option.id as option.name for option in rnrColumn.options.formulas">
+                  <option ng-repeat="option in rnrColumn.options.formulas" value="{{ option.id }}">{{option.name}}</option>
+            </select>
+          </span>
           <span class="tpl-error" ng-show="errorMap[rnrColumn.name]">
             <div class="alert alert-error" ng-bind="errorMap[rnrColumn.name]"></div>
           </span>
@@ -118,4 +162,17 @@
       <div class="toolbar-error" id="saveErrorMsgDiv" openlmis-message="error" ng-show="error"></div>
     </div>
   </form>
+  </span>
+  <span ng-show="visibleTab == 'basic'">
+    <div ng-include="'/public/pages/admin/rnr-template/partials/basic-settings.html'"></div>
+  </span>
+  <span ng-show="visibleTab == 'coverage'">
+    <div ng-include="'/public/pages/admin/rnr-template/partials/coverage.html'"></div>
+  </span>
+   <span ng-show="visibleTab == 'ivdTabs'">
+    <div ng-include="'/public/pages/admin/rnr-template/partials/tab-settings.html'"></div>
+  </span>
+  <span ng-show="visibleTab == 'ivdLogisticTemplate'">
+    <div ng-include="'/public/pages/admin/rnr-template/partials/ivd-column-template.html'"></div>
+  </span>
 </div>

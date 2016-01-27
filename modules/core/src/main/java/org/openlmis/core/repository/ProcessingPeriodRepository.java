@@ -76,12 +76,20 @@ public class ProcessingPeriodRepository {
       mapper.getAllPeriodsAfterDateAndPeriod(scheduleId, startPeriodId, afterDate, beforeDate);
   }
 
+  public List<ProcessingPeriod> getOpenPeriods(Long facilityId, Long programId, Long startingPeriodId){
+    return mapper.getOpenPeriods(facilityId, programId, startingPeriodId);
+  }
+
   public ProcessingPeriod getById(Long id) {
     return mapper.getById(id);
   }
 
   public List<ProcessingPeriod> getAllPeriodsForDateRange(Long scheduleId, Date startDate, Date endDate) {
     return mapper.getAllPeriodsForDateRange(scheduleId, startDate, endDate);
+  }
+
+  public List<ProcessingPeriod> getRnrPeriodsForDateRange(Long facilityId, Long programId, Date startDate, Date endDate){
+    return mapper.getRnrPeriodsForDateRange(facilityId, programId, startDate, endDate);
   }
 
   public List<ProcessingPeriod> getAllPeriodsBefore(Long scheduleId, Date beforeDate) {
@@ -98,5 +106,9 @@ public class ProcessingPeriodRepository {
 
   public ProcessingPeriod getPeriodForDate(Long scheduleId, Date date) {
     return mapper.getPeriodForDate(scheduleId, date);
+  }
+
+  public List<ProcessingPeriod>  getAllPeriodsForScheduleAndYear(Long scheduleId, Long year) {
+      return mapper.getAllPeriodsForScheduleAndYear(scheduleId, year);
   }
 }

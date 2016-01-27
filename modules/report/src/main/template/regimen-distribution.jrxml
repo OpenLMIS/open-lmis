@@ -1,0 +1,317 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ~ Electronic Logistics Management Information System (eLMIS) is a supply chain management system for health commodities in a developing country setting.
+  ~
+  ~ Copyright (C) 2015  John Snow, Inc (JSI). This program was produced for the U.S. Agency for International Development (USAID). It was prepared under the USAID | DELIVER PROJECT, Task Order 4.
+  ~
+  ~ This program is free software: you can redistribute it and/or modify it under the terms of the GNU Affero General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
+  ~
+  ~ This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Affero General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU Affero General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
+  -->
+
+<!-- Created with Jaspersoft Studio version 6.1.0.final using JasperReports Library version 6.1.0  -->
+<!-- 2015-06-22T15:14:56 -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="regimen-distribution" language="groovy" pageWidth="842" pageHeight="595" orientation="Landscape" columnWidth="802" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="ed759f09-4d2c-46c9-b606-42da2355eabd">
+	<property name="ireport.zoom" value="1.210000000000001"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<parameter name="SUBREPORT_DIR" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA["./"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="REPORT_NAME" class="java.lang.String"/>
+	<parameter name="REPORT_TITLE" class="java.lang.String"/>
+	<parameter name="COUNTRY_NAME" class="java.lang.String"/>
+	<parameter name="GENERATED_BY" class="java.lang.String"/>
+	<parameter name="REPORT_VERSION" class="java.lang.String"/>
+	<parameter name="REPORT_ID" class="java.lang.String"/>
+	<parameter name="LOGO" class="java.io.InputStream"/>
+	<parameter name="REPORT_OUTPUT_OPTION" class="java.lang.String"/>
+	<parameter name="OPERATOR_LOGO" class="java.io.InputStream"/>
+	<parameter name="REPORT_SUB_TITLE" class="java.lang.String"/>
+	<parameter name="REPORT_FILTER_PARAM_VALUES" class="java.lang.String"/>
+	<parameter name="REPORT_MESSAGE_WHEN_NO_DATA" class="java.lang.String"/>
+	<parameter name="OPERATOR_NAME" class="java.lang.String"/>
+	<queryString>
+		<![CDATA[]]>
+	</queryString>
+	<field name="regimen" class="java.lang.String"/>
+	<field name="patientsontreatment" class="java.lang.Integer"/>
+	<field name="totalpatientsToInitiateTreatmentPercentage" class="java.math.BigDecimal"/>
+	<field name="patientstoinitiatetreatment" class="java.lang.Integer"/>
+	<field name="totalOnTreatmentPercentage" class="java.math.BigDecimal"/>
+	<field name="patientsstoppedtreatment" class="java.lang.Integer"/>
+	<field name="stoppedTreatmentPercentage" class="java.math.BigDecimal"/>
+	<field name="district" class="java.lang.String"/>
+	<variable name="TOTAL_PAGES" class="java.lang.Integer">
+		<variableExpression><![CDATA[$V{PAGE_NUMBER}]]></variableExpression>
+	</variable>
+	<variable name="patientsontreatment_1" class="java.lang.Long" resetType="Group" resetGroup="GroupByRegimen" calculation="Sum">
+		<variableExpression><![CDATA[$F{patientsontreatment}]]></variableExpression>
+	</variable>
+	<variable name="patientstoinitiate_1" class="java.lang.Long" resetType="Group" resetGroup="GroupByRegimen" calculation="Sum">
+		<variableExpression><![CDATA[$F{patientstoinitiatetreatment}]]></variableExpression>
+	</variable>
+	<variable name="patientsstoppedtreatment_1" class="java.lang.Long" resetType="Group" resetGroup="GroupByRegimen" calculation="Sum">
+		<variableExpression><![CDATA[$F{patientsstoppedtreatment}]]></variableExpression>
+	</variable>
+	<variable name="totalOnTreatmentPercentage_1" class="java.math.BigDecimal" resetType="Group" resetGroup="GroupByRegimen" calculation="Sum">
+		<variableExpression><![CDATA[$F{totalOnTreatmentPercentage}]]></variableExpression>
+	</variable>
+	<variable name="totalpatientsToInitiateTreatmentPercentage_1" class="java.math.BigDecimal" resetType="Group" resetGroup="GroupByRegimen" calculation="Sum">
+		<variableExpression><![CDATA[$F{totalpatientsToInitiateTreatmentPercentage}]]></variableExpression>
+	</variable>
+	<variable name="stoppedTreatmentPercentage_1" class="java.math.BigDecimal" resetType="Group" resetGroup="GroupByRegimen" calculation="Sum">
+		<variableExpression><![CDATA[$F{stoppedTreatmentPercentage}]]></variableExpression>
+	</variable>
+	<group name="GroupByRegimen" isStartNewPage="true" isReprintHeaderOnEachPage="true">
+		<groupExpression><![CDATA[$F{regimen}]]></groupExpression>
+		<groupHeader>
+			<band height="40">
+				<staticText>
+					<reportElement mode="Opaque" x="0" y="20" width="802" height="20" forecolor="#FFFFFF" backcolor="#3D9297" uuid="e587f413-b748-4b6c-8a34-93bb08817a0b">
+						<property name="net.sf.jasperreports.export.xls.ignore.graphics" value="false"/>
+					</reportElement>
+					<text><![CDATA[]]></text>
+				</staticText>
+				<textField isBlankWhenNull="true">
+					<reportElement x="94" y="0" width="138" height="20" uuid="987dfd20-2622-443c-9f95-62413810cbef"/>
+					<textElement verticalAlignment="Middle">
+						<font isBold="true"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{regimen}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement mode="Transparent" x="572" y="20" width="118" height="20" forecolor="#000000" backcolor="#333333" uuid="cd6c9cc8-d873-4247-988a-e0cbd3687508"/>
+					<textElement textAlignment="Right" verticalAlignment="Middle" rotation="None" markup="none">
+						<font fontName="SansSerif" size="10" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+						<paragraph lineSpacing="Single"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$R{label.stopped.treatments}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement mode="Transparent" x="690" y="20" width="111" height="20" forecolor="#000000" backcolor="#333333" uuid="3dc5622c-1f23-4cd2-84c1-d91c3410a48c"/>
+					<textElement textAlignment="Right" verticalAlignment="Middle" rotation="None" markup="none">
+						<font fontName="SansSerif" size="10" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+						<paragraph lineSpacing="Single"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$R{label.total.percent}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement x="0" y="0" width="94" height="20" uuid="41e7497b-6abe-48f2-afab-ca727831d8ec"/>
+					<textElement verticalAlignment="Middle">
+						<font isBold="true"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$R{label.regimen}+':']]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement x="0" y="20" width="43" height="20" uuid="c3b59625-cb40-48af-b00b-cac71ec836a6"/>
+					<textElement verticalAlignment="Middle"/>
+					<textFieldExpression><![CDATA[$R{label.line.no}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement x="43" y="20" width="115" height="20" uuid="7bf62a58-028d-4931-828f-02f732ceca60"/>
+					<textElement verticalAlignment="Middle"/>
+					<textFieldExpression><![CDATA[$R{label.district}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement x="158" y="20" width="142" height="20" uuid="69a4c355-c5cc-4615-86e3-247e2322e978"/>
+					<textElement textAlignment="Right" verticalAlignment="Middle"/>
+					<textFieldExpression><![CDATA[$R{label.patient.treatment}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement x="300" y="20" width="61" height="20" uuid="708ab78f-762a-4932-b72f-c4c4e5a150e7"/>
+					<textElement textAlignment="Right" verticalAlignment="Middle"/>
+					<textFieldExpression><![CDATA[$R{label.total.percent}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement x="361" y="20" width="152" height="20" uuid="af39650b-6e48-459f-b0e2-e4b713b13361"/>
+					<textElement textAlignment="Right" verticalAlignment="Middle"/>
+					<textFieldExpression><![CDATA[$R{label.patient.initiate.treatment}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement x="513" y="20" width="59" height="20" uuid="dcc8cf6b-ee96-43d7-a188-1bd98ee5bce5"/>
+					<textElement textAlignment="Right" verticalAlignment="Middle"/>
+					<textFieldExpression><![CDATA[$R{label.total.percent}]]></textFieldExpression>
+				</textField>
+			</band>
+		</groupHeader>
+		<groupFooter>
+			<band height="20">
+				<textField>
+					<reportElement mode="Transparent" x="43" y="0" width="115" height="20" forecolor="#000000" backcolor="#333333" uuid="1a17cb00-033a-4151-8f3e-4a16b367aa2c"/>
+					<textElement textAlignment="Right" verticalAlignment="Middle" rotation="None" markup="none">
+						<font fontName="SansSerif" size="10" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+						<paragraph lineSpacing="Single"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$R{label.total}+':']]></textFieldExpression>
+				</textField>
+				<textField pattern="#,##0" isBlankWhenNull="true">
+					<reportElement mode="Transparent" x="158" y="0" width="142" height="20" forecolor="#000000" backcolor="#FFFFFF" uuid="a4c069eb-7ead-42ce-8dfb-3239eb46942a"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle" rotation="None" markup="none">
+						<font fontName="SansSerif" size="10" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+						<paragraph lineSpacing="Single"/>
+					</textElement>
+					<textFieldExpression><![CDATA[new java.text.DecimalFormat("#,##0").format($V{patientsontreatment_1})]]></textFieldExpression>
+				</textField>
+				<textField pattern="#,##0" isBlankWhenNull="true">
+					<reportElement mode="Transparent" x="361" y="0" width="152" height="20" forecolor="#000000" backcolor="#FFFFFF" uuid="2d43cc36-793b-4233-aa7b-7748179ccf78"/>
+					<textElement textAlignment="Right" verticalAlignment="Middle" rotation="None" markup="none">
+						<font fontName="SansSerif" size="10" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+						<paragraph lineSpacing="Single"/>
+					</textElement>
+					<textFieldExpression><![CDATA[new java.text.DecimalFormat("#,##0").format($V{patientstoinitiate_1})]]></textFieldExpression>
+				</textField>
+				<textField pattern="#,##0" isBlankWhenNull="true">
+					<reportElement mode="Transparent" x="572" y="0" width="118" height="20" forecolor="#000000" backcolor="#FFFFFF" uuid="457e1bd5-c8b4-4164-b693-beee13b8a123"/>
+					<textElement textAlignment="Right" verticalAlignment="Middle" rotation="None" markup="none">
+						<font fontName="SansSerif" size="10" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+						<paragraph lineSpacing="Single"/>
+					</textElement>
+					<textFieldExpression><![CDATA[new java.text.DecimalFormat("#,##0").format($V{patientsstoppedtreatment_1})]]></textFieldExpression>
+				</textField>
+				<textField pattern="###0">
+					<reportElement x="300" y="0" width="63" height="20" uuid="27dad01e-592e-4fe4-a2f5-d4d8a3877f08"/>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font isBold="true"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$V{totalOnTreatmentPercentage_1} == null ? 0+'%' : ($V{totalOnTreatmentPercentage_1} > 0 ? $V{totalOnTreatmentPercentage_1}.setScale(1, java.math.RoundingMode.HALF_UP) +'%' : 0+'%')]]></textFieldExpression>
+				</textField>
+				<textField pattern="#,##0">
+					<reportElement x="513" y="0" width="59" height="20" uuid="57373df8-6da9-499c-94c6-f7d1e5b08c3f"/>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font isBold="true"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$V{totalpatientsToInitiateTreatmentPercentage_1} == null ? 0+'%' : ($V{totalpatientsToInitiateTreatmentPercentage_1} > 0 ? $V{totalOnTreatmentPercentage_1}.setScale(1, java.math.RoundingMode.HALF_UP) +'%' : 0 +'%' )]]></textFieldExpression>
+				</textField>
+				<textField pattern="#,##0">
+					<reportElement x="690" y="0" width="112" height="20" uuid="5466218d-3870-44e4-83fa-31f46c2766c7"/>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font isBold="true"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$V{stoppedTreatmentPercentage_1} == null ? 0 +'%': ($V{stoppedTreatmentPercentage_1} > 0 ? $V{stoppedTreatmentPercentage_1}.setScale(1, java.math.RoundingMode.HALF_UP) +'%' : 0 +'%' )]]></textFieldExpression>
+				</textField>
+			</band>
+		</groupFooter>
+	</group>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="79" splitType="Stretch">
+			<subreport>
+				<reportElement x="0" y="0" width="802" height="79" isRemoveLineWhenBlank="true" uuid="c576bd49-9432-4ebb-a897-b64a7ec0183e">
+					<printWhenExpression><![CDATA[$P{REPORT_OUTPUT_OPTION}.toUpperCase() != "XLS"]]></printWhenExpression>
+				</reportElement>
+				<subreportParameter name="PAGE_NO">
+					<subreportParameterExpression><![CDATA[$V{PAGE_NUMBER}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="REPORT_TITLE">
+					<subreportParameterExpression><![CDATA[$P{REPORT_TITLE}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="LOGO">
+					<subreportParameterExpression><![CDATA[$P{LOGO}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="OPERATOR_NAME">
+					<subreportParameterExpression><![CDATA[$P{OPERATOR_NAME}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="REPORT_SUB_TITLE">
+					<subreportParameterExpression><![CDATA[$P{REPORT_SUB_TITLE}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="REPORT_NAME">
+					<subreportParameterExpression><![CDATA[$P{REPORT_NAME}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="REPORT_FILTER_PARAM_VALUES">
+					<subreportParameterExpression><![CDATA[$P{REPORT_FILTER_PARAM_VALUES}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="OPERATOR_LOGO">
+					<subreportParameterExpression><![CDATA[$P{OPERATOR_LOGO}]]></subreportParameterExpression>
+				</subreportParameter>
+				<dataSourceExpression><![CDATA[new net.sf.jasperreports.engine.JREmptyDataSource()]]></dataSourceExpression>
+				<subreportExpression><![CDATA["openlmis-report-header-landscape.jasper"]]></subreportExpression>
+			</subreport>
+		</band>
+	</title>
+	<columnHeader>
+		<band height="19"/>
+	</columnHeader>
+	<detail>
+		<band height="20" splitType="Stretch">
+			<textField>
+				<reportElement x="43" y="0" width="759" height="20" forecolor="#006666" uuid="a9fda8ef-b699-4b67-991c-cfabff61e5da">
+					<printWhenExpression><![CDATA[$P{REPORT_MESSAGE_WHEN_NO_DATA} != null]]></printWhenExpression>
+				</reportElement>
+				<textElement textAlignment="Center" verticalAlignment="Top">
+					<font size="14" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{REPORT_MESSAGE_WHEN_NO_DATA}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement mode="Opaque" x="0" y="0" width="801" height="20" backcolor="#F4F4F4" uuid="9a174af8-d2cb-46c8-b19f-0b17e1be585b">
+					<printWhenExpression><![CDATA[$V{REPORT_COUNT}%2 == 0]]></printWhenExpression>
+				</reportElement>
+				<text><![CDATA[]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="0" y="0" width="43" height="20" uuid="29ff9399-7f59-451b-b8df-f1f6240f4a60"/>
+				<textElement verticalAlignment="Middle">
+					<paragraph leftIndent="5"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{REPORT_COUNT}]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement x="0" y="19" width="801" height="1" forecolor="#3D9297" uuid="83a87452-92e8-46d4-bcdd-314f90e18dc7">
+					<printWhenExpression><![CDATA[$P{REPORT_OUTPUT_OPTION}.toUpperCase() != "XLS"]]></printWhenExpression>
+				</reportElement>
+				<graphicElement>
+					<pen lineWidth="0.5"/>
+				</graphicElement>
+			</line>
+			<textField pattern="" isBlankWhenNull="true">
+				<reportElement mode="Transparent" x="43" y="0" width="115" height="20" forecolor="#000000" backcolor="#FFFFFF" uuid="5342fab3-58d3-42c9-b212-7e577dc21e8c"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle" rotation="None" markup="none">
+					<font fontName="SansSerif" size="10" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{district}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0" isBlankWhenNull="false">
+				<reportElement mode="Transparent" x="158" y="0" width="142" height="20" forecolor="#000000" backcolor="#FFFFFF" uuid="f3fca3e5-268e-49ab-9dda-1b628d2ca58e"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle" rotation="None" markup="none">
+					<font fontName="SansSerif" size="10" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+					<paragraph lineSpacing="Single" rightIndent="5"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{patientsontreatment} == null? "0" : $F{patientsontreatment}]]></textFieldExpression>
+			</textField>
+			<textField pattern="" isBlankWhenNull="true">
+				<reportElement mode="Transparent" x="300" y="0" width="61" height="20" forecolor="#000000" backcolor="#FFFFFF" uuid="029c088b-bf88-4d50-bbe1-7a98dc98ce36"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle" rotation="None" markup="none">
+					<font fontName="SansSerif" size="10" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+					<paragraph lineSpacing="Single" leftIndent="5"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{totalOnTreatmentPercentage} == null ? 0+'%' : ($F{totalOnTreatmentPercentage} > 0 ? $F{totalOnTreatmentPercentage}.setScale(1, java.math.RoundingMode.HALF_UP) +'%' : 0 +'%')]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0">
+				<reportElement x="361" y="0" width="152" height="20" uuid="6d514553-cf8e-43ed-ac69-9489ead644bc"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[new java.text.DecimalFormat("#,##0").format($F{patientstoinitiatetreatment} == null? "0" : $F{patientstoinitiatetreatment})]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="513" y="0" width="59" height="20" uuid="85836953-773e-4682-a4a2-2cab457a1e30"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[new java.text.DecimalFormat("#,##0").format($F{totalpatientsToInitiateTreatmentPercentage} == null ? 0 : ($F{totalpatientsToInitiateTreatmentPercentage} > 0 ? $F{totalpatientsToInitiateTreatmentPercentage}.setScale(1, java.math.RoundingMode.HALF_UP) +'%' : 0 +'%'))]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="690" y="0" width="111" height="20" uuid="3e0eb615-83c4-4234-9d19-3756622880dc"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[new java.text.DecimalFormat("#,##0").format($F{stoppedTreatmentPercentage} == null ? 0 +'%': ($F{stoppedTreatmentPercentage} > 0 ? $F{stoppedTreatmentPercentage}.setScale(1, java.math.RoundingMode.HALF_UP) +'%' : 0 +'%'))]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0">
+				<reportElement x="572" y="1" width="118" height="19" uuid="687c9f3b-cab0-4abf-981e-6274f379822e"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[new java.text.DecimalFormat("#,##0").format($F{patientsstoppedtreatment} == null? "0" : $F{patientsstoppedtreatment})]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+</jasperReport>

@@ -43,8 +43,12 @@ public class ProgramRepository {
     mapper.insert(p);
   }
 
-  public void update(Program p) {
-    mapper.update(p);
+  public Program update(Program program) {
+    if(program.getBudgetingApplies() == false)
+      program.setUsePriceSchedule(false);
+
+    mapper.update(program);
+    return mapper.getById(program.getId());
   }
 
   public List<Program> getByFacility(Long facilityId) {
@@ -64,9 +68,18 @@ public class ProgramRepository {
     return mapper.getUserSupervisedActivePrograms(userId, commaSeparateRightNames(rightNames));
   }
 
+  public List<Program> getUserSupervisedActiveIvdProgramsWithRights(Long userId, String... rightNames) {
+    return mapper.getUserSupervisedActiveIvdPrograms(userId, commaSeparateRightNames(rightNames));
+  }
+
   public List<Program> getProgramsSupportedByUserHomeFacilityWithRights(Long facilityId, Long userId, String... rightNames) {
     return mapper.getProgramsSupportedByUserHomeFacilityWithRights(facilityId, userId, commaSeparateRightNames(rightNames));
   }
+
+  public List<Program> getIvdProgramsSupportedByUserHomeFacilityWithRights(Long facilityId, Long userId, String... rightNames) {
+    return mapper.getIvdProgramsSupportedByUserHomeFacilityWithRights(facilityId, userId, commaSeparateRightNames(rightNames));
+  }
+
 
   public Long getIdByCode(String code) {
     Long programId = mapper.getIdForCode(code);
@@ -112,5 +125,10 @@ public class ProgramRepository {
 
   public List<Program> getProgramsForNotification() {
     return mapper.getProgramsForNotification();
+  }
+
+  public List<Program> getAllIvdPrograms() {
+    return mapper.getAllIvdPrograms();
+
   }
 }

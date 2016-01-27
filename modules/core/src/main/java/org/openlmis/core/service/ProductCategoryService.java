@@ -53,6 +53,10 @@ public class ProductCategoryService {
     return repository.getExisting(productCategory);
   }
 
+  public ProductCategory getById(Long id){
+    return repository.getById(id);
+  }
+
   public List<ProductCategory> getAll() {
     return repository.getAll();
   }

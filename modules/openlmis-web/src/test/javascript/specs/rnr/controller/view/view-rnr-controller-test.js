@@ -30,7 +30,7 @@ describe('ViewRnrController', function () {
     httpBackend = $httpBackend;
     controller = $controller;
     location = $location;
-    requisition = {lineItems: [], nonFullSupplyLineItems: [], regimenLineItems: [], period: {numberOfMonths: 3}};
+    requisition = {lineItems: [], nonFullSupplyLineItems: [], regimenLineItems: [], equipmentLineItems :[], period: {numberOfMonths: 3}};
     pageSize = 2;
     routeParams.page = 1;
     messageService = _messageService_;
@@ -39,9 +39,15 @@ describe('ViewRnrController', function () {
 
   it('should include approved quantity column if status approved', function () {
     columns.push({'name': 'quantityApproved', 'label': 'Approved Quantity', id: '99', visible: true});
-    requisition = {lineItems: [], nonFullSupplyLineItems: [], regimenLineItems: [], status: 'APPROVED'};
+    requisition = {lineItems: [], nonFullSupplyLineItems: [], regimenLineItems: [], equipmentLineItems :[], status: 'APPROVED'};
     controller(ViewRnrController, {$scope: scope, $routeParams: routeParams, requisitionData: {rnr: requisition}, currency: {},
-      pageSize: pageSize, rnrColumns: columns, regimenTemplate: regimenTemplate});
+      pageSize: pageSize, rnrColumns: columns, regimenTemplate: regimenTemplate,
+      hideAdditionalCommoditiesTab: false,
+      hideSkippedProducts: false,
+      enableSkipPeriod: false,
+      $dialog: {},
+      comments: [],
+      equipmentOperationalStatus:[]});
 
     var expectedColumns = angular.copy(columns);
 
@@ -49,9 +55,15 @@ describe('ViewRnrController', function () {
   });
 
   it('should include approved quantity column if status released', function () {
-    requisition = {lineItems: [], nonFullSupplyLineItems: [], regimenLineItems: [], status: 'RELEASED'};
+    requisition = {lineItems: [], nonFullSupplyLineItems: [], regimenLineItems: [], equipmentLineItems :[], status: 'RELEASED'};
     controller(ViewRnrController, {$scope: scope, $routeParams: routeParams, requisitionData: {rnr: requisition}, currency: {},
-      pageSize: pageSize, rnrColumns: columns, regimenTemplate: regimenTemplate});
+      pageSize: pageSize, rnrColumns: columns, regimenTemplate: regimenTemplate,
+      hideAdditionalCommoditiesTab: false,
+      hideSkippedProducts: false,
+      enableSkipPeriod: false,
+      $dialog: {},
+      comments: [],
+      equipmentOperationalStatus:[]});
 
     var expectedColumns = angular.copy(columns);
 
@@ -59,9 +71,15 @@ describe('ViewRnrController', function () {
   });
 
   it('should not include approved quantity column if status not approved nor released', function () {
-    requisition = {lineItems: [], nonFullSupplyLineItems: [], regimenLineItems: [], status: 'INITIATED'};
+    requisition = {lineItems: [], nonFullSupplyLineItems: [], regimenLineItems: [], equipmentLineItems :[], status: 'INITIATED'};
     controller(ViewRnrController, {$scope: scope, $routeParams: routeParams, requisitionData: {rnr: requisition}, currency: {},
-      pageSize: pageSize, rnrColumns: columns, regimenTemplate: regimenTemplate});
+      pageSize: pageSize, rnrColumns: columns, regimenTemplate: regimenTemplate,
+      hideAdditionalCommoditiesTab: false,
+      hideSkippedProducts: false,
+      enableSkipPeriod: false,
+      $dialog: {},
+      comments: [],
+      equipmentOperationalStatus:[]});
 
     var expectedColumns = angular.copy(columns);
     expectedColumns.splice(5, 1);
@@ -73,23 +91,35 @@ describe('ViewRnrController', function () {
     routeParams.supplyType = 'fullSupply';
     var rnr = {fullSupplyLineItems: [
       {'id': 1}
-    ], nonFullSupplyLineItems: [], regimenLineItems: [], period: {numberOfMonths: 5}, status: 'INITIATED'};
+    ], nonFullSupplyLineItems: [], regimenLineItems: [], equipmentLineItems :[], period: {numberOfMonths: 5}, status: 'INITIATED'};
     controller(ViewRnrController, {$scope: scope, $routeParams: routeParams, requisitionData: {rnr: rnr}, currency: {},
-      pageSize: pageSize, rnrColumns: columns, regimenTemplate: regimenTemplate});
+      pageSize: pageSize, rnrColumns: columns, regimenTemplate: regimenTemplate,
+      hideAdditionalCommoditiesTab: false,
+      hideSkippedProducts: false,
+      enableSkipPeriod: false,
+      $dialog: {},
+      comments: [],
+      equipmentOperationalStatus:[]});
     expect(rnr.fullSupplyLineItems.length).toEqual(scope.page.fullSupply.length);
   });
 
   it('should set requisition type as Regular for regular requisition', function () {
     var rnr = {emergency: false, fullSupplyLineItems: [
       {'id': 1}
-    ], nonFullSupplyLineItems: [], regimenLineItems: [], period: {numberOfMonths: 5}, status: 'INITIATED'};
+    ], nonFullSupplyLineItems: [], regimenLineItems: [], equipmentLineItems :[], period: {numberOfMonths: 5}, status: 'INITIATED'};
 
     routeParams.supplyType = 'fullSupply';
 
     spyOn(messageService, "get").andReturn("requisition.type.regular");
 
     controller(ViewRnrController, {$scope: scope, $routeParams: routeParams, requisitionData: {rnr: rnr}, currency: {},
-      pageSize: pageSize, rnrColumns: columns, regimenTemplate: regimenTemplate});
+      pageSize: pageSize, rnrColumns: columns, regimenTemplate: regimenTemplate,
+      hideAdditionalCommoditiesTab: false,
+      hideSkippedProducts: false,
+      enableSkipPeriod: false,
+      $dialog: {},
+      comments: [],
+      equipmentOperationalStatus:[]});
 
     expect(scope.requisitionType).toEqual("requisition.type.regular");
   });
@@ -98,13 +128,19 @@ describe('ViewRnrController', function () {
   it('should set requisition type as Emergency for emergency requisition', function () {
     var rnr = {emergency: true, fullSupplyLineItems: [
       {'id': 1}
-    ], nonFullSupplyLineItems: [], regimenLineItems: [], period: {numberOfMonths: 5}, status: 'INITIATED'};
+    ], nonFullSupplyLineItems: [], regimenLineItems: [], equipmentLineItems :[], period: {numberOfMonths: 5}, status: 'INITIATED'};
 
     routeParams.supplyType = 'fullSupply';
 
 
     controller(ViewRnrController, {$scope: scope, $routeParams: routeParams, requisitionData: {rnr: rnr}, currency: {},
-      pageSize: pageSize, rnrColumns: columns, regimenTemplate: regimenTemplate});
+      pageSize: pageSize, rnrColumns: columns, regimenTemplate: regimenTemplate,
+      hideAdditionalCommoditiesTab: false,
+      hideSkippedProducts: false,
+      enableSkipPeriod: false,
+      $dialog: {},
+      comments: [],
+      equipmentOperationalStatus:[]});
 
     expect(scope.requisitionType).toEqual("requisition.type.emergency");
   });
@@ -113,9 +149,15 @@ describe('ViewRnrController', function () {
     routeParams.supplyType = 'nonFullSupply';
     var rnr = {fullSupplyLineItems: [], nonFullSupplyLineItems: [
       {'id': 1}
-    ], regimenLineItems: [], period: {numberOfMonths: 5}, status: 'INITIATED'};
+    ], regimenLineItems: [], equipmentLineItems :[], period: {numberOfMonths: 5}, status: 'INITIATED'};
     controller(ViewRnrController, {$scope: scope, $routeParams: routeParams, requisitionData: {rnr: rnr}, currency: {},
-      pageSize: pageSize, rnrColumns: columns, regimenTemplate: regimenTemplate});
+      pageSize: pageSize, rnrColumns: columns, regimenTemplate: regimenTemplate,
+      hideAdditionalCommoditiesTab: false,
+      hideSkippedProducts: false,
+      enableSkipPeriod: false,
+      $dialog: {},
+      comments: [],
+      equipmentOperationalStatus:[]});
     expect(rnr.nonFullSupplyLineItems.length).toEqual(scope.page.nonFullSupply.length);
   });
 
@@ -127,7 +169,13 @@ describe('ViewRnrController', function () {
       {'id': 4}
     ];
     controller(ViewRnrController, {$scope: scope, requisitionData: {rnr: requisition}, rnrColumns: columns, currency: '$', pageSize: pageSize,
-      $location: location, $routeParams: routeParams, regimenTemplate: regimenTemplate});
+      $location: location, $routeParams: routeParams, regimenTemplate: regimenTemplate,
+      hideAdditionalCommoditiesTab: false,
+      hideSkippedProducts: false,
+      enableSkipPeriod: false,
+      $dialog: {},
+      comments: [],
+      equipmentOperationalStatus:[]});
 
     expect(2).toEqual(scope.numberOfPages);
   });
@@ -140,8 +188,15 @@ describe('ViewRnrController', function () {
       {'id': 3},
       {'id': 4}
     ];
+
     controller(ViewRnrController, {$scope: scope, requisitionData: {rnr: requisition}, rnrColumns: columns, currency: '$', pageSize: pageSize,
-      $location: location, $routeParams: routeParams, regimenTemplate: regimenTemplate});
+      $location: location, $routeParams: routeParams, regimenTemplate: regimenTemplate,
+      hideAdditionalCommoditiesTab: false,
+      hideSkippedProducts: false,
+      enableSkipPeriod: false,
+      $dialog: {},
+      comments: [],
+      equipmentOperationalStatus:[]});
 
     expect(2).toEqual(scope.numberOfPages);
   });
@@ -153,8 +208,15 @@ describe('ViewRnrController', function () {
       {'id': 3},
       {'id': 4}
     ];
+
     controller(ViewRnrController, {$scope: scope, requisitionData: {rnr: requisition}, rnrColumns: columns, currency: '$', pageSize: pageSize,
-      $location: location, $routeParams: routeParams, regimenTemplate: regimenTemplate});
+      $location: location, $routeParams: routeParams, regimenTemplate: regimenTemplate,
+      hideAdditionalCommoditiesTab: false,
+      hideSkippedProducts: false,
+      enableSkipPeriod: false,
+      $dialog: {},
+      comments: [],
+      equipmentOperationalStatus:[]});
 
     expect(scope.page.fullSupply[0].id).toEqual(1);
     expect(scope.page.fullSupply[1].id).toEqual(2);
@@ -169,8 +231,15 @@ describe('ViewRnrController', function () {
       {'id': 3},
       {'id': 4}
     ];
+
     controller(ViewRnrController, {$scope: scope, requisitionData: {rnr: requisition}, rnrColumns: columns, currency: '$', pageSize: pageSize,
-      $location: location, $routeParams: routeParams, regimenTemplate: regimenTemplate});
+      $location: location, $routeParams: routeParams, regimenTemplate: regimenTemplate,
+      hideAdditionalCommoditiesTab: false,
+      hideSkippedProducts: false,
+      enableSkipPeriod: false,
+      $dialog: {},
+      comments: [],
+      equipmentOperationalStatus:[]});
 
     expect(scope.page.fullSupply[0].id).toEqual(3);
     expect(scope.page.fullSupply[1].id).toEqual(4);
@@ -185,8 +254,15 @@ describe('ViewRnrController', function () {
       {'id': 3},
       {'id': 4}
     ];
+
     controller(ViewRnrController, {$scope: scope, requisitionData: {rnr: requisition}, rnrColumns: columns, currency: '$', pageSize: pageSize,
-      $location: location, $routeParams: routeParams, regimenTemplate: regimenTemplate});
+      $location: location, $routeParams: routeParams, regimenTemplate: regimenTemplate,
+      hideAdditionalCommoditiesTab: false,
+      hideSkippedProducts: false,
+      enableSkipPeriod: false,
+      $dialog: {},
+      comments: [],
+      equipmentOperationalStatus:[]});
 
     routeParams.page = 2;
     scope.$broadcast('$routeUpdate');
@@ -204,8 +280,15 @@ describe('ViewRnrController', function () {
       {'id': 3},
       {'id': 4}
     ];
+
     controller(ViewRnrController, {$scope: scope, requisitionData: {rnr: requisition}, rnrColumns: columns, currency: '$', pageSize: pageSize,
-      $location: location, $routeParams: routeParams, regimenTemplate: regimenTemplate});
+      $location: location, $routeParams: routeParams, regimenTemplate: regimenTemplate,
+      hideAdditionalCommoditiesTab: false,
+      hideSkippedProducts: false,
+      enableSkipPeriod: false,
+      $dialog: {},
+      comments: [],
+      equipmentOperationalStatus:[]});
     spyOn(location, 'search').andCallThrough();
     scope.currentPage = 2;
     scope.$digest();
@@ -221,10 +304,17 @@ describe('ViewRnrController', function () {
       {'id': 3},
       {'id': 4}
     ];
+
     spyOn(location, 'search').andCallThrough();
 
     controller(ViewRnrController, {$scope: scope, requisitionData: {rnr: requisition}, rnrColumns: columns, currency: '$', pageSize: pageSize,
-      $location: location, $routeParams: routeParams, regimenTemplate: regimenTemplate});
+      $location: location, $routeParams: routeParams, regimenTemplate: regimenTemplate,
+      hideAdditionalCommoditiesTab: false,
+      hideSkippedProducts: false,
+      enableSkipPeriod: false,
+      $dialog: {},
+      comments: [],
+      equipmentOperationalStatus:[]});
     scope.$digest();
     expect(location.search).toHaveBeenCalledWith('page', 1);
   });
@@ -238,10 +328,17 @@ describe('ViewRnrController', function () {
       {'id': 3},
       {'id': 4}
     ];
+
     spyOn(location, 'search').andCallThrough();
 
     controller(ViewRnrController, {$scope: scope, requisitionData: {rnr: requisition}, rnrColumns: columns, currency: '$', pageSize: pageSize,
-      $location: location, $routeParams: routeParams, regimenTemplate: regimenTemplate});
+      $location: location, $routeParams: routeParams, regimenTemplate: regimenTemplate,
+      hideAdditionalCommoditiesTab: false,
+      hideSkippedProducts: false,
+      enableSkipPeriod: false,
+      $dialog: {},
+      comments: [],
+      equipmentOperationalStatus:[]});
     scope.$broadcast('$routeUpdate');
     expect(location.search).toHaveBeenCalledWith('supplyType', 'fullSupply');
   });

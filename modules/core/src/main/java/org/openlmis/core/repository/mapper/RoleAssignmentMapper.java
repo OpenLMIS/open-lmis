@@ -70,13 +70,22 @@ public interface RoleAssignmentMapper {
   List<RoleAssignment> getHomeFacilityRolesForUserOnGivenProgramWithRights(@Param("userId") Long userId, @Param("programId") Long programId, @Param("commaSeparatedRights") String commaSeparatedRights);
 
 
+  
   @Select({"SELECT DISTINCT RA.userId, array_agg(RA.roleId) as roleIdsAsString",
     "FROM role_assignments RA",
     "INNER JOIN role_rights RR ON RR.roleId = RA.roleId",
     "INNER JOIN rights RT ON RT.name = RR.rightName",
     "WHERE userId = #{userId} AND RT.rightType = 'ADMIN'",
-    "GROUP BY userId, supervisoryNodeId, programId"})
+    "GROUP BY userId"})
   RoleAssignment getAdminRole(Long userId);
+
+  @Select({"SELECT DISTINCT RA.userId, array_agg(RA.roleId) as roleIdsAsString",
+      "FROM role_assignments RA",
+      "INNER JOIN role_rights RR ON RR.roleId = RA.roleId",
+      "INNER JOIN rights RT ON RT.name = RR.rightName",
+      "WHERE userId = #{userId} AND RT.rightType = 'REPORT'",
+      "GROUP BY userId"})
+  RoleAssignment getReportRole(Long userId);
 
   @Insert("INSERT INTO role_assignments" +
     "(userId, roleId, programId, supervisoryNodeId, deliveryZoneId) VALUES " +

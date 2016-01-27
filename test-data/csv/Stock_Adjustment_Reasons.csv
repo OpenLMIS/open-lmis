@@ -1,0 +1,7 @@
+Reason Name,Description,Additive,Display Order,Is Default,Category
+Credit,Product was found,t,5,t,default
+Broken,Product was broken,f,1,t,national_arrival
+Expired,Product expired,f,2,t,default
+Recalled,Product was recalled,f,3,t,default
+Issue,Product was issued to another,f,4,t,default
+Receive,Product was received,t,0,t,default

@@ -13,7 +13,7 @@ package org.openlmis.rnr.domain;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
-import org.codehaus.jackson.map.annotate.JsonSerialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import org.openlmis.core.domain.RegimenCategory;
 import org.openlmis.core.exception.DataException;
 import org.slf4j.Logger;
@@ -21,7 +21,7 @@ import org.slf4j.LoggerFactory;
 
 import java.lang.reflect.Field;
 
-import static org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion.NON_EMPTY;
+import static com.fasterxml.jackson.databind.annotation.JsonSerialize.Inclusion.NON_EMPTY;
 import static org.openlmis.rnr.domain.Rnr.RNR_VALIDATION_ERROR;
 
 /**
@@ -45,9 +45,20 @@ public class RegimenLineItem extends LineItem {
   private Integer patientsOnTreatment;
   private Integer patientsToInitiateTreatment;
   private Integer patientsStoppedTreatment;
+
+  private Integer patientsOnTreatmentAdult;
+  private Integer patientsToInitiateTreatmentAdult;
+  private Integer patientsStoppedTreatmentAdult;
+
+  private Integer patientsOnTreatmentChildren;
+  private Integer patientsToInitiateTreatmentChildren;
+  private Integer patientsStoppedTreatmentChildren;
+
   private String remarks;
   private RegimenCategory category;
   private Integer regimenDisplayOrder;
+
+  private Boolean skipped = false;
 
   private static Logger logger = LoggerFactory.getLogger(RegimenLineItem.class);
 
