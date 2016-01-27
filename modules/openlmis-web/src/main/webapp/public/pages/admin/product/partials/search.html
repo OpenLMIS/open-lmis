@@ -45,18 +45,20 @@
   </div>
 
   <div class="table-container">
-    <table id="programProductTable" class="table table-bordered search-list" ng-show="showResults">
+    <table id="programProductTable" class="table table-bordered search-list">
       <thead>
       <tr class="gradient-header resultCountHeader">
-        <th colspan="11">
-        <span ng-switch on="totalItems" ng-show="searchedQuery">
+        <th colspan="11" ng-switch on="searchedQuery">
+        <span ng-switch-when="%">
+          <h3 id="allResultsMessage" openlmis-message="msg.all.matches|totalItems"></h3>
+        </span>
+          <span ng-switch-default ng-switch on="totalItems">
           <h3 id="noResultMessage" ng-switch-when="0" openlmis-message="msg.no.matches|searchedQuery"></h3>
           <h3 id="oneResultMessage" ng-switch-when="1" openlmis-message="msg.one.match|searchedQuery"></h3>
           <h3 id="nResultsMessage" ng-switch-default openlmis-message="msg.many.matches|totalItems|searchedQuery"></h3>
         </span>
-          <a id="closeButton" class="close-btn" href="" ng-click="clearSearch()" tabindex="-1"></a>
-
-        </th>
+        <a id="closeButton" class="close-btn" href="" ng-click="clearSearch()" tabindex="-1" ng-show="showCloseButton"></a>
+      </th>
       </tr>
       <tr class="gradient-header" ng-show="programProducts.length">
         <th id="fullSupply" openlmis-message="header.full.supply"></th>
