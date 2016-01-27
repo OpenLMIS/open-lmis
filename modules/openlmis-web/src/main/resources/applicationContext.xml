@@ -25,14 +25,15 @@
         http://www.springframework.org/schema/aop/spring-aop-4.1.xsd
       ">
 
-    <context:annotation-config  />
-    <mvc:annotation-driven  />
-    <aop:aspectj-autoproxy expose-proxy="false" />
+    <context:annotation-config/>
+    <mvc:annotation-driven/>
+    <aop:aspectj-autoproxy expose-proxy="false"/>
 
 
     <bean class="org.openlmis.config.MySwaggerConfig"></bean>
+    <bean class="org.springframework.web.client.RestTemplate"></bean>
 
-    <context:component-scan base-package="org.openlmis.web" />
+    <context:component-scan base-package="org.openlmis.web"/>
 
     <bean id="applicationProperties" class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
 
@@ -72,11 +73,11 @@
     <import resource="classpath:/applicationContext-reporting.xml"/>
     <import resource="classpath:/applicationContext-report.xml"/>
     <import resource="classpath:/applicationContext-distribution.xml"/>
-    <import resource="classpath:/applicationContext-equipment.xml" />
-    <import resource="classpath:/applicationContext-help.xml" />
+    <import resource="classpath:/applicationContext-equipment.xml"/>
+    <import resource="classpath:/applicationContext-help.xml"/>
     <import resource="classpath:/applicationContext-demographics.xml"/>
-    <import resource="classpath:/applicationContext-vaccine.xml" />
-    <import resource="classpath:/applicationContext-stock-management.xml" />
+    <import resource="classpath:/applicationContext-vaccine.xml"/>
+    <import resource="classpath:/applicationContext-stock-management.xml"/>
 
     <bean id="userAuthenticationProvider" class="org.openlmis.authentication.web.UserAuthenticationProvider"/>
 
