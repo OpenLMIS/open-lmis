@@ -13,7 +13,7 @@
 <html lang="en" ng-app="dashboard">
 <head>
     <meta charset="utf-8">
-    <title openlmis-message="app.title"></title>        <!-- Icons -->
+    <title openlmis-message="app.title"></title> <!-- Icons -->
     <link rel="icon" href="/favicon.ico" type="image/x-icon"/>
 
     <!-- library files-->
@@ -33,7 +33,6 @@
     <script src="/public/lib/c3/c3.min.js"></script>
     <script src="/public/lib/c3/c3-angular.min.js"></script>
     <link rel="stylesheet" href="/public/lib/c3/c3.min.css">
-
 
 
     <script src="/public/lib/nsPopover/nsPopover.js"></script>
@@ -76,6 +75,7 @@
     <!--<link rel="stylesheet" href="/public/css/style.css">-->
     <link rel="stylesheet" href="/public/css/report.css">
     <link rel="stylesheet" href="/public/css/dashboard.css">
+    <link rel="stylesheet" href="/public/css/dashboard-index.css">
     <link rel="stylesheet" href="/public/lib/leaflet/leaflet.css">
 
     <!-- Shared controller files -->
@@ -98,7 +98,7 @@
     <script src="/public/lib/flot/jquery.flot.tooltip.min.js"></script>
     <script src="/public/lib/flot/flot-barnumbers/jquery.flot.barnumbers.js"></script>
     <!-- Calendar tool-->
-    <script src="/public/lib/fullcalendar/fullcalendar.min.js" ></script>
+    <script src="/public/lib/fullcalendar/fullcalendar.min.js"></script>
     <!--<script src="/public/lib/fullcalendar/gcal.js" ></script>-->
     <script src="/public/lib/ui-calendar/calendar.js"></script>
 
@@ -108,6 +108,7 @@
     <script src="/public/lib/jquery/jqplot.meterGaugeRenderer.min.js"></script>
 
     <script src="/public/js/dashboard/module/dashboard-module.js"></script>
+    <script src="/public/js/dashboard/controller/home-page-controller.js"></script>
     <script src="/public/js/dashboard/controller/dashboard-controller.js"></script>
     <script src="/public/js/dashboard/controller/dashboard-program-controller.js"></script>
     <script src="/public/js/dashboard/controller/stock-controller.js"></script>
@@ -130,43 +131,61 @@
     <!--[if IE 9]>
     <link rel="stylesheet" href="/public/css/ie9.css"/>
     <![endif]-->
-
 </head>
 <body onunload="">
-<div id="wrap">
-    <ng-include src="'/public/pages/header.html'"></ng-include>
-    <ng-include src="'/public/pages/navigation.html'"></ng-include>
-    <div class="content">
-        <ng-include src="'/public/pages/dashboard/shared/dashboard-header.html'"></ng-include>
-        <div ng-view></div>
+<div ng-controller="homePageController">
+    <div id="wrap">
+        <ng-include src="'/public/pages/header.html'"></ng-include>
+        <ng-include src="'/public/pages/navigation.html'"></ng-include>
+
+        <div ng-show="showDashboard">
+            <div class="content">
+                <ng-include src="'/public/pages/dashboard/shared/dashboard-header.html'"></ng-include>
+                <div ng-view></div>
+            </div>
+
+            <ng-include src="'/public/pages/template/footer/openlmis-footer.html'"></ng-include>
+        </div>
+        <div ng-show="showHomepage" class="index-container">
+            <div class="index-content">
+                <div class="center-wrapper">
+                    <div class="center-wrapper2">
+                        <img src="/public/images/logo-moz.svg"/>
+
+                        <h1 openlmis-message="label.welcome.moz"></h1>
+
+                        <h3 openlmis-message="label.welcome.moz.stock"></h3>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
-    <ng-include src="'/public/pages/template/footer/openlmis-footer.html'"></ng-include>
 </div>
 <script>
     var newWin = null;
-    function popUp(strURL,strType, strHeight, strWidth) {
+    function popUp(strURL, strType, strHeight, strWidth) {
 
-        if(typeof(strHeight)==='undefined') strType = "maximized";
-        if(typeof(strWidth)==='undefined')  strType = "maximized";
+        if (typeof(strHeight) === 'undefined') strType = "maximized";
+        if (typeof(strWidth) === 'undefined')  strType = "maximized";
 
         if (newWin != null && !newWin.closed) {
             newWin.close();
         }
-        var strOptions="";
-        if (strType=="console") {
-            strOptions="resizable,height="+strHeight+",width="+strWidth;
+        var strOptions = "";
+        if (strType == "console") {
+            strOptions = "resizable,height=" + strHeight + ",width=" + strWidth;
         }
-        if (strType=="fixed") {
-            strOptions="status,height="+strHeight+",width="+strWidth;
+        if (strType == "fixed") {
+            strOptions = "status,height=" + strHeight + ",width=" + strWidth;
         }
-        if (strType=="elastic") {
-            strOptions="toolbar,menubar,scrollbars,"+"resizable,location,height="+strHeight+",width="+strWidth;
+        if (strType == "elastic") {
+            strOptions = "toolbar,menubar,scrollbars," + "resizable,location,height=" + strHeight + ",width=" + strWidth;
         }
-        if (strType=="maximized") {
+        if (strType == "maximized") {
             strWidth = (screen.availWidth - 10).toString();
             strHeight = (screen.availHeight - 122).toString();
 
-            strOptions="toolbar,menubar,scrollbars,"+"location,height="+strHeight+",width="+strWidth;
+            strOptions = "toolbar,menubar,scrollbars," + "location,height=" + strHeight + ",width=" + strWidth;
         }
 
         newWin = window.open(strURL, 'newWin', strOptions);

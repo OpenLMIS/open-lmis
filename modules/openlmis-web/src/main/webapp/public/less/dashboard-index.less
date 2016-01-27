@@ -1,0 +1,84 @@
+@font-face {
+  font-family: "RalewayExtraLight";
+  font-style: normal;
+  font-weight: 200;
+  src: local("Raleway ExtraLight"), local("Raleway-ExtraLight"), url("https://fonts.gstatic.com/s/raleway/v9/8KhZd3VQBtXTAznvKjw-k_k_vArhqVIZ0nv9q090hN8.woff2") format("woff2"), url("https://fonts.gstatic.com/s/raleway/v9/8KhZd3VQBtXTAznvKjw-kxsxEYwM7FgeyaSgU71cLG0.woff") format("woff");
+}
+
+@font-face {
+  font-family: "RalewaySemiBold";
+  font-style: normal;
+  font-weight: 600;
+  src: local("Raleway SemiBold"), local("Raleway-SemiBold"), url("https://fonts.gstatic.com/s/raleway/v9/xkvoNo9fC8O2RDydKj12b_k_vArhqVIZ0nv9q090hN8.woff2") format("woff2"), url("https://fonts.gstatic.com/s/raleway/v9/xkvoNo9fC8O2RDydKj12bxsxEYwM7FgeyaSgU71cLG0.woff") format("woff");
+}
+
+.index-container {
+  position: absolute;
+  height: 90%;
+  width: 96%;
+  left: 2%;
+}
+
+.index-container:after {
+  content: " "; /* Older browser do not support empty content */
+  visibility: hidden;
+  display: block;
+  height: 0;
+  clear: both;
+}
+
+.index-content {
+  position: absolute;
+  width: 100%;
+  height: 90%;
+  background-color: #DFDFDF;
+  text-align: center;
+
+  margin: auto;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+
+  .center-wrapper {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    .center-wrapper2 {
+      position: absolute;
+      width: 70%;
+      height: 25em;
+      margin: auto;
+      left: 0;
+      right: 0;
+      top: 0;
+      bottom: 0;
+      -moz-user-select: none;
+      -khtml-user-select: none;
+      -webkit-user-select: none;
+      -o-user-select: none;
+
+      cursor: default;
+      img {
+        height: 20em;
+      }
+      h1 {
+        font-weight: 100;
+        font-size: 3em;
+        font-family: "RalewayExtraLight";
+      }
+      h3 {
+        font-weight: 100;
+        font-family: "RalewaySemiBold";
+      }
+    }
+  }
+}
+
+.index-content:after {
+  content: " "; /* Older browser do not support empty content */
+  visibility: hidden;
+  display: block;
+  height: 0;
+  clear: both;
+}
