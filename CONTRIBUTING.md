@@ -1,12 +1,12 @@
 # Contributing to OpenLMIS
 Contributing to OpenLMIS is what delivers a shared, open source solution for managing medical commodity distribution
 in low- and middle-income countries.  Your contributions are needed!  Before you get started, take a moment to read
-this quick guide, (get to know the community) and (get in touch with us) so we can coordinate.
+this quick guide, [get to know the community](http://openlmis.org/openlmis-community/) and join in on the [developer forum](https://groups.google.com/forum/#!forum/openlmis-dev) so we can coordinate.
 
 ## Reporting Bugs
-The OpenLMIS community is currently using a public JIRA for tracking bugs.  This system helps track current and 
-historical bugs, what work has been done, and so on.  Reporting a bug with this tool is the best way to get the bug 
-fixed quickly and in the best manner.
+The OpenLMIS community is currently using a public JIRA for [tracking bugs](https://openlmis.atlassian.net/projects/OLMIS/issues/).
+This system helps track current and historical bugs, what work has been done, and so on.  Reporting a bug with this tool is the best way
+to get the bug fixed quickly and in the best manner.
 
 ### Before you report a bug
 - Search to see if the same bug or a similar one has already been reported.  If one already exists it saves
@@ -20,16 +20,16 @@ the technical forums.
 Fixing bugs is a time-intensive process.  To speed things along and assist in fixing the bug, it greatly helps to send
 in a complete, accurate and well thought out bug report.  These steps can help that along:
 
-- First make sure you search for the bug!  It takes a lot of work to report and investigate bug reports so please do
+1. First make sure you search for the bug!  It takes a lot of work to report and investigate bug reports so please do
 this first. See above.
-- A clear and concise description of what you saw, as well as a description of what you thought you should see from
+2. A clear and concise description of what you saw, as well as a description of what you thought you should see from
 the feature.
-- Detailed steps that someone unfamiliar with the bug can use to recreate it.  Make sure this bug occurs on different
+3. Detailed steps that someone unfamiliar with the bug can use to recreate it.  Make sure this bug occurs on different
 personal computers, servers, web-browsers, etc.
-- The web-browser (e.g. FireFox), version (e.g. v40), OpenLMIS version, as well as any custom modifications made.
-- Your priority in fixing this bug!
-- If applicable the output of any stacktrace, or logging output
-- If possible and relevant, a sample or view of the database - though don't post sensitive information in public
+4. The web-browser (e.g. FireFox), version (e.g. v40), OpenLMIS version, as well as any custom modifications made.
+5. Your priority in fixing this bug!
+6. If applicable the output of any stacktrace, or logging output
+7. If possible and relevant, a sample or view of the database - though don't post sensitive information in public
 
 ### Example Bug Report
 
@@ -108,7 +108,7 @@ TODO:  describe how a module is built and where it's contributed.  Reference Mod
 
 * Code that breaks the build or disables / removes needed tests to pass
 
-* Code that doesn't pass our Quality Gate - TODO: link to style guide
+* Code that doesn't pass our Quality Gate - TODO: link to style guide & sonar
 
 * Code that belongs in a Module but was added to Core or vice versa
 
