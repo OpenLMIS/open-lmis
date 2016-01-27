@@ -15,8 +15,9 @@ function SupervisoryNodeSearchController($scope, navigateBackService, Supervisor
     {value: "parent", name: "option.value.supervisory.node.parent"}
   ];
 
-  $scope.showResults = false;
+  $scope.showCloseButton = false;
   $scope.currentPage = 1;
+  $scope.searchedQuery = '%'
   $scope.selectedSearchOption = navigateBackService.selectedSearchOption || $scope.searchOptions[0];
 
   $scope.selectSearchType = function (searchOption) {
@@ -48,7 +49,11 @@ function SupervisoryNodeSearchController($scope, navigateBackService, Supervisor
       $scope.pagination = data.pagination;
       $scope.totalItems = $scope.pagination.totalRecords;
       $scope.currentPage = $scope.pagination.page;
-      $scope.showResults = true;
+      if($scope.searchedQuery === '%'){
+        $scope.showCloseButton = false;
+      }else {
+        $scope.showCloseButton = true;
+      }
     }, {});
   }
 
@@ -62,8 +67,11 @@ function SupervisoryNodeSearchController($scope, navigateBackService, Supervisor
     $scope.query = "";
     $scope.totalItems = 0;
     $scope.supervisoryNodeList = [];
-    $scope.showResults = false;
+    $scope.showCloseButton = false;
     angular.element("#searchSupervisoryNode").focus();
+    $scope.searchedQuery= "%";
+    $scope.currentPage = 1;
+    $scope.search($scope.currentPage, $scope.searchedQuery);
   };
 
   $scope.triggerSearch = function (event) {
