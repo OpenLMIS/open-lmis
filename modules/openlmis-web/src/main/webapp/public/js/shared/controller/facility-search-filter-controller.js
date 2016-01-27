@@ -12,11 +12,13 @@ function FacilitySearchFilterController($scope, Facilities) {
 
   $scope.type = {};
   $scope.zone = {};
+  var defaultSearchParam='%';
+  $scope.showCloseButton = false;
 
   $scope.showFacilitySearchResults = function () {
-    if (!$scope.facilitySearchParam) return;
+    if (!($scope.facilitySearchParam || defaultSearchParam)) return;
 
-    $scope.facilityQuery = $scope.facilitySearchParam.trim();
+    $scope.facilityQuery = $scope.facilitySearchParam ? $scope.facilitySearchParam.trim() : defaultSearchParam;
     Facilities.get({
         "searchParam": $scope.facilityQuery,
         "facilityTypeId": $scope.type.id,
@@ -28,6 +30,11 @@ function FacilitySearchFilterController($scope, Facilities) {
         $scope.facilityResultCount = isUndefined($scope.facilityList) ? 0 : $scope.facilityList.length;
         $scope.resultCount = $scope.facilityResultCount;
         $scope.message = data.message;
+        if($scope.facilityQuery === '%'){
+            $scope.showCloseButton = false;
+        }else {
+            $scope.showCloseButton = true;
+        }
       });
   };
 
@@ -40,8 +47,8 @@ function FacilitySearchFilterController($scope, Facilities) {
   $scope.clearFacilitySearch = function () {
     $scope.facilitySearchParam = undefined;
     $scope.facilityList = undefined;
-    $scope.facilityResultCount = undefined;
     angular.element('#searchFacility').focus();
+    $scope.showFacilitySearchResults();
   };
 
   $scope.clearVisibleFilters = function () {
@@ -55,4 +62,10 @@ function FacilitySearchFilterController($scope, Facilities) {
     $scope.clearVisibleFilters();
     $scope.$broadcast('singleSelectSearchCleared');
   };
+
+  $scope.$watch('showSlider', function() {
+      if($scope.showSlider){
+        $scope.showFacilitySearchResults();
+      }
+  });
 }
