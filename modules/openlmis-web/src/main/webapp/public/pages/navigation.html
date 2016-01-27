@@ -10,9 +10,8 @@
 
 <div class="navigation toggleFullScreen" ng-controller="NavigationController" ui-nav>
   <ul class="clearfix" style="display:none">
-    <li >
-      <a  href="" id='homeMenu' ng-click="homeLinkClicked()" openlmis-message="link.home"></a></li>
     <li>
+      <a  href="" id='homeMenu' ng-click="homeLinkClicked()" openlmis-message="link.home"></a></li>
     <li>
       <a id="requisitions-menu" href="javascript: void(0)" openlmis-message="link.requisitions"></a>
 
@@ -60,8 +59,17 @@
 
     </li>
 
-    <li ng-show="hasReportingPermission()">
-      <a id="report-menu" href="/public/pages/report/index.html" openlmis-message="link.reports"></a>
+    <li>
+      <a id="distributions-menu" href="javascript: void(0)" openlmis-message="link.distributions"></a>
+      <div class="submenu">
+        <ul>
+          <li ng-show="hasPermission('MANAGE_DISTRIBUTION')">
+            <a id="manage-distribution" href="/public/pages/logistics/distribution/index.html#/manage"
+               openlmis-message="link.manage"></a>
+          </li>
+          <li class="beak"></li>
+        </ul>
+      </div>
     </li>
 
     <li>
@@ -85,7 +93,7 @@
         </ul>
       </div>
     </li>
-    <li ng-show="hasPermission('CREATE_IVD') || hasPermission('VIEW_IVD') || hasPermission('MANAGE_DISTRIBUTION') || hasPermission('VIEW_ORDER_REQUISITION') || hasPermission('VIEW_PENDING_REQUEST') || hasPermission('CREATE_ORDER_REQUISITION')">
+    <li ng-show="hasPermission('CREATE_IVD') || hasPermission('VIEW_IVD') || hasPermission('VIEW_ORDER_REQUISITION') || hasPermission('VIEW_PENDING_REQUEST') || hasPermission('CREATE_ORDER_REQUISITION')">
       <a id="vaccine" href="" openlmis-message="link.vaccine"></a>
       <div class="submenu">
         <ul>
@@ -95,11 +103,6 @@
           </li>
           <li ng-show="hasPermission('VIEW_IVD')">
             <a href="/public/pages/vaccine/report/index.html#/view" openlmis-message="link.view.ivd"></a>
-          </li>
-          <li ng-show="hasPermission('MANAGE_DISTRIBUTION')">
-            <a id="manage-distribution"
-               href="/public/pages/logistics/distribution/index.html#/manage"
-               openlmis-message="link.distributions"></a>
           </li>
           <li class="beak"></li>
           <li>
@@ -429,6 +432,7 @@
           <li class="beak"></li>
         </ul>
       </div>
+    </li>
 
     <li ng-show="hasPermission('ACCESS_ILS_GATEWAY')">
         <a
