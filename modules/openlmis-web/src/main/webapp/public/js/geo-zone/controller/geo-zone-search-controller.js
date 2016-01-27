@@ -15,8 +15,9 @@ function GeoZoneSearchController($scope, GeographicZones, $location, navigateBac
     {value: "parentName", name: "option.value.geo.zone.parent"}
   ];
 
-  $scope.showResults = false;
+  $scope.showCloseButton = false;
   $scope.currentPage = 1;
+  $scope.searchedQuery = '%'
   $scope.selectedSearchOption = navigateBackService.selectedSearchOption || $scope.searchOptions[0];
 
   $scope.selectSearchType = function (searchOption) {
@@ -51,7 +52,11 @@ function GeoZoneSearchController($scope, GeographicZones, $location, navigateBac
       $scope.pagination = data.pagination;
       $scope.totalItems = $scope.pagination.totalRecords;
       $scope.currentPage = $scope.pagination.page;
-      $scope.showResults = true;
+      if($scope.searchedQuery === '%'){
+        $scope.showCloseButton = false;
+      }else {
+        $scope.showCloseButton = true;
+      }
     }, {});
   }
 
@@ -59,8 +64,11 @@ function GeoZoneSearchController($scope, GeographicZones, $location, navigateBac
     $scope.query = "";
     $scope.totalItems = 0;
     $scope.geoZoneList = [];
-    $scope.showResults = false;
+    $scope.showCloseButton = false;
     angular.element("#searchGeoZone").focus();
+    $scope.searchedQuery= "%";
+    $scope.currentPage = 1;
+    $scope.search($scope.currentPage, $scope.searchedQuery);
   };
 
   $scope.triggerSearch = function (event) {
