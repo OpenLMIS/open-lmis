@@ -130,6 +130,7 @@ subprojects {
     jvmArgs '-XX:-UseSplitVerifier', '-XX:MaxPermSize=256m'
     System.properties.get('environmentName', 'local')
     systemProperties System.properties
+    systemProperty 'toggleOnCustom', toggleOnCustom
     useJUnit {
       includeCategories 'org.openlmis.db.categories.UnitTests'
       includeCategories 'org.openlmis.db.categories.IntegrationTests'
@@ -144,6 +145,7 @@ subprojects {
     jvmArgs '-XX:-UseSplitVerifier', '-XX:MaxPermSize=256m'
     System.properties.get('environmentName', 'local')
     systemProperties System.properties
+    systemProperty 'toggleOnCustom', toggleOnCustom
     useJUnit {
       includeCategories 'org.openlmis.db.categories.IntegrationTests'
     }

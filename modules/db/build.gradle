@@ -114,9 +114,18 @@ task vimsSeed(type: Exec) {
     commandLine 'psql', '-U', dbUser, '--file', '../../test-data/vims/seed.sql', '-h', databaseHostName, '-w', dbName
 }
 
-task seed(type: Exec) {
+task baseSeed(type: Exec) {
     environment("PGPASSWORD", dbPassword)
     commandLine 'psql', '-U', dbUser, '--file', 'src/main/resources/seed/seed.sql', '-h', databaseHostName, '-w', dbName
+}
+
+task vSeed(type: Exec, dependsOn: baseSeed) {
+    onlyIf { toggleOnCustom == 'true' }
+    environment("PGPASSWORD", dbPassword)
+    commandLine 'psql', '-U', dbUser, '--file', 'src/main/resources/seed/vims_seed.sql', '-h', databaseHostName, '-w', dbName
+}
+
+task seed(dependsOn: [baseSeed, vSeed]) {
 }
 
 def boolean closeActiveConnections(String pid) {
