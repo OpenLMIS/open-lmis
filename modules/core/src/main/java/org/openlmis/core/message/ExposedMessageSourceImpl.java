@@ -22,23 +22,46 @@ import java.util.*;
  */
 @Component
 public class ExposedMessageSourceImpl extends ReloadableResourceBundleMessageSource implements ExposedMessageSource {
- 
-	protected Properties getAllProperties(Locale locale) {
+
+	private static final String MESSAGES_FILE_NAME = "messages";
+	private static final String CLASS_PATH = "classpath:";
+	private static final String MESSAGES_EN_MOZ_FILE_NAME = "messages_en_MOZ";
+	private static final String MESSAGES_PT_MOZ_FILE_NAME = "messages_pt_MOZ";
+
+	protected Properties getAllPropertiesByFileName(String fileName) {
 		clearCacheIncludingAncestors();
-		PropertiesHolder propertiesHolder = getMergedProperties(locale);
+		PropertiesHolder propertiesHolder = getProperties(CLASS_PATH + fileName);
 		Properties properties = propertiesHolder.getProperties();
-		
+
 		return properties;
 	}
-	
-	
+
+
 	public Map<String, String> getAll(Locale locale) {
-		Properties p = getAllProperties(locale);
-		Enumeration<String> keys = (Enumeration<String>) p.propertyNames();
+		Properties pMoz = null;
+		if (locale.toString().equals("en")) {
+			pMoz = getAllPropertiesByFileName(MESSAGES_EN_MOZ_FILE_NAME);
+		} else if (locale.toString().equals("pt")){
+			pMoz = getAllPropertiesByFileName(MESSAGES_PT_MOZ_FILE_NAME);
+        }
+
+		Properties baseProperties = getAllPropertiesByFileName(MESSAGES_FILE_NAME);
+		Properties localeProperties = getAllPropertiesByFileName(MESSAGES_FILE_NAME + "_" + locale.toString());
+
+		Properties mergedProperties = new Properties();
+		mergedProperties.putAll(baseProperties);
+		mergedProperties.putAll(localeProperties);
+		mergedProperties.putAll(pMoz);
+
+		return convertPropertiesToMap(mergedProperties);
+	}
+
+	private Map<String, String> convertPropertiesToMap(Properties mergedProperties) {
+		Enumeration<String> keys = (Enumeration<String>) mergedProperties.propertyNames();
 		Map<String, String> asMap = new HashMap<>();
 		while(keys.hasMoreElements()) {
 			String key = keys.nextElement();
-			asMap.put(key, p.getProperty(key));
+			asMap.put(key, mergedProperties.getProperty(key));
 		}
 		return asMap;
 	}
