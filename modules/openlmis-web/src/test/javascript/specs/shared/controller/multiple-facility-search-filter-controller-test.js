@@ -34,7 +34,6 @@ describe("Multiple Facility Search Filter Controller", function () {
 
     expect(scope.multipleFacilities).toEqual([facility1, facility2]);
     expect(scope.multipleFacilitiesMessage).toEqual(undefined);
-    expect(scope.multipleFacilitiesResultCount).toEqual(2);
     expect(scope.resultCount).toEqual(2);
   });
 
@@ -50,17 +49,20 @@ describe("Multiple Facility Search Filter Controller", function () {
 
     expect(scope.multipleFacilities).toBeUndefined();
     expect(scope.multipleFacilitiesMessage).toEqual(undefined);
-    expect(scope.multipleFacilitiesResultCount).toEqual(0);
     expect(scope.resultCount).toEqual(0);
   });
 
-  it('should not search results if query is undefined', function () {
+  it('should search all results if query is undefined', function () {
     spyOn(httpBackend, 'expectGET');
     scope.multipleFacilitiesSearchParam = undefined;
+    scope.$parent = {"$parent": {"addMembers": function () {
+      return true;
+    }}};
+    scope.extraMultipleParams = {"virtualFacility": null, "enabled": true };
 
     scope.showFacilitySearchResults();
 
-    expect(httpBackend.expectGET).not.toHaveBeenCalledWith('/filter-facilities.json?searchParam=undefined');
+    expect(httpBackend.expectGET).not.toHaveBeenCalledWith('/filter-facilities.json?searchParam=%25');
   });
 
   it('should associate facilities', function () {
@@ -129,27 +131,20 @@ describe("Multiple Facility Search Filter Controller", function () {
     expect(spyBroadcast).not.toHaveBeenCalledWith('multiSelectSearchCleared');
   });
 
-  it('should not search results if query is undefined', function () {
-    spyOn(httpBackend, 'expectGET');
-    scope.multipleFacilitiesSearchParam = undefined;
-
-    scope.showFacilitySearchResults();
-
-    expect(httpBackend.expectGET).not.toHaveBeenCalledWith('/filter-facilities.json?searchParam=undefined');
-    expect(scope.tempFacilities).toEqual([]);
-  });
-
   it('should clear facility search results', function () {
     scope.multipleFacilitiesSearchParam = "searchParam";
     scope.multipleFacilities = [];
     scope.multipleFacilitiesResultCount = 3;
     var element = angular.element('<div id="search" class="search-list"></div>');
     spyOn(angular, "element").andReturn(element);
+    scope.$parent = {"$parent": {"addMembers": function () {
+      return true;
+    }}};
+    scope.extraMultipleParams = {"virtualFacility": null, "enabled": true };
 
     scope.clearMultiSelectFacilitySearch();
     element.trigger('slideUp');
 
-    expect(scope.multipleFacilitiesResultCount).toBeUndefined();
     expect(scope.multipleFacilities).toBeUndefined();
     expect(scope.multipleFacilitiesSearchParam).toBeUndefined();
     expect(scope.disableAddFacility).toBeTruthy();
@@ -160,6 +155,9 @@ describe("Multiple Facility Search Filter Controller", function () {
   it('should clear visible filters', function () {
     scope.type = {name: "type"};
     scope.zone = {name: "zone"};
+    scope.$parent = {"$parent": {"addMembers": function () {
+      return true;
+    }}};
 
     scope.clearVisibleFilters();
 
@@ -178,12 +176,15 @@ describe("Multiple Facility Search Filter Controller", function () {
     scope.tempFacilities = [
       {name: "F1"}
     ];
+    scope.$parent = {"$parent": {"addMembers": function () {
+      return true;
+    }}};
+    scope.extraMultipleParams = {"virtualFacility": null, "enabled": true };
 
     scope.clearMultiSelectFacilitySearch();
 
     expect(scope.multipleFacilitiesSearchParam).toBeUndefined();
     expect(scope.multipleFacilities).toBeUndefined();
-    expect(scope.multipleFacilitiesResultCount).toBeUndefined();
     expect(scope.disableAddFacility).toBeTruthy();
     expect(scope.tempFacilities).toEqual([]);
   });

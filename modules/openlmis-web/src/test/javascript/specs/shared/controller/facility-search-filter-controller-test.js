@@ -59,12 +59,12 @@ describe("Facility Search Filter Controller", function () {
       {name: "F2"}
     ];
     scope.facilityResultCount = 34;
+    scope.extraParams = {"virtualFacility": null, "enabled": true };
 
     scope.clearFacilitySearch();
 
     expect(scope.facilitySearchParam).toBeUndefined();
     expect(scope.facilityList).toBeUndefined();
-    expect(scope.facilityResultCount).toBeUndefined();
   });
 
   it('should trigger fetching facility search results on pressing enter key', function () {
@@ -88,6 +88,7 @@ describe("Facility Search Filter Controller", function () {
   it('should not search results if query is undefined', function () {
     spyOn($httpBackend, 'expectGET');
     scope.facilitySearchParam = undefined;
+    scope.extraParams = {"virtualFacility": null, "enabled": true };
 
     scope.showFacilitySearchResults();
 

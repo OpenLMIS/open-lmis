@@ -82,8 +82,10 @@ describe("Facility Sub Filters Controller", function () {
       {"name": "moz"}
     ];
     scope.geoZoneSearchParam = "moz";
-
+    var response = {"geoZones": [], "message": "Too may results found"};
+    $httpBackend.when('GET', '/filtered-geographicZones.json?searchParam=%25').respond(response);
     scope.clearGeoZoneSearch();
+    $httpBackend.flush();
 
     expect(scope.showCloseButton).toBeFalsy();
     expect(scope.geoZoneList).toEqual([]);
@@ -148,6 +150,8 @@ describe("Facility Sub Filters Controller", function () {
   it('should show filter modal with facilityTypes', function () {
     scope.filterModal = false;
     $httpBackend.when('GET', '/facility-types.json').respond({"facilityTypeList": facilityTypeList});
+    var response = {"geoZones": [], "message": "Too may results found"};
+    $httpBackend.when('GET', '/filtered-geographicZones.json?searchParam=%25').respond(response);
     scope.showFilterModal();
     $httpBackend.flush();
 
