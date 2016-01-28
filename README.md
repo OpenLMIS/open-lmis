@@ -1,4 +1,4 @@
-[![Build Status](http://ci.openlmis.org:8080/buildStatus/icon?job=OpenLMIS2.0)](http://ci.openlmis.org:8080/job/OpenLMIS2.0)
+[![Build Status](http://ci.openlmis.org:8080/job/OpenLMIS%20dev%20branch%20build/badge/icon)](http://ci.openlmis.org:8080/job/OpenLMIS%20dev%20branch%20build/)
 
 OpenLMIS (Open Logistics Management Information System) is software for a shared, open source solution for managing medical commodity distribution in low- and middle-income countries.  For more information, see http://openlmis.org/.
 
