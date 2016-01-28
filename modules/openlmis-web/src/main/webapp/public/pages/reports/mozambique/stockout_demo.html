@@ -65,14 +65,14 @@
                 "cubename": "vw_stockouts",
                 "name": "stock outs",
                 "mode": "chart",
-                "drilldown": ["drug:drug"],
+                "drilldown": ["facility", "drug:drug", "stockout:days"],
                 "cuts": [{
-                    dimension: 'drug',
-                    value: '08R01Z'
+                    dimension: 'facility',
+                    value: 'Habel Jafar'
                 }],
                 "datefilters": [],
                 "rangefilters": [],
-                "xaxis": "facility",
+                "xaxis": "stockout:date",
                 "yaxis": "stockout_days",
                 "charttype": "bars-vertical",
                 "columnHide": {},
