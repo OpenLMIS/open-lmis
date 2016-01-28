@@ -23,7 +23,7 @@ function ProgramEquipmentProductController($scope, $dialog, messageService, navi
 
   $scope.getAllEquipments = function () {
     EquipmentTypes.get(function (data) {
-       $scope.allEquipments = data.equipment_type;
+       $scope.allEquipments = data.equipment_types;
        $scope.equipmentsLoaded = true;
       });
   };
