@@ -162,4 +162,12 @@ describe("Supply Line Search Controller", function () {
 
     expect(searchSpy).toHaveBeenCalledWith(1,'%');
   });
+
+  it('should trigger search % when change SearchType ', function () {
+    scope.searchOption = {value: "facility", name: "label.supplying.facility"};
+    var searchSpy = spyOn(scope, 'search');
+    scope.selectSearchType(scope.searchOption);
+
+    expect(searchSpy).toHaveBeenCalledWith(1,'%');
+  });
 });

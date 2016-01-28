@@ -22,6 +22,8 @@ function SupplyLineSearchController($scope, $location, navigateBackService, Supp
 
   $scope.selectSearchType = function (searchOption) {
     $scope.selectedSearchOption = searchOption;
+    $scope.currentPage = 1;
+    $scope.search($scope.currentPage, $scope.searchedQuery);
   };
 
   $scope.$on('$viewContentLoaded', function () {
