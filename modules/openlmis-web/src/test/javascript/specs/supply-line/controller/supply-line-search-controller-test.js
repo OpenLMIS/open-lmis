@@ -68,12 +68,13 @@ describe("Supply Line Search Controller", function () {
     expect($httpBackend.expectGET).not.toHaveBeenCalledWith('/supplyLines/search.json?column=supervisoryNode&page=1&searchParam=Nod');
   });
 
-  it('should clear search param and result list', function () {
+  it('should clear search param and show all result list', function () {
     var supplyLine = {program: {name: "P1"}, supplyingFacility: {name: "Fac 1"}, supervisoryNode: {name: "Node 1"}, description: "desc"};
     scope.query = "query";
     scope.totalItems = 100;
     scope.supplyLines = [supplyLine];
     scope.showCloseButton = true;
+    var searchSpy = spyOn(scope, 'search');
 
     scope.clearSearch();
 
@@ -81,6 +82,7 @@ describe("Supply Line Search Controller", function () {
     expect(scope.query).toEqual("");
     expect(scope.totalItems).toEqual(0);
     expect(scope.supplyLines).toEqual([]);
+    expect(searchSpy).toHaveBeenCalledWith(1,'%');
   });
 
   it('should trigger search on enter key', function () {
@@ -155,9 +157,9 @@ describe("Supply Line Search Controller", function () {
 
   it('should search % on loaded page', function () {
     var searchSpy = spyOn(scope, 'search');
-    scope.currentPage = '1';
+    scope.currentPage = 1;
     scope.$digest();
 
-    expect(searchSpy).toHaveBeenCalledWith('1','%');
+    expect(searchSpy).toHaveBeenCalledWith(1,'%');
   });
 });

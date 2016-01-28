@@ -65,12 +65,13 @@ describe("Facility Search Controller", function () {
     expect(httpBackendSpy).not.toHaveBeenCalled();
   });
 
-  it('should clear search param and result list', function () {
+  it('should clear search param and show all result list', function () {
     var facilitiesList = [{"code": "F1", "name": "FAC1"},{"code": "F2", "name": "FAC2"}];
     scope.query = "F";
     scope.totalItems = 100;
     scope.facilityList = facilitiesList;
     scope.showCloseButton = true;
+    var searchSpy = spyOn(scope, 'loadFacilities');
 
     scope.clearSearch();
 
@@ -78,6 +79,7 @@ describe("Facility Search Controller", function () {
     expect(scope.query).toEqual("");
     expect(scope.totalItems).toEqual(0);
     expect(scope.facilityList).toEqual([]);
+    expect(searchSpy).toHaveBeenCalledWith(1,'%');
   });
 
   it('should trigger search on enter key', function () {
@@ -91,10 +93,10 @@ describe("Facility Search Controller", function () {
 
   it('should search % on loaded page', function () {
     var searchSpy = spyOn(scope, 'loadFacilities');
-    scope.currentPage = '1';
+    scope.currentPage = 1;
     scope.$digest();
 
-    expect(searchSpy).toHaveBeenCalledWith('1','%');
+    expect(searchSpy).toHaveBeenCalledWith(1,'%');
   });
 
   it('should set selected search option', function () {

@@ -59,12 +59,13 @@ describe("Requisition Group Search Controller", function () {
     expect(scope.totalItems).toEqual(100);
   });
 
-  it('should clear search param and result list', function () {
+  it('should clear search param and show all result list', function () {
     var requisitionGroup = {"code": "N1", "name": "Node 1"};
     scope.query = "query";
     scope.totalItems = 100;
     scope.requisitionGroupList = [requisitionGroup];
     scope.showCloseButton = true;
+    var searchSpy = spyOn(scope, 'search');
 
     scope.clearSearch();
 
@@ -72,6 +73,7 @@ describe("Requisition Group Search Controller", function () {
     expect(scope.query).toEqual("");
     expect(scope.totalItems).toEqual(0);
     expect(scope.requisitionGroupList).toEqual([]);
+    expect(searchSpy).toHaveBeenCalledWith(1,'%');
   });
 
   it('should trigger search on enter key', function () {
@@ -135,10 +137,10 @@ describe("Requisition Group Search Controller", function () {
 
   it('should search % on loaded page', function () {
     var searchSpy = spyOn(scope, 'search');
-    scope.currentPage = '1';
+    scope.currentPage = 1;
     scope.$digest();
 
-    expect(searchSpy).toHaveBeenCalledWith('1','%');
+    expect(searchSpy).toHaveBeenCalledWith(1,'%');
   });
 
 });

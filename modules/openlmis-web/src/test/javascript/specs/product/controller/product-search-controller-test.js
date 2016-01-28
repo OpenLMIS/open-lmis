@@ -61,12 +61,13 @@ describe("Product Search Controller", function () {
     expect(scope.totalItems).toEqual(100);
   });
 
-  it('should clear search param and result list', function () {
+  it('should clear search param and show all result list', function () {
     var programProduct = {"program": {"code": "pg1", "name": "prog1"}, "product": {"code": "pd1", "name": "prod1"}};
     scope.query = "query";
     scope.totalItems = 100;
     scope.programProducts = [programProduct];
     scope.showCloseButton = true;
+    var searchSpy = spyOn(scope, 'loadProducts');
 
     scope.clearSearch();
 
@@ -74,6 +75,7 @@ describe("Product Search Controller", function () {
     expect(scope.query).toEqual("");
     expect(scope.totalItems).toEqual(0);
     expect(scope.programProducts).toEqual([]);
+    expect(searchSpy).toHaveBeenCalledWith(1,'%');
   });
 
   it('should trigger search on enter key', function () {
@@ -168,9 +170,9 @@ describe("Product Search Controller", function () {
 
   it('should search % on loaded page', function () {
     var searchSpy = spyOn(scope, 'loadProducts');
-    scope.currentPage = '1';
+    scope.currentPage = 1;
     scope.$digest();
 
-    expect(searchSpy).toHaveBeenCalledWith('1','%');
+    expect(searchSpy).toHaveBeenCalledWith(1,'%');
   });
 });

@@ -76,20 +76,19 @@ describe("Facility Sub Filters Controller", function () {
     expect(scope.clearGeoZoneSearch).toHaveBeenCalled();
   });
 
-  it('should clear geo zone search', function () {
+  it('should clear geo zone search and show all result', function () {
     scope.showCloseButton = true;
     scope.geoZoneList = [
       {"name": "moz"}
     ];
-    scope.geoZoneSearchParam = "moz";
-    var response = {"geoZones": [], "message": "Too may results found"};
-    $httpBackend.when('GET', '/filtered-geographicZones.json?searchParam=%25').respond(response);
-    scope.clearGeoZoneSearch();
-    $httpBackend.flush();
 
-    expect(scope.showCloseButton).toBeFalsy();
+    scope.geoZoneSearchParam = "moz";
+    var searchSpy = spyOn(scope, 'searchGeoZone');
+    scope.clearGeoZoneSearch();
+
     expect(scope.geoZoneList).toEqual([]);
     expect(scope.geoZoneSearchParam).toBeUndefined();
+    expect(searchSpy).toHaveBeenCalledWith();
   });
 
   it('should set facility type and label as change if already selected', function () {

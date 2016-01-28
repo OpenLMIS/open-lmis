@@ -77,6 +77,7 @@ describe("User Search Controller", function () {
     scope.totalItems = 100;
     scope.userList = userList;
     scope.showCloseButton = true;
+    var searchSpy = spyOn(scope, 'loadUsers');
 
     scope.clearSearch();
 
@@ -84,6 +85,7 @@ describe("User Search Controller", function () {
     expect(scope.query).toEqual("");
     expect(scope.totalItems).toEqual(0);
     expect(scope.userList).toEqual([]);
+    expect(searchSpy).toHaveBeenCalledWith(1,'%');
   });
 
   it('should set query according to navigate back service', function () {
@@ -130,9 +132,9 @@ describe("User Search Controller", function () {
 
   it('should search % on loaded page', function () {
     var searchSpy = spyOn(scope, 'loadUsers');
-    scope.currentPage = '1';
+    scope.currentPage = 1;
     scope.$digest();
 
-    expect(searchSpy).toHaveBeenCalledWith('1','%');
+    expect(searchSpy).toHaveBeenCalledWith(1,'%');
   });
 });

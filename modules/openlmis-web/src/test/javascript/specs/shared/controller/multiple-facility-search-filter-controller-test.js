@@ -131,7 +131,7 @@ describe("Multiple Facility Search Filter Controller", function () {
     expect(spyBroadcast).not.toHaveBeenCalledWith('multiSelectSearchCleared');
   });
 
-  it('should clear facility search results', function () {
+  it('should show all facility search results when click clear button', function () {
     scope.multipleFacilitiesSearchParam = "searchParam";
     scope.multipleFacilities = [];
     scope.multipleFacilitiesResultCount = 3;
@@ -141,14 +141,12 @@ describe("Multiple Facility Search Filter Controller", function () {
       return true;
     }}};
     scope.extraMultipleParams = {"virtualFacility": null, "enabled": true };
-
+    var searchSpy = spyOn(scope, 'showFacilitySearchResults');
     scope.clearMultiSelectFacilitySearch();
     element.trigger('slideUp');
 
-    expect(scope.multipleFacilities).toBeUndefined();
     expect(scope.multipleFacilitiesSearchParam).toBeUndefined();
-    expect(scope.disableAddFacility).toBeTruthy();
-    expect(scope.tempFacilities).toEqual([]);
+    expect(searchSpy).toHaveBeenCalledWith();
   });
 
 
