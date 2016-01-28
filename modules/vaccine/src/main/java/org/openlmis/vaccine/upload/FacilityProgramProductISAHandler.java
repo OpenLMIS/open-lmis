@@ -63,6 +63,7 @@ public class FacilityProgramProductISAHandler extends AbstractModelPersistenceHa
         Long populationSourceId = (category != null) ? category.getId() : null;
 
         Double wastageFactor = fppISA.getWastageFactor();
+        // If upload file is -1 for wastage factor, use calculation (VIMS)
         if (wastageFactor == -1.0) {
             wastageFactor = repository.getOverriddenIsa(pp.getId(), facility.getId()).getWastageFactor();
         }
