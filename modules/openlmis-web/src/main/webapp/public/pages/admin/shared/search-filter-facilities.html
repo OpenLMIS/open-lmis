@@ -27,7 +27,8 @@
       </div>
 
       <div id="searchFacilityList" class="search-list">
-        <div ng-switch on="facilityQuery">
+        <h3 id="tooManyFacilityResultsMessage" ng-show="message" openlmis-message="message"></h3>
+        <div ng-switch on="facilityQuery" ng-show="!message">
           <span ng-switch-when="%">
             <h3 id="allResultsMessage" openlmis-message="msg.all.matches|resultCount"></h3>
           </span>

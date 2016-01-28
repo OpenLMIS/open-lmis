@@ -78,7 +78,8 @@
       </div>
 
       <div id="geoZoneSearchList" class="search-list">
-        <div ng-switch on="geoZoneQuery">
+        <h3 id="tooManyGeoZoneResults" ng-show="manyGeoZoneMessage" openlmis-message="manyGeoZoneMessage"></h3>
+        <div ng-switch on="geoZoneQuery" ng-show="!manyGeoZoneMessage">
           <span ng-switch-when="%">
             <h3 id="allResultsMessage" openlmis-message="msg.all.matches|geoZonesResultCount"></h3>
           </span>
