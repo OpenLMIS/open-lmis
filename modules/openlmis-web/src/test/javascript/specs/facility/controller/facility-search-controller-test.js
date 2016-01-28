@@ -89,6 +89,14 @@ describe("Facility Search Controller", function () {
     expect(searchSpy).toHaveBeenCalledWith(1);
   });
 
+  it('should search % on loaded page', function () {
+    var searchSpy = spyOn(scope, 'loadFacilities');
+    scope.currentPage = '1';
+    scope.$digest();
+
+    expect(searchSpy).toHaveBeenCalledWith('1','%');
+  });
+
   it('should set selected search option', function () {
     var searchOption = "search_option";
 

@@ -206,4 +206,12 @@ describe("Multiple Facility Search Filter Controller", function () {
 
     expect(scope.showFacilitySearchResults).not.toHaveBeenCalled();
   });
+
+  it('should search % on loaded page', function () {
+    var searchSpy = spyOn(scope, 'showFacilitySearchResults');
+    scope.showMultipleFacilitiesSlider = 'true';
+    scope.$digest();
+
+    expect(searchSpy).toHaveBeenCalledWith();
+  });
 });

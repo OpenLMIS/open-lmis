@@ -133,4 +133,12 @@ describe("Geographic Zone Search Controller", function () {
     expect(location.path).toHaveBeenCalledWith('edit/1');
   });
 
+  it('should search % on loaded page', function () {
+    var searchSpy = spyOn(scope, 'search');
+    scope.currentPage = '1';
+    scope.$digest();
+
+    expect(searchSpy).toHaveBeenCalledWith('1','%');
+  });
+
 });

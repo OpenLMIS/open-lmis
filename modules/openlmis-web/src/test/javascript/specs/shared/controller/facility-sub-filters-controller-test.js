@@ -251,4 +251,12 @@ describe("Facility Sub Filters Controller", function () {
     expect(scope.selectedFacilityType).toBeUndefined();
     expect(scope.selectedGeoZone).toBeUndefined();
   });
+
+  it('should search % on loaded page', function () {
+    var searchSpy = spyOn(scope, 'searchGeoZone');
+    scope.filterModal = 'true';
+    scope.$digest();
+
+    expect(searchSpy).toHaveBeenCalledWith();
+  });
 });

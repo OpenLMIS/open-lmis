@@ -165,4 +165,12 @@ describe("Product Search Controller", function () {
     ];
     expect(scope.showCategory(1)).toBeTruthy();
   });
+
+  it('should search % on loaded page', function () {
+    var searchSpy = spyOn(scope, 'loadProducts');
+    scope.currentPage = '1';
+    scope.$digest();
+
+    expect(searchSpy).toHaveBeenCalledWith('1','%');
+  });
 });

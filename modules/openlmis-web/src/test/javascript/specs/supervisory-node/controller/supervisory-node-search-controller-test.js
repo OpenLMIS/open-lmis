@@ -129,4 +129,12 @@ describe("Supervisory Node Search Controller", function () {
     expect(navigateBackService.setData).toHaveBeenCalledWith({query: scope.query, selectedSearchOption: scope.selectedSearchOption});
   });
 
+  it('should search % on loaded page', function () {
+    var searchSpy = spyOn(scope, 'search');
+    scope.currentPage = '1';
+    scope.$digest();
+
+    expect(searchSpy).toHaveBeenCalledWith('1','%');
+  });
+
 });
