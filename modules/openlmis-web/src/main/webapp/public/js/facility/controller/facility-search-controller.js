@@ -17,7 +17,7 @@ function FacilitySearchController($scope, Facility, $location, navigateBackServi
 
   $scope.showCloseButton = false;
   $scope.currentPage = 1;
-  $scope.searchedQuery = '%'
+  $scope.searchedQuery = '%';
   $scope.selectedSearchOption = navigateBackService.selectedSearchOption || $scope.searchOptions[0];
 
   $scope.selectSearchType = function (searchOption) {

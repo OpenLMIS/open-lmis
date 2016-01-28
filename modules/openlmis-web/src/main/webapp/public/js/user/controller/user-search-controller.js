@@ -11,7 +11,7 @@
 function UserSearchController($scope, $location, Users, navigateBackService) {
   $scope.showCloseButton = false;
   $scope.currentPage = 1;
-  $scope.searchedQuery = '%'
+  $scope.searchedQuery = '%';
 
   $scope.loadUsers = function (page, lastQuery) {
     if (!($scope.query || lastQuery)) return;
