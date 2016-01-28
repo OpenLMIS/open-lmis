@@ -143,4 +143,12 @@ describe("Geographic Zone Search Controller", function () {
     expect(searchSpy).toHaveBeenCalledWith(1,'%');
   });
 
+  it('should trigger search % when change SearchType ', function () {
+    scope.searchOption = {value: "parentName", name: "option.value.geo.zone.parent"};
+    var searchSpy = spyOn(scope, 'search');
+    scope.selectSearchType(scope.searchOption);
+
+    expect(searchSpy).toHaveBeenCalledWith(1,'%');
+  });
+
 });

@@ -22,6 +22,7 @@ function SupervisoryNodeSearchController($scope, navigateBackService, Supervisor
 
   $scope.selectSearchType = function (searchOption) {
     $scope.selectedSearchOption = searchOption;
+    $scope.search(1, $scope.searchedQuery);
   };
 
   $scope.$on('$viewContentLoaded', function () {

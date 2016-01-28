@@ -139,4 +139,12 @@ describe("Facility Search Controller", function () {
     expect(navigateBackService.setData).toHaveBeenCalledWith({query: "f1", selectedSearchOption: "facility" });
     expect(location.path).toHaveBeenCalledWith('edit/1');
   });
+
+  it('should trigger search % when change SearchType ', function () {
+    scope.searchOption = {value: "geographicZone", name: "option.value.geo.zone"};
+    var searchSpy = spyOn(scope, 'loadFacilities');
+    scope.selectSearchType(scope.searchOption);
+
+    expect(searchSpy).toHaveBeenCalledWith(1,'%');
+  });
 });

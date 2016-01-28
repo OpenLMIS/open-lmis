@@ -175,4 +175,12 @@ describe("Product Search Controller", function () {
 
     expect(searchSpy).toHaveBeenCalledWith(1,'%');
   });
+
+  it('should trigger search % when change SearchType ', function () {
+    scope.searchOption = {value: "program", name: "option.value.program"};
+    var searchSpy = spyOn(scope, 'loadProducts');
+    scope.selectSearchType(scope.searchOption);
+
+    expect(searchSpy).toHaveBeenCalledWith(1,'%');
+  });
 });

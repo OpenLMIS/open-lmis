@@ -22,6 +22,7 @@ function ProductSearchController($scope, ProgramProductsSearch, AdjustmentProduc
 
   $scope.selectSearchType = function (searchOption) {
     $scope.selectedSearchOption = searchOption;
+    $scope.loadProducts(1, $scope.searchedQuery);
   };
 
   $scope.$on('$viewContentLoaded', function () {

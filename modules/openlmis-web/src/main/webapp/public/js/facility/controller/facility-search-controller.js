@@ -22,6 +22,7 @@ function FacilitySearchController($scope, Facility, $location, navigateBackServi
 
   $scope.selectSearchType = function (searchOption) {
     $scope.selectedSearchOption = searchOption;
+    $scope.loadFacilities(1, $scope.searchedQuery);
   };
 
   $scope.$on('$viewContentLoaded', function () {

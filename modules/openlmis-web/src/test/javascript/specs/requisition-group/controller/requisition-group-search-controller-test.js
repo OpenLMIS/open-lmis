@@ -143,4 +143,12 @@ describe("Requisition Group Search Controller", function () {
     expect(searchSpy).toHaveBeenCalledWith(1,'%');
   });
 
+  it('should trigger search % when change SearchType ', function () {
+    scope.searchOption = {value: "supervisoryNode", name: "option.value.supervisory.node"};
+    var searchSpy = spyOn(scope, 'search');
+    scope.selectSearchType(scope.searchOption);
+
+    expect(searchSpy).toHaveBeenCalledWith(1,'%');
+  });
+
 });
