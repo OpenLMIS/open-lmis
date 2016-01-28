@@ -77,7 +77,7 @@ describe("Facility Sub Filters Controller", function () {
   });
 
   it('should clear geo zone search', function () {
-    scope.showResults = true;
+    scope.showCloseButton = true;
     scope.geoZoneList = [
       {"name": "moz"}
     ];
@@ -85,7 +85,7 @@ describe("Facility Sub Filters Controller", function () {
 
     scope.clearGeoZoneSearch();
 
-    expect(scope.showResults).toBeFalsy();
+    expect(scope.showCloseButton).toBeFalsy();
     expect(scope.geoZoneList).toEqual([]);
     expect(scope.geoZoneSearchParam).toBeUndefined();
   });
@@ -128,7 +128,7 @@ describe("Facility Sub Filters Controller", function () {
       {"name": "moz", "level": {"name": "district"}}
     ]);
     expect(scope.levels).toEqual(["district"]);
-    expect(scope.showResults).toEqual(true);
+    expect(scope.showCloseButton).toEqual(true);
   });
 
   it('should set message if too many searched geo zones found', function () {

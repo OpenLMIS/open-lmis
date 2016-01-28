@@ -34,7 +34,7 @@ describe("Facility Search Controller", function () {
     expect(scope.facilityList).toEqual(facilitiesList);
     expect(scope.pagination).toEqual(pagination);
     expect(scope.currentPage).toEqual(1);
-    expect(scope.showResults).toEqual(true);
+    expect(scope.showCloseButton).toEqual(true);
     expect(scope.totalItems).toEqual(100);
   });
 
@@ -52,7 +52,7 @@ describe("Facility Search Controller", function () {
     expect(scope.facilityList).toEqual(facilitiesList);
     expect(scope.pagination).toEqual(pagination);
     expect(scope.currentPage).toEqual(1);
-    expect(scope.showResults).toEqual(true);
+    expect(scope.showCloseButton).toEqual(true);
     expect(scope.totalItems).toEqual(100);
   });
 
@@ -70,11 +70,11 @@ describe("Facility Search Controller", function () {
     scope.query = "F";
     scope.totalItems = 100;
     scope.facilityList = facilitiesList;
-    scope.showResults = true;
+    scope.showCloseButton = true;
 
     scope.clearSearch();
 
-    expect(scope.showResults).toEqual(false);
+    expect(scope.showCloseButton).toEqual(false);
     expect(scope.query).toEqual("");
     expect(scope.totalItems).toEqual(0);
     expect(scope.facilityList).toEqual([]);

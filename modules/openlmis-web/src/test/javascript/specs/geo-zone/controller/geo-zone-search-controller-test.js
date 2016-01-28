@@ -46,7 +46,7 @@ describe("Geographic Zone Search Controller", function () {
     expect(scope.geoZoneList).toEqual([geoZone]);
     expect(scope.pagination).toEqual(pagination);
     expect(scope.currentPage).toEqual(1);
-    expect(scope.showResults).toEqual(true);
+    expect(scope.showCloseButton).toEqual(true);
     expect(scope.totalItems).toEqual(100);
   });
 
@@ -64,7 +64,7 @@ describe("Geographic Zone Search Controller", function () {
     expect(scope.geoZoneList).toEqual([geoZone]);
     expect(scope.pagination).toEqual(pagination);
     expect(scope.currentPage).toEqual(1);
-    expect(scope.showResults).toEqual(true);
+    expect(scope.showCloseButton).toEqual(true);
     expect(scope.totalItems).toEqual(100);
   });
 
@@ -73,11 +73,11 @@ describe("Geographic Zone Search Controller", function () {
     scope.query = "query";
     scope.totalItems = 100;
     scope.geoZoneList = [geoZone];
-    scope.showResults = true;
+    scope.showCloseButton = true;
 
     scope.clearSearch();
 
-    expect(scope.showResults).toEqual(false);
+    expect(scope.showCloseButton).toEqual(false);
     expect(scope.query).toEqual("");
     expect(scope.totalItems).toEqual(0);
     expect(scope.geoZoneList).toEqual([]);

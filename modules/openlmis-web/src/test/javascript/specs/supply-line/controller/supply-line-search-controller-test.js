@@ -37,7 +37,7 @@ describe("Supply Line Search Controller", function () {
     expect(scope.supplyLines).toEqual([supplyLine]);
     expect(scope.pagination).toEqual(pagination);
     expect(scope.currentPage).toEqual(1);
-    expect(scope.showResults).toEqual(true);
+    expect(scope.showCloseButton).toEqual(true);
     expect(scope.totalItems).toEqual(100);
   });
 
@@ -55,7 +55,7 @@ describe("Supply Line Search Controller", function () {
     expect(scope.supplyLines).toEqual([supplyLine]);
     expect(scope.pagination).toEqual(pagination);
     expect(scope.currentPage).toEqual(1);
-    expect(scope.showResults).toEqual(true);
+    expect(scope.showCloseButton).toEqual(true);
     expect(scope.totalItems).toEqual(100);
   });
 
@@ -73,11 +73,11 @@ describe("Supply Line Search Controller", function () {
     scope.query = "query";
     scope.totalItems = 100;
     scope.supplyLines = [supplyLine];
-    scope.showResults = true;
+    scope.showCloseButton = true;
 
     scope.clearSearch();
 
-    expect(scope.showResults).toEqual(false);
+    expect(scope.showCloseButton).toEqual(false);
     expect(scope.query).toEqual("");
     expect(scope.totalItems).toEqual(0);
     expect(scope.supplyLines).toEqual([]);
