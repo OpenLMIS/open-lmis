@@ -115,14 +115,10 @@ module repositories using git-repo.  In short this process involves:
 ### What's not accepted
 
 * Code that breaks the build or disables / removes needed tests to pass
-
 * Code that doesn't pass our Quality Gate - TODO: link to style guide & sonar
-
 * Code that belongs in a Module but was added to Core or vice versa
-
 * Code that might break existing implementations - sometimes we might have to leave an implementation behind, but the
  community needs to know about it first!
-
 * Changes to some specific style preference - if you can't change it all at once or someone disagrees with your 
 whitespace preferences, it won't be accepted.  It's better to just stick with what's already there.
 
