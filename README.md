@@ -67,8 +67,8 @@ checkout the `dev` branch.
     ```
   
 ### Contributing
-If you're intending to contribute to the OpenLMIS project, please read through CONTRIBUTING.md.  **note** that new 
-features should be placed in modules and should be managed using git-repo.
+If you're intending to contribute to the OpenLMIS project, please read through [CONTRIBUTING.md](CONTRIBUTING.md).  
+**note** that new features should be placed in modules and should be managed using git-repo.
 
 IntelliJ IDEA Setup
 -------------------
