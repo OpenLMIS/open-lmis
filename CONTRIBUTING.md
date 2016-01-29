@@ -102,7 +102,15 @@ To get this started, let us know what you are doing and your plans on the [devel
 
 ### Developing A New Module
 
-TODO:  describe how a module is built and where it's contributed.  Reference Module needed as a pattern?
+New features should be developed in a module.  For now OpenLMIS v2 is adopting a short-term approach to managing
+module repositories using git-repo.  In short this process involves:
+
+1. Setting up git-repo and using it to manage OpenLMIS & module sources.  See: 
+    * [OpenLMIS-repo](https://github.com/OpenLMIS/openlmis-repo) to get started with git-repo
+    * [module-template](https://github.com/OpenLMIS/module-template) for a template to start your new module from 
+2. Developing your new module in it's own repository.
+3. Utilizing git-repo and local-manifests to manage contributions to these different repositories.
+4. Collaborating on creating extension points in existing OpenLMIS code.  See the Extension Point Fast Track section. 
 
 ### What's not accepted
 
