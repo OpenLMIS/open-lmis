@@ -26,7 +26,7 @@ VALUES ('ACCESS_ILS_GATEWAY','ADMIN','Permission to access the ILS Gateway.',38,
   ,('Print Issue report','REPORTING','',NULL,'')
   ,('Print Order Requisition','REPORTING','',NULL,'')
   ,('SERVICE_VENDOR_RIGHT','ADMIN','Permission to use system as service Vendor',41,'right.manage.service.vendor')
-  ,('VIEW_ADJUSTMENT_SUMMARY_REPORT','REPORT','Permission to view adjustment summary Report','','right.report.adjustment')
+  ,('VIEW_ADJUSTMENT_SUMMARY_REPORT','REPORT','Permission to view adjustment summary Report',NULL,'right.report.adjustment')
   ,('VIEW_AVERAGE_CONSUMPTION_REPORT','REPORT','Permission to view avergae consumption Report',NULL,'right.report.average.consumption')
   ,('VIEW_CCE_STORAGE_CAPACITY_REPORT','REPORT','Permission to view CCE Storage Capacity Report',NULL,'right.report.cce.storage.capacity')
   ,('VIEW_COLD_CHAIN_EQUIPMENT_LIST_REPORT','REPORT','Permission to view cold chain equipment list Report',NULL,'right.report.coldchain.equipment')
