@@ -16,6 +16,12 @@ apply plugin: 'jetty'
 apply plugin: 'war'
 apply plugin: 'cobertura'
 
+repositories {
+  mavenCentral()
+  maven { url "http://jasperreports.sourceforge.net/maven2/" }
+}
+
+
 task npm(type: Exec) {
   group = "Build"
   description = "Installs all Node.js dependencies defined in package.json"

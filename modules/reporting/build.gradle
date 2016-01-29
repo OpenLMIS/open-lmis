@@ -10,6 +10,11 @@
 
 apply plugin: 'cobertura'
 
+repositories {
+    mavenCentral()
+    maven { url "http://jasperreports.sourceforge.net/maven2/" }
+}
+
 dependencies {
     compile 'org.springframework:spring-core:3.1.1.RELEASE',
             'org.springframework:spring-aspects:3.1.1.RELEASE',
@@ -24,7 +29,6 @@ dependencies {
             'commons-collections:commons-collections:20040616',
             'net.sf.jasperreports:jasperreports:5.5.0',
             'org.codehaus.groovy:groovy-all:2.0.1',
-            'com.lowagie:itext:4.2.0',
             'org.apache.poi:poi:3.7',
             project(':modules:core')
 
