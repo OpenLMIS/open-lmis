@@ -39,64 +39,64 @@ import static org.junit.Assert.assertThat;
 @Transactional
 public class RightMapperIT {
 
-  @Autowired
-  RightMapper rightMapper;
+    @Autowired
+    RightMapper rightMapper;
 
-  @Autowired
-  RoleRightsMapper roleRightsMapper;
+    @Autowired
+    RoleRightsMapper roleRightsMapper;
 
-  @Autowired
-  private QueryExecutor queryExecutor;
+    @Autowired
+    private QueryExecutor queryExecutor;
 
-  @Test
-  public void shouldInsertRight() throws SQLException {
+    @Test
+    public void shouldInsertRight() throws SQLException {
 
-    Right right = new Right();
-    right.setName("Requisition Group Program");
-    right.setType(RightType.REPORTING);
+        Right right = new Right();
+        right.setName("Requisition Group Program");
+        right.setType(RightType.REPORTING);
 
-    rightMapper.insertRight(right);
+        rightMapper.insertRight(right);
 
-    ResultSet resultSet = queryExecutor.execute("SELECT * FROM rights WHERE name = ?", right.getName());
-    resultSet.next();
-    assertThat(resultSet.getString("name"), is(right.getName()));
-    assertThat(resultSet.getString("rightType"), is(right.getType().toString()));
-    assertNotNull(resultSet.getTimestamp("createdDate"));
-  }
+        ResultSet resultSet = queryExecutor.execute("SELECT * FROM rights WHERE name = ?", right.getName());
+        resultSet.next();
+        assertThat(resultSet.getString("name"), is(right.getName()));
+        assertThat(resultSet.getString("rightType"), is(right.getType().toString()));
+        assertNotNull(resultSet.getTimestamp("createdDate"));
+    }
 
-  @Test
-  public void shouldReturnCountOfReportingRightOfUser() throws SQLException {
-    Long userId = 1L;
-    Right right1 = new Right("template1", RightType.REPORTING);
-    Right right2 = new Right("template2", RightType.REPORTING);
-    Right right3 = new Right("template3", RightType.REPORTING);
-    Right right4 = new Right("admin", RightType.REPORTING);
-    rightMapper.insertRight(right1);
-    rightMapper.insertRight(right2);
-    rightMapper.insertRight(right3);
-    rightMapper.insertRight(right4);
+    @Test
+    public void shouldReturnCountOfReportingRightOfUser() throws SQLException {
+        Long userId = 1L;
+        Right right1 = new Right("template1", RightType.REPORTING);
+        Right right2 = new Right("template2", RightType.REPORTING);
+        Right right3 = new Right("template3", RightType.REPORTING);
+        Right right4 = new Right("admin", RightType.REPORTING);
+        rightMapper.insertRight(right1);
+        rightMapper.insertRight(right2);
+        rightMapper.insertRight(right3);
+        rightMapper.insertRight(right4);
 
-    Role role = new Role();
-    role.setName("New Role");
-    roleRightsMapper.insertRole(role);
-    queryExecutor.executeUpdate("INSERT INTO role_rights(roleId, rightName) VALUES (?,?)", role.getId(), "template1");
-    queryExecutor.executeUpdate("INSERT INTO role_rights(roleId, rightName) VALUES (?,?)", role.getId(), "template2");
-    queryExecutor.executeUpdate("INSERT INTO role_rights(roleId, rightName) VALUES (?,?)", role.getId(), "template3");
-    queryExecutor.executeUpdate("INSERT INTO role_rights(roleId, rightName) VALUES (?,?)", role.getId(), "admin");
+        Role role = new Role();
+        role.setName("New Role");
+        roleRightsMapper.insertRole(role);
+        queryExecutor.executeUpdate("INSERT INTO role_rights(roleId, rightName) VALUES (?,?)", role.getId(), "template1");
+        queryExecutor.executeUpdate("INSERT INTO role_rights(roleId, rightName) VALUES (?,?)", role.getId(), "template2");
+        queryExecutor.executeUpdate("INSERT INTO role_rights(roleId, rightName) VALUES (?,?)", role.getId(), "template3");
+        queryExecutor.executeUpdate("INSERT INTO role_rights(roleId, rightName) VALUES (?,?)", role.getId(), "admin");
 
-    queryExecutor.executeUpdate("INSERT INTO role_assignments(userId, roleId) VALUES (?,?)", userId, role.getId());
+        queryExecutor.executeUpdate("INSERT INTO role_assignments(userId, roleId) VALUES (?,?)", userId, role.getId());
 
-    Integer count = rightMapper.totalReportingRightsFor(userId);
+        Integer count = rightMapper.totalReportingRightsFor(userId);
 
-    assertThat(count, is(4));
-  }
+        assertThat(count, is(4));
+    }
 
-  @Test
-  public void shouldGetAllRights() {
+    @Test
+    public void shouldGetAllRights() {
 
-    List<Right> rights = rightMapper.getAll();
+        List<Right> rights = rightMapper.getAll();
 
-    assertThat(rights.size(), is(99));
-    assertThat(rights.get(0).getDisplayOrder(),is(1));
-  }
+        assertThat(rights.size(), is(100));
+        assertThat(rights.get(0).getDisplayOrder(), is(1));
+    }
 }
