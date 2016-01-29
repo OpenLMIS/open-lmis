@@ -27,3 +27,4 @@ gradle/
 gradlew
 gradlew.bat
 modules/export/src/main/resources/generated/
+.repo/
