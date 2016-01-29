@@ -49,8 +49,6 @@ System Requirements
     `> npm install -g karma karma-coverage`
   * Install karma command line with:
     `> npm install -g karma-cli`
-  * Install project-specific grunt dependencies by navigating to `modules/openlmis-web` from project root directory and run
-    `> npm install` (one-time activity)
   * Grunt tasks available can be found in `modules/openlmis-web/Gruntfile.js`
 
 Source code
@@ -58,13 +56,17 @@ Source code
 1. Get the source code using `git clone https://github.com/openlmis/open-lmis.git`.
 2. By default you'll checkout the `master` branch.  This is the latest stable code.  For the latest development code
 checkout the `dev` branch.
-3. Set up dependencies on submodules using
-    ```shell
+3. Set up dependencies on submodules & Grunt using:  
+  
+    ```shell  
     > cd open-lmis
     > git submodule init
     > git submodule update
+    > cd modules/openlmis-web
+    > npm install
     ```
-## Contributing
+  
+### Contributing
 If you're intending to contribute to the OpenLMIS project, please read through CONTRIBUTING.md.  **note** that new 
 features should be placed in modules and should be managed using git-repo.
 
