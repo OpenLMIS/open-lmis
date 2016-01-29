@@ -145,3 +145,60 @@ INSERT INTO role_assignments (userId, roleId, deliveryZoneId, programId) VALUES
   FROM programs
   WHERE name = 'VACCINES'));
 
+-- Create new roles for requisition and fulfillment based rights
+-- Admin, reports and allocation based right roles already exist
+INSERT INTO roles (name)
+VALUES ('All Requisition')
+  ,('All Fulfillment')
+;
+
+-- Add new rights for Admin role
+INSERT INTO role_rights (roleid, rightname)
+VALUES ((SELECT id FROM roles WHERE name = 'Admin'), 'MANAGE_SETTING')
+  ,((SELECT id FROM roles WHERE name = 'Admin'), 'MANAGE_EQUIPMENT_SETTINGS')
+  ,((SELECT id FROM roles WHERE name = 'Admin'), 'MANAGE_DEMOGRAPHIC_PARAMETERS')
+;
+
+-- Add new rights for report viewing role
+INSERT INTO role_rights (roleid, rightname)
+VALUES
+  ((SELECT id FROM roles WHERE name = 'View-Report'), 'VIEW_USER_SUMMARY_REPORT')
+;
+
+-- Add new rights for reporting role
+INSERT INTO role_rights (roleid, rightname)
+  SELECT (SELECT id FROM roles WHERE name = 'Reporting'), name
+  FROM rights r
+  WHERE r.righttype = 'REPORTING'
+        AND r.name <> 'MANAGE_REPORT';
+
+-- Add all requisition rights for new requisition role
+INSERT INTO role_rights (roleid, rightname)
+  SELECT (SELECT id FROM roles WHERE name = 'All Requisition'), name
+  FROM rights r
+  WHERE r.righttype = 'REQUISITION';
+
+-- Add all fulfillment rights for fulfillment role
+INSERT INTO role_rights (roleid, rightname)
+  SELECT (SELECT id FROM roles WHERE name = 'All Fulfillment'), name
+  FROM rights r
+  WHERE r.righttype = 'FULFILLMENT';
+
+-- Create new admin user for developer testing
+-- Set its home facility to something in the system
+INSERT INTO users (userName, password, facilityId, firstName, lastName, email, verified, active, restrictLogin)
+VALUES ('devadmin', 'TQskzK3iiLfbRVHeM1muvBCiiKriibfl6lh8ipo91hb74G3OvsybvkzpPI4S3KIeWTXAiiwlUU0iiSxWii4wSuS8mokSAieie', (SELECT id FROM facilities WHERE code = 'F11'), 'Dev', 'Admin', 'devadmin@openlmis.com', TRUE, TRUE, FALSE)
+;
+
+-- Assign new dev admin user roles for all right categories
+INSERT INTO role_assignments (userid, roleid, programid, deliveryzoneid)
+VALUES ((SELECT id FROM users WHERE username = 'devadmin'), (SELECT id FROM roles WHERE name = 'Admin'), NULL, NULL)
+  ,((SELECT id FROM users WHERE username = 'devadmin'), (SELECT id FROM roles WHERE name = 'View-Report'), NULL, NULL)
+  ,((SELECT id FROM users WHERE username = 'devadmin'), (SELECT id FROM roles WHERE name = 'Reporting'), NULL, NULL)
+  ,((SELECT id FROM users WHERE username = 'devadmin'), (SELECT id FROM roles WHERE name = 'All Requisition'), (SELECT id FROM programs WHERE code = 'ESS_MEDS'), NULL)
+  ,((SELECT id FROM users WHERE username = 'devadmin'), (SELECT id FROM roles WHERE name = 'FieldCoordinator'), (SELECT id FROM programs WHERE code = 'VACCINES'), (SELECT id FROM delivery_zones WHERE code = 'Norte'))
+;
+
+INSERT INTO fulfillment_role_assignments (userid, roleid, facilityid)
+VALUES ((SELECT id FROM users WHERE username = 'Admin123'), (SELECT id FROM roles WHERE name = 'All Fulfillment'), (SELECT id FROM facilities WHERE code = 'F11'))
+;
