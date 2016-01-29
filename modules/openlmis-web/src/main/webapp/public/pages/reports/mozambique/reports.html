@@ -1,4 +1,5 @@
-<li class="has-children" ng-show="hasPermission('VIEW_REQUISITION_REPORT') || hasPermission('VIEW_STOCK_ON_HAND_REPORT') || hasPermission('VIEW_TABLET_INFO_REPORT')">
+<li class="has-children"
+    ng-show="hasPermission('VIEW_REQUISITION_REPORT') || hasPermission('VIEW_STOCK_ON_HAND_REPORT') || hasPermission('VIEW_TABLET_INFO_REPORT') || hasPermission('VIEW_STOCKOUT_REPORT')">
     <a id='report' href="javascript: void(0);" openlmis-message="menu.report.moz"></a>
 
     <div class="submenu">
@@ -21,6 +22,11 @@
             <li ng-show="hasPermission('VIEW_TABLET_INFO_REPORT')">
                 <a href="/public/pages/reports/mozambique/index.html#/app-version"
                    openlmis-message="menu.report.app.version.reports"></a>
+            </li>
+
+            <li ng-show="hasPermission('VIEW_STOCKOUT_REPORT')">
+                <a href="/public/pages/reports/mozambique/stockout_demo.html"
+                   openlmis-message="menu.report.app.stockout.reports"></a>
             </li>
         </ul>
     </div>
