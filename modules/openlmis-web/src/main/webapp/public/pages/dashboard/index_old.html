@@ -1,0 +1,177 @@
+<!doctype html>
+<!--
+  ~ Electronic Logistics Management Information System (eLMIS) is a supply chain management system for health commodities in a developing country setting.
+  ~
+  ~ Copyright (C) 2015  John Snow, Inc (JSI). This program was produced for the U.S. Agency for International Development (USAID). It was prepared under the USAID | DELIVER PROJECT, Task Order 4.
+  ~
+  ~ This program is free software: you can redistribute it and/or modify it under the terms of the GNU Affero General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
+  ~
+  ~ This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Affero General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU Affero General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
+  -->
+<html lang="en" ng-app="dashboard">
+<head>
+    <meta charset="utf-8">
+    <title openlmis-message="app.title"></title>        <!-- Icons -->
+    <link rel="icon" href="/favicon.ico" type="image/x-icon"/>
+
+    <!-- library files-->
+    <title openlmis-message="app.title"></title>
+    <script src="/public/lib/jquery/jquery-2.0.0.min.js"></script>
+    <script src="/public/lib/jquery/jquery-ui-1.10.2.custom.min.js"></script>
+    <script src="/public/lib/angular/angular.min.js"></script>
+    <script src="/public/lib/angular/angular-route.min.js"></script>
+    <script src="/public/lib/angular/angular-cookies.js"></script>
+    <script src="/public/lib/angular/angular-resource.min.js"></script>
+    <script src="/public/lib/underscore/underscore-min.js"></script>
+    <script src="/public/lib/angular-ui/angular-ui.min.js"></script>
+    <script src="/public/lib/angular-ui/bootstrap/ui-bootstrap-tpls-0.8.0.min.js"></script>
+    <script src="/public/lib/angular-ui/ng-table/ng-table.js"></script>
+    <script src="/public/lib/leaflet/leaflet.js"></script>
+    <script src="/public/lib/d3/d3.min.js"></script>
+    <script src="/public/lib/c3/c3.min.js"></script>
+    <script src="/public/lib/c3/c3-angular.min.js"></script>
+    <link rel="stylesheet" href="/public/lib/c3/c3.min.css">
+
+
+
+    <script src="/public/lib/nsPopover/nsPopover.js"></script>
+    <link rel="stylesheet" href="/public/lib/nsPopover/nsPopover.css">
+
+    <script src="/public/lib/select2/select2.js"></script>
+    <script src="/public/js/shared/select2-ext.js"></script>
+
+    <!-- Style sheet files-->
+    <link rel="stylesheet" href="/public/lib/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/public/lib/select2/select2.css">
+    <link rel="stylesheet" href="/public/lib/fullcalendar/fullcalendar.css">
+    <link rel="stylesheet" href="/public/lib/jquery/jquery.jqplot.min.css">
+
+    <!-- Services -->
+    <script src="/public/js/shared/services/services.js"></script>
+    <script src="/public/js/shared/services/extension-services.js"></script>
+    <script type="text/javascript" src="/public/js/shared/services/message-service.js"></script>
+    <script type="text/javascript" src="/public/js/shared/services/authorization-service.js"></script>
+    <script src="/public/js/shared/services/navigate-back-service.js"></script>
+
+    <script src="/public/js/shared/app.js"></script>
+
+    <!-- App directives and shared utilites -->
+    <script src="/public/js/shared/directives/form-toolbar.js"></script>
+    <script src="/public/js/shared/directives/openlmis-message.js"></script>
+    <script src="/public/js/shared/directives/openlmis-pagination.js"></script>
+    <script src="/public/js/shared/directives/placeholder.js"></script>
+    <script src="/public/js/shared/directives/ui-nav.js"></script>
+    <script src="/public/lib/localstorage/localStorage.js"></script>
+    <script src="/public/js/shared/util.js"></script>
+    <script src="/public/js/shared/open-lmis-dialog.js"></script>
+    <script src="/public/js/shared/localStorageKeys.js"></script>
+    <script src="/public/js/shared/directives/angular-flot.js"></script>
+    <script src="/public/js/shared/directives/ng-table-scroll.js"></script>
+
+
+    <link rel="stylesheet" href="/public/css/app.css">
+    <link rel="stylesheet" href="/public/lib/angular-ui/ng-table/ng-table.css">
+    <!--<link rel="stylesheet" href="/public/css/style.css">-->
+    <link rel="stylesheet" href="/public/css/report.css">
+    <link rel="stylesheet" href="/public/css/dashboard.css">
+    <link rel="stylesheet" href="/public/lib/leaflet/leaflet.css">
+
+    <!-- Shared controller files -->
+    <script src="/public/js/shared/controller/login-controller.js"></script>
+    <script src="/public/js/shared/controller/locale-controller.js"></script>
+    <script src="/public/js/shared/controller/header-controller.js"></script>
+    <script src="/public/js/shared/controller/navigation-controller.js"></script>
+    <script src="/public/js/dashboard/shared/resolve/dashboard-form-data-resolve.js"></script>
+    <script src="/public/js/dashboard/shared/controller/alerts-controller.js"></script>
+    <script src="/public/js/dashboard/shared/services/dashboard-menu-service.js"></script>
+    <script src="/public/js/dashboard/shared/services/dashboard-filters-history-service.js"></script>
+    <script src="/public/js/dashboard/shared/controller/dashboard-menu-controller.js"></script>
+
+    <!-- Page specific files -->
+    <!-- charts tool (Bar, pie) -->
+    <script src="/public/lib/flot/jquery.flot.min.js"></script>
+    <script src="/public/lib/flot/jquery.flot.pie.min.js"></script>
+    <script src="/public/lib/flot/jquery.flot.axislabels.js"></script>
+    <script src="/public/lib/flot/jquery.flot.orderBars.js"></script>
+    <script src="/public/lib/flot/jquery.flot.tooltip.min.js"></script>
+    <script src="/public/lib/flot/flot-barnumbers/jquery.flot.barnumbers.js"></script>
+    <!-- Calendar tool-->
+    <script src="/public/lib/fullcalendar/fullcalendar.min.js" ></script>
+    <!--<script src="/public/lib/fullcalendar/gcal.js" ></script>-->
+    <script src="/public/lib/ui-calendar/calendar.js"></script>
+
+    <!-- easypiechart -->
+    <script src="/public/lib/easypiechart/angular.easypiechart.min.js"></script>
+    <script src="/public/lib/jquery/jquery.jqplot.min.js"></script>
+    <script src="/public/lib/jquery/jqplot.meterGaugeRenderer.min.js"></script>
+
+    <script src="/public/js/dashboard/module/dashboard-module.js"></script>
+    <script src="/public/js/dashboard/controller/dashboard-controller.js"></script>
+    <script src="/public/js/dashboard/controller/dashboard-program-controller.js"></script>
+    <script src="/public/js/dashboard/controller/stock-controller.js"></script>
+    <script src="/public/js/dashboard/controller/shipment-lead-time-controller.js"></script>
+    <script src="/public/js/dashboard/controller/stocked-out-controller.js"></script>
+    <script src="/public/js/dashboard/controller/district-stocked-out-controller.js"></script>
+    <script src="/public/js/dashboard/controller/stocked-out-detail-controller.js"></script>
+    <script src="/public/js/dashboard/controller/notifications-detail-controller.js"></script>
+    <script src="/public/js/dashboard/controller/send-notification-controller.js"></script>
+    <script src="/public/js/dashboard/controller/requisition-status-summary-controller.js"></script>
+    <script src="/public/js/dashboard/controller/reporting-performance-detail-controller.js"></script>
+    <script src="/public/js/dashboard/controller/rnr-status-details-controller.js"></script>
+
+    <script src="/public/lib/angular-ui/ui-jqplot/ui-jqplot-chart.js"></script>
+    <script src="/public/js/shared/controller/header-controller.js"></script>
+    <script src="/public/js/static-pages/controller/openlmis-footer-controller.js"></script>
+    <link rel="stylesheet" href="/public/css/footer.css">
+
+    <link type="text/css" rel="stylesheet" charset="UTF-8" href="/public/css/app.css">
+    <!--[if IE 9]>
+    <link rel="stylesheet" href="/public/css/ie9.css"/>
+    <![endif]-->
+
+</head>
+<body onunload="">
+<div id="wrap">
+    <ng-include src="'/public/pages/header.html'"></ng-include>
+    <ng-include src="'/public/pages/navigation.html'"></ng-include>
+    <div class="content">
+        <ng-include src="'/public/pages/dashboard/shared/dashboard-header.html'"></ng-include>
+        <div ng-view></div>
+    </div>
+    <ng-include src="'/public/pages/template/footer/openlmis-footer.html'"></ng-include>
+</div>
+<script>
+    var newWin = null;
+    function popUp(strURL,strType, strHeight, strWidth) {
+
+        if(typeof(strHeight)==='undefined') strType = "maximized";
+        if(typeof(strWidth)==='undefined')  strType = "maximized";
+
+        if (newWin != null && !newWin.closed) {
+            newWin.close();
+        }
+        var strOptions="";
+        if (strType=="console") {
+            strOptions="resizable,height="+strHeight+",width="+strWidth;
+        }
+        if (strType=="fixed") {
+            strOptions="status,height="+strHeight+",width="+strWidth;
+        }
+        if (strType=="elastic") {
+            strOptions="toolbar,menubar,scrollbars,"+"resizable,location,height="+strHeight+",width="+strWidth;
+        }
+        if (strType=="maximized") {
+            strWidth = (screen.availWidth - 10).toString();
+            strHeight = (screen.availHeight - 122).toString();
+
+            strOptions="toolbar,menubar,scrollbars,"+"location,height="+strHeight+",width="+strWidth;
+        }
+
+        newWin = window.open(strURL, 'newWin', strOptions);
+        newWin.focus();
+    }
+</script>
+</body>
+</html>
