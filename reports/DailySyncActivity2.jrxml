@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version last-->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="DailySyncActivity2" language="groovy" pageWidth="612" pageHeight="792" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="c0b40c28-861e-4d0e-b71c-b91ccf40bfa6">
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="Open-LMIS - Localhost"/>
+	<queryString language="SQL">
+		<![CDATA[select dz.name as delivery_zone_name
+  , p.name as period_name
+  , date(fv.modifiedDate) as sync_date
+  , fv.visited as visited
+  , avg(date(fv.modifiedDate) - date(fv.visitDate)) as avg_visit_sync_lag
+  , count(1) as sync_count
+from facility_visits fv
+join distributions d on (fv.distributionid=d.id)
+join processing_periods p on (d.periodid=p.id)
+join facilities f on (fv.facilityid=f.id)
+join delivery_zone_members dzm on (f.id=dzm.facilityid)
+join delivery_zones dz on (dzm.deliveryzoneid=dz.id)
+where fv.synced=true
+group by dz.name, p.name, date(fv.modifiedDate), fv.visited
+order by date(fv.modifiedDate) desc, dz.name asc]]>
+	</queryString>
+	<field name="period_name" class="java.lang.String"/>
+	<field name="delivery_zone_name" class="java.lang.String"/>
+	<field name="sync_date" class="java.sql.Date"/>
+	<field name="visited" class="java.lang.Boolean"/>
+	<field name="avg_visit_sync_lag" class="java.math.BigDecimal"/>
+	<field name="sync_count" class="java.lang.Long"/>
+	<variable name="sync_age" class="java.lang.Float">
+		<variableExpression><![CDATA[new java.util.Date() - $F{sync_date}]]></variableExpression>
+	</variable>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="274" splitType="Stretch">
+			<bubbleChart>
+				<chart evaluationTime="Report">
+					<reportElement x="0" y="0" width="572" height="274" uuid="82cb892b-593a-43a7-ac96-df91226daa13"/>
+					<chartTitle/>
+					<chartSubtitle/>
+					<chartLegend>
+						<font fontName="Serif" size="8"/>
+					</chartLegend>
+				</chart>
+				<xyzDataset>
+					<xyzSeries>
+						<seriesExpression><![CDATA[$F{delivery_zone_name}]]></seriesExpression>
+						<xValueExpression><![CDATA[$V{sync_age}]]></xValueExpression>
+						<yValueExpression><![CDATA[$F{avg_visit_sync_lag}]]></yValueExpression>
+						<zValueExpression><![CDATA[$F{sync_count}]]></zValueExpression>
+					</xyzSeries>
+				</xyzDataset>
+				<bubblePlot>
+					<plot/>
+					<xAxisLabelExpression><![CDATA["Sync Age (days)"]]></xAxisLabelExpression>
+					<xAxisFormat>
+						<axisFormat/>
+					</xAxisFormat>
+					<yAxisLabelExpression><![CDATA["Avg Sync Lag from Visit (days)"]]></yAxisLabelExpression>
+					<yAxisFormat>
+						<axisFormat/>
+					</yAxisFormat>
+				</bubblePlot>
+			</bubbleChart>
+		</band>
+	</title>
+	<columnHeader>
+		<band height="35" splitType="Stretch">
+			<staticText>
+				<reportElement x="0" y="0" width="70" height="30" uuid="ccefd579-c216-4e1a-9987-18334656ed42"/>
+				<text><![CDATA[Sync Date]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="80" y="0" width="70" height="30" uuid="01c68659-730b-4777-8ae5-e4fc49c906a9"/>
+				<text><![CDATA[Delivery Zone]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="160" y="2" width="70" height="30" uuid="567596f5-e295-4116-8207-7feb7635caab"/>
+				<text><![CDATA[Month]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="320" y="0" width="70" height="30" uuid="1578021a-e7b4-4532-a0cd-1a56ecb200a4"/>
+				<text><![CDATA[# of Facilities]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="240" y="0" width="70" height="30" uuid="8d90fef7-11a8-445b-b394-70f53e51f61b"/>
+				<text><![CDATA[visited]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="44" splitType="Stretch">
+			<textField pattern="d/MMM/yyyy">
+				<reportElement isPrintRepeatedValues="false" x="0" y="0" width="70" height="30" uuid="be9d31d5-a438-4dc5-9a39-312641507ab2"/>
+				<textFieldExpression><![CDATA[$F{sync_date}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="80" y="0" width="70" height="30" uuid="3982557e-4b96-43cd-b031-cee463e30aa1"/>
+				<textFieldExpression><![CDATA[$F{delivery_zone_name}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="160" y="0" width="70" height="30" uuid="b88f82a4-31aa-4a35-9699-bd09a9935893"/>
+				<textFieldExpression><![CDATA[$F{period_name}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="320" y="0" width="70" height="30" uuid="bdca54aa-101b-4f9d-a458-b7af8db1be82"/>
+				<textFieldExpression><![CDATA[$F{sync_count}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="240" y="0" width="70" height="30" uuid="c6bfd50d-91c5-4355-9f84-4acddbf7d789"/>
+				<textFieldExpression><![CDATA[$F{visited}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<columnFooter>
+		<band height="45" splitType="Stretch"/>
+	</columnFooter>
+	<pageFooter>
+		<band height="37" splitType="Stretch"/>
+	</pageFooter>
+	<summary>
+		<band height="42" splitType="Stretch"/>
+	</summary>
+</jasperReport>
