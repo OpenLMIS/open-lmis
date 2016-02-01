@@ -32,8 +32,10 @@ import java.util.concurrent.Future;
 public class EmailService {
 
   private Boolean mailSendingFlag;
-
   private MailSender mailSender;
+
+  @Value("${mail.sender.from}")
+  private String defaultFromAddress;
 
   @Autowired
   public EmailService(MailSender mailSender, @Value("${mail.sending.flag}") Boolean mailSendingFlag) {
@@ -46,6 +48,11 @@ public class EmailService {
     if (!mailSendingFlag) {
       return new AsyncResult<>(true);
     }
+
+    if(emailMessage.getFrom() == null){
+      emailMessage.setFrom(defaultFromAddress);
+    }
+
     mailSender.send(emailMessage);
     return new AsyncResult<>(true);
   }
