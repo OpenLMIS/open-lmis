@@ -49,6 +49,10 @@ System Requirements
     `> npm install -g karma karma-coverage`
   * Install karma command line with:
     `> npm install -g karma-cli`
+  * You may need to install further karma dependencies for FireFox:
+    `> npm install -g  karma-firefox-install`
+  * And for jasmine:
+    `> npm install -g  karma-jasmine`
   * Install project-specific grunt dependencies by navigating to `modules/openlmis-web` from project root directory and run
     `> npm install` (one-time activity)
   * Grunt tasks available can be found in `modules/openlmis-web/Gruntfile.js`
