@@ -5,7 +5,6 @@ DROP TABLE IF EXISTS interface_facility_mappings;
 DROP TABLE IF EXISTS interface_product_data_elements;
 DROP TABLE IF EXISTS interface_product_mappings;
 DROP TABLE IF EXISTS interface_data_elements;
-drop table if exists interface_dataset;
 DROP TABLE IF EXISTS interface_logs;
 DROP TABLE IF EXISTS interface_partners;
 DROP TABLE IF EXISTS interface_dhis2_facilities;
@@ -48,6 +47,5 @@ drop view if exists vw_user_program_facilities;
 drop view if exists vw_user_role_program_rg;
 
 -- tables
-drop table if exists facility_mappings;
 DROP TABLE IF EXISTS dhis2_products;
 drop table if exists product_code_change_log;
