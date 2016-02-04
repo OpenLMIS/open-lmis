@@ -1813,6 +1813,10 @@ INSERT INTO rights (name, righttype, description, createddate, displayorder, dis
 INSERT INTO rights (name, righttype, description, createddate, displayorder, displaynamekey) VALUES ('Requisition Groups Missing Supply Line', 'REPORTING', NULL, '2016-02-03 14:37:39.641001', NULL, NULL);
 INSERT INTO rights (name, righttype, description, createddate, displayorder, displaynamekey) VALUES ('Order Routing Inconsistencies', 'REPORTING', NULL, '2016-02-03 14:37:39.641001', NULL, NULL);
 INSERT INTO rights (name, righttype, description, createddate, displayorder, displaynamekey) VALUES ('Delivery Zones Missing Manage Distribution Role', 'REPORTING', NULL, '2016-02-03 14:37:39.641001', NULL, NULL);
+INSERT INTO rights (name, righttype, description, createddate, displayorder, displaynamekey) VALUES ('VIEW_CUSTOM_REPORTS', 'REPORT', 'Permission to view Custom Reports in Reports menu', '2016-02-04 14:56:56.057737', NULL, 'right.reports.custom');
+INSERT INTO rights (name, righttype, description, createddate, displayorder, displaynamekey) VALUES ('VIEW_FACILITY_INTEGRATION', 'ADMIN', 'Permission to view facility integration section', '2016-02-04 14:56:56.057737', NULL, 'right.view.facility.integration');
+INSERT INTO rights (name, righttype, description, createddate, displayorder, displaynamekey) VALUES ('VIEW_FACILITY_PICTURES', 'ADMIN', 'Permission to view facility pictures section', '2016-02-04 14:56:56.057737', NULL, 'right.view.facility.pictures');
+INSERT INTO rights (name, righttype, description, createddate, displayorder, displaynamekey) VALUES ('VIEW_PRODUCT_RATIONING', 'ADMIN', 'Permission to view product rationing column', '2016-02-04 14:56:56.057737', NULL, 'right.view.product.rationing');
 
 
 --
