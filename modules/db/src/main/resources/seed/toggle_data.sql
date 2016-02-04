@@ -55,7 +55,15 @@ DELETE FROM rights WHERE name = 'VIEW_PENDING_REQUEST';
 DELETE FROM rights WHERE name = 'CREATE_ORDER_REQUISITION';
 DELETE FROM rights WHERE name = 'MASS_DISTRIBUTION';
 DELETE FROM rights WHERE name = 'MANAGE_CUSTOM_REPORTS';
--- DELETE FROM rights WHERE name = 'VIEW_STOCK_ON_HAND';
--- DELETE FROM rights WHERE name = 'MANAGE_STOCK';
+DELETE FROM rights WHERE name = 'VIEW_CUSTOM_REPORTS';
+DELETE FROM rights WHERE name = 'VIEW_FACILITY_INTEGRATION';
+DELETE FROM rights WHERE name = 'VIEW_FACILITY_PICTURES';
+DELETE FROM rights WHERE name = 'VIEW_PRODUCT_RATIONING';
 
-UPDATE configuration_settings SET value = '/public/pages/index.html' WHERE key = 'LOGIN_SUCCESS_DEFAULT_LANDING_PAGE';
+UPDATE configuration_settings
+SET value = '/public/pages/index.html'
+WHERE key = 'LOGIN_SUCCESS_DEFAULT_LANDING_PAGE';
+
+UPDATE configuration_settings
+SET isconfigurable = FALSE
+WHERE groupname IN ('Dashboard','GENERAL','Order Export','R & R','Report Labels','VACCINE');

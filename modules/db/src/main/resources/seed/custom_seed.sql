@@ -61,8 +61,11 @@ VALUES ('ACCESS_ILS_GATEWAY','ADMIN','Permission to access the ILS Gateway.',38,
   ,('VIEW_VACCINE_REPLACEMENT_PLAN_SUMMARY','REPORT','Permission to View Replacement Plan Summary Report',NULL,'right.report.vaccine.replacement.plan.summary')
   ,('print_vaccine_Order_Requisition','REPORTING','',NULL,'')
   ,('vims_distribution','REPORTING','',NULL,'')
---   ,('VIEW_STOCK_ON_HAND','REQUISITION','Permission to view stock on hand',NULL,'right.view.stock.on.hand')
---   ,('MANAGE_STOCK','REQUISITION','Permission to manage stock (issue/receive/adjust)',NULL,'right.manage.stock')
+  ,('VIEW_CUSTOM_REPORTS','REPORT','Permission to view Custom Reports in Reports menu',NULL,'right.reports.custom')
+  ,('VIEW_FACILITY_INTEGRATION','ADMIN','Permission to view facility integration section',NULL,'right.view.facility.integration')
+  ,('VIEW_FACILITY_PICTURES','ADMIN','Permission to view facility pictures section',NULL,'right.view.facility.pictures')
+  ,('VIEW_PRODUCT_RATIONING','ADMIN','Permission to view product rationing column',NULL,'right.view.product.rationing')
+;
 ;
 
 INSERT INTO report_rights(templateid, rightname)
@@ -72,4 +75,10 @@ VALUES (3, 'Print Order Requisition')
   ,(6, 'print_vaccine_Order_Requisition')
 ;
 
-UPDATE configuration_settings SET value = '/public/pages/dashboard/index.html#/dashboard' WHERE key = 'LOGIN_SUCCESS_DEFAULT_LANDING_PAGE';
+UPDATE configuration_settings
+SET value = '/public/pages/dashboard/index.html#/dashboard'
+WHERE key = 'LOGIN_SUCCESS_DEFAULT_LANDING_PAGE';
+
+UPDATE configuration_settings
+SET isconfigurable = TRUE
+WHERE groupname IN ('Dashboard','GENERAL','Order Export','R & R','Report Labels','VACCINE');
