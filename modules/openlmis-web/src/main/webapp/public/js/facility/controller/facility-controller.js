@@ -9,7 +9,7 @@
  */
 
 
-function FacilityController($scope, facilityReferenceData, $routeParams, facility, Facility, demographicCategories, $location, FacilityProgramProducts, FacilityProgramProductsISA, priceSchedules, facilityImages, $q, $dialog, messageService, interfacesReferenceData)
+function FacilityController($scope, facilityReferenceData, $routeParams, facility, Facility, demographicCategories, $location, FacilityProgramProducts, FacilityProgramProductsISA, priceSchedules, facilityImages, $q, $dialog, messageService, interfacesReferenceData, AuthorizationService)
 {
   $scope.$parent.facilityId = null;
   $scope.message = "";
@@ -19,6 +19,7 @@ function FacilityController($scope, facilityReferenceData, $routeParams, facilit
 
   $scope.demographicCategories = demographicCategories; //Will be undefined if we aren't in VIMS
 
+  $scope.hasPermission = AuthorizationService.hasPermission;
 
   function initialize() {
     $scope.facilityTypes = facilityReferenceData.facilityTypes;

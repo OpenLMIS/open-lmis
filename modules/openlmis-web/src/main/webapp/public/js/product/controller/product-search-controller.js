@@ -8,7 +8,7 @@
  * You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org.
  */
 
-function ProductSearchController($scope, ProgramProductsSearch, AdjustmentProducts, $location, navigateBackService) {
+function ProductSearchController($scope, ProgramProductsSearch, AdjustmentProducts, $location, navigateBackService, AuthorizationService) {
 
   $scope.searchOptions = [
     {value: "product", name: "option.value.product"},
@@ -18,6 +18,8 @@ function ProductSearchController($scope, ProgramProductsSearch, AdjustmentProduc
   $scope.showResults = false;
   $scope.currentPage = 1;
   $scope.selectedSearchOption = navigateBackService.selectedSearchOption || $scope.searchOptions[0];
+
+  $scope.hasPermission = AuthorizationService.hasPermission;
 
   $scope.selectSearchType = function (searchOption) {
     $scope.selectedSearchOption = searchOption;

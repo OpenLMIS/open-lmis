@@ -271,7 +271,7 @@
             </div>
           </li>
 
-          <li ng-show="hasPermission('MANAGE_SETTING')">
+          <li ng-show="hasPermission('MANAGE_CONFIG_SMS')">
               <a href="/public/pages/admin/sms/index.html">Messages</a>
           </li>
 
@@ -398,11 +398,12 @@
                             href="/public/pages/demographics/index.html#/facility"
                       openlmis-message="link.manage.facility.demographic"></a>
                   </li>
-                  <li ng-show="hasPermission('MANAGE_DEMOGRAPHIC_PARAMETERS')">
+                  <li ng-show="hasPermission('MANAGE_DEMOGRAPHIC_ESTIMATES')">
                     <a
                             href="/public/pages/demographics/index.html#/district"
                       openlmis-message="link.manage.district.demographic"></a>
                   </li>
+                <li class="beak"></li>
                 </ul>
               </div>
             </li>

@@ -215,7 +215,7 @@
 
     <div ng-include="'/public/pages/reports/mozambique/reports.html'"></div>
 
-    <li>
+    <li ng-show="hasPermission('VIEW_CUSTOM_REPORTS')">
       <a ng-href="/public/pages/reports/custom/index.html" openlmis-message="menu.report.custom.reports"></a>
     </li>
 
