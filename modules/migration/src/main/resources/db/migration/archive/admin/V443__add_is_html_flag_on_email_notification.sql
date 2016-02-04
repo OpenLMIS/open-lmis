@@ -1,2 +1,0 @@
-ALTER TABLE email_notifications
-ADD isHtml BOOLEAN NOT NULL DEFAULT(FALSE);

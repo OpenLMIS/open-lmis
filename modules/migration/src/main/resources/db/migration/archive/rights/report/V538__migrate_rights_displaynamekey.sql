@@ -1,1 +1,0 @@
-update rights set displayNameKey = 'right.report.repair.management' where name = 'VIEW_REPAIR_MANAGEMENT_REPORT';
