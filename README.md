@@ -49,6 +49,10 @@ System Requirements
     `> npm install -g karma karma-coverage`
   * Install karma command line with:
     `> npm install -g karma-cli`
+  * You may need to install further karma dependencies for FireFox:
+    `> npm install -g  karma-firefox-install`
+  * And for jasmine:
+    `> npm install -g  karma-jasmine`
   * Grunt tasks available can be found in `modules/openlmis-web/Gruntfile.js`
 
 Source code
@@ -114,13 +118,7 @@ See [SonarQube.org](http://www.sonarqube.org/) for official documentation.  For 
   [OpenLMIS sonar-configuration](https://github.com/OpenLMIS/sonar-configuration) repository.
 
 ## Issues
-1. You may encounter a `java.lang.OutOfMemoryError: PermGen space`. This is a result of not enough memory for the Jetty JVM. One way to fix this is to export the following (or include in `$HOME/.bash_profile` or `$HOME/.profile` or `$HOME/.bashrc` or `$HOME/.zshrc`, depending on your shell).
-
-    ```bash
-    export JAVA_OPTS="-XX:MaxPermSize=512m"
-    export JAVA_TOOL_OPTIONS="-Xmx1024m -XX:MaxPermSize=512m -Xms512m"
-    ```
-2. If a few integration tests fail, like this:
+1. If a few integration tests fail, like this:
 `org.openlmis.core.repository.mapper.FacilityMapperIT > shouldUpdateFacilityWithSuppliedModifiedTime FAILED java.lang.AssertionError at FacilityMapperIT.java:292`
 This can be caused by the timezone in `postgresql.conf` being different than your operating system timezone. To fix, stop the postgresql server, and edit the following line: `timezone = 'US/Pacific'` to match your current operating system timezone, then restart the postgresql server.
 

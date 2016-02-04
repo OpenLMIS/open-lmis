@@ -44,8 +44,8 @@ import static org.hamcrest.MatcherAssert.assertThat;
 @TransactionConfiguration(defaultRollback = true, transactionManager = "openLmisTransactionManager")
 public class ELMISInterfaceMapperIT {
 
-    @Autowired
-    ELMISInterfaceMapper mapper;
+   @Autowired
+   ELMISInterfaceMapper mapper;
 
     @Test
     public void shouldGetInterfaceAppById(){
