@@ -46,7 +46,7 @@ flyway {
     password = dbPassword
     schemas = ['public','atomfeed']
     locations = ['filesystem:'+sourceSets.main.resources.srcDirs.first().getCanonicalPath()+'/db/migration']
-//    sqlMigrationPrefix = ''
+    sqlMigrationPrefix = ''
     placeholderPrefix = '#['
     placeholderSuffix = ']'
 }
@@ -58,10 +58,6 @@ jar.doFirst {
 task setupDB << {
     tasks.dropDB.execute()
     tasks.createDB.execute()
-
-    println("Creating atomfeed schema...")
-    executeSql('create schema atomfeed', true)
-
     tasks.migrateDB.execute()
 }
 

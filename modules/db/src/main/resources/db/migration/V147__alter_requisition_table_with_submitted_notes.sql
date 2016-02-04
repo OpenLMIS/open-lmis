@@ -1,1 +1,0 @@
-ALTER TABLE requisitions ADD COLUMN clientSubmittedNotes VARCHAR(256);
