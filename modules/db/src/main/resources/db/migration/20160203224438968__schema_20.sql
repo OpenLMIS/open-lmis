@@ -600,15 +600,15 @@ CREATE FUNCTION fn_get_parent_geographiczone(v_geographiczoneid integer, v_level
 DECLARE
 
 v_highest_parent_id integer;
-v_highest_parent_name geographic_zones.name%TYPE;
+v_highest_parent_name character varying(250);
 
 v_this_parent_id integer;
-v_this_parent_name geographic_zones.name%TYPE;
+v_this_parent_name character varying(250);
 
 v_current_parent_id integer;
-v_current_parent_name geographic_zones.name%TYPE;
+v_current_parent_name character varying(250);
 
-v_parent_geographizone_name geographic_zones.name%TYPE;
+v_parent_geographizone_name character varying(250);
 
 
 BEGIN
@@ -877,7 +877,7 @@ CREATE FUNCTION fn_get_supplying_facility_name(v_supervisorynode_id integer) RET
 DECLARE
 
 v_supplying_facility_id integer;
-v_supplying_facility_name facilities.name%TYPE;
+v_supplying_facility_name character varying(50);
 BEGIN
 select supplyingfacilityid into v_supplying_facility_id from supply_lines where supervisorynodeid = v_supervisorynode_id;
 select name into v_supplying_facility_name from facilities where id =  v_supplying_facility_id;
