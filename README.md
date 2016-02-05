@@ -82,12 +82,11 @@ Running App on embedded Jetty server
 --------------------------------------------------
 1. Clone the project repository using git.
 2. Setup _postgres_ user with password as configured in `gradle.properties` file.
-3. You can use `gradle clean setupdb setupExtensions seed build testseed run` to start the app.
-4. You can use `gradle clean setupdb setupExtensions seed build` to just run all of the tests.
+3. You can use `gradle clean setupdb seed build testseed run` to start the app.
+4. You can use `gradle clean setupdb seed build` to just run all of the tests.
 5. There are bunch of gradle tasks that you can see by running `gradle tasks`:
   - `build` is to build the app.
   - `setupdb` is to recreate the database and schema.
-  - `setupExtensions` is to apply the database schema extensions added.
   - `seed` is to seed in the reference data.
   - `testseed` puts in some test data which can be used to browse through basic functionality in the system.
   - `run` is to start the embedded jetty server.
