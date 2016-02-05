@@ -248,12 +248,7 @@ public class FacilityController extends BaseController {
     public ResponseEntity<OpenLmisResponse> getFacilitySupervisors(@RequestParam("facilityId") Long facilityId) {
         return OpenLmisResponse.response("supervisors",facilityService.getFacilitySupervisors(facilityId));
     }
-
-  @RequestMapping(value = "/facility-images", method = GET, headers = ACCEPT_JSON)
-  public ResponseEntity<OpenLmisResponse> getImagesForFacility(@RequestParam("facilityId") Long facilityId) {
-    return OpenLmisResponse.response("images",facilityService.getFacilityImages(facilityId));
-  }
-
+  
   @RequestMapping(value = "/facilityType/{facilityTypeId}/requisitionGroup/{requisitionGroupId}/facilities", method = GET, headers = ACCEPT_JSON)
   public ResponseEntity<OpenLmisResponse> getFacilityByTypeAndRequisitionGroupId(@PathVariable("facilityTypeId") Long facilityTypeId, @PathVariable("requisitionGroupId") Long requisitionGroupId) {
     return OpenLmisResponse.response("facilities",facilityService.getFacilityByTypeAndRequisitionGroupId(facilityTypeId, requisitionGroupId));
