@@ -9,7 +9,7 @@
  */
 
 
-function FacilityController($scope, facilityReferenceData, $routeParams, facility, Facility, demographicCategories, $location, FacilityProgramProducts, FacilityProgramProductsISA, priceSchedules, facilityImages, $q, $dialog, messageService, interfacesReferenceData)
+function FacilityController($scope, facilityReferenceData, $routeParams, facility, Facility, demographicCategories, $location, FacilityProgramProductsISA, priceSchedules, $dialog, messageService, interfacesReferenceData)
 {
   $scope.$parent.facilityId = null;
   $scope.message = "";
@@ -24,7 +24,6 @@ function FacilityController($scope, facilityReferenceData, $routeParams, facilit
     $scope.facilityTypes = facilityReferenceData.facilityTypes;
     $scope.geographicZones = facilityReferenceData.geographicZones;
     $scope.facilityOperators = facilityReferenceData.facilityOperators;
-    $scope.images = facilityImages.images;
     $scope.programs = facilityReferenceData.programs;
     $scope.priceSchedules = priceSchedules;
     $scope.interfaces = interfacesReferenceData;
@@ -277,20 +276,6 @@ FacilityController.resolve = {
       FacilityReferenceData.get({}, function (data) {
         deferred.resolve(data);
       }, {});
-    }, 100);
-    return deferred.promise;
-  },
-  facilityImages: function ($q,$route, $timeout, FacilityImages){
-    var deferred = $q.defer();
-    var facilityId = $route.current.params.facilityId;
-    $timeout(function(){
-      if(!isUndefined(facilityId)){
-        FacilityImages.get({facilityId: facilityId }, function (data){
-          deferred.resolve(data);
-        });
-      }else{
-        deferred.resolve([]);
-      }
     }, 100);
     return deferred.promise;
   },

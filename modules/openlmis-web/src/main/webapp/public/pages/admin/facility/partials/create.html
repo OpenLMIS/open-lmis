@@ -686,24 +686,6 @@
           </div>
         </div>
       </div>
-
-      <div class="form-group">
-        <h3><span openlmis-message="label.facility.pictures"></span></h3>
-
-        <div class="form-row clearfix" ng-show="images.length > 0">
-          <div ng-repeat="image in images">
-            <img class="form-cell" ng-show="image.firstPicture" ng-src="data:image/png;base64,{{ image.firstPicture }}" />
-            <img class="form-cell" ng-show="image.secondPicture" ng-src="data:image/png;base64,{{ image.secondPicture }}" />
-            <img class="form-cell" ng-show="image.thirdPicture" ng-src="data:image/png;base64,{{ image.thirdPicture }}" />
-            <img class="form-cell" ng-show="image.fourthPicture" ng-src="data:image/png;base64,{{ image.fourthPicture }}" />
-            <img class="form-cell" ng-show="image.fifthPicture" ng-src="data:image/png;base64,{{ image.fifthPicture }}" />
-          </div>
-        </div>
-        <div ng-show="images.length == 0">
-          <span openlmis-message="label.facility.no.pictures.uploaded"></span>
-        </div>
-      </div>
-
       <div form-toolbar id="action_buttons" class="action-buttons">
         <div class="form-cell button-row">
           <input id="saveButton" type="submit" id="save-button" class="btn btn-primary save-button"
