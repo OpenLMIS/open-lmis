@@ -1817,6 +1817,7 @@ INSERT INTO rights (name, righttype, description, createddate, displayorder, dis
 INSERT INTO rights (name, righttype, description, createddate, displayorder, displaynamekey) VALUES ('VIEW_FACILITY_INTEGRATION', 'ADMIN', 'Permission to view facility integration section', '2016-02-04 14:56:56.057737', NULL, 'right.view.facility.integration');
 INSERT INTO rights (name, righttype, description, createddate, displayorder, displaynamekey) VALUES ('VIEW_FACILITY_PICTURES', 'ADMIN', 'Permission to view facility pictures section', '2016-02-04 14:56:56.057737', NULL, 'right.view.facility.pictures');
 INSERT INTO rights (name, righttype, description, createddate, displayorder, displaynamekey) VALUES ('VIEW_PRODUCT_RATIONING', 'ADMIN', 'Permission to view product rationing column', '2016-02-04 14:56:56.057737', NULL, 'right.view.product.rationing');
+INSERT INTO rights (name, righttype, description, createddate, displayorder, displaynamekey) VALUES ('MANAGE_EQUIPMENT_SERVICING', 'ADMIN', 'Permission to manage service vendors and contracts', '2016-02-04 14:56:56.057737', NULL, 'right.manage.equipment.servicing');
 
 
 --
