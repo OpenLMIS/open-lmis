@@ -80,4 +80,4 @@ WHERE key = 'LOGIN_SUCCESS_DEFAULT_LANDING_PAGE';
 
 UPDATE configuration_settings
 SET isconfigurable = TRUE
-WHERE groupname IN ('Dashboard','GENERAL','Order Export','R & R','Report Labels','VACCINE');
+WHERE groupname IN ('Dashboard','GENERAL','Order Export','R & R','VACCINE');
