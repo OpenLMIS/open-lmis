@@ -2,19 +2,15 @@
 
 OpenLMIS (Open Logistics Management Information System) is software for a shared, open source solution for managing medical commodity distribution in low- and middle-income countries.  For more information, see http://openlmis.org/.
 
-The OpenLMIS wiki is at https://openlmis.atlassian.net/wiki/display/OP/Developer+Guide.
-
-License Terms
----------------------------
-This program is part of the OpenLMIS logistics management information system platform software. Copyright © 2013, 2014, 2015 VillageReach, JSI, and ThoughtWorks.
-
-This site contains code and related material necessary to implement a configuration of the OpenLMIS logistics management information system platform.  See https://github.com/OpenLMIS/open-lmis/ for details of OpenLMIS.
-
-This site contains free software: you can redistribute it and/or modify it under the terms of the appropriate license.  As this site contains code developed by more than one organization and licensed under different terms you should refer to the license terms stated in each component for details.
-
-The programs and documents on this site are distributed in the hope that they will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the applicable License for more details.
-
-You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.
+__Project Links:__
+* [OpenLMIS.org](http://openlmis.org)
+* [Wiki](https://openlmis.atlassian.net/wiki/display/OP/Developer+Guide)
+* [Project Management](https://openlmis.atlassian.net/projects/OLMIS/issues/)
+* [Slack](http://openlmis.slack.com)
+* [Developer Forums](https://groups.google.com/forum/#!forum/openlmis-dev)
+* [Product Committee Forums](https://groups.google.com/forum/#!forum/openlmis_product_committee)
+* [Governance Committee Forums](https://groups.google.com/forum/#!forum/openlmis-governance)
+* [Code-quality](http://ci.openlmis.org:9000)
 
 System Requirements
 ---------------------------
@@ -125,3 +121,15 @@ Tech Stack
  - Jasmine
  - Node.js
  - Grunt.js
+
+License Terms
+---------------------------
+This program is part of the OpenLMIS logistics management information system platform software. Copyright © 2013, 2014, 2015 VillageReach, JSI, and ThoughtWorks.
+
+This site contains code and related material necessary to implement a configuration of the OpenLMIS logistics management information system platform.  See https://github.com/OpenLMIS/open-lmis/ for details of OpenLMIS.
+
+This site contains free software: you can redistribute it and/or modify it under the terms of the appropriate license.  As this site contains code developed by more than one organization and licensed under different terms you should refer to the license terms stated in each component for details.
+
+The programs and documents on this site are distributed in the hope that they will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the applicable License for more details.
+
+You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.
