@@ -10,7 +10,8 @@ __Project Links:__
 * [Developer Forums](https://groups.google.com/forum/#!forum/openlmis-dev)
 * [Product Committee Forums](https://groups.google.com/forum/#!forum/openlmis_product_committee)
 * [Governance Committee Forums](https://groups.google.com/forum/#!forum/openlmis-governance)
-* [Code-quality](http://ci.openlmis.org:9000)
+* [Code Quality](http://ci.openlmis.org:9000)
+* [Build](http://ci.openlmis.org:8080)
 
 System Requirements
 ---------------------------
