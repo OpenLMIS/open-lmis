@@ -4,7 +4,7 @@ OpenLMIS (Open Logistics Management Information System) is software for a shared
 
 __Project Links:__
 * [OpenLMIS.org](http://openlmis.org)
-* [Wiki](https://openlmis.atlassian.net/wiki/display/OP/Developer+Guide)
+* [Wiki](https://openlmis.atlassian.net/wiki/display/OP)
 * [Project Management](https://openlmis.atlassian.net/projects/OLMIS/issues/)
 * [Slack](http://openlmis.slack.com)
 * [Developer Forums](https://groups.google.com/forum/#!forum/openlmis-dev)
