@@ -42,7 +42,7 @@ function ViewColdChainStatusController($scope, facilities, period, deliveryZone,
               $scope.apimessage = "message.api.error.not.all.data";
             }
         } else {
-            $scope.message = "label.no.cold.chain.status.information";
+            $scope.apimessage = "message.api.error";
         }
     }
     $scope.facilities = facilities;
