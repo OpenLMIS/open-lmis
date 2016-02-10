@@ -1,12 +1,12 @@
 # Contributing to OpenLMIS
 Contributing to OpenLMIS is what delivers a shared, open source solution for managing medical commodity distribution
 in low- and middle-income countries.  Your contributions are needed!  Before you get started, take a moment to read
-this quick guide, [get to know the community](http://openlmis.org/openlmis-community/) and join in on the [developer forum](https://groups.google.com/forum/#!forum/openlmis-dev) so we can coordinate.
+this quick guide, [get to know the community](http://openlmis.org/openlmis-community/) and join in on the [developer forum](https://groups.google.com/forum/#!forum/openlmis-dev).
 
 ## Reporting Bugs
-The OpenLMIS community is currently using a public JIRA for [tracking bugs](https://openlmis.atlassian.net/projects/OLMIS/issues/).
+The OpenLMIS community uses JIRA for [tracking bugs](https://openlmis.atlassian.net/projects/OLMIS/issues/).
 This system helps track current and historical bugs, what work has been done, and so on.  Reporting a bug with this tool is the best way
-to get the bug fixed quickly and in the best manner.
+to get the bug fixed quickly and correctly.
 
 ### Before you report a bug
 - Search to see if the same bug or a similar one has already been reported.  If one already exists it saves
@@ -73,7 +73,7 @@ The backlog can be found here: https://openlmis.atlassian.net/secure/RapidBoard.
 The OpenLMIS community welcomes code contributions and we encourage you to fix a bug or implement a new feature.  
 However we also need to make sure that contributions keep in mind existing implementations and the needs of a 
 Logistics Management Information System that works in many different localities and programs.  To enable OpenLMIS to 
-keep a rapid pace of development while allowing for country custimizations we are in the process of splitting the 
+keep a rapid pace of development while allowing for country custimizations, we are in the process of splitting the 
 software into two products:
 
 * Core - is a collection of the most widely followed functionality and therefore special attention is paid to 
@@ -84,21 +84,6 @@ without forking.
 * Reference Distribution - is what utilizes Core to provide a useable and extendable application.  The Reference 
 Distribution (RD) is what implementor's deploy to run their logistics system and what developers can utilize to 
 develop custom modules for.
-
-### Extension Point Fast Track
-Extension points are interfaces within Core that allow Core to be extended via a Module and allows the functionality 
-within Core to change in predictable ways without necessitating Core to fork.  Keeping Core from forking is a high 
-priority for the OpenLMIS community.  To enable this we've fast tracked the building of extension points.
-
-An example of a need for an extension point might be the calculation of a re-supply quantity on the R&R form.  Lets 
-say that the R&R currently supports calculating resupply amount utilizing the current consumption of the Product and
-that in your logisitics system you need to calculate this resupply amount using the current population.  Core 
-defines the need for a resupply amount and the consumption based calculation, but not currently any way to calculate
-based off of population.  To avoid forking Core, and to maintain the integrity of the community, we will fast 
-track building an extension point in Core that allows you to plugin your desired calculation service.
-
-To get this started, let us know what you are doing and your plans on the [developer forums](https://groups.google
-.com/forum/#!forum/openlmis-dev) and we'll be sure to help you by building extension points.
 
 ### Developing A New Module
 
@@ -119,7 +104,7 @@ TODO:  describe how a module is built and where it's contributed.  Reference Mod
 whitespace preferences, it won't be accepted.  It's better to just stick with what's already there.
 
 ## Git, Branching & Pull Requests
-The OpenLMIS community employs a couple code-management techniques to help develop the software, enable contributions,
+The OpenLMIS community employs several code-management techniques to help develop the software, enable contributions,
 discuss & review and pull the community together.  The first is that OpenLMIS code is managed using Git and is always 
 publicly hosted on [GitHub](http://github.com/OpenLMIS/open-lmis) and we encourage everyone working on the code-base to 
 take advantage of GitHub's fork and pull-request model to track what's going on. Second we follow, as needed, a git 
@@ -128,12 +113,12 @@ branching strategy based on Vincent Driessen's
 which we encourage contributors to follow as well to ease the task of reviewing and accepting contribution 
 submissions.
 
-In short we utilize the following branches:
+We utilize the following branches:
 * `master` - is where all OpenLMIS stable releases are.  Code here is of the highest quality for the project and is ready to be used
-in an implementation.  Pull requests should not be made against this branch.  If a bug-fix is needed on a released version, a pull-request should be made to that version's release branch.
+in an implementation.  Pull requests should not be made against this branch.  If a bug fix is needed on a released version, a pull request should be made to that version's release branch.
 * `dev` - is where all active development occurs.  Code that's here **should** always build and pass tests, however it may not be stable and it is not suitable yet for a release.  Contributions for the next release should be made here via pull requests.
 
-A short example of contributing would look like this:
+The general flow:
 
 1. *Communicate* using JIRA, the wiki, or the developer forums!
 
@@ -145,7 +130,7 @@ A short example of contributing would look like this:
 
 5. *Re-base* your branch *often* from OpenLMIS `dev` branch
 
-6. Issue a *Pull Request* back to the `dev` branch - explain what you did and keep it brief to speed review!
+6. Issue a *Pull Request* back to the `dev` branch - explain what you did and keep it brief to speed review!  Mention the JIRA ticket number (e.g., "OLIMS-34") in the commit and pull request messages to activate the JIRA/GitHub integration.
 
 While developing your code, be sure you follow our style guide <todo: link> and keep your contribution specific to
 doing **one** thing.
@@ -171,7 +156,7 @@ to `copyright VillageReach, <insert name here>`
 - Update the copyright year to a range.  e.g. if it was 2014, update it to read 2014-2015
 
 ### Adding new code in a new file
-- Copy the license file header template to the top of the new file.
+- Copy the license file header template, LICENSE_HEADER, to the top of the new file.
 - Add the year and your name or your organization's name to the license header. e.g. if it reads `Copyright © <INSERT YEAR AND COPYRIGHT HOLDER HERE>`, update it to `Copyright © 2016 MyOrganization`
 
 For complete licensing details be sure to reference the LICENSE file that comes with this project.
