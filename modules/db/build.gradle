@@ -119,13 +119,13 @@ task baseSeed(type: Exec) {
     commandLine 'psql', '-U', dbUser, '--file', 'src/main/resources/seed/seed.sql', '-h', databaseHostName, '-w', dbName
 }
 
-task customSeed(type: Exec, dependsOn: baseSeed) {
+task enableCustom(type: Exec, dependsOn: baseSeed) {
     onlyIf { toggleOnCustom == 'true' }
     environment("PGPASSWORD", dbPassword)
-    commandLine 'psql', '-U', dbUser, '--file', 'src/main/resources/seed/custom_seed.sql', '-h', databaseHostName, '-w', dbName
+    commandLine 'psql', '-U', dbUser, '--file', 'src/main/resources/seed/enable_custom.sql', '-h', databaseHostName, '-w', dbName
 }
 
-task seed(dependsOn: [baseSeed, customSeed]) {
+task seed(dependsOn: [baseSeed, enableCustom]) {
 }
 
 def boolean closeActiveConnections(String pid) {
