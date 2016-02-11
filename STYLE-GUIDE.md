@@ -5,14 +5,14 @@ The OpenLMIS style guide is intended to assist in the design and development of 
 2. the automated source code checking mechanisms and associated rule-sets.
 
 The OpenLMIS style guide aims to help contributors to the project create quality contributions and also as an 
-automated check to ensure that the review process can proceed efficiently.  To do this this guide has two main sections: 
+automated check to ensure that the review process can proceed efficiently.  To that end, this guide has two main sections: 
 the first is a set of rules that every contribution may be tested against and mechanisms for tracking the 
-project's compliance automatically. The second expands upon some of the intentions behind the OpenLMIS principles for 
+project's compliance automatically. The second expands upon some of the intentions behind the OpenLMIS principles 
 to influence better design and implementation of OpenLMIS features.
 
 Often the state of the code-base is far from the outlined ideals.  This presents us with the opportunity to improve 
 upon the current state of the project while recording lessons learned here and through the developer forums.  In 
-that vain this guide is in no way meant to be exhaustive and further discussion is welcomed on the developer forums.
+that vein, this guide is in no way meant to be exhaustive and further discussion is welcomed on the developer forums.
 
 
 ## Principles
@@ -37,21 +37,19 @@ dependant technologies that are licensed similarly.  Contributions should aspire
 
 OpenLMIS is built and used by those in low-resource settings:
 
-* Internet is often slow and intermittent.  Features should be designed with these limitations in mind.  e.g. most 
-work-flows should highly optimize for slow internet and even work-flows with periods of non-connectivity.  
+* Internet is often slow and intermittent.  Features should be designed with these limitations in mind.  For example, most 
+work-flows should be optimized for slow internet and even work-flows with periods of non-connectivity.  
 Administrative screens however can often take shortcuts and assume that their users will have better internet 
 connectivity.
-* Processes not only vary and need to be configurable by program and implementation, they also oftentimes are being 
-used in parallel or supplementing traditional paper processes.  Data collection and forms should strive to be able to 
+* Processes not only vary and need to be configurable by program and implementation, they oftentimes are  
+used in parallel or supplement traditional paper processes.  Data collection and forms should strive to be able to 
 be configurable to match a paper form and be able to restore it historically.
-* Screens are often older and come with lower resolutions than the latest and greatest.  800x600 px screens can still
-be found.  Additionally many work-flows that would be used by someone at the last mile will be used by someone with a
-smaller tablet or even phone.
-* Scalability for OpenLMIS is the ability to be able to be used by people in large hospitals to community health 
-workers nation wide.  Data collection, processing through to report delivery should be designed and implemented to be
-able to process for thousands of users with thousands of physical facilities.
+* Screens are often older and come with lower resolutions than the latest and greatest.  800x600 px screens are not uncommon.  Additionally, many work-flows that would be used by someone at the last mile will be used by someone with a
+smaller tablet or even a phone.
+* Scalability for OpenLMIS is the capability of use in large hospitals to community health 
+workers nation wide.  The workflow from data collection, processing through to report delivery should be designed and implemented for thousands of users with thousands of physical facilities.
 * Security is important for OpenLMIS to be trusted to run nation-wide government supply chains to NGO initiatives.  
-A role-base security system provides for users to see and do only what they need to be able to.  Care should be given
+A role-based security system contains users to see and do only what is required for their role.  Care should be given
 in designing features and running implementations to keep OpenLMIS secure.
 
 ### <a name="configurable"></a>Configurable
@@ -59,21 +57,21 @@ in designing features and running implementations to keep OpenLMIS secure.
 > designed so that countries can configure and use the software with minimal training and technical capacity.
 
 Supply chains vary.  Reporting requirements, process differences, language, and even the look and feel need to be as 
-configurable as is reasonable for OpenLMIS to continue to deliver on its mission.  In order to accomplish this OpenLMIS
+configurable as is reasonable for OpenLMIS to continue to deliver on its mission.  In order to accomplish this, OpenLMIS
 contributions need to at a minimum continue to deliver:
 
 * Language - Language tags allow messages/UI/email/API/etc to be translated into many different languages and allows 
-the user to switch the language displayed easily.  OpenLMIS has standardized development in english for consistency
+the user to switch the language displayed easily.  OpenLMIS has standardized development in English for consistency
 and supports translation projects as the opportunity arises.
 * Dates - Date formatting also varies by locality.  As such any date or time printed should allow for custom 
 formatting.
-* Programs allow for OpenLMIS to configure the vertical supply chains present in many low- and middle-income 
+* **Programs** allow for OpenLMIS to configure the vertical supply chains present in many low- and middle-income 
 countries independently.  e.g. a Malaria program may collect different data by different people than an HIV/AIDS 
 program.
 * Schedules allow for a Program to define regular or even planned irregularity for timing of program related events.  
 Monthly and quarterly are typical examples, however a schedule may have periods where a monthly schedule may have to 
 be extended to a couple months when seasonal monsoons slow transportation networks.
-* Variable and often program-segregated administrative hierarchies are needed to ensure program's can operate 
+* Variable and often Program-segregated administrative hierarchies are needed to ensure programs can operate 
 independently and reflect the common situation of programs not sharing staff.
 * A singular geographic hierarchy is currently in use.  Unlike many features of OpenLMIS, this definition is not 
 segregated by Program and is meant to reflect that physical facilities often are part of one official geographic 
@@ -110,17 +108,17 @@ oftentimes more useful over a longer period of time.
 * sharing code often comes with mis-matched expectations and undesired consequences, so it's not unexpected that 
 development often occurs behind closed-doors until "it's ready".  The OpenLMIS project however aims to be *open* so all 
 code that is part of the OpenLMIS project is found in the OpenLMIS [repository](https://github.com/OpenLMIS/open-lmis).
-The recommended approach to [collaborating](CONTRIBUTING.md) with OpenLMIS is to similarly publicly host and link 
+The recommended approach to [collaborating](CONTRIBUTING.md) with OpenLMIS is to publicly host and link 
 your project to OpenLMIS utilizing GitHub's 
 [Fork and Pull Request](https://help.github.com/categories/collaborating-on-projects-using-pull-requests/) model.  
 [Contribution](CONTRIBUTING.md) to OpenLMIS **requires** this pull request method.
-* sharing ideas, work items, roadmaps, feature requests, knowledge bases etc is vital to know where the project is 
-going is going and even participate in that direction.  To that end OpenLMIS encourages all participants to utilize 
+* sharing ideas, work items, roadmaps, feature requests, knowledge bases, etc. is vital to know where the project is 
+going and encourage participation.  To that end OpenLMIS encourages all participants to utilize 
 the public forums, chat, project management, and wiki spaces to collaborate.  An active list is found in the 
 [README](README.md).
 * automated testing ensures functionality from developer to developer and implementation to implementation is 
-behaving as expected over time.  OpenLMIS doesn't currently define code-coverage targets, however the project expects 
-that appropriate test coverage is provided with every contribution and highly scrutinize existing tests.  Since 
+behaving as expected over time.  OpenLMIS doesn't currently define code-coverage targets, however, the project expects 
+that appropriate test coverage is provided with every contribution and highly scrutinizes existing tests.  Since 
 testing is so important, calling out the kinds of testing done and not done and *why* can greatly help the review 
 process for contributions.
 
@@ -131,6 +129,6 @@ process for contributions.
 
 
 ## Sonar & Quality Gate
-OpenLMIS utilizes Sonar for tracking OpenLMIS quality over time.  For the project this tool provides an on-going review
+OpenLMIS utilizes Sonar for tracking OpenLMIS quality over time.  This tool provides an on-going review
 mechanism to help evaluate contributions and project metrics to ensure that key metrics aren't changing negatively.  
 
