@@ -50,19 +50,26 @@ System Requirements
     `> npm install -g  karma-firefox-install`
   * And for jasmine:
     `> npm install -g  karma-jasmine`
-  * Install project-specific grunt dependencies by navigating to `modules/openlmis-web` from project root directory and run
-    `> npm install` (one-time activity)
   * Grunt tasks available can be found in `modules/openlmis-web/Gruntfile.js`
 
 Source code
 ------------------
 1. Get the source code using `git clone https://github.com/openlmis/open-lmis.git`.
-2. For now, all work should be pushed to the 2.0 branch, not master. After cloning, you can do `git checkout 2.0` to get into the 2.0 branch.
-3. Set up dependencies on submodules using
-    ```bash
+2. By default you'll checkout the `master` branch.  This is the latest stable code.  For the latest development code
+checkout the `dev` branch.
+3. Set up dependencies on submodules & Grunt using:  
+  
+    ```shell  
+    > cd open-lmis
     > git submodule init
     > git submodule update
+    > cd modules/openlmis-web
+    > npm install
     ```
+  
+### Contributing
+If you're intending to contribute to the OpenLMIS project, please read through [CONTRIBUTING.md](CONTRIBUTING.md).  
+**note** that new features should be placed in modules and should be managed using git-repo.
 
 IntelliJ IDEA Setup
 -------------------
