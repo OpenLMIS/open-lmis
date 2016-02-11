@@ -72,7 +72,12 @@ The backlog can be found here: https://openlmis.atlassian.net/secure/RapidBoard.
 ## Contributing Code
 The OpenLMIS community welcomes code contributions and we encourage you to fix a bug or implement a new feature.  
 However we also need to make sure that contributions keep in mind existing implementations and the needs of a 
-Logistics Management Information System that works in many different localities and programs.  To enable OpenLMIS to 
+Logistics Management Information System that works in many different localities and programs.  To that end, when considering a new feature or modification, please:
+
+1.  Review your feature with the community
+2.  Before modifying core functionality, check with the technical community.  We prefer building in **extension points**, which are simply hooks or Strategies to enable different behavior while maintaining compatibility.  The tech group can help advise how best to do this.
+
+To enable OpenLMIS to 
 keep a rapid pace of development while allowing for country custimizations, we are in the process of splitting the 
 software into two products:
 
