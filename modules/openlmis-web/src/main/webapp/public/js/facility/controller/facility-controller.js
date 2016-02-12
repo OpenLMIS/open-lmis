@@ -9,7 +9,7 @@
  */
 
 
-function FacilityController($scope, facilityReferenceData, $routeParams, facility, Facility, demographicCategories, $location, FacilityProgramProductsISA, priceSchedules, facilityImages, $q, $dialog, messageService, interfacesReferenceData, AuthorizationService)
+function FacilityController($scope, facilityReferenceData, $routeParams, facility, Facility, demographicCategories, $location, FacilityProgramProductsISA, priceSchedules, $dialog, messageService, interfacesReferenceData, AuthorizationService)
 {
   $scope.$parent.facilityId = null;
   $scope.message = "";

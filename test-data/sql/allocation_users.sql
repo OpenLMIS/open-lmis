@@ -200,5 +200,5 @@ VALUES ((SELECT id FROM users WHERE username = 'devadmin'), (SELECT id FROM role
 ;
 
 INSERT INTO fulfillment_role_assignments (userid, roleid, facilityid)
-VALUES ((SELECT id FROM users WHERE username = 'Admin123'), (SELECT id FROM roles WHERE name = 'All Fulfillment'), (SELECT id FROM facilities WHERE code = 'F11'))
+VALUES ((SELECT id FROM users WHERE username = 'devadmin'), (SELECT id FROM roles WHERE name = 'All Fulfillment'), (SELECT id FROM facilities WHERE code = 'F11'))
 ;

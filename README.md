@@ -2,19 +2,16 @@
 
 OpenLMIS (Open Logistics Management Information System) is software for a shared, open source solution for managing medical commodity distribution in low- and middle-income countries.  For more information, see http://openlmis.org/.
 
-The OpenLMIS wiki is at https://openlmis.atlassian.net/wiki/display/OP/Developer+Guide.
-
-License Terms
----------------------------
-This program is part of the OpenLMIS logistics management information system platform software. Copyright © 2013, 2014, 2015 VillageReach, JSI, and ThoughtWorks.
-
-This site contains code and related material necessary to implement a configuration of the OpenLMIS logistics management information system platform.  See https://github.com/OpenLMIS/open-lmis/ for details of OpenLMIS.
-
-This site contains free software: you can redistribute it and/or modify it under the terms of the appropriate license.  As this site contains code developed by more than one organization and licensed under different terms you should refer to the license terms stated in each component for details.
-
-The programs and documents on this site are distributed in the hope that they will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the applicable License for more details.
-
-You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.
+__Project Links:__
+* [OpenLMIS.org](http://openlmis.org)
+* [Wiki](https://openlmis.atlassian.net/wiki/display/OP)
+* [Project Management](https://openlmis.atlassian.net/projects/OLMIS/issues/)
+* [Slack](http://openlmis.slack.com)
+* [Developer Forums](https://groups.google.com/forum/#!forum/openlmis-dev)
+* [Product Committee Forums](https://groups.google.com/forum/#!forum/openlmis_product_committee)
+* [Governance Committee Forums](https://groups.google.com/forum/#!forum/openlmis-governance)
+* [Code Quality](http://ci.openlmis.org:9000)
+* [Build](http://ci.openlmis.org:8080)
 
 System Requirements
 ---------------------------
@@ -53,19 +50,26 @@ System Requirements
     `> npm install -g  karma-firefox-install`
   * And for jasmine:
     `> npm install -g  karma-jasmine`
-  * Install project-specific grunt dependencies by navigating to `modules/openlmis-web` from project root directory and run
-    `> npm install` (one-time activity)
   * Grunt tasks available can be found in `modules/openlmis-web/Gruntfile.js`
 
 Source code
 ------------------
 1. Get the source code using `git clone https://github.com/openlmis/open-lmis.git`.
-2. For now, all work should be pushed to the 2.0 branch, not master. After cloning, you can do `git checkout 2.0` to get into the 2.0 branch.
-3. Set up dependencies on submodules using
-    ```bash
+2. By default you'll checkout the `master` branch.  This is the latest stable code.  For the latest development code
+checkout the `dev` branch.
+3. Set up dependencies on submodules & Grunt using:  
+  
+    ```shell  
+    > cd open-lmis
     > git submodule init
     > git submodule update
+    > cd modules/openlmis-web
+    > npm install
     ```
+  
+### Contributing
+If you're intending to contribute to the OpenLMIS project, please read through [CONTRIBUTING.md](CONTRIBUTING.md).  
+**note** that new features should be placed in modules and should be managed using git-repo.
 
 IntelliJ IDEA Setup
 -------------------
@@ -91,12 +95,12 @@ Running App on embedded Jetty server
 --------------------------------------------------
 1. Clone the project repository using git.
 2. Setup _postgres_ user with password as configured in `gradle.properties` file.
-3. You can use `gradle clean setupdb setupExtensions seed build testseed run` to start the app.
-4. You can use `gradle clean setupdb setupExtensions seed build` to just run all of the tests.
-5. There are bunch of gradle tasks that you can see by running `gradle tasks`:
+3. Add psql command to your PATH
+4. You can use `gradle clean setupdb seed build testseed run` to start the app.
+5. You can use `gradle clean setupdb seed build` to just run all of the tests.
+6. There are bunch of gradle tasks that you can see by running `gradle tasks`:
   - `build` is to build the app.
   - `setupdb` is to recreate the database and schema.
-  - `setupExtensions` is to apply the database schema extensions added.
   - `seed` is to seed in the reference data.
   - `testseed` puts in some test data which can be used to browse through basic functionality in the system.
   - `run` is to start the embedded jetty server.
@@ -135,3 +139,15 @@ Tech Stack
  - Jasmine
  - Node.js
  - Grunt.js
+
+License Terms
+---------------------------
+This program is part of the OpenLMIS logistics management information system platform software. Copyright © 2013, 2014, 2015 VillageReach, JSI, and ThoughtWorks.
+
+This site contains code and related material necessary to implement a configuration of the OpenLMIS logistics management information system platform.  See https://github.com/OpenLMIS/open-lmis/ for details of OpenLMIS.
+
+This site contains free software: you can redistribute it and/or modify it under the terms of the appropriate license.  As this site contains code developed by more than one organization and licensed under different terms you should refer to the license terms stated in each component for details.
+
+The programs and documents on this site are distributed in the hope that they will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the applicable License for more details.
+
+You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.
