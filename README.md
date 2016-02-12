@@ -82,6 +82,15 @@ Jasmine Tests
 -------------------
 1. To run jasmine tests headlessly: gradle karmaRun
 
+Feature Toggle (for 2.0)
+--------------------------------------------------
+A number of country-specific features (eLMIS, VIMS, Moz) are integrated into the project. These are turned off by 
+default. To turn them on, edit the `gradle.properties` file by setting `toggleOnCustom = true`.
+
+See https://openlmis.atlassian.net/wiki/display/OP/2.0+Feature+Toggle+Mechanism for more details.
+
+To add features to the toggling mechanism, see [Feature Toggle.md](docs/Feature%20Toggle.md) in the `docs` folder.
+
 Running App on embedded Jetty server
 --------------------------------------------------
 1. Clone the project repository using git.

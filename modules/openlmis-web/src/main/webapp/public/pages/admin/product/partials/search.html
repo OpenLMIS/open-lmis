@@ -69,7 +69,7 @@
         <th id="packSize" openlmis-message="header.pack.size"></th>
         <th id="globalActive" openlmis-message="header.global.active"></th>
         <th id="activeAtProgram" openlmis-message="header.active.at.program"></th>
-        <th id="rationing" openlmis-message="header.rationing"></th>
+        <th id="rationing" openlmis-message="header.rationing" ng-show="hasPermission('VIEW_PRODUCT_RATIONING')"></th>
       </tr>
       </thead>
       <tbody ng-repeat="programProduct in programProducts">
@@ -102,7 +102,7 @@
           <i id="activeAtProgram{{$index}}"
              ng-class="{'icon-ok': programProduct.active}"></i>
         </td>
-        <td class="center-justified">
+        <td class="center-justified" ng-show="hasPermission('VIEW_PRODUCT_RATIONING')">
             <a ng-hide="isAdjustmentExists(programProduct.product.id)" href="" ng-click="addRationing(programProduct.product.id)" class="btn btn-primary">
               <span id="addRationing" openlmis-message="button.add"></span>
             </a>
