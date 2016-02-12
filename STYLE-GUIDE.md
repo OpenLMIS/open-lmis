@@ -42,8 +42,8 @@ work-flows should be optimized for slow internet and even work-flows with period
 Administrative screens however can often take shortcuts and assume that their users will have better internet 
 connectivity.
 * Processes not only vary and need to be configurable by program and implementation, they oftentimes are  
-used in parallel or supplement traditional paper processes.  Data collection and forms should strive to be able to 
-be configurable to match a paper form and be able to restore it historically.
+used in parallel or supplement traditional paper processes.  Data collection and forms should strive to 
+be configurable to match the official paper form and be able to restore it historically.
 * Screens are often older and come with lower resolutions than the latest and greatest.  800x600 px screens are not uncommon.  Additionally, many work-flows that would be used by someone at the last mile will be used by someone with a
 smaller tablet or even a phone.
 * Scalability for OpenLMIS is the capability of use in large hospitals to community health 
