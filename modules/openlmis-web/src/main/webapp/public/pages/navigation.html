@@ -10,9 +10,8 @@
 
 <div class="navigation toggleFullScreen" ng-controller="NavigationController" ui-nav>
   <ul class="clearfix" style="display:none">
-    <li >
-      <a  href="" id='homeMenu' ng-click="homeLinkClicked()" openlmis-message="link.home"></a></li>
     <li>
+      <a  href="" id='homeMenu' ng-click="homeLinkClicked()" openlmis-message="link.home"></a></li>
     <li>
       <a id="requisitions-menu" href="javascript: void(0)" openlmis-message="link.requisitions"></a>
 
@@ -60,8 +59,17 @@
 
     </li>
 
-    <li ng-show="hasReportingPermission()">
-      <a id="report-menu" href="/public/pages/report/index.html" openlmis-message="link.reports"></a>
+    <li>
+      <a id="distributions-menu" href="javascript: void(0)" openlmis-message="link.distributions"></a>
+      <div class="submenu">
+        <ul>
+          <li ng-show="hasPermission('MANAGE_DISTRIBUTION')">
+            <a id="manage-distribution" href="/public/pages/logistics/distribution/index.html#/manage"
+               openlmis-message="link.manage"></a>
+          </li>
+          <li class="beak"></li>
+        </ul>
+      </div>
     </li>
 
     <li>
@@ -85,7 +93,7 @@
         </ul>
       </div>
     </li>
-    <li ng-show="hasPermission('CREATE_IVD') || hasPermission('VIEW_IVD') || hasPermission('MANAGE_DISTRIBUTION') || hasPermission('VIEW_ORDER_REQUISITION') || hasPermission('VIEW_PENDING_REQUEST') || hasPermission('CREATE_ORDER_REQUISITION')">
+    <li ng-show="hasPermission('CREATE_IVD') || hasPermission('VIEW_IVD') || hasPermission('VIEW_ORDER_REQUISITION') || hasPermission('VIEW_PENDING_REQUEST') || hasPermission('CREATE_ORDER_REQUISITION')">
       <a id="vaccine" href="" openlmis-message="link.vaccine"></a>
       <div class="submenu">
         <ul>
@@ -95,11 +103,6 @@
           </li>
           <li ng-show="hasPermission('VIEW_IVD')">
             <a href="/public/pages/vaccine/report/index.html#/view" openlmis-message="link.view.ivd"></a>
-          </li>
-          <li ng-show="hasPermission('MANAGE_DISTRIBUTION')">
-            <a id="manage-distribution"
-               href="/public/pages/logistics/distribution/index.html#/manage"
-               openlmis-message="link.distributions"></a>
           </li>
           <li class="beak"></li>
           <li>
@@ -268,7 +271,7 @@
             </div>
           </li>
 
-          <li ng-show="hasPermission('MANAGE_SETTING')">
+          <li ng-show="hasPermission('MANAGE_CONFIG_SMS')">
               <a href="/public/pages/admin/sms/index.html">Messages</a>
           </li>
 
@@ -343,18 +346,18 @@
                         <a href="/public/pages/admin/equipment/program-equipment-products/index.html"
                             openlmis-message="link.manage.equipment.products"></a>
                       </li>
-                      <li ng-show="hasPermission('MANAGE_EQUIPMENT_SETTINGS')">
+                      <li ng-show="hasPermission('MANAGE_EQUIPMENT_SERVICING')">
                         <a href="/public/pages/admin/equipment/service-type/index.html">
                           <span id="equipment-service-type"
                               openlmis-message="link.manage.equipment.service.types"></span>
                         </a>
                       </li>
-                      <li ng-show="hasPermission('MANAGE_EQUIPMENT_SETTINGS')">
+                      <li ng-show="hasPermission('MANAGE_EQUIPMENT_SERVICING')">
                         <a href="/public/pages/admin/equipment/vendor/index.html">
                           <span id="service-vendor" openlmis-message="link.manage.equipment.vendors"></span>
                         </a>
                       </li>
-                      <li ng-show="hasPermission('MANAGE_EQUIPMENT_SETTINGS')">
+                      <li ng-show="hasPermission('MANAGE_EQUIPMENT_SERVICING')">
                         <a href="/public/pages/admin/equipment/service-contract/index.html">
                           <span id="service-contract"
                               openlmis-message="link.manage.equipment.contracts"></span>
@@ -365,6 +368,7 @@
                           <span id="manage-donor" openlmis-message="link.manage.equipment.donors"></span>
                         </a>
                       </li>
+                      <li class="beak"></li>
                     </ul>
                 </div>
             </li>
@@ -394,11 +398,12 @@
                             href="/public/pages/demographics/index.html#/facility"
                       openlmis-message="link.manage.facility.demographic"></a>
                   </li>
-                  <li ng-show="hasPermission('MANAGE_DEMOGRAPHIC_PARAMETERS')">
+                  <li ng-show="hasPermission('MANAGE_DEMOGRAPHIC_ESTIMATES')">
                     <a
                             href="/public/pages/demographics/index.html#/district"
                       openlmis-message="link.manage.district.demographic"></a>
                   </li>
+                <li class="beak"></li>
                 </ul>
               </div>
             </li>
@@ -429,6 +434,7 @@
           <li class="beak"></li>
         </ul>
       </div>
+    </li>
 
     <li ng-show="hasPermission('ACCESS_ILS_GATEWAY')">
         <a

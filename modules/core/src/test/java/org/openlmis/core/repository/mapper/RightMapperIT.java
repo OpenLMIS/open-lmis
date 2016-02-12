@@ -92,11 +92,12 @@ public class RightMapperIT {
   }
 
   @Test
-  public void shouldGetAllRights() {
-
+  public void shouldGetAllRights() throws SQLException {
     List<Right> rights = rightMapper.getAll();
+    ResultSet results = queryExecutor.execute("SELECT COUNT(*) AS count FROM rights");
+    results.next();
 
-    assertThat(rights.size(), is(96));
+    assertThat(rights.size(), is(Integer.parseInt(results.getString("count"))));
     assertThat(rights.get(0).getDisplayOrder(),is(1));
   }
 }
