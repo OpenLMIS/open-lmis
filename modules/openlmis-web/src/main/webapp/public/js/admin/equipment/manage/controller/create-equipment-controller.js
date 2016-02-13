@@ -81,7 +81,6 @@ function CreateEquipmentController($scope, $routeParams, $location, Equipment,Eq
       }
       else{
         $scope.equipment.equipmentTypeName = "equipment";
-        $scope.equipment.designationId=$scope.equipment.designation.id;
       }
       SaveEquipment.save($scope.equipment, onSuccess, onError);
     }
