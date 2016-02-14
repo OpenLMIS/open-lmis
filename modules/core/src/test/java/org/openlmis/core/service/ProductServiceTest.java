@@ -19,10 +19,12 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.openlmis.core.domain.*;
+import org.openlmis.core.exception.DataException;
 import org.openlmis.core.repository.ProductRepository;
 import org.openlmis.db.categories.UnitTests;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 

@@ -1,13 +1,12 @@
 package org.openlmis.restapi.service;
 
 import com.google.common.base.Function;
-import com.google.common.base.Predicate;
 import com.google.common.collect.FluentIterable;
-import org.openlmis.core.domain.*;
+import org.openlmis.core.domain.KitProduct;
+import org.openlmis.core.domain.Product;
+import org.openlmis.core.domain.ProgramProduct;
 import org.openlmis.core.service.ProductService;
 import org.openlmis.core.service.ProgramProductService;
-import org.openlmis.core.service.ProgramSupportedService;
-import org.openlmis.core.service.UserService;
 import org.openlmis.restapi.domain.ProductResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -32,12 +31,6 @@ public class RestProductService {
 
   @Autowired
   private ProgramProductService programProductSevice;
-
-  @Autowired
-  private UserService userService;
-
-  @Autowired
-  private ProgramSupportedService programSupportedService;
 
   @Transactional
   public Product buildAndSave(Product product) {
@@ -80,59 +73,33 @@ public class RestProductService {
     product.setActive(true);
   }
 
-  public List<ProductResponse> getLatestProductsAfterUpdatedTime(Date afterUpdatedTime, Long userId) {
+  public List<ProductResponse> getLatestProductsAfterUpdatedTime(Date afterUpdatedTime) {
 
-    List<Product> latestProducts = getLatestProducts(afterUpdatedTime);
+    List<ProductResponse> productResponses = new ArrayList<>();
+    List<Product> latestProducts;
 
-    List<String> allSupportedPrograms = getSupportedProgramsByFacility(userId);
-
-    return prepareProductsBasedOnFacilitySupportedPrograms(latestProducts, allSupportedPrograms);
-  }
-
-  private List<Product> getLatestProducts(Date afterUpdatedTime) {
-
-    if(afterUpdatedTime == null) {
-      return productService.getAllProducts();
+    if(afterUpdatedTime == null ) {
+      latestProducts = productService.getAllProducts();
     } else {
-      return productService.getProductsAfterUpdatedDate(afterUpdatedTime);
+      latestProducts = productService.getProductsAfterUpdatedDate(afterUpdatedTime);
     }
-  }
 
-  private List<String> getSupportedProgramsByFacility(Long userId) {
-    User user = userService.getById(userId);
-    Long facilityId = user.getFacilityId();
+    for(Product product : latestProducts) {
 
-    List<ProgramSupported> programSupportedList = programSupportedService.getAllByFacilityId(facilityId);
-    return FluentIterable.from(programSupportedList).transform(new Function<ProgramSupported, String>() {
-      @Override
-      public String apply(ProgramSupported programSupported) {
-        return programSupported.getProgram().getCode();
-      }
-    }).toList();
-  }
-
-  private List<ProductResponse> prepareProductsBasedOnFacilitySupportedPrograms(List<Product> latestProducts, final List<String> programs) {
-    List<ProductResponse> productResponseList = new ArrayList<>();
-
-    for (Product product : latestProducts) {
-
-      List<String> programCodes = FluentIterable.from(programProductSevice.getByProductCode(product.getCode())).filter(new Predicate<ProgramProduct>() {
-        @Override
-        public boolean apply(ProgramProduct programProduct) {
-          return programs.contains(programProduct.getProgram().getCode());
-        }
-      }).transform(new Function<ProgramProduct, String>() {
-        @Override
-        public String apply(ProgramProduct programProduct) {
-          return programProduct.getProgram().getCode();
-        }
-      }).toList();
-
-      if (!programCodes.isEmpty()) {
-        productResponseList.add(new ProductResponse(product, programCodes));
-      }
+      List<String> programsSupportedByProduct = getSupportProgramsForProduct(product);
+      ProductResponse productResponse = new ProductResponse(product, programsSupportedByProduct);
+      productResponses.add(productResponse);
     }
-    return productResponseList;
+    return productResponses;
   }
 
+  private List<String> getSupportProgramsForProduct(Product product) {
+    return FluentIterable.from(programProductSevice.getByProductCode(product.getCode()))
+            .transform(new Function<ProgramProduct, String>() {
+          @Override
+          public String apply(ProgramProduct programProduct) {
+            return programProduct.getProgram().getCode();
+          }
+        }).toList();
+  }
 }

@@ -15,7 +15,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import java.security.Principal;
 import java.util.Date;
 import java.util.List;
 
@@ -37,11 +36,11 @@ public class RestProductController extends BaseController {
   }
 
   @RequestMapping(value = "/rest-api/latest-products")
-  public ResponseEntity<RestResponse> getLatestProducts(@RequestParam(required = false) Long afterUpdatedTime, Principal principal) {
+  public ResponseEntity<RestResponse> getLatestProducts(@RequestParam(required = false) Long afterUpdatedTime) {
 
     try {
       Date afterUpdatedTimeInDate = (afterUpdatedTime == null ? null : new Date(afterUpdatedTime));
-      List<ProductResponse> products = restProductService.getLatestProductsAfterUpdatedTime(afterUpdatedTimeInDate, loggedInUserId(principal));
+      List<ProductResponse> products = restProductService.getLatestProductsAfterUpdatedTime(afterUpdatedTimeInDate);
       RestResponse restResponse = new RestResponse("latestProducts", products);
       restResponse.addData("latestUpdatedTime", new Date());
       return new ResponseEntity<>(restResponse, HttpStatus.OK);

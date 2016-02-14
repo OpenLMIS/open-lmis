@@ -1,6 +1,5 @@
 package org.openlmis.restapi.controller;
 
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
@@ -19,14 +18,12 @@ import org.powermock.modules.junit4.PowerMockRunnerDelegate;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
-import java.security.Principal;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
-import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.openlmis.restapi.response.RestResponse.SUCCESS;
@@ -43,13 +40,6 @@ public class RestProductControllerTest {
 
   @Mock
   private RestProductService restProductService;
-  private Principal principal;
-
-  @Before
-  public void setup() {
-    principal = mock(Principal.class);
-    PowerMockito.when(principal.getName()).thenReturn("1");
-  }
 
   @Test
   public void shouldCallRestKitServiceToSaveKitAndRespondWithSuccess() {
@@ -71,9 +61,9 @@ public class RestProductControllerTest {
     products.add(new ProductResponse());
     long date = 1234L;
     Date afterUpdatedTime = new Date(date);
-    when(restProductService.getLatestProductsAfterUpdatedTime(afterUpdatedTime, 1L)).thenReturn(products);
+    when(restProductService.getLatestProductsAfterUpdatedTime(afterUpdatedTime)).thenReturn(products);
 
-    ResponseEntity<RestResponse> response = restProductController.getLatestProducts(date, principal);
+    ResponseEntity<RestResponse> response = restProductController.getLatestProducts(date);
     assertEquals(HttpStatus.OK, response.getStatusCode());
     assertEquals(products, response.getBody().getData().get("latestProducts"));
     assertNotNull(response.getBody().getData().get("latestUpdatedTime"));
@@ -81,8 +71,8 @@ public class RestProductControllerTest {
 
   @Test
   public void shouldCallLatestProgramsWithProductsWithNullTimeWhenTimeIsNotProvided() {
-    ResponseEntity<RestResponse> response = restProductController.getLatestProducts(null, principal);
+    ResponseEntity<RestResponse> response = restProductController.getLatestProducts(null);
     assertEquals(HttpStatus.OK, response.getStatusCode());
-    verify(restProductService).getLatestProductsAfterUpdatedTime(null, 1L);
+    verify(restProductService).getLatestProductsAfterUpdatedTime(null);
   }
 }
