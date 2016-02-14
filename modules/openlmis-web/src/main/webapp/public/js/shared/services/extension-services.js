@@ -1340,7 +1340,7 @@ services.factory('VersionReportService', function($resource){
 services.factory('ProductReportService', function ($resource) {
     return {
         loadAllProducts: function () {
-            return $resource('/rest-api/lookup/products', {pageSize: 2000}, {});
+            return $resource('/rest-api/lookup/products', {paging: false}, {});
         },
         loadProductReport: function () {
             return $resource('/reports/single-product-report', {}, {save: {method: 'POST'}});
