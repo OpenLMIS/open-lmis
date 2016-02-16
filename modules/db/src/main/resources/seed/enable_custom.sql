@@ -65,6 +65,7 @@ VALUES ('ACCESS_ILS_GATEWAY','ADMIN','Permission to access the ILS Gateway.',38,
   ,('VIEW_FACILITY_INTEGRATION','ADMIN','Permission to view facility integration section',NULL,'right.view.facility.integration')
   ,('VIEW_PRODUCT_RATIONING','ADMIN','Permission to view product rationing column',NULL,'right.view.product.rationing')
   ,('MANAGE_EQUIPMENT_SERVICING', 'ADMIN', 'Permission to manage service vendors and contracts', NULL, 'right.manage.equipment.servicing')
+  ,('VIEW_HELP', 'ADMIN', 'Permission to view help link', NULL, 'right.view.help');
 ;
 
 INSERT INTO report_rights(templateid, rightname)
