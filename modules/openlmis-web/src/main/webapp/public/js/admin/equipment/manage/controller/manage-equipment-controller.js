@@ -39,35 +39,36 @@ function ManageEquipmentController($scope, $routeParams,$dialog, $location,messa
       };
 
 
-   $scope.listEquipments=function(initLoad)
-   {
+    $scope.listEquipments=function(initLoad)
+    {
 
-      if(initLoad)
-      {
+        if(initLoad) {
             $scope.page=1;
-      }
-      var id=$scope.equipmentTypeId;
-      currentEquipmentTypeId.set($scope.equipmentTypeId);
-      Equipments.get({
-           equipmentTypeId:id,
-           page: $scope.page
-           },function (data) {
-               $scope.equipments = data.equipments;
-               $scope.pagination = data.pagination;
-               $scope.totalItems = $scope.pagination.totalRecords;
-               $scope.currentPage = $scope.pagination.page;
-       });
-      EquipmentType.get({
-            id: id
-          }, function (data) {
-            $scope.equipment_type = data.equipment_type;
-       });
+        }
 
-      ColdChainPqsStatus.get(function (data) {
-              $scope.pqsStatus = data.pqs_status;
-       });
-
-   };
+        if ($scope.equipmentTypeId !== '') {
+            var id=$scope.equipmentTypeId;
+            currentEquipmentTypeId.set($scope.equipmentTypeId);
+            Equipments.get({
+                equipmentTypeId:id,
+                page: $scope.page
+            },function (data) {
+                $scope.equipments = data.equipments;
+                $scope.pagination = data.pagination;
+                $scope.totalItems = $scope.pagination.totalRecords;
+                $scope.currentPage = $scope.pagination.page;
+            });
+            EquipmentType.get({
+                id: id
+            }, function (data) {
+                $scope.equipment_type = data.equipment_type;
+            });
+            
+            ColdChainPqsStatus.get(function (data) {
+                $scope.pqsStatus = data.pqs_status;
+            });
+        }
+    };
 
    var ASC=true;
    $scope.sortBy=function(title){
