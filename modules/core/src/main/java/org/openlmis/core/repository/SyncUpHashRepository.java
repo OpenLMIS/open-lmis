@@ -1,4 +1,3 @@
-
 package org.openlmis.core.repository;
 
 import lombok.NoArgsConstructor;
@@ -17,4 +16,11 @@ public class SyncUpHashRepository {
         this.syncUpHashMapper = syncUpHashMapper;
     }
 
+    public void save(String hash) {
+        syncUpHashMapper.insert(hash);
+    }
+
+    public boolean hashExists(String hash) {
+        return syncUpHashMapper.find(hash).size() > 0;
+    }
 }
