@@ -104,6 +104,9 @@ Running App on embedded Jetty server
   - `seed` is to seed in the reference data.
   - `testseed` puts in some test data which can be used to browse through basic functionality in the system.
   - `run` is to start the embedded jetty server.
+7. If you wish to run the app using supplied demo data, you can do so by running the following two commands in succession:
+  - `gradle clean setupdb seed build` to build the WAR.
+  - `gradle setupdb baseseed demoseed run` to initialize the database and run the server.
 
 Once the system is running, you can access the home page at `http://localhost:9091/`. You can log into the default instance with: user: `Admin123`, pass: `Admin123` (case sensitive)
 

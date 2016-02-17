@@ -8,6 +8,8 @@
 -- You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org. 
 --
 
+-- This SQL script re-adds all country-specific data that was removed in disable_custom.sql.
+
 INSERT INTO rights(name, righttype, description, displayorder, displaynamekey)
 VALUES ('ACCESS_ILS_GATEWAY','ADMIN','Permission to access the ILS Gateway.',38,'right.ils')
   ,('ACCESS_NEW_DASHBOARD','REPORT','Permission to access new dashboard',13,'right.dashboard')

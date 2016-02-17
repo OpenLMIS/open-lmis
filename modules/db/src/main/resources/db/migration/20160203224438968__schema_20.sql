@@ -17778,7 +17778,7 @@ CREATE UNIQUE INDEX unique_program_equipment_product_index ON equipment_type_pro
 --
 
 ALTER TABLE ONLY adult_coverage_opened_vial_line_items
-    ADD CONSTRAINT adult_coverage_opened_vial_line_items_facilityvisitid_fkey FOREIGN KEY (facilityvisitid) REFERENCES facility_visits(id);
+    ADD CONSTRAINT adult_coverage_opened_vial_line_items_facilityvisitid_fkey FOREIGN KEY (facilityvisitid) REFERENCES facility_visits(id) DEFERRABLE;
 
 
 --
@@ -17786,7 +17786,7 @@ ALTER TABLE ONLY adult_coverage_opened_vial_line_items
 --
 
 ALTER TABLE ONLY budget_line_items
-    ADD CONSTRAINT budget_line_items_budgetfileid_fkey FOREIGN KEY (budgetfileid) REFERENCES budget_file_info(id);
+    ADD CONSTRAINT budget_line_items_budgetfileid_fkey FOREIGN KEY (budgetfileid) REFERENCES budget_file_info(id) DEFERRABLE;
 
 
 --
@@ -17794,7 +17794,7 @@ ALTER TABLE ONLY budget_line_items
 --
 
 ALTER TABLE ONLY budget_line_items
-    ADD CONSTRAINT budget_line_items_facilityid_fkey FOREIGN KEY (facilityid) REFERENCES facilities(id);
+    ADD CONSTRAINT budget_line_items_facilityid_fkey FOREIGN KEY (facilityid) REFERENCES facilities(id) DEFERRABLE;
 
 
 --
@@ -17802,7 +17802,7 @@ ALTER TABLE ONLY budget_line_items
 --
 
 ALTER TABLE ONLY budget_line_items
-    ADD CONSTRAINT budget_line_items_periodid_fkey FOREIGN KEY (periodid) REFERENCES processing_periods(id);
+    ADD CONSTRAINT budget_line_items_periodid_fkey FOREIGN KEY (periodid) REFERENCES processing_periods(id) DEFERRABLE;
 
 
 --
@@ -17810,7 +17810,7 @@ ALTER TABLE ONLY budget_line_items
 --
 
 ALTER TABLE ONLY budget_line_items
-    ADD CONSTRAINT budget_line_items_programid_fkey FOREIGN KEY (programid) REFERENCES programs(id);
+    ADD CONSTRAINT budget_line_items_programid_fkey FOREIGN KEY (programid) REFERENCES programs(id) DEFERRABLE;
 
 
 --
@@ -17818,7 +17818,7 @@ ALTER TABLE ONLY budget_line_items
 --
 
 ALTER TABLE ONLY regimen_combination_constituents
-    ADD CONSTRAINT combo_id_fkey FOREIGN KEY (productcomboid) REFERENCES regimen_product_combinations(id) ON UPDATE CASCADE ON DELETE CASCADE;
+    ADD CONSTRAINT combo_id_fkey FOREIGN KEY (productcomboid) REFERENCES regimen_product_combinations(id) ON UPDATE CASCADE ON DELETE CASCADE DEFERRABLE;
 
 
 --
@@ -17826,7 +17826,7 @@ ALTER TABLE ONLY regimen_combination_constituents
 --
 
 ALTER TABLE ONLY comments
-    ADD CONSTRAINT comments_createdby_fkey FOREIGN KEY (createdby) REFERENCES users(id);
+    ADD CONSTRAINT comments_createdby_fkey FOREIGN KEY (createdby) REFERENCES users(id) DEFERRABLE;
 
 
 --
@@ -17834,7 +17834,7 @@ ALTER TABLE ONLY comments
 --
 
 ALTER TABLE ONLY comments
-    ADD CONSTRAINT comments_modifiedby_fkey FOREIGN KEY (modifiedby) REFERENCES users(id);
+    ADD CONSTRAINT comments_modifiedby_fkey FOREIGN KEY (modifiedby) REFERENCES users(id) DEFERRABLE;
 
 
 --
@@ -17842,7 +17842,7 @@ ALTER TABLE ONLY comments
 --
 
 ALTER TABLE ONLY comments
-    ADD CONSTRAINT comments_rnrid_fkey FOREIGN KEY (rnrid) REFERENCES requisitions(id);
+    ADD CONSTRAINT comments_rnrid_fkey FOREIGN KEY (rnrid) REFERENCES requisitions(id) DEFERRABLE;
 
 
 --
@@ -17850,7 +17850,7 @@ ALTER TABLE ONLY comments
 --
 
 ALTER TABLE ONLY coverage_product_vials
-    ADD CONSTRAINT coverage_product_vials_productcode_fkey FOREIGN KEY (productcode) REFERENCES products(code);
+    ADD CONSTRAINT coverage_product_vials_productcode_fkey FOREIGN KEY (productcode) REFERENCES products(code) DEFERRABLE;
 
 
 --
@@ -17858,7 +17858,7 @@ ALTER TABLE ONLY coverage_product_vials
 --
 
 ALTER TABLE ONLY coverage_target_group_products
-    ADD CONSTRAINT coverage_vaccination_products_productcode_fkey FOREIGN KEY (productcode) REFERENCES products(code);
+    ADD CONSTRAINT coverage_vaccination_products_productcode_fkey FOREIGN KEY (productcode) REFERENCES products(code) DEFERRABLE;
 
 
 --
@@ -17866,7 +17866,7 @@ ALTER TABLE ONLY coverage_target_group_products
 --
 
 ALTER TABLE ONLY regimen_combination_constituents
-    ADD CONSTRAINT defalut_regimen_product_id_fkey FOREIGN KEY (defaultdosageid) REFERENCES regimen_constituents_dosages(id);
+    ADD CONSTRAINT defalut_regimen_product_id_fkey FOREIGN KEY (defaultdosageid) REFERENCES regimen_constituents_dosages(id) DEFERRABLE;
 
 
 --
@@ -17874,7 +17874,7 @@ ALTER TABLE ONLY regimen_combination_constituents
 --
 
 ALTER TABLE ONLY delivery_zone_members
-    ADD CONSTRAINT delivery_zone_members_deliveryzoneid_fkey FOREIGN KEY (deliveryzoneid) REFERENCES delivery_zones(id);
+    ADD CONSTRAINT delivery_zone_members_deliveryzoneid_fkey FOREIGN KEY (deliveryzoneid) REFERENCES delivery_zones(id) DEFERRABLE;
 
 
 --
@@ -17882,7 +17882,7 @@ ALTER TABLE ONLY delivery_zone_members
 --
 
 ALTER TABLE ONLY delivery_zone_members
-    ADD CONSTRAINT delivery_zone_members_facilityid_fkey FOREIGN KEY (facilityid) REFERENCES facilities(id);
+    ADD CONSTRAINT delivery_zone_members_facilityid_fkey FOREIGN KEY (facilityid) REFERENCES facilities(id) DEFERRABLE;
 
 
 --
@@ -17890,7 +17890,7 @@ ALTER TABLE ONLY delivery_zone_members
 --
 
 ALTER TABLE ONLY delivery_zone_program_schedules
-    ADD CONSTRAINT delivery_zone_program_schedules_deliveryzoneid_fkey FOREIGN KEY (deliveryzoneid) REFERENCES delivery_zones(id);
+    ADD CONSTRAINT delivery_zone_program_schedules_deliveryzoneid_fkey FOREIGN KEY (deliveryzoneid) REFERENCES delivery_zones(id) DEFERRABLE;
 
 
 --
@@ -17898,7 +17898,7 @@ ALTER TABLE ONLY delivery_zone_program_schedules
 --
 
 ALTER TABLE ONLY delivery_zone_program_schedules
-    ADD CONSTRAINT delivery_zone_program_schedules_programid_fkey FOREIGN KEY (programid) REFERENCES programs(id);
+    ADD CONSTRAINT delivery_zone_program_schedules_programid_fkey FOREIGN KEY (programid) REFERENCES programs(id) DEFERRABLE;
 
 
 --
@@ -17906,7 +17906,7 @@ ALTER TABLE ONLY delivery_zone_program_schedules
 --
 
 ALTER TABLE ONLY delivery_zone_program_schedules
-    ADD CONSTRAINT delivery_zone_program_schedules_scheduleid_fkey FOREIGN KEY (scheduleid) REFERENCES processing_schedules(id);
+    ADD CONSTRAINT delivery_zone_program_schedules_scheduleid_fkey FOREIGN KEY (scheduleid) REFERENCES processing_schedules(id) DEFERRABLE;
 
 
 --
@@ -17914,7 +17914,7 @@ ALTER TABLE ONLY delivery_zone_program_schedules
 --
 
 ALTER TABLE ONLY delivery_zone_warehouses
-    ADD CONSTRAINT delivery_zone_warehouses_deliveryzoneid_fkey FOREIGN KEY (deliveryzoneid) REFERENCES delivery_zones(id);
+    ADD CONSTRAINT delivery_zone_warehouses_deliveryzoneid_fkey FOREIGN KEY (deliveryzoneid) REFERENCES delivery_zones(id) DEFERRABLE;
 
 
 --
@@ -17922,7 +17922,7 @@ ALTER TABLE ONLY delivery_zone_warehouses
 --
 
 ALTER TABLE ONLY delivery_zone_warehouses
-    ADD CONSTRAINT delivery_zone_warehouses_warehouseid_fkey FOREIGN KEY (warehouseid) REFERENCES facilities(id);
+    ADD CONSTRAINT delivery_zone_warehouses_warehouseid_fkey FOREIGN KEY (warehouseid) REFERENCES facilities(id) DEFERRABLE;
 
 
 --
@@ -17930,7 +17930,7 @@ ALTER TABLE ONLY delivery_zone_warehouses
 --
 
 ALTER TABLE ONLY distributions
-    ADD CONSTRAINT distributions_createdby_fkey FOREIGN KEY (createdby) REFERENCES users(id);
+    ADD CONSTRAINT distributions_createdby_fkey FOREIGN KEY (createdby) REFERENCES users(id) DEFERRABLE;
 
 
 --
@@ -17938,7 +17938,7 @@ ALTER TABLE ONLY distributions
 --
 
 ALTER TABLE ONLY distributions
-    ADD CONSTRAINT distributions_deliveryzoneid_fkey FOREIGN KEY (deliveryzoneid) REFERENCES delivery_zones(id);
+    ADD CONSTRAINT distributions_deliveryzoneid_fkey FOREIGN KEY (deliveryzoneid) REFERENCES delivery_zones(id) DEFERRABLE;
 
 
 --
@@ -17946,7 +17946,7 @@ ALTER TABLE ONLY distributions
 --
 
 ALTER TABLE ONLY distributions
-    ADD CONSTRAINT distributions_modifiedby_fkey FOREIGN KEY (modifiedby) REFERENCES users(id);
+    ADD CONSTRAINT distributions_modifiedby_fkey FOREIGN KEY (modifiedby) REFERENCES users(id) DEFERRABLE;
 
 
 --
@@ -17954,7 +17954,7 @@ ALTER TABLE ONLY distributions
 --
 
 ALTER TABLE ONLY distributions
-    ADD CONSTRAINT distributions_periodid_fkey FOREIGN KEY (periodid) REFERENCES processing_periods(id);
+    ADD CONSTRAINT distributions_periodid_fkey FOREIGN KEY (periodid) REFERENCES processing_periods(id) DEFERRABLE;
 
 
 --
@@ -17962,7 +17962,7 @@ ALTER TABLE ONLY distributions
 --
 
 ALTER TABLE ONLY distributions
-    ADD CONSTRAINT distributions_programid_fkey FOREIGN KEY (programid) REFERENCES programs(id);
+    ADD CONSTRAINT distributions_programid_fkey FOREIGN KEY (programid) REFERENCES programs(id) DEFERRABLE;
 
 
 --
@@ -17970,7 +17970,7 @@ ALTER TABLE ONLY distributions
 --
 
 ALTER TABLE ONLY district_demographic_estimates
-    ADD CONSTRAINT district_demographic_estimates_demographicestimateid_fkey FOREIGN KEY (demographicestimateid) REFERENCES demographic_estimate_categories(id);
+    ADD CONSTRAINT district_demographic_estimates_demographicestimateid_fkey FOREIGN KEY (demographicestimateid) REFERENCES demographic_estimate_categories(id) DEFERRABLE;
 
 
 --
@@ -17978,7 +17978,7 @@ ALTER TABLE ONLY district_demographic_estimates
 --
 
 ALTER TABLE ONLY district_demographic_estimates
-    ADD CONSTRAINT district_demographic_estimates_districtid_fkey FOREIGN KEY (districtid) REFERENCES geographic_zones(id);
+    ADD CONSTRAINT district_demographic_estimates_districtid_fkey FOREIGN KEY (districtid) REFERENCES geographic_zones(id) DEFERRABLE;
 
 
 --
@@ -17986,7 +17986,7 @@ ALTER TABLE ONLY district_demographic_estimates
 --
 
 ALTER TABLE ONLY district_demographic_estimates
-    ADD CONSTRAINT district_demographic_estimates_programid_fkey FOREIGN KEY (programid) REFERENCES programs(id);
+    ADD CONSTRAINT district_demographic_estimates_programid_fkey FOREIGN KEY (programid) REFERENCES programs(id) DEFERRABLE;
 
 
 --
@@ -17994,7 +17994,7 @@ ALTER TABLE ONLY district_demographic_estimates
 --
 
 ALTER TABLE ONLY regimen_constituents_dosages
-    ADD CONSTRAINT dosage_frequency_id_fkey FOREIGN KEY (dosagefrequencyid) REFERENCES dosage_frequencies(id);
+    ADD CONSTRAINT dosage_frequency_id_fkey FOREIGN KEY (dosagefrequencyid) REFERENCES dosage_frequencies(id) DEFERRABLE;
 
 
 --
@@ -18002,7 +18002,7 @@ ALTER TABLE ONLY regimen_constituents_dosages
 --
 
 ALTER TABLE ONLY regimen_constituents_dosages
-    ADD CONSTRAINT dosage_unit_id_fkey FOREIGN KEY (dosageunitid) REFERENCES dosage_units(id);
+    ADD CONSTRAINT dosage_unit_id_fkey FOREIGN KEY (dosageunitid) REFERENCES dosage_units(id) DEFERRABLE;
 
 
 --
@@ -18010,7 +18010,7 @@ ALTER TABLE ONLY regimen_constituents_dosages
 --
 
 ALTER TABLE ONLY elmis_help
-    ADD CONSTRAINT elmis_help_helptopicid_fkey FOREIGN KEY (helptopicid) REFERENCES elmis_help_topic(id);
+    ADD CONSTRAINT elmis_help_helptopicid_fkey FOREIGN KEY (helptopicid) REFERENCES elmis_help_topic(id) DEFERRABLE;
 
 
 --
@@ -18018,7 +18018,7 @@ ALTER TABLE ONLY elmis_help
 --
 
 ALTER TABLE ONLY elmis_help_topic
-    ADD CONSTRAINT elmis_help_topic_parent_help_topic_id_fkey FOREIGN KEY (parent_help_topic_id) REFERENCES elmis_help_topic(id);
+    ADD CONSTRAINT elmis_help_topic_parent_help_topic_id_fkey FOREIGN KEY (parent_help_topic_id) REFERENCES elmis_help_topic(id) DEFERRABLE;
 
 
 --
@@ -18026,7 +18026,7 @@ ALTER TABLE ONLY elmis_help_topic
 --
 
 ALTER TABLE ONLY elmis_help_topic_roles
-    ADD CONSTRAINT elmis_help_topic_roles_help_topic_id_fkey FOREIGN KEY (help_topic_id) REFERENCES elmis_help_topic(id);
+    ADD CONSTRAINT elmis_help_topic_roles_help_topic_id_fkey FOREIGN KEY (help_topic_id) REFERENCES elmis_help_topic(id) DEFERRABLE;
 
 
 --
@@ -18034,7 +18034,7 @@ ALTER TABLE ONLY elmis_help_topic_roles
 --
 
 ALTER TABLE ONLY elmis_help_topic_roles
-    ADD CONSTRAINT elmis_help_topic_roles_role_id_fkey FOREIGN KEY (role_id) REFERENCES roles(id);
+    ADD CONSTRAINT elmis_help_topic_roles_role_id_fkey FOREIGN KEY (role_id) REFERENCES roles(id) DEFERRABLE;
 
 
 --
@@ -18042,7 +18042,7 @@ ALTER TABLE ONLY elmis_help_topic_roles
 --
 
 ALTER TABLE ONLY email_attachments_relation
-    ADD CONSTRAINT email_attachments_relation_attachmentid_fkey FOREIGN KEY (attachmentid) REFERENCES email_attachments(id);
+    ADD CONSTRAINT email_attachments_relation_attachmentid_fkey FOREIGN KEY (attachmentid) REFERENCES email_attachments(id) DEFERRABLE;
 
 
 --
@@ -18050,7 +18050,7 @@ ALTER TABLE ONLY email_attachments_relation
 --
 
 ALTER TABLE ONLY email_attachments_relation
-    ADD CONSTRAINT email_attachments_relation_emailid_fkey FOREIGN KEY (emailid) REFERENCES email_notifications(id);
+    ADD CONSTRAINT email_attachments_relation_emailid_fkey FOREIGN KEY (emailid) REFERENCES email_notifications(id) DEFERRABLE;
 
 
 --
@@ -18058,7 +18058,7 @@ ALTER TABLE ONLY email_attachments_relation
 --
 
 ALTER TABLE ONLY epi_inventory_line_items
-    ADD CONSTRAINT epi_inventory_line_items_facilityvisitid_fkey FOREIGN KEY (facilityvisitid) REFERENCES facility_visits(id);
+    ADD CONSTRAINT epi_inventory_line_items_facilityvisitid_fkey FOREIGN KEY (facilityvisitid) REFERENCES facility_visits(id) DEFERRABLE;
 
 
 --
@@ -18066,7 +18066,7 @@ ALTER TABLE ONLY epi_inventory_line_items
 --
 
 ALTER TABLE ONLY epi_inventory_line_items
-    ADD CONSTRAINT epi_inventory_line_items_programproductid_fkey FOREIGN KEY (programproductid) REFERENCES program_products(id);
+    ADD CONSTRAINT epi_inventory_line_items_programproductid_fkey FOREIGN KEY (programproductid) REFERENCES program_products(id) DEFERRABLE;
 
 
 --
@@ -18074,7 +18074,7 @@ ALTER TABLE ONLY epi_inventory_line_items
 --
 
 ALTER TABLE ONLY epi_use_line_items
-    ADD CONSTRAINT epi_use_line_items_createdby_fkey FOREIGN KEY (createdby) REFERENCES users(id);
+    ADD CONSTRAINT epi_use_line_items_createdby_fkey FOREIGN KEY (createdby) REFERENCES users(id) DEFERRABLE;
 
 
 --
@@ -18082,7 +18082,7 @@ ALTER TABLE ONLY epi_use_line_items
 --
 
 ALTER TABLE ONLY epi_use_line_items
-    ADD CONSTRAINT epi_use_line_items_facilityvisitid_fkey FOREIGN KEY (facilityvisitid) REFERENCES facility_visits(id);
+    ADD CONSTRAINT epi_use_line_items_facilityvisitid_fkey FOREIGN KEY (facilityvisitid) REFERENCES facility_visits(id) DEFERRABLE;
 
 
 --
@@ -18090,7 +18090,7 @@ ALTER TABLE ONLY epi_use_line_items
 --
 
 ALTER TABLE ONLY epi_use_line_items
-    ADD CONSTRAINT epi_use_line_items_modifiedby_fkey FOREIGN KEY (modifiedby) REFERENCES users(id);
+    ADD CONSTRAINT epi_use_line_items_modifiedby_fkey FOREIGN KEY (modifiedby) REFERENCES users(id) DEFERRABLE;
 
 
 --
@@ -18098,7 +18098,7 @@ ALTER TABLE ONLY epi_use_line_items
 --
 
 ALTER TABLE ONLY epi_use_line_items
-    ADD CONSTRAINT epi_use_line_items_productgroupid_fkey FOREIGN KEY (productgroupid) REFERENCES product_groups(id);
+    ADD CONSTRAINT epi_use_line_items_productgroupid_fkey FOREIGN KEY (productgroupid) REFERENCES product_groups(id) DEFERRABLE;
 
 
 --
@@ -18106,7 +18106,7 @@ ALTER TABLE ONLY epi_use_line_items
 --
 
 ALTER TABLE ONLY equipment_cold_chain_equipments
-    ADD CONSTRAINT equipment_cce_designation_fkey FOREIGN KEY (designationid) REFERENCES equipment_cold_chain_equipment_designations(id);
+    ADD CONSTRAINT equipment_cce_designation_fkey FOREIGN KEY (designationid) REFERENCES equipment_cold_chain_equipment_designations(id) DEFERRABLE;
 
 
 --
@@ -18114,7 +18114,7 @@ ALTER TABLE ONLY equipment_cold_chain_equipments
 --
 
 ALTER TABLE ONLY equipment_cold_chain_equipments
-    ADD CONSTRAINT equipment_cce_donor_fkey FOREIGN KEY (donorid) REFERENCES donors(id);
+    ADD CONSTRAINT equipment_cce_donor_fkey FOREIGN KEY (donorid) REFERENCES donors(id) DEFERRABLE;
 
 
 --
@@ -18122,7 +18122,7 @@ ALTER TABLE ONLY equipment_cold_chain_equipments
 --
 
 ALTER TABLE ONLY equipment_cold_chain_equipments
-    ADD CONSTRAINT equipment_cce_equipment_fkey FOREIGN KEY (equipmentid) REFERENCES equipments(id);
+    ADD CONSTRAINT equipment_cce_equipment_fkey FOREIGN KEY (equipmentid) REFERENCES equipments(id) DEFERRABLE;
 
 
 --
@@ -18130,7 +18130,7 @@ ALTER TABLE ONLY equipment_cold_chain_equipments
 --
 
 ALTER TABLE ONLY equipment_cold_chain_equipments
-    ADD CONSTRAINT equipment_cce_psq_status_fkey FOREIGN KEY (pqsstatusid) REFERENCES equipment_cold_chain_equipment_pqs_status(id);
+    ADD CONSTRAINT equipment_cce_psq_status_fkey FOREIGN KEY (pqsstatusid) REFERENCES equipment_cold_chain_equipment_pqs_status(id) DEFERRABLE;
 
 
 --
@@ -18138,7 +18138,7 @@ ALTER TABLE ONLY equipment_cold_chain_equipments
 --
 
 ALTER TABLE ONLY equipment_contract_service_types
-    ADD CONSTRAINT equipment_contract_service_types_contractid_fkey FOREIGN KEY (contractid) REFERENCES equipment_service_contracts(id);
+    ADD CONSTRAINT equipment_contract_service_types_contractid_fkey FOREIGN KEY (contractid) REFERENCES equipment_service_contracts(id) DEFERRABLE;
 
 
 --
@@ -18146,7 +18146,7 @@ ALTER TABLE ONLY equipment_contract_service_types
 --
 
 ALTER TABLE ONLY equipment_contract_service_types
-    ADD CONSTRAINT equipment_contract_service_types_servicetypeid_fkey FOREIGN KEY (servicetypeid) REFERENCES equipment_service_types(id);
+    ADD CONSTRAINT equipment_contract_service_types_servicetypeid_fkey FOREIGN KEY (servicetypeid) REFERENCES equipment_service_types(id) DEFERRABLE;
 
 
 --
@@ -18154,7 +18154,7 @@ ALTER TABLE ONLY equipment_contract_service_types
 --
 
 ALTER TABLE ONLY equipments
-    ADD CONSTRAINT equipment_energy_type_fkey FOREIGN KEY (energytypeid) REFERENCES equipment_energy_types(id);
+    ADD CONSTRAINT equipment_energy_type_fkey FOREIGN KEY (energytypeid) REFERENCES equipment_energy_types(id) DEFERRABLE;
 
 
 --
@@ -18162,7 +18162,7 @@ ALTER TABLE ONLY equipments
 --
 
 ALTER TABLE ONLY equipment_maintenance_logs
-    ADD CONSTRAINT equipment_maintenance_logs_contractid_fkey FOREIGN KEY (contractid) REFERENCES equipment_service_contracts(id);
+    ADD CONSTRAINT equipment_maintenance_logs_contractid_fkey FOREIGN KEY (contractid) REFERENCES equipment_service_contracts(id) DEFERRABLE;
 
 
 --
@@ -18170,7 +18170,7 @@ ALTER TABLE ONLY equipment_maintenance_logs
 --
 
 ALTER TABLE ONLY equipment_maintenance_logs
-    ADD CONSTRAINT equipment_maintenance_logs_equipmentid_fkey FOREIGN KEY (equipmentid) REFERENCES equipments(id);
+    ADD CONSTRAINT equipment_maintenance_logs_equipmentid_fkey FOREIGN KEY (equipmentid) REFERENCES equipments(id) DEFERRABLE;
 
 
 --
@@ -18178,7 +18178,7 @@ ALTER TABLE ONLY equipment_maintenance_logs
 --
 
 ALTER TABLE ONLY equipment_maintenance_logs
-    ADD CONSTRAINT equipment_maintenance_logs_facilityid_fkey FOREIGN KEY (facilityid) REFERENCES facilities(id);
+    ADD CONSTRAINT equipment_maintenance_logs_facilityid_fkey FOREIGN KEY (facilityid) REFERENCES facilities(id) DEFERRABLE;
 
 
 --
@@ -18186,7 +18186,7 @@ ALTER TABLE ONLY equipment_maintenance_logs
 --
 
 ALTER TABLE ONLY equipment_maintenance_logs
-    ADD CONSTRAINT equipment_maintenance_logs_requestid_fkey FOREIGN KEY (requestid) REFERENCES equipment_maintenance_requests(id);
+    ADD CONSTRAINT equipment_maintenance_logs_requestid_fkey FOREIGN KEY (requestid) REFERENCES equipment_maintenance_requests(id) DEFERRABLE;
 
 
 --
@@ -18194,7 +18194,7 @@ ALTER TABLE ONLY equipment_maintenance_logs
 --
 
 ALTER TABLE ONLY equipment_maintenance_logs
-    ADD CONSTRAINT equipment_maintenance_logs_userid_fkey FOREIGN KEY (userid) REFERENCES users(id);
+    ADD CONSTRAINT equipment_maintenance_logs_userid_fkey FOREIGN KEY (userid) REFERENCES users(id) DEFERRABLE;
 
 
 --
@@ -18202,7 +18202,7 @@ ALTER TABLE ONLY equipment_maintenance_logs
 --
 
 ALTER TABLE ONLY equipment_maintenance_logs
-    ADD CONSTRAINT equipment_maintenance_logs_vendorid_fkey FOREIGN KEY (vendorid) REFERENCES equipment_service_vendors(id);
+    ADD CONSTRAINT equipment_maintenance_logs_vendorid_fkey FOREIGN KEY (vendorid) REFERENCES equipment_service_vendors(id) DEFERRABLE;
 
 
 --
@@ -18210,7 +18210,7 @@ ALTER TABLE ONLY equipment_maintenance_logs
 --
 
 ALTER TABLE ONLY equipment_maintenance_requests
-    ADD CONSTRAINT equipment_maintenance_requests_facilityid_fkey FOREIGN KEY (facilityid) REFERENCES facilities(id);
+    ADD CONSTRAINT equipment_maintenance_requests_facilityid_fkey FOREIGN KEY (facilityid) REFERENCES facilities(id) DEFERRABLE;
 
 
 --
@@ -18218,7 +18218,7 @@ ALTER TABLE ONLY equipment_maintenance_requests
 --
 
 ALTER TABLE ONLY equipment_maintenance_requests
-    ADD CONSTRAINT equipment_maintenance_requests_inventoryid_fkey FOREIGN KEY (inventoryid) REFERENCES equipment_inventories(id);
+    ADD CONSTRAINT equipment_maintenance_requests_inventoryid_fkey FOREIGN KEY (inventoryid) REFERENCES equipment_inventories(id) DEFERRABLE;
 
 
 --
@@ -18226,7 +18226,7 @@ ALTER TABLE ONLY equipment_maintenance_requests
 --
 
 ALTER TABLE ONLY equipment_maintenance_requests
-    ADD CONSTRAINT equipment_maintenance_requests_userid_fkey FOREIGN KEY (userid) REFERENCES users(id);
+    ADD CONSTRAINT equipment_maintenance_requests_userid_fkey FOREIGN KEY (userid) REFERENCES users(id) DEFERRABLE;
 
 
 --
@@ -18234,7 +18234,7 @@ ALTER TABLE ONLY equipment_maintenance_requests
 --
 
 ALTER TABLE ONLY equipment_maintenance_requests
-    ADD CONSTRAINT equipment_maintenance_requests_vendorid_fkey FOREIGN KEY (vendorid) REFERENCES equipment_service_vendors(id);
+    ADD CONSTRAINT equipment_maintenance_requests_vendorid_fkey FOREIGN KEY (vendorid) REFERENCES equipment_service_vendors(id) DEFERRABLE;
 
 
 --
@@ -18242,7 +18242,7 @@ ALTER TABLE ONLY equipment_maintenance_requests
 --
 
 ALTER TABLE ONLY equipment_service_contract_equipment_types
-    ADD CONSTRAINT equipment_service_contract_equipments_contractid_fkey FOREIGN KEY (contractid) REFERENCES equipment_service_contracts(id);
+    ADD CONSTRAINT equipment_service_contract_equipments_contractid_fkey FOREIGN KEY (contractid) REFERENCES equipment_service_contracts(id) DEFERRABLE;
 
 
 --
@@ -18250,7 +18250,7 @@ ALTER TABLE ONLY equipment_service_contract_equipment_types
 --
 
 ALTER TABLE ONLY equipment_service_contract_equipment_types
-    ADD CONSTRAINT equipment_service_contract_equipments_equipmenttypeid_fkey FOREIGN KEY (equipmenttypeid) REFERENCES equipment_types(id);
+    ADD CONSTRAINT equipment_service_contract_equipments_equipmenttypeid_fkey FOREIGN KEY (equipmenttypeid) REFERENCES equipment_types(id) DEFERRABLE;
 
 
 --
@@ -18258,7 +18258,7 @@ ALTER TABLE ONLY equipment_service_contract_equipment_types
 --
 
 ALTER TABLE ONLY equipment_service_contract_facilities
-    ADD CONSTRAINT equipment_service_contract_facilities_contractid_fkey FOREIGN KEY (contractid) REFERENCES equipment_service_contracts(id);
+    ADD CONSTRAINT equipment_service_contract_facilities_contractid_fkey FOREIGN KEY (contractid) REFERENCES equipment_service_contracts(id) DEFERRABLE;
 
 
 --
@@ -18266,7 +18266,7 @@ ALTER TABLE ONLY equipment_service_contract_facilities
 --
 
 ALTER TABLE ONLY equipment_service_contract_facilities
-    ADD CONSTRAINT equipment_service_contract_facilities_facilityid_fkey FOREIGN KEY (facilityid) REFERENCES facilities(id);
+    ADD CONSTRAINT equipment_service_contract_facilities_facilityid_fkey FOREIGN KEY (facilityid) REFERENCES facilities(id) DEFERRABLE;
 
 
 --
@@ -18274,7 +18274,7 @@ ALTER TABLE ONLY equipment_service_contract_facilities
 --
 
 ALTER TABLE ONLY equipment_service_contracts
-    ADD CONSTRAINT equipment_service_contracts_vendorid_fkey FOREIGN KEY (vendorid) REFERENCES equipment_service_vendors(id);
+    ADD CONSTRAINT equipment_service_contracts_vendorid_fkey FOREIGN KEY (vendorid) REFERENCES equipment_service_vendors(id) DEFERRABLE;
 
 
 --
@@ -18282,7 +18282,7 @@ ALTER TABLE ONLY equipment_service_contracts
 --
 
 ALTER TABLE ONLY equipment_service_vendor_users
-    ADD CONSTRAINT equipment_service_vendor_users_userid_fkey FOREIGN KEY (userid) REFERENCES users(id);
+    ADD CONSTRAINT equipment_service_vendor_users_userid_fkey FOREIGN KEY (userid) REFERENCES users(id) DEFERRABLE;
 
 
 --
@@ -18290,7 +18290,7 @@ ALTER TABLE ONLY equipment_service_vendor_users
 --
 
 ALTER TABLE ONLY equipment_service_vendor_users
-    ADD CONSTRAINT equipment_service_vendor_users_vendorid_fkey FOREIGN KEY (vendorid) REFERENCES equipment_service_vendors(id);
+    ADD CONSTRAINT equipment_service_vendor_users_vendorid_fkey FOREIGN KEY (vendorid) REFERENCES equipment_service_vendors(id) DEFERRABLE;
 
 
 --
@@ -18298,7 +18298,7 @@ ALTER TABLE ONLY equipment_service_vendor_users
 --
 
 ALTER TABLE ONLY equipment_status_line_items
-    ADD CONSTRAINT equipment_status_line_items_equipmentinventoryid_fkey FOREIGN KEY (equipmentinventoryid) REFERENCES equipment_inventories(id);
+    ADD CONSTRAINT equipment_status_line_items_equipmentinventoryid_fkey FOREIGN KEY (equipmentinventoryid) REFERENCES equipment_inventories(id) DEFERRABLE;
 
 
 --
@@ -18306,7 +18306,7 @@ ALTER TABLE ONLY equipment_status_line_items
 --
 
 ALTER TABLE ONLY equipment_status_line_items
-    ADD CONSTRAINT equipment_status_line_items_inventorystatusid_fkey FOREIGN KEY (inventorystatusid) REFERENCES equipment_inventory_statuses(id);
+    ADD CONSTRAINT equipment_status_line_items_inventorystatusid_fkey FOREIGN KEY (inventorystatusid) REFERENCES equipment_inventory_statuses(id) DEFERRABLE;
 
 
 --
@@ -18314,7 +18314,7 @@ ALTER TABLE ONLY equipment_status_line_items
 --
 
 ALTER TABLE ONLY equipment_status_line_items
-    ADD CONSTRAINT equipment_status_line_items_rnrid_fkey FOREIGN KEY (rnrid) REFERENCES requisitions(id);
+    ADD CONSTRAINT equipment_status_line_items_rnrid_fkey FOREIGN KEY (rnrid) REFERENCES requisitions(id) DEFERRABLE;
 
 
 --
@@ -18322,7 +18322,7 @@ ALTER TABLE ONLY equipment_status_line_items
 --
 
 ALTER TABLE ONLY equipments
-    ADD CONSTRAINT equipments_equipmenttypeid_fkey FOREIGN KEY (equipmenttypeid) REFERENCES equipment_types(id);
+    ADD CONSTRAINT equipments_equipmenttypeid_fkey FOREIGN KEY (equipmenttypeid) REFERENCES equipment_types(id) DEFERRABLE;
 
 
 --
@@ -18330,7 +18330,7 @@ ALTER TABLE ONLY equipments
 --
 
 ALTER TABLE ONLY facilities
-    ADD CONSTRAINT facilities_geographiczoneid_fkey FOREIGN KEY (geographiczoneid) REFERENCES geographic_zones(id);
+    ADD CONSTRAINT facilities_geographiczoneid_fkey FOREIGN KEY (geographiczoneid) REFERENCES geographic_zones(id) DEFERRABLE;
 
 
 --
@@ -18338,7 +18338,7 @@ ALTER TABLE ONLY facilities
 --
 
 ALTER TABLE ONLY facilities
-    ADD CONSTRAINT facilities_operatedbyid_fkey FOREIGN KEY (operatedbyid) REFERENCES facility_operators(id);
+    ADD CONSTRAINT facilities_operatedbyid_fkey FOREIGN KEY (operatedbyid) REFERENCES facility_operators(id) DEFERRABLE;
 
 
 --
@@ -18346,7 +18346,7 @@ ALTER TABLE ONLY facilities
 --
 
 ALTER TABLE ONLY facilities
-    ADD CONSTRAINT facilities_parentfacilityid_fkey FOREIGN KEY (parentfacilityid) REFERENCES facilities(id);
+    ADD CONSTRAINT facilities_parentfacilityid_fkey FOREIGN KEY (parentfacilityid) REFERENCES facilities(id) DEFERRABLE;
 
 
 --
@@ -18354,7 +18354,7 @@ ALTER TABLE ONLY facilities
 --
 
 ALTER TABLE ONLY facilities
-    ADD CONSTRAINT facilities_pricescheduleid_fkey FOREIGN KEY (pricescheduleid) REFERENCES price_schedules(id);
+    ADD CONSTRAINT facilities_pricescheduleid_fkey FOREIGN KEY (pricescheduleid) REFERENCES price_schedules(id) DEFERRABLE;
 
 
 --
@@ -18362,7 +18362,7 @@ ALTER TABLE ONLY facilities
 --
 
 ALTER TABLE ONLY facilities
-    ADD CONSTRAINT facilities_typeid_fkey FOREIGN KEY (typeid) REFERENCES facility_types(id);
+    ADD CONSTRAINT facilities_typeid_fkey FOREIGN KEY (typeid) REFERENCES facility_types(id) DEFERRABLE;
 
 
 --
@@ -18370,7 +18370,7 @@ ALTER TABLE ONLY facilities
 --
 
 ALTER TABLE ONLY facility_approved_products
-    ADD CONSTRAINT facility_approved_products_facilitytypeid_fkey FOREIGN KEY (facilitytypeid) REFERENCES facility_types(id);
+    ADD CONSTRAINT facility_approved_products_facilitytypeid_fkey FOREIGN KEY (facilitytypeid) REFERENCES facility_types(id) DEFERRABLE;
 
 
 --
@@ -18378,7 +18378,7 @@ ALTER TABLE ONLY facility_approved_products
 --
 
 ALTER TABLE ONLY facility_approved_products
-    ADD CONSTRAINT facility_approved_products_programproductid_fkey FOREIGN KEY (programproductid) REFERENCES program_products(id);
+    ADD CONSTRAINT facility_approved_products_programproductid_fkey FOREIGN KEY (programproductid) REFERENCES program_products(id) DEFERRABLE;
 
 
 --
@@ -18386,7 +18386,7 @@ ALTER TABLE ONLY facility_approved_products
 --
 
 ALTER TABLE ONLY facility_demographic_estimates
-    ADD CONSTRAINT facility_demographic_estimates_demographicestimateid_fkey FOREIGN KEY (demographicestimateid) REFERENCES demographic_estimate_categories(id);
+    ADD CONSTRAINT facility_demographic_estimates_demographicestimateid_fkey FOREIGN KEY (demographicestimateid) REFERENCES demographic_estimate_categories(id) DEFERRABLE;
 
 
 --
@@ -18394,7 +18394,7 @@ ALTER TABLE ONLY facility_demographic_estimates
 --
 
 ALTER TABLE ONLY facility_demographic_estimates
-    ADD CONSTRAINT facility_demographic_estimates_facilityid_fkey FOREIGN KEY (facilityid) REFERENCES facilities(id);
+    ADD CONSTRAINT facility_demographic_estimates_facilityid_fkey FOREIGN KEY (facilityid) REFERENCES facilities(id) DEFERRABLE;
 
 
 --
@@ -18402,7 +18402,7 @@ ALTER TABLE ONLY facility_demographic_estimates
 --
 
 ALTER TABLE ONLY facility_demographic_estimates
-    ADD CONSTRAINT facility_demographic_estimates_programid_fkey FOREIGN KEY (programid) REFERENCES programs(id);
+    ADD CONSTRAINT facility_demographic_estimates_programid_fkey FOREIGN KEY (programid) REFERENCES programs(id) DEFERRABLE;
 
 
 --
@@ -18410,7 +18410,7 @@ ALTER TABLE ONLY facility_demographic_estimates
 --
 
 ALTER TABLE ONLY stock_cards
-    ADD CONSTRAINT facility_fkey FOREIGN KEY (facilityid) REFERENCES facilities(id);
+    ADD CONSTRAINT facility_fkey FOREIGN KEY (facilityid) REFERENCES facilities(id) DEFERRABLE;
 
 
 --
@@ -18418,7 +18418,7 @@ ALTER TABLE ONLY stock_cards
 --
 
 ALTER TABLE ONLY vaccine_order_requisitions
-    ADD CONSTRAINT facility_fkey FOREIGN KEY (facilityid) REFERENCES facilities(id);
+    ADD CONSTRAINT facility_fkey FOREIGN KEY (facilityid) REFERENCES facilities(id) DEFERRABLE;
 
 
 --
@@ -18426,7 +18426,7 @@ ALTER TABLE ONLY vaccine_order_requisitions
 --
 
 ALTER TABLE ONLY facility_ftp_details
-    ADD CONSTRAINT facility_ftp_details_facilityid_fkey FOREIGN KEY (facilityid) REFERENCES facilities(id);
+    ADD CONSTRAINT facility_ftp_details_facilityid_fkey FOREIGN KEY (facilityid) REFERENCES facilities(id) DEFERRABLE;
 
 
 --
@@ -18434,7 +18434,7 @@ ALTER TABLE ONLY facility_ftp_details
 --
 
 ALTER TABLE ONLY facility_mappings
-    ADD CONSTRAINT facility_mappings_facilityid_fkey FOREIGN KEY (facilityid) REFERENCES facilities(id);
+    ADD CONSTRAINT facility_mappings_facilityid_fkey FOREIGN KEY (facilityid) REFERENCES facilities(id) DEFERRABLE;
 
 
 --
@@ -18442,7 +18442,7 @@ ALTER TABLE ONLY facility_mappings
 --
 
 ALTER TABLE ONLY facility_mappings
-    ADD CONSTRAINT facility_mappings_interfaceid_fkey FOREIGN KEY (interfaceid) REFERENCES interface_apps(id);
+    ADD CONSTRAINT facility_mappings_interfaceid_fkey FOREIGN KEY (interfaceid) REFERENCES interface_apps(id) DEFERRABLE;
 
 
 --
@@ -18450,7 +18450,7 @@ ALTER TABLE ONLY facility_mappings
 --
 
 ALTER TABLE ONLY equipment_inventories
-    ADD CONSTRAINT facility_program_equipments_equipmentid_fkey FOREIGN KEY (equipmentid) REFERENCES equipments(id);
+    ADD CONSTRAINT facility_program_equipments_equipmentid_fkey FOREIGN KEY (equipmentid) REFERENCES equipments(id) DEFERRABLE;
 
 
 --
@@ -18458,7 +18458,7 @@ ALTER TABLE ONLY equipment_inventories
 --
 
 ALTER TABLE ONLY equipment_inventories
-    ADD CONSTRAINT facility_program_equipments_facilityid_fkey FOREIGN KEY (facilityid) REFERENCES facilities(id);
+    ADD CONSTRAINT facility_program_equipments_facilityid_fkey FOREIGN KEY (facilityid) REFERENCES facilities(id) DEFERRABLE;
 
 
 --
@@ -18466,7 +18466,7 @@ ALTER TABLE ONLY equipment_inventories
 --
 
 ALTER TABLE ONLY equipment_inventories
-    ADD CONSTRAINT facility_program_equipments_primarydonorid_fkey FOREIGN KEY (primarydonorid) REFERENCES donors(id);
+    ADD CONSTRAINT facility_program_equipments_primarydonorid_fkey FOREIGN KEY (primarydonorid) REFERENCES donors(id) DEFERRABLE;
 
 
 --
@@ -18474,7 +18474,7 @@ ALTER TABLE ONLY equipment_inventories
 --
 
 ALTER TABLE ONLY equipment_inventories
-    ADD CONSTRAINT facility_program_equipments_programid_fkey FOREIGN KEY (programid) REFERENCES programs(id);
+    ADD CONSTRAINT facility_program_equipments_programid_fkey FOREIGN KEY (programid) REFERENCES programs(id) DEFERRABLE;
 
 
 --
@@ -18482,7 +18482,7 @@ ALTER TABLE ONLY equipment_inventories
 --
 
 ALTER TABLE ONLY facility_program_products
-    ADD CONSTRAINT facility_program_products_facilityid_fkey1 FOREIGN KEY (facilityid) REFERENCES facilities(id);
+    ADD CONSTRAINT facility_program_products_facilityid_fkey1 FOREIGN KEY (facilityid) REFERENCES facilities(id) DEFERRABLE;
 
 
 --
@@ -18490,7 +18490,7 @@ ALTER TABLE ONLY facility_program_products
 --
 
 ALTER TABLE ONLY facility_program_products
-    ADD CONSTRAINT facility_program_products_isacoefficientsid_fkey FOREIGN KEY (isacoefficientsid) REFERENCES isa_coefficients(id);
+    ADD CONSTRAINT facility_program_products_isacoefficientsid_fkey FOREIGN KEY (isacoefficientsid) REFERENCES isa_coefficients(id) DEFERRABLE;
 
 
 --
@@ -18498,7 +18498,7 @@ ALTER TABLE ONLY facility_program_products
 --
 
 ALTER TABLE ONLY facility_program_products
-    ADD CONSTRAINT facility_program_products_programproductid_fkey1 FOREIGN KEY (programproductid) REFERENCES program_products(id);
+    ADD CONSTRAINT facility_program_products_programproductid_fkey1 FOREIGN KEY (programproductid) REFERENCES program_products(id) DEFERRABLE;
 
 
 --
@@ -18506,7 +18506,7 @@ ALTER TABLE ONLY facility_program_products
 --
 
 ALTER TABLE ONLY facility_visits
-    ADD CONSTRAINT facility_visits_distributionid_fkey FOREIGN KEY (distributionid) REFERENCES distributions(id);
+    ADD CONSTRAINT facility_visits_distributionid_fkey FOREIGN KEY (distributionid) REFERENCES distributions(id) DEFERRABLE;
 
 
 --
@@ -18514,7 +18514,7 @@ ALTER TABLE ONLY facility_visits
 --
 
 ALTER TABLE ONLY facility_visits
-    ADD CONSTRAINT facility_visits_facilityid_fkey FOREIGN KEY (facilityid) REFERENCES facilities(id);
+    ADD CONSTRAINT facility_visits_facilityid_fkey FOREIGN KEY (facilityid) REFERENCES facilities(id) DEFERRABLE;
 
 
 --
@@ -18522,7 +18522,7 @@ ALTER TABLE ONLY facility_visits
 --
 
 ALTER TABLE ONLY elmis_help_topic
-    ADD CONSTRAINT fk_foreign_users_modifier FOREIGN KEY (modifiedby) REFERENCES users(id);
+    ADD CONSTRAINT fk_foreign_users_modifier FOREIGN KEY (modifiedby) REFERENCES users(id) DEFERRABLE;
 
 
 --
@@ -18530,7 +18530,7 @@ ALTER TABLE ONLY elmis_help_topic
 --
 
 ALTER TABLE ONLY elmis_help_topic
-    ADD CONSTRAINT fk_foreing_users_creator FOREIGN KEY (created_by) REFERENCES users(id);
+    ADD CONSTRAINT fk_foreing_users_creator FOREIGN KEY (created_by) REFERENCES users(id) DEFERRABLE;
 
 
 --
@@ -18538,7 +18538,7 @@ ALTER TABLE ONLY elmis_help_topic
 --
 
 ALTER TABLE ONLY elmis_help
-    ADD CONSTRAINT fk_user_help_modifier FOREIGN KEY (modifiedby) REFERENCES users(id);
+    ADD CONSTRAINT fk_user_help_modifier FOREIGN KEY (modifiedby) REFERENCES users(id) DEFERRABLE;
 
 
 --
@@ -18546,7 +18546,7 @@ ALTER TABLE ONLY elmis_help
 --
 
 ALTER TABLE ONLY stock_movements
-    ADD CONSTRAINT from_facility_fkey FOREIGN KEY (fromfacilityid) REFERENCES facilities(id);
+    ADD CONSTRAINT from_facility_fkey FOREIGN KEY (fromfacilityid) REFERENCES facilities(id) DEFERRABLE;
 
 
 --
@@ -18554,7 +18554,7 @@ ALTER TABLE ONLY stock_movements
 --
 
 ALTER TABLE ONLY fulfillment_role_assignments
-    ADD CONSTRAINT fulfillment_role_assignments_facilityid_fkey FOREIGN KEY (facilityid) REFERENCES facilities(id);
+    ADD CONSTRAINT fulfillment_role_assignments_facilityid_fkey FOREIGN KEY (facilityid) REFERENCES facilities(id) DEFERRABLE;
 
 
 --
@@ -18562,7 +18562,7 @@ ALTER TABLE ONLY fulfillment_role_assignments
 --
 
 ALTER TABLE ONLY fulfillment_role_assignments
-    ADD CONSTRAINT fulfillment_role_assignments_roleid_fkey FOREIGN KEY (roleid) REFERENCES roles(id);
+    ADD CONSTRAINT fulfillment_role_assignments_roleid_fkey FOREIGN KEY (roleid) REFERENCES roles(id) DEFERRABLE;
 
 
 --
@@ -18570,7 +18570,7 @@ ALTER TABLE ONLY fulfillment_role_assignments
 --
 
 ALTER TABLE ONLY fulfillment_role_assignments
-    ADD CONSTRAINT fulfillment_role_assignments_userid_fkey FOREIGN KEY (userid) REFERENCES users(id);
+    ADD CONSTRAINT fulfillment_role_assignments_userid_fkey FOREIGN KEY (userid) REFERENCES users(id) DEFERRABLE;
 
 
 --
@@ -18578,7 +18578,7 @@ ALTER TABLE ONLY fulfillment_role_assignments
 --
 
 ALTER TABLE ONLY full_coverages
-    ADD CONSTRAINT full_coverages_facilityvisitid_fkey FOREIGN KEY (facilityvisitid) REFERENCES facility_visits(id);
+    ADD CONSTRAINT full_coverages_facilityvisitid_fkey FOREIGN KEY (facilityvisitid) REFERENCES facility_visits(id) DEFERRABLE;
 
 
 --
@@ -18586,7 +18586,7 @@ ALTER TABLE ONLY full_coverages
 --
 
 ALTER TABLE ONLY geographic_zones
-    ADD CONSTRAINT geographic_zones_levelid_fkey FOREIGN KEY (levelid) REFERENCES geographic_levels(id);
+    ADD CONSTRAINT geographic_zones_levelid_fkey FOREIGN KEY (levelid) REFERENCES geographic_levels(id) DEFERRABLE;
 
 
 --
@@ -18594,7 +18594,7 @@ ALTER TABLE ONLY geographic_zones
 --
 
 ALTER TABLE ONLY geographic_zones
-    ADD CONSTRAINT geographic_zones_parentid_fkey FOREIGN KEY (parentid) REFERENCES geographic_zones(id);
+    ADD CONSTRAINT geographic_zones_parentid_fkey FOREIGN KEY (parentid) REFERENCES geographic_zones(id) DEFERRABLE;
 
 
 --
@@ -18602,7 +18602,7 @@ ALTER TABLE ONLY geographic_zones
 --
 
 ALTER TABLE ONLY interface_dataset
-    ADD CONSTRAINT interface_dataset_interfaceid_fkey FOREIGN KEY (interfaceid) REFERENCES interface_apps(id);
+    ADD CONSTRAINT interface_dataset_interfaceid_fkey FOREIGN KEY (interfaceid) REFERENCES interface_apps(id) DEFERRABLE;
 
 
 --
@@ -18610,7 +18610,7 @@ ALTER TABLE ONLY interface_dataset
 --
 
 ALTER TABLE ONLY equipment_inventory_statuses
-    ADD CONSTRAINT inventory_fkey FOREIGN KEY (inventoryid) REFERENCES equipment_inventories(id);
+    ADD CONSTRAINT inventory_fkey FOREIGN KEY (inventoryid) REFERENCES equipment_inventories(id) DEFERRABLE;
 
 
 --
@@ -18618,7 +18618,7 @@ ALTER TABLE ONLY equipment_inventory_statuses
 --
 
 ALTER TABLE ONLY isa_coefficients
-    ADD CONSTRAINT isa_coefficients_populationsource_fkey FOREIGN KEY (populationsource) REFERENCES demographic_estimate_categories(id);
+    ADD CONSTRAINT isa_coefficients_populationsource_fkey FOREIGN KEY (populationsource) REFERENCES demographic_estimate_categories(id) DEFERRABLE;
 
 
 --
@@ -18626,7 +18626,7 @@ ALTER TABLE ONLY isa_coefficients
 --
 
 ALTER TABLE ONLY stock_card_entries
-    ADD CONSTRAINT losses_adjustments_types_fkey FOREIGN KEY (adjustmenttype) REFERENCES losses_adjustments_types(name);
+    ADD CONSTRAINT losses_adjustments_types_fkey FOREIGN KEY (adjustmenttype) REFERENCES losses_adjustments_types(name) DEFERRABLE;
 
 
 --
@@ -18634,7 +18634,7 @@ ALTER TABLE ONLY stock_card_entries
 --
 
 ALTER TABLE ONLY lots_on_hand
-    ADD CONSTRAINT lot_fkey FOREIGN KEY (lotid) REFERENCES lots(id);
+    ADD CONSTRAINT lot_fkey FOREIGN KEY (lotid) REFERENCES lots(id) DEFERRABLE;
 
 
 --
@@ -18642,7 +18642,7 @@ ALTER TABLE ONLY lots_on_hand
 --
 
 ALTER TABLE ONLY stock_movement_line_items
-    ADD CONSTRAINT lot_fkey FOREIGN KEY (lotid) REFERENCES lots(id);
+    ADD CONSTRAINT lot_fkey FOREIGN KEY (lotid) REFERENCES lots(id) DEFERRABLE;
 
 
 --
@@ -18650,7 +18650,7 @@ ALTER TABLE ONLY stock_movement_line_items
 --
 
 ALTER TABLE ONLY stock_movement_lots
-    ADD CONSTRAINT lot_fkey FOREIGN KEY (lotid) REFERENCES lots(id);
+    ADD CONSTRAINT lot_fkey FOREIGN KEY (lotid) REFERENCES lots(id) DEFERRABLE;
 
 
 --
@@ -18658,7 +18658,7 @@ ALTER TABLE ONLY stock_movement_lots
 --
 
 ALTER TABLE ONLY stock_card_entries
-    ADD CONSTRAINT lot_on_hand_fkey FOREIGN KEY (lotonhandid) REFERENCES lots_on_hand(id);
+    ADD CONSTRAINT lot_on_hand_fkey FOREIGN KEY (lotonhandid) REFERENCES lots_on_hand(id) DEFERRABLE;
 
 
 --
@@ -18666,7 +18666,7 @@ ALTER TABLE ONLY stock_card_entries
 --
 
 ALTER TABLE ONLY master_rnr_column_options
-    ADD CONSTRAINT master_rnr_column_options_masterrnrcolumnid_fkey FOREIGN KEY (masterrnrcolumnid) REFERENCES master_rnr_columns(id);
+    ADD CONSTRAINT master_rnr_column_options_masterrnrcolumnid_fkey FOREIGN KEY (masterrnrcolumnid) REFERENCES master_rnr_columns(id) DEFERRABLE;
 
 
 --
@@ -18674,7 +18674,7 @@ ALTER TABLE ONLY master_rnr_column_options
 --
 
 ALTER TABLE ONLY master_rnr_column_options
-    ADD CONSTRAINT master_rnr_column_options_rnroptionid_fkey FOREIGN KEY (rnroptionid) REFERENCES configurable_rnr_options(id);
+    ADD CONSTRAINT master_rnr_column_options_rnroptionid_fkey FOREIGN KEY (rnroptionid) REFERENCES configurable_rnr_options(id) DEFERRABLE;
 
 
 --
@@ -18682,7 +18682,7 @@ ALTER TABLE ONLY master_rnr_column_options
 --
 
 ALTER TABLE ONLY mos_adjustment_facilities
-    ADD CONSTRAINT mos_adjustment_facilities_facilityid_fkey FOREIGN KEY (facilityid) REFERENCES facilities(id);
+    ADD CONSTRAINT mos_adjustment_facilities_facilityid_fkey FOREIGN KEY (facilityid) REFERENCES facilities(id) DEFERRABLE;
 
 
 --
@@ -18690,7 +18690,7 @@ ALTER TABLE ONLY mos_adjustment_facilities
 --
 
 ALTER TABLE ONLY mos_adjustment_facilities
-    ADD CONSTRAINT mos_adjustment_facilities_typeid_fkey FOREIGN KEY (typeid) REFERENCES mos_adjustment_products(id);
+    ADD CONSTRAINT mos_adjustment_facilities_typeid_fkey FOREIGN KEY (typeid) REFERENCES mos_adjustment_products(id) DEFERRABLE;
 
 
 --
@@ -18698,7 +18698,7 @@ ALTER TABLE ONLY mos_adjustment_facilities
 --
 
 ALTER TABLE ONLY mos_adjustment_products
-    ADD CONSTRAINT mos_adjustment_products_basisid_fkey FOREIGN KEY (basisid) REFERENCES mos_adjustment_basis(id);
+    ADD CONSTRAINT mos_adjustment_products_basisid_fkey FOREIGN KEY (basisid) REFERENCES mos_adjustment_basis(id) DEFERRABLE;
 
 
 --
@@ -18706,7 +18706,7 @@ ALTER TABLE ONLY mos_adjustment_products
 --
 
 ALTER TABLE ONLY mos_adjustment_products
-    ADD CONSTRAINT mos_adjustment_products_productid_fkey FOREIGN KEY (productid) REFERENCES products(id);
+    ADD CONSTRAINT mos_adjustment_products_productid_fkey FOREIGN KEY (productid) REFERENCES products(id) DEFERRABLE;
 
 
 --
@@ -18714,7 +18714,7 @@ ALTER TABLE ONLY mos_adjustment_products
 --
 
 ALTER TABLE ONLY mos_adjustment_products
-    ADD CONSTRAINT mos_adjustment_products_typeid_fkey FOREIGN KEY (typeid) REFERENCES mos_adjustment_types(id);
+    ADD CONSTRAINT mos_adjustment_products_typeid_fkey FOREIGN KEY (typeid) REFERENCES mos_adjustment_types(id) DEFERRABLE;
 
 
 --
@@ -18722,7 +18722,7 @@ ALTER TABLE ONLY mos_adjustment_products
 --
 
 ALTER TABLE ONLY equipment_inventory_statuses
-    ADD CONSTRAINT not_functional_reason_fkey FOREIGN KEY (notfunctionalstatusid) REFERENCES equipment_operational_status(id);
+    ADD CONSTRAINT not_functional_reason_fkey FOREIGN KEY (notfunctionalstatusid) REFERENCES equipment_operational_status(id) DEFERRABLE;
 
 
 --
@@ -18730,7 +18730,7 @@ ALTER TABLE ONLY equipment_inventory_statuses
 --
 
 ALTER TABLE ONLY child_coverage_opened_vial_line_items
-    ADD CONSTRAINT opened_vial_line_items_facilityvisitid_fkey FOREIGN KEY (facilityvisitid) REFERENCES facility_visits(id);
+    ADD CONSTRAINT opened_vial_line_items_facilityvisitid_fkey FOREIGN KEY (facilityvisitid) REFERENCES facility_visits(id) DEFERRABLE;
 
 
 --
@@ -18738,7 +18738,7 @@ ALTER TABLE ONLY child_coverage_opened_vial_line_items
 --
 
 ALTER TABLE ONLY order_quantity_adjustment_products
-    ADD CONSTRAINT order_quantity_adjustment_products_facilityid_fkey FOREIGN KEY (facilityid) REFERENCES facilities(id);
+    ADD CONSTRAINT order_quantity_adjustment_products_facilityid_fkey FOREIGN KEY (facilityid) REFERENCES facilities(id) DEFERRABLE;
 
 
 --
@@ -18746,7 +18746,7 @@ ALTER TABLE ONLY order_quantity_adjustment_products
 --
 
 ALTER TABLE ONLY order_quantity_adjustment_products
-    ADD CONSTRAINT order_quantity_adjustment_products_factorsid_fkey FOREIGN KEY (factorid) REFERENCES order_quantity_adjustment_factors(id);
+    ADD CONSTRAINT order_quantity_adjustment_products_factorsid_fkey FOREIGN KEY (factorid) REFERENCES order_quantity_adjustment_factors(id) DEFERRABLE;
 
 
 --
@@ -18754,7 +18754,7 @@ ALTER TABLE ONLY order_quantity_adjustment_products
 --
 
 ALTER TABLE ONLY order_quantity_adjustment_products
-    ADD CONSTRAINT order_quantity_adjustment_products_productid_fkey FOREIGN KEY (productid) REFERENCES products(id);
+    ADD CONSTRAINT order_quantity_adjustment_products_productid_fkey FOREIGN KEY (productid) REFERENCES products(id) DEFERRABLE;
 
 
 --
@@ -18762,7 +18762,7 @@ ALTER TABLE ONLY order_quantity_adjustment_products
 --
 
 ALTER TABLE ONLY order_quantity_adjustment_products
-    ADD CONSTRAINT order_quantity_adjustment_products_typeid_fkey FOREIGN KEY (typeid) REFERENCES order_quantity_adjustment_types(id);
+    ADD CONSTRAINT order_quantity_adjustment_products_typeid_fkey FOREIGN KEY (typeid) REFERENCES order_quantity_adjustment_types(id) DEFERRABLE;
 
 
 --
@@ -18770,7 +18770,7 @@ ALTER TABLE ONLY order_quantity_adjustment_products
 --
 
 ALTER TABLE ONLY orders
-    ADD CONSTRAINT orders_createdby_fkey FOREIGN KEY (createdby) REFERENCES users(id);
+    ADD CONSTRAINT orders_createdby_fkey FOREIGN KEY (createdby) REFERENCES users(id) DEFERRABLE;
 
 
 --
@@ -18778,7 +18778,7 @@ ALTER TABLE ONLY orders
 --
 
 ALTER TABLE ONLY orders
-    ADD CONSTRAINT orders_id_fkey FOREIGN KEY (id) REFERENCES requisitions(id);
+    ADD CONSTRAINT orders_id_fkey FOREIGN KEY (id) REFERENCES requisitions(id) DEFERRABLE;
 
 
 --
@@ -18786,7 +18786,7 @@ ALTER TABLE ONLY orders
 --
 
 ALTER TABLE ONLY orders
-    ADD CONSTRAINT orders_modifiedby_fkey FOREIGN KEY (modifiedby) REFERENCES users(id);
+    ADD CONSTRAINT orders_modifiedby_fkey FOREIGN KEY (modifiedby) REFERENCES users(id) DEFERRABLE;
 
 
 --
@@ -18794,7 +18794,7 @@ ALTER TABLE ONLY orders
 --
 
 ALTER TABLE ONLY orders
-    ADD CONSTRAINT orders_shipmentid_fkey FOREIGN KEY (shipmentid) REFERENCES shipment_file_info(id);
+    ADD CONSTRAINT orders_shipmentid_fkey FOREIGN KEY (shipmentid) REFERENCES shipment_file_info(id) DEFERRABLE;
 
 
 --
@@ -18802,7 +18802,7 @@ ALTER TABLE ONLY orders
 --
 
 ALTER TABLE ONLY orders
-    ADD CONSTRAINT orders_supplylineid_fkey FOREIGN KEY (supplylineid) REFERENCES supply_lines(id);
+    ADD CONSTRAINT orders_supplylineid_fkey FOREIGN KEY (supplylineid) REFERENCES supply_lines(id) DEFERRABLE;
 
 
 --
@@ -18810,7 +18810,7 @@ ALTER TABLE ONLY orders
 --
 
 ALTER TABLE ONLY patient_quantification_line_items
-    ADD CONSTRAINT patient_quantification_line_items_rnrid_fkey FOREIGN KEY (rnrid) REFERENCES requisitions(id);
+    ADD CONSTRAINT patient_quantification_line_items_rnrid_fkey FOREIGN KEY (rnrid) REFERENCES requisitions(id) DEFERRABLE;
 
 
 --
@@ -18818,7 +18818,7 @@ ALTER TABLE ONLY patient_quantification_line_items
 --
 
 ALTER TABLE ONLY period_short_names
-    ADD CONSTRAINT period_short_names_periodid_fkey FOREIGN KEY (periodid) REFERENCES processing_periods(id);
+    ADD CONSTRAINT period_short_names_periodid_fkey FOREIGN KEY (periodid) REFERENCES processing_periods(id) DEFERRABLE;
 
 
 --
@@ -18826,7 +18826,7 @@ ALTER TABLE ONLY period_short_names
 --
 
 ALTER TABLE ONLY pod
-    ADD CONSTRAINT pod_facilityid_fkey FOREIGN KEY (facilityid) REFERENCES facilities(id);
+    ADD CONSTRAINT pod_facilityid_fkey FOREIGN KEY (facilityid) REFERENCES facilities(id) DEFERRABLE;
 
 
 --
@@ -18834,7 +18834,7 @@ ALTER TABLE ONLY pod
 --
 
 ALTER TABLE ONLY pod_line_items
-    ADD CONSTRAINT pod_line_items_podid_fkey FOREIGN KEY (podid) REFERENCES pod(id);
+    ADD CONSTRAINT pod_line_items_podid_fkey FOREIGN KEY (podid) REFERENCES pod(id) DEFERRABLE;
 
 
 --
@@ -18842,7 +18842,7 @@ ALTER TABLE ONLY pod_line_items
 --
 
 ALTER TABLE ONLY pod_line_items
-    ADD CONSTRAINT pod_line_items_productcode_fkey FOREIGN KEY (productcode) REFERENCES products(code);
+    ADD CONSTRAINT pod_line_items_productcode_fkey FOREIGN KEY (productcode) REFERENCES products(code) DEFERRABLE;
 
 
 --
@@ -18850,7 +18850,7 @@ ALTER TABLE ONLY pod_line_items
 --
 
 ALTER TABLE ONLY pod
-    ADD CONSTRAINT pod_orderid_fkey FOREIGN KEY (orderid) REFERENCES orders(id);
+    ADD CONSTRAINT pod_orderid_fkey FOREIGN KEY (orderid) REFERENCES orders(id) DEFERRABLE;
 
 
 --
@@ -18858,7 +18858,7 @@ ALTER TABLE ONLY pod
 --
 
 ALTER TABLE ONLY pod
-    ADD CONSTRAINT pod_periodid_fkey FOREIGN KEY (periodid) REFERENCES processing_periods(id);
+    ADD CONSTRAINT pod_periodid_fkey FOREIGN KEY (periodid) REFERENCES processing_periods(id) DEFERRABLE;
 
 
 --
@@ -18866,7 +18866,7 @@ ALTER TABLE ONLY pod
 --
 
 ALTER TABLE ONLY pod
-    ADD CONSTRAINT pod_programid_fkey FOREIGN KEY (programid) REFERENCES programs(id);
+    ADD CONSTRAINT pod_programid_fkey FOREIGN KEY (programid) REFERENCES programs(id) DEFERRABLE;
 
 
 --
@@ -18874,7 +18874,7 @@ ALTER TABLE ONLY pod
 --
 
 ALTER TABLE ONLY processing_periods
-    ADD CONSTRAINT processing_periods_scheduleid_fkey FOREIGN KEY (scheduleid) REFERENCES processing_schedules(id);
+    ADD CONSTRAINT processing_periods_scheduleid_fkey FOREIGN KEY (scheduleid) REFERENCES processing_schedules(id) DEFERRABLE;
 
 
 --
@@ -18882,7 +18882,7 @@ ALTER TABLE ONLY processing_periods
 --
 
 ALTER TABLE ONLY stock_cards
-    ADD CONSTRAINT product_fkey FOREIGN KEY (productid) REFERENCES products(id);
+    ADD CONSTRAINT product_fkey FOREIGN KEY (productid) REFERENCES products(id) DEFERRABLE;
 
 
 --
@@ -18890,7 +18890,7 @@ ALTER TABLE ONLY stock_cards
 --
 
 ALTER TABLE ONLY lots
-    ADD CONSTRAINT product_fkey FOREIGN KEY (productid) REFERENCES products(id);
+    ADD CONSTRAINT product_fkey FOREIGN KEY (productid) REFERENCES products(id) DEFERRABLE;
 
 
 --
@@ -18898,7 +18898,7 @@ ALTER TABLE ONLY lots
 --
 
 ALTER TABLE ONLY product_price_schedules
-    ADD CONSTRAINT product_price_schedules_pricescheduleid_fkey FOREIGN KEY (pricescheduleid) REFERENCES price_schedules(id);
+    ADD CONSTRAINT product_price_schedules_pricescheduleid_fkey FOREIGN KEY (pricescheduleid) REFERENCES price_schedules(id) DEFERRABLE;
 
 
 --
@@ -18906,7 +18906,7 @@ ALTER TABLE ONLY product_price_schedules
 --
 
 ALTER TABLE ONLY product_price_schedules
-    ADD CONSTRAINT product_price_schedules_productid_fkey FOREIGN KEY (productid) REFERENCES products(id);
+    ADD CONSTRAINT product_price_schedules_productid_fkey FOREIGN KEY (productid) REFERENCES products(id) DEFERRABLE;
 
 
 --
@@ -18914,7 +18914,7 @@ ALTER TABLE ONLY product_price_schedules
 --
 
 ALTER TABLE ONLY product_short_names
-    ADD CONSTRAINT product_short_names_productid_fkey FOREIGN KEY (productid) REFERENCES products(id);
+    ADD CONSTRAINT product_short_names_productid_fkey FOREIGN KEY (productid) REFERENCES products(id) DEFERRABLE;
 
 
 --
@@ -18922,7 +18922,7 @@ ALTER TABLE ONLY product_short_names
 --
 
 ALTER TABLE ONLY products
-    ADD CONSTRAINT products_dosageunitid_fkey FOREIGN KEY (dosageunitid) REFERENCES dosage_units(id);
+    ADD CONSTRAINT products_dosageunitid_fkey FOREIGN KEY (dosageunitid) REFERENCES dosage_units(id) DEFERRABLE;
 
 
 --
@@ -18930,7 +18930,7 @@ ALTER TABLE ONLY products
 --
 
 ALTER TABLE ONLY products
-    ADD CONSTRAINT products_formid_fkey FOREIGN KEY (formid) REFERENCES product_forms(id);
+    ADD CONSTRAINT products_formid_fkey FOREIGN KEY (formid) REFERENCES product_forms(id) DEFERRABLE;
 
 
 --
@@ -18938,7 +18938,7 @@ ALTER TABLE ONLY products
 --
 
 ALTER TABLE ONLY products
-    ADD CONSTRAINT products_productgroupid_fkey FOREIGN KEY (productgroupid) REFERENCES product_groups(id);
+    ADD CONSTRAINT products_productgroupid_fkey FOREIGN KEY (productgroupid) REFERENCES product_groups(id) DEFERRABLE;
 
 
 --
@@ -18946,7 +18946,7 @@ ALTER TABLE ONLY products
 --
 
 ALTER TABLE ONLY equipment_type_products
-    ADD CONSTRAINT program_equipment_products_productid_fkey FOREIGN KEY (productid) REFERENCES products(id);
+    ADD CONSTRAINT program_equipment_products_productid_fkey FOREIGN KEY (productid) REFERENCES products(id) DEFERRABLE;
 
 
 --
@@ -18954,7 +18954,7 @@ ALTER TABLE ONLY equipment_type_products
 --
 
 ALTER TABLE ONLY equipment_type_products
-    ADD CONSTRAINT program_equipment_products_programequipmentid_fkey FOREIGN KEY (programequipmenttypeid) REFERENCES equipment_type_programs(id);
+    ADD CONSTRAINT program_equipment_products_programequipmentid_fkey FOREIGN KEY (programequipmenttypeid) REFERENCES equipment_type_programs(id) DEFERRABLE;
 
 
 --
@@ -18962,7 +18962,7 @@ ALTER TABLE ONLY equipment_type_products
 --
 
 ALTER TABLE ONLY equipment_type_programs
-    ADD CONSTRAINT program_equipments_equipmenttypeid FOREIGN KEY (equipmenttypeid) REFERENCES equipment_types(id);
+    ADD CONSTRAINT program_equipments_equipmenttypeid FOREIGN KEY (equipmenttypeid) REFERENCES equipment_types(id) DEFERRABLE;
 
 
 --
@@ -18970,7 +18970,7 @@ ALTER TABLE ONLY equipment_type_programs
 --
 
 ALTER TABLE ONLY equipment_type_programs
-    ADD CONSTRAINT program_equipments_programid_fkey FOREIGN KEY (programid) REFERENCES programs(id);
+    ADD CONSTRAINT program_equipments_programid_fkey FOREIGN KEY (programid) REFERENCES programs(id) DEFERRABLE;
 
 
 --
@@ -18978,7 +18978,7 @@ ALTER TABLE ONLY equipment_type_programs
 --
 
 ALTER TABLE ONLY stock_adjustment_reasons_programs
-    ADD CONSTRAINT program_fkey FOREIGN KEY (programcode) REFERENCES programs(code);
+    ADD CONSTRAINT program_fkey FOREIGN KEY (programcode) REFERENCES programs(code) DEFERRABLE;
 
 
 --
@@ -18986,7 +18986,7 @@ ALTER TABLE ONLY stock_adjustment_reasons_programs
 --
 
 ALTER TABLE ONLY program_product_price_history
-    ADD CONSTRAINT program_product_price_history_programproductid_fkey FOREIGN KEY (programproductid) REFERENCES program_products(id);
+    ADD CONSTRAINT program_product_price_history_programproductid_fkey FOREIGN KEY (programproductid) REFERENCES program_products(id) DEFERRABLE;
 
 
 --
@@ -18994,7 +18994,7 @@ ALTER TABLE ONLY program_product_price_history
 --
 
 ALTER TABLE ONLY program_products
-    ADD CONSTRAINT program_products_isacoefficientsid_fkey FOREIGN KEY (isacoefficientsid) REFERENCES isa_coefficients(id);
+    ADD CONSTRAINT program_products_isacoefficientsid_fkey FOREIGN KEY (isacoefficientsid) REFERENCES isa_coefficients(id) DEFERRABLE;
 
 
 --
@@ -19002,7 +19002,7 @@ ALTER TABLE ONLY program_products
 --
 
 ALTER TABLE ONLY program_products
-    ADD CONSTRAINT program_products_productcategoryid_fkey FOREIGN KEY (productcategoryid) REFERENCES product_categories(id);
+    ADD CONSTRAINT program_products_productcategoryid_fkey FOREIGN KEY (productcategoryid) REFERENCES product_categories(id) DEFERRABLE;
 
 
 --
@@ -19010,7 +19010,7 @@ ALTER TABLE ONLY program_products
 --
 
 ALTER TABLE ONLY program_products
-    ADD CONSTRAINT program_products_productid_fkey FOREIGN KEY (productid) REFERENCES products(id);
+    ADD CONSTRAINT program_products_productid_fkey FOREIGN KEY (productid) REFERENCES products(id) DEFERRABLE;
 
 
 --
@@ -19018,7 +19018,7 @@ ALTER TABLE ONLY program_products
 --
 
 ALTER TABLE ONLY program_products
-    ADD CONSTRAINT program_products_programid_fkey FOREIGN KEY (programid) REFERENCES programs(id);
+    ADD CONSTRAINT program_products_programid_fkey FOREIGN KEY (programid) REFERENCES programs(id) DEFERRABLE;
 
 
 --
@@ -19026,7 +19026,7 @@ ALTER TABLE ONLY program_products
 --
 
 ALTER TABLE ONLY program_regimen_columns
-    ADD CONSTRAINT program_regimen_columns_programid_fkey FOREIGN KEY (programid) REFERENCES programs(id);
+    ADD CONSTRAINT program_regimen_columns_programid_fkey FOREIGN KEY (programid) REFERENCES programs(id) DEFERRABLE;
 
 
 --
@@ -19034,7 +19034,7 @@ ALTER TABLE ONLY program_regimen_columns
 --
 
 ALTER TABLE ONLY program_rnr_columns
-    ADD CONSTRAINT program_rnr_columns_mastercolumnid_fkey FOREIGN KEY (mastercolumnid) REFERENCES master_rnr_columns(id);
+    ADD CONSTRAINT program_rnr_columns_mastercolumnid_fkey FOREIGN KEY (mastercolumnid) REFERENCES master_rnr_columns(id) DEFERRABLE;
 
 
 --
@@ -19042,7 +19042,7 @@ ALTER TABLE ONLY program_rnr_columns
 --
 
 ALTER TABLE ONLY program_rnr_columns
-    ADD CONSTRAINT program_rnr_columns_rnroptionid_fkey FOREIGN KEY (rnroptionid) REFERENCES configurable_rnr_options(id);
+    ADD CONSTRAINT program_rnr_columns_rnroptionid_fkey FOREIGN KEY (rnroptionid) REFERENCES configurable_rnr_options(id) DEFERRABLE;
 
 
 --
@@ -19050,7 +19050,7 @@ ALTER TABLE ONLY program_rnr_columns
 --
 
 ALTER TABLE ONLY programs_supported
-    ADD CONSTRAINT programs_supported_facilityid_fkey FOREIGN KEY (facilityid) REFERENCES facilities(id);
+    ADD CONSTRAINT programs_supported_facilityid_fkey FOREIGN KEY (facilityid) REFERENCES facilities(id) DEFERRABLE;
 
 
 --
@@ -19058,7 +19058,7 @@ ALTER TABLE ONLY programs_supported
 --
 
 ALTER TABLE ONLY programs_supported
-    ADD CONSTRAINT programs_supported_programid_fkey FOREIGN KEY (programid) REFERENCES programs(id);
+    ADD CONSTRAINT programs_supported_programid_fkey FOREIGN KEY (programid) REFERENCES programs(id) DEFERRABLE;
 
 
 --
@@ -19066,7 +19066,7 @@ ALTER TABLE ONLY programs_supported
 --
 
 ALTER TABLE ONLY refrigerator_problems
-    ADD CONSTRAINT refrigerator_problems_readingid_fkey FOREIGN KEY (readingid) REFERENCES refrigerator_readings(id);
+    ADD CONSTRAINT refrigerator_problems_readingid_fkey FOREIGN KEY (readingid) REFERENCES refrigerator_readings(id) DEFERRABLE;
 
 
 --
@@ -19074,7 +19074,7 @@ ALTER TABLE ONLY refrigerator_problems
 --
 
 ALTER TABLE ONLY refrigerator_readings
-    ADD CONSTRAINT refrigerator_readings_facilityvisitid_fkey FOREIGN KEY (facilityvisitid) REFERENCES facility_visits(id);
+    ADD CONSTRAINT refrigerator_readings_facilityvisitid_fkey FOREIGN KEY (facilityvisitid) REFERENCES facility_visits(id) DEFERRABLE;
 
 
 --
@@ -19082,7 +19082,7 @@ ALTER TABLE ONLY refrigerator_readings
 --
 
 ALTER TABLE ONLY refrigerator_readings
-    ADD CONSTRAINT refrigerator_readings_refrigeratorid_fkey FOREIGN KEY (refrigeratorid) REFERENCES refrigerators(id);
+    ADD CONSTRAINT refrigerator_readings_refrigeratorid_fkey FOREIGN KEY (refrigeratorid) REFERENCES refrigerators(id) DEFERRABLE;
 
 
 --
@@ -19090,7 +19090,7 @@ ALTER TABLE ONLY refrigerator_readings
 --
 
 ALTER TABLE ONLY refrigerators
-    ADD CONSTRAINT refrigerators_createdby_fkey FOREIGN KEY (createdby) REFERENCES users(id);
+    ADD CONSTRAINT refrigerators_createdby_fkey FOREIGN KEY (createdby) REFERENCES users(id) DEFERRABLE;
 
 
 --
@@ -19098,7 +19098,7 @@ ALTER TABLE ONLY refrigerators
 --
 
 ALTER TABLE ONLY refrigerators
-    ADD CONSTRAINT refrigerators_facilityid_fkey FOREIGN KEY (facilityid) REFERENCES facilities(id);
+    ADD CONSTRAINT refrigerators_facilityid_fkey FOREIGN KEY (facilityid) REFERENCES facilities(id) DEFERRABLE;
 
 
 --
@@ -19106,7 +19106,7 @@ ALTER TABLE ONLY refrigerators
 --
 
 ALTER TABLE ONLY refrigerators
-    ADD CONSTRAINT refrigerators_modifiedby_fkey FOREIGN KEY (modifiedby) REFERENCES users(id);
+    ADD CONSTRAINT refrigerators_modifiedby_fkey FOREIGN KEY (modifiedby) REFERENCES users(id) DEFERRABLE;
 
 
 --
@@ -19114,7 +19114,7 @@ ALTER TABLE ONLY refrigerators
 --
 
 ALTER TABLE ONLY regimen_product_combinations
-    ADD CONSTRAINT regimen_id_fkey FOREIGN KEY (regimenid) REFERENCES regimens(id) ON UPDATE CASCADE ON DELETE CASCADE;
+    ADD CONSTRAINT regimen_id_fkey FOREIGN KEY (regimenid) REFERENCES regimens(id) ON UPDATE CASCADE ON DELETE CASCADE DEFERRABLE;
 
 
 --
@@ -19122,7 +19122,7 @@ ALTER TABLE ONLY regimen_product_combinations
 --
 
 ALTER TABLE ONLY regimen_line_items
-    ADD CONSTRAINT regimen_line_items_rnrid_fkey FOREIGN KEY (rnrid) REFERENCES requisitions(id);
+    ADD CONSTRAINT regimen_line_items_rnrid_fkey FOREIGN KEY (rnrid) REFERENCES requisitions(id) DEFERRABLE;
 
 
 --
@@ -19130,7 +19130,7 @@ ALTER TABLE ONLY regimen_line_items
 --
 
 ALTER TABLE ONLY regimens
-    ADD CONSTRAINT regimens_categoryid_fkey FOREIGN KEY (categoryid) REFERENCES regimen_categories(id);
+    ADD CONSTRAINT regimens_categoryid_fkey FOREIGN KEY (categoryid) REFERENCES regimen_categories(id) DEFERRABLE;
 
 
 --
@@ -19138,7 +19138,7 @@ ALTER TABLE ONLY regimens
 --
 
 ALTER TABLE ONLY regimen_constituents_dosages
-    ADD CONSTRAINT regimens_product_dosage_fkey FOREIGN KEY (regimenproductid) REFERENCES regimen_combination_constituents(id) ON UPDATE CASCADE ON DELETE CASCADE;
+    ADD CONSTRAINT regimens_product_dosage_fkey FOREIGN KEY (regimenproductid) REFERENCES regimen_combination_constituents(id) ON UPDATE CASCADE ON DELETE CASCADE DEFERRABLE;
 
 
 --
@@ -19146,7 +19146,7 @@ ALTER TABLE ONLY regimen_constituents_dosages
 --
 
 ALTER TABLE ONLY regimens
-    ADD CONSTRAINT regimens_programid_fkey FOREIGN KEY (programid) REFERENCES programs(id);
+    ADD CONSTRAINT regimens_programid_fkey FOREIGN KEY (programid) REFERENCES programs(id) DEFERRABLE;
 
 
 --
@@ -19154,7 +19154,7 @@ ALTER TABLE ONLY regimens
 --
 
 ALTER TABLE ONLY report_rights
-    ADD CONSTRAINT report_rights_rightname_fkey FOREIGN KEY (rightname) REFERENCES rights(name);
+    ADD CONSTRAINT report_rights_rightname_fkey FOREIGN KEY (rightname) REFERENCES rights(name) DEFERRABLE;
 
 
 --
@@ -19162,7 +19162,7 @@ ALTER TABLE ONLY report_rights
 --
 
 ALTER TABLE ONLY report_rights
-    ADD CONSTRAINT report_rights_templateid_fkey FOREIGN KEY (templateid) REFERENCES templates(id);
+    ADD CONSTRAINT report_rights_templateid_fkey FOREIGN KEY (templateid) REFERENCES templates(id) DEFERRABLE;
 
 
 --
@@ -19170,7 +19170,7 @@ ALTER TABLE ONLY report_rights
 --
 
 ALTER TABLE ONLY requisition_group_members
-    ADD CONSTRAINT requisition_group_members_facilityid_fkey FOREIGN KEY (facilityid) REFERENCES facilities(id);
+    ADD CONSTRAINT requisition_group_members_facilityid_fkey FOREIGN KEY (facilityid) REFERENCES facilities(id) DEFERRABLE;
 
 
 --
@@ -19178,7 +19178,7 @@ ALTER TABLE ONLY requisition_group_members
 --
 
 ALTER TABLE ONLY requisition_group_members
-    ADD CONSTRAINT requisition_group_members_requisitiongroupid_fkey FOREIGN KEY (requisitiongroupid) REFERENCES requisition_groups(id);
+    ADD CONSTRAINT requisition_group_members_requisitiongroupid_fkey FOREIGN KEY (requisitiongroupid) REFERENCES requisition_groups(id) DEFERRABLE;
 
 
 --
@@ -19186,7 +19186,7 @@ ALTER TABLE ONLY requisition_group_members
 --
 
 ALTER TABLE ONLY requisition_group_program_schedules
-    ADD CONSTRAINT requisition_group_program_schedules_dropofffacilityid_fkey FOREIGN KEY (dropofffacilityid) REFERENCES facilities(id);
+    ADD CONSTRAINT requisition_group_program_schedules_dropofffacilityid_fkey FOREIGN KEY (dropofffacilityid) REFERENCES facilities(id) DEFERRABLE;
 
 
 --
@@ -19194,7 +19194,7 @@ ALTER TABLE ONLY requisition_group_program_schedules
 --
 
 ALTER TABLE ONLY requisition_group_program_schedules
-    ADD CONSTRAINT requisition_group_program_schedules_programid_fkey FOREIGN KEY (programid) REFERENCES programs(id);
+    ADD CONSTRAINT requisition_group_program_schedules_programid_fkey FOREIGN KEY (programid) REFERENCES programs(id) DEFERRABLE;
 
 
 --
@@ -19202,7 +19202,7 @@ ALTER TABLE ONLY requisition_group_program_schedules
 --
 
 ALTER TABLE ONLY requisition_group_program_schedules
-    ADD CONSTRAINT requisition_group_program_schedules_requisitiongroupid_fkey FOREIGN KEY (requisitiongroupid) REFERENCES requisition_groups(id);
+    ADD CONSTRAINT requisition_group_program_schedules_requisitiongroupid_fkey FOREIGN KEY (requisitiongroupid) REFERENCES requisition_groups(id) DEFERRABLE;
 
 
 --
@@ -19210,7 +19210,7 @@ ALTER TABLE ONLY requisition_group_program_schedules
 --
 
 ALTER TABLE ONLY requisition_group_program_schedules
-    ADD CONSTRAINT requisition_group_program_schedules_scheduleid_fkey FOREIGN KEY (scheduleid) REFERENCES processing_schedules(id);
+    ADD CONSTRAINT requisition_group_program_schedules_scheduleid_fkey FOREIGN KEY (scheduleid) REFERENCES processing_schedules(id) DEFERRABLE;
 
 
 --
@@ -19218,7 +19218,7 @@ ALTER TABLE ONLY requisition_group_program_schedules
 --
 
 ALTER TABLE ONLY requisition_groups
-    ADD CONSTRAINT requisition_groups_supervisorynodeid_fkey FOREIGN KEY (supervisorynodeid) REFERENCES supervisory_nodes(id);
+    ADD CONSTRAINT requisition_groups_supervisorynodeid_fkey FOREIGN KEY (supervisorynodeid) REFERENCES supervisory_nodes(id) DEFERRABLE;
 
 
 --
@@ -19226,7 +19226,7 @@ ALTER TABLE ONLY requisition_groups
 --
 
 ALTER TABLE ONLY requisition_line_item_losses_adjustments
-    ADD CONSTRAINT requisition_line_item_losses_adjustm_requisitionlineitemid_fkey FOREIGN KEY (requisitionlineitemid) REFERENCES requisition_line_items(id);
+    ADD CONSTRAINT requisition_line_item_losses_adjustm_requisitionlineitemid_fkey FOREIGN KEY (requisitionlineitemid) REFERENCES requisition_line_items(id) DEFERRABLE;
 
 
 --
@@ -19234,7 +19234,7 @@ ALTER TABLE ONLY requisition_line_item_losses_adjustments
 --
 
 ALTER TABLE ONLY requisition_line_item_losses_adjustments
-    ADD CONSTRAINT requisition_line_item_losses_adjustments_type_fkey FOREIGN KEY (type) REFERENCES losses_adjustments_types(name);
+    ADD CONSTRAINT requisition_line_item_losses_adjustments_type_fkey FOREIGN KEY (type) REFERENCES losses_adjustments_types(name) DEFERRABLE;
 
 
 --
@@ -19242,7 +19242,7 @@ ALTER TABLE ONLY requisition_line_item_losses_adjustments
 --
 
 ALTER TABLE ONLY requisition_line_items
-    ADD CONSTRAINT requisition_line_items_productcode_fkey FOREIGN KEY (productcode) REFERENCES products(code);
+    ADD CONSTRAINT requisition_line_items_productcode_fkey FOREIGN KEY (productcode) REFERENCES products(code) DEFERRABLE;
 
 
 --
@@ -19250,7 +19250,7 @@ ALTER TABLE ONLY requisition_line_items
 --
 
 ALTER TABLE ONLY requisition_line_items
-    ADD CONSTRAINT requisition_line_items_rnrid_fkey FOREIGN KEY (rnrid) REFERENCES requisitions(id);
+    ADD CONSTRAINT requisition_line_items_rnrid_fkey FOREIGN KEY (rnrid) REFERENCES requisitions(id) DEFERRABLE;
 
 
 --
@@ -19258,7 +19258,7 @@ ALTER TABLE ONLY requisition_line_items
 --
 
 ALTER TABLE ONLY requisition_signatures
-    ADD CONSTRAINT requisition_signatures_rnrid_fkey FOREIGN KEY (rnrid) REFERENCES requisitions(id);
+    ADD CONSTRAINT requisition_signatures_rnrid_fkey FOREIGN KEY (rnrid) REFERENCES requisitions(id) DEFERRABLE;
 
 
 --
@@ -19266,7 +19266,7 @@ ALTER TABLE ONLY requisition_signatures
 --
 
 ALTER TABLE ONLY requisition_signatures
-    ADD CONSTRAINT requisition_signatures_signatureid_fkey FOREIGN KEY (signatureid) REFERENCES signatures(id);
+    ADD CONSTRAINT requisition_signatures_signatureid_fkey FOREIGN KEY (signatureid) REFERENCES signatures(id) DEFERRABLE;
 
 
 --
@@ -19274,7 +19274,7 @@ ALTER TABLE ONLY requisition_signatures
 --
 
 ALTER TABLE ONLY requisition_status_changes
-    ADD CONSTRAINT requisition_status_changes_createdby_fkey FOREIGN KEY (createdby) REFERENCES users(id);
+    ADD CONSTRAINT requisition_status_changes_createdby_fkey FOREIGN KEY (createdby) REFERENCES users(id) DEFERRABLE;
 
 
 --
@@ -19282,7 +19282,7 @@ ALTER TABLE ONLY requisition_status_changes
 --
 
 ALTER TABLE ONLY requisition_status_changes
-    ADD CONSTRAINT requisition_status_changes_modifiedby_fkey FOREIGN KEY (modifiedby) REFERENCES users(id);
+    ADD CONSTRAINT requisition_status_changes_modifiedby_fkey FOREIGN KEY (modifiedby) REFERENCES users(id) DEFERRABLE;
 
 
 --
@@ -19290,7 +19290,7 @@ ALTER TABLE ONLY requisition_status_changes
 --
 
 ALTER TABLE ONLY requisition_status_changes
-    ADD CONSTRAINT requisition_status_changes_rnrid_fkey FOREIGN KEY (rnrid) REFERENCES requisitions(id);
+    ADD CONSTRAINT requisition_status_changes_rnrid_fkey FOREIGN KEY (rnrid) REFERENCES requisitions(id) DEFERRABLE;
 
 
 --
@@ -19298,7 +19298,7 @@ ALTER TABLE ONLY requisition_status_changes
 --
 
 ALTER TABLE ONLY requisitions
-    ADD CONSTRAINT requisitions_facilityid_fkey FOREIGN KEY (facilityid) REFERENCES facilities(id);
+    ADD CONSTRAINT requisitions_facilityid_fkey FOREIGN KEY (facilityid) REFERENCES facilities(id) DEFERRABLE;
 
 
 --
@@ -19306,7 +19306,7 @@ ALTER TABLE ONLY requisitions
 --
 
 ALTER TABLE ONLY requisitions
-    ADD CONSTRAINT requisitions_periodid_fkey FOREIGN KEY (periodid) REFERENCES processing_periods(id);
+    ADD CONSTRAINT requisitions_periodid_fkey FOREIGN KEY (periodid) REFERENCES processing_periods(id) DEFERRABLE;
 
 
 --
@@ -19314,7 +19314,7 @@ ALTER TABLE ONLY requisitions
 --
 
 ALTER TABLE ONLY requisitions
-    ADD CONSTRAINT requisitions_programid_fkey FOREIGN KEY (programid) REFERENCES programs(id);
+    ADD CONSTRAINT requisitions_programid_fkey FOREIGN KEY (programid) REFERENCES programs(id) DEFERRABLE;
 
 
 --
@@ -19322,7 +19322,7 @@ ALTER TABLE ONLY requisitions
 --
 
 ALTER TABLE ONLY requisitions
-    ADD CONSTRAINT requisitions_supervisorynodeid_fkey FOREIGN KEY (supervisorynodeid) REFERENCES supervisory_nodes(id);
+    ADD CONSTRAINT requisitions_supervisorynodeid_fkey FOREIGN KEY (supervisorynodeid) REFERENCES supervisory_nodes(id) DEFERRABLE;
 
 
 --
@@ -19330,7 +19330,7 @@ ALTER TABLE ONLY requisitions
 --
 
 ALTER TABLE ONLY role_assignments
-    ADD CONSTRAINT role_assignments_deliveryzoneid_fkey FOREIGN KEY (deliveryzoneid) REFERENCES delivery_zones(id);
+    ADD CONSTRAINT role_assignments_deliveryzoneid_fkey FOREIGN KEY (deliveryzoneid) REFERENCES delivery_zones(id) DEFERRABLE;
 
 
 --
@@ -19338,7 +19338,7 @@ ALTER TABLE ONLY role_assignments
 --
 
 ALTER TABLE ONLY role_assignments
-    ADD CONSTRAINT role_assignments_programid_fkey FOREIGN KEY (programid) REFERENCES programs(id);
+    ADD CONSTRAINT role_assignments_programid_fkey FOREIGN KEY (programid) REFERENCES programs(id) DEFERRABLE;
 
 
 --
@@ -19346,7 +19346,7 @@ ALTER TABLE ONLY role_assignments
 --
 
 ALTER TABLE ONLY role_assignments
-    ADD CONSTRAINT role_assignments_roleid_fkey FOREIGN KEY (roleid) REFERENCES roles(id);
+    ADD CONSTRAINT role_assignments_roleid_fkey FOREIGN KEY (roleid) REFERENCES roles(id) DEFERRABLE;
 
 
 --
@@ -19354,7 +19354,7 @@ ALTER TABLE ONLY role_assignments
 --
 
 ALTER TABLE ONLY role_assignments
-    ADD CONSTRAINT role_assignments_supervisorynodeid_fkey FOREIGN KEY (supervisorynodeid) REFERENCES supervisory_nodes(id);
+    ADD CONSTRAINT role_assignments_supervisorynodeid_fkey FOREIGN KEY (supervisorynodeid) REFERENCES supervisory_nodes(id) DEFERRABLE;
 
 
 --
@@ -19362,7 +19362,7 @@ ALTER TABLE ONLY role_assignments
 --
 
 ALTER TABLE ONLY role_assignments
-    ADD CONSTRAINT role_assignments_userid_fkey FOREIGN KEY (userid) REFERENCES users(id);
+    ADD CONSTRAINT role_assignments_userid_fkey FOREIGN KEY (userid) REFERENCES users(id) DEFERRABLE;
 
 
 --
@@ -19370,7 +19370,7 @@ ALTER TABLE ONLY role_assignments
 --
 
 ALTER TABLE ONLY role_rights
-    ADD CONSTRAINT role_rights_rightname_fkey FOREIGN KEY (rightname) REFERENCES rights(name);
+    ADD CONSTRAINT role_rights_rightname_fkey FOREIGN KEY (rightname) REFERENCES rights(name) DEFERRABLE;
 
 
 --
@@ -19378,7 +19378,7 @@ ALTER TABLE ONLY role_rights
 --
 
 ALTER TABLE ONLY role_rights
-    ADD CONSTRAINT role_rights_roleid_fkey FOREIGN KEY (roleid) REFERENCES roles(id);
+    ADD CONSTRAINT role_rights_roleid_fkey FOREIGN KEY (roleid) REFERENCES roles(id) DEFERRABLE;
 
 
 --
@@ -19386,7 +19386,7 @@ ALTER TABLE ONLY role_rights
 --
 
 ALTER TABLE ONLY shipment_line_items
-    ADD CONSTRAINT shipment_line_items_orderid_fkey FOREIGN KEY (orderid) REFERENCES orders(id);
+    ADD CONSTRAINT shipment_line_items_orderid_fkey FOREIGN KEY (orderid) REFERENCES orders(id) DEFERRABLE;
 
 
 --
@@ -19394,7 +19394,7 @@ ALTER TABLE ONLY shipment_line_items
 --
 
 ALTER TABLE ONLY shipment_line_items
-    ADD CONSTRAINT shipment_line_items_productcode_fkey FOREIGN KEY (productcode) REFERENCES products(code);
+    ADD CONSTRAINT shipment_line_items_productcode_fkey FOREIGN KEY (productcode) REFERENCES products(code) DEFERRABLE;
 
 
 --
@@ -19402,7 +19402,7 @@ ALTER TABLE ONLY shipment_line_items
 --
 
 ALTER TABLE ONLY equipment_inventory_statuses
-    ADD CONSTRAINT status_fkey FOREIGN KEY (statusid) REFERENCES equipment_operational_status(id);
+    ADD CONSTRAINT status_fkey FOREIGN KEY (statusid) REFERENCES equipment_operational_status(id) DEFERRABLE;
 
 
 --
@@ -19410,7 +19410,7 @@ ALTER TABLE ONLY equipment_inventory_statuses
 --
 
 ALTER TABLE ONLY stock_adjustment_reasons_programs
-    ADD CONSTRAINT stock_adjustment_reason_fkey FOREIGN KEY (reasonname) REFERENCES losses_adjustments_types(name);
+    ADD CONSTRAINT stock_adjustment_reason_fkey FOREIGN KEY (reasonname) REFERENCES losses_adjustments_types(name) DEFERRABLE;
 
 
 --
@@ -19418,7 +19418,7 @@ ALTER TABLE ONLY stock_adjustment_reasons_programs
 --
 
 ALTER TABLE ONLY stock_card_entry_key_values
-    ADD CONSTRAINT stock_card_entry_fkey FOREIGN KEY (stockcardentryid) REFERENCES stock_card_entries(id);
+    ADD CONSTRAINT stock_card_entry_fkey FOREIGN KEY (stockcardentryid) REFERENCES stock_card_entries(id) DEFERRABLE;
 
 
 --
@@ -19426,7 +19426,7 @@ ALTER TABLE ONLY stock_card_entry_key_values
 --
 
 ALTER TABLE ONLY lots_on_hand
-    ADD CONSTRAINT stock_card_fkey FOREIGN KEY (stockcardid) REFERENCES stock_cards(id);
+    ADD CONSTRAINT stock_card_fkey FOREIGN KEY (stockcardid) REFERENCES stock_cards(id) DEFERRABLE;
 
 
 --
@@ -19434,7 +19434,7 @@ ALTER TABLE ONLY lots_on_hand
 --
 
 ALTER TABLE ONLY stock_card_entries
-    ADD CONSTRAINT stock_card_fkey FOREIGN KEY (stockcardid) REFERENCES stock_cards(id);
+    ADD CONSTRAINT stock_card_fkey FOREIGN KEY (stockcardid) REFERENCES stock_cards(id) DEFERRABLE;
 
 
 --
@@ -19442,7 +19442,7 @@ ALTER TABLE ONLY stock_card_entries
 --
 
 ALTER TABLE ONLY stock_card_entries
-    ADD CONSTRAINT stock_movement_fkey FOREIGN KEY (stockmovementid) REFERENCES stock_movements(id);
+    ADD CONSTRAINT stock_movement_fkey FOREIGN KEY (stockmovementid) REFERENCES stock_movements(id) DEFERRABLE;
 
 
 --
@@ -19450,7 +19450,7 @@ ALTER TABLE ONLY stock_card_entries
 --
 
 ALTER TABLE ONLY stock_movement_line_items
-    ADD CONSTRAINT stock_movement_fkey FOREIGN KEY (stockmovementid) REFERENCES stock_movements(id);
+    ADD CONSTRAINT stock_movement_fkey FOREIGN KEY (stockmovementid) REFERENCES stock_movements(id) DEFERRABLE;
 
 
 --
@@ -19458,7 +19458,7 @@ ALTER TABLE ONLY stock_movement_line_items
 --
 
 ALTER TABLE ONLY stock_movement_lots
-    ADD CONSTRAINT stock_movement_line_item_fkey FOREIGN KEY (stockmovementlineitemid) REFERENCES stock_movement_line_items(id);
+    ADD CONSTRAINT stock_movement_line_item_fkey FOREIGN KEY (stockmovementlineitemid) REFERENCES stock_movement_line_items(id) DEFERRABLE;
 
 
 --
@@ -19466,7 +19466,7 @@ ALTER TABLE ONLY stock_movement_lots
 --
 
 ALTER TABLE ONLY stock_movement_line_item_extra_fields
-    ADD CONSTRAINT stock_movement_line_item_fkey FOREIGN KEY (stockmovementlineitemid) REFERENCES stock_movement_line_items(id);
+    ADD CONSTRAINT stock_movement_line_item_fkey FOREIGN KEY (stockmovementlineitemid) REFERENCES stock_movement_line_items(id) DEFERRABLE;
 
 
 --
@@ -19474,7 +19474,7 @@ ALTER TABLE ONLY stock_movement_line_item_extra_fields
 --
 
 ALTER TABLE ONLY supervisory_nodes
-    ADD CONSTRAINT supervisory_nodes_facilityid_fkey FOREIGN KEY (facilityid) REFERENCES facilities(id);
+    ADD CONSTRAINT supervisory_nodes_facilityid_fkey FOREIGN KEY (facilityid) REFERENCES facilities(id) DEFERRABLE;
 
 
 --
@@ -19482,7 +19482,7 @@ ALTER TABLE ONLY supervisory_nodes
 --
 
 ALTER TABLE ONLY supervisory_nodes
-    ADD CONSTRAINT supervisory_nodes_parentid_fkey FOREIGN KEY (parentid) REFERENCES supervisory_nodes(id);
+    ADD CONSTRAINT supervisory_nodes_parentid_fkey FOREIGN KEY (parentid) REFERENCES supervisory_nodes(id) DEFERRABLE;
 
 
 --
@@ -19490,7 +19490,7 @@ ALTER TABLE ONLY supervisory_nodes
 --
 
 ALTER TABLE ONLY supply_lines
-    ADD CONSTRAINT supply_lines_parentid_fkey FOREIGN KEY (parentid) REFERENCES supply_lines(id);
+    ADD CONSTRAINT supply_lines_parentid_fkey FOREIGN KEY (parentid) REFERENCES supply_lines(id) DEFERRABLE;
 
 
 --
@@ -19498,7 +19498,7 @@ ALTER TABLE ONLY supply_lines
 --
 
 ALTER TABLE ONLY supply_lines
-    ADD CONSTRAINT supply_lines_programid_fkey FOREIGN KEY (programid) REFERENCES programs(id);
+    ADD CONSTRAINT supply_lines_programid_fkey FOREIGN KEY (programid) REFERENCES programs(id) DEFERRABLE;
 
 
 --
@@ -19506,7 +19506,7 @@ ALTER TABLE ONLY supply_lines
 --
 
 ALTER TABLE ONLY supply_lines
-    ADD CONSTRAINT supply_lines_supervisorynodeid_fkey FOREIGN KEY (supervisorynodeid) REFERENCES supervisory_nodes(id);
+    ADD CONSTRAINT supply_lines_supervisorynodeid_fkey FOREIGN KEY (supervisorynodeid) REFERENCES supervisory_nodes(id) DEFERRABLE;
 
 
 --
@@ -19514,7 +19514,7 @@ ALTER TABLE ONLY supply_lines
 --
 
 ALTER TABLE ONLY supply_lines
-    ADD CONSTRAINT supply_lines_supplyingfacilityid_fkey FOREIGN KEY (supplyingfacilityid) REFERENCES facilities(id);
+    ADD CONSTRAINT supply_lines_supplyingfacilityid_fkey FOREIGN KEY (supplyingfacilityid) REFERENCES facilities(id) DEFERRABLE;
 
 
 --
@@ -19522,7 +19522,7 @@ ALTER TABLE ONLY supply_lines
 --
 
 ALTER TABLE ONLY template_parameters
-    ADD CONSTRAINT template_parameters_templateid_fkey FOREIGN KEY (templateid) REFERENCES templates(id);
+    ADD CONSTRAINT template_parameters_templateid_fkey FOREIGN KEY (templateid) REFERENCES templates(id) DEFERRABLE;
 
 
 --
@@ -19530,7 +19530,7 @@ ALTER TABLE ONLY template_parameters
 --
 
 ALTER TABLE ONLY stock_movements
-    ADD CONSTRAINT to_facility_fkey FOREIGN KEY (tofacilityid) REFERENCES facilities(id);
+    ADD CONSTRAINT to_facility_fkey FOREIGN KEY (tofacilityid) REFERENCES facilities(id) DEFERRABLE;
 
 
 --
@@ -19538,7 +19538,7 @@ ALTER TABLE ONLY stock_movements
 --
 
 ALTER TABLE ONLY user_password_reset_tokens
-    ADD CONSTRAINT user_password_reset_tokens_userid_fkey FOREIGN KEY (userid) REFERENCES users(id);
+    ADD CONSTRAINT user_password_reset_tokens_userid_fkey FOREIGN KEY (userid) REFERENCES users(id) DEFERRABLE;
 
 
 --
@@ -19546,7 +19546,7 @@ ALTER TABLE ONLY user_password_reset_tokens
 --
 
 ALTER TABLE ONLY user_preference_roles
-    ADD CONSTRAINT user_preference_roles_roleid_fkey FOREIGN KEY (roleid) REFERENCES roles(id);
+    ADD CONSTRAINT user_preference_roles_roleid_fkey FOREIGN KEY (roleid) REFERENCES roles(id) DEFERRABLE;
 
 
 --
@@ -19554,7 +19554,7 @@ ALTER TABLE ONLY user_preference_roles
 --
 
 ALTER TABLE ONLY user_preference_roles
-    ADD CONSTRAINT user_preference_roles_userpreferencekey_fkey FOREIGN KEY (userpreferencekey) REFERENCES user_preference_master(key);
+    ADD CONSTRAINT user_preference_roles_userpreferencekey_fkey FOREIGN KEY (userpreferencekey) REFERENCES user_preference_master(key) DEFERRABLE;
 
 
 --
@@ -19562,7 +19562,7 @@ ALTER TABLE ONLY user_preference_roles
 --
 
 ALTER TABLE ONLY user_preferences
-    ADD CONSTRAINT user_preferences_userid_fkey FOREIGN KEY (userid) REFERENCES users(id);
+    ADD CONSTRAINT user_preferences_userid_fkey FOREIGN KEY (userid) REFERENCES users(id) DEFERRABLE;
 
 
 --
@@ -19570,7 +19570,7 @@ ALTER TABLE ONLY user_preferences
 --
 
 ALTER TABLE ONLY user_preferences
-    ADD CONSTRAINT user_preferences_userpreferencekey_fkey FOREIGN KEY (userpreferencekey) REFERENCES user_preference_master(key);
+    ADD CONSTRAINT user_preferences_userpreferencekey_fkey FOREIGN KEY (userpreferencekey) REFERENCES user_preference_master(key) DEFERRABLE;
 
 
 --
@@ -19578,7 +19578,7 @@ ALTER TABLE ONLY user_preferences
 --
 
 ALTER TABLE ONLY users
-    ADD CONSTRAINT users_facilityid_fkey FOREIGN KEY (facilityid) REFERENCES facilities(id);
+    ADD CONSTRAINT users_facilityid_fkey FOREIGN KEY (facilityid) REFERENCES facilities(id) DEFERRABLE;
 
 
 --
@@ -19586,7 +19586,7 @@ ALTER TABLE ONLY users
 --
 
 ALTER TABLE ONLY users
-    ADD CONSTRAINT users_supervisorid_fkey FOREIGN KEY (supervisorid) REFERENCES users(id);
+    ADD CONSTRAINT users_supervisorid_fkey FOREIGN KEY (supervisorid) REFERENCES users(id) DEFERRABLE;
 
 
 --
@@ -19594,7 +19594,7 @@ ALTER TABLE ONLY users
 --
 
 ALTER TABLE ONLY vaccine_distribution_line_items
-    ADD CONSTRAINT vacc_distribution_line_items_distribution_fkey FOREIGN KEY (distributionid) REFERENCES vaccine_distributions(id);
+    ADD CONSTRAINT vacc_distribution_line_items_distribution_fkey FOREIGN KEY (distributionid) REFERENCES vaccine_distributions(id) DEFERRABLE;
 
 
 --
@@ -19602,7 +19602,7 @@ ALTER TABLE ONLY vaccine_distribution_line_items
 --
 
 ALTER TABLE ONLY vaccine_distribution_line_item_lots
-    ADD CONSTRAINT vacc_distribution_lotid_fkey FOREIGN KEY (lotid) REFERENCES lots(id);
+    ADD CONSTRAINT vacc_distribution_lotid_fkey FOREIGN KEY (lotid) REFERENCES lots(id) DEFERRABLE;
 
 
 --
@@ -19610,7 +19610,7 @@ ALTER TABLE ONLY vaccine_distribution_line_item_lots
 --
 
 ALTER TABLE ONLY vaccine_distribution_line_item_lots
-    ADD CONSTRAINT vacc_distribution_lots_line_item_fkey FOREIGN KEY (distributionlineitemid) REFERENCES vaccine_distribution_line_items(id);
+    ADD CONSTRAINT vacc_distribution_lots_line_item_fkey FOREIGN KEY (distributionlineitemid) REFERENCES vaccine_distribution_line_items(id) DEFERRABLE;
 
 
 --
@@ -19618,7 +19618,7 @@ ALTER TABLE ONLY vaccine_distribution_line_item_lots
 --
 
 ALTER TABLE ONLY vaccine_distributions
-    ADD CONSTRAINT vacc_distributions_frofacility_fkey FOREIGN KEY (fromfacilityid) REFERENCES facilities(id);
+    ADD CONSTRAINT vacc_distributions_frofacility_fkey FOREIGN KEY (fromfacilityid) REFERENCES facilities(id) DEFERRABLE;
 
 
 --
@@ -19626,7 +19626,7 @@ ALTER TABLE ONLY vaccine_distributions
 --
 
 ALTER TABLE ONLY vaccine_distribution_line_items
-    ADD CONSTRAINT vacc_distributions_line_items_product_fkey FOREIGN KEY (productid) REFERENCES products(id);
+    ADD CONSTRAINT vacc_distributions_line_items_product_fkey FOREIGN KEY (productid) REFERENCES products(id) DEFERRABLE;
 
 
 --
@@ -19634,7 +19634,7 @@ ALTER TABLE ONLY vaccine_distribution_line_items
 --
 
 ALTER TABLE ONLY vaccine_distributions
-    ADD CONSTRAINT vacc_distributions_period_fkey FOREIGN KEY (periodid) REFERENCES processing_periods(id);
+    ADD CONSTRAINT vacc_distributions_period_fkey FOREIGN KEY (periodid) REFERENCES processing_periods(id) DEFERRABLE;
 
 
 --
@@ -19642,7 +19642,7 @@ ALTER TABLE ONLY vaccine_distributions
 --
 
 ALTER TABLE ONLY vaccine_distributions
-    ADD CONSTRAINT vacc_distributions_tofacility_fkey FOREIGN KEY (tofacilityid) REFERENCES facilities(id);
+    ADD CONSTRAINT vacc_distributions_tofacility_fkey FOREIGN KEY (tofacilityid) REFERENCES facilities(id) DEFERRABLE;
 
 
 --
@@ -19650,7 +19650,7 @@ ALTER TABLE ONLY vaccine_distributions
 --
 
 ALTER TABLE ONLY vaccination_adult_coverage_line_items
-    ADD CONSTRAINT vaccination_adult_coverage_line_items_facilityvisitid_fkey FOREIGN KEY (facilityvisitid) REFERENCES facility_visits(id);
+    ADD CONSTRAINT vaccination_adult_coverage_line_items_facilityvisitid_fkey FOREIGN KEY (facilityvisitid) REFERENCES facility_visits(id) DEFERRABLE;
 
 
 --
@@ -19658,7 +19658,7 @@ ALTER TABLE ONLY vaccination_adult_coverage_line_items
 --
 
 ALTER TABLE ONLY vaccination_child_coverage_line_items
-    ADD CONSTRAINT vaccination_child_coverage_line_items_facilityvisitid_fkey FOREIGN KEY (facilityvisitid) REFERENCES facility_visits(id);
+    ADD CONSTRAINT vaccination_child_coverage_line_items_facilityvisitid_fkey FOREIGN KEY (facilityvisitid) REFERENCES facility_visits(id) DEFERRABLE;
 
 
 --
@@ -19666,7 +19666,7 @@ ALTER TABLE ONLY vaccination_child_coverage_line_items
 --
 
 ALTER TABLE ONLY vaccine_lots_on_hand_adjustments
-    ADD CONSTRAINT vaccine_adjustment_reasons_fkey FOREIGN KEY (adjustmentreason) REFERENCES losses_adjustments_types(name);
+    ADD CONSTRAINT vaccine_adjustment_reasons_fkey FOREIGN KEY (adjustmentreason) REFERENCES losses_adjustments_types(name) DEFERRABLE;
 
 
 --
@@ -19674,7 +19674,7 @@ ALTER TABLE ONLY vaccine_lots_on_hand_adjustments
 --
 
 ALTER TABLE ONLY vaccine_inventory_product_configurations
-    ADD CONSTRAINT vaccine_inventory_config_product_fkey FOREIGN KEY (productid) REFERENCES products(id);
+    ADD CONSTRAINT vaccine_inventory_config_product_fkey FOREIGN KEY (productid) REFERENCES products(id) DEFERRABLE;
 
 
 --
@@ -19682,7 +19682,7 @@ ALTER TABLE ONLY vaccine_inventory_product_configurations
 --
 
 ALTER TABLE ONLY vaccine_inventory_product_configurations
-    ADD CONSTRAINT vaccine_inventory_product_configurations_fkey FOREIGN KEY (denominatorestimatecategoryid) REFERENCES demographic_estimate_categories(id);
+    ADD CONSTRAINT vaccine_inventory_product_configurations_fkey FOREIGN KEY (denominatorestimatecategoryid) REFERENCES demographic_estimate_categories(id) DEFERRABLE;
 
 
 --
@@ -19690,7 +19690,7 @@ ALTER TABLE ONLY vaccine_inventory_product_configurations
 --
 
 ALTER TABLE ONLY vaccine_ivd_tab_visibilities
-    ADD CONSTRAINT vaccine_ivd_tab_visibilities_programid_fkey FOREIGN KEY (programid) REFERENCES programs(id);
+    ADD CONSTRAINT vaccine_ivd_tab_visibilities_programid_fkey FOREIGN KEY (programid) REFERENCES programs(id) DEFERRABLE;
 
 
 --
@@ -19698,7 +19698,7 @@ ALTER TABLE ONLY vaccine_ivd_tab_visibilities
 --
 
 ALTER TABLE ONLY vaccine_order_requisition_line_items
-    ADD CONSTRAINT vaccine_order_requisition_line_items_productid_fkey FOREIGN KEY (productid) REFERENCES products(id);
+    ADD CONSTRAINT vaccine_order_requisition_line_items_productid_fkey FOREIGN KEY (productid) REFERENCES products(id) DEFERRABLE;
 
 
 --
@@ -19706,7 +19706,7 @@ ALTER TABLE ONLY vaccine_order_requisition_line_items
 --
 
 ALTER TABLE ONLY vaccine_order_requisitions
-    ADD CONSTRAINT vaccine_order_requisitions_periodid_fkey FOREIGN KEY (periodid) REFERENCES processing_periods(id);
+    ADD CONSTRAINT vaccine_order_requisitions_periodid_fkey FOREIGN KEY (periodid) REFERENCES processing_periods(id) DEFERRABLE;
 
 
 --
@@ -19714,7 +19714,7 @@ ALTER TABLE ONLY vaccine_order_requisitions
 --
 
 ALTER TABLE ONLY vaccine_order_requisitions
-    ADD CONSTRAINT vaccine_order_requisitions_programid_fkey FOREIGN KEY (programid) REFERENCES programs(id);
+    ADD CONSTRAINT vaccine_order_requisitions_programid_fkey FOREIGN KEY (programid) REFERENCES programs(id) DEFERRABLE;
 
 
 --
@@ -19722,7 +19722,7 @@ ALTER TABLE ONLY vaccine_order_requisitions
 --
 
 ALTER TABLE ONLY vaccine_product_doses
-    ADD CONSTRAINT vaccine_product_doses_denominatorestimatecategoryid_fkey FOREIGN KEY (denominatorestimatecategoryid) REFERENCES demographic_estimate_categories(id);
+    ADD CONSTRAINT vaccine_product_doses_denominatorestimatecategoryid_fkey FOREIGN KEY (denominatorestimatecategoryid) REFERENCES demographic_estimate_categories(id) DEFERRABLE;
 
 
 --
@@ -19730,7 +19730,7 @@ ALTER TABLE ONLY vaccine_product_doses
 --
 
 ALTER TABLE ONLY vaccine_product_doses
-    ADD CONSTRAINT vaccine_product_doses_doseid_fkey FOREIGN KEY (doseid) REFERENCES vaccine_doses(id);
+    ADD CONSTRAINT vaccine_product_doses_doseid_fkey FOREIGN KEY (doseid) REFERENCES vaccine_doses(id) DEFERRABLE;
 
 
 --
@@ -19738,7 +19738,7 @@ ALTER TABLE ONLY vaccine_product_doses
 --
 
 ALTER TABLE ONLY vaccine_product_doses
-    ADD CONSTRAINT vaccine_product_doses_productid_fkey FOREIGN KEY (productid) REFERENCES products(id);
+    ADD CONSTRAINT vaccine_product_doses_productid_fkey FOREIGN KEY (productid) REFERENCES products(id) DEFERRABLE;
 
 
 --
@@ -19746,7 +19746,7 @@ ALTER TABLE ONLY vaccine_product_doses
 --
 
 ALTER TABLE ONLY vaccine_product_doses
-    ADD CONSTRAINT vaccine_product_doses_programid_fkey FOREIGN KEY (programid) REFERENCES programs(id);
+    ADD CONSTRAINT vaccine_product_doses_programid_fkey FOREIGN KEY (programid) REFERENCES programs(id) DEFERRABLE;
 
 
 --
@@ -19754,7 +19754,7 @@ ALTER TABLE ONLY vaccine_product_doses
 --
 
 ALTER TABLE ONLY vaccine_program_logistics_columns
-    ADD CONSTRAINT vaccine_program_logistics_columns_mastercolumnid_fkey FOREIGN KEY (mastercolumnid) REFERENCES vaccine_logistics_master_columns(id);
+    ADD CONSTRAINT vaccine_program_logistics_columns_mastercolumnid_fkey FOREIGN KEY (mastercolumnid) REFERENCES vaccine_logistics_master_columns(id) DEFERRABLE;
 
 
 --
@@ -19762,7 +19762,7 @@ ALTER TABLE ONLY vaccine_program_logistics_columns
 --
 
 ALTER TABLE ONLY vaccine_program_logistics_columns
-    ADD CONSTRAINT vaccine_program_logistics_columns_programid_fkey FOREIGN KEY (programid) REFERENCES programs(id);
+    ADD CONSTRAINT vaccine_program_logistics_columns_programid_fkey FOREIGN KEY (programid) REFERENCES programs(id) DEFERRABLE;
 
 
 --
@@ -19770,7 +19770,7 @@ ALTER TABLE ONLY vaccine_program_logistics_columns
 --
 
 ALTER TABLE ONLY vaccine_report_adverse_effect_line_items
-    ADD CONSTRAINT vaccine_report_adverse_effect_line_items_productid_fkey FOREIGN KEY (productid) REFERENCES products(id);
+    ADD CONSTRAINT vaccine_report_adverse_effect_line_items_productid_fkey FOREIGN KEY (productid) REFERENCES products(id) DEFERRABLE;
 
 
 --
@@ -19778,7 +19778,7 @@ ALTER TABLE ONLY vaccine_report_adverse_effect_line_items
 --
 
 ALTER TABLE ONLY vaccine_report_adverse_effect_line_items
-    ADD CONSTRAINT vaccine_report_adverse_effect_line_items_reportid_fkey FOREIGN KEY (reportid) REFERENCES vaccine_reports(id);
+    ADD CONSTRAINT vaccine_report_adverse_effect_line_items_reportid_fkey FOREIGN KEY (reportid) REFERENCES vaccine_reports(id) DEFERRABLE;
 
 
 --
@@ -19786,7 +19786,7 @@ ALTER TABLE ONLY vaccine_report_adverse_effect_line_items
 --
 
 ALTER TABLE ONLY vaccine_report_campaign_line_items
-    ADD CONSTRAINT vaccine_report_campaign_line_items_reportid_fkey FOREIGN KEY (reportid) REFERENCES vaccine_reports(id);
+    ADD CONSTRAINT vaccine_report_campaign_line_items_reportid_fkey FOREIGN KEY (reportid) REFERENCES vaccine_reports(id) DEFERRABLE;
 
 
 --
@@ -19794,7 +19794,7 @@ ALTER TABLE ONLY vaccine_report_campaign_line_items
 --
 
 ALTER TABLE ONLY vaccine_report_cold_chain_line_items
-    ADD CONSTRAINT vaccine_report_cold_chain_line_items_equipmentinventoryid_fkey FOREIGN KEY (equipmentinventoryid) REFERENCES equipment_inventories(id);
+    ADD CONSTRAINT vaccine_report_cold_chain_line_items_equipmentinventoryid_fkey FOREIGN KEY (equipmentinventoryid) REFERENCES equipment_inventories(id) DEFERRABLE;
 
 
 --
@@ -19802,7 +19802,7 @@ ALTER TABLE ONLY vaccine_report_cold_chain_line_items
 --
 
 ALTER TABLE ONLY vaccine_report_cold_chain_line_items
-    ADD CONSTRAINT vaccine_report_cold_chain_line_items_reportid_fkey FOREIGN KEY (reportid) REFERENCES vaccine_reports(id);
+    ADD CONSTRAINT vaccine_report_cold_chain_line_items_reportid_fkey FOREIGN KEY (reportid) REFERENCES vaccine_reports(id) DEFERRABLE;
 
 
 --
@@ -19810,7 +19810,7 @@ ALTER TABLE ONLY vaccine_report_cold_chain_line_items
 --
 
 ALTER TABLE ONLY vaccine_report_coverage_line_items
-    ADD CONSTRAINT vaccine_report_coverage_line_items_doseid_fkey FOREIGN KEY (doseid) REFERENCES vaccine_doses(id);
+    ADD CONSTRAINT vaccine_report_coverage_line_items_doseid_fkey FOREIGN KEY (doseid) REFERENCES vaccine_doses(id) DEFERRABLE;
 
 
 --
@@ -19818,7 +19818,7 @@ ALTER TABLE ONLY vaccine_report_coverage_line_items
 --
 
 ALTER TABLE ONLY vaccine_report_coverage_line_items
-    ADD CONSTRAINT vaccine_report_coverage_line_items_productid_fkey FOREIGN KEY (productid) REFERENCES products(id);
+    ADD CONSTRAINT vaccine_report_coverage_line_items_productid_fkey FOREIGN KEY (productid) REFERENCES products(id) DEFERRABLE;
 
 
 --
@@ -19826,7 +19826,7 @@ ALTER TABLE ONLY vaccine_report_coverage_line_items
 --
 
 ALTER TABLE ONLY vaccine_report_coverage_line_items
-    ADD CONSTRAINT vaccine_report_coverage_line_items_reportid_fkey FOREIGN KEY (reportid) REFERENCES vaccine_reports(id);
+    ADD CONSTRAINT vaccine_report_coverage_line_items_reportid_fkey FOREIGN KEY (reportid) REFERENCES vaccine_reports(id) DEFERRABLE;
 
 
 --
@@ -19834,7 +19834,7 @@ ALTER TABLE ONLY vaccine_report_coverage_line_items
 --
 
 ALTER TABLE ONLY vaccine_report_disease_line_items
-    ADD CONSTRAINT vaccine_report_disease_line_items_diseaseid_fkey FOREIGN KEY (diseaseid) REFERENCES vaccine_diseases(id);
+    ADD CONSTRAINT vaccine_report_disease_line_items_diseaseid_fkey FOREIGN KEY (diseaseid) REFERENCES vaccine_diseases(id) DEFERRABLE;
 
 
 --
@@ -19842,7 +19842,7 @@ ALTER TABLE ONLY vaccine_report_disease_line_items
 --
 
 ALTER TABLE ONLY vaccine_report_disease_line_items
-    ADD CONSTRAINT vaccine_report_disease_line_items_reportid_fkey FOREIGN KEY (reportid) REFERENCES vaccine_reports(id);
+    ADD CONSTRAINT vaccine_report_disease_line_items_reportid_fkey FOREIGN KEY (reportid) REFERENCES vaccine_reports(id) DEFERRABLE;
 
 
 --
@@ -19850,7 +19850,7 @@ ALTER TABLE ONLY vaccine_report_disease_line_items
 --
 
 ALTER TABLE ONLY vaccine_report_logistics_line_items
-    ADD CONSTRAINT vaccine_report_logistics_line_items_discardingreasonid_fkey FOREIGN KEY (discardingreasonid) REFERENCES vaccine_discarding_reasons(id);
+    ADD CONSTRAINT vaccine_report_logistics_line_items_discardingreasonid_fkey FOREIGN KEY (discardingreasonid) REFERENCES vaccine_discarding_reasons(id) DEFERRABLE;
 
 
 --
@@ -19858,7 +19858,7 @@ ALTER TABLE ONLY vaccine_report_logistics_line_items
 --
 
 ALTER TABLE ONLY vaccine_report_logistics_line_items
-    ADD CONSTRAINT vaccine_report_logistics_line_items_productid_fkey FOREIGN KEY (productid) REFERENCES products(id);
+    ADD CONSTRAINT vaccine_report_logistics_line_items_productid_fkey FOREIGN KEY (productid) REFERENCES products(id) DEFERRABLE;
 
 
 --
@@ -19866,7 +19866,7 @@ ALTER TABLE ONLY vaccine_report_logistics_line_items
 --
 
 ALTER TABLE ONLY vaccine_report_logistics_line_items
-    ADD CONSTRAINT vaccine_report_logistics_line_items_reportid_fkey FOREIGN KEY (reportid) REFERENCES vaccine_reports(id);
+    ADD CONSTRAINT vaccine_report_logistics_line_items_reportid_fkey FOREIGN KEY (reportid) REFERENCES vaccine_reports(id) DEFERRABLE;
 
 
 --
@@ -19874,7 +19874,7 @@ ALTER TABLE ONLY vaccine_report_logistics_line_items
 --
 
 ALTER TABLE ONLY vaccine_report_status_changes
-    ADD CONSTRAINT vaccine_report_status_changes_reportid_fkey FOREIGN KEY (reportid) REFERENCES vaccine_reports(id);
+    ADD CONSTRAINT vaccine_report_status_changes_reportid_fkey FOREIGN KEY (reportid) REFERENCES vaccine_reports(id) DEFERRABLE;
 
 
 --
@@ -19882,7 +19882,7 @@ ALTER TABLE ONLY vaccine_report_status_changes
 --
 
 ALTER TABLE ONLY vaccine_report_vitamin_supplementation_line_items
-    ADD CONSTRAINT vaccine_report_vitamin_supplementation_l_vitaminagegroupid_fkey FOREIGN KEY (vitaminagegroupid) REFERENCES vaccine_vitamin_supplementation_age_groups(id);
+    ADD CONSTRAINT vaccine_report_vitamin_supplementation_l_vitaminagegroupid_fkey FOREIGN KEY (vitaminagegroupid) REFERENCES vaccine_vitamin_supplementation_age_groups(id) DEFERRABLE;
 
 
 --
@@ -19890,7 +19890,7 @@ ALTER TABLE ONLY vaccine_report_vitamin_supplementation_line_items
 --
 
 ALTER TABLE ONLY vaccine_report_vitamin_supplementation_line_items
-    ADD CONSTRAINT vaccine_report_vitamin_supplementation_li_vaccinevitaminid_fkey FOREIGN KEY (vaccinevitaminid) REFERENCES vaccine_vitamins(id);
+    ADD CONSTRAINT vaccine_report_vitamin_supplementation_li_vaccinevitaminid_fkey FOREIGN KEY (vaccinevitaminid) REFERENCES vaccine_vitamins(id) DEFERRABLE;
 
 
 --
@@ -19898,7 +19898,7 @@ ALTER TABLE ONLY vaccine_report_vitamin_supplementation_line_items
 --
 
 ALTER TABLE ONLY vaccine_report_vitamin_supplementation_line_items
-    ADD CONSTRAINT vaccine_report_vitamin_supplementation_line_items_reportid_fkey FOREIGN KEY (reportid) REFERENCES vaccine_reports(id);
+    ADD CONSTRAINT vaccine_report_vitamin_supplementation_line_items_reportid_fkey FOREIGN KEY (reportid) REFERENCES vaccine_reports(id) DEFERRABLE;
 
 
 --
@@ -19906,7 +19906,7 @@ ALTER TABLE ONLY vaccine_report_vitamin_supplementation_line_items
 --
 
 ALTER TABLE ONLY vaccine_reports
-    ADD CONSTRAINT vaccine_reports_facilityid_fkey FOREIGN KEY (facilityid) REFERENCES facilities(id);
+    ADD CONSTRAINT vaccine_reports_facilityid_fkey FOREIGN KEY (facilityid) REFERENCES facilities(id) DEFERRABLE;
 
 
 --
@@ -19914,7 +19914,7 @@ ALTER TABLE ONLY vaccine_reports
 --
 
 ALTER TABLE ONLY vaccine_reports
-    ADD CONSTRAINT vaccine_reports_periodid_fkey FOREIGN KEY (periodid) REFERENCES processing_periods(id);
+    ADD CONSTRAINT vaccine_reports_periodid_fkey FOREIGN KEY (periodid) REFERENCES processing_periods(id) DEFERRABLE;
 
 
 --
@@ -19922,7 +19922,7 @@ ALTER TABLE ONLY vaccine_reports
 --
 
 ALTER TABLE ONLY vaccine_reports
-    ADD CONSTRAINT vaccine_reports_programid_fkey FOREIGN KEY (programid) REFERENCES programs(id);
+    ADD CONSTRAINT vaccine_reports_programid_fkey FOREIGN KEY (programid) REFERENCES programs(id) DEFERRABLE;
 
 
 --
@@ -19930,7 +19930,7 @@ ALTER TABLE ONLY vaccine_reports
 --
 
 ALTER TABLE ONLY vaccine_lots_on_hand_vvm
-    ADD CONSTRAINT vaccine_vvm_lots_on_hand_fkey FOREIGN KEY (lotonhandid) REFERENCES lots_on_hand(id);
+    ADD CONSTRAINT vaccine_vvm_lots_on_hand_fkey FOREIGN KEY (lotonhandid) REFERENCES lots_on_hand(id) DEFERRABLE;
 
 
 --

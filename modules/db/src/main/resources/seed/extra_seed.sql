@@ -1,3 +1,6 @@
+-- This SQL script seeds the database with "extra" seed data; data that is seeded into the database in order to get the 
+-- build to pass.
+
 --
 -- PostgreSQL database dump
 --
