@@ -13,23 +13,23 @@ package org.openlmis.core.serializer;
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.JsonDeserializer;
-import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormatter;
 import org.joda.time.format.ISODateTimeFormat;
 
 import java.io.IOException;
+import java.util.Date;
 
 import static org.apache.commons.lang3.StringUtils.isBlank;
 
-public class DateTimeDeserializer extends JsonDeserializer<DateTime> {
-    private static final DateTimeFormatter formatter = ISODateTimeFormat.basicDateTimeNoMillis();
+public class DateTimeDeserializer extends JsonDeserializer<Date> {
+    private static final DateTimeFormatter formatter = ISODateTimeFormat.basicDateTime();
 
     @Override
-    public DateTime deserialize(JsonParser jsonparser,
-                                DeserializationContext deserializationcontext) throws IOException {
+    public Date deserialize(JsonParser jsonparser,
+                            DeserializationContext deserializationcontext) throws IOException {
 
         String dtToParse = jsonparser.getText();
         if (isBlank(dtToParse)) return null;
-        return formatter.parseLocalDateTime(jsonparser.getText()).toDateTime();
+        return formatter.parseLocalDateTime(dtToParse).toDate();
     }
 }
