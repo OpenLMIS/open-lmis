@@ -78,6 +78,7 @@ public class RestStockCardServiceTest {
     @Before
     public void setUp() throws Exception {
         setupStockData();
+        when(facilityRepository.getById(facilityId)).thenReturn(defaultFacility);
     }
 
     @Test
@@ -94,7 +95,6 @@ public class RestStockCardServiceTest {
     public void shouldThrowDataExceptionIfInvalidAdjustment() throws Exception {
         expectedException.expect(DataException.class);
         expectedException.expectMessage("error.stockmanagement.invalidadjustment");
-        when(facilityRepository.getById(facilityId)).thenReturn(defaultFacility);
         when(productService.getByCode(productCode)).thenReturn(defaultProduct);
         StockAdjustmentReason stockAdjustmentReason = new StockAdjustmentReason();
         stockAdjustmentReason.setAdditive(true);
@@ -111,7 +111,7 @@ public class RestStockCardServiceTest {
     public void shouldThrowDataExceptionIfProductIsInvalid() throws Exception {
         expectedException.expect(DataException.class);
         expectedException.expectMessage("error.product.unknown");
-        when(facilityRepository.getById(facilityId)).thenReturn(defaultFacility);
+
         when(productService.getByCode(productCode)).thenReturn(null);
 
         restStockCardService.adjustStock(facilityId, stockEventList, userId);
@@ -121,7 +121,7 @@ public class RestStockCardServiceTest {
     public void shouldThrowDataExceptionIfAdjustmentReasonIsInvalid() throws Exception {
         expectedException.expect(DataException.class);
         expectedException.expectMessage("error.stockadjustmentreason.unknown");
-        when(facilityRepository.getById(facilityId)).thenReturn(defaultFacility);
+
         when(productService.getByCode(productCode)).thenReturn(defaultProduct);
         String reasonName = "invalid reason";
         stockEvent2.setReasonName(reasonName);
@@ -136,7 +136,7 @@ public class RestStockCardServiceTest {
         Product product2 = make(a(ProductBuilder.defaultProduct, with(ProductBuilder.code, productCode2)));
         stockEvent2.setProductCode(productCode2);
 
-        when(facilityRepository.getById(facilityId)).thenReturn(defaultFacility);
+
         when(productService.getByCode(productCode)).thenReturn(defaultProduct);
         when(productService.getByCode(productCode2)).thenReturn(product2);
         StockAdjustmentReason stockAdjustmentReason = new StockAdjustmentReason();
@@ -164,7 +164,7 @@ public class RestStockCardServiceTest {
         stockAdjustmentReason2.setAdditive(true);
         stockEvent2.setReasonName(stockAdjustmentReasonName2);
 
-        when(facilityRepository.getById(facilityId)).thenReturn(defaultFacility);
+
         when(productService.getByCode(productCode)).thenReturn(defaultProduct);
         when(stockAdjustmentReasonRepository.getAdjustmentReasonByName(stockAdjustmentReasonName)).thenReturn(stockAdjustmentReason);
         when(stockAdjustmentReasonRepository.getAdjustmentReasonByName(stockAdjustmentReasonName2)).thenReturn(stockAdjustmentReason2);
@@ -194,7 +194,7 @@ public class RestStockCardServiceTest {
         stockEvent1.setQuantity(quantity1);
         stockEvent2.setQuantity(quantity2);
 
-        when(facilityRepository.getById(facilityId)).thenReturn(defaultFacility);
+
         when(productService.getByCode(productCode)).thenReturn(defaultProduct);
         when(stockAdjustmentReasonRepository.getAdjustmentReasonByName(stockAdjustmentReasonName)).thenReturn(stockAdjustmentReason);
 
@@ -221,7 +221,7 @@ public class RestStockCardServiceTest {
         stockEvent1.setQuantity(quantity1);
         stockEvent2.setQuantity(quantity2);
 
-        when(facilityRepository.getById(facilityId)).thenReturn(defaultFacility);
+
         when(productService.getByCode(productCode)).thenReturn(defaultProduct);
         when(stockAdjustmentReasonRepository.getAdjustmentReasonByName(stockAdjustmentReasonName)).thenReturn(stockAdjustmentReason);
 
@@ -236,7 +236,7 @@ public class RestStockCardServiceTest {
 
     @Test
     public void shouldAddStockCardEntriesWithUserId() throws Exception {
-        when(facilityRepository.getById(facilityId)).thenReturn(defaultFacility);
+
         when(productService.getByCode(productCode)).thenReturn(defaultProduct);
         StockAdjustmentReason stockAdjustmentReason = new StockAdjustmentReason();
         stockAdjustmentReason.setAdditive(true);
@@ -258,7 +258,7 @@ public class RestStockCardServiceTest {
         expirationDates.put("expirationDates", "10/10/2016, 11/11/2016");
         stockEvent1.setCustomProps(expirationDates);
 
-        when(facilityRepository.getById(facilityId)).thenReturn(defaultFacility);
+
         when(productService.getByCode(productCode)).thenReturn(defaultProduct);
         StockAdjustmentReason stockAdjustmentReason = new StockAdjustmentReason();
         stockAdjustmentReason.setAdditive(true);
@@ -280,7 +280,7 @@ public class RestStockCardServiceTest {
         Date occurred2 = new Date();
         stockEvent2.setOccurred(occurred2);
 
-        when(facilityRepository.getById(facilityId)).thenReturn(defaultFacility);
+
         when(productService.getByCode(productCode)).thenReturn(defaultProduct);
         StockAdjustmentReason stockAdjustmentReason = new StockAdjustmentReason();
         stockAdjustmentReason.setAdditive(true);
@@ -302,7 +302,7 @@ public class RestStockCardServiceTest {
         String referenceNumber2 = "456";
         stockEvent2.setReferenceNumber(referenceNumber2);
 
-        when(facilityRepository.getById(facilityId)).thenReturn(defaultFacility);
+
         when(productService.getByCode(productCode)).thenReturn(defaultProduct);
         StockAdjustmentReason stockAdjustmentReason = new StockAdjustmentReason();
         stockAdjustmentReason.setAdditive(true);
@@ -319,7 +319,7 @@ public class RestStockCardServiceTest {
 
     @Test
     public void shouldNotCreateNewStockCardReferenceWhenTheCardAlreadyExists() {
-        when(facilityRepository.getById(facilityId)).thenReturn(defaultFacility);
+
         when(productService.getByCode(productCode)).thenReturn(defaultProduct);
         StockAdjustmentReason stockAdjustmentReason = new StockAdjustmentReason();
         stockAdjustmentReason.setAdditive(true);
