@@ -1,3 +1,5 @@
+-- This SQL script removes all country-specific data in order to make the install looks as generic as possible.
+
 DELETE FROM report_rights WHERE rightname = 'print_vaccine_Order_Requisition';
 DELETE FROM report_rights WHERE rightname = 'Print Order Requisition';
 DELETE FROM report_rights WHERE rightname = 'Print Issue report';
