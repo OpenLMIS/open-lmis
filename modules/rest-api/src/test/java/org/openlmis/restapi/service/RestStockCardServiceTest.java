@@ -323,7 +323,7 @@ public class RestStockCardServiceTest {
     }
 
     @Test
-    public void shouldNotSaveWhenHashExists() throws Exception {
+    public void shouldNotSaveStockCardEntriesWhenHashExists() throws Exception {
         //given
         when(syncUpHashRepository.hashExists(anyString())).thenReturn(true);
         mockReasonWithName(reasonName);
@@ -334,6 +334,20 @@ public class RestStockCardServiceTest {
         //then
         verify(syncUpHashRepository, never()).save(anyString());
         assertThat(savedEntries.size(), is(0));
+    }
+
+    @Test
+    public void shouldSaveStockCardEntriesWhenHashDoesNotExist() throws Exception {
+        //given
+        when(syncUpHashRepository.hashExists(anyString())).thenReturn(false);
+        mockReasonWithName(reasonName);
+
+        //when
+        List<StockCardEntry> savedEntries = restStockCardService.adjustStock(facilityId, stockEventList, userId);
+
+        //then
+        verify(syncUpHashRepository, times(2)).save(anyString());
+        assertThat(savedEntries.size(), is(2));
     }
 
     private void mockReasonWithName(String reasonName) {

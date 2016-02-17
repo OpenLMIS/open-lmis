@@ -76,6 +76,8 @@ public class RestStockCardService {
             if (syncUpHashRepository.hashExists(stockEvent.getSyncUpHash())) {
                 continue;
             }
+
+            syncUpHashRepository.save(stockEvent.getSyncUpHash());
             String errorInStockEvent = validateStockEvent(stockEvent);
             if (errorInStockEvent != null) {
                 throw new DataException(errorInStockEvent);
