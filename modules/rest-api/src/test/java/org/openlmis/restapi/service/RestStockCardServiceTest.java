@@ -42,8 +42,8 @@ import static java.util.Arrays.asList;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.*;
 import static org.mockito.Matchers.anyList;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Matchers.anyString;
+import static org.mockito.Mockito.*;
 
 @Category(UnitTests.class)
 @RunWith(PowerMockRunner.class)
@@ -323,7 +323,17 @@ public class RestStockCardServiceTest {
     }
 
     @Test
-    public void shouldSaveStockCardEntryHash() throws Exception {
+    public void shouldNotSaveWhenHashExists() throws Exception {
+        //given
+        when(syncUpHashRepository.hashExists(anyString())).thenReturn(true);
+        mockReasonWithName(reasonName);
+
+        //when
+        List<StockCardEntry> savedEntries = restStockCardService.adjustStock(facilityId, stockEventList, userId);
+
+        //then
+        verify(syncUpHashRepository, never()).save(anyString());
+        assertThat(savedEntries.size(), is(0));
     }
 
     private void mockReasonWithName(String reasonName) {

@@ -5,6 +5,7 @@ import org.openlmis.core.domain.StockAdjustmentReason;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.core.repository.FacilityRepository;
 import org.openlmis.core.repository.StockAdjustmentReasonRepository;
+import org.openlmis.core.repository.SyncUpHashRepository;
 import org.openlmis.core.service.ProductService;
 import org.openlmis.restapi.domain.StockCardDTO;
 import org.openlmis.restapi.domain.StockCardMovementDTO;
@@ -25,6 +26,9 @@ public class RestStockCardService {
 
     @Autowired
     private FacilityRepository facilityRepository;
+
+    @Autowired
+    private SyncUpHashRepository syncUpHashRepository;
 
     @Autowired
     private ProductService productService;
@@ -68,8 +72,10 @@ public class RestStockCardService {
     private List<StockCardEntry> createStockCardEntries(List<StockEvent> stockEvents, Long facilityId, Long userId) {
         Map<String, StockCard> stockCardMap = new HashMap<>();
         List<StockCardEntry> entries = new ArrayList<>();
-
         for (StockEvent stockEvent : stockEvents) {
+            if (syncUpHashRepository.hashExists(stockEvent.getSyncUpHash())) {
+                continue;
+            }
             String errorInStockEvent = validateStockEvent(stockEvent);
             if (errorInStockEvent != null) {
                 throw new DataException(errorInStockEvent);
