@@ -28,17 +28,17 @@
             </a>
         </li>
 
-        <li ng-show="hasPermission('MANAGE_EQUIPMENT_SETTINGS')" ng-class="manageServiceTypeSelected">
+        <li ng-show="hasPermission('MANAGE_EQUIPMENT_SERVICING')" ng-class="manageServiceTypeSelected">
           <a href="/public/pages/admin/equipment/service-type/index.html">
             <span id="equipment-service-type" openlmis-message="label.equipment.service.types" ></span>
           </a>
         </li>
-        <li ng-show="hasPermission('MANAGE_EQUIPMENT_SETTINGS')" ng-class="manageVendorSelected">
+        <li ng-show="hasPermission('MANAGE_EQUIPMENT_SERVICING')" ng-class="manageVendorSelected">
           <a href="/public/pages/admin/equipment/vendor/index.html">
             <span id="service-vendor" openlmis-message="label.equipment.service.vendors" ></span>
           </a>
         </li>
-        <li ng-show="hasPermission('MANAGE_EQUIPMENT_SETTINGS')" ng-class="manageServiceContactsSelected">
+        <li ng-show="hasPermission('MANAGE_EQUIPMENT_SERVICING')" ng-class="manageServiceContactsSelected">
           <a href="/public/pages/admin/equipment/service-contract/index.html">
             <span id="service-contract" openlmis-message="label.equipment.service.contracts" ></span>
           </a>

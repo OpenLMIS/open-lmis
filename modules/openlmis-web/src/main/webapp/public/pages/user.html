@@ -9,8 +9,8 @@
   -->
 
 <div class="user-info">
-    <span openlmis-message="message.loggedInAs"></span>&nbsp;<strong>{{user}}</strong> <a href="/public/pages/admin/user/preference/index.html#/edit-user-preference/{{userId}}">
-    <span id="user-tab" openlmis-message="menu.header.edit.preferences"></span></a>  | <a href="/public/pages/help/helpContent/index.html#/viewDashboard"><span openlmis-message="menu.header.help"></span></a> | <a id='logout'
-           ng-click="logout()" href=""
-           openlmis-message="link.logout"></a>
+    <span openlmis-message="message.loggedInAs"></span>&nbsp;<strong>{{user}}</strong>
+    <a href="/public/pages/admin/user/preference/index.html#/edit-user-preference/{{userId}}"><span id="user-tab" openlmis-message="menu.header.edit.preferences"></span></a>
+    <span ng-show="hasPermission('VIEW_HELP')">| <a href="/public/pages/help/helpContent/index.html#/viewDashboard"><span openlmis-message="menu.header.help"></span></a></span>
+    | <a id='logout' ng-click="logout()" href="" openlmis-message="link.logout"></a>
 </div>
