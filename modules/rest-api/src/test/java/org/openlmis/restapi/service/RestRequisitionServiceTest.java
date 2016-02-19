@@ -24,6 +24,7 @@ import org.openlmis.core.builder.FacilityBuilder;
 import org.openlmis.core.domain.*;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.core.service.*;
+import org.openlmis.core.utils.DateUtil;
 import org.openlmis.db.categories.UnitTests;
 import org.openlmis.order.domain.Order;
 import org.openlmis.order.service.OrderService;
@@ -169,8 +170,8 @@ public class RestRequisitionServiceTest {
 
     setUpRequisitionReportBeforeSubmit();
     Date actualPeriodDate = new Date();
-    report.setActualPeriodStartDate(actualPeriodDate);
-    report.setActualPeriodEndDate(actualPeriodDate);
+    report.setActualPeriodStartDate(DateUtil.formatDate(actualPeriodDate));
+    report.setActualPeriodEndDate(DateUtil.formatDate(actualPeriodDate));
 
     service.submitReport(report, 1L);
 
@@ -184,8 +185,8 @@ public class RestRequisitionServiceTest {
 
     setUpRequisitionReportBeforeSubmit();
     Date actualPeriodDate = new Date();
-    report.setActualPeriodStartDate(actualPeriodDate);
-    report.setActualPeriodEndDate(actualPeriodDate);
+    report.setActualPeriodStartDate(DateUtil.formatDate(actualPeriodDate));
+    report.setActualPeriodEndDate(DateUtil.formatDate(actualPeriodDate));
 
     service.submitReport(report, 1L);
 

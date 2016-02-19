@@ -62,9 +62,9 @@ public class Report {
 
   private Date periodStartDate;
 
-  private Date actualPeriodStartDate;
+  private String actualPeriodStartDate;
 
-  private Date actualPeriodEndDate;
+  private String actualPeriodEndDate;
 
   private List<Signature> rnrSignatures;
 
@@ -72,6 +72,14 @@ public class Report {
     if (isEmpty(agentCode) || isEmpty(programCode)) {
       throw new DataException("error.mandatory.fields.missing");
     }
+  }
+
+  public Date getActualPeriodStartDate() {
+    return DateUtil.parseDate(actualPeriodStartDate);
+  }
+
+  public Date getActualPeriodEndDate() {
+    return DateUtil.parseDate(actualPeriodEndDate);
   }
 
   public Date getClientSubmittedTime() {
@@ -133,6 +141,14 @@ public class Report {
     report.setClientSubmittedNotes(rnr.getClientSubmittedNotes());
     report.setPeriodStartDate(rnr.getPeriod().getStartDate());
     report.setRnrSignatures(rnr.getRnrSignatures());
+
+    if (rnr.getActualPeriodStartDate() != null) {
+      report.setActualPeriodStartDate(DateUtil.formatDate(rnr.getActualPeriodStartDate()));
+    }
+
+    if (rnr.getActualPeriodEndDate() != null) {
+      report.setActualPeriodEndDate(DateUtil.formatDate(rnr.getActualPeriodEndDate()));
+    }
 
     return report;
   }
