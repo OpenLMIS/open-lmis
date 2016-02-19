@@ -62,6 +62,7 @@ DELETE FROM rights WHERE name = 'VIEW_FACILITY_INTEGRATION';
 DELETE FROM rights WHERE name = 'VIEW_PRODUCT_RATIONING';
 DELETE FROM rights WHERE name = 'MANAGE_EQUIPMENT_SERVICING';
 DELETE FROM rights WHERE name = 'VIEW_HELP';
+DELETE FROM rights WHERE name = 'MANAGE_IVD_TEMPLATES';
 
 UPDATE configuration_settings
 SET value = '/public/pages/index.html'

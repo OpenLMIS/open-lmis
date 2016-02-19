@@ -12,7 +12,7 @@
   <h2 openlmis-message="requisition.template.header"></h2>
 
   <div class="info-box">
-    <div class="pull-right">
+    <div class="pull-right" ng-show="hasPermission('MANAGE_IVD_TEMPLATES')">
       <div class="form-cell">
         <div class="checkbox">
           <label for="enableIvd">
