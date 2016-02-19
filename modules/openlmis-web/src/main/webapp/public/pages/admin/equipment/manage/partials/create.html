@@ -93,7 +93,7 @@
             <span class="label-required">*</span>
           </label>
           <div class="form-field">
-            <select ng-model="equipment.designation" ng-options="designation as designation.name for designation in designations" id="designation" name="designation" ng-required="equipment.equipmentType.coldChain">
+            <select ng-model="equipment.designation" ng-options="designation as designation.name for designation in designations track by designation.id" id="designation" name="designation" ng-required="equipment.equipmentType.coldChain">
               <option openlmis-message="Select"  value=""></option>
             </select>
             <span class="field-error" ng-show="equipmentForm.designation.$error.required && showError" openlmis-message="missing.value"></span>
