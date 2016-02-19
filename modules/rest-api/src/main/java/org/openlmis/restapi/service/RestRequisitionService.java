@@ -20,10 +20,7 @@ import org.apache.log4j.Logger;
 import org.apache.lucene.util.CollectionUtil;
 import org.openlmis.core.domain.*;
 import org.openlmis.core.exception.DataException;
-import org.openlmis.core.service.FacilityApprovedProductService;
-import org.openlmis.core.service.FacilityService;
-import org.openlmis.core.service.ProcessingPeriodService;
-import org.openlmis.core.service.ProgramService;
+import org.openlmis.core.service.*;
 import org.openlmis.order.service.OrderService;
 import org.openlmis.restapi.domain.ReplenishmentDTO;
 import org.openlmis.restapi.domain.Report;
@@ -69,6 +66,8 @@ public class RestRequisitionService {
   private RestRequisitionCalculator restRequisitionCalculator;
   @Autowired
   private ProcessingPeriodService processingPeriodService;
+  @Autowired
+  private StaticReferenceDataService staticReferenceDataService;
   @Autowired
   private FacilityApprovedProductService facilityApprovedProductService;
   private List<FacilityTypeApprovedProduct> nonFullSupplyFacilityApprovedProductByFacilityAndProgram;
@@ -118,9 +117,11 @@ public class RestRequisitionService {
 
     requisitionService.updateClientFields(rnr);
 
-    rnr.setActualPeriodStartDate(report.getActualPeriodStartDate());
-    rnr.setActualPeriodEndDate(report.getActualPeriodEndDate());
-    requisitionService.saveClientPeriod(rnr);
+    if(staticReferenceDataService.getBoolean("toggle.sync.period.date.for.rnr")){
+        rnr.setActualPeriodStartDate(report.getActualPeriodStartDate());
+        rnr.setActualPeriodEndDate(report.getActualPeriodEndDate());
+        requisitionService.saveClientPeriod(rnr);
+    }
   }
 
   @Transactional

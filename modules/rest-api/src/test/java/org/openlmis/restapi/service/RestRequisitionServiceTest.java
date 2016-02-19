@@ -80,6 +80,8 @@ public class RestRequisitionServiceTest {
   UserService userService;
   @Mock
   FacilityApprovedProductService facilityApprovedProductService;
+  @Mock
+  StaticReferenceDataService staticReferenceDataService;
   @InjectMocks
   RestRequisitionService service;
   Rnr requisition;
@@ -163,6 +165,8 @@ public class RestRequisitionServiceTest {
   @Test
   public void shouldSaveClientPeriodWhenPeriodDateIsSet() throws
           Exception {
+    when(staticReferenceDataService.getBoolean("toggle.sync.period.date.for.rnr")).thenReturn(true);
+
     setUpRequisitionReportBeforeSubmit();
     Date actualPeriodDate = new Date();
     report.setActualPeriodStartDate(actualPeriodDate);
@@ -171,6 +175,21 @@ public class RestRequisitionServiceTest {
     service.submitReport(report, 1L);
 
     verify(requisitionService, times(1)).saveClientPeriod(requisition);
+  }
+
+  @Test
+  public void shouldNotSaveClientPeriodWhenToggleOff() throws
+          Exception {
+    when(staticReferenceDataService.getBoolean("toggle.sync.period.date.for.rnr")).thenReturn(false);
+
+    setUpRequisitionReportBeforeSubmit();
+    Date actualPeriodDate = new Date();
+    report.setActualPeriodStartDate(actualPeriodDate);
+    report.setActualPeriodEndDate(actualPeriodDate);
+
+    service.submitReport(report, 1L);
+
+    verify(requisitionService, times(0)).saveClientPeriod(requisition);
   }
 
   private void setUpRequisitionReportBeforeSubmit() throws Exception {
