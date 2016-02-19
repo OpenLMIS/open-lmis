@@ -17,6 +17,7 @@ import org.openlmis.rnr.dto.RnrDTO;
 import org.openlmis.rnr.service.RequisitionService;
 import org.springframework.stereotype.Repository;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -57,7 +58,11 @@ public interface RequisitionMapper {
       @Result(property = "patientQuantifications", javaType = List.class, column = "id",
           many = @Many(select = "org.openlmis.rnr.repository.mapper.PatientQuantificationLineItemMapper.getPatientQuantificationLineItemsByRnrId")),
       @Result(property = "rnrSignatures", column = "id", javaType = List.class,
-          many = @Many(select = "org.openlmis.rnr.repository.mapper.RequisitionMapper.getRnrSignaturesByRnrId"))
+          many = @Many(select = "org.openlmis.rnr.repository.mapper.RequisitionMapper.getRnrSignaturesByRnrId")),
+      @Result(property = "actualPeriodStartDate", column = "id", javaType = Date.class,
+          one = @One(select = "org.openlmis.rnr.repository.mapper.RequisitionMapper.getRnrPeriodStartDateByRnrId")),
+      @Result(property = "actualPeriodEndDate", column = "id", javaType = Date.class,
+          one = @One(select = "org.openlmis.rnr.repository.mapper.RequisitionMapper.getRnrPeriodEndDateByRnrId"))
   })
   Rnr getById(Long rnrId);
 
@@ -128,8 +133,11 @@ public interface RequisitionMapper {
       @Result(property = "clientSubmittedTime", column = "clientSubmittedTime"),
       @Result(property = "clientSubmittedNotes", column = "clientSubmittedNotes"),
       @Result(property = "rnrSignatures", column = "id", javaType = List.class,
-        many = @Many(select = "org.openlmis.rnr.repository.mapper.RequisitionMapper.getRnrSignaturesByRnrId")
-      )
+          many = @Many(select = "org.openlmis.rnr.repository.mapper.RequisitionMapper.getRnrSignaturesByRnrId")),
+      @Result(property = "actualPeriodStartDate", column = "id", javaType = Date.class,
+      one = @One(select = "org.openlmis.rnr.repository.mapper.RequisitionMapper.getRnrPeriodStartDateByRnrId")),
+      @Result(property = "actualPeriodEndDate", column = "id", javaType = Date.class,
+      one = @One(select = "org.openlmis.rnr.repository.mapper.RequisitionMapper.getRnrPeriodEndDateByRnrId"))
   })
   List<Rnr> getRequisitionsWithLineItemsByFacility(@Param("facility") Facility facility);
 
@@ -247,11 +255,22 @@ public interface RequisitionMapper {
       "WHERE id = #{id}"})
   void updateClientFields(Rnr rnr);
 
+  @Insert("INSERT INTO requisition_period(periodStartDate, periodEndDate, rnrId) VALUES " +
+      "(#{actualPeriodStartDate}, #{actualPeriodEndDate}, #{id})")
   void saveClientPeriod(Rnr rnr);
 
   @Insert("INSERT INTO requisition_signatures(signatureId, rnrId) VALUES " +
       "(#{signature.id}, #{rnr.id})")
   void insertRnrSignature(@Param("rnr") Rnr rnr, @Param("signature") Signature signature);
+
+  @Select("SELECT periodStartDate FROM requisition_period " +
+      "WHERE rnrId = #{rnrId} ")
+  Date getRnrPeriodStartDateByRnrId(Long rnrId);
+
+  @Select("SELECT periodEndDate FROM requisition_period " +
+      "WHERE rnrId = #{rnrId} ")
+  Date getRnrPeriodEndDateByRnrId(Long rnrId);
+
   @Select("SELECT * FROM requisition_signatures " +
       "JOIN signatures " +
       "ON signatures.id = requisition_signatures.signatureId " +

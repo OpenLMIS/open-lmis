@@ -284,6 +284,26 @@ public class RequisitionMapperIT {
   }
 
   @Test
+  public void shouldSaveClientPeriod() throws Exception {
+    Rnr requisition = insertRequisition(processingPeriod1, program, INITIATED, false, facility, supervisoryNode, modifiedDate);
+
+    DateTime dateTime = new DateTime();
+    Date actualPeriodStartDate = dateTime.withDate(2016,3,8).toDate();
+    Date actualPeriodEndDate = dateTime.withDate(2016,3,28).toDate();
+
+    requisition.setActualPeriodStartDate(actualPeriodStartDate);
+    requisition.setActualPeriodEndDate(actualPeriodEndDate);
+
+    mapper.saveClientPeriod(requisition);
+
+    Rnr updatedRequisition = mapper.getById(requisition.getId());
+
+    assertThat(updatedRequisition.getId(), is(requisition.getId()));
+    assertEquals(actualPeriodStartDate, updatedRequisition.getActualPeriodStartDate());
+    assertEquals(actualPeriodEndDate, updatedRequisition.getActualPeriodEndDate());
+  }
+
+  @Test
   public void shouldReturnRequisitionWithLineItemsByFacilityProgramAndPeriod() {
     Product fullSupplyProduct = insertProduct(true, "P1");
     Product nonFullSupplyProduct = insertProduct(false, "P2");
@@ -893,6 +913,26 @@ public class RequisitionMapperIT {
 
     assertThat(rnrSignatures.size(), is(1));
     assertThat(rnrSignatures.get(0).getText(), is("Mystique"));
+  }
+
+  @Test
+  public void shouldReturnPeriodDateInRequisitions() {
+    Rnr requisition = insertRequisition(processingPeriod1, program, INITIATED, false, facility, supervisoryNode, modifiedDate);
+
+    DateTime dateTime = new DateTime();
+    Date actualPeriodStartDate = dateTime.withDate(2016,3,8).toDate();
+    Date actualPeriodEndDate = dateTime.withDate(2016,3,28).toDate();
+
+    requisition.setActualPeriodStartDate(actualPeriodStartDate);
+    requisition.setActualPeriodEndDate(actualPeriodEndDate);
+
+    mapper.saveClientPeriod(requisition);
+
+    List<Rnr> rnrs = mapper.getRequisitionsWithLineItemsByFacility(facility);
+
+    assertThat(rnrs.size(), is(1));
+    assertThat(rnrs.get(0).getActualPeriodStartDate(), is(actualPeriodStartDate));
+    assertThat(rnrs.get(0).getActualPeriodEndDate(), is(actualPeriodEndDate));
   }
 
   private void insertRoleForApprovedRequisitions(Long facilityId, Long userId) throws SQLException {

@@ -117,6 +117,9 @@ public class RestRequisitionService {
     rnr.setClientSubmittedNotes(clientSubmittedNotes);
 
     requisitionService.updateClientFields(rnr);
+
+    rnr.setActualPeriodStartDate(report.getActualPeriodStartDate());
+    rnr.setActualPeriodEndDate(report.getActualPeriodEndDate());
     requisitionService.saveClientPeriod(rnr);
   }
 

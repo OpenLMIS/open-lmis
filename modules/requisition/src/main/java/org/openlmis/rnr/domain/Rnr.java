@@ -69,8 +69,9 @@ public class Rnr extends BaseModel {
   private Date clientSubmittedTime;
   private String clientSubmittedNotes;
   private List<Comment> comments = new ArrayList<>();
-
   private List<Signature> rnrSignatures;
+  private Date actualPeriodStartDate;
+  private Date actualPeriodEndDate;
 
   public Rnr(Facility facility, Program program, ProcessingPeriod period, Boolean emergency, Long modifiedBy, Long createdBy) {
     this.facility = facility;
