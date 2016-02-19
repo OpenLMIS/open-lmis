@@ -117,6 +117,7 @@ public class RestRequisitionService {
     rnr.setClientSubmittedNotes(clientSubmittedNotes);
 
     requisitionService.updateClientFields(rnr);
+    requisitionService.saveClientPeriod(rnr);
   }
 
   @Transactional

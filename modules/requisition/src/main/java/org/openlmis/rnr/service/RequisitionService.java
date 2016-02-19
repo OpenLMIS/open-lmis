@@ -682,5 +682,9 @@ public class RequisitionService {
   public void insertRnrSignatures(Rnr rnr) {
     requisitionRepository.insertRnrSignatures(rnr);
   }
+
+  public void saveClientPeriod(Rnr rnr) {
+    requisitionRepository.saveClientPeriod(rnr);
+  }
 }
 

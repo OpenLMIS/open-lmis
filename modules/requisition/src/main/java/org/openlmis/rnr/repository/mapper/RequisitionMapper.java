@@ -247,6 +247,8 @@ public interface RequisitionMapper {
       "WHERE id = #{id}"})
   void updateClientFields(Rnr rnr);
 
+  void saveClientPeriod(Rnr rnr);
+
   @Insert("INSERT INTO requisition_signatures(signatureId, rnrId) VALUES " +
       "(#{signature.id}, #{rnr.id})")
   void insertRnrSignature(@Param("rnr") Rnr rnr, @Param("signature") Signature signature);

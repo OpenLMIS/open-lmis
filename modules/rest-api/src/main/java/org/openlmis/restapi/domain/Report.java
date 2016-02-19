@@ -62,6 +62,10 @@ public class Report {
 
   private Date periodStartDate;
 
+  private Date actualPeriodStartDate;
+
+  private Date actualPeriodEndDate;
+
   private List<Signature> rnrSignatures;
 
   public void validate() {

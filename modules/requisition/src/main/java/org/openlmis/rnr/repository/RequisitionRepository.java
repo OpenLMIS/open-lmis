@@ -314,4 +314,8 @@ public class RequisitionRepository {
       requisitionMapper.insertRnrSignature(rnr, signature);
     }
   }
+
+  public void saveClientPeriod(Rnr rnr) {
+    requisitionMapper.saveClientPeriod(rnr);
+  }
 }

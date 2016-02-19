@@ -465,6 +465,13 @@ public class RequisitionRepositoryTest {
   }
 
   @Test
+  public void shouldSaveClientPeriod() throws Exception {
+    Rnr rnr = new Rnr();
+    requisitionRepository.saveClientPeriod(rnr);
+    verify(requisitionMapper).saveClientPeriod(rnr);
+  }
+
+  @Test
   public void shouldGetRequisitionsWithLineItemsByFacility() {
     Facility facility = new Facility();
     requisitionRepository.getRequisitionDetailsByFacility(facility);
