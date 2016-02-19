@@ -9,7 +9,7 @@
  */
 
 function SaveRnrTemplateController($scope, rnrTemplateForm, program, messageService, $routeParams, RnRColumnList, UpdateProgram,
-                                   $location) {
+                                   $location, AuthorizationService) {
   $scope.rnrColumns = rnrTemplateForm.rnrColumns;
   $scope.sources = rnrTemplateForm.sources;
   $scope.validateFormula = $scope.rnrColumns[0].formulaValidationRequired;
@@ -24,7 +24,8 @@ function SaveRnrTemplateController($scope, rnrTemplateForm, program, messageServ
     function (rnrColumn) {
       return rnrColumn.position;
     });
-
+  $scope.hasPermission = AuthorizationService.hasPermission;
+  
   var setRnRTemplateValidateFlag = function () {
     $.each($scope.rnrColumns, function (index, column) {
       column.formulaValidationRequired = $scope.validateFormula;
