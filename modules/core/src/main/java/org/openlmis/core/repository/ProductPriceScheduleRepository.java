@@ -45,9 +45,19 @@ public class ProductPriceScheduleRepository {
   }
 
   //TODO: QUESTION? does this belong here? should this not move to a service?
-  public ProductPriceSchedule getByProductCodeAndPriceSchedule(ProductPriceSchedule productPriceSchedule) {
+  public ProductPriceSchedule getByProductCodeAndPriceSchedule(ProductPriceSchedule productPriceSchedule)
+  {
+    if(productPriceSchedule == null || productPriceSchedule.getProduct() == null || productPriceSchedule.getPriceSchedule() == null)
+      return null;
+
     Product product = productMapper.getByCode(productPriceSchedule.getProduct().getCode());
+    if(product == null)
+      return null;
+
     PriceSchedule schedule = priceScheduleMapper.getByCode(productPriceSchedule.getPriceSchedule().getCode());
+    if(schedule == null)
+      return null;
+
     productPriceSchedule.getPriceSchedule().setId(schedule.getId());
     productPriceSchedule.getProduct().setId(product.getId());
     return mapper.getByProductCodePriceSchedule(productPriceSchedule.getProduct().getId(), schedule.getId());
