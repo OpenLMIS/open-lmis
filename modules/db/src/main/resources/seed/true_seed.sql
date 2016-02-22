@@ -738,9 +738,15 @@ SELECT pg_catalog.setval('equipment_contract_service_types_id_seq', 1, false);
 -- Data for Name: equipment_operational_status; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
-INSERT INTO equipment_operational_status (id, name, displayorder, createdby, createddate, modifiedby, modifieddate, category, isbad) VALUES (1, 'Fully Operational', 1, NULL, '2016-02-03 14:37:35.815046', NULL, '2016-02-03 14:37:35.815046', NULL, NULL);
-INSERT INTO equipment_operational_status (id, name, displayorder, createdby, createddate, modifiedby, modifieddate, category, isbad) VALUES (2, 'Partially Operational', 2, NULL, '2016-02-03 14:37:35.815046', NULL, '2016-02-03 14:37:35.815046', NULL, NULL);
-INSERT INTO equipment_operational_status (id, name, displayorder, createdby, createddate, modifiedby, modifieddate, category, isbad) VALUES (3, 'Not Operational', 3, NULL, '2016-02-03 14:37:35.815046', NULL, '2016-02-03 14:37:35.815046', NULL, NULL);
+INSERT INTO equipment_operational_status (id, name, displayorder, createdby, createddate, modifiedby, modifieddate, category, isbad) VALUES (1, 'Fully Operational', 1, NULL, '2016-02-03 14:37:35.815046', NULL, '2016-02-03 14:37:35.815046', 'LAB', false);
+INSERT INTO equipment_operational_status (id, name, displayorder, createdby, createddate, modifiedby, modifieddate, category, isbad) VALUES (2, 'Partially Operational', 2, NULL, '2016-02-03 14:37:35.815046', NULL, '2016-02-03 14:37:35.815046', 'LAB', false);
+INSERT INTO equipment_operational_status (id, name, displayorder, createdby, createddate, modifiedby, modifieddate, category, isbad) VALUES (3, 'Not Operational', 3, NULL, '2016-02-03 14:37:35.815046', NULL, '2016-02-03 14:37:35.815046', 'LAB', false);
+INSERT INTO equipment_operational_status (id, name, displayorder, createdby, createddate, modifiedby, modifieddate, category, isbad) VALUES (4, 'Functional', 4, NULL, '2016-02-03 14:37:35.815046', NULL, '2016-02-03 14:37:35.815046', 'CCE', false);
+INSERT INTO equipment_operational_status (id, name, displayorder, createdby, createddate, modifiedby, modifieddate, category, isbad) VALUES (5, 'Functional But Not Installed', 5, NULL, '2016-02-03 14:37:35.815046', NULL, '2016-02-03 14:37:35.815046', 'CCE', false);
+INSERT INTO equipment_operational_status (id, name, displayorder, createdby, createddate, modifiedby, modifieddate, category, isbad) VALUES (6, 'Not Functional', 6, NULL, '2016-02-03 14:37:35.815046', NULL, '2016-02-03 14:37:35.815046', 'CCE', true);
+INSERT INTO equipment_operational_status (id, name, displayorder, createdby, createddate, modifiedby, modifieddate, category, isbad) VALUES (7, 'Waiting For Repair', 7, NULL, '2016-02-03 14:37:35.815046', NULL, '2016-02-03 14:37:35.815046', 'CCE Not Functional', false);
+INSERT INTO equipment_operational_status (id, name, displayorder, createdby, createddate, modifiedby, modifieddate, category, isbad) VALUES (8, 'Waiting For Spare Parts', 8, NULL, '2016-02-03 14:37:35.815046', NULL, '2016-02-03 14:37:35.815046', 'CCE Not Functional', false);
+INSERT INTO equipment_operational_status (id, name, displayorder, createdby, createddate, modifiedby, modifieddate, category, isbad) VALUES (9, 'Obsolete', 9, NULL, '2016-02-03 14:37:35.815046', NULL, '2016-02-03 14:37:35.815046', 'CCE Not Functional', true);
 
 
 --

@@ -40,6 +40,6 @@ public class EquipmentOperationalStatusMapperIT {
   @Test
   public void testGetAll() throws Exception {
     List<EquipmentOperationalStatus> statusList = mapper.getAll();
-    assertEquals(3, statusList.size());
+    assertEquals(9, statusList.size());
   }
 }
