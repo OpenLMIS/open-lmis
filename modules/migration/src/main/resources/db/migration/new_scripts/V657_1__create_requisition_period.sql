@@ -1,4 +1,4 @@
-CREATE TABLE requisition_periods(
+CREATE TABLE requisition_period(
   id SERIAL PRIMARY KEY,
   rnrId INT NOT NULL REFERENCES requisitions(id) UNIQUE,
   periodStartDate TIMESTAMP,

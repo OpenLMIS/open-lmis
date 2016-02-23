@@ -1,0 +1,1 @@
+alter table "requisition_period" rename to requisition_periods;
