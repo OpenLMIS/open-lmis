@@ -255,7 +255,7 @@ public interface RequisitionMapper {
       "WHERE id = #{id}"})
   void updateClientFields(Rnr rnr);
 
-  @Insert("INSERT INTO requisition_period(periodStartDate, periodEndDate, rnrId) VALUES " +
+  @Insert("INSERT INTO requisition_periods(periodStartDate, periodEndDate, rnrId) VALUES " +
       "(#{actualPeriodStartDate}, #{actualPeriodEndDate}, #{id})")
   void saveClientPeriod(Rnr rnr);
 
@@ -263,11 +263,11 @@ public interface RequisitionMapper {
       "(#{signature.id}, #{rnr.id})")
   void insertRnrSignature(@Param("rnr") Rnr rnr, @Param("signature") Signature signature);
 
-  @Select("SELECT periodStartDate FROM requisition_period " +
+  @Select("SELECT periodStartDate FROM requisition_periods " +
       "WHERE rnrId = #{rnrId} ")
   Date getRnrPeriodStartDateByRnrId(Long rnrId);
 
-  @Select("SELECT periodEndDate FROM requisition_period " +
+  @Select("SELECT periodEndDate FROM requisition_periods " +
       "WHERE rnrId = #{rnrId} ")
   Date getRnrPeriodEndDateByRnrId(Long rnrId);
 
