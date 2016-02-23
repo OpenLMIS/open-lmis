@@ -144,10 +144,15 @@ public class Report {
 
     if (rnr.getActualPeriodStartDate() != null) {
       report.setActualPeriodStartDate(DateUtil.formatDate(rnr.getActualPeriodStartDate()));
+    } else {
+      report.setActualPeriodStartDate(DateUtil.formatDate(rnr.getPeriod().getStartDate()));
     }
 
     if (rnr.getActualPeriodEndDate() != null) {
       report.setActualPeriodEndDate(DateUtil.formatDate(rnr.getActualPeriodEndDate()));
+    } else {
+      report.setActualPeriodEndDate(DateUtil.formatDate(rnr.getPeriod().getEndDate()));
+
     }
 
     return report;
