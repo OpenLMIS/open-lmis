@@ -40,7 +40,7 @@
         <property name="locations">
             <list>
                 <value>classpath:/default.properties</value>
-                <value>classpath:/app.properties</value>
+                <value>classpath:${environmentName}/app.properties</value>
                 <value>classpath:/database-config.properties</value>
             </list>
         </property>
