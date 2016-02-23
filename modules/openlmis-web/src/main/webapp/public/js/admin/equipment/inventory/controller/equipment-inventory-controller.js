@@ -147,6 +147,13 @@ function EquipmentInventoryController($scope, UserFacilityList, EquipmentInvento
   $scope.saveModal = function () {
     $scope.modalError = '';
     if (!$scope.notFunctionalForm.$invalid) {
+      // When saving, need to make sure date fields are set from string date fields
+      // Do this by parsing date string and add timezone offset seconds
+      var now = new Date();
+      if ($scope.modalItem.dateDecommissionedString) {
+        $scope.modalItem.dateDecommissioned = Date.parse($scope.modalItem.dateDecommissionedString) + (now.getTimezoneOffset()*60000);
+      }
+
       SaveEquipmentInventory.save($scope.modalItem, function () {
         // Success
         $scope.notFunctionalModal = false;
