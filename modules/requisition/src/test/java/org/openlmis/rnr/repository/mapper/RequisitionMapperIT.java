@@ -21,6 +21,7 @@ import org.openlmis.core.builder.*;
 import org.openlmis.core.domain.*;
 import org.openlmis.core.query.QueryExecutor;
 import org.openlmis.core.repository.mapper.*;
+import org.openlmis.core.utils.DateUtil;
 import org.openlmis.db.categories.IntegrationTests;
 import org.openlmis.rnr.builder.RnrLineItemBuilder;
 import org.openlmis.rnr.domain.*;
@@ -49,6 +50,7 @@ import static org.openlmis.core.builder.FacilityBuilder.name;
 import static org.openlmis.core.builder.ProcessingPeriodBuilder.*;
 import static org.openlmis.core.builder.ProcessingScheduleBuilder.defaultProcessingSchedule;
 import static org.openlmis.core.builder.ProgramBuilder.programCode;
+import static org.openlmis.core.builder.ProgramBuilder.programId;
 import static org.openlmis.core.builder.ProgramBuilder.programName;
 import static org.openlmis.core.builder.SupplyLineBuilder.defaultSupplyLine;
 import static org.openlmis.core.builder.UserBuilder.active;
@@ -913,6 +915,14 @@ public class RequisitionMapperIT {
 
     assertThat(rnrSignatures.size(), is(1));
     assertThat(rnrSignatures.get(0).getText(), is("Mystique"));
+  }
+
+  @Test
+  public void shouldFindPeriodByPhysicalInventoryDate() {
+    ProcessingPeriod period = insertPeriod("Period", processingSchedule, DateUtil.parseDate("2020-10-20", DateUtil.FORMAT_DATE),
+        DateUtil.parseDate("2020-11-20", DateUtil.FORMAT_DATE));
+    insertRequisition(period, program, INITIATED, false, facility, supervisoryNode, modifiedDate);
+    assertThat(mapper.findRnrByPeriodAndProgram("2020-10", "2020-11", program.getId()).size(), is(1));
   }
 
   @Test

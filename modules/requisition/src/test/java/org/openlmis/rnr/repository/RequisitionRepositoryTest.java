@@ -24,6 +24,7 @@ import org.openlmis.core.exception.DataException;
 import org.openlmis.core.repository.SupervisoryNodeRepository;
 import org.openlmis.core.repository.helper.CommaSeparator;
 import org.openlmis.core.repository.mapper.SignatureMapper;
+import org.openlmis.core.utils.DateUtil;
 import org.openlmis.db.categories.UnitTests;
 import org.openlmis.rnr.builder.PatientQuantificationsBuilder;
 import org.openlmis.rnr.builder.RnrLineItemBuilder;
@@ -33,6 +34,7 @@ import org.powermock.core.classloader.annotations.PrepareForTest;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 
 import static com.natpryce.makeiteasy.MakeItEasy.*;
@@ -490,5 +492,20 @@ public class RequisitionRepositoryTest {
     verify(signatureMapper).insertSignature(rnr.getRnrSignatures().get(1));
     verify(requisitionMapper).insertRnrSignature(rnr, submitterSignature);
     verify(requisitionMapper).insertRnrSignature(rnr, approverSignature);
+  }
+
+  @Test
+  public void shouldReturnRnrsWithDateMonthsAndProgram() {
+    Date begindDate = DateUtil.parseDate("2020-10-20", DateUtil.FORMAT_DATE);
+    Date endDate = DateUtil.parseDate("2020-11-20", DateUtil.FORMAT_DATE);
+    List<Rnr> rnrs = asList(new Rnr());
+    when(requisitionMapper.findRnrByPeriodAndProgram("2020-10", "2020-11", 1L)).thenReturn(rnrs);
+
+    assertEquals(rnrs, requisitionRepository.findRnrByPeriodAndProgram(begindDate, endDate, 1L));
+  }
+
+  @Test
+  public void shouldReturnEmptyWhenDatesAreNull() {
+    assertEquals(0, requisitionRepository.findRnrByPeriodAndProgram(null, null, 1L).size());
   }
 }

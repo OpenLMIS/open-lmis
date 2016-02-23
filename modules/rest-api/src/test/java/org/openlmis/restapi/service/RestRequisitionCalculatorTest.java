@@ -24,6 +24,8 @@ import org.openlmis.core.domain.ProcessingPeriod;
 import org.openlmis.core.domain.Program;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.core.service.ProcessingScheduleService;
+import org.openlmis.core.service.StaticReferenceDataService;
+import org.openlmis.core.utils.DateUtil;
 import org.openlmis.db.categories.UnitTests;
 import org.openlmis.pod.domain.OrderPODLineItem;
 import org.openlmis.pod.service.PODService;
@@ -67,6 +69,9 @@ public class RestRequisitionCalculatorTest {
   @Mock
   private PODService podService;
 
+  @Mock
+  private StaticReferenceDataService staticReferenceDataService;
+
   @Rule
   public ExpectedException expectedException = ExpectedException.none();
 
@@ -90,7 +95,7 @@ public class RestRequisitionCalculatorTest {
 
     facility.setVirtualFacility(true);
 
-    restRequisitionCalculator.validatePeriod(facility, new Program());
+    restRequisitionCalculator.validatePeriod(facility, new Program(), null, null);
   }
 
   @Test
@@ -102,7 +107,7 @@ public class RestRequisitionCalculatorTest {
     when(requisitionService.getCurrentPeriod(any(RequisitionSearchCriteria.class))).thenReturn(processingPeriod);
     when(requisitionService.getPeriodForInitiating(reportingFacility, reportingProgram)).thenReturn(processingPeriod);
 
-    restRequisitionCalculator.validatePeriod(reportingFacility, reportingProgram);
+    restRequisitionCalculator.validatePeriod(reportingFacility, reportingProgram, null, null);
   }
 
   @Test
@@ -156,7 +161,7 @@ public class RestRequisitionCalculatorTest {
     expectedException.expect(DataException.class);
     expectedException.expectMessage("error.rnr.previous.not.filled");
 
-    restRequisitionCalculator.validatePeriod(reportingFacility, reportingProgram);
+    restRequisitionCalculator.validatePeriod(reportingFacility, reportingProgram, null, null);
   }
 
   @Test
@@ -404,5 +409,53 @@ public class RestRequisitionCalculatorTest {
     Rnr filledRequisition = restRequisitionCalculator.setDefaultValues(requisition);
 
     assertThat(filledRequisition.getFullSupplyLineItems().get(0).getQuantityReceived(), is(0));
+  }
+
+  @Test
+  public void shouldNotThrowExceptionIfFeatureToggleOnForAllowingPreviousReq() {
+    when(staticReferenceDataService.getBoolean("toggle.requisitions.allow.previous")).thenReturn(true);
+
+    ProcessingPeriod previousPeriod = new ProcessingPeriod(1L);
+    ProcessingPeriod currentPeriod = new ProcessingPeriod(2L);
+    Facility reportingFacility = new Facility();
+    Program reportingProgram = new Program();
+
+    when(requisitionService.getPeriodForInitiating(reportingFacility, reportingProgram)).thenReturn(previousPeriod);
+    when(requisitionService.getRequisitionsByPeriodAndProgram(null, null, reportingProgram.getId())).thenReturn(null);
+
+    restRequisitionCalculator.validatePeriod(reportingFacility, reportingProgram, null, null);
+  }
+
+  @Test
+  public void shouldThrowExceptionIfFeatureToggleOnAndNoPeriodAvailable() {
+    when(staticReferenceDataService.getBoolean("toggle.requisitions.allow.previous")).thenReturn(true);
+
+    Facility reportingFacility = new Facility();
+    Program reportingProgram = new Program();
+
+    when(requisitionService.getPeriodForInitiating(reportingFacility, reportingProgram)).thenReturn(null);
+    when(requisitionService.getRequisitionsByPeriodAndProgram(null, null, reportingProgram.getId())).thenReturn(null);
+
+    expectedException.expect(DataException.class);
+    restRequisitionCalculator.validatePeriod(reportingFacility, reportingProgram, null, null);
+
+  }
+
+  @Test
+  public void shouldThrowExceptionIfFeatureToggleOnAndUploadingRnrWithSamePeriod() {
+    when(staticReferenceDataService.getBoolean("toggle.requisitions.allow.previous")).thenReturn(true);
+
+    ProcessingPeriod previousPeriod = new ProcessingPeriod(1L);
+    Facility reportingFacility = new Facility();
+    Program reportingProgram = new Program();
+
+    Date beginDate = DateUtil.parseDate("2020-10-20", DateUtil.FORMAT_DATE);
+    Date endDate = DateUtil.parseDate("2020-11-20", DateUtil.FORMAT_DATE);
+
+    when(requisitionService.getPeriodForInitiating(reportingFacility, reportingProgram)).thenReturn(previousPeriod);
+    when(requisitionService.getRequisitionsByPeriodAndProgram(beginDate, endDate, reportingProgram.getId())).thenReturn(asList(new Rnr()));
+
+    expectedException.expect(DataException.class);
+    restRequisitionCalculator.validatePeriod(reportingFacility, reportingProgram, beginDate, endDate);
   }
 }

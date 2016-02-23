@@ -15,6 +15,7 @@ import org.openlmis.core.domain.ProcessingPeriod;
 import org.openlmis.core.domain.Program;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.core.service.ProcessingScheduleService;
+import org.openlmis.core.service.StaticReferenceDataService;
 import org.openlmis.pod.domain.OrderPODLineItem;
 import org.openlmis.pod.service.PODService;
 import org.openlmis.rnr.domain.Rnr;
@@ -45,7 +46,10 @@ public class RestRequisitionCalculator {
   @Autowired
   private ProcessingScheduleService processingScheduleService;
 
-  public void validatePeriod(Facility reportingFacility, Program reportingProgram) {
+  @Autowired
+  private StaticReferenceDataService staticReferenceDataService;
+
+  public void validatePeriod(Facility reportingFacility, Program reportingProgram, Date periodStartDate, Date periodEndDate) {
 
     if (!reportingFacility.getVirtualFacility()) {
 
@@ -53,10 +57,28 @@ public class RestRequisitionCalculator {
       searchCriteria.setProgramId(reportingProgram.getId());
       searchCriteria.setFacilityId(reportingFacility.getId());
 
-      if (requisitionService.getCurrentPeriod(searchCriteria) != null && !requisitionService.getCurrentPeriod(searchCriteria).getId().equals
-          (requisitionService.getPeriodForInitiating(reportingFacility, reportingProgram).getId())) {
-        throw new DataException("error.rnr.previous.not.filled");
+      if (staticReferenceDataService.getBoolean("toggle.requisitions.allow.previous")) {
+        validatePeriodBasedOnActualPeriodDates(reportingFacility, reportingProgram, periodStartDate, periodEndDate);
+      } else {
+
+        if (requisitionService.getCurrentPeriod(searchCriteria) != null && !requisitionService.getCurrentPeriod(searchCriteria).getId().equals
+            (requisitionService.getPeriodForInitiating(reportingFacility, reportingProgram).getId())) {
+          throw new DataException("error.rnr.previous.not.filled");
+        }
       }
+    }
+  }
+
+  private void validatePeriodBasedOnActualPeriodDates(Facility reportingFacility, Program reportingProgram, Date periodStartDate, Date periodEndDate) {
+    ProcessingPeriod periodForInitialize = requisitionService.getPeriodForInitiating(reportingFacility, reportingProgram);
+
+    if (periodForInitialize == null) {
+      throw new DataException("error.program.configuration.missing");
+    }
+
+    List<Rnr> rnrs = requisitionService.getRequisitionsByPeriodAndProgram(periodStartDate, periodEndDate, reportingProgram.getId());
+    if (rnrs != null && !rnrs.isEmpty()) {
+      throw new DataException("error.rnr.period.duplicate");
     }
   }
 

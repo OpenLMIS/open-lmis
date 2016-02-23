@@ -14,6 +14,7 @@ import org.openlmis.core.domain.*;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.core.repository.helper.CommaSeparator;
 import org.openlmis.core.repository.mapper.SignatureMapper;
+import org.openlmis.core.utils.DateUtil;
 import org.openlmis.equipment.domain.EquipmentInventoryStatus;
 import org.openlmis.equipment.repository.mapper.EquipmentInventoryStatusMapper;
 import org.openlmis.rnr.domain.*;
@@ -22,6 +23,7 @@ import org.openlmis.rnr.repository.mapper.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -317,5 +319,12 @@ public class RequisitionRepository {
 
   public void saveClientPeriod(Rnr rnr) {
     requisitionMapper.saveClientPeriod(rnr);
+  }
+
+  public List<Rnr> findRnrByPeriodAndProgram(Date beginDate, Date endDate, Long programId) {
+    if (beginDate == null || endDate == null) {
+      return new ArrayList<>();
+    }
+    return requisitionMapper.findRnrByPeriodAndProgram(DateUtil.getFormattedDate(beginDate, DateUtil.FORMAT_YEAR_MONTH), DateUtil.getFormattedDate(endDate, DateUtil.FORMAT_YEAR_MONTH), programId);
   }
 }

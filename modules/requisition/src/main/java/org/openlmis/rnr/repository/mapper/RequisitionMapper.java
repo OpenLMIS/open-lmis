@@ -277,6 +277,18 @@ public interface RequisitionMapper {
       "WHERE requisition_signatures.rnrId = #{rnrId} ")
   List<Signature> getRnrSignaturesByRnrId(Long rnrId);
 
+  @Select("SELECT * FROM requisitions r " +
+      "JOIN processing_periods pp " +
+      "ON r.periodid = pp.id " +
+      "JOIN programs p " +
+      "ON r.programid = p.id " +
+      "WHERE TO_CHAR(pp.startdate, 'yyyy-mm') = #{periodStartMonth} " +
+      "AND TO_CHAR(pp.enddate, 'yyyy-mm') = #{periodEndMonth} " +
+      "AND p.id = #{programId}")
+  List<Rnr> findRnrByPeriodAndProgram(@Param("periodStartMonth") String periodStartMonth,
+                                      @Param("periodEndMonth") String periodEndMonth,
+                                      @Param("programId") Long programId);
+
   public class ApprovedRequisitionSearch {
 
     @SuppressWarnings("UnusedDeclaration")

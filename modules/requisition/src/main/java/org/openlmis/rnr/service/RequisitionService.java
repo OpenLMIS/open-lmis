@@ -686,5 +686,9 @@ public class RequisitionService {
   public void saveClientPeriod(Rnr rnr) {
     requisitionRepository.saveClientPeriod(rnr);
   }
+
+  public List<Rnr> getRequisitionsByPeriodAndProgram(Date periodBeginDate, Date periodEndDate, Long programId) {
+    return requisitionRepository.findRnrByPeriodAndProgram(periodBeginDate, periodEndDate, programId);
+  }
 }
 
