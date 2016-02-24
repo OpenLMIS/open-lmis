@@ -20,9 +20,11 @@ import org.junit.runner.RunWith;
 import org.junit.runners.BlockJUnit4ClassRunner;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.openlmis.core.builder.FacilityBuilder;
 import org.openlmis.core.domain.*;
 import org.openlmis.core.exception.DataException;
+import org.openlmis.core.repository.SyncUpHashRepository;
 import org.openlmis.core.service.*;
 import org.openlmis.core.utils.DateUtil;
 import org.openlmis.db.categories.UnitTests;
@@ -37,6 +39,7 @@ import org.openlmis.rnr.domain.*;
 import org.openlmis.rnr.search.criteria.RequisitionSearchCriteria;
 import org.openlmis.rnr.service.RequisitionService;
 import org.openlmis.rnr.service.RnrTemplateService;
+import org.openlmis.stockmanagement.domain.StockCardEntry;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 import org.powermock.modules.junit4.PowerMockRunnerDelegate;
@@ -105,6 +108,8 @@ public class RestRequisitionServiceTest {
   private ProgramService programService;
   @Mock
   private ProductService productService;
+  @Mock
+  private SyncUpHashRepository syncUpHashRepository;
 
   private Facility facility;
 
@@ -708,6 +713,32 @@ public class RestRequisitionServiceTest {
     assertThat(requisition.getRnrSignatures().get(1).getCreatedBy(), is(user.getId()));
     assertThat(requisition.getRnrSignatures().get(1).getModifiedBy(), is(user.getId()));
     verify(requisitionService).insertRnrSignatures(requisition);
+  }
+
+  @Test
+  public void shouldSaveReportWhenHashDoesNotExist() throws Exception {
+    //given
+    setUpRequisitionReportBeforeSubmit();
+    Mockito.when(syncUpHashRepository.hashExists(anyString())).thenReturn(false);
+
+    //when
+    service.submitReport(report, 1L);
+
+    //then
+    verify(syncUpHashRepository, times(1)).save(anyString());
+  }
+
+  @Test
+  public void shouldNotSaveStockCardEntriesWhenHashExists() throws Exception {
+    //given
+    setUpRequisitionReportBeforeSubmit();
+    Mockito.when(syncUpHashRepository.hashExists(anyString())).thenReturn(true);
+
+    //when
+    service.submitReport(report, 1L);
+
+    //then
+    verify(syncUpHashRepository, never()).save(anyString());
   }
 
   private List<RnrColumn> getRnrColumns() {

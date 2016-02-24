@@ -250,4 +250,17 @@ public class RestRequisitionControllerTest {
     assertThat(response.getStatusCode(), is(HttpStatus.BAD_REQUEST));
   }
 
+  @Test
+  public void shouldReturnOKIfRnrIsNullAndNoException() {
+    Report report = new Report();
+    when(service.submitReport(report, 1L)).thenReturn(null);
+    ResponseEntity<RestResponse> expectResponse = new ResponseEntity<>(new RestResponse(RNR, 0L), OK);
+    when(RestResponse.response(RNR, 0L, HttpStatus.OK)).thenReturn(expectResponse);
+
+    ResponseEntity<RestResponse> response = controller.submitRequisition(report, principal);
+
+    assertThat((Long) response.getBody().getData().get(RNR), is(0L));
+    assertThat(response.getStatusCode(), is(HttpStatus.OK));
+  }
+
 }

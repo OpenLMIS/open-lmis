@@ -17,9 +17,9 @@ import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
 import org.apache.commons.collections.Transformer;
 import org.apache.log4j.Logger;
-import org.apache.lucene.util.CollectionUtil;
 import org.openlmis.core.domain.*;
 import org.openlmis.core.exception.DataException;
+import org.openlmis.core.repository.SyncUpHashRepository;
 import org.openlmis.core.service.*;
 import org.openlmis.order.service.OrderService;
 import org.openlmis.restapi.domain.ReplenishmentDTO;
@@ -71,9 +71,15 @@ public class RestRequisitionService {
   @Autowired
   private FacilityApprovedProductService facilityApprovedProductService;
   private List<FacilityTypeApprovedProduct> nonFullSupplyFacilityApprovedProductByFacilityAndProgram;
+  @Autowired
+  private SyncUpHashRepository syncUpHashRepository;
 
   @Transactional
   public Rnr submitReport(Report report, Long userId) {
+    if (syncUpHashRepository.hashExists(report.getSyncUpHash())) {
+      return null;
+    }
+
     report.validate();
 
     Facility reportingFacility = facilityService.getOperativeFacilityByCode(report.getAgentCode());
@@ -101,7 +107,11 @@ public class RestRequisitionService {
 
     rnr = requisitionService.submit(rnr);
 
-    return requisitionService.authorize(rnr);
+    Rnr authorize = requisitionService.authorize(rnr);
+
+    syncUpHashRepository.save(report.getSyncUpHash());
+
+    return authorize;
   }
 
   public void notifySubmittedEvent(Rnr rnr){
