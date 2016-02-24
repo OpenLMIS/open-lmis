@@ -10,13 +10,13 @@
 
 package org.openlmis.restapi.domain;
 
+import org.hamcrest.CoreMatchers;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.junit.rules.ExpectedException;
 import org.openlmis.core.builder.FacilityBuilder;
 import org.openlmis.core.builder.ProcessingPeriodBuilder;
-import org.openlmis.core.builder.ProductBuilder;
 import org.openlmis.core.builder.ProgramBuilder;
 import org.openlmis.core.domain.Facility;
 import org.openlmis.core.domain.ProcessingPeriod;
@@ -40,8 +40,7 @@ import java.util.List;
 import static com.natpryce.makeiteasy.MakeItEasy.*;
 import static java.util.Arrays.asList;
 import static org.hamcrest.core.Is.is;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertThat;
+import static org.junit.Assert.*;
 import static org.openlmis.restapi.builder.ReportBuilder.approverName;
 import static org.openlmis.restapi.builder.ReportBuilder.products;
 
@@ -246,5 +245,49 @@ public class ReportTest {
     Report report = Report.prepareForREST(rnr);
     assertThat(report.getPeriodStartDate(), is(period.getStartDate()));
   }
+
+
+  @Test
+  public void shouldGenerateConsistentSyncUpHash() throws Exception {
+    Report report = getReportForHash();
+
+    String syncUpHash = report.getSyncUpHash();
+
+    assertThat(syncUpHash, CoreMatchers.is("nPX5SsTvcGisWIXveyfIobGF2l6XdRLPv5hgGU6m366Vb3RVomOIBEJUzSQj7HXYpNulujipo0f2LebFj810Z1iiAieie"));
+  }
+
+  private Report getReportForHash() {
+    Report report = make(a(ReportBuilder.defaultReport));
+    report.setClientSubmittedTime("ClientSubmittedTime");
+    report.setActualPeriodStartDate("ActualPeriodStartDate");
+    report.setActualPeriodEndDate("ActualPeriodEndDate");
+    report.setAgentCode("AgentCode");
+    report.setProgramCode("ProgramCode");
+    return report;
+  }
+
+  @Test
+  public void shouldGenerateSameHashForDifferentEventObjectsThatHaveSameContent() throws Exception {
+    Report report1 = getReportForHash();
+    Report report2 = getReportForHash();
+
+    String syncUpHash1 = report1.getSyncUpHash();
+    String syncUpHash2 = report2.getSyncUpHash();
+
+    assertEquals(syncUpHash1, syncUpHash2);
+  }
+
+  @Test
+  public void shouldGenerateDifferentHashForEventsThatHaveDifferentContent() throws Exception {
+    Report report1 = getReportForHash();
+    Report report2 = getReportForHash();
+    report2.setProgramCode("different code");
+
+    String syncUpHash1 = report1.getSyncUpHash();
+    String syncUpHash2 = report2.getSyncUpHash();
+
+    assertNotEquals(syncUpHash1, syncUpHash2);
+  }
+
 }
 

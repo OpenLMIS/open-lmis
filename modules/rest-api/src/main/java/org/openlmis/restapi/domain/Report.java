@@ -18,6 +18,7 @@ import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import org.openlmis.core.domain.Signature;
 import org.openlmis.core.exception.DataException;
+import org.openlmis.core.hash.Encoder;
 import org.openlmis.core.utils.DateUtil;
 import org.openlmis.rnr.domain.PatientQuantificationLineItem;
 import org.openlmis.rnr.domain.RegimenLineItem;
@@ -123,7 +124,7 @@ public class Report {
     report.setProducts(fullSupplyProducts);
 
     ArrayList<RegimenLineItem> regimenLineItems = new ArrayList<RegimenLineItem>() {{
-        addAll(rnr.getRegimenLineItems());
+      addAll(rnr.getRegimenLineItems());
     }};
     report.setRegimens(regimenLineItems);
 
@@ -156,5 +157,9 @@ public class Report {
     }
 
     return report;
+  }
+
+  public String getSyncUpHash() {
+    return Encoder.hash(actualPeriodStartDate + actualPeriodEndDate + clientSubmittedTime + agentCode + programCode);
   }
 }
