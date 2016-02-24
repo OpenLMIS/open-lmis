@@ -3,6 +3,7 @@ package org.openlmis.restapi.controller;
 import lombok.NoArgsConstructor;
 import org.openlmis.restapi.service.ArchivedProductService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -22,6 +23,6 @@ public class RestArchivedProductController extends BaseController {
     @RequestMapping(value = "/rest-api/facilities/{facilityId}/archivedProducts", method = POST, headers = ACCEPT_JSON)
     public ResponseEntity updateArchivedProductsList(@PathVariable long facilityId, @RequestBody(required = true) List<String> archivedProductCodes) {
         archivedProductService.updateArchivedProductList(facilityId, archivedProductCodes);
-        return ResponseEntity.ok(null);
+        return new ResponseEntity(HttpStatus.OK);
     }
 }
