@@ -27,11 +27,16 @@ function ManagePODController($scope, OrdersForManagePOD, messageService, OrderPO
         OrdersForManagePOD.get({program: $scope.filter.program}, function (data) {
           $scope.orders = data.ordersForPOD;
         });
+      } else {
+        OrdersForManagePOD.get({program: $scope.filter.program, facility: $scope.filter.facility}, function (data) {
+          $scope.orders = data.ordersForPOD;
+        });
       }
     }
   };
 
   $scope.onFacilityChanged = function(){
+    $scope.orders = [];
     OrdersForManagePOD.get({program: $scope.filter.program, facility: $scope.filter.facility}, function (data) {
       $scope.orders = data.ordersForPOD;
     });
