@@ -12,13 +12,16 @@
 
 package org.openlmis.equipment.domain;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.openlmis.core.domain.BaseModel;
 import org.openlmis.core.domain.Facility;
+import org.openlmis.core.serializer.DateDeserializer;
 import org.openlmis.core.utils.DateUtil;
 
 import java.util.Date;
@@ -48,16 +51,14 @@ public class EquipmentInventory extends BaseModel {
   private String nameOfAssessor;
   private Long primaryDonorId;
   private Boolean isActive;
+
+  @JsonDeserialize(using = DateDeserializer.class)
+  @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
   private Date dateDecommissioned;
+
+  @JsonDeserialize(using = DateDeserializer.class)
+  @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
   private Date dateLastAssessed;
+
   private Boolean hasStabilizer;
-
-  public String getDateLastAssessedString() {
-    return DateUtil.getFormattedDate(this.dateLastAssessed, "yyyy-MM-dd");
-  }
-
-  public String getDateDecommissionedString() {
-    return DateUtil.getFormattedDate(this.dateDecommissioned, "yyyy-MM-dd");
-  }
-
 }

@@ -26,8 +26,8 @@
         <span openlmis-message="label.equipment.date.last.assessed"></span>
       </label>
       <div class="form-field">
-        <input ng-model="inventory.dateLastAssessedString" name="dateLastAssessed" id="dateLastAssessed" ng-change="blurDateFields();" ui-date="{maxDate: 'today', dateFormat: 'dd/mm/yy', changeYear: true}" ui-date-format="yy-mm-dd" />
-        <span class="field-error" ng-show="inventoryForm.dateLastAssessedString.$error.required && showError" openlmis-message="missing.value"></span>
+        <input ng-model="inventory.dateLastAssessed" name="dateLastAssessed" id="dateLastAssessed" ng-change="blurDateFields();" ui-date="{maxDate: 'today', dateFormat: 'dd/mm/yy', changeYear: true}" ui-date-format="yy-mm-dd" />
+        <span class="field-error" ng-show="inventoryForm.dateLastAssessed.$error.required && showError" openlmis-message="missing.value"></span>
       </div>
     </div>
   </div>
@@ -45,8 +45,8 @@
         <span openlmis-message="label.equipment.date.decommissioned"></span>
       </label>
       <div class="form-field">
-        <input ng-model="inventory.dateDecommissionedString" ng-disabled="inventory.isActive" name="dateDecommissioned" ui-date="{dateFormat: 'dd/mm/yy', changeYear: true}" ui-date-format="yy-mm-dd" id="dateDecommissioned">
-        <span class="field-error" ng-show="inventoryForm.dateDecommissionedString.$error.required && showError" openlmis-message="missing.value"></span>
+        <input ng-model="inventory.dateDecommissioned" ng-disabled="inventory.isActive" name="dateDecommissioned" ui-date="{dateFormat: 'dd/mm/yy', changeYear: true}" ui-date-format="yy-mm-dd" id="dateDecommissioned">
+        <span class="field-error" ng-show="inventoryForm.dateDecommissioned.$error.required && showError" openlmis-message="missing.value"></span>
       </div>
     </div>
   </div>

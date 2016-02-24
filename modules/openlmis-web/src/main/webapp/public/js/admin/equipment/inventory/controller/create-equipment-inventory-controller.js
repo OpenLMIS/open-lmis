@@ -55,7 +55,7 @@ function CreateEquipmentInventoryController($scope, $location, $routeParams, Equ
     $scope.inventory.isActive = true;
     // To match format UI expects, need to use ISO string and split out time from date
     var now = new Date();
-    $scope.inventory.dateLastAssessedString = now.toISOString().split("T")[0];
+    $scope.inventory.dateLastAssessed = now.toISOString().split("T")[0];
     $scope.inventory.yearOfInstallation = now.getFullYear();
 
     if ($routeParams.from === "0") {
@@ -144,17 +144,6 @@ function CreateEquipmentInventoryController($scope, $location, $routeParams, Equ
 
       if (!$scope.inventory.equipment.name) {
         $scope.inventory.equipment.name = $scope.inventory.equipment.manufacturer + " / " + $scope.inventory.equipment.model;
-      }
-
-      // When saving, need to make sure date fields are set from string date fields
-      // Do this by parsing date string and add timezone offset seconds
-      var now = new Date();
-      if ($scope.inventory.dateDecommissionedString) {
-        $scope.inventory.dateDecommissioned = Date.parse($scope.inventory.dateDecommissionedString) + (now.getTimezoneOffset()*60000);
-      }
-
-      if ($scope.inventory.dateLastAssessedString) {
-        $scope.inventory.dateLastAssessed = Date.parse($scope.inventory.dateLastAssessedString) + (now.getTimezoneOffset()*60000);
       }
 
       SaveEquipmentInventory.save($scope.inventory, function (data) {

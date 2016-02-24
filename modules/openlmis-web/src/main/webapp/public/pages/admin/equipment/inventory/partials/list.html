@@ -207,10 +207,10 @@
               <span openlmis-message="label.equipment.date.decommissioned"></span>
             </label>
             <div class="form-field">
-              <input ng-model="modalItem.dateDecommissionedString" ng-disabled="modalItem.isActive"
+              <input ng-model="modalItem.dateDecommissioned" ng-disabled="modalItem.isActive"
                      name="dateDecommissioned" ui-date="{dateFormat: 'dd/mm/yy', changeYear: true}"
                      ui-date-format="yy-mm-dd" id="dateDecommissioned">
-                <span class="field-error" ng-show="notFunctionalForm.dateDecommissionedString.$error.required && modalError"
+                <span class="field-error" ng-show="notFunctionalForm.dateDecommissioned.$error.required && modalError"
                       openlmis-message="missing.value"></span>
             </div>
           </div>
