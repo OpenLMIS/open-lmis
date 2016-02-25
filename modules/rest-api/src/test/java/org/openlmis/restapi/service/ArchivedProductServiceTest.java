@@ -25,4 +25,14 @@ public class ArchivedProductServiceTest {
 
         Mockito.verify(repository).updateArchivedProductList(1L, codes);
     }
+
+    @Test
+    public void shouldGetAllArchivedProducts() {
+        ArchivedProductService archivedProductService = new ArchivedProductService();
+        archivedProductService.archivedProductRepository = repository;
+
+        archivedProductService.getAllArchivedProducts(1L);
+
+        Mockito.verify(repository).getAllArchivedProducts(1L);
+    }
 }

@@ -14,4 +14,8 @@ public class ArchivedProductService {
     public void updateArchivedProductList(long facilityId, List<String> codes) {
         archivedProductRepository.updateArchivedProductList(facilityId,codes);
     }
+
+    public List<String> getAllArchivedProducts(long facilityId) {
+        return archivedProductRepository.getAllArchivedProducts(facilityId);
+    }
 }

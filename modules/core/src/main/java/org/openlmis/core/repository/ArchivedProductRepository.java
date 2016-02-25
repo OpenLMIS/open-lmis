@@ -20,4 +20,8 @@ public class ArchivedProductRepository {
             archivedProductsMapper.updateArchivedProductList(facilityId, code);
         }
     }
+
+    public List<String> getAllArchivedProducts(long facilityId) {
+        return archivedProductsMapper.listArchivedProducts(facilityId);
+    }
 }
