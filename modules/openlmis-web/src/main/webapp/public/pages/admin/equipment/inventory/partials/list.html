@@ -130,7 +130,7 @@
           <th openlmis-message="label.equipment.manufacturer"></th>
           <th openlmis-message="label.equipment.model"></th>
           <th openlmis-message="label.equipment.source.of.fund"></th>
-          <th openlmis-message="label.equipment.actions"></th>
+          <th ng-show="hasPermission('MANAGE_EQUIPMENT_SERVICING')" openlmis-message="label.equipment.actions"></th>
         </tr>
         </thead>
         <tbody>
@@ -140,7 +140,7 @@
           <td>{{item.equipment.manufacturer}}</td>
           <td>{{item.equipment.model}}</td>
           <td>{{item.sourceOfFund}}</td>
-          <td>
+          <td ng-show="hasPermission('MANAGE_EQUIPMENT_SERVICING')">
             <span class="btn-mini" ng-show="!item.isActive" openlmis-message="label.equipment.status.decommissioned"></span>
             <a ng-show="item.isActive" class="btn-mini btn-primary" ng-href="#/request/{{item.id}}?facilityId={{item.facility.id}}">
               <span openlmis-message="label.equipment.request.service"></span>
