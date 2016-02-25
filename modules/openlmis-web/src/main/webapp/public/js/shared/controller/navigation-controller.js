@@ -44,20 +44,27 @@ function NavigationController($scope, ConfigSettingsByKey, localStorageService, 
     return false;
   };
 
-  $scope.goOnline = function () {
-    Locales.get({}, function (data) {
-      if (data.locales) {
+  $scope.goOnline = function()
+  {
+    Locales.get({}, function(data)
+    {
+      if(data.locales)
+      {
         var currentURI = $location.absUrl();
-        if (currentURI.endsWith('offline.html')) {
+        if (currentURI.endsWith('offline.html'))
           $window.location = currentURI.replace('public/pages/offline.html', '');
-        }
-        else {
+        else if (currentURI.indexOf('offline.html') > -1)
           $window.location = currentURI.replace('offline.html', 'index.html').replace('#/list', '#/manage');
-        }
+        else
+          $window.location.reload();
+
         $scope.showNetworkError = false;
         return;
       }
-      $scope.showNetworkError = true;
+
+    $scope.showNetworkError = true;
     }, {});
   };
+
+
 }
