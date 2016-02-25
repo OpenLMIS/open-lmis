@@ -8,7 +8,7 @@
  * You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org. 
  */
 
-function HeaderController($scope, localStorageService, loginConfig, ConfigSettingsByKey, $window) {
+function HeaderController($scope, localStorageService, loginConfig, ConfigSettingsByKey, AppPropertiesService, $window) {
   $scope.loginConfig = loginConfig;
   $scope.user = localStorageService.get(localStorageKeys.USERNAME);
   $scope.userId = localStorageService.get(localStorageKeys.USER_ID);
@@ -26,7 +26,10 @@ function HeaderController($scope, localStorageService, loginConfig, ConfigSettin
     });
   }
 
-
+  var viewPropertiesKey = {key: "app.environment"};
+  AppPropertiesService.get(viewPropertiesKey, function (result) {
+    $scope.env=result.key;
+  });
 
   $scope.logout = function () {
     localStorageService.remove(localStorageKeys.RIGHT);

@@ -24,6 +24,8 @@
           <img src="/public/images/logo.png"/>
 
           <h1 openlmis-message="label.app.header"></h1>
+
+          <div class="user-info-env" ng-if="env!=prod">on {{env}} environment</div>
         </div>
       </div>
       <div id="loader" class="loader-icon"></div>

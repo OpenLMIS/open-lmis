@@ -8,10 +8,15 @@
  * You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org. 
  */
 
-function NavigationController($scope, ConfigSettingsByKey, localStorageService, Locales, $location, $window, FeatureToggleService) {
+function NavigationController($scope, ConfigSettingsByKey, localStorageService, Locales, $location, $window, FeatureToggleService, AppPropertiesService) {
 
   ConfigSettingsByKey.get({key: 'LOGIN_SUCCESS_DEFAULT_LANDING_PAGE'}, function (data){
     $scope.homePage =  data.settings.value;
+  });
+
+  var viewPropertiesKey = {key: "app.environment"};
+  AppPropertiesService.get(viewPropertiesKey, function (result) {
+    $scope.env=result.key;
   });
 
    $scope.loadToggle = function () {
