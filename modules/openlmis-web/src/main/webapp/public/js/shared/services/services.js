@@ -460,3 +460,7 @@ services.factory('VaccineOrderRequisitionsForViewing', function ($resource) {
 services.factory('FeatureToggleService', function ($q, $timeout, $resource) {
   return $resource('/reference-data/toggle/:key.json', {key: '@key'});
 });
+
+services.factory('AppPropertiesService', function ($q, $timeout, $resource) {
+  return $resource('/reference-data/:key.json', {key: '@key'});
+});

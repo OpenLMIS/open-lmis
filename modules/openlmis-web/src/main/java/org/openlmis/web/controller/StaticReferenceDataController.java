@@ -51,4 +51,10 @@ public class StaticReferenceDataController extends BaseController {
     OpenLmisResponse response = new OpenLmisResponse(KEY, service.getBoolean(KEY_TOGGLE_PREFIX + key));
     return new ResponseEntity(response, OK);
   }
+
+  @RequestMapping(value = "/reference-data/{key}", method = RequestMethod.GET)
+  public ResponseEntity<OpenLmisResponse> getProperties(@PathVariable(value = "key") String key) {
+    OpenLmisResponse response = new OpenLmisResponse(KEY, service.getPropertyValue(key));
+    return new ResponseEntity(response, OK);
+  }
 }
