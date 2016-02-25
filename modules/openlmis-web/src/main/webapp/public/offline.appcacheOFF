@@ -111,8 +111,13 @@ CACHE:
 /public/images/home-bg.png
 /public/images/home-glow.png
 
+#TODO: Determine why the UI doesn't request/use fonts consistently. Improving that would obviate the need to cache redundant font-files.
 /public/fonts/fontawesome-webfont.woff
+/public/fonts/fontawesome-webfont.woff?v=3.2.1
+/public/fonts/fontawesome-webfont.ttf?v=3.2.1
 /public/fonts/HelveticaNeue-CondensedBold.woff
+
+/settings/LOGIN_SUCCESS_DEFAULT_LANDING_PAGE.json
 
 FALLBACK:
 / /public/pages/offline.html

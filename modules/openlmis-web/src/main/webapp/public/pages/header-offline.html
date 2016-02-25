@@ -7,7 +7,7 @@
   ~ This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Affero General Public License for more details.
   ~ You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org. 
   -->
-<div ng-controller="HeaderController">
+
 <div ng-show="modalShown" id="myModal">
   <div class="modal-backdrop"></div>
 </div>
@@ -21,20 +21,6 @@
         <h1 openlmis-message="label.app.header"></h1>
       </div>
     </div>
-      <div id="loader" class="loader-icon"></div>
-      <div class="offline-loggin" ng-show="!user">
-          <ng-include src="'/public/pages/public-user.html'"></ng-include>
-      </div>
-      <div class="offline-loggin" ng-show="user">
-          <ng-include src="'/public/pages/user.html'"></ng-include>
-      </div>
-    <!-- div id="loader" class="loader-icon"></div -->
+    <div id="loader" class="loader-icon"></div>
   </div>
-    <div  ng-show="!!user">
-        <ng-include src="'/public/pages/navigation.html'"></ng-include>
-    </div>
-    <div  ng-show="!user">
-        <ng-include src="'/public/pages/navigation-offline.html'"></ng-include>
-    </div>
-</div>
 </div>

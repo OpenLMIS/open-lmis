@@ -136,7 +136,7 @@ tasks.withType(War) {
         }
         if (fileCopy.name.endsWith('html') || fileCopy.name.endsWith('css') || fileCopy.name.endsWith('appcache'))
             fileCopy.filter { String line ->
-                if (!line.contains(".html"))
+                if (!line.contains(".html") && !line.contains("/settings/")) //eg: http://localhost:9091/settings/LOGIN_SUCCESS_DEFAULT_LANDING_PAGE.json
                     line.replace('/public', '/public/v' + prepareVersionedDirectory.currentTime)
                 else
                     "$line"

@@ -34,9 +34,7 @@ function NavigationController($scope, ConfigSettingsByKey, localStorageService, 
     }
     return false;
   };
-$scope.homeLinkClicked=function(){
-    $window.location.href= $scope.homePage;
-};
+
   $scope.hasPermission = function (permission) {
     if ($scope.rights !== undefined && $scope.rights !== null) {
       var rights = JSON.parse($scope.rights);
