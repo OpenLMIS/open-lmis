@@ -21,6 +21,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.mail.MailAuthenticationException;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.mail.javamail.MimeMessageHelper;
@@ -69,7 +70,7 @@ public class EmailService {
     if (!mailSendingFlag) {
       return new AsyncResult<>(true);
     }
-    mailSender.send(emailMessage);
+    sendMsgHelper(emailMessage);
     return new AsyncResult<>(true);
   }
 
@@ -81,13 +82,12 @@ public class EmailService {
       initEmailAttachment(oMessage);
 
       if (oMessage.isHtml()) {
-        mailSender.send(setUpMimeMessage(oMessage));
+        sendMimeMsgHelper(setUpMimeMessage(oMessage));
       } else {
         oMessage.setFrom(fromAddress);
-        mailSender.send(oMessage);
+        sendMsgHelper(oMessage);
       }
     }
-
   }
 
   private void initEmailAttachment(EmailMessage oMessage) {
@@ -167,6 +167,30 @@ public class EmailService {
     emailAttachment.setFileDataSource(dataSource);
     emailMessage.addEmailAttachment(emailAttachment);
 
-    mailSender.send(setUpMimeMessage(emailMessage));
+    sendMimeMsgHelper(setUpMimeMessage(emailMessage));
+  }
+
+  /*
+  Helper to handle mail sending exceptions - non-mime
+   */
+  private void sendMsgHelper(SimpleMailMessage msg) {
+    try {
+      mailSender.send(msg);
+    } catch(MailAuthenticationException mae) {
+      logger.error("SMTP Authentication Failed.  Email can't be sent due to: " + mae.getMessage());
+      logger.debug("Mail auth failure", mae);
+    }
+  }
+
+  /*
+  Helper to handle mail sending exceptions - mime
+   */
+  private void sendMimeMsgHelper(MimeMessage msg) {
+    try {
+      mailSender.send(msg);
+    } catch(MailAuthenticationException mae) {
+      logger.error("SMTP Authentication Failed.  Email can't be sent due to: " + mae.getMessage());
+      logger.debug("Mail auth failure", mae);
+    }
   }
 }
