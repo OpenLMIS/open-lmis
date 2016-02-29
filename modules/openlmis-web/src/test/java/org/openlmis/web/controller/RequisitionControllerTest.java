@@ -186,7 +186,7 @@ public class RequisitionControllerTest {
     //given
     Long rnrId = 1L;
     controller.requisitionEmailService = mock(RequisitionEmailServiceForSIMAM.class);
-    Rnr requisition = new Rnr();
+    Rnr requisition = make(a(defaultRequisition));
 
     //when
     MockHttpServletResponse mockHttpServletResponse = new MockHttpServletResponse();
