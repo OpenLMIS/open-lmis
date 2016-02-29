@@ -26,14 +26,4 @@ public class RestArchivedProductControllerTest {
 
         Mockito.verify(archivedProductService).updateArchivedProductList(1l, codes);
     }
-
-    @Test
-    public void shouldGetAllArchivedProductCodes() {
-        RestArchivedProductController restArchivedProductController = new RestArchivedProductController();
-        restArchivedProductController.archivedProductService = archivedProductService;
-
-        restArchivedProductController.getAllArchivedProductsCode(1l);
-
-        Mockito.verify(archivedProductService).getAllArchivedProducts(1l);
-    }
 }

@@ -1,7 +1,6 @@
 package org.openlmis.restapi.controller;
 
 import lombok.NoArgsConstructor;
-import org.openlmis.restapi.response.RestResponse;
 import org.openlmis.restapi.service.ArchivedProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -13,8 +12,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import java.util.List;
 
-import static org.openlmis.restapi.response.RestResponse.response;
-import static org.springframework.web.bind.annotation.RequestMethod.GET;
 import static org.springframework.web.bind.annotation.RequestMethod.POST;
 
 @Controller
@@ -29,9 +26,4 @@ public class RestArchivedProductController extends BaseController {
         return new ResponseEntity(HttpStatus.OK);
     }
 
-    @RequestMapping(value = "/rest-api/facilities/{facilityId}/archivedProducts", method = GET, headers = ACCEPT_JSON)
-    public ResponseEntity<RestResponse> getAllArchivedProductsCode(@PathVariable long facilityId) {
-        List<String> allArchivedProducts = archivedProductService.getAllArchivedProducts(facilityId);
-        return response("archivedProductCodes", allArchivedProducts);
-    }
 }
