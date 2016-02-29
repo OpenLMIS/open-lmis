@@ -3,11 +3,11 @@ package org.openlmis.restapi.service;
 import com.google.common.base.Function;
 import com.google.common.base.Predicate;
 import com.google.common.collect.FluentIterable;
-import org.openlmis.core.domain.*;
-import org.openlmis.core.service.ProductService;
-import org.openlmis.core.service.ProgramProductService;
-import org.openlmis.core.service.ProgramSupportedService;
-import org.openlmis.core.service.UserService;
+import org.openlmis.core.domain.KitProduct;
+import org.openlmis.core.domain.Product;
+import org.openlmis.core.domain.ProgramProduct;
+import org.openlmis.core.domain.ProgramSupported;
+import org.openlmis.core.service.*;
 import org.openlmis.restapi.domain.ProductResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -38,6 +38,12 @@ public class RestProductService {
 
   @Autowired
   private ProgramSupportedService programSupportedService;
+
+  @Autowired
+  ArchivedProductService archivedProductService;
+
+  @Autowired
+  StaticReferenceDataService staticReferenceDataService;
 
   @Transactional
   public Product buildAndSave(Product product) {
@@ -81,27 +87,38 @@ public class RestProductService {
   }
 
   public List<ProductResponse> getLatestProductsAfterUpdatedTime(Date afterUpdatedTime, Long userId) {
+    Long facilityId = userService.getById(userId).getFacilityId();
 
-    List<Product> latestProducts = getLatestProducts(afterUpdatedTime);
+    List<Product> latestProducts = getLatestProducts(afterUpdatedTime,facilityId);
 
-    List<String> allSupportedPrograms = getSupportedProgramsByFacility(userId);
+    List<String> allSupportedPrograms = getSupportedProgramsByFacility(facilityId);
 
     return prepareProductsBasedOnFacilitySupportedPrograms(latestProducts, allSupportedPrograms);
   }
 
-  private List<Product> getLatestProducts(Date afterUpdatedTime) {
+  private List<Product> getLatestProducts(Date afterUpdatedTime, Long facilityId) {
 
     if(afterUpdatedTime == null) {
-      return productService.getAllProducts();
+      List<Product> allProducts = productService.getAllProducts();
+      if (!staticReferenceDataService.getBoolean("toggle.sync.product.archived.status")){
+        return allProducts;
+      }
+
+      final List<String> archivedProductCodes = archivedProductService.getAllArchivedProducts(facilityId);
+
+      return FluentIterable.from(allProducts).transform(new Function<Product, Product>() {
+        @Override
+        public Product apply(Product product) {
+          product.setArchived(archivedProductCodes.contains(product.getCode()));
+          return product;
+        }
+      }).toList();
     } else {
       return productService.getProductsAfterUpdatedDate(afterUpdatedTime);
     }
   }
 
-  private List<String> getSupportedProgramsByFacility(Long userId) {
-    User user = userService.getById(userId);
-    Long facilityId = user.getFacilityId();
-
+  private List<String> getSupportedProgramsByFacility(Long facilityId) {
     List<ProgramSupported> programSupportedList = programSupportedService.getAllByFacilityId(facilityId);
     return FluentIterable.from(programSupportedList).transform(new Function<ProgramSupported, String>() {
       @Override

@@ -9,10 +9,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.openlmis.core.builder.*;
 import org.openlmis.core.domain.*;
-import org.openlmis.core.service.ProductService;
-import org.openlmis.core.service.ProgramProductService;
-import org.openlmis.core.service.ProgramSupportedService;
-import org.openlmis.core.service.UserService;
+import org.openlmis.core.service.*;
 import org.openlmis.core.utils.DateUtil;
 import org.openlmis.db.categories.UnitTests;
 import org.openlmis.restapi.domain.ProductResponse;
@@ -26,8 +23,8 @@ import java.util.List;
 import static com.natpryce.makeiteasy.MakeItEasy.*;
 import static java.util.Arrays.asList;
 import static org.hamcrest.Matchers.is;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertThat;
+import static org.junit.Assert.*;
+import static org.mockito.Matchers.anyLong;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -48,7 +45,13 @@ public class RestProductServiceTest {
   private ProgramProductService programProductService;
 
   @Mock
+  private ArchivedProductService archivedProductService;
+
+  @Mock
   private ProgramSupportedService programSupportedService;
+
+  @Mock
+  private StaticReferenceDataService staticReferenceDataService;
 
   @InjectMocks
   RestProductService restProductService;
@@ -105,7 +108,9 @@ public class RestProductServiceTest {
   @Test
   public void shouldGetAllLatestProgramsWithProductsByFacilityIdWhenAfterUpdatedTimeIsEmpty() {
     Product product1 = makeProduct("P1", "product 1");
+    product1.setArchived(false);
     Product product2 = makeProduct("P2", "product 2");
+    product2.setArchived(false);
 
     Program program1 = makeProgram("PR1", "program 1");
     Program program2 = makeProgram("PR2", "program 2");
@@ -120,6 +125,7 @@ public class RestProductServiceTest {
 
     Facility facility = make(a(FacilityBuilder.defaultFacility));
     facility.setSupportedPrograms(asList(programSupported1, programSupported2));
+    facility.setId(1L);
 
     User user = make(a(UserBuilder.defaultUser));
     user.setFacilityId(facility.getId());
@@ -129,6 +135,8 @@ public class RestProductServiceTest {
     when(programProductService.getByProductCode("P2")).thenReturn(asList(programProduct3));
     when(userService.getById(user.getId())).thenReturn(user);
     when(programSupportedService.getAllByFacilityId(user.getFacilityId())).thenReturn(facility.getSupportedPrograms());
+    when(archivedProductService.getAllArchivedProducts(anyLong())).thenReturn(asList("P1"));
+    when(staticReferenceDataService.getBoolean("toggle.sync.product.archived.status")).thenReturn(true);
 
     List<ProductResponse> products = restProductService.getLatestProductsAfterUpdatedTime(null, user.getId());
 
@@ -136,6 +144,8 @@ public class RestProductServiceTest {
     assertEquals("PR1", products.get(0).getSupportedPrograms().get(0));
     assertEquals("PR2", products.get(0).getSupportedPrograms().get(1));
     assertEquals("PR1", products.get(1).getSupportedPrograms().get(0));
+    assertTrue(products.get(0).getProduct().getArchived());
+    assertFalse(products.get(1).getProduct().getArchived());
   }
 
   @Test
