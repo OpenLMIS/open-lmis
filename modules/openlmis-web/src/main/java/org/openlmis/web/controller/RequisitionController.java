@@ -47,9 +47,13 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipOutputStream;
 
 import static org.openlmis.core.domain.RightName.APPROVE_REQUISITION;
 import static org.openlmis.core.domain.RightName.CONVERT_TO_ORDER;
@@ -83,6 +87,7 @@ public class RequisitionController extends BaseController {
   public static final String LOSSES_AND_ADJUSTMENT_TYPES = "lossesAndAdjustmentTypes";
   public static final String NUMBER_OF_MONTHS = "numberOfMonths";
   public static final String CAN_APPROVE_RNR = "canApproveRnr";
+  public static final String SIMAM_FILE_NAME_PREFIX = "SIMAM_";
   private static final Logger logger = LoggerFactory.getLogger(RequisitionController.class);
   @Autowired
   private RequisitionService requisitionService;
@@ -96,9 +101,14 @@ public class RequisitionController extends BaseController {
   private RequisitionPermissionService requisitionPermissionService;
   @Autowired
   protected PDFGenerator pdfGenerator;
+  @Autowired
+  protected RequisitionEmailServiceForSIMAM requisitionEmailService;
 
   @Value("${export.tmp.path}")
   protected String EXPORT_TMP_PATH;
+
+  @Value("${email.attachment.cache.path}")
+  protected String attachmentDirectory;
 
   @RequestMapping(value = "/requisitions", method = POST, headers = ACCEPT_JSON)
   public ResponseEntity<OpenLmisResponse> initiateRnr(@RequestParam("facilityId") Long facilityId,
@@ -174,6 +184,92 @@ public class RequisitionController extends BaseController {
       logger.error("error occurred when download pdf file : " + e.getMessage());
     }
   }
+
+  @RequestMapping(value = "/requisitions/{id}/simam", method = GET)
+  @PreAuthorize("@permissionEvaluator.hasPermission(principal,'VIEW_REQUISITION')")
+  public void getSIMAM(@PathVariable("id") Long rnrId, HttpServletResponse response) {
+    String zipDirectory = EXPORT_TMP_PATH + "/" + UUID.randomUUID().toString() + rnrId + "/";
+    File directory = new File(zipDirectory);
+    directory.mkdirs();
+
+    Rnr requisition = requisitionService.getFullRequisitionById(rnrId);
+    List<File> files = generateExcels(requisition);
+
+    String zipName = SIMAM_FILE_NAME_PREFIX + requisition.getFacility().getName() + "_" + requisition.getPeriod().getName() + "_" + requisition.getProgram().getName() + ".zip";
+
+    response.setContentType("Content-type: application/zip");
+    response.setHeader("Content-Disposition", "attachment; filename=" + zipName);
+    File zipFile = generateZipFile(zipDirectory, zipName, files);
+
+    if (zipFile != null) {
+      try {
+        FileInputStream fileInputStream = new FileInputStream(zipFile);
+        IOUtils.copy(fileInputStream, response.getOutputStream());
+        response.flushBuffer();
+        fileInputStream.close();
+        FileUtils.deleteDirectory(directory);
+      } catch (IOException e) {
+        logger.error("error occurred when download simam.zip : " + e.getMessage());
+      }
+    }
+  }
+
+  private List<File> generateExcels(Rnr requisition) {
+    String regimenFile = attachmentDirectory + "/" + requisitionEmailService.fileNameForRegimens(requisition);
+    if(!new File(regimenFile).exists()) {
+      regimenFile = requisitionEmailService.generateRegimenExcelForSIMAM(requisition);
+    }
+
+
+    String requisitionFile = attachmentDirectory + "/" + requisitionEmailService.fileNameForRequiItems(requisition);
+    if (!new File(requisitionFile).exists()) {
+      requisitionFile = requisitionEmailService.generateRequisitionExcelForSIMAM(requisition);
+    }
+
+    return Arrays.asList(
+            new File(regimenFile),
+            new File(requisitionFile)
+    );
+  }
+
+  private File generateZipFile(String zipDirectory, String zipName, List<File> files) {
+    File zipFile = null;
+
+    ZipOutputStream zipOutputStream = null;
+
+    try {
+      zipFile = new File(zipDirectory + zipName);
+
+      byte[] buffer = new byte[8 * 1024];
+      FileOutputStream fileOutputStream = new FileOutputStream(zipFile);
+      zipOutputStream = new ZipOutputStream(fileOutputStream);
+
+      for (File srcFile : files) {
+        FileInputStream fileInputStream = new FileInputStream(srcFile);
+        zipOutputStream.putNextEntry(new ZipEntry(srcFile.getName()));
+
+        int length;
+        while ((length = fileInputStream.read(buffer)) > 0) {
+          zipOutputStream.write(buffer, 0, length);
+        }
+        zipOutputStream.closeEntry();
+        fileInputStream.close();
+      }
+    } catch (Exception e) {
+      logger.error(e.getMessage());
+    } finally {
+      try {
+        if (zipOutputStream != null) {
+          zipOutputStream.close();
+        }
+      } catch (IOException e) {
+        logger.error(e.getMessage());
+      }
+    }
+
+    return zipFile;
+  }
+
 
   @RequestMapping(value = "/requisitions/{id}/save", method = PUT, headers = ACCEPT_JSON)
   public ResponseEntity<OpenLmisResponse> saveRnr(@RequestBody Rnr rnr,

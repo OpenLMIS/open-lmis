@@ -10,7 +10,7 @@
 
 
 describe('ViewRnrViaDetailController', function () {
-  var httpBackend, scope, route, requisition, messageService, downloadPdfService;
+  var httpBackend, scope, route, requisition, messageService, downloadPdfService, downloadSimamService;
 
   var submitterText = "submitterText";
   var approverText = "approverText";
@@ -78,14 +78,16 @@ describe('ViewRnrViaDetailController', function () {
 
   beforeEach(module('openlmis'));
 
-  beforeEach(inject(function ($httpBackend, $rootScope, $controller, _messageService_, _downloadPdfService_) {
+  beforeEach(inject(function ($httpBackend, $rootScope, $controller, _messageService_, _downloadPdfService_, _downloadSimamService_) {
     httpBackend = $httpBackend;
     scope = $rootScope.$new();
     requisition = {lineItems: [], nonFullSupplyLineItems: [], regimenLineItems: [], equipmentLineItems :[], period: {numberOfMonths: 3}};
     route = {current: {params:{'programId': 2, 'rnr': 1, 'supplyType': 'fullSupply'}}};
     messageService =  _messageService_;
     downloadPdfService = _downloadPdfService_;
+    downloadSimamService = _downloadSimamService_;
     spyOn(downloadPdfService, "init").andReturn(function(a,b){});
+    spyOn(downloadSimamService, "init").andReturn(function(a,b){});
     $controller(ViewRnrMmiaController, {$scope: scope, $route: route});
   }));
 

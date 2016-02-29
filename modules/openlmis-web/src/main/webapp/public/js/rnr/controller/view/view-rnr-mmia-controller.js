@@ -1,4 +1,4 @@
-function ViewRnrMmiaController($scope, $route, Requisitions, messageService, downloadPdfService) {
+function ViewRnrMmiaController($scope, $route, Requisitions, messageService, downloadPdfService, downloadSimamService) {
     $scope.adult = [];
     $scope.children = [];
     $scope.other = [];
@@ -17,7 +17,8 @@ function ViewRnrMmiaController($scope, $route, Requisitions, messageService, dow
         $scope.initMonth();
     });
 
-    $(".btn-download").hide();
+    $(".btn-download-pdf").hide();
+    $(".btn-download-simam").hide();
     $scope.loadMmiaDetail = function () {
         Requisitions.get({id: $route.current.params.rnr, operation: "skipped"}, function (data) {
             $scope.rnr = data.rnr;
@@ -32,6 +33,7 @@ function ViewRnrMmiaController($scope, $route, Requisitions, messageService, dow
             parseSignature($scope.rnr.rnrSignatures);
 
             downloadPdfService.init($scope, $scope.rnr.id);
+            downloadSimamService.init($scope, $scope.rnr.id);
         });
     };
 
