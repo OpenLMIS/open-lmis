@@ -70,6 +70,9 @@ public class UserService {
     user.validate();
     userRepository.update(user);
     roleAssignmentService.saveRolesForUser(user);
+    if (user.isMobileUser()) {
+      userRepository.verify(user);
+    }
   }
 
   public LinkedHashMap getPreferences(Long userId){
