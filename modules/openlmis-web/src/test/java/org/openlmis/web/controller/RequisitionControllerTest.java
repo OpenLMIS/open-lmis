@@ -182,6 +182,32 @@ public class RequisitionControllerTest {
   }
 
   @Test
+  public void shouldGetSIMAMDownloadByRnRId() throws Exception {
+    //given
+    Long rnrId = 1L;
+    controller.requisitionEmailService = mock(RequisitionEmailServiceForSIMAM.class);
+    Rnr requisition = new Rnr();
+
+    //when
+    MockHttpServletResponse mockHttpServletResponse = new MockHttpServletResponse();
+    when(requisitionService.getFullRequisitionById(rnrId)).thenReturn(requisition);
+    when(controller.requisitionEmailService.generateRegimenExcelForSIMAM(requisition)).thenReturn("regimen.xlsx");
+    when(controller.requisitionEmailService.fileNameForRegimens(requisition)).thenReturn("regimen.xlsx");
+    when(controller.requisitionEmailService.generateRequisitionExcelForSIMAM(requisition)).thenReturn("requisition.xlsx");
+    when(controller.requisitionEmailService.fileNameForRequiItems(requisition)).thenReturn("requisition.xlsx");
+
+
+    controller.getSIMAM(rnrId, mockHttpServletResponse);
+
+    //then
+    verify(controller.requisitionEmailService).generateRequisitionExcelForSIMAM(requisition);
+    verify(controller.requisitionEmailService).generateRegimenExcelForSIMAM(requisition);
+
+    assertThat(mockHttpServletResponse.getContentType(), is("Content-type: application/zip"));
+    assertNotNull(mockHttpServletResponse.getContentAsString());
+  }
+
+  @Test
   public void shouldSetCanApproveFlagTrueIfRequisitionInApprovableState() throws Exception {
     Rnr rnr = new Rnr();
     rnr.setId(1000L);
