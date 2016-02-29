@@ -163,4 +163,8 @@ public class UserRepository {
   public List<String> getSupervisoryRights(Long userId) {
     return userMapper.getSupervisoryRights(userId);
   }
+  
+  public void verify(User user) {
+    userMapper.verify(user);
+  }
 }

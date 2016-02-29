@@ -63,8 +63,8 @@ public interface UserMapper {
   @Update("UPDATE users SET userName = #{userName}, firstName = #{firstName}, lastName = #{lastName}, " +
     "employeeId = #{employeeId},restrictLogin = #{restrictLogin}, facilityId=#{facilityId}, jobTitle = #{jobTitle}, " +
     "primaryNotificationMethod = #{primaryNotificationMethod}, officePhone = #{officePhone}, cellPhone = #{cellPhone}, " +
-    "email = #{email}, active = #{active}, " +
-          "verified = #{verified}, ismobileuser = #{isMobileUser}, " +
+    "email = #{email}, active = #{active}, " + 
+    "ismobileuser = #{isMobileUser}, " +
     "modifiedBy = #{modifiedBy}, modifiedDate = (COALESCE(#{modifiedDate}, NOW())) WHERE id=#{id}")
   void update(User user);
 
@@ -138,4 +138,7 @@ public interface UserMapper {
     "   join role_assignments ras on ras.roleid = rr.roleId " +
     "where r.righttype = 'REQUISITION' and ras.userId = #{userId}")
   List<String> getSupervisoryRights(@Param("userId") Long userId);
+
+  @Update("UPDATE users SET verified = TRUE WHERE id = #{id}")
+  void verify(User user);
 }
