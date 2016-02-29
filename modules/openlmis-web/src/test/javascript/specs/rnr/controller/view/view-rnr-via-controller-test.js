@@ -10,7 +10,7 @@
 
 
 describe('ViewRnrViaDetailController', function () {
-  var httpBackend, scope, route, location, requisition, requisitionService, downloadPdfService;
+  var httpBackend, scope, route, location, requisition, requisitionService, downloadPdfService, downloadSimamService;
 
   var rnrItemsForPagination = {
     rnr: {
@@ -56,7 +56,7 @@ describe('ViewRnrViaDetailController', function () {
 
   beforeEach(module('openlmis'));
 
-  beforeEach(inject(function ($httpBackend, $rootScope, $controller, $location, _requisitionService_, _downloadPdfService_) {
+  beforeEach(inject(function ($httpBackend, $rootScope, $controller, $location, _requisitionService_, _downloadPdfService_, _downloadSimamService_) {
     httpBackend = $httpBackend;
     scope = $rootScope.$new();
     location = $location;
@@ -64,7 +64,9 @@ describe('ViewRnrViaDetailController', function () {
     route = {current: {params:{'programId': 2, 'rnr': 1, 'supplyType': 'fullSupply'}}};
     requisitionService =  _requisitionService_;
     downloadPdfService = _downloadPdfService_;
+    downloadSimamService = _downloadSimamService_;
     spyOn(downloadPdfService, "init").andReturn(function(a,b){});
+    spyOn(downloadSimamService, "init").andReturn(function(a,b){});
     $controller(ViewRnrViaDetailController, {$scope: scope, $route: route, $location:$location});
   }));
 

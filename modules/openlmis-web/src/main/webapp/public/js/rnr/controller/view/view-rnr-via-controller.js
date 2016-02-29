@@ -1,4 +1,4 @@
-function ViewRnrViaDetailController($scope, $route, $location, Requisitions, downloadPdfService) {
+function ViewRnrViaDetailController($scope, $route, $location, Requisitions, downloadPdfService, downloadSimamService) {
     $scope.pageSize = 20;
     $scope.currentPage = 1;
     $scope.rnrItemsVisible = [];
@@ -14,7 +14,8 @@ function ViewRnrViaDetailController($scope, $route, $location, Requisitions, dow
         }
     }
 
-    $(".btn-download").hide();
+    $(".btn-download-pdf").hide();
+    $(".btn-download-simam").hide();
 
     $scope.loadRequisitionDetail = function () {
         Requisitions.get({id: $route.current.params.rnr, operation:"skipped"}, function (data) {
@@ -33,6 +34,8 @@ function ViewRnrViaDetailController($scope, $route, $location, Requisitions, dow
             parseSignature($scope.rnr.rnrSignatures);
 
             downloadPdfService.init($scope, $scope.rnr.id);
+            downloadSimamService.init($scope, $scope.rnr.id);
+
             $scope.numPages = $scope.regularRnrItems.length / $scope.pageSize;
         });
 
