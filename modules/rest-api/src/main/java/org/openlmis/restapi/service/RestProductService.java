@@ -99,14 +99,10 @@ public class RestProductService {
   private List<Product> getLatestProducts(Date afterUpdatedTime, Long facilityId) {
 
     if(afterUpdatedTime == null) {
-      List<Product> allProducts = productService.getAllProducts();
-      if (!staticReferenceDataService.getBoolean("toggle.sync.product.archived.status")){
-        return allProducts;
-      }
 
       final List<String> archivedProductCodes = archivedProductService.getAllArchivedProducts(facilityId);
 
-      return FluentIterable.from(allProducts).transform(new Function<Product, Product>() {
+      return FluentIterable.from(productService.getAllProducts()).transform(new Function<Product, Product>() {
         @Override
         public Product apply(Product product) {
           product.setArchived(archivedProductCodes.contains(product.getCode()));
