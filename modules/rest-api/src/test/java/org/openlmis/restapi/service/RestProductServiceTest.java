@@ -50,9 +50,6 @@ public class RestProductServiceTest {
   @Mock
   private ProgramSupportedService programSupportedService;
 
-  @Mock
-  private StaticReferenceDataService staticReferenceDataService;
-
   @InjectMocks
   RestProductService restProductService;
 
@@ -136,7 +133,6 @@ public class RestProductServiceTest {
     when(userService.getById(user.getId())).thenReturn(user);
     when(programSupportedService.getAllByFacilityId(user.getFacilityId())).thenReturn(facility.getSupportedPrograms());
     when(archivedProductService.getAllArchivedProducts(anyLong())).thenReturn(asList("P1"));
-    when(staticReferenceDataService.getBoolean("toggle.sync.product.archived.status")).thenReturn(true);
 
     List<ProductResponse> products = restProductService.getLatestProductsAfterUpdatedTime(null, user.getId());
 
