@@ -23,38 +23,59 @@ describe('ProgramProduct', function () {
 
 
   it('should set isa amount to overridden isa divided by pack size times number of months in period if available', function () {
-    progProduct = {
-      overriddenIsa: 400,
-      product: {
+    progProduct =
+    {
+      overriddenIsa:
+      {
+        minimumValue: 400,
+        maximumValue: 400
+      },
+
+      product:
+      {
         packSize: 22
       }
     };
-    var facility = {};
-    var period = {
+    var facility =
+    {
+      catchmentPopulation: 100
+    };
+
+    var period =
+    {
       numberOfMonths: 2
     };
-    programProduct = new ProgramProduct(progProduct);
 
+    programProduct = new ProgramProduct(progProduct);
     programProduct.calculateISA(facility, period);
 
     expect(programProduct.isaAmount).toEqual(37);
   });
 
   it('should set isa amount to overridden isa 0 if overridden by 0', function () {
-    progProduct = {
-      overriddenIsa: 0,
-      product: {
+    progProduct =
+    {
+      overriddenIsa:
+      {
+        minimumValue: 0,
+        maximumValue: 0
+      },
+
+      product:
+      {
         packSize: 22
       }
     };
+
     var facility = {};
-    var period = {
+
+    var period =
+    {
       numberOfMonths: 2
     };
+
     programProduct = new ProgramProduct(progProduct);
-
     programProduct.calculateISA(facility, period);
-
     expect(programProduct.isaAmount).toEqual(0);
   });
 
