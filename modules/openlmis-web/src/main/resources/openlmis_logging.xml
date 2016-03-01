@@ -56,7 +56,7 @@
   <!--</logger>-->
 
   <logger name="org.openlmis.web">
-    <level value="ERROR"/>
+    <level value="INFO"/>
     <appender-ref ref="logFileAppender"/>
   </logger>
 
