@@ -107,11 +107,6 @@
             </bean>
         </mvc:interceptor>
 
-        <mvc:interceptor>
-            <mvc:mapping path="/**"/>
-            <bean class="org.openlmis.web.interceptor.RestActivityInterceptor"/>
-        </mvc:interceptor>
-
     </mvc:interceptors>
 
     <bean id="uploadBeansMap" class="java.util.HashMap">
