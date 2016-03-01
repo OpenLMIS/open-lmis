@@ -9285,20 +9285,6 @@ INSERT INTO role_rights
 )
 VALUES
 (
-  2,
-  'VIEW_USER_SUMMARY_REPORT',
-  NULL,
-  '2016-02-05 11:22:43.148'
-);
-INSERT INTO role_rights
-(
-  roleid,
-  rightname,
-  createdby,
-  createddate
-)
-VALUES
-(
   3,
   'MANAGE_REPORT',
   NULL,

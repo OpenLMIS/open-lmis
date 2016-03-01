@@ -55,42 +55,42 @@
             <table id="rightsTable" class="rights-table table table-bordered">
               <thead>
                 <tr>
-                  <th ng-click='showRoleTypeModal("ADMIN")'>
+                  <th ng-show='adminRights.length' ng-click='showRoleTypeModal("ADMIN")'>
                     <div class="form-inline" ng-class="{'is-selected': currentRightType == 'ADMIN'}">
                       <label id="adminRoleType">
                         <h4 openlmis-message="create.role.adminRights"></h4>
                       </label>
                     </div>
                   </th>
-                  <th ng-click='showRoleTypeModal("REPORT")'>
+                  <th ng-show='reportRights.length' ng-click='showRoleTypeModal("REPORT")'>
                     <div class="form-inline" ng-class="{'is-selected': currentRightType == 'REPORT'}">
                       <label id="reportRoleType">
                         <h4 openlmis-message="create.role.report.rights"></h4>
                       </label>
                     </div>
                   </th>
-                  <th ng-click='showRoleTypeModal("REPORTING")'>
+                  <th ng-show='reportingRights.length' ng-click='showRoleTypeModal("REPORTING")'>
                     <div class="form-inline" ng-class="{'is-selected': currentRightType == 'REPORTING'}">
                       <label id="reportingRoleType">
                         <h4 openlmis-message="create.role.reporting.rights"></h4>
                       </label>
                     </div>
                   </th>
-                  <th ng-click='showRoleTypeModal("ALLOCATION")'>
+                  <th ng-show='allocationRights.length' ng-click='showRoleTypeModal("ALLOCATION")'>
                     <div class="form-inline" ng-class="{'is-selected': currentRightType == 'ALLOCATION'}">
                       <label id="allocationRoleType">
                         <h4 openlmis-message="label.allocation.program.rights"></h4>
                       </label>
                     </div>
                   </th>
-                  <th ng-click='showRoleTypeModal("REQUISITION")'>
+                  <th ng-show='requisitionRights.length' ng-click='showRoleTypeModal("REQUISITION")'>
                     <div class="form-inline" ng-class="{'is-selected': currentRightType == 'REQUISITION'}">
                       <label id="requisitionRoleType">
                         <h4 openlmis-message="label.request.program.rights"></h4>
                       </label>
                     </div>
                   </th>
-                  <th ng-click='showRoleTypeModal("FULFILLMENT")'>
+                  <th ng-show='fulfillmentRights.length' ng-click='showRoleTypeModal("FULFILLMENT")'>
                     <div class="form-inline" ng-class="{'is-selected': currentRightType == 'FULFILLMENT'}">
                       <label id="fulfillmentRoleType">
                         <h4 openlmis-message="label.fulfillment.based.rights"></h4>
@@ -101,7 +101,7 @@
               </thead>
               <tbody>
                 <tr>
-                  <td ng-class="{'is-disabled': currentRightType != 'ADMIN'}">
+                  <td ng-show='adminRights.length' ng-class="{'is-disabled': currentRightType != 'ADMIN'}">
                     <div id="rights-{{right.name}}" class="checkbox-list clearfix"
                          ng-repeat="right in adminRights" tab-scroll>
                       <input id="{{right.name}}" type="checkbox"
@@ -116,7 +116,7 @@
                     </span>
                   </td>
 
-                  <td ng-class="{'is-disabled': currentRightType != 'REPORT'}">
+                  <td ng-show='reportRights.length' ng-class="{'is-disabled': currentRightType != 'REPORT'}">
                     <div id="reportRights-{{reportRight.name}}" class="checkbox-list clearfix"
                          ng-repeat="reportRight in reportRights" tab-scroll>
                       <input id="{{reportRight.name}}" type="checkbox"
@@ -137,7 +137,7 @@
                     </span>
                   </td>
 
-                  <td ng-class="{'is-disabled': currentRightType != 'REPORTING'}">
+                  <td ng-show='reportingRights.length' ng-class="{'is-disabled': currentRightType != 'REPORTING'}">
                     <div id="reportingRights-{{reportingRight.name}}" class="checkbox-list clearfix"
                          ng-repeat="reportingRight in reportingRights" tab-scroll>
                       <input id="{{reportingRight.name}}" type="checkbox"
@@ -159,7 +159,7 @@
                     </span>
                   </td>
 
-                  <td ng-class="{'is-disabled': currentRightType != 'ALLOCATION'}">
+                  <td ng-show='allocationRights.length' ng-class="{'is-disabled': currentRightType != 'ALLOCATION'}">
                     <div id="allocationRights-{{allocationRight.name}}" class="checkbox-list clearfix"
                          ng-repeat="allocationRight in allocationRights" tab-scroll>
                       <input id="{{allocationRight.name}}" type="checkbox"
@@ -174,7 +174,7 @@
                     </span>
                   </td>
 
-                  <td ng-class="{'is-disabled': currentRightType != 'REQUISITION'}">
+                  <td ng-show='requisitionRights.length' ng-class="{'is-disabled': currentRightType != 'REQUISITION'}">
                     <div id="requisitionRights-{{requisitionRight.name}}" class="checkbox-list clearfix"
                          ng-repeat="requisitionRight in requisitionRights" tab-scroll>
                       <input id="{{requisitionRight.name}}" type="checkbox"
@@ -189,7 +189,7 @@
                     </span>
                   </td>
 
-                  <td ng-class="{'is-disabled': currentRightType != 'FULFILLMENT'}">
+                  <td ng-show='fulfillmentRights.length' ng-class="{'is-disabled': currentRightType != 'FULFILLMENT'}">
                     <div id="fulfillmentRights-{{fulfillmentRight.name}}" class="checkbox-list clearfix"
                          ng-repeat="fulfillmentRight in fulfillmentRights" tab-scroll>
                       <input id="{{fulfillmentRight.name}}" type="checkbox"

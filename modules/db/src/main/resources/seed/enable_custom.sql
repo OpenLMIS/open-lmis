@@ -69,6 +69,7 @@ VALUES ('ACCESS_ILS_GATEWAY','ADMIN','Permission to access the ILS Gateway.',38,
   ,('MANAGE_EQUIPMENT_SERVICING', 'ADMIN', 'Permission to manage service vendors and contracts', NULL, 'right.manage.equipment.servicing')
   ,('VIEW_HELP', 'ADMIN', 'Permission to view help link', NULL, 'right.view.help')
   ,('MANAGE_IVD_TEMPLATES', 'REQUISITION', 'Permission to manage IVD tabs in R&R template', NULL, 'right.manage.ivd.templates')
+  ,('VIEW_USER_SUMMARY_REPORT', 'REPORT', 'Permission to view user summary Report', NULL, 'right.report.user.summary');
 ;
 
 INSERT INTO report_rights(templateid, rightname)
