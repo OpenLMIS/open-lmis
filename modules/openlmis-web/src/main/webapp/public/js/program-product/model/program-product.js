@@ -14,10 +14,17 @@ var ProgramProduct = function (programProduct) {
   ProgramProduct.prototype.calculateISA = function (facility, period) {
     if (isUndefined(programProduct.programProductIsa) && isUndefined(programProduct.overriddenIsa)) {
       programProduct.isaAmount = "--";
-    } else {
+    } else
+    {
       programProduct.programProductIsa = new ProgramProductISA(programProduct.programProductIsa);
-      programProduct.isaAmount = (!isUndefined(programProduct.overriddenIsa)) ? programProduct.overriddenIsa : programProduct.programProductIsa.calculate(facility.catchmentPopulation);
-//          TODO important need validation on packSize to be more than 0
+
+      if(programProduct.overriddenIsa)
+        programProduct.overriddenIsa = new ProgramProductISA(programProduct.overriddenIsa);
+
+      var isa = (!isUndefined(programProduct.overriddenIsa)) ? programProduct.overriddenIsa : programProduct.programProductIsa;
+      programProduct.isaAmount = isa.calculate(facility.catchmentPopulation);
+
+      //TODO important need validation on packSize to be more than 0
       programProduct.isaAmount = programProduct.isaAmount ? Math.ceil((programProduct.isaAmount * period.numberOfMonths) / programProduct.product.packSize) : 0;
     }
 
