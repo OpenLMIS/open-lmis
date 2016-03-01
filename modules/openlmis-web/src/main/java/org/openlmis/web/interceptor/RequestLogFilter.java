@@ -7,7 +7,7 @@ import javax.servlet.http.HttpServletRequest;
 
 public class RequestLogFilter extends AbstractRequestLoggingFilter {
 
-    Logger logger = Logger.getLogger(getClass());
+    private Logger logger = Logger.getLogger(getClass());
 
     @Override
     protected void beforeRequest(HttpServletRequest request, String message) {
