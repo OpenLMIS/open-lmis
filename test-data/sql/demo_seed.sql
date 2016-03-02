@@ -9244,20 +9244,6 @@ INSERT INTO role_rights
 VALUES
 (
   1,
-  'MANAGE_DEMOGRAPHIC_PARAMETERS',
-  NULL,
-  '2016-02-05 11:22:43.144'
-);
-INSERT INTO role_rights
-(
-  roleid,
-  rightname,
-  createdby,
-  createddate
-)
-VALUES
-(
-  1,
   'MANAGE_SETTING',
   NULL,
   '2016-02-05 11:22:43.144'
@@ -9483,48 +9469,6 @@ VALUES
 (
   5,
   'MANAGE_EQUIPMENT_INVENTORY',
-  NULL,
-  '2016-02-05 11:22:43.240'
-);
-INSERT INTO role_rights
-(
-  roleid,
-  rightname,
-  createdby,
-  createddate
-)
-VALUES
-(
-  5,
-  'MANAGE_DEMOGRAPHIC_ESTIMATES',
-  NULL,
-  '2016-02-05 11:22:43.240'
-);
-INSERT INTO role_rights
-(
-  roleid,
-  rightname,
-  createdby,
-  createddate
-)
-VALUES
-(
-  5,
-  'FINALIZE_DEMOGRAPHIC_ESTIMATES',
-  NULL,
-  '2016-02-05 11:22:43.240'
-);
-INSERT INTO role_rights
-(
-  roleid,
-  rightname,
-  createdby,
-  createddate
-)
-VALUES
-(
-  5,
-  'UNLOCK_FINALIZED_DEMOGRAPHIC_ESTIMATES',
   NULL,
   '2016-02-05 11:22:43.240'
 );

@@ -69,7 +69,11 @@ VALUES ('ACCESS_ILS_GATEWAY','ADMIN','Permission to access the ILS Gateway.',38,
   ,('MANAGE_EQUIPMENT_SERVICING', 'ADMIN', 'Permission to manage service vendors and contracts', NULL, 'right.manage.equipment.servicing')
   ,('VIEW_HELP', 'ADMIN', 'Permission to view help link', NULL, 'right.view.help')
   ,('MANAGE_IVD_TEMPLATES', 'REQUISITION', 'Permission to manage IVD tabs in R&R template', NULL, 'right.manage.ivd.templates')
-  ,('VIEW_USER_SUMMARY_REPORT', 'REPORT', 'Permission to view user summary Report', NULL, 'right.report.user.summary');
+  ,('VIEW_USER_SUMMARY_REPORT', 'REPORT', 'Permission to view user summary Report', NULL, 'right.report.user.summary')
+  ,('MANAGE_DEMOGRAPHIC_PARAMETERS', 'ADMIN', 'Permission to manage demographic parameters', 60, 'right.manage.demographic.parameters')
+  ,('MANAGE_DEMOGRAPHIC_ESTIMATES', 'REQUISITION', 'Permission to manage demographic estimates', 30, 'right.manage.demographic.estimates')
+  ,('FINALIZE_DEMOGRAPHIC_ESTIMATES', 'REQUISITION', 'Permission to finalize demographic estimates', 31, 'right.demographic.estimate.finalize')
+  ,('UNLOCK_FINALIZED_DEMOGRAPHIC_ESTIMATES', 'REQUISITION', 'Permission to unlock finalized demographic estimates', 32, 'right.demographic.estimate.unlock.finalized')
 ;
 
 INSERT INTO report_rights(templateid, rightname)
