@@ -792,7 +792,7 @@ SELECT pg_catalog.setval('equipment_maintenance_requests_id_seq', 1, false);
 -- Name: equipment_operational_status_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
-SELECT pg_catalog.setval('equipment_operational_status_id_seq', 3, true);
+SELECT pg_catalog.setval('equipment_operational_status_id_seq', 9, true);
 
 
 --
