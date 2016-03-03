@@ -105,7 +105,7 @@ module repositories using git-repo.  In short this process involves:
 ### What's not accepted
 
 * Code that breaks the build or disables / removes needed tests to pass
-* Code that doesn't pass our Quality Gate - TODO: link to style guide & sonar
+* Code that doesn't pass our Quality Gate - see the [Style Guide](STYLE-GUIDE.md) and [Sonar](http://ci.openlmis.org:9000/).
 * Code that belongs in a Module but was added to Core or vice versa
 * Code that might break existing implementations - sometimes we might have to leave an implementation behind, but the
  community needs to know about it first!
@@ -141,7 +141,7 @@ The general flow:
 
 6. Issue a *Pull Request* back to the `dev` branch - explain what you did and keep it brief to speed review!  Mention the JIRA ticket number (e.g., "OLIMS-34") in the commit and pull request messages to activate the JIRA/GitHub integration.
 
-While developing your code, be sure you follow our style guide <todo: link> and keep your contribution specific to
+While developing your code, be sure you follow our [style guide](STYLE-GUIDE.md) and keep your contribution specific to
 doing **one** thing.
 
 ### Step by Step
