@@ -28,6 +28,11 @@
                 <a href="/public/pages/reports/mozambique/stockout_demo.html"
                    openlmis-message="menu.report.stockout.reports"></a>
             </li>
+
+            <li ng-show="hasPermission('VIEW_STOCKOUT_REPORT')">
+                <a href="/public/pages/reports/mozambique/index.html#/stock-out"
+                   openlmis-message="menu.report.stockout.reports"></a>
+            </li>
         </ul>
     </div>
 </li>

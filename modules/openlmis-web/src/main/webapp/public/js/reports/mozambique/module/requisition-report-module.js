@@ -21,7 +21,11 @@ angular.module('requisition-report', ['openlmis', 'angularCombine', 'ngTable', '
                     templateUrl: 'appVersion/partials/list.html',
                     reloadOnSearch: false
                 }).
-                otherwise({redirectTo: '/'});
+                when('/stock-out', {
+                    controller: ProductReportController("singleFacility"),
+                    templateUrl: 'stockOut/partials/list.html',
+                    reloadOnSearch: false
+                }).otherwise({redirectTo: '/'});
         }]).run(
     function ($rootScope, AuthorizationService) {
 
