@@ -7848,7 +7848,2410 @@ VALUES
 -- No UPDATEs for program_products necessary
 -- No INSERTs for program_regimen_columns necessary
 -- No UPDATEs for program_regimen_columns necessary
--- No INSERTs for program_rnr_columns necessary
+-- -------------------
+-- INSERTS for public.program_rnr_columns
+-- -------------------
+INSERT INTO program_rnr_columns
+(
+  mastercolumnid,
+  programid,
+  label,
+  visible,
+  POSITION,
+  source,
+  formulavalidationrequired,
+  createdby,
+  createddate,
+  modifiedby,
+  modifieddate,
+  rnroptionid,
+  calculationoption
+)
+VALUES
+(
+  1,
+  1,
+  'Skip',
+  TRUE,
+  1,
+  'U',
+  TRUE,
+  4,
+  '2016-03-03 11:45:04.099',
+  4,
+  '2016-03-03 11:45:04.099',
+  NULL,
+  'DEFAULT'
+);
+INSERT INTO program_rnr_columns
+(
+  mastercolumnid,
+  programid,
+  label,
+  visible,
+  POSITION,
+  source,
+  formulavalidationrequired,
+  createdby,
+  createddate,
+  modifiedby,
+  modifieddate,
+  rnroptionid,
+  calculationoption
+)
+VALUES
+(
+  2,
+  1,
+  'Product Code',
+  TRUE,
+  2,
+  'R',
+  TRUE,
+  4,
+  '2016-03-03 11:45:04.099',
+  4,
+  '2016-03-03 11:45:04.099',
+  NULL,
+  'DEFAULT'
+);
+INSERT INTO program_rnr_columns
+(
+  mastercolumnid,
+  programid,
+  label,
+  visible,
+  POSITION,
+  source,
+  formulavalidationrequired,
+  createdby,
+  createddate,
+  modifiedby,
+  modifieddate,
+  rnroptionid,
+  calculationoption
+)
+VALUES
+(
+  3,
+  1,
+  'Product',
+  TRUE,
+  3,
+  'R',
+  TRUE,
+  4,
+  '2016-03-03 11:45:04.099',
+  4,
+  '2016-03-03 11:45:04.099',
+  NULL,
+  'DEFAULT'
+);
+INSERT INTO program_rnr_columns
+(
+  mastercolumnid,
+  programid,
+  label,
+  visible,
+  POSITION,
+  source,
+  formulavalidationrequired,
+  createdby,
+  createddate,
+  modifiedby,
+  modifieddate,
+  rnroptionid,
+  calculationoption
+)
+VALUES
+(
+  4,
+  1,
+  'Unit/Unit of Issue',
+  TRUE,
+  4,
+  'R',
+  TRUE,
+  4,
+  '2016-03-03 11:45:04.099',
+  4,
+  '2016-03-03 11:45:04.099',
+  NULL,
+  'DEFAULT'
+);
+INSERT INTO program_rnr_columns
+(
+  mastercolumnid,
+  programid,
+  label,
+  visible,
+  POSITION,
+  source,
+  formulavalidationrequired,
+  createdby,
+  createddate,
+  modifiedby,
+  modifieddate,
+  rnroptionid,
+  calculationoption
+)
+VALUES
+(
+  6,
+  1,
+  'Total Received Quantity',
+  TRUE,
+  5,
+  'U',
+  TRUE,
+  4,
+  '2016-03-03 11:45:04.099',
+  4,
+  '2016-03-03 11:45:04.099',
+  NULL,
+  'DEFAULT'
+);
+INSERT INTO program_rnr_columns
+(
+  mastercolumnid,
+  programid,
+  label,
+  visible,
+  POSITION,
+  source,
+  formulavalidationrequired,
+  createdby,
+  createddate,
+  modifiedby,
+  modifieddate,
+  rnroptionid,
+  calculationoption
+)
+VALUES
+(
+  7,
+  1,
+  'Total',
+  TRUE,
+  6,
+  'C',
+  TRUE,
+  4,
+  '2016-03-03 11:45:04.099',
+  4,
+  '2016-03-03 11:45:04.099',
+  NULL,
+  'DEFAULT'
+);
+INSERT INTO program_rnr_columns
+(
+  mastercolumnid,
+  programid,
+  label,
+  visible,
+  POSITION,
+  source,
+  formulavalidationrequired,
+  createdby,
+  createddate,
+  modifiedby,
+  modifieddate,
+  rnroptionid,
+  calculationoption
+)
+VALUES
+(
+  8,
+  1,
+  'Total Consumed Quantity',
+  TRUE,
+  7,
+  'U',
+  TRUE,
+  4,
+  '2016-03-03 11:45:04.099',
+  4,
+  '2016-03-03 11:45:04.099',
+  NULL,
+  'DEFAULT'
+);
+INSERT INTO program_rnr_columns
+(
+  mastercolumnid,
+  programid,
+  label,
+  visible,
+  POSITION,
+  source,
+  formulavalidationrequired,
+  createdby,
+  createddate,
+  modifiedby,
+  modifieddate,
+  rnroptionid,
+  calculationoption
+)
+VALUES
+(
+  9,
+  1,
+  'Total Losses / Adjustments',
+  TRUE,
+  8,
+  'U',
+  TRUE,
+  4,
+  '2016-03-03 11:45:04.099',
+  4,
+  '2016-03-03 11:45:04.099',
+  NULL,
+  'DEFAULT'
+);
+INSERT INTO program_rnr_columns
+(
+  mastercolumnid,
+  programid,
+  label,
+  visible,
+  POSITION,
+  source,
+  formulavalidationrequired,
+  createdby,
+  createddate,
+  modifiedby,
+  modifieddate,
+  rnroptionid,
+  calculationoption
+)
+VALUES
+(
+  10,
+  1,
+  'Stock on Hand',
+  TRUE,
+  9,
+  'U',
+  TRUE,
+  4,
+  '2016-03-03 11:45:04.099',
+  4,
+  '2016-03-03 11:45:04.099',
+  NULL,
+  'DEFAULT'
+);
+INSERT INTO program_rnr_columns
+(
+  mastercolumnid,
+  programid,
+  label,
+  visible,
+  POSITION,
+  source,
+  formulavalidationrequired,
+  createdby,
+  createddate,
+  modifiedby,
+  modifieddate,
+  rnroptionid,
+  calculationoption
+)
+VALUES
+(
+  11,
+  1,
+  'Total number of new patients added to service on the program',
+  TRUE,
+  10,
+  'U',
+  TRUE,
+  4,
+  '2016-03-03 11:45:04.099',
+  4,
+  '2016-03-03 11:45:04.099',
+  1,
+  'DEFAULT'
+);
+INSERT INTO program_rnr_columns
+(
+  mastercolumnid,
+  programid,
+  label,
+  visible,
+  POSITION,
+  source,
+  formulavalidationrequired,
+  createdby,
+  createddate,
+  modifiedby,
+  modifieddate,
+  rnroptionid,
+  calculationoption
+)
+VALUES
+(
+  12,
+  1,
+  'Total Stockout Days',
+  TRUE,
+  11,
+  'U',
+  TRUE,
+  4,
+  '2016-03-03 11:45:04.099',
+  4,
+  '2016-03-03 11:45:04.099',
+  NULL,
+  'DEFAULT'
+);
+INSERT INTO program_rnr_columns
+(
+  mastercolumnid,
+  programid,
+  label,
+  visible,
+  POSITION,
+  source,
+  formulavalidationrequired,
+  createdby,
+  createddate,
+  modifiedby,
+  modifieddate,
+  rnroptionid,
+  calculationoption
+)
+VALUES
+(
+  14,
+  1,
+  'Average Monthly Consumption(AMC)',
+  TRUE,
+  12,
+  'C',
+  TRUE,
+  4,
+  '2016-03-03 11:45:04.099',
+  4,
+  '2016-03-03 11:45:04.099',
+  NULL,
+  'DEFAULT'
+);
+INSERT INTO program_rnr_columns
+(
+  mastercolumnid,
+  programid,
+  label,
+  visible,
+  POSITION,
+  source,
+  formulavalidationrequired,
+  createdby,
+  createddate,
+  modifiedby,
+  modifieddate,
+  rnroptionid,
+  calculationoption
+)
+VALUES
+(
+  16,
+  1,
+  'Calculated Order Quantity',
+  TRUE,
+  13,
+  'C',
+  TRUE,
+  4,
+  '2016-03-03 11:45:04.099',
+  4,
+  '2016-03-03 11:45:04.099',
+  NULL,
+  'DEFAULT'
+);
+INSERT INTO program_rnr_columns
+(
+  mastercolumnid,
+  programid,
+  label,
+  visible,
+  POSITION,
+  source,
+  formulavalidationrequired,
+  createdby,
+  createddate,
+  modifiedby,
+  modifieddate,
+  rnroptionid,
+  calculationoption
+)
+VALUES
+(
+  17,
+  1,
+  'Requested Quantity',
+  TRUE,
+  14,
+  'U',
+  TRUE,
+  4,
+  '2016-03-03 11:45:04.099',
+  4,
+  '2016-03-03 11:45:04.099',
+  NULL,
+  'DEFAULT'
+);
+INSERT INTO program_rnr_columns
+(
+  mastercolumnid,
+  programid,
+  label,
+  visible,
+  POSITION,
+  source,
+  formulavalidationrequired,
+  createdby,
+  createddate,
+  modifiedby,
+  modifieddate,
+  rnroptionid,
+  calculationoption
+)
+VALUES
+(
+  18,
+  1,
+  'Requested Quantity Explanation',
+  TRUE,
+  15,
+  'U',
+  TRUE,
+  4,
+  '2016-03-03 11:45:04.099',
+  4,
+  '2016-03-03 11:45:04.099',
+  NULL,
+  'DEFAULT'
+);
+INSERT INTO program_rnr_columns
+(
+  mastercolumnid,
+  programid,
+  label,
+  visible,
+  POSITION,
+  source,
+  formulavalidationrequired,
+  createdby,
+  createddate,
+  modifiedby,
+  modifieddate,
+  rnroptionid,
+  calculationoption
+)
+VALUES
+(
+  20,
+  1,
+  'Packs to Ship',
+  TRUE,
+  16,
+  'C',
+  TRUE,
+  4,
+  '2016-03-03 11:45:04.099',
+  4,
+  '2016-03-03 11:45:04.099',
+  NULL,
+  'DEFAULT'
+);
+INSERT INTO program_rnr_columns
+(
+  mastercolumnid,
+  programid,
+  label,
+  visible,
+  POSITION,
+  source,
+  formulavalidationrequired,
+  createdby,
+  createddate,
+  modifiedby,
+  modifieddate,
+  rnroptionid,
+  calculationoption
+)
+VALUES
+(
+  21,
+  1,
+  'Price per Pack',
+  TRUE,
+  17,
+  'R',
+  TRUE,
+  4,
+  '2016-03-03 11:45:04.099',
+  4,
+  '2016-03-03 11:45:04.099',
+  NULL,
+  'DEFAULT'
+);
+INSERT INTO program_rnr_columns
+(
+  mastercolumnid,
+  programid,
+  label,
+  visible,
+  POSITION,
+  source,
+  formulavalidationrequired,
+  createdby,
+  createddate,
+  modifiedby,
+  modifieddate,
+  rnroptionid,
+  calculationoption
+)
+VALUES
+(
+  22,
+  1,
+  'Total Cost',
+  TRUE,
+  18,
+  'C',
+  TRUE,
+  4,
+  '2016-03-03 11:45:04.099',
+  4,
+  '2016-03-03 11:45:04.099',
+  NULL,
+  'DEFAULT'
+);
+INSERT INTO program_rnr_columns
+(
+  mastercolumnid,
+  programid,
+  label,
+  visible,
+  POSITION,
+  source,
+  formulavalidationrequired,
+  createdby,
+  createddate,
+  modifiedby,
+  modifieddate,
+  rnroptionid,
+  calculationoption
+)
+VALUES
+(
+  23,
+  1,
+  'Expiration Date',
+  TRUE,
+  19,
+  'U',
+  TRUE,
+  4,
+  '2016-03-03 11:45:04.099',
+  4,
+  '2016-03-03 11:45:04.099',
+  NULL,
+  'DEFAULT'
+);
+INSERT INTO program_rnr_columns
+(
+  mastercolumnid,
+  programid,
+  label,
+  visible,
+  POSITION,
+  source,
+  formulavalidationrequired,
+  createdby,
+  createddate,
+  modifiedby,
+  modifieddate,
+  rnroptionid,
+  calculationoption
+)
+VALUES
+(
+  24,
+  1,
+  'Remarks',
+  TRUE,
+  20,
+  'U',
+  TRUE,
+  4,
+  '2016-03-03 11:45:04.099',
+  4,
+  '2016-03-03 11:45:04.099',
+  NULL,
+  'DEFAULT'
+);
+INSERT INTO program_rnr_columns
+(
+  mastercolumnid,
+  programid,
+  label,
+  visible,
+  POSITION,
+  source,
+  formulavalidationrequired,
+  createdby,
+  createddate,
+  modifiedby,
+  modifieddate,
+  rnroptionid,
+  calculationoption
+)
+VALUES
+(
+  25,
+  1,
+  'Period Normalized Consumption',
+  TRUE,
+  21,
+  'C',
+  TRUE,
+  4,
+  '2016-03-03 11:45:04.099',
+  4,
+  '2016-03-03 11:45:04.099',
+  NULL,
+  'DEFAULT'
+);
+INSERT INTO program_rnr_columns
+(
+  mastercolumnid,
+  programid,
+  label,
+  visible,
+  POSITION,
+  source,
+  formulavalidationrequired,
+  createdby,
+  createddate,
+  modifiedby,
+  modifieddate,
+  rnroptionid,
+  calculationoption
+)
+VALUES
+(
+  15,
+  1,
+  'Maximum Stock Quantity',
+  TRUE,
+  22,
+  'C',
+  TRUE,
+  4,
+  '2016-03-03 11:45:04.099',
+  4,
+  '2016-03-03 11:45:04.099',
+  NULL,
+  '[{"name":"Default", "id":"DEFAULT"},{"name":"Normalized Consumption x 2","id":"CONSUMPTION_X_2"},{"name":"Dispensed Quantity x 2","id":"DISPENSED_X_2"}]'
+);
+INSERT INTO program_rnr_columns
+(
+  mastercolumnid,
+  programid,
+  label,
+  visible,
+  POSITION,
+  source,
+  formulavalidationrequired,
+  createdby,
+  createddate,
+  modifiedby,
+  modifieddate,
+  rnroptionid,
+  calculationoption
+)
+VALUES
+(
+  5,
+  1,
+  'Beginning Balance',
+  TRUE,
+  23,
+  'U',
+  TRUE,
+  4,
+  '2016-03-03 11:45:04.099',
+  4,
+  '2016-03-03 11:45:04.099',
+  NULL,
+  '[{"name":"Default", "id":"DEFAULT"},{"name":"Allow users to override beginning balance","id":"ALLOW_USER_OVERRIDE"}]'
+);
+INSERT INTO program_rnr_columns
+(
+  mastercolumnid,
+  programid,
+  label,
+  visible,
+  POSITION,
+  source,
+  formulavalidationrequired,
+  createdby,
+  createddate,
+  modifiedby,
+  modifieddate,
+  rnroptionid,
+  calculationoption
+)
+VALUES
+(
+  19,
+  1,
+  'Approved Quantity',
+  TRUE,
+  24,
+  'U',
+  TRUE,
+  4,
+  '2016-03-03 11:45:04.099',
+  4,
+  '2016-03-03 11:45:04.099',
+  NULL,
+  '[{"name":"Default", "id":"DEFAULT"},{"name":"Accept in Packs","id":"ACCEPT_PACKS"}]'
+);
+INSERT INTO program_rnr_columns
+(
+  mastercolumnid,
+  programid,
+  label,
+  visible,
+  POSITION,
+  source,
+  formulavalidationrequired,
+  createdby,
+  createddate,
+  modifiedby,
+  modifieddate,
+  rnroptionid,
+  calculationoption
+)
+VALUES
+(
+  13,
+  1,
+  'Monthly Normalized Consumption',
+  TRUE,
+  25,
+  'C',
+  TRUE,
+  4,
+  '2016-03-03 11:45:04.099',
+  4,
+  '2016-03-03 11:45:04.099',
+  NULL,
+  '[{"name":"Default", "id":"DEFAULT"},{"name":"Dispensed Quantity + No of New Patients","id":"DISPENSED_PLUS_NEW_PATIENTS"},{"name":"(Dispensed x 90) / (90 - Stockout Days)","id":"DISPENSED_X_90"}]'
+);
+INSERT INTO program_rnr_columns
+(
+  mastercolumnid,
+  programid,
+  label,
+  visible,
+  POSITION,
+  source,
+  formulavalidationrequired,
+  createdby,
+  createddate,
+  modifiedby,
+  modifieddate,
+  rnroptionid,
+  calculationoption
+)
+VALUES
+(
+  1,
+  2,
+  'Skip',
+  TRUE,
+  1,
+  'U',
+  TRUE,
+  4,
+  '2016-03-03 11:45:06.710',
+  4,
+  '2016-03-03 11:45:06.710',
+  NULL,
+  'DEFAULT'
+);
+INSERT INTO program_rnr_columns
+(
+  mastercolumnid,
+  programid,
+  label,
+  visible,
+  POSITION,
+  source,
+  formulavalidationrequired,
+  createdby,
+  createddate,
+  modifiedby,
+  modifieddate,
+  rnroptionid,
+  calculationoption
+)
+VALUES
+(
+  2,
+  2,
+  'Product Code',
+  TRUE,
+  2,
+  'R',
+  TRUE,
+  4,
+  '2016-03-03 11:45:06.710',
+  4,
+  '2016-03-03 11:45:06.710',
+  NULL,
+  'DEFAULT'
+);
+INSERT INTO program_rnr_columns
+(
+  mastercolumnid,
+  programid,
+  label,
+  visible,
+  POSITION,
+  source,
+  formulavalidationrequired,
+  createdby,
+  createddate,
+  modifiedby,
+  modifieddate,
+  rnroptionid,
+  calculationoption
+)
+VALUES
+(
+  3,
+  2,
+  'Product',
+  TRUE,
+  3,
+  'R',
+  TRUE,
+  4,
+  '2016-03-03 11:45:06.710',
+  4,
+  '2016-03-03 11:45:06.710',
+  NULL,
+  'DEFAULT'
+);
+INSERT INTO program_rnr_columns
+(
+  mastercolumnid,
+  programid,
+  label,
+  visible,
+  POSITION,
+  source,
+  formulavalidationrequired,
+  createdby,
+  createddate,
+  modifiedby,
+  modifieddate,
+  rnroptionid,
+  calculationoption
+)
+VALUES
+(
+  4,
+  2,
+  'Unit/Unit of Issue',
+  TRUE,
+  4,
+  'R',
+  TRUE,
+  4,
+  '2016-03-03 11:45:06.710',
+  4,
+  '2016-03-03 11:45:06.710',
+  NULL,
+  'DEFAULT'
+);
+INSERT INTO program_rnr_columns
+(
+  mastercolumnid,
+  programid,
+  label,
+  visible,
+  POSITION,
+  source,
+  formulavalidationrequired,
+  createdby,
+  createddate,
+  modifiedby,
+  modifieddate,
+  rnroptionid,
+  calculationoption
+)
+VALUES
+(
+  6,
+  2,
+  'Total Received Quantity',
+  TRUE,
+  5,
+  'U',
+  TRUE,
+  4,
+  '2016-03-03 11:45:06.710',
+  4,
+  '2016-03-03 11:45:06.710',
+  NULL,
+  'DEFAULT'
+);
+INSERT INTO program_rnr_columns
+(
+  mastercolumnid,
+  programid,
+  label,
+  visible,
+  POSITION,
+  source,
+  formulavalidationrequired,
+  createdby,
+  createddate,
+  modifiedby,
+  modifieddate,
+  rnroptionid,
+  calculationoption
+)
+VALUES
+(
+  7,
+  2,
+  'Total',
+  TRUE,
+  6,
+  'C',
+  TRUE,
+  4,
+  '2016-03-03 11:45:06.710',
+  4,
+  '2016-03-03 11:45:06.710',
+  NULL,
+  'DEFAULT'
+);
+INSERT INTO program_rnr_columns
+(
+  mastercolumnid,
+  programid,
+  label,
+  visible,
+  POSITION,
+  source,
+  formulavalidationrequired,
+  createdby,
+  createddate,
+  modifiedby,
+  modifieddate,
+  rnroptionid,
+  calculationoption
+)
+VALUES
+(
+  8,
+  2,
+  'Total Consumed Quantity',
+  TRUE,
+  7,
+  'U',
+  TRUE,
+  4,
+  '2016-03-03 11:45:06.710',
+  4,
+  '2016-03-03 11:45:06.710',
+  NULL,
+  'DEFAULT'
+);
+INSERT INTO program_rnr_columns
+(
+  mastercolumnid,
+  programid,
+  label,
+  visible,
+  POSITION,
+  source,
+  formulavalidationrequired,
+  createdby,
+  createddate,
+  modifiedby,
+  modifieddate,
+  rnroptionid,
+  calculationoption
+)
+VALUES
+(
+  9,
+  2,
+  'Total Losses / Adjustments',
+  TRUE,
+  8,
+  'U',
+  TRUE,
+  4,
+  '2016-03-03 11:45:06.710',
+  4,
+  '2016-03-03 11:45:06.710',
+  NULL,
+  'DEFAULT'
+);
+INSERT INTO program_rnr_columns
+(
+  mastercolumnid,
+  programid,
+  label,
+  visible,
+  POSITION,
+  source,
+  formulavalidationrequired,
+  createdby,
+  createddate,
+  modifiedby,
+  modifieddate,
+  rnroptionid,
+  calculationoption
+)
+VALUES
+(
+  10,
+  2,
+  'Stock on Hand',
+  TRUE,
+  9,
+  'U',
+  TRUE,
+  4,
+  '2016-03-03 11:45:06.710',
+  4,
+  '2016-03-03 11:45:06.710',
+  NULL,
+  'DEFAULT'
+);
+INSERT INTO program_rnr_columns
+(
+  mastercolumnid,
+  programid,
+  label,
+  visible,
+  POSITION,
+  source,
+  formulavalidationrequired,
+  createdby,
+  createddate,
+  modifiedby,
+  modifieddate,
+  rnroptionid,
+  calculationoption
+)
+VALUES
+(
+  11,
+  2,
+  'Total number of new patients added to service on the program',
+  TRUE,
+  10,
+  'U',
+  TRUE,
+  4,
+  '2016-03-03 11:45:06.710',
+  4,
+  '2016-03-03 11:45:06.710',
+  1,
+  'DEFAULT'
+);
+INSERT INTO program_rnr_columns
+(
+  mastercolumnid,
+  programid,
+  label,
+  visible,
+  POSITION,
+  source,
+  formulavalidationrequired,
+  createdby,
+  createddate,
+  modifiedby,
+  modifieddate,
+  rnroptionid,
+  calculationoption
+)
+VALUES
+(
+  12,
+  2,
+  'Total Stockout Days',
+  TRUE,
+  11,
+  'U',
+  TRUE,
+  4,
+  '2016-03-03 11:45:06.710',
+  4,
+  '2016-03-03 11:45:06.710',
+  NULL,
+  'DEFAULT'
+);
+INSERT INTO program_rnr_columns
+(
+  mastercolumnid,
+  programid,
+  label,
+  visible,
+  POSITION,
+  source,
+  formulavalidationrequired,
+  createdby,
+  createddate,
+  modifiedby,
+  modifieddate,
+  rnroptionid,
+  calculationoption
+)
+VALUES
+(
+  14,
+  2,
+  'Average Monthly Consumption(AMC)',
+  TRUE,
+  12,
+  'C',
+  TRUE,
+  4,
+  '2016-03-03 11:45:06.710',
+  4,
+  '2016-03-03 11:45:06.710',
+  NULL,
+  'DEFAULT'
+);
+INSERT INTO program_rnr_columns
+(
+  mastercolumnid,
+  programid,
+  label,
+  visible,
+  POSITION,
+  source,
+  formulavalidationrequired,
+  createdby,
+  createddate,
+  modifiedby,
+  modifieddate,
+  rnroptionid,
+  calculationoption
+)
+VALUES
+(
+  16,
+  2,
+  'Calculated Order Quantity',
+  TRUE,
+  13,
+  'C',
+  TRUE,
+  4,
+  '2016-03-03 11:45:06.710',
+  4,
+  '2016-03-03 11:45:06.710',
+  NULL,
+  'DEFAULT'
+);
+INSERT INTO program_rnr_columns
+(
+  mastercolumnid,
+  programid,
+  label,
+  visible,
+  POSITION,
+  source,
+  formulavalidationrequired,
+  createdby,
+  createddate,
+  modifiedby,
+  modifieddate,
+  rnroptionid,
+  calculationoption
+)
+VALUES
+(
+  17,
+  2,
+  'Requested Quantity',
+  TRUE,
+  14,
+  'U',
+  TRUE,
+  4,
+  '2016-03-03 11:45:06.710',
+  4,
+  '2016-03-03 11:45:06.710',
+  NULL,
+  'DEFAULT'
+);
+INSERT INTO program_rnr_columns
+(
+  mastercolumnid,
+  programid,
+  label,
+  visible,
+  POSITION,
+  source,
+  formulavalidationrequired,
+  createdby,
+  createddate,
+  modifiedby,
+  modifieddate,
+  rnroptionid,
+  calculationoption
+)
+VALUES
+(
+  18,
+  2,
+  'Requested Quantity Explanation',
+  TRUE,
+  15,
+  'U',
+  TRUE,
+  4,
+  '2016-03-03 11:45:06.710',
+  4,
+  '2016-03-03 11:45:06.710',
+  NULL,
+  'DEFAULT'
+);
+INSERT INTO program_rnr_columns
+(
+  mastercolumnid,
+  programid,
+  label,
+  visible,
+  POSITION,
+  source,
+  formulavalidationrequired,
+  createdby,
+  createddate,
+  modifiedby,
+  modifieddate,
+  rnroptionid,
+  calculationoption
+)
+VALUES
+(
+  20,
+  2,
+  'Packs to Ship',
+  TRUE,
+  16,
+  'C',
+  TRUE,
+  4,
+  '2016-03-03 11:45:06.710',
+  4,
+  '2016-03-03 11:45:06.710',
+  NULL,
+  'DEFAULT'
+);
+INSERT INTO program_rnr_columns
+(
+  mastercolumnid,
+  programid,
+  label,
+  visible,
+  POSITION,
+  source,
+  formulavalidationrequired,
+  createdby,
+  createddate,
+  modifiedby,
+  modifieddate,
+  rnroptionid,
+  calculationoption
+)
+VALUES
+(
+  21,
+  2,
+  'Price per Pack',
+  TRUE,
+  17,
+  'R',
+  TRUE,
+  4,
+  '2016-03-03 11:45:06.710',
+  4,
+  '2016-03-03 11:45:06.710',
+  NULL,
+  'DEFAULT'
+);
+INSERT INTO program_rnr_columns
+(
+  mastercolumnid,
+  programid,
+  label,
+  visible,
+  POSITION,
+  source,
+  formulavalidationrequired,
+  createdby,
+  createddate,
+  modifiedby,
+  modifieddate,
+  rnroptionid,
+  calculationoption
+)
+VALUES
+(
+  22,
+  2,
+  'Total Cost',
+  TRUE,
+  18,
+  'C',
+  TRUE,
+  4,
+  '2016-03-03 11:45:06.710',
+  4,
+  '2016-03-03 11:45:06.710',
+  NULL,
+  'DEFAULT'
+);
+INSERT INTO program_rnr_columns
+(
+  mastercolumnid,
+  programid,
+  label,
+  visible,
+  POSITION,
+  source,
+  formulavalidationrequired,
+  createdby,
+  createddate,
+  modifiedby,
+  modifieddate,
+  rnroptionid,
+  calculationoption
+)
+VALUES
+(
+  23,
+  2,
+  'Expiration Date',
+  TRUE,
+  19,
+  'U',
+  TRUE,
+  4,
+  '2016-03-03 11:45:06.710',
+  4,
+  '2016-03-03 11:45:06.710',
+  NULL,
+  'DEFAULT'
+);
+INSERT INTO program_rnr_columns
+(
+  mastercolumnid,
+  programid,
+  label,
+  visible,
+  POSITION,
+  source,
+  formulavalidationrequired,
+  createdby,
+  createddate,
+  modifiedby,
+  modifieddate,
+  rnroptionid,
+  calculationoption
+)
+VALUES
+(
+  24,
+  2,
+  'Remarks',
+  TRUE,
+  20,
+  'U',
+  TRUE,
+  4,
+  '2016-03-03 11:45:06.710',
+  4,
+  '2016-03-03 11:45:06.710',
+  NULL,
+  'DEFAULT'
+);
+INSERT INTO program_rnr_columns
+(
+  mastercolumnid,
+  programid,
+  label,
+  visible,
+  POSITION,
+  source,
+  formulavalidationrequired,
+  createdby,
+  createddate,
+  modifiedby,
+  modifieddate,
+  rnroptionid,
+  calculationoption
+)
+VALUES
+(
+  25,
+  2,
+  'Period Normalized Consumption',
+  TRUE,
+  21,
+  'C',
+  TRUE,
+  4,
+  '2016-03-03 11:45:06.710',
+  4,
+  '2016-03-03 11:45:06.710',
+  NULL,
+  'DEFAULT'
+);
+INSERT INTO program_rnr_columns
+(
+  mastercolumnid,
+  programid,
+  label,
+  visible,
+  POSITION,
+  source,
+  formulavalidationrequired,
+  createdby,
+  createddate,
+  modifiedby,
+  modifieddate,
+  rnroptionid,
+  calculationoption
+)
+VALUES
+(
+  15,
+  2,
+  'Maximum Stock Quantity',
+  TRUE,
+  22,
+  'C',
+  TRUE,
+  4,
+  '2016-03-03 11:45:06.710',
+  4,
+  '2016-03-03 11:45:06.710',
+  NULL,
+  '[{"name":"Default", "id":"DEFAULT"},{"name":"Normalized Consumption x 2","id":"CONSUMPTION_X_2"},{"name":"Dispensed Quantity x 2","id":"DISPENSED_X_2"}]'
+);
+INSERT INTO program_rnr_columns
+(
+  mastercolumnid,
+  programid,
+  label,
+  visible,
+  POSITION,
+  source,
+  formulavalidationrequired,
+  createdby,
+  createddate,
+  modifiedby,
+  modifieddate,
+  rnroptionid,
+  calculationoption
+)
+VALUES
+(
+  5,
+  2,
+  'Beginning Balance',
+  TRUE,
+  23,
+  'U',
+  TRUE,
+  4,
+  '2016-03-03 11:45:06.710',
+  4,
+  '2016-03-03 11:45:06.710',
+  NULL,
+  '[{"name":"Default", "id":"DEFAULT"},{"name":"Allow users to override beginning balance","id":"ALLOW_USER_OVERRIDE"}]'
+);
+INSERT INTO program_rnr_columns
+(
+  mastercolumnid,
+  programid,
+  label,
+  visible,
+  POSITION,
+  source,
+  formulavalidationrequired,
+  createdby,
+  createddate,
+  modifiedby,
+  modifieddate,
+  rnroptionid,
+  calculationoption
+)
+VALUES
+(
+  19,
+  2,
+  'Approved Quantity',
+  TRUE,
+  24,
+  'U',
+  TRUE,
+  4,
+  '2016-03-03 11:45:06.710',
+  4,
+  '2016-03-03 11:45:06.710',
+  NULL,
+  '[{"name":"Default", "id":"DEFAULT"},{"name":"Accept in Packs","id":"ACCEPT_PACKS"}]'
+);
+INSERT INTO program_rnr_columns
+(
+  mastercolumnid,
+  programid,
+  label,
+  visible,
+  POSITION,
+  source,
+  formulavalidationrequired,
+  createdby,
+  createddate,
+  modifiedby,
+  modifieddate,
+  rnroptionid,
+  calculationoption
+)
+VALUES
+(
+  13,
+  2,
+  'Monthly Normalized Consumption',
+  TRUE,
+  25,
+  'C',
+  TRUE,
+  4,
+  '2016-03-03 11:45:06.710',
+  4,
+  '2016-03-03 11:45:06.710',
+  NULL,
+  '[{"name":"Default", "id":"DEFAULT"},{"name":"Dispensed Quantity + No of New Patients","id":"DISPENSED_PLUS_NEW_PATIENTS"},{"name":"(Dispensed x 90) / (90 - Stockout Days)","id":"DISPENSED_X_90"}]'
+);
+INSERT INTO program_rnr_columns
+(
+  mastercolumnid,
+  programid,
+  label,
+  visible,
+  POSITION,
+  source,
+  formulavalidationrequired,
+  createdby,
+  createddate,
+  modifiedby,
+  modifieddate,
+  rnroptionid,
+  calculationoption
+)
+VALUES
+(
+  1,
+  3,
+  'Skip',
+  TRUE,
+  1,
+  'U',
+  TRUE,
+  4,
+  '2016-03-03 11:45:09.836',
+  4,
+  '2016-03-03 11:45:09.836',
+  NULL,
+  'DEFAULT'
+);
+INSERT INTO program_rnr_columns
+(
+  mastercolumnid,
+  programid,
+  label,
+  visible,
+  POSITION,
+  source,
+  formulavalidationrequired,
+  createdby,
+  createddate,
+  modifiedby,
+  modifieddate,
+  rnroptionid,
+  calculationoption
+)
+VALUES
+(
+  2,
+  3,
+  'Product Code',
+  TRUE,
+  2,
+  'R',
+  TRUE,
+  4,
+  '2016-03-03 11:45:09.836',
+  4,
+  '2016-03-03 11:45:09.836',
+  NULL,
+  'DEFAULT'
+);
+INSERT INTO program_rnr_columns
+(
+  mastercolumnid,
+  programid,
+  label,
+  visible,
+  POSITION,
+  source,
+  formulavalidationrequired,
+  createdby,
+  createddate,
+  modifiedby,
+  modifieddate,
+  rnroptionid,
+  calculationoption
+)
+VALUES
+(
+  3,
+  3,
+  'Product',
+  TRUE,
+  3,
+  'R',
+  TRUE,
+  4,
+  '2016-03-03 11:45:09.836',
+  4,
+  '2016-03-03 11:45:09.836',
+  NULL,
+  'DEFAULT'
+);
+INSERT INTO program_rnr_columns
+(
+  mastercolumnid,
+  programid,
+  label,
+  visible,
+  POSITION,
+  source,
+  formulavalidationrequired,
+  createdby,
+  createddate,
+  modifiedby,
+  modifieddate,
+  rnroptionid,
+  calculationoption
+)
+VALUES
+(
+  4,
+  3,
+  'Unit/Unit of Issue',
+  TRUE,
+  4,
+  'R',
+  TRUE,
+  4,
+  '2016-03-03 11:45:09.836',
+  4,
+  '2016-03-03 11:45:09.836',
+  NULL,
+  'DEFAULT'
+);
+INSERT INTO program_rnr_columns
+(
+  mastercolumnid,
+  programid,
+  label,
+  visible,
+  POSITION,
+  source,
+  formulavalidationrequired,
+  createdby,
+  createddate,
+  modifiedby,
+  modifieddate,
+  rnroptionid,
+  calculationoption
+)
+VALUES
+(
+  6,
+  3,
+  'Total Received Quantity',
+  TRUE,
+  5,
+  'U',
+  TRUE,
+  4,
+  '2016-03-03 11:45:09.836',
+  4,
+  '2016-03-03 11:45:09.836',
+  NULL,
+  'DEFAULT'
+);
+INSERT INTO program_rnr_columns
+(
+  mastercolumnid,
+  programid,
+  label,
+  visible,
+  POSITION,
+  source,
+  formulavalidationrequired,
+  createdby,
+  createddate,
+  modifiedby,
+  modifieddate,
+  rnroptionid,
+  calculationoption
+)
+VALUES
+(
+  7,
+  3,
+  'Total',
+  TRUE,
+  6,
+  'C',
+  TRUE,
+  4,
+  '2016-03-03 11:45:09.836',
+  4,
+  '2016-03-03 11:45:09.836',
+  NULL,
+  'DEFAULT'
+);
+INSERT INTO program_rnr_columns
+(
+  mastercolumnid,
+  programid,
+  label,
+  visible,
+  POSITION,
+  source,
+  formulavalidationrequired,
+  createdby,
+  createddate,
+  modifiedby,
+  modifieddate,
+  rnroptionid,
+  calculationoption
+)
+VALUES
+(
+  8,
+  3,
+  'Total Consumed Quantity',
+  TRUE,
+  7,
+  'U',
+  TRUE,
+  4,
+  '2016-03-03 11:45:09.836',
+  4,
+  '2016-03-03 11:45:09.836',
+  NULL,
+  'DEFAULT'
+);
+INSERT INTO program_rnr_columns
+(
+  mastercolumnid,
+  programid,
+  label,
+  visible,
+  POSITION,
+  source,
+  formulavalidationrequired,
+  createdby,
+  createddate,
+  modifiedby,
+  modifieddate,
+  rnroptionid,
+  calculationoption
+)
+VALUES
+(
+  9,
+  3,
+  'Total Losses / Adjustments',
+  TRUE,
+  8,
+  'U',
+  TRUE,
+  4,
+  '2016-03-03 11:45:09.836',
+  4,
+  '2016-03-03 11:45:09.836',
+  NULL,
+  'DEFAULT'
+);
+INSERT INTO program_rnr_columns
+(
+  mastercolumnid,
+  programid,
+  label,
+  visible,
+  POSITION,
+  source,
+  formulavalidationrequired,
+  createdby,
+  createddate,
+  modifiedby,
+  modifieddate,
+  rnroptionid,
+  calculationoption
+)
+VALUES
+(
+  10,
+  3,
+  'Stock on Hand',
+  TRUE,
+  9,
+  'U',
+  TRUE,
+  4,
+  '2016-03-03 11:45:09.836',
+  4,
+  '2016-03-03 11:45:09.836',
+  NULL,
+  'DEFAULT'
+);
+INSERT INTO program_rnr_columns
+(
+  mastercolumnid,
+  programid,
+  label,
+  visible,
+  POSITION,
+  source,
+  formulavalidationrequired,
+  createdby,
+  createddate,
+  modifiedby,
+  modifieddate,
+  rnroptionid,
+  calculationoption
+)
+VALUES
+(
+  11,
+  3,
+  'Total number of new patients added to service on the program',
+  TRUE,
+  10,
+  'U',
+  TRUE,
+  4,
+  '2016-03-03 11:45:09.836',
+  4,
+  '2016-03-03 11:45:09.836',
+  1,
+  'DEFAULT'
+);
+INSERT INTO program_rnr_columns
+(
+  mastercolumnid,
+  programid,
+  label,
+  visible,
+  POSITION,
+  source,
+  formulavalidationrequired,
+  createdby,
+  createddate,
+  modifiedby,
+  modifieddate,
+  rnroptionid,
+  calculationoption
+)
+VALUES
+(
+  12,
+  3,
+  'Total Stockout Days',
+  TRUE,
+  11,
+  'U',
+  TRUE,
+  4,
+  '2016-03-03 11:45:09.836',
+  4,
+  '2016-03-03 11:45:09.836',
+  NULL,
+  'DEFAULT'
+);
+INSERT INTO program_rnr_columns
+(
+  mastercolumnid,
+  programid,
+  label,
+  visible,
+  POSITION,
+  source,
+  formulavalidationrequired,
+  createdby,
+  createddate,
+  modifiedby,
+  modifieddate,
+  rnroptionid,
+  calculationoption
+)
+VALUES
+(
+  14,
+  3,
+  'Average Monthly Consumption(AMC)',
+  TRUE,
+  12,
+  'C',
+  TRUE,
+  4,
+  '2016-03-03 11:45:09.836',
+  4,
+  '2016-03-03 11:45:09.836',
+  NULL,
+  'DEFAULT'
+);
+INSERT INTO program_rnr_columns
+(
+  mastercolumnid,
+  programid,
+  label,
+  visible,
+  POSITION,
+  source,
+  formulavalidationrequired,
+  createdby,
+  createddate,
+  modifiedby,
+  modifieddate,
+  rnroptionid,
+  calculationoption
+)
+VALUES
+(
+  16,
+  3,
+  'Calculated Order Quantity',
+  TRUE,
+  13,
+  'C',
+  TRUE,
+  4,
+  '2016-03-03 11:45:09.836',
+  4,
+  '2016-03-03 11:45:09.836',
+  NULL,
+  'DEFAULT'
+);
+INSERT INTO program_rnr_columns
+(
+  mastercolumnid,
+  programid,
+  label,
+  visible,
+  POSITION,
+  source,
+  formulavalidationrequired,
+  createdby,
+  createddate,
+  modifiedby,
+  modifieddate,
+  rnroptionid,
+  calculationoption
+)
+VALUES
+(
+  17,
+  3,
+  'Requested Quantity',
+  TRUE,
+  14,
+  'U',
+  TRUE,
+  4,
+  '2016-03-03 11:45:09.836',
+  4,
+  '2016-03-03 11:45:09.836',
+  NULL,
+  'DEFAULT'
+);
+INSERT INTO program_rnr_columns
+(
+  mastercolumnid,
+  programid,
+  label,
+  visible,
+  POSITION,
+  source,
+  formulavalidationrequired,
+  createdby,
+  createddate,
+  modifiedby,
+  modifieddate,
+  rnroptionid,
+  calculationoption
+)
+VALUES
+(
+  18,
+  3,
+  'Requested Quantity Explanation',
+  TRUE,
+  15,
+  'U',
+  TRUE,
+  4,
+  '2016-03-03 11:45:09.836',
+  4,
+  '2016-03-03 11:45:09.836',
+  NULL,
+  'DEFAULT'
+);
+INSERT INTO program_rnr_columns
+(
+  mastercolumnid,
+  programid,
+  label,
+  visible,
+  POSITION,
+  source,
+  formulavalidationrequired,
+  createdby,
+  createddate,
+  modifiedby,
+  modifieddate,
+  rnroptionid,
+  calculationoption
+)
+VALUES
+(
+  20,
+  3,
+  'Packs to Ship',
+  TRUE,
+  16,
+  'C',
+  TRUE,
+  4,
+  '2016-03-03 11:45:09.836',
+  4,
+  '2016-03-03 11:45:09.836',
+  NULL,
+  'DEFAULT'
+);
+INSERT INTO program_rnr_columns
+(
+  mastercolumnid,
+  programid,
+  label,
+  visible,
+  POSITION,
+  source,
+  formulavalidationrequired,
+  createdby,
+  createddate,
+  modifiedby,
+  modifieddate,
+  rnroptionid,
+  calculationoption
+)
+VALUES
+(
+  21,
+  3,
+  'Price per Pack',
+  TRUE,
+  17,
+  'R',
+  TRUE,
+  4,
+  '2016-03-03 11:45:09.836',
+  4,
+  '2016-03-03 11:45:09.836',
+  NULL,
+  'DEFAULT'
+);
+INSERT INTO program_rnr_columns
+(
+  mastercolumnid,
+  programid,
+  label,
+  visible,
+  POSITION,
+  source,
+  formulavalidationrequired,
+  createdby,
+  createddate,
+  modifiedby,
+  modifieddate,
+  rnroptionid,
+  calculationoption
+)
+VALUES
+(
+  22,
+  3,
+  'Total Cost',
+  TRUE,
+  18,
+  'C',
+  TRUE,
+  4,
+  '2016-03-03 11:45:09.836',
+  4,
+  '2016-03-03 11:45:09.836',
+  NULL,
+  'DEFAULT'
+);
+INSERT INTO program_rnr_columns
+(
+  mastercolumnid,
+  programid,
+  label,
+  visible,
+  POSITION,
+  source,
+  formulavalidationrequired,
+  createdby,
+  createddate,
+  modifiedby,
+  modifieddate,
+  rnroptionid,
+  calculationoption
+)
+VALUES
+(
+  23,
+  3,
+  'Expiration Date',
+  TRUE,
+  19,
+  'U',
+  TRUE,
+  4,
+  '2016-03-03 11:45:09.836',
+  4,
+  '2016-03-03 11:45:09.836',
+  NULL,
+  'DEFAULT'
+);
+INSERT INTO program_rnr_columns
+(
+  mastercolumnid,
+  programid,
+  label,
+  visible,
+  POSITION,
+  source,
+  formulavalidationrequired,
+  createdby,
+  createddate,
+  modifiedby,
+  modifieddate,
+  rnroptionid,
+  calculationoption
+)
+VALUES
+(
+  24,
+  3,
+  'Remarks',
+  TRUE,
+  20,
+  'U',
+  TRUE,
+  4,
+  '2016-03-03 11:45:09.836',
+  4,
+  '2016-03-03 11:45:09.836',
+  NULL,
+  'DEFAULT'
+);
+INSERT INTO program_rnr_columns
+(
+  mastercolumnid,
+  programid,
+  label,
+  visible,
+  POSITION,
+  source,
+  formulavalidationrequired,
+  createdby,
+  createddate,
+  modifiedby,
+  modifieddate,
+  rnroptionid,
+  calculationoption
+)
+VALUES
+(
+  25,
+  3,
+  'Period Normalized Consumption',
+  TRUE,
+  21,
+  'C',
+  TRUE,
+  4,
+  '2016-03-03 11:45:09.836',
+  4,
+  '2016-03-03 11:45:09.836',
+  NULL,
+  'DEFAULT'
+);
+INSERT INTO program_rnr_columns
+(
+  mastercolumnid,
+  programid,
+  label,
+  visible,
+  POSITION,
+  source,
+  formulavalidationrequired,
+  createdby,
+  createddate,
+  modifiedby,
+  modifieddate,
+  rnroptionid,
+  calculationoption
+)
+VALUES
+(
+  15,
+  3,
+  'Maximum Stock Quantity',
+  TRUE,
+  22,
+  'C',
+  TRUE,
+  4,
+  '2016-03-03 11:45:09.836',
+  4,
+  '2016-03-03 11:45:09.836',
+  NULL,
+  '[{"name":"Default", "id":"DEFAULT"},{"name":"Normalized Consumption x 2","id":"CONSUMPTION_X_2"},{"name":"Dispensed Quantity x 2","id":"DISPENSED_X_2"}]'
+);
+INSERT INTO program_rnr_columns
+(
+  mastercolumnid,
+  programid,
+  label,
+  visible,
+  POSITION,
+  source,
+  formulavalidationrequired,
+  createdby,
+  createddate,
+  modifiedby,
+  modifieddate,
+  rnroptionid,
+  calculationoption
+)
+VALUES
+(
+  5,
+  3,
+  'Beginning Balance',
+  TRUE,
+  23,
+  'U',
+  TRUE,
+  4,
+  '2016-03-03 11:45:09.836',
+  4,
+  '2016-03-03 11:45:09.836',
+  NULL,
+  '[{"name":"Default", "id":"DEFAULT"},{"name":"Allow users to override beginning balance","id":"ALLOW_USER_OVERRIDE"}]'
+);
+INSERT INTO program_rnr_columns
+(
+  mastercolumnid,
+  programid,
+  label,
+  visible,
+  POSITION,
+  source,
+  formulavalidationrequired,
+  createdby,
+  createddate,
+  modifiedby,
+  modifieddate,
+  rnroptionid,
+  calculationoption
+)
+VALUES
+(
+  19,
+  3,
+  'Approved Quantity',
+  TRUE,
+  24,
+  'U',
+  TRUE,
+  4,
+  '2016-03-03 11:45:09.836',
+  4,
+  '2016-03-03 11:45:09.836',
+  NULL,
+  '[{"name":"Default", "id":"DEFAULT"},{"name":"Accept in Packs","id":"ACCEPT_PACKS"}]'
+);
+INSERT INTO program_rnr_columns
+(
+  mastercolumnid,
+  programid,
+  label,
+  visible,
+  POSITION,
+  source,
+  formulavalidationrequired,
+  createdby,
+  createddate,
+  modifiedby,
+  modifieddate,
+  rnroptionid,
+  calculationoption
+)
+VALUES
+(
+  13,
+  3,
+  'Monthly Normalized Consumption',
+  TRUE,
+  25,
+  'C',
+  TRUE,
+  4,
+  '2016-03-03 11:45:09.836',
+  4,
+  '2016-03-03 11:45:09.836',
+  NULL,
+  '[{"name":"Default", "id":"DEFAULT"},{"name":"Dispensed Quantity + No of New Patients","id":"DISPENSED_PLUS_NEW_PATIENTS"},{"name":"(Dispensed x 90) / (90 - Stockout Days)","id":"DISPENSED_X_90"}]'
+);
+
 -- No UPDATEs for program_rnr_columns necessary
 -- -------------------
 -- INSERTS for public.programs
@@ -7882,7 +10285,7 @@ VALUES
   'ART',
   'Anti-Retroviral Therapy',
   TRUE,
-  NULL,
+  TRUE,
   NULL,
   TRUE,
   NULL,
@@ -7928,7 +10331,7 @@ VALUES
   'Essential Medicines',
   'Primary Care – Essential Medications',
   TRUE,
-  NULL,
+  TRUE,
   NULL,
   FALSE,
   NULL,
@@ -7974,7 +10377,7 @@ VALUES
   'Malaria',
   'Malaria Testing and Treatment',
   TRUE,
-  NULL,
+  TRUE,
   NULL,
   FALSE,
   NULL,
