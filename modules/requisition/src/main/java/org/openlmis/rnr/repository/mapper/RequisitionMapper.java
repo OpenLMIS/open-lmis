@@ -284,10 +284,12 @@ public interface RequisitionMapper {
       "ON r.programid = p.id " +
       "WHERE TO_CHAR(pp.startdate, 'yyyy-mm') = #{periodStartMonth} " +
       "AND TO_CHAR(pp.enddate, 'yyyy-mm') = #{periodEndMonth} " +
-      "AND p.id = #{programId}")
+      "AND p.id = #{programId} " +
+      "AND r.facilityid = #{facilityId}")
   List<Rnr> findRnrByPeriodAndProgram(@Param("periodStartMonth") String periodStartMonth,
                                       @Param("periodEndMonth") String periodEndMonth,
-                                      @Param("programId") Long programId);
+                                      @Param("programId") Long programId,
+                                      @Param("facilityId") Long facilityId);
 
   public class ApprovedRequisitionSearch {
 

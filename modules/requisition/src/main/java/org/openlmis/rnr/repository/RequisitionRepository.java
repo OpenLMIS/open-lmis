@@ -321,10 +321,10 @@ public class RequisitionRepository {
     requisitionMapper.saveClientPeriod(rnr);
   }
 
-  public List<Rnr> findRnrByPeriodAndProgram(Date beginDate, Date endDate, Long programId) {
+  public List<Rnr> findRnrByPeriodAndProgram(Date beginDate, Date endDate, Long programId, Long facilityId) {
     if (beginDate == null || endDate == null) {
       return new ArrayList<>();
     }
-    return requisitionMapper.findRnrByPeriodAndProgram(DateUtil.getFormattedDate(beginDate, DateUtil.FORMAT_YEAR_MONTH), DateUtil.getFormattedDate(endDate, DateUtil.FORMAT_YEAR_MONTH), programId);
+    return requisitionMapper.findRnrByPeriodAndProgram(DateUtil.getFormattedDate(beginDate, DateUtil.FORMAT_YEAR_MONTH), DateUtil.getFormattedDate(endDate, DateUtil.FORMAT_YEAR_MONTH), programId, facilityId);
   }
 }

@@ -421,7 +421,7 @@ public class RestRequisitionCalculatorTest {
     Program reportingProgram = new Program();
 
     when(requisitionService.getPeriodForInitiating(reportingFacility, reportingProgram)).thenReturn(previousPeriod);
-    when(requisitionService.getRequisitionsByPeriodAndProgram(null, null, reportingProgram.getId())).thenReturn(null);
+    when(requisitionService.getRequisitionsByPeriodAndProgram(null, null, reportingProgram.getId(), reportingFacility.getId())).thenReturn(null);
 
     restRequisitionCalculator.validatePeriod(reportingFacility, reportingProgram, null, null);
   }
@@ -434,7 +434,7 @@ public class RestRequisitionCalculatorTest {
     Program reportingProgram = new Program();
 
     when(requisitionService.getPeriodForInitiating(reportingFacility, reportingProgram)).thenReturn(null);
-    when(requisitionService.getRequisitionsByPeriodAndProgram(null, null, reportingProgram.getId())).thenReturn(null);
+    when(requisitionService.getRequisitionsByPeriodAndProgram(null, null, reportingProgram.getId(), reportingFacility.getId())).thenReturn(null);
 
     expectedException.expect(DataException.class);
     restRequisitionCalculator.validatePeriod(reportingFacility, reportingProgram, null, null);
@@ -453,7 +453,7 @@ public class RestRequisitionCalculatorTest {
     Date endDate = DateUtil.parseDate("2020-11-20", DateUtil.FORMAT_DATE);
 
     when(requisitionService.getPeriodForInitiating(reportingFacility, reportingProgram)).thenReturn(previousPeriod);
-    when(requisitionService.getRequisitionsByPeriodAndProgram(beginDate, endDate, reportingProgram.getId())).thenReturn(asList(new Rnr()));
+    when(requisitionService.getRequisitionsByPeriodAndProgram(beginDate, endDate, reportingProgram.getId(), reportingFacility.getId())).thenReturn(asList(new Rnr()));
 
     expectedException.expect(DataException.class);
     restRequisitionCalculator.validatePeriod(reportingFacility, reportingProgram, beginDate, endDate);

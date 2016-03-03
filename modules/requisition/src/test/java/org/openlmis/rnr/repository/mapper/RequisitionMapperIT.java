@@ -44,13 +44,10 @@ import static org.joda.time.DateTime.now;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
-import static org.openlmis.core.builder.FacilityBuilder.FACILITY_CODE;
-import static org.openlmis.core.builder.FacilityBuilder.defaultFacility;
-import static org.openlmis.core.builder.FacilityBuilder.name;
+import static org.openlmis.core.builder.FacilityBuilder.*;
 import static org.openlmis.core.builder.ProcessingPeriodBuilder.*;
 import static org.openlmis.core.builder.ProcessingScheduleBuilder.defaultProcessingSchedule;
 import static org.openlmis.core.builder.ProgramBuilder.programCode;
-import static org.openlmis.core.builder.ProgramBuilder.programId;
 import static org.openlmis.core.builder.ProgramBuilder.programName;
 import static org.openlmis.core.builder.SupplyLineBuilder.defaultSupplyLine;
 import static org.openlmis.core.builder.UserBuilder.active;
@@ -633,9 +630,9 @@ public class RequisitionMapperIT {
   public void shouldGetApprovedRequisitionsInAscOrderOfFacilityName() throws SQLException {
     Long userId = insertUser();
     insertRoleForApprovedRequisitions(facility.getId(), userId);
-    Facility facility1 = make(a(FacilityBuilder.defaultFacility, with(name, "village pharmacy"), with(FacilityBuilder.code, "VP")));
+    Facility facility1 = make(a(FacilityBuilder.defaultFacility, with(FacilityBuilder.name, "village pharmacy"), with(FacilityBuilder.code, "VP")));
     facilityMapper.insert(facility1);
-    Facility facility2 = make(a(FacilityBuilder.defaultFacility, with(name, "central hospital"), with(FacilityBuilder.code, "CH")));
+    Facility facility2 = make(a(FacilityBuilder.defaultFacility, with(FacilityBuilder.name, "central hospital"), with(FacilityBuilder.code, "CH")));
     facilityMapper.insert(facility2);
     Rnr requisition1 = insertRequisition(processingPeriod1, program, SUBMITTED, false, facility1, supervisoryNode, modifiedDate);
     Rnr requisition2 = insertRequisition(processingPeriod3, program, SUBMITTED, false, facility2, supervisoryNode, modifiedDate);
@@ -660,9 +657,9 @@ public class RequisitionMapperIT {
   public void shouldGetApprovedRequisitionsInAscOrderOfFacilityCode() throws SQLException {
     Long userId = insertUser();
     insertRoleForApprovedRequisitions(facility.getId(), userId);
-    Facility facility1 = make(a(FacilityBuilder.defaultFacility, with(name, "village pharmacy"), with(FacilityBuilder.code, "VP")));
+    Facility facility1 = make(a(FacilityBuilder.defaultFacility, with(FacilityBuilder.name, "village pharmacy"), with(FacilityBuilder.code, "VP")));
     facilityMapper.insert(facility1);
-    Facility facility2 = make(a(FacilityBuilder.defaultFacility, with(name, "central hospital"), with(FacilityBuilder.code, "CH")));
+    Facility facility2 = make(a(FacilityBuilder.defaultFacility, with(FacilityBuilder.name, "central hospital"), with(FacilityBuilder.code, "CH")));
     facilityMapper.insert(facility2);
     Rnr requisition1 = insertRequisition(processingPeriod1, program, SUBMITTED, false, facility1, supervisoryNode, modifiedDate);
     Rnr requisition2 = insertRequisition(processingPeriod3, program, SUBMITTED, false, facility2, supervisoryNode, modifiedDate);
@@ -685,9 +682,9 @@ public class RequisitionMapperIT {
 
   @Test
   public void shouldGetApprovedRequisitionsInAscOrderOfSupplyingDepotName() throws SQLException {
-    Facility facility1 = make(a(FacilityBuilder.defaultFacility, with(name, "village pharmacy"), with(FacilityBuilder.code, "VP")));
+    Facility facility1 = make(a(FacilityBuilder.defaultFacility, with(FacilityBuilder.name, "village pharmacy"), with(FacilityBuilder.code, "VP")));
     facilityMapper.insert(facility1);
-    Facility facility2 = make(a(FacilityBuilder.defaultFacility, with(name, "central hospital"), with(FacilityBuilder.code, "CH")));
+    Facility facility2 = make(a(FacilityBuilder.defaultFacility, with(FacilityBuilder.name, "central hospital"), with(FacilityBuilder.code, "CH")));
     facilityMapper.insert(facility2);
     Long userId = insertUser();
     insertRoleForApprovedRequisitions(facility1.getId(), userId);
@@ -918,11 +915,27 @@ public class RequisitionMapperIT {
   }
 
   @Test
-  public void shouldFindPeriodByPhysicalInventoryDate() {
+  public void shouldFindPeriodByPhysicalInventoryDateAndProgramAndFacility() {
     ProcessingPeriod period = insertPeriod("Period", processingSchedule, DateUtil.parseDate("2020-10-20", DateUtil.FORMAT_DATE),
         DateUtil.parseDate("2020-11-20", DateUtil.FORMAT_DATE));
     insertRequisition(period, program, INITIATED, false, facility, supervisoryNode, modifiedDate);
-    assertThat(mapper.findRnrByPeriodAndProgram("2020-10", "2020-11", program.getId()).size(), is(1));
+    assertThat(mapper.findRnrByPeriodAndProgram("2020-10", "2020-11", program.getId(), facility.getId()).size(), is(1));
+  }
+
+  @Test
+  public void shouldNotFindPeriodWithSameDateButDiffFacility() {
+    ProcessingPeriod period = insertPeriod("Period", processingSchedule, DateUtil.parseDate("2020-10-20", DateUtil.FORMAT_DATE),
+        DateUtil.parseDate("2020-11-20", DateUtil.FORMAT_DATE));
+    insertRequisition(period, program, INITIATED, false, facility, supervisoryNode, modifiedDate);
+    assertThat(mapper.findRnrByPeriodAndProgram("2020-10", "2020-11", program.getId(), 1000L).size(), is(0));
+  }
+
+  @Test
+  public void shouldNotFindPeriodNotByPhysicalInventoryDate() {
+    ProcessingPeriod period = insertPeriod("Period", processingSchedule, DateUtil.parseDate("2020-9-20", DateUtil.FORMAT_DATE),
+        DateUtil.parseDate("2020-10-20", DateUtil.FORMAT_DATE));
+    insertRequisition(period, program, INITIATED, false, facility, supervisoryNode, modifiedDate);
+    assertThat(mapper.findRnrByPeriodAndProgram("2020-10", "2020-11", program.getId(), facility.getId()).size(), is(0));
   }
 
   @Test

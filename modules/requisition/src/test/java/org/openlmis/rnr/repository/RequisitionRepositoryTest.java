@@ -499,13 +499,13 @@ public class RequisitionRepositoryTest {
     Date begindDate = DateUtil.parseDate("2020-10-20", DateUtil.FORMAT_DATE);
     Date endDate = DateUtil.parseDate("2020-11-20", DateUtil.FORMAT_DATE);
     List<Rnr> rnrs = asList(new Rnr());
-    when(requisitionMapper.findRnrByPeriodAndProgram("2020-10", "2020-11", 1L)).thenReturn(rnrs);
+    when(requisitionMapper.findRnrByPeriodAndProgram("2020-10", "2020-11", 1L, 0L)).thenReturn(rnrs);
 
-    assertEquals(rnrs, requisitionRepository.findRnrByPeriodAndProgram(begindDate, endDate, 1L));
+    assertEquals(rnrs, requisitionRepository.findRnrByPeriodAndProgram(begindDate, endDate, 1L, 0L));
   }
 
   @Test
   public void shouldReturnEmptyWhenDatesAreNull() {
-    assertEquals(0, requisitionRepository.findRnrByPeriodAndProgram(null, null, 1L).size());
+    assertEquals(0, requisitionRepository.findRnrByPeriodAndProgram(null, null, 1L, null).size());
   }
 }

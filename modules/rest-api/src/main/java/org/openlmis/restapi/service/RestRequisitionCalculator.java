@@ -76,7 +76,7 @@ public class RestRequisitionCalculator {
       throw new DataException("error.program.configuration.missing");
     }
 
-    List<Rnr> rnrs = requisitionService.getRequisitionsByPeriodAndProgram(periodStartDate, periodEndDate, reportingProgram.getId());
+    List<Rnr> rnrs = requisitionService.getRequisitionsByPeriodAndProgram(periodStartDate, periodEndDate, reportingProgram.getId(), reportingFacility.getId());
     if (rnrs != null && !rnrs.isEmpty()) {
       throw new DataException("error.rnr.period.duplicate");
     }
