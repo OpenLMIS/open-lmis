@@ -2606,6 +2606,26 @@ VALUES
   NULL,
   '2016-02-05 11:22:43.647'
 );
+INSERT INTO fulfillment_role_assignments
+(
+  userid,
+  roleid,
+  facilityid,
+  createdby,
+  createddate,
+  modifiedby,
+  modifieddate
+)
+VALUES
+(
+  4,
+  6,
+  8,
+  3,
+  '2016-03-03 11:34:07.178',
+  3,
+  '2016-03-03 11:34:07.178'
+);
 
 -- No UPDATEs for fulfillment_role_assignments necessary
 -- No INSERTs for full_coverages necessary
@@ -9145,6 +9165,262 @@ VALUES
   NULL,
   NULL
 );
+INSERT INTO role_assignments
+(
+  userid,
+  roleid,
+  programid,
+  supervisorynodeid,
+  deliveryzoneid
+)
+VALUES
+(
+  4,
+  5,
+  1,
+  NULL,
+  NULL
+);
+INSERT INTO role_assignments
+(
+  userid,
+  roleid,
+  programid,
+  supervisorynodeid,
+  deliveryzoneid
+)
+VALUES
+(
+  4,
+  5,
+  2,
+  NULL,
+  NULL
+);
+INSERT INTO role_assignments
+(
+  userid,
+  roleid,
+  programid,
+  supervisorynodeid,
+  deliveryzoneid
+)
+VALUES
+(
+  4,
+  5,
+  3,
+  NULL,
+  NULL
+);
+INSERT INTO role_assignments
+(
+  userid,
+  roleid,
+  programid,
+  supervisorynodeid,
+  deliveryzoneid
+)
+VALUES
+(
+  4,
+  5,
+  1,
+  3,
+  NULL
+);
+INSERT INTO role_assignments
+(
+  userid,
+  roleid,
+  programid,
+  supervisorynodeid,
+  deliveryzoneid
+)
+VALUES
+(
+  4,
+  5,
+  1,
+  1,
+  NULL
+);
+INSERT INTO role_assignments
+(
+  userid,
+  roleid,
+  programid,
+  supervisorynodeid,
+  deliveryzoneid
+)
+VALUES
+(
+  4,
+  5,
+  1,
+  2,
+  NULL
+);
+INSERT INTO role_assignments
+(
+  userid,
+  roleid,
+  programid,
+  supervisorynodeid,
+  deliveryzoneid
+)
+VALUES
+(
+  4,
+  5,
+  2,
+  3,
+  NULL
+);
+INSERT INTO role_assignments
+(
+  userid,
+  roleid,
+  programid,
+  supervisorynodeid,
+  deliveryzoneid
+)
+VALUES
+(
+  4,
+  5,
+  2,
+  1,
+  NULL
+);
+INSERT INTO role_assignments
+(
+  userid,
+  roleid,
+  programid,
+  supervisorynodeid,
+  deliveryzoneid
+)
+VALUES
+(
+  4,
+  5,
+  2,
+  2,
+  NULL
+);
+INSERT INTO role_assignments
+(
+  userid,
+  roleid,
+  programid,
+  supervisorynodeid,
+  deliveryzoneid
+)
+VALUES
+(
+  4,
+  5,
+  3,
+  3,
+  NULL
+);
+INSERT INTO role_assignments
+(
+  userid,
+  roleid,
+  programid,
+  supervisorynodeid,
+  deliveryzoneid
+)
+VALUES
+(
+  4,
+  5,
+  3,
+  1,
+  NULL
+);
+INSERT INTO role_assignments
+(
+  userid,
+  roleid,
+  programid,
+  supervisorynodeid,
+  deliveryzoneid
+)
+VALUES
+(
+  4,
+  5,
+  3,
+  2,
+  NULL
+);
+INSERT INTO role_assignments
+(
+  userid,
+  roleid,
+  programid,
+  supervisorynodeid,
+  deliveryzoneid
+)
+VALUES
+(
+  4,
+  4,
+  4,
+  NULL,
+  1
+);
+INSERT INTO role_assignments
+(
+  userid,
+  roleid,
+  programid,
+  supervisorynodeid,
+  deliveryzoneid
+)
+VALUES
+(
+  4,
+  4,
+  4,
+  NULL,
+  2
+);
+INSERT INTO role_assignments
+(
+  userid,
+  roleid,
+  programid,
+  supervisorynodeid,
+  deliveryzoneid
+)
+VALUES
+(
+  4,
+  1,
+  NULL,
+  NULL,
+  NULL
+);
+INSERT INTO role_assignments
+(
+  userid,
+  roleid,
+  programid,
+  supervisorynodeid,
+  deliveryzoneid
+)
+VALUES
+(
+  4,
+  3,
+  NULL,
+  NULL,
+  NULL
+);
 
 -- No UPDATEs for role_assignments necessary
 -- -------------------
@@ -10038,6 +10314,52 @@ VALUES
   '2016-02-05 11:22:43.250',
   NULL,
   '2016-02-05 11:22:43.250',
+  FALSE
+);
+INSERT INTO users
+(
+  username,
+  password,
+  firstname,
+  lastname,
+  employeeid,
+  restrictlogin,
+  jobtitle,
+  primarynotificationmethod,
+  officephone,
+  cellphone,
+  email,
+  supervisorid,
+  facilityid,
+  verified,
+  active,
+  createdby,
+  createddate,
+  modifiedby,
+  modifieddate,
+  ismobileuser
+)
+VALUES
+(
+  'devadmin',
+  'TQskzK3iiLfbRVHeM1muvBCiiKriibfl6lh8ipo91hb74G3OvsybvkzpPI4S3KIeWTXAiiwlUU0iiSxWii4wSuS8mokSAieie',
+  'Dev',
+  'Admin',
+  NULL,
+  FALSE,
+  NULL,
+  NULL,
+  NULL,
+  NULL,
+  'devadmin@openlmis.com',
+  NULL,
+  3,
+  TRUE,
+  TRUE,
+  NULL,
+  '2016-02-05 11:22:43.250',
+  3,
+  '2016-03-03 11:34:07.178',
   FALSE
 );
 
