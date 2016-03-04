@@ -61,12 +61,12 @@ describe('ViewColdChainStatusController', function () {
 
   it('should set no cold chain status information available message if no data', function () {
     controller(ViewColdChainStatusController, {$scope: scope, facilities: facilities, period: {}, deliveryZone: {}, fridges : { fridges: [] }});
-    expect(scope.message).toEqual("label.no.cold.chain.status.information");
+    expect(scope.apimessage).toEqual("message.api.error");
   });
 
   it('should set no cold chain status information available message if undefined data', function () {
     controller(ViewColdChainStatusController, {$scope: scope, facilities: facilities, period: {}, deliveryZone: {}, fridges : { fridges: undefined }});
-    expect(scope.message).toEqual("label.no.cold.chain.status.information");
+    expect(scope.apimessage).toEqual("message.api.error");
   });
 
   it('should set program name', function () {
