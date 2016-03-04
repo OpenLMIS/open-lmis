@@ -6,6 +6,45 @@ function ProductReportController(type) {
         $scope.facilities = [];
         $scope.fullGeoZoneList = [];
 
+        $scope.example15model = [];
+        $scope.example15data = [
+            {id: 1, label: "David"},
+            {id: 2, label: "Jhon"},
+            {id: 3, label: "Lisa"},
+            {id: 4, label: "Nicole"},
+            {id: 5, label: "Danny"},
+            {id: 6, label: "Danny"},
+            {id: 7, label: "Danny"},
+            {id: 8, label: "Danny"},
+            {id: 9, label: "Danny"},
+            {id: 10, label: "Danny"},
+            {id: 11, label: "Danny"},
+            {id: 12, label: "Danny"},
+            {id: 13, label: "Danny"},
+            {id: 14, label: "Danny"},
+            {id: 15, label: "Danny"},
+            {id: 16, label: "Danny"},
+            {id: 17, label: "Danny"},
+            {id: 18, label: "Danny"},
+            {id: 19, label: "Danny"},
+            {id: 20, label: "Danny"}];
+
+        $scope.example15settings = {
+            enableSearch: true,
+            scrollable : true,
+            scrollableHeight: "300px",
+            showCheckAll: false
+        };
+
+        $scope.modifyTexts = {
+            dynamicButtonTextSuffix: "items checked",
+            buttonDefaultText: "Select Drugs"
+        };
+
+        $scope.customFilter = '';
+
+        $scope.example8model = []; $scope.example8data = [ {id: 1, label: "David"}, {id: 2, label: "Jhon"}, {id: 3, label: "Danny"}];
+
         $scope.$on('$viewContentLoaded', function () {
             if (type == "singleProduct") {
                 $scope.loadProducts();
