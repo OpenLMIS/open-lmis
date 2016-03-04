@@ -677,16 +677,14 @@ INSERT INTO equipment_energy_types (id, name, createdby, createddate, modifiedby
 -- Data for Name: equipment_types; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
-INSERT INTO equipment_types (id, code, name, displayorder, createdby, createddate, modifiedby, modifieddate, iscoldchain) VALUES (1, 'et-1', 'Refrigerator', 1, 1, '2016-02-03 14:37:39.648529', NULL, '2016-02-03 14:37:39.648529', NULL);
-INSERT INTO equipment_types (id, code, name, displayorder, createdby, createddate, modifiedby, modifieddate, iscoldchain) VALUES (2, 'et-2', 'Anesthesia Units', 2, 1, '2016-02-03 14:37:39.648529', NULL, '2016-02-03 14:37:39.648529', NULL);
+INSERT INTO equipment_types (id, code, name, displayorder, createdby, createddate, modifiedby, modifieddate, iscoldchain) VALUES (1, 'CCE', 'Cold Chain Equipment', 1, 1, '2016-02-03 14:37:39.648529', NULL, '2016-02-03 14:37:39.648529', TRUE);
+INSERT INTO equipment_types (id, code, name, displayorder, createdby, createddate, modifiedby, modifieddate, iscoldchain) VALUES (2, 'AU', 'Anesthesia Units', 2, 1, '2016-02-03 14:37:39.648529', NULL, '2016-02-03 14:37:39.648529', NULL);
 
 
 --
 -- Data for Name: equipments; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
-INSERT INTO equipments (id, name, equipmenttypeid, createdby, createddate, modifiedby, modifieddate, manufacturer, model, energytypeid) VALUES (1, 'Refrigerator', 1, 1, '2016-02-03 14:37:39.654309', NULL, '2016-02-03 14:37:39.654309', NULL, NULL, NULL);
-INSERT INTO equipments (id, name, equipmenttypeid, createdby, createddate, modifiedby, modifieddate, manufacturer, model, energytypeid) VALUES (2, 'Anesthesia Units', 2, 1, '2016-02-03 14:37:39.654309', NULL, '2016-02-03 14:37:39.654309', NULL, NULL, NULL);
 
 
 --
@@ -891,7 +889,7 @@ SELECT pg_catalog.setval('equipment_types_id_seq', 2, true);
 -- Name: equipments_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
-SELECT pg_catalog.setval('equipments_id_seq', 2, true);
+SELECT pg_catalog.setval('equipments_id_seq', 1, false);
 
 
 --

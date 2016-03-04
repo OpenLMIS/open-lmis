@@ -52,7 +52,7 @@ public interface UserMapper {
   @Results(@Result(property = "supervisor.id", column = "supervisorId"))
   User getByEmail(String email);
 
-  @Select({"SELECT id, userName, facilityId, firstName, lastName, employeeId, restrictLogin, jobTitle, primaryNotificationMethod, ",
+  @Select({"SELECT U.id, userName, facilityId, firstName, lastName, employeeId, restrictLogin, jobTitle, primaryNotificationMethod, ",
           "officePhone, cellPhone, email, supervisorId ,verified, active, ismobileuser " +
       "FROM users U INNER JOIN role_assignments RA ON U.id = RA.userId INNER JOIN role_rights RR ON RA.roleId = RR.roleId ",
     "WHERE RA.programId = #{program.id} AND COALESCE(RA.supervisoryNodeId, -1) = COALESCE(#{supervisoryNode.id}, -1) AND RR.rightName = #{right}"})
@@ -91,7 +91,7 @@ public interface UserMapper {
   @Update("UPDATE users SET active = FALSE, modifiedBy = #{modifiedBy}, modifiedDate = NOW() WHERE id = #{userId}")
   void disable(@Param(value = "userId") Long userId, @Param(value = "modifiedBy") Long modifiedBy);
 
-  @Select({"SELECT id, userName, facilityId, firstName, lastName, employeeId, restrictLogin, jobTitle, primaryNotificationMethod,",
+  @Select({"SELECT users.id, userName, facilityId, firstName, lastName, employeeId, restrictLogin, jobTitle, primaryNotificationMethod,",
     "officePhone, cellPhone, email, supervisorId, verified, active from users inner join role_assignments on users.id = role_assignments.userId ",
     "INNER JOIN role_rights ON role_rights.roleId = role_assignments.roleId ",
     "where supervisoryNodeId IN (WITH RECURSIVE supervisoryNodesRec(id, parentId) ",
