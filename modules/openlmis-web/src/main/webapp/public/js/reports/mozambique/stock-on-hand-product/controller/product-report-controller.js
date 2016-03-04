@@ -14,7 +14,6 @@ function ProductReportController(type) {
             enableSearch: true,
             scrollable : true,
             scrollableHeight: "300px",
-            showCheckAll: false
         };
         $scope.multiSelectionModifyTexts = {
             dynamicButtonTextSuffix: "drugs selected",
