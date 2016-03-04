@@ -87,7 +87,7 @@
                 </div>
 
             </div>
-            <div class="form-group">
+            <div class="form-group" ng-show="hasPermission('ACCESS_NEW_DASHBOARD')">
                 <h3 openlmis-message="label.dashboard.preference"></h3>
 
                 <div class="form-row clearfix">
@@ -210,8 +210,6 @@
 <div form-toolbar id="action_buttons" class="action-buttons">
     <div class="form-cell button-row">
         <input id="userSaveButton" type="submit" class="btn btn-primary save-button" openlmis-message="button.save"/>
-        <input id="userCancelButton" type="button" class="btn btn-cancel cancel-button" openlmis-message="button.cancel"
-               ng-click="cancelUserSave()"/>
     </div>
     <div class="toolbar-error" id="saveErrorMsgDiv" openlmis-message="error" ng-show="error"/>
     <div class="toolbar-success" id="saveSuccessMsgDiv" openlmis-message="message" ng-show="message"/>

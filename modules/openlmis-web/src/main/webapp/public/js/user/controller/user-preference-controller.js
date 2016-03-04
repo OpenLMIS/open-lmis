@@ -2,11 +2,13 @@
  * Created by issa on 10/24/14.
  */
 function UserPreferenceController($scope,ReportProductsByProgram,user,roles_map,supervisoryNodes,UserFacilitiesForProgram,programs,$location,messageService,
-                                  UpdateUserPreference,userDashboardPreferenceValues, UserPreferences, localStorageService){
+                                  UpdateUserPreference,userDashboardPreferenceValues, UserPreferences, localStorageService, AuthorizationService){
     $scope.user = user || {};
     $scope.programs = programs;
     $scope.supervisoryNodes = supervisoryNodes;
     $scope.rolesMap = roles_map;
+    
+    $scope.hasPermission = AuthorizationService.hasPermission;
 
     $scope.preference = {program: userDashboardPreferenceValues[localStorageKeys.PREFERENCE.DEFAULT_PROGRAM],
         facility: userDashboardPreferenceValues[localStorageKeys.PREFERENCE.DEFAULT_FACILITY],
