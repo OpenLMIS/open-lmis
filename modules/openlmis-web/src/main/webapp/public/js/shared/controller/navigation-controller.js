@@ -20,11 +20,15 @@ function NavigationController($scope, ConfigSettingsByKey, localStorageService, 
   });
 
    $scope.loadToggle = function () {
-    var toggleKey = {key: 'update.product.view'};
-    FeatureToggleService.get(toggleKey, function (result) {
+    var updateProductToggleKey = {key: 'update.product.view'};
+    FeatureToggleService.get(updateProductToggleKey, function (result) {
       $scope.isUpdateProductsToggleOn = result.key;
     });
-  }();
+     var stockOutReportToggleKey = {key: 'stock.out.report'};
+     FeatureToggleService.get(stockOutReportToggleKey, function (result) {
+      $scope.isNewStockReportToggleOn = result.key;
+    });
+   }();
 
   $scope.loadRights = function () {
     $scope.rights = localStorageService.get(localStorageKeys.RIGHT);
