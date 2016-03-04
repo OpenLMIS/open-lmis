@@ -31,6 +31,7 @@ function ChildCoverageController($scope, $routeParams, distributionService) {
     return map;
   };
 
+  $scope.childCoverage.childCoverageLineItems = _.sortBy($scope.childCoverage.childCoverageLineItems, 'displayOrder');
   $scope.childCoverageMap = convertListToMap($scope.childCoverage.childCoverageLineItems, 'vaccination');
   $scope.openedVialMap = convertListToMap($scope.childCoverage.openedVialLineItems, 'productVialName');
 
@@ -127,18 +128,19 @@ function ChildCoverageController($scope, $routeParams, distributionService) {
       return vaccination.replace('1a', '1<sup>a</sup>').replace('2a', '2<sup>a</sup>').replace('3a', '3<sup>a</sup>');
   };
 
-  $scope.calculateWastageRate = function (productsForVaccination) {
+  $scope.calculateWastageRate = function (productMapEntry) {
     var totalDosesConsumed = 0;
     var totalVaccinations = 0;
-    if (!isUndefined(productsForVaccination)) {
-      $.each(productsForVaccination.products, function (index, product) {
+    if (!isUndefined(productMapEntry)) {
+      $.each(productMapEntry.products, function (index, product) {
         var openedVialLineItem = $scope.openedVialMap[product];
+
         if (!isUndefined(openedVialLineItem.packSize) && !isUndefined(openedVialLineItem.openedVial) && !isUndefined(openedVialLineItem.openedVial.value)) {
           totalDosesConsumed += openedVialLineItem.packSize * openedVialLineItem.openedVial.value;
         }
       });
 
-      $.each(productsForVaccination.vaccinations, function (index, vaccination) {
+      $.each(productMapEntry.vaccinations, function (index, vaccination) {
         var childCoverageLineItem = $scope.childCoverageMap[vaccination];
         totalVaccinations += $scope.getTotalVaccinations(childCoverageLineItem);
       });

@@ -34,8 +34,8 @@ public interface VaccinationCoverageMapper {
   @Options(useGeneratedKeys = true)
   void insertFullVaccinationCoverage(VaccinationFullCoverage vaccinationFullCoverage);
 
-  @Insert({"INSERT INTO vaccination_child_coverage_line_items (facilityVisitId, vaccination, targetGroup, createdBy, modifiedBy)",
-    "VALUES (#{facilityVisitId}, #{vaccination}, #{targetGroup}, #{createdBy}, #{modifiedBy})"})
+  @Insert({"INSERT INTO vaccination_child_coverage_line_items (facilityVisitId, vaccination, targetGroup, createdBy, modifiedBy, displayOrder)",
+    "VALUES (#{facilityVisitId}, #{vaccination}, #{targetGroup}, #{createdBy}, #{modifiedBy}, #{displayOrder} )"})
   @Options(useGeneratedKeys = true)
   void insertChildCoverageLineItem(ChildCoverageLineItem childCoverageLineItem);
 
@@ -62,7 +62,7 @@ public interface VaccinationCoverageMapper {
   List<ProductVial> getProductVials();
 
   @Update({"UPDATE vaccination_child_coverage_line_items SET healthCenter11Months = #{healthCenter11Months}, outreach11Months = #{outreach11Months},",
-    "healthCenter23Months = #{healthCenter23Months}, outreach23Months = #{outreach23Months}, modifiedBy = #{modifiedBy}, modifiedDate = DEFAULT WHERE id = #{id}"})
+    "healthCenter23Months = #{healthCenter23Months}, outreach23Months = #{outreach23Months}, modifiedBy = #{modifiedBy}, modifiedDate = DEFAULT, displayOrder = #{displayOrder} WHERE id = #{id}"})
   void updateChildCoverageLineItem(ChildCoverageLineItem childCoverageLineItem);
 
   @Update({"UPDATE child_coverage_opened_vial_line_items SET openedVials = #{openedVials}, modifiedBy = #{modifiedBy}, modifiedDate = DEFAULT WHERE id = #{id}"})

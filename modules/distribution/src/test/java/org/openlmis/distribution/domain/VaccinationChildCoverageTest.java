@@ -59,10 +59,8 @@ public class VaccinationChildCoverageTest {
     ProductVial productVial = new ProductVial("bcg", "BCG", true);
     List<ProductVial> productVials = asList(productVial);
 
-    whenNew(ChildCoverageLineItem.class).withArguments(facilityVisit, facility, targetGroupProduct, "BCG", 3).thenReturn(
-      lineItem);
-    whenNew(OpenedVialLineItem.class).withArguments(facilityVisit, facility, productVial, "BCG").thenReturn(
-      openedVialLineItem);
+    whenNew(ChildCoverageLineItem.class).withArguments(facilityVisit, facility, targetGroupProduct, "BCG", 0, 3).thenReturn(lineItem);
+    whenNew(OpenedVialLineItem.class).withArguments(facilityVisit, facility, productVial, "BCG").thenReturn(openedVialLineItem);
 
     VaccinationChildCoverage vaccinationChildCoverage = new VaccinationChildCoverage(facilityVisit, facility, period, targetGroupProducts, productVials);
 
@@ -84,7 +82,7 @@ public class VaccinationChildCoverageTest {
     OpenedVialLineItem openedVialLineItem = new OpenedVialLineItem();
 
     when(period.getNumberOfMonths()).thenReturn(2);
-    whenNew(ChildCoverageLineItem.class).withArguments(facilityVisit, facility, null, "BCG", 2).thenReturn(lineItem);
+    whenNew(ChildCoverageLineItem.class).withArguments(facilityVisit, facility, null, "BCG", 0, 2).thenReturn(lineItem);
     whenNew(OpenedVialLineItem.class).withArguments(facilityVisit, facility, productVial, "BCG").thenReturn(openedVialLineItem);
 
     VaccinationChildCoverage vaccinationChildCoverage = new VaccinationChildCoverage(facilityVisit, facility, period, targetGroupProducts, asList(productVial));
@@ -92,7 +90,7 @@ public class VaccinationChildCoverageTest {
     assertThat(vaccinationChildCoverage.getChildCoverageLineItems().size(), is(16));
     assertThat(vaccinationChildCoverage.getOpenedVialLineItems().size(), is(10));
     assertTrue(vaccinationChildCoverage.getChildCoverageLineItems().get(0).getVaccination().equals("BCG"));
-    verifyNew(ChildCoverageLineItem.class).withArguments(facilityVisit, facility, null, "BCG", 2);
+    verifyNew(ChildCoverageLineItem.class).withArguments(facilityVisit, facility, null, "BCG", 0, 2);
   }
 
   @Test
@@ -111,7 +109,7 @@ public class VaccinationChildCoverageTest {
     openedVialLineItem.setProductVialName("BCG");
 
     when(period.getNumberOfMonths()).thenReturn(2);
-    whenNew(ChildCoverageLineItem.class).withArguments(facilityVisit, facility, null, "BCG", 2).thenReturn(lineItem);
+    whenNew(ChildCoverageLineItem.class).withArguments(facilityVisit, facility, null, "BCG", 0, 2).thenReturn(lineItem);
     whenNew(OpenedVialLineItem.class).withArguments(facilityVisit, facility, null, "BCG").thenReturn(openedVialLineItem);
 
     VaccinationChildCoverage vaccinationChildCoverage = new VaccinationChildCoverage(facilityVisit, facility, period, targetGroupProducts, productVials);

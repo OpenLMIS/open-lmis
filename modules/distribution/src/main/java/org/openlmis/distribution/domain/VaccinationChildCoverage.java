@@ -38,26 +38,29 @@ public class VaccinationChildCoverage extends VaccinationCoverage {
   private static List<String> validProductVials = Collections.unmodifiableList(asList(
     "BCG", "Polio10", "Polio20", "IPV", "Penta1", "Penta10", "PCV", "RV Rotarix", "Sarampo", "MSD"));
 
+  //Note that the order in which vaccines are listed here is important - it implicitly defines their intended display order
+  private static List<String> validVaccinationsInOrder = Collections.unmodifiableList(
+          asList("BCG", "Polio (Newborn)", "Polio 1a dose", "Polio 2a dose",
+                  "Polio 3a dose", "IPV", "Penta 1a dose", "Penta 2a dose", "Penta 3a dose",
+                  "PCV10 1a dose", "PCV10 2a dose", "PCV10 3a dose", "RV Rotarix 1a dose",
+                  "RV Rotarix 2a dose", "Sarampo 1a dose", "Sarampo 2a dose"));
+
   public VaccinationChildCoverage(FacilityVisit facilityVisit, Facility facility,
                                   ProcessingPeriod period, List<TargetGroupProduct> targetGroupProducts,
                                   List<ProductVial> productVials) {
     super(facilityVisit, facility, productVials, validProductVials);
-    List<String> validVaccinations = Collections.unmodifiableList(
-      asList("BCG", "Polio (Newborn)", "Polio 1a dose", "Polio 2a dose",
-        "Polio 3a dose", "IPV", "Penta 1a dose", "Penta 2a dose", "Penta 3a dose",
-        "PCV10 1a dose", "PCV10 2a dose", "PCV10 3a dose", "RV Rotarix 1a dose",
-        "RV Rotarix 2a dose", "Sarampo 1a dose", "Sarampo 2a dose"));
 
-    createChildCoverageLineItems(facilityVisit, facility, targetGroupProducts, validVaccinations, period.getNumberOfMonths());
+    createChildCoverageLineItems(facilityVisit, facility, targetGroupProducts, period.getNumberOfMonths());
   }
 
   private void createChildCoverageLineItems(FacilityVisit facilityVisit, Facility facility,
-                                            List<TargetGroupProduct> targetGroupProducts, List<String> validVaccinations,
-                                            Integer processingPeriodMonths) {
-    for (String vaccination : validVaccinations) {
-
+                                            List<TargetGroupProduct> targetGroupProducts, Integer processingPeriodMonths)
+  {
+    for(int ordinalValue=0; ordinalValue < validVaccinationsInOrder.size(); ordinalValue++)
+    {
+      String vaccination = validVaccinationsInOrder.get(ordinalValue);
       TargetGroupProduct targetGroup = getTargetGroupForLineItem(targetGroupProducts, vaccination);
-      this.childCoverageLineItems.add(new ChildCoverageLineItem(facilityVisit, facility, targetGroup, vaccination, processingPeriodMonths));
+      this.childCoverageLineItems.add(new ChildCoverageLineItem(facilityVisit, facility, targetGroup, vaccination, ordinalValue, processingPeriodMonths));
     }
   }
 }
