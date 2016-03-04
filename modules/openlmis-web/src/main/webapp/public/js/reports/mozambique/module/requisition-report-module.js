@@ -22,7 +22,7 @@ angular.module('requisition-report', ['openlmis', 'angularCombine', 'ngTable', '
                     reloadOnSearch: false
                 }).
                 when('/stock-out', {
-                    controller: ProductReportController("singleFacility"),
+                    controller: ProductReportController("stockOut"),
                     templateUrl: 'stockOut/partials/list.html',
                     reloadOnSearch: false
                 }).otherwise({redirectTo: '/'});
