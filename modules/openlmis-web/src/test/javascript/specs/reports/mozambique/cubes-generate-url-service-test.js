@@ -1,4 +1,4 @@
-ddescribe("cubes generate url service test", function () {
+describe("cubes generate url service test", function () {
 
     var cubesGenerateUrlService;
     beforeEach(module('openlmis'));
