@@ -21,21 +21,46 @@
     </div>
 
     <hr/>
-    <div class="form-cell">
-        <label>
-            <span openlmis-message="label.date"></span>
-        </label>
 
-        <div class="form-field">
-            <input name="endTime" id="endTime" type="text"
-                   ui-date
-                   ui-date-format
-                   ng-model="reportParams.endTime"
-                   ng-required="true"
-                   ng-change="checkDate()"/>
+    <div class="time-container">
+        <ul>
+            <li ng-repeat="timeTag in timeTags">
+                <a ng-class="{'selected': timeTagSelected == timeTag}" ng-click=changeTime(timeTag)
+                   openlmis-message="label.last.{{timeTag}}" href=""></a>
+                <span>|</span>
+            </li>
+        </ul>
+    </div>
 
-              <span class="field-error" ng-show="createPeriodForm.startDate.$error.required && showErrorForCreate"
-                    openlmis-message="missing.value"></span>
+    <div>searchTime:{{searchTime}}</div>
+
+    <div>
+        <div class="form-cell">
+            <label>
+                <span openlmis-message="label.start.date"></span>
+            </label>
+
+            <div class="form-field">
+                <input name="startTime" id="startTime" type="text"
+                       ui-date="{maxDate: '{{reportParams.endTime | date: 'yyyy-MM-dd'}}', dateFormat: 'yy-mm-dd', changeYear: true}"
+                       ui-date-format
+                       ng-model="reportParams.startTime"
+                       ng-click="checkDate()"/>
+            </div>
+        </div>
+
+        <div class="form-cell">
+            <label>
+                <span openlmis-message="label.end.date"></span>
+            </label>
+
+            <div class="form-field">
+                <input name="endTime" id="endTime" type="text"
+                       ui-date="{maxDate: todayDate, dateFormat: 'yy-mm-dd', changeYear: true}"
+                       ui-date-format
+                       ng-model="reportParams.endTime"
+                       ng-click="checkDate()"/>
+            </div>
         </div>
     </div>
     <hr/>

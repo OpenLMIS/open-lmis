@@ -7,6 +7,8 @@ function ProductReportController(type) {
         $scope.fullGeoZoneList = [];
         $scope.multiProducts = [];
 
+        var todayDateString = $filter('date')(new Date(), "yyyy-MM-dd");
+
         $scope.multiSelectionSettings = {
             displayProp: "primaryName",
             idProp: "primaryName",
@@ -20,6 +22,22 @@ function ProductReportController(type) {
             buttonDefaultText: "Select Drugs"
         };
 
+        $scope.timeTags = ["month", "3month", "year"];
+
+        $scope.changeTime = function(time){
+            var selectedDate = new Date();
+            $scope.timeTagSelected = time;
+            if (time == "month"){
+                selectedDate= selectedDate.setMonth(selectedDate.getMonth() - 1);
+            }else if (time == "3month"){
+                selectedDate = selectedDate.setMonth(selectedDate.getMonth() - 3);
+            }else{
+                selectedDate = selectedDate.setFullYear(selectedDate.getFullYear() - 1);
+            }
+            $scope.reportParams.startTime = $filter('date')(selectedDate, "yyyy-MM-dd");
+            $scope.reportParams.endTime = $scope.todayDate;
+        };
+
         $scope.$on('$viewContentLoaded', function () {
             if (type == "singleProduct") {
                 $scope.loadProducts();
@@ -28,10 +46,11 @@ function ProductReportController(type) {
             }else{
                 $scope.loadProducts();
                 $scope.loadHealthFacilities();
+                $scope.todayDate = todayDateString;
             }
             loadGeographicZones();
             $scope.reportParams = {};
-            $scope.reportParams.endTime = $filter('date')(new Date(), "yyyy-MM-dd");
+            $scope.reportParams.endTime = todayDateString;
         });
 
         $scope.loadProducts = function () {
@@ -142,6 +161,7 @@ function ProductReportController(type) {
         };
 
         $scope.checkDate = function(){
+            $scope.timeTagSelected = "";
             if(new Date() < new Date($scope.reportParams.endTime)){
                 $scope.reportParams.endTime = $filter('date')(new Date(), "yyyy-MM-dd");
                 var options = {
