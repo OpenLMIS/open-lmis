@@ -146,7 +146,7 @@ function ProductReportController(type) {
                 ProductReportService.loadProductReport().get(params, function (data) {
                     $scope.reportData = data.products;
                 });
-            } else {
+            } else if (type == "singleFacility"){
                 params.facilityId = $scope.reportParams.facilityId;
                 if (!validateFacility()) {
                     return;
@@ -154,6 +154,12 @@ function ProductReportController(type) {
                 ProductReportService.loadFacilityReport().get(params, function (data) {
                     $scope.reportData = data.products;
                 });
+            }else {
+                $scope.reportData = [
+                    {"code":"f1","name":"p1","avg":100,"occurrences":3,"total":300},
+                    {"code":"f2","name":"p2","avg":200,"occurrences":3,"total":600},
+                    {"code":"f3","name":"p3","avg":100,"occurrences":3,"total":300},
+                    {"code":"f4","name":"p4","avg":100,"occurrences":3,"total":300}];
             }
         };
 
