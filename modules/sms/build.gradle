@@ -17,7 +17,7 @@ dependencies {
     compile  'javax.activation:activation:1.1.1',
             'org.springframework.integration:spring-integration-core:4.1.2.RELEASE',
             'org.springframework.integration:spring-integration-jdbc:4.1.2.RELEASE',
-            'commons-collections:commons-collections:3.2.1',
+            'commons-collections:commons-collections:3.2.2',
             'commons-lang:commons-lang:2.6',
             project(':modules:db')
 
