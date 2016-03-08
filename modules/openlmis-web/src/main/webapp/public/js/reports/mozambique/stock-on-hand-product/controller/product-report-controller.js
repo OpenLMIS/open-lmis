@@ -7,7 +7,7 @@ function ProductReportController(type) {
         $scope.fullGeoZoneList = [];
         $scope.multiProducts = [];
 
-        var todayDateString = $filter('date')(new Date(), "yyyy-MM-dd");
+        $scope.todayDateString = $filter('date')(new Date(), "yyyy-MM-dd");
 
         $scope.multiSelectionSettings = {
             displayProp: "primaryName",
@@ -15,27 +15,25 @@ function ProductReportController(type) {
             externalIdProp: "name",
             enableSearch: true,
             scrollable : true,
-            scrollableHeight: "300px",
+            scrollableHeight: "300px"
         };
         $scope.multiSelectionModifyTexts = {
             dynamicButtonTextSuffix: "drugs selected",
             buttonDefaultText: "Select Drugs"
         };
 
-        $scope.timeTags = ["month", "3month", "year"];
+        var currentDate = new Date();
+        var timePeriods = {
+            "month": new Date().setMonth(currentDate.getMonth() - 1),
+            "3month": new Date().setMonth(currentDate.getMonth() - 3),
+            "year": new Date().setFullYear(currentDate.getFullYear() - 1)
+        };
+        $scope.timeTags = Object.keys(timePeriods);
 
-        $scope.changeTime = function(time){
-            var selectedDate = new Date();
-            $scope.timeTagSelected = time;
-            if (time == "month"){
-                selectedDate= selectedDate.setMonth(selectedDate.getMonth() - 1);
-            }else if (time == "3month"){
-                selectedDate = selectedDate.setMonth(selectedDate.getMonth() - 3);
-            }else{
-                selectedDate = selectedDate.setFullYear(selectedDate.getFullYear() - 1);
-            }
-            $scope.reportParams.startTime = $filter('date')(selectedDate, "yyyy-MM-dd");
-            $scope.reportParams.endTime = $scope.todayDate;
+        $scope.changePeriod = function(timeTag) {
+            $scope.timeTagSelected = timeTag;
+            $scope.reportParams.startTime = $filter('date')(timePeriods[timeTag], "yyyy-MM-dd");
+            $scope.reportParams.endTime = $scope.todayDateString;
         };
 
         $scope.$on('$viewContentLoaded', function () {
@@ -46,11 +44,10 @@ function ProductReportController(type) {
             }else{
                 $scope.loadProducts();
                 $scope.loadHealthFacilities();
-                $scope.todayDate = todayDateString;
             }
             loadGeographicZones();
             $scope.reportParams = {};
-            $scope.reportParams.endTime = todayDateString;
+            $scope.reportParams.endTime = $scope.todayDateString;
         });
 
         $scope.loadProducts = function () {

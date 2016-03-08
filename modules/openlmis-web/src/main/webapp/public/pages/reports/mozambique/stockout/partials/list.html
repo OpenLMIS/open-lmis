@@ -13,7 +13,8 @@
         </div>
 
         <div class="report-selection">
-            <input type="submit" class="btn btn-primary" ng-click="loadReport()" openlmis-message="button.generateReport"/>
+            <input type="submit" class="btn btn-primary" ng-click="loadReport()"
+                   openlmis-message="button.generateReport"/>
         </div>
 
         <div style="clear: both"></div>
@@ -23,43 +24,45 @@
     <hr/>
 
     <div class="time-container">
-        <ul>
-            <li ng-repeat="timeTag in timeTags">
-                <a ng-class="{'selected': timeTagSelected == timeTag}" ng-click=changeTime(timeTag)
-                   openlmis-message="label.last.{{timeTag}}" href=""></a>
-                <span>|</span>
-            </li>
-        </ul>
-    </div>
-
-    <div>searchTime:{{searchTime}}</div>
-
-    <div>
-        <div class="form-cell">
-            <label>
-                <span openlmis-message="label.start.date"></span>
-            </label>
-
-            <div class="form-field">
-                <input name="startTime" id="startTime" type="text"
-                       ui-date="{maxDate: '{{reportParams.endTime | date: 'yyyy-MM-dd'}}', dateFormat: 'yy-mm-dd', changeYear: true}"
-                       ui-date-format
-                       ng-model="reportParams.startTime"
-                       ng-click="checkDate()"/>
-            </div>
+        <div class="time-tag">
+            <ul>
+                <li ng-repeat="timeTag in timeTags">
+                    <a ng-class="{'selected': timeTagSelected == timeTag}" ng-click=changePeriod(timeTag)
+                       openlmis-message="label.last.{{timeTag}}" href=""></a>
+                    <span>|</span>
+                </li>
+            </ul>
         </div>
 
-        <div class="form-cell">
-            <label>
-                <span openlmis-message="label.end.date"></span>
-            </label>
+        <div class="date-picker">
+            <div class="form-cell">
+                <label>
+                    <span openlmis-message="label.start.date"></span>
+                </label>
 
-            <div class="form-field">
-                <input name="endTime" id="endTime" type="text"
-                       ui-date="{maxDate: todayDate, dateFormat: 'yy-mm-dd', changeYear: true}"
-                       ui-date-format
-                       ng-model="reportParams.endTime"
-                       ng-click="checkDate()"/>
+                <div class="form-field">
+                    <input name="startTime" id="startTime" type="text"
+                           ui-date="{maxDate: '{{reportParams.endTime | date: 'yyyy-MM-dd'}}', dateFormat: 'yy-mm-dd', changeYear: true}"
+                           ui-date-format
+                           ng-model="reportParams.startTime"
+                           ng-click="checkDate()"/>
+                </div>
+            </div>
+
+            <div> - </div>
+
+            <div class="form-cell">
+                <label>
+                    <span openlmis-message="label.end.date"></span>
+                </label>
+
+                <div class="form-field">
+                    <input name="endTime" id="endTime" type="text"
+                           ui-date="{maxDate: todayDateString, dateFormat: 'yy-mm-dd', changeYear: true}"
+                           ui-date-format
+                           ng-model="reportParams.endTime"
+                           ng-click="checkDate()"/>
+                </div>
             </div>
         </div>
     </div>
