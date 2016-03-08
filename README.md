@@ -1,6 +1,6 @@
-| Stable        | Development           |
+| Stable        | Development   |
 |:-------------:|:-------------:|
-| [![Master Build Status](http://ci.openlmis.org:8080/job/OpenLMIS-Stable/badge/icon)](http://ci.openlmis.org:8080/job/OpenLMIS-Stable/)     | [![Dev Build Status](http://ci.openlmis.org:8080/job/OpenLMIS-dev-branch/badge/icon)](http://ci.openlmis.org:8080/job/OpenLMIS-dev-branch/)|
+| [![Master Build Status](http://build.openlmis.org/job/OpenLMIS-Stable/badge/icon)](http://build.openlmis.org/job/OpenLMIS-Stable/)     | [![Dev Build Status](http://build.openlmis.org/job/OpenLMIS-dev-branch/badge/icon)](http://build.openlmis.org/job/OpenLMIS-dev-branch/)|
 
 OpenLMIS (Open Logistics Management Information System) is software for a shared, open source solution for managing medical commodity distribution in low- and middle-income countries.  For more information, see http://openlmis.org/.
 
@@ -12,8 +12,8 @@ __Project Links:__
 * [Developer Forums](https://groups.google.com/forum/#!forum/openlmis-dev)
 * [Product Committee Forums](https://groups.google.com/forum/#!forum/openlmis_product_committee)
 * [Governance Committee Forums](https://groups.google.com/forum/#!forum/openlmis-governance)
-* [Code Quality](http://ci.openlmis.org:9000)
-* [Build](http://ci.openlmis.org:8080)
+* [Code Quality](http://sonar.openlmis.org)
+* [Build](http://build.openlmis.org)
 
 System Requirements
 ---------------------------
