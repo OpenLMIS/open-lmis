@@ -95,7 +95,7 @@ subprojects {
         'org.springframework.integration:spring-integration-ftp:4.1.2.RELEASE',
 
         'xml-apis:xml-apis:2.0.2',
-        'commons-collections:commons-collections:3.2.1',
+        'commons-collections:commons-collections:3.2.2',
         'org.apache.commons:commons-collections4:4.0',
         'javax.servlet:javax.servlet-api:3.1.0',
 
