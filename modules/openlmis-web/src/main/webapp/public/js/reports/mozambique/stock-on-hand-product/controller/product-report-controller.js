@@ -6,13 +6,14 @@ function ProductReportController(type) {
         $scope.facilities = [];
         $scope.fullGeoZoneList = [];
         $scope.multiProducts = [];
+        $scope.reportParams = {};
 
         $scope.todayDateString = $filter('date')(new Date(), "yyyy-MM-dd");
 
         $scope.multiSelectionSettings = {
             displayProp: "primaryName",
-            idProp: "primaryName",
-            externalIdProp: "name",
+            idProp: "code",
+            externalIdProp: "code",
             enableSearch: true,
             scrollable : true,
             scrollableHeight: "300px"
@@ -46,7 +47,6 @@ function ProductReportController(type) {
                 $scope.loadHealthFacilities();
             }
             loadGeographicZones();
-            $scope.reportParams = {};
             $scope.reportParams.endTime = $scope.todayDateString;
         });
 
@@ -155,12 +155,30 @@ function ProductReportController(type) {
                     $scope.reportData = data.products;
                 });
             }else {
+                params.startTime = $filter('date')($scope.reportParams.startTime, "yyyy,MM,dd");
+                params.endTime = $filter('date')($scope.reportParams.endTime, "yyyy,MM,dd");
+                params.provinceName = ($scope.getGeographicZoneById($scope.provinces, $scope.reportParams.provinceId)).name;
+                params.districtName = ($scope.getGeographicZoneById($scope.districts, $scope.reportParams.districtId)).name;
+                params.selectedProducts = $scope.multiProducts.map(function(product){
+                    return product.code;
+                });
+                params.facilityName = ($scope.facilities.find(function(facility){
+                    return facility.id = $scope.reportParams.facilityId;
+                })).name;
+                $scope.reportParams.reportTitle = params.provinceName + ","+ params.districtName+","+ params.facilityName;
+
                 $scope.reportData = [
                     {"code":"f1","name":"p1","avg":100,"occurrences":3,"total":300},
                     {"code":"f2","name":"p2","avg":200,"occurrences":3,"total":600},
                     {"code":"f3","name":"p3","avg":100,"occurrences":3,"total":300},
                     {"code":"f4","name":"p4","avg":100,"occurrences":3,"total":300}];
             }
+        };
+
+        $scope.getGeographicZoneById = function(zones, zoneId){
+            return zones.find(function(zone){
+                return zone.id == zoneId;
+            });
         };
 
         $scope.checkDate = function(){

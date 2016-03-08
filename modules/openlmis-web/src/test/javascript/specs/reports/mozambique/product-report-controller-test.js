@@ -1,5 +1,5 @@
 describe("Product Report Controller", function () {
-    var scope, scope2, geoZoneData, levels, productData, facilityProductData, httpBackend;
+    var scope, scope2, geoZoneData, levels, productData, facilityProductData, provinceData,httpBackend, filter;
 
     levels = [{
         "id": 5,
@@ -88,14 +88,37 @@ describe("Product Report Controller", function () {
         }]
     };
 
+    provinceData = [
+        {
+            code: "MAPUTO_PROVINCIA",
+            id: 1,
+            latitude: null,
+            levelId: 2,
+            longitude: null,
+            name: "Maputo Província",
+            parent: null,
+            parentId: 3
+        },
+        {
+            code: "Habel",
+            id: 2,
+            latitude: null,
+            levelId: 2,
+            longitude: null,
+            name: "Habel",
+            parent: null,
+            parentId: 3
+        }];
+
     beforeEach(module('openlmis'));
     beforeEach(inject(function (_$httpBackend_,$rootScope,$filter, ProductReportService) {
         scope = $rootScope.$new();
         scope2 = $rootScope.$new();
         httpBackend = _$httpBackend_;
+        filter = $filter;
 
         ProductReportController("singleProduct")(scope, $filter, ProductReportService);
-        ProductReportController()(scope2, $filter, ProductReportService);
+        ProductReportController("singleFacility")(scope2, $filter, ProductReportService);
     }));
 
     it('should get provinces and districts', function () {
@@ -145,4 +168,18 @@ describe("Product Report Controller", function () {
         expect(scope2.reportData[1].productName).toEqual("Tenofovir 300mg/Lamivudina 300mg/Efavirenze 600mg Embalagem 10mg ");
     });
 
+    it('should change period correctly', function () {
+        scope.$on('$viewContentLoaded');
+        scope.changePeriod("month");
+
+        var equalDate = filter('date')(new Date().setMonth(new Date().getMonth() - 1), "yyyy-MM-dd");
+        expect(scope.reportParams.startTime).toEqual(equalDate);
+    });
+
+    it('should get corresponding province by id', function () {
+        var provinceById1 = scope.getGeographicZoneById(provinceData, 1);
+        var provinceById2 = scope.getGeographicZoneById(provinceData, 2);
+        expect(provinceById1["name"]).toEqual("Maputo Província");
+        expect(provinceById2["name"]).toEqual("Habel");
+    });
 });
