@@ -27,7 +27,7 @@
         <div class="time-tag">
             <ul>
                 <li ng-repeat="timeTag in timeTags">
-                    <a ng-class="{'selected': timeTagSelected == timeTag}" ng-click=changePeriod(timeTag)
+                    <a ng-class="{'selected': timeTagSelected == timeTag}" ng-click=changeTimeOption(timeTag)
                        openlmis-message="label.last.{{timeTag}}" href=""></a>
                     <span>|</span>
                 </li>

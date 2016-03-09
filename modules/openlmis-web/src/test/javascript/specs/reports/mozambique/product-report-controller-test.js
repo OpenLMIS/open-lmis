@@ -168,9 +168,9 @@ describe("Product Report Controller", function () {
         expect(scope2.reportData[1].productName).toEqual("Tenofovir 300mg/Lamivudina 300mg/Efavirenze 600mg Embalagem 10mg ");
     });
 
-    it('should change period correctly', function () {
+    it('should change time options correctly', function () {
         scope.$on('$viewContentLoaded');
-        scope.changePeriod("month");
+        scope.changeTimeOption("month");
 
         var equalDate = filter('date')(new Date().setMonth(new Date().getMonth() - 1), "yyyy-MM-dd");
         expect(scope.reportParams.startTime).toEqual(equalDate);

@@ -24,16 +24,16 @@ function ProductReportController(type) {
         };
 
         var currentDate = new Date();
-        var timePeriods = {
+        var timeOptions = {
             "month": new Date().setMonth(currentDate.getMonth() - 1),
             "3month": new Date().setMonth(currentDate.getMonth() - 3),
             "year": new Date().setFullYear(currentDate.getFullYear() - 1)
         };
-        $scope.timeTags = Object.keys(timePeriods);
+        $scope.timeTags = Object.keys(timeOptions);
 
-        $scope.changePeriod = function(timeTag) {
+        $scope.changeTimeOption = function(timeTag) {
             $scope.timeTagSelected = timeTag;
-            $scope.reportParams.startTime = $filter('date')(timePeriods[timeTag], "yyyy-MM-dd");
+            $scope.reportParams.startTime = $filter('date')(timeOptions[timeTag], "yyyy-MM-dd");
             $scope.reportParams.endTime = $scope.todayDateString;
         };
 
@@ -166,7 +166,6 @@ function ProductReportController(type) {
                     return facility.id == $scope.reportParams.facilityId;
                 })).name;
                 $scope.reportParams.reportTitle = params.provinceName + ","+ params.districtName+","+ params.facilityName;
-
                 $scope.reportData = [
                     {"code":"f1","name":"p1","avg":100,"occurrences":3,"total":300},
                     {"code":"f2","name":"p2","avg":200,"occurrences":3,"total":600},
