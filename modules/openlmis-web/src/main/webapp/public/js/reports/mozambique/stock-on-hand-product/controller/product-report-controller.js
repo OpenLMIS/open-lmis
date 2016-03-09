@@ -163,7 +163,7 @@ function ProductReportController(type) {
                     return product.code;
                 });
                 params.facilityName = ($scope.facilities.find(function(facility){
-                    return facility.id = $scope.reportParams.facilityId;
+                    return facility.id == $scope.reportParams.facilityId;
                 })).name;
                 $scope.reportParams.reportTitle = params.provinceName + ","+ params.districtName+","+ params.facilityName;
 
