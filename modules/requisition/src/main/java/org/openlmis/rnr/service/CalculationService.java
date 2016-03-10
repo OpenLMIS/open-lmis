@@ -175,6 +175,11 @@ public class CalculationService {
 
   private void calculateForNonFullSupply(Rnr requisition) {
     for (RnrLineItem lineItem : requisition.getNonFullSupplyLineItems()) {
+
+      if (lineItem.getIsKit()) {
+        continue;
+      }
+
       lineItem.validateNonFullSupply();
 
       lineItem.calculatePacksToShip();
@@ -188,6 +193,10 @@ public class CalculationService {
     Integer numberOfMonths = processingScheduleService.findM(requisition.getPeriod());
 
     for (RnrLineItem lineItem : requisition.getNonSkippedLineItems()) {
+
+      if (lineItem.getIsKit()) {
+        continue;
+      }
 
       lineItem.validateMandatoryFields(template);
       lineItem.calculateForFullSupply(template, requisition.getStatus(), lossesAndAdjustmentsTypes, numberOfMonths);

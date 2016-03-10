@@ -458,4 +458,24 @@ public class RestRequisitionCalculatorTest {
     expectedException.expect(DataException.class);
     restRequisitionCalculator.validatePeriod(reportingFacility, reportingProgram, beginDate, endDate);
   }
+
+  @Test
+  public void shouldThrowExceptionIfUploadingPeriodIsNotNextPeriodInSchedule() {
+    when(staticReferenceDataService.getBoolean("toggle.requisitions.allow.previous")).thenReturn(true);
+
+    ProcessingPeriod currentPeriod = new ProcessingPeriod(1L);
+    currentPeriod.setStartDate(DateUtil.parseDate("2020-9-20", DateUtil.FORMAT_DATE));
+    currentPeriod.setEndDate(DateUtil.parseDate("2020-10-20", DateUtil.FORMAT_DATE));
+    Facility reportingFacility = new Facility();
+    Program reportingProgram = new Program();
+
+    Date beginDate = DateUtil.parseDate("2020-10-20", DateUtil.FORMAT_DATE);
+    Date endDate = DateUtil.parseDate("2020-11-20", DateUtil.FORMAT_DATE);
+
+    when(requisitionService.getPeriodForInitiating(reportingFacility, reportingProgram)).thenReturn(currentPeriod);
+    when(requisitionService.getRequisitionsByPeriodAndProgram(beginDate, endDate, reportingProgram.getId(), reportingFacility.getId())).thenReturn(asList(new Rnr()));
+
+    expectedException.expect(DataException.class);
+    restRequisitionCalculator.validatePeriod(reportingFacility, reportingProgram, beginDate, endDate);
+  }
 }

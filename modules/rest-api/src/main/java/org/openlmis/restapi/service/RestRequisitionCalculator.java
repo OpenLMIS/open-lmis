@@ -10,6 +10,7 @@
 
 package org.openlmis.restapi.service;
 
+import org.joda.time.DateTime;
 import org.openlmis.core.domain.Facility;
 import org.openlmis.core.domain.ProcessingPeriod;
 import org.openlmis.core.domain.Program;
@@ -79,6 +80,10 @@ public class RestRequisitionCalculator {
     List<Rnr> rnrs = requisitionService.getRequisitionsByPeriodAndProgram(periodStartDate, periodEndDate, reportingProgram.getId(), reportingFacility.getId());
     if (rnrs != null && !rnrs.isEmpty()) {
       throw new DataException("error.rnr.period.duplicate");
+    }
+
+    if (periodStartDate != null && new DateTime(periodForInitialize.getStartDate()).getMonthOfYear() != new DateTime(periodStartDate).getMonthOfYear()) {
+      throw new DataException("error.rnr.period.invalid");
     }
   }
 
