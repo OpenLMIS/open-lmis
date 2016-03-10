@@ -18,9 +18,9 @@ describe("cubes generate url service test", function () {
             {dimension: "date", values: ["2015,12,3-2015,12,21"]}];
 
         expect(cubesGenerateUrlService.generateAggregateUrl(cubesName, drillDown, cuts))
-            .toEqual("cubesreports/cube/xxx/aggregate?drilldown=drug&cut=facility:HF1|drug:01C01;08A07|location:provinceCode1,districtCode1;provinceCode2,districtCode2|date:2015,12,3-2015,12,21");
+            .toEqual("/cubesreports/cube/xxx/aggregate?drilldown=drug&cut=facility:HF1|drug:01C01;08A07|location:provinceCode1,districtCode1;provinceCode2,districtCode2|date:2015,12,3-2015,12,21");
         expect(cubesGenerateUrlService.generateFactsUrl(cubesName, cuts))
-            .toEqual("cubesreports/cube/xxx/facts?cut=facility:HF1|drug:01C01;08A07|location:provinceCode1,districtCode1;provinceCode2,districtCode2|date:2015,12,3-2015,12,21")
+            .toEqual("/cubesreports/cube/xxx/facts?cut=facility:HF1|drug:01C01;08A07|location:provinceCode1,districtCode1;provinceCode2,districtCode2|date:2015,12,3-2015,12,21")
     });
 
 });

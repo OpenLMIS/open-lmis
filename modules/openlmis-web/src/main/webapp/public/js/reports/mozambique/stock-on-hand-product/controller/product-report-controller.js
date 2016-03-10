@@ -142,7 +142,7 @@ function ProductReportController(type) {
 
                 $http.get(generateAggregateUrl).success(function (data) {
                     $scope.reportData = data.cells;
-                    $scope.reportParams.reportTitle = generateReportTitle(stockReportParams)
+                    $scope.reportParams.reportTitle = generateReportTitle(stockReportParams);
                 });
             }
         };
@@ -196,7 +196,7 @@ function ProductReportController(type) {
             }
 
             if (stockReportParams.selectedDistrict) {
-                cutsParams.push({dimension: "location", values: [stockReportParams.selectedDistrict.code]})
+                cutsParams.push({dimension: "location", values: [stockReportParams.selectedDistrict.code]});
             }
             return cutsParams;
         }
