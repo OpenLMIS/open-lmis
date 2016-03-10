@@ -93,16 +93,14 @@
                     <span ng-show="sortType != 'total'" class="icon-sort"></span>
                     <span ng-show="sortType == 'total' && !sortReverse" class="icon-sort-up"></span>
                     <span ng-show="sortType == 'total' && sortReverse" class="icon-sort-down"></span></th>
-                <th openlmis-message="report.stock.out.details"></th>
             </tr>
 
             <tr ng-repeat="entry in reportData | orderBy:sortType:sortReverse">
-                <td>{{entry.code}}</td>
-                <td style="text-align: left">{{entry.name}}</td>
-                <td>{{entry.avg}}</td>
-                <td>{{entry.occurrences}}</td>
-                <td>{{entry.total}}</td>
-                <td><a openlmis-message="report.stock.out.view.details"></a></td>
+                <td>{{entry['drug.drug_code']}}</td>
+                <td style="text-align: left">{{entry['drug.drug_name']}}</td>
+                <td>{{entry.average_days}}</td>
+                <td>{{entry.record_count}}</td>
+                <td>{{entry.duration}}</td>
             </tr>
         </table>
     </div>

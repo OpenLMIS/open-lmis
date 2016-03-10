@@ -1,5 +1,5 @@
 function ProductReportController(type) {
-    return function ($scope, $filter, ProductReportService,GeographicZoneService,FacilityService, $dialog) {
+    return function ($scope, $http,$filter, ProductReportService,GeographicZoneService,FacilityService, $dialog, CubesGenerateUrlService) {
 
         $scope.provinces = [];
         $scope.districts = [];
@@ -155,24 +155,37 @@ function ProductReportController(type) {
                     $scope.reportData = data.products;
                 });
             }else {
-                params.startTime = $filter('date')($scope.reportParams.startTime, "yyyy,MM,dd");
-                params.endTime = $filter('date')($scope.reportParams.endTime, "yyyy,MM,dd");
-                params.provinceName = ($scope.getGeographicZoneById($scope.provinces, $scope.reportParams.provinceId)).name;
-                params.districtName = ($scope.getGeographicZoneById($scope.districts, $scope.reportParams.districtId)).name;
-                params.selectedProducts = $scope.multiProducts.map(function(product){
-                    return product.code;
+                var params = getStockReportRequestParam();
+                $scope.reportParams.reportTitle = params.selectedProvince.name + ","+ params.selectedDistrict.name+","+ params.selectedFacility.name;
+
+                var cubesName = "vw_stockouts";
+                var drillDown = "drug";
+                var cutsParams = [{dimension: "facility", values: [params.selectedFacility.code]},
+                    {dimension: "drug", values: params.selectedProductCodes},
+                    {dimension: "location", values: [[params.selectedProvince.code, params.selectedDistrict.code]]},
+                    {dimension: "date", values: [params.startTime + "-" + params.endTime]}];
+                var generateAggregateUrl = CubesGenerateUrlService.generateAggregateUrl(cubesName, drillDown, cutsParams);
+
+                $http.get("/"+generateAggregateUrl).success(function(data){
+                    $scope.reportData = data.cells;
                 });
-                params.facilityName = ($scope.facilities.find(function(facility){
-                    return facility.id == $scope.reportParams.facilityId;
-                })).name;
-                $scope.reportParams.reportTitle = params.provinceName + ","+ params.districtName+","+ params.facilityName;
-                $scope.reportData = [
-                    {"code":"f1","name":"p1","avg":100,"occurrences":3,"total":300},
-                    {"code":"f2","name":"p2","avg":200,"occurrences":3,"total":600},
-                    {"code":"f3","name":"p3","avg":100,"occurrences":3,"total":300},
-                    {"code":"f4","name":"p4","avg":100,"occurrences":3,"total":300}];
             }
         };
+
+        function getStockReportRequestParam() {
+            var params = {};
+            params.startTime = $filter('date')($scope.reportParams.startTime, "yyyy,MM,dd");
+            params.endTime = $filter('date')($scope.reportParams.endTime, "yyyy,MM,dd");
+            params.selectedProvince = $scope.getGeographicZoneById($scope.provinces, $scope.reportParams.provinceId);
+            params.selectedDistrict = $scope.getGeographicZoneById($scope.districts, $scope.reportParams.districtId);
+            params.selectedFacility = ($scope.facilities.find(function (facility) {
+                return facility.id == $scope.reportParams.facilityId;
+            }));
+            params.selectedProductCodes = $scope.multiProducts.map(function (product) {
+                return product.code;
+            });
+            return params;
+        }
 
         $scope.getGeographicZoneById = function(zones, zoneId){
             return zones.find(function(zone){

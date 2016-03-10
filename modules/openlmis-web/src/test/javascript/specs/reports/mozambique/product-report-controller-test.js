@@ -1,5 +1,5 @@
 describe("Product Report Controller", function () {
-    var scope, scope2, geoZoneData, levels, productData, facilityProductData, provinceData,httpBackend, filter;
+    var scope, scope2, geoZoneData, levels, productData, facilityProductData, provinceData,httpBackend, dateFilter;
 
     levels = [{
         "id": 5,
@@ -111,14 +111,14 @@ describe("Product Report Controller", function () {
         }];
 
     beforeEach(module('openlmis'));
-    beforeEach(inject(function (_$httpBackend_,$rootScope,$filter, ProductReportService) {
+    beforeEach(inject(function (_$httpBackend_,$rootScope, $http, $filter, ProductReportService) {
         scope = $rootScope.$new();
         scope2 = $rootScope.$new();
         httpBackend = _$httpBackend_;
-        filter = $filter;
+        dateFilter = $filter('date');
 
-        ProductReportController("singleProduct")(scope, $filter, ProductReportService);
-        ProductReportController("singleFacility")(scope2, $filter, ProductReportService);
+        ProductReportController("singleProduct")(scope, $http, $filter, ProductReportService);
+        ProductReportController("singleFacility")(scope2, $http, $filter, ProductReportService);
     }));
 
     it('should get provinces and districts', function () {
@@ -172,7 +172,7 @@ describe("Product Report Controller", function () {
         scope.$on('$viewContentLoaded');
         scope.changeTimeOption("month");
 
-        var equalDate = filter('date')(new Date().setMonth(new Date().getMonth() - 1), "yyyy-MM-dd");
+        var equalDate = dateFilter(new Date().setMonth(new Date().getMonth() - 1), "yyyy-MM-dd");
         expect(scope.reportParams.startTime).toEqual(equalDate);
     });
 
