@@ -97,8 +97,8 @@
 
             <tr ng-repeat="entry in reportData | orderBy:sortType:sortReverse">
                 <td>{{entry['drug.drug_code']}}</td>
-                <td style="text-align: left">{{entry['drug.drug_name']}}</td>
-                <td>{{entry.average_days}}</td>
+                <td style="text-align: left"><a href="javascript:void(0);">{{entry['drug.drug_name']}}</a></td>
+                <td>{{entry.average_days | number:1}}</td>
                 <td>{{entry.record_count}}</td>
                 <td>{{entry.duration}}</td>
             </tr>

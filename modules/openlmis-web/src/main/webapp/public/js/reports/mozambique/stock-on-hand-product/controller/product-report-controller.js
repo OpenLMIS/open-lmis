@@ -1,5 +1,5 @@
 function ProductReportController(type) {
-    return function ($scope, $http,$filter, ProductReportService,GeographicZoneService,FacilityService, $dialog, CubesGenerateUrlService) {
+    return function ($scope, $http, $filter, ProductReportService, GeographicZoneService, FacilityService, $dialog, CubesGenerateUrlService) {
 
         $scope.provinces = [];
         $scope.districts = [];
@@ -15,8 +15,9 @@ function ProductReportController(type) {
             idProp: "code",
             externalIdProp: "code",
             enableSearch: true,
-            scrollable : true,
-            scrollableHeight: "300px"
+            scrollable: true,
+            scrollableHeight: "300px",
+            showCheckAll: false
         };
         $scope.multiSelectionModifyTexts = {
             dynamicButtonTextSuffix: "drugs selected",
@@ -31,7 +32,7 @@ function ProductReportController(type) {
         };
         $scope.timeTags = Object.keys(timeOptions);
 
-        $scope.changeTimeOption = function(timeTag) {
+        $scope.changeTimeOption = function (timeTag) {
             $scope.timeTagSelected = timeTag;
             $scope.reportParams.startTime = $filter('date')(timeOptions[timeTag], "yyyy-MM-dd");
             $scope.reportParams.endTime = $scope.todayDateString;
@@ -42,12 +43,13 @@ function ProductReportController(type) {
                 $scope.loadProducts();
             } else if (type == "singleFacility") {
                 $scope.loadHealthFacilities();
-            }else{
+            } else {
                 $scope.loadProducts();
                 $scope.loadHealthFacilities();
             }
             loadGeographicZones();
             $scope.reportParams.endTime = $scope.todayDateString;
+            $scope.reportParams.startTime = $filter('date')(new Date().setMonth(currentDate.getMonth() - 1), "yyyy-MM-dd");
         });
 
         $scope.loadProducts = function () {
@@ -57,10 +59,10 @@ function ProductReportController(type) {
         };
 
         $scope.loadHealthFacilities = function () {
-            FacilityService.facilityTypes().get({},function(data){
-               var facilityTypes = data["facility-types"];
+            FacilityService.facilityTypes().get({}, function (data) {
+                var facilityTypes = data["facility-types"];
 
-               $scope.loadFacilities(facilityTypes);
+                $scope.loadFacilities(facilityTypes);
             });
         };
 
@@ -69,42 +71,23 @@ function ProductReportController(type) {
                 var facilities = data.facilities;
                 var healthFacilities = [];
 
-                _.forEach(facilities,function(facility){
-                    _.forEach(facilityTypes,function(type){
-                       if(type.id == facility.typeId){
-                           if(type.code != "DDM" && type.code != "DPM"){
-                               healthFacilities.push(facility);
-                           }
-                       }
+                _.forEach(facilities, function (facility) {
+                    _.forEach(facilityTypes, function (type) {
+                        if (type.id == facility.typeId) {
+                            if (type.code != "DDM" && type.code != "DPM") {
+                                healthFacilities.push(facility);
+                            }
+                        }
                     });
                 });
                 $scope.facilities = healthFacilities;
             });
         };
 
-        function loadGeographicZones() {
-            GeographicZoneService.loadGeographicLevel().get({}, function (data) {
-
-                var geographicZoneLevel = data["geographic-levels"];
-                GeographicZoneService.loadGeographicZone().get({}, function (data) {
-                    $scope.getProvincesAndDistricts(geographicZoneLevel,data);
-                });
-            });
-        }
-
-        function findGeographicZoneLevelByCode(geographicZoneLevels, code){
-            if (!geographicZoneLevels) {
-                return null;
-            }
-            return geographicZoneLevels.find(function (level) {
-                return level.code == code;
-            });
-        }
-
-        $scope.getProvincesAndDistricts = function(geographicZoneLevels, data) {
+        $scope.getProvincesAndDistricts = function (geographicZoneLevels, data) {
             var provinceLevel = findGeographicZoneLevelByCode(geographicZoneLevels, "province");
             var districtLevel = findGeographicZoneLevelByCode(geographicZoneLevels, "district");
-            _.forEach(data["geographic-zones"], function(zone){
+            _.forEach(data["geographic-zones"], function (zone) {
                 if (zone.levelId == provinceLevel.id) {
                     $scope.provinces.push(zone);
                 } else if (zone.levelId == districtLevel.id) {
@@ -121,56 +104,102 @@ function ProductReportController(type) {
 
         $scope.getParent = function (geoZoneId) {
             return geoZoneId && $scope.fullGeoZoneList.find(function (zone, index, array) {
-                return $scope.getGeoZone(geoZoneId).parentId == zone.id;
-            });
+                    return $scope.getGeoZone(geoZoneId).parentId == zone.id;
+                });
         };
 
         $scope.getGeoZone = function (id) {
             return id && $scope.fullGeoZoneList.find(function (zone, index, array) {
-                return id == zone.id;
-            });
+                    return id == zone.id;
+                });
         };
 
         $scope.loadReport = function () {
-            var params = {};
+            var params = {endTime: $filter('date')($scope.reportParams.endTime, "yyyy-MM-dd HH:mm:ss")};
 
-            params.endTime = $filter('date')($scope.reportParams.endTime, "yyyy-MM-dd HH:mm:ss");
             if (type == "singleProduct") {
                 params.productId = $scope.reportParams.productId;
-                params.geographicZoneId = $scope.reportParams.districtId ? $scope.reportParams.districtId : $scope.reportParams.provinceId;
+                params.geographicZoneId = $scope.reportParams.districtId || $scope.reportParams.provinceId;
 
-                if (!validateProduct()) {
-                    return;
+                if (validateProduct()) {
+                    ProductReportService.loadProductReport().get(params, function (data) {
+                        $scope.reportData = data.products;
+                    });
                 }
-
-                ProductReportService.loadProductReport().get(params, function (data) {
-                    $scope.reportData = data.products;
-                });
-            } else if (type == "singleFacility"){
+            } else if (type == "singleFacility") {
                 params.facilityId = $scope.reportParams.facilityId;
-                if (!validateFacility()) {
-                    return;
+
+                if (validateFacility()) {
+                    ProductReportService.loadFacilityReport().get(params, function (data) {
+                        $scope.reportData = data.products;
+                    });
                 }
-                ProductReportService.loadFacilityReport().get(params, function (data) {
-                    $scope.reportData = data.products;
-                });
-            }else {
-                var params = getStockReportRequestParam();
-                $scope.reportParams.reportTitle = params.selectedProvince.name + ","+ params.selectedDistrict.name+","+ params.selectedFacility.name;
 
-                var cubesName = "vw_stockouts";
-                var drillDown = "drug";
-                var cutsParams = [{dimension: "facility", values: [params.selectedFacility.code]},
-                    {dimension: "drug", values: params.selectedProductCodes},
-                    {dimension: "location", values: [[params.selectedProvince.code, params.selectedDistrict.code]]},
-                    {dimension: "date", values: [params.startTime + "-" + params.endTime]}];
-                var generateAggregateUrl = CubesGenerateUrlService.generateAggregateUrl(cubesName, drillDown, cutsParams);
+            } else {
+                var stockReportParams = getStockReportRequestParam();
 
-                $http.get("/"+generateAggregateUrl).success(function(data){
+                var generateAggregateUrl = CubesGenerateUrlService.generateAggregateUrl('vw_stockouts', 'drug', generateCutParams(stockReportParams));
+
+                $http.get(generateAggregateUrl).success(function (data) {
                     $scope.reportData = data.cells;
+                    $scope.reportParams.reportTitle = generateReportTitle(stockReportParams)
                 });
             }
         };
+
+        $scope.getGeographicZoneById = function (zones, zoneId) {
+            return zones.find(function (zone) {
+                return zone.id == zoneId;
+            });
+        };
+
+        $scope.checkDate = function () {
+            $scope.timeTagSelected = "";
+            if (new Date() < new Date($scope.reportParams.endTime)) {
+                $scope.reportParams.endTime = $filter('date')(new Date(), "yyyy-MM-dd");
+                var options = {
+                    id: "chooseDateAlertDialog",
+                    header: "title.alert",
+                    body: "dialog.body.date"
+                };
+                MozambiqueDialog.newDialog(options, function () {
+                }, $dialog);
+            }
+        };
+
+        $scope.checkLastSyncDate = function (time) {
+            var syncInterval = (new Date() - time) / 1000 / 3600;
+            return syncInterval <= 24 && {'background-color': 'green'} ||
+                syncInterval > 24 * 3 && {'background-color': 'red'} ||
+                {'background-color': 'orange'};
+        };
+
+        function generateReportTitle(stockReportParams) {
+            var reportTitle;
+            if (stockReportParams.selectedProvince) {
+                reportTitle = stockReportParams.selectedProvince.name;
+            }
+            if (stockReportParams.selectedDistrict) {
+                reportTitle += ("," + stockReportParams.selectedDistrict.name);
+            }
+            if (stockReportParams.selectedFacility) {
+                reportTitle += stockReportParams.selectedFacility.name;
+            }
+            return reportTitle || "All";
+        }
+
+        function generateCutParams(stockReportParams) {
+            var cutsParams = [{dimension: "date", values: [stockReportParams.startTime + "-" + stockReportParams.endTime]},
+                {dimension: "drug", values: stockReportParams.selectedProductCodes}];
+            if (stockReportParams.selectedFacility) {
+                cutsParams.push({dimension: "facility", values: [stockReportParams.selectedFacility.code]});
+            }
+
+            if (stockReportParams.selectedDistrict) {
+                cutsParams.push({dimension: "location", values: [stockReportParams.selectedDistrict.code]})
+            }
+            return cutsParams;
+        }
 
         function getStockReportRequestParam() {
             var params = {};
@@ -187,25 +216,6 @@ function ProductReportController(type) {
             return params;
         }
 
-        $scope.getGeographicZoneById = function(zones, zoneId){
-            return zones.find(function(zone){
-                return zone.id == zoneId;
-            });
-        };
-
-        $scope.checkDate = function(){
-            $scope.timeTagSelected = "";
-            if(new Date() < new Date($scope.reportParams.endTime)){
-                $scope.reportParams.endTime = $filter('date')(new Date(), "yyyy-MM-dd");
-                var options = {
-                    id: "chooseDateAlertDialog",
-                    header:"title.alert",
-                    body: "dialog.body.date"
-                };
-                MozambiqueDialog.newDialog(options, function(){}, $dialog);
-            }
-        };
-
         function validateFacility() {
             $scope.invalid = !$scope.reportParams.facilityId;
             return !$scope.invalid;
@@ -216,11 +226,23 @@ function ProductReportController(type) {
             return !$scope.invalid;
         }
 
-        $scope.checkLastSyncDate = function (time) {
-            var syncInterval = (new Date() - time) / 1000 / 3600;
-            return syncInterval <= 24 && {'background-color': 'green'} ||
-                syncInterval > 24 * 3 && {'background-color': 'red'} ||
-                {'background-color': 'orange'};
-        };
+        function loadGeographicZones() {
+            GeographicZoneService.loadGeographicLevel().get({}, function (data) {
+
+                var geographicZoneLevel = data["geographic-levels"];
+                GeographicZoneService.loadGeographicZone().get({}, function (data) {
+                    $scope.getProvincesAndDistricts(geographicZoneLevel, data);
+                });
+            });
+        }
+
+        function findGeographicZoneLevelByCode(geographicZoneLevels, code) {
+            if (!geographicZoneLevels) {
+                return null;
+            }
+            return geographicZoneLevels.find(function (level) {
+                return level.code == code;
+            });
+        }
     };
 }
