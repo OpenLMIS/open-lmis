@@ -21,6 +21,8 @@ function ViewRnrViaDetailController($scope, $route, $location, Requisitions, dow
         Requisitions.get({id: $route.current.params.rnr, operation:"skipped"}, function (data) {
             $scope.rnr = data.rnr;
 
+            setPeriodDate();
+
             populateKitItems(data.rnr.fullSupplyLineItems);
 
             var extraRows = $scope.regularRnrItems.length % $scope.pageSize;
@@ -40,6 +42,16 @@ function ViewRnrViaDetailController($scope, $route, $location, Requisitions, dow
         });
 
     };
+
+    function setPeriodDate() {
+        if ($scope.rnr.actualPeriodStartDate != null && $scope.rnr.actualPeriodEndDate != null) {
+            $scope.displayStartDate = $scope.rnr.actualPeriodStartDate;
+            $scope.displayEndDate = $scope.rnr.actualPeriodEndDate;
+        } else {
+            $scope.displayStartDate = $scope.rnr.period.startDate;
+            $scope.displayEndDate = $scope.rnr.period.endDate;
+        }
+    }
 
     function populateKitItems(rnrItems) {
         $scope.regularRnrItems = [];

@@ -158,6 +158,45 @@ describe('ViewRnrViaDetailController', function () {
     expect(scope.approverSignature).toEqual(approverText);
   });
 
+  it('should set actualPeriod as the period when there is actualPeriod in rnr',function(){
+
+    var startDate = new Date("2015/02/20");
+    var endDate = new Date("2015/03/20");
+    var actualStartDate = new Date("2015/02/18");
+    var actualEndDate = new Date("2015/03/19");
+    var rnrItems = {
+      rnr: {
+        facility: {code: "F10", name: "Health Facility 1"},
+        fullSupplyLineItems: [{beginningBalance: 98, quantityRequested: 12345, stockInHand: 261, totalLossesAndAdjustments: 140}],
+        period: {stringStartDate: "02/20/2014", stringEndDate: "20/03/2014", startDate: startDate, endDate: endDate},
+        actualPeriodStartDate: actualStartDate,
+        actualPeriodEndDate: actualEndDate
+      }
+    };
+
+    initMockRequisition(rnrItems);
+
+    expect(scope.displayStartDate).toEqual(actualStartDate);
+    expect(scope.displayEndDate).toEqual(actualEndDate);
+  });
+
+  it('should set schedulePeriod as the period when there is no actualPeriod in rnr',function(){
+
+    var startDate = new Date("2015/02/20");
+    var endDate = new Date("2015/03/20");
+    var rnrItems = {
+      rnr: {
+        facility: {code: "F10", name: "Health Facility 1"},
+        fullSupplyLineItems: [{beginningBalance: 98, quantityRequested: 12345, stockInHand: 261, totalLossesAndAdjustments: 140}],
+        period: {stringStartDate: "02/20/2014", stringEndDate: "20/03/2014", startDate: startDate, endDate: endDate},
+      }
+    };
+    initMockRequisition(rnrItems);
+
+    expect(scope.displayStartDate).toEqual(startDate);
+    expect(scope.displayEndDate).toEqual(endDate);
+  });
+
   function initMockRequisition(rnrItems) {
     var expectedUrl = "/requisitions/1/skipped.json";
     httpBackend.expect('GET', expectedUrl).respond(200, rnrItems);
