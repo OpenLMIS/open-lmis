@@ -7,12 +7,12 @@ angular.module('requisition-report', ['openlmis', 'angularCombine', 'ngTable', '
                     reloadOnSearch: false
                 }).
                 when('/single-product', {
-                    controller: ProductReportController("singleProduct"),
+                    controller: SingleProductReportController,
                     templateUrl: 'single-product/partials/list.html',
                     reloadOnSearch: false
                 }).
                 when('/all-products', {
-                    controller: ProductReportController("singleFacility"),
+                    controller: SingleFacilityReportController,
                     templateUrl: 'all-products/partials/list.html',
                     reloadOnSearch: false
                 }).
@@ -22,7 +22,7 @@ angular.module('requisition-report', ['openlmis', 'angularCombine', 'ngTable', '
                     reloadOnSearch: false
                 }).
                 when('/stock-out', {
-                    controller: ProductReportController("stockOut"),
+                    controller: StockOutReportController,
                     templateUrl: 'stockout/partials/list.html',
                     reloadOnSearch: false
                 }).otherwise({redirectTo: '/'});
