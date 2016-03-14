@@ -196,7 +196,9 @@ function ProductReportController(type) {
             }
 
             if (stockReportParams.selectedDistrict) {
-                cutsParams.push({dimension: "location", values: [stockReportParams.selectedDistrict.code]});
+                cutsParams.push({dimension: "location", values: [[stockReportParams.selectedProvince.code, stockReportParams.selectedDistrict.code]]});
+            }else{
+                cutsParams.push({dimension: "location", values: [stockReportParams.selectedProvince.code]});
             }
             return cutsParams;
         }
