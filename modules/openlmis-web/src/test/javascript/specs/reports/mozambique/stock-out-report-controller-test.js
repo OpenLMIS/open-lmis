@@ -141,10 +141,6 @@ describe("Stock Out Report Controller", function () {
             code: "MARRACUENE",
             name: "Marracuene"
         }];
-        scope.multiProducts = [
-            {code: "07A06"},
-            {code: "07A06Z"}
-        ];
         scope.facilities = [{
             code: "HF8",
             id: 1,
@@ -162,7 +158,7 @@ describe("Stock Out Report Controller", function () {
             endTime: "2016-03-15"
         };
 
-        httpBackend.expectGET('/cubesreports/cube/vw_stockouts/aggregate?drilldown=drug&cut=date:2015,03,15-2016,03,15|drug:07A06;07A06Z|facility:HF8|location:MAPUTO_PROVINCIA,MARRACUENE').respond(200, stockOutReportData);
+        httpBackend.expectGET('/cubesreports/cube/vw_stockouts/aggregate?drilldown=drug&cut=date:2015,03,15-2016,03,15|facility:HF8|location:MAPUTO_PROVINCIA,MARRACUENE').respond(200, stockOutReportData);
         scope.loadReport();
         httpBackend.flush();
 

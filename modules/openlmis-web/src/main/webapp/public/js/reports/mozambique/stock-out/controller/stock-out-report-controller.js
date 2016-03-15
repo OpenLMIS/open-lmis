@@ -1,21 +1,6 @@
 function StockOutReportController($scope, $filter, $controller, $http, CubesGenerateUrlService, messageService) {
     $controller('BaseProductReportController', {$scope: $scope});
 
-    $scope.multiProducts = [];
-    $scope.multiSelectionSettings = {
-        displayProp: "primaryName",
-        idProp: "code",
-        externalIdProp: "code",
-        enableSearch: true,
-        scrollable: true,
-        scrollableHeight: "300px",
-        showCheckAll: false
-    };
-    $scope.multiSelectionModifyTexts = {
-        dynamicButtonTextSuffix: "drugs selected",
-        buttonDefaultText: "Select Drugs"
-    };
-
     var currentDate = new Date();
     var timeOptions = {
         "month": new Date().setMonth(currentDate.getMonth() - 1),
@@ -54,9 +39,6 @@ function StockOutReportController($scope, $filter, $controller, $http, CubesGene
         params.selectedFacility = ($scope.facilities.find(function (facility) {
             return facility.id == $scope.reportParams.facilityId;
         }));
-        params.selectedProductCodes = $scope.multiProducts.map(function (product) {
-            return product.code;
-        });
         return params;
     }
 
@@ -67,8 +49,7 @@ function StockOutReportController($scope, $filter, $controller, $http, CubesGene
     }
 
     function generateCutParams(stockReportParams) {
-        var cutsParams = [{dimension: "date", values: [stockReportParams.startTime + "-" + stockReportParams.endTime]},
-            {dimension: "drug", values: stockReportParams.selectedProductCodes}];
+        var cutsParams = [{dimension: "date", values: [stockReportParams.startTime + "-" + stockReportParams.endTime]}];
         if (stockReportParams.selectedFacility) {
             cutsParams.push({dimension: "facility", values: [stockReportParams.selectedFacility.code]});
         }
