@@ -1,4 +1,4 @@
-angular.module('requisition-report', ['openlmis', 'angularCombine', 'ngTable', 'ui.bootstrap.dialog', 'angularjs-dropdown-multiselect']).config(['$routeProvider',
+angular.module('requisition-report', ['openlmis', 'angularCombine', 'ngTable', 'ui.bootstrap.dialog']).config(['$routeProvider',
         function ($routeProvider) {
             $routeProvider.
                 when('/requisition', {
