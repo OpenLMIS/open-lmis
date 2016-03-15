@@ -44,7 +44,7 @@ function ViewRnrViaDetailController($scope, $route, $location, Requisitions, dow
     };
 
     function setPeriodDate() {
-        if ($scope.rnr.actualPeriodStartDate!==null && $scope.rnr.actualPeriodEndDate!==null) {
+        if ($scope.rnr.actualPeriodStartDate && $scope.rnr.actualPeriodEndDate) {
             $scope.displayStartDate = $scope.rnr.actualPeriodStartDate;
             $scope.displayEndDate = $scope.rnr.actualPeriodEndDate;
         } else {
