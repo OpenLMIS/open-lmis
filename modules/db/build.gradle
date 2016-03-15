@@ -138,7 +138,7 @@ task globalSeed(dependsOn: [baseSeed, extraSeed]) {
     description 'Runs all seed tasks that apply globally'
 }
 
-task enableCustom(type: Exec, dependsOn: globalSeed) {
+task enableCustom(type: Exec, dependsOn: baseSeed) {
     onlyIf { toggleOnCustom == 'true' }
     description 'Runs script to enable project-specific features (if toggleOnCustom is true)'
     environment("PGPASSWORD", dbPassword)
