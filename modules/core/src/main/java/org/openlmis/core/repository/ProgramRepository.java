@@ -128,4 +128,8 @@ public class ProgramRepository {
     return mapper.getAllIvdPrograms();
 
   }
+
+  public void associateParent(Long parentProgramId, String programCode) {
+
+  }
 }

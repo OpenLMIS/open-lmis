@@ -16,6 +16,8 @@ import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
+import java.util.List;
+
 import static com.fasterxml.jackson.databind.annotation.JsonSerialize.Inclusion.NON_EMPTY;
 
 /**
@@ -42,6 +44,9 @@ public class Program extends BaseModel {
   private Boolean enableIvdForm;
   private Boolean push;
   private Boolean usePriceSchedule;
+
+  private Program parent;
+
 
   public Program(Long id) {
     this.id = id;
