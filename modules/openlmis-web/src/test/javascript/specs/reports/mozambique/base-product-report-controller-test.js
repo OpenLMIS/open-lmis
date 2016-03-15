@@ -1,5 +1,5 @@
 describe("Base Product Report Controller", function () {
-    var scope, geoZoneData, levels, httpBackend, dateFilter;
+    var scope, geoZoneData, levels, httpBackend, dateFilter, facilityData, fullGeoZoneList;
 
     levels = [{
         "id": 5,
@@ -62,6 +62,30 @@ describe("Base Product Report Controller", function () {
         }]
     };
 
+    facilityData = [{
+        code: "HF8",
+        id: 1,
+        name: "Habel Jafar",
+        geographicZoneId: 1
+    }, {
+        code: "HF3",
+        id: 4,
+        name: "Machubo",
+        geographicZoneId: 2
+    }];
+
+    fullGeoZoneList = [{
+        code: "testDist",
+        id: 1,
+        name: "testDist",
+        parentId: 2
+    },{
+        code: "testProv",
+        id: 2,
+        name: "testProv",
+        parentId: 7
+    }]
+
     beforeEach(module('openlmis'));
     beforeEach(inject(function (_$httpBackend_,$rootScope, $http, $filter, ProductReportService) {
         scope = $rootScope.$new();
@@ -85,5 +109,15 @@ describe("Base Product Report Controller", function () {
         var parentZone = scope.getParent(75);
         expect(parentZone.id).toEqual(74);
         expect(parentZone.name).toEqual("Maputo Província");
+    });
+
+    it('should fill corresponding district and province when select facility', function () {
+        scope.fullGeoZoneList = fullGeoZoneList;
+        scope.facilities = facilityData;
+        scope.reportParams.facilityId = 1;
+        scope.fillGeographicZone();
+
+        expect(scope.reportParams.districtId).toEqual(1);
+        expect(scope.reportParams.provinceId).toEqual(2);
     });
 });

@@ -62,6 +62,14 @@ function BaseProductReportController($scope, $filter, ProductReportService, Faci
         $scope.reportParams.provinceId = !parent ? undefined : parent.id;
     };
 
+    $scope.fillGeographicZone = function () {
+        var selectedFacility = $scope.facilities.find(function (facility) {
+            return facility.id == $scope.reportParams.facilityId;
+        });
+        $scope.reportParams.districtId = !selectedFacility ? undefined : selectedFacility.geographicZoneId;
+        $scope.reportParams.provinceId = !selectedFacility ? undefined : $scope.getParent(selectedFacility.geographicZoneId).id;
+    };
+
     $scope.getParent = function (geoZoneId) {
         return geoZoneId && $scope.fullGeoZoneList.find(function (zone, index, array) {
                 return $scope.getGeoZone(geoZoneId).parentId == zone.id;
