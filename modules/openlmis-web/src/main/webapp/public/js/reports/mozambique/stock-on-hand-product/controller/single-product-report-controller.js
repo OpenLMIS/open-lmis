@@ -15,7 +15,7 @@ function SingleProductReportController($scope, $filter, $controller, ProductRepo
                 $scope.reportData = data.products;
             });
         }
-    }
+    };
 
     function validateProduct() {
         $scope.invalid = !$scope.reportParams.productId;

@@ -46,7 +46,7 @@ function StockOutReportController($scope, $filter, $controller, $http, CubesGene
         return zones.find(function (zone) {
             return zone.id == zoneId;
         });
-    }
+    };
 
     function generateCutParams(stockReportParams) {
         var cutsParams = [{dimension: "date", values: [stockReportParams.startTime + "-" + stockReportParams.endTime]}];
