@@ -1,5 +1,5 @@
 describe("Stock Out Report Controller", function () {
-    var scope, geoZoneData, levels, provinceData, httpBackend, dateFilter;
+    var scope, geoZoneData, levels, provinceData, httpBackend, dateFilter, stockOutReportData;
 
     levels = [{
         "id": 5,
@@ -66,27 +66,36 @@ describe("Stock Out Report Controller", function () {
         {
             code: "MAPUTO_PROVINCIA",
             id: 1,
-            latitude: null,
             levelId: 2,
-            longitude: null,
             name: "Maputo Província",
-            parent: null,
             parentId: 3
         },
         {
             code: "Habel",
             id: 2,
-            latitude: null,
             levelId: 2,
-            longitude: null,
             name: "Habel",
-            parent: null,
             parentId: 3
         }];
 
+    stockOutReportData = {cells: [
+        {
+            "drug.drug_code": "07A06",
+            "duration": 21,
+            "record_count": 4,
+            "average_days": 5.25,
+            "drug.drug_name": "Paracetamol120mg/5mLXarope"
+        }, {
+            "drug.drug_code": "07A06Z",
+            "duration": 45,
+            "record_count": 6,
+            "average_days": 7.5,
+            "drug.drug_name": "Paracetamol125mg/5mLXarope"
+        }]};
+
     beforeEach(module('openlmis'));
     beforeEach(module('ui.bootstrap.dialog'));
-    beforeEach(inject(function (_$httpBackend_,$rootScope, $http, $controller, $filter) {
+    beforeEach(inject(function (_$httpBackend_, $rootScope, $http, $controller, $filter) {
         scope = $rootScope.$new();
         httpBackend = _$httpBackend_;
         dateFilter = $filter('date');
@@ -123,5 +132,46 @@ describe("Stock Out Report Controller", function () {
         var provinceById2 = scope.getGeographicZoneById(provinceData, 2);
         expect(provinceById1["name"]).toEqual("Maputo Província");
         expect(provinceById2["name"]).toEqual("Habel");
+    });
+
+    it('should load single product report successfully', function () {
+        scope.provinces = provinceData;
+        scope.districts = [{
+            id: 5,
+            code: "MARRACUENE",
+            name: "Marracuene"
+        }];
+        scope.multiProducts = [
+            {code: "07A06"},
+            {code: "07A06Z"}
+        ];
+        scope.facilities = [{
+            code: "HF8",
+            id: 1,
+            name: "Habel Jafar"
+        }, {
+            code: "HF3",
+            id: 4,
+            name: "Machubo"
+        }];
+        scope.reportParams = {
+            provinceId: "1",
+            districtId: "5",
+            facilityId: "1",
+            startTime: "2015-03-15",
+            endTime: "2016-03-15"
+        };
+
+        httpBackend.expectGET('/cubesreports/cube/vw_stockouts/aggregate?drilldown=drug&cut=date:2015,03,15-2016,03,15|drug:07A06;07A06Z|facility:HF8|location:MAPUTO_PROVINCIA,MARRACUENE').respond(200, stockOutReportData);
+        scope.loadReport();
+        httpBackend.flush();
+
+        expect(scope.reportData.length).toBe(2);
+        expect(scope.reportData[0]["drug.drug_code"]).toEqual("07A06");
+        expect(scope.reportData[0]["duration"]).toEqual(21);
+        expect(scope.reportData[0]["record_count"]).toEqual(4);
+        expect(scope.reportData[0]["average_days"]).toEqual(5.25);
+        expect(scope.reportData[0]["drug.drug_name"]).toEqual("Paracetamol120mg/5mLXarope");
+        expect(scope.reportParams.reportTitle).toEqual("Maputo Província,MarracueneHabel Jafar");
     });
 });
