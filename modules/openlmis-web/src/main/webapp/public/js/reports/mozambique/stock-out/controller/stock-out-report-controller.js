@@ -1,4 +1,4 @@
-function StockOutReportController($scope, $filter,$controller, $http, CubesGenerateUrlService) {
+function StockOutReportController($scope, $filter, $controller, $http, CubesGenerateUrlService, messageService) {
     $controller('BaseProductReportController', {$scope: $scope});
 
     $scope.multiProducts = [];
@@ -74,8 +74,11 @@ function StockOutReportController($scope, $filter,$controller, $http, CubesGener
         }
 
         if (stockReportParams.selectedDistrict) {
-            cutsParams.push({dimension: "location", values: [[stockReportParams.selectedProvince.code, stockReportParams.selectedDistrict.code]]});
-        }else if (stockReportParams.selectedProvince) {
+            cutsParams.push({
+                dimension: "location",
+                values: [[stockReportParams.selectedProvince.code, stockReportParams.selectedDistrict.code]]
+            });
+        } else if (stockReportParams.selectedProvince) {
             cutsParams.push({dimension: "location", values: [stockReportParams.selectedProvince.code]});
         }
         return cutsParams;
@@ -92,6 +95,6 @@ function StockOutReportController($scope, $filter,$controller, $http, CubesGener
         if (stockReportParams.selectedFacility) {
             reportTitle += stockReportParams.selectedFacility.name;
         }
-        return reportTitle || "All";
+        return reportTitle || messageService.get("label.all");
     }
 }
