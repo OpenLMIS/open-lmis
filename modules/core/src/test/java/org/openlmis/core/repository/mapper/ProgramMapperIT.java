@@ -363,6 +363,22 @@ public class ProgramMapperIT {
     assertThat(programsForNotification.get(0).getCode(), is("HIV"));
   }
 
+  @Test
+  public void shouldUpdateProgramParent() throws Exception {
+    Program program = make(a(ProgramBuilder.defaultProgram, with(ProgramBuilder.programCode, "P1")));
+    Program programParent = make(a(ProgramBuilder.defaultProgram, with(ProgramBuilder.programCode, "P2")));
+
+    programMapper.insert(program);
+    programMapper.insert(programParent);
+
+    long programId = programMapper.getByCode("P1").getId();
+    long programParentId = programMapper.getByCode("P2").getId();
+
+    programMapper.associateProgramToParent(programId, programParentId);
+
+    assertThat(programMapper.getWithParentById(programId).getParent(), is(programParent));
+  }
+
   private SupervisoryNode insertSupervisoryNode(SupervisoryNode supervisoryNode) {
     supervisoryNodeMapper.insert(supervisoryNode);
     return supervisoryNode;

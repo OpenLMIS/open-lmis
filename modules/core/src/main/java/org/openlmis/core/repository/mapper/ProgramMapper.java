@@ -11,9 +11,13 @@
 package org.openlmis.core.repository.mapper;
 
 import org.apache.ibatis.annotations.*;
+import org.openlmis.core.domain.GeographicZone;
+import org.openlmis.core.domain.ProductGroup;
 import org.openlmis.core.domain.Program;
 import org.springframework.stereotype.Repository;
+import reactor.core.dynamic.annotation.On;
 
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -184,4 +188,32 @@ public interface ProgramMapper {
     " where enableIvdForm = true " +
     " order by name")
   List<Program> getAllIvdPrograms();
+
+  @Update("UPDATE programs SET " +
+    "parentId = #{parentProgramId} " +
+    "WHERE id = #{programId}")
+  void associateProgramToParent(@Param("programId") Long programId, @Param("parentProgramId") Long parentProgramId);
+
+
+  @Select("SELECT * FROM programs WHERE id = #{programId}")
+  @Results(value = {
+      @Result(property = "id", column = "id"),
+      @Result(property = "code", column = "code"),
+      @Result(property = "name", column = "name"),
+      @Result(property = "description", column = "description"),
+      @Result(property = "active", column = "active"),
+      @Result(property = "budgetingApplies", column = "budgetingApplies"),
+      @Result(property = "templateConfigured", column = "templateConfigured"),
+      @Result(property = "regimenTemplateConfigured", column = "regimenTemplateConfigured"),
+      @Result(property = "isEquipmentConfigured", column = "isEquipmentConfigured"),
+      @Result(property = "enableSkipPeriod", column = "enableSkipPeriod"),
+      @Result(property = "showNonFullSupplyTab", column = "showNonFullSupplyTab"),
+      @Result(property = "hideSkippedProducts", column = "hideSkippedProducts"),
+      @Result(property = "enableIvdForm", column = "enableIvdForm"),
+      @Result(property = "push", column = "push"),
+      @Result(property = "usePriceSchedule", column = "usePriceSchedule"),
+      @Result(property = "parent", column = "parentId", javaType = Program.class,
+      one = @One(select = "org.openlmis.core.repository.mapper.ProgramMapper.getById")),
+  })
+  Program getWithParentById(Long programId);
 }

@@ -130,6 +130,7 @@ public class ProgramRepository {
   }
 
   public void associateParent(Long parentProgramId, String programCode) {
-
+    Long programId = getIdByCode(programCode);
+    mapper.associateProgramToParent(programId, parentProgramId);
   }
 }

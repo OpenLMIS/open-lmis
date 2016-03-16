@@ -1,1 +1,1 @@
-ALTER TABLE programs ADD COLUMN parent INTEGER REFERENCES programs(id);
+ALTER TABLE programs ADD COLUMN parentId INTEGER REFERENCES programs(id);
