@@ -78,7 +78,7 @@
                     <span ng-show="sortType != 'average_days'" class="icon-sort"></span>
                     <span ng-show="sortType == 'average_days' && !sortReverse" class="icon-sort-up"></span>
                     <span ng-show="sortType == 'average_days' && sortReverse" class="icon-sort-down"></span></th>
-                <th ng-click="sortType = 'record_count'; sortReverse = !sortReverse" class="sortable sort-desc" openlmis-message="report.stock.out.occurrences">
+                <th ng-click="sortType = 'record_count'; sortReverse = !sortReverse" class="sortable sort-desc">{{occurrencesHeader}}
                     <span ng-show="sortType != 'record_count'" class="icon-sort"></span>
                     <span ng-show="sortType == 'record_count' && !sortReverse" class="icon-sort-up"></span>
                     <span ng-show="sortType == 'record_count' && sortReverse" class="icon-sort-down"></span></th>

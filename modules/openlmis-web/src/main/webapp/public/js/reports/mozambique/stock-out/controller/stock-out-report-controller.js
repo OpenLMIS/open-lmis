@@ -20,6 +20,16 @@ function StockOutReportController($scope, $filter, $controller, $http, CubesGene
         var generateAggregateUrl = CubesGenerateUrlService.generateAggregateUrl('vw_stockouts', 'drug', generateCutParams(stockReportParams));
         $http.get(generateAggregateUrl).success(function (data) {
             $scope.reportData = data.cells;
+
+            if (!stockReportParams.selectedFacility){
+                $scope.reportData.map(function(data){
+                    data.duration = "-";
+                });
+                $scope.occurrencesHeader = messageService.get("report.avg.stock.out.occurrences");
+            }else {
+                $scope.occurrencesHeader = messageService.get("report.stock.out.occurrences");
+            }
+
             $scope.reportParams.reportTitle = generateReportTitle(stockReportParams);
         });
     };
