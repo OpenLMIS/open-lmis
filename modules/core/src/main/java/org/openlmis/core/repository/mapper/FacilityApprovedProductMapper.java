@@ -230,7 +230,7 @@ public interface FacilityApprovedProductMapper {
           "INNER JOIN product_categories pc ON pc.id = pp.productCategoryId ",
           "INNER JOIN programs pgm ON pp.programId = pgm.id ",
           "WHERE",
-          "(pgm.id = #{programId} OR pgm.parentId = #{programId})",
+          "(pgm.id = #{programId} AND pgm.parentId = NULL) OR (pgm.parentId = #{programId})",
           "AND f.id = #{facilityId}",
           "AND pp.fullSupply = TRUE",
           "AND p.active = TRUE",

@@ -432,17 +432,17 @@ public class FacilityApprovedProductMapperIT {
     programMapper.insert(program2);
     programMapper.associateProgramToParent(program1.getId(), program2.getId());
 
-    ProgramProduct programProduct1 = addToProgramProduct(program1, product("PRO01", "Primary Name 1", true), true, category1, 1, true);
-    ProgramProduct programProduct2 = addToProgramProduct(program2, product("PRO02", "Primary Name 2", true), true, category1, 2, true);
+    Product pro01 = product("PRO01", "Primary Name 1", true);
+    ProgramProduct programProduct1 = addToProgramProduct(program1, pro01, true, category1, 1, true);
+    ProgramProduct programProduct2 = addToProgramProduct(program2, pro01, true, category1, 2, true);
 
     insertFacilityApprovedProduct(FACILITY_TYPE_ID, programProduct1);
     insertFacilityApprovedProduct(FACILITY_TYPE_ID, programProduct2);
 
     List<FacilityTypeApprovedProduct> facilityTypeApprovedProducts = mapper.getFullSupplyProductsByProgramAndSubprograms(facility.getId(), program2.getId());
 
-    assertEquals(2, facilityTypeApprovedProducts.size());
+    assertEquals(1, facilityTypeApprovedProducts.size());
     assertEquals(programProduct1.getProduct().getCode(), facilityTypeApprovedProducts.get(0).getProgramProduct().getProduct().getCode());
-    assertEquals(programProduct2.getProduct().getCode(), facilityTypeApprovedProducts.get(1).getProgramProduct().getProduct().getCode());
   }
 
   private ProductCategory category(String categoryCode, String categoryName, int categoryDisplayOrder) {
