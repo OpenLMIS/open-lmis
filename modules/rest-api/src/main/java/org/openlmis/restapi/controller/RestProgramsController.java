@@ -22,7 +22,7 @@ public class RestProgramsController extends BaseController {
   @Autowired
   private RestProgramsService restProgramsService;
 
-  @RequestMapping(value = "/rest-api/programs", method = POST, headers = ACCEPT_JSON)
+  @RequestMapping(value = "/rest-api/associate-programs", method = POST, headers = ACCEPT_JSON)
   public ResponseEntity associatePrograms(@RequestParam(required = true) Long parentProgramId, @RequestBody(required = true) List<String> programCodes) {
     restProgramsService.associate(parentProgramId, programCodes);
     return RestResponse.success("msg.rnr.programs.success");
