@@ -69,4 +69,8 @@ public class FacilityApprovedProductRepository {
   public FacilityTypeApprovedProduct get(Long id){
     return mapper.get(id);
   }
+
+  public List<FacilityTypeApprovedProduct> getFullSupplyProductsByFacilityAndProgramIncludingSubPrograms(Long facilityId, Long programId) {
+    return mapper.getFullSupplyProductsByProgramAndSubprograms(facilityId, programId);
+  }
 }

@@ -1583,6 +1583,25 @@ public class RequisitionServiceTest {
         verify(requisitionRepository).getRequisitionDetailsByFacility(facility);
     }
 
+    @Test
+    public void shouldGetFacilityApprovedProgramProductsIncludingSubPrograms() {
+        setupForInitRnr();
+        createProcessingPeriod(1L, new DateTime());
+        when(programService.getById(PROGRAM.getId())).thenReturn(PROGRAM);
+        Date programStartDate = new Date();
+        when(programService.getProgramStartDate(FACILITY.getId(), PROGRAM.getId())).thenReturn(programStartDate);
+        when(processingScheduleService.getCurrentPeriod(FACILITY.getId(), PROGRAM.getId(), programStartDate)).thenReturn(PERIOD);
+        when(staticReferenceDataService.getBoolean("toggle.rnr.multiple.programs")).thenReturn(true);
+        when(processingScheduleService.getAllPeriodsAfterDateAndPeriod(anyLong(), anyLong(), any(Date.class), anyLong())).thenReturn(asList(PERIOD));
+        PROGRAM.setUsePriceSchedule(false);
+        PROGRAM.setBudgetingApplies(false);
+        PROGRAM.setIsEquipmentConfigured(false);
+
+        requisitionService.initiate(FACILITY, PROGRAM, 1L, false, null);
+        verify(facilityApprovedProductService).getFullSupplyFacilityApprovedProductByFacilityAndProgramIncludingSubPrograms(
+            FACILITY.getId(), PROGRAM.getId());
+    }
+
     private void setupForInitRnr() {
         when(requisitionPermissionService.hasPermission(USER_ID, FACILITY, PROGRAM, CREATE_REQUISITION)).thenReturn(true);
         when(rnrTemplateService.fetchProgramTemplateForRequisition(PROGRAM.getId())).thenReturn(

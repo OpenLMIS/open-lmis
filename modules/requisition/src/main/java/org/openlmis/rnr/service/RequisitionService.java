@@ -129,9 +129,15 @@ public class RequisitionService {
         period = proposedPeriod;
       }
     }
+    List<FacilityTypeApprovedProduct> facilityTypeApprovedProducts;
 
-    List<FacilityTypeApprovedProduct> facilityTypeApprovedProducts = facilityApprovedProductService.getFullSupplyFacilityApprovedProductByFacilityAndProgram(
-      facility.getId(), program.getId());
+    if (!staticReferenceDataService.getBoolean("toggle.rnr.multiple.programs")) {
+      facilityTypeApprovedProducts = facilityApprovedProductService.getFullSupplyFacilityApprovedProductByFacilityAndProgram(
+          facility.getId(), program.getId());
+    } else {
+      facilityTypeApprovedProducts = facilityApprovedProductService.getFullSupplyFacilityApprovedProductByFacilityAndProgramIncludingSubPrograms(
+          facility.getId(), program.getId());
+    }
 
      //N:B If usePriceSchedule is selected for the selected program, use the product price from price_schedule table
     if(program.getUsePriceSchedule())

@@ -52,6 +52,10 @@ public class FacilityApprovedProductService {
     return repository.getFullSupplyProductsByFacilityAndProgram(facilityId, programId);
   }
 
+  public List<FacilityTypeApprovedProduct> getFullSupplyFacilityApprovedProductByFacilityAndProgramIncludingSubPrograms(Long facilityId, Long programId) {
+    return repository.getFullSupplyProductsByFacilityAndProgramIncludingSubPrograms(facilityId, programId);
+  }
+
   public List<FacilityTypeApprovedProduct> getNonFullSupplyFacilityApprovedProductByFacilityAndProgram(Long facilityId, Long programId) {
     return repository.getNonFullSupplyProductsByFacilityAndProgram(facilityId, programId);
   }
