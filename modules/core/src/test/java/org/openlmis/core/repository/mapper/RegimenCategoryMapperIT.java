@@ -48,4 +48,10 @@ public class RegimenCategoryMapperIT {
     RegimenCategory adultCategory = regimenCategoryMapper.getById(1L);
     assertThat(adultCategory.getCode(), is("ADULTS"));
   }
+
+  @Test
+  public void shouldGetRegimenCategoryByName() {
+    RegimenCategory adultCategory = regimenCategoryMapper.getByCode("ADULTS");
+    assertThat(adultCategory.getName(), is("Adults"));
+  }
 }

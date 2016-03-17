@@ -44,6 +44,9 @@ public class RegimenMapperIT {
   @Autowired
   RegimenMapper mapper;
 
+  @Autowired
+  RegimenCategoryMapper regimenCategoryMapper;
+
   Regimen regimen;
 
   @Before
@@ -81,6 +84,29 @@ public class RegimenMapperIT {
     assertThat(regimens.get(1).getCode(), is("CODE_2"));
     assertThat(regimens.get(2).getCode(), is("CODE_4"));
     assertThat(regimens.get(3).getCode(), is("CODE_3"));
+  }
+
+  @Test
+  public void shouldGetRegimensByCategory(){
+    RegimenCategory adultRegimenCategory = new RegimenCategory("ADULTS", "Adults", 1);
+    adultRegimenCategory.setId(1l);
+    Regimen adultRegimen1 = make(a(defaultRegimen, with(regimenCode,"CODE_1"), with(displayOrder, 1), with(category, adultRegimenCategory)));
+    mapper.insert(adultRegimen1);
+    Regimen adultRegimen2 = make(a(defaultRegimen, with(regimenCode,"CODE_2"), with(displayOrder, 2), with(category, adultRegimenCategory)));
+    mapper.insert(adultRegimen2);
+
+    RegimenCategory paediatricsRegimenCategory = new RegimenCategory("PAEDIATRICS", "Paediatrics", 2);
+    paediatricsRegimenCategory.setId(2l);
+    Regimen paediatricsRegimen1 = make(a(defaultRegimen, with(regimenCode,"CODE_4"), with(displayOrder, 1), with(category, paediatricsRegimenCategory)));
+    mapper.insert(paediatricsRegimen1);
+    Regimen paediatricsRegimen2 = make(a(defaultRegimen, with(regimenCode,"CODE_3"), with(displayOrder, 2), with(category, paediatricsRegimenCategory)));
+    mapper.insert(paediatricsRegimen2);
+
+    List<Regimen> regimens = mapper.getRegimensByCategoryId(adultRegimenCategory.getId());
+
+    assertThat(regimens.size(), is(2));
+    assertThat(regimens.get(0).getCode(), is("CODE_1"));
+    assertThat(regimens.get(1).getCode(), is("CODE_2"));
   }
 
   @Test

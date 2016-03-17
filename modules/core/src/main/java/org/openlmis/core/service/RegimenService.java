@@ -59,4 +59,12 @@ public class RegimenService {
   public List<RegimenConstituentDosage> getAllRegimenConstituentDosages(){
         return repository.getAllRegimenConstituentsDosages();
   }
+
+  public List getRegimensByCategory(RegimenCategory category) {
+    return repository.getRegimensByCategory(category);
+  }
+
+  public RegimenCategory queryRegimenCategoryByCode(String code) {
+    return repository.getRegimenCategoryByCode(code);
+  }
 }

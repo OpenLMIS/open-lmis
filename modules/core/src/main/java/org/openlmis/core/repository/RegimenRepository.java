@@ -62,7 +62,6 @@ public class RegimenRepository {
       mapper.update(regimen);
     }
   }
-
   public List<Regimen> getAllRegimens(){
        return mapper.getAllRegimens();
   }
@@ -83,4 +82,11 @@ public class RegimenRepository {
       return regimenProductCombinationMapper.getAll();
   }
 
+  public List<Regimen> getRegimensByCategory(RegimenCategory category) {
+    return mapper.getRegimensByCategoryId(category.getId());
+  }
+
+  public RegimenCategory getRegimenCategoryByCode(String code) {
+    return regimenCategoryMapper.getByCode(code);
+  }
 }
