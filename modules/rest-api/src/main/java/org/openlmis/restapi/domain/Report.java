@@ -47,7 +47,7 @@ public class Report {
 
   private List<RnrLineItem> products;
   private List<RnrLineItem> nonFullSupplyProducts;
-  private List<RegimenLineItem> regimens;
+  private List<RegimenResponse> regimens;
   private List<PatientQuantificationLineItem> patientQuantifications;
 
   private String agentCode;
@@ -123,9 +123,12 @@ public class Report {
     }};
     report.setProducts(fullSupplyProducts);
 
-    ArrayList<RegimenLineItem> regimenLineItems = new ArrayList<RegimenLineItem>() {{
-      addAll(rnr.getRegimenLineItems());
+    ArrayList<RegimenResponse> regimenLineItems = new ArrayList<RegimenResponse>() {{
     }};
+
+    for(RegimenLineItem regimenLineItem : rnr.getRegimenLineItems()) {
+      regimenLineItems.add(RegimenResponse.convertFromRegimenLineItem(regimenLineItem));
+    }
     report.setRegimens(regimenLineItems);
 
     ArrayList<PatientQuantificationLineItem> patientQuantificationLineItems = new ArrayList<PatientQuantificationLineItem>() {{

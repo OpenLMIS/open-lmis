@@ -31,6 +31,7 @@ import org.openlmis.db.categories.UnitTests;
 import org.openlmis.order.domain.Order;
 import org.openlmis.order.service.OrderService;
 import org.openlmis.restapi.builder.ReportBuilder;
+import org.openlmis.restapi.domain.RegimenResponse;
 import org.openlmis.restapi.domain.ReplenishmentDTO;
 import org.openlmis.restapi.domain.Report;
 import org.openlmis.rnr.builder.PatientQuantificationsBuilder;
@@ -39,7 +40,6 @@ import org.openlmis.rnr.domain.*;
 import org.openlmis.rnr.search.criteria.RequisitionSearchCriteria;
 import org.openlmis.rnr.service.RequisitionService;
 import org.openlmis.rnr.service.RnrTemplateService;
-import org.openlmis.stockmanagement.domain.StockCardEntry;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 import org.powermock.modules.junit4.PowerMockRunnerDelegate;
@@ -107,6 +107,8 @@ public class RestRequisitionServiceTest {
   @Mock
   private ProgramService programService;
   @Mock
+  private RegimenService regimenService;
+  @Mock
   private ProductService productService;
   @Mock
   private SyncUpHashRepository syncUpHashRepository;
@@ -135,7 +137,7 @@ public class RestRequisitionServiceTest {
     setUpRequisitionReportBeforeSubmit();
 
     RegimenLineItem reportRegimenLineItem = make(a(defaultRegimenLineItem, with(patientsOnTreatment, 10), with(patientsStoppedTreatment, 5)));
-    report.setRegimens(asList(reportRegimenLineItem));
+    report.setRegimens(asList(RegimenResponse.convertFromRegimenLineItem(reportRegimenLineItem)));
     service.submitReport(report, 1L);
 
     verify(facilityService).getOperativeFacilityByCode(DEFAULT_AGENT_CODE);
@@ -143,7 +145,6 @@ public class RestRequisitionServiceTest {
     verify(requisitionService).initiate(facility, new Program(PROGRAM_ID), 1L, false, null);
     verify(requisitionService).submit(requisition);
     assertThat(requisition.getRegimenLineItems().get(0).getPatientsOnTreatment(), is(10));
-    assertThat(requisition.getRegimenLineItems().get(0).getPatientsStoppedTreatment(), is(5));
   }
 
 
@@ -238,8 +239,12 @@ public class RestRequisitionServiceTest {
             addLineItem(new PatientQuantificationLineItem("adults", new Integer(5))).build();
 
     RegimenLineItem reportRegimenLineItem = make(a(defaultRegimenLineItem, with(patientsOnTreatment, 10), with(patientsStoppedTreatment, 5)));
-    report.setRegimens(asList(reportRegimenLineItem));
+    report.setRegimens(asList(RegimenResponse.convertFromRegimenLineItem(reportRegimenLineItem)));
     report.setPatientQuantifications(patientQuantifications);
+
+    RegimenCategory category = reportRegimenLineItem.getCategory();
+    when(regimenService.queryRegimenCategoryByCode(reportRegimenLineItem.getCategoryName())).thenReturn(category);
+    when(regimenService.getRegimensByCategory(category)).thenReturn(asList(category));
     service.submitReport(report, 1L);
 
     assertThat(requisition.getPatientQuantifications().get(0).getTotal(), is(10));
@@ -260,7 +265,7 @@ public class RestRequisitionServiceTest {
 
     report.setProducts(products);
     RegimenLineItem reportRegimenLineItem = make(a(defaultRegimenLineItem, with(patientsOnTreatment, 10), with(patientsStoppedTreatment, 5)));
-    report.setRegimens(asList(reportRegimenLineItem));
+    report.setRegimens(asList(RegimenResponse.convertFromRegimenLineItem(reportRegimenLineItem)));
     report.setPeriodId(1L);
     report.setEmergency(false);
 
@@ -287,7 +292,6 @@ public class RestRequisitionServiceTest {
     verify(requisitionService).initiate(facility, new Program(PROGRAM_ID), 1L, false, null);
     verify(requisitionService).submit(requisition);
     assertThat(requisition.getRegimenLineItems().get(0).getPatientsOnTreatment(), is(10));
-    assertThat(requisition.getRegimenLineItems().get(0).getPatientsStoppedTreatment(), is(5));
   }
 
   @Test
@@ -304,7 +308,7 @@ public class RestRequisitionServiceTest {
 
     report.setProducts(products);
     RegimenLineItem reportRegimenLineItem = make(a(defaultRegimenLineItem, with(patientsOnTreatment, 10), with(patientsStoppedTreatment, 5)));
-    report.setRegimens(asList(reportRegimenLineItem));
+    report.setRegimens(asList(RegimenResponse.convertFromRegimenLineItem(reportRegimenLineItem)));
     report.setPeriodId(1L);
     report.setEmergency(false);
 
@@ -447,11 +451,11 @@ public class RestRequisitionServiceTest {
   }
 
   @Test
-  public void shouldThrowErrorIfInvalidRegimenIsProvided() throws Exception {
+  public void shouldSaveRegimenWhenThereIsANewRegime() throws Exception {
     Program program = new Program();
     report.setProducts(new ArrayList<RnrLineItem>());
     RegimenLineItem reportRegimenLineItem = make(a(defaultRegimenLineItem, with(patientsOnTreatment, 10), with(patientsStoppedTreatment, 5)));
-    report.setRegimens(asList(reportRegimenLineItem));
+    report.setRegimens(asList(RegimenResponse.convertFromRegimenLineItem(reportRegimenLineItem)));
 
     when(programService.getValidatedProgramByCode(report.getProgramCode())).thenReturn(program);
 
@@ -463,11 +467,8 @@ public class RestRequisitionServiceTest {
     when(requisitionService.initiate(facility, program, 3l, false, null)).thenReturn(rnr);
     when(rnrTemplateService.fetchProgramTemplateForRequisition(any(Long.class))).thenReturn(new ProgramRnrTemplate(new ArrayList<RnrColumn>()));
 
-    expectedException.expect(DataException.class);
-    expectedException.expectMessage("error.invalid.regimen");
-
     service.submitReport(report, 3l);
-
+    verify(regimenService).save(any(Regimen.class), anyLong());
   }
 
   @Test

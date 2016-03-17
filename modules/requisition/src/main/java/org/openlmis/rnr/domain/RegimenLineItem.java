@@ -69,6 +69,13 @@ public class RegimenLineItem extends LineItem {
     this.modifiedBy = modifiedBy;
   }
 
+  public RegimenLineItem(String code, String name, int patientsOnTreatment, RegimenCategory category) {
+    this.code = code;
+    this.name = name;
+    this.patientsOnTreatment = patientsOnTreatment;
+    this.category = category;
+  }
+
   public void setRegimenFieldsAccordingToTemplate(RegimenTemplate regimenTemplate) {
     if (regimenTemplate.isRegimenColumnVisible(ON_TREATMENT))
       patientsOnTreatment = 0;

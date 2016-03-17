@@ -22,10 +22,12 @@ import org.openlmis.core.exception.DataException;
 import org.openlmis.core.repository.SyncUpHashRepository;
 import org.openlmis.core.service.*;
 import org.openlmis.order.service.OrderService;
+import org.openlmis.restapi.domain.RegimenResponse;
 import org.openlmis.restapi.domain.ReplenishmentDTO;
 import org.openlmis.restapi.domain.Report;
 import org.openlmis.rnr.domain.*;
 import org.openlmis.rnr.search.criteria.RequisitionSearchCriteria;
+import org.openlmis.rnr.service.RegimenColumnService;
 import org.openlmis.rnr.service.RequisitionService;
 import org.openlmis.rnr.service.RnrTemplateService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -73,6 +75,10 @@ public class RestRequisitionService {
   private List<FacilityTypeApprovedProduct> nonFullSupplyFacilityApprovedProductByFacilityAndProgram;
   @Autowired
   private SyncUpHashRepository syncUpHashRepository;
+  @Autowired
+  private RegimenService regimenService;
+  @Autowired
+  private RegimenColumnService regimenColumnService;
 
   @Transactional
   public Rnr submitReport(Report report, Long userId) {
@@ -96,7 +102,7 @@ public class RestRequisitionService {
     if (reportingFacility.getVirtualFacility())
       restRequisitionCalculator.setDefaultValues(rnr);
 
-    copyRegimens(rnr, report);
+    copyRegimens(rnr, report, userId);
 
     requisitionService.save(rnr);
 
@@ -189,7 +195,7 @@ public class RestRequisitionService {
     markSkippedLineItems(rnr, report);
 
 
-    copyRegimens(rnr, report);
+    copyRegimens(rnr, report, userId);
     // if you have come this far, then do it, it is your day. make the submission.
     // i cannot believe we do all of these three at the same time.
     // but then this is what zambia specifically asked.
@@ -220,12 +226,17 @@ public class RestRequisitionService {
   }
 
 
-  private void copyRegimens(Rnr rnr, Report report) {
+  private void copyRegimens(Rnr rnr, Report report, Long userId) {
     if (report.getRegimens() != null) {
-      for (RegimenLineItem regimenLineItem : report.getRegimens()) {
+      for (RegimenResponse regimenResponse : report.getRegimens()) {
+        RegimenLineItem regimenLineItem = new RegimenLineItem(regimenResponse.getCode(), regimenResponse.getName(), regimenResponse.getPatientsOnTreatment(), regimenService.queryRegimenCategoryByCode(regimenResponse.getCategoryCode()));
+
         RegimenLineItem correspondingRegimenLineItem = rnr.findCorrespondingRegimenLineItem(regimenLineItem);
-        if (correspondingRegimenLineItem == null)
-          throw new DataException("error.invalid.regimen");
+        if (correspondingRegimenLineItem == null) {
+          Regimen regimen = new Regimen(regimenLineItem.getName(), regimenLineItem.getCode(), rnr.getProgram().getId(), true, regimenLineItem.getCategory(), regimenService.getRegimensByCategory(regimenLineItem.getCategory()).size());
+          regimenService.save(regimen, userId);
+          correspondingRegimenLineItem = regimenLineItem;
+        }
         correspondingRegimenLineItem.populate(regimenLineItem);
       }
     }
