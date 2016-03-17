@@ -65,11 +65,8 @@ public class RegimenRepository {
 
   public void save(Regimen regimen, Long userId) {
       regimen.setModifiedBy(userId);
-      if (regimen.getId() == null) {
-        regimen.setCreatedBy(userId);
-        mapper.insert(regimen);
-      }
-      mapper.update(regimen);
+      regimen.setCreatedBy(userId);
+      mapper.insert(regimen);
   }
 
   public List<Regimen> getAllRegimens(){
@@ -98,5 +95,10 @@ public class RegimenRepository {
 
   public RegimenCategory getRegimenCategoryByCode(String code) {
     return regimenCategoryMapper.getByCode(code);
+  }
+
+  public Regimen getRegimensByCategoryIdAndCode(Long categoryId, String code) {
+
+    return mapper.getRegimensByCategoryIdAndCode(categoryId, code);
   }
 }

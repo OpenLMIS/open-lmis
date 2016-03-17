@@ -233,8 +233,13 @@ public class RestRequisitionService {
 
         RegimenLineItem correspondingRegimenLineItem = rnr.findCorrespondingRegimenLineItem(regimenLineItem);
         if (correspondingRegimenLineItem == null) {
-          Regimen regimen = new Regimen(regimenLineItem.getName(), regimenLineItem.getCode(), rnr.getProgram().getId(), true, regimenLineItem.getCategory(), regimenService.getRegimensByCategory(regimenLineItem.getCategory()).size());
-          regimenService.save(regimen, userId);
+          rnr.getRegimenLineItems().add(regimenLineItem);
+
+          if (regimenService.getRegimensByCategoryIdAndCode(regimenLineItem.getCategory().getId(), regimenLineItem.getCode()) == null) {
+            Regimen regimen = new Regimen(regimenLineItem.getName(), regimenLineItem.getCode(), rnr.getProgram().getId(), true, regimenLineItem.getCategory(), regimenService.getRegimensByCategory(regimenLineItem.getCategory()).size());
+            regimenService.save(regimen, userId);
+          }
+
           correspondingRegimenLineItem = regimenLineItem;
         }
         correspondingRegimenLineItem.populate(regimenLineItem);

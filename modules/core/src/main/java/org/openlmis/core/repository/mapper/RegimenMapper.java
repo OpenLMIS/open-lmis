@@ -56,4 +56,12 @@ public interface RegimenMapper {
           @Result(property = "category", column = "categoryId", javaType = Long.class,
                   one = @One(select = "org.openlmis.core.repository.mapper.RegimenCategoryMapper.getById"))})
   List<Regimen> getRegimensByCategoryId(Long categoryId);
+
+
+  @Select({"SELECT * FROM regimens R INNER JOIN regimen_categories RC ON R.categoryId = RC.id ",
+          "WHERE R.categoryId=#{categoryId} AND R.code=#{code}"})
+  @Results(value = {
+          @Result(property = "category", column = "categoryId", javaType = Long.class,
+                  one = @One(select = "org.openlmis.core.repository.mapper.RegimenCategoryMapper.getById"))})
+  Regimen getRegimensByCategoryIdAndCode(@Param("categoryId") Long categoryId, @Param("code") String code);
 }

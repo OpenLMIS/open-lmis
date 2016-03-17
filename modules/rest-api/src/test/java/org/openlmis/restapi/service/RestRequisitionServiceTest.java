@@ -451,7 +451,7 @@ public class RestRequisitionServiceTest {
   }
 
   @Test
-  public void shouldSaveRegimenWhenThereIsANewRegime() throws Exception {
+  public void shouldSaveRegimenAndAddRegimenLineItemToRnrWhenThereIsANewRegime() throws Exception {
     Program program = new Program();
     report.setProducts(new ArrayList<RnrLineItem>());
     RegimenLineItem reportRegimenLineItem = make(a(defaultRegimenLineItem, with(patientsOnTreatment, 10), with(patientsStoppedTreatment, 5)));
@@ -467,8 +467,41 @@ public class RestRequisitionServiceTest {
     when(requisitionService.initiate(facility, program, 3l, false, null)).thenReturn(rnr);
     when(rnrTemplateService.fetchProgramTemplateForRequisition(any(Long.class))).thenReturn(new ProgramRnrTemplate(new ArrayList<RnrColumn>()));
 
+    RegimenCategory category = reportRegimenLineItem.getCategory();
+    category.setId(1l);
+    when(regimenService.queryRegimenCategoryByCode(anyString())).thenReturn(category);
+    when(regimenService.getRegimensByCategory(category)).thenReturn(asList(category));
+    when(regimenService.getRegimensByCategoryIdAndCode(anyLong(), anyString())).thenReturn(null);
     service.submitReport(report, 3l);
     verify(regimenService).save(any(Regimen.class), anyLong());
+    assertThat(rnr.getRegimenLineItems().size(), is(1));
+  }
+
+  @Test
+  public void shouldNotSaveRegimenAndAddRegimenLineItemToRnrWhenThereIsANewRegime() throws Exception {
+    Program program = new Program();
+    report.setProducts(new ArrayList<RnrLineItem>());
+    RegimenLineItem reportRegimenLineItem = make(a(defaultRegimenLineItem, with(patientsOnTreatment, 10), with(patientsStoppedTreatment, 5)));
+    report.setRegimens(asList(RegimenResponse.convertFromRegimenLineItem(reportRegimenLineItem)));
+
+    when(programService.getValidatedProgramByCode(report.getProgramCode())).thenReturn(program);
+
+    Facility facility = make(a(FacilityBuilder.defaultFacility, with(FacilityBuilder.virtualFacility, true)));
+    when(facilityService.getOperativeFacilityByCode(report.getAgentCode())).thenReturn(facility);
+
+    Rnr rnr = new Rnr();
+    rnr.setProgram(program);
+    when(requisitionService.initiate(facility, program, 3l, false, null)).thenReturn(rnr);
+    when(rnrTemplateService.fetchProgramTemplateForRequisition(any(Long.class))).thenReturn(new ProgramRnrTemplate(new ArrayList<RnrColumn>()));
+
+    RegimenCategory category = reportRegimenLineItem.getCategory();
+    category.setId(1l);
+    when(regimenService.queryRegimenCategoryByCode(anyString())).thenReturn(category);
+    when(regimenService.getRegimensByCategory(category)).thenReturn(asList(category));
+    when(regimenService.getRegimensByCategoryIdAndCode(anyLong(), anyString())).thenReturn(new Regimen());
+    service.submitReport(report, 3l);
+    verify(regimenService, never()).save(any(Regimen.class), anyLong());
+    assertThat(rnr.getRegimenLineItems().size(), is(1));
   }
 
   @Test

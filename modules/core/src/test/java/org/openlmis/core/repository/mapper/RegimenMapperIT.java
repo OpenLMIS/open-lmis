@@ -110,6 +110,27 @@ public class RegimenMapperIT {
   }
 
   @Test
+  public void shouldGetRegimensByCategoryAngCode(){
+    RegimenCategory adultRegimenCategory = new RegimenCategory("ADULTS", "Adults", 1);
+    adultRegimenCategory.setId(1l);
+    Regimen adultRegimen1 = make(a(defaultRegimen, with(regimenCode,"CODE_1"), with(displayOrder, 1), with(category, adultRegimenCategory)));
+    mapper.insert(adultRegimen1);
+    Regimen adultRegimen2 = make(a(defaultRegimen, with(regimenCode,"CODE_2"), with(displayOrder, 2), with(category, adultRegimenCategory)));
+    mapper.insert(adultRegimen2);
+
+    RegimenCategory paediatricsRegimenCategory = new RegimenCategory("PAEDIATRICS", "Paediatrics", 2);
+    paediatricsRegimenCategory.setId(2l);
+    Regimen paediatricsRegimen1 = make(a(defaultRegimen, with(regimenCode,"CODE_4"), with(displayOrder, 1), with(category, paediatricsRegimenCategory)));
+    mapper.insert(paediatricsRegimen1);
+    Regimen paediatricsRegimen2 = make(a(defaultRegimen, with(regimenCode,"CODE_3"), with(displayOrder, 2), with(category, paediatricsRegimenCategory)));
+    mapper.insert(paediatricsRegimen2);
+
+    Regimen regimen = mapper.getRegimensByCategoryIdAndCode(adultRegimenCategory.getId(), "CODE_1");
+
+    assertThat(regimen.getName(), is(adultRegimen1.getName()));
+  }
+
+  @Test
   public void shouldUpdateRegimen() throws Exception {
     mapper.insert(regimen);
     regimen.setName("Regimen");

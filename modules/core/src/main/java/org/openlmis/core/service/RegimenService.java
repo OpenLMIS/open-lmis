@@ -71,4 +71,8 @@ public class RegimenService {
   public RegimenCategory queryRegimenCategoryByCode(String code) {
     return repository.getRegimenCategoryByCode(code);
   }
+
+  public Object getRegimensByCategoryIdAndCode(Long categoryId, String code) {
+    return repository.getRegimensByCategoryIdAndCode(categoryId, code);
+  }
 }
