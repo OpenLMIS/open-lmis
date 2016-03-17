@@ -27,7 +27,6 @@ import java.util.List;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
-import static org.mockito.Matchers.isNotNull;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -105,4 +104,13 @@ public class RegimenRepositoryTest {
     verify(regimenCategoryMapper).getAll();
   }
 
+  @Test
+  public void shouldSaveRegime() throws Exception {
+    final Regimen regimen = new Regimen();
+
+    repository.save(regimen, 1L);
+
+    assertThat(regimen.getCreatedBy(), is(1L));
+    verify(mapper).insert(regimen);
+  }
 }

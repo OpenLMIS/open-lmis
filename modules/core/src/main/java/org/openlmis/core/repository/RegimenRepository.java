@@ -62,6 +62,16 @@ public class RegimenRepository {
       mapper.update(regimen);
     }
   }
+
+  public void save(Regimen regimen, Long userId) {
+      regimen.setModifiedBy(userId);
+      if (regimen.getId() == null) {
+        regimen.setCreatedBy(userId);
+        mapper.insert(regimen);
+      }
+      mapper.update(regimen);
+  }
+
   public List<Regimen> getAllRegimens(){
        return mapper.getAllRegimens();
   }

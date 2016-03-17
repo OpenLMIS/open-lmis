@@ -34,6 +34,10 @@ public class RegimenService {
     repository.save(regimens, userId);
   }
 
+  public void save(Regimen regimen, Long userId) {
+    repository.save(regimen, userId);
+  }
+
   public List<Regimen> getByProgram(Long programId) {
     return repository.getByProgram(programId);
   }
