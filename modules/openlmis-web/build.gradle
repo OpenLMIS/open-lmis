@@ -211,6 +211,15 @@ jettyRun {
     System.properties.get('environmentName', 'local')
 }
 
+jettyRunWar {
+    httpPort = 9091;
+    contextPath = ''
+    daemon = false;
+    scanIntervalSeconds = 1
+    System.properties.get('defaultLocale', 'en')
+    System.properties.get('environmentName', 'local')
+}
+
 def configureHttps(keystore, password) {
     ext.connectors = [jettyRun.class.classLoader.loadClass('org.mortbay.jetty.security.SslSocketConnector').newInstance()]
     ext.connectors[0].port = 9091
@@ -221,7 +230,11 @@ def configureHttps(keystore, password) {
     return ext.connectors;
 }
 
-task run(dependsOn: [jettyRun, lesswatch]) {
+task run(dependsOn: jettyRunWar) {
+    description = 'Runs the Jetty server using the WAR file'
+}
+
+task runWithLess(dependsOn: [jettyRun, lesswatch]) {
     description = 'Runs the Jetty server and starts watching LESS files for changes'
 }
 
