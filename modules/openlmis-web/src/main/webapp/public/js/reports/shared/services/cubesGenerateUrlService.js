@@ -1,8 +1,8 @@
 services.factory('CubesGenerateUrlService', function () {
     var baseUrl = "/cubesreports/cube/";
 
-    var generateAggregateUrl = function (cubesName, drillDown, cuts) {
-        return baseUrl + cubesName + "/aggregate" + "?drilldown=" + drillDown + "&cut=" + generateCuts(cuts);
+    var generateAggregateUrl = function (cubesName, drillDowns, cuts) {
+        return baseUrl + cubesName + "/aggregate" + "?drilldown=" + drillDowns.join("|") + "&cut=" + generateCuts(cuts);
     };
 
     var generateFactsUrl = function (cubesName, cuts) {

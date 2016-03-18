@@ -17,7 +17,7 @@ function StockOutReportController($scope, $filter, $controller, $http, CubesGene
 
     $scope.loadReport = function () {
         var stockReportParams = getStockReportRequestParam();
-        var generateAggregateUrl = CubesGenerateUrlService.generateAggregateUrl('vw_stockouts', 'drug', generateCutParams(stockReportParams));
+        var generateAggregateUrl = CubesGenerateUrlService.generateAggregateUrl('vw_stockouts', ["drug","overlapped_month"], generateCutParams(stockReportParams));
         $http.get(generateAggregateUrl).success(function (data) {
             $scope.reportData = data.cells;
 
@@ -59,7 +59,7 @@ function StockOutReportController($scope, $filter, $controller, $http, CubesGene
     };
 
     function generateCutParams(stockReportParams) {
-        var cutsParams = [{dimension: "date", values: [stockReportParams.startTime + "-" + stockReportParams.endTime]}];
+        var cutsParams = [{dimension: "overlapped_date", values: [stockReportParams.startTime + "-" + stockReportParams.endTime]}];
         if (stockReportParams.selectedFacility) {
             cutsParams.push({dimension: "facility", values: [stockReportParams.selectedFacility.code]});
         }
