@@ -141,6 +141,12 @@ tasks.withType(War) {
                 else
                     "$line"
             }
+        if (fileCopy.name.equals('login-form.html')) {
+            fileCopy.filter(ReplaceTokens, tokens: [major_version: majorVersion, 
+                                                    minor_version: minorVersion, 
+                                                    patch_version: patchVersion, 
+                                                    build_version: buildVersion])
+        }
     }
 }
 

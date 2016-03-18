@@ -15,6 +15,11 @@ apply plugin: 'com.github.ben-manes.versions'
 apply plugin: 'properties'
 apply plugin: 'sonar-runner'
 
+ext.versionProps = new Properties()
+versionProps.load(new FileInputStream("version.properties"))
+versionProps.each { versionProp ->
+  ext.set(versionProp.key, versionProp.value)
+}
 
 idea.project.languageLevel = '1.7'
 idea.project.jdkName = '1.7'
@@ -95,8 +100,8 @@ subprojects {
         'org.springframework.integration:spring-integration-ftp:4.1.2.RELEASE',
 
         'xml-apis:xml-apis:2.0.2',
-        'commons-collections:commons-collections:3.2.1',
-        'org.apache.commons:commons-collections4:4.0',
+        'commons-collections:commons-collections:3.2.2',
+        'org.apache.commons:commons-collections4:4.1',
         'javax.servlet:javax.servlet-api:3.1.0',
 
         'org.projectlombok:lombok:1.16.2',
