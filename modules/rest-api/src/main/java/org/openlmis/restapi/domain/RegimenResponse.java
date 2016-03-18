@@ -20,9 +20,9 @@ public class RegimenResponse {
     private String code;
     private String name;
     private Integer patientsOnTreatment;
-    private String categoryCode;
+    private String categoryName;
 
     public static RegimenResponse convertFromRegimenLineItem(RegimenLineItem regimenLineItem) {
-        return new RegimenResponse(regimenLineItem.getCode(), regimenLineItem.getName(), regimenLineItem.getPatientsOnTreatment(), regimenLineItem.getCategory().getCode());
+        return new RegimenResponse(regimenLineItem.getCode(), regimenLineItem.getName(), regimenLineItem.getPatientsOnTreatment(), regimenLineItem.getCategory().getName());
     }
 }

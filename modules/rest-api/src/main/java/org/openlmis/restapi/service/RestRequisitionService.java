@@ -229,7 +229,15 @@ public class RestRequisitionService {
   private void copyRegimens(Rnr rnr, Report report, Long userId) {
     if (report.getRegimens() != null) {
       for (RegimenResponse regimenResponse : report.getRegimens()) {
-        RegimenLineItem regimenLineItem = new RegimenLineItem(regimenResponse.getCode(), regimenResponse.getName(), regimenResponse.getPatientsOnTreatment(), regimenService.queryRegimenCategoryByCode(regimenResponse.getCategoryCode()));
+        RegimenLineItem regimenLineItem;
+        if (staticReferenceDataService.getBoolean("toggle.mmia.custom.regimen")) {
+          regimenLineItem = new RegimenLineItem(regimenResponse.getCode(), regimenResponse.getName(), regimenResponse.getPatientsOnTreatment(), regimenService.queryRegimenCategoryByName(regimenResponse.getCategoryName()));
+        } else {
+          regimenLineItem = new RegimenLineItem();
+          regimenLineItem.setCode(regimenResponse.getCode());
+          regimenLineItem.setName(regimenResponse.getName());
+          regimenLineItem.setPatientsOnTreatment(regimenResponse.getPatientsOnTreatment());
+        }
 
         RegimenLineItem correspondingRegimenLineItem = rnr.findCorrespondingRegimenLineItem(regimenLineItem);
         if (correspondingRegimenLineItem == null) {

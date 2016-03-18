@@ -93,8 +93,8 @@ public class RegimenRepository {
     return mapper.getRegimensByCategoryId(category.getId());
   }
 
-  public RegimenCategory getRegimenCategoryByCode(String code) {
-    return regimenCategoryMapper.getByCode(code);
+  public RegimenCategory getRegimenCategoryByName(String name) {
+    return regimenCategoryMapper.getByName(name);
   }
 
   public Regimen getRegimensByCategoryIdAndCode(Long categoryId, String code) {

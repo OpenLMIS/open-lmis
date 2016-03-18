@@ -31,7 +31,7 @@ public class RegimenResponseTest {
         assertThat(regimenResponse.getCode(), is(regimenLineItem.getCode()));
         assertThat(regimenResponse.getName(), is(regimenLineItem.getName()));
         assertThat(regimenResponse.getPatientsOnTreatment(), is(regimenLineItem.getPatientsOnTreatment()));
-        assertThat(regimenResponse.getCategoryCode(), is(regimenLineItem.getCategory().getCode()));
+        assertThat(regimenResponse.getCategoryName(), is(regimenLineItem.getCategory().getName()));
 
     }
 }

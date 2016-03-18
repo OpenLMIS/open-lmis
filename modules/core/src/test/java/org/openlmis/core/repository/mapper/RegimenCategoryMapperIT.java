@@ -51,7 +51,7 @@ public class RegimenCategoryMapperIT {
 
   @Test
   public void shouldGetRegimenCategoryByName() {
-    RegimenCategory adultCategory = regimenCategoryMapper.getByCode("ADULTS");
-    assertThat(adultCategory.getName(), is("Adults"));
+    RegimenCategory adultCategory = regimenCategoryMapper.getByName("Adults");
+    assertThat(adultCategory.getCode(), is("ADULTS"));
   }
 }

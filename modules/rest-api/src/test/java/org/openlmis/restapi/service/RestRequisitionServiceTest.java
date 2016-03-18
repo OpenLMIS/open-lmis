@@ -243,7 +243,7 @@ public class RestRequisitionServiceTest {
     report.setPatientQuantifications(patientQuantifications);
 
     RegimenCategory category = reportRegimenLineItem.getCategory();
-    when(regimenService.queryRegimenCategoryByCode(reportRegimenLineItem.getCategoryName())).thenReturn(category);
+    when(regimenService.queryRegimenCategoryByName(reportRegimenLineItem.getCategoryName())).thenReturn(category);
     when(regimenService.getRegimensByCategory(category)).thenReturn(asList(category));
     service.submitReport(report, 1L);
 
@@ -461,6 +461,7 @@ public class RestRequisitionServiceTest {
 
     Facility facility = make(a(FacilityBuilder.defaultFacility, with(FacilityBuilder.virtualFacility, true)));
     when(facilityService.getOperativeFacilityByCode(report.getAgentCode())).thenReturn(facility);
+    when(staticReferenceDataService.getBoolean("toggle.mmia.custom.regimen")).thenReturn(true);
 
     Rnr rnr = new Rnr();
     rnr.setId(2L);
@@ -470,7 +471,7 @@ public class RestRequisitionServiceTest {
 
     RegimenCategory category = reportRegimenLineItem.getCategory();
     category.setId(1l);
-    when(regimenService.queryRegimenCategoryByCode(anyString())).thenReturn(category);
+    when(regimenService.queryRegimenCategoryByName(anyString())).thenReturn(category);
     when(regimenService.getRegimensByCategory(category)).thenReturn(asList(category));
     when(regimenService.getRegimensByCategoryIdAndCode(anyLong(), anyString())).thenReturn(null);
     service.submitReport(report, 3l);
@@ -490,6 +491,7 @@ public class RestRequisitionServiceTest {
 
     Facility facility = make(a(FacilityBuilder.defaultFacility, with(FacilityBuilder.virtualFacility, true)));
     when(facilityService.getOperativeFacilityByCode(report.getAgentCode())).thenReturn(facility);
+    when(staticReferenceDataService.getBoolean("toggle.mmia.custom.regimen")).thenReturn(true);
 
     Rnr rnr = new Rnr();
     rnr.setProgram(program);
@@ -498,7 +500,7 @@ public class RestRequisitionServiceTest {
 
     RegimenCategory category = reportRegimenLineItem.getCategory();
     category.setId(1l);
-    when(regimenService.queryRegimenCategoryByCode(anyString())).thenReturn(category);
+    when(regimenService.queryRegimenCategoryByName(anyString())).thenReturn(category);
     when(regimenService.getRegimensByCategory(category)).thenReturn(asList(category));
     when(regimenService.getRegimensByCategoryIdAndCode(anyLong(), anyString())).thenReturn(new Regimen());
     service.submitReport(report, 3l);

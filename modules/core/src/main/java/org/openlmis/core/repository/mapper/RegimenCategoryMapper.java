@@ -28,6 +28,6 @@ public interface RegimenCategoryMapper {
   @Select({"SELECT * FROM regimen_categories WHERE id = #{id}"})
   RegimenCategory getById(Long id);
 
-  @Select({"SELECT * FROM regimen_categories WHERE code = #{code}"})
-  RegimenCategory getByCode(String code);
+  @Select({"SELECT * FROM regimen_categories WHERE name = #{name}"})
+  RegimenCategory getByName(String name);
 }
