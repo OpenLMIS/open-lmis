@@ -11,7 +11,6 @@
 package org.openlmis.core.repository.mapper;
 
 import org.hamcrest.core.Is;
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
@@ -423,7 +422,7 @@ public class FacilityApprovedProductMapperIT {
   }
 
   @Test
-  public void shouldGetFacilityTypeApprovedProductIncludingProductsFromSubPrograms() {
+  public void shouldGetFacilityTypeApprovedProductIncludingProductsFromSubProgramsForProgramWithParentProgram() {
     Facility facility = make(a(FacilityBuilder.defaultFacility));
     facilityMapper.insert(facility);
     Program program1 = make(a(defaultProgram, with(programCode, "P1")));
@@ -441,8 +440,27 @@ public class FacilityApprovedProductMapperIT {
 
     List<FacilityTypeApprovedProduct> facilityTypeApprovedProducts = mapper.getFullSupplyProductsByProgramAndSubprograms(facility.getId(), program2.getId());
 
+    assertEquals(2, facilityTypeApprovedProducts.size());
+    assertEquals(programProduct1.getProduct().getCode(), facilityTypeApprovedProducts.get(0).getProgramProduct().getProduct().getCode());
+  }
+
+  @Test
+  public void shouldGetFacilityTypeApprovedProductIncludingProductsFromSubProgramsForProgramsWithNoParentProgram() {
+    Facility facility = make(a(FacilityBuilder.defaultFacility));
+    facilityMapper.insert(facility);
+    Program program1 = make(a(defaultProgram, with(programCode, "P1")));
+    programMapper.insert(program1);
+
+    Product pro01 = product("PRO01", "Primary Name 1", true);
+    ProgramProduct programProduct1 = addToProgramProduct(program1, pro01, true, category1, 1, true);
+
+    insertFacilityApprovedProduct(FACILITY_TYPE_ID, programProduct1);
+
+    List<FacilityTypeApprovedProduct> facilityTypeApprovedProducts = mapper.getFullSupplyProductsByProgramAndSubprograms(facility.getId(), program1.getId());
+
     assertEquals(1, facilityTypeApprovedProducts.size());
     assertEquals(programProduct1.getProduct().getCode(), facilityTypeApprovedProducts.get(0).getProgramProduct().getProduct().getCode());
+
   }
 
   private ProductCategory category(String categoryCode, String categoryName, int categoryDisplayOrder) {
