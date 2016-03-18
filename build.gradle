@@ -15,6 +15,11 @@ apply plugin: 'com.github.ben-manes.versions'
 apply plugin: 'properties'
 apply plugin: 'sonar-runner'
 
+ext.versionProps = new Properties()
+versionProps.load(new FileInputStream("version.properties"))
+versionProps.each { versionProp ->
+  ext.set(versionProp.key, versionProp.value)
+}
 
 idea.project.languageLevel = '1.7'
 idea.project.jdkName = '1.7'
