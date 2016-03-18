@@ -463,6 +463,7 @@ public class RestRequisitionServiceTest {
     when(facilityService.getOperativeFacilityByCode(report.getAgentCode())).thenReturn(facility);
 
     Rnr rnr = new Rnr();
+    rnr.setId(2L);
     rnr.setProgram(program);
     when(requisitionService.initiate(facility, program, 3l, false, null)).thenReturn(rnr);
     when(rnrTemplateService.fetchProgramTemplateForRequisition(any(Long.class))).thenReturn(new ProgramRnrTemplate(new ArrayList<RnrColumn>()));
@@ -475,6 +476,7 @@ public class RestRequisitionServiceTest {
     service.submitReport(report, 3l);
     verify(regimenService).save(any(Regimen.class), anyLong());
     assertThat(rnr.getRegimenLineItems().size(), is(1));
+    assertThat(rnr.getRegimenLineItems().get(0).getRnrId(), is(2L));
   }
 
   @Test

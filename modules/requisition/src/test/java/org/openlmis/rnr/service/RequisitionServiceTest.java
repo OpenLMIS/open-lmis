@@ -32,6 +32,7 @@ import org.openlmis.core.message.OpenLmisMessage;
 import org.openlmis.core.service.*;
 import org.openlmis.db.categories.UnitTests;
 import org.openlmis.db.repository.mapper.DbMapper;
+import org.openlmis.rnr.builder.RegimenLineItemBuilder;
 import org.openlmis.rnr.builder.RequisitionBuilder;
 import org.openlmis.rnr.domain.*;
 import org.openlmis.rnr.repository.RequisitionRepository;
@@ -397,6 +398,34 @@ public class RequisitionServiceTest {
     }
 
     @Test
+    public void shouldNotValidateRegimen() {
+        Rnr savedRnr = getFilledSavedRequisitionWithDefaultFacilityProgramPeriod(initiatedRnr, CREATE_REQUISITION);
+        ProgramRnrTemplate template = new ProgramRnrTemplate(rnrColumns);
+        when(rnrTemplateService.fetchProgramTemplate(PROGRAM.getId())).thenReturn(template);
+        doNothing().when(calculationService).perform(savedRnr, template);
+        when(supervisoryNodeService.getFor(FACILITY, PROGRAM)).thenReturn(new SupervisoryNode());
+        when(staticReferenceDataService.getBoolean("toggle.mmia.custom.regimen")).thenReturn(true);
+
+        requisitionService.submit(initiatedRnr);
+
+        verify(savedRnr, never()).validateRegimenLineItems(any(RegimenTemplate.class));
+    }
+
+    @Test
+    public void shouldValidateRegimenWhenToggleOff() {
+        Rnr savedRnr = getFilledSavedRequisitionWithDefaultFacilityProgramPeriod(initiatedRnr, CREATE_REQUISITION);
+        ProgramRnrTemplate template = new ProgramRnrTemplate(rnrColumns);
+        when(rnrTemplateService.fetchProgramTemplate(PROGRAM.getId())).thenReturn(template);
+        doNothing().when(calculationService).perform(savedRnr, template);
+        when(supervisoryNodeService.getFor(FACILITY, PROGRAM)).thenReturn(new SupervisoryNode());
+        when(staticReferenceDataService.getBoolean("toggle.mmia.custom.regimen")).thenReturn(false);
+
+        requisitionService.submit(initiatedRnr);
+
+        verify(savedRnr).validateRegimenLineItems(any(RegimenTemplate.class));
+    }
+
+    @Test
     public void shouldAuthorizeAValidRnrAndTagWithSupervisoryNode() throws Exception {
         Rnr savedRnr = getFilledSavedRequisitionWithDefaultFacilityProgramPeriod(submittedRnr, AUTHORIZE_REQUISITION);
         ProgramRnrTemplate template = new ProgramRnrTemplate(rnrColumns);
@@ -431,6 +460,40 @@ public class RequisitionServiceTest {
         verify(rnrTemplateService).fetchProgramTemplate(savedRnr.getProgram().getId());
         verify(requisitionRepository).update(savedRnr);
         assertThat(authorizedRnr.getStatus(), is(AUTHORIZED));
+    }
+
+    @Test
+    public void shouldNotValidateRegimenWhenAuthoriseForm() throws Exception {
+        Rnr savedRnr = getFilledSavedRequisitionWithDefaultFacilityProgramPeriod(submittedRnr, AUTHORIZE_REQUISITION);
+
+        ProgramRnrTemplate template = new ProgramRnrTemplate(rnrColumns);
+        when(rnrTemplateService.fetchProgramTemplate(PROGRAM.getId())).thenReturn(template);
+        doNothing().when(calculationService).perform(savedRnr, template);
+        SupervisoryNode node = make(a(SupervisoryNodeBuilder.defaultSupervisoryNode));
+        when(supervisoryNodeService.getFor(savedRnr.getFacility(), savedRnr.getProgram())).thenReturn(node);
+        doNothing().when(savedRnr).fillBasicInformation(FACILITY, PROGRAM, PERIOD);
+        when(staticReferenceDataService.getBoolean("toggle.mmia.custom.regimen")).thenReturn(true);
+
+        requisitionService.authorize(submittedRnr);
+
+        verify(savedRnr, never()).validateRegimenLineItems(any(RegimenTemplate.class));
+    }
+
+    @Test
+    public void shouldValidateRegimenWhenAuthoriseFormAndTheToggleOff() throws Exception {
+        Rnr savedRnr = getFilledSavedRequisitionWithDefaultFacilityProgramPeriod(submittedRnr, AUTHORIZE_REQUISITION);
+
+        ProgramRnrTemplate template = new ProgramRnrTemplate(rnrColumns);
+        when(rnrTemplateService.fetchProgramTemplate(PROGRAM.getId())).thenReturn(template);
+        doNothing().when(calculationService).perform(savedRnr, template);
+        SupervisoryNode node = make(a(SupervisoryNodeBuilder.defaultSupervisoryNode));
+        when(supervisoryNodeService.getFor(savedRnr.getFacility(), savedRnr.getProgram())).thenReturn(node);
+        doNothing().when(savedRnr).fillBasicInformation(FACILITY, PROGRAM, PERIOD);
+        when(staticReferenceDataService.getBoolean("toggle.mmia.custom.regimen")).thenReturn(false);
+
+        requisitionService.authorize(submittedRnr);
+
+        verify(savedRnr).validateRegimenLineItems(any(RegimenTemplate.class));
     }
 
     @Test
@@ -518,6 +581,58 @@ public class RequisitionServiceTest {
         requisitionService.save(initiatedRnr);
 
         verify(requisitionRepository).update(savedRnr);
+    }
+
+    @Test
+    public void shouldCopyAllRegimenFromRnr() {
+        initiatedRnr.getRegimenLineItems().add(make(a(RegimenLineItemBuilder.defaultRegimenLineItem, with(RegimenLineItemBuilder.code, "NEW"), with(RegimenLineItemBuilder.name, "New"))));
+        Rnr savedRnr = spy(getFilledSavedRequisitionWithDefaultFacilityProgramPeriod(initiatedRnr, CREATE_REQUISITION));
+
+        ProgramRnrTemplate template = new ProgramRnrTemplate(rnrColumns);
+        RegimenTemplate regimenTemplate = new RegimenTemplate(savedRnr.getProgram().getId(),
+                new ArrayList<RegimenColumn>());
+        Mockito.when(requisitionRepository.getById(savedRnr.getId())).thenReturn(savedRnr);
+        when(rnrTemplateService.fetchProgramTemplate(initiatedRnr.getProgram().getId())).thenReturn(template);
+        Mockito.when(regimenColumnService.getRegimenTemplateByProgramId(initiatedRnr.getProgram().getId())).thenReturn(
+                regimenTemplate);
+        List<ProgramProduct> programProducts = new ArrayList<>();
+        Mockito.doNothing().when(savedRnr).copyCreatorEditableFields(initiatedRnr, template, programProducts);
+        Mockito.doNothing().when(savedRnr).fillBasicInformation(FACILITY, PROGRAM, PERIOD);
+
+        when(staticReferenceDataService.getBoolean("toggle.mmia.custom.regimen")).thenReturn(true);
+        when(requisitionPermissionService.hasPermissionToSave(USER_ID, savedRnr)).thenReturn(true);
+        initiatedRnr.setModifiedBy(USER_ID);
+
+        requisitionService.save(initiatedRnr);
+
+        verify(requisitionRepository).update(savedRnr);
+        verify(savedRnr).copyCreatorEditableFields(initiatedRnr, template, programProducts);
+    }
+
+    @Test
+    public void shouldNotCopyAllRegimenFromRnr() {
+        initiatedRnr.getRegimenLineItems().add(make(a(RegimenLineItemBuilder.defaultRegimenLineItem, with(RegimenLineItemBuilder.code, "NEW"), with(RegimenLineItemBuilder.name, "New"))));
+        Rnr savedRnr = spy(getFilledSavedRequisitionWithDefaultFacilityProgramPeriod(initiatedRnr, CREATE_REQUISITION));
+
+        ProgramRnrTemplate template = new ProgramRnrTemplate(rnrColumns);
+        RegimenTemplate regimenTemplate = new RegimenTemplate(savedRnr.getProgram().getId(),
+                new ArrayList<RegimenColumn>());
+        Mockito.when(requisitionRepository.getById(savedRnr.getId())).thenReturn(savedRnr);
+        when(rnrTemplateService.fetchProgramTemplate(initiatedRnr.getProgram().getId())).thenReturn(template);
+        Mockito.when(regimenColumnService.getRegimenTemplateByProgramId(initiatedRnr.getProgram().getId())).thenReturn(
+                regimenTemplate);
+        List<ProgramProduct> programProducts = new ArrayList<>();
+        Mockito.doNothing().when(savedRnr).copyCreatorEditableFields(initiatedRnr, template, regimenTemplate, programProducts);
+        Mockito.doNothing().when(savedRnr).fillBasicInformation(FACILITY, PROGRAM, PERIOD);
+
+        when(staticReferenceDataService.getBoolean("toggle.mmia.custom.regimen")).thenReturn(false);
+        when(requisitionPermissionService.hasPermissionToSave(USER_ID, savedRnr)).thenReturn(true);
+        initiatedRnr.setModifiedBy(USER_ID);
+
+        requisitionService.save(initiatedRnr);
+
+        verify(requisitionRepository).update(savedRnr);
+        verify(savedRnr).copyCreatorEditableFields(initiatedRnr, template, regimenTemplate, programProducts);
     }
 
     @Test

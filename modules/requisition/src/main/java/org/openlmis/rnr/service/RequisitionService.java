@@ -220,7 +220,12 @@ public class RequisitionService {
 
     } else {
       List<ProgramProduct> programProducts = programProductService.getNonFullSupplyProductsForProgram(savedRnr.getProgram());
-      savedRnr.copyCreatorEditableFields(rnr, rnrTemplate, regimenTemplate, programProducts);
+
+      if (staticReferenceDataService.getBoolean("toggle.mmia.custom.regimen")) {
+        savedRnr.copyCreatorEditableFields(rnr, rnrTemplate, programProducts);
+      } else {
+        savedRnr.copyCreatorEditableFields(rnr, rnrTemplate, regimenTemplate, programProducts);
+      }
       //TODO: copy only the editable fields.
       savedRnr.setEquipmentLineItems(rnr.getEquipmentLineItems());
     }
@@ -237,7 +242,9 @@ public class RequisitionService {
     if (savedRnr.getStatus() != INITIATED)
       throw new DataException(new OpenLmisMessage(RNR_SUBMISSION_ERROR));
 
-    savedRnr.validateRegimenLineItems(regimenColumnService.getRegimenTemplateByProgramId(savedRnr.getProgram().getId()));
+    if (!staticReferenceDataService.getBoolean("toggle.mmia.custom.regimen")) {
+      savedRnr.validateRegimenLineItems(regimenColumnService.getRegimenTemplateByProgramId(savedRnr.getProgram().getId()));
+    }
 
     if (!requisitionPermissionService.hasPermission(rnr.getModifiedBy(), savedRnr, CREATE_REQUISITION))
       throw new DataException(RNR_OPERATION_UNAUTHORIZED);
@@ -258,7 +265,9 @@ public class RequisitionService {
     if (savedRnr.getStatus() != SUBMITTED)
       throw new DataException(new OpenLmisMessage(RNR_AUTHORIZATION_ERROR));
 
-    savedRnr.validateRegimenLineItems(regimenColumnService.getRegimenTemplateByProgramId(savedRnr.getProgram().getId()));
+    if (!staticReferenceDataService.getBoolean("toggle.mmia.custom.regimen")) {
+      savedRnr.validateRegimenLineItems(regimenColumnService.getRegimenTemplateByProgramId(savedRnr.getProgram().getId()));
+    }
 
     if (!requisitionPermissionService.hasPermission(rnr.getModifiedBy(), savedRnr, AUTHORIZE_REQUISITION))
       throw new DataException(RNR_OPERATION_UNAUTHORIZED);

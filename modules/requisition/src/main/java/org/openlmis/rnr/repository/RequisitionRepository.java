@@ -69,7 +69,6 @@ public class RequisitionRepository {
   @Autowired
   private SignatureMapper signatureMapper;
 
-
   public void insert(Rnr requisition) {
     requisition.setStatus(INITIATED);
     requisitionMapper.insert(requisition);
@@ -145,7 +144,11 @@ public class RequisitionRepository {
 
   private void updateRegimenLineItems(Rnr rnr) {
     for (RegimenLineItem regimenLineItem : rnr.getRegimenLineItems()) {
-      regimenLineItemMapper.update(regimenLineItem);
+      if (regimenLineItem.getId() == null) {
+        regimenLineItemMapper.insert(regimenLineItem);
+      } else {
+        regimenLineItemMapper.update(regimenLineItem);
+      }
     }
   }
 

@@ -336,6 +336,30 @@ public class RnrTest {
   }
 
   @Test
+  public void shouldCopyAllRegimenFromRnr() throws Exception {
+      Rnr newRnr = make(a(defaultRequisition));
+      List<RegimenColumn> regimenColumns = new ArrayList<>();
+      RegimenLineItem regimenLineItem = make(a(RegimenLineItemBuilder.defaultRegimenLineItem));
+      regimenLineItem.setCode("R02");
+      RegimenLineItem regimenLineItem1 = make(a(RegimenLineItemBuilder.defaultRegimenLineItem));
+      RegimenLineItem spyRegimenLineItem = spy(regimenLineItem);
+      RegimenLineItem spyRegimenLineItem1 = spy(regimenLineItem1);
+      List<RegimenLineItem> spyRegimenLineItems = new ArrayList<>();
+      spyRegimenLineItems.add(spyRegimenLineItem);
+      spyRegimenLineItems.add(spyRegimenLineItem1);
+      newRnr.setModifiedBy(1L);
+      newRnr.setRegimenLineItems(asList(regimenLineItem, regimenLineItem1));
+      rnr.setRegimenLineItems(spyRegimenLineItems);
+      RegimenTemplate regimenTemplate = new RegimenTemplate(1l, regimenColumns);
+      List<RnrColumn> rnrColumns = new ArrayList<>();
+      List<ProgramProduct> programProducts = new ArrayList<>();
+      rnr.copyCreatorEditableFields(newRnr, new ProgramRnrTemplate(rnrColumns), programProducts);
+
+      assertThat(rnr.getRegimenLineItems().get(0).getModifiedBy(), is(1L));
+      assertThat(rnr.getRegimenLineItems().get(1).getModifiedBy(), is(1L));
+  }
+
+  @Test
   public void shouldNotCopyExtraLineItemForApprovalRnr() throws Exception {
     long userId = 5L;
     Rnr newRnr = make(a(defaultRequisition, with(modifiedBy, userId)));

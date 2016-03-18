@@ -233,6 +233,7 @@ public class RestRequisitionService {
 
         RegimenLineItem correspondingRegimenLineItem = rnr.findCorrespondingRegimenLineItem(regimenLineItem);
         if (correspondingRegimenLineItem == null) {
+          regimenLineItem.setRnrId(rnr.getId());
           rnr.getRegimenLineItems().add(regimenLineItem);
 
           if (regimenService.getRegimensByCategoryIdAndCode(regimenLineItem.getCategory().getId(), regimenLineItem.getCode()) == null) {

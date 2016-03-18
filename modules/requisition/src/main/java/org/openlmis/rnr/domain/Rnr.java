@@ -10,13 +10,13 @@
 
 package org.openlmis.rnr.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import org.apache.commons.collections.Predicate;
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import org.openlmis.core.domain.*;
 import org.openlmis.core.exception.DataException;
 
@@ -26,9 +26,9 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import static com.fasterxml.jackson.databind.annotation.JsonSerialize.Inclusion.NON_NULL;
 import static org.apache.commons.collections.CollectionUtils.find;
 import static org.apache.commons.collections.CollectionUtils.selectRejected;
-import static com.fasterxml.jackson.databind.annotation.JsonSerialize.Inclusion.NON_NULL;
 import static org.openlmis.rnr.domain.ProgramRnrTemplate.BEGINNING_BALANCE;
 import static org.openlmis.rnr.domain.RnrStatus.*;
 
@@ -138,7 +138,7 @@ public class Rnr extends BaseModel {
     return totalFullSupplyCost;
   }
 
-  public int calculateRegimeTotal(){
+  public int calculateRegimeTotal() {
     int total = 0;
     for (RegimenLineItem regimenLineItem : regimenLineItems) {
       total += regimenLineItem.getPatientsOnTreatment();
@@ -155,8 +155,8 @@ public class Rnr extends BaseModel {
 
   private void setBeginningBalances(Rnr previousRequisition, boolean beginningBalanceVisible) {
     if (previousRequisition == null ||
-      previousRequisition.status == INITIATED ||
-      previousRequisition.status == SUBMITTED) {
+            previousRequisition.status == INITIATED ||
+            previousRequisition.status == SUBMITTED) {
 
       if (!beginningBalanceVisible) {
         resetBeginningBalances();
@@ -261,6 +261,20 @@ public class Rnr extends BaseModel {
     copyCreatorEditableFieldsForFullSupply(rnr, rnrTemplate);
     copyCreatorEditableFieldsForNonFullSupply(rnr, rnrTemplate, programProducts);
     copyCreatorEditableFieldsForRegimen(rnr, regimenTemplate);
+  }
+
+  public void copyCreatorEditableFields(Rnr rnr, ProgramRnrTemplate rnrTemplate, List<ProgramProduct> programProducts) {
+    this.modifiedBy = rnr.getModifiedBy();
+    copyCreatorEditableFieldsForFullSupply(rnr, rnrTemplate);
+    copyCreatorEditableFieldsForNonFullSupply(rnr, rnrTemplate, programProducts);
+
+    for (RegimenLineItem regimenLineItem : rnr.getRegimenLineItems()) {
+      regimenLineItem.setModifiedBy(rnr.getModifiedBy());
+    }
+
+    regimenLineItems.clear();
+    regimenLineItems.addAll(rnr.getRegimenLineItems());
+
   }
 
   private void copyCreatorEditableFieldsForRegimen(Rnr rnr, RegimenTemplate regimenTemplate) {
