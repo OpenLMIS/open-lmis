@@ -1,18 +1,55 @@
 function StockOutReportController($scope, $filter, $controller, $http, CubesGenerateUrlService, messageService) {
     $controller('BaseProductReportController', {$scope: $scope});
 
+    var todayDateString = $filter('date')(new Date(), "yyyy-MM-dd");
     var currentDate = new Date();
     var timeOptions = {
-        "month": new Date().setMonth(currentDate.getMonth() - 1),
-        "3month": new Date().setMonth(currentDate.getMonth() - 3),
-        "year": new Date().setFullYear(currentDate.getFullYear() - 1)
+        "month": new Date(),
+        "3month": new Date().setMonth(currentDate.getMonth() - 2),
+        "year": new Date().setMonth(currentDate.getMonth() - 11)
     };
     $scope.timeTags = Object.keys(timeOptions);
+
+    function baseTimePickerOptions() {
+        return {
+            dateFormat: 'yy-mm-dd',
+            changeYear: true,
+            changeMonth: true,
+            showMonthAfterYear: true,
+            beforeShow: function (e, t) {
+                $("#ui-datepicker-div").addClass("hide-calendar");
+                $("#ui-datepicker-div").addClass('MonthDatePicker');
+                $("#ui-datepicker-div").addClass('HideTodayButton');
+            }
+        }
+    }
+
+    $scope.datePickerStartOptions = angular.extend(baseTimePickerOptions(), {
+        onClose: function () {
+            $scope.timeTagSelected = "";
+            var selectedYear = $("#ui-datepicker-div .ui-datepicker-year :selected").val();
+            var selectedMonth = $("#ui-datepicker-div .ui-datepicker-month :selected").val();
+            $scope.$apply(function () {
+                $scope.reportParams.startTime = selectedMonth == null ? formatDateWithFirstDayOfMonth(currentDate) : $filter('date')(new Date(selectedYear, selectedMonth, 01), "yyyy-MM-dd");
+            });
+    }});
+
+    $scope.datePickerEndOptions = angular.extend(baseTimePickerOptions(),{
+        onClose: function(){
+            $scope.timeTagSelected = "";
+            var selectedYear = $("#ui-datepicker-div .ui-datepicker-year :selected").val();
+            var selectedMonth = $("#ui-datepicker-div .ui-datepicker-month :selected").val();
+            $scope.$apply(function(){
+                $scope.reportParams.endTime = selectedMonth == null ? todayDateString :formatDateWithLastDayOfMonth(new Date(selectedYear, selectedMonth));
+            });
+        }
+    });
 
     $scope.$on('$viewContentLoaded', function () {
         $scope.loadProducts();
         $scope.loadHealthFacilities();
-        $scope.reportParams.startTime = $filter('date')(new Date().setMonth(currentDate.getMonth() - 1), "yyyy-MM-dd");
+        $scope.reportParams.startTime = formatDateWithFirstDayOfMonth(currentDate);
+        $scope.reportParams.endTime = todayDateString;
     });
 
     $scope.loadReport = function () {
@@ -36,8 +73,8 @@ function StockOutReportController($scope, $filter, $controller, $http, CubesGene
 
     $scope.changeTimeOption = function (timeTag) {
         $scope.timeTagSelected = timeTag;
-        $scope.reportParams.startTime = $filter('date')(timeOptions[timeTag], "yyyy-MM-dd");
-        $scope.reportParams.endTime = $scope.todayDateString;
+        $scope.reportParams.startTime = formatDateWithFirstDayOfMonth(new Date(timeOptions[timeTag]));
+        $scope.reportParams.endTime = todayDateString;
     };
 
     function getStockReportRequestParam() {
@@ -88,4 +125,13 @@ function StockOutReportController($scope, $filter, $controller, $http, CubesGene
         }
         return reportTitle || messageService.get("label.all");
     }
+
+    function formatDateWithFirstDayOfMonth(date){
+        return $filter('date')(new Date(date.getFullYear(), date.getMonth(), 1), "yyyy-MM-dd");
+    }
+
+    function formatDateWithLastDayOfMonth(date){
+        return $filter('date')(new Date(date.getFullYear(), date.getMonth() +1, 0), "yyyy-MM-dd");
+    }
+
 }

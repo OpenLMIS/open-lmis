@@ -83,7 +83,6 @@ function BaseProductReportController($scope, $filter, ProductReportService, Faci
     };
 
     $scope.checkDate = function () {
-        $scope.timeTagSelected = "";
         if (new Date() < new Date($scope.reportParams.endTime)) {
             $scope.reportParams.endTime = $filter('date')(new Date(), "yyyy-MM-dd");
             var options = {
