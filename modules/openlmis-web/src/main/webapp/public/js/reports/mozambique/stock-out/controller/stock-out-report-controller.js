@@ -121,7 +121,7 @@ function StockOutReportController($scope, $filter, $controller, $http, CubesGene
             reportTitle += ("," + stockReportParams.selectedDistrict.name);
         }
         if (stockReportParams.selectedFacility) {
-            reportTitle += stockReportParams.selectedFacility.name;
+            reportTitle += ("," + stockReportParams.selectedFacility.name);
         }
         return reportTitle || messageService.get("label.all");
     }
