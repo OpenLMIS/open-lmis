@@ -353,7 +353,7 @@ public class RnrTest {
       RegimenTemplate regimenTemplate = new RegimenTemplate(1l, regimenColumns);
       List<RnrColumn> rnrColumns = new ArrayList<>();
       List<ProgramProduct> programProducts = new ArrayList<>();
-      rnr.copyCreatorEditableFields(newRnr, new ProgramRnrTemplate(rnrColumns), programProducts);
+      rnr.copyCreatorEditableFieldsSkipValidate(newRnr, new ProgramRnrTemplate(rnrColumns), regimenTemplate, programProducts);
 
       assertThat(rnr.getRegimenLineItems().get(0).getModifiedBy(), is(1L));
       assertThat(rnr.getRegimenLineItems().get(1).getModifiedBy(), is(1L));

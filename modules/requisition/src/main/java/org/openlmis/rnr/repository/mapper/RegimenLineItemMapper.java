@@ -23,8 +23,8 @@ import java.util.List;
 @Repository
 public interface RegimenLineItemMapper {
 
-  @Insert({"INSERT INTO regimen_line_items(code, name, regimenDisplayOrder, regimenCategory, regimenCategoryDisplayOrder, rnrId, skipped, modifiedBy, createdBy) values " +
-    "(#{code}, #{name}, #{regimenDisplayOrder}, #{category.name}, #{category.displayOrder}, #{rnrId}, #{skipped}, #{modifiedBy}, #{createdBy})"})
+  @Insert({"INSERT INTO regimen_line_items(code, name, regimenDisplayOrder, regimenCategory, regimenCategoryDisplayOrder, rnrId, skipped, modifiedBy, createdBy, patientsontreatment) values " +
+    "(#{code}, #{name}, #{regimenDisplayOrder}, #{category.name}, #{category.displayOrder}, #{rnrId}, #{skipped}, #{modifiedBy}, #{createdBy}, #{patientsOnTreatment})"})
   @Options(useGeneratedKeys = true)
    void insert(RegimenLineItem regimenLineItem);
 

@@ -263,18 +263,11 @@ public class Rnr extends BaseModel {
     copyCreatorEditableFieldsForRegimen(rnr, regimenTemplate);
   }
 
-  public void copyCreatorEditableFields(Rnr rnr, ProgramRnrTemplate rnrTemplate, List<ProgramProduct> programProducts) {
+  public void copyCreatorEditableFieldsSkipValidate(Rnr rnr, ProgramRnrTemplate rnrTemplate, RegimenTemplate regimenTemplate, List<ProgramProduct> programProducts) {
     this.modifiedBy = rnr.getModifiedBy();
     copyCreatorEditableFieldsForFullSupply(rnr, rnrTemplate);
     copyCreatorEditableFieldsForNonFullSupply(rnr, rnrTemplate, programProducts);
-
-    for (RegimenLineItem regimenLineItem : rnr.getRegimenLineItems()) {
-      regimenLineItem.setModifiedBy(rnr.getModifiedBy());
-    }
-
-    regimenLineItems.clear();
-    regimenLineItems.addAll(rnr.getRegimenLineItems());
-
+    copyCreatorEditableFieldsForRegimenSkipValidate(rnr, regimenTemplate);
   }
 
   private void copyCreatorEditableFieldsForRegimen(Rnr rnr, RegimenTemplate regimenTemplate) {
@@ -283,6 +276,19 @@ public class Rnr extends BaseModel {
       if (savedRegimenLineItem != null) {
         savedRegimenLineItem.copyCreatorEditableFieldsForRegimen(regimenLineItem, regimenTemplate);
         savedRegimenLineItem.setModifiedBy(rnr.getModifiedBy());
+      }
+    }
+  }
+
+  private void copyCreatorEditableFieldsForRegimenSkipValidate(Rnr rnr, RegimenTemplate regimenTemplate) {
+    for (RegimenLineItem regimenLineItem : rnr.regimenLineItems) {
+      RegimenLineItem savedRegimenLineItem = this.findCorrespondingRegimenLineItem(regimenLineItem);
+      if (savedRegimenLineItem != null) {
+        savedRegimenLineItem.copyCreatorEditableFieldsForRegimen(regimenLineItem, regimenTemplate);
+        savedRegimenLineItem.setModifiedBy(rnr.getModifiedBy());
+      } else {
+        regimenLineItem.setModifiedBy(rnr.getModifiedBy());
+        regimenLineItems.add(regimenLineItem);
       }
     }
   }

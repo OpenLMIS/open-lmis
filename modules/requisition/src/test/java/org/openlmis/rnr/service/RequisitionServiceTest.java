@@ -596,7 +596,7 @@ public class RequisitionServiceTest {
         Mockito.when(regimenColumnService.getRegimenTemplateByProgramId(initiatedRnr.getProgram().getId())).thenReturn(
                 regimenTemplate);
         List<ProgramProduct> programProducts = new ArrayList<>();
-        Mockito.doNothing().when(savedRnr).copyCreatorEditableFields(initiatedRnr, template, programProducts);
+        Mockito.doNothing().when(savedRnr).copyCreatorEditableFieldsSkipValidate(initiatedRnr, template, regimenTemplate, programProducts);
         Mockito.doNothing().when(savedRnr).fillBasicInformation(FACILITY, PROGRAM, PERIOD);
 
         when(staticReferenceDataService.getBoolean("toggle.mmia.custom.regimen")).thenReturn(true);
@@ -606,7 +606,7 @@ public class RequisitionServiceTest {
         requisitionService.save(initiatedRnr);
 
         verify(requisitionRepository).update(savedRnr);
-        verify(savedRnr).copyCreatorEditableFields(initiatedRnr, template, programProducts);
+        verify(savedRnr).copyCreatorEditableFieldsSkipValidate(initiatedRnr, template, regimenTemplate, programProducts);
     }
 
     @Test

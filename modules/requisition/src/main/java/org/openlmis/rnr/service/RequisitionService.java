@@ -222,9 +222,9 @@ public class RequisitionService {
       List<ProgramProduct> programProducts = programProductService.getNonFullSupplyProductsForProgram(savedRnr.getProgram());
 
       if (staticReferenceDataService.getBoolean("toggle.mmia.custom.regimen")) {
-        savedRnr.copyCreatorEditableFields(rnr, rnrTemplate, programProducts);
+        savedRnr.copyCreatorEditableFieldsSkipValidate(rnr, rnrTemplate, regimenTemplate, programProducts);
       } else {
-        savedRnr.copyCreatorEditableFields(rnr, rnrTemplate, regimenTemplate, programProducts);
+      savedRnr.copyCreatorEditableFields(rnr, rnrTemplate, regimenTemplate, programProducts);
       }
       //TODO: copy only the editable fields.
       savedRnr.setEquipmentLineItems(rnr.getEquipmentLineItems());
