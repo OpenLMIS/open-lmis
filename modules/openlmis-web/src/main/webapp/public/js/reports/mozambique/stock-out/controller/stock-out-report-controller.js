@@ -101,12 +101,12 @@ function StockOutReportController($scope, $filter, $controller, $http, CubesGene
             cutsParams.push({dimension: "facility", values: [stockReportParams.selectedFacility.code]});
         }
 
-        if (stockReportParams.selectedDistrict) {
+        if (stockReportParams.selectedProvince && stockReportParams.selectedDistrict) {
             cutsParams.push({
                 dimension: "location",
                 values: [[stockReportParams.selectedProvince.code, stockReportParams.selectedDistrict.code]]
             });
-        } else if (stockReportParams.selectedProvince) {
+        }else if (stockReportParams.selectedProvince && !stockReportParams.selectedDistrict) {
             cutsParams.push({dimension: "location", values: [stockReportParams.selectedProvince.code]});
         }
         return cutsParams;
@@ -121,7 +121,7 @@ function StockOutReportController($scope, $filter, $controller, $http, CubesGene
             reportTitle += ("," + stockReportParams.selectedDistrict.name);
         }
         if (stockReportParams.selectedFacility) {
-            reportTitle += ("," + stockReportParams.selectedFacility.name);
+            reportTitle += reportTitle == "" ? stockReportParams.selectedFacility.name : ("," + stockReportParams.selectedFacility.name);
         }
         return reportTitle || messageService.get("label.all");
     }

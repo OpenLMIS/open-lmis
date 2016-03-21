@@ -3,7 +3,7 @@
     <label class="labels" openlmis-message="label.province"></label>
 
     <div class="form-fields">
-        <select ui-select2 style="width:160px;" id="selectorProvince" class="large-input" ng-change="" name="provinces" ng-model="reportParams.provinceId">
+        <select ui-select2 style="width:160px;" id="selectorProvince" class="large-input" ng-change="selectedProvince()" name="provinces" ng-model="reportParams.provinceId">
             <option ng-repeat="option in provinces | provinceFilter:reportParams.provinceId" value="{{option.id}}" >{{option.name}}</option>
             <option value="">ALL</option>
         </select>

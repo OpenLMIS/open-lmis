@@ -57,6 +57,10 @@ function BaseProductReportController($scope, $filter, ProductReportService, Faci
         $scope.fullGeoZoneList = _.union($scope.fullGeoZoneList, $scope.provinces, $scope.districts);
     };
 
+    $scope.selectedProvince = function(){
+        $scope.reportParams.districtId = "";
+    };
+
     $scope.fillProvince = function () {
         var parent = $scope.getParent($scope.reportParams.districtId);
         $scope.reportParams.provinceId = !parent ? undefined : parent.id;
