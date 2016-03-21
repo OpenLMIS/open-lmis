@@ -18,7 +18,9 @@ import org.junit.runner.RunWith;
 import org.junit.runners.BlockJUnit4ClassRunner;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.openlmis.core.domain.Program;
 import org.openlmis.db.categories.UnitTests;
+import org.openlmis.restapi.domain.FacilitySupportedProgram;
 import org.openlmis.restapi.domain.LoginInformation;
 import org.openlmis.restapi.domain.RestLoginRequest;
 import org.openlmis.restapi.response.RestResponse;
@@ -30,6 +32,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.BadCredentialsException;
 
+import java.util.List;
+
+import static org.codehaus.groovy.runtime.InvokerHelper.asList;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.when;
 
@@ -66,6 +71,22 @@ public class RestLoginControllerTest {
         ResponseEntity<RestResponse> response = restLoginController.login(request);
         assertEquals(HttpStatus.OK, response.getStatusCode());
         assertEquals(loggedInUser, response.getBody().getData().get("userInformation"));
+    }
 
+    @Test
+    public void shouldReturnFacilitySupposedPrograms() {
+        LoginInformation loginInformation = new LoginInformation();
+        loginInformation.setFacilityId(1L);
+        when(restLoginService.login("username", "pass")).thenReturn(loginInformation);
+        List<FacilitySupportedProgram> facilityPrograms = asList(new FacilitySupportedProgram());
+        when(restLoginService.getFacilitySupportedPrograms(1L)).thenReturn(facilityPrograms);
+
+        RestLoginRequest request = new RestLoginRequest();
+        request.setUsername("username");
+        request.setPassword("pass");
+        ResponseEntity<RestResponse> response = restLoginController.login(request);
+
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertEquals(facilityPrograms, response.getBody().getData().get("facilitySupportedPrograms"));
     }
 }

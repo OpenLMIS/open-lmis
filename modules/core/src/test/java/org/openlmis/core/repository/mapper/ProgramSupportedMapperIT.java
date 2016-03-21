@@ -141,8 +141,14 @@ public class ProgramSupportedMapperIT {
     Facility facility = make(a(defaultFacility));
     facilityMapper.insert(facility);
 
+    Program programParent = make(a(defaultProgram, with(programCode, "XXX")));
+    programMapper.insert(programParent);
+
     Program program = make(a(defaultProgram, with(programCode, YELLOW_FEVER)));
+    program.setParent(programParent);
     programMapper.insert(program);
+    programMapper.associateProgramToParent(program.getId(), programParent.getId());
+
     Program program2 = make(a(defaultProgram, with(programCode, GREEN_FEVER)));
     programMapper.insert(program2);
 
@@ -152,6 +158,9 @@ public class ProgramSupportedMapperIT {
     ProgramSupported programSupported = make(a(defaultProgramSupported,
       with(supportedFacilityId, facility.getId()),
       with(supportedProgram, program)));
+    ProgramSupported programSupported1 = make(a(defaultProgramSupported,
+        with(supportedFacilityId, facility.getId()),
+        with(supportedProgram, programParent)));
     ProgramSupported programSupported2 = make(a(defaultProgramSupported,
       with(supportedFacilityId, facility.getId()),
       with(supportedProgram, program2), with(isActive, false)));
@@ -161,12 +170,15 @@ public class ProgramSupportedMapperIT {
 
     mapper.insert(programSupported);
     mapper.insert(programSupported2);
+    mapper.insert(programSupported1);
     mapper.insert(inactiveProgramSupported);
 
     List<ProgramSupported> programsSupported = mapper.getActiveProgramsByFacilityId(facility.getId());
 
-    assertThat(programsSupported.size(), is(1));
-    assertThat(programsSupported.get(0).getProgram().getCode(), is(programSupported.getProgram().getCode()));
+    assertThat(programsSupported.size(), is(2));
+    assertThat(programsSupported.get(0).getProgram().getCode(), is(programParent.getCode()));
+    assertThat(programsSupported.get(1).getProgram().getCode(), is(programSupported.getProgram().getCode()));
+    assertThat(programsSupported.get(1).getProgram().getParent().getCode(), is(programParent.getCode()));
   }
 
   @Test

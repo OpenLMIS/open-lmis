@@ -1,6 +1,7 @@
 package org.openlmis.restapi.controller;
 
 import lombok.NoArgsConstructor;
+import org.openlmis.restapi.domain.FacilitySupportedProgram;
 import org.openlmis.restapi.domain.LoginInformation;
 import org.openlmis.restapi.domain.RestLoginRequest;
 import org.openlmis.restapi.response.RestResponse;
@@ -14,6 +15,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
+import java.util.Date;
+import java.util.List;
+
 @Controller
 @NoArgsConstructor
 public class RestLoginController extends BaseController {
@@ -25,7 +29,11 @@ public class RestLoginController extends BaseController {
     public ResponseEntity<RestResponse> login(@RequestBody RestLoginRequest restLogin) {
         try {
             LoginInformation loginInformation = restLoginService.login(restLogin.getUsername(), restLogin.getPassword());
-            return RestResponse.response("userInformation", loginInformation);
+            RestResponse restResponse = new RestResponse("userInformation", loginInformation);
+
+            List<FacilitySupportedProgram> facilitySupportedProgramList = restLoginService.getFacilitySupportedPrograms(loginInformation.getFacilityId());
+            restResponse.addData("facilitySupportedPrograms", facilitySupportedProgramList);
+            return new ResponseEntity<>(restResponse, HttpStatus.OK);
         } catch (BadCredentialsException e) {
             return new ResponseEntity(HttpStatus.UNAUTHORIZED);
         }

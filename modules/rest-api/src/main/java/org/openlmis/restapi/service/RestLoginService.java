@@ -8,10 +8,12 @@ import org.openlmis.core.domain.Facility;
 import org.openlmis.core.domain.Program;
 import org.openlmis.core.domain.ProgramSupported;
 import org.openlmis.core.domain.User;
+import org.openlmis.core.exception.DataException;
 import org.openlmis.core.service.FacilityService;
 import org.openlmis.core.service.MessageService;
 import org.openlmis.core.service.ProgramSupportedService;
 import org.openlmis.core.service.UserService;
+import org.openlmis.restapi.domain.FacilitySupportedProgram;
 import org.openlmis.restapi.domain.LoginInformation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -59,18 +61,35 @@ public class RestLoginService {
     private LoginInformation getLoginInformation(String username) {
         User user = userService.getByUserName(username);
         Long facilityId = user.getFacilityId();
+        List<String> programs = FluentIterable.from(getProgramsSupportedByFacilityId(facilityId)).transform(new Function<ProgramSupported, String>() {
+            @Override
+            public String apply(ProgramSupported input) {
+                return input.getProgram().getCode();
+            }
+        }).toList();
+        return LoginInformation.prepareForREST(user, facilityService.getById(facilityId), programs);
+    }
 
+    private List<ProgramSupported> getProgramsSupportedByFacilityId(Long facilityId) {
         if (facilityId != null) {
-            Facility facility = facilityService.getById(facilityId);
-            List<String> programs = FluentIterable.from(programSupportedService.getActiveByFacilityId(facilityId)).transform(new Function<ProgramSupported, String>() {
-                @Override
-                public String apply(ProgramSupported input) {
-                    return input.getProgram().getCode();
-                }
-            }).toList();
-            return LoginInformation.prepareForREST(user, facility, programs);
+            return programSupportedService.getActiveByFacilityId(facilityId);
         } else {
-            return LoginInformation.prepareForREST(user, null, null);
+            throw new DataException("error.facility.unknown");
         }
+    }
+
+    public List<FacilitySupportedProgram> getFacilitySupportedPrograms(Long facilityId) {
+        return FluentIterable.from(getProgramsSupportedByFacilityId(facilityId)).transform(new Function<ProgramSupported, FacilitySupportedProgram>() {
+            @Override
+            public FacilitySupportedProgram apply(ProgramSupported input) {
+                FacilitySupportedProgram program = new FacilitySupportedProgram();
+                program.setProgramCode(input.getProgram().getCode());
+                program.setProgramName(input.getProgram().getName());
+                if (input.getProgram().getParent() != null) {
+                    program.setParentCode(input.getProgram().getParent().getCode());
+                }
+                return program;
+            }
+        }).toList();
     }
 }
