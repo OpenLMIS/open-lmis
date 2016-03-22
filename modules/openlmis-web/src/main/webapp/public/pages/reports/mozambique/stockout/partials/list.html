@@ -17,14 +17,18 @@
     <hr/>
 
     <div class="time-container">
-        <div class="time-tag">
-            <ul>
-                <li ng-repeat="timeTag in timeTags">
-                    <a ng-class="{'selected': timeTagSelected == timeTag}" ng-click=changeTimeOption(timeTag)
-                       openlmis-message="label.last.{{timeTag}}" href=""></a>
-                    <span>|</span>
-                </li>
-            </ul>
+        <div id="time-tag-div">
+            <div class="time-tag">
+                <ul>
+                    <li ng-repeat="timeTag in timeTags">
+                        <a ng-class="{'selected': timeTagSelected == timeTag}" ng-click=changeTimeOption(timeTag)
+                           openlmis-message="label.last.{{timeTag}}" href=""></a>
+                        <span>|</span>
+                    </li>
+                </ul>
+            </div>
+
+            <div ng-show="showIncompleteWarning" id="stock-out-incomplete-warning" openlmis-message="label.stock.out.incomplete.warning"></div>
         </div>
 
         <div class="date-picker">

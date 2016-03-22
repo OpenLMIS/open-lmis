@@ -50,10 +50,13 @@ function StockOutReportController($scope, $filter, $controller, $http, CubesGene
         $scope.loadHealthFacilities();
         $scope.reportParams.startTime = formatDateWithFirstDayOfMonth(currentDate);
         $scope.reportParams.endTime = todayDateString;
+        $scope.timeTagSelected = "month";
     });
 
     $scope.loadReport = function () {
         $scope.reportData = [];
+        $scope.showIncompleteWarning = !isSelectedEndTimeLastDayOfMonth();
+
         var stockReportParams = getStockReportRequestParam();
         var generateAggregateUrl = CubesGenerateUrlService.generateAggregateUrl('vw_stockouts', ["drug","overlapped_month"], generateCutParams(stockReportParams));
         $http.get(generateAggregateUrl).success(function (data) {
@@ -98,6 +101,10 @@ function StockOutReportController($scope, $filter, $controller, $http, CubesGene
         $scope.reportParams.startTime = formatDateWithFirstDayOfMonth(new Date(timeOptions[timeTag]));
         $scope.reportParams.endTime = todayDateString;
     };
+
+    function isSelectedEndTimeLastDayOfMonth() {
+        return $scope.reportParams.endTime == formatDateWithLastDayOfMonth(new Date($scope.reportParams.endTime));
+    }
 
     function getStockReportRequestParam() {
         var params = {};
