@@ -1,4 +1,4 @@
-function StockOutReportController($scope, $filter, $controller, $http, CubesGenerateUrlService, messageService) {
+function StockOutReportController($scope, $filter, $controller, $http, CubesGenerateUrlService, messageService, $dialog) {
     $controller('BaseProductReportController', {$scope: $scope});
 
     var todayDateString = $filter('date')(new Date(), "yyyy-MM-dd");
@@ -9,6 +9,7 @@ function StockOutReportController($scope, $filter, $controller, $http, CubesGene
         "year": new Date().setMonth(currentDate.getMonth() - 11)
     };
     $scope.timeTags = Object.keys(timeOptions);
+    $scope.showDateRangeInvalidWarning = false;
 
     function baseTimePickerOptions() {
         return {
@@ -25,6 +26,7 @@ function StockOutReportController($scope, $filter, $controller, $http, CubesGene
     }
 
     $scope.datePickerStartOptions = angular.extend(baseTimePickerOptions(), {
+        maxDate: currentDate,
         onClose: function () {
             $scope.timeTagSelected = "";
             var selectedYear = $("#ui-datepicker-div .ui-datepicker-year :selected").val();
@@ -35,6 +37,7 @@ function StockOutReportController($scope, $filter, $controller, $http, CubesGene
     }});
 
     $scope.datePickerEndOptions = angular.extend(baseTimePickerOptions(),{
+        maxDate: currentDate,
         onClose: function(){
             $scope.timeTagSelected = "";
             var selectedYear = $("#ui-datepicker-div .ui-datepicker-year :selected").val();
@@ -45,6 +48,16 @@ function StockOutReportController($scope, $filter, $controller, $http, CubesGene
         }
     });
 
+    function showDateRangeInvalidWarningDialog() {
+        var options = {
+            id: "chooseDateAlertDialog",
+            header: "title.alert",
+            body: "dialog.date.range.invalid.warning"
+        };
+        MozambiqueDialog.newDialog(options, function () {
+        }, $dialog);
+    }
+
     $scope.$on('$viewContentLoaded', function () {
         $scope.loadProducts();
         $scope.loadHealthFacilities();
@@ -54,6 +67,11 @@ function StockOutReportController($scope, $filter, $controller, $http, CubesGene
     });
 
     $scope.loadReport = function () {
+        if ($scope.reportParams.startTime > $scope.reportParams.endTime){
+            showDateRangeInvalidWarningDialog();
+            return;
+        }
+
         $scope.reportData = [];
         $scope.showIncompleteWarning = !isSelectedEndTimeLastDayOfMonth();
 

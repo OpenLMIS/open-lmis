@@ -32,35 +32,35 @@
         </div>
 
         <div class="date-picker">
-            <div class="form-cell">
-                <label>
-                    <span openlmis-message="label.start.date"></span>
-                </label>
+                <div class="form-cell">
+                    <label>
+                        <span openlmis-message="label.start.date"></span>
+                    </label>
 
-                <div class="stock-out-date-picker">
-                    <input name="startTime" id="startTime" type="text"
-                           ui-date= datePickerStartOptions
-                           ui-date-format
-                           readonly
-                           ng-model="reportParams.startTime"/>
+                    <div class="stock-out-date-picker">
+                        <input name="startTime" id="startTime" type="text"
+                               ui-date=datePickerStartOptions
+                               ui-date-format
+                               readonly
+                               ng-model="reportParams.startTime"/>
+                    </div>
                 </div>
-            </div>
 
-            <div> - </div>
+                <div> -</div>
 
-            <div class="form-cell">
-                <label>
-                    <span openlmis-message="label.end.date"></span>
-                </label>
+                <div class="form-cell">
+                    <label>
+                        <span openlmis-message="label.end.date"></span>
+                    </label>
 
-                <div class="stock-out-date-picker">
-                    <input name="endTime" id="endTime" type="text"
-                           ui-date= datePickerEndOptions
-                           ui-date-format
-                           readonly
-                           ng-model="reportParams.endTime"/>
+                    <div class="stock-out-date-picker">
+                        <input name="endTime" id="endTime" type="text"
+                               ui-date=datePickerEndOptions
+                               ui-date-format
+                               readonly
+                               ng-model="reportParams.endTime"/>
+                    </div>
                 </div>
-            </div>
         </div>
     </div>
 
