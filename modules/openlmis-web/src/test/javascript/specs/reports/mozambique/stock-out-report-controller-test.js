@@ -233,7 +233,6 @@ describe("Stock Out Report Controller", function () {
         };
         scope.loadReport();
 
-        expect(scope.reportData.length).toEqual(0);
-        expect(scope.reportData.showIncompleteWarning).toEqual(undefined);
+        expect(scope.showIncompleteWarning).toEqual(undefined);
     });
 });

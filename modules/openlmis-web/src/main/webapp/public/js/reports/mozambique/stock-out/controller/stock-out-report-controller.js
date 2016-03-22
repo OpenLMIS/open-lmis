@@ -3,6 +3,7 @@ function StockOutReportController($scope, $filter, $controller, $http, CubesGene
 
     var todayDateString = $filter('date')(new Date(), "yyyy-MM-dd");
     var currentDate = new Date();
+
     var timeOptions = {
         "month": new Date(),
         "3month": new Date().setMonth(currentDate.getMonth() - 2),
@@ -68,42 +69,58 @@ function StockOutReportController($scope, $filter, $controller, $http, CubesGene
     });
 
     $scope.loadReport = function () {
-        $scope.reportData = [];
-
-        if ($scope.reportParams.startTime > $scope.reportParams.endTime) {
+        if (isInvalidDateRange()) {
             showDateRangeInvalidWarningDialog();
             return;
         }
+        
+        checkCompletenessOfEndTime();
+        generateReportTitle();
 
-        $scope.showIncompleteWarning = !isSelectedEndTimeLastDayOfMonth();
-
-        var stockReportParams = getStockReportRequestParam();
-        var generateAggregateUrl = CubesGenerateUrlService.generateAggregateUrl('vw_stockouts', ["drug", "overlapped_month"], generateCutParams(stockReportParams));
-        $http.get(generateAggregateUrl).success(function (data) {
-            var groupedDrug = _.groupBy(data.cells, "drug.drug_code");
-
-            _.forEach(groupedDrug, function (drug) {
-                var sumAvg = 0;
-                var sumDuration = 0;
-                var totalOccurrences = 0;
-                _.forEach(drug, function (stockOut) {
-                    sumAvg += stockOut.average_days;
-                    sumDuration += stockOut['overlap_duration'];
-                    totalOccurrences += stockOut.record_count;
-                });
-                drug.totalDuration = sumDuration;
-                drug.code = drug[0]['drug.drug_code'];
-                drug.name = drug[0]['drug.drug_name'];
-                var numberOfFacilities = $scope.reportParams.facilityId ? 1 : FacilityFilter()($scope.facilities, $scope.districts, $scope.reportParams.districtId, $scope.reportParams.provinceId).length;
-                drug.monthlyAvg = sumAvg / drug.length / numberOfFacilities;
-                drug.monthlyOccurrences = totalOccurrences / drug.length;
-                $scope.reportData.push(drug);
-            });
-
-            formatReportWhenSelectAllFacility();
-            $scope.reportParams.reportTitle = generateReportTitle(stockReportParams);
-        });
+        getStockOutDataFromCubes();
     };
+
+    function isInvalidDateRange() {
+        return $scope.reportParams.startTime > $scope.reportParams.endTime;
+    }
+
+    function getStockOutDataFromCubes() {
+        $http.get(CubesGenerateUrlService.generateAggregateUrl('vw_stockouts', ["drug", "overlapped_month"], generateCutParams(getStockReportRequestParam())))
+            .success(function (data) {
+                $scope.reportData = [];
+                generateStockOutAverageReportData(data.cells);
+                formatReportWhenSelectAllFacility();
+        });
+    }
+
+    function generateStockOutAverageReportData(data) {
+        _.forEach(_.groupBy(data, "drug.drug_code"), function (drug) {
+            var sumAvg = 0;
+            var sumDuration = 0;
+            var totalOccurrences = 0;
+            _.forEach(drug, function (stockOut) {
+                sumAvg += stockOut.average_days;
+                sumDuration += stockOut['overlap_duration'];
+                totalOccurrences += stockOut.record_count;
+            });
+            var monthlyAvg = sumAvg / drug.length / getNumOfSelectedFacilities();
+            var monthlyOccurrences = totalOccurrences / drug.length;
+            generateReportItem(drug, sumDuration, monthlyAvg, monthlyOccurrences);
+        });
+    }
+
+    function generateReportItem(drug, sumDuration, monthlyAvg, monthlyOccurrences) {
+        drug.code = drug[0]['drug.drug_code'];
+        drug.name = drug[0]['drug.drug_name'];
+        drug.totalDuration = sumDuration;
+        drug.monthlyAvg = monthlyAvg;
+        drug.monthlyOccurrences = monthlyOccurrences;
+        $scope.reportData.push(drug);
+    }
+
+    function getNumOfSelectedFacilities() {
+        return $scope.reportParams.facilityId ? 1 : FacilityFilter()($scope.facilities, $scope.districts, $scope.reportParams.districtId, $scope.reportParams.provinceId).length;
+    }
 
     function formatReportWhenSelectAllFacility() {
         if (!$scope.reportParams.facilityId) {
@@ -122,8 +139,8 @@ function StockOutReportController($scope, $filter, $controller, $http, CubesGene
         $scope.reportParams.endTime = todayDateString;
     };
 
-    function isSelectedEndTimeLastDayOfMonth() {
-        return $scope.reportParams.endTime == formatDateWithLastDayOfMonth(new Date($scope.reportParams.endTime));
+    function checkCompletenessOfEndTime() {
+        $scope.showIncompleteWarning = !($scope.reportParams.endTime == formatDateWithLastDayOfMonth(new Date($scope.reportParams.endTime)));
     }
 
     function getStockReportRequestParam() {
@@ -164,7 +181,8 @@ function StockOutReportController($scope, $filter, $controller, $http, CubesGene
         return cutsParams;
     }
 
-    function generateReportTitle(stockReportParams) {
+    function generateReportTitle() {
+        var stockReportParams = getStockReportRequestParam();
         var reportTitle = "";
         if (stockReportParams.selectedProvince) {
             reportTitle = stockReportParams.selectedProvince.name;
@@ -175,7 +193,7 @@ function StockOutReportController($scope, $filter, $controller, $http, CubesGene
         if (stockReportParams.selectedFacility) {
             reportTitle += reportTitle == "" ? stockReportParams.selectedFacility.name : ("," + stockReportParams.selectedFacility.name);
         }
-        return reportTitle || messageService.get("label.all");
+        $scope.reportParams.reportTitle = reportTitle || messageService.get("label.all");
     }
 
     function formatDateWithFirstDayOfMonth(date){
