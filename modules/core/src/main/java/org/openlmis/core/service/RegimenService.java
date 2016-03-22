@@ -75,4 +75,8 @@ public class RegimenService {
   public Object getRegimensByCategoryIdAndName(Long categoryId, String name) {
     return repository.getRegimensByCategoryIdAndName(categoryId, name);
   }
+
+  public List<Regimen> listAll() {
+     return repository.getAllRegimens();
+  }
 }

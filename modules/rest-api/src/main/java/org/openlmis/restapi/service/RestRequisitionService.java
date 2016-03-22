@@ -242,6 +242,11 @@ public class RestRequisitionService {
         RegimenLineItem correspondingRegimenLineItem = rnr.findCorrespondingRegimenLineItem(regimenLineItem);
         if (correspondingRegimenLineItem == null) {
           regimenLineItem.setRnrId(rnr.getId());
+
+          if(staticReferenceDataService.getBoolean("toggle.mmia.custom.regimen")) {
+            regimenLineItem.setCode(String.format("%03d", regimenService.listAll().size() + 1));
+          }
+
           rnr.getRegimenLineItems().add(regimenLineItem);
 
           if (regimenService.getRegimensByCategoryIdAndName(regimenLineItem.getCategory().getId(), regimenLineItem.getName()) == null) {

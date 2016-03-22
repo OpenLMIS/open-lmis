@@ -474,10 +474,12 @@ public class RestRequisitionServiceTest {
     when(regimenService.queryRegimenCategoryByName(anyString())).thenReturn(category);
     when(regimenService.getRegimensByCategory(category)).thenReturn(asList(category));
     when(regimenService.getRegimensByCategoryIdAndName(anyLong(), anyString())).thenReturn(null);
+    when(regimenService.listAll()).thenReturn(new ArrayList<Regimen>());
     service.submitReport(report, 3l);
     verify(regimenService).save(any(Regimen.class), anyLong());
     assertThat(rnr.getRegimenLineItems().size(), is(1));
     assertThat(rnr.getRegimenLineItems().get(0).getRnrId(), is(2L));
+    assertThat(rnr.getRegimenLineItems().get(0).getCode(), is("001"));
   }
 
   @Test
