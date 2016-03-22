@@ -62,21 +62,21 @@
 
     <hr/>
 
-    <div id="report" ng-if="reportData">
+    <div id="report" ng-if="reportData.length > 0">
         <h3 class="report-title" openlmis-message="subtitle.stock.out.report|reportParams.reportTitle"></h3>
 
         <table class="table table-condensed table-bordered table-striped">
             <tr class="gradient-header">
-                <th ng-click="sortType = 'drug.drug_code'; sortReverse = !sortReverse" class="sortable sort-desc"
-                    openlmis-message="report.drug.code">
-                    <span ng-show="sortType != 'drug.drug_code'" class="icon-sort"></span>
-                    <span ng-show="sortType == 'drug.drug_code' && !sortReverse" class="icon-sort-up"></span>
-                    <span ng-show="sortType == 'drug.drug_code' && sortReverse" class="icon-sort-down"></span></th>
-                <th ng-click="sortType = 'drug.drug_name'; sortReverse = !sortReverse" class="sortable sort-desc"
+                <th ng-click="sortType = 'code'; sortReverse = !sortReverse" class="sortable sort-desc"
+                    openlmis-message="code">
+                    <span ng-show="sortType != 'code'" class="icon-sort"></span>
+                    <span ng-show="sortType == 'code' && !sortReverse" class="icon-sort-up"></span>
+                    <span ng-show="sortType == 'code' && sortReverse" class="icon-sort-down"></span></th>
+                <th ng-click="sortType = 'name'; sortReverse = !sortReverse" class="sortable sort-desc"
                     openlmis-message="report.drug.name">
-                    <span ng-show="sortType != 'drug.drug_name'" class="icon-sort"></span>
-                    <span ng-show="sortType == 'drug.drug_name' && !sortReverse" class="icon-sort-up"></span>
-                    <span ng-show="sortType == 'drug.drug_name' && sortReverse" class="icon-sort-down"></span></th>
+                    <span ng-show="sortType != 'name'" class="icon-sort"></span>
+                    <span ng-show="sortType == 'name' && !sortReverse" class="icon-sort-up"></span>
+                    <span ng-show="sortType == 'name' && sortReverse" class="icon-sort-down"></span></th>
                 <th ng-click="sortType = 'average_days'; sortReverse = !sortReverse" class="sortable sort-desc"
                     openlmis-message="report.stock.out.avg.duration">
                     <span ng-show="sortType != 'average_days'" class="icon-sort"></span>
@@ -95,11 +95,11 @@
             </tr>
 
             <tr ng-repeat="entry in reportData | orderBy:sortType:sortReverse">
-                <td>{{entry['drug.drug_code']}}</td>
-                <td style="text-align: left"><a href="javascript:void(0);">{{entry['drug.drug_name']}}</a></td>
-                <td>{{entry.average_days | number:1}}</td>
-                <td>{{entry.record_count}}</td>
-                <td>{{entry.duration}}</td>
+                <td>{{entry.code}}</td>
+                <td style="text-align: left"><a href="javascript:void(0);">{{entry.name}}</a></td>
+                <td>{{entry.monthlyAvg | number:1}}</td>
+                <td>{{entry.monthlyOccurrences | number:0}}</td>
+                <td>{{entry.totalDuration}}</td>
             </tr>
         </table>
     </div>

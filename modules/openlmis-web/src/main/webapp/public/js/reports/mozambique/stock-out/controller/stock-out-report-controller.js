@@ -53,23 +53,45 @@ function StockOutReportController($scope, $filter, $controller, $http, CubesGene
     });
 
     $scope.loadReport = function () {
+        $scope.reportData = [];
         var stockReportParams = getStockReportRequestParam();
         var generateAggregateUrl = CubesGenerateUrlService.generateAggregateUrl('vw_stockouts', ["drug","overlapped_month"], generateCutParams(stockReportParams));
         $http.get(generateAggregateUrl).success(function (data) {
-            $scope.reportData = data.cells;
+            var groupedDrug =_.groupBy(data.cells, "drug.drug_code");
 
-            if (!stockReportParams.selectedFacility){
-                $scope.reportData.map(function(data){
-                    data.duration = "-";
+            _.forEach(groupedDrug, function(drug){
+                var sumAvg=0;
+                var sumDuration=0;
+                var totalOccurrences=0;
+                _.forEach(drug, function(stockOut){
+                    sumAvg += stockOut.average_days;
+                    sumDuration += stockOut['overlap_duration'];
+                    totalOccurrences += stockOut.record_count;
                 });
-                $scope.occurrencesHeader = messageService.get("report.avg.stock.out.occurrences");
-            }else {
-                $scope.occurrencesHeader = messageService.get("report.stock.out.occurrences");
-            }
+                drug.totalDuration = sumDuration;
+                drug.code = drug[0]['drug.drug_code'];
+                drug.name = drug[0]['drug.drug_name'];
+                var numberOfFacilities = $scope.reportParams.facilityId ? 1 : FacilityFilter()($scope.facilities, $scope.districts, $scope.reportParams.districtId, $scope.reportParams.provinceId).length;
+                drug.monthlyAvg = sumAvg/drug.length/ numberOfFacilities;
+                drug.monthlyOccurrences = totalOccurrences/drug.length;
+                $scope.reportData.push(drug);
+            });
 
+            formatReportWhenSelectAllFacility();
             $scope.reportParams.reportTitle = generateReportTitle(stockReportParams);
         });
     };
+
+    function formatReportWhenSelectAllFacility() {
+        if (!$scope.reportParams.facilityId) {
+            $scope.reportData.map(function (data) {
+                data.totalDuration = "-";
+            });
+            $scope.occurrencesHeader = messageService.get("report.avg.stock.out.occurrences");
+        } else {
+            $scope.occurrencesHeader = messageService.get("report.stock.out.occurrences");
+        }
+    }
 
     $scope.changeTimeOption = function (timeTag) {
         $scope.timeTagSelected = timeTag;
