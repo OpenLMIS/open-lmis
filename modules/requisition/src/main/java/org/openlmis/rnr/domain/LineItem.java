@@ -33,7 +33,6 @@ public abstract class LineItem extends BaseModel {
 
   abstract public boolean compareCategory(LineItem lineItem);
 
-  @JsonIgnore
   abstract public String getCategoryName();
 
   @JsonIgnore

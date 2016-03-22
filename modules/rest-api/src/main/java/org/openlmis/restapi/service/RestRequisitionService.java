@@ -22,7 +22,7 @@ import org.openlmis.core.exception.DataException;
 import org.openlmis.core.repository.SyncUpHashRepository;
 import org.openlmis.core.service.*;
 import org.openlmis.order.service.OrderService;
-import org.openlmis.restapi.domain.RegimenResponse;
+import org.openlmis.restapi.domain.RegimenLineItemForRest;
 import org.openlmis.restapi.domain.ReplenishmentDTO;
 import org.openlmis.restapi.domain.Report;
 import org.openlmis.rnr.domain.*;
@@ -228,15 +228,15 @@ public class RestRequisitionService {
 
   private void copyRegimens(Rnr rnr, Report report, Long userId) {
     if (report.getRegimens() != null) {
-      for (RegimenResponse regimenResponse : report.getRegimens()) {
+      for (RegimenLineItemForRest regimenLineItemForRest : report.getRegimens()) {
         RegimenLineItem regimenLineItem;
         if (staticReferenceDataService.getBoolean("toggle.mmia.custom.regimen")) {
-          regimenLineItem = new RegimenLineItem(regimenResponse.getCode(), regimenResponse.getName(), regimenResponse.getPatientsOnTreatment(), regimenService.queryRegimenCategoryByName(regimenResponse.getCategoryName()));
+          regimenLineItem = new RegimenLineItem(regimenLineItemForRest.getCode(), regimenLineItemForRest.getName(), regimenLineItemForRest.getPatientsOnTreatment(), regimenService.queryRegimenCategoryByName(regimenLineItemForRest.getCategoryName()));
         } else {
           regimenLineItem = new RegimenLineItem();
-          regimenLineItem.setCode(regimenResponse.getCode());
-          regimenLineItem.setName(regimenResponse.getName());
-          regimenLineItem.setPatientsOnTreatment(regimenResponse.getPatientsOnTreatment());
+          regimenLineItem.setCode(regimenLineItemForRest.getCode());
+          regimenLineItem.setName(regimenLineItemForRest.getName());
+          regimenLineItem.setPatientsOnTreatment(regimenLineItemForRest.getPatientsOnTreatment());
         }
 
         RegimenLineItem correspondingRegimenLineItem = rnr.findCorrespondingRegimenLineItem(regimenLineItem);

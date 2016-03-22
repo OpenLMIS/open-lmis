@@ -31,7 +31,7 @@ import org.openlmis.db.categories.UnitTests;
 import org.openlmis.order.domain.Order;
 import org.openlmis.order.service.OrderService;
 import org.openlmis.restapi.builder.ReportBuilder;
-import org.openlmis.restapi.domain.RegimenResponse;
+import org.openlmis.restapi.domain.RegimenLineItemForRest;
 import org.openlmis.restapi.domain.ReplenishmentDTO;
 import org.openlmis.restapi.domain.Report;
 import org.openlmis.rnr.builder.PatientQuantificationsBuilder;
@@ -137,7 +137,7 @@ public class RestRequisitionServiceTest {
     setUpRequisitionReportBeforeSubmit();
 
     RegimenLineItem reportRegimenLineItem = make(a(defaultRegimenLineItem, with(patientsOnTreatment, 10), with(patientsStoppedTreatment, 5)));
-    report.setRegimens(asList(RegimenResponse.convertFromRegimenLineItem(reportRegimenLineItem)));
+    report.setRegimens(asList(RegimenLineItemForRest.convertFromRegimenLineItem(reportRegimenLineItem)));
     service.submitReport(report, 1L);
 
     verify(facilityService).getOperativeFacilityByCode(DEFAULT_AGENT_CODE);
@@ -239,7 +239,7 @@ public class RestRequisitionServiceTest {
             addLineItem(new PatientQuantificationLineItem("adults", new Integer(5))).build();
 
     RegimenLineItem reportRegimenLineItem = make(a(defaultRegimenLineItem, with(patientsOnTreatment, 10), with(patientsStoppedTreatment, 5)));
-    report.setRegimens(asList(RegimenResponse.convertFromRegimenLineItem(reportRegimenLineItem)));
+    report.setRegimens(asList(RegimenLineItemForRest.convertFromRegimenLineItem(reportRegimenLineItem)));
     report.setPatientQuantifications(patientQuantifications);
 
     RegimenCategory category = reportRegimenLineItem.getCategory();
@@ -265,7 +265,7 @@ public class RestRequisitionServiceTest {
 
     report.setProducts(products);
     RegimenLineItem reportRegimenLineItem = make(a(defaultRegimenLineItem, with(patientsOnTreatment, 10), with(patientsStoppedTreatment, 5)));
-    report.setRegimens(asList(RegimenResponse.convertFromRegimenLineItem(reportRegimenLineItem)));
+    report.setRegimens(asList(RegimenLineItemForRest.convertFromRegimenLineItem(reportRegimenLineItem)));
     report.setPeriodId(1L);
     report.setEmergency(false);
 
@@ -308,7 +308,7 @@ public class RestRequisitionServiceTest {
 
     report.setProducts(products);
     RegimenLineItem reportRegimenLineItem = make(a(defaultRegimenLineItem, with(patientsOnTreatment, 10), with(patientsStoppedTreatment, 5)));
-    report.setRegimens(asList(RegimenResponse.convertFromRegimenLineItem(reportRegimenLineItem)));
+    report.setRegimens(asList(RegimenLineItemForRest.convertFromRegimenLineItem(reportRegimenLineItem)));
     report.setPeriodId(1L);
     report.setEmergency(false);
 
@@ -455,7 +455,7 @@ public class RestRequisitionServiceTest {
     Program program = new Program();
     report.setProducts(new ArrayList<RnrLineItem>());
     RegimenLineItem reportRegimenLineItem = make(a(defaultRegimenLineItem, with(patientsOnTreatment, 10), with(patientsStoppedTreatment, 5)));
-    report.setRegimens(asList(RegimenResponse.convertFromRegimenLineItem(reportRegimenLineItem)));
+    report.setRegimens(asList(RegimenLineItemForRest.convertFromRegimenLineItem(reportRegimenLineItem)));
 
     when(programService.getValidatedProgramByCode(report.getProgramCode())).thenReturn(program);
 
@@ -481,11 +481,11 @@ public class RestRequisitionServiceTest {
   }
 
   @Test
-  public void shouldNotSaveRegimenAndAddRegimenLineItemToRnrWhenThereIsANewRegime() throws Exception {
+  public void shouldNotSaveRegimenAndAddRegimenLineItemToRnrWhenThereIsARegimeNotIncludedInTemplateButInDB() throws Exception {
     Program program = new Program();
     report.setProducts(new ArrayList<RnrLineItem>());
     RegimenLineItem reportRegimenLineItem = make(a(defaultRegimenLineItem, with(patientsOnTreatment, 10), with(patientsStoppedTreatment, 5)));
-    report.setRegimens(asList(RegimenResponse.convertFromRegimenLineItem(reportRegimenLineItem)));
+    report.setRegimens(asList(RegimenLineItemForRest.convertFromRegimenLineItem(reportRegimenLineItem)));
 
     when(programService.getValidatedProgramByCode(report.getProgramCode())).thenReturn(program);
 

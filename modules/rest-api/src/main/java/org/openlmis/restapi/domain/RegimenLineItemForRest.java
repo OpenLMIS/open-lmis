@@ -16,13 +16,13 @@ import static com.fasterxml.jackson.databind.annotation.JsonSerialize.Inclusion.
 @JsonDeserialize
 @JsonSerialize(include = NON_EMPTY)
 @EqualsAndHashCode()
-public class RegimenResponse {
+public class RegimenLineItemForRest extends RegimenLineItem {
     private String code;
     private String name;
     private Integer patientsOnTreatment;
     private String categoryName;
 
-    public static RegimenResponse convertFromRegimenLineItem(RegimenLineItem regimenLineItem) {
-        return new RegimenResponse(regimenLineItem.getCode(), regimenLineItem.getName(), regimenLineItem.getPatientsOnTreatment(), regimenLineItem.getCategory().getName());
+    public static RegimenLineItemForRest convertFromRegimenLineItem(RegimenLineItem regimenLineItem) {
+        return new RegimenLineItemForRest(regimenLineItem.getCode(), regimenLineItem.getName(), regimenLineItem.getPatientsOnTreatment(), regimenLineItem.getCategory().getName());
     }
 }

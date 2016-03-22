@@ -21,17 +21,17 @@ import static org.openlmis.rnr.builder.RegimenLineItemBuilder.patientsStoppedTre
 @Category(UnitTests.class)
 @RunWith(MockitoJUnitRunner.class)
 @PowerMockRunnerDelegate(BlockJUnit4ClassRunner.class)
-public class RegimenResponseTest {
+public class RegimenLineItemForRestTest {
 
     @Test
     public void shouldConvertFromRnrLineItem() throws Exception {
         RegimenLineItem regimenLineItem = make(a(defaultRegimenLineItem, with(patientsOnTreatment, 10), with(patientsStoppedTreatment, 5)));
-        RegimenResponse regimenResponse = RegimenResponse.convertFromRegimenLineItem(regimenLineItem);
+        RegimenLineItemForRest regimenLineItemForRest = RegimenLineItemForRest.convertFromRegimenLineItem(regimenLineItem);
 
-        assertThat(regimenResponse.getCode(), is(regimenLineItem.getCode()));
-        assertThat(regimenResponse.getName(), is(regimenLineItem.getName()));
-        assertThat(regimenResponse.getPatientsOnTreatment(), is(regimenLineItem.getPatientsOnTreatment()));
-        assertThat(regimenResponse.getCategoryName(), is(regimenLineItem.getCategory().getName()));
+        assertThat(regimenLineItemForRest.getCode(), is(regimenLineItem.getCode()));
+        assertThat(regimenLineItemForRest.getName(), is(regimenLineItem.getName()));
+        assertThat(regimenLineItemForRest.getPatientsOnTreatment(), is(regimenLineItem.getPatientsOnTreatment()));
+        assertThat(regimenLineItemForRest.getCategoryName(), is(regimenLineItem.getCategory().getName()));
 
     }
 }
