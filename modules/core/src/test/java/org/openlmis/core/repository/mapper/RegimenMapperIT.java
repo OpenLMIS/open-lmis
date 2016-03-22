@@ -110,24 +110,24 @@ public class RegimenMapperIT {
   }
 
   @Test
-  public void shouldGetRegimensByCategoryAngCode(){
+  public void shouldGetRegimensByCategoryAngName(){
     RegimenCategory adultRegimenCategory = new RegimenCategory("ADULTS", "Adults", 1);
     adultRegimenCategory.setId(1l);
-    Regimen adultRegimen1 = make(a(defaultRegimen, with(regimenCode,"CODE_1"), with(displayOrder, 1), with(category, adultRegimenCategory)));
+    Regimen adultRegimen1 = make(a(defaultRegimen, with(regimenCode,"CODE_1"), with(regimenName, "NAME_1"), with(displayOrder, 1), with(category, adultRegimenCategory)));
     mapper.insert(adultRegimen1);
-    Regimen adultRegimen2 = make(a(defaultRegimen, with(regimenCode,"CODE_2"), with(displayOrder, 2), with(category, adultRegimenCategory)));
+    Regimen adultRegimen2 = make(a(defaultRegimen, with(regimenCode,"CODE_2"), with(regimenName, "NAME_2"), with(displayOrder, 2), with(category, adultRegimenCategory)));
     mapper.insert(adultRegimen2);
 
     RegimenCategory paediatricsRegimenCategory = new RegimenCategory("PAEDIATRICS", "Paediatrics", 2);
     paediatricsRegimenCategory.setId(2l);
-    Regimen paediatricsRegimen1 = make(a(defaultRegimen, with(regimenCode,"CODE_4"), with(displayOrder, 1), with(category, paediatricsRegimenCategory)));
+    Regimen paediatricsRegimen1 = make(a(defaultRegimen, with(regimenCode,"CODE_4"), with(regimenName, "NAME_3"), with(displayOrder, 1), with(category, paediatricsRegimenCategory)));
     mapper.insert(paediatricsRegimen1);
-    Regimen paediatricsRegimen2 = make(a(defaultRegimen, with(regimenCode,"CODE_3"), with(displayOrder, 2), with(category, paediatricsRegimenCategory)));
+    Regimen paediatricsRegimen2 = make(a(defaultRegimen, with(regimenCode,"CODE_3"), with(regimenName, "NAME_4"), with(displayOrder, 2), with(category, paediatricsRegimenCategory)));
     mapper.insert(paediatricsRegimen2);
 
-    Regimen regimen = mapper.getRegimensByCategoryIdAndCode(adultRegimenCategory.getId(), "CODE_1");
+    Regimen regimen = mapper.getRegimensByCategoryIdAndName(adultRegimenCategory.getId(), "NAME_1");
 
-    assertThat(regimen.getName(), is(adultRegimen1.getName()));
+    assertThat(regimen.getCode(), is(adultRegimen1.getCode()));
   }
 
   @Test

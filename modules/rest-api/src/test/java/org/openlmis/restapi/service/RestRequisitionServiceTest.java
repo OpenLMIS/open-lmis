@@ -473,7 +473,7 @@ public class RestRequisitionServiceTest {
     category.setId(1l);
     when(regimenService.queryRegimenCategoryByName(anyString())).thenReturn(category);
     when(regimenService.getRegimensByCategory(category)).thenReturn(asList(category));
-    when(regimenService.getRegimensByCategoryIdAndCode(anyLong(), anyString())).thenReturn(null);
+    when(regimenService.getRegimensByCategoryIdAndName(anyLong(), anyString())).thenReturn(null);
     service.submitReport(report, 3l);
     verify(regimenService).save(any(Regimen.class), anyLong());
     assertThat(rnr.getRegimenLineItems().size(), is(1));
@@ -502,7 +502,7 @@ public class RestRequisitionServiceTest {
     category.setId(1l);
     when(regimenService.queryRegimenCategoryByName(anyString())).thenReturn(category);
     when(regimenService.getRegimensByCategory(category)).thenReturn(asList(category));
-    when(regimenService.getRegimensByCategoryIdAndCode(anyLong(), anyString())).thenReturn(new Regimen());
+    when(regimenService.getRegimensByCategoryIdAndName(anyLong(), anyString())).thenReturn(new Regimen());
     service.submitReport(report, 3l);
     verify(regimenService, never()).save(any(Regimen.class), anyLong());
     assertThat(rnr.getRegimenLineItems().size(), is(1));

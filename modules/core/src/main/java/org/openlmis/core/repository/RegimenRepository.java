@@ -97,8 +97,8 @@ public class RegimenRepository {
     return regimenCategoryMapper.getByName(name);
   }
 
-  public Regimen getRegimensByCategoryIdAndCode(Long categoryId, String code) {
+  public Regimen getRegimensByCategoryIdAndName(Long categoryId, String code) {
 
-    return mapper.getRegimensByCategoryIdAndCode(categoryId, code);
+    return mapper.getRegimensByCategoryIdAndName(categoryId, code);
   }
 }

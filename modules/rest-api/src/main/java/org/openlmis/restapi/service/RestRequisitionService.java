@@ -244,7 +244,7 @@ public class RestRequisitionService {
           regimenLineItem.setRnrId(rnr.getId());
           rnr.getRegimenLineItems().add(regimenLineItem);
 
-          if (regimenService.getRegimensByCategoryIdAndCode(regimenLineItem.getCategory().getId(), regimenLineItem.getCode()) == null) {
+          if (regimenService.getRegimensByCategoryIdAndName(regimenLineItem.getCategory().getId(), regimenLineItem.getName()) == null) {
             Regimen regimen = new Regimen(regimenLineItem.getName(), regimenLineItem.getCode(), rnr.getProgram().getId(), true, regimenLineItem.getCategory(), regimenService.getRegimensByCategory(regimenLineItem.getCategory()).size());
             regimenService.save(regimen, userId);
           }

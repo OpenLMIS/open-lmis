@@ -72,7 +72,7 @@ public class RegimenService {
     return repository.getRegimenCategoryByName(name);
   }
 
-  public Object getRegimensByCategoryIdAndCode(Long categoryId, String code) {
-    return repository.getRegimensByCategoryIdAndCode(categoryId, code);
+  public Object getRegimensByCategoryIdAndName(Long categoryId, String name) {
+    return repository.getRegimensByCategoryIdAndName(categoryId, name);
   }
 }
