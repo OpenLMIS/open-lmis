@@ -23,7 +23,7 @@ function StockOutReportController($scope, $filter, $controller, $http, CubesGene
                 $("#ui-datepicker-div").addClass('MonthDatePicker');
                 $("#ui-datepicker-div").addClass('HideTodayButton');
             }
-        }
+        };
     }
 
     $scope.datePickerStartOptions = angular.extend(baseTimePickerOptions(), {
@@ -33,19 +33,18 @@ function StockOutReportController($scope, $filter, $controller, $http, CubesGene
             var selectedYear = $("#ui-datepicker-div .ui-datepicker-year :selected").val();
             var selectedMonth = $("#ui-datepicker-div .ui-datepicker-month :selected").val();
             $scope.$apply(function () {
-                $scope.reportParams.startTime = selectedMonth == null ? formatDateWithFirstDayOfMonth(currentDate) : $filter('date')(new Date(selectedYear, selectedMonth, 01), "yyyy-MM-dd");
+                $scope.reportParams.startTime = selectedMonth === null ? formatDateWithFirstDayOfMonth(currentDate) : $filter('date')(new Date(selectedYear, selectedMonth, 01), "yyyy-MM-dd");
             });
         }
     });
 
     $scope.datePickerEndOptions = angular.extend(baseTimePickerOptions(), {
-        maxDate: currentDate,
         onClose: function () {
             $scope.timeTagSelected = "";
             var selectedYear = $("#ui-datepicker-div .ui-datepicker-year :selected").val();
             var selectedMonth = $("#ui-datepicker-div .ui-datepicker-month :selected").val();
             $scope.$apply(function () {
-                $scope.reportParams.endTime = selectedMonth == null ? todayDateString : formatDateWithLastDayOfMonth(new Date(selectedYear, selectedMonth));
+                $scope.reportParams.endTime = selectedMonth === null ? todayDateString : formatDateWithLastDayOfMonth(new Date(selectedYear, selectedMonth));
             });
         }
     });
@@ -100,7 +99,7 @@ function StockOutReportController($scope, $filter, $controller, $http, CubesGene
             var totalOccurrences = 0;
             _.forEach(drug, function (stockOut) {
                 sumAvg += stockOut.average_days;
-                sumDuration += stockOut['overlap_duration'];
+                sumDuration += stockOut.overlap_duration;
                 totalOccurrences += stockOut.record_count;
             });
             var monthlyAvg = sumAvg / drug.length / getNumOfSelectedFacilities();
@@ -140,7 +139,7 @@ function StockOutReportController($scope, $filter, $controller, $http, CubesGene
     };
 
     function checkCompletenessOfEndTime() {
-        $scope.showIncompleteWarning = !($scope.reportParams.endTime == formatDateWithLastDayOfMonth(new Date($scope.reportParams.endTime)));
+        $scope.showIncompleteWarning = $scope.reportParams.endTime != formatDateWithLastDayOfMonth(new Date($scope.reportParams.endTime));
     }
 
     function getStockReportRequestParam() {
@@ -191,7 +190,7 @@ function StockOutReportController($scope, $filter, $controller, $http, CubesGene
             reportTitle += ("," + stockReportParams.selectedDistrict.name);
         }
         if (stockReportParams.selectedFacility) {
-            reportTitle += reportTitle == "" ? stockReportParams.selectedFacility.name : ("," + stockReportParams.selectedFacility.name);
+            reportTitle += reportTitle === "" ? stockReportParams.selectedFacility.name : ("," + stockReportParams.selectedFacility.name);
         }
         $scope.reportParams.reportTitle = reportTitle || messageService.get("label.all");
     }
