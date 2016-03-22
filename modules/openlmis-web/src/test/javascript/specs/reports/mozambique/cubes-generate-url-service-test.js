@@ -9,7 +9,7 @@ describe("cubes generate url service test", function () {
         })
     });
 
-    iit("should generate drill down and cuts parameter for url", function () {
+    it("should generate drill down and cuts parameter for url", function () {
         var cubesName = "xxx";
         var drillDown = ["drug","overlapped_month"];
         var cuts = [{dimension: "facility", values: ["HF1"]},
