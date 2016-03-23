@@ -95,7 +95,7 @@ public class FacilityProductReportEntry {
         return from(stockCard.getEntries()).filter(new Predicate<StockCardEntry>() {
             @Override
             public boolean apply(StockCardEntry input) {
-                return !DateUtils.truncate(input.getCreatedDate(), Calendar.DATE).after(date);
+                return !DateUtils.truncate(input.getOccurred(), Calendar.DATE).after(date);
             }
         }).toList();
     }

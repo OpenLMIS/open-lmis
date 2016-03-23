@@ -32,8 +32,8 @@ public class FacilityProductReportEntryTest {
   @Before
   public void setUp() throws Exception {
     setupStockCardWithTwoEntries();
-    firstReportEntry = new FacilityProductReportEntry(stockCard, DateUtil.parseDate("2018-10-11 10:10:10"));
-    secondReportEntry = new FacilityProductReportEntry(stockCard, DateUtil.parseDate("2018-10-12 10:10:10"));
+    firstReportEntry = new FacilityProductReportEntry(stockCard, DateUtil.parseDate("2018-10-1 10:10:10"));
+    secondReportEntry = new FacilityProductReportEntry(stockCard, DateUtil.parseDate("2018-10-2 10:10:10"));
   }
 
   @Test
@@ -50,7 +50,7 @@ public class FacilityProductReportEntryTest {
 
   @Test
   public void shouldGetSoonestExpiryDateIsNULLIfIsBeforeSearchDate() throws Exception {
-    FacilityProductReportEntry reportEntryBeforeSearchDate = new FacilityProductReportEntry(stockCard, DateUtil.parseDate("2018-10-09 10:10:10"));
+    FacilityProductReportEntry reportEntryBeforeSearchDate = new FacilityProductReportEntry(stockCard, DateUtil.parseDate("2018-09-30 10:10:10"));
     assertNull(DateUtil.getFormattedDate(reportEntryBeforeSearchDate.getSoonestExpiryDate(),DateUtil.FORMAT_DATE_TIME_DAY_MONTH_YEAR));
   }
 
@@ -67,6 +67,7 @@ public class FacilityProductReportEntryTest {
     StockCardEntry stockCardEntry = new StockCardEntry();
     stockCardEntry.setQuantity(100L);
     stockCardEntry.setCreatedDate(DateUtil.parseDate("2018-10-10 10:10:10"));
+    stockCardEntry.setOccurred(DateUtil.parseDate("2018-10-1 10:10:10"));
 
     ArrayList<StockCardEntryKV> keyValues = new ArrayList<>();
     keyValues.add(new StockCardEntryKV(FacilityProductReportEntry.EXPIRATION_DATES, "10/10/2019, 10/21/2020", null));
@@ -75,6 +76,7 @@ public class FacilityProductReportEntryTest {
     StockCardEntry secondStockCardEntry = new StockCardEntry();
     secondStockCardEntry.setQuantity(100L);
     secondStockCardEntry.setCreatedDate(DateUtil.parseDate("2018-10-12 10:10:10"));
+    secondStockCardEntry.setOccurred(DateUtil.parseDate("2018-10-2 10:10:10"));
 
     ArrayList<StockCardEntryKV> secondKeyValues = new ArrayList<>();
     secondKeyValues.add(new StockCardEntryKV(FacilityProductReportEntry.EXPIRATION_DATES, "10/10/2017, 10/20/2020", null));
