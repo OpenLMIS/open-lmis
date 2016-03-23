@@ -32,6 +32,7 @@ public class LoginInformation {
 
     private Long facilityId;
 
+    @Deprecated
     private List<String> facilitySupportedPrograms;
 
     public static LoginInformation prepareForREST(final User user, final Facility facility, List<String> programs) {
