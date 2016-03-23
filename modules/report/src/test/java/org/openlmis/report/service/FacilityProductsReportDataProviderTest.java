@@ -136,7 +136,7 @@ public class FacilityProductsReportDataProviderTest {
 
     StockCardEntry stockCardEntry = new StockCardEntry();
     stockCardEntry.setQuantity(100L);
-    stockCardEntry.setCreatedDate(DateUtil.parseDate("2011-10-10 10:10:10"));
+    stockCardEntry.setOccurred(DateUtil.parseDate("2011-10-10 10:10:10"));
 
     ArrayList<StockCardEntryKV> keyValues = new ArrayList<>();
     keyValues.add(new StockCardEntryKV(FacilityProductReportEntry.EXPIRATION_DATES, null, null));
@@ -154,7 +154,7 @@ public class FacilityProductsReportDataProviderTest {
     secondStockCard.setFacility(facility);
     StockCardEntry stockCardEntry = new StockCardEntry();
     stockCardEntry.setQuantity(200L);
-    stockCardEntry.setCreatedDate(DateUtil.parseDate("2011-10-10 10:10:10"));
+    stockCardEntry.setOccurred(DateUtil.parseDate("2011-10-10 10:10:10"));
     ArrayList<StockCardEntryKV> keyValues = new ArrayList<>();
     keyValues.add(new StockCardEntryKV(FacilityProductReportEntry.EXPIRATION_DATES, null, null));
     stockCardEntry.setExtensions(keyValues);
@@ -171,7 +171,7 @@ public class FacilityProductsReportDataProviderTest {
 
     StockCardEntry stockCardEntry = new StockCardEntry();
     stockCardEntry.setQuantity(300L);
-    stockCardEntry.setCreatedDate(DateUtil.parseDate("2011-10-10 10:10:10"));
+    stockCardEntry.setOccurred(DateUtil.parseDate("2011-10-10 10:10:10"));
 
     List<StockCardEntry> entries = asList(stockCardEntry);
     stockCard.setEntries(entries);
