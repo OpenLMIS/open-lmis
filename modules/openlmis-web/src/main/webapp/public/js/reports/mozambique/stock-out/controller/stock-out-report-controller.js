@@ -39,6 +39,7 @@ function StockOutReportController($scope, $filter, $controller, $http, CubesGene
     });
 
     $scope.datePickerEndOptions = angular.extend(baseTimePickerOptions(), {
+        maxDate: formatDateWithLastDayOfMonth(currentDate),
         onClose: function () {
             $scope.timeTagSelected = "";
             var selectedYear = $("#ui-datepicker-div .ui-datepicker-year :selected").val();
