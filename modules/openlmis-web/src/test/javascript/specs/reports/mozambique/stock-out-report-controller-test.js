@@ -175,7 +175,7 @@ describe("Stock Out Report Controller", function () {
         expect(provinceById2["name"]).toEqual("Habel");
     });
 
-    it('should load single product report successfully', function () {
+    it('should load stock out report successfully', function () {
         scope.provinces = provinceData;
         scope.districts = districtData;
         scope.facilities = facilityData;
