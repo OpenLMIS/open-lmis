@@ -16,54 +16,7 @@
 
     <hr/>
 
-    <div class="time-container">
-        <div id="time-tag-div">
-            <div class="time-tag">
-                <ul>
-                    <li ng-repeat="timeTag in timeTags">
-                        <a ng-class="{'selected': timeTagSelected == timeTag}" ng-click=changeTimeOption(timeTag)
-                           openlmis-message="label.last.{{timeTag}}" href=""></a>
-                        <span>|</span>
-                    </li>
-                </ul>
-            </div>
-
-            <div ng-show="showIncompleteWarning" id="stock-out-incomplete-warning" openlmis-message="label.stock.out.incomplete.warning"></div>
-        </div>
-
-        <div class="date-picker">
-                <div class="form-cell">
-                    <label>
-                        <span openlmis-message="label.start.date"></span>
-                    </label>
-
-                    <div class="stock-out-date-picker">
-                        <input name="startTime" id="startTime" type="text"
-                               ui-date=datePickerStartOptions
-                               ui-date-format
-                               readonly
-                               ng-model="reportParams.startTime"/>
-                    </div>
-                </div>
-
-                <div> -</div>
-
-                <div class="form-cell">
-                    <label>
-                        <span openlmis-message="label.end.date"></span>
-                    </label>
-
-                    <div class="stock-out-date-picker">
-                        <input name="endTime" id="endTime" type="text"
-                               ui-date=datePickerEndOptions
-                               ui-date-format
-                               readonly
-                               ng-model="reportParams.endTime"/>
-                    </div>
-                </div>
-        </div>
-    </div>
-
+    <date-picker-container  show-incomplete-warning="{{showIncompleteWarning}}" get-time-range = "getTimeRange(dateRange)"></date-picker-container>
     <hr/>
 
     <div id="report" ng-if="reportData.length > 0">

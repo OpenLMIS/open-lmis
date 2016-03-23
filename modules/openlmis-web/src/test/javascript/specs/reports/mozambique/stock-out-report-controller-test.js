@@ -157,17 +157,6 @@ describe("Stock Out Report Controller", function () {
         expect(parentZone.name).toEqual("Maputo Província");
     });
 
-    it('should change time options correctly', function () {
-        scope.$on('$viewContentLoaded');
-        scope.changeTimeOption("3month");
-        var expectLastThreeMonth = new Date(new Date().setMonth(new Date().getMonth() - 2)).getMonth() + 1;
-        expect(Number(scope.reportParams.startTime.substring(5,7))).toEqual(expectLastThreeMonth);
-
-        scope.changeTimeOption("year");
-        var expectLastYear = new Date(new Date().setMonth(new Date().getMonth() - 11)).getMonth() + 1;
-        expect(Number(scope.reportParams.startTime.substring(5,7))).toEqual(expectLastYear);
-    });
-
     it('should get corresponding province by id', function () {
         var provinceById1 = scope.getGeographicZoneById(provinceData, 1);
         var provinceById2 = scope.getGeographicZoneById(provinceData, 2);

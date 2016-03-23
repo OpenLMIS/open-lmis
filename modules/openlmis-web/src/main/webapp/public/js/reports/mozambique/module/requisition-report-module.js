@@ -34,4 +34,5 @@ angular.module('requisition-report', ['openlmis', 'angularCombine', 'ngTable', '
         angularCombineConfigProvider.addConf(/filter-/, '/public/pages/reports/shared/filters.html');
     }).filter("districtFilter", DistrictFilter)
     .filter("provinceFilter", ProvinceFilter)
-    .filter("facilityFilter", FacilityFilter);
+    .filter("facilityFilter", FacilityFilter)
+    .directive('datePickerContainer', datePickerContainer);
