@@ -27,9 +27,7 @@ function StockOutAllProductsReportController($scope, $filter, $controller, $http
             return;
         }
         
-        checkCompletenessOfEndTime();
         generateReportTitle();
-
         getStockOutDataFromCubes();
     };
 
@@ -84,10 +82,6 @@ function StockOutAllProductsReportController($scope, $filter, $controller, $http
         } else {
             $scope.occurrencesHeader = messageService.get("report.stock.out.occurrences");
         }
-    }
-
-    function checkCompletenessOfEndTime() {
-        $scope.showIncompleteWarning = $scope.reportParams.endTime != DateFormatService.formatDateWithLastDayOfMonth(new Date($scope.reportParams.endTime));
     }
 
     function getStockReportRequestParam() {

@@ -59,14 +59,6 @@ function DatePickerContainerController($scope, $filter, DateFormatService) {
         $scope.dateRange.endTime = todayDateString;
     };
 
-    //function formatDateWithFirstDayOfMonth(date) {
-    //    return $filter('date')(new Date(date.getFullYear(), date.getMonth(), 1), "yyyy-MM-dd");
-    //}
-    //
-    //function formatDateWithLastDayOfMonth(date) {
-    //    return $filter('date')(new Date(date.getFullYear(), date.getMonth() + 1, 0), "yyyy-MM-dd");
-    //}
-
     $scope.$watch('dateRange.startTime', function(){
         $scope.getTimeRange({
             'dateRange': $scope.dateRange
@@ -74,8 +66,14 @@ function DatePickerContainerController($scope, $filter, DateFormatService) {
     });
 
     $scope.$watch('dateRange.endTime', function(){
+        $scope.checkCompletenessOfEndTime();
+
         $scope.getTimeRange({
             'dateRange': $scope.dateRange
         },true);
     });
+
+    $scope.checkCompletenessOfEndTime = function() {
+        $scope.showIncompleteWarning = $scope.dateRange.endTime != DateFormatService.formatDateWithLastDayOfMonth(new Date($scope.dateRange.endTime));
+    };
 }

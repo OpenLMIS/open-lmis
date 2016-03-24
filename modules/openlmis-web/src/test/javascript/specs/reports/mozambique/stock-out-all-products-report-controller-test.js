@@ -181,7 +181,6 @@ describe("Stock Out Report Controller", function () {
         httpBackend.flush();
 
         expect(scope.reportData.length).toBe(2);
-        expect(scope.showIncompleteWarning).toEqual(true);
         expect(scope.reportData[0]["code"]).toEqual("07A06");
         expect(scope.reportData[0]["totalDuration"]).toEqual(60);
         expect(scope.reportData[0]["monthlyOccurrences"]).toEqual(4);
@@ -210,18 +209,5 @@ describe("Stock Out Report Controller", function () {
         expect(scope.reportParams.reportTitle).toEqual("Maputo Província,Marracuene");
         expect(scope.occurrencesHeader).toEqual("Average stockout occurrences");
         expect(scope.reportData[0].totalDuration).toEqual("-");
-    });
-
-    it('should not send request when date range invalid', function () {
-        scope.reportParams = {
-            provinceId: "1",
-            districtId: "5",
-            facilityId: "1",
-            startTime: "2016-04-15",
-            endTime: "2016-03-15"
-        };
-        scope.loadReport();
-
-        expect(scope.showIncompleteWarning).toEqual(undefined);
     });
 });
