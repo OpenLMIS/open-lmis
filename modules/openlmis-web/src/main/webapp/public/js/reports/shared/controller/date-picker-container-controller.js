@@ -1,9 +1,9 @@
-function DatePickerContainerController($scope, $filter) {
+function DatePickerContainerController($scope, $filter, DateFormatService) {
     var currentDate = new Date();
     var todayDateString = $filter('date')(new Date(), "yyyy-MM-dd");
 
     $scope.dateRange = {};
-    $scope.dateRange.startTime = formatDateWithFirstDayOfMonth(new Date());
+    $scope.dateRange.startTime = DateFormatService.formatDateWithFirstDayOfMonth(new Date());
     $scope.dateRange.endTime = todayDateString;
     $scope.timeTagSelected = "month";
 
@@ -36,36 +36,36 @@ function DatePickerContainerController($scope, $filter) {
             var selectedYear = $("#ui-datepicker-div .ui-datepicker-year :selected").val();
             var selectedMonth = $("#ui-datepicker-div .ui-datepicker-month :selected").val();
             $scope.$apply(function () {
-                $scope.dateRange.startTime = selectedMonth === null ? formatDateWithFirstDayOfMonth(currentDate) : $filter('date')(new Date(selectedYear, selectedMonth, 01), "yyyy-MM-dd");
+                $scope.dateRange.startTime = selectedMonth === null ? DateFormatService.formatDateWithFirstDayOfMonth(currentDate) : $filter('date')(new Date(selectedYear, selectedMonth, 01), "yyyy-MM-dd");
             });
         }
     });
 
     $scope.datePickerEndOptions = angular.extend(baseTimePickerOptions(), {
-        maxDate: formatDateWithLastDayOfMonth(currentDate),
+        maxDate: DateFormatService.formatDateWithLastDayOfMonth(currentDate),
         onClose: function () {
             $scope.timeTagSelected = "";
             var selectedYear = $("#ui-datepicker-div .ui-datepicker-year :selected").val();
             var selectedMonth = $("#ui-datepicker-div .ui-datepicker-month :selected").val();
             $scope.$apply(function () {
-                $scope.dateRange.endTime = selectedMonth === null ? todayDateString : formatDateWithLastDayOfMonth(new Date(selectedYear, selectedMonth));
+                $scope.dateRange.endTime = selectedMonth === null ? todayDateString : DateFormatService.formatDateWithLastDayOfMonth(new Date(selectedYear, selectedMonth));
             });
         }
     });
 
     $scope.changeTimeOption = function (timeTag) {
         $scope.timeTagSelected = timeTag;
-        $scope.dateRange.startTime = formatDateWithFirstDayOfMonth(new Date(timeOptions[timeTag]));
+        $scope.dateRange.startTime = DateFormatService.formatDateWithFirstDayOfMonth(new Date(timeOptions[timeTag]));
         $scope.dateRange.endTime = todayDateString;
     };
 
-    function formatDateWithFirstDayOfMonth(date) {
-        return $filter('date')(new Date(date.getFullYear(), date.getMonth(), 1), "yyyy-MM-dd");
-    }
-
-    function formatDateWithLastDayOfMonth(date) {
-        return $filter('date')(new Date(date.getFullYear(), date.getMonth() + 1, 0), "yyyy-MM-dd");
-    }
+    //function formatDateWithFirstDayOfMonth(date) {
+    //    return $filter('date')(new Date(date.getFullYear(), date.getMonth(), 1), "yyyy-MM-dd");
+    //}
+    //
+    //function formatDateWithLastDayOfMonth(date) {
+    //    return $filter('date')(new Date(date.getFullYear(), date.getMonth() + 1, 0), "yyyy-MM-dd");
+    //}
 
     $scope.$watch('dateRange.startTime', function(){
         $scope.getTimeRange({

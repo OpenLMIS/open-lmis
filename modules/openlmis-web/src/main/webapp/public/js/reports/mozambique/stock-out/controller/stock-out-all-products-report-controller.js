@@ -1,4 +1,4 @@
-function StockOutAllProductsReportController($scope, $filter, $controller, $http, CubesGenerateUrlService, messageService, $dialog) {
+function StockOutAllProductsReportController($scope, $filter, $controller, $http, CubesGenerateUrlService, messageService, $dialog,DateFormatService) {
     $controller('BaseProductReportController', {$scope: $scope});
 
     $scope.getTimeRange =function(dateRange){
@@ -87,7 +87,7 @@ function StockOutAllProductsReportController($scope, $filter, $controller, $http
     }
 
     function checkCompletenessOfEndTime() {
-        $scope.showIncompleteWarning = $scope.reportParams.endTime != formatDateWithLastDayOfMonth(new Date($scope.reportParams.endTime));
+        $scope.showIncompleteWarning = $scope.reportParams.endTime != DateFormatService.formatDateWithLastDayOfMonth(new Date($scope.reportParams.endTime));
     }
 
     function getStockReportRequestParam() {
@@ -142,13 +142,4 @@ function StockOutAllProductsReportController($scope, $filter, $controller, $http
         }
         $scope.reportParams.reportTitle = reportTitle || messageService.get("label.all");
     }
-
-    function formatDateWithFirstDayOfMonth(date){
-        return $filter('date')(new Date(date.getFullYear(), date.getMonth(), 1), "yyyy-MM-dd");
-    }
-
-    function formatDateWithLastDayOfMonth(date) {
-        return $filter('date')(new Date(date.getFullYear(), date.getMonth() + 1, 0), "yyyy-MM-dd");
-    }
-
 }
