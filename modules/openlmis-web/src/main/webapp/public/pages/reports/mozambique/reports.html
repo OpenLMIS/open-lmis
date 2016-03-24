@@ -10,12 +10,12 @@
             </li>
 
             <li ng-show="hasPermission('VIEW_STOCK_ON_HAND_REPORT')">
-                <a href="/public/pages/reports/mozambique/index.html#/single-product"
+                <a href="/public/pages/reports/mozambique/index.html#/stock-on-hand-single-product"
                    openlmis-message="menu.report.single.product.reports"></a>
             </li>
 
             <li ng-show="hasPermission('VIEW_STOCK_ON_HAND_REPORT')">
-                <a href="/public/pages/reports/mozambique/index.html#/all-products"
+                <a href="/public/pages/reports/mozambique/index.html#/stock-on-hand-all-products"
                    openlmis-message="menu.report.all.products.reports"></a>
             </li>
 
@@ -25,8 +25,13 @@
             </li>
 
             <li ng-show="hasPermission('VIEW_STOCKOUT_REPORT') && isNewStockReportToggleOn">
-                <a href="/public/pages/reports/mozambique/index.html#/stock-out"
-                   openlmis-message="menu.report.stockout.reports"></a>
+                <a href="/public/pages/reports/mozambique/index.html#/stock-out-all-products"
+                   openlmis-message="menu.report.stockout.all.reports"></a>
+            </li>
+
+            <li ng-show="hasPermission('VIEW_STOCKOUT_REPORT') && isNewStockReportToggleOn">
+                <a href="/public/pages/reports/mozambique/index.html#/stock-out-single-product"
+                   openlmis-message="menu.report.stockout.single.reports"></a>
             </li>
         </ul>
     </div>

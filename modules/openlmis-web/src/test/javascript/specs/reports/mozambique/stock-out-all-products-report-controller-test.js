@@ -133,7 +133,7 @@ describe("Stock Out Report Controller", function () {
         messageService = _messageService_;
         dateFilter = $filter('date');
 
-        $controller(StockOutReportController, {$scope: scope});
+        $controller(StockOutAllProductsReportController, {$scope: scope});
 
         spyOn(messageService, 'get').andCallFake(function (value) {
             if (value == 'report.stock.out.occurrences') return "Stockout occurrences"

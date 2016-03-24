@@ -1,4 +1,4 @@
-function StockOutReportController($scope, $filter, $controller, $http, CubesGenerateUrlService, messageService, $dialog) {
+function StockOutAllProductsReportController($scope, $filter, $controller, $http, CubesGenerateUrlService, messageService, $dialog) {
     $controller('BaseProductReportController', {$scope: $scope});
 
     $scope.getTimeRange =function(dateRange){
