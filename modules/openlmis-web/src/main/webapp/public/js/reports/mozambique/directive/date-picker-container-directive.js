@@ -7,5 +7,5 @@ function datePickerContainer(){
             getTimeRange: '&'
         },
         templateUrl:'date-picker-container.html'
-    }
+    };
 }
