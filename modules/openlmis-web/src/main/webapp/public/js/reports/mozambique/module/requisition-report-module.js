@@ -8,12 +8,12 @@ angular.module('requisition-report', ['openlmis', 'angularCombine', 'ngTable', '
                 }).
                 when('/single-product', {
                     controller: SingleProductReportController,
-                    templateUrl: 'single-product/partials/list.html',
+                    templateUrl: 'stock-on-hand/single-product/partials/list.html',
                     reloadOnSearch: false
                 }).
                 when('/all-products', {
                     controller: SingleFacilityReportController,
-                    templateUrl: 'all-products/partials/list.html',
+                    templateUrl: 'stock-on-hand/all-products/partials/list.html',
                     reloadOnSearch: false
                 }).
                 when('/app-version', {
