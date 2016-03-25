@@ -1,4 +1,4 @@
-function StockOutAllProductsReportController($scope, $filter, $controller, $http, CubesGenerateUrlService, messageService, $dialog,DateFormatService) {
+function StockOutAllProductsReportController($scope, $filter, $controller, $http, CubesGenerateUrlService, messageService, $dialog) {
     $controller('BaseProductReportController', {$scope: $scope});
 
     $scope.getTimeRange =function(dateRange){
@@ -38,7 +38,7 @@ function StockOutAllProductsReportController($scope, $filter, $controller, $http
                 totalOccurrences += stockOut.record_count;
             });
             var monthlyAvg = sumAvg / drug.length / getNumOfSelectedFacilities();
-            var monthlyOccurrences = totalOccurrences / drug.length;
+            var monthlyOccurrences = totalOccurrences / drug.length / getNumOfSelectedFacilities;
             generateReportItem(drug, sumDuration, monthlyAvg, monthlyOccurrences);
         });
     }
