@@ -128,13 +128,13 @@ function StockOutSingleProductReportController($scope, $filter, $controller, $ht
         });
     }
 
-    function generateReportItem(name, totalDuration, monthlyAvg, monthlyOccurrences) {
+    function generateReportItem(name, totalDuration, monthlyAvg, monthlyOccurrences, incidents) {
         return {
             'name': name,
             'monthlyAvg': monthlyAvg,
             'monthlyOccurrences': monthlyOccurrences,
             'totalDuration': totalDuration,
-            'incidents': ""
+            'incidents': incidents
         };
     }
 
@@ -142,12 +142,19 @@ function StockOutSingleProductReportController($scope, $filter, $controller, $ht
         var sumAvg = 0;
         var totalOccurrences = 0;
         var totalDuration = 0;
-
+        var incidents = "";
         var groupByOverlapMonth = _.groupBy(groupValue, "overlapped_month");
+
         _.forEach(groupByOverlapMonth, function (drug) {
             var sum = 0;
             _.forEach(drug, function (stockOut) {
                 sum += stockOut.overlap_duration;
+                if (numOfSelectedFacilities === 1) {
+                    var incident = stockOut['stockout.date'] + "to" + stockOut['stockout.resolved_date'];
+                    if (incidents.indexOf(incident) === -1) {
+                        incidents += incidents === "" ? incident : ", " + incident;
+                    }
+                }
             });
             sumAvg += sum / drug.length;
             totalOccurrences += drug.length;
@@ -158,6 +165,6 @@ function StockOutSingleProductReportController($scope, $filter, $controller, $ht
         var monthlyOccurrences = totalOccurrences / Object.keys(groupByOverlapMonth).length / numOfSelectedFacilities;
 
 
-        return generateReportItem(groupValue[0][name], totalDuration, monthlyAvg, monthlyOccurrences);
+        return generateReportItem(groupValue[0][name], totalDuration, monthlyAvg, monthlyOccurrences, incidents);
     }
 }
