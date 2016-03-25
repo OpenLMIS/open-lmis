@@ -21,6 +21,11 @@ angular.module('requisition-report', ['openlmis', 'angularCombine', 'ngTable', '
                     templateUrl: 'appVersion/partials/list.html',
                     reloadOnSearch: false
                 }).
+                when('/expiry-dates', {
+                    controller: ExpiryDatesReportController,
+                    templateUrl: 'expiry-dates/partials/list.html',
+                    reloadOnSearch: false
+                }).
                 when('/stock-out-all-products', {
                     controller: StockOutAllProductsReportController,
                     templateUrl: 'stockout/all-products/partials/list.html',

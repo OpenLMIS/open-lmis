@@ -24,9 +24,12 @@ function NavigationController($scope, ConfigSettingsByKey, localStorageService, 
     FeatureToggleService.get(updateProductToggleKey, function (result) {
       $scope.isUpdateProductsToggleOn = result.key;
     });
-     var stockOutReportToggleKey = {key: 'stock.out.report'};
-     FeatureToggleService.get(stockOutReportToggleKey, function (result) {
+    var stockOutReportToggleKey = {key: 'stock.out.report'};
+    FeatureToggleService.get(stockOutReportToggleKey, function (result) {
       $scope.isNewStockReportToggleOn = result.key;
+    });
+    FeatureToggleService.get({key: 'expiry.dates.report'}, function (result) {
+      $scope.isExpiryDatesToggleOn = result.key;
     });
    }();
 

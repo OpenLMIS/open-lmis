@@ -33,6 +33,12 @@
                 <a href="/public/pages/reports/mozambique/index.html#/stock-out-single-product"
                    openlmis-message="menu.report.stockout.single.reports"></a>
             </li>
+
+            <!--//TODO should add permission -->
+            <li ng-show="hasPermission('VIEW_TABLET_INFO_REPORT') && isExpiryDatesToggleOn">
+                <a href="/public/pages/reports/mozambique/index.html#/expiry-dates"
+                   openlmis-message="menu.report.expiry.dates"></a>
+            </li>
         </ul>
     </div>
 </li>
