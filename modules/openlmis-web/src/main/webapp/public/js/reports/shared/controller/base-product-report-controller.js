@@ -4,6 +4,7 @@ function BaseProductReportController($scope, $filter, ProductReportService, Faci
     $scope.facilities = [];
     $scope.fullGeoZoneList = [];
     $scope.reportParams = {};
+    $scope.products = [];
 
     $scope.todayDateString = $filter('date')(new Date(), "yyyy-MM-dd");
 
