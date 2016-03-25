@@ -1,7 +1,6 @@
 function StockOutSingleProductReportController($scope, $filter, $controller, $http, CubesGenerateUrlService, messageService, $dialog) {
     $controller('BaseProductReportController', {$scope: $scope});
 
-    $scope.tree_data = [];
     $scope.getTimeRange = function (dateRange) {
         $scope.reportParams.startTime = dateRange.startTime;
         $scope.reportParams.endTime = dateRange.endTime;
@@ -14,15 +13,20 @@ function StockOutSingleProductReportController($scope, $filter, $controller, $ht
 
     $scope.loadReport = function () {
         if ($scope.checkDateValidRange()) {
+            $scope.selectedProduct = JSON.parse($scope.reportParams.product);
             getStockOutDataFromCubes();
         }
     };
+
+    function isInvalidDateRange() {
+        return $scope.reportParams.startTime > $scope.reportParams.endTime;
+    }
 
     function getStockReportRequestParam() {
         var params = {};
         params.startTime = $filter('date')($scope.reportParams.startTime, "yyyy,MM,dd");
         params.endTime = $filter('date')($scope.reportParams.endTime, "yyyy,MM,dd");
-        params.drugCode = $scope.reportParams.productCode;
+        params.drugCode = $scope.selectedProduct.code;
         return params;
     }
 
@@ -48,7 +52,7 @@ function StockOutSingleProductReportController($scope, $filter, $controller, $ht
     }
 
     function validateProduct() {
-        $scope.invalid = !$scope.reportParams.productCode;
+        $scope.invalid = !$scope.selectedProduct;
         return !$scope.invalid;
     }
 
@@ -163,7 +167,6 @@ function StockOutSingleProductReportController($scope, $filter, $controller, $ht
 
         var monthlyAvg = sumAvg / Object.keys(groupByOverlapMonth).length / numOfSelectedFacilities;
         var monthlyOccurrences = totalOccurrences / Object.keys(groupByOverlapMonth).length / numOfSelectedFacilities;
-
 
         return generateReportItem(groupValue[0][name], totalDuration, monthlyAvg, monthlyOccurrences, incidents);
     }
