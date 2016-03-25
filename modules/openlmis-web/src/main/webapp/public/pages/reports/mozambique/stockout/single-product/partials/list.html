@@ -26,7 +26,10 @@
     <hr/>
 
     <date-picker-container get-time-range = "getTimeRange(dateRange)"></date-picker-container>
+
     <hr/>
+
+    <tree-grid tree-data="tree_data" col-defs="col_defs" expand-on="expanding_property" expand-level="2"></tree-grid>
 
     <label ng-show="reportData && reportData.length == 0">No Data</label>
 
