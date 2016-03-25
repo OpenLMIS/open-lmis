@@ -435,32 +435,33 @@ function StockOutSingleProductReportController($scope, $filter, $controller, $ht
         var groupByProvince = _.groupBy(testRawTreeData, 'location.province_code');
 
         var provinceData = [];
-        for (var property in groupByProvince) {
-            if (groupByProvince.hasOwnProperty(property)) {
-                var groupByProvinceValue = groupByProvince[property];
-                var provinceResult = calculateProvinceStockOut(groupByProvinceValue);
+        _.forEach(groupByProvince,function(groupByProvinceValue) {
+            var provinceResult = calculateProvinceStockOut(groupByProvinceValue);
 
-                var provinceChildrenArray = [];
-                var districts = _.groupBy(groupByProvinceValue, 'location.district_code');
-                _.forEach(districts, function (district) {
-                    var facilities = _.groupBy(district, 'facility.facility_code');
-                    var districtChildren = [];
-                    _.forEach(facilities, function (facility) {
-                        var facilityResult = calculateFacilityStockOut(facility);
-                        districtChildren.push(facilityResult);
-                    });
+            var districts = _.groupBy(groupByProvinceValue, 'location.district_code');
 
-                    var districtResult = calculateDistrictStockOut(district);
-
-                    districtResult.children = districtChildren;
-                    provinceChildrenArray.push(districtResult);
-                });
-
-                provinceResult.children = provinceChildrenArray;
-                provinceData.push(provinceResult);
-            }
-        }
+            provinceResult.children = generateProvinceChildren(districts);
+            provinceData.push(provinceResult);
+        });
         return provinceData;
+    }
+
+    function generateProvinceChildren(districts) {
+        var provinceChildrenArray = [];
+        _.forEach(districts, function (district) {
+            var facilities = _.groupBy(district, 'facility.facility_code');
+            var districtChildren = [];
+            _.forEach(facilities, function (facility) {
+                var facilityResult = calculateFacilityStockOut(facility);
+                districtChildren.push(facilityResult);
+            });
+
+            var districtResult = calculateDistrictStockOut(district);
+
+            districtResult.children = districtChildren;
+            provinceChildrenArray.push(districtResult);
+        });
+        return provinceChildrenArray;
     }
 
     function calculateFacilityStockOut(facilityData) {
@@ -496,7 +497,7 @@ function StockOutSingleProductReportController($scope, $filter, $controller, $ht
             'monthlyOccurrences': 2.5,
             'totalDuration': 30,
             'incidents':""
-        }
+        };
     }
 
 
