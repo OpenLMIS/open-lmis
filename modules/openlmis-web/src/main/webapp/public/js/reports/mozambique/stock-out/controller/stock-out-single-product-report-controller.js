@@ -126,8 +126,8 @@ function StockOutSingleProductReportController($scope, $filter, $controller, $ht
         return FacilityFilter()($scope.facilities, $scope.districts, districtId, province.id).length;
     }
 
-    function getGeographicZoneByCode(zone, zoneCode) {
-        return zone.find(function (zone) {
+    function getGeographicZoneByCode(zones, zoneCode) {
+        return _.find(zones, function(zone){
             return zone.code == zoneCode;
         });
     }

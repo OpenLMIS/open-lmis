@@ -68,22 +68,27 @@ function BaseProductReportController($scope, $filter, ProductReportService, Faci
     };
 
     $scope.fillGeographicZone = function () {
-        var selectedFacility = $scope.facilities.find(function (facility) {
+        if (!$scope.reportParams.facilityId){
+            return;
+        }
+
+        var selectedFacility = _.find($scope.facilities, function (facility) {
             return facility.id == $scope.reportParams.facilityId;
         });
+
         $scope.reportParams.districtId = !selectedFacility ? undefined : selectedFacility.geographicZoneId;
         $scope.reportParams.provinceId = !selectedFacility ? undefined : $scope.getParent(selectedFacility.geographicZoneId).id;
     };
 
     $scope.getParent = function (geoZoneId) {
-        return geoZoneId && $scope.fullGeoZoneList.find(function (zone, index, array) {
+        return geoZoneId && _.find($scope.fullGeoZoneList, function(zone){
                 return $scope.getGeoZone(geoZoneId).parentId == zone.id;
             });
     };
 
     $scope.getGeoZone = function (id) {
-        return id && $scope.fullGeoZoneList.find(function (zone, index, array) {
-                return id == zone.id;
+        return id && _.find($scope.fullGeoZoneList, function(zone){
+               return id == zone.id;
             });
     };
 
@@ -135,9 +140,10 @@ function BaseProductReportController($scope, $filter, ProductReportService, Faci
         if (!geographicZoneLevels) {
             return null;
         }
-        return geographicZoneLevels.find(function (level) {
-            return level.code == code;
-        });
+
+        return _.find(geographicZoneLevels, function(geographicZoneLevel){
+            return geographicZoneLevel.code == code;
+        })
     }
 
     function showDateRangeInvalidWarningDialog() {
