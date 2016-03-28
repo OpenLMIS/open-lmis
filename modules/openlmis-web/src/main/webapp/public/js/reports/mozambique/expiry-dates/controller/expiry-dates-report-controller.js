@@ -37,8 +37,8 @@ function ExpiryDatesReportController($scope, $filter, $controller, $http, CubesG
             _.forEach(Object.keys(dataGroupByDrug), function(drugCode) {
                 if (!expiryDatesHash[drugCode]) {
                     expiryDatesHash[drugCode] = expiryDatesForTheFacility[drugCode];
-                } else if (expiryDatesForTheFacility[drugCode] && expiryDatesForTheFacility[drugCode]["expiry_dates"]) {
-                    expiryDatesHash[drugCode]["expiry_dates"] = expiryDatesHash[drugCode]["expiry_dates"] + "," + expiryDatesForTheFacility[drugCode]["expiry_dates"];
+                } else if (expiryDatesForTheFacility[drugCode] && expiryDatesForTheFacility[drugCode].expiry_dates) {
+                    expiryDatesHash[drugCode].expiry_dates = expiryDatesHash[drugCode].expiry_dates + "," + expiryDatesForTheFacility[drugCode].expiry_dates;
                 }
             });
         });
