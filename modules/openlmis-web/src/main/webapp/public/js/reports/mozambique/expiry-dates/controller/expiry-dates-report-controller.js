@@ -1,4 +1,4 @@
-function ExpiryDatesReportController($scope, $filter, $controller, $http, CubesGenerateUrlService, messageService, $dialog) {
+function ExpiryDatesReportController($scope, $filter, $controller, $http, CubesGenerateUrlService, messageService) {
     $controller('BaseProductReportController', {$scope: $scope});
 
     $scope.getTimeRange = function (dateRange) {
@@ -6,43 +6,26 @@ function ExpiryDatesReportController($scope, $filter, $controller, $http, CubesG
         $scope.reportParams.endTime = dateRange.endTime;
     };
 
-    function showDateRangeInvalidWarningDialog() {
-        var options = {
-            id: "chooseDateAlertDialog",
-            header: "title.alert",
-            body: "dialog.date.range.invalid.warning"
-        };
-        MozambiqueDialog.newDialog(options, function () {
-        }, $dialog);
-    }
-
     $scope.$on('$viewContentLoaded', function () {
         $scope.loadProducts();
         $scope.loadHealthFacilities();
     });
 
     $scope.loadReport = function () {
-        if (isInvalidDateRange()) {
-            showDateRangeInvalidWarningDialog();
-            return;
+        if ($scope.checkDateValidRange()) {
+            generateReportTitle();
+            queryExpiryDatesReportDataFromCubes();
         }
-
-        generateReportTitle();
-        getStockOutDataFromCubes();
     };
 
-    function isInvalidDateRange() {
-        return $scope.reportParams.startTime > $scope.reportParams.endTime;
-    }
-
-    function getStockOutDataFromCubes() {
-        $http.get(CubesGenerateUrlService.generateFactsUrl('vw_expiry_dates', generateCutParams(getExpiryDateReportsParams())))
+    function queryExpiryDatesReportDataFromCubes() {
+        $http.get(CubesGenerateUrlService.generateFactsUrl('vw_expiry_dates', generateCutParams()))
             .success(function (data) {
-                generateReportItems(data);
+                generateReportData(data);
             });
     }
 
-    function generateReportItems(data) {
+    function generateReportData(data) {
         var drugOccurredHash = {};
 
         _.forEach(data, function (item) {
@@ -80,13 +63,8 @@ function ExpiryDatesReportController($scope, $filter, $controller, $http, CubesG
         return params;
     }
 
-    $scope.getGeographicZoneById = function (zones, zoneId) {
-        return zones.find(function (zone) {
-            return zone.id == zoneId;
-        });
-    };
-
-    function generateCutParams(expiryDatesParams) {
+    function generateCutParams() {
+        var expiryDatesParams = getExpiryDateReportsParams();
         var cutsParams = [
             {dimension: "occurred", values: [expiryDatesParams.startTime + "-" + expiryDatesParams.endTime]}
         ];

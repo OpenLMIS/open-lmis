@@ -87,7 +87,13 @@ function BaseProductReportController($scope, $filter, ProductReportService, Faci
             });
     };
 
-    $scope.checkDate = function () {
+    $scope.getGeographicZoneById = function (zones, zoneId) {
+        return zones.find(function (zone) {
+            return zone.id == zoneId;
+        });
+    };
+
+    $scope.checkDateBeforeToday = function () {
         if (new Date() < new Date($scope.reportParams.endTime)) {
             $scope.reportParams.endTime = $filter('date')(new Date(), "yyyy-MM-dd");
             var options = {
@@ -98,6 +104,14 @@ function BaseProductReportController($scope, $filter, ProductReportService, Faci
             MozambiqueDialog.newDialog(options, function () {
             }, $dialog);
         }
+    };
+
+    $scope.checkDateValidRange = function() {
+        if ($scope.reportParams.startTime > $scope.reportParams.endTime) {
+            showDateRangeInvalidWarningDialog();
+            return false;
+        }
+        return true;
     };
 
     $scope.checkLastSyncDate = function (time) {
@@ -125,4 +139,15 @@ function BaseProductReportController($scope, $filter, ProductReportService, Faci
             return level.code == code;
         });
     }
+
+    function showDateRangeInvalidWarningDialog() {
+        var options = {
+            id: "chooseDateAlertDialog",
+            header: "title.alert",
+            body: "dialog.date.range.invalid.warning"
+        };
+        MozambiqueDialog.newDialog(options, function () {
+        }, $dialog);
+    }
+
 }

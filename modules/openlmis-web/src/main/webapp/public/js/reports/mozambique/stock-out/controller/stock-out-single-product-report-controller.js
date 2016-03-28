@@ -6,32 +6,15 @@ function StockOutSingleProductReportController($scope, $filter, $controller, $ht
         $scope.reportParams.endTime = dateRange.endTime;
     };
 
-    function showDateRangeInvalidWarningDialog() {
-        var options = {
-            id: "chooseDateAlertDialog",
-            header: "title.alert",
-            body: "dialog.date.range.invalid.warning"
-        };
-        MozambiqueDialog.newDialog(options, function () {
-        }, $dialog);
-    }
-
     $scope.$on('$viewContentLoaded', function () {
         $scope.loadProducts();
     });
 
     $scope.loadReport = function () {
-        if (isInvalidDateRange()) {
-            showDateRangeInvalidWarningDialog();
-            return;
+        if ($scope.checkDateValidRange()) {
+            getStockOutDataFromCubes();
         }
-
-        getStockOutDataFromCubes();
     };
-
-    function isInvalidDateRange() {
-        return $scope.reportParams.startTime > $scope.reportParams.endTime;
-    }
 
     function getStockReportRequestParam() {
         var params = {};

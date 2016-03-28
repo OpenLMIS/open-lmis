@@ -6,34 +6,17 @@ function StockOutAllProductsReportController($scope, $filter, $controller, $http
         $scope.reportParams.endTime = dateRange.endTime;
     };
 
-    function showDateRangeInvalidWarningDialog() {
-        var options = {
-            id: "chooseDateAlertDialog",
-            header: "title.alert",
-            body: "dialog.date.range.invalid.warning"
-        };
-        MozambiqueDialog.newDialog(options, function () {
-        }, $dialog);
-    }
-
     $scope.$on('$viewContentLoaded', function () {
         $scope.loadProducts();
         $scope.loadHealthFacilities();
     });
 
     $scope.loadReport = function () {
-        if (isInvalidDateRange()) {
-            showDateRangeInvalidWarningDialog();
-            return;
+        if ($scope.checkDateValidRange()) {
+            generateReportTitle();
+            getStockOutDataFromCubes();
         }
-        
-        generateReportTitle();
-        getStockOutDataFromCubes();
     };
-
-    function isInvalidDateRange() {
-        return $scope.reportParams.startTime > $scope.reportParams.endTime;
-    }
 
     function getStockOutDataFromCubes() {
         $http.get(CubesGenerateUrlService.generateAggregateUrl('vw_stockouts', ["drug", "overlapped_month"], generateCutParams(getStockReportRequestParam())))
@@ -95,12 +78,6 @@ function StockOutAllProductsReportController($scope, $filter, $controller, $http
         }));
         return params;
     }
-
-    $scope.getGeographicZoneById = function (zones, zoneId) {
-        return zones.find(function (zone) {
-            return zone.id == zoneId;
-        });
-    };
 
     function generateCutParams(stockReportParams) {
         var cutsParams = [{
