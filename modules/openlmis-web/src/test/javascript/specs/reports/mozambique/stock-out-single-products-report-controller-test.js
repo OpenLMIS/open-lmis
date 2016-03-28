@@ -170,24 +170,24 @@ describe("Stock Out Single Product Report Controller", function () {
         expect(scope.tree_data.length).toBe(2);
         var provinceResult = scope.tree_data[0];
         expect(provinceResult.name).toEqual('Maputo Província');
-        expect(provinceResult.monthlyAvg).toBe(5);
-        expect(provinceResult.monthlyOccurrences).toBe(1);
+        expect(provinceResult.monthlyAvg).toBe('5.0');
+        expect(provinceResult.monthlyOccurrences).toBe('1.0');
         expect(provinceResult.totalDuration).toBe(80);
         expect(provinceResult.incidents).toBe("");
 
         expect(provinceResult.children.length).toBe(3);
         var districtResult = provinceResult.children[0];
         expect(districtResult.name).toEqual('Marracuene');
-        expect(districtResult.monthlyAvg).toBe(7.5);
-        expect(districtResult.monthlyOccurrences).toBe(1);
+        expect(districtResult.monthlyAvg).toBe('7.5');
+        expect(districtResult.monthlyOccurrences).toBe('1.0');
         expect(districtResult.totalDuration).toBe(30);
         expect(districtResult.incidents).toBe("");
 
         expect(districtResult.children.length).toBe(2);
         var facilityResult = districtResult.children[0];
         expect(facilityResult.name).toEqual('Marracuene');
-        expect(facilityResult.monthlyAvg).toBe(10);
-        expect(facilityResult.monthlyOccurrences).toBe(1);
+        expect(facilityResult.monthlyAvg).toBe('10.0');
+        expect(facilityResult.monthlyOccurrences).toBe('1.0');
         expect(facilityResult.totalDuration).toBe(10);
         expect(facilityResult.incidents).toBe("2016-01-13to2016-01-22");
     });
