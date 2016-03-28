@@ -1,10 +1,11 @@
-function StockOutSingleProductReportController($scope, $filter, $controller, $http, CubesGenerateUrlService, messageService) {
+function StockOutSingleProductReportController($scope, $filter, $controller, $http, CubesGenerateUrlService, messageService, $routeParams, ProductReportService) {
     $controller('BaseProductReportController', {$scope: $scope});
 
     $scope.expanding_property = {
         field: "name",
         displayName: " "
     };
+
     $scope.col_defs = [
         {
             field: "monthlyAvg",
@@ -33,18 +34,31 @@ function StockOutSingleProductReportController($scope, $filter, $controller, $ht
         $scope.loadHealthFacilities();
     });
 
+    $scope.loadProducts = function () {
+        ProductReportService.loadAllProducts().get({}, function (data) {
+            $scope.products = data.products;
+            $scope.reportParams.productCode = $routeParams.code;
+        });
+    };
+
     $scope.loadReport = function () {
         if ($scope.checkDateValidRange()) {
-            $scope.selectedProduct = JSON.parse($scope.reportParams.product);
+            $scope.selectedProduct = getProductByCode($scope.reportParams.productCode);
             getStockOutDataFromCubes();
         }
     };
+
+    function getProductByCode(code){
+        return _.find($scope.products, function(product){
+            return product.code === code;
+        });
+    }
 
     function getStockReportRequestParam() {
         var params = {};
         params.startTime = $filter('date')($scope.reportParams.startTime, "yyyy,MM,dd");
         params.endTime = $filter('date')($scope.reportParams.endTime, "yyyy,MM,dd");
-        params.drugCode = $scope.selectedProduct.code;
+        params.drugCode = $scope.reportParams.productCode;
         return params;
     }
 
@@ -70,7 +84,7 @@ function StockOutSingleProductReportController($scope, $filter, $controller, $ht
     }
 
     function validateProduct() {
-        $scope.invalid = !$scope.selectedProduct;
+        $scope.invalid = !$scope.reportParams.productCode;
         return !$scope.invalid;
     }
 

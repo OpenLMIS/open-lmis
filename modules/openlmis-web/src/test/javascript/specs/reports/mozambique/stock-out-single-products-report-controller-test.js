@@ -161,12 +161,11 @@ describe("Stock Out Single Product Report Controller", function () {
             startTime: "2016-01-01",
             endTime: "2016-03-28"
         };
-        scope.reportParams.product = '{"code": "O7A06"}';
+        scope.reportParams.productCode = "O7A06";
 
         httpBackend.expectGET("/cubesreports/cube/vw_stockouts/facts?cut=overlapped_date:2016,01,01-2016,03,28|drug:O7A06").respond(200, stockOutReportData);
         scope.loadReport();
         httpBackend.flush();
-
 
         expect(scope.tree_data.length).toBe(2);
         var provinceResult = scope.tree_data[0];

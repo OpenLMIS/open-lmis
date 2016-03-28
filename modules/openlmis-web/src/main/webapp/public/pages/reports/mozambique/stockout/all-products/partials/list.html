@@ -53,7 +53,7 @@
 
             <tr ng-repeat="entry in reportData | orderBy:sortType:sortReverse">
                 <td>{{entry.code}}</td>
-                <td style="text-align: left"><a href="javascript:void(0);">{{entry.name}}</a></td>
+                <td style="text-align: left"><a href="#/stock-out-single-product/{{entry.code}}">{{entry.name}}</a></td>
                 <td>{{entry.monthlyAvg | number:1}}</td>
                 <td>{{entry.monthlyOccurrences | number:1}}</td>
                 <td>{{entry.totalDuration}}</td>
