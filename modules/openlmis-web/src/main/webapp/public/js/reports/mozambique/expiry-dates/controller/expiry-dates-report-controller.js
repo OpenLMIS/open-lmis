@@ -1,22 +1,7 @@
 function ExpiryDatesReportController($scope, $filter, $controller, $http, CubesGenerateUrlService, messageService, $dialog) {
     $controller('BaseProductReportController', {$scope: $scope});
 
-    $scope.multiProducts = [];
-    $scope.multiSelectionSettings = {
-        displayProp: "primaryName",
-        idProp: "code",
-        externalIdProp: "code",
-        enableSearch: true,
-        scrollable : true,
-        scrollableHeight: "300px",
-        showCheckAll: false
-    };
-    $scope.multiSelectionModifyTexts = {
-        dynamicButtonTextSuffix: "drugs selected",
-        buttonDefaultText: "Select Drugs"
-    };
-
-    $scope.getTimeRange =function(dateRange){
+    $scope.getTimeRange = function (dateRange) {
         $scope.reportParams.startTime = dateRange.startTime;
         $scope.reportParams.endTime = dateRange.endTime;
     };
@@ -51,55 +36,39 @@ function ExpiryDatesReportController($scope, $filter, $controller, $http, CubesG
     }
 
     function getStockOutDataFromCubes() {
-        $http.get(CubesGenerateUrlService.generateAggregateUrl('vw_stockouts', ["drug", "overlapped_month"], generateCutParams(getStockReportRequestParam())))
+        $http.get(CubesGenerateUrlService.generateFactsUrl('vw_expiry_dates', generateCutParams(getExpiryDateReportsParams())))
             .success(function (data) {
-                $scope.reportData = [];
-                generateStockOutAverageReportData(data.cells);
-                formatReportWhenSelectAllFacility();
+                generateReportItems(data);
             });
     }
 
-    function generateStockOutAverageReportData(data) {
-        _.forEach(_.groupBy(data, "drug.drug_code"), function (drug) {
-            var sumAvg = 0;
-            var sumDuration = 0;
-            var totalOccurrences = 0;
-            _.forEach(drug, function (stockOut) {
-                sumAvg += stockOut.average_days;
-                sumDuration += stockOut.overlap_duration;
-                totalOccurrences += stockOut.record_count;
-            });
-            var monthlyAvg = sumAvg / drug.length / getNumOfSelectedFacilities();
-            var monthlyOccurrences = totalOccurrences / drug.length;
-            generateReportItem(drug, sumDuration, monthlyAvg, monthlyOccurrences);
+    function generateReportItems(data) {
+        var drugOccurredHash = {};
+
+        _.forEach(data, function (item) {
+            var occurredDate = new Date(item['occurred.year'], item['occurred.month'] - 1, item['occurred.day']);
+            var drug_code = item['drug.drug_code'];
+            if (drugOccurredHash[drug_code]) {
+                if (occurredDate <= drugOccurredHash[drug_code]) {
+                    drugOccurredHash[drug_code].occurred_date = occurredDate;
+                    drugOccurredHash[drug_code].expiry_dates = item.expiry_dates;
+                }
+            } else {
+                drugOccurredHash[drug_code] = {
+                    code: drug_code,
+                    name: item['drug.drug_name'],
+                    expiry_dates: item.expiry_dates,
+                    occurred_date: occurredDate
+                };
+            }
         });
-    }
-
-    function generateReportItem(drug, sumDuration, monthlyAvg, monthlyOccurrences) {
-        drug.code = drug[0]['drug.drug_code'];
-        drug.name = drug[0]['drug.drug_name'];
-        drug.totalDuration = sumDuration;
-        drug.monthlyAvg = monthlyAvg;
-        drug.monthlyOccurrences = monthlyOccurrences;
-        $scope.reportData.push(drug);
-    }
-
-    function getNumOfSelectedFacilities() {
-        return $scope.reportParams.facilityId ? 1 : FacilityFilter()($scope.facilities, $scope.districts, $scope.reportParams.districtId, $scope.reportParams.provinceId).length;
-    }
-
-    function formatReportWhenSelectAllFacility() {
-        if (!$scope.reportParams.facilityId) {
-            $scope.reportData.map(function (data) {
-                data.totalDuration = "-";
-            });
-            $scope.occurrencesHeader = messageService.get("report.avg.stock.out.occurrences");
-        } else {
-            $scope.occurrencesHeader = messageService.get("report.stock.out.occurrences");
+        $scope.reportData = [];
+        for (var key in drugOccurredHash) {
+            $scope.reportData.push(drugOccurredHash[key]);
         }
     }
 
-    function getStockReportRequestParam() {
+    function getExpiryDateReportsParams() {
         var params = {};
         params.startTime = $filter('date')($scope.reportParams.startTime, "yyyy,MM,dd");
         params.endTime = $filter('date')($scope.reportParams.endTime, "yyyy,MM,dd");
@@ -117,28 +86,27 @@ function ExpiryDatesReportController($scope, $filter, $controller, $http, CubesG
         });
     };
 
-    function generateCutParams(stockReportParams) {
-        var cutsParams = [{
-            dimension: "overlapped_date",
-            values: [stockReportParams.startTime + "-" + stockReportParams.endTime]
-        }];
-        if (stockReportParams.selectedFacility) {
-            cutsParams.push({dimension: "facility", values: [stockReportParams.selectedFacility.code]});
+    function generateCutParams(expiryDatesParams) {
+        var cutsParams = [
+            {dimension: "occurred", values: [expiryDatesParams.startTime + "-" + expiryDatesParams.endTime]}
+        ];
+        if (expiryDatesParams.selectedFacility) {
+            cutsParams.push({dimension: "facility", values: [expiryDatesParams.selectedFacility.code]});
         }
 
-        if (stockReportParams.selectedProvince && stockReportParams.selectedDistrict) {
+        if (expiryDatesParams.selectedProvince && expiryDatesParams.selectedDistrict) {
             cutsParams.push({
                 dimension: "location",
-                values: [[stockReportParams.selectedProvince.code, stockReportParams.selectedDistrict.code]]
+                values: [[expiryDatesParams.selectedProvince.code, expiryDatesParams.selectedDistrict.code]]
             });
-        } else if (stockReportParams.selectedProvince && !stockReportParams.selectedDistrict) {
-            cutsParams.push({dimension: "location", values: [stockReportParams.selectedProvince.code]});
+        } else if (expiryDatesParams.selectedProvince && !expiryDatesParams.selectedDistrict) {
+            cutsParams.push({dimension: "location", values: [expiryDatesParams.selectedProvince.code]});
         }
         return cutsParams;
     }
 
     function generateReportTitle() {
-        var stockReportParams = getStockReportRequestParam();
+        var stockReportParams = getExpiryDateReportsParams();
         var reportTitle = "";
         if (stockReportParams.selectedProvince) {
             reportTitle = stockReportParams.selectedProvince.name;
