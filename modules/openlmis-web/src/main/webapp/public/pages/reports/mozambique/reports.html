@@ -24,7 +24,7 @@
                    openlmis-message="menu.report.app.version.reports"></a>
             </li>
 
-            <li ng-show="hasPermission('VIEW_TABLET_INFO_REPORT') && isNewStockReportToggleOn">
+            <li ng-show="hasPermission('VIEW_STOCKOUT_REPORT') && isNewStockReportToggleOn">
                 <a href="/public/pages/reports/mozambique/index.html#/stock-out-all-products"
                    openlmis-message="menu.report.stockout.all.reports"></a>
             </li>
@@ -35,7 +35,7 @@
             </li>
 
             <!--//TODO should add permission -->
-            <li ng-show="hasPermission('VIEW_TABLET_INFO_REPORT') && isExpiryDatesToggleOn">
+            <li ng-show="hasPermission('VIEW_STOCKOUT_REPORT') && isExpiryDatesToggleOn">
                 <a href="/public/pages/reports/mozambique/index.html#/expiry-dates"
                    openlmis-message="menu.report.expiry.dates"></a>
             </li>
