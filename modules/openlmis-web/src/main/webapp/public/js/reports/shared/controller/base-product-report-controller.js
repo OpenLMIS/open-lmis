@@ -93,7 +93,7 @@ function BaseProductReportController($scope, $filter, ProductReportService, Faci
     };
 
     $scope.getGeographicZoneById = function (zones, zoneId) {
-        return zones.find(function (zone) {
+        return _.find(zones, function(zone){
             return zone.id == zoneId;
         });
     };
@@ -143,7 +143,7 @@ function BaseProductReportController($scope, $filter, ProductReportService, Faci
 
         return _.find(geographicZoneLevels, function(geographicZoneLevel){
             return geographicZoneLevel.code == code;
-        })
+        });
     }
 
     function showDateRangeInvalidWarningDialog() {

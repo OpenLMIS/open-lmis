@@ -38,7 +38,7 @@ function StockOutAllProductsReportController($scope, $filter, $controller, $http
                 totalOccurrences += stockOut.record_count;
             });
             var monthlyAvg = sumAvg / drug.length / getNumOfSelectedFacilities();
-            var monthlyOccurrences = totalOccurrences / drug.length / getNumOfSelectedFacilities;
+            var monthlyOccurrences = totalOccurrences / drug.length / getNumOfSelectedFacilities();
             generateReportItem(drug, sumDuration, monthlyAvg, monthlyOccurrences);
         });
     }

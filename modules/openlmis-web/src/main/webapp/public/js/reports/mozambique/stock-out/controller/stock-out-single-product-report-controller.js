@@ -18,10 +18,6 @@ function StockOutSingleProductReportController($scope, $filter, $controller, $ht
         }
     };
 
-    function isInvalidDateRange() {
-        return $scope.reportParams.startTime > $scope.reportParams.endTime;
-    }
-
     function getStockReportRequestParam() {
         var params = {};
         params.startTime = $filter('date')($scope.reportParams.startTime, "yyyy,MM,dd");

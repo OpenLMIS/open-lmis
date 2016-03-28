@@ -114,10 +114,17 @@ describe("Base Product Report Controller", function () {
     it('should fill corresponding district and province when select facility', function () {
         scope.fullGeoZoneList = fullGeoZoneList;
         scope.facilities = facilityData;
+
+        scope.reportParams.facilityId = undefined;
+        scope.fillGeographicZone();
+        expect(scope.reportParams.districtId).toEqual(undefined);
+        expect(scope.reportParams.provinceId).toEqual(undefined);
+
         scope.reportParams.facilityId = 1;
         scope.fillGeographicZone();
 
         expect(scope.reportParams.districtId).toEqual(1);
         expect(scope.reportParams.provinceId).toEqual(2);
+
     });
 });

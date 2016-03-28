@@ -49,7 +49,7 @@
                        ui-date-format
                        ng-model="reportParams.endTime"
                        ng-required="true"
-                       ng-change="checkDate()"/>
+                       ng-change="checkDateBeforeToday()"/>
 
               <span class="field-error" ng-show="createPeriodForm.startDate.$error.required && showErrorForCreate"
                     openlmis-message="missing.value"></span>
