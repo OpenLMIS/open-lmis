@@ -28,6 +28,16 @@
 
     <context:component-scan base-package="org.openlmis.report"/>
 
+    <bean id="reportsProperties" class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+
+        <property name="ignoreResourceNotFound" value="true"/>
+        <property name="locations">
+            <list>
+                <value>classpath:/reports-configs.properties</value>
+            </list>
+        </property>
+    </bean>
+
     <!-- Integrates with report module -->
     <bean id="reportManager" class="org.openlmis.report.ReportManager">
         <constructor-arg index="0">
@@ -390,7 +400,8 @@
     </bean>
 
     <task:scheduled-tasks scheduler="viewRefreshScheduler">
-        <task:scheduled ref="stockoutViewRefresher" fixed-delay="3600000" method="refreshStockoutView"/>
+        <task:scheduled ref="stockoutViewRefresher" fixed-delay="${stockout.view.refresh.rate}"
+                        method="refreshStockoutView"/>
     </task:scheduled-tasks>
 
     <task:scheduler id="viewRefreshScheduler"/>
