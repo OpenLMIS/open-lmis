@@ -14,9 +14,14 @@
 
     </div>
 
-    <hr/>
-
-    <date-picker-container get-time-range = "getTimeRange(dateRange)"></date-picker-container>
+    <div class="form-field">
+        <input name="endTime" id="endTime" type="text"
+               ui-date
+               ui-date-format
+               ng-model="reportParams.endTime"
+               ng-required="true"
+               ng-change="checkDateBeforeToday()"/>
+    </div>
     <hr/>
 
     <div id="report" ng-if="reportData.length > 0">

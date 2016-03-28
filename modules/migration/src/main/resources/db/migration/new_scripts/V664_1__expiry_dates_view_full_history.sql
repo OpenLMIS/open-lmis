@@ -20,4 +20,4 @@ CREATE OR REPLACE VIEW vw_expiry_dates AS
     JOIN stock_card_entries ON stock_cards.id = stock_card_entries.stockcardid
     JOIN stock_card_entry_key_values ON stock_card_entries.id = stock_card_entry_key_values.stockcardentryid
   WHERE keycolumn = 'expirationdates' AND valuecolumn != ''
-  ORDER BY occurred, stock_card_entries.id, facility_code, drug_code, expiry_dates;
+  ORDER BY facility_code, drug_code, occurred, stock_card_entries.id DESC;
