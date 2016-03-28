@@ -152,6 +152,17 @@ function StockOutSingleProductReportController($scope, $filter, $controller, $ht
         };
     }
 
+    function generateIncidents(stockOut, numOfSelectedFacilities) {
+        var incidents = "";
+        if (numOfSelectedFacilities === 1) {
+            var incident = stockOut['stockout.date'] + "to" + stockOut['stockout.resolved_date'];
+            if (incidents.indexOf(incident) === -1) {
+                incidents += incidents === "" ? incident : ", " + incident;
+            }
+        }
+        return incidents;
+    }
+
     function calculateStockOut(groupValue, name, numOfSelectedFacilities) {
         var sumAvg = 0;
         var totalOccurrences = 0;
@@ -163,20 +174,15 @@ function StockOutSingleProductReportController($scope, $filter, $controller, $ht
             var sum = 0;
             _.forEach(drug, function (stockOut) {
                 sum += stockOut.overlap_duration;
-                if (numOfSelectedFacilities === 1) {
-                    var incident = stockOut['stockout.date'] + "to" + stockOut['stockout.resolved_date'];
-                    if (incidents.indexOf(incident) === -1) {
-                        incidents += incidents === "" ? incident : ", " + incident;
-                    }
-                }
+                incidents = generateIncidents(stockOut, numOfSelectedFacilities);
             });
             sumAvg += sum / drug.length;
             totalOccurrences += drug.length;
             totalDuration += sum;
         });
 
-        var monthlyAvg = sumAvg / Object.keys(groupByOverlapMonth).length / numOfSelectedFacilities;
-        var monthlyOccurrences = totalOccurrences / Object.keys(groupByOverlapMonth).length / numOfSelectedFacilities;
+        var monthlyAvg = $filter('number')(sumAvg / Object.keys(groupByOverlapMonth).length / numOfSelectedFacilities, 1);
+        var monthlyOccurrences = $filter('number')(totalOccurrences / Object.keys(groupByOverlapMonth).length / numOfSelectedFacilities, 1);
 
         return generateReportItem(groupValue[0][name], totalDuration, monthlyAvg, monthlyOccurrences, incidents);
     }
