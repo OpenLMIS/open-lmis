@@ -1,4 +1,4 @@
-describe("Stock Out Report Controller", function () {
+describe("Stock Out All Products Report Controller", function () {
     var scope, geoZoneData, levels, provinceData, httpBackend, dateFilter, stockOutReportData, facilityData, districtData, messageService;
 
     levels = [{
@@ -164,7 +164,7 @@ describe("Stock Out Report Controller", function () {
         expect(provinceById2["name"]).toEqual("Habel");
     });
 
-    it('should load stock out report successfully', function () {
+    it('should load stock out all products report successfully', function () {
         scope.provinces = provinceData;
         scope.districts = districtData;
         scope.facilities = facilityData;

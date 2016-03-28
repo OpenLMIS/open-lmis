@@ -1,5 +1,27 @@
-function StockOutSingleProductReportController($scope, $filter, $controller, $http, CubesGenerateUrlService, messageService, $dialog) {
+function StockOutSingleProductReportController($scope, $filter, $controller, $http, CubesGenerateUrlService, messageService) {
     $controller('BaseProductReportController', {$scope: $scope});
+
+    $scope.expanding_property = {
+        field: "name",
+        displayName: " "
+    };
+    $scope.col_defs = [
+        {
+            field: "monthlyAvg",
+            displayName: messageService.get('report.stock.out.avg.duration')
+        },
+        {
+            field: "monthlyOccurrences",
+            displayName: messageService.get('report.stock.out.occurrences')
+        },
+        {
+            field: "totalDuration",
+            displayName: messageService.get('report.stock.out.total')
+        }, {
+            field: "incidents",
+            displayName: messageService.get('report.stock.out.incidents')
+        }
+    ];
 
     $scope.getTimeRange = function (dateRange) {
         $scope.reportParams.startTime = dateRange.startTime;
@@ -52,30 +74,8 @@ function StockOutSingleProductReportController($scope, $filter, $controller, $ht
         return !$scope.invalid;
     }
 
-    $scope.expanding_property = {
-        field: "name",
-        displayName: " "
-    };
-    $scope.col_defs = [
-        {
-            field: "monthlyAvg",
-            displayName: messageService.get('report.stock.out.avg.duration')
-        },
-        {
-            field: "monthlyOccurrences",
-            displayName: messageService.get('report.stock.out.occurrences')
-        },
-        {
-            field: "totalDuration",
-            displayName: messageService.get('report.stock.out.total')
-        }, {
-            field: "incidents",
-            displayName: messageService.get('report.stock.out.incidents')
-        }
-    ];
-
-    function generateStockOutData(testRawTreeData) {
-        var groupByProvince = _.groupBy(testRawTreeData, 'location.province_code');
+    function generateStockOutData(data) {
+        var groupByProvince = _.groupBy(data, 'location.province_code');
 
         var provinceData = [];
         _.forEach(groupByProvince, function (province) {
