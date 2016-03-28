@@ -143,7 +143,13 @@ public class RequisitionService {
     if(program.getUsePriceSchedule())
         populateProductsPriceBasedOnPriceSchedule(facility.getId(), program.getId(), facilityTypeApprovedProducts); //non intrusive on the legacy setup
 
-    List<Regimen> regimens = regimenService.getByProgram(program.getId());
+    List<Regimen> regimens = null;
+    if (staticReferenceDataService.getBoolean("toggle.mmia.custom.regimen")) {
+      regimens = regimenService.getRegimensByProgramAndIsCustom(program.getId(), false);
+    } else {
+      regimens = regimenService.getByProgram(program.getId());
+    }
+
     RegimenTemplate regimenTemplate = regimenColumnService.getRegimenTemplateByProgramId(program.getId());
 
     Rnr requisition = new Rnr(facility, program, period, emergency, facilityTypeApprovedProducts, regimens, modifiedBy);
@@ -224,7 +230,7 @@ public class RequisitionService {
       if (staticReferenceDataService.getBoolean("toggle.mmia.custom.regimen")) {
         savedRnr.copyCreatorEditableFieldsSkipValidate(rnr, rnrTemplate, regimenTemplate, programProducts);
       } else {
-      savedRnr.copyCreatorEditableFields(rnr, rnrTemplate, regimenTemplate, programProducts);
+        savedRnr.copyCreatorEditableFields(rnr, rnrTemplate, regimenTemplate, programProducts);
       }
       //TODO: copy only the editable fields.
       savedRnr.setEquipmentLineItems(rnr.getEquipmentLineItems());

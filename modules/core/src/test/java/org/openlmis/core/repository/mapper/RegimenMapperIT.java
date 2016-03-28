@@ -161,4 +161,23 @@ public class RegimenMapperIT {
     assertThat(result.size(), is(0));
 
   }
+
+  @Test
+  public void shouldListAllDefaultRegimens() throws Exception {
+    Long programId1 = 1l;
+    Long programId2 = 2l;
+    Regimen adultRegimen1 = make(a(defaultRegimen, with(regimenCode,"CODE_1"), with(displayOrder, 1), with(programId, programId1), with(isCustom, true)));
+    mapper.insert(adultRegimen1);
+    Regimen adultRegimen2 = make(a(defaultRegimen, with(regimenCode,"CODE_2"), with(displayOrder, 2), with(programId, programId1), with(isCustom, false)));
+    mapper.insert(adultRegimen2);
+    Regimen adultRegimen3 = make(a(defaultRegimen, with(regimenCode,"CODE_3"), with(displayOrder, 2), with(programId, programId2), with(isCustom, true)));
+    mapper.insert(adultRegimen3);
+
+    List<Regimen> regimens = mapper.getRegimensByProgramAndIsCustom(programId1, true);
+    List<Regimen> allRegimens = mapper.getAllRegimens();
+
+    assertThat(allRegimens.size(), is(3));
+    assertThat(regimens.size(), is(1));
+    assertThat(regimens.get(0).getCode(), is("CODE_1"));
+  }
 }

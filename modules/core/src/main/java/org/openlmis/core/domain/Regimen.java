@@ -36,5 +36,6 @@ public class Regimen extends BaseModel {
   private Boolean active;
   private RegimenCategory category;
   private Integer displayOrder;
+  private boolean isCustom;
 
 }

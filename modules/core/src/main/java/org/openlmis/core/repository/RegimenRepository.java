@@ -101,4 +101,9 @@ public class RegimenRepository {
 
     return mapper.getRegimensByCategoryIdAndName(categoryId, code);
   }
+
+  public List<Regimen> getRegimensByProgramAndIsCustom(Long programId, boolean isCustom) {
+
+    return mapper.getRegimensByProgramAndIsCustom(programId, isCustom);
+  }
 }

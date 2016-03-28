@@ -22,8 +22,8 @@ import java.util.List;
 @Repository
 public interface RegimenMapper {
 
-  @Insert({"INSERT INTO regimens (code, name, active, programId, categoryId, displayOrder, createdBy, modifiedBy) ",
-    "VALUES (#{code}, #{name}, #{active}, #{programId}, #{category.id}, #{displayOrder}, #{createdBy}, #{modifiedBy})"})
+  @Insert({"INSERT INTO regimens (code, name, active, programId, categoryId, displayOrder, iscustom, createdBy, modifiedBy) ",
+    "VALUES (#{code}, #{name}, #{active}, #{programId}, #{category.id}, #{displayOrder}, #{isCustom}, #{createdBy}, #{modifiedBy})"})
   @Options(useGeneratedKeys = true)
   public void insert(Regimen regimen);
 
@@ -64,4 +64,12 @@ public interface RegimenMapper {
           @Result(property = "category", column = "categoryId", javaType = Long.class,
                   one = @One(select = "org.openlmis.core.repository.mapper.RegimenCategoryMapper.getById"))})
   Regimen getRegimensByCategoryIdAndName(@Param("categoryId") Long categoryId, @Param("name") String name);
+
+  @Select({"SELECT * FROM regimens R INNER JOIN regimen_categories RC ON R.categoryId = RC.id ",
+          "WHERE R.programId=#{programId} AND R.iscustom=#{isCustom} ORDER BY RC.displayOrder,R.displayOrder"})
+  @Results(value = {
+          @Result(property = "category", column = "categoryId", javaType = Long.class,
+                  one = @One(select = "org.openlmis.core.repository.mapper.RegimenCategoryMapper.getById"))})
+  List<Regimen> getRegimensByProgramAndIsCustom(@Param("programId") Long programId, @Param("isCustom") boolean isCustom);
+
 }

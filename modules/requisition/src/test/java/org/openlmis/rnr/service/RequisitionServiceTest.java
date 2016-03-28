@@ -175,7 +175,7 @@ public class RequisitionServiceTest {
                 PROGRAM.getId())).thenReturn(facilityTypeApprovedProducts);
 
         List<Regimen> regimens = new ArrayList<>();
-        regimens.add(new Regimen("name", "code", 1L, true, new RegimenCategory("code", "name", 1), 1));
+        regimens.add(new Regimen("name", "code", 1L, true, new RegimenCategory("code", "name", 1), 1, false));
 
         List<RegimenLineItem> regimenLineItems = new ArrayList<>();
         regimenLineItems.add(new RegimenLineItem(null, null, 1L, 1L));
@@ -1715,6 +1715,44 @@ public class RequisitionServiceTest {
         requisitionService.initiate(FACILITY, PROGRAM, 1L, false, null);
         verify(facilityApprovedProductService).getFullSupplyFacilityApprovedProductByFacilityAndProgramIncludingSubPrograms(
             FACILITY.getId(), PROGRAM.getId());
+    }
+
+    @Test
+    public void shouldGetDefaultRegimens() {
+        setupForInitRnr();
+        createProcessingPeriod(1L, new DateTime());
+        when(programService.getById(PROGRAM.getId())).thenReturn(PROGRAM);
+        Date programStartDate = new Date();
+        when(programService.getProgramStartDate(FACILITY.getId(), PROGRAM.getId())).thenReturn(programStartDate);
+        when(processingScheduleService.getCurrentPeriod(FACILITY.getId(), PROGRAM.getId(), programStartDate)).thenReturn(PERIOD);
+        when(staticReferenceDataService.getBoolean("toggle.rnr.multiple.programs")).thenReturn(true);
+        when(staticReferenceDataService.getBoolean("toggle.mmia.custom.regimen")).thenReturn(true);
+        when(processingScheduleService.getAllPeriodsAfterDateAndPeriod(anyLong(), anyLong(), any(Date.class), anyLong())).thenReturn(asList(PERIOD));
+        PROGRAM.setUsePriceSchedule(false);
+        PROGRAM.setBudgetingApplies(false);
+        PROGRAM.setIsEquipmentConfigured(false);
+
+        requisitionService.initiate(FACILITY, PROGRAM, 1L, false, null);
+        verify(regimenService).getRegimensByProgramAndIsCustom(3L, false);
+    }
+
+    @Test
+    public void shouldGetAllRegimensWhenToggleOff() {
+        setupForInitRnr();
+        createProcessingPeriod(1L, new DateTime());
+        when(programService.getById(PROGRAM.getId())).thenReturn(PROGRAM);
+        Date programStartDate = new Date();
+        when(programService.getProgramStartDate(FACILITY.getId(), PROGRAM.getId())).thenReturn(programStartDate);
+        when(processingScheduleService.getCurrentPeriod(FACILITY.getId(), PROGRAM.getId(), programStartDate)).thenReturn(PERIOD);
+        when(staticReferenceDataService.getBoolean("toggle.rnr.multiple.programs")).thenReturn(true);
+        when(staticReferenceDataService.getBoolean("toggle.mmia.custom.regimen")).thenReturn(false);
+        when(processingScheduleService.getAllPeriodsAfterDateAndPeriod(anyLong(), anyLong(), any(Date.class), anyLong())).thenReturn(asList(PERIOD));
+        PROGRAM.setUsePriceSchedule(false);
+        PROGRAM.setBudgetingApplies(false);
+        PROGRAM.setIsEquipmentConfigured(false);
+
+        requisitionService.initiate(FACILITY, PROGRAM, 1L, false, null);
+        verify(regimenService).getByProgram(3L);
     }
 
     private void setupForInitRnr() {

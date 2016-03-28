@@ -27,6 +27,7 @@ public class RegimenBuilder {
   public static final Property<Regimen, Long> programId = newProperty();
   public static final Property<Regimen, Integer> displayOrder = newProperty();
   public static final Property<Regimen, RegimenCategory> category = newProperty();
+  public static final Property<Regimen, Boolean> isCustom = newProperty();
 
   private static final String REGIMEN_CODE = "3TC/AZT";
   private static final String REGIMEN_NAME = "3TC/AZT + EFV";
@@ -42,6 +43,7 @@ public class RegimenBuilder {
       regimenCategory.setId(1l);
       regimen.setCategory(lookup.valueOf(category, regimenCategory));
       regimen.setDisplayOrder(lookup.valueOf(displayOrder, 1));
+      regimen.setCustom(lookup.valueOf(isCustom, false));
       return regimen;
     }
   };
