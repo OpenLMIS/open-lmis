@@ -17,10 +17,14 @@ import static com.fasterxml.jackson.databind.annotation.JsonSerialize.Inclusion.
 @JsonSerialize(include = NON_EMPTY)
 @EqualsAndHashCode()
 public class RegimenLineItemForRest extends RegimenLineItem {
-    private String code;
-    private String name;
-    private Integer patientsOnTreatment;
     private String categoryName;
+
+    public RegimenLineItemForRest(String code, String name, Integer patientsOnTreatment, String categoryName) {
+        this.setCode(code);
+        this.setName(name);
+        this.setPatientsOnTreatment(patientsOnTreatment);
+        this.categoryName = categoryName;
+    }
 
     public static RegimenLineItemForRest convertFromRegimenLineItem(RegimenLineItem regimenLineItem) {
         return new RegimenLineItemForRest(regimenLineItem.getCode(), regimenLineItem.getName(), regimenLineItem.getPatientsOnTreatment(), regimenLineItem.getCategory().getName());
