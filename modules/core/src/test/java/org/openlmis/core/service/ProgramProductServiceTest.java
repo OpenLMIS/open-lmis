@@ -445,15 +445,4 @@ public class ProgramProductServiceTest {
     service.getProductsByProgramAfterUpdatedDateByFacilityType(program, afterUpdatedTime, facilityType);
     verify(programProductRepository).getByProgramAfterUpdatedTimeByFacilityType(program, afterUpdatedTime, facilityType);
   }
-
-  @Test
-  public void shouldGetLatestUpdatedProgramProducts() {
-    Date afterUpdatedTime = new Date();
-
-    service.getLatestUpdatedProgramProduct(afterUpdatedTime);
-
-    verify(programProductRepository).getLatestUpdatedProgramProduct(afterUpdatedTime);
-  }
-
-
 }

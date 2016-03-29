@@ -310,27 +310,6 @@ public class ProgramProductMapperIT {
   }
 
   @Test
-  public void shouldGetLatestUpdatedProgramProducts() {
-    Program program2 = make(a(defaultProgram, with(programName, "TB"), with(programCode, "anshul")));
-    programMapper.insert(program2);
-
-    ProgramProduct programProduct1 = new ProgramProduct(program, product, 10, true);
-    programProduct1.setProductCategory(productCategory);
-    programProduct1.setModifiedDate(DateUtil.parseDate("2010-10-10 10:10:10"));
-    ProgramProduct programProduct2 = new ProgramProduct(program2, product, 10, true);
-    programProduct2.setProductCategory(productCategory);
-    programProduct2.setModifiedDate(DateUtil.parseDate("2012-12-12 12:12:12"));
-
-    programProductMapper.insert(programProduct1);
-    programProductMapper.insert(programProduct2);
-
-    List<ProgramProduct> latestUpdatedProgramProduct = programProductMapper.getLatestUpdatedProgramProduct(DateUtil.parseDate("2011-11-11 11:11:11"));
-
-    assertThat(latestUpdatedProgramProduct.size(), is(1));
-    assertThat(latestUpdatedProgramProduct.get(0).getProduct().getCode(),is("P999"));
-  }
-
-  @Test
   public void shouldSearchProgramProductByProduct() {
     Pagination pagination = new Pagination(1, 10);
     Product prod1 = make(a(defaultProduct, with(primaryName, "prod1"), with(code, "p1")));

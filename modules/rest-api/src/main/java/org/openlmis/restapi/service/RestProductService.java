@@ -91,25 +91,9 @@ public class RestProductService {
 
     List<Product> latestProducts = getLatestProducts(afterUpdatedTime,facilityId);
 
-    List<ProgramProduct> latestProgramProduct = programProductSevice.getLatestUpdatedProgramProduct(afterUpdatedTime);
-    for (ProgramProduct programProduct : latestProgramProduct) {
-      if (!isContainedInLatestProduct(latestProducts, programProduct)){
-        latestProducts.add(programProduct.getProduct());
-      }
-    }
-
     List<String> allSupportedPrograms = getSupportedProgramsByFacility(facilityId);
 
     return prepareProductsBasedOnFacilitySupportedPrograms(latestProducts, allSupportedPrograms);
-  }
-
-  private boolean isContainedInLatestProduct(List<Product> latestProducts, ProgramProduct programProduct) {
-    boolean isContainedInLatestProduct = false;
-    for (Product latestProduct : latestProducts) {
-      if (latestProduct.getCode().equals(programProduct.getProduct().getCode()))
-        isContainedInLatestProduct = true;
-    }
-    return isContainedInLatestProduct;
   }
 
   private List<Product> getLatestProducts(Date afterUpdatedTime, Long facilityId) {

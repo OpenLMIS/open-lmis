@@ -201,12 +201,4 @@ public interface ProgramProductMapper {
             @Result(property = "product.id", column = "productid")
     })
   List<ProgramProduct> getAll();
-
-
-  @Select("SELECT * FROM program_products WHERE modifieddate > #{date}")
-  @Results({
-          @Result(
-                  property = "product", column = "productId", javaType = Product.class,
-                  many = @Many(select = "org.openlmis.core.repository.mapper.ProductMapper.getById"))})
-  List<ProgramProduct> getLatestUpdatedProgramProduct(Date afterUpdatedTime);
 }
