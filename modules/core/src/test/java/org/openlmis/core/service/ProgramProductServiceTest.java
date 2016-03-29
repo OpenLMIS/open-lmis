@@ -455,13 +455,5 @@ public class ProgramProductServiceTest {
     verify(programProductRepository).getLatestUpdatedProgramProduct(afterUpdatedTime);
   }
 
-  @Test
-  public void shouldGetActiveProgramCodesByProductCode() {
-
-    service.getActiveProgramCodesByProductCode("07A06");
-
-    verify(programProductRepository).getActiveProgramCodesByProductCode("07A06");
-  }
-
 
 }

@@ -120,10 +120,6 @@ public class ProgramProductRepository {
     return mapper.getByProductCode(code);
   }
 
-  public List<String> getActiveProgramCodesByProductCode(String code) {
-    return mapper.getActiveProgramCodesByProductCode(code);
-  }
-
   public List<ProgramProduct> getProgramProductsBy(Long programId, String facilityTypeCode) {
     return mapper.getByProgramIdAndFacilityTypeCode(programId, facilityTypeCode);
   }

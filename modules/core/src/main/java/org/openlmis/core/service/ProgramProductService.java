@@ -139,10 +139,6 @@ public class ProgramProductService {
     return programProductRepository.getByProductCode(productCode);
   }
 
-  public List<String> getActiveProgramCodesByProductCode(String productCode) {
-    return programProductRepository.getActiveProgramCodesByProductCode(productCode);
-  }
-
   public List<ProgramProduct> getProgramProductsBy(String programCode, String facilityTypeCode) {
     FacilityType facilityType = new FacilityType();
     if ((facilityTypeCode = trimToNull(facilityTypeCode)) != null) {
