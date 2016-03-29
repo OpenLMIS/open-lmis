@@ -256,4 +256,12 @@ public class ProgramProductRepositoryTest {
 
     verify(programProductMapper).getLatestUpdatedProgramProduct(afterUpdatedTime);
   }
+
+  @Test
+  public void shouldGetActiveProgramCodesByProductCode() {
+
+    programProductRepository.getActiveProgramCodesByProductCode("07A06");
+
+    verify(programProductMapper).getActiveProgramCodesByProductCode("07A06");
+  }
 }

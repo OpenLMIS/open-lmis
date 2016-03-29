@@ -331,6 +331,25 @@ public class ProgramProductMapperIT {
   }
 
   @Test
+  public void shouldGetActiveProgramCodeByProductCode() {
+    Program program2 = make(a(defaultProgram, with(programName, "TB"), with(programCode, "anshul")));
+    programMapper.insert(program2);
+
+    ProgramProduct programProduct1 = new ProgramProduct(program, product, 10, true);
+    programProduct1.setProductCategory(productCategory);
+    programProduct1.setActive(true);
+    ProgramProduct programProduct2 = new ProgramProduct(program2, product, 10, true);
+    programProduct2.setProductCategory(productCategory);
+    programProduct2.setActive(false);
+
+    programProductMapper.insert(programProduct1);
+    programProductMapper.insert(programProduct2);
+
+    List<String> activeProgramCodes = programProductMapper.getActiveProgramCodesByProductCode(product.getCode());
+    assertThat(activeProgramCodes.size(),is(1));
+  }
+
+  @Test
   public void shouldSearchProgramProductByProduct() {
     Pagination pagination = new Pagination(1, 10);
     Product prod1 = make(a(defaultProduct, with(primaryName, "prod1"), with(code, "p1")));

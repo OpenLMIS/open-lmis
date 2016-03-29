@@ -145,15 +145,10 @@ public class RestProductService {
 
     for (Product product : latestProducts) {
 
-      List<String> programCodes = FluentIterable.from(programProductSevice.getByProductCode(product.getCode())).filter(new Predicate<ProgramProduct>() {
+      List<String> programCodes = FluentIterable.from(programProductSevice.getActiveProgramCodesByProductCode(product.getCode())).filter(new Predicate<String>() {
         @Override
-        public boolean apply(ProgramProduct programProduct) {
-          return programs.contains(programProduct.getProgram().getCode());
-        }
-      }).transform(new Function<ProgramProduct, String>() {
-        @Override
-        public String apply(ProgramProduct programProduct) {
-          return programProduct.getProgram().getCode();
+        public boolean apply(String programProductCode) {
+          return programs.contains(programProductCode);
         }
       }).toList();
 
