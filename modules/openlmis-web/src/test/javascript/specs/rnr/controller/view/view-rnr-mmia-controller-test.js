@@ -97,7 +97,7 @@ describe('ViewRnrViaDetailController', function () {
     initMockRequisition();
 
     expect(scope.rnr.fullSupplyLineItems.length).toBe(24);
-    expect(scope.rnr.regimenLineItems.length).toBe(18);
+    expect(scope.rnr.regimenLineItems.length).toBe(19);
     expect(scope.rnr.patientQuantifications.length).toBe(7);
   });
 
@@ -134,7 +134,7 @@ describe('ViewRnrViaDetailController', function () {
     scope.initRegime();
     //initMockRequisition();
 
-    expect(scope.regimeTotal).toBe(18);
+    expect(scope.regimeTotal).toBe(19);
     expect(scope.regimeAdult.length).toBe(9);
     expect(scope.regimeChildren.length).toBe(10);
 
