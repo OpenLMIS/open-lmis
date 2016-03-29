@@ -22,6 +22,7 @@ function ViewRnrMmiaController($scope, $route, Requisitions, messageService, dow
     $scope.loadMmiaDetail = function () {
         Requisitions.get({id: $route.current.params.rnr, operation: "skipped"}, function (data) {
             $scope.rnr = data.rnr;
+            console.log($scope.rnr);
 
             $scope.year = data.rnr.period.stringYear;
 
@@ -103,16 +104,18 @@ function ViewRnrMmiaController($scope, $route, Requisitions, messageService, dow
 
 
     $scope.initRegime = function () {
-        var regimes = $scope.rnr.regimenLineItems;
+        var regimens = $scope.rnr.regimenLineItems;
 
-        $scope.regimeAdult = regimes.slice(0, 8);
-        $scope.regimeChildren = regimes.slice(8, 18);
-        calculateRegimeTotal(regimes);
+        $scope.regimeAdult = _.filter(regimens, function(regimen){ return regimen.categoryName == "Adults"; });
+
+        $scope.regimeChildren = _.filter(regimens, function(regimen){ return regimen.categoryName == "Paediatrics"; });
+
+        calculateRegimeTotal(regimens);
     };
 
-    var calculateRegimeTotal = function (regimes) {
-        for (var i = 0; i < regimes.length; i++) {
-            $scope.regimeTotal += regimes[i].patientsOnTreatment;
+    var calculateRegimeTotal = function (regimens) {
+        for (var i = 0; i < regimens.length; i++) {
+            $scope.regimeTotal += regimens[i].patientsOnTreatment;
         }
     };
 

@@ -45,24 +45,25 @@ describe('ViewRnrViaDetailController', function () {
         {id: 24, expirationDate: "28/02/2000"}],
       period: {stringStartDate: "01/01/2014", stringEndDate: "31/01/2014", stringYear: "2014"},
       regimenLineItems: [
-        {id: 40, patientsOnTreatment: 1},
-        {id: 41, patientsOnTreatment: 1},
-        {id: 42, patientsOnTreatment: 1},
-        {id: 43, patientsOnTreatment: 1},
-        {id: 44, patientsOnTreatment: 1},
-        {id: 45, patientsOnTreatment: 1},
-        {id: 46, patientsOnTreatment: 1},
-        {id: 47, patientsOnTreatment: 1},
-        {id: 48, patientsOnTreatment: 1},
-        {id: 49, patientsOnTreatment: 1},
-        {id: 50, patientsOnTreatment: 1},
-        {id: 51, patientsOnTreatment: 1},
-        {id: 52, patientsOnTreatment: 1},
-        {id: 53, patientsOnTreatment: 1},
-        {id: 54, patientsOnTreatment: 1},
-        {id: 55, patientsOnTreatment: 1},
-        {id: 57, patientsOnTreatment: 1},
-        {id: 56, patientsOnTreatment: 1}],
+        {id: 40, categoryName: "Adults", patientsOnTreatment: 1},
+        {id: 41, categoryName: "Adults", patientsOnTreatment: 1},
+        {id: 42, categoryName: "Adults", patientsOnTreatment: 1},
+        {id: 43, categoryName: "Adults", patientsOnTreatment: 1},
+        {id: 44, categoryName: "Adults", patientsOnTreatment: 1},
+        {id: 45, categoryName: "Paediatrics", patientsOnTreatment: 1},
+        {id: 46, categoryName: "Paediatrics", patientsOnTreatment: 1},
+        {id: 47, categoryName: "Paediatrics", patientsOnTreatment: 1},
+        {id: 48, categoryName: "Paediatrics", patientsOnTreatment: 1},
+        {id: 49, categoryName: "Adults", patientsOnTreatment: 1},
+        {id: 50, categoryName: "Adults", patientsOnTreatment: 1},
+        {id: 51, categoryName: "Adults", patientsOnTreatment: 1},
+        {id: 52, categoryName: "Adults", patientsOnTreatment: 1},
+        {id: 53, categoryName: "Paediatrics", patientsOnTreatment: 1},
+        {id: 54, categoryName: "Paediatrics", patientsOnTreatment: 1},
+        {id: 55, categoryName: "Paediatrics", patientsOnTreatment: 1},
+        {id: 57, categoryName: "Paediatrics", patientsOnTreatment: 1},
+        {id: 56, categoryName: "Paediatrics", patientsOnTreatment: 1},
+        {id: 57, categoryName: "Paediatrics", patientsOnTreatment: 1}],
       patientQuantifications: [
         {id: 1, total: 1},
         {id: 2, total: 1},
@@ -134,7 +135,7 @@ describe('ViewRnrViaDetailController', function () {
     //initMockRequisition();
 
     expect(scope.regimeTotal).toBe(18);
-    expect(scope.regimeAdult.length).toBe(8);
+    expect(scope.regimeAdult.length).toBe(9);
     expect(scope.regimeChildren.length).toBe(10);
 
   });
