@@ -163,7 +163,7 @@ public class RegimenMapperIT {
   }
 
   @Test
-  public void shouldListAllDefaultRegimens() throws Exception {
+  public void shouldListCustomRegimens() throws Exception {
     Long programId1 = 1l;
     Long programId2 = 2l;
     Regimen adultRegimen1 = make(a(defaultRegimen, with(regimenCode,"CODE_1"), with(displayOrder, 1), with(programId, programId1), with(isCustom, true)));
