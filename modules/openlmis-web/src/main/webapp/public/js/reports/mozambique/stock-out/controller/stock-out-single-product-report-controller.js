@@ -152,8 +152,7 @@ function StockOutSingleProductReportController($scope, $filter, $controller, $ht
         };
     }
 
-    function generateIncidents(stockOut, numOfSelectedFacilities) {
-        var incidents = "";
+    function generateIncidents(incidents,stockOut, numOfSelectedFacilities) {
         if (numOfSelectedFacilities === 1) {
             var incident = stockOut['stockout.date'] + "to" + stockOut['stockout.resolved_date'];
             if (incidents.indexOf(incident) === -1) {
@@ -174,7 +173,7 @@ function StockOutSingleProductReportController($scope, $filter, $controller, $ht
             var sum = 0;
             _.forEach(drug, function (stockOut) {
                 sum += stockOut.overlap_duration;
-                incidents = generateIncidents(stockOut, numOfSelectedFacilities);
+                incidents = generateIncidents(incidents,stockOut, numOfSelectedFacilities);
             });
             sumAvg += sum / drug.length;
             totalOccurrences += drug.length;

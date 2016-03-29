@@ -135,7 +135,20 @@ describe("Stock Out Single Product Report Controller", function () {
             "location.district_code": "MARRACUENE4",
             "stockout.date": "2016-01-12",
             "facility.facility_code": "HF5",
-            "stockout.resolved_date": "2016-03-28",
+            "stockout.resolved_date": "2016-02-01",
+            "overlapped_month": "2016-01-01",
+            "location.district_name": "Marracuene4"
+        },{
+            "drug.drug_code": "07A06",
+            "location.province_code": "TestProvince",
+            "drug.drug_name": "Paracetamol120mg/5mLXarope",
+            "location.province_name": "TestProvinceName",
+            "facility.facility_name": "Marracuene",
+            "overlap_duration": 20,
+            "location.district_code": "MARRACUENE4",
+            "stockout.date": "2016-02-10",
+            "facility.facility_code": "HF5",
+            "stockout.resolved_date": "2016-03-29",
             "overlapped_month": "2016-01-01",
             "location.district_name": "Marracuene4"
         }
@@ -155,7 +168,7 @@ describe("Stock Out Single Product Report Controller", function () {
         scope.districts = districtData;
         scope.facilities = facilityData;
         scope.reportParams = {
-            provinceId: "1",
+            provinceId: "2",
             districtId: "4",
             facilityId: "1",
             startTime: "2016-01-01",
@@ -190,6 +203,30 @@ describe("Stock Out Single Product Report Controller", function () {
         expect(facilityResult.monthlyOccurrences).toBe('1.0');
         expect(facilityResult.totalDuration).toBe(10);
         expect(facilityResult.incidents).toBe("2016-01-13to2016-01-22");
+
+    });
+
+    it('should generate facility incidents correctly', function () {
+        scope.provinces = provinceData;
+        scope.districts = districtData;
+        scope.facilities = facilityData;
+        scope.reportParams = {
+            provinceId: "1",
+            districtId: "6",
+            facilityId: "5",
+            startTime: "2016-01-01",
+            endTime: "2016-03-31"
+        };
+        scope.reportParams.productCode = "O7A06";
+
+        httpBackend.expectGET("/cubesreports/cube/vw_stockouts/facts?cut=overlapped_date:2016,01,01-2016,03,31|drug:O7A06").respond(200, stockOutReportData);
+        scope.loadReport();
+        httpBackend.flush();
+
+
+        var facilityResult = scope.tree_data[1].children[0].children[0];
+
+        expect(facilityResult.incidents).toBe("2016-01-12to2016-02-01, 2016-02-10to2016-03-29");
     });
 
 });
