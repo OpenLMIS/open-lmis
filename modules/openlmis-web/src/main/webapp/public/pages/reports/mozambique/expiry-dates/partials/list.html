@@ -54,11 +54,11 @@
                 <td>{{entry.code}}</td>
                 <td style="text-align: left"><a href="javascript:void(0);">{{entry.name}}</a></td>
                 <td class="expiry-dates-td">
-                    <div class="expiry-dates-container" ng-repeat="expiryDate in entry.expiry_dates">
-                        <span ng-class="{true: 'expiry-warning'}[highlightDate(expiryDate)]">
+                    <p>
+                        <span ng-class="{true: 'expiry-warning'}[highlightDate(expiryDate)]" ng-repeat="expiryDate in entry.expiry_dates">
                            {{formatDate(expiryDate)}}
                         </span>
-                    </div>
+                    </p>
                 </td>
             </tr>
         </table>

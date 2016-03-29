@@ -14,6 +14,7 @@ function LocaleController($scope, $rootScope, $cookies, Locales, ChangeLocale, M
 
   Locales.get({}, function (data) {
     $scope.locales = data.locales;
+    locale = data.locales;
     messageService.populate();
   }, {});
 
