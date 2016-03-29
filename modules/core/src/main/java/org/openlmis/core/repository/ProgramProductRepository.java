@@ -157,4 +157,8 @@ public class ProgramProductRepository {
   public List<ProgramProduct> getByProgramAfterUpdatedTimeByFacilityType(Program program, Date afterUpdatedTime, FacilityType facilityType) {
     return mapper.getByProgramAfterUpdatedTimeFilterByFacilityType(program.getId(), afterUpdatedTime, facilityType.getId());
   }
+
+  public List<ProgramProduct> getLatestUpdatedProgramProduct(Date afterUpdatedTime) {
+    return mapper.getLatestUpdatedProgramProduct(afterUpdatedTime);
+  }
 }

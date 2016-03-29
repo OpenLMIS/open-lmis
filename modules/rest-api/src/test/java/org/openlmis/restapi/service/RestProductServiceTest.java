@@ -150,12 +150,17 @@ public class RestProductServiceTest {
 
     Product product1 = makeProduct("P1", "product 1");
     Product product2 = makeProduct("P2", "product 2");
+    Product product3 = makeProduct("P3", "product 3");
+    ArrayList<Product> latestUpdatedProducts = new ArrayList<>();
+    latestUpdatedProducts.add(product1);
+    latestUpdatedProducts.add(product2);
 
     Program program1 = makeProgram("PR1", "program 1");
     Program program2 = makeProgram("PR2", "program 2");
     ProgramProduct programProduct1 = makeProgramProduct(program1, product1);
     ProgramProduct programProduct2 = makeProgramProduct(program2, product1);
     ProgramProduct programProduct3 = makeProgramProduct(program1, product2);
+    ProgramProduct programProduct4 = makeProgramProduct(program1, product3);
 
     ProgramSupported programSupported1 = make(a(ProgramSupportedBuilder.defaultProgramSupported,
         with(ProgramSupportedBuilder.supportedProgram, program1)));
@@ -167,21 +172,62 @@ public class RestProductServiceTest {
 
     User user = make(a(UserBuilder.defaultUser));
     user.setFacilityId(facility.getId());
+    List<ProgramProduct> programProducts = new ArrayList<>();
+    programProducts.add(programProduct4);
 
-    when(productService.getProductsAfterUpdatedDate(afterUpdatedTime)).thenReturn(asList(product1, product2));
+    when(productService.getProductsAfterUpdatedDate(afterUpdatedTime)).thenReturn(latestUpdatedProducts);
     when(programProductService.getByProductCode("P1")).thenReturn(asList(programProduct1, programProduct2));
     when(programProductService.getByProductCode("P2")).thenReturn(asList(programProduct3));
+    when(programProductService.getByProductCode("P3")).thenReturn(asList(programProduct4));
     when(userService.getById(user.getId())).thenReturn(user);
     when(programSupportedService.getAllByFacilityId(user.getFacilityId())).thenReturn(facility.getSupportedPrograms());
+    when(programProductService.getLatestUpdatedProgramProduct(afterUpdatedTime)).thenReturn(programProducts);
 
     List<ProductResponse> products = restProductService.getLatestProductsAfterUpdatedTime(afterUpdatedTime, user.getId());
 
-    assertEquals(2, products.size());
+    assertEquals(3, products.size());
     assertEquals("PR1", products.get(0).getSupportedPrograms().get(0));
     assertEquals("PR2", products.get(0).getSupportedPrograms().get(1));
     assertEquals("PR1", products.get(1).getSupportedPrograms().get(0));
 
   }
+
+
+  @Test
+  public void shouldNotResponseProductTwiceWhenProductsUpdatedAndAssociateProgramProductUpdated() {
+    Date afterUpdatedTime = DateUtil.parseDate("2015-11-11 10:10:10");
+
+    Product product = makeProduct("P1", "product 1");
+
+    ArrayList<Product> latestUpdatedProducts = new ArrayList<>();
+    latestUpdatedProducts.add(product);
+
+    Program program1 = makeProgram("PR1", "program 1");
+    ProgramProduct programProduct = makeProgramProduct(program1, product);
+
+    ProgramSupported programSupported1 = make(a(ProgramSupportedBuilder.defaultProgramSupported,
+            with(ProgramSupportedBuilder.supportedProgram, program1)));
+
+    Facility facility = make(a(FacilityBuilder.defaultFacility));
+    facility.setSupportedPrograms(asList(programSupported1));
+
+    User user = make(a(UserBuilder.defaultUser));
+    user.setFacilityId(facility.getId());
+    List<ProgramProduct> programProducts = new ArrayList<>();
+    programProducts.add(programProduct);
+
+    when(productService.getProductsAfterUpdatedDate(afterUpdatedTime)).thenReturn(latestUpdatedProducts);
+    when(programProductService.getByProductCode("P1")).thenReturn(asList(programProduct));
+
+    when(userService.getById(user.getId())).thenReturn(user);
+    when(programSupportedService.getAllByFacilityId(user.getFacilityId())).thenReturn(facility.getSupportedPrograms());
+    when(programProductService.getLatestUpdatedProgramProduct(afterUpdatedTime)).thenReturn(programProducts);
+
+    List<ProductResponse> products = restProductService.getLatestProductsAfterUpdatedTime(afterUpdatedTime, user.getId());
+
+    assertEquals(1, products.size());
+  }
+
 
   @Test
   public void shouldNotGetProductsInProgramsNotSupportedByFacility() {

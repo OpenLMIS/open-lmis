@@ -233,4 +233,8 @@ public class ProgramProductService {
   public List<ProgramProduct> getProductsByProgramAfterUpdatedDateByFacilityType(Program program, Date afterUpdatedTime, FacilityType facilityType) {
     return programProductRepository.getByProgramAfterUpdatedTimeByFacilityType(program, afterUpdatedTime, facilityType);
   }
+
+  public List<ProgramProduct> getLatestUpdatedProgramProduct(Date afterUpdatedTime) {
+    return programProductRepository.getLatestUpdatedProgramProduct(afterUpdatedTime);
+  }
 }

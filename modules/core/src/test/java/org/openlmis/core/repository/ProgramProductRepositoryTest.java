@@ -247,4 +247,13 @@ public class ProgramProductRepositoryTest {
     programProductRepository.getByProgramAfterUpdatedTimeByFacilityType(program, afterUpdatedTime, facilityType);
     verify(programProductMapper).getByProgramAfterUpdatedTimeFilterByFacilityType(program.getId(), afterUpdatedTime, facilityType.getId());
   }
+
+  @Test
+  public void shouldGetLatestUpdatedProgramProducts() {
+    Date afterUpdatedTime = new Date();
+
+    programProductRepository.getLatestUpdatedProgramProduct(afterUpdatedTime);
+
+    verify(programProductMapper).getLatestUpdatedProgramProduct(afterUpdatedTime);
+  }
 }
