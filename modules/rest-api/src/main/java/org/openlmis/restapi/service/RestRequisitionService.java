@@ -245,16 +245,18 @@ public class RestRequisitionService {
 
           if(staticReferenceDataService.getBoolean("toggle.mmia.custom.regimen")) {
             regimenLineItem.setCode(String.format("%03d", regimenService.listAll().size() + 1));
+
+            rnr.getRegimenLineItems().add(regimenLineItem);
+
+            if (regimenService.getRegimensByCategoryIdAndName(regimenLineItem.getCategory().getId(), regimenLineItem.getName()) == null) {
+              Regimen regimen = new Regimen(regimenLineItem.getName(), regimenLineItem.getCode(), rnr.getProgram().getId(), true, regimenLineItem.getCategory(), regimenService.getRegimensByCategory(regimenLineItem.getCategory()).size(), true);
+              regimenService.save(regimen, userId);
+            }
+
+            correspondingRegimenLineItem = regimenLineItem;
+          } else {
+            throw new DataException("error.invalid.regimen");
           }
-
-          rnr.getRegimenLineItems().add(regimenLineItem);
-
-          if (regimenService.getRegimensByCategoryIdAndName(regimenLineItem.getCategory().getId(), regimenLineItem.getName()) == null) {
-            Regimen regimen = new Regimen(regimenLineItem.getName(), regimenLineItem.getCode(), rnr.getProgram().getId(), true, regimenLineItem.getCategory(), regimenService.getRegimensByCategory(regimenLineItem.getCategory()).size(), true);
-            regimenService.save(regimen, userId);
-          }
-
-          correspondingRegimenLineItem = regimenLineItem;
         }
         correspondingRegimenLineItem.populate(regimenLineItem);
       }

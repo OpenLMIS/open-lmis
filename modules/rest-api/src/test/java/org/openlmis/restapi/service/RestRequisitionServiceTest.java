@@ -514,6 +514,33 @@ public class RestRequisitionServiceTest {
   }
 
   @Test
+  public void shouldThrowErrorIfInvalidRegimenIsProvidedWhenToggleOff() throws Exception {
+    Program program = new Program();
+    report.setProducts(new ArrayList<RnrLineItem>());
+    RegimenLineItem reportRegimenLineItem = make(a(defaultRegimenLineItem, with(patientsOnTreatment, 10), with(patientsStoppedTreatment, 5)));
+    report.setRegimens(asList(RegimenLineItemForRest.convertFromRegimenLineItem(reportRegimenLineItem)));
+
+
+    when(programService.getValidatedProgramByCode(report.getProgramCode())).thenReturn(program);
+    when(staticReferenceDataService.getBoolean("toggle.mmia.custom.regimen")).thenReturn(false);
+
+
+    Facility facility = make(a(FacilityBuilder.defaultFacility, with(FacilityBuilder.virtualFacility, true)));
+    when(facilityService.getOperativeFacilityByCode(report.getAgentCode())).thenReturn(facility);
+
+    Rnr rnr = new Rnr();
+    rnr.setProgram(program);
+    when(requisitionService.initiate(facility, program, 3l, false, null)).thenReturn(rnr);
+    when(rnrTemplateService.fetchProgramTemplateForRequisition(any(Long.class))).thenReturn(new ProgramRnrTemplate(new ArrayList<RnrColumn>()));
+
+    expectedException.expect(DataException.class);
+    expectedException.expectMessage("error.invalid.regimen");
+
+    service.submitReport(report, 3l);
+
+  }
+
+  @Test
   public void shouldThrowAnExceptionIfLineItemsCountMismatchBetweenReportAndSavedRequisition() throws Exception {
     long requisitionId = 123L;
     List<RnrLineItem> productList = asList(make(a(defaultRnrLineItem, with(productCode, "P10"))));
