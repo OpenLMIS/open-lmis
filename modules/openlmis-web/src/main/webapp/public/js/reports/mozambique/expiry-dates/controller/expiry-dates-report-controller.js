@@ -16,6 +16,18 @@ function ExpiryDatesReportController($scope, $filter, $controller, $http, CubesG
         queryExpiryDatesReportDataFromCubes();
     };
 
+    $scope.highlightDate = function(date) {
+        var today = new Date();
+        var sixMonthsFromNow = new Date(today.getFullYear(), today.getMonth() - 1 + 6, today.getDate());
+        var compareDate = DateFormatService.formatDateWithLastDayOfMonth(sixMonthsFromNow);
+        return date <= compareDate;
+    };
+
+    $scope.formatDate = function(date) {
+        var options = {year: 'numeric', month: 'long'};
+        return new Date(date).toLocaleString(locale, options);
+    };
+
     function queryExpiryDatesReportDataFromCubes() {
         $http.get(CubesGenerateUrlService.generateFactsUrl('vw_expiry_dates', generateCutParams()))
             .success(function (data) {

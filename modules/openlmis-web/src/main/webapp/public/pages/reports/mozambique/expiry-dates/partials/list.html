@@ -6,6 +6,18 @@
         <div ng-include="'/public/pages/reports/mozambique/product-report-selection.html'"></div>
 
         <div class="report-selection">
+            <label class="labels" openlmis-message="label.occurred.end.date"></label>
+            <div class="form-field">
+                <input name="endTime" id="endTime" type="text"
+                       ui-date
+                       ui-date-format
+                       ng-model="reportParams.endTime"
+                       ng-required="true"
+                       ng-change="checkDateBeforeToday()"/>
+            </div>
+        </div>
+
+        <div class="report-selection">
             <input type="submit" class="btn btn-primary" ng-click="loadReport()"
                    openlmis-message="button.generateReport"/>
         </div>
@@ -14,14 +26,6 @@
 
     </div>
 
-    <div class="form-field">
-        <input name="endTime" id="endTime" type="text"
-               ui-date
-               ui-date-format
-               ng-model="reportParams.endTime"
-               ng-required="true"
-               ng-change="checkDateBeforeToday()"/>
-    </div>
     <hr/>
 
     <div id="report" ng-if="reportData.length > 0">
@@ -49,7 +53,13 @@
             <tr ng-repeat="entry in reportData | orderBy:sortType:sortReverse">
                 <td>{{entry.code}}</td>
                 <td style="text-align: left"><a href="javascript:void(0);">{{entry.name}}</a></td>
-                <td>{{entry.expiry_dates}}</td>
+                <td class="expiry-dates-td">
+                    <div class="expiry-dates-container" ng-repeat="expiryDate in entry.expiry_dates">
+                        <span ng-class="{true: 'expiry-warning'}[highlightDate(expiryDate)]">
+                           {{formatDate(expiryDate)}}
+                        </span>
+                    </div>
+                </td>
             </tr>
         </table>
     </div>
