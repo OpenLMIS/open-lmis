@@ -40,17 +40,14 @@ function ExpiryDatesReportController($scope, $filter, $controller, $http, CubesG
 
         var expiryDatesHash = {};
 
-        var dataGroupByFacility = _.groupBy(data, 'facility.facility_code');
-        var dataGroupByDrug = _.groupBy(data, 'drug.drug_code');
-
-        _.forEach(dataGroupByFacility, function(item) {
+        _.forEach(_.groupBy(data, 'facility.facility_code'), function(item) {
             var expiryDatesForTheFacility = getExpiryDatesBeforeOccurredForFacility(item);
 
-            _.forEach(Object.keys(dataGroupByDrug), function(drugCode) {
-                if (!expiryDatesHash[drugCode]) {
-                    expiryDatesHash[drugCode] = expiryDatesForTheFacility[drugCode];
-                } else if (expiryDatesForTheFacility[drugCode] && expiryDatesForTheFacility[drugCode].expiry_dates) {
-                    expiryDatesHash[drugCode].expiry_dates = expiryDatesHash[drugCode].expiry_dates + "," + expiryDatesForTheFacility[drugCode].expiry_dates;
+            _.forEach(expiryDatesForTheFacility, function(expiryDateItem, drugCode) {
+                if (expiryDatesHash[drugCode]) {
+                    expiryDatesHash[drugCode].expiry_dates = expiryDatesHash[drugCode].expiry_dates + "," + expiryDateItem.expiry_dates;
+                } else {
+                    expiryDatesHash[drugCode] = expiryDateItem;
                 }
             });
         });
