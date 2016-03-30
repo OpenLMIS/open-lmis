@@ -22,8 +22,6 @@ function ViewRnrMmiaController($scope, $route, Requisitions, messageService, dow
     $scope.loadMmiaDetail = function () {
         Requisitions.get({id: $route.current.params.rnr, operation: "skipped"}, function (data) {
             $scope.rnr = data.rnr;
-            console.log($scope.rnr);
-
             $scope.year = data.rnr.period.stringYear;
 
             $scope.initMonth();
