@@ -24,7 +24,6 @@ import org.openlmis.core.query.QueryExecutor;
 import org.openlmis.core.repository.mapper.*;
 import org.openlmis.db.categories.IntegrationTests;
 import org.openlmis.rnr.builder.RequisitionBuilder;
-import org.openlmis.rnr.builder.RnrLineItemBuilder;
 import org.openlmis.rnr.domain.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
@@ -43,9 +42,7 @@ import static org.hamcrest.CoreMatchers.nullValue;
 import static org.junit.Assert.*;
 import static org.openlmis.core.builder.FacilityApprovedProductBuilder.defaultFacilityApprovedProduct;
 import static org.openlmis.core.builder.FacilityBuilder.defaultFacility;
-import static org.openlmis.core.builder.ProcessingPeriodBuilder.defaultProcessingPeriod;
-import static org.openlmis.core.builder.ProcessingPeriodBuilder.name;
-import static org.openlmis.core.builder.ProcessingPeriodBuilder.scheduleId;
+import static org.openlmis.core.builder.ProcessingPeriodBuilder.*;
 import static org.openlmis.core.builder.ProgramBuilder.PROGRAM_ID;
 import static org.openlmis.rnr.builder.RnrLineItemBuilder.*;
 import static org.openlmis.rnr.domain.RnrStatus.*;
@@ -169,6 +166,39 @@ public class RnrLineItemMapperIT {
 
     assertThat(rnrLineItem.getId(), is(lineItem.getId()));
     assertThat(rnrLineItem.getLossesAndAdjustments().size(), is(2));
+    assertThat(rnrLineItem.getRnrId(), is(rnr.getId()));
+    assertThat(rnrLineItem.getDosesPerMonth(), is(30));
+    assertThat(rnrLineItem.getDosesPerDispensingUnit(), is(10));
+    assertThat(rnrLineItem.getProduct(), is("Primary Name Tablet strength mg"));
+    assertThat(rnrLineItem.getPacksToShip(), is(20));
+    assertThat(rnrLineItem.getDispensingUnit(), is("Strip"));
+    assertThat(rnrLineItem.getRoundToZero(), is(true));
+    assertThat(rnrLineItem.getPackSize(), is(10));
+    assertThat(rnrLineItem.getPrice().compareTo(new Money("12.5")), is(0));
+    assertThat(rnrLineItem.getBeginningBalance(), is(5));
+    assertThat(rnrLineItem.getPreviousStockInHand(), is(5));
+    assertThat(rnrLineItem.getProductCategory(), is("Category 1"));
+    assertThat(rnrLineItem.getReportingDays(), is(10));
+  }
+
+  @Test
+  public void shouldReturnRnrLineItemsByRnrIdWithoutLossesAndAdjustments() {
+    requisitionMapper.insert(rnr);
+    RnrLineItem lineItem = new RnrLineItem(rnr.getId(), facilityTypeApprovedProduct, MODIFIED_BY, 1L);
+    lineItem.setPacksToShip(20);
+    lineItem.setBeginningBalance(5);
+    lineItem.setFullSupply(true);
+    lineItem.setReportingDays(10);
+    lineItem.setPreviousStockInHand(5);
+    rnrLineItemMapper.insert(lineItem, lineItem.getPreviousNormalizedConsumptions().toString());
+
+    List<RnrLineItem> rnrLineItems = rnrLineItemMapper.getRnrLineItemsByRnrId(rnr.getId());
+
+    assertThat(rnrLineItems.size(), is(1));
+    RnrLineItem rnrLineItem = rnrLineItems.get(0);
+
+    assertThat(rnrLineItem.getId(), is(lineItem.getId()));
+    assertThat(rnrLineItem.getLossesAndAdjustments().size(), is(0));
     assertThat(rnrLineItem.getRnrId(), is(rnr.getId()));
     assertThat(rnrLineItem.getDosesPerMonth(), is(30));
     assertThat(rnrLineItem.getDosesPerDispensingUnit(), is(10));

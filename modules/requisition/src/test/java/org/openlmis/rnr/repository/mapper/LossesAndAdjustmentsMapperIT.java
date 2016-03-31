@@ -129,6 +129,13 @@ public class LossesAndAdjustmentsMapperIT {
   }
 
   @Test
+  public void shouldNotThrowErrorWhenThereIsNoLossesAndAdjustments() throws Exception {
+    List<LossesAndAdjustments> lossesAndAdjustmentsList = lossesAndAdjustmentsMapper.getByRnrLineItem(
+            rnrLineItem.getId());
+    assertThat(lossesAndAdjustmentsList.size(), is(0));
+  }
+
+  @Test
   public void shouldDeleteLossesAndAdjustmentForLineItem() throws Exception {
     lossesAndAdjustmentsMapper.insert(rnrLineItem, lossAndAdjustment);
     lossesAndAdjustmentsMapper.deleteByLineItemId(rnrLineItem.getId());

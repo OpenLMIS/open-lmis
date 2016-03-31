@@ -147,46 +147,18 @@ public class RequisitionMapperIT {
 
   @Test
   public void shouldGetRequisitionById() {
-    Rnr requisition = new Rnr(new Facility(facility.getId()), new Program(program.getId()), processingPeriod1, false, MODIFIED_BY, 1L);
-    requisition.setAllocatedBudget(new BigDecimal(123.45));
-    requisition.setStatus(INITIATED);
-    requisition.setId(1L);
-    requisition.setEmergency(true);
+    Rnr requisition = generateRnr();
 
     String submitterText = "submitter";
     Signature submitterSignature = new Signature(Signature.Type.SUBMITTER, submitterText);
     String approverText = "approver";
     Signature approverSignature = new Signature(Signature.Type.APPROVER, approverText);
 
-    ArrayList<Signature> rnrSignatures = new ArrayList<>();
-    rnrSignatures.add(submitterSignature);
-    rnrSignatures.add(approverSignature);
+    insertSignatures(requisition, submitterSignature, approverSignature);
 
-    requisition.setRnrSignatures(rnrSignatures);
+    insertLineItem(requisition);
 
-    signatureMapper.insertSignature(submitterSignature);
-    signatureMapper.insertSignature(approverSignature);
-    mapper.insert(requisition);
-    mapper.insertRnrSignature(requisition, submitterSignature);
-    mapper.insertRnrSignature(requisition, approverSignature);
-
-    Product product = insertProduct(true, "P1");
-    RnrLineItem fullSupplyLineItem = make(a(defaultRnrLineItem, with(fullSupply, true), with(productCode, product.getCode())));
-    RnrLineItem nonFullSupplyLineItem = make(a(defaultRnrLineItem, with(fullSupply, false), with(productCode, product.getCode())));
-    fullSupplyLineItem.setRnrId(requisition.getId());
-    nonFullSupplyLineItem.setRnrId(requisition.getId());
-    lineItemMapper.insert(fullSupplyLineItem, Collections.EMPTY_LIST.toString());
-    lineItemMapper.insert(nonFullSupplyLineItem, Collections.EMPTY_LIST.toString());
-
-    ProgramProduct programProduct = new ProgramProduct(program, product, 1, true);
-    programProduct.setProductCategory(productCategory);
-    programProductMapper.insert(programProduct);
-
-    User author = new User();
-    author.setId(1L);
-    Comment comment = new Comment(requisition.getId(), author, "A comment", null);
-    commentMapper.insert(comment);
-    updateSupplyingDepotForRequisition(requisition);
+      insertComment(requisition);
 
     Rnr fetchedRequisition = mapper.getById(requisition.getId());
 
@@ -206,6 +178,70 @@ public class RequisitionMapperIT {
     assertThat(fetchedRequisition.getRnrSignatures().get(0).getText(), is(submitterText));
     assertThat(fetchedRequisition.getRnrSignatures().get(1).getType(), is(Signature.Type.APPROVER));
     assertThat(fetchedRequisition.getRnrSignatures().get(1).getText(), is(approverText));
+  }
+
+    @Test
+  public void shouldGetRequisitionByIdWithoutLossesAndAdjustments() {
+    Rnr requisition = generateRnr();
+
+    Signature submitterSignature = new Signature(Signature.Type.SUBMITTER, "submitter");
+    Signature approverSignature = new Signature(Signature.Type.APPROVER, "approver");
+
+    insertSignatures(requisition, submitterSignature, approverSignature);
+
+    insertLineItem(requisition);
+
+    insertComment(requisition);
+
+    Rnr fetchedRequisition = mapper.getById(requisition.getId());
+
+    assertThat(fetchedRequisition.getFullSupplyLineItems().size(), is(1));
+  }
+
+  private void insertComment(Rnr requisition) {
+    User author = new User();
+    author.setId(1L);
+    Comment comment = new Comment(requisition.getId(), author, "A comment", null);
+    commentMapper.insert(comment);
+    updateSupplyingDepotForRequisition(requisition);
+  }
+
+  private void insertSignatures(Rnr requisition, Signature submitterSignature, Signature approverSignature) {
+    ArrayList<Signature> rnrSignatures = new ArrayList<>();
+    rnrSignatures.add(submitterSignature);
+    rnrSignatures.add(approverSignature);
+
+    requisition.setRnrSignatures(rnrSignatures);
+
+    signatureMapper.insertSignature(submitterSignature);
+    signatureMapper.insertSignature(approverSignature);
+    mapper.insert(requisition);
+    mapper.insertRnrSignature(requisition, submitterSignature);
+    mapper.insertRnrSignature(requisition, approverSignature);
+  }
+
+  private void insertLineItem(Rnr requisition) {
+    Product product = insertProduct(true, "P1");
+    RnrLineItem fullSupplyLineItem = make(a(defaultRnrLineItem, with(fullSupply, true), with(productCode, product.getCode())));
+    fullSupplyLineItem.getLossesAndAdjustments().clear();
+    RnrLineItem nonFullSupplyLineItem = make(a(defaultRnrLineItem, with(fullSupply, false), with(productCode, product.getCode())));
+    nonFullSupplyLineItem.getLossesAndAdjustments().clear();
+    fullSupplyLineItem.setRnrId(requisition.getId());
+    nonFullSupplyLineItem.setRnrId(requisition.getId());
+    lineItemMapper.insert(fullSupplyLineItem, Collections.EMPTY_LIST.toString());
+    lineItemMapper.insert(nonFullSupplyLineItem, Collections.EMPTY_LIST.toString());
+    ProgramProduct programProduct = new ProgramProduct(program, product, 1, true);
+    programProduct.setProductCategory(productCategory);
+    programProductMapper.insert(programProduct);
+  }
+
+  private Rnr generateRnr() {
+    Rnr requisition = new Rnr(new Facility(facility.getId()), new Program(program.getId()), processingPeriod1, false, MODIFIED_BY, 1L);
+    requisition.setAllocatedBudget(new BigDecimal(123.45));
+    requisition.setStatus(INITIATED);
+    requisition.setId(1L);
+    requisition.setEmergency(true);
+    return requisition;
   }
 
   @Test
