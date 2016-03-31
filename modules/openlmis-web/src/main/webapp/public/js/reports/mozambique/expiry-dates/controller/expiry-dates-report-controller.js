@@ -1,11 +1,6 @@
 function ExpiryDatesReportController($scope, $filter, $controller, $http, CubesGenerateUrlService, messageService, DateFormatService) {
     $controller('BaseProductReportController', {$scope: $scope});
 
-    $scope.getTimeRange = function (dateRange) {
-        $scope.reportParams.startTime = dateRange.startTime;
-        $scope.reportParams.endTime = dateRange.endTime;
-    };
-
     $scope.$on('$viewContentLoaded', function () {
         $scope.loadProducts();
         $scope.loadHealthFacilities();
@@ -29,9 +24,9 @@ function ExpiryDatesReportController($scope, $filter, $controller, $http, CubesG
     };
 
     function queryExpiryDatesReportDataFromCubes() {
-        $http.get(CubesGenerateUrlService.generateFactsUrl('vw_expiry_dates', generateCutParams()))
+        $http.get(CubesGenerateUrlService.generateAggregateUrl('vw_expiry_dates', ['facility.facility_code', 'drug.drug_code', 'expiry_dates'], generateCutParams()))
             .success(function (data) {
-                generateReportData(data);
+                generateReportData(data.cells);
             });
     }
 
@@ -74,10 +69,10 @@ function ExpiryDatesReportController($scope, $filter, $controller, $http, CubesG
     function getExpiryDatesBeforeOccurredForFacility(dataForOneFacility) {
         var drugOccurredHash = {};
         _.forEach(dataForOneFacility, function (item) {
-            var occurredDate = new Date(item['occurred.year'], item['occurred.month'] - 1, item['occurred.day']);
+            var occurredDate = item.last_occurred;
             var drugCode = item['drug.drug_code'];
             if (drugOccurredHash[drugCode] ) {
-                if (occurredDate < drugOccurredHash[drugCode]) {
+                if (occurredDate > drugOccurredHash[drugCode].occurred_date) {
                     drugOccurredHash[drugCode].occurred_date = occurredDate;
                     drugOccurredHash[drugCode].expiry_dates = item.expiry_dates;
                 }
@@ -86,16 +81,18 @@ function ExpiryDatesReportController($scope, $filter, $controller, $http, CubesG
                     code: drugCode,
                     name: item['drug.drug_name'],
                     expiry_dates: item.expiry_dates,
-                    occurred_date: occurredDate
+                    occurred_date: occurredDate,
+                    facility_code: item['facility.facility_code']
                 };
             }
         });
+        console.log(drugOccurredHash);
         return drugOccurredHash;
     }
 
     function getExpiryDateReportsParams() {
         var params = {};
-        params.endTime = $filter('date')($scope.reportParams.endTime, "yyyy,MM,dd");
+        params.endTime = new Date($scope.reportParams.endTime).getTime();
         params.selectedProvince = $scope.getGeographicZoneById($scope.provinces, $scope.reportParams.provinceId);
         params.selectedDistrict = $scope.getGeographicZoneById($scope.districts, $scope.reportParams.districtId);
         params.selectedFacility = ($scope.facilities.find(function (facility) {
