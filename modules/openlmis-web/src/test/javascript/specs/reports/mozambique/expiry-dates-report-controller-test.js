@@ -1,47 +1,64 @@
 describe("Expiry Dates Report Controller", function () {
     var scope, httpBackend, dateFilter, expiryDatesReportData, messageService;
 
-    expiryDatesReportData =
-    {
-        "cells": [
-            {
-                "drug.drug_code": "01A01",
-                "drug.drug_name": "Digoxina 0,25mg Comp",
-                "facility.facility_name": "Matalane",
-                "facility.facility_code": "HF2",
-                "occurred_sum": 5856192000000.0,
-                "expiry_dates": "20/7/2017, 31/5/2016",
-                "last_occurred": 1443657600000.0 //10/1/2015
-            },
-            {
-                "drug.drug_code": "01A02",
-                "drug.drug_name": "Digoxina; 2,5mg/50mL; Gotas Orais",
-                "facility.facility_name": "Matalane",
-                "facility.facility_code": "HF2",
-                "occurred_sum": 2928096000000.0,
-                "expiry_dates": "31/10/2016,31/5/2021",
-                "last_occurred": 1440979200000.0 //8/31/2015
-            },
-            {
-                "drug.drug_code": "01A01",
-                "drug.drug_name": "Digoxina 0,25mg Comp",
-                "facility.facility_name": "Nhongonhane (Ed.Mondl.)",
-                "facility.facility_code": "HF5",
-                "occurred_sum": 2928096000000.0,
-                "expiry_dates": "31/1/2018,31/7/2017",
-                "last_occurred": 1438300800000.0 //7/31/2015
-            },
-            {
-                "drug.drug_code": "01A02",
-                "drug.drug_name": "Digoxina; 2,5mg/50mL; Gotas Orais",
-                "facility.facility_name": "Nhongonhane (Ed.Mondl.)",
-                "facility.facility_code": "HF5",
-                "occurred_sum": 2928096000000.0,
-                "expiry_dates": "31/8/2016,30/4/2017,31/5/2018",
-                "last_occurred": 1433030400000.0 //5/31/2015
-            }
-        ]
-    };
+    expiryDatesReportData = [
+        {
+            "facility.facility_name": "Health Facility 1",
+            "facility.facility_code": "HF1",
+            "drug.drug_name": "Drug 1",
+            "drug.drug_code": "P1",
+            "location.district_name": "District 1",
+            "location.district_code": "D1",
+            "location.province_name": "Province 1",
+            "location.province_code": "PH1",
+            "expiry_dates": "10/1/2017, 11/11/2018",
+            "occurred.year": 2015,
+            "occurred.month": 8,
+            "occurred.day": 31
+        },
+        {
+            "facility.facility_name": "Health Facility 1",
+            "facility.facility_code": "HF1",
+            "drug.drug_name": "Drug 1",
+            "drug.drug_code": "P1",
+            "location.district_name": "District 1",
+            "location.district_code": "D1",
+            "location.province_name": "Province 1",
+            "location.province_code": "PH1",
+            "expiry_dates": "10/10/2017, 11/11/2018",
+            "occurred.year": 2015,
+            "occurred.month": 10,
+            "occurred.day": 31
+        },
+        {
+            "facility.facility_name": "Health Facility 1",
+            "facility.facility_code": "HF1",
+            "drug.drug_name": "Drug 2",
+            "drug.drug_code": "P2",
+            "location.district_name": "District 1",
+            "location.district_code": "D1",
+            "location.province_name": "Province 1",
+            "location.province_code": "PH1",
+            "expiry_dates": "20/10/2017, 11/12/2019",
+            "occurred.year": 2015,
+            "occurred.month": 11,
+            "occurred.day": 30
+        },
+        {
+            "facility.facility_name": "Health Facility 2",
+            "facility.facility_code": "HF2",
+            "drug.drug_name": "Drug 1",
+            "drug.drug_code": "P1",
+            "location.district_name": "District 1",
+            "location.district_code": "D1",
+            "location.province_name": "Province 1",
+            "location.province_code": "PH1",
+            "expiry_dates": "10/10/2015, 11/11/2018, 12/3/2017",
+            "occurred.year": 2015,
+            "occurred.month": 9,
+            "occurred.day": 20
+        }
+    ];
 
     beforeEach(module('openlmis'));
     beforeEach(module('ui.bootstrap.dialog'));
@@ -56,15 +73,15 @@ describe("Expiry Dates Report Controller", function () {
 
     it('should get the expiry dates on the last movement before occurred date for each drug', function() {
         scope.reportParams = {
-            endTime: 1451520000000 //12/31/2015
+            endTime: "2015-12-31"
         };
 
-        httpBackend.expectGET('/cubesreports/cube/vw_expiry_dates/aggregate?drilldown=facility.facility_code|drug.drug_code|expiry_dates&cut=occurred:-1451520000000').respond(200, expiryDatesReportData);
+        httpBackend.expectGET('/cubesreports/cube/vw_expiry_dates/facts?cut=occurred:-2015,12,31').respond(200, expiryDatesReportData);
         scope.loadReport();
         httpBackend.flush();
 
         expect(scope.reportData.length).toEqual(2);
-        expect(scope.reportData[0].code).toEqual("01A01");
-        expect(scope.reportData[0].expiry_dates).toEqual([ '2016-05-31', '2017-07-31', '2018-01-31' ]);
+        expect(scope.reportData[0].code).toEqual("P1");
+        expect(scope.reportData[0].expiry_dates).toEqual(['2015-10-31', '2017-01-31', '2017-03-31', '2018-11-30']);
     });
 });
