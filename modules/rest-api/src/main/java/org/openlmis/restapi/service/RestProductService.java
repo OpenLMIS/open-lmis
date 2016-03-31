@@ -132,7 +132,7 @@ public class RestProductService {
       List<String> programCodes = FluentIterable.from(programProductSevice.getByProductCode(product.getCode())).filter(new Predicate<ProgramProduct>() {
         @Override
         public boolean apply(ProgramProduct programProduct) {
-          return programs.contains(programProduct.getProgram().getCode());
+          return programs.contains(programProduct.getProgram().getCode()) && programProduct.getActive();
         }
       }).transform(new Function<ProgramProduct, String>() {
         @Override

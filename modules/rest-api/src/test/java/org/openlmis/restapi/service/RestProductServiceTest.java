@@ -190,6 +190,7 @@ public class RestProductServiceTest {
     Product product1 = makeProduct("P1", "product 1");
     Product product2 = makeProduct("P2", "product 2");
     Product product3 = makeProduct("P3", "product 3");
+    Product product4 = makeProduct("P4", "product 4");
 
     Program program1 = makeProgram("PR1", "program 1");
     Program program2 = makeProgram("PR2", "program 2");
@@ -197,6 +198,8 @@ public class RestProductServiceTest {
     ProgramProduct programProduct2 = makeProgramProduct(program2, product1);
     ProgramProduct programProduct3 = makeProgramProduct(program1, product2);
     ProgramProduct programProduct4 = makeProgramProduct(program2, product3);
+    ProgramProduct programProduct5 = makeProgramProduct(program1, product4);
+    programProduct5.setActive(false);
 
     ProgramSupported programSupported = make(a(ProgramSupportedBuilder.defaultProgramSupported,
         with(ProgramSupportedBuilder.supportedProgram, program1)));
@@ -207,10 +210,11 @@ public class RestProductServiceTest {
     User user = make(a(UserBuilder.defaultUser));
     user.setFacilityId(facility.getId());
 
-    when(productService.getProductsAfterUpdatedDate(afterUpdatedTime)).thenReturn(asList(product1, product2, product3));
+    when(productService.getProductsAfterUpdatedDate(afterUpdatedTime)).thenReturn(asList(product1, product2, product3, product4));
     when(programProductService.getByProductCode("P1")).thenReturn(asList(programProduct1, programProduct2));
     when(programProductService.getByProductCode("P2")).thenReturn(asList(programProduct3));
     when(programProductService.getByProductCode("P3")).thenReturn(asList(programProduct4));
+    when(programProductService.getByProductCode("P4")).thenReturn(asList(programProduct5));
     when(userService.getById(user.getId())).thenReturn(user);
     when(programSupportedService.getAllByFacilityId(user.getFacilityId())).thenReturn(facility.getSupportedPrograms());
 
