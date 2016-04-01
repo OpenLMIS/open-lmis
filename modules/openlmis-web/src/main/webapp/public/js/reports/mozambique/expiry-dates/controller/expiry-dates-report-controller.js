@@ -122,16 +122,16 @@ function ExpiryDatesReportController($scope, $filter, $controller, $http, CubesG
     }
 
     function generateReportTitle() {
-        var stockReportParams = getExpiryDateReportsParams();
+        var expiryDatesReportParams = getExpiryDateReportsParams();
         var reportTitle = "";
-        if (stockReportParams.selectedProvince) {
-            reportTitle = stockReportParams.selectedProvince.name;
+        if (expiryDatesReportParams.selectedProvince) {
+            reportTitle = expiryDatesReportParams.selectedProvince.name;
         }
-        if (stockReportParams.selectedDistrict) {
-            reportTitle += ("," + stockReportParams.selectedDistrict.name);
+        if (expiryDatesReportParams.selectedDistrict) {
+            reportTitle += ("," + expiryDatesReportParams.selectedDistrict.name);
         }
-        if (stockReportParams.selectedFacility) {
-            reportTitle += reportTitle === "" ? stockReportParams.selectedFacility.name : ("," + stockReportParams.selectedFacility.name);
+        if (expiryDatesReportParams.selectedFacility) {
+            reportTitle += reportTitle === "" ? expiryDatesReportParams.selectedFacility.name : ("," + expiryDatesReportParams.selectedFacility.name);
         }
         $scope.reportParams.reportTitle = reportTitle || messageService.get("label.all");
     }
