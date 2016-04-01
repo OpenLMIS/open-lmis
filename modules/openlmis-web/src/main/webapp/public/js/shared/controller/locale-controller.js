@@ -11,17 +11,17 @@ var locale = "en-US";
 
 function LocaleController($scope, $rootScope, $cookies, Locales, ChangeLocale, Messages, messageService, localStorageService) {
   $scope.selectedLocale = $cookies.lang === undefined ? "en" : $cookies.lang;
+  locale = $scope.selectedLocale;
 
   Locales.get({}, function (data) {
     $scope.locales = data.locales;
-    locale = data.locales;
     messageService.populate();
   }, {});
 
   $scope.changeLocale = function (localeKey) {
     $scope.selectedLocale = localeKey;
     locale = localeKey;
-    ChangeLocale.update({locale: localeKey}, {}, function (data) {
+    ChangeLocale.update({locale: localeKey}, {}, function () {
       Messages.get({}, function (data) {
         for (var attr in data.messages) {
           var key = 'message.' + attr;
