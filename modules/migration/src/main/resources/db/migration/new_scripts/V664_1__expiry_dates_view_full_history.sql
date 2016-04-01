@@ -11,7 +11,7 @@ CREATE OR REPLACE VIEW vw_expiry_dates AS
     products.code        AS drug_code,
     products.primaryname AS drug_name,
     valuecolumn          AS expiry_dates,
-    occurred             AS occurred
+    (EXTRACT(EPOCH FROM occurred) * 1000) AS occurred
   FROM facilities
     JOIN geographic_zones AS zone ON facilities.geographiczoneid = zone.id
     JOIN geographic_zones AS parent_zone ON zone.parentid = parent_zone.id
