@@ -120,6 +120,11 @@ public class ProgramProductRepository {
     return mapper.getByProductCode(code);
   }
 
+  public List<String> getActiveProgramCodesByProductCode(String code) {
+    return mapper.getActiveProgramCodesByProductCode(code);
+  }
+
+
   public List<ProgramProduct> getProgramProductsBy(Long programId, String facilityTypeCode) {
     return mapper.getByProgramIdAndFacilityTypeCode(programId, facilityTypeCode);
   }
@@ -156,5 +161,9 @@ public class ProgramProductRepository {
 
   public List<ProgramProduct> getByProgramAfterUpdatedTimeByFacilityType(Program program, Date afterUpdatedTime, FacilityType facilityType) {
     return mapper.getByProgramAfterUpdatedTimeFilterByFacilityType(program.getId(), afterUpdatedTime, facilityType.getId());
+  }
+
+  public List<ProgramProduct> getLatestUpdatedProgramProduct(Date afterUpdatedTime) {
+    return mapper.getLatestUpdatedProgramProduct(afterUpdatedTime);
   }
 }

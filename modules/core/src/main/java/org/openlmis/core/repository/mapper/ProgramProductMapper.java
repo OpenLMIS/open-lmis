@@ -201,4 +201,20 @@ public interface ProgramProductMapper {
             @Result(property = "product.id", column = "productid")
     })
   List<ProgramProduct> getAll();
+
+  @Select("SELECT * FROM program_products WHERE modifieddate > #{date}")
+  @Results({
+          @Result(
+                  property = "product", column = "productId", javaType = Product.class,
+                  many = @Many(select = "org.openlmis.core.repository.mapper.ProductMapper.getById"))})
+  List<ProgramProduct> getLatestUpdatedProgramProduct(Date afterUpdatedTime);
+
+  @Select("SELECT pp.*, pr.code AS programCode FROM " +
+          "program_products pp " +
+          "INNER JOIN products p ON pp.productId = p.id INNER JOIN programs pr ON pp.programId = pr.id WHERE p.code = #{code} AND pp.active = true")
+  @Results(value = {
+          @Result(property = "program.code", column = "programCode")
+  })
+  List<String> getActiveProgramCodesByProductCode(String code);
+
 }

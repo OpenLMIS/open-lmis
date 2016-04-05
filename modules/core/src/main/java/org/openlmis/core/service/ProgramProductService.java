@@ -139,6 +139,10 @@ public class ProgramProductService {
     return programProductRepository.getByProductCode(productCode);
   }
 
+  public List<String> getActiveProgramCodesByProductCode(String productCode) {
+    return programProductRepository.getActiveProgramCodesByProductCode(productCode);
+  }
+
   public List<ProgramProduct> getProgramProductsBy(String programCode, String facilityTypeCode) {
     FacilityType facilityType = new FacilityType();
     if ((facilityTypeCode = trimToNull(facilityTypeCode)) != null) {
@@ -232,5 +236,9 @@ public class ProgramProductService {
 
   public List<ProgramProduct> getProductsByProgramAfterUpdatedDateByFacilityType(Program program, Date afterUpdatedTime, FacilityType facilityType) {
     return programProductRepository.getByProgramAfterUpdatedTimeByFacilityType(program, afterUpdatedTime, facilityType);
+  }
+
+  public List<ProgramProduct> getLatestUpdatedProgramProduct(Date afterUpdatedTime) {
+    return programProductRepository.getLatestUpdatedProgramProduct(afterUpdatedTime);
   }
 }

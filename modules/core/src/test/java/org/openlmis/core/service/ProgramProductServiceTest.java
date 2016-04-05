@@ -445,4 +445,21 @@ public class ProgramProductServiceTest {
     service.getProductsByProgramAfterUpdatedDateByFacilityType(program, afterUpdatedTime, facilityType);
     verify(programProductRepository).getByProgramAfterUpdatedTimeByFacilityType(program, afterUpdatedTime, facilityType);
   }
+
+  @Test
+  public void shouldGetLatestUpdatedProgramProducts() {
+    Date afterUpdatedTime = new Date();
+
+    service.getLatestUpdatedProgramProduct(afterUpdatedTime);
+
+    verify(programProductRepository).getLatestUpdatedProgramProduct(afterUpdatedTime);
+  }
+
+  @Test
+  public void shouldGetActiveProgramCodesByProductCode() {
+
+    service.getActiveProgramCodesByProductCode("07A06");
+
+    verify(programProductRepository).getActiveProgramCodesByProductCode("07A06");
+  }
 }

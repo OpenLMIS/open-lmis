@@ -91,9 +91,25 @@ public class RestProductService {
 
     List<Product> latestProducts = getLatestProducts(afterUpdatedTime,facilityId);
 
+    List<ProgramProduct> latestProgramProduct = programProductSevice.getLatestUpdatedProgramProduct(afterUpdatedTime);
+    for (ProgramProduct programProduct : latestProgramProduct) {
+      if (!isContainedInLatestProduct(latestProducts, programProduct)){
+        latestProducts.add(programProduct.getProduct());
+      }
+    }
+
     List<String> allSupportedPrograms = getSupportedProgramsByFacility(facilityId);
 
     return prepareProductsBasedOnFacilitySupportedPrograms(latestProducts, allSupportedPrograms);
+  }
+
+  private boolean isContainedInLatestProduct(List<Product> latestProducts, ProgramProduct programProduct) {
+    boolean isContainedInLatestProduct = false;
+    for (Product latestProduct : latestProducts) {
+      if (latestProduct.getCode().equals(programProduct.getProduct().getCode()))
+        isContainedInLatestProduct = true;
+    }
+    return isContainedInLatestProduct;
   }
 
   private List<Product> getLatestProducts(Date afterUpdatedTime, Long facilityId) {
@@ -129,15 +145,10 @@ public class RestProductService {
 
     for (Product product : latestProducts) {
 
-      List<String> programCodes = FluentIterable.from(programProductSevice.getByProductCode(product.getCode())).filter(new Predicate<ProgramProduct>() {
+      List<String> programCodes = FluentIterable.from(programProductSevice.getActiveProgramCodesByProductCode(product.getCode())).filter(new Predicate<String>() {
         @Override
-        public boolean apply(ProgramProduct programProduct) {
-          return programs.contains(programProduct.getProgram().getCode()) && programProduct.getActive();
-        }
-      }).transform(new Function<ProgramProduct, String>() {
-        @Override
-        public String apply(ProgramProduct programProduct) {
-          return programProduct.getProgram().getCode();
+        public boolean apply(String programProductCode) {
+          return programs.contains(programProductCode);
         }
       }).toList();
 
