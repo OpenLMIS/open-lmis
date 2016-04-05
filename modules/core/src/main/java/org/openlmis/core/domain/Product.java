@@ -179,7 +179,7 @@ public class Product extends BaseModel implements Importable {
   private Boolean archived;
 
   @ImportField(type = "boolean", name = "Is a Kit")
-  private Boolean isKit;
+  private Boolean isKit = false;
 
   private List<KitProduct> kitProductList = new ArrayList<>();
 
