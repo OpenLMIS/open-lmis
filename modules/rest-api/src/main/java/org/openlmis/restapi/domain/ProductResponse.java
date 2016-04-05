@@ -15,7 +15,7 @@ import static com.fasterxml.jackson.databind.annotation.JsonSerialize.Inclusion.
 @NoArgsConstructor
 @AllArgsConstructor
 @JsonSerialize(include = NON_EMPTY)
-public class ProductResponse extends Product{
+public class ProductResponse {
 
   private Product product;
   private List<String> supportedPrograms = new ArrayList<>();
