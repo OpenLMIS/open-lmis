@@ -400,8 +400,8 @@
     </bean>
 
     <task:scheduled-tasks scheduler="viewRefreshScheduler">
-        <task:scheduled ref="stockoutViewRefresher" fixed-delay="${stockout.view.refresh.rate}"
-                        method="refreshStockoutView"/>
+        <task:scheduled ref="materializedViewRefresher" fixed-delay="${stockout.view.refresh.rate}"
+                        method="refreshViews"/>
     </task:scheduled-tasks>
 
     <task:scheduler id="viewRefreshScheduler"/>

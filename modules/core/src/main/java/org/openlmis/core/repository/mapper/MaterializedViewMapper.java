@@ -4,7 +4,10 @@ import org.apache.ibatis.annotations.Select;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface StockoutViewMapper {
+public interface MaterializedViewMapper {
     @Select("SELECT refresh_stockouts()")
-    Integer refresh();
+    Integer refreshStockouts();
+
+    @Select("SELECT refresh_start_carry_view()")
+    Integer refreshCarryStartDates();
 }
