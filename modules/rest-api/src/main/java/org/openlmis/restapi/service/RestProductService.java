@@ -9,6 +9,7 @@ import org.openlmis.core.domain.ProgramProduct;
 import org.openlmis.core.domain.ProgramSupported;
 import org.openlmis.core.service.*;
 import org.openlmis.restapi.domain.ProductResponse;
+import org.openlmis.restapi.domain.ProgramProductResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -143,18 +144,39 @@ public class RestProductService {
   private List<ProductResponse> prepareProductsBasedOnFacilitySupportedPrograms(List<Product> latestProducts, final List<String> programs) {
     List<ProductResponse> productResponseList = new ArrayList<>();
 
-    for (Product product : latestProducts) {
+    for (final Product product : latestProducts) {
+      if (staticReferenceDataService.getBoolean("toggle.deactivate.program.product")) {
 
-      List<String> programCodes = FluentIterable.from(programProductSevice.getActiveProgramCodesByProductCode(product.getCode())).filter(new Predicate<String>() {
-        @Override
-        public boolean apply(String programProductCode) {
-          return programs.contains(programProductCode);
+        List<ProgramProduct> productPrograms = programProductSevice.getByProductCode(product.getCode());
+        List<ProgramProductResponse> programsResponse = FluentIterable.from(productPrograms).filter(new Predicate<ProgramProduct>() {
+          @Override
+          public boolean apply(ProgramProduct programProduct) {
+            return programs.contains(programProduct.getProgram().getCode());
+          }
+        }).transform(new Function<ProgramProduct, ProgramProductResponse>() {
+          @Override
+          public ProgramProductResponse apply(ProgramProduct programProduct) {
+            return new ProgramProductResponse(programProduct.getProgram().getCode(), product.getCode(), programProduct.getActive());
+          }
+        }).toList();
+
+        if (!programsResponse.isEmpty()) {
+          productResponseList.add(new ProductResponse(product, new ArrayList<String>(), programsResponse));
         }
-      }).toList();
+      } else {
 
-      if (!programCodes.isEmpty()) {
-        productResponseList.add(new ProductResponse(product, programCodes));
+        List<String> programCodes = FluentIterable.from(programProductSevice.getActiveProgramCodesByProductCode(product.getCode())).filter(new Predicate<String>() {
+          @Override
+          public boolean apply(String programProductCode) {
+            return programs.contains(programProductCode);
+          }
+        }).toList();
+
+        if (!programCodes.isEmpty()) {
+          productResponseList.add(new ProductResponse(product, programCodes, new ArrayList<ProgramProductResponse>()));
+        }
       }
+
     }
     return productResponseList;
   }

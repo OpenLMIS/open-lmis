@@ -50,6 +50,9 @@ public class RestProductServiceTest {
   @Mock
   private ProgramSupportedService programSupportedService;
 
+  @Mock
+  private StaticReferenceDataService staticReferenceDataService;
+
   @InjectMocks
   RestProductService restProductService;
 
@@ -58,22 +61,14 @@ public class RestProductServiceTest {
     product.setCode("some kit code");
     product.setPrimaryName("primary name");
     ArrayList<KitProduct> kitProductList = new ArrayList<>();
-    KitProduct kitProduct1 = new KitProduct();
-    kitProduct1.setProductCode("code 1");
-    kitProduct1.setQuantity(100);
-    kitProductList.add(kitProduct1);
-    KitProduct kitProduct2 = new KitProduct();
-    kitProduct2.setProductCode("code 2");
-    kitProduct2.setQuantity(200);
-    kitProductList.add(kitProduct2);
+    kitProductList.add(new KitProduct("kit code 1", "code 1", 100));
+    kitProductList.add(new KitProduct("kit code 2", "code 2", 200));
     product.setKitProductList(kitProductList);
 
   }
 
   @Test
   public void shouldPopulateKitCodeForKitProductsInList() {
-
-
     Product convertedProduct = restProductService.buildAndSave(product);
 
     assertThat(convertedProduct.getDispensingUnit(), is("1"));
@@ -103,22 +98,13 @@ public class RestProductServiceTest {
   }
 
   @Test
-  public void shouldGetAllLatestProgramsWithProductsByFacilityIdWhenAfterUpdatedTimeIsEmpty() {
-    Product product1 = makeProduct("P1", "product 1");
-    product1.setArchived(false);
-    Product product2 = makeProduct("P2", "product 2");
-    product2.setArchived(false);
-
-    Program program1 = makeProgram("PR1", "program 1");
-    Program program2 = makeProgram("PR2", "program 2");
-    ProgramProduct programProduct1 = makeProgramProduct(program1, product1);
-    ProgramProduct programProduct2 = makeProgramProduct(program2, product1);
-    ProgramProduct programProduct3 = makeProgramProduct(program1, product2);
+  public void shouldGetAllLatestProgramsWithProductsByFacilityIdWhenAfterUpdatedTimeIsEmptToggleOff() {
+    when(staticReferenceDataService.getBoolean("toggle.deactivate.program.product")).thenReturn(false);
 
     ProgramSupported programSupported1 = make(a(ProgramSupportedBuilder.defaultProgramSupported,
-        with(ProgramSupportedBuilder.supportedProgram, program1)));
+        with(ProgramSupportedBuilder.supportedProgram, makeProgram("PR1", "program 1"))));
     ProgramSupported programSupported2 = make(a(ProgramSupportedBuilder.defaultProgramSupported,
-        with(ProgramSupportedBuilder.supportedProgram, program2)));
+        with(ProgramSupportedBuilder.supportedProgram, makeProgram("PR2", "program 2"))));
 
     Facility facility = make(a(FacilityBuilder.defaultFacility));
     facility.setSupportedPrograms(asList(programSupported1, programSupported2));
@@ -127,9 +113,10 @@ public class RestProductServiceTest {
     User user = make(a(UserBuilder.defaultUser));
     user.setFacilityId(facility.getId());
 
-    when(productService.getAllProducts()).thenReturn(asList(product1, product2));
+    when(productService.getAllProducts()).thenReturn(asList(makeProduct("P1", "product 1", false), makeProduct("P2", "product 2", false)));
     when(programProductService.getActiveProgramCodesByProductCode("P1")).thenReturn(asList("PR1","PR2"));
     when(programProductService.getActiveProgramCodesByProductCode("P2")).thenReturn(asList("PR1"));
+
     when(userService.getById(user.getId())).thenReturn(user);
     when(programSupportedService.getAllByFacilityId(user.getFacilityId())).thenReturn(facility.getSupportedPrograms());
     when(archivedProductService.getAllArchivedProducts(anyLong())).thenReturn(asList("P1"));
@@ -145,7 +132,47 @@ public class RestProductServiceTest {
   }
 
   @Test
+  public void shouldGetAllLatestProgramsWithProductsByFacilityIdWhenAfterUpdatedTimeIsEmptyAndToggleOn() {
+    when(staticReferenceDataService.getBoolean("toggle.deactivate.program.product")).thenReturn(true);
+
+    ProgramSupported programSupported1 = make(a(ProgramSupportedBuilder.defaultProgramSupported,
+          with(ProgramSupportedBuilder.supportedProgram, makeProgram("PR1", "program 1"))));
+    ProgramSupported programSupported2 = make(a(ProgramSupportedBuilder.defaultProgramSupported,
+          with(ProgramSupportedBuilder.supportedProgram, makeProgram("PR2", "program 2"))));
+
+
+
+    Facility facility = make(a(FacilityBuilder.defaultFacility));
+    facility.setSupportedPrograms(asList(programSupported1, programSupported2));
+    facility.setId(1L);
+
+    User user = make(a(UserBuilder.defaultUser));
+    user.setFacilityId(facility.getId());
+
+    when(productService.getAllProducts()).thenReturn(asList(makeProduct("P1", "product 1", false), makeProduct("P2", "product 2", false)));
+    when(programProductService.getActiveProgramCodesByProductCode("P1")).thenReturn(asList("PR1","PR2"));
+    when(programProductService.getActiveProgramCodesByProductCode("P2")).thenReturn(asList("PR1"));
+
+    when(programProductService.getByProductCode("P1")).thenReturn(asList(makeProgramProduct("PR1", "P1", true), makeProgramProduct("PR2", "P1", true)));
+    when(programProductService.getByProductCode("P2")).thenReturn(asList(makeProgramProduct("PR1", "P1", true)));
+
+    when(userService.getById(user.getId())).thenReturn(user);
+    when(programSupportedService.getAllByFacilityId(user.getFacilityId())).thenReturn(facility.getSupportedPrograms());
+    when(archivedProductService.getAllArchivedProducts(anyLong())).thenReturn(asList("P1"));
+
+    List<ProductResponse> products = restProductService.getLatestProductsAfterUpdatedTime(null, user.getId());
+
+    assertEquals(2, products.size());
+    assertEquals("PR1", products.get(0).getProductPrograms().get(0).getProgramCode());
+    assertEquals("PR2", products.get(0).getProductPrograms().get(1).getProgramCode());
+    assertEquals("PR1", products.get(1).getProductPrograms().get(0).getProgramCode());
+    assertTrue(products.get(0).getProduct().getArchived());
+    assertFalse(products.get(1).getProduct().getArchived());
+  }
+
+  @Test
   public void shouldRetrieveProductsAfterUpdatedDate() {
+    when(staticReferenceDataService.getBoolean("toggle.deactivate.program.product")).thenReturn(false);
     Date afterUpdatedTime = DateUtil.parseDate("2015-11-11 10:10:10");
 
     Product product1 = makeProduct("P1", "product 1");
@@ -189,7 +216,8 @@ public class RestProductServiceTest {
   }
 
   @Test
-  public void shouldNotResponseProductTwiceWhenProductsUpdatedAndAssociateProgramProductUpdated() {
+  public void shouldNotResponseProductTwiceWhenProductsUpdatedAndAssociateProgramProductUpdatedWhenToggleOff() {
+    when(staticReferenceDataService.getBoolean("toggle.deactivate.program.product")).thenReturn(false);
     Date afterUpdatedTime = DateUtil.parseDate("2015-11-11 10:10:10");
 
     Product product = makeProduct("P1", "product 1");
@@ -223,20 +251,49 @@ public class RestProductServiceTest {
     assertEquals(1, products.size());
   }
 
-
-    @Test
-  public void shouldNotGetProductsInProgramsNotSupportedByFacility() {
+  @Test
+  public void shouldNotResponseProductTwiceWhenProductsUpdatedAndAssociateProgramProductUpdatedWhenToggleOn() {
+    when(staticReferenceDataService.getBoolean("toggle.deactivate.program.product")).thenReturn(true);
     Date afterUpdatedTime = DateUtil.parseDate("2015-11-11 10:10:10");
 
-    Product product1 = makeProduct("P1", "product 1");
-    Product product2 = makeProduct("P2", "product 2");
-    Product product3 = makeProduct("P3", "product 3");
-    Product product4 = makeProduct("P4", "product 4");
+    Product product = makeProduct("P1", "product 1");
+
+    ArrayList<Product> latestUpdatedProducts = new ArrayList<>();
+    latestUpdatedProducts.add(product);
 
     Program program1 = makeProgram("PR1", "program 1");
+    ProgramProduct programProduct = makeProgramProduct(program1, product);
+
+    ProgramSupported programSupported1 = make(a(ProgramSupportedBuilder.defaultProgramSupported,
+        with(ProgramSupportedBuilder.supportedProgram, program1)));
+
+    Facility facility = make(a(FacilityBuilder.defaultFacility));
+    facility.setSupportedPrograms(asList(programSupported1));
+
+    User user = make(a(UserBuilder.defaultUser));
+    user.setFacilityId(facility.getId());
+    List<ProgramProduct> programProducts = new ArrayList<>();
+    programProducts.add(programProduct);
+
+    when(productService.getProductsAfterUpdatedDate(afterUpdatedTime)).thenReturn(latestUpdatedProducts);
+    when(programProductService.getByProductCode("P1")).thenReturn(asList(makeProgramProduct("PR1", "P1", true)));
+
+    when(userService.getById(user.getId())).thenReturn(user);
+    when(programSupportedService.getAllByFacilityId(user.getFacilityId())).thenReturn(facility.getSupportedPrograms());
+    when(programProductService.getLatestUpdatedProgramProduct(afterUpdatedTime)).thenReturn(programProducts);
+
+    List<ProductResponse> products = restProductService.getLatestProductsAfterUpdatedTime(afterUpdatedTime, user.getId());
+
+    assertEquals(1, products.size());
+  }
+
+  @Test
+  public void shouldNotGetProductsInProgramsNotSupportedByFacilityWhenToggleOn() {
+    when(staticReferenceDataService.getBoolean("toggle.deactivate.program.product")).thenReturn(true);
+    Date afterUpdatedTime = DateUtil.parseDate("2015-11-11 10:10:10");
 
     ProgramSupported programSupported = make(a(ProgramSupportedBuilder.defaultProgramSupported,
-        with(ProgramSupportedBuilder.supportedProgram, program1)));
+      with(ProgramSupportedBuilder.supportedProgram, makeProgram("PR1", "program 1"))));
 
     Facility facility = make(a(FacilityBuilder.defaultFacility));
     facility.setSupportedPrograms(asList(programSupported));
@@ -244,7 +301,36 @@ public class RestProductServiceTest {
     User user = make(a(UserBuilder.defaultUser));
     user.setFacilityId(facility.getId());
 
-    when(productService.getProductsAfterUpdatedDate(afterUpdatedTime)).thenReturn(asList(product1, product2, product3, product4));
+    when(productService.getProductsAfterUpdatedDate(afterUpdatedTime)).thenReturn(asList(makeProduct("P1", "product 1"), makeProduct("P2", "product 2"), makeProduct("P3", "product 3"), makeProduct("P4", "product 4")));
+    when(programProductService.getByProductCode("P1")).thenReturn(asList(makeProgramProduct("PR1", "P1", true), makeProgramProduct("PR2", "P1", true)));
+    when(programProductService.getByProductCode("P2")).thenReturn(asList(makeProgramProduct("PR1", "P2", true)));
+    when(programProductService.getByProductCode("P3")).thenReturn(asList(makeProgramProduct("PR2", "P3", true)));
+
+    when(userService.getById(user.getId())).thenReturn(user);
+    when(programSupportedService.getAllByFacilityId(user.getFacilityId())).thenReturn(facility.getSupportedPrograms());
+
+    List<ProductResponse> products = restProductService.getLatestProductsAfterUpdatedTime(afterUpdatedTime, user.getId());
+
+    assertEquals(2, products.size());
+    assertEquals("PR1", products.get(0).getProductPrograms().get(0).getProgramCode());
+    assertEquals("PR1", products.get(1).getProductPrograms().get(0).getProgramCode());
+  }
+
+  @Test
+  public void shouldNotGetProductsInProgramsNotSupportedByFacilityWhenToggleOff() {
+    when(staticReferenceDataService.getBoolean("toggle.deactivate.program.product")).thenReturn(false);
+    Date afterUpdatedTime = DateUtil.parseDate("2015-11-11 10:10:10");
+
+    ProgramSupported programSupported = make(a(ProgramSupportedBuilder.defaultProgramSupported,
+        with(ProgramSupportedBuilder.supportedProgram, makeProgram("PR1", "program 1"))));
+
+    Facility facility = make(a(FacilityBuilder.defaultFacility));
+    facility.setSupportedPrograms(asList(programSupported));
+
+    User user = make(a(UserBuilder.defaultUser));
+    user.setFacilityId(facility.getId());
+
+    when(productService.getProductsAfterUpdatedDate(afterUpdatedTime)).thenReturn(asList(makeProduct("P1", "product 1"), makeProduct("P2", "product 2"), makeProduct("P3", "product 3"), makeProduct("P4", "product 4")));
     when(programProductService.getActiveProgramCodesByProductCode("P1")).thenReturn(asList("PR1", "PR2"));
     when(programProductService.getActiveProgramCodesByProductCode("P2")).thenReturn(asList("PR1"));
     when(programProductService.getActiveProgramCodesByProductCode("P3")).thenReturn(asList("PR2"));
@@ -273,9 +359,22 @@ public class RestProductServiceTest {
   }
 
   private Product makeProduct(String code, String name) {
+    return makeProduct(code, name, false);
+  }
+
+  private Product makeProduct(String code, String name, boolean isArchived) {
     Product product = make(a(ProductBuilder.defaultProduct));
     product.setCode(code);
     product.setPrimaryName(name);
+    product.setArchived(isArchived);
     return product;
+  }
+
+  private ProgramProduct makeProgramProduct(String programCode, String productCode, boolean isActive) {
+    ProgramProduct programProduct = new ProgramProduct();
+    programProduct.setProduct(makeProduct(productCode, "default product name"));
+    programProduct.setProgram(makeProgram(programCode, "default program name"));
+    programProduct.setActive(isActive);
+    return programProduct;
   }
 }
