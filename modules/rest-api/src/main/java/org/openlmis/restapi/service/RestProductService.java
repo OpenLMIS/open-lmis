@@ -145,38 +145,29 @@ public class RestProductService {
     List<ProductResponse> productResponseList = new ArrayList<>();
 
     for (final Product product : latestProducts) {
-      if (staticReferenceDataService.getBoolean("toggle.deactivate.program.product")) {
-
-        List<ProgramProduct> productPrograms = programProductSevice.getByProductCode(product.getCode());
-        List<ProgramProductResponse> programsResponse = FluentIterable.from(productPrograms).filter(new Predicate<ProgramProduct>() {
-          @Override
-          public boolean apply(ProgramProduct programProduct) {
-            return programs.contains(programProduct.getProgram().getCode());
-          }
-        }).transform(new Function<ProgramProduct, ProgramProductResponse>() {
-          @Override
-          public ProgramProductResponse apply(ProgramProduct programProduct) {
-            return new ProgramProductResponse(programProduct.getProgram().getCode(), product.getCode(), programProduct.getActive());
-          }
-        }).toList();
-
-        if (!programsResponse.isEmpty()) {
-          productResponseList.add(new ProductResponse(product, new ArrayList<String>(), programsResponse));
+      List<ProgramProduct> productPrograms = programProductSevice.getByProductCode(product.getCode());
+      List<ProgramProductResponse> programsResponse = FluentIterable.from(productPrograms).filter(new Predicate<ProgramProduct>() {
+        @Override
+        public boolean apply(ProgramProduct programProduct) {
+          return programs.contains(programProduct.getProgram().getCode());
         }
-      } else {
-
-        List<String> programCodes = FluentIterable.from(programProductSevice.getActiveProgramCodesByProductCode(product.getCode())).filter(new Predicate<String>() {
-          @Override
-          public boolean apply(String programProductCode) {
-            return programs.contains(programProductCode);
-          }
-        }).toList();
-
-        if (!programCodes.isEmpty()) {
-          productResponseList.add(new ProductResponse(product, programCodes, new ArrayList<ProgramProductResponse>()));
+      }).transform(new Function<ProgramProduct, ProgramProductResponse>() {
+        @Override
+        public ProgramProductResponse apply(ProgramProduct programProduct) {
+          return new ProgramProductResponse(programProduct.getProgram().getCode(), product.getCode(), programProduct.getActive());
         }
+      }).toList();
+
+      List<String> programCodes = FluentIterable.from(programProductSevice.getActiveProgramCodesByProductCode(product.getCode())).filter(new Predicate<String>() {
+        @Override
+        public boolean apply(String programProductCode) {
+          return programs.contains(programProductCode);
+        }
+      }).toList();
+
+      if (!programsResponse.isEmpty()) {
+        productResponseList.add(new ProductResponse(product, programCodes, programsResponse));
       }
-
     }
     return productResponseList;
   }
