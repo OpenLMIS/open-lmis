@@ -51,7 +51,7 @@ services.factory('StockoutSingleProductTreeDataBuilder', function () {
             return stockOut[facilityCodeKey] == facilityCode;
         });
         var incidents = _.uniq(_.map(stockOutsInFacility, function (stockout) {
-            return stockout[stockoutStartDateKey] + "to" + stockout[stockoutEndDateKey];
+            return stockout[stockoutStartDateKey] + " to " + stockout[stockoutEndDateKey];
         })).join(", ");
         var facilityResult = calculateStockoutResult(stockOutsInFacility, 1);
 

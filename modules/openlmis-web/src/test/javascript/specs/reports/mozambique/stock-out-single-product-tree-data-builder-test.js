@@ -153,14 +153,14 @@ describe("stock out single product tree data builder test", function () {
                         monthlyAvg: '13.5',//(25+2)/2=13.5
                         monthlyOccurrences: '1.0',//2/2=1
                         totalDuration: 27,
-                        incidents: "2016-02-05to2016-03-02",
+                        incidents: "2016-02-05 to 2016-03-02",
                         facilityCode: "FA"
                     }, {
                         name: "FA2 name",
                         monthlyAvg: '4.0',//4/1/1=4
                         monthlyOccurrences: '1.0',//1/1=1
                         totalDuration: 4,//4
-                        incidents: "2016-02-05to2016-02-08",
+                        incidents: "2016-02-05 to 2016-02-08",
                         facilityCode: "FA2"
                     }]
                 },
@@ -198,7 +198,7 @@ describe("stock out single product tree data builder test", function () {
                         monthlyAvg: '6.0',//6/1/1=6
                         monthlyOccurrences: '1.0',//1/1=1
                         totalDuration: 6,
-                        incidents: "2016-02-05to2016-02-10",
+                        incidents: "2016-02-05 to 2016-02-10",
                         facilityCode: "FB"
                     }, {
                         name: "FB2 name",
