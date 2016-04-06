@@ -14,66 +14,69 @@
 <html lang="en" ng-app="requisition-report">
 
 <head>
-  <meta charset="utf-8">
-  <title openlmis-message="app.title"></title>
-  <!-- Icons -->
-  <link rel="icon" href="/favicon.ico" type="image/x-icon"/>
+    <meta charset="utf-8">
+    <title openlmis-message="app.title"></title>
+    <!-- Icons -->
+    <link rel="icon" href="/favicon.ico" type="image/x-icon"/>
 
-  <!-- library files-->
-  <title openlmis-message="app.title"></title>
-  <script src="/public/lib/jquery/jquery-2.0.0.min.js"></script>
-  <script src="/public/lib/jquery/jquery-ui-1.9.2.custom.min.js"></script>
-  <script src="/public/lib/angular/angular.min.js"></script>
-  <script src="/public/lib/angular/angular-route.min.js"></script>
-  <script src="/public/lib/angular/angular-cookies.js"></script>
-  <script src="/public/lib/angular/angular-resource.min.js"></script>
-  <script src="/public/lib/bootstrap/js/bootstrap.min.js"></script>
-  <script src="/public/lib/angular-ui/angular-ui.min.js"></script>
-  <script src="/public/lib/angular-ui/bootstrap/ui-bootstrap-0.1.0.min.js"></script>
-  <script src="/public/lib/jquery/jquery.form.js"></script>
-  <script src="/public/lib/select2/select2.js"></script>
-  <script src="/public/lib/underscore/underscore-min.js"></script>
+    <!-- library files-->
+    <title openlmis-message="app.title"></title>
+    <script src="/public/lib/jquery/jquery-2.0.0.min.js"></script>
+    <script src="/public/lib/jquery/jquery-ui-1.9.2.custom.min.js"></script>
+    <script src="/public/lib/angular/angular.min.js"></script>
+    <script src="/public/lib/angular/angular-route.min.js"></script>
+    <script src="/public/lib/angular/angular-cookies.js"></script>
+    <script src="/public/lib/angular/angular-resource.min.js"></script>
+    <script src="/public/lib/bootstrap/js/bootstrap.min.js"></script>
+    <script src="/public/lib/angular-ui/angular-ui.min.js"></script>
+    <script src="/public/lib/angular-ui/bootstrap/ui-bootstrap-0.1.0.min.js"></script>
+    <script src="/public/lib/jquery/jquery.form.js"></script>
+    <script src="/public/lib/select2/select2.js"></script>
+    <script src="/public/lib/underscore/underscore-min.js"></script>
 
-  <!-- Style sheet files-->
-  <script src="/public/lib/angular-ui/ng-table/ng-table.js"></script>
-  <link rel="stylesheet" href="/public/lib/angular-ui/ng-table/ng-table.css">
-  <link rel="stylesheet" href="/public/lib/bootstrap/css/bootstrap.min.css">
-  <link rel="stylesheet" href="/public/lib/angular-ui/angular-ui.min.css">
-  <link rel="stylesheet" href="/public/lib/select2/select2.css">
-  <link rel="stylesheet" href="/public/css/font-awesome/font-awesome.css"/>
+    <!-- Style sheet files-->
+    <script src="/public/lib/angular-ui/ng-table/ng-table.js"></script>
+    <link rel="stylesheet" href="/public/lib/angular-ui/ng-table/ng-table.css">
+    <link rel="stylesheet" href="/public/lib/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/public/lib/angular-ui/angular-ui.min.css">
+    <link rel="stylesheet" href="/public/lib/select2/select2.css">
+    <link rel="stylesheet" href="/public/css/font-awesome/font-awesome.css"/>
 
-  <!-- Services -->
-  <script src="/public/js/shared/services/services.js"></script>
-  <script src="/public/js/shared/services/extension-services.js"></script>
-  <script type="text/javascript" src="/public/js/shared/services/message-service.js"></script>
-  <script type="text/javascript" src="/public/js/shared/services/authorization-service.js"></script>
+    <!-- Services -->
+    <script src="/public/js/shared/services/services.js"></script>
+    <script src="/public/js/shared/services/extension-services.js"></script>
+    <script type="text/javascript" src="/public/js/shared/services/message-service.js"></script>
+    <script type="text/javascript" src="/public/js/shared/services/authorization-service.js"></script>
 
-  <script src="/public/js/shared/app.js"></script>
+    <script src="/public/js/shared/app.js"></script>
 
-  <!-- App directives and shared utilites -->
-  <script src="/public/lib/angular/angular-combine.js"></script>
-  <script src="/public/js/shared/directives/form-toolbar.js"></script>
-  <script src="/public/js/shared/directives/openlmis-message.js"></script>
-  <script src="/public/js/shared/directives/openlmis-pagination.js"></script>
-  <script src="/public/js/shared/directives/placeholder.js"></script>
-  <script src="/public/js/shared/directives/ui-nav.js"></script>
-  <script src="/public/lib/localstorage/localStorage.js"></script>
-  <script src="/public/js/shared/util.js"></script>
-  <script src="/public/js/shared/localStorageKeys.js"></script>
+    <!-- App directives and shared utilites -->
+    <script src="/public/lib/angular/angular-combine.js"></script>
+    <script src="/public/js/shared/directives/form-toolbar.js"></script>
+    <script src="/public/js/shared/directives/openlmis-message.js"></script>
+    <script src="/public/js/shared/directives/openlmis-pagination.js"></script>
+    <script src="/public/js/shared/directives/placeholder.js"></script>
+    <script src="/public/js/shared/directives/ui-nav.js"></script>
+    <script src="/public/lib/localstorage/localStorage.js"></script>
+    <script src="/public/js/shared/util.js"></script>
+    <script src="/public/js/shared/localStorageKeys.js"></script>
 
-  <link rel="stylesheet" href="/public/css/app.css">
-  <link rel="stylesheet" href="/public/css/report.css">
-  <link rel="stylesheet" href="/public/css/style.css">
-  <link rel="stylesheet" href="/public/lib/tree-grid/treeGrid.css">
+    <link rel="stylesheet" href="/public/css/app.css">
+    <link rel="stylesheet" href="/public/css/report.css">
+    <link rel="stylesheet" href="/public/css/style.css">
+    <link rel="stylesheet" href="/public/lib/tree-grid/treeGrid.css">
 
-  <!-- Shared controller files -->
-  <script src="/public/js/shared/controller/login-controller.js"></script>
-  <script src="/public/js/shared/controller/locale-controller.js"></script>
-  <script src="/public/js/shared/controller/header-controller.js"></script>
-  <script src="/public/js/shared/controller/navigation-controller.js"></script>
+    <script type="text/javascript" src="/public/lib/amCharts/amcharts.js"></script>
+    <script type="text/javascript" src="/public/lib/amCharts/serial.js"></script>
+    <script type="text/javascript" src="/public/lib/amCharts/light.js"></script>
+    <!-- Shared controller files -->
+    <script src="/public/js/shared/controller/login-controller.js"></script>
+    <script src="/public/js/shared/controller/locale-controller.js"></script>
+    <script src="/public/js/shared/controller/header-controller.js"></script>
+    <script src="/public/js/shared/controller/navigation-controller.js"></script>
 
 
-  <script src="/public/lib/angular-ui/ui-jqplot/ui-jqplot-chart.js"></script>
+    <script src="/public/lib/angular-ui/ui-jqplot/ui-jqplot-chart.js"></script>
 
     <!-- Page specific files -->
     <script src="/public/lib/flot/jquery.js"></script>
@@ -88,38 +91,40 @@
     <script src="/public/lib/tree-grid/tree-grid-directive.js"></script>
     <script src="/public/js/shared/directives/angular-flot.js"></script>
 
-  <script src="/public/js/reports/shared/directives/filters.js"></script>
-  <script src="/public/js/reports/shared/controller/base-product-report-controller.js"></script>
-  <script src="/public/js/reports/shared/controller/date-picker-container-controller.js"></script>
-  <script src="/public/js/reports/mozambique/filter/report-filters.js"></script>
-  <script src="/public/js/reports/mozambique/directive/date-picker-container-directive.js"></script>
-  <script src="/public/js/reports/shared/services/cubesGenerateUrlService.js"></script>
-  <script src="/public/js/reports/shared/services/dateFormatService.js"></script>
-  <script src="/public/js/reports/mozambique/dialog/custom-dialog.js"></script>
-  <script src="/public/js/reports/mozambique/module/requisition-report-module.js"></script>
-  <script src="/public/js/reports/mozambique/requisition/controller/requisition-report-controller.js"></script>
-  <script src="/public/js/reports/mozambique/stock-on-hand-product/controller/single-product-report-controller.js"></script>
-  <script src="/public/js/reports/mozambique/stock-on-hand-product/controller/single-facility-report-controller.js"></script>
-  <script src="/public/js/reports/mozambique/expiry-dates/controller/expiry-dates-report-controller.js"></script>
-  <script src="/public/js/reports/mozambique/requisition/controller/requisition-report-controller.js"></script>
-  <script src="/public/js/reports/mozambique/appVersion/controller/app-version-controller.js"></script>
-  <script src="/public/js/reports/mozambique/stock-out/controller/stock-out-all-products-report-controller.js"></script>
-  <script src="/public/js/reports/mozambique/stock-out/controller/stock-out-single-product-report-controller.js"></script>
+    <script src="/public/js/reports/shared/directives/filters.js"></script>
+    <script src="/public/js/reports/shared/controller/base-product-report-controller.js"></script>
+    <script src="/public/js/reports/shared/controller/date-picker-container-controller.js"></script>
+    <script src="/public/js/reports/mozambique/filter/report-filters.js"></script>
+    <script src="/public/js/reports/mozambique/directive/date-picker-container-directive.js"></script>
+    <script src="/public/js/reports/shared/services/cubesGenerateUrlService.js"></script>
+    <script src="/public/js/reports/shared/services/dateFormatService.js"></script>
+    <script src="/public/js/reports/mozambique/stock-out/services/stock-out-single-product-chart-service.js"></script>
+    <script src="/public/js/reports/mozambique/stock-out/services/stock-out-single-product-tree-data-builder.js"></script>
+    <script src="/public/js/reports/mozambique/dialog/custom-dialog.js"></script>
+    <script src="/public/js/reports/mozambique/module/requisition-report-module.js"></script>
+    <script src="/public/js/reports/mozambique/requisition/controller/requisition-report-controller.js"></script>
+    <script src="/public/js/reports/mozambique/stock-on-hand-product/controller/single-product-report-controller.js"></script>
+    <script src="/public/js/reports/mozambique/stock-on-hand-product/controller/single-facility-report-controller.js"></script>
+    <script src="/public/js/reports/mozambique/expiry-dates/controller/expiry-dates-report-controller.js"></script>
+    <script src="/public/js/reports/mozambique/requisition/controller/requisition-report-controller.js"></script>
+    <script src="/public/js/reports/mozambique/appVersion/controller/app-version-controller.js"></script>
+    <script src="/public/js/reports/mozambique/stock-out/controller/stock-out-all-products-report-controller.js"></script>
+    <script src="/public/js/reports/mozambique/stock-out/controller/stock-out-single-product-report-controller.js"></script>
 
-  <link type="text/css" rel="stylesheet" charset="UTF-8" href="/public/css/app.css">
-  <!--[if IE 9]>
-  <link rel="stylesheet" href="/public/css/ie9.css"/>
-  <![endif]-->
+    <link type="text/css" rel="stylesheet" charset="UTF-8" href="/public/css/app.css">
+    <!--[if IE 9]>
+    <link rel="stylesheet" href="/public/css/ie9.css"/>
+    <![endif]-->
 
 </head>
 <body>
 <div id="wrap">
-  <ng-include src="'/public/pages/header.html'"></ng-include>
-  <ng-include src="'/public/pages/navigation.html'"></ng-include>
-  <div class="content">
-    <div ng-view>
+    <ng-include src="'/public/pages/header.html'"></ng-include>
+    <ng-include src="'/public/pages/navigation.html'"></ng-include>
+    <div class="content">
+        <div ng-view>
+        </div>
     </div>
-  </div>
 </div>
 
 </body>

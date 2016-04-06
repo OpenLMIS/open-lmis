@@ -22,7 +22,7 @@
                     "             <div ng-if=\"col.cellTemplate\" compile=\"col.cellTemplate\" cell-template-scope=\"col.cellTemplateScope\"></div>\n" +
                     "             <div ng-if=\'row.branch[col.field]'><span style='font-weight: bold;'>{{col.displayName}}: </span>{{row.branch[col.field]}}</div>" +
                     "           </div>\n" +
-                    "           <div id='{{row.branch[expandingProperty.field]}}' style='height: 200px;width: 100%;'>graph</div>" +
+                    "           <div id='{{row.branch.provinceCode||row.branch.districtCode||row.branch.facilityCode}}' style='height: 200px;width: 100%;'></div>" +
                     "       <td>" +
                     "     </tr>\n" +
                     "   </tbody>\n" +
@@ -220,7 +220,7 @@
                             if (branch.expanded == true) {
                                 $timeout(function () {
                                     console.log("calling on expanded");
-                                    scope.onExpanded({branch:branch});
+                                    scope.onExpanded({branch: branch});
                                 });
                             }
                         };

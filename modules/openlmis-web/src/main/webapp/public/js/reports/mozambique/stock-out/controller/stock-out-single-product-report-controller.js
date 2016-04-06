@@ -1,5 +1,8 @@
-function StockOutSingleProductReportController($scope, $filter, $controller, $http, CubesGenerateUrlService, messageService, $routeParams, ProductReportService) {
+function StockOutSingleProductReportController($scope, $filter, $q, $controller, $http, CubesGenerateUrlService, messageService, $routeParams, ProductReportService, StockoutSingleProductChartService, StockoutSingleProductTreeDataBuilder) {
     $controller('BaseProductReportController', {$scope: $scope});
+
+    var stockOuts;
+    var carryStartDates;
 
     $scope.expanding_property = {
         field: "name",
@@ -48,28 +51,32 @@ function StockOutSingleProductReportController($scope, $filter, $controller, $ht
         }
     };
 
-    function getProductByCode(code){
-        return _.find($scope.products, function(product){
+    function getProductByCode(code) {
+        return _.find($scope.products, function (product) {
             return product.code === code;
         });
     }
 
-    function getStockReportRequestParam() {
-        var params = {};
-        params.startTime = $filter('date')($scope.reportParams.startTime, "yyyy,MM,dd");
-        params.endTime = $filter('date')($scope.reportParams.endTime, "yyyy,MM,dd");
-        params.drugCode = $scope.reportParams.productCode;
-        return params;
+    function getCarryStartDatesRequestParam() {
+        return [{
+            dimension: "carry_start",
+            values: ["-" + $filter('date')($scope.reportParams.endTime, "yyyy,MM,dd")]
+        }, {
+            dimension: "drug",
+            values: [$scope.reportParams.productCode]
+        }];
     }
 
-    function generateCutParams(stockReportParams) {
-        var cutsParams = [{
+    function generateCutParams() {
+        var start = $filter('date')($scope.reportParams.startTime, "yyyy,MM,dd");
+        var end = $filter('date')($scope.reportParams.endTime, "yyyy,MM,dd");
+        return [{
             dimension: "overlapped_date",
-            values: [stockReportParams.startTime + "-" + stockReportParams.endTime]
+            values: [start + "-" + end]
+        }, {
+            dimension: "drug",
+            values: [$scope.reportParams.productCode]
         }];
-
-        cutsParams.push({dimension: "drug", values: [stockReportParams.drugCode]});
-        return cutsParams;
     }
 
     function getStockOutDataFromCubes() {
@@ -77,10 +84,14 @@ function StockOutSingleProductReportController($scope, $filter, $controller, $ht
             return;
         }
 
-        $http.get(CubesGenerateUrlService.generateFactsUrl('vw_stockouts', generateCutParams(getStockReportRequestParam())))
-            .success(function (data) {
-                $scope.tree_data = generateStockOutData(data);
-            });
+        var requestStockOuts = $http.get(CubesGenerateUrlService.generateFactsUrl('vw_stockouts', generateCutParams()));
+        var requestCarryStartDates = $http.get(CubesGenerateUrlService.generateFactsUrl('vw_carry_start_dates', getCarryStartDatesRequestParam()));
+        $q.all([requestStockOuts, requestCarryStartDates]).then(function (arrayOfResults) {
+            stockOuts = arrayOfResults[0].data;
+            carryStartDates = arrayOfResults[1].data;
+
+            $scope.tree_data = StockoutSingleProductTreeDataBuilder.buildTreeData(stockOuts, carryStartDates);
+        });
     }
 
     function validateProduct() {
@@ -137,7 +148,7 @@ function StockOutSingleProductReportController($scope, $filter, $controller, $ht
     }
 
     function getGeographicZoneByCode(zones, zoneCode) {
-        return _.find(zones, function(zone){
+        return _.find(zones, function (zone) {
             return zone.code == zoneCode;
         });
     }
@@ -152,7 +163,7 @@ function StockOutSingleProductReportController($scope, $filter, $controller, $ht
         };
     }
 
-    function generateIncidents(incidents,stockOut, numOfSelectedFacilities) {
+    function generateIncidents(incidents, stockOut, numOfSelectedFacilities) {
         if (numOfSelectedFacilities === 1) {
             var incident = stockOut['stockout.date'] + "to" + stockOut['stockout.resolved_date'];
             if (incidents.indexOf(incident) === -1) {
@@ -173,7 +184,7 @@ function StockOutSingleProductReportController($scope, $filter, $controller, $ht
             var sum = 0;
             _.forEach(drug, function (stockOut) {
                 sum += stockOut.overlap_duration;
-                incidents = generateIncidents(incidents,stockOut, numOfSelectedFacilities);
+                incidents = generateIncidents(incidents, stockOut, numOfSelectedFacilities);
             });
             sumAvg += sum / drug.length;
             totalOccurrences += drug.length;
@@ -185,4 +196,14 @@ function StockOutSingleProductReportController($scope, $filter, $controller, $ht
 
         return generateReportItem(groupValue[0][name], totalDuration, monthlyAvg, monthlyOccurrences, incidents);
     }
+
+    $scope.onExpanded = function (branch) {
+        console.log(branch);
+        _.forEach(branch.children, function (child) {
+            StockoutSingleProductChartService.makeStockoutChartForFacility({
+                name: child.name,
+                code: child.facilityCode
+            }, child.facilityCode, new Date($scope.reportParams.startTime), new Date($scope.reportParams.endTime), stockOuts);
+        });
+    };
 }
