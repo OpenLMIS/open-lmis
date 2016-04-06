@@ -142,6 +142,10 @@ public class RestRequisitionService {
 
   @Transactional
   public Rnr submitSdpReport(Report report, Long userId) {
+    if (syncUpHashRepository.hashExists(report.getSyncUpHash())) {
+      return null;
+    }
+
     report.validate();
 
     Facility reportingFacility = facilityService.getOperativeFacilityByCode(report.getAgentCode());
@@ -180,7 +184,9 @@ public class RestRequisitionService {
     // differentiate between full supply and non full supply products
     while(iterator.hasNext()){
       final RnrLineItem lineItem = iterator.next();
-      if(lineItem.getFullSupply()){
+
+      //default to full supply products
+      if(lineItem.getFullSupply() == null || lineItem.getFullSupply()){
         fullSupplyProducts.add(lineItem);
       }else{
 
@@ -200,8 +206,18 @@ public class RestRequisitionService {
     // i cannot believe we do all of these three at the same time.
     // but then this is what zambia specifically asked.
     requisitionService.save(rnr);
+
+    updateClientFields(report, rnr);
+    insertPatientQuantificationLineItems(report, rnr);
+
+    insertRnrSignatures(report, rnr, userId);
+
     rnr = requisitionService.submit(rnr);
-    return requisitionService.authorize(rnr);
+    rnr = requisitionService.authorize(rnr);
+
+    syncUpHashRepository.save(report.getSyncUpHash());
+
+    return rnr;
   }
 
   private void setNonFullSupplyCreatorFields(final RnrLineItem lineItem) {

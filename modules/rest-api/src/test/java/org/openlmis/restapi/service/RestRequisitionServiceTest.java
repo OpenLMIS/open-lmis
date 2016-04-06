@@ -254,6 +254,18 @@ public class RestRequisitionServiceTest {
 
   @Test
   public void sdpShouldCreateAndSubmitARequisition() throws Exception{
+    Facility facility = setupSDPrequisition();
+
+    service.submitSdpReport(report, 1L);
+
+    verify(facilityService).getOperativeFacilityByCode(DEFAULT_AGENT_CODE);
+    verify(programService).getValidatedProgramByCode(DEFAULT_PROGRAM_CODE);
+    verify(requisitionService).initiate(facility, new Program(PROGRAM_ID), 1L, false, null);
+    verify(requisitionService).submit(requisition);
+    assertThat(requisition.getRegimenLineItems().get(0).getPatientsOnTreatment(), is(10));
+  }
+
+  private Facility setupSDPrequisition() throws Exception {
     RnrLineItem rnrLineItem = make(a(defaultRnrLineItem, with(productCode, "P10")));
     List<RnrLineItem> products = asList(rnrLineItem);
     requisition.setFullSupplyLineItems(products);
@@ -261,7 +273,6 @@ public class RestRequisitionServiceTest {
 
     RegimenLineItem regimenLineItem = make(a(defaultRegimenLineItem));
     requisition.setRegimenLineItems(asList(regimenLineItem));
-
 
     report.setProducts(products);
     RegimenLineItem reportRegimenLineItem = make(a(defaultRegimenLineItem, with(patientsOnTreatment, 10), with(patientsStoppedTreatment, 5)));
@@ -284,14 +295,7 @@ public class RestRequisitionServiceTest {
     when(rnrTemplateService.fetchProgramTemplateForRequisition(any(Long.class))).thenReturn(new ProgramRnrTemplate(new ArrayList<RnrColumn>()));
 
     when(requisitionService.submit(requisition)).thenReturn(requisition);
-
-    service.submitSdpReport(report, 1L);
-
-    verify(facilityService).getOperativeFacilityByCode(DEFAULT_AGENT_CODE);
-    verify(programService).getValidatedProgramByCode(DEFAULT_PROGRAM_CODE);
-    verify(requisitionService).initiate(facility, new Program(PROGRAM_ID), 1L, false, null);
-    verify(requisitionService).submit(requisition);
-    assertThat(requisition.getRegimenLineItems().get(0).getPatientsOnTreatment(), is(10));
+    return facility;
   }
 
   @Test
@@ -799,7 +803,34 @@ public class RestRequisitionServiceTest {
   }
 
   @Test
-  public void shouldNotSaveStockCardEntriesWhenHashExists() throws Exception {
+  public void shouldSaveEmergencyReportWhenHashDoesNotExist() throws Exception {
+    //given
+    setupSDPrequisition();
+    Mockito.when(syncUpHashRepository.hashExists(anyString())).thenReturn(false);
+
+    //when
+    service.submitSdpReport(report, 1L);
+
+    //then
+    verify(syncUpHashRepository, times(1)).save(anyString());
+  }
+
+  @Test
+  public void shouldNotSaveEmergencyReportWhenHashDoesNotExist() throws Exception {
+    //given
+    setupSDPrequisition();
+    Mockito.when(syncUpHashRepository.hashExists(anyString())).thenReturn(true);
+
+    //when
+    service.submitSdpReport(report, 1L);
+
+    //then
+    verify(syncUpHashRepository, never()).save(anyString());
+  }
+
+
+  @Test
+  public void shouldNotSaveReportWhenHashExists() throws Exception {
     //given
     setUpRequisitionReportBeforeSubmit();
     Mockito.when(syncUpHashRepository.hashExists(anyString())).thenReturn(true);
@@ -809,6 +840,16 @@ public class RestRequisitionServiceTest {
 
     //then
     verify(syncUpHashRepository, never()).save(anyString());
+  }
+
+  @Test
+  public void shouldNotThrowExceptionIfNoFullSupplySpecifiedForProductInSDPReport() throws Exception {
+    setupSDPrequisition();
+    for (RnrLineItem rnrLineItem: report.getProducts()) {
+      rnrLineItem.setFullSupply(null);
+    }
+    service.submitSdpReport(report, 1L);
+    //No exception
   }
 
   private List<RnrColumn> getRnrColumns() {
