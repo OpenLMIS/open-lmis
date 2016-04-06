@@ -86,7 +86,6 @@ function ExpiryDatesReportController($scope, $filter, $controller, $http, CubesG
                 };
             }
         });
-        console.log(drugOccurredHash);
         return drugOccurredHash;
     }
 
