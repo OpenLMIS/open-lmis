@@ -220,7 +220,7 @@
                             if (branch.expanded == true) {
                                 $timeout(function () {
                                     console.log("calling on expanded");
-                                    scope.onExpanded(branch);
+                                    scope.onExpanded({branch:branch});
                                 });
                             }
                         };
