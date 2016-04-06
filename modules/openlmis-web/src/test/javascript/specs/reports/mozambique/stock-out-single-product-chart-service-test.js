@@ -11,7 +11,7 @@ describe("stock out single product chart service test", function () {
         })
     });
 
-    iit("should generate chart data items", function () {
+    it("should generate chart data items", function () {
 
         var facilityData = {
             code: 'HF'
