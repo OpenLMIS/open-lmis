@@ -16,7 +16,7 @@ services.factory('StockoutSingleProductTreeDataBuilder', function () {
     function calculateStockoutResult(stockOuts, numberOfFacilities) {
         var numberOfMonths = _.uniq(_.pluck(stockOuts, overlapMonthKey)).length;
 
-        if (numberOfMonths == 0) {
+        if (numberOfMonths === 0) {
             return {monthlyAvg: 0, monthlyOccurrences: 0, totalDuration: 0};
         }
 

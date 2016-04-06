@@ -13,7 +13,7 @@ services.factory('StockoutSingleProductChartService', function () {
                 return stockOutEvent["facility.facility_code"] == facilityCode;
             })
             .map(function (stockOutEvent) {
-                return dateRangeToArray(new Date(stockOutEvent["stockout.date"]), new Date(stockOutEvent["stockout.resolved_date"]))
+                return dateRangeToArray(new Date(stockOutEvent["stockout.date"]), new Date(stockOutEvent["stockout.resolved_date"]));
             })
             .flatten()
             .uniq(function (date) {
@@ -32,7 +32,7 @@ services.factory('StockoutSingleProductChartService', function () {
                 var match = _.find(facilityCoveredDays, function (coveredDay) {
                     return coveredDay.getTime() == day.getTime();
                 });
-                if (match == undefined) {
+                if (match === undefined) {
                     stockOutBarHeight = 0;
                 }
                 return {
@@ -45,7 +45,7 @@ services.factory('StockoutSingleProductChartService', function () {
     function renderFacilityStockoutChart(facilityName, chartData, divId) {
         function makeBaloon(item, graph) {
             var value = item.values.value;
-            if (value == 0) {
+            if (value === 0) {
                 return graph.title + " had no stock out";
             } else {
                 return graph.title + " stocked out";
