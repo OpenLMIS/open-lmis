@@ -177,6 +177,7 @@ public class ProgramSupportedMapperIT {
 
     assertThat(programsSupported.size(), is(2));
     assertThat(programsSupported.get(0).getProgram().getCode(), is(programParent.getCode()));
+    assertThat(programsSupported.get(0).getProgram().getIsEmergency(), is(false));
     assertThat(programsSupported.get(1).getProgram().getCode(), is(programSupported.getProgram().getCode()));
     assertThat(programsSupported.get(1).getProgram().getParent().getCode(), is(programParent.getCode()));
   }

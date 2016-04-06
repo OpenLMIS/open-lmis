@@ -111,8 +111,10 @@ public class RestLoginServiceTest {
     @Test
     public void shouldReturnFacilitySupportedProgramInformation() {
         Program program1 = make(a(ProgramBuilder.defaultProgram, with(ProgramBuilder.programCode, "P1")));
+        program1.setIsEmergency(true);
         Program program2 = make(a(ProgramBuilder.defaultProgram, with(ProgramBuilder.programCode, "P2")));
         program2.setParent(program1);
+        program2.setIsEmergency(false);
         ProgramSupported programSupported1 = make(a(ProgramSupportedBuilder.defaultProgramSupported, with(ProgramSupportedBuilder.supportedProgram, program1)));
         ProgramSupported programSupported2 = make(a(ProgramSupportedBuilder.defaultProgramSupported, with(ProgramSupportedBuilder.supportedProgram, program2)));
         List<ProgramSupported> programSupportedList = asList(programSupported1, programSupported2);
@@ -122,7 +124,9 @@ public class RestLoginServiceTest {
         assertEquals(2, facilitySupportedPrograms.size());
         assertEquals("P1", facilitySupportedPrograms.get(0).getProgramCode());
         assertEquals(null, facilitySupportedPrograms.get(0).getParentCode());
+        assertEquals(true, facilitySupportedPrograms.get(0).getIsEmergency());
         assertEquals("P2", facilitySupportedPrograms.get(1).getProgramCode());
         assertEquals("P1", facilitySupportedPrograms.get(1).getParentCode());
+        assertEquals(false, facilitySupportedPrograms.get(1).getIsEmergency());
     }
 }

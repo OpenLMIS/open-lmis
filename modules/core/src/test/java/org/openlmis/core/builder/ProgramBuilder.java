@@ -58,6 +58,7 @@ public class ProgramBuilder {
       program.setHideSkippedProducts(lookup.valueOf(hideSkippedProducts, Boolean.FALSE));
       program.setEnableIvdForm(lookup.valueOf(enableIvdForm, Boolean.FALSE));
       program.setUsePriceSchedule(lookup.valueOf(enableIvdForm, Boolean.FALSE));
+      program.setIsEmergency(false);
       return program;
     }
   };

@@ -85,6 +85,7 @@ public class RestLoginService {
                 FacilitySupportedProgram program = new FacilitySupportedProgram();
                 program.setProgramCode(input.getProgram().getCode());
                 program.setProgramName(input.getProgram().getName());
+                program.setIsEmergency(input.getProgram().getIsEmergency());
                 if (input.getProgram().getParent() != null) {
                     program.setParentCode(input.getProgram().getParent().getCode());
                 }

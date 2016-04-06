@@ -44,6 +44,7 @@ public class Program extends BaseModel {
   private Boolean enableIvdForm;
   private Boolean push;
   private Boolean usePriceSchedule;
+  private Boolean isEmergency;
 
   private Program parent;
 

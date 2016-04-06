@@ -53,11 +53,12 @@ public interface ProgramSupportedMapper {
     //TODO use COALESCE for modifiedDate
   void update(ProgramSupported programSupported);
 
-  @Select({"SELECT P.code, P.name, P.parentId FROM programs_supported PS INNER JOIN programs P ON P.id = PS.programId ",
+  @Select({"SELECT P.code, P.name, P.parentId ,P.isEmergency FROM programs_supported PS INNER JOIN programs P ON P.id = PS.programId ",
     "WHERE PS.facilityId = #{facilityId} AND PS.active = TRUE AND P.active = TRUE"})
   @Results({
       @Result(property = "program.code", column = "code"),
       @Result(property = "program.name", column = "name"),
+      @Result(property = "program.isEmergency", column = "isEmergency"),
       @Result(property = "program.parent", column = "parentId", javaType = Program.class,
           one = @One(select = "org.openlmis.core.repository.mapper.ProgramMapper.getById")),
   })
