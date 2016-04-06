@@ -100,10 +100,10 @@ function ViewRnrListController($scope, facilities, RequisitionsForViewing, Progr
 
     function redirectBasedOnFeatureToggle() {
         var url = "requisition/";
-        var urlMapping = {"ESS_MEDS": "view-requisition-via/", "MMIA": "view-requisition-mmia/"};
         var viewToggleKey = {key: "new.rnr.view"};
         FeatureToggleService.get(viewToggleKey, function (result) {
             if (result.key) {
+                var urlMapping = {"VIA": "view-requisition-via/", "ESS_MEDS": "view-requisition-via/", "MMIA": "view-requisition-mmia/"};
                 url = urlMapping[$scope.selectedItems[0].programCode];
             }
             url += $scope.selectedItems[0].id + "/" + $scope.selectedItems[0].programId + "?supplyType=fullSupply&page=1";
