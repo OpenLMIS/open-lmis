@@ -1,4 +1,4 @@
-function StockOutSingleProductReportController($scope, $filter, $q, $controller, $http, CubesGenerateUrlService, messageService, $routeParams, ProductReportService, StockoutSingleProductFacilityChartService, StockoutSingleProductTreeDataBuilder) {
+function StockOutSingleProductReportController($scope, $filter, $q, $controller, $http, $timeout, CubesGenerateUrlService, messageService, $routeParams, ProductReportService, StockoutSingleProductFacilityChartService, StockoutSingleProductZoneChartService, StockoutSingleProductTreeDataBuilder) {
     $controller('BaseProductReportController', {$scope: $scope});
 
     var stockOuts;
@@ -198,12 +198,46 @@ function StockOutSingleProductReportController($scope, $filter, $q, $controller,
     }
 
     $scope.onExpanded = function (branch) {
-        console.log(branch);
-        _.forEach(branch.children, function (child) {
-            StockoutSingleProductFacilityChartService.makeStockoutChartForFacility({
-                name: child.name,
-                code: child.facilityCode
-            }, child.facilityCode, new Date($scope.reportParams.startTime), new Date($scope.reportParams.endTime), stockOuts);
+        function renderFacilitiesInDistrict(facilities) {
+            _.forEach(facilities, function (facility) {
+                StockoutSingleProductFacilityChartService.makeStockoutChartForFacility({
+                    name: facility.name,
+                    code: facility.facilityCode
+                }, facility.facilityCode, new Date($scope.reportParams.startTime), new Date($scope.reportParams.endTime), stockOuts);
+            });
+        }
+
+        function renderDistricts(districts) {
+            _.forEach(districts, function (district) {
+                StockoutSingleProductZoneChartService.makeStockoutChartForZone({
+                    zoneCode: district.districtCode,
+                    zonePropertyName: "location.district_code"
+                }, district.districtCode, new Date($scope.reportParams.startTime), new Date($scope.reportParams.endTime), stockOuts, carryStartDates);
+
+                if (district.expanded) {
+                    renderFacilitiesInDistrict(district.children);
+                }
+            });
+        }
+
+        var isDistrict = branch.districtCode != undefined;
+        var isProvince = branch.provinceCode != undefined;
+        if (isDistrict) {
+            renderFacilitiesInDistrict(branch.children);
+        } else if (isProvince) {
+            renderDistricts(branch.children);
+        }
+    };
+
+    $scope.onChartPlaceHolderShown = function (branch) {
+        $timeout(function () {
+            var isProvince = branch.provinceCode != undefined;
+            if (isProvince) {
+                StockoutSingleProductZoneChartService.makeStockoutChartForZone({
+                    zoneCode: branch.provinceCode,
+                    zonePropertyName: "location.province_code"
+                }, branch.provinceCode, new Date($scope.reportParams.startTime), new Date($scope.reportParams.endTime), stockOuts, carryStartDates);
+            }
         });
     };
 }

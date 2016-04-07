@@ -22,7 +22,7 @@
                     "             <div ng-if=\"col.cellTemplate\" compile=\"col.cellTemplate\" cell-template-scope=\"col.cellTemplateScope\"></div>\n" +
                     "             <div ng-if=\'row.branch[col.field]'><span style='font-weight: bold;'>{{col.displayName}}: </span>{{row.branch[col.field]}}</div>" +
                     "           </div>\n" +
-                    "           <div id='{{row.branch.provinceCode||row.branch.districtCode||row.branch.facilityCode}}' style='height: 200px;width: 100%;'></div>" +
+                    "           <div ng-init='onChartPlaceHolderShown({branch:row.branch})' id='{{row.branch.provinceCode||row.branch.districtCode||row.branch.facilityCode}}' style='height: 200px;width: 100%;'>placeholder</div>" +
                     "       <td>" +
                     "     </tr>\n" +
                     "   </tbody>\n" +
@@ -83,6 +83,7 @@
                         expandOn: '=',
                         onSelect: '&',
                         onExpanded: '&',
+                        onChartPlaceHolderShown: '&',
                         onClick: '&',
                         initialSelection: '@',
                         treeControl: '='
@@ -203,6 +204,7 @@
                                 }
                             }
                         };
+
                         scope.on_user_click = function (branch) {
                             if (scope.onClick) {
                                 scope.onClick({
@@ -219,7 +221,6 @@
                             branch.expanded = !branch.expanded;
                             if (branch.expanded == true) {
                                 $timeout(function () {
-                                    console.log("calling on expanded");
                                     scope.onExpanded({branch: branch});
                                 });
                             }
