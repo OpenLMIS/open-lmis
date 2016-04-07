@@ -51,6 +51,11 @@ public class PDFGeneratorTest {
         testParameterParsingForPhantom("ESS_MEDS", "via");
     }
 
+    @Test
+    public void shouldCallPhantomToGeneratePDFForVIAProgram() throws Exception {
+        testParameterParsingForPhantom("VIA", "via");
+    }
+
     private void testParameterParsingForPhantom(String programCode, String urlPart) throws IOException, URISyntaxException, InterruptedException {
         //given
         when(attributes.getSessionId()).thenReturn("helloid");

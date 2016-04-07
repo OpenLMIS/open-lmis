@@ -63,6 +63,7 @@ public class PDFGenerator {
 
     public enum RnrProgram {
         MMIA("mmia"),
+        VIA("via"),
         ESS_MEDS("via");
 
         private String programName;
