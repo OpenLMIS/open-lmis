@@ -24,7 +24,7 @@ services.factory('StockoutSingleProductZoneChartService', function () {
     }
 
     function renderZoneChart(chartData, divId) {
-        function makeBaloon(item, graph) {
+        function makeBalloon(item, graph) {
             var stockOutFacilities = item.dataContext.stockOutFacilities;
             var carryingFacilities = item.dataContext.carryingFacilities;
             var percentage = item.values.value;
@@ -33,14 +33,14 @@ services.factory('StockoutSingleProductZoneChartService', function () {
                 return "None of the facilities started carrying this drug yet";
             } else if (percentage == 0) {
                 return "None of the facilities had stock out"
-                    + "<br><br>"
-                    + carryingFacilities.join("<br>");
+                    + "<br>"
+                    + carryingFacilities.join(", ");
             } else {
-                return percentage + "% <br><br>"
+                return percentage + "% <br>"
                     + stockOutFacilities.length + " / " + carryingFacilities.length
-                    + '<br><br><span style="color: red;">'
-                    + _.intersection(carryingFacilities, stockOutFacilities).join("<br>") + "</span><br>"
-                    + _.difference(carryingFacilities, stockOutFacilities).join("<br>");
+                    + '<br><span style="color: red;">'
+                    + _.intersection(carryingFacilities, stockOutFacilities).join(", ") + "</span><br>"
+                    + _.difference(carryingFacilities, stockOutFacilities).join(", ");
             }
         }
 
@@ -60,7 +60,7 @@ services.factory('StockoutSingleProductZoneChartService', function () {
                 "fillAlphas": 0.5,
                 "lineColor": "#FF0000",
                 // "type": "smoothedLine",
-                "balloonFunction": makeBaloon
+                "balloonFunction": makeBalloon
 
             }],
             balloon: {textAlign: "left"},
