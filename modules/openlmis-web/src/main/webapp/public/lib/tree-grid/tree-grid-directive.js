@@ -22,7 +22,10 @@
                     "             <div ng-if=\"col.cellTemplate\" compile=\"col.cellTemplate\" cell-template-scope=\"col.cellTemplateScope\"></div>\n" +
                     "             <div ng-if=\'row.branch[col.field]'><span style='font-weight: bold;'>{{col.displayName}}: </span>{{row.branch[col.field]}}</div>" +
                     "           </div>\n" +
-                    "           <div ng-init='onChartPlaceHolderShown({branch:row.branch})' id='{{row.branch.provinceCode||row.branch.districtCode||row.branch.facilityCode}}' style='height: 200px;width: 100%;'>placeholder</div>" +
+                    "           <div " +
+                    "               class='treeLevel-{{row.level}}-Chart'" +
+                    "               ng-init='onChartPlaceHolderShown({branch:row.branch})' " +
+                    "               id='{{row.branch.provinceCode||row.branch.districtCode||row.branch.facilityCode}}'></div>" +
                     "       <td>" +
                     "     </tr>\n" +
                     "   </tbody>\n" +
