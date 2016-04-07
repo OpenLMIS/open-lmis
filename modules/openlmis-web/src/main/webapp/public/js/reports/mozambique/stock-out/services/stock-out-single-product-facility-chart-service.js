@@ -74,33 +74,19 @@ services.factory('StockoutSingleProductFacilityChartService', function () {
                 "parseDates": true,
                 "dateFormats": [{
                     period: 'DD',
-                    format: 'YYYY.MM.DD'
+                    format: 'DD.MM.YYYY'
                 }, {
                     period: 'WW',
-                    format: 'YYYY.MM.DD'
+                    format: 'DD.MM.YYYY'
                 }, {
                     period: 'MM',
-                    format: 'YYYY.MM'
+                    format: 'MM.YYYY'
                 }, {
                     period: 'YYYY',
                     format: 'YYYY'
                 }],
                 "axisColor": "#DADADA",
                 "minorGridEnabled": true
-            },
-            "chartScrollbar": {
-                "oppositeAxis": false,
-                "offset": 30,
-                "scrollbarHeight": 40,
-                "backgroundAlpha": 0,
-                "selectedBackgroundAlpha": 0.1,
-                "selectedBackgroundColor": "#888888",
-                "graphFillAlpha": 0,
-                "graphLineAlpha": 0.5,
-                "selectedGraphFillAlpha": 0,
-                "selectedGraphLineAlpha": 1,
-                "autoGridCount": true,
-                "color": "#AAAAAA"
             },
             chartCursor: {
                 enabled: true,
