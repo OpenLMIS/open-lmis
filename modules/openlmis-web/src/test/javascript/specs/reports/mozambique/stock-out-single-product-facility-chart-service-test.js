@@ -1,17 +1,17 @@
-describe("stock out single product chart service test", function () {
+describe("stock out single product facility chart service test", function () {
 
-    var stockoutSingleProductChartService;
+    var stockoutSingleProductFacilityChartService;
 
 
     beforeEach(module('openlmis'));
 
     beforeEach(function () {
-        inject(function (StockoutSingleProductChartService) {
-            stockoutSingleProductChartService = StockoutSingleProductChartService;
+        inject(function (StockoutSingleProductFacilityChartService) {
+            stockoutSingleProductFacilityChartService = StockoutSingleProductFacilityChartService;
         })
     });
 
-    it("should generate chart data items", function () {
+    it("should generate facility chart data items", function () {
 
         var facilityData = {
             code: 'HF'
@@ -22,7 +22,7 @@ describe("stock out single product chart service test", function () {
             'stockout.date': '2016-01-01',
             'stockout.resolved_date': '2016-03-01'
         }];
-        var chartDataItems = stockoutSingleProductChartService.generateChartDataItems(new Date("2016-03-01"), new Date("2016-03-02"), facilityData, stockoutEvents);
+        var chartDataItems = stockoutSingleProductFacilityChartService.generateChartDataItems(new Date("2016-03-01"), new Date("2016-03-02"), facilityData, stockoutEvents);
 
         expect(chartDataItems).toEqual([
             {

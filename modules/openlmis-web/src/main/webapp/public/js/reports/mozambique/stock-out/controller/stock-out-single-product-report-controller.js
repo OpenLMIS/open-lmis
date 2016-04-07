@@ -1,4 +1,4 @@
-function StockOutSingleProductReportController($scope, $filter, $q, $controller, $http, CubesGenerateUrlService, messageService, $routeParams, ProductReportService, StockoutSingleProductChartService, StockoutSingleProductTreeDataBuilder) {
+function StockOutSingleProductReportController($scope, $filter, $q, $controller, $http, CubesGenerateUrlService, messageService, $routeParams, ProductReportService, StockoutSingleProductFacilityChartService, StockoutSingleProductTreeDataBuilder) {
     $controller('BaseProductReportController', {$scope: $scope});
 
     var stockOuts;
@@ -200,7 +200,7 @@ function StockOutSingleProductReportController($scope, $filter, $q, $controller,
     $scope.onExpanded = function (branch) {
         console.log(branch);
         _.forEach(branch.children, function (child) {
-            StockoutSingleProductChartService.makeStockoutChartForFacility({
+            StockoutSingleProductFacilityChartService.makeStockoutChartForFacility({
                 name: child.name,
                 code: child.facilityCode
             }, child.facilityCode, new Date($scope.reportParams.startTime), new Date($scope.reportParams.endTime), stockOuts);

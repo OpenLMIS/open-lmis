@@ -1,4 +1,4 @@
-services.factory('StockoutSingleProductChartService', function () {
+services.factory('StockoutSingleProductFacilityChartService', function () {
     function dateRangeToArray(start, end) {
         var dates = [];
         for (var day = new Date(start); day <= end; day.setDate(day.getDate() + 1)) {
