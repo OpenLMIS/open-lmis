@@ -1,4 +1,4 @@
-services.factory('StockoutSingleProductZoneChartService', function () {
+services.factory('StockoutSingleProductZoneChartService', function (messageService) {
 
     function dateRangeToArray(start, end) {
         var dates = [];
@@ -47,7 +47,7 @@ services.factory('StockoutSingleProductZoneChartService', function () {
             "theme": "light",
             "dataProvider": chartData,
             "valueAxes": [{
-                title: "Stock out percentage",
+                title: messageService.get('stock.out.chart.axis.title'),
                 maximum: 100,
                 minimum: 0
             }],

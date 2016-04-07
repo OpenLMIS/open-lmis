@@ -20,7 +20,7 @@
                     "       <td>" +
                     "           <div ng-repeat=\"col in colDefinitions\" style='display: inline-block; margin-right: 20px'>\n" +
                     "             <div ng-if=\"col.cellTemplate\" compile=\"col.cellTemplate\" cell-template-scope=\"col.cellTemplateScope\"></div>\n" +
-                    "             <div ng-if=\'row.branch[col.field]'><span style='font-weight: bold;'>{{col.displayName}}: </span>{{row.branch[col.field]}}</div>" +
+                    "             <div ng-if=\'row.branch[col.field]'><span style='font-weight: bold;' openlmis-message='{{col.displayName}}'></span> : {{row.branch[col.field]}}</div>" +
                     "           </div>\n" +
                     "           <div " +
                     "               class='treeLevel-{{row.level}}-Chart'" +
