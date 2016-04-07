@@ -220,8 +220,8 @@ function StockOutSingleProductReportController($scope, $filter, $q, $controller,
             });
         }
 
-        var isDistrict = branch.districtCode != undefined;
-        var isProvince = branch.provinceCode != undefined;
+        var isDistrict = branch.districtCode !== undefined;
+        var isProvince = branch.provinceCode !== undefined;
         if (isDistrict) {
             renderFacilitiesInDistrict(branch.children);
         } else if (isProvince) {
@@ -231,7 +231,7 @@ function StockOutSingleProductReportController($scope, $filter, $q, $controller,
 
     $scope.onChartPlaceHolderShown = function (branch) {
         $timeout(function () {
-            var isProvince = branch.provinceCode != undefined;
+            var isProvince = branch.provinceCode !== undefined;
             if (isProvince) {
                 StockoutSingleProductZoneChartService.makeStockoutChartForZone({
                     zoneCode: branch.provinceCode,

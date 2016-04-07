@@ -29,18 +29,16 @@ services.factory('StockoutSingleProductZoneChartService', function () {
             var carryingFacilities = item.dataContext.carryingFacilities;
             var percentage = item.values.value;
 
-            if (carryingFacilities.length == 0) {
+            if (carryingFacilities.length === 0) {
                 return "None of the facilities started carrying this drug yet";
-            } else if (percentage == 0) {
-                return "None of the facilities had stock out"
-                    + "<br>"
-                    + carryingFacilities.join(", ");
+            } else if (percentage === 0) {
+                return "None of the facilities had stock out" + "<br>" + carryingFacilities.join(", ");
             } else {
-                return percentage + "% <br>"
-                    + stockOutFacilities.length + " / " + carryingFacilities.length
-                    + '<br><span style="color: red;">'
-                    + _.intersection(carryingFacilities, stockOutFacilities).join(", ") + "</span><br>"
-                    + _.difference(carryingFacilities, stockOutFacilities).join(", ");
+                return percentage + "% <br>" +
+                    stockOutFacilities.length + " / " + carryingFacilities.length +
+                    '<br><span style="color: red;">' +
+                    _.intersection(carryingFacilities, stockOutFacilities).join(", ") + "</span><br>" +
+                    _.difference(carryingFacilities, stockOutFacilities).join(", ");
             }
         }
 
@@ -98,7 +96,7 @@ services.factory('StockoutSingleProductZoneChartService', function () {
                 return stockout[zone.zonePropertyName] == zone.zoneCode;
             })
             .uniq(function (stockout) {
-                return stockout["facility.facility_code"] + stockout["stockout.date"] + stockout["stockout.resolved_date"]
+                return stockout["facility.facility_code"] + stockout["stockout.date"] + stockout["stockout.resolved_date"];
             })
             .sortBy("facility.facility_name")
             .value();
