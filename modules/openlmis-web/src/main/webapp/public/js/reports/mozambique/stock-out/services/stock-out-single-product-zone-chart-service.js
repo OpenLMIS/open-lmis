@@ -20,7 +20,7 @@ services.factory('StockoutSingleProductZoneChartService', function () {
         var stockoutAtDay = _.filter(stockoutsInZone, function (stockoutEvent) {
             return new Date(stockoutEvent["stockout.date"]) <= day && new Date(stockoutEvent["stockout.resolved_date"]) >= day;
         });
-        return _.pluck(stockoutAtDay, "facility.facility_name");
+        return _.uniq(_.pluck(stockoutAtDay, "facility.facility_name"));
     }
 
     function renderZoneChart(chartData, divId) {
@@ -104,8 +104,8 @@ services.factory('StockoutSingleProductZoneChartService', function () {
             .value();
 
         return _.map(userSelectedDays, function (day) {
-            var carryingFacilities = getCarryingFacilitiesAtDay(day, zone, carryStartDates);
             var stockOutFacilities = getStockoutFacilitiesAtDay(day, stockoutsInZone);
+            var carryingFacilities = getCarryingFacilitiesAtDay(day, zone, carryStartDates);
             var percentage = 0;
             if (stockOutFacilities.length > 0) {
                 percentage = ((stockOutFacilities.length / carryingFacilities.length) * 100).toFixed(0);

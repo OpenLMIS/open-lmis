@@ -2,28 +2,36 @@ describe("stock out single product zone chart service test", function () {
 
     var stockoutSingleProductZoneChartService;
 
-    var stockOuts = [{
-        "facility.facility_code": "HF1",
-        "facility.facility_name": "HF1 name",
-        "location.district_code": "Z1",
-        "location.province_code": "P1",
-        "stockout.date": "2016-01-01",
-        "stockout.resolved_date": "2016-01-02"
-    }, {
-        "facility.facility_code": "HF2",
-        "facility.facility_name": "HF2 name",
-        "location.province_code": "P1",
-        "location.district_code": "Z1",
-        "stockout.date": "2016-01-02",
-        "stockout.resolved_date": "2016-01-04"
-    }, {
-        "facility.facility_code": "HF3",
-        "facility.facility_name": "HF3 name",
-        "location.province_code": "P1",
-        "location.district_code": "Z1",
-        "stockout.date": "2016-02-05",
-        "stockout.resolved_date": "2016-04-04"
-    }];
+    var stockOuts = [
+        {
+            "facility.facility_code": "HF1",
+            "facility.facility_name": "HF1 name",
+            "location.district_code": "Z1",
+            "location.province_code": "P1",
+            "stockout.date": "2015-12-01",
+            "stockout.resolved_date": "2016-01-01"
+        }, {
+            "facility.facility_code": "HF1",
+            "facility.facility_name": "HF1 name",
+            "location.district_code": "Z1",
+            "location.province_code": "P1",
+            "stockout.date": "2016-01-01",
+            "stockout.resolved_date": "2016-01-02"
+        }, {
+            "facility.facility_code": "HF2",
+            "facility.facility_name": "HF2 name",
+            "location.province_code": "P1",
+            "location.district_code": "Z1",
+            "stockout.date": "2016-01-02",
+            "stockout.resolved_date": "2016-01-04"
+        }, {
+            "facility.facility_code": "HF3",
+            "facility.facility_name": "HF3 name",
+            "location.province_code": "P1",
+            "location.district_code": "Z1",
+            "stockout.date": "2016-02-05",
+            "stockout.resolved_date": "2016-04-04"
+        }];
 
     var carryStartDates = [{
         "facility.facility_code": "HF1",
