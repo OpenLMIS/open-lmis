@@ -17,7 +17,7 @@
                     "           </a><span class=\"indented tree-label\" ng-click=\"on_user_click(row.branch)\">\n" +
                     "             {{row.branch[expandingProperty.field] || row.branch[expandingProperty]}}</span>\n" +
                     "       </td>\n" +
-                    "       <td>" +
+                    "       <td id='chart-div'>" +
                     "           <div ng-repeat=\"col in colDefinitions\" style='display: inline-block; margin-right: 20px'>\n" +
                     "             <div ng-if=\"col.cellTemplate\" compile=\"col.cellTemplate\" cell-template-scope=\"col.cellTemplateScope\"></div>\n" +
                     "             <div ng-if=\'row.branch[col.field]'><span style='font-weight: bold;' openlmis-message='{{col.displayName}}'></span> : {{row.branch[col.field]}}</div>" +

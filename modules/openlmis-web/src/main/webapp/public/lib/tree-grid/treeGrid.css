@@ -119,3 +119,7 @@ table.tree-grid {
     height: 90px;
     width: 100%;
 }
+
+#chart-div {
+    padding-left: 2%;
+}
