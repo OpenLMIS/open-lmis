@@ -92,28 +92,7 @@ public class CalculationServiceTest {
 
     verify(rnrLineItem2).validateNonFullSupply();
   }
-
-  @Test
-  public void shouldNotValidateOnKitItems() throws Exception {
-    final RnrLineItem rnrLineItem1 = mock(RnrLineItem.class);
-    final RnrLineItem rnrLineItem2 = mock(RnrLineItem.class);
-    when(rnrLineItem1.getIsKit()).thenReturn(true);
-    when(rnrLineItem2.getIsKit()).thenReturn(true);
-
-    rnr.setFullSupplyLineItems(asList(rnrLineItem1));
-    rnr.setNonFullSupplyLineItems(asList(rnrLineItem2));
-
-    List<RnrColumn> programRnrColumns = new ArrayList<>();
-    ProgramRnrTemplate template = new ProgramRnrTemplate(programRnrColumns);
-
-    calculationService.perform(rnr, template);
-
-    verify(rnrLineItem1, never()).validateMandatoryFields(template);
-    verify(rnrLineItem1, never()).validateCalculatedFields(template);
-
-    verify(rnrLineItem2, never()).validateNonFullSupply();
-  }
-
+  
   @Test
   public void shouldCalculateCalculatedFieldsAccordingToProgramTemplate() throws Exception {
     ArrayList<RnrColumn> programRequisitionColumns = new ArrayList<>();
