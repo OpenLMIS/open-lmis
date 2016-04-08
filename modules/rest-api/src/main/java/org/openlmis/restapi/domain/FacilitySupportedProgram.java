@@ -14,5 +14,5 @@ public class FacilitySupportedProgram {
   private String programName;
   private String programCode;
   private String parentCode;
-  private Boolean isEmergency;
+  private Boolean isSupportEmergency;
 }
