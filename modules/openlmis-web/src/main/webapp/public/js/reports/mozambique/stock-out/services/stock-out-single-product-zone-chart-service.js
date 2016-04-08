@@ -30,9 +30,9 @@ services.factory('StockoutSingleProductZoneChartService', function (messageServi
             var percentage = item.values.value;
 
             if (carryingFacilities.length === 0) {
-                return "None of the facilities started carrying this drug yet";
+                return messageService.get("stock.out.chart.no.facility.carry");
             } else if (percentage === 0) {
-                return "None of the facilities had stock out" + "<br>" + carryingFacilities.join(", ");
+                return messageService.get("stock.out.chart.no.facility.stockOut") + "<br>" + carryingFacilities.join(", ");
             } else {
                 return percentage + "% <br>" +
                     stockOutFacilities.length + " / " + carryingFacilities.length +

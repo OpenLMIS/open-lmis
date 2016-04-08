@@ -1,4 +1,4 @@
-services.factory('StockoutSingleProductFacilityChartService', function () {
+services.factory('StockoutSingleProductFacilityChartService', function (messageService) {
     function dateRangeToArray(start, end) {
         var dates = [];
         for (var day = new Date(start); day <= end; day.setDate(day.getDate() + 1)) {
@@ -46,9 +46,9 @@ services.factory('StockoutSingleProductFacilityChartService', function () {
         function makeBaloon(item, graph) {
             var value = item.values.value;
             if (value === 0) {
-                return graph.title + " had no stock out";
+                return graph.title + " " + messageService.get("stock.out.chart.no.stockOut");
             } else {
-                return graph.title + " stocked out";
+                return graph.title + " " + messageService.get("stock.out.chart.stocked.out");
             }
         }
 
