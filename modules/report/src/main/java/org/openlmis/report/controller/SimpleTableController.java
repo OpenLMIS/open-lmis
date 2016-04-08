@@ -31,6 +31,7 @@ import org.openlmis.core.web.OpenLmisResponse;
 import org.openlmis.core.web.controller.BaseController;
 import org.openlmis.report.mapper.AppInfoMapper;
 import org.openlmis.report.mapper.RequisitionReportsMapper;
+import org.openlmis.report.model.dto.RequisitionDTO;
 import org.openlmis.report.service.FacilityProductsReportDataProvider;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -82,8 +83,12 @@ public class SimpleTableController extends BaseController {
     public ResponseEntity<OpenLmisResponse> requisitionReport(
             @RequestParam(value = "startTime", required = true) Date startTime,
             @RequestParam(value = "endTime", required = true) Date endTime) {
-        return OpenLmisResponse.response("rnr_list", requisitionReportsMapper
-                .getRequisitionList(startTime, endTime));
+        List<RequisitionDTO> requisitions = requisitionReportsMapper.getRequisitionList(startTime, endTime);
+
+        for (RequisitionDTO requisitionDTO : requisitions) {
+            requisitionDTO.assignType();
+        }
+        return OpenLmisResponse.response("rnr_list", requisitions);
     }
 
 

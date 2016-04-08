@@ -53,8 +53,10 @@ public class SimpleTableControllerTest {
                 controller.requisitionReport(startTime, endTime);
 
         assertThat(response.getStatusCode(), is(HttpStatus.OK));
-        assertThat((List<RequisitionDTO>) response.getBody().getData().get("rnr_list"), is
-                (requisitionDTOs));
+
+        List<RequisitionDTO> rnrs = (List<RequisitionDTO>)response.getBody().getData().get("rnr_list");
+        assertThat(rnrs, is(requisitionDTOs));
+        assertThat(rnrs.get(0).getType(), is(RequisitionDTO.NORMAL_TYPE));
     }
 
     @Test

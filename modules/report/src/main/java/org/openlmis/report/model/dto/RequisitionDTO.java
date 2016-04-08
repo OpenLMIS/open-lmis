@@ -11,8 +11,13 @@ import java.util.Date;
 @NoArgsConstructor
 @AllArgsConstructor
 public class RequisitionDTO {
+    public static final String NORMAL_TYPE = "Normal";
+    public static final String EMERGENCY_TYPE = "Emergency";
+
     private Long id;
     private String programName;
+    private String type;
+    private boolean emergency;
     private String facilityName;
     private String submittedUser;
     private String webSubmittedTimeString;
@@ -30,6 +35,10 @@ public class RequisitionDTO {
 
     public String getWebSubmittedTimeString() {
         return DateUtil.formatDate(webSubmittedTime);
+    }
+
+    public void assignType() {
+        type = emergency ? EMERGENCY_TYPE : NORMAL_TYPE;
     }
 
 }

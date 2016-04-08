@@ -27,6 +27,7 @@ public interface RequisitionReportsMapper {
 
     @Select({"SELECT req.id id," +
             "fac.name facilityName," +
+            "req.emergency emergency," +
             "pro.name programName," +
             "us.username submittedUser," +
             "req.clientsubmittedtime clientSubmittedTime," +
