@@ -51,7 +51,7 @@
                             <li class="type-checkbox">
                                 <span openlmis-message="view.rnr.via.normal"></span>
                         <span class="checkbox">
-                        <input type="checkbox" value="4" id="checkboxInput4" checked="checked" name=""/>
+                        <input type="checkbox" value="4" id="checkboxInput4" ng-checked="!emergency" name=""/>
                         <label for="checkboxInput4"></label>
                         </span>
                             </li>
@@ -59,7 +59,7 @@
                             <li class="type-checkbox">
                                 <span openlmis-message="view.rnr.via.special"></span>
                         <span class="checkbox">
-                        <input type="checkbox" value="5" id="checkboxInput5" name=""/>
+                        <input type="checkbox" value="5" id="checkboxInput5" ng-checked="emergency" name=""/>
                         <label for="checkboxInput5"></label>
                         </span>
                             </li>

@@ -39,6 +39,8 @@ function ViewRnrViaDetailController($scope, $route, $location, Requisitions, dow
             downloadSimamService.init($scope, $scope.rnr.id);
 
             $scope.numPages = $scope.regularRnrItems.length / $scope.pageSize;
+
+            $scope.emergency = data.rnr.emergency;
         });
 
     };
