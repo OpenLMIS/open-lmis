@@ -15,12 +15,14 @@ describe("Product", function () {
   describe("Controller", function () {
 
     var ctrl, scope, $httpBackend, location, controller, rootScope;
-    beforeEach(inject(function ($rootScope, _$httpBackend_, $controller, $location) {
+    beforeEach(inject(function ($rootScope, _$httpBackend_, $controller, $location,_FeatureToggleService_) {
       rootScope = $rootScope;
       scope = $rootScope.$new();
       $httpBackend = _$httpBackend_;
+      FeatureToggleService = _FeatureToggleService_;
       location = $location;
       controller = $controller;
+      spyOn(FeatureToggleService,'get').andReturn({"key":true});
       var productDTO = {product: undefined, productLastUpdated: "23/12/2014"};
       ctrl = $controller('ProductController', {$scope: scope, productGroups: [], productForms: [], dosageUnits: [], programs: [], categories: [], PriceSchCategories: [], productDTO: productDTO});
     }));

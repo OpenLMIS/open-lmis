@@ -1,4 +1,4 @@
-function ProductController($scope, productGroups, productForms, dosageUnits, programs, categories, productDTO, Products, PriceSchCategories, $location, $filter) {
+function ProductController($scope, productGroups, productForms, dosageUnits, programs, categories, productDTO, Products, PriceSchCategories, $location, $filter, FeatureToggleService) {
   $scope.productGroups = productGroups;
   $scope.productForms = productForms;
   $scope.dosageUnits = dosageUnits;
@@ -54,6 +54,13 @@ function ProductController($scope, productGroups, productForms, dosageUnits, pro
     $scope.product.form = _.where($scope.productForms, {code: $scope.selectedProductFormCode})[0];
     $scope.product.dosageUnit = _.where($scope.dosageUnits, {code: $scope.selectedProductDosageUnitCode})[0];
   };
+
+  $scope.isSupportArchive = function () {
+    var toggleKey = {key: 'product.archive'};
+    FeatureToggleService.get(toggleKey, function (result) {
+      return result.key;
+    })
+  }();
 
   $scope.save = function () {
     if ($scope.productForm.$error.required) {
