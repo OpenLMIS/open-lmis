@@ -59,7 +59,7 @@ function ProductController($scope, productGroups, productForms, dosageUnits, pro
     var toggleKey = {key: 'product.archive'};
     FeatureToggleService.get(toggleKey, function (result) {
       return result.key;
-    })
+    });
   }();
 
   $scope.save = function () {
