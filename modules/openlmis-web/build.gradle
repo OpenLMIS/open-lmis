@@ -154,7 +154,7 @@ dependencies {
     'org.springframework:spring-core:3.1.1.RELEASE',
     'org.springframework:spring-web:3.1.1.RELEASE',
     'javax.servlet:servlet-api:2.5',
-    'commons-collections:commons-collections:20040616',
+    'commons-collections:commons-collections:3.2.2',
     'org.codehaus.jackson:jackson-mapper-asl:1.9.9',
     'org.springframework.security:spring-security-taglibs:3.1.2.RELEASE',
     'org.json:json:20090211',

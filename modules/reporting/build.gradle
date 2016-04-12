@@ -21,7 +21,7 @@ dependencies {
             'javax.servlet:servlet-api:2.5',
             'org.aspectj:aspectjrt:1.7.0',
             'commons-lang:commons-lang:2.6',
-            'commons-collections:commons-collections:20040616',
+            'commons-collections:commons-collections:3.2.2',
             'net.sf.jasperreports:jasperreports:5.5.0',
             'org.codehaus.groovy:groovy-all:2.0.1',
             'com.lowagie:itext:4.2.0',
