@@ -156,9 +156,13 @@ public class RequisitionMapperIT {
 
     insertSignatures(requisition, submitterSignature, approverSignature);
 
+    User author = new User();
+    author.setId(1L);
+    Comment comment = new Comment(requisition.getId(), author, "A comment", null);
+    commentMapper.insert(comment);
+    updateSupplyingDepotForRequisition(requisition);
     insertLineItem(requisition);
-
-      insertComment(requisition);
+    insertComment(requisition);
 
     Rnr fetchedRequisition = mapper.getById(requisition.getId());
 
