@@ -56,7 +56,7 @@ public class SimpleTableControllerTest {
 
         List<RequisitionDTO> rnrs = (List<RequisitionDTO>)response.getBody().getData().get("rnr_list");
         assertThat(rnrs, is(requisitionDTOs));
-        assertThat(rnrs.get(0).getType(), is(RequisitionDTO.NORMAL_TYPE));
+        assertThat(rnrs.get(0).getType(), is(RequisitionDTO.RequisitionType.NORMAL_TYPE));
     }
 
     @Test

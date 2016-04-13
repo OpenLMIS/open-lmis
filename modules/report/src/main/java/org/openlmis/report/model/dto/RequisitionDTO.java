@@ -1,5 +1,6 @@
 package org.openlmis.report.model.dto;
 
+import com.fasterxml.jackson.annotation.JsonValue;
 import lombok.*;
 import org.openlmis.core.utils.DateUtil;
 
@@ -11,12 +12,9 @@ import java.util.Date;
 @NoArgsConstructor
 @AllArgsConstructor
 public class RequisitionDTO {
-    public static final String NORMAL_TYPE = "Normal";
-    public static final String EMERGENCY_TYPE = "Emergency";
-
     private Long id;
     private String programName;
-    private String type;
+    private RequisitionType type;
     private boolean emergency;
     private String facilityName;
     private String submittedUser;
@@ -38,7 +36,24 @@ public class RequisitionDTO {
     }
 
     public void assignType() {
-        type = emergency ? EMERGENCY_TYPE : NORMAL_TYPE;
+        type = emergency ? RequisitionType.EMERGENCY_TYPE : RequisitionType.NORMAL_TYPE;
+    }
+
+    public enum RequisitionType {
+        NORMAL_TYPE("Normal"),
+        EMERGENCY_TYPE("Emergency");
+
+        @JsonValue
+        public String getType() {
+            return type;
+        }
+
+        private String type;
+
+        RequisitionType(String type) {
+            this.type = type;
+        }
+
     }
 
 }

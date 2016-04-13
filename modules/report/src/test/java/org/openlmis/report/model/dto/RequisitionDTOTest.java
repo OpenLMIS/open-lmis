@@ -14,7 +14,7 @@ public class RequisitionDTOTest {
         requisitionDTO.setEmergency(false);
         requisitionDTO.assignType();
 
-        assertThat(requisitionDTO.getType(), is(RequisitionDTO.NORMAL_TYPE));
+        assertThat(requisitionDTO.getType(), is(RequisitionDTO.RequisitionType.NORMAL_TYPE));
     }
 
     @Test
@@ -22,6 +22,6 @@ public class RequisitionDTOTest {
         requisitionDTO.setEmergency(true);
         requisitionDTO.assignType();
 
-        assertThat(requisitionDTO.getType(), is(RequisitionDTO.NORMAL_TYPE));
+        assertThat(requisitionDTO.getType(), is(RequisitionDTO.RequisitionType.EMERGENCY_TYPE));
     }
 }
