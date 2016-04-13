@@ -1,7 +1,7 @@
-function StockOutAllProductsReportController($scope, $filter, $q,$controller, $http, CubesGenerateUrlService, messageService, StockOutReportCalculationService) {
+function StockOutAllProductsReportController($scope, $filter, $q, $controller, $http, CubesGenerateUrlService, messageService, StockOutReportCalculationService) {
     $controller('BaseProductReportController', {$scope: $scope});
 
-    $scope.getTimeRange =function(dateRange){
+    $scope.getTimeRange = function (dateRange) {
         $scope.reportParams.startTime = dateRange.startTime;
         $scope.reportParams.endTime = dateRange.endTime;
     };
@@ -29,15 +29,22 @@ function StockOutAllProductsReportController($scope, $filter, $q,$controller, $h
     }
 
     function generateStockOutAverageReportData(data) {
-        _.forEach(_.groupBy(data, "drug.drug_code"), function (drug) {
-            var occurrences = 0;
-            _.forEach(_.groupBy(drug,"facility.facility_code"),function(stockOutsInFacility){
-                occurrences += StockOutReportCalculationService.generateIncidents(stockOutsInFacility).length;
-            });
+        var drugCodeKey = "drug.drug_code";
+        var facilityCodeKey = "facility.facility_code";
 
-            var calculationData = StockOutReportCalculationService.calculateStockoutResult(drug, occurrences);
-            generateReportItem(drug, calculationData);
-        });
+        _.chain(data)
+            .groupBy(drugCodeKey)
+            .forEach(function (drug) {
+                var occurrences = _.chain(drug)
+                    .groupBy(facilityCodeKey)
+                    .reduce(function (memo, stockOutsInFacility) {
+                        memo += StockOutReportCalculationService.generateIncidents(stockOutsInFacility).length;
+                        return memo;
+                    }, 0).value();
+
+                var calculationData = StockOutReportCalculationService.calculateStockoutResult(drug, occurrences);
+                generateReportItem(drug, calculationData);
+            });
     }
 
     function generateReportItem(drug, calculationData) {

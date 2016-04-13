@@ -40,5 +40,5 @@ services.factory('StockOutReportCalculationService', function () {
     return {
         calculateStockoutResult: calculateStockoutResult,
         generateIncidents: generateIncidents
-    }
+    };
 });
