@@ -90,7 +90,7 @@ services.factory('StockoutSingleProductFacilityChartService', function (messageS
             },
             chartCursor: {
                 enabled: true,
-                categoryBalloonDateFormat: "YYYY.MM.DD"
+                categoryBalloonDateFormat: "DD.MM.YYYY"
             }
         });
     }

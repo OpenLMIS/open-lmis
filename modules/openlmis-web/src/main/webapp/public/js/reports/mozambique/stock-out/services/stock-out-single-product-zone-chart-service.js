@@ -83,7 +83,7 @@ services.factory('StockoutSingleProductZoneChartService', function (messageServi
             },
             chartCursor: {
                 enabled: true,
-                categoryBalloonDateFormat: "YYYY.MM.DD"
+                categoryBalloonDateFormat: "DD.MM.YYYY"
             }
         });
 
