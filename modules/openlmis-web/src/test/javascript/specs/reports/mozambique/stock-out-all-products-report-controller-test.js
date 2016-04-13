@@ -94,36 +94,51 @@ describe("Stock Out All Products Report Controller", function () {
         name: "Marracuene"
     }];
 
-    stockOutReportData = {cells: [
-        {
-            "drug.drug_code": "07A06",
-            "overlap_duration": 10,
-            "record_count": 2,
-            "overlapped_month": "2016-01-01",
-            "average_days": 5,
-            "drug.drug_name": "Paracetamol120mg/5mLXarope"
-        },{
-            "drug.drug_code": "07A06",
-            "overlap_duration": 20,
-            "record_count": 5,
-            "overlapped_month": "2016-02-01",
-            "average_days": 4,
-            "drug.drug_name": "Paracetamol120mg/5mLXarope"
-        },{
-            "drug.drug_code": "07A06",
-            "overlap_duration": 30,
-            "record_count": 5,
-            "overlapped_month": "2016-03-01",
-            "average_days": 6,
-            "drug.drug_name": "Paracetamol120mg/5mLXarope"
-        }, {
-            "drug.drug_code": "07A06Z",
-            "overlap_duration": 45,
-            "record_count": 6,
-            "overlapped_month": "2016-04-01",
-            "average_days": 7.5,
-            "drug.drug_name": "Paracetamol125mg/5mLXarope"
-        }]};
+    stockOutReportData = [{
+        "drug.drug_code" : "Drug a",
+        "drug.drug_name" : "Drug a name",
+
+        "facility.facility_code": "FA",
+
+        "stockout.date": "2016-02-05",
+        "stockout.resolved_date": "2016-03-02",
+
+        "overlapped_month": "2016-02-01",
+        "overlap_duration": 25
+    }, {
+        "drug.drug_code" : "Drug a",
+        "drug.drug_name" : "Drug a name",
+
+        "facility.facility_code": "FA",
+
+        "stockout.date": "2016-04-05",
+        "stockout.resolved_date": "2016-04-12",
+
+        "overlapped_month": "2016-04-01",
+        "overlap_duration": 2
+    }, {
+        "drug.drug_code" : "Drug b",
+        "drug.drug_name" : "Drug b name",
+
+        "facility.facility_code": "FA2",
+
+        "stockout.date": "2016-02-05",
+        "stockout.resolved_date": "2016-02-08",
+
+        "overlapped_month": "2016-02-01",
+        "overlap_duration": 4
+    }, {
+        "drug.drug_code" : "Drug c",
+        "drug.drug_name" : "Drug c name",
+
+        "facility.facility_code": "FB",
+
+        "stockout.date": "2016-02-05",
+        "stockout.resolved_date": "2016-02-10",
+
+        "overlapped_month": "2016-02-01",
+        "overlap_duration": 6
+    }];;
 
     beforeEach(module('openlmis'));
     beforeEach(module('ui.bootstrap.dialog'));
@@ -176,16 +191,16 @@ describe("Stock Out All Products Report Controller", function () {
             endTime: "2016-03-15"
         };
 
-        httpBackend.expectGET('/cubesreports/cube/vw_stockouts/aggregate?drilldown=drug|overlapped_month&cut=overlapped_date:2015,02,15-2016,03,15|facility:HF8|location:MAPUTO_PROVINCIA,MARRACUENE').respond(200, stockOutReportData);
+        httpBackend.expectGET('/cubesreports/cube/vw_stockouts/facts?cut=overlapped_date:2015,02,15-2016,03,15|facility:HF8|location:MAPUTO_PROVINCIA,MARRACUENE').respond(200, stockOutReportData);
         scope.loadReport();
         httpBackend.flush();
 
-        expect(scope.reportData.length).toBe(2);
-        expect(scope.reportData[0]["code"]).toEqual("07A06");
-        expect(scope.reportData[0]["totalDuration"]).toEqual(60);
-        expect(scope.reportData[0]["occurrences"]).toEqual(4);
-        expect(scope.reportData[0]["avgDuration"]).toEqual(5);
-        expect(scope.reportData[0]["name"]).toEqual("Paracetamol120mg/5mLXarope");
+        expect(scope.reportData.length).toBe(3);
+        expect(scope.reportData[0]["code"]).toEqual("Drug a");
+        expect(scope.reportData[0]["totalDuration"]).toEqual(27);
+        expect(scope.reportData[0]["occurrences"]).toEqual(2);
+        expect(scope.reportData[0]["avgDuration"]).toEqual('13.5');
+        expect(scope.reportData[0]["name"]).toEqual("Drug a name");
         expect(scope.reportParams.reportTitle).toEqual("Maputo Província,Marracuene,Habel Jafar");
         expect(scope.occurrencesHeader).toEqual("Stockout occurrences");
     });
@@ -202,7 +217,7 @@ describe("Stock Out All Products Report Controller", function () {
             endTime: "2016-03-15"
         };
 
-        httpBackend.expectGET('/cubesreports/cube/vw_stockouts/aggregate?drilldown=drug|overlapped_month&cut=overlapped_date:2015,02,15-2016,03,15|location:MAPUTO_PROVINCIA,MARRACUENE').respond(200, stockOutReportData);
+        httpBackend.expectGET('/cubesreports/cube/vw_stockouts/facts?cut=overlapped_date:2015,02,15-2016,03,15|location:MAPUTO_PROVINCIA,MARRACUENE').respond(200, stockOutReportData);
         scope.loadReport();
         httpBackend.flush();
 

@@ -34,28 +34,28 @@
                     <span ng-show="sortType != 'name'" class="icon-sort"></span>
                     <span ng-show="sortType == 'name' && !sortReverse" class="icon-sort-up"></span>
                     <span ng-show="sortType == 'name' && sortReverse" class="icon-sort-down"></span></th>
-                <th ng-click="sortType = 'average_days'; sortReverse = !sortReverse" class="sortable sort-desc"
+                <th ng-click="sortType = 'avgDuration'; sortReverse = !sortReverse" class="sortable sort-desc"
                     openlmis-message="report.stock.out.avg.duration">
-                    <span ng-show="sortType != 'average_days'" class="icon-sort"></span>
-                    <span ng-show="sortType == 'average_days' && !sortReverse" class="icon-sort-up"></span>
-                    <span ng-show="sortType == 'average_days' && sortReverse" class="icon-sort-down"></span></th>
-                <th ng-click="sortType = 'record_count'; sortReverse = !sortReverse" class="sortable sort-desc">
+                    <span ng-show="sortType != 'avgDuration'" class="icon-sort"></span>
+                    <span ng-show="sortType == 'avgDuration' && !sortReverse" class="icon-sort-up"></span>
+                    <span ng-show="sortType == 'avgDuration' && sortReverse" class="icon-sort-down"></span></th>
+                <th ng-click="sortType = 'occurrences'; sortReverse = !sortReverse" class="sortable sort-desc">
                     {{occurrencesHeader}}
-                    <span ng-show="sortType != 'record_count'" class="icon-sort"></span>
-                    <span ng-show="sortType == 'record_count' && !sortReverse" class="icon-sort-up"></span>
-                    <span ng-show="sortType == 'record_count' && sortReverse" class="icon-sort-down"></span></th>
-                <th ng-click="sortType = 'duration'; sortReverse = !sortReverse" class="sortable sort-desc"
+                    <span ng-show="sortType != 'occurrences'" class="icon-sort"></span>
+                    <span ng-show="sortType == 'occurrences' && !sortReverse" class="icon-sort-up"></span>
+                    <span ng-show="sortType == 'occurrences' && sortReverse" class="icon-sort-down"></span></th>
+                <th ng-click="sortType = 'totalDuration'; sortReverse = !sortReverse" class="sortable sort-desc"
                     openlmis-message="report.stock.out.total">
-                    <span ng-show="sortType != 'duration'" class="icon-sort"></span>
-                    <span ng-show="sortType == 'duration' && !sortReverse" class="icon-sort-up"></span>
-                    <span ng-show="sortType == 'duration' && sortReverse" class="icon-sort-down"></span></th>
+                    <span ng-show="sortType != 'totalDuration'" class="icon-sort"></span>
+                    <span ng-show="sortType == 'totalDuration' && !sortReverse" class="icon-sort-up"></span>
+                    <span ng-show="sortType == 'totalDuration' && sortReverse" class="icon-sort-down"></span></th>
             </tr>
 
             <tr ng-repeat="entry in reportData | orderBy:sortType:sortReverse">
                 <td>{{entry.code}}</td>
                 <td style="text-align: left"><a href="#/stock-out-single-product/{{entry.code}}">{{entry.name}}</a></td>
-                <td>{{entry.monthlyAvg | number:1}}</td>
-                <td>{{entry.monthlyOccurrences | number:1}}</td>
+                <td>{{entry.avgDuration}}</td>
+                <td>{{entry.occurrences}}</td>
                 <td>{{entry.totalDuration}}</td>
             </tr>
         </table>

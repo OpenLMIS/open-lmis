@@ -10,7 +10,6 @@ services.factory('StockoutSingleProductTreeDataBuilder', function () {
 
     var stockoutStartDateKey = "stockout.date";
     var stockoutEndDateKey = "stockout.resolved_date";
-
     var overlapMonthKey = "overlapped_month";
 
     function calculateStockoutResult(stockOuts, occurrences) {
@@ -41,15 +40,19 @@ services.factory('StockoutSingleProductTreeDataBuilder', function () {
         };
     }
 
+    function calculateIncidents(stockOutsInFacility) {
+        return _.uniq(_.map(stockOutsInFacility, function (stockout) {
+            return stockout[stockoutStartDateKey] + " to " + stockout[stockoutEndDateKey];
+        }));
+    }
+
     function createFacilityTreeItem(stockOuts, carryingFacility) {
         var facilityCode = carryingFacility[facilityCodeKey];
 
         var stockOutsInFacility = _.filter(stockOuts, function (stockOut) {
             return stockOut[facilityCodeKey] == facilityCode;
         });
-        var incidents = _.uniq(_.map(stockOutsInFacility, function (stockout) {
-            return stockout[stockoutStartDateKey] + " to " + stockout[stockoutEndDateKey];
-        }));
+        var incidents = calculateIncidents(stockOutsInFacility);
         var facilityResult = calculateStockoutResult(stockOutsInFacility, incidents.length);
 
         return {
@@ -140,6 +143,7 @@ services.factory('StockoutSingleProductTreeDataBuilder', function () {
     }
 
     return {
-        buildTreeData: buildTreeData
+        buildTreeData: buildTreeData,
+        calculateStockoutResult: calculateStockoutResult
     };
 });
