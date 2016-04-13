@@ -13,34 +13,31 @@ services.factory('StockoutSingleProductTreeDataBuilder', function () {
 
     var overlapMonthKey = "overlapped_month";
 
-    function calculateStockoutResult(stockOuts, numberOfFacilities) {
+    function calculateStockoutResult(stockOuts, occurrences) {
         var numberOfMonths = _.uniq(_.pluck(stockOuts, overlapMonthKey)).length;
 
         if (numberOfMonths === 0) {
-            return {monthlyAvg: 0, monthlyOccurrences: 0, totalDuration: 0};
+            return {avgDuration: 0, totalOccurrences: 0, totalDuration: 0};
         }
 
-        var sums = _.chain(stockOuts)
+        var sumsDuration = _.chain(stockOuts)
             .groupBy(overlapMonthKey)
             .map(function (stockOutsInSameMonth) {
-                var totalDuration = _.reduce(stockOutsInSameMonth, function (memo, stockOut) {
+                return _.reduce(stockOutsInSameMonth, function (memo, stockOut) {
                     memo += stockOut.overlap_duration;
                     return memo;
                 }, 0);
-                return {totalDurationOfMonth: totalDuration, totalOccurancesOfMonth: stockOutsInSameMonth.length};
             })
-            .reduce(function (memo, monthResult) {
-                memo.monthsAvgSum += monthResult.totalDurationOfMonth / monthResult.totalOccurancesOfMonth;
-                memo.monthsOccurrencesSum += monthResult.totalOccurancesOfMonth;
-                memo.monthsDurationSum += monthResult.totalDurationOfMonth;
+            .reduce(function (memo, totalDurationOfMonth) {
+                memo += totalDurationOfMonth;
                 return memo;
-            }, {monthsOccurrencesSum: 0, monthsDurationSum: 0, monthsAvgSum: 0})
+            }, 0)
             .value();
 
         return {
-            monthlyAvg: (sums.monthsAvgSum / numberOfMonths / numberOfFacilities).toFixed(1),
-            monthlyOccurrences: (sums.monthsOccurrencesSum / numberOfMonths / numberOfFacilities).toFixed(1),
-            totalDuration: sums.monthsDurationSum
+            avgDuration: (sumsDuration / occurrences).toFixed(1),
+            totalOccurrences: occurrences,
+            totalDuration: sumsDuration
         };
     }
 
@@ -52,16 +49,16 @@ services.factory('StockoutSingleProductTreeDataBuilder', function () {
         });
         var incidents = _.uniq(_.map(stockOutsInFacility, function (stockout) {
             return stockout[stockoutStartDateKey] + " to " + stockout[stockoutEndDateKey];
-        })).join(", ");
-        var facilityResult = calculateStockoutResult(stockOutsInFacility, 1);
+        }));
+        var facilityResult = calculateStockoutResult(stockOutsInFacility, incidents.length);
 
         return {
             name: carryingFacility[facilityNameKey],
             facilityCode: facilityCode,
-            monthlyAvg: facilityResult.monthlyAvg,
-            monthlyOccurrences: facilityResult.monthlyOccurrences,
+            avgDuration: facilityResult.avgDuration,
+            totalOccurrences: facilityResult.totalOccurrences,
             totalDuration: facilityResult.totalDuration,
-            incidents: incidents
+            incidents: incidents.join(", ")
         };
     }
 
@@ -71,43 +68,51 @@ services.factory('StockoutSingleProductTreeDataBuilder', function () {
             return stockOut[districtCodeKey] == districtCode;
         });
         var facilityCodes = _.uniq(_.pluck(carryingFacilitiesInDistrict, facilityCodeKey));
-        var numberOfFacilities = facilityCodes.length;
 
-        var districtResult = calculateStockoutResult(stockOutsInDistrict, numberOfFacilities);
+        var facilityTreeData = _.filter(facilityChildren, function (facilityChild) {
+            return facilityCodes.indexOf(facilityChild.facilityCode) != -1;
+        });
+
+        var districtResult = calculateStockoutResult(stockOutsInDistrict, calculateZoneOccurrences(facilityTreeData));
 
         return {
             name: carryingFacilitiesInDistrict[0][districtNameKey],
-            monthlyAvg: districtResult.monthlyAvg,
-            monthlyOccurrences: districtResult.monthlyOccurrences,
+            avgDuration: districtResult.avgDuration,
+            totalOccurrences: districtResult.totalOccurrences,
             totalDuration: districtResult.totalDuration,
             districtCode: districtCode,
-            children: _.filter(facilityChildren, function (facilityChild) {
-                return facilityCodes.indexOf(facilityChild.facilityCode) != -1;
-            })
+            children: facilityTreeData
         };
     }
-
 
     function createProvinceTreeItem(stockOuts, carryingFacilitiesInProvince, districtChildren) {
         var provinceCode = carryingFacilitiesInProvince[0][provinceCodeKey];
         var stockOutsInProvince = _.filter(stockOuts, function (stockOut) {
             return stockOut[provinceCodeKey] == provinceCode;
         });
-        var numberOfFacilities = _.uniq(_.pluck(carryingFacilitiesInProvince, facilityCodeKey)).length;
         var districtCodes = _.uniq(_.pluck(carryingFacilitiesInProvince, districtCodeKey));
 
-        var provinceResult = calculateStockoutResult(stockOutsInProvince, numberOfFacilities);
+        var districtTreeData = _.filter(districtChildren, function (districtChild) {
+            return districtCodes.indexOf(districtChild.districtCode) != -1;
+        });
+
+        var provinceResult = calculateStockoutResult(stockOutsInProvince, calculateZoneOccurrences(districtTreeData));
 
         return {
             name: carryingFacilitiesInProvince[0][provinceNameKey],
-            monthlyAvg: provinceResult.monthlyAvg,
-            monthlyOccurrences: provinceResult.monthlyOccurrences,
+            avgDuration: provinceResult.avgDuration,
+            totalOccurrences: provinceResult.totalOccurrences,
             totalDuration: provinceResult.totalDuration,
             provinceCode: provinceCode,
-            children: _.filter(districtChildren, function (districtChild) {
-                return districtCodes.indexOf(districtChild.districtCode) != -1;
-            })
+            children: districtTreeData
         };
+    }
+
+    function calculateZoneOccurrences(treeData) {
+        return _.reduce(treeData, function (memo, data) {
+            memo += data.totalOccurrences;
+            return memo;
+        }, 0);
     }
 
     function buildTreeData(stockOuts, carryStartDates) {

@@ -47,8 +47,8 @@ function StockOutAllProductsReportController($scope, $filter, $controller, $http
         drug.code = drug[0]['drug.drug_code'];
         drug.name = drug[0]['drug.drug_name'];
         drug.totalDuration = sumDuration;
-        drug.monthlyAvg = monthlyAvg;
-        drug.monthlyOccurrences = monthlyOccurrences;
+        drug.avgDuration = monthlyAvg;
+        drug.occurrences = monthlyOccurrences;
         $scope.reportData.push(drug);
     }
 

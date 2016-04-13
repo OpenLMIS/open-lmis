@@ -11,11 +11,11 @@ function StockOutSingleProductReportController($scope, $filter, $q, $controller,
 
     $scope.col_defs = [
         {
-            field: "monthlyAvg",
+            field: "avgDuration",
             displayName: 'report.stock.out.avg.duration'
         },
         {
-            field: "monthlyOccurrences",
+            field: "totalOccurrences",
             displayName: 'report.stock.out.occurrences'
         },
         {

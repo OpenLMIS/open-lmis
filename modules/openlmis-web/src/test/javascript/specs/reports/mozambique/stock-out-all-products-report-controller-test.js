@@ -183,8 +183,8 @@ describe("Stock Out All Products Report Controller", function () {
         expect(scope.reportData.length).toBe(2);
         expect(scope.reportData[0]["code"]).toEqual("07A06");
         expect(scope.reportData[0]["totalDuration"]).toEqual(60);
-        expect(scope.reportData[0]["monthlyOccurrences"]).toEqual(4);
-        expect(scope.reportData[0]["monthlyAvg"]).toEqual(5);
+        expect(scope.reportData[0]["occurrences"]).toEqual(4);
+        expect(scope.reportData[0]["avgDuration"]).toEqual(5);
         expect(scope.reportData[0]["name"]).toEqual("Paracetamol120mg/5mLXarope");
         expect(scope.reportParams.reportTitle).toEqual("Maputo Província,Marracuene,Habel Jafar");
         expect(scope.occurrencesHeader).toEqual("Stockout occurrences");

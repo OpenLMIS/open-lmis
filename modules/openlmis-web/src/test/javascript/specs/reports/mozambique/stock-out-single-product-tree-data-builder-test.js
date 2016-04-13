@@ -137,43 +137,43 @@ describe("stock out single product tree data builder test", function () {
 
         expect(treeData).toEqual([{
             name: "PA name",
-            monthlyAvg: '2.8',//((25+4)/2+2/1)/2/3=4.125
-            monthlyOccurrences: '0.5',//3/2/3=0.5
+            avgDuration: '15.5',
+            totalOccurrences: 2,
             totalDuration: 31,
             provinceCode: "PA",
             children: [
                 {
                     name: "DA name",
-                    monthlyAvg: '4.1',//((25+4)/2+2/1)/2/2=4.125
-                    monthlyOccurrences: '0.8',//3/2/2=0.75
+                    avgDuration: '15.5',
+                    totalOccurrences: 2,
                     totalDuration: 31,
                     districtCode: "DA",
                     children: [{
                         name: "FA name",
-                        monthlyAvg: '13.5',//(25+2)/2=13.5
-                        monthlyOccurrences: '1.0',//2/2=1
+                        avgDuration: '27.0',
+                        totalOccurrences: 1,
                         totalDuration: 27,
                         incidents: "2016-02-05 to 2016-03-02",
                         facilityCode: "FA"
                     }, {
                         name: "FA2 name",
-                        monthlyAvg: '4.0',//4/1/1=4
-                        monthlyOccurrences: '1.0',//1/1=1
-                        totalDuration: 4,//4
+                        avgDuration: '4.0',
+                        totalOccurrences: 1,
+                        totalDuration: 4,
                         incidents: "2016-02-05 to 2016-02-08",
                         facilityCode: "FA2"
                     }]
                 },
                 {
                     name: "DA2 name",
-                    monthlyAvg: 0,
-                    monthlyOccurrences: 0,
+                    avgDuration: 0,
+                    totalOccurrences: 0,
                     totalDuration: 0,
                     districtCode: "DA2",
                     children: [{
                         name: "FA3 name",
-                        monthlyAvg: 0,
-                        monthlyOccurrences: 0,
+                        avgDuration: 0,
+                        totalOccurrences: 0,
                         totalDuration: 0,
                         incidents: "",
                         facilityCode: "FA3"
@@ -182,28 +182,28 @@ describe("stock out single product tree data builder test", function () {
             ]
         }, {
             name: "PB name",
-            monthlyAvg: '3.0',//6/1/1/2=3
-            monthlyOccurrences: '0.5',//1/1/2=0.5
+            avgDuration: '6.0',
+            totalOccurrences: 1,
             totalDuration: 6,
             provinceCode: "PB",
             children: [
                 {
                     name: "DB name",
-                    monthlyAvg: '3.0',//6/1/1/2=3
-                    monthlyOccurrences: '0.5',//1/1/2=0.5
+                    avgDuration: '6.0',
+                    totalOccurrences: 1,
                     totalDuration: 6,
                     districtCode: "DB",
                     children: [{
                         name: "FB name",
-                        monthlyAvg: '6.0',//6/1/1=6
-                        monthlyOccurrences: '1.0',//1/1=1
+                        avgDuration: '6.0',
+                        totalOccurrences: 1,
                         totalDuration: 6,
                         incidents: "2016-02-05 to 2016-02-10",
                         facilityCode: "FB"
                     }, {
                         name: "FB2 name",
-                        monthlyAvg: 0,
-                        monthlyOccurrences: 0,
+                        avgDuration: 0,
+                        totalOccurrences: 0,
                         totalDuration: 0,
                         incidents: "",
                         facilityCode: "FB2"
