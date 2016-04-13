@@ -1,4 +1,4 @@
-function StockOutAllProductsReportController($scope, $filter, $q,$controller, $http, CubesGenerateUrlService, messageService, StockoutSingleProductTreeDataBuilder) {
+function StockOutAllProductsReportController($scope, $filter, $q,$controller, $http, CubesGenerateUrlService, messageService, StockOutReportCalculationService) {
     $controller('BaseProductReportController', {$scope: $scope});
 
     $scope.getTimeRange =function(dateRange){
@@ -28,19 +28,14 @@ function StockOutAllProductsReportController($scope, $filter, $q,$controller, $h
             });
     }
 
-    var stockoutStartDateKey = "stockout.date";
-    var stockoutEndDateKey = "stockout.resolved_date";
-
     function generateStockOutAverageReportData(data) {
         _.forEach(_.groupBy(data, "drug.drug_code"), function (drug) {
-            var occurrence = 0;
+            var occurrences = 0;
             _.forEach(_.groupBy(drug,"facility.facility_code"),function(stockOutsInFacility){
-                occurrence += _.uniq(_.map(stockOutsInFacility, function (stockOut) {
-                    return stockOut[stockoutStartDateKey] + " to " + stockOut[stockoutEndDateKey];
-                })).length;
+                occurrences += StockOutReportCalculationService.generateIncidents(stockOutsInFacility).length;
             });
 
-            var calculationData = StockoutSingleProductTreeDataBuilder.calculateStockoutResult(drug, occurrence);
+            var calculationData = StockOutReportCalculationService.calculateStockoutResult(drug, occurrences);
             generateReportItem(drug, calculationData);
         });
     }

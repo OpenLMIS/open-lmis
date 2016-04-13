@@ -1,4 +1,4 @@
-services.factory('StockoutSingleProductTreeDataBuilder', function () {
+services.factory('StockoutSingleProductTreeDataBuilder', function (StockOutReportCalculationService) {
     var facilityCodeKey = "facility.facility_code";
     var facilityNameKey = "facility.facility_name";
 
@@ -8,52 +8,14 @@ services.factory('StockoutSingleProductTreeDataBuilder', function () {
     var provinceCodeKey = "location.province_code";
     var provinceNameKey = "location.province_name";
 
-    var stockoutStartDateKey = "stockout.date";
-    var stockoutEndDateKey = "stockout.resolved_date";
-    var overlapMonthKey = "overlapped_month";
-
-    function calculateStockoutResult(stockOuts, occurrences) {
-        var numberOfMonths = _.uniq(_.pluck(stockOuts, overlapMonthKey)).length;
-
-        if (numberOfMonths === 0) {
-            return {avgDuration: 0, totalOccurrences: 0, totalDuration: 0};
-        }
-
-        var sumsDuration = _.chain(stockOuts)
-            .groupBy(overlapMonthKey)
-            .map(function (stockOutsInSameMonth) {
-                return _.reduce(stockOutsInSameMonth, function (memo, stockOut) {
-                    memo += stockOut.overlap_duration;
-                    return memo;
-                }, 0);
-            })
-            .reduce(function (memo, totalDurationOfMonth) {
-                memo += totalDurationOfMonth;
-                return memo;
-            }, 0)
-            .value();
-
-        return {
-            avgDuration: (sumsDuration / occurrences).toFixed(1),
-            totalOccurrences: occurrences,
-            totalDuration: sumsDuration
-        };
-    }
-
-    function calculateIncidents(stockOutsInFacility) {
-        return _.uniq(_.map(stockOutsInFacility, function (stockout) {
-            return stockout[stockoutStartDateKey] + " to " + stockout[stockoutEndDateKey];
-        }));
-    }
-
     function createFacilityTreeItem(stockOuts, carryingFacility) {
         var facilityCode = carryingFacility[facilityCodeKey];
 
         var stockOutsInFacility = _.filter(stockOuts, function (stockOut) {
             return stockOut[facilityCodeKey] == facilityCode;
         });
-        var incidents = calculateIncidents(stockOutsInFacility);
-        var facilityResult = calculateStockoutResult(stockOutsInFacility, incidents.length);
+        var occurrences = StockOutReportCalculationService.generateIncidents(stockOutsInFacility).length;
+        var facilityResult = StockOutReportCalculationService.calculateStockoutResult(stockOutsInFacility, occurrences);
 
         return {
             name: carryingFacility[facilityNameKey],
@@ -61,7 +23,7 @@ services.factory('StockoutSingleProductTreeDataBuilder', function () {
             avgDuration: facilityResult.avgDuration,
             totalOccurrences: facilityResult.totalOccurrences,
             totalDuration: facilityResult.totalDuration,
-            incidents: incidents.join(", ")
+            incidents: StockOutReportCalculationService.generateIncidents(stockOutsInFacility).join(", ")
         };
     }
 
@@ -76,7 +38,7 @@ services.factory('StockoutSingleProductTreeDataBuilder', function () {
             return facilityCodes.indexOf(facilityChild.facilityCode) != -1;
         });
 
-        var districtResult = calculateStockoutResult(stockOutsInDistrict, calculateZoneOccurrences(facilityTreeData));
+        var districtResult = StockOutReportCalculationService.calculateStockoutResult(stockOutsInDistrict, calculateZoneOccurrences(facilityTreeData));
 
         return {
             name: carryingFacilitiesInDistrict[0][districtNameKey],
@@ -99,7 +61,7 @@ services.factory('StockoutSingleProductTreeDataBuilder', function () {
             return districtCodes.indexOf(districtChild.districtCode) != -1;
         });
 
-        var provinceResult = calculateStockoutResult(stockOutsInProvince, calculateZoneOccurrences(districtTreeData));
+        var provinceResult = StockOutReportCalculationService.calculateStockoutResult(stockOutsInProvince, calculateZoneOccurrences(districtTreeData));
 
         return {
             name: carryingFacilitiesInProvince[0][provinceNameKey],
@@ -143,7 +105,6 @@ services.factory('StockoutSingleProductTreeDataBuilder', function () {
     }
 
     return {
-        buildTreeData: buildTreeData,
-        calculateStockoutResult: calculateStockoutResult
+        buildTreeData: buildTreeData
     };
 });
