@@ -40,7 +40,7 @@ function ViewRnrViaDetailController($scope, $route, $location, Requisitions, dow
 
             $scope.numPages = $scope.regularRnrItems.length / $scope.pageSize;
 
-            $scope.emergency = data.rnr.emergency;
+            $scope.isEmergency = data.rnr.emergency;
         });
 
     };
