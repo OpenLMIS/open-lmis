@@ -16,9 +16,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
-import org.openlmis.core.builder.ProcessingScheduleBuilder;
-import org.openlmis.core.builder.ProductBuilder;
-import org.openlmis.core.builder.ProgramBuilder;
+import org.openlmis.core.builder.*;
 import org.openlmis.core.domain.*;
 import org.openlmis.core.query.QueryExecutor;
 import org.openlmis.core.repository.mapper.*;
@@ -92,6 +90,7 @@ public class RnrLineItemMapperIT {
   ProcessingPeriod processingPeriod;
   ProcessingPeriod processingPeriod2;
   ProcessingPeriod processingPeriod3;
+  private ProductCategory category;
 
   @Before
   public void setUp() {
@@ -102,7 +101,7 @@ public class RnrLineItemMapperIT {
     programMapper.insert(program);
 
 
-    ProductCategory category = new ProductCategory("C1", "Category 1", 1);
+    category = new ProductCategory("C1", "Category 1", 1);
     productCategoryMapper.insert(category);
 
     ProgramProduct programProduct = new ProgramProduct(program, product, 30, true, new Money("12.5000"));
@@ -742,6 +741,46 @@ public class RnrLineItemMapperIT {
 
     assertThat(fetchedNonSkippedNonSupplyLineItems.size(), is(1));
     assertThat(fetchedNonSkippedNonSupplyLineItems.get(0).getQuantityRequested(), is(20));
+  }
+
+  @Test
+  public void shouldOrderByProductDisplayOrderWhenRetrievingRnrLineItems() {
+    Rnr newRnr = new Rnr(facility, new Program(PROGRAM_ID), processingPeriod, false, MODIFIED_BY, 1L);
+    newRnr.setStatus(INITIATED);
+    requisitionMapper.insert(newRnr);
+
+    RnrLineItem lineItem1 = makeLineItemWithOrder(newRnr.getId(), 2, "P1");
+    RnrLineItem lineItem2 = makeLineItemWithOrder(newRnr.getId(), 3, "P2");
+    RnrLineItem lineItem3 = makeLineItemWithOrder(newRnr.getId(), 1, "P3");
+
+    rnrLineItemMapper.insert(lineItem1, "0");
+    rnrLineItemMapper.insert(lineItem2, "0");
+    rnrLineItemMapper.insert(lineItem3, "0");
+
+    List<RnrLineItem> rnrLineItems = rnrLineItemMapper.getRnrLineItemsByRnrId(newRnr.getId());
+
+    assertEquals(3, rnrLineItems.size());
+    assertEquals("P3", rnrLineItems.get(0).getProductCode());
+    assertEquals("P1", rnrLineItems.get(1).getProductCode());
+    assertEquals("P2", rnrLineItems.get(2).getProductCode());
+  }
+
+  private RnrLineItem makeLineItemWithOrder(Long rnrId, int displayOrder, String productCode){
+    Product product1 = make(a(ProductBuilder.defaultProduct, with(ProductBuilder.code, productCode)));
+    productMapper.insert(product1);
+
+    ProgramProduct programProduct1 = new ProgramProduct(program, product1, 1, true);
+    programProduct1.setProductCategory(category);
+    programProduct1.setDisplayOrder(displayOrder);
+    programProductMapper.insert(programProduct1);
+
+    FacilityTypeApprovedProduct facilityTypeApprovedProduct1 = make(a(defaultFacilityApprovedProduct));
+    facilityTypeApprovedProduct1.setProgramProduct(programProduct1);
+    facilityApprovedProductMapper.insert(facilityTypeApprovedProduct1);
+
+    RnrLineItem rnrLineItem = new RnrLineItem(rnrId, facilityTypeApprovedProduct1, 1L, 1L);
+    rnrLineItem.setFullSupply(true);
+    return rnrLineItem;
   }
 
   private java.sql.Date getDateByDays(int days) {

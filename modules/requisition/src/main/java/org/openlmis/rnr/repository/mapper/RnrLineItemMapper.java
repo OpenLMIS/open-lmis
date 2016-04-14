@@ -45,7 +45,7 @@ public interface RnrLineItemMapper {
       "FROM requisition_line_items, products " +
       "WHERE rnrId = #{rnrId} and requisition_line_items.fullSupply = true " +
       "and requisition_line_items.productcode = products.code " +
-      "order by requisition_line_items.id;")
+      "order by productDisplayOrder;")
   @Results(value = {
     @Result(property = "id", column = "id"),
     @Result(property = "isKit", column = "isKit"),
