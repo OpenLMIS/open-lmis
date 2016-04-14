@@ -959,7 +959,7 @@ public class RequisitionMapperIT {
     ProcessingPeriod period = insertPeriod("Period", processingSchedule, DateUtil.parseDate("2020-10-20", DateUtil.FORMAT_DATE),
         DateUtil.parseDate("2020-11-20", DateUtil.FORMAT_DATE));
     insertRequisition(period, program, INITIATED, false, facility, supervisoryNode, modifiedDate);
-    assertThat(mapper.findRnrByPeriodAndProgram("2020-10", "2020-11", program.getId(), facility.getId()).size(), is(1));
+    assertThat(mapper.findNormalRnrByPeriodAndProgram("2020-10", "2020-11", program.getId(), facility.getId()).size(), is(1));
   }
 
   @Test
@@ -967,7 +967,7 @@ public class RequisitionMapperIT {
     ProcessingPeriod period = insertPeriod("Period", processingSchedule, DateUtil.parseDate("2020-10-20", DateUtil.FORMAT_DATE),
         DateUtil.parseDate("2020-11-20", DateUtil.FORMAT_DATE));
     insertRequisition(period, program, INITIATED, false, facility, supervisoryNode, modifiedDate);
-    assertThat(mapper.findRnrByPeriodAndProgram("2020-10", "2020-11", program.getId(), 1000L).size(), is(0));
+    assertThat(mapper.findNormalRnrByPeriodAndProgram("2020-10", "2020-11", program.getId(), 1000L).size(), is(0));
   }
 
   @Test
@@ -975,7 +975,15 @@ public class RequisitionMapperIT {
     ProcessingPeriod period = insertPeriod("Period", processingSchedule, DateUtil.parseDate("2020-9-20", DateUtil.FORMAT_DATE),
         DateUtil.parseDate("2020-10-20", DateUtil.FORMAT_DATE));
     insertRequisition(period, program, INITIATED, false, facility, supervisoryNode, modifiedDate);
-    assertThat(mapper.findRnrByPeriodAndProgram("2020-10", "2020-11", program.getId(), facility.getId()).size(), is(0));
+    assertThat(mapper.findNormalRnrByPeriodAndProgram("2020-10", "2020-11", program.getId(), facility.getId()).size(), is(0));
+  }
+
+  @Test
+  public void shouldNotGetEmergencyRnr() {
+    ProcessingPeriod period = insertPeriod("Period", processingSchedule, DateUtil.parseDate("2020-10-20", DateUtil.FORMAT_DATE),
+      DateUtil.parseDate("2020-11-20", DateUtil.FORMAT_DATE));
+    insertRequisition(period, program, INITIATED, true, facility, supervisoryNode, modifiedDate);
+    assertThat(mapper.findNormalRnrByPeriodAndProgram("2020-10", "2020-11", program.getId(), facility.getId()).size(), is(0));
   }
 
   @Test

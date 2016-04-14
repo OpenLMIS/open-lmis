@@ -708,8 +708,8 @@ public class RequisitionService {
     requisitionRepository.saveClientPeriod(rnr);
   }
 
-  public List<Rnr> getRequisitionsByPeriodAndProgram(Date periodBeginDate, Date periodEndDate, Long programId, Long facilityId) {
-    return requisitionRepository.findRnrByPeriodAndProgram(periodBeginDate, periodEndDate, programId, facilityId);
+  public List<Rnr> getNormalRnrsByPeriodAndProgram(Date periodBeginDate, Date periodEndDate, Long programId, Long facilityId) {
+    return requisitionRepository.findNormalRnrByPeriodAndProgram(periodBeginDate, periodEndDate, programId, facilityId);
   }
 }
 
