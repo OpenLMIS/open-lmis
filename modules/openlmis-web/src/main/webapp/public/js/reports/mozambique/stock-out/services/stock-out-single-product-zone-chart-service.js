@@ -11,7 +11,11 @@ services.factory('StockoutSingleProductZoneChartService', function (messageServi
     function getCarryingFacilitiesAtDay(day, zone, carryStartDates) {
         var carryingAtDay = _.filter(carryStartDates, function (carryStartDate) {
             var isCarrying = new Date(carryStartDate["dates.carry_start_date"]) <= day;
-            return carryStartDate[zone.zonePropertyName] == zone.zoneCode && isCarrying;
+            if (zone === undefined) {
+                return isCarrying;
+            } else {
+                return carryStartDate[zone.zonePropertyName] == zone.zoneCode && isCarrying;
+            }
         });
         return _.pluck(carryingAtDay, "facility.facility_name");
     }
@@ -93,7 +97,11 @@ services.factory('StockoutSingleProductZoneChartService', function (messageServi
         var userSelectedDays = dateRangeToArray(start, end);
         var stockoutsInZone = _.chain(stockOuts)
             .filter(function (stockout) {
-                return stockout[zone.zonePropertyName] == zone.zoneCode;
+                if (zone === undefined) {
+                    return true;
+                } else {
+                    return stockout[zone.zonePropertyName] == zone.zoneCode;
+                }
             })
             .uniq(function (stockout) {
                 return stockout["facility.facility_code"] + stockout["stockout.date"] + stockout["stockout.resolved_date"];

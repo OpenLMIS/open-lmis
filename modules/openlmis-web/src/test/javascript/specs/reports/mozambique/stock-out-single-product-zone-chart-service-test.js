@@ -1,4 +1,4 @@
-describe("stock out single product zone chart service test", function () {
+ddescribe("stock out single product zone chart service test", function () {
 
     var stockoutSingleProductZoneChartService;
 
@@ -88,6 +88,24 @@ describe("stock out single product zone chart service test", function () {
 
     it("should generate province chart data items", function () {
         var zone = {zoneCode: "P1", zonePropertyName: "location.province_code"};
+
+        var generatedChartDataItems = stockoutSingleProductZoneChartService.generateChartDataItemsForZone(zone, new Date("2016-01-01"), new Date("2016-01-02"), stockOuts, carryStartDates);
+
+        expect(generatedChartDataItems).toEqual([{
+            date: new Date("2016-01-01"),
+            percentage: '25',
+            stockOutFacilities: ["HF1 name"],
+            carryingFacilities: ["HF1 name", "HF2 name", "HF3 name", "HF4 name"]
+        }, {
+            date: new Date("2016-01-02"),
+            percentage: '50',
+            stockOutFacilities: ["HF1 name", "HF2 name"],
+            carryingFacilities: ["HF1 name", "HF2 name", "HF3 name", "HF4 name"]
+        }]);
+    });
+
+    it("should generate chart data items for all provinces", function () {
+        var zone = undefined;
 
         var generatedChartDataItems = stockoutSingleProductZoneChartService.generateChartDataItemsForZone(zone, new Date("2016-01-01"), new Date("2016-01-02"), stockOuts, carryStartDates);
 
