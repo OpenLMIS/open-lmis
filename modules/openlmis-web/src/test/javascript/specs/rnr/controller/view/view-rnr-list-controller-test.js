@@ -202,6 +202,32 @@ describe('ViewRnrListController', function () {
     ]);
   });
 
+  it('should set emergency date as \ when data has emergency', function () {
+    scope.selectedFacilityId = 1;
+    scope.startDate = "01-01-2001";
+    scope.endDate = "02-01-2001";
+    scope.selectedProgramId = 1;
+    var expectedUrl = '/requisitions.json?dateRangeEnd=02-01-2001&dateRangeStart=01-01-2001&facilityId=1&programId=1';
+    var rnrList = {'rnr_list': [
+      {
+        facilityId: 1,
+        stringPeriodStartDate: "10/10/2004",
+        stringPeriodEndDate: "10/10/2014",
+        emergency:true,
+        programs: [
+          {id: 1}
+        ]
+      }
+    ]};
+
+    loadRequisitions(expectedUrl, rnrList);
+
+    expect(scope.requisitions[0].stringPeriodStartDate).toEqual('\\');
+    expect(scope.requisitions[0].stringPeriodEndDate).toEqual('\\');
+  });
+
+
+
   it('should set data in scope from previous search', function () {
     var data = {
       facilityId: 1,

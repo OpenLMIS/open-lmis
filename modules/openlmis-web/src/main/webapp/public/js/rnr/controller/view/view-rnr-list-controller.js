@@ -14,7 +14,6 @@ function ViewRnrListController($scope, facilities, RequisitionsForViewing, Progr
     $scope.programLabel = messageService.get("label.none.assigned");
     $scope.selectedItems = [];
 
-
     $scope.loadRequisitions = function () {
         if ($scope.viewRequisitionForm && $scope.viewRequisitionForm.$invalid) {
             $scope.errorShown = true;
@@ -29,13 +28,22 @@ function ViewRnrListController($scope, facilities, RequisitionsForViewing, Progr
         if ($scope.selectedProgramId) requisitionQueryParameters.programId = $scope.selectedProgramId;
 
         RequisitionsForViewing.get(requisitionQueryParameters, function (data) {
-
-            $scope.requisitions = $scope.filteredRequisitions = data.rnr_list;
+            initRequisitions(data);
 
             setRequisitionsFoundMessage();
-        }, function () {
         });
     };
+
+    function initRequisitions(data){
+        angular.forEach(data.rnr_list,function(requisition){
+            if(requisition.emergency){
+                requisition.stringPeriodStartDate = '\\';
+                requisition.stringPeriodEndDate = '\\';
+            }
+        });
+
+        $scope.requisitions = $scope.filteredRequisitions = data.rnr_list;
+    }
 
     $scope.selectedFacilityId = navigateBackService.facilityId;
     $scope.startDate = navigateBackService.dateRangeStart;
