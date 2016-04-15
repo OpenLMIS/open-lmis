@@ -4,10 +4,12 @@ ddescribe("tracer drugs chart service test", function () {
 
     var tracerDrugs = [
         {
-            drug: "code1"
+            "drug.drug_code": "code1",
+            "drug.drug_name": "drug name1"
         },
         {
-            drug: "code2"
+            "drug.drug_code": "code2",
+            "drug.drug_name": "drug name2"
         }
     ];
 
@@ -124,5 +126,27 @@ ddescribe("tracer drugs chart service test", function () {
     it("should generate chart data items for tracer drugs for one district", function () {
         var tracerDrugChartDataItems = tracerDrugsChartService.generateTracerDrugsChartDataItems(tracerDrugs, stockOuts, carryStartDates, new Date("2015-12-31"), new Date("2016-01-09"), "P1", "D1");
         expect(tracerDrugChartDataItems).toEqual(expectedTracerDrugChartDataItems);
+    });
+
+    it("should generate graphs for tracer drugs", function () {
+        var graphs = tracerDrugsChartService.generateGraphs(tracerDrugs);
+
+        expect(graphs).toEqual([{
+            lineColor: "#9B656A",
+            bullet: "round",
+            title: "drug name1",
+            valueField: "code1"
+        }, {
+            lineColor: "#80182C",
+            bullet: "round",
+            title: "drug name2",
+            valueField: "code2"
+        }, {
+            lineColor: "#2869FD",
+            bullet: "round",
+            title: "Average",
+            valueField: "average",
+            dashLength: 5
+        }]);
     })
 });
