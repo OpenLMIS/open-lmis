@@ -168,18 +168,37 @@ services.factory('TracerDrugsChartService', function ($http, $filter, $q, messag
                 "axisThickness": 2,
                 "gridAlpha": 0,
                 "axisAlpha": 1,
-                "position": "left"
+                "position": "left",
+                maximum: 100,
+                minimum: 0
             }],
             "graphs": graphs,
-            "chartScrollbar": {},
+            "chartScrollbar": {
+                "oppositeAxis": false,
+                "offset": 30
+            },
             "chartCursor": {
-                "cursorPosition": "mouse"
+                "cursorPosition": "mouse",
+                categoryBalloonDateFormat: "YYYY week W (DD.MM.YYYY)"
             },
             "categoryField": "date",
             "categoryAxis": {
                 "parseDates": true,
                 "axisColor": "#DADADA",
-                "minorGridEnabled": true
+                "minorGridEnabled": true,
+                "dateFormats": [{
+                    period: 'DD',
+                    format: 'YYYY week W'
+                }, {
+                    period: 'WW',
+                    format: 'YYYY week W'
+                }, {
+                    period: 'MM',
+                    format: 'MM.YYYY'
+                }, {
+                    period: 'YYYY',
+                    format: 'YYYY'
+                }]
             }
         });
     }
