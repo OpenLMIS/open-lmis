@@ -1,4 +1,4 @@
-ddescribe("stock out single product zone chart service test", function () {
+describe("stock out single product zone chart service test", function () {
 
     var stockoutSingleProductZoneChartService;
 

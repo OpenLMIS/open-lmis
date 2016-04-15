@@ -1,4 +1,4 @@
-describe("tracer drugs chart service test", function () {
+ddescribe("tracer drugs chart service test", function () {
 
     var tracerDrugsChartService, httpBackend;
 
@@ -109,6 +109,11 @@ describe("tracer drugs chart service test", function () {
             tracerDrugsChartService = TracerDrugsChartService;
             httpBackend = _$httpBackend_;
         });
+    });
+
+    it("should generate chart data items for tracer drugs for all provinces", function () {
+        var tracerDrugChartDataItems = tracerDrugsChartService.generateTracerDrugsChartDataItems(tracerDrugs, stockOuts, carryStartDates, new Date("2015-12-31"), new Date("2016-01-09"), undefined, undefined);
+        expect(tracerDrugChartDataItems).toEqual(expectedTracerDrugChartDataItems);
     });
 
     it("should generate chart data items for tracer drugs for one province", function () {
