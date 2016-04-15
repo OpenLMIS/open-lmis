@@ -222,7 +222,6 @@ describe("Stock Out All Products Report Controller", function () {
         httpBackend.flush();
 
         expect(scope.reportParams.reportTitle).toEqual("Maputo Província,Marracuene");
-        expect(scope.occurrencesHeader).toEqual("Average stockout occurrences");
         expect(scope.reportData[0].totalDuration).toEqual("-");
     });
 });

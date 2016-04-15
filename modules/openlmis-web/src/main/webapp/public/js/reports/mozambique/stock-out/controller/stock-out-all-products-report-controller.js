@@ -61,9 +61,6 @@ function StockOutAllProductsReportController($scope, $filter, $q, $controller, $
             $scope.reportData.map(function (data) {
                 data.totalDuration = "-";
             });
-            $scope.occurrencesHeader = messageService.get("report.avg.stock.out.occurrences");
-        } else {
-            $scope.occurrencesHeader = messageService.get("report.stock.out.occurrences");
         }
     }
 
