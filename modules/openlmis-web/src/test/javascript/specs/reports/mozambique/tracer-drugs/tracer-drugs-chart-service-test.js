@@ -1,4 +1,4 @@
-ddescribe("tracer drugs chart service test", function () {
+describe("tracer drugs chart service test", function () {
 
     var tracerDrugsChartService, httpBackend;
 
