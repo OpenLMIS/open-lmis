@@ -55,7 +55,7 @@ module.exports = function (config) {
     plugins: [
       'karma-jasmine',
       'karma-coverage',
-      'karma-chrome-launcher'
+      'karma-firefox-launcher'
     ],
 
     // test results reporter to use
@@ -64,10 +64,11 @@ module.exports = function (config) {
 
     coverageReporter: {
       type: 'html',
-      dir: '../../../test/coverage/',
-      instrumenterOptions: {
-        istanbul: {noCompact: true}
-      }
+      dir: '../../../test/coverage/'
+    },
+
+    preprocessors: {
+      'js/**/*.js': ['coverage']
     },
 
     // web server port
@@ -91,7 +92,7 @@ module.exports = function (config) {
     // - Safari (only Mac; has to be installed with `npm install karma-safari-launcher`)
     // - PhantomJS
     // - IE (only Windows; has to be installed with `npm install karma-ie-launcher`)
-    browsers: ['Chrome'],
+    browsers: ['Firefox'],
 
     // If browser does not capture in given timeout [ms], kill it
     captureTimeout: 30000,
