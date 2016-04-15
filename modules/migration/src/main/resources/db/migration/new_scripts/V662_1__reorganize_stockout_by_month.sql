@@ -39,15 +39,22 @@ CREATE OR REPLACE FUNCTION calculate_one_month_overlap(occuredDate     DATE, res
   RETURNS INT AS $$
 DECLARE
   overlap_duration INT;
+  occurred_resolved_range INT;
 BEGIN
 
   IF occuredDate = resolvedDate
   THEN
     RETURN 0;
+  ELSIF occuredDate < resolvedDate
+  THEN
+    occurred_resolved_range = DATERANGE(occuredDate, resolvedDate);
+  ELSE
+    RAISE NOTICE 'Dirty Data: resolvedDate = (%) and occuredDate = (%)', resolvedDate, occuredDate;
+    occurred_resolved_range = DATERANGE(resolvedDate, occuredDate);
   END IF;
 
   overlap_duration := extract_days(
-      DATERANGE(occuredDate, resolvedDate) * DATERANGE(firstDayOfMonth, lastDayOfMonthy));
+      occurred_resolved_range * DATERANGE(firstDayOfMonth, lastDayOfMonthy));
   IF overlap_duration IS NULL
   THEN
     RETURN 1;
