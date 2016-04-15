@@ -1,10 +1,7 @@
 services.factory('TracerDrugsChartService', function ($http, $filter, $q, messageService, CubesGenerateUrlService, StockoutSingleProductZoneChartService) {
 
-    function getTracerDrugStockRateOnFriday(districtCode, friday, stockOuts, tracerDrug, carryStartDates) {
-        return StockoutSingleProductZoneChartService.generateChartDataItemsForZone({
-            zoneCode: districtCode,
-            zonePropertyName: "location.district_code"
-        }, friday, friday, _.filter(stockOuts, function (stockOut) {
+    function getTracerDrugStockRateOnFriday(zone2, friday, stockOuts, tracerDrug, carryStartDates) {
+        return StockoutSingleProductZoneChartService.generateChartDataItemsForZone(zone2, friday, friday, _.filter(stockOuts, function (stockOut) {
             return stockOut["drug.drug_code"] === tracerDrug.drug;
         }), _.filter(carryStartDates, function (carry) {
             return carry["drug.drug_code"] === tracerDrug.drug;
@@ -32,6 +29,20 @@ services.factory('TracerDrugsChartService', function ($http, $filter, $q, messag
         return dates;
     }
 
+    function getZone(provinceCode, districtCode) {
+        if (districtCode !== undefined) {
+            return {
+                zoneCode: districtCode,
+                zonePropertyName: "location.district_code"
+            };
+        } else {
+            return {
+                zoneCode: provinceCode,
+                zonePropertyName: "location.province_code"
+            };
+        }
+    }
+
     function generateTracerDrugsChartDataItems(tracerDrugs, stockOuts, carryStartDates, userSelectedStartDate, userSelectedEndDate, provinceCode, districtCode) {
         var fridays = getFridaysBetween(userSelectedStartDate, userSelectedEndDate);
 
@@ -40,7 +51,7 @@ services.factory('TracerDrugsChartService', function ($http, $filter, $q, messag
 
             var totalPercentage = 0;
             _.forEach(tracerDrugs, function (tracerDrug) {
-                var fridayStockOutRate = getTracerDrugStockRateOnFriday(districtCode, friday, stockOuts, tracerDrug, carryStartDates)[0];
+                var fridayStockOutRate = getTracerDrugStockRateOnFriday(getZone(provinceCode, districtCode), friday, stockOuts, tracerDrug, carryStartDates)[0];
                 var hasStockPercentage = 100 - fridayStockOutRate.percentage;
                 chartDataItem[tracerDrug.drug] = hasStockPercentage;
                 chartDataItem[tracerDrug.drug + "StockOutFacilities"] = fridayStockOutRate.stockOutFacilities;
