@@ -10,7 +10,7 @@
 
 
 describe('ViewRnrViaDetailController', function () {
-  var httpBackend, scope, route, location, requisition, requisitionService, downloadPdfService, downloadSimamService;
+  var httpBackend, scope, route, filter, location, requisition, requisitionService, downloadPdfService, downloadSimamService;
 
   var rnrItemsForPagination = {
     rnr: {
@@ -56,7 +56,7 @@ describe('ViewRnrViaDetailController', function () {
 
   beforeEach(module('openlmis'));
 
-  beforeEach(inject(function ($httpBackend, $rootScope, $controller, $location, _requisitionService_, _downloadPdfService_, _downloadSimamService_) {
+  beforeEach(inject(function ($httpBackend, $rootScope, $controller, $filter, $location, _requisitionService_, _downloadPdfService_, _downloadSimamService_) {
     httpBackend = $httpBackend;
     scope = $rootScope.$new();
     location = $location;
@@ -176,9 +176,41 @@ describe('ViewRnrViaDetailController', function () {
 
     initMockRequisition(rnrItems);
 
-    expect(scope.displayStartDate).toEqual(actualStartDate);
-    expect(scope.displayEndDate).toEqual(actualEndDate);
+    expect(scope.displayStartDate).toEqual('18/02/2015');
+    expect(scope.displayEndDate).toEqual('19/03/2015');
   });
+
+  it('should set emergency cell as \\ when there rnr is emergency',function(){
+
+    var startDate = new Date("2015/02/20");
+    var endDate = new Date("2015/03/20");
+    var actualStartDate = new Date("2015/02/18");
+    var actualEndDate = new Date("2015/03/19");
+    var rnrItems = {
+      rnr: {
+        facility: {code: "F10", name: "Health Facility 1"},
+        fullSupplyLineItems: [{beginningBalance: 98, quantityRequested: 12345, stockInHand: 261, totalLossesAndAdjustments: 140}],
+        period: {stringStartDate: "02/20/2014", stringEndDate: "20/03/2014", startDate: startDate, endDate: endDate},
+        actualPeriodStartDate: actualStartDate,
+        actualPeriodEndDate: actualEndDate,
+        emergency:true
+      }
+    };
+
+    initMockRequisition(rnrItems);
+
+    expect(scope.displayStartDate).toEqual('\\');
+    expect(scope.displayEndDate).toEqual('\\');
+
+    expect(scope.consultationNumber).toEqual('\\');
+
+    expect(scope.apeKitReceived).toEqual('\\');
+    expect(scope.apeKitDispensed).toEqual('\\');
+    expect(scope.usKitReceived).toEqual('\\');
+    expect(scope.usKitDispensed).toEqual('\\');
+  });
+
+
 
   it('should set schedulePeriod as the period when there is no actualPeriod in rnr',function(){
 

@@ -71,7 +71,7 @@
                         </span>
                             </li>
                         </ul>
-                        <div class="type-checkbox"><span openlmis-message="view.rnr.via.submittedTime"></span>: {{ rnr.submittedDate | date:"MM/dd/yyyy"}}</div>
+                        <div class="type-checkbox"><span openlmis-message="view.rnr.via.submittedTime"></span>: {{ rnr.submittedDate }}</div>
                     </td>
                 </tr>
                 <tr>
@@ -80,8 +80,8 @@
                     </td>
                     <td tag="col3" class="border-all-thin" width="246px"><span openlmis-message="view.rnr.province"></span>: {{rnr.facility.geographicZone.parent.name}}</td>
                     <td tag="col4" class="border-all-thin" width="90px"></td>
-                    <td tag="col5-8" class="border-all-thin" colspan="4"><span openlmis-message="view.rnr.via.periodStart"></span>: {{displayStartDate | date:'dd/MM/yyyy' }}</td>
-                    <td tag="col9-10" class="border-all-thin" colspan="2"><span openlmis-message="view.rnr.via.periodEnd"></span>: {{displayEndDate | date:'dd/MM/yyyy' }}</td>
+                    <td tag="col5-8" class="border-all-thin" colspan="4"><span openlmis-message="view.rnr.via.periodStart"></span>: {{displayStartDate}}</td>
+                    <td tag="col9-10" class="border-all-thin" colspan="2"><span openlmis-message="view.rnr.via.periodEnd"></span>: {{displayEndDate}}</td>
                 </tr>
                 <tr>
 
@@ -89,23 +89,23 @@
                     <td tag="col3" class="border-all-thin"></td>
                     <td tag="col4" class="border-all-thin"></td>
                     <td tag="col5" class="border-all-thin" width="70px"><span openlmis-message="view.rnr.via.2"></span></td>
-                    <td tag="col6" class="border-all-thin" width="70px">{{usKitItem.quantityReceived}}</td>
+                    <td tag="col6" class="border-all-thin" width="70px">{{usKitReceived}}</td>
                     <td tag="col7" class="border-all-thin" width="25px"><span openlmis-message="view.rnr.via.HF"></span></td>
                     <td tag="col8" class="border-all-thin" width="25px"></td>
                     <td tag="col9" class="border-all-thin" width="30px"><span openlmis-message="view.rnr.via.CHW"></span></td>
-                    <td tag="col10" class="border-all-thin" width="70px">{{apeKitItem.quantityReceived}}</td>
+                    <td tag="col10" class="border-all-thin" width="70px">{{apeKitReceived}}</td>
                 </tr>
                 <tr>
 
                     <td class="border-all-thin"><span openlmis-message="view.rnr.via.1"></span>:</td>
                     <td class="border-all-thin"><span openlmis-message="view.rnr.via.consultation"></span>:</td>
-                    <td class="border-all-thin">{{rnr.patientQuantifications[0].total}}</td>
+                    <td class="border-all-thin">{{consultationNumber}}</td>
                     <td class="border-all-thin" width="70px"><span openlmis-message="view.rnr.via.3"></span></td>
-                    <td class="border-all-thin">{{usKitItem.quantityDispensed}}</td>
+                    <td class="border-all-thin">{{usKitDispensed}}</td>
                     <td class="border-all-thin"><span openlmis-message="view.rnr.via.HF"></span></td>
                     <td class="border-all-thin"></td>
                     <td class="border-all-thin"><span openlmis-message="view.rnr.via.CHW"></span></td>
-                    <td class="border-all-thin">{{apeKitItem.quantityDispensed}}</td>
+                    <td class="border-all-thin">{{apeKitDispensed}}</td>
                 </tr>
             </table>
             <div class="view-table-spacing"></div>

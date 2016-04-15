@@ -1,4 +1,4 @@
-function ViewRnrViaDetailController($scope, $route, $location, Requisitions, downloadPdfService, downloadSimamService) {
+function ViewRnrViaDetailController($scope, $route, $filter, $location, Requisitions, downloadPdfService, downloadSimamService) {
     $scope.pageSize = 20;
     $scope.currentPage = 1;
     $scope.rnrItemsVisible = [];
@@ -21,7 +21,9 @@ function ViewRnrViaDetailController($scope, $route, $location, Requisitions, dow
         Requisitions.get({id: $route.current.params.rnr, operation:"skipped"}, function (data) {
             $scope.rnr = data.rnr;
 
-            setPeriodDate();
+            $scope.rnr.submittedDate = $filter('date')(data.rnr.submittedDate,'dd/MM/yyyy');
+
+            $scope.isEmergency = data.rnr.emergency;
 
             populateKitItems(data.rnr.fullSupplyLineItems);
 
@@ -40,19 +42,41 @@ function ViewRnrViaDetailController($scope, $route, $location, Requisitions, dow
 
             $scope.numPages = $scope.regularRnrItems.length / $scope.pageSize;
 
-            $scope.isEmergency = data.rnr.emergency;
+            if ($scope.isEmergency){
+                $scope.displayStartDate = '\\';
+                $scope.displayEndDate = '\\';
+
+                $scope.apeKitReceived = '\\';
+                $scope.apeKitDispensed = '\\';
+                $scope.usKitReceived = '\\';
+                $scope.usKitDispensed = '\\';
+
+                $scope.consultationNumber = '\\';
+            } else {
+                setPeriodDate();
+
+                $scope.apeKitReceived = $scope.apeKitItem.quantityReceived;
+                $scope.apeKitDispensed = $scope.apeKitItem.quantityDispensed;
+                $scope.usKitReceived = $scope.usKitItem.quantityReceived;
+                $scope.usKitDispensed = $scope.usKitItem.quantityDispensed;
+
+                $scope.consultationNumber = $scope.rnr.patientQuantifications[0].total;
+            }
         });
 
     };
 
     function setPeriodDate() {
-        if ($scope.rnr.actualPeriodStartDate && $scope.rnr.actualPeriodEndDate) {
-            $scope.displayStartDate = $scope.rnr.actualPeriodStartDate;
-            $scope.displayEndDate = $scope.rnr.actualPeriodEndDate;
-        } else {
-            $scope.displayStartDate = $scope.rnr.period.startDate;
-            $scope.displayEndDate = $scope.rnr.period.endDate;
-        }
+        var displayStartDate,displayEndDate;
+          if ($scope.rnr.actualPeriodStartDate && $scope.rnr.actualPeriodEndDate) {
+              displayStartDate = $scope.rnr.actualPeriodStartDate;
+              displayEndDate = $scope.rnr.actualPeriodEndDate;
+          } else {
+              displayStartDate = $scope.rnr.period.startDate;
+              displayEndDate = $scope.rnr.period.endDate;
+          }
+        $scope.displayStartDate = $filter('date')(displayStartDate,'dd/MM/yyyy');
+        $scope.displayEndDate = $filter('date')(displayEndDate,'dd/MM/yyyy');
     }
 
     function populateKitItems(rnrItems) {
