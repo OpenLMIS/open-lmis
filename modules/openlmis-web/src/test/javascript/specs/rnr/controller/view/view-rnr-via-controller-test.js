@@ -38,7 +38,10 @@ describe('ViewRnrViaDetailController', function () {
         {beginningBalance: 20, quantityRequested: 12345, stockInHand: 261, totalLossesAndAdjustments: 140},
         {beginningBalance: 21, quantityRequested: 12345, stockInHand: 261, totalLossesAndAdjustments: 140},
         {beginningBalance: 22, quantityRequested: 12345, stockInHand: 261, totalLossesAndAdjustments: 140}],
-      period: {stringStartDate: "01/01/2014", stringEndDate: "31/01/2014"}
+      period: {stringStartDate: "01/01/2014", stringEndDate: "31/01/2014"},
+      patientQuantifications: [
+        {id: 1, total: 1}
+      ]
     }
   };
 
@@ -50,7 +53,10 @@ describe('ViewRnrViaDetailController', function () {
         {quantityReceived: 5, quantityDispensed: 2, isKit: true, productCode: 'SCOD12'},
         {quantityReceived: 20, quantityDispensed: 3, isKit: false, productCode: 'P1'}
       ],
-      period: {stringStartDate: "01/01/2014", stringEndDate: "31/01/2014"}
+      period: {stringStartDate: "01/01/2014", stringEndDate: "31/01/2014"},
+      patientQuantifications: [
+        {id: 1, total: 1}
+      ]
     }
   }
 
@@ -76,7 +82,10 @@ describe('ViewRnrViaDetailController', function () {
       rnr: {
         facility: {code: "F10", name: "Health Facility 1"},
         fullSupplyLineItems: [{beginningBalance: 98, quantityRequested: 12345, stockInHand: 261, totalLossesAndAdjustments: 140}],
-        period: {stringStartDate: "01/01/2014", stringEndDate: "31/01/2014"}
+        period: {stringStartDate: "01/01/2014", stringEndDate: "31/01/2014"},
+        patientQuantifications: [
+          {id: 1, total: 1}
+        ]
       }
     };
 
@@ -148,7 +157,10 @@ describe('ViewRnrViaDetailController', function () {
         facility: {code: "F10", name: "Health Facility 1"},
         fullSupplyLineItems: [{beginningBalance: 98, quantityRequested: 12345, stockInHand: 261, totalLossesAndAdjustments: 140}],
         period: {stringStartDate: "01/01/2014", stringEndDate: "31/01/2014"},
-        rnrSignatures:[{type: "SUBMITTER",text: submitterText},{type: "APPROVER",text: approverText}]
+        rnrSignatures:[{type: "SUBMITTER",text: submitterText},{type: "APPROVER",text: approverText}],
+        patientQuantifications: [
+          {id: 1, total: 1}
+        ]
       }
     };
 
@@ -170,7 +182,10 @@ describe('ViewRnrViaDetailController', function () {
         fullSupplyLineItems: [{beginningBalance: 98, quantityRequested: 12345, stockInHand: 261, totalLossesAndAdjustments: 140}],
         period: {stringStartDate: "02/20/2014", stringEndDate: "20/03/2014", startDate: startDate, endDate: endDate},
         actualPeriodStartDate: actualStartDate,
-        actualPeriodEndDate: actualEndDate
+        actualPeriodEndDate: actualEndDate,
+        patientQuantifications: [
+          {id: 1, total: 1}
+        ]
       }
     };
 
@@ -193,7 +208,10 @@ describe('ViewRnrViaDetailController', function () {
         period: {stringStartDate: "02/20/2014", stringEndDate: "20/03/2014", startDate: startDate, endDate: endDate},
         actualPeriodStartDate: actualStartDate,
         actualPeriodEndDate: actualEndDate,
-        emergency:true
+        emergency:true,
+        patientQuantifications: [
+          {id: 1, total: 1}
+        ]
       }
     };
 
@@ -210,8 +228,6 @@ describe('ViewRnrViaDetailController', function () {
     expect(scope.usKitDispensed).toEqual('\\');
   });
 
-
-
   it('should set schedulePeriod as the period when there is no actualPeriod in rnr',function(){
 
     var startDate = new Date("2015/02/20");
@@ -221,12 +237,42 @@ describe('ViewRnrViaDetailController', function () {
         facility: {code: "F10", name: "Health Facility 1"},
         fullSupplyLineItems: [{beginningBalance: 98, quantityRequested: 12345, stockInHand: 261, totalLossesAndAdjustments: 140}],
         period: {stringStartDate: "02/20/2014", stringEndDate: "20/03/2014", startDate: startDate, endDate: endDate},
+        patientQuantifications: [
+          {id: 1, total: 1}
+        ]
       }
     };
     initMockRequisition(rnrItems);
 
-    expect(scope.displayStartDate).toEqual(startDate);
-    expect(scope.displayEndDate).toEqual(endDate);
+    expect(scope.displayStartDate).toEqual("20/02/2015");
+    expect(scope.displayEndDate).toEqual("20/03/2015");
+  });
+
+  it('should set kit view empty when normal requisition has no kit product',function(){
+
+    var startDate = new Date("2015/02/20");
+    var endDate = new Date("2015/03/20");
+    var actualStartDate = new Date("2015/02/18");
+    var actualEndDate = new Date("2015/03/19");
+    var rnrItems = {
+      rnr: {
+        facility: {code: "F10", name: "Health Facility 1"},
+        fullSupplyLineItems: [{beginningBalance: 98, quantityRequested: 12345, stockInHand: 261, totalLossesAndAdjustments: 140}],
+        period: {stringStartDate: "02/20/2014", stringEndDate: "20/03/2014", startDate: startDate, endDate: endDate},
+        actualPeriodStartDate: actualStartDate,
+        actualPeriodEndDate: actualEndDate,
+        patientQuantifications: [
+          {id: 1, total: 1}
+        ]
+      }
+    };
+
+    initMockRequisition(rnrItems);
+
+    expect(scope.apeKitReceived).toEqual("");
+    expect(scope.usKitReceived).toEqual("");
+    expect(scope.apeKitDispensed).toEqual("");
+    expect(scope.usKitDispensed).toEqual("");
   });
 
   function initMockRequisition(rnrItems) {

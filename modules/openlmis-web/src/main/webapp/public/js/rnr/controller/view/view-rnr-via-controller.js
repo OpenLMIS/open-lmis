@@ -42,26 +42,7 @@ function ViewRnrViaDetailController($scope, $route, $filter, $location, Requisit
 
             $scope.numPages = $scope.regularRnrItems.length / $scope.pageSize;
 
-            if ($scope.isEmergency){
-                $scope.displayStartDate = '\\';
-                $scope.displayEndDate = '\\';
-
-                $scope.apeKitReceived = '\\';
-                $scope.apeKitDispensed = '\\';
-                $scope.usKitReceived = '\\';
-                $scope.usKitDispensed = '\\';
-
-                $scope.consultationNumber = '\\';
-            } else {
-                setPeriodDate();
-
-                $scope.apeKitReceived = $scope.apeKitItem.quantityReceived;
-                $scope.apeKitDispensed = $scope.apeKitItem.quantityDispensed;
-                $scope.usKitReceived = $scope.usKitItem.quantityReceived;
-                $scope.usKitDispensed = $scope.usKitItem.quantityDispensed;
-
-                $scope.consultationNumber = $scope.rnr.patientQuantifications[0].total;
-            }
+            initRequisitionHeaderValue();
         });
 
     };
@@ -103,6 +84,29 @@ function ViewRnrViaDetailController($scope, $route, $filter, $location, Requisit
                $scope.approverSignature = signature.text;
            }
         });
+    }
+
+    function initRequisitionHeaderValue() {
+        if ($scope.isEmergency) {
+            $scope.displayStartDate = '\\';
+            $scope.displayEndDate = '\\';
+
+            $scope.apeKitReceived = '\\';
+            $scope.apeKitDispensed = '\\';
+            $scope.usKitReceived = '\\';
+            $scope.usKitDispensed = '\\';
+
+            $scope.consultationNumber = '\\';
+        } else {
+            setPeriodDate();
+
+            $scope.apeKitReceived = $scope.apeKitItem === undefined ? '' : $scope.apeKitItem.quantityReceived;
+            $scope.apeKitDispensed = $scope.apeKitItem === undefined ? '' : $scope.apeKitItem.quantityDispensed;
+            $scope.usKitReceived = $scope.usKitItem === undefined ? '' : $scope.usKitItem.quantityReceived;
+            $scope.usKitDispensed = $scope.usKitItem === undefined ? '' : $scope.usKitItem.quantityDispensed;
+
+            $scope.consultationNumber = $scope.rnr.patientQuantifications[0].total;
+        }
     }
 
     $scope.$on('$routeUpdate', refreshItems);

@@ -202,7 +202,6 @@ describe("Stock Out All Products Report Controller", function () {
         expect(scope.reportData[0]["avgDuration"]).toEqual('13.5');
         expect(scope.reportData[0]["name"]).toEqual("Drug a name");
         expect(scope.reportParams.reportTitle).toEqual("Maputo Província,Marracuene,Habel Jafar");
-        expect(scope.occurrencesHeader).toEqual("Stockout occurrences");
     });
 
     it('should change report title and format total duration value when select all facility', function () {
