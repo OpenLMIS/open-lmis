@@ -24,9 +24,9 @@ function ViewRnrViaDetailController($scope, $route, $filter, $location, Requisit
             $scope.rnr.submittedDate = $filter('date')(data.rnr.submittedDate,'dd/MM/yyyy');
 
             $scope.isEmergency = data.rnr.emergency;
-
-            populateKitItems(data.rnr.fullSupplyLineItems);
-
+            
+            populateKitItems(_.sortBy($scope.rnr.fullSupplyLineItems, 'productCode'));
+            
             var extraRows = $scope.regularRnrItems.length % $scope.pageSize;
             if ($scope.regularRnrItems.length === 0) {
                 generateEmptyRows(0);

@@ -16,28 +16,28 @@ describe('ViewRnrViaDetailController', function () {
     rnr: {
       facility: {code: "F10", name: "Health Facility 1"},
       fullSupplyLineItems: [
-        {beginningBalance: 1, quantityRequested: 12345, stockInHand: 261, totalLossesAndAdjustments: 140},
-        {beginningBalance: 2, quantityRequested: 12345, stockInHand: 261, totalLossesAndAdjustments: 140},
-        {beginningBalance: 3, quantityRequested: 12345, stockInHand: 261, totalLossesAndAdjustments: 140},
-        {beginningBalance: 4, quantityRequested: 12345, stockInHand: 261, totalLossesAndAdjustments: 140},
-        {beginningBalance: 5, quantityRequested: 12345, stockInHand: 261, totalLossesAndAdjustments: 140},
-        {beginningBalance: 6, quantityRequested: 12345, stockInHand: 261, totalLossesAndAdjustments: 140},
-        {beginningBalance: 7, quantityRequested: 12345, stockInHand: 261, totalLossesAndAdjustments: 140},
-        {beginningBalance: 8, quantityRequested: 12345, stockInHand: 261, totalLossesAndAdjustments: 140},
-        {beginningBalance: 9, quantityRequested: 12345, stockInHand: 261, totalLossesAndAdjustments: 140},
-        {beginningBalance: 10, quantityRequested: 12345, stockInHand: 261, totalLossesAndAdjustments: 140},
-        {beginningBalance: 11, quantityRequested: 12345, stockInHand: 261, totalLossesAndAdjustments: 140},
-        {beginningBalance: 12, quantityRequested: 12345, stockInHand: 261, totalLossesAndAdjustments: 140},
-        {beginningBalance: 13, quantityRequested: 12345, stockInHand: 261, totalLossesAndAdjustments: 140},
-        {beginningBalance: 14, quantityRequested: 12345, stockInHand: 261, totalLossesAndAdjustments: 140},
-        {beginningBalance: 15, quantityRequested: 12345, stockInHand: 261, totalLossesAndAdjustments: 140},
-        {beginningBalance: 16, quantityRequested: 12345, stockInHand: 261, totalLossesAndAdjustments: 140},
-        {beginningBalance: 17, quantityRequested: 12345, stockInHand: 261, totalLossesAndAdjustments: 140},
-        {beginningBalance: 18, quantityRequested: 12345, stockInHand: 261, totalLossesAndAdjustments: 140},
-        {beginningBalance: 19, quantityRequested: 12345, stockInHand: 261, totalLossesAndAdjustments: 140},
-        {beginningBalance: 20, quantityRequested: 12345, stockInHand: 261, totalLossesAndAdjustments: 140},
-        {beginningBalance: 21, quantityRequested: 12345, stockInHand: 261, totalLossesAndAdjustments: 140},
-        {beginningBalance: 22, quantityRequested: 12345, stockInHand: 261, totalLossesAndAdjustments: 140}],
+        {beginningBalance: 1, quantityRequested: 12345, stockInHand: 261, totalLossesAndAdjustments: 140, productCode: '008'},
+        {beginningBalance: 2, quantityRequested: 12345, stockInHand: 261, totalLossesAndAdjustments: 140, productCode: '009'},
+        {beginningBalance: 3, quantityRequested: 12345, stockInHand: 261, totalLossesAndAdjustments: 140, productCode: '010'},
+        {beginningBalance: 4, quantityRequested: 12345, stockInHand: 261, totalLossesAndAdjustments: 140, productCode: '004'},
+        {beginningBalance: 5, quantityRequested: 12345, stockInHand: 261, totalLossesAndAdjustments: 140, productCode: '005'},
+        {beginningBalance: 6, quantityRequested: 12345, stockInHand: 261, totalLossesAndAdjustments: 140, productCode: '006'},
+        {beginningBalance: 7, quantityRequested: 12345, stockInHand: 261, totalLossesAndAdjustments: 140, productCode: '007'},
+        {beginningBalance: 8, quantityRequested: 12345, stockInHand: 261, totalLossesAndAdjustments: 140, productCode: '001'},
+        {beginningBalance: 9, quantityRequested: 12345, stockInHand: 261, totalLossesAndAdjustments: 140, productCode: '002'},
+        {beginningBalance: 10, quantityRequested: 12345, stockInHand: 261, totalLossesAndAdjustments: 140, productCode: '022'},
+        {beginningBalance: 11, quantityRequested: 12345, stockInHand: 261, totalLossesAndAdjustments: 140, productCode: '122'},
+        {beginningBalance: 12, quantityRequested: 12345, stockInHand: 261, totalLossesAndAdjustments: 140, productCode: '002'},
+        {beginningBalance: 13, quantityRequested: 12345, stockInHand: 261, totalLossesAndAdjustments: 140, productCode: '003'},
+        {beginningBalance: 14, quantityRequested: 12345, stockInHand: 261, totalLossesAndAdjustments: 140, productCode: '010'},
+        {beginningBalance: 15, quantityRequested: 12345, stockInHand: 261, totalLossesAndAdjustments: 140, productCode: '011'},
+        {beginningBalance: 16, quantityRequested: 12345, stockInHand: 261, totalLossesAndAdjustments: 140, productCode: '012'},
+        {beginningBalance: 17, quantityRequested: 12345, stockInHand: 261, totalLossesAndAdjustments: 140, productCode: '014'},
+        {beginningBalance: 18, quantityRequested: 12345, stockInHand: 261, totalLossesAndAdjustments: 140, productCode: '015'},
+        {beginningBalance: 19, quantityRequested: 12345, stockInHand: 261, totalLossesAndAdjustments: 140, productCode: '027'},
+        {beginningBalance: 20, quantityRequested: 12345, stockInHand: 261, totalLossesAndAdjustments: 140, productCode: '029'},
+        {beginningBalance: 21, quantityRequested: 12345, stockInHand: 261, totalLossesAndAdjustments: 140, productCode: '110'},
+        {beginningBalance: 22, quantityRequested: 12345, stockInHand: 261, totalLossesAndAdjustments: 140, productCode: '111'}],
       period: {stringStartDate: "01/01/2014", stringEndDate: "31/01/2014"},
       patientQuantifications: [
         {id: 1, total: 1}
@@ -100,11 +100,19 @@ describe('ViewRnrViaDetailController', function () {
     expect(scope.numPages).toEqual(2);
   });
 
+  it('should sort by fnm ',function(){
+
+    initMockRequisition(rnrItemsForPagination);
+
+    expect(scope.regularRnrItems[0].productCode).toEqual('001');
+    expect(scope.regularRnrItems[21].productCode).toEqual('122');
+  });
+
   it('should get the 2 page of visible rnr items ',function(){
     scope.currentPage = 2;
     var expectRnrList = [
-      {beginningBalance: 21, quantityRequested: 12345, stockInHand: 261, totalLossesAndAdjustments: 140},
-      {beginningBalance: 22, quantityRequested: 12345, stockInHand: 261, totalLossesAndAdjustments: 140},
+      {beginningBalance: 22, quantityRequested: 12345, stockInHand: 261, totalLossesAndAdjustments: 140, productCode: '111'},
+      {beginningBalance: 11, quantityRequested: 12345, stockInHand: 261, totalLossesAndAdjustments: 140, productCode: '122'},
       {},
       {},
       {},
