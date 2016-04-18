@@ -46,7 +46,7 @@ services.factory('TracerDrugsChartService', function ($http, $filter, $q, messag
     }
 
     function getUserSelectedZoneConfig(provinceCode, districtCode) {
-        var isOneDistrict = provinceCode === undefined && districtCode !== undefined;
+        var isOneDistrict = provinceCode !== undefined && districtCode !== undefined;
         var isOneProvince = provinceCode !== undefined && districtCode === undefined;
         var isAllProvinces = provinceCode === undefined && districtCode === undefined;
         return {isOneDistrict: isOneDistrict, isOneProvince: isOneProvince, isAllProvinces: isAllProvinces};
