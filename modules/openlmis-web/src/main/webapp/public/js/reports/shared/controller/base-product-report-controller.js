@@ -146,6 +146,12 @@ function BaseProductReportController($scope, $filter, ProductReportService, Faci
         });
     }
 
+    $scope.getGeographicZoneById = function (zones, zoneId) {
+        return _.find(zones, function (zone) {
+            return zone.id == zoneId;
+        });
+    };
+
     function showDateRangeInvalidWarningDialog() {
         var options = {
             id: "chooseDateAlertDialog",

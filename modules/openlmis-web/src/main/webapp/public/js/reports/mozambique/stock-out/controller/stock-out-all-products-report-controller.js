@@ -76,12 +76,6 @@ function StockOutAllProductsReportController($scope, $filter, $q, $controller, $
         return params;
     }
 
-    $scope.getGeographicZoneById = function (zones, zoneId) {
-        return _.find(zones, function (zone) {
-            return zone.id == zoneId;
-        });
-    };
-
     function generateCutParams(stockReportParams) {
         var cutsParams = [{
             dimension: "overlapped_date",

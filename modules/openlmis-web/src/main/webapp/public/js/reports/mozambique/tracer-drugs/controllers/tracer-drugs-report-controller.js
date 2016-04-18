@@ -11,7 +11,10 @@ function TracerDrugsReportController($scope, $controller, TracerDrugsChartServic
     });
 
     $scope.loadReport = function () {
-        TracerDrugsChartService.makeTracerDrugsChart('tracer-report', new Date($scope.reportParams.startTime), new Date($scope.reportParams.endTime), undefined, undefined);
+        var selectedProvinceCode = $scope.reportParams.provinceId ? $scope.getGeographicZoneById($scope.provinces, $scope.reportParams.provinceId).code : undefined;
+        var selectedDistrictCode = $scope.reportParams.districtId ? $scope.getGeographicZoneById($scope.districts, $scope.reportParams.districtId).code : undefined;
+
+        TracerDrugsChartService.makeTracerDrugsChart('tracer-report', new Date($scope.reportParams.startTime), new Date($scope.reportParams.endTime), selectedProvinceCode, selectedDistrictCode);
     };
 
 }
