@@ -133,9 +133,9 @@ services.factory('TracerDrugsChartService', function ($http, $filter, $q, messag
                 var percentage = item.dataContext[tracerDrugcode];
                 var stockOutFacilities = item.dataContext[tracerDrugcode + "StockOutFacilities"];
                 var carryingFacilities = item.dataContext[tracerDrugcode + "CarryingFacilities"];
-                return "Name: " + tracerDrugName + "<br>" +
-                    "Percentage: " + percentage + "% <br>" +
-                    "Health Facilities(SOH > 0): " + _.difference(carryingFacilities, stockOutFacilities).join();
+                return messageService.get('report.tracer.name') + ": " + tracerDrugName + "<br>" +
+                    messageService.get('report.tracer.percentage') + ": " + percentage + "% <br>" +
+                    messageService.get('report.tracer.health.facility') + ": " + _.difference(carryingFacilities, stockOutFacilities).join();
             };
         }
 
@@ -156,10 +156,10 @@ services.factory('TracerDrugsChartService', function ($http, $filter, $q, messag
         tracerDrugGraphs.push({
             lineColor: "red",
             bullet: "round",
-            title: "Average",
+            title: messageService.get('report.tracer.average'),
             valueField: "average",
             dashLength: 5,
-            balloonText: "Average: [[average]]%"
+            balloonText: messageService.get('report.tracer.average') + ": [[average]]%"
         });
 
         return tracerDrugGraphs;
@@ -168,6 +168,7 @@ services.factory('TracerDrugsChartService', function ($http, $filter, $q, messag
     function renderTracerDrugsChart(divId, chartDataItems, tracerDrugs) {
         var graphs = generateGraphs(tracerDrugs);
 
+        var dateWeeklyString = 'YYYY' + ' ' + messageService.get('report.tracer.week') + ' ' + 'W';
         AmCharts.makeChart(divId, {
             "type": "serial",
             "theme": "light",
@@ -191,7 +192,7 @@ services.factory('TracerDrugsChartService', function ($http, $filter, $q, messag
             },
             "chartCursor": {
                 "cursorPosition": "mouse",
-                categoryBalloonDateFormat: "YYYY week W (DD.MM.YYYY)"
+                categoryBalloonDateFormat: dateWeeklyString + "(DD.MM.YYYY)"
             },
             "categoryField": "date",
             "categoryAxis": {
@@ -200,10 +201,10 @@ services.factory('TracerDrugsChartService', function ($http, $filter, $q, messag
                 "minorGridEnabled": true,
                 "dateFormats": [{
                     period: 'DD',
-                    format: 'YYYY week W'
+                    format: dateWeeklyString
                 }, {
                     period: 'WW',
-                    format: 'YYYY week W'
+                    format: dateWeeklyString
                 }, {
                     period: 'MM',
                     format: 'MM.YYYY'
