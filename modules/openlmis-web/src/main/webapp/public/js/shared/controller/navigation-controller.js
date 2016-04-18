@@ -31,6 +31,9 @@ function NavigationController($scope, ConfigSettingsByKey, localStorageService, 
     FeatureToggleService.get({key: 'expiry.dates.report'}, function (result) {
       $scope.isExpiryDatesToggleOn = result.key;
     });
+    FeatureToggleService.get({key: 'tracer.drugs.report'}, function (result) {
+      $scope.isTracerDrugsReportToggleOn = result.key;
+    });
    }();
 
   $scope.loadRights = function () {
