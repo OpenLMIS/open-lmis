@@ -38,6 +38,11 @@
                 <a href="/public/pages/reports/mozambique/index.html#/expiry-dates"
                    openlmis-message="menu.report.expiry.dates"></a>
             </li>
+
+            <li ng-show="hasPermission('VIEW_TRACER_DRUGS_REPORT') && isTracerDrugsReportToggleOn">
+                <a href="/public/pages/reports/mozambique/index.html#/tracer-drugs"
+                   openlmis-message="menu.report.tracer.drugs"></a>
+            </li>
         </ul>
     </div>
 </li>
