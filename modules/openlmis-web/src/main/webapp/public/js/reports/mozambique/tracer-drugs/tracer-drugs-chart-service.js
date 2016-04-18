@@ -136,7 +136,7 @@ services.factory('TracerDrugsChartService', function ($http, $filter, $q, messag
                 return "Name: " + tracerDrugName + "<br>" +
                     "Percentage: " + percentage + "% <br>" +
                     "Health Facilities(SOH > 0): " + _.difference(carryingFacilities, stockOutFacilities).join();
-            }
+            };
         }
 
         var tracerDrugGraphs = _.chain(tracerDrugs)
