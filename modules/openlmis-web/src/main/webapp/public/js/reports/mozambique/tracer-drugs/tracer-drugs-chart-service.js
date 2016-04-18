@@ -154,7 +154,7 @@ services.factory('TracerDrugsChartService', function ($http, $filter, $q, messag
             }).value();
 
         tracerDrugGraphs.push({
-            lineColor: stringToRGB("AVERAGE"),
+            lineColor: "red",
             bullet: "round",
             title: "Average",
             valueField: "average",
