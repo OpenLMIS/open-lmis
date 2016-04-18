@@ -30,9 +30,7 @@ services.factory('TracerDrugsChartService', function ($http, $filter, $q, messag
         }];
 
         addLocaltionCut(cuts);
-
         var requestUrl = CubesGenerateUrlService.generateFactsUrl(cubesName, cuts);
-
         return $http.get(requestUrl);
     }
 
@@ -130,6 +128,17 @@ services.factory('TracerDrugsChartService', function ($http, $filter, $q, messag
             return "#" + "00000".substring(0, 6 - c.length) + c;
         }
 
+        function makeBalloon(tracerDrugName, tracerDrugcode) {
+            return function (item, graph) {
+                var percentage = item.dataContext[tracerDrugcode];
+                var stockOutFacilities = item.dataContext[tracerDrugcode + "StockOutFacilities"];
+                var carryingFacilities = item.dataContext[tracerDrugcode + "CarryingFacilities"];
+                return "Name: " + tracerDrugName + "<br>" +
+                    "Percentage: " + percentage + "% <br>" +
+                    "Health Facilities(SOH > 0): " + _.difference(carryingFacilities, stockOutFacilities).join();
+            }
+        }
+
         var tracerDrugGraphs = _.chain(tracerDrugs)
             .map(function (tracerDrug) {
                 var tracerDrugcode = tracerDrug["drug.drug_code"];
@@ -139,7 +148,8 @@ services.factory('TracerDrugsChartService', function ($http, $filter, $q, messag
                     lineColor: stringToRGB(tracerDrugcode + tracerDrugName),
                     bullet: "round",
                     title: tracerDrugName,
-                    valueField: tracerDrugcode
+                    valueField: tracerDrugcode,
+                    balloonFunction: makeBalloon(tracerDrugName, tracerDrugcode)
                 };
             }).value();
 
@@ -148,7 +158,8 @@ services.factory('TracerDrugsChartService', function ($http, $filter, $q, messag
             bullet: "round",
             title: "Average",
             valueField: "average",
-            dashLength: 5
+            dashLength: 5,
+            balloonText: "Average: [[average]]%"
         });
 
         return tracerDrugGraphs;
@@ -173,6 +184,7 @@ services.factory('TracerDrugsChartService', function ($http, $filter, $q, messag
                 minimum: 0
             }],
             "graphs": graphs,
+            balloon: {textAlign: "left", maxWidth: 300},
             "chartScrollbar": {
                 "oppositeAxis": false,
                 "offset": 30

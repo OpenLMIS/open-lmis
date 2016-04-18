@@ -131,22 +131,17 @@ describe("tracer drugs chart service test", function () {
     it("should generate graphs for tracer drugs", function () {
         var graphs = tracerDrugsChartService.generateGraphs(tracerDrugs);
 
-        expect(graphs).toEqual([{
+        var joc = jasmine.objectContaining;
+        expect(graphs).toEqual(joc([joc({
             lineColor: "#9B656A",
             bullet: "round",
             title: "drug name1",
             valueField: "code1"
-        }, {
+        }), joc({
             lineColor: "#80182C",
             bullet: "round",
             title: "drug name2",
             valueField: "code2"
-        }, {
-            lineColor: "#2869FD",
-            bullet: "round",
-            title: "Average",
-            valueField: "average",
-            dashLength: 5
-        }]);
+        })]));
     })
 });

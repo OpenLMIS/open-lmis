@@ -61,7 +61,6 @@ services.factory('StockoutSingleProductZoneChartService', function (messageServi
                 "lineAlpha": 0,
                 "fillAlphas": 0.5,
                 "lineColor": "#FF0000",
-                // "type": "smoothedLine",
                 "balloonFunction": makeBalloon
 
             }],
