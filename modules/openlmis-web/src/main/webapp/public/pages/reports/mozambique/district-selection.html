@@ -1,0 +1,14 @@
+<div class="report-selection">
+
+    <label class="labels" openlmis-message="label.district"></label>
+
+    <div class="form-fields">
+        <select ui-select2 style="width:160px;" class="large-input" ng-change="fillProvince()" name="districts"
+                ng-model="reportParams.districtId">
+            <option ng-repeat="option in districts | districtFilter:reportParams.provinceId" value="{{option.id}}">
+                {{option.name}}
+            </option>
+            <option value="">ALL</option>
+        </select>
+    </div>
+</div>

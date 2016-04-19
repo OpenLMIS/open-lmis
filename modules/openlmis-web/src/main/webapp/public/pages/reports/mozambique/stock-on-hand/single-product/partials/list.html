@@ -14,29 +14,9 @@
             </div>
         </div>
 
-        <div class="report-selection">
+        <div ng-include="'/public/pages/reports/mozambique/province-selection.html'"></div>
 
-            <label class="labels" openlmis-message="label.province"></label>
-
-            <div class="form-fields">
-                <select ui-select2 style="width:160px;" class="large-input" name="provinces" ng-model="reportParams.provinceId">
-                    <option value="">ALL</option>
-                    <option ng-repeat="option in provinces | provinceFilter:reportParams.provinceId" value="{{option.id}}">{{option.name}}</option>
-                </select>
-            </div>
-        </div>
-
-        <div class="report-selection">
-
-            <label class="labels" openlmis-message="label.district"></label>
-
-            <div class="form-fields">
-                <select ui-select2 style="width:160px;" class="large-input" ng-change="fillProvince()" name="districts" ng-model="reportParams.districtId">
-                    <option value="">ALL</option>
-                    <option ng-repeat="option in districts| districtFilter:reportParams.provinceId" value="{{option.id}}">{{option.name}}</option>
-                </select>
-            </div>
-        </div>
+        <div ng-include="'/public/pages/reports/mozambique/district-selection.html'"></div>
 
         <div class="form-cell report-selection">
             <label>
