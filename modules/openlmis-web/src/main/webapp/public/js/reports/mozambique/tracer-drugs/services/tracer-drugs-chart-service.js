@@ -221,7 +221,7 @@ services.factory('TracerDrugsChartService', function ($http, $filter, $q, $timeo
         });
         tracerDrugGraphs.push({
             id: "all",
-            title: "All",
+            title: messageService.get('report.tracer.all'),
             lineColor: "black",
             hidden: true,
             legendValueText: " ",
