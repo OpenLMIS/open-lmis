@@ -1,7 +1,8 @@
-services.factory('TracerDrugsChartService', function ($http, $filter, $q, messageService, CubesGenerateUrlService, StockoutSingleProductZoneChartService) {
+services.factory('TracerDrugsChartService', function ($http, $filter, $q, $timeout, messageService, CubesGenerateUrlService, StockoutSingleProductZoneChartService) {
 
     var drugCodekey = "drug.drug_code";
     var drugNameKey = "drug.drug_name";
+    var dateWeeklyString = 'YYYY' + ' ' + messageService.get('report.tracer.week') + ' ' + 'W';
 
     function getTracerDrugStockRateOnFriday(zone, friday, stockOuts, tracerDrugCode, carryStartDates) {
         var stockOutsOfTracerDrug = _.filter(stockOuts, function (stockOut) {
@@ -97,6 +98,50 @@ services.factory('TracerDrugsChartService', function ($http, $filter, $q, messag
         return chartDataItem;
     }
 
+    function LinkedNode() {
+        var self = this;
+
+        this.addToTail = function (elem) {
+            if (self.next === undefined) {
+                self.next = elem;
+            } else {
+                self.next.addToTail(elem);
+            }
+        };
+
+        this.showSelfAndNext = function (isToggleOff, event) {
+            $timeout(function () {
+                if (isToggleOff) {
+                    event.chart.hideGraph(self.value);
+                } else {
+                    event.chart.showGraph(self.value);
+                }
+                if (self.next !== undefined) {
+                    self.next.showSelfAndNext(isToggleOff, event);
+                }
+            });
+        };
+    }
+
+    function toggleGraphsExclude(event, isToggleOff, excludes) {
+        var firstLinkedNode = _.chain(event.chart.graphs)
+            .filter(function (graph) {
+                return _.every(excludes, function (exclude) {
+                    return graph.id != exclude
+                });
+            })
+            .reduce(function (node, graph) {
+                var newNode = new LinkedNode();
+                newNode.value = graph;
+
+                node.addToTail(newNode);
+                return node;
+            }, new LinkedNode())
+            .value().next;
+
+        firstLinkedNode.showSelfAndNext(isToggleOff, event);
+    }
+
     function generateTracerDrugsChartDataItems(tracerDrugs, stockOuts, carryStartDates, userSelectedStartDate, userSelectedEndDate, provinceCode, districtCode) {
         var fridays = getFridaysBetween(userSelectedStartDate, userSelectedEndDate);
         return _.chain(fridays)
@@ -158,6 +203,7 @@ services.factory('TracerDrugsChartService', function ($http, $filter, $q, messag
                     bullet: "round",
                     title: tracerDrugName + "[" + tracerDrugcode + "]",
                     valueField: tracerDrugcode,
+                    hidden: true,
                     lineThickness: 2,
                     balloonFunction: makeBalloon(tracerDrugName, tracerDrugcode)
                 };
@@ -169,14 +215,15 @@ services.factory('TracerDrugsChartService', function ($http, $filter, $q, messag
             bullet: "round",
             title: messageService.get('report.tracer.average'),
             valueField: "average",
-            dashLength: 5,
-            lineThickness: 4,
+            dashLength: 3,
+            lineThickness: 6,
             balloonText: messageService.get('report.tracer.average') + ": [[average]]%"
         });
         tracerDrugGraphs.push({
             id: "all",
             title: "All",
             lineColor: "black",
+            hidden: true,
             legendValueText: " ",
             legendPeriodValueText: " "
         });
@@ -185,26 +232,7 @@ services.factory('TracerDrugsChartService', function ($http, $filter, $q, messag
     }
 
     function renderTracerDrugsChart(divId, chartDataItems, tracerDrugs) {
-
         function onInit(initEvent) {
-            function toggleGraphsExclude(event, isToggleOff, excludes) {
-                _.chain(event.chart.graphs)
-                    .filter(function (graph) {
-                        return _.every(excludes, function (exclude) {
-                            return graph.id != exclude
-                        });
-                    })
-                    .forEach(function (graph) {
-                        var start = new Date().getTime();
-                        if (isToggleOff) {
-                            event.chart.hideGraph(graph);
-                        } else {
-                            event.chart.showGraph(graph);
-                        }
-                        console.log(new Date().getTime() - start);
-                    });
-            }
-
             function legendHandler(toggleEvent) {
                 if (toggleEvent.dataItem.id == 'all') {
                     toggleGraphsExclude(toggleEvent, toggleEvent.dataItem.hidden, ['all', 'average']);
@@ -213,13 +241,8 @@ services.factory('TracerDrugsChartService', function ($http, $filter, $q, messag
 
             initEvent.chart.legend.addListener('hideItem', legendHandler);
             initEvent.chart.legend.addListener('showItem', legendHandler);
-
-            toggleGraphsExclude(initEvent, true, ['average']);
         }
 
-        var graphs = generateGraphs(tracerDrugs);
-
-        var dateWeeklyString = 'YYYY' + ' ' + messageService.get('report.tracer.week') + ' ' + 'W';
         AmCharts.makeChart(divId, {
             "listeners": [{
                 "event": "init",
@@ -237,7 +260,7 @@ services.factory('TracerDrugsChartService', function ($http, $filter, $q, messag
                 maximum: 100,
                 minimum: 0
             }],
-            "graphs": graphs,
+            "graphs": generateGraphs(tracerDrugs),
             balloon: {textAlign: "left", maxWidth: 300},
             "chartScrollbar": {
                 "oppositeAxis": false,
