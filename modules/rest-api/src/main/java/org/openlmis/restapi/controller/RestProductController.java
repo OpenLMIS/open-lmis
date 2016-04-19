@@ -21,7 +21,7 @@ import java.util.List;
 
 import static org.openlmis.restapi.response.RestResponse.error;
 import static org.springframework.http.HttpStatus.BAD_REQUEST;
-import static org.springframework.web.bind.annotation.RequestMethod.POST;
+import static org.springframework.web.bind.annotation.RequestMethod.PUT;
 
 @Controller
 @NoArgsConstructor
@@ -30,10 +30,10 @@ public class RestProductController extends BaseController {
   @Autowired
   private RestProductService restProductService;
 
-  @RequestMapping(value = "/rest-api/products", method = POST, headers = ACCEPT_JSON)
-  public ResponseEntity createProduct(@RequestBody(required = true) Product kit) {
-    restProductService.buildAndSave(kit);
-    return RestResponse.success("msg.kit.createsuccess");
+  @RequestMapping(value = "/rest-api/products", method = PUT, headers = ACCEPT_JSON)
+  public ResponseEntity createOrUpdateProduct(@RequestBody(required = true) Product product) {
+    restProductService.buildAndSave(product);
+    return RestResponse.success("msg.kit.savesuccess");
   }
 
   @RequestMapping(value = "/rest-api/latest-products")

@@ -33,6 +33,7 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.DuplicateKeyException;
 
 import java.util.Date;
+import java.util.List;
 
 import static com.natpryce.makeiteasy.MakeItEasy.a;
 import static com.natpryce.makeiteasy.MakeItEasy.make;
@@ -187,6 +188,37 @@ public class ProductRepositoryTest {
     repository.getProductsAfterUpdatedTime(date);
 
     verify(mockedMapper).listProductsAfterUpdatedTime(date);
+  }
+
+  @Test
+  public void shouldUpdateKitProductList() {
+    Product product = make(a(ProductBuilder.defaultProduct, with(ProductBuilder.code, "KIT1")));
+    product.setIsKit(true);
+
+    KitProduct kitProduct1 = make(a(KitProductBuilder.defaultKit,
+        with(KitProductBuilder.kitCode, product.getCode()),
+        with(KitProductBuilder.productCode, "P1")));
+    KitProduct kitProduct2 = make(a(KitProductBuilder.defaultKit,
+        with(KitProductBuilder.kitCode, product.getCode()),
+        with(KitProductBuilder.productCode, "P2")));
+    List<KitProduct> oldKitProductList = asList(kitProduct1, kitProduct2);
+    when(mockedMapper.getKitProductsByKitCode("KIT1")).thenReturn(oldKitProductList);
+
+    KitProduct kitProduct3 = make(a(KitProductBuilder.defaultKit,
+        with(KitProductBuilder.kitCode, product.getCode()),
+        with(KitProductBuilder.productCode, "P3")));
+    KitProduct kitProduct4 = make(a(KitProductBuilder.defaultKit,
+        with(KitProductBuilder.kitCode, product.getCode()),
+        with(KitProductBuilder.productCode, "P4")));
+    List<KitProduct> newKitProductList = asList(kitProduct3, kitProduct4);
+    product.setKitProductList(newKitProductList);
+
+    repository.update(product);
+
+    verify(mockedMapper).deleteKitProduct(kitProduct1);
+    verify(mockedMapper).deleteKitProduct(kitProduct2);
+    verify(mockedMapper).insertKitProduct(kitProduct3);
+    verify(mockedMapper).insertKitProduct(kitProduct4);
   }
 }
 

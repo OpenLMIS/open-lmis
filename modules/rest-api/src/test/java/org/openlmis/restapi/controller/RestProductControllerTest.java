@@ -54,12 +54,12 @@ public class RestProductControllerTest {
   @Test
   public void shouldCallRestKitServiceToSaveKitAndRespondWithSuccess() {
     mockStatic(RestResponse.class);
-    String successMsg = "msg.kit.createsuccess";
+    String successMsg = "msg.kit.savesuccess";
     ResponseEntity<RestResponse> expectedResponse = new ResponseEntity<>(new RestResponse(SUCCESS, successMsg), HttpStatus.OK);
     PowerMockito.when(RestResponse.success(successMsg)).thenReturn(expectedResponse);
 
     Product fakeKit = new Product();
-    ResponseEntity<RestResponse> response = restProductController.createProduct(fakeKit);
+    ResponseEntity<RestResponse> response = restProductController.createOrUpdateProduct(fakeKit);
 
     assertEquals(HttpStatus.OK, response.getStatusCode());
     verify(restProductService).buildAndSave(fakeKit);

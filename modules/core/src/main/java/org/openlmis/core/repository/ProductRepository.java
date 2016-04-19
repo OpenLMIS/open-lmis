@@ -66,6 +66,8 @@ public class ProductRepository {
   public void update(Product product) {
     try {
       mapper.update(product);
+      updateKitProductList(product);
+
     } catch (DuplicateKeyException duplicateKeyException) {
       throw new DataException("error.duplicate.product.code");
     } catch (DataIntegrityViolationException dataIntegrityViolationException) {
@@ -74,6 +76,23 @@ public class ProductRepository {
         throw new DataException("error.reference.data.missing");
       } else {
         throw new DataException("error.incorrect.length");
+      }
+    }
+  }
+
+  private void updateKitProductList(Product product) {
+    List<KitProduct> oldKitProductList = mapper.getKitProductsByKitCode(product.getCode());
+    List<KitProduct> newKitProductList = product.getKitProductList();
+
+    if (!oldKitProductList.isEmpty()) {
+      for (KitProduct kitProduct: oldKitProductList) {
+        mapper.deleteKitProduct(kitProduct);
+      }
+    }
+
+    if (!newKitProductList.isEmpty()) {
+      for (KitProduct kitProduct: product.getKitProductList()) {
+        mapper.insertKitProduct(kitProduct);
       }
     }
   }

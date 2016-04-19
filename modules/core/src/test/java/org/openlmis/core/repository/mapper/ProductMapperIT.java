@@ -213,7 +213,7 @@ public class ProductMapperIT {
   }
 
   @Test
-  public void shouldInsertKitProduct() throws SQLException {
+  public void shouldInsertAndDeleteKitProduct() throws SQLException {
     Product product = make(a(ProductBuilder.defaultProduct, with(ProductBuilder.code, "KIT")));
     productMapper.insert(product);
 
@@ -235,6 +235,11 @@ public class ProductMapperIT {
     assertThat(productList.get(1).getCode(), is("P1"));
     assertThat(productList.get(0).getKitProductList().size(), is(1));
     assertThat(productList.get(1).getKitProductList().size(), is(0));
+
+    productMapper.deleteKitProduct(kitProduct1);
+
+    Product kit = productMapper.getByCode("KIT");
+    assertTrue(kit.getKitProductList().isEmpty());
   }
 
   @Test
