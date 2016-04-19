@@ -1348,6 +1348,9 @@ services.factory('ProductReportService', function ($resource) {
         },
         loadFacilityReport: function () {
             return $resource('/reports/all-products-report', {}, {save: {method: 'POST'}});
+        },
+        loadProductsWithStockCards: function () {
+            return $resource('/reports/products-with-stock-cards', {}, {});
         }
     };
 });

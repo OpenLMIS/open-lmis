@@ -769,4 +769,8 @@ public class ReportLookupService {
 
 //End new
 
+    public List<Product> getProductsWithStockCards() {
+        return productMapper.getAllProductsWithStockCards();
+    }
+
 }

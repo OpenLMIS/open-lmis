@@ -122,4 +122,10 @@ public interface ProductReportMapper {
     List<Product> getRmnchProducts();
 
 
+  @Select("SELECT distinct p.id, p.primaryname as name, p.code " +
+          "FROM products p " +
+          "JOIN stock_cards s " +
+          "ON s.productid = p.id " +
+          "order by p.code")
+  List<Product> getAllProductsWithStockCards();
 }

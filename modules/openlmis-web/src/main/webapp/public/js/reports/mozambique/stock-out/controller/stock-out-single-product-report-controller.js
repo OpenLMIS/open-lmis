@@ -38,8 +38,8 @@ function StockOutSingleProductReportController($scope, $filter, $q, $controller,
     });
 
     $scope.loadProducts = function () {
-        ProductReportService.loadAllProducts().get({}, function (data) {
-            $scope.products = data.products;
+        ProductReportService.loadProductsWithStockCards().get({}, function (data) {
+            $scope.products = data.productList;
             $scope.reportParams.productCode = $routeParams.code;
         });
     };
