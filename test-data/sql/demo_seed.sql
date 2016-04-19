@@ -1,5 +1,4 @@
 SET search_path = atomfeed, pg_catalog;
-
 INSERT INTO event_records (id, uuid, title, "timestamp", uri, object, category) VALUES (1, '925614f0-5860-4262-865f-e06ca7a35750', 'Requisition Status', '2016-04-08 20:22:12.504407', '', '{"requisitionId":1,"requisitionStatus":"INITIATED","emergency":false,"startDate":1438383600000,"endDate":1440975600000,"stringStartDate":"01-08-2015","stringEndDate":"31-08-2015"}', 'requisition-status');
 INSERT INTO event_records (id, uuid, title, "timestamp", uri, object, category) VALUES (2, '5cb6eca9-66fc-4b9d-a8f1-f9a1b3b841ef', 'Requisition Status', '2016-04-08 20:54:10.751362', '', '{"requisitionId":2,"requisitionStatus":"INITIATED","emergency":false,"startDate":1438383600000,"endDate":1440975600000,"stringStartDate":"01-08-2015","stringEndDate":"31-08-2015"}', 'requisition-status');
 INSERT INTO event_records (id, uuid, title, "timestamp", uri, object, category) VALUES (3, 'cf58a053-8fe4-46f0-9343-88b805e2974f', 'Program Catalog Changes', '2016-04-08 21:44:14.782565', '', '{"programCode":"art","programName":"ART"}', 'program-catalog-changes');
@@ -65,38 +64,25 @@ INSERT INTO event_records (id, uuid, title, "timestamp", uri, object, category) 
 INSERT INTO event_records (id, uuid, title, "timestamp", uri, object, category) VALUES (63, '7c988a51-c1c5-448d-8a75-99c92b6df15c', 'Requisition Status', '2016-04-16 04:55:26.73711', '', '{"requisitionId":33,"requisitionStatus":"AUTHORIZED","emergency":false,"startDate":1438383600000,"endDate":1440975600000,"stringStartDate":"01-08-2015","stringEndDate":"31-08-2015"}', 'requisition-status');
 INSERT INTO event_records (id, uuid, title, "timestamp", uri, object, category) VALUES (64, '2a52ff46-6afe-48aa-9a97-6efe025fc0d6', 'Requisition Status', '2016-04-16 04:55:42.099193', '', '{"requisitionId":33,"requisitionStatus":"APPROVED","emergency":false,"startDate":1438383600000,"endDate":1440975600000,"stringStartDate":"01-08-2015","stringEndDate":"31-08-2015"}', 'requisition-status');
 INSERT INTO event_records (id, uuid, title, "timestamp", uri, object, category) VALUES (65, '0414066e-4ff0-4941-9e1e-2fff6c518f7e', 'Requisition Status', '2016-04-16 04:56:49.930974', '', '{"requisitionId":34,"requisitionStatus":"INITIATED","emergency":false,"startDate":1441062000000,"endDate":1443567600000,"stringStartDate":"01-09-2015","stringEndDate":"30-09-2015"}', 'requisition-status');
-
-
-
-SELECT pg_catalog.setval('event_records_id_seq', 65, true);
-
-
+INSERT INTO event_records (id, uuid, title, "timestamp", uri, object, category) VALUES (66, '30932d11-1db8-4056-a76a-589ff8bf1b75', 'Requisition Status', '2016-04-19 20:47:07.787138', '', '{"requisitionId":35,"requisitionStatus":"INITIATED","emergency":false,"startDate":1443654000000,"endDate":1446249600000,"stringStartDate":"01-10-2015","stringEndDate":"31-10-2015"}', 'requisition-status');
+INSERT INTO event_records (id, uuid, title, "timestamp", uri, object, category) VALUES (67, '38dc8461-9e95-44cd-91da-8ab87f0e8fe7', 'Requisition Status', '2016-04-19 20:47:20.806855', '', '{"requisitionId":36,"requisitionStatus":"INITIATED","emergency":false,"startDate":1441062000000,"endDate":1443567600000,"stringStartDate":"01-09-2015","stringEndDate":"30-09-2015"}', 'requisition-status');
+INSERT INTO event_records (id, uuid, title, "timestamp", uri, object, category) VALUES (68, 'ca1ff9b7-0648-4b55-b5bf-83db33a6609b', 'Requisition Status', '2016-04-19 20:47:30.652937', '', '{"requisitionId":37,"requisitionStatus":"INITIATED","emergency":false,"startDate":1441062000000,"endDate":1443567600000,"stringStartDate":"01-09-2015","stringEndDate":"30-09-2015"}', 'requisition-status');
+INSERT INTO event_records (id, uuid, title, "timestamp", uri, object, category) VALUES (69, 'a3dd1398-d502-4795-834a-5f933dea5490', 'Requisition Status', '2016-04-19 20:49:43.93798', '', '{"requisitionId":27,"requisitionStatus":"AUTHORIZED","emergency":false,"startDate":1438383600000,"endDate":1440975600000,"stringStartDate":"01-08-2015","stringEndDate":"31-08-2015"}', 'requisition-status');
+INSERT INTO event_records (id, uuid, title, "timestamp", uri, object, category) VALUES (70, '83de4763-f1d3-4630-83a3-aab26e236966', 'Requisition Status', '2016-04-19 20:50:05.65571', '', '{"requisitionId":38,"requisitionStatus":"INITIATED","emergency":false,"startDate":1441062000000,"endDate":1443567600000,"stringStartDate":"01-09-2015","stringEndDate":"30-09-2015"}', 'requisition-status');
+SELECT pg_catalog.setval('event_records_id_seq', 70, true);
 SET search_path = public, pg_catalog;
-
 INSERT INTO delivery_zones (id, code, name, description, createdby, createddate, modifiedby, modifieddate) VALUES (1, 'dz-east', 'East', 'Delivery Zone East for Informed Push', 1, '2016-02-05 11:16:28.508', 1, '2016-02-05 11:16:28.495');
 INSERT INTO delivery_zones (id, code, name, description, createdby, createddate, modifiedby, modifieddate) VALUES (2, 'dz-west', 'West', 'Delivery Zone West for Informed Push', 1, '2016-02-05 11:16:28.508', 1, '2016-02-05 11:16:28.495');
-
-
-
 INSERT INTO facility_operators (id, code, text, displayorder, createddate, createdby, modifiedby, modifieddate) VALUES (1, 'moh', 'Ministry of Health', 1, '2016-02-05 11:13:36.355', 1, 1, '2016-02-05 03:13:36.355-08');
-
-
-
 INSERT INTO facility_types (id, code, name, description, levelid, nominalmaxmonth, nominaleop, displayorder, active, createddate, createdby, modifiedby, modifieddate) VALUES (1, 'health_center', 'Health Centre', NULL, NULL, 3, 1.00, 6, true, '2016-02-05 11:13:30.945', 1, 1, '2016-02-05 03:13:30.945-08');
 INSERT INTO facility_types (id, code, name, description, levelid, nominalmaxmonth, nominaleop, displayorder, active, createddate, createdby, modifiedby, modifieddate) VALUES (2, 'dist_hosp', 'District Hospital', NULL, NULL, 3, 1.00, 5, true, '2016-02-05 11:13:30.945', 1, 1, '2016-02-05 03:13:30.945-08');
 INSERT INTO facility_types (id, code, name, description, levelid, nominalmaxmonth, nominaleop, displayorder, active, createddate, createdby, modifiedby, modifieddate) VALUES (3, 'disp', 'Dispensary', NULL, NULL, 3, 1.00, 4, true, '2016-02-05 11:13:30.945', 1, 1, '2016-02-05 03:13:30.945-08');
 INSERT INTO facility_types (id, code, name, description, levelid, nominalmaxmonth, nominaleop, displayorder, active, createddate, createdby, modifiedby, modifieddate) VALUES (4, 'comm_clinic', 'Community Clinic', NULL, NULL, 3, 1.00, 3, true, '2016-02-05 11:13:30.945', 1, 1, '2016-02-05 03:13:30.945-08');
 INSERT INTO facility_types (id, code, name, description, levelid, nominalmaxmonth, nominaleop, displayorder, active, createddate, createdby, modifiedby, modifieddate) VALUES (5, 'reg_hosp', 'Regional Hospital', NULL, NULL, 3, 1.00, 2, true, '2016-02-05 11:13:30.945', 1, 1, '2016-02-05 03:13:30.945-08');
 INSERT INTO facility_types (id, code, name, description, levelid, nominalmaxmonth, nominaleop, displayorder, active, createddate, createdby, modifiedby, modifieddate) VALUES (6, 'warehouse', 'Warehouse', NULL, NULL, 3, 1.00, 1, true, '2016-02-05 11:13:30.945', 1, 1, '2016-02-05 03:13:30.945-08');
-
-
-
 INSERT INTO geographic_levels (id, code, name, levelnumber, createddate, createdby, modifiedby, modifieddate) VALUES (1, 'country', 'Country', 1, '2016-02-05 11:13:19.835', 1, 1, '2016-02-05 03:13:19.835-08');
 INSERT INTO geographic_levels (id, code, name, levelnumber, createddate, createdby, modifiedby, modifieddate) VALUES (2, 'province', 'Province', 2, '2016-02-05 11:13:19.835', 1, 1, '2016-02-05 03:13:19.835-08');
 INSERT INTO geographic_levels (id, code, name, levelnumber, createddate, createdby, modifiedby, modifieddate) VALUES (3, 'region', 'Region', 3, '2016-02-05 11:13:19.835', 1, 1, '2016-02-05 03:13:19.835-08');
-
-
-
 INSERT INTO geographic_zones (id, code, name, levelid, parentid, catchmentpopulation, latitude, longitude, createdby, createddate, modifiedby, modifieddate) VALUES (1, 'canada', 'Canada', 1, NULL, 34880000, NULL, NULL, 1, '2016-02-05 11:13:25.161', 1, '2016-02-05 11:13:25.146');
 INSERT INTO geographic_zones (id, code, name, levelid, parentid, catchmentpopulation, latitude, longitude, createdby, createddate, modifiedby, modifieddate) VALUES (2, 'manitoba', 'Manitoba', 2, 1, 1272000, NULL, NULL, 1, '2016-02-05 11:13:25.161', 1, '2016-02-05 11:13:25.146');
 INSERT INTO geographic_zones (id, code, name, levelid, parentid, catchmentpopulation, latitude, longitude, createdby, createddate, modifiedby, modifieddate) VALUES (3, 'centralplains', 'Central Plains', 3, 2, 48289, NULL, NULL, 1, '2016-02-05 11:13:25.161', 1, '2016-02-05 11:13:25.146');
@@ -107,9 +93,6 @@ INSERT INTO geographic_zones (id, code, name, levelid, parentid, catchmentpopula
 INSERT INTO geographic_zones (id, code, name, levelid, parentid, catchmentpopulation, latitude, longitude, createdby, createddate, modifiedby, modifieddate) VALUES (8, 'pembinavalley', 'Pembina Valley', 3, 2, 52126, NULL, NULL, 1, '2016-02-05 11:13:25.161', 1, '2016-02-05 11:13:25.146');
 INSERT INTO geographic_zones (id, code, name, levelid, parentid, catchmentpopulation, latitude, longitude, createdby, createddate, modifiedby, modifieddate) VALUES (9, 'westman', 'Westman', 3, 2, 108868, NULL, NULL, 1, '2016-02-05 11:13:25.161', 1, '2016-02-05 11:13:25.146');
 INSERT INTO geographic_zones (id, code, name, levelid, parentid, catchmentpopulation, latitude, longitude, createdby, createddate, modifiedby, modifieddate) VALUES (10, 'winnipegcr', 'Winnipeg Capital Region', 3, 2, 767380, NULL, NULL, 1, '2016-02-05 11:13:25.161', 1, '2016-02-05 11:13:25.146');
-
-
-
 INSERT INTO facilities (id, code, name, description, gln, mainphone, fax, address1, address2, geographiczoneid, typeid, catchmentpopulation, latitude, longitude, altitude, operatedbyid, coldstoragegrosscapacity, coldstoragenetcapacity, suppliesothers, sdp, online, satellite, parentfacilityid, haselectricity, haselectronicscc, haselectronicdar, active, golivedate, godowndate, comment, enabled, virtualfacility, createdby, createddate, modifiedby, modifieddate, pricescheduleid) VALUES (1, 'F10010', 'Stonewall Health Center', NULL, NULL, NULL, NULL, NULL, NULL, 5, 1, 24000, NULL, NULL, NULL, NULL, NULL, NULL, false, true, NULL, NULL, NULL, NULL, NULL, NULL, true, '2003-01-01', NULL, NULL, true, false, 1, '2016-02-05 11:13:41.555', 4, '2016-04-08 21:43:57.497', NULL);
 INSERT INTO facilities (id, code, name, description, gln, mainphone, fax, address1, address2, geographiczoneid, typeid, catchmentpopulation, latitude, longitude, altitude, operatedbyid, coldstoragegrosscapacity, coldstoragenetcapacity, suppliesothers, sdp, online, satellite, parentfacilityid, haselectricity, haselectronicscc, haselectronicdar, active, golivedate, godowndate, comment, enabled, virtualfacility, createdby, createddate, modifiedby, modifieddate, pricescheduleid) VALUES (2, 'F10050', 'Teuton Health Center', NULL, NULL, NULL, NULL, NULL, NULL, 5, 1, 20000, NULL, NULL, NULL, NULL, NULL, NULL, false, true, NULL, NULL, NULL, NULL, NULL, NULL, true, '2003-01-01', NULL, NULL, true, false, 1, '2016-02-05 11:13:41.555', 4, '2016-04-08 21:43:57.497', NULL);
 INSERT INTO facilities (id, code, name, description, gln, mainphone, fax, address1, address2, geographiczoneid, typeid, catchmentpopulation, latitude, longitude, altitude, operatedbyid, coldstoragegrosscapacity, coldstoragenetcapacity, suppliesothers, sdp, online, satellite, parentfacilityid, haselectricity, haselectronicscc, haselectronicdar, active, golivedate, godowndate, comment, enabled, virtualfacility, createdby, createddate, modifiedby, modifieddate, pricescheduleid) VALUES (3, 'F3020A', 'Steinbach Hospital', NULL, NULL, NULL, NULL, NULL, NULL, 4, 2, 50000, NULL, NULL, NULL, NULL, NULL, NULL, true, true, NULL, NULL, NULL, NULL, NULL, NULL, true, '2003-01-01', NULL, NULL, true, false, 1, '2016-02-05 11:13:41.555', 4, '2016-04-08 21:43:57.497', NULL);
@@ -118,69 +101,44 @@ INSERT INTO facilities (id, code, name, description, gln, mainphone, fax, addres
 INSERT INTO facilities (id, code, name, description, gln, mainphone, fax, address1, address2, geographiczoneid, typeid, catchmentpopulation, latitude, longitude, altitude, operatedbyid, coldstoragegrosscapacity, coldstoragenetcapacity, suppliesothers, sdp, online, satellite, parentfacilityid, haselectricity, haselectronicscc, haselectronicdar, active, golivedate, godowndate, comment, enabled, virtualfacility, createdby, createddate, modifiedby, modifieddate, pricescheduleid) VALUES (7, 'F505', 'Winnipeg Provincial Hospital', NULL, NULL, NULL, NULL, NULL, NULL, 10, 5, 1000000, NULL, NULL, NULL, NULL, NULL, NULL, false, true, NULL, NULL, NULL, NULL, NULL, NULL, true, '2003-01-01', NULL, NULL, true, false, 1, '2016-02-05 11:13:41.555', 4, '2016-04-08 21:43:57.497', NULL);
 INSERT INTO facilities (id, code, name, description, gln, mainphone, fax, address1, address2, geographiczoneid, typeid, catchmentpopulation, latitude, longitude, altitude, operatedbyid, coldstoragegrosscapacity, coldstoragenetcapacity, suppliesothers, sdp, online, satellite, parentfacilityid, haselectricity, haselectronicscc, haselectronicdar, active, golivedate, godowndate, comment, enabled, virtualfacility, createdby, createddate, modifiedby, modifieddate, pricescheduleid) VALUES (8, 'F09', 'Manitoba Warehouse', NULL, NULL, NULL, NULL, NULL, NULL, 10, 6, 1000000, NULL, NULL, NULL, NULL, NULL, NULL, true, false, NULL, NULL, NULL, NULL, NULL, NULL, true, '2003-01-01', NULL, NULL, true, false, 1, '2016-02-05 11:13:41.555', 4, '2016-04-08 21:43:57.497', NULL);
 INSERT INTO facilities (id, code, name, description, gln, mainphone, fax, address1, address2, geographiczoneid, typeid, catchmentpopulation, latitude, longitude, altitude, operatedbyid, coldstoragegrosscapacity, coldstoragenetcapacity, suppliesothers, sdp, online, satellite, parentfacilityid, haselectricity, haselectronicscc, haselectronicdar, active, golivedate, godowndate, comment, enabled, virtualfacility, createdby, createddate, modifiedby, modifieddate, pricescheduleid) VALUES (5, 'F3060B', 'Morris Dispensary', NULL, NULL, NULL, NULL, NULL, NULL, 8, 3, 2000, NULL, NULL, NULL, NULL, NULL, NULL, false, true, false, NULL, NULL, false, false, false, true, '2003-01-01', '2018-04-11', NULL, true, false, 1, '2016-02-05 11:13:41.555', 4, '2016-04-12 23:39:16.477224', NULL);
-
-
-
 INSERT INTO processing_schedules (id, code, name, description, createdby, createddate, modifiedby, modifieddate) VALUES (1, 'm', 'Monthly', 'Monthly Schedule', NULL, '2016-02-05 11:16:00.123', NULL, '2016-02-05 11:16:00.123');
 INSERT INTO processing_schedules (id, code, name, description, createdby, createddate, modifiedby, modifieddate) VALUES (2, 'q', 'Quarterly', 'Quarterly Schedule', NULL, '2016-02-05 11:16:00.123', NULL, '2016-02-05 11:16:00.123');
-
-
-
-INSERT INTO processing_periods (id, scheduleid, name, description, startdate, enddate, numberofmonths, createdby, createddate, modifiedby, modifieddate) VALUES (1, 2, 'August2015-October2015', NULL, '2015-08-01 00:00:00', '2015-10-31 00:00:00', 3, NULL, '2016-02-05 11:17:29.908', NULL, '2016-02-05 11:17:29.908');
-INSERT INTO processing_periods (id, scheduleid, name, description, startdate, enddate, numberofmonths, createdby, createddate, modifiedby, modifieddate) VALUES (2, 2, 'November2015-January2016', NULL, '2015-11-01 00:00:00', '2016-01-31 00:00:00', 3, NULL, '2016-02-05 11:17:29.908', NULL, '2016-02-05 11:17:29.908');
-INSERT INTO processing_periods (id, scheduleid, name, description, startdate, enddate, numberofmonths, createdby, createddate, modifiedby, modifieddate) VALUES (3, 2, 'February2016-April2016', NULL, '2016-02-01 00:00:00', '2016-04-30 00:00:00', 3, NULL, '2016-02-05 11:17:29.908', NULL, '2016-02-05 11:17:29.908');
-INSERT INTO processing_periods (id, scheduleid, name, description, startdate, enddate, numberofmonths, createdby, createddate, modifiedby, modifieddate) VALUES (4, 2, 'May2016-July2016', NULL, '2016-05-01 00:00:00', '2016-07-31 00:00:00', 3, NULL, '2016-02-05 11:17:29.908', NULL, '2016-02-05 11:17:29.908');
-INSERT INTO processing_periods (id, scheduleid, name, description, startdate, enddate, numberofmonths, createdby, createddate, modifiedby, modifieddate) VALUES (5, 1, 'August2015', NULL, '2015-08-01 00:00:00', '2015-08-31 00:00:00', 1, NULL, '2016-02-05 11:17:29.898', NULL, '2016-02-05 11:17:29.898');
-INSERT INTO processing_periods (id, scheduleid, name, description, startdate, enddate, numberofmonths, createdby, createddate, modifiedby, modifieddate) VALUES (6, 1, 'September2015', NULL, '2015-09-01 00:00:00', '2015-09-30 00:00:00', 1, NULL, '2016-02-05 11:17:29.898', NULL, '2016-02-05 11:17:29.898');
-INSERT INTO processing_periods (id, scheduleid, name, description, startdate, enddate, numberofmonths, createdby, createddate, modifiedby, modifieddate) VALUES (7, 1, 'October2015', NULL, '2015-10-01 00:00:00', '2015-10-31 00:00:00', 1, NULL, '2016-02-05 11:17:29.898', NULL, '2016-02-05 11:17:29.898');
-INSERT INTO processing_periods (id, scheduleid, name, description, startdate, enddate, numberofmonths, createdby, createddate, modifiedby, modifieddate) VALUES (8, 1, 'November2015', NULL, '2015-11-01 00:00:00', '2015-11-30 00:00:00', 1, NULL, '2016-02-05 11:17:29.898', NULL, '2016-02-05 11:17:29.898');
-INSERT INTO processing_periods (id, scheduleid, name, description, startdate, enddate, numberofmonths, createdby, createddate, modifiedby, modifieddate) VALUES (9, 1, 'December2015', NULL, '2015-12-01 00:00:00', '2015-12-31 00:00:00', 1, NULL, '2016-02-05 11:17:29.898', NULL, '2016-02-05 11:17:29.898');
-INSERT INTO processing_periods (id, scheduleid, name, description, startdate, enddate, numberofmonths, createdby, createddate, modifiedby, modifieddate) VALUES (10, 1, 'January2016', NULL, '2016-01-01 00:00:00', '2016-01-31 00:00:00', 1, NULL, '2016-02-05 11:17:29.898', NULL, '2016-02-05 11:17:29.898');
-INSERT INTO processing_periods (id, scheduleid, name, description, startdate, enddate, numberofmonths, createdby, createddate, modifiedby, modifieddate) VALUES (11, 1, 'February2016', NULL, '2016-02-01 00:00:00', '2016-02-29 00:00:00', 1, NULL, '2016-02-05 11:17:29.898', NULL, '2016-02-05 11:17:29.898');
-INSERT INTO processing_periods (id, scheduleid, name, description, startdate, enddate, numberofmonths, createdby, createddate, modifiedby, modifieddate) VALUES (12, 1, 'March2016', NULL, '2016-03-01 00:00:00', '2016-03-31 00:00:00', 1, NULL, '2016-02-05 11:17:29.898', NULL, '2016-02-05 11:17:29.898');
-INSERT INTO processing_periods (id, scheduleid, name, description, startdate, enddate, numberofmonths, createdby, createddate, modifiedby, modifieddate) VALUES (13, 1, 'April2016', NULL, '2016-04-01 00:00:00', '2016-04-30 00:00:00', 1, NULL, '2016-02-05 11:17:29.898', NULL, '2016-02-05 11:17:29.898');
-INSERT INTO processing_periods (id, scheduleid, name, description, startdate, enddate, numberofmonths, createdby, createddate, modifiedby, modifieddate) VALUES (14, 1, 'May2016', NULL, '2016-05-01 00:00:00', '2016-05-31 00:00:00', 1, NULL, '2016-02-05 11:17:29.898', NULL, '2016-02-05 11:17:29.898');
-INSERT INTO processing_periods (id, scheduleid, name, description, startdate, enddate, numberofmonths, createdby, createddate, modifiedby, modifieddate) VALUES (15, 1, 'June2016', NULL, '2016-06-01 00:00:00', '2016-06-30 00:00:00', 1, NULL, '2016-02-05 11:17:29.898', NULL, '2016-02-05 11:17:29.898');
+INSERT INTO processing_periods(id, scheduleid, name, startdate, enddate, numberofmonths)
+  SELECT row_number() OVER ()
+    , (SELECT id FROM processing_schedules WHERE code = 'q') AS scheduleid
+    , to_char(now() + interval '3 months' * a, 'FMMonthYYYY') || '-' || to_char(now() + (interval '3 months' * (a + 1)) - interval '1 month', 'FMMonthYYYY') AS name
+    , date_trunc('month', now() + interval '3 months' * a) AS startdate
+    , date_trunc('month', now() + interval '3 months' * (a + 1)) - interval '1 day' AS enddate
+    , 3 AS numberofmonths
+  FROM generate_series(-2,1) AS s(a)
+;
+INSERT INTO processing_periods(id, scheduleid, name, startdate, enddate, numberofmonths)
+  SELECT row_number() OVER () + 4
+    , (SELECT id FROM processing_schedules WHERE code = 'm') AS scheduleid
+    , to_char(now() + interval '1 month' * a, 'FMMonthYYYY') AS name
+    , date_trunc('month', now() + interval '1 month' * a) AS startdate
+    , date_trunc('month', now() + interval '1 month' * (a + 1)) - interval '1 day' AS enddate
+    , 1 AS numberofmonths
+  FROM generate_series(-6,5) AS s(a)
+;
 INSERT INTO processing_periods (id, scheduleid, name, description, startdate, enddate, numberofmonths, createdby, createddate, modifiedby, modifieddate) VALUES (17, 2, 'exp', NULL, '2016-08-01 00:00:00', '2016-09-14 23:59:59', 2, 4, '2016-04-13 00:11:19.452706', 4, '2016-04-13 00:11:19.452706');
 INSERT INTO processing_periods (id, scheduleid, name, description, startdate, enddate, numberofmonths, createdby, createddate, modifiedby, modifieddate) VALUES (18, 2, 'exp2', NULL, '2016-09-15 00:00:00', '2017-11-04 23:59:59', 14, 4, '2016-04-13 00:11:59.181207', 4, '2016-04-13 00:11:59.181207');
-
-
-
 INSERT INTO programs (id, code, name, description, active, templateconfigured, regimentemplateconfigured, budgetingapplies, usesdar, push, sendfeed, createdby, createddate, modifiedby, modifieddate, isequipmentconfigured, hideskippedproducts, shownonfullsupplytab, enableskipperiod, enableivdform, usepriceschedule) VALUES (4, 'epi', 'EPI', 'Routine Immunizations', true, NULL, NULL, false, NULL, true, false, NULL, '2016-02-05 11:12:59.118', NULL, '2016-02-05 11:12:59.118', false, false, true, false, false, false);
 INSERT INTO programs (id, code, name, description, active, templateconfigured, regimentemplateconfigured, budgetingapplies, usesdar, push, sendfeed, createdby, createddate, modifiedby, modifieddate, isequipmentconfigured, hideskippedproducts, shownonfullsupplytab, enableskipperiod, enableivdform, usepriceschedule) VALUES (1, 'art', 'ART', 'Anti-Retroviral Therapy', true, true, NULL, true, NULL, false, false, NULL, '2016-02-05 11:12:59.118', NULL, '2016-02-05 11:12:59.118', false, false, true, false, false, false);
 INSERT INTO programs (id, code, name, description, active, templateconfigured, regimentemplateconfigured, budgetingapplies, usesdar, push, sendfeed, createdby, createddate, modifiedby, modifieddate, isequipmentconfigured, hideskippedproducts, shownonfullsupplytab, enableskipperiod, enableivdform, usepriceschedule) VALUES (2, 'em', 'Essential Medicines', 'Primary Care – Essential Medications', true, true, NULL, false, NULL, false, false, NULL, '2016-02-05 11:12:59.118', NULL, '2016-02-05 11:12:59.118', false, false, true, false, false, false);
 INSERT INTO programs (id, code, name, description, active, templateconfigured, regimentemplateconfigured, budgetingapplies, usesdar, push, sendfeed, createdby, createddate, modifiedby, modifieddate, isequipmentconfigured, hideskippedproducts, shownonfullsupplytab, enableskipperiod, enableivdform, usepriceschedule) VALUES (3, 'malaria', 'Malaria', 'Malaria Testing and Treatment', true, true, NULL, false, NULL, false, false, NULL, '2016-02-05 11:12:59.118', NULL, '2016-02-05 11:12:59.118', false, false, true, false, false, false);
 INSERT INTO programs (id, code, name, description, active, templateconfigured, regimentemplateconfigured, budgetingapplies, usesdar, push, sendfeed, createdby, createddate, modifiedby, modifieddate, isequipmentconfigured, hideskippedproducts, shownonfullsupplytab, enableskipperiod, enableivdform, usepriceschedule) VALUES (5, 'fp', 'Family Planning', 'Family Planning', true, true, NULL, true, NULL, false, false, NULL, '2016-04-15 20:17:55.572843', NULL, '2016-04-15 20:17:55.572843', false, false, true, false, false, false);
-
-
-
 INSERT INTO users (id, username, password, firstname, lastname, employeeid, restrictlogin, jobtitle, primarynotificationmethod, officephone, cellphone, email, supervisorid, facilityid, verified, active, createdby, createddate, modifiedby, modifieddate, ismobileuser) VALUES (2, 'superuser', 'Agismyf1Whs0fxr1FFfK8cs3qisVJ1qMs3yuMLDTeEcZEGzstjiswaaUsQNQTIKk1U5JRzrDbPLCzCO1isvB5YGaEQieie', 'Super', 'User', NULL, false, NULL, NULL, NULL, NULL, 'superuser@openlmis.com', NULL, 3, true, true, NULL, '2016-02-05 11:22:43.246', NULL, '2016-02-05 11:22:43.246', false);
 INSERT INTO users (id, username, password, firstname, lastname, employeeid, restrictlogin, jobtitle, primarynotificationmethod, officephone, cellphone, email, supervisorid, facilityid, verified, active, createdby, createddate, modifiedby, modifieddate, ismobileuser) VALUES (3, 'superadmin', 'TQskzK3iiLfbRVHeM1muvBCiiKriibfl6lh8ipo91hb74G3OvsybvkzpPI4S3KIeWTXAiiwlUU0iiSxWii4wSuS8mokSAieie', 'Super', 'Admin', NULL, false, NULL, NULL, NULL, NULL, 'superadmin@openlmis.com', NULL, NULL, true, true, NULL, '2016-02-05 11:22:43.25', NULL, '2016-02-05 11:22:43.25', false);
-INSERT INTO users (id, username, password, firstname, lastname, employeeid, restrictlogin, jobtitle, primarynotificationmethod, officephone, cellphone, email, supervisorid, facilityid, verified, active, createdby, createddate, modifiedby, modifieddate, ismobileuser) VALUES (1, 'Admin123', 'TQskzK3iiLfbRVHeM1muvBCiiKriibfl6lh8ipo91hb74G3OvsybvkzpPI4S3KIeWTXAiiwlUU0iiSxWii4wSuS8mokSAieie', 'John', 'Doe', NULL, false, NULL, NULL, NULL, NULL, 'John_Doe@openlmis.com', NULL, NULL, true, true, NULL, '2016-02-03 14:37:33.439729', 4, '2016-04-13 00:25:46.384938', false);
 INSERT INTO users (id, username, password, firstname, lastname, employeeid, restrictlogin, jobtitle, primarynotificationmethod, officephone, cellphone, email, supervisorid, facilityid, verified, active, createdby, createddate, modifiedby, modifieddate, ismobileuser) VALUES (4, 'devadmin', 'TQskzK3iiLfbRVHeM1muvBCiiKriibfl6lh8ipo91hb74G3OvsybvkzpPI4S3KIeWTXAiiwlUU0iiSxWii4wSuS8mokSAieie', 'Dev', 'Admin', NULL, false, NULL, NULL, NULL, NULL, 'devadmin@openlmis.com', NULL, 3, true, true, NULL, '2016-02-05 11:22:43.25', 4, '2016-04-16 04:54:14.758418', false);
-
-
-
 INSERT INTO distributions (id, deliveryzoneid, programid, periodid, status, createdby, createddate, modifiedby, modifieddate) VALUES (1, 1, 4, 5, 'INITIATED', 4, '2016-04-14 18:32:54.609314', 4, '2016-04-14 18:32:54.609314');
-
-
-
 INSERT INTO facility_visits (id, distributionid, facilityid, confirmedbyname, confirmedbytitle, verifiedbyname, verifiedbytitle, observations, createdby, createddate, synced, modifieddate, modifiedby, visited, visitdate, vehicleid, facilitycatchmentpopulation, reasonfornotvisiting, otherreasondescription) VALUES (1, 1, 1, NULL, NULL, NULL, NULL, NULL, 4, '2016-04-14 18:32:54.609314', false, '2016-04-14 18:32:54.609314', 4, NULL, NULL, NULL, 24000, NULL, NULL);
 INSERT INTO facility_visits (id, distributionid, facilityid, confirmedbyname, confirmedbytitle, verifiedbyname, verifiedbytitle, observations, createdby, createddate, synced, modifieddate, modifiedby, visited, visitdate, vehicleid, facilitycatchmentpopulation, reasonfornotvisiting, otherreasondescription) VALUES (2, 1, 2, NULL, NULL, NULL, NULL, NULL, 4, '2016-04-14 18:32:54.609314', false, '2016-04-14 18:32:54.609314', 4, NULL, NULL, NULL, 20000, NULL, NULL);
 INSERT INTO facility_visits (id, distributionid, facilityid, confirmedbyname, confirmedbytitle, verifiedbyname, verifiedbytitle, observations, createdby, createddate, synced, modifieddate, modifiedby, visited, visitdate, vehicleid, facilitycatchmentpopulation, reasonfornotvisiting, otherreasondescription) VALUES (3, 1, 7, NULL, NULL, NULL, NULL, NULL, 4, '2016-04-14 18:32:54.609314', false, '2016-04-14 18:32:54.609314', 4, NULL, NULL, NULL, 1000000, NULL, NULL);
-
-
-
 INSERT INTO adult_coverage_opened_vial_line_items (id, facilityvisitid, productvialname, openedvials, packsize, createdby, createddate, modifiedby, modifieddate) VALUES (1, 1, 'Tetanus', NULL, 10, 4, '2016-04-14 18:32:54.609314', 4, '2016-04-14 18:32:54.609314');
 INSERT INTO adult_coverage_opened_vial_line_items (id, facilityvisitid, productvialname, openedvials, packsize, createdby, createddate, modifiedby, modifieddate) VALUES (2, 2, 'Tetanus', NULL, 10, 4, '2016-04-14 18:32:54.609314', 4, '2016-04-14 18:32:54.609314');
 INSERT INTO adult_coverage_opened_vial_line_items (id, facilityvisitid, productvialname, openedvials, packsize, createdby, createddate, modifiedby, modifieddate) VALUES (3, 3, 'Tetanus', NULL, 10, 4, '2016-04-14 18:32:54.609314', 4, '2016-04-14 18:32:54.609314');
-
-
-
 SELECT pg_catalog.setval('adult_coverage_opened_vial_line_items_id_seq', 3, true);
-
-
-
 INSERT INTO child_coverage_opened_vial_line_items (id, facilityvisitid, productvialname, openedvials, packsize, createdby, createddate, modifiedby, modifieddate) VALUES (1, 1, 'BCG', NULL, 20, 4, '2016-04-14 18:32:54.609314', 4, '2016-04-14 18:32:54.609314');
 INSERT INTO child_coverage_opened_vial_line_items (id, facilityvisitid, productvialname, openedvials, packsize, createdby, createddate, modifiedby, modifieddate) VALUES (2, 1, 'Polio10', NULL, 10, 4, '2016-04-14 18:32:54.609314', 4, '2016-04-14 18:32:54.609314');
 INSERT INTO child_coverage_opened_vial_line_items (id, facilityvisitid, productvialname, openedvials, packsize, createdby, createddate, modifiedby, modifieddate) VALUES (3, 1, 'Polio20', NULL, 20, 4, '2016-04-14 18:32:54.609314', 4, '2016-04-14 18:32:54.609314');
@@ -202,32 +160,19 @@ INSERT INTO child_coverage_opened_vial_line_items (id, facilityvisitid, productv
 INSERT INTO child_coverage_opened_vial_line_items (id, facilityvisitid, productvialname, openedvials, packsize, createdby, createddate, modifiedby, modifieddate) VALUES (19, 3, 'Penta10', NULL, 10, 4, '2016-04-14 18:32:54.609314', 4, '2016-04-14 18:32:54.609314');
 INSERT INTO child_coverage_opened_vial_line_items (id, facilityvisitid, productvialname, openedvials, packsize, createdby, createddate, modifiedby, modifieddate) VALUES (20, 3, 'PCV', NULL, 2, 4, '2016-04-14 18:32:54.609314', 4, '2016-04-14 18:32:54.609314');
 INSERT INTO child_coverage_opened_vial_line_items (id, facilityvisitid, productvialname, openedvials, packsize, createdby, createddate, modifiedby, modifieddate) VALUES (21, 3, 'Measles', NULL, 10, 4, '2016-04-14 18:32:54.609314', 4, '2016-04-14 18:32:54.609314');
-
-
-
 INSERT INTO supervisory_nodes (id, parentid, facilityid, name, code, description, createdby, createddate, modifiedby, modifieddate) VALUES (1, NULL, 7, 'South Central Medical Services', 'SN80', NULL, 1, '2016-02-05 11:14:09.928', 1, '2016-02-05 11:14:09.914');
 INSERT INTO supervisory_nodes (id, parentid, facilityid, name, code, description, createdby, createddate, modifiedby, modifieddate) VALUES (2, 1, 3, 'Winkler District Office', 'SN97', NULL, 1, '2016-02-05 11:14:09.928', 1, '2016-02-05 11:14:09.914');
 INSERT INTO supervisory_nodes (id, parentid, facilityid, name, code, description, createdby, createddate, modifiedby, modifieddate) VALUES (3, NULL, 3, 'Malaria program supervision', 'SN65', NULL, 1, '2016-02-05 11:14:09.928', 1, '2016-02-05 11:14:09.914');
-
-
-
+INSERT INTO requisitions (id, facilityid, programid, periodid, status, emergency, fullsupplyitemssubmittedcost, nonfullsupplyitemssubmittedcost, supervisorynodeid, createdby, createddate, modifiedby, modifieddate, allocatedbudget, clientsubmittedtime, clientsubmittednotes) VALUES (27, 3, 3, 5, 'AUTHORIZED', false, 0.00, 0.00, 1, 4, '2016-04-13 19:55:21.991611', 4, '2016-04-19 20:49:43.888205', NULL, NULL, NULL);
 INSERT INTO requisitions (id, facilityid, programid, periodid, status, emergency, fullsupplyitemssubmittedcost, nonfullsupplyitemssubmittedcost, supervisorynodeid, createdby, createddate, modifiedby, modifieddate, allocatedbudget, clientsubmittedtime, clientsubmittednotes) VALUES (17, 3, 1, 13, 'INITIATED', true, NULL, NULL, NULL, 4, '2016-04-12 20:04:41.261447', 4, '2016-04-12 20:04:41.261447', NULL, NULL, NULL);
 INSERT INTO requisitions (id, facilityid, programid, periodid, status, emergency, fullsupplyitemssubmittedcost, nonfullsupplyitemssubmittedcost, supervisorynodeid, createdby, createddate, modifiedby, modifieddate, allocatedbudget, clientsubmittedtime, clientsubmittednotes) VALUES (13, 3, 1, 5, 'RELEASED', false, 61.30, 0.00, 3, 4, '2016-04-12 18:36:01.691313', 2, '2016-04-13 00:36:02.253804', NULL, NULL, NULL);
 INSERT INTO requisitions (id, facilityid, programid, periodid, status, emergency, fullsupplyitemssubmittedcost, nonfullsupplyitemssubmittedcost, supervisorynodeid, createdby, createddate, modifiedby, modifieddate, allocatedbudget, clientsubmittedtime, clientsubmittednotes) VALUES (23, 3, 1, 6, 'APPROVED', false, 1684.90, 0.00, 3, 4, '2016-04-13 19:33:25.394895', 4, '2016-04-13 19:46:55.486299', NULL, NULL, NULL);
 INSERT INTO requisitions (id, facilityid, programid, periodid, status, emergency, fullsupplyitemssubmittedcost, nonfullsupplyitemssubmittedcost, supervisorynodeid, createdby, createddate, modifiedby, modifieddate, allocatedbudget, clientsubmittedtime, clientsubmittednotes) VALUES (28, 3, 2, 5, 'AUTHORIZED', false, 1312.00, 0.00, 1, 4, '2016-04-14 18:27:37.095319', 4, '2016-04-14 18:29:19.135643', NULL, NULL, NULL);
-INSERT INTO requisitions (id, facilityid, programid, periodid, status, emergency, fullsupplyitemssubmittedcost, nonfullsupplyitemssubmittedcost, supervisorynodeid, createdby, createddate, modifiedby, modifieddate, allocatedbudget, clientsubmittedtime, clientsubmittednotes) VALUES (29, 3, 2, 6, 'INITIATED', false, 0.00, 0.00, NULL, 4, '2016-04-14 18:29:29.726812', 4, '2016-04-14 20:06:01.980503', NULL, NULL, NULL);
-INSERT INTO requisitions (id, facilityid, programid, periodid, status, emergency, fullsupplyitemssubmittedcost, nonfullsupplyitemssubmittedcost, supervisorynodeid, createdby, createddate, modifiedby, modifieddate, allocatedbudget, clientsubmittedtime, clientsubmittednotes) VALUES (27, 3, 3, 5, 'SUBMITTED', false, 0.00, 0.00, NULL, 4, '2016-04-13 19:55:21.991611', 4, '2016-04-15 17:54:49.279497', NULL, NULL, NULL);
 INSERT INTO requisitions (id, facilityid, programid, periodid, status, emergency, fullsupplyitemssubmittedcost, nonfullsupplyitemssubmittedcost, supervisorynodeid, createdby, createddate, modifiedby, modifieddate, allocatedbudget, clientsubmittedtime, clientsubmittednotes) VALUES (33, 3, 5, 5, 'APPROVED', false, 0.00, 0.00, 1, 4, '2016-04-16 04:44:45.34509', 4, '2016-04-16 04:55:42.072414', NULL, NULL, NULL);
-
-
-
 INSERT INTO dosage_units (id, code, displayorder, createddate, createdby, modifiedby, modifieddate) VALUES (1, 'mg', 1, '2016-02-05 11:12:27.314', 1, 1, '2016-02-05 03:12:27.314-08');
 INSERT INTO dosage_units (id, code, displayorder, createddate, createdby, modifiedby, modifieddate) VALUES (2, 'mcg', 2, '2016-02-05 11:12:27.314', 1, 1, '2016-02-05 03:12:27.314-08');
 INSERT INTO dosage_units (id, code, displayorder, createddate, createdby, modifiedby, modifieddate) VALUES (3, 'ml', 3, '2016-02-05 11:12:27.314', 1, 1, '2016-02-05 03:12:27.314-08');
 INSERT INTO dosage_units (id, code, displayorder, createddate, createdby, modifiedby, modifieddate) VALUES (4, 'each', 4, '2016-02-05 11:12:27.314', 1, 1, '2016-02-05 03:12:27.314-08');
-
-
-
 INSERT INTO product_forms (id, code, displayorder, createddate, createdby, modifiedby, modifieddate) VALUES (1, 'tablet', 1, '2016-02-05 11:12:34.243', 1, 1, '2016-02-05 03:12:34.243-08');
 INSERT INTO product_forms (id, code, displayorder, createddate, createdby, modifiedby, modifieddate) VALUES (2, 'capsule', 2, '2016-02-05 11:12:34.243', 1, 1, '2016-02-05 03:12:34.243-08');
 INSERT INTO product_forms (id, code, displayorder, createddate, createdby, modifiedby, modifieddate) VALUES (3, 'powder', 3, '2016-02-05 11:12:34.243', 1, 1, '2016-02-05 03:12:34.243-08');
@@ -239,9 +184,6 @@ INSERT INTO product_forms (id, code, displayorder, createddate, createdby, modif
 INSERT INTO product_forms (id, code, displayorder, createddate, createdby, modifiedby, modifieddate) VALUES (9, 'Latex sheath', 1, '2016-04-15 20:05:41.006614', 4, 4, '2016-04-15 12:05:41.006614-07');
 INSERT INTO product_forms (id, code, displayorder, createddate, createdby, modifiedby, modifieddate) VALUES (10, 'Single rod', 2, '2016-04-15 20:05:41.006614', 4, 4, '2016-04-15 12:05:41.006614-07');
 INSERT INTO product_forms (id, code, displayorder, createddate, createdby, modifiedby, modifieddate) VALUES (11, 'Two rod', 3, '2016-04-15 20:05:41.006614', 4, 4, '2016-04-15 12:05:41.006614-07');
-
-
-
 INSERT INTO product_groups (id, code, name, createdby, createddate, modifiedby, modifieddate) VALUES (1, '1bcg', 'BCG', 1, '2016-02-05 11:12:45.939', 1, '2016-02-05 11:12:45.926');
 INSERT INTO product_groups (id, code, name, createdby, createddate, modifiedby, modifieddate) VALUES (2, '2polio', 'Polio', 1, '2016-02-05 11:12:45.939', 1, '2016-02-05 11:12:45.926');
 INSERT INTO product_groups (id, code, name, createdby, createddate, modifiedby, modifieddate) VALUES (3, '3penta', 'Pentavalent', 1, '2016-02-05 11:12:45.939', 1, '2016-02-05 11:12:45.926');
@@ -249,9 +191,6 @@ INSERT INTO product_groups (id, code, name, createdby, createddate, modifiedby, 
 INSERT INTO product_groups (id, code, name, createdby, createddate, modifiedby, modifieddate) VALUES (5, '5pcv10', 'PCV10', 1, '2016-02-05 11:12:45.939', 1, '2016-02-05 11:12:45.926');
 INSERT INTO product_groups (id, code, name, createdby, createddate, modifiedby, modifieddate) VALUES (6, '6hpv', 'HPV', 1, '2016-02-05 11:12:45.939', 1, '2016-02-05 11:12:45.926');
 INSERT INTO product_groups (id, code, name, createdby, createddate, modifiedby, modifieddate) VALUES (7, '7tetanus', 'VAT', 1, '2016-02-05 11:12:45.939', 1, '2016-02-05 11:12:45.926');
-
-
-
 INSERT INTO products (id, code, alternateitemcode, manufacturer, manufacturercode, manufacturerbarcode, mohbarcode, gtin, type, primaryname, fullname, genericname, alternatename, description, strength, formid, dosageunitid, productgroupid, dispensingunit, dosesperdispensingunit, packsize, alternatepacksize, storerefrigerated, storeroomtemperature, hazardous, flammable, controlledsubstance, lightsensitive, approvedbywho, contraceptivecyp, packlength, packwidth, packheight, packweight, packspercarton, cartonlength, cartonwidth, cartonheight, cartonsperpallet, expectedshelflife, specialstorageinstructions, specialtransportinstructions, active, fullsupply, tracer, roundtozero, archived, packroundingthreshold, createdby, createddate, modifiedby, modifieddate) VALUES (35, 'C100', NULL, NULL, NULL, NULL, NULL, NULL, 'Oral Contraceptive', 'Levora', NULL, NULL, NULL, NULL, '30/150', 1, 1, NULL, 'Pack of 84', 84, 84, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, true, true, false, false, NULL, 1, 4, '2016-04-15 20:14:36.690875', 4, '2016-04-15 20:21:18.478495');
 INSERT INTO products (id, code, alternateitemcode, manufacturer, manufacturercode, manufacturerbarcode, mohbarcode, gtin, type, primaryname, fullname, genericname, alternatename, description, strength, formid, dosageunitid, productgroupid, dispensingunit, dosesperdispensingunit, packsize, alternatepacksize, storerefrigerated, storeroomtemperature, hazardous, flammable, controlledsubstance, lightsensitive, approvedbywho, contraceptivecyp, packlength, packwidth, packheight, packweight, packspercarton, cartonlength, cartonwidth, cartonheight, cartonsperpallet, expectedshelflife, specialstorageinstructions, specialtransportinstructions, active, fullsupply, tracer, roundtozero, archived, packroundingthreshold, createdby, createddate, modifiedby, modifieddate) VALUES (36, 'C200', NULL, NULL, NULL, NULL, NULL, NULL, 'Oral Contraceptive', 'Ortho-Novum', NULL, NULL, NULL, NULL, '35/1', 1, 2, NULL, 'Pack of 63', 63, 63, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, true, true, false, false, NULL, 1, 4, '2016-04-15 20:14:36.690875', 4, '2016-04-15 20:22:21.025829');
 INSERT INTO products (id, code, alternateitemcode, manufacturer, manufacturercode, manufacturerbarcode, mohbarcode, gtin, type, primaryname, fullname, genericname, alternatename, description, strength, formid, dosageunitid, productgroupid, dispensingunit, dosesperdispensingunit, packsize, alternatepacksize, storerefrigerated, storeroomtemperature, hazardous, flammable, controlledsubstance, lightsensitive, approvedbywho, contraceptivecyp, packlength, packwidth, packheight, packweight, packspercarton, cartonlength, cartonwidth, cartonheight, cartonsperpallet, expectedshelflife, specialstorageinstructions, specialtransportinstructions, active, fullsupply, tracer, roundtozero, archived, packroundingthreshold, createdby, createddate, modifiedby, modifieddate) VALUES (38, 'C400', NULL, NULL, NULL, NULL, NULL, NULL, 'Barrier Method', 'Male Condom', NULL, NULL, NULL, NULL, NULL, 9, 4, NULL, '1 condom', 1, 1, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, true, true, false, false, NULL, 1, 4, '2016-04-15 20:14:36.690875', 4, '2016-04-15 20:24:34.099744');
@@ -286,9 +225,6 @@ INSERT INTO products (id, code, alternateitemcode, manufacturer, manufacturercod
 INSERT INTO products (id, code, alternateitemcode, manufacturer, manufacturercode, manufacturerbarcode, mohbarcode, gtin, type, primaryname, fullname, genericname, alternatename, description, strength, formid, dosageunitid, productgroupid, dispensingunit, dosesperdispensingunit, packsize, alternatepacksize, storerefrigerated, storeroomtemperature, hazardous, flammable, controlledsubstance, lightsensitive, approvedbywho, contraceptivecyp, packlength, packwidth, packheight, packweight, packspercarton, cartonlength, cartonwidth, cartonheight, cartonsperpallet, expectedshelflife, specialstorageinstructions, specialtransportinstructions, active, fullsupply, tracer, roundtozero, archived, packroundingthreshold, createdby, createddate, modifiedby, modifieddate) VALUES (6, 'A53007D', NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'Co-Trimoxazole DS', NULL, NULL, NULL, NULL, '800/160', 2, 1, NULL, '10 tab strip', 10, 20, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, true, false, false, false, NULL, 5, 1, '2016-02-05 11:12:52.997', 4, '2016-04-13 16:50:53.048046');
 INSERT INTO products (id, code, alternateitemcode, manufacturer, manufacturercode, manufacturerbarcode, mohbarcode, gtin, type, primaryname, fullname, genericname, alternatename, description, strength, formid, dosageunitid, productgroupid, dispensingunit, dosesperdispensingunit, packsize, alternatepacksize, storerefrigerated, storeroomtemperature, hazardous, flammable, controlledsubstance, lightsensitive, approvedbywho, contraceptivecyp, packlength, packwidth, packheight, packweight, packspercarton, cartonlength, cartonwidth, cartonheight, cartonsperpallet, expectedshelflife, specialstorageinstructions, specialtransportinstructions, active, fullsupply, tracer, roundtozero, archived, packroundingthreshold, createdby, createddate, modifiedby, modifieddate) VALUES (3, 'P200563', NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'Omeprazole', NULL, NULL, NULL, NULL, '20', 1, 1, NULL, 'each', 15, 5, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, true, false, false, false, NULL, 4, 1, '2016-02-05 11:12:52.997', 4, '2016-04-13 16:53:25.804627');
 INSERT INTO products (id, code, alternateitemcode, manufacturer, manufacturercode, manufacturerbarcode, mohbarcode, gtin, type, primaryname, fullname, genericname, alternatename, description, strength, formid, dosageunitid, productgroupid, dispensingunit, dosesperdispensingunit, packsize, alternatepacksize, storerefrigerated, storeroomtemperature, hazardous, flammable, controlledsubstance, lightsensitive, approvedbywho, contraceptivecyp, packlength, packwidth, packheight, packweight, packspercarton, cartonlength, cartonwidth, cartonheight, cartonsperpallet, expectedshelflife, specialstorageinstructions, specialtransportinstructions, active, fullsupply, tracer, roundtozero, archived, packroundingthreshold, createdby, createddate, modifiedby, modifieddate) VALUES (5, 'S00056L', NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'Gloves, surgical latex, powdered', NULL, NULL, NULL, NULL, 'size 7', 5, 4, NULL, 'each', 1, 100, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, true, false, false, false, NULL, 25, 1, '2016-02-05 11:12:52.997', 4, '2016-04-13 17:53:30.305758');
-
-
-
 INSERT INTO coverage_product_vials (id, vial, productcode, childcoverage) VALUES (1, 'BCG', 'bcg20', true);
 INSERT INTO coverage_product_vials (id, vial, productcode, childcoverage) VALUES (2, 'Polio10', 'polio10', true);
 INSERT INTO coverage_product_vials (id, vial, productcode, childcoverage) VALUES (3, 'Polio20', 'polio20', true);
@@ -297,13 +233,7 @@ INSERT INTO coverage_product_vials (id, vial, productcode, childcoverage) VALUES
 INSERT INTO coverage_product_vials (id, vial, productcode, childcoverage) VALUES (6, 'PCV', 'pcv10', true);
 INSERT INTO coverage_product_vials (id, vial, productcode, childcoverage) VALUES (7, 'Measles', 'measles10', true);
 INSERT INTO coverage_product_vials (id, vial, productcode, childcoverage) VALUES (8, 'Tetanus', 'tetanus10', false);
-
-
-
 SELECT pg_catalog.setval('coverage_product_vials_id_seq', 8, true);
-
-
-
 INSERT INTO coverage_target_group_products (id, targetgroupentity, productcode, childcoverage) VALUES (1, 'BCG', 'bcg20', true);
 INSERT INTO coverage_target_group_products (id, targetgroupentity, productcode, childcoverage) VALUES (2, 'Polio (Newborn)', 'polio10', true);
 INSERT INTO coverage_target_group_products (id, targetgroupentity, productcode, childcoverage) VALUES (3, 'Polio 1st dose', 'polio10', true);
@@ -317,13 +247,7 @@ INSERT INTO coverage_target_group_products (id, targetgroupentity, productcode, 
 INSERT INTO coverage_target_group_products (id, targetgroupentity, productcode, childcoverage) VALUES (11, 'PCV10 3rd dose', 'pcv10', true);
 INSERT INTO coverage_target_group_products (id, targetgroupentity, productcode, childcoverage) VALUES (12, 'Measles', 'measles10', true);
 INSERT INTO coverage_target_group_products (id, targetgroupentity, productcode, childcoverage) VALUES (13, 'Pregnant Women', 'tetanus10', false);
-
-
-
 SELECT pg_catalog.setval('coverage_vaccination_products_id_seq', 13, true);
-
-
-
 INSERT INTO delivery_zone_members (id, deliveryzoneid, facilityid, createdby, createddate, modifiedby, modifieddate) VALUES (1, 2, 4, 1, '2016-02-05 11:16:44.246', 1, '2016-02-05 11:16:44.236');
 INSERT INTO delivery_zone_members (id, deliveryzoneid, facilityid, createdby, createddate, modifiedby, modifieddate) VALUES (2, 2, 5, 1, '2016-02-05 11:16:44.246', 1, '2016-02-05 11:16:44.236');
 INSERT INTO delivery_zone_members (id, deliveryzoneid, facilityid, createdby, createddate, modifiedby, modifieddate) VALUES (3, 2, 6, 1, '2016-02-05 11:16:44.246', 1, '2016-02-05 11:16:44.236');
@@ -331,42 +255,18 @@ INSERT INTO delivery_zone_members (id, deliveryzoneid, facilityid, createdby, cr
 INSERT INTO delivery_zone_members (id, deliveryzoneid, facilityid, createdby, createddate, modifiedby, modifieddate) VALUES (5, 1, 1, 1, '2016-02-05 11:16:44.246', 1, '2016-02-05 11:16:44.236');
 INSERT INTO delivery_zone_members (id, deliveryzoneid, facilityid, createdby, createddate, modifiedby, modifieddate) VALUES (6, 1, 2, 1, '2016-02-05 11:16:44.246', 1, '2016-02-05 11:16:44.236');
 INSERT INTO delivery_zone_members (id, deliveryzoneid, facilityid, createdby, createddate, modifiedby, modifieddate) VALUES (7, 1, 7, 1, '2016-02-05 11:16:44.246', 1, '2016-02-05 11:16:44.236');
-
-
-
 SELECT pg_catalog.setval('delivery_zone_members_id_seq', 7, true);
-
-
-
 INSERT INTO delivery_zone_program_schedules (id, deliveryzoneid, programid, scheduleid, createdby, createddate, modifiedby, modifieddate) VALUES (1, 1, 4, 1, 1, '2016-02-05 11:16:35.247', 1, '2016-02-05 11:16:35.236');
 INSERT INTO delivery_zone_program_schedules (id, deliveryzoneid, programid, scheduleid, createdby, createddate, modifiedby, modifieddate) VALUES (2, 2, 4, 1, 1, '2016-02-05 11:16:35.247', 1, '2016-02-05 11:16:35.236');
-
-
-
 SELECT pg_catalog.setval('delivery_zone_program_schedules_id_seq', 2, true);
-
-
-
 SELECT pg_catalog.setval('delivery_zones_id_seq', 2, true);
-
-
-
 SELECT pg_catalog.setval('distributions_id_seq', 1, true);
-
-
-
 SELECT pg_catalog.setval('dosage_units_id_seq', 4, true);
-
-
-
 INSERT INTO roles (id, name, description, createdby, createddate, modifiedby, modifieddate) VALUES (2, 'All Reports', NULL, NULL, '2016-02-05 11:22:43.139', NULL, '2016-02-05 11:22:43.139');
 INSERT INTO roles (id, name, description, createdby, createddate, modifiedby, modifieddate) VALUES (3, 'All Admin Reports', NULL, NULL, '2016-02-05 11:22:43.139', NULL, '2016-02-05 11:22:43.139');
 INSERT INTO roles (id, name, description, createdby, createddate, modifiedby, modifieddate) VALUES (4, 'Field Coordinator', NULL, NULL, '2016-02-05 11:22:43.139', NULL, '2016-02-05 11:22:43.139');
 INSERT INTO roles (id, name, description, createdby, createddate, modifiedby, modifieddate) VALUES (5, 'All Requisition', NULL, NULL, '2016-02-05 11:22:43.139', NULL, '2016-02-05 11:22:43.139');
 INSERT INTO roles (id, name, description, createdby, createddate, modifiedby, modifieddate) VALUES (6, 'All Fulfillment', NULL, NULL, '2016-02-05 11:22:43.139', NULL, '2016-02-05 11:22:43.139');
-
-
-
 INSERT INTO email_notifications (id, receiver, subject, content, sent, createddate, ishtml) VALUES (5, 'superuser@openlmis.com', 'Your Action is Required', 'Dear Super User This is to inform you that Steinbach Hospital has completed its Report and Requisition for the Period September2015 and requires your approval. Please login to approve / reject it. Thank you.', true, '2016-04-13 19:42:39.502122', false);
 INSERT INTO email_notifications (id, receiver, subject, content, sent, createddate, ishtml) VALUES (6, 'devadmin@openlmis.com', 'Your Action is Required', 'Dear Dev Admin This is to inform you that Steinbach Hospital has completed its Report and Requisition for the Period September2015 and requires your approval. Please login to approve / reject it. Thank you.', true, '2016-04-13 19:42:39.502122', false);
 INSERT INTO email_notifications (id, receiver, subject, content, sent, createddate, ishtml) VALUES (1, 'superuser@openlmis.com', 'Your Action is Required', 'Dear Super User This is to inform you that Steinbach Hospital has completed its Report and Requisition for the Period August2015 and requires your approval. Please login to approve / reject it. Thank you.', true, '2016-04-13 00:35:34.877147', false);
@@ -383,13 +283,9 @@ INSERT INTO email_notifications (id, receiver, subject, content, sent, createdda
 INSERT INTO email_notifications (id, receiver, subject, content, sent, createddate, ishtml) VALUES (14, 'devadmin@openlmis.com', 'Your Action is Required', 'Dear Dev Admin This is to inform you that Steinbach Hospital has completed its Report and Requisition for the Period August2015 and requires your approval. Please login to approve / reject it. Thank you.', true, '2016-04-15 17:54:49.279497', false);
 INSERT INTO email_notifications (id, receiver, subject, content, sent, createddate, ishtml) VALUES (15, 'devadmin@openlmis.com', 'Your Action is Required', 'Dear Dev Admin This is to inform you that Steinbach Hospital has completed its Report and Requisition for the Period August2015 and requires your approval. Please login to approve / reject it. Thank you.', true, '2016-04-16 04:46:29.535161', false);
 INSERT INTO email_notifications (id, receiver, subject, content, sent, createddate, ishtml) VALUES (16, 'devadmin@openlmis.com', 'Your Action is Required', 'Dear Dev Admin This is to inform you that Steinbach Hospital has completed its Report and Requisition for the Period August2015 and requires your approval. Please login to approve / reject it. Thank you.', true, '2016-04-16 04:55:26.686267', false);
-
-
-
-SELECT pg_catalog.setval('email_notifications_id_seq', 16, true);
-
-
-
+INSERT INTO email_notifications (id, receiver, subject, content, sent, createddate, ishtml) VALUES (17, 'devadmin@openlmis.com', 'Your Action is Required', 'Dear Dev Admin This is to inform you that Steinbach Hospital has completed its Report and Requisition for the Period August2015 and requires your approval. Please login to approve / reject it. Thank you.', true, '2016-04-19 20:49:43.888205', false);
+INSERT INTO email_notifications (id, receiver, subject, content, sent, createddate, ishtml) VALUES (18, 'superuser@openlmis.com', 'Your Action is Required', 'Dear Super User This is to inform you that Steinbach Hospital has completed its Report and Requisition for the Period August2015 and requires your approval. Please login to approve / reject it. Thank you.', true, '2016-04-19 20:49:43.888205', false);
+SELECT pg_catalog.setval('email_notifications_id_seq', 18, true);
 INSERT INTO product_categories (id, code, name, displayorder, createdby, createddate, modifiedby, modifieddate) VALUES (1, 'antibiotics', 'Antibiotics', 1, 1, '2016-02-05 11:12:40.286', 1, '2016-02-05 11:12:40.275');
 INSERT INTO product_categories (id, code, name, displayorder, createdby, createddate, modifiedby, modifieddate) VALUES (2, 'antiretrovials', 'Anti-retrovirals', 2, 1, '2016-02-05 11:12:40.286', 1, '2016-02-05 11:12:40.275');
 INSERT INTO product_categories (id, code, name, displayorder, createdby, createddate, modifiedby, modifieddate) VALUES (3, 'malariaprophylaxis', 'Malaria Prophylaxis', 3, 1, '2016-02-05 11:12:40.286', 1, '2016-02-05 11:12:40.275');
@@ -404,9 +300,6 @@ INSERT INTO product_categories (id, code, name, displayorder, createdby, created
 INSERT INTO product_categories (id, code, name, displayorder, createdby, createddate, modifiedby, modifieddate) VALUES (12, 'barrier methods', 'Barrier Method', 2, 4, '2016-04-15 17:37:36.786661', 4, '2016-04-15 20:50:37.425');
 INSERT INTO product_categories (id, code, name, displayorder, createdby, createddate, modifiedby, modifieddate) VALUES (13, 'implants', 'Implantable Contraceptive', 3, 4, '2016-04-15 17:37:36.786661', 4, '2016-04-15 20:50:37.425');
 INSERT INTO product_categories (id, code, name, displayorder, createdby, createddate, modifiedby, modifieddate) VALUES (14, 'injectables', 'Injectable Hormonal Contraceptive', 4, 4, '2016-04-15 17:37:36.786661', 4, '2016-04-15 20:50:37.425');
-
-
-
 INSERT INTO program_products (id, programid, productid, dosespermonth, active, currentprice, createdby, createddate, modifiedby, modifieddate, productcategoryid, displayorder, fullsupply, isacoefficientsid) VALUES (12, 4, 13, 99, true, NULL, 1, '2016-02-05 11:13:05.272', 1, '2016-02-05 11:13:05.256', 9, 16, true, NULL);
 INSERT INTO program_products (id, programid, productid, dosespermonth, active, currentprice, createdby, createddate, modifiedby, modifieddate, productcategoryid, displayorder, fullsupply, isacoefficientsid) VALUES (13, 4, 14, 99, true, NULL, 1, '2016-02-05 11:13:05.272', 1, '2016-02-05 11:13:05.256', 9, 17, true, NULL);
 INSERT INTO program_products (id, programid, productid, dosespermonth, active, currentprice, createdby, createddate, modifiedby, modifieddate, productcategoryid, displayorder, fullsupply, isacoefficientsid) VALUES (14, 4, 15, 99, true, NULL, 1, '2016-02-05 11:13:05.272', 1, '2016-02-05 11:13:05.256', 9, 18, true, NULL);
@@ -452,9 +345,6 @@ INSERT INTO program_products (id, programid, productid, dosespermonth, active, c
 INSERT INTO program_products (id, programid, productid, dosespermonth, active, currentprice, createdby, createddate, modifiedby, modifieddate, productcategoryid, displayorder, fullsupply, isacoefficientsid) VALUES (42, 5, 37, 1, true, NULL, NULL, '2016-04-15 20:23:41.990821', 4, '2016-04-16 04:43:04.59174', 14, 4, true, NULL);
 INSERT INTO program_products (id, programid, productid, dosespermonth, active, currentprice, createdby, createddate, modifiedby, modifieddate, productcategoryid, displayorder, fullsupply, isacoefficientsid) VALUES (44, 5, 39, 1, true, NULL, NULL, '2016-04-15 20:26:11.212065', 4, '2016-04-16 04:43:54.932064', 13, 3, true, NULL);
 INSERT INTO program_products (id, programid, productid, dosespermonth, active, currentprice, createdby, createddate, modifiedby, modifieddate, productcategoryid, displayorder, fullsupply, isacoefficientsid) VALUES (45, 5, 40, 1, true, NULL, NULL, '2016-04-15 20:27:22.537056', 4, '2016-04-16 04:44:18.749903', 13, 3, true, NULL);
-
-
-
 INSERT INTO epi_inventory_line_items (id, productname, idealquantity, existingquantity, spoiledquantity, deliveredquantity, facilityvisitid, productcode, productdisplayorder, programproductid, createdby, createddate, modifiedby, modifieddate, idealquantitybypacksize) VALUES (1, 'BCG', NULL, NULL, NULL, NULL, 1, 'bcg20', 16, 12, 4, '2016-04-14 18:32:54.609314', 4, '2016-04-14 18:32:54.609314', NULL);
 INSERT INTO epi_inventory_line_items (id, productname, idealquantity, existingquantity, spoiledquantity, deliveredquantity, facilityvisitid, productcode, productdisplayorder, programproductid, createdby, createddate, modifiedby, modifieddate, idealquantitybypacksize) VALUES (2, 'Polio (10 dose)', NULL, NULL, NULL, NULL, 1, 'polio10', 17, 13, 4, '2016-04-14 18:32:54.609314', 4, '2016-04-14 18:32:54.609314', NULL);
 INSERT INTO epi_inventory_line_items (id, productname, idealquantity, existingquantity, spoiledquantity, deliveredquantity, facilityvisitid, productcode, productdisplayorder, programproductid, createdby, createddate, modifiedby, modifieddate, idealquantitybypacksize) VALUES (3, 'Polio (20 dose)', NULL, NULL, NULL, NULL, 1, 'polio20', 18, 14, 4, '2016-04-14 18:32:54.609314', 4, '2016-04-14 18:32:54.609314', NULL);
@@ -497,13 +387,7 @@ INSERT INTO epi_inventory_line_items (id, productname, idealquantity, existingqu
 INSERT INTO epi_inventory_line_items (id, productname, idealquantity, existingquantity, spoiledquantity, deliveredquantity, facilityvisitid, productcode, productdisplayorder, programproductid, createdby, createddate, modifiedby, modifieddate, idealquantitybypacksize) VALUES (40, 'Seringa 0,05ml', NULL, NULL, NULL, NULL, 3, 'syringe005ml', 27, 23, 4, '2016-04-14 18:32:54.609314', 4, '2016-04-14 18:32:54.609314', NULL);
 INSERT INTO epi_inventory_line_items (id, productname, idealquantity, existingquantity, spoiledquantity, deliveredquantity, facilityvisitid, productcode, productdisplayorder, programproductid, createdby, createddate, modifiedby, modifieddate, idealquantitybypacksize) VALUES (41, 'Caixas Inciner.', NULL, NULL, NULL, NULL, 3, 'safetybox', 28, 24, 4, '2016-04-14 18:32:54.609314', 4, '2016-04-14 18:32:54.609314', NULL);
 INSERT INTO epi_inventory_line_items (id, productname, idealquantity, existingquantity, spoiledquantity, deliveredquantity, facilityvisitid, productcode, productdisplayorder, programproductid, createdby, createddate, modifiedby, modifieddate, idealquantitybypacksize) VALUES (42, 'Gás (Cilindro)', NULL, NULL, NULL, NULL, 3, 'gas', 29, 25, 4, '2016-04-14 18:32:54.609314', 4, '2016-04-14 18:32:54.609314', NULL);
-
-
-
 SELECT pg_catalog.setval('epi_inventory_line_items_id_seq', 42, true);
-
-
-
 INSERT INTO epi_use_line_items (id, productgroupid, productgroupname, stockatfirstofmonth, received, distributed, loss, stockatendofmonth, expirationdate, createdby, createddate, modifiedby, modifieddate, facilityvisitid) VALUES (1, 1, 'BCG', NULL, NULL, NULL, NULL, NULL, NULL, 4, '2016-04-14 18:32:54.609314', 4, '2016-04-14 18:32:54.609314', 1);
 INSERT INTO epi_use_line_items (id, productgroupid, productgroupname, stockatfirstofmonth, received, distributed, loss, stockatendofmonth, expirationdate, createdby, createddate, modifiedby, modifieddate, facilityvisitid) VALUES (2, 2, 'Polio', NULL, NULL, NULL, NULL, NULL, NULL, 4, '2016-04-14 18:32:54.609314', 4, '2016-04-14 18:32:54.609314', 1);
 INSERT INTO epi_use_line_items (id, productgroupid, productgroupname, stockatfirstofmonth, received, distributed, loss, stockatendofmonth, expirationdate, createdby, createddate, modifiedby, modifieddate, facilityvisitid) VALUES (3, 3, 'Pentavalent', NULL, NULL, NULL, NULL, NULL, NULL, 4, '2016-04-14 18:32:54.609314', 4, '2016-04-14 18:32:54.609314', 1);
@@ -525,47 +409,17 @@ INSERT INTO epi_use_line_items (id, productgroupid, productgroupname, stockatfir
 INSERT INTO epi_use_line_items (id, productgroupid, productgroupname, stockatfirstofmonth, received, distributed, loss, stockatendofmonth, expirationdate, createdby, createddate, modifiedby, modifieddate, facilityvisitid) VALUES (19, 5, 'PCV10', NULL, NULL, NULL, NULL, NULL, NULL, 4, '2016-04-14 18:32:54.609314', 4, '2016-04-14 18:32:54.609314', 3);
 INSERT INTO epi_use_line_items (id, productgroupid, productgroupname, stockatfirstofmonth, received, distributed, loss, stockatendofmonth, expirationdate, createdby, createddate, modifiedby, modifieddate, facilityvisitid) VALUES (20, 6, 'HPV', NULL, NULL, NULL, NULL, NULL, NULL, 4, '2016-04-14 18:32:54.609314', 4, '2016-04-14 18:32:54.609314', 3);
 INSERT INTO epi_use_line_items (id, productgroupid, productgroupname, stockatfirstofmonth, received, distributed, loss, stockatendofmonth, expirationdate, createdby, createddate, modifiedby, modifieddate, facilityvisitid) VALUES (21, 7, 'VAT', NULL, NULL, NULL, NULL, NULL, NULL, 4, '2016-04-14 18:32:54.609314', 4, '2016-04-14 18:32:54.609314', 3);
-
-
-
 SELECT pg_catalog.setval('epi_use_line_items_id_seq', 21, true);
-
-
-
 INSERT INTO equipments (id, name, equipmenttypeid, createdby, createddate, modifiedby, modifieddate, manufacturer, model, energytypeid) VALUES (1, 'Dometic / RW50', 1, 1, '2016-04-13 20:09:25.052237', 1, '2016-04-13 20:31:24.569876', 'Dometic', 'RW50', 1);
-
-
-
 INSERT INTO equipment_cold_chain_equipments (equipmentid, designationid, ccecode, pqscode, refrigeratorcapacity, freezercapacity, refrigerant, temperaturezone, maxtemperature, mintemperature, holdovertime, energyconsumption, dimension, price, pqsstatusid, donorid, createdby, createddate, modifiedby, modifieddate, capacity) VALUES (1, 2, NULL, NULL, NULL, NULL, NULL, '', 8, 2, NULL, NULL, NULL, 0.00, 1, NULL, 1, '2016-04-13 20:09:25.052237', 1, '2016-04-13 20:31:24.569876', 50.00);
-
-
-
 INSERT INTO equipment_inventories (id, facilityid, programid, equipmentid, serialnumber, yearofinstallation, purchaseprice, sourceoffund, replacementrecommended, reasonforreplacement, nameofassessor, datelastassessed, createdby, createddate, modifiedby, modifieddate, isactive, datedecommissioned, primarydonorid, hasstabilizer) VALUES (1, 3, 1, 1, '123456-001', 2010, NULL, NULL, false, NULL, NULL, '2016-04-11', 2, '2016-04-13 20:12:46.910818', 2, '2016-04-13 20:32:38.97646', true, NULL, NULL, NULL);
-
-
-
 INSERT INTO equipment_inventory_statuses (id, inventoryid, statusid, notfunctionalstatusid, createddate, createdby, modifiedby, modifieddate) VALUES (1, 1, 4, NULL, '2016-04-13 12:12:46.916785-07', 2, 2, '2016-04-13 12:12:46.916785-07');
-
-
-
 SELECT pg_catalog.setval('equipment_inventory_statuses_id_seq', 1, true);
-
-
-
 INSERT INTO equipment_type_programs (id, programid, equipmenttypeid, displayorder, enabletestcount, enabletotalcolumn, createdby, createddate, modifiedby, modifieddate) VALUES (1, 4, 1, 0, false, false, 1, '2016-04-13 20:07:45.038', 1, '2016-04-13 20:08:02.235');
 INSERT INTO equipment_type_programs (id, programid, equipmenttypeid, displayorder, enabletestcount, enabletotalcolumn, createdby, createddate, modifiedby, modifieddate) VALUES (2, 2, 1, 0, false, false, 1, '2016-04-13 20:10:20.092', 1, '2016-04-13 20:10:20.092');
 INSERT INTO equipment_type_programs (id, programid, equipmenttypeid, displayorder, enabletestcount, enabletotalcolumn, createdby, createddate, modifiedby, modifieddate) VALUES (3, 1, 1, 0, true, true, 1, '2016-04-13 20:10:39.317', 1, '2016-04-13 20:10:59.521');
-
-
-
 SELECT pg_catalog.setval('equipments_id_seq', 1, true);
-
-
-
 SELECT pg_catalog.setval('facilities_id_seq', 8, true);
-
-
-
 INSERT INTO facility_approved_products (id, facilitytypeid, programproductid, maxmonthsofstock, minmonthsofstock, eop, createdby, createddate, modifiedby, modifieddate) VALUES (1, 1, 5, 3, NULL, NULL, 1, '2016-02-05 11:14:02.474', 1, '2016-02-05 11:14:02.465');
 INSERT INTO facility_approved_products (id, facilitytypeid, programproductid, maxmonthsofstock, minmonthsofstock, eop, createdby, createddate, modifiedby, modifieddate) VALUES (2, 1, 6, 3, NULL, NULL, 1, '2016-02-05 11:14:02.474', 1, '2016-02-05 11:14:02.465');
 INSERT INTO facility_approved_products (id, facilitytypeid, programproductid, maxmonthsofstock, minmonthsofstock, eop, createdby, createddate, modifiedby, modifieddate) VALUES (3, 1, 8, 3, NULL, NULL, 1, '2016-02-05 11:14:02.474', 1, '2016-02-05 11:14:02.465');
@@ -643,119 +497,41 @@ INSERT INTO facility_approved_products (id, facilitytypeid, programproductid, ma
 INSERT INTO facility_approved_products (id, facilitytypeid, programproductid, maxmonthsofstock, minmonthsofstock, eop, createdby, createddate, modifiedby, modifieddate) VALUES (108, 4, 43, 3, NULL, NULL, 4, '2016-04-15 22:02:56.677497', 4, '2016-04-15 22:02:56.673');
 INSERT INTO facility_approved_products (id, facilitytypeid, programproductid, maxmonthsofstock, minmonthsofstock, eop, createdby, createddate, modifiedby, modifieddate) VALUES (109, 4, 44, 3, NULL, NULL, 4, '2016-04-15 22:02:56.677497', 4, '2016-04-15 22:02:56.673');
 INSERT INTO facility_approved_products (id, facilitytypeid, programproductid, maxmonthsofstock, minmonthsofstock, eop, createdby, createddate, modifiedby, modifieddate) VALUES (110, 4, 45, 3, NULL, NULL, 4, '2016-04-15 22:02:56.677497', 4, '2016-04-15 22:02:56.673');
-
-
-
 SELECT pg_catalog.setval('facility_approved_products_id_seq', 110, true);
-
-
-
 SELECT pg_catalog.setval('facility_operators_id_seq', 1, true);
-
-
-
 SELECT pg_catalog.setval('facility_program_equipments_id_seq', 1, true);
-
-
-
 SELECT pg_catalog.setval('facility_types_id_seq', 6, true);
-
-
-
 SELECT pg_catalog.setval('facility_visits_id_seq', 3, true);
-
-
-
 INSERT INTO fulfillment_role_assignments (userid, roleid, facilityid, createdby, createddate, modifiedby, modifieddate) VALUES (2, 6, 8, NULL, '2016-02-05 11:22:43.647', NULL, '2016-02-05 11:22:43.647');
 INSERT INTO fulfillment_role_assignments (userid, roleid, facilityid, createdby, createddate, modifiedby, modifieddate) VALUES (4, 6, 8, 4, '2016-04-16 04:54:14.758418', 4, '2016-04-16 04:54:14.758418');
-
-
-
 SELECT pg_catalog.setval('geographic_levels_id_seq', 3, true);
-
-
-
 SELECT pg_catalog.setval('geographic_zones_id_seq', 10, true);
-
-
-
 SELECT pg_catalog.setval('opened_vial_line_items_id_seq', 21, true);
-
-
-
 INSERT INTO supply_lines (id, description, supervisorynodeid, programid, supplyingfacilityid, exportorders, createdby, createddate, modifiedby, modifieddate, parentid) VALUES (1, NULL, 1, 2, 8, true, 1, '2016-02-05 11:14:18.127', 1, '2016-02-05 11:14:18.119', NULL);
 INSERT INTO supply_lines (id, description, supervisorynodeid, programid, supplyingfacilityid, exportorders, createdby, createddate, modifiedby, modifieddate, parentid) VALUES (2, NULL, 1, 1, 8, true, 1, '2016-02-05 11:14:18.127', 1, '2016-02-05 11:14:18.119', NULL);
 INSERT INTO supply_lines (id, description, supervisorynodeid, programid, supplyingfacilityid, exportorders, createdby, createddate, modifiedby, modifieddate, parentid) VALUES (3, NULL, 1, 3, 8, true, 1, '2016-02-05 11:14:18.127', 1, '2016-02-05 11:14:18.119', NULL);
 INSERT INTO supply_lines (id, description, supervisorynodeid, programid, supplyingfacilityid, exportorders, createdby, createddate, modifiedby, modifieddate, parentid) VALUES (4, NULL, 3, 1, 8, true, 1, '2016-02-05 11:14:18.127', 1, '2016-02-05 11:14:18.119', NULL);
 INSERT INTO supply_lines (id, description, supervisorynodeid, programid, supplyingfacilityid, exportorders, createdby, createddate, modifiedby, modifieddate, parentid) VALUES (5, NULL, 3, 3, 8, true, 1, '2016-02-05 11:14:18.127', 1, '2016-02-05 11:14:18.119', NULL);
 INSERT INTO supply_lines (id, description, supervisorynodeid, programid, supplyingfacilityid, exportorders, createdby, createddate, modifiedby, modifieddate, parentid) VALUES (6, NULL, 3, 2, 8, true, 1, '2016-02-05 11:14:18.127', 1, '2016-02-05 11:14:18.119', NULL);
-
-
-
 INSERT INTO orders (id, shipmentid, status, ftpcomment, supplylineid, createdby, createddate, modifiedby, modifieddate, ordernumber) VALUES (13, NULL, 'TRANSFER_FAILED', 'order.ftpComment.ftpcredential.missing', 4, 2, '2016-04-13 00:36:02.253804', 2, '2016-04-13 00:36:03.218356', 'Oart00000013R');
-
-
-
 INSERT INTO pod (id, orderid, receiveddate, createdby, createddate, modifiedby, modifieddate, facilityid, programid, periodid, deliveredby, receivedby, ordernumber) VALUES (1, 13, NULL, 2, '2016-04-13 00:51:38.210846', 2, '2016-04-13 00:51:38.210846', 3, 1, 5, NULL, NULL, 'Oart00000013R');
-
-
-
 SELECT pg_catalog.setval('pod_id_seq', 1, true);
-
-
-
 INSERT INTO pod_line_items (id, podid, productcode, quantityreceived, createdby, createddate, modifiedby, modifieddate, productname, dispensingunit, packstoship, quantityshipped, notes, fullsupply, productcategory, productcategorydisplayorder, productdisplayorder, quantityreturned, replacedproductcode) VALUES (1, 1, 'P10048', NULL, 2, '2016-04-13 00:51:38.210846', 2, '2016-04-13 00:51:38.210846', '3TC/AZT + NVP tablet 300/300/600 mg', '60 tab bottle', 1, NULL, NULL, true, 'Anti-retrovirals', 2, 1, NULL, NULL);
 INSERT INTO pod_line_items (id, podid, productcode, quantityreceived, createdby, createddate, modifiedby, modifieddate, productname, dispensingunit, packstoship, quantityshipped, notes, fullsupply, productcategory, productcategorydisplayorder, productdisplayorder, quantityreturned, replacedproductcode) VALUES (2, 1, 'KM3375-2', NULL, 2, '2016-04-13 00:51:38.210846', 2, '2016-04-13 00:51:38.210846', 'Malaria Rapid Diagnostic Test card 1 each', 'each', 1, NULL, NULL, true, 'Test Kits', 6, 4, NULL, NULL);
-
-
-
 SELECT pg_catalog.setval('pod_line_items_id_seq', 2, true);
-
-
-
 SELECT pg_catalog.setval('processing_periods_id_seq', 18, true);
-
-
-
 SELECT pg_catalog.setval('processing_schedules_id_seq', 2, true);
-
-
-
 SELECT pg_catalog.setval('product_categories_id_seq', 14, true);
-
-
-
 SELECT pg_catalog.setval('product_forms_id_seq', 11, true);
-
-
-
 SELECT pg_catalog.setval('product_groups_id_seq', 7, true);
-
-
-
 SELECT pg_catalog.setval('products_id_seq', 40, true);
-
-
-
 SELECT pg_catalog.setval('program_equipments_id_seq', 3, true);
-
-
-
 INSERT INTO program_product_price_history (id, programproductid, price, priceperdosage, source, startdate, enddate, createdby, createddate, modifiedby, modifieddate) VALUES (1, 1, 61.30, 0.12, NULL, '2016-02-05 11:13:11.977', NULL, 1, '2016-02-05 11:13:11.977', 1, '2016-02-05 11:13:11.972');
 INSERT INTO program_product_price_history (id, programproductid, price, priceperdosage, source, startdate, enddate, createdby, createddate, modifiedby, modifieddate) VALUES (2, 2, 29.26, 0.49, NULL, '2016-02-05 11:13:11.977', NULL, 1, '2016-02-05 11:13:11.977', 1, '2016-02-05 11:13:11.972');
 INSERT INTO program_product_price_history (id, programproductid, price, priceperdosage, source, startdate, enddate, createdby, createddate, modifiedby, modifieddate) VALUES (3, 3, 3.75, 0.04, NULL, '2016-02-05 11:13:11.977', NULL, 1, '2016-02-05 11:13:11.977', 1, '2016-02-05 11:13:11.972');
 INSERT INTO program_product_price_history (id, programproductid, price, priceperdosage, source, startdate, enddate, createdby, createddate, modifiedby, modifieddate) VALUES (4, 4, 16.40, 0.08, NULL, '2016-02-05 11:13:11.977', NULL, 1, '2016-02-05 11:13:11.977', 1, '2016-02-05 11:13:11.972');
-
-
-
 SELECT pg_catalog.setval('program_product_price_history_id_seq', 4, true);
-
-
-
 SELECT pg_catalog.setval('program_products_id_seq', 45, true);
-
-
-
 INSERT INTO program_rnr_columns (id, mastercolumnid, programid, label, visible, "position", source, formulavalidationrequired, createdby, createddate, modifiedby, modifieddate, rnroptionid, calculationoption) VALUES (51, 1, 3, 'Skip', true, 1, 'U', true, 4, '2016-03-03 11:45:09.836', 4, '2016-04-13 19:53:15.529963', NULL, 'DEFAULT');
 INSERT INTO program_rnr_columns (id, mastercolumnid, programid, label, visible, "position", source, formulavalidationrequired, createdby, createddate, modifiedby, modifieddate, rnroptionid, calculationoption) VALUES (52, 2, 3, 'Product Code', true, 2, 'R', true, 4, '2016-03-03 11:45:09.836', 4, '2016-04-13 19:53:15.529963', NULL, 'DEFAULT');
 INSERT INTO program_rnr_columns (id, mastercolumnid, programid, label, visible, "position", source, formulavalidationrequired, createdby, createddate, modifiedby, modifieddate, rnroptionid, calculationoption) VALUES (53, 3, 3, 'Product', true, 3, 'R', true, 4, '2016-03-03 11:45:09.836', 4, '2016-04-13 19:53:15.529963', NULL, 'DEFAULT');
@@ -856,17 +632,8 @@ INSERT INTO program_rnr_columns (id, mastercolumnid, programid, label, visible, 
 INSERT INTO program_rnr_columns (id, mastercolumnid, programid, label, visible, "position", source, formulavalidationrequired, createdby, createddate, modifiedby, modifieddate, rnroptionid, calculationoption) VALUES (93, 11, 5, 'Total number of new patients added to service on the program', false, 18, 'U', true, 4, '2016-04-16 04:36:36.215187', 4, '2016-04-16 04:39:26.605977', 1, 'DEFAULT');
 INSERT INTO program_rnr_columns (id, mastercolumnid, programid, label, visible, "position", source, formulavalidationrequired, createdby, createddate, modifiedby, modifieddate, rnroptionid, calculationoption) VALUES (94, 20, 5, 'Packs to Ship', false, 19, 'C', true, 4, '2016-04-16 04:36:36.215187', 4, '2016-04-16 04:39:26.605977', NULL, 'DEFAULT');
 INSERT INTO program_rnr_columns (id, mastercolumnid, programid, label, visible, "position", source, formulavalidationrequired, createdby, createddate, modifiedby, modifieddate, rnroptionid, calculationoption) VALUES (95, 21, 5, 'Price per Pack', false, 20, 'R', true, 4, '2016-04-16 04:36:36.215187', 4, '2016-04-16 04:39:26.605977', NULL, 'DEFAULT');
-
-
-
 SELECT pg_catalog.setval('program_rnr_columns_id_seq', 100, true);
-
-
-
 SELECT pg_catalog.setval('programs_id_seq', 5, true);
-
-
-
 INSERT INTO programs_supported (id, facilityid, programid, startdate, active, createdby, createddate, modifiedby, modifieddate) VALUES (1, 1, 3, '2003-01-01 00:00:00', true, 1, '2016-02-05 11:13:49.751', 1, '2016-02-05 11:13:49.742');
 INSERT INTO programs_supported (id, facilityid, programid, startdate, active, createdby, createddate, modifiedby, modifieddate) VALUES (2, 1, 4, '2003-01-01 00:00:00', true, 1, '2016-02-05 11:13:49.751', 1, '2016-02-05 11:13:49.742');
 INSERT INTO programs_supported (id, facilityid, programid, startdate, active, createdby, createddate, modifiedby, modifieddate) VALUES (3, 5, 1, '2003-01-01 00:00:00', true, 1, '2016-02-05 11:13:49.751', 1, '2016-02-05 11:13:49.742');
@@ -892,29 +659,14 @@ INSERT INTO programs_supported (id, facilityid, programid, startdate, active, cr
 INSERT INTO programs_supported (id, facilityid, programid, startdate, active, createdby, createddate, modifiedby, modifieddate) VALUES (35, 3, 5, '2003-01-01 00:00:00', true, 4, '2016-04-15 21:54:19.639143', 4, '2016-04-15 21:54:19.636');
 INSERT INTO programs_supported (id, facilityid, programid, startdate, active, createdby, createddate, modifiedby, modifieddate) VALUES (36, 2, 5, '2003-01-01 00:00:00', true, 4, '2016-04-15 21:54:19.639143', 4, '2016-04-15 21:54:19.636');
 INSERT INTO programs_supported (id, facilityid, programid, startdate, active, createdby, createddate, modifiedby, modifieddate) VALUES (37, 6, 5, '2003-01-01 00:00:00', true, 4, '2016-04-15 21:54:19.639143', 4, '2016-04-15 21:54:19.636');
-
-
-
 SELECT pg_catalog.setval('programs_supported_id_seq', 37, true);
-
-
-
 INSERT INTO regimen_categories (id, code, name, displayorder, createdby, createddate, modifiedby, modifieddate) VALUES (1, 'AD', 'Adult', 1, 1, '2016-02-05 11:13:55.53', 1, '2016-02-05 11:13:55.53');
 INSERT INTO regimen_categories (id, code, name, displayorder, createdby, createddate, modifiedby, modifieddate) VALUES (2, 'CH', 'Child', 2, 1, '2016-02-05 11:13:55.53', 1, '2016-02-05 11:13:55.53');
 INSERT INTO regimen_categories (id, code, name, displayorder, createdby, createddate, modifiedby, modifieddate) VALUES (3, 'IN', 'Infant', 3, 1, '2016-02-05 11:13:55.53', 1, '2016-02-05 11:13:55.53');
-
-
-
 SELECT pg_catalog.setval('regimen_categories_id_seq', 3, true);
-
-
-
 INSERT INTO requisition_groups (id, code, name, description, supervisorynodeid, createdby, createddate, modifiedby, modifieddate) VALUES (1, 'rg1', 'Southern regions Malaria support', 'Supports facilities running the Malaria program', 3, 1, '2016-02-05 11:14:25.995', 1, '2016-02-05 11:14:25.982');
 INSERT INTO requisition_groups (id, code, name, description, supervisorynodeid, createdby, createddate, modifiedby, modifieddate) VALUES (3, 'rg6', 'Provincial Health Plan support', 'Supports health centres in the southern half of the province', 1, 1, '2016-02-05 11:14:25.995', 4, '2016-04-16 04:32:29.962326');
 INSERT INTO requisition_groups (id, code, name, description, supervisorynodeid, createdby, createddate, modifiedby, modifieddate) VALUES (2, 'rg2', 'Provincial Park primary care', 'Manages primary care center in Winkler', 2, 1, '2016-02-05 11:14:25.995', 4, '2016-04-16 04:32:46.63244');
-
-
-
 INSERT INTO requisition_group_members (id, requisitiongroupid, facilityid, createdby, createddate, modifiedby, modifieddate) VALUES (1, 1, 6, 1, '2016-02-05 11:16:18.082', 1, '2016-02-05 11:16:18.073');
 INSERT INTO requisition_group_members (id, requisitiongroupid, facilityid, createdby, createddate, modifiedby, modifieddate) VALUES (2, 1, 4, 1, '2016-02-05 11:16:18.082', 1, '2016-02-05 11:16:18.073');
 INSERT INTO requisition_group_members (id, requisitiongroupid, facilityid, createdby, createddate, modifiedby, modifieddate) VALUES (3, 1, 5, 1, '2016-02-05 11:16:18.082', 1, '2016-02-05 11:16:18.073');
@@ -924,35 +676,24 @@ INSERT INTO requisition_group_members (id, requisitiongroupid, facilityid, creat
 INSERT INTO requisition_group_members (id, requisitiongroupid, facilityid, createdby, createddate, modifiedby, modifieddate) VALUES (12, 3, 3, 4, '2016-04-16 04:32:30.009872', 4, '2016-04-16 04:32:30.009872');
 INSERT INTO requisition_group_members (id, requisitiongroupid, facilityid, createdby, createddate, modifiedby, modifieddate) VALUES (13, 3, 7, 4, '2016-04-16 04:32:30.014604', 4, '2016-04-16 04:32:30.014604');
 INSERT INTO requisition_group_members (id, requisitiongroupid, facilityid, createdby, createddate, modifiedby, modifieddate) VALUES (14, 2, 6, 4, '2016-04-16 04:32:46.650975', 4, '2016-04-16 04:32:46.650975');
-
-
-
 SELECT pg_catalog.setval('requisition_group_members_id_seq', 14, true);
-
-
-
 INSERT INTO requisition_group_program_schedules (id, requisitiongroupid, programid, scheduleid, directdelivery, dropofffacilityid, createdby, createddate, modifiedby, modifieddate) VALUES (1, 1, 1, 1, true, NULL, 1, '2016-02-05 11:16:09.384', 1, '2016-02-05 11:16:09.38');
 INSERT INTO requisition_group_program_schedules (id, requisitiongroupid, programid, scheduleid, directdelivery, dropofffacilityid, createdby, createddate, modifiedby, modifieddate) VALUES (5, 3, 2, 1, true, NULL, 4, '2016-04-16 04:32:29.972282', 4, '2016-04-16 04:32:29.972282');
 INSERT INTO requisition_group_program_schedules (id, requisitiongroupid, programid, scheduleid, directdelivery, dropofffacilityid, createdby, createddate, modifiedby, modifieddate) VALUES (6, 3, 3, 1, true, NULL, 4, '2016-04-16 04:32:29.979744', 4, '2016-04-16 04:32:29.979744');
 INSERT INTO requisition_group_program_schedules (id, requisitiongroupid, programid, scheduleid, directdelivery, dropofffacilityid, createdby, createddate, modifiedby, modifieddate) VALUES (7, 3, 5, 1, true, NULL, 4, '2016-04-16 04:32:29.987872', 4, '2016-04-16 04:32:29.987872');
 INSERT INTO requisition_group_program_schedules (id, requisitiongroupid, programid, scheduleid, directdelivery, dropofffacilityid, createdby, createddate, modifiedby, modifieddate) VALUES (8, 2, 3, 1, true, NULL, 4, '2016-04-16 04:32:46.639761', 4, '2016-04-16 04:32:46.639761');
 INSERT INTO requisition_group_program_schedules (id, requisitiongroupid, programid, scheduleid, directdelivery, dropofffacilityid, createdby, createddate, modifiedby, modifieddate) VALUES (9, 2, 5, 1, true, NULL, 4, '2016-04-16 04:32:46.644939', 4, '2016-04-16 04:32:46.644939');
-
-
-
 SELECT pg_catalog.setval('requisition_group_program_schedules_id_seq', 9, true);
-
-
-
 SELECT pg_catalog.setval('requisition_groups_id_seq', 3, true);
-
-
-
 INSERT INTO requisition_line_items (id, rnrid, productcode, product, productdisplayorder, productcategory, productcategorydisplayorder, dispensingunit, beginningbalance, quantityreceived, quantitydispensed, stockinhand, quantityrequested, reasonforrequestedquantity, calculatedorderquantity, quantityapproved, totallossesandadjustments, newpatientcount, stockoutdays, normalizedconsumption, amc, maxmonthsofstock, maxstockquantity, packstoship, price, expirationdate, remarks, dosespermonth, dosesperdispensingunit, packsize, roundtozero, packroundingthreshold, fullsupply, skipped, reportingdays, createdby, createddate, modifiedby, modifieddate, previousnormalizedconsumptions, previousstockinhand, periodnormalizedconsumption) VALUES (48, 13, 'P10048', '3TC/AZT + NVP tablet 300/300/600 mg', 1, 'Anti-retrovirals', 2, '60 tab bottle', 10, 10, 10, 10, 10, 'because', 110, 10, 0, 10, 101, 40, 40, 3, 120, 1, 61.3000, '01/2020', NULL, 60, 20, 50, false, 25, true, false, 30, 4, '2016-04-12 18:36:01.691313', 2, '2016-04-13 00:36:02.253804', '[]', NULL, 40);
 INSERT INTO requisition_line_items (id, rnrid, productcode, product, productdisplayorder, productcategory, productcategorydisplayorder, dispensingunit, beginningbalance, quantityreceived, quantitydispensed, stockinhand, quantityrequested, reasonforrequestedquantity, calculatedorderquantity, quantityapproved, totallossesandadjustments, newpatientcount, stockoutdays, normalizedconsumption, amc, maxmonthsofstock, maxstockquantity, packstoship, price, expirationdate, remarks, dosespermonth, dosesperdispensingunit, packsize, roundtozero, packroundingthreshold, fullsupply, skipped, reportingdays, createdby, createddate, modifiedby, modifieddate, previousnormalizedconsumptions, previousstockinhand, periodnormalizedconsumption) VALUES (49, 13, 'KM3375-2', 'Malaria Rapid Diagnostic Test card 1 each', 4, 'Test Kits', 6, 'each', 10, 10, 10, 10, 10, 'b', 50, 10, 0, 10, 101, 20, 20, 3, 60, 1, NULL, '01/2020', NULL, 1, 1, 50, false, 20, true, false, 30, 4, '2016-04-12 18:36:01.691313', 2, '2016-04-13 00:36:02.253804', '[]', NULL, 20);
 INSERT INTO requisition_line_items (id, rnrid, productcode, product, productdisplayorder, productcategory, productcategorydisplayorder, dispensingunit, beginningbalance, quantityreceived, quantitydispensed, stockinhand, quantityrequested, reasonforrequestedquantity, calculatedorderquantity, quantityapproved, totallossesandadjustments, newpatientcount, stockoutdays, normalizedconsumption, amc, maxmonthsofstock, maxstockquantity, packstoship, price, expirationdate, remarks, dosespermonth, dosesperdispensingunit, packsize, roundtozero, packroundingthreshold, fullsupply, skipped, reportingdays, createdby, createddate, modifiedby, modifieddate, previousnormalizedconsumptions, previousstockinhand, periodnormalizedconsumption) VALUES (50, 13, 'N-378013', 'Tramedol injection 50mg/ml mg', 2, 'Anti-pyretics', 7, 'each', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, NULL, NULL, NULL, NULL, 3, NULL, NULL, NULL, NULL, NULL, 1, 2, 10, false, 25, true, true, 30, 4, '2016-04-12 18:36:01.691313', 2, '2016-04-13 00:36:02.253804', '[]', NULL, NULL);
 INSERT INTO requisition_line_items (id, rnrid, productcode, product, productdisplayorder, productcategory, productcategorydisplayorder, dispensingunit, beginningbalance, quantityreceived, quantitydispensed, stockinhand, quantityrequested, reasonforrequestedquantity, calculatedorderquantity, quantityapproved, totallossesandadjustments, newpatientcount, stockoutdays, normalizedconsumption, amc, maxmonthsofstock, maxstockquantity, packstoship, price, expirationdate, remarks, dosespermonth, dosesperdispensingunit, packsize, roundtozero, packroundingthreshold, fullsupply, skipped, reportingdays, createdby, createddate, modifiedby, modifieddate, previousnormalizedconsumptions, previousstockinhand, periodnormalizedconsumption) VALUES (51, 13, 'P-228438', 'Diclofenac tablet 50 mg', 3, 'Anti-pyretics', 7, 'each', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, NULL, NULL, NULL, NULL, 3, NULL, NULL, NULL, NULL, NULL, 60, 1, 100, false, 50, true, true, 30, 4, '2016-04-12 18:36:01.691313', 2, '2016-04-13 00:36:02.253804', '[]', NULL, NULL);
 INSERT INTO requisition_line_items (id, rnrid, productcode, product, productdisplayorder, productcategory, productcategorydisplayorder, dispensingunit, beginningbalance, quantityreceived, quantitydispensed, stockinhand, quantityrequested, reasonforrequestedquantity, calculatedorderquantity, quantityapproved, totallossesandadjustments, newpatientcount, stockoutdays, normalizedconsumption, amc, maxmonthsofstock, maxstockquantity, packstoship, price, expirationdate, remarks, dosespermonth, dosesperdispensingunit, packsize, roundtozero, packroundingthreshold, fullsupply, skipped, reportingdays, createdby, createddate, modifiedby, modifieddate, previousnormalizedconsumptions, previousstockinhand, periodnormalizedconsumption) VALUES (52, 13, 'P000833', 'Quinine Sulphate capsule 300 mg', 1, 'Anti-malarials', 8, 'each', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, NULL, NULL, NULL, NULL, 3, NULL, NULL, NULL, NULL, NULL, 60, 1, 500, false, 200, true, true, 30, 4, '2016-04-12 18:36:01.691313', 2, '2016-04-13 00:36:02.253804', '[]', NULL, NULL);
+INSERT INTO requisition_line_items (id, rnrid, productcode, product, productdisplayorder, productcategory, productcategorydisplayorder, dispensingunit, beginningbalance, quantityreceived, quantitydispensed, stockinhand, quantityrequested, reasonforrequestedquantity, calculatedorderquantity, quantityapproved, totallossesandadjustments, newpatientcount, stockoutdays, normalizedconsumption, amc, maxmonthsofstock, maxstockquantity, packstoship, price, expirationdate, remarks, dosespermonth, dosesperdispensingunit, packsize, roundtozero, packroundingthreshold, fullsupply, skipped, reportingdays, createdby, createddate, modifiedby, modifieddate, previousnormalizedconsumptions, previousstockinhand, periodnormalizedconsumption) VALUES (98, 27, 'A41099', 'Doxycycline tablet 100 mg', 3, 'Malaria Prophylaxis', 3, '12 tab strip', 200, 140, 100, 180, 100, 'amc', 120, 100, -60, 0, 0, 100, 100, 3, 300, 9, NULL, NULL, NULL, 90, 10, 12, false, 3, true, false, 30, 4, '2016-04-13 19:55:21.991611', 4, '2016-04-19 20:49:43.888205', '[]', NULL, 100);
+INSERT INTO requisition_line_items (id, rnrid, productcode, product, productdisplayorder, productcategory, productcategorydisplayorder, dispensingunit, beginningbalance, quantityreceived, quantitydispensed, stockinhand, quantityrequested, reasonforrequestedquantity, calculatedorderquantity, quantityapproved, totallossesandadjustments, newpatientcount, stockoutdays, normalizedconsumption, amc, maxmonthsofstock, maxstockquantity, packstoship, price, expirationdate, remarks, dosespermonth, dosesperdispensingunit, packsize, roundtozero, packroundingthreshold, fullsupply, skipped, reportingdays, createdby, createddate, modifiedby, modifieddate, previousnormalizedconsumptions, previousstockinhand, periodnormalizedconsumption) VALUES (99, 27, 'S00056L', 'Gloves, surgical latex, powdered pair size 7 each', 5, 'Gloves and Protective Gear', 4, 'each', 1000, 500, 1100, 400, 2900, 'amount adequate', 2900, 2900, 0, 0, 0, 1100, 1100, 3, 3300, 29, NULL, NULL, NULL, 1, 1, 100, false, 25, true, false, 30, 4, '2016-04-13 19:55:21.991611', 4, '2016-04-19 20:49:43.888205', '[]', NULL, 1100);
+INSERT INTO requisition_line_items (id, rnrid, productcode, product, productdisplayorder, productcategory, productcategorydisplayorder, dispensingunit, beginningbalance, quantityreceived, quantitydispensed, stockinhand, quantityrequested, reasonforrequestedquantity, calculatedorderquantity, quantityapproved, totallossesandadjustments, newpatientcount, stockoutdays, normalizedconsumption, amc, maxmonthsofstock, maxstockquantity, packstoship, price, expirationdate, remarks, dosespermonth, dosesperdispensingunit, packsize, roundtozero, packroundingthreshold, fullsupply, skipped, reportingdays, createdby, createddate, modifiedby, modifieddate, previousnormalizedconsumptions, previousstockinhand, periodnormalizedconsumption) VALUES (100, 27, 'KM3375-2', 'Malaria Rapid Diagnostic Test card 1 each', 4, 'Test Kits', 6, 'each', 500, 2000, 1500, 1000, 3500, 'amount adequate', 3500, 3500, 0, 0, 0, 1500, 1500, 3, 4500, 70, NULL, NULL, NULL, 1, 1, 50, false, 20, true, false, 30, 4, '2016-04-13 19:55:21.991611', 4, '2016-04-19 20:49:43.888205', '[]', NULL, 1500);
+INSERT INTO requisition_line_items (id, rnrid, productcode, product, productdisplayorder, productcategory, productcategorydisplayorder, dispensingunit, beginningbalance, quantityreceived, quantitydispensed, stockinhand, quantityrequested, reasonforrequestedquantity, calculatedorderquantity, quantityapproved, totallossesandadjustments, newpatientcount, stockoutdays, normalizedconsumption, amc, maxmonthsofstock, maxstockquantity, packstoship, price, expirationdate, remarks, dosespermonth, dosesperdispensingunit, packsize, roundtozero, packroundingthreshold, fullsupply, skipped, reportingdays, createdby, createddate, modifiedby, modifieddate, previousnormalizedconsumptions, previousstockinhand, periodnormalizedconsumption) VALUES (101, 27, 'P000833', 'Quinine Sulphate capsule 300 mg', 1, 'Anti-malarials', 8, 'each', 500, 200, 0, 700, 0, 'no additional product needed', 0, 0, 0, 0, 0, 0, 0, 3, 0, 1, NULL, NULL, NULL, 60, 1, 500, false, 200, true, false, 30, 4, '2016-04-13 19:55:21.991611', 4, '2016-04-19 20:49:43.888205', '[]', NULL, 0);
 INSERT INTO requisition_line_items (id, rnrid, productcode, product, productdisplayorder, productcategory, productcategorydisplayorder, dispensingunit, beginningbalance, quantityreceived, quantitydispensed, stockinhand, quantityrequested, reasonforrequestedquantity, calculatedorderquantity, quantityapproved, totallossesandadjustments, newpatientcount, stockoutdays, normalizedconsumption, amc, maxmonthsofstock, maxstockquantity, packstoship, price, expirationdate, remarks, dosespermonth, dosesperdispensingunit, packsize, roundtozero, packroundingthreshold, fullsupply, skipped, reportingdays, createdby, createddate, modifiedby, modifieddate, previousnormalizedconsumptions, previousstockinhand, periodnormalizedconsumption) VALUES (102, 28, 'A581453', 'Ampicillin PDR injection 500mg mg', 1, 'Antibiotics', 1, 'each', 100, 200, 290, 10, NULL, NULL, 860, 860, 0, 0, 0, 290, 290, 3, 870, 17, NULL, NULL, NULL, 3, 10, 50, false, 20, true, false, 30, 4, '2016-04-14 18:27:37.095319', 4, '2016-04-14 18:29:19.135643', '[]', NULL, 290);
 INSERT INTO requisition_line_items (id, rnrid, productcode, product, productdisplayorder, productcategory, productcategorydisplayorder, dispensingunit, beginningbalance, quantityreceived, quantitydispensed, stockinhand, quantityrequested, reasonforrequestedquantity, calculatedorderquantity, quantityapproved, totallossesandadjustments, newpatientcount, stockoutdays, normalizedconsumption, amc, maxmonthsofstock, maxstockquantity, packstoship, price, expirationdate, remarks, dosespermonth, dosesperdispensingunit, packsize, roundtozero, packroundingthreshold, fullsupply, skipped, reportingdays, createdby, createddate, modifiedby, modifieddate, previousnormalizedconsumptions, previousstockinhand, periodnormalizedconsumption) VALUES (103, 28, 'A427826', 'Ciproflaxin capsule 500 mg', 2, 'Antibiotics', 1, '10 tab strip', 4000, 10000, 13500, 500, NULL, NULL, 40000, 40000, 0, 0, 0, 13500, 13500, 3, 40500, 4000, NULL, NULL, NULL, 60, 10, 10, false, 5, true, false, 30, 4, '2016-04-14 18:27:37.095319', 4, '2016-04-14 18:29:19.135643', '[]', NULL, 13500);
 INSERT INTO requisition_line_items (id, rnrid, productcode, product, productdisplayorder, productcategory, productcategorydisplayorder, dispensingunit, beginningbalance, quantityreceived, quantitydispensed, stockinhand, quantityrequested, reasonforrequestedquantity, calculatedorderquantity, quantityapproved, totallossesandadjustments, newpatientcount, stockoutdays, normalizedconsumption, amc, maxmonthsofstock, maxstockquantity, packstoship, price, expirationdate, remarks, dosespermonth, dosesperdispensingunit, packsize, roundtozero, packroundingthreshold, fullsupply, skipped, reportingdays, createdby, createddate, modifiedby, modifieddate, previousnormalizedconsumptions, previousstockinhand, periodnormalizedconsumption) VALUES (75, 23, 'P10048', '3TC/AZT + NVP tablet 300/300/600 mg', 1, 'Anti-retrovirals', 2, '60 tab bottle', 10, 500, 440, 100, NULL, NULL, 665, 665, 30, 10, 0, 470, 255, 3, 765, 13, 61.3000, NULL, NULL, 60, 20, 50, false, 25, true, false, 30, 4, '2016-04-13 19:33:25.394895', 4, '2016-04-13 19:46:55.486299', '[40]', 10, 470);
@@ -967,38 +708,16 @@ INSERT INTO requisition_line_items (id, rnrid, productcode, product, productdisp
 INSERT INTO requisition_line_items (id, rnrid, productcode, product, productdisplayorder, productcategory, productcategorydisplayorder, dispensingunit, beginningbalance, quantityreceived, quantitydispensed, stockinhand, quantityrequested, reasonforrequestedquantity, calculatedorderquantity, quantityapproved, totallossesandadjustments, newpatientcount, stockoutdays, normalizedconsumption, amc, maxmonthsofstock, maxstockquantity, packstoship, price, expirationdate, remarks, dosespermonth, dosesperdispensingunit, packsize, roundtozero, packroundingthreshold, fullsupply, skipped, reportingdays, createdby, createddate, modifiedby, modifieddate, previousnormalizedconsumptions, previousstockinhand, periodnormalizedconsumption) VALUES (57, 17, 'N-378013', 'Tramedol injection 50mg/ml mg', 2, 'Anti-pyretics', 7, 'each', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, 0, 0, NULL, NULL, 3, NULL, NULL, NULL, NULL, NULL, 1, 2, 10, false, 25, true, false, 11, 4, '2016-04-12 20:04:41.261447', 4, '2016-04-12 20:04:41.261447', '[]', NULL, NULL);
 INSERT INTO requisition_line_items (id, rnrid, productcode, product, productdisplayorder, productcategory, productcategorydisplayorder, dispensingunit, beginningbalance, quantityreceived, quantitydispensed, stockinhand, quantityrequested, reasonforrequestedquantity, calculatedorderquantity, quantityapproved, totallossesandadjustments, newpatientcount, stockoutdays, normalizedconsumption, amc, maxmonthsofstock, maxstockquantity, packstoship, price, expirationdate, remarks, dosespermonth, dosesperdispensingunit, packsize, roundtozero, packroundingthreshold, fullsupply, skipped, reportingdays, createdby, createddate, modifiedby, modifieddate, previousnormalizedconsumptions, previousstockinhand, periodnormalizedconsumption) VALUES (58, 17, 'P-228438', 'Diclofenac tablet 50 mg', 3, 'Anti-pyretics', 7, 'each', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, 0, 0, NULL, NULL, 3, NULL, NULL, NULL, NULL, NULL, 60, 1, 100, false, 50, true, false, 11, 4, '2016-04-12 20:04:41.261447', 4, '2016-04-12 20:04:41.261447', '[]', NULL, NULL);
 INSERT INTO requisition_line_items (id, rnrid, productcode, product, productdisplayorder, productcategory, productcategorydisplayorder, dispensingunit, beginningbalance, quantityreceived, quantitydispensed, stockinhand, quantityrequested, reasonforrequestedquantity, calculatedorderquantity, quantityapproved, totallossesandadjustments, newpatientcount, stockoutdays, normalizedconsumption, amc, maxmonthsofstock, maxstockquantity, packstoship, price, expirationdate, remarks, dosespermonth, dosesperdispensingunit, packsize, roundtozero, packroundingthreshold, fullsupply, skipped, reportingdays, createdby, createddate, modifiedby, modifieddate, previousnormalizedconsumptions, previousstockinhand, periodnormalizedconsumption) VALUES (59, 17, 'P000833', 'Quinine Sulphate capsule 300 mg', 1, 'Anti-malarials', 8, 'each', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, 0, 0, NULL, NULL, 3, NULL, NULL, NULL, NULL, NULL, 60, 1, 500, false, 200, true, false, 11, 4, '2016-04-12 20:04:41.261447', 4, '2016-04-12 20:04:41.261447', '[]', NULL, NULL);
-INSERT INTO requisition_line_items (id, rnrid, productcode, product, productdisplayorder, productcategory, productcategorydisplayorder, dispensingunit, beginningbalance, quantityreceived, quantitydispensed, stockinhand, quantityrequested, reasonforrequestedquantity, calculatedorderquantity, quantityapproved, totallossesandadjustments, newpatientcount, stockoutdays, normalizedconsumption, amc, maxmonthsofstock, maxstockquantity, packstoship, price, expirationdate, remarks, dosespermonth, dosesperdispensingunit, packsize, roundtozero, packroundingthreshold, fullsupply, skipped, reportingdays, createdby, createddate, modifiedby, modifieddate, previousnormalizedconsumptions, previousstockinhand, periodnormalizedconsumption) VALUES (109, 29, 'A581453', 'Ampicillin PDR injection 500mg mg', 1, 'Antibiotics', 1, 'each', 10, 900, NULL, 150, 1500, 'Expecting patient surge next month', NULL, NULL, -50, 0, 10, NULL, NULL, 3, NULL, NULL, NULL, NULL, NULL, 3, 10, 50, false, 20, true, false, 30, 4, '2016-04-14 18:29:29.726812', 4, '2016-04-14 20:06:01.980503', '[290]', 10, NULL);
-INSERT INTO requisition_line_items (id, rnrid, productcode, product, productdisplayorder, productcategory, productcategorydisplayorder, dispensingunit, beginningbalance, quantityreceived, quantitydispensed, stockinhand, quantityrequested, reasonforrequestedquantity, calculatedorderquantity, quantityapproved, totallossesandadjustments, newpatientcount, stockoutdays, normalizedconsumption, amc, maxmonthsofstock, maxstockquantity, packstoship, price, expirationdate, remarks, dosespermonth, dosesperdispensingunit, packsize, roundtozero, packroundingthreshold, fullsupply, skipped, reportingdays, createdby, createddate, modifiedby, modifieddate, previousnormalizedconsumptions, previousstockinhand, periodnormalizedconsumption) VALUES (110, 29, 'A427826', 'Ciproflaxin capsule 500 mg', 2, 'Antibiotics', 1, '10 tab strip', 500, 0, NULL, 0, NULL, NULL, NULL, NULL, 0, 0, 0, NULL, NULL, 3, NULL, NULL, NULL, NULL, NULL, 60, 10, 10, false, 5, true, false, 30, 4, '2016-04-14 18:29:29.726812', 4, '2016-04-14 20:06:01.980503', '[13500]', 500, NULL);
-INSERT INTO requisition_line_items (id, rnrid, productcode, product, productdisplayorder, productcategory, productcategorydisplayorder, dispensingunit, beginningbalance, quantityreceived, quantitydispensed, stockinhand, quantityrequested, reasonforrequestedquantity, calculatedorderquantity, quantityapproved, totallossesandadjustments, newpatientcount, stockoutdays, normalizedconsumption, amc, maxmonthsofstock, maxstockquantity, packstoship, price, expirationdate, remarks, dosespermonth, dosesperdispensingunit, packsize, roundtozero, packroundingthreshold, fullsupply, skipped, reportingdays, createdby, createddate, modifiedby, modifieddate, previousnormalizedconsumptions, previousstockinhand, periodnormalizedconsumption) VALUES (111, 29, 'A53007D', 'Co-Trimoxazole DS capsule 800/160 mg', 3, 'Antibiotics', 1, '10 tab strip', 200, 0, NULL, 0, NULL, NULL, NULL, NULL, 0, 0, 0, NULL, NULL, 3, NULL, NULL, 16.4000, NULL, NULL, 60, 10, 20, false, 5, true, false, 30, 4, '2016-04-14 18:29:29.726812', 4, '2016-04-14 20:06:01.980503', '[600]', 200, NULL);
-INSERT INTO requisition_line_items (id, rnrid, productcode, product, productdisplayorder, productcategory, productcategorydisplayorder, dispensingunit, beginningbalance, quantityreceived, quantitydispensed, stockinhand, quantityrequested, reasonforrequestedquantity, calculatedorderquantity, quantityapproved, totallossesandadjustments, newpatientcount, stockoutdays, normalizedconsumption, amc, maxmonthsofstock, maxstockquantity, packstoship, price, expirationdate, remarks, dosespermonth, dosesperdispensingunit, packsize, roundtozero, packroundingthreshold, fullsupply, skipped, reportingdays, createdby, createddate, modifiedby, modifieddate, previousnormalizedconsumptions, previousstockinhand, periodnormalizedconsumption) VALUES (112, 29, 'A41099', 'Doxycycline tablet 100 mg', 5, 'Antibiotics', 1, '12 tab strip', 20, 0, NULL, 0, NULL, NULL, NULL, NULL, 0, 0, 0, NULL, NULL, 3, NULL, NULL, NULL, NULL, NULL, 90, 10, 12, false, 3, true, false, 30, 4, '2016-04-14 18:29:29.726812', 4, '2016-04-14 20:06:01.980503', '[310]', 20, NULL);
-INSERT INTO requisition_line_items (id, rnrid, productcode, product, productdisplayorder, productcategory, productcategorydisplayorder, dispensingunit, beginningbalance, quantityreceived, quantitydispensed, stockinhand, quantityrequested, reasonforrequestedquantity, calculatedorderquantity, quantityapproved, totallossesandadjustments, newpatientcount, stockoutdays, normalizedconsumption, amc, maxmonthsofstock, maxstockquantity, packstoship, price, expirationdate, remarks, dosespermonth, dosesperdispensingunit, packsize, roundtozero, packroundingthreshold, fullsupply, skipped, reportingdays, createdby, createddate, modifiedby, modifieddate, previousnormalizedconsumptions, previousstockinhand, periodnormalizedconsumption) VALUES (113, 29, 'P200563', 'Omeprazole tablet 20 mg', 6, 'Antacids', 5, 'each', 200, 0, NULL, 0, NULL, NULL, NULL, NULL, 0, 0, 0, NULL, NULL, 3, NULL, NULL, NULL, NULL, NULL, 30, 15, 5, false, 4, true, false, 30, 4, '2016-04-14 18:29:29.726812', 4, '2016-04-14 20:06:01.980503', '[200]', 200, NULL);
-INSERT INTO requisition_line_items (id, rnrid, productcode, product, productdisplayorder, productcategory, productcategorydisplayorder, dispensingunit, beginningbalance, quantityreceived, quantitydispensed, stockinhand, quantityrequested, reasonforrequestedquantity, calculatedorderquantity, quantityapproved, totallossesandadjustments, newpatientcount, stockoutdays, normalizedconsumption, amc, maxmonthsofstock, maxstockquantity, packstoship, price, expirationdate, remarks, dosespermonth, dosesperdispensingunit, packsize, roundtozero, packroundingthreshold, fullsupply, skipped, reportingdays, createdby, createddate, modifiedby, modifieddate, previousnormalizedconsumptions, previousstockinhand, periodnormalizedconsumption) VALUES (114, 29, 'N-378013', 'Tramedol injection 50mg/ml mg', 2, 'Anti-pyretics', 7, 'each', 200, 0, NULL, 0, NULL, NULL, NULL, NULL, 0, 0, 0, NULL, NULL, 3, NULL, NULL, NULL, NULL, NULL, 1, 2, 10, false, 25, true, false, 30, 4, '2016-04-14 18:29:29.726812', 4, '2016-04-14 20:06:01.980503', '[700]', 200, NULL);
-INSERT INTO requisition_line_items (id, rnrid, productcode, product, productdisplayorder, productcategory, productcategorydisplayorder, dispensingunit, beginningbalance, quantityreceived, quantitydispensed, stockinhand, quantityrequested, reasonforrequestedquantity, calculatedorderquantity, quantityapproved, totallossesandadjustments, newpatientcount, stockoutdays, normalizedconsumption, amc, maxmonthsofstock, maxstockquantity, packstoship, price, expirationdate, remarks, dosespermonth, dosesperdispensingunit, packsize, roundtozero, packroundingthreshold, fullsupply, skipped, reportingdays, createdby, createddate, modifiedby, modifieddate, previousnormalizedconsumptions, previousstockinhand, periodnormalizedconsumption) VALUES (98, 27, 'A41099', 'Doxycycline tablet 100 mg', 3, 'Malaria Prophylaxis', 3, '12 tab strip', 200, 140, 100, 180, 100, 'amc', NULL, NULL, -60, 0, 0, 100, NULL, 3, NULL, 9, NULL, NULL, NULL, 90, 10, 12, false, 3, true, false, 30, 4, '2016-04-13 19:55:21.991611', 4, '2016-04-15 17:54:49.279497', '[]', NULL, 100);
-INSERT INTO requisition_line_items (id, rnrid, productcode, product, productdisplayorder, productcategory, productcategorydisplayorder, dispensingunit, beginningbalance, quantityreceived, quantitydispensed, stockinhand, quantityrequested, reasonforrequestedquantity, calculatedorderquantity, quantityapproved, totallossesandadjustments, newpatientcount, stockoutdays, normalizedconsumption, amc, maxmonthsofstock, maxstockquantity, packstoship, price, expirationdate, remarks, dosespermonth, dosesperdispensingunit, packsize, roundtozero, packroundingthreshold, fullsupply, skipped, reportingdays, createdby, createddate, modifiedby, modifieddate, previousnormalizedconsumptions, previousstockinhand, periodnormalizedconsumption) VALUES (99, 27, 'S00056L', 'Gloves, surgical latex, powdered pair size 7 each', 5, 'Gloves and Protective Gear', 4, 'each', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, 0, 0, NULL, NULL, 3, NULL, NULL, NULL, NULL, NULL, 1, 1, 100, false, 25, true, true, 30, 4, '2016-04-13 19:55:21.991611', 4, '2016-04-15 17:54:49.279497', '[]', NULL, NULL);
-INSERT INTO requisition_line_items (id, rnrid, productcode, product, productdisplayorder, productcategory, productcategorydisplayorder, dispensingunit, beginningbalance, quantityreceived, quantitydispensed, stockinhand, quantityrequested, reasonforrequestedquantity, calculatedorderquantity, quantityapproved, totallossesandadjustments, newpatientcount, stockoutdays, normalizedconsumption, amc, maxmonthsofstock, maxstockquantity, packstoship, price, expirationdate, remarks, dosespermonth, dosesperdispensingunit, packsize, roundtozero, packroundingthreshold, fullsupply, skipped, reportingdays, createdby, createddate, modifiedby, modifieddate, previousnormalizedconsumptions, previousstockinhand, periodnormalizedconsumption) VALUES (100, 27, 'KM3375-2', 'Malaria Rapid Diagnostic Test card 1 each', 4, 'Test Kits', 6, 'each', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, 0, 0, NULL, NULL, 3, NULL, NULL, NULL, NULL, NULL, 1, 1, 50, false, 20, true, true, 30, 4, '2016-04-13 19:55:21.991611', 4, '2016-04-15 17:54:49.279497', '[]', NULL, NULL);
-INSERT INTO requisition_line_items (id, rnrid, productcode, product, productdisplayorder, productcategory, productcategorydisplayorder, dispensingunit, beginningbalance, quantityreceived, quantitydispensed, stockinhand, quantityrequested, reasonforrequestedquantity, calculatedorderquantity, quantityapproved, totallossesandadjustments, newpatientcount, stockoutdays, normalizedconsumption, amc, maxmonthsofstock, maxstockquantity, packstoship, price, expirationdate, remarks, dosespermonth, dosesperdispensingunit, packsize, roundtozero, packroundingthreshold, fullsupply, skipped, reportingdays, createdby, createddate, modifiedby, modifieddate, previousnormalizedconsumptions, previousstockinhand, periodnormalizedconsumption) VALUES (101, 27, 'P000833', 'Quinine Sulphate capsule 300 mg', 1, 'Anti-malarials', 8, 'each', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, 0, 0, NULL, NULL, 3, NULL, NULL, NULL, NULL, NULL, 60, 1, 500, false, 200, true, true, 30, 4, '2016-04-13 19:55:21.991611', 4, '2016-04-15 17:54:49.279497', '[]', NULL, NULL);
-INSERT INTO requisition_line_items (id, rnrid, productcode, product, productdisplayorder, productcategory, productcategorydisplayorder, dispensingunit, beginningbalance, quantityreceived, quantitydispensed, stockinhand, quantityrequested, reasonforrequestedquantity, calculatedorderquantity, quantityapproved, totallossesandadjustments, newpatientcount, stockoutdays, normalizedconsumption, amc, maxmonthsofstock, maxstockquantity, packstoship, price, expirationdate, remarks, dosespermonth, dosesperdispensingunit, packsize, roundtozero, packroundingthreshold, fullsupply, skipped, reportingdays, createdby, createddate, modifiedby, modifieddate, previousnormalizedconsumptions, previousstockinhand, periodnormalizedconsumption) VALUES (115, 29, 'P-228438', 'Diclofenac tablet 50 mg', 3, 'Anti-pyretics', 7, 'each', 200, 0, NULL, 0, NULL, NULL, NULL, NULL, 0, 0, 0, NULL, NULL, 3, NULL, NULL, NULL, NULL, NULL, 60, 1, 100, false, 50, true, false, 30, 4, '2016-04-14 18:29:29.726812', 4, '2016-04-14 20:06:01.980503', '[700]', 200, NULL);
 INSERT INTO requisition_line_items (id, rnrid, productcode, product, productdisplayorder, productcategory, productcategorydisplayorder, dispensingunit, beginningbalance, quantityreceived, quantitydispensed, stockinhand, quantityrequested, reasonforrequestedquantity, calculatedorderquantity, quantityapproved, totallossesandadjustments, newpatientcount, stockoutdays, normalizedconsumption, amc, maxmonthsofstock, maxstockquantity, packstoship, price, expirationdate, remarks, dosespermonth, dosesperdispensingunit, packsize, roundtozero, packroundingthreshold, fullsupply, skipped, reportingdays, createdby, createddate, modifiedby, modifieddate, previousnormalizedconsumptions, previousstockinhand, periodnormalizedconsumption) VALUES (134, 33, 'C100', 'Levora tablet 30/150 mg', 1, 'Oral Contraceptive', 1, 'Pack of 84', 500, 2000, 1500, 1000, NULL, NULL, 3500, 3500, 0, 0, 0, 1500, 1500, 3, 4500, 42, NULL, NULL, NULL, 1, 84, 84, false, 1, true, false, 30, 4, '2016-04-16 04:44:45.34509', 4, '2016-04-16 04:55:42.072414', '[]', NULL, 1500);
 INSERT INTO requisition_line_items (id, rnrid, productcode, product, productdisplayorder, productcategory, productcategorydisplayorder, dispensingunit, beginningbalance, quantityreceived, quantitydispensed, stockinhand, quantityrequested, reasonforrequestedquantity, calculatedorderquantity, quantityapproved, totallossesandadjustments, newpatientcount, stockoutdays, normalizedconsumption, amc, maxmonthsofstock, maxstockquantity, packstoship, price, expirationdate, remarks, dosespermonth, dosesperdispensingunit, packsize, roundtozero, packroundingthreshold, fullsupply, skipped, reportingdays, createdby, createddate, modifiedby, modifieddate, previousnormalizedconsumptions, previousstockinhand, periodnormalizedconsumption) VALUES (135, 33, 'C200', 'Ortho-Novum tablet 35/1 mcg', 1, 'Oral Contraceptive', 1, 'Pack of 63', 200, 2000, 2000, 200, NULL, NULL, 5800, 5800, 0, 0, 0, 2000, 2000, 3, 6000, 93, NULL, NULL, NULL, 1, 63, 63, false, 1, true, false, 30, 4, '2016-04-16 04:44:45.34509', 4, '2016-04-16 04:55:42.072414', '[]', NULL, 2000);
 INSERT INTO requisition_line_items (id, rnrid, productcode, product, productdisplayorder, productcategory, productcategorydisplayorder, dispensingunit, beginningbalance, quantityreceived, quantitydispensed, stockinhand, quantityrequested, reasonforrequestedquantity, calculatedorderquantity, quantityapproved, totallossesandadjustments, newpatientcount, stockoutdays, normalizedconsumption, amc, maxmonthsofstock, maxstockquantity, packstoship, price, expirationdate, remarks, dosespermonth, dosesperdispensingunit, packsize, roundtozero, packroundingthreshold, fullsupply, skipped, reportingdays, createdby, createddate, modifiedby, modifieddate, previousnormalizedconsumptions, previousstockinhand, periodnormalizedconsumption) VALUES (136, 33, 'C400', 'Male Condom Latex sheath  each', 2, 'Barrier Method', 2, '1 condom', 500, 1000, 200, 1300, NULL, NULL, 0, 0, 0, 0, 0, 200, 200, 3, 600, 1, NULL, NULL, NULL, 1, 1, 1, false, 1, true, false, 30, 4, '2016-04-16 04:44:45.34509', 4, '2016-04-16 04:55:42.072414', '[]', NULL, 200);
 INSERT INTO requisition_line_items (id, rnrid, productcode, product, productdisplayorder, productcategory, productcategorydisplayorder, dispensingunit, beginningbalance, quantityreceived, quantitydispensed, stockinhand, quantityrequested, reasonforrequestedquantity, calculatedorderquantity, quantityapproved, totallossesandadjustments, newpatientcount, stockoutdays, normalizedconsumption, amc, maxmonthsofstock, maxstockquantity, packstoship, price, expirationdate, remarks, dosespermonth, dosesperdispensingunit, packsize, roundtozero, packroundingthreshold, fullsupply, skipped, reportingdays, createdby, createddate, modifiedby, modifieddate, previousnormalizedconsumptions, previousstockinhand, periodnormalizedconsumption) VALUES (137, 33, 'C500', 'Implanon Single rod 68 mg', 3, 'Implantable Contraceptive', 3, '1 rod', 100, 200, 100, 200, NULL, NULL, 100, 100, 0, 0, 0, 100, 100, 3, 300, 100, NULL, NULL, NULL, 1, 1, 1, false, 1, true, false, 30, 4, '2016-04-16 04:44:45.34509', 4, '2016-04-16 04:55:42.072414', '[]', NULL, 100);
 INSERT INTO requisition_line_items (id, rnrid, productcode, product, productdisplayorder, productcategory, productcategorydisplayorder, dispensingunit, beginningbalance, quantityreceived, quantitydispensed, stockinhand, quantityrequested, reasonforrequestedquantity, calculatedorderquantity, quantityapproved, totallossesandadjustments, newpatientcount, stockoutdays, normalizedconsumption, amc, maxmonthsofstock, maxstockquantity, packstoship, price, expirationdate, remarks, dosespermonth, dosesperdispensingunit, packsize, roundtozero, packroundingthreshold, fullsupply, skipped, reportingdays, createdby, createddate, modifiedby, modifieddate, previousnormalizedconsumptions, previousstockinhand, periodnormalizedconsumption) VALUES (138, 33, 'C600', 'Levonorgestrel Two rod 150 mg', 3, 'Implantable Contraceptive', 3, '2 rods', 150, 300, 200, 250, NULL, NULL, 350, 350, 0, 0, 0, 200, 200, 3, 600, 350, NULL, NULL, NULL, 1, 1, 1, false, 1, true, false, 30, 4, '2016-04-16 04:44:45.34509', 4, '2016-04-16 04:55:42.072414', '[]', NULL, 200);
 INSERT INTO requisition_line_items (id, rnrid, productcode, product, productdisplayorder, productcategory, productcategorydisplayorder, dispensingunit, beginningbalance, quantityreceived, quantitydispensed, stockinhand, quantityrequested, reasonforrequestedquantity, calculatedorderquantity, quantityapproved, totallossesandadjustments, newpatientcount, stockoutdays, normalizedconsumption, amc, maxmonthsofstock, maxstockquantity, packstoship, price, expirationdate, remarks, dosespermonth, dosesperdispensingunit, packsize, roundtozero, packroundingthreshold, fullsupply, skipped, reportingdays, createdby, createddate, modifiedby, modifieddate, previousnormalizedconsumptions, previousstockinhand, periodnormalizedconsumption) VALUES (139, 33, 'C300', 'Depo-Estradiol injection 5/25 mg', 4, 'Injectable Hormonal Contraceptive', 4, '1 injection', 100, 300, 300, 100, NULL, NULL, 800, 800, 0, 0, 0, 300, 300, 3, 900, 800, NULL, NULL, NULL, 1, 1, 1, false, 1, true, false, 30, 4, '2016-04-16 04:44:45.34509', 4, '2016-04-16 04:55:42.072414', '[]', NULL, 300);
-
-
-
 INSERT INTO requisition_line_item_losses_adjustments (requisitionlineitemid, type, quantity, createdby, createddate, modifiedby, modifieddate) VALUES (75, 'TRANSFER_IN', 50, NULL, '2016-04-13 19:46:52.658654', 4, '2016-04-13 19:46:52.658654');
 INSERT INTO requisition_line_item_losses_adjustments (requisitionlineitemid, type, quantity, createdby, createddate, modifiedby, modifieddate) VALUES (75, 'DAMAGED', 20, NULL, '2016-04-13 19:46:52.658654', 4, '2016-04-13 19:46:52.658654');
-INSERT INTO requisition_line_item_losses_adjustments (requisitionlineitemid, type, quantity, createdby, createddate, modifiedby, modifieddate) VALUES (109, 'EXPIRED', 100, NULL, '2016-04-14 20:06:01.980503', 4, '2016-04-14 20:06:01.980503');
-INSERT INTO requisition_line_item_losses_adjustments (requisitionlineitemid, type, quantity, createdby, createddate, modifiedby, modifieddate) VALUES (109, 'TRANSFER_IN', 50, NULL, '2016-04-14 20:06:01.980503', 4, '2016-04-14 20:06:01.980503');
-INSERT INTO requisition_line_item_losses_adjustments (requisitionlineitemid, type, quantity, createdby, createddate, modifiedby, modifieddate) VALUES (98, 'EXPIRED', 60, NULL, '2016-04-15 17:54:49.279497', 4, '2016-04-15 17:54:49.279497');
-
-
-
-SELECT pg_catalog.setval('requisition_line_items_id_seq', 145, true);
-
-
-
+INSERT INTO requisition_line_item_losses_adjustments (requisitionlineitemid, type, quantity, createdby, createddate, modifiedby, modifieddate) VALUES (98, 'EXPIRED', 60, NULL, '2016-04-19 20:49:43.888205', 4, '2016-04-19 20:49:43.888205');
+SELECT pg_catalog.setval('requisition_line_items_id_seq', 164, true);
 INSERT INTO requisition_status_changes (id, rnrid, status, createdby, createddate, modifiedby, modifieddate, username) VALUES (13, 13, 'INITIATED', 4, '2016-04-12 18:36:01.691313', 4, '2016-04-12 18:36:01.691313', NULL);
 INSERT INTO requisition_status_changes (id, rnrid, status, createdby, createddate, modifiedby, modifieddate, username) VALUES (17, 17, 'INITIATED', 4, '2016-04-12 20:04:41.261447', 4, '2016-04-12 20:04:41.261447', NULL);
 INSERT INTO requisition_status_changes (id, rnrid, status, createdby, createddate, modifiedby, modifieddate, username) VALUES (18, 13, 'SUBMITTED', 2, '2016-04-13 00:35:34.877147', 2, '2016-04-13 00:35:34.877147', NULL);
@@ -1013,23 +732,14 @@ INSERT INTO requisition_status_changes (id, rnrid, status, createdby, createddat
 INSERT INTO requisition_status_changes (id, rnrid, status, createdby, createddate, modifiedby, modifieddate, username) VALUES (35, 28, 'INITIATED', 4, '2016-04-14 18:27:37.095319', 4, '2016-04-14 18:27:37.095319', NULL);
 INSERT INTO requisition_status_changes (id, rnrid, status, createdby, createddate, modifiedby, modifieddate, username) VALUES (36, 28, 'SUBMITTED', 4, '2016-04-14 18:29:15.025418', 4, '2016-04-14 18:29:15.025418', NULL);
 INSERT INTO requisition_status_changes (id, rnrid, status, createdby, createddate, modifiedby, modifieddate, username) VALUES (37, 28, 'AUTHORIZED', 4, '2016-04-14 18:29:19.135643', 4, '2016-04-14 18:29:19.135643', NULL);
-INSERT INTO requisition_status_changes (id, rnrid, status, createdby, createddate, modifiedby, modifieddate, username) VALUES (38, 29, 'INITIATED', 4, '2016-04-14 18:29:29.726812', 4, '2016-04-14 18:29:29.726812', NULL);
 INSERT INTO requisition_status_changes (id, rnrid, status, createdby, createddate, modifiedby, modifieddate, username) VALUES (39, 27, 'SUBMITTED', 4, '2016-04-15 17:54:49.279497', 4, '2016-04-15 17:54:49.279497', NULL);
 INSERT INTO requisition_status_changes (id, rnrid, status, createdby, createddate, modifiedby, modifieddate, username) VALUES (43, 33, 'INITIATED', 4, '2016-04-16 04:44:45.34509', 4, '2016-04-16 04:44:45.34509', NULL);
 INSERT INTO requisition_status_changes (id, rnrid, status, createdby, createddate, modifiedby, modifieddate, username) VALUES (44, 33, 'SUBMITTED', 4, '2016-04-16 04:46:29.535161', 4, '2016-04-16 04:46:29.535161', NULL);
 INSERT INTO requisition_status_changes (id, rnrid, status, createdby, createddate, modifiedby, modifieddate, username) VALUES (45, 33, 'AUTHORIZED', 4, '2016-04-16 04:55:26.686267', 4, '2016-04-16 04:55:26.686267', NULL);
 INSERT INTO requisition_status_changes (id, rnrid, status, createdby, createddate, modifiedby, modifieddate, username) VALUES (46, 33, 'APPROVED', 4, '2016-04-16 04:55:42.072414', 4, '2016-04-16 04:55:42.072414', NULL);
-
-
-
-SELECT pg_catalog.setval('requisition_status_changes_id_seq', 47, true);
-
-
-
-SELECT pg_catalog.setval('requisitions_id_seq', 34, true);
-
-
-
+INSERT INTO requisition_status_changes (id, rnrid, status, createdby, createddate, modifiedby, modifieddate, username) VALUES (51, 27, 'AUTHORIZED', 4, '2016-04-19 20:49:43.888205', 4, '2016-04-19 20:49:43.888205', NULL);
+SELECT pg_catalog.setval('requisition_status_changes_id_seq', 52, true);
+SELECT pg_catalog.setval('requisitions_id_seq', 38, true);
 INSERT INTO role_assignments (id, userid, roleid, programid, supervisorynodeid, deliveryzoneid) VALUES (3, 2, 2, NULL, NULL, NULL);
 INSERT INTO role_assignments (id, userid, roleid, programid, supervisorynodeid, deliveryzoneid) VALUES (4, 2, 4, 4, NULL, 1);
 INSERT INTO role_assignments (id, userid, roleid, programid, supervisorynodeid, deliveryzoneid) VALUES (5, 2, 4, 4, NULL, 2);
@@ -1067,12 +777,7 @@ INSERT INTO role_assignments (id, userid, roleid, programid, supervisorynodeid, 
 INSERT INTO role_assignments (id, userid, roleid, programid, supervisorynodeid, deliveryzoneid) VALUES (106, 4, 4, 4, NULL, 2);
 INSERT INTO role_assignments (id, userid, roleid, programid, supervisorynodeid, deliveryzoneid) VALUES (107, 4, 1, NULL, NULL, NULL);
 INSERT INTO role_assignments (id, userid, roleid, programid, supervisorynodeid, deliveryzoneid) VALUES (108, 4, 3, NULL, NULL, NULL);
-
-
-
 SELECT pg_catalog.setval('role_assignments_id_seq', 108, true);
-
-
 INSERT INTO role_rights (roleid, rightname, createdby, createddate) VALUES (1, 'MANAGE_GEOGRAPHIC_ZONE', NULL, '2016-02-05 11:22:43.144');
 INSERT INTO role_rights (roleid, rightname, createdby, createddate) VALUES (1, 'MANAGE_SUPPLY_LINE', NULL, '2016-02-05 11:22:43.144');
 INSERT INTO role_rights (roleid, rightname, createdby, createddate) VALUES (1, 'MANAGE_FACILITY_APPROVED_PRODUCT', NULL, '2016-02-05 11:22:43.144');
@@ -1103,25 +808,10 @@ INSERT INTO role_rights (roleid, rightname, createdby, createddate) VALUES (6, '
 INSERT INTO role_rights (roleid, rightname, createdby, createddate) VALUES (6, 'VIEW_ORDER', NULL, '2016-02-05 11:22:43.243');
 INSERT INTO role_rights (roleid, rightname, createdby, createddate) VALUES (6, 'FACILITY_FILL_SHIPMENT', NULL, '2016-02-05 11:22:43.243');
 INSERT INTO role_rights (roleid, rightname, createdby, createddate) VALUES (6, 'MANAGE_POD', NULL, '2016-02-05 11:22:43.243');
-
-
-
 SELECT pg_catalog.setval('roles_id_seq', 6, true);
-
-
-
 SELECT pg_catalog.setval('supervisory_nodes_id_seq', 3, true);
-
-
-
 SELECT pg_catalog.setval('supply_lines_id_seq', 6, true);
-
-
-
 SELECT pg_catalog.setval('users_id_seq', 4, true);
-
-
-
 INSERT INTO vaccination_adult_coverage_line_items (id, facilityvisitid, demographicgroup, targetgroup, createdby, createddate, modifiedby, modifieddate, healthcentertetanus1, outreachtetanus1, healthcentertetanus2to5, outreachtetanus2to5) VALUES (1, 1, 'Pregnant Women', NULL, 4, '2016-04-14 18:32:54.609314', 4, '2016-04-14 18:32:54.609314', NULL, NULL, NULL, NULL);
 INSERT INTO vaccination_adult_coverage_line_items (id, facilityvisitid, demographicgroup, targetgroup, createdby, createddate, modifiedby, modifieddate, healthcentertetanus1, outreachtetanus1, healthcentertetanus2to5, outreachtetanus2to5) VALUES (2, 1, 'MIF 15-49 years - Community', NULL, 4, '2016-04-14 18:32:54.609314', 4, '2016-04-14 18:32:54.609314', NULL, NULL, NULL, NULL);
 INSERT INTO vaccination_adult_coverage_line_items (id, facilityvisitid, demographicgroup, targetgroup, createdby, createddate, modifiedby, modifieddate, healthcentertetanus1, outreachtetanus1, healthcentertetanus2to5, outreachtetanus2to5) VALUES (3, 1, 'MIF 15-49 years - Students', NULL, 4, '2016-04-14 18:32:54.609314', 4, '2016-04-14 18:32:54.609314', NULL, NULL, NULL, NULL);
@@ -1143,13 +833,7 @@ INSERT INTO vaccination_adult_coverage_line_items (id, facilityvisitid, demograp
 INSERT INTO vaccination_adult_coverage_line_items (id, facilityvisitid, demographicgroup, targetgroup, createdby, createddate, modifiedby, modifieddate, healthcentertetanus1, outreachtetanus1, healthcentertetanus2to5, outreachtetanus2to5) VALUES (19, 3, 'Students not MIF', NULL, 4, '2016-04-14 18:32:54.609314', 4, '2016-04-14 18:32:54.609314', NULL, NULL, NULL, NULL);
 INSERT INTO vaccination_adult_coverage_line_items (id, facilityvisitid, demographicgroup, targetgroup, createdby, createddate, modifiedby, modifieddate, healthcentertetanus1, outreachtetanus1, healthcentertetanus2to5, outreachtetanus2to5) VALUES (20, 3, 'Workers not MIF', NULL, 4, '2016-04-14 18:32:54.609314', 4, '2016-04-14 18:32:54.609314', NULL, NULL, NULL, NULL);
 INSERT INTO vaccination_adult_coverage_line_items (id, facilityvisitid, demographicgroup, targetgroup, createdby, createddate, modifiedby, modifieddate, healthcentertetanus1, outreachtetanus1, healthcentertetanus2to5, outreachtetanus2to5) VALUES (21, 3, 'Other not MIF', NULL, 4, '2016-04-14 18:32:54.609314', 4, '2016-04-14 18:32:54.609314', NULL, NULL, NULL, NULL);
-
-
-
 SELECT pg_catalog.setval('vaccination_adult_coverage_line_items_id_seq', 21, true);
-
-
-
 INSERT INTO vaccination_child_coverage_line_items (id, facilityvisitid, vaccination, targetgroup, healthcenter11months, outreach11months, healthcenter23months, outreach23months, createdby, createddate, modifiedby, modifieddate) VALUES (1, 1, 'BCG', NULL, NULL, NULL, NULL, NULL, 4, '2016-04-14 18:32:54.609314', 4, '2016-04-14 18:32:54.609314');
 INSERT INTO vaccination_child_coverage_line_items (id, facilityvisitid, vaccination, targetgroup, healthcenter11months, outreach11months, healthcenter23months, outreach23months, createdby, createddate, modifiedby, modifieddate) VALUES (2, 1, 'Polio (Newborn)', NULL, NULL, NULL, NULL, NULL, 4, '2016-04-14 18:32:54.609314', 4, '2016-04-14 18:32:54.609314');
 INSERT INTO vaccination_child_coverage_line_items (id, facilityvisitid, vaccination, targetgroup, healthcenter11months, outreach11months, healthcenter23months, outreach23months, createdby, createddate, modifiedby, modifieddate) VALUES (3, 1, 'Polio 1st dose', NULL, NULL, NULL, NULL, NULL, 4, '2016-04-14 18:32:54.609314', 4, '2016-04-14 18:32:54.609314');
@@ -1186,9 +870,4 @@ INSERT INTO vaccination_child_coverage_line_items (id, facilityvisitid, vaccinat
 INSERT INTO vaccination_child_coverage_line_items (id, facilityvisitid, vaccination, targetgroup, healthcenter11months, outreach11months, healthcenter23months, outreach23months, createdby, createddate, modifiedby, modifieddate) VALUES (34, 3, 'PCV10 2nd dose', NULL, NULL, NULL, NULL, NULL, 4, '2016-04-14 18:32:54.609314', 4, '2016-04-14 18:32:54.609314');
 INSERT INTO vaccination_child_coverage_line_items (id, facilityvisitid, vaccination, targetgroup, healthcenter11months, outreach11months, healthcenter23months, outreach23months, createdby, createddate, modifiedby, modifieddate) VALUES (35, 3, 'PCV10 3rd dose', NULL, NULL, NULL, NULL, NULL, 4, '2016-04-14 18:32:54.609314', 4, '2016-04-14 18:32:54.609314');
 INSERT INTO vaccination_child_coverage_line_items (id, facilityvisitid, vaccination, targetgroup, healthcenter11months, outreach11months, healthcenter23months, outreach23months, createdby, createddate, modifiedby, modifieddate) VALUES (36, 3, 'Measles', NULL, NULL, NULL, NULL, NULL, 4, '2016-04-14 18:32:54.609314', 4, '2016-04-14 18:32:54.609314');
-
-
-
 SELECT pg_catalog.setval('vaccination_child_coverage_line_items_id_seq', 36, true);
-
-
