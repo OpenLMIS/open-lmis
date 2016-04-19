@@ -127,7 +127,7 @@ services.factory('TracerDrugsChartService', function ($http, $filter, $q, $timeo
         var firstLinkedNode = _.chain(event.chart.graphs)
             .filter(function (graph) {
                 return _.every(excludes, function (exclude) {
-                    return graph.id != exclude
+                    return graph.id != exclude;
                 });
             })
             .reduce(function (node, graph) {
