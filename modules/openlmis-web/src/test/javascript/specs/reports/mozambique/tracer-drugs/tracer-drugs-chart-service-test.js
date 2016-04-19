@@ -1,4 +1,4 @@
-describe("tracer drugs chart service test", function () {
+ddescribe("tracer drugs chart service test", function () {
 
     var tracerDrugsChartService, httpBackend;
 
@@ -135,12 +135,12 @@ describe("tracer drugs chart service test", function () {
         expect(graphs).toEqual(joc([joc({
             lineColor: "#9B656A",
             bullet: "round",
-            title: "drug name1",
+            title: "drug name1[code1]",
             valueField: "code1"
         }), joc({
             lineColor: "#80182C",
             bullet: "round",
-            title: "drug name2",
+            title: "drug name2[code2]",
             valueField: "code2"
         })]));
     })

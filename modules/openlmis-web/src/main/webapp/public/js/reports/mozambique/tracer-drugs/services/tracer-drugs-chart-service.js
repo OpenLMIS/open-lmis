@@ -147,7 +147,7 @@ services.factory('TracerDrugsChartService', function ($http, $filter, $q, messag
                 return {
                     lineColor: stringToRGB(tracerDrugcode + tracerDrugName),
                     bullet: "round",
-                    title: tracerDrugName,
+                    title: tracerDrugName + "[" + tracerDrugcode + "]",
                     valueField: tracerDrugcode,
                     lineThickness: 2,
                     balloonFunction: makeBalloon(tracerDrugName, tracerDrugcode)
