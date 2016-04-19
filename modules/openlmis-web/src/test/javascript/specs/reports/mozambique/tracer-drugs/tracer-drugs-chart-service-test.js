@@ -4,12 +4,12 @@ ddescribe("tracer drugs chart service test", function () {
 
     var tracerDrugs = [
         {
-            "drug.drug_code": "code1",
-            "drug.drug_name": "drug name1"
-        },
-        {
             "drug.drug_code": "code2",
             "drug.drug_name": "drug name2"
+        },
+        {
+            "drug.drug_code": "code1",
+            "drug.drug_name": "drug name1"
         }
     ];
 
@@ -132,16 +132,25 @@ ddescribe("tracer drugs chart service test", function () {
         var graphs = tracerDrugsChartService.generateGraphs(tracerDrugs);
 
         var joc = jasmine.objectContaining;
-        expect(graphs).toEqual(joc([joc({
-            lineColor: "#9B656A",
-            bullet: "round",
-            title: "drug name1[code1]",
-            valueField: "code1"
-        }), joc({
-            lineColor: "#80182C",
-            bullet: "round",
-            title: "drug name2[code2]",
-            valueField: "code2"
-        })]));
+        expect(graphs).toEqual(joc([
+            joc({
+                id: "average",
+                lineColor: "red"
+            }),
+            joc({
+                lineColor: "#9B656A",
+                bullet: "round",
+                title: "drug name1[code1]",
+                valueField: "code1"
+            }),
+            joc({
+                lineColor: "#80182C",
+                bullet: "round",
+                title: "drug name2[code2]",
+                valueField: "code2"
+            }),
+            joc({
+                id: "all"
+            })]));
     })
 });

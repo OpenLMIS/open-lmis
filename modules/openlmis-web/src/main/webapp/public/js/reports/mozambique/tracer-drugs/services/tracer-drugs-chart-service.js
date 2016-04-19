@@ -1,11 +1,14 @@
 services.factory('TracerDrugsChartService', function ($http, $filter, $q, messageService, CubesGenerateUrlService, StockoutSingleProductZoneChartService) {
 
+    var drugCodekey = "drug.drug_code";
+    var drugNameKey = "drug.drug_name";
+
     function getTracerDrugStockRateOnFriday(zone, friday, stockOuts, tracerDrugCode, carryStartDates) {
         var stockOutsOfTracerDrug = _.filter(stockOuts, function (stockOut) {
-            return stockOut["drug.drug_code"] === tracerDrugCode;
+            return stockOut[drugCodekey] === tracerDrugCode;
         });
         var carryStartDatesOfTracerDrug = _.filter(carryStartDates, function (carry) {
-            return carry["drug.drug_code"] === tracerDrugCode;
+            return carry[drugCodekey] === tracerDrugCode;
         });
 
         return StockoutSingleProductZoneChartService.generateChartDataItemsForZone(zone, friday, friday, stockOutsOfTracerDrug, carryStartDatesOfTracerDrug)[0];
@@ -23,7 +26,7 @@ services.factory('TracerDrugsChartService', function ($http, $filter, $q, messag
 
         var cuts = [{
             dimension: "drug",
-            values: _.pluck(tracerDrugs, "drug.drug_code")
+            values: _.pluck(tracerDrugs, drugCodekey)
         }, {
             dimension: timeDimensionName,
             values: [$filter('date')(userSelectedStartDate, "yyyy,MM,dd") + "-" + $filter('date')(userSelectedEndDate, "yyyy,MM,dd")]
@@ -77,7 +80,7 @@ services.factory('TracerDrugsChartService', function ($http, $filter, $q, messag
 
         var totalPercentage = 0;
         _.forEach(tracerDrugs, function (tracerDrug) {
-            var tracerDrugCode = tracerDrug["drug.drug_code"];
+            var tracerDrugCode = tracerDrug[drugCodekey];
 
             var fridayStockOutRate = getTracerDrugStockRateOnFriday(getZone(provinceCode, districtCode), friday, stockOuts, tracerDrugCode, carryStartDates);
             var hasStockPercentage = 100 - fridayStockOutRate.percentage;
@@ -140,9 +143,12 @@ services.factory('TracerDrugsChartService', function ($http, $filter, $q, messag
         }
 
         var tracerDrugGraphs = _.chain(tracerDrugs)
+            .sortBy(function (tracerDrug) {
+                return tracerDrug[drugNameKey];
+            })
             .map(function (tracerDrug) {
-                var tracerDrugcode = tracerDrug["drug.drug_code"];
-                var tracerDrugName = tracerDrug["drug.drug_name"];
+                var tracerDrugcode = tracerDrug[drugCodekey];
+                var tracerDrugName = tracerDrug[drugNameKey];
 
                 return {
                     lineColor: stringToRGB(tracerDrugcode + tracerDrugName),
@@ -154,7 +160,7 @@ services.factory('TracerDrugsChartService', function ($http, $filter, $q, messag
                 };
             }).value();
 
-        tracerDrugGraphs.push({
+        tracerDrugGraphs.unshift({
             id: "average",
             lineColor: "red",
             bullet: "round",
