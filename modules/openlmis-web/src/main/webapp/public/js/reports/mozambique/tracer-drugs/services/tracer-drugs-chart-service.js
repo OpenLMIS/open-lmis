@@ -136,9 +136,9 @@ services.factory('TracerDrugsChartService', function ($http, $filter, $q, messag
                 var percentage = item.dataContext[tracerDrugcode];
                 var stockOutFacilities = item.dataContext[tracerDrugcode + "StockOutFacilities"];
                 var carryingFacilities = item.dataContext[tracerDrugcode + "CarryingFacilities"];
-                return messageService.get('report.tracer.name') + ": " + tracerDrugName + "<br>" +
+                return messageService.get('report.tracer.name') + ": " + tracerDrugName + "[" + tracerDrugcode + "]" + "<br>" +
                     messageService.get('report.tracer.percentage') + ": " + percentage + "% <br>" +
-                    messageService.get('report.tracer.health.facility') + ": " + _.difference(carryingFacilities, stockOutFacilities).join();
+                    messageService.get('report.tracer.health.facility') + ": " + (carryingFacilities.length - stockOutFacilities.length);
             };
         }
 
