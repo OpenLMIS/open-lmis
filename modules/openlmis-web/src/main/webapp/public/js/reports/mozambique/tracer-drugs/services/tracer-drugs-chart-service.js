@@ -226,9 +226,7 @@ services.factory('TracerDrugsChartService', function ($http, $filter, $q, messag
             }],
             "type": "serial",
             "theme": "light",
-            "legend": {
-                "useGraphSettings": true
-            },
+            "legend": {},
             "dataProvider": chartDataItems,
             "valueAxes": [{
                 "axisThickness": 2,
