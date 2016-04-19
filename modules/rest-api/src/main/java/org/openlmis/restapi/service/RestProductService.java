@@ -154,8 +154,7 @@ public class RestProductService {
       }).transform(new Function<ProgramProduct, ProgramProductResponse>() {
         @Override
         public ProgramProductResponse apply(ProgramProduct programProduct) {
-          return new ProgramProductResponse(programProduct.getProgram().getCode(), product.getCode(),
-                  programProduct.getActive(), programProduct.getProductCategory().getName());
+          return new ProgramProductResponse(programProduct.getProgram().getCode(), product.getCode(), programProduct.getActive());
         }
       }).toList();
 

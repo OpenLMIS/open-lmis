@@ -15,5 +15,4 @@ public class ProgramProductResponse {
     private String programCode;
     private String productCode;
     private boolean isActive;
-    private String category;
 }
