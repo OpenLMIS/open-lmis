@@ -174,8 +174,9 @@ services.factory('TracerDrugsChartService', function ($http, $filter, $q, messag
             balloonText: messageService.get('report.tracer.average') + ": [[average]]%"
         });
         tracerDrugGraphs.push({
-            title: "All",
             id: "all",
+            title: "All",
+            lineColor: "black",
             legendValueText: " ",
             legendPeriodValueText: " "
         });
