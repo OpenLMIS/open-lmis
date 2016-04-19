@@ -72,7 +72,11 @@ public class RestRequisitionController extends BaseController {
     } catch (DataException e) {
       return error(e.getOpenLmisMessage(), BAD_REQUEST);
     }
-    return response(RNR, requisition.getId(), CREATED);
+
+    if (requisition != null) {
+      return response(RNR, requisition.getId(), CREATED);
+    }
+    return response(RNR, 0L, OK);
   }
 
   @RequestMapping(value = "/rest-api/requisitions/{requisitionId}/approve", method = PUT, headers = ACCEPT_JSON)

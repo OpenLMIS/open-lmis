@@ -263,4 +263,17 @@ public class RestRequisitionControllerTest {
     assertThat(response.getStatusCode(), is(HttpStatus.OK));
   }
 
+  @Test
+  public void shouldReturnOKIfEmergencyRnrIsNullAndNoException() {
+    Report report = new Report();
+    when(service.submitSdpReport(report, 1L)).thenReturn(null);
+    ResponseEntity<RestResponse> expectResponse = new ResponseEntity<>(new RestResponse(RNR, 0L), OK);
+    when(RestResponse.response(RNR, 0L, HttpStatus.OK)).thenReturn(expectResponse);
+
+    ResponseEntity<RestResponse> response = controller.submitSDPRequisition(report, principal);
+
+    assertThat((Long) response.getBody().getData().get(RNR), is(0L));
+    assertThat(response.getStatusCode(), is(HttpStatus.OK));
+  }
+
 }
