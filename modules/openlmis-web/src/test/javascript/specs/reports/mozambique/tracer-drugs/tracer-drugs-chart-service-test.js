@@ -10,6 +10,10 @@ ddescribe("tracer drugs chart service test", function () {
         {
             "drug.drug_code": "code1",
             "drug.drug_name": "drug name1"
+        },
+        {
+            "drug.drug_code": "noCarrierCode",
+            "drug.drug_name": "noCarrierName"
         }
     ];
 
@@ -88,7 +92,11 @@ ddescribe("tracer drugs chart service test", function () {
             code2StockOutFacilities: [],
             code2CarryingFacilities: ["HF3 name", "HF4 name"],
 
-            average: "75"
+            noCarrierCode: 0,
+            noCarrierCodeStockOutFacilities: [],
+            noCarrierCodeCarryingFacilities: [],
+
+            average: "50"
         }, {
             date: new Date("2016-01-08"),
 
@@ -100,7 +108,11 @@ ddescribe("tracer drugs chart service test", function () {
             code2StockOutFacilities: ["HF3 name"],
             code2CarryingFacilities: ["HF3 name", "HF4 name"],
 
-            average: "75"
+            noCarrierCode: 0,
+            noCarrierCodeStockOutFacilities: [],
+            noCarrierCodeCarryingFacilities: [],
+
+            average: "50"
         }
     ];
 
@@ -138,16 +150,16 @@ ddescribe("tracer drugs chart service test", function () {
                 lineColor: "red"
             }),
             joc({
-                lineColor: "#9B656A",
-                bullet: "round",
                 title: "drug name1[code1]",
                 valueField: "code1"
             }),
             joc({
-                lineColor: "#80182C",
-                bullet: "round",
                 title: "drug name2[code2]",
                 valueField: "code2"
+            }),
+            joc({
+                title: "noCarrierName[noCarrierCode]",
+                valueField: "noCarrierCode"
             }),
             joc({
                 id: "all"

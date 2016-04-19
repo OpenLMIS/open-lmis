@@ -83,11 +83,14 @@ services.factory('TracerDrugsChartService', function ($http, $filter, $q, messag
             var tracerDrugCode = tracerDrug[drugCodekey];
 
             var fridayStockOutRate = getTracerDrugStockRateOnFriday(getZone(provinceCode, districtCode), friday, stockOuts, tracerDrugCode, carryStartDates);
-            var hasStockPercentage = 100 - fridayStockOutRate.percentage;
-            chartDataItem[tracerDrugCode] = hasStockPercentage;
             chartDataItem[tracerDrugCode + "StockOutFacilities"] = fridayStockOutRate.stockOutFacilities;
             chartDataItem[tracerDrugCode + "CarryingFacilities"] = fridayStockOutRate.carryingFacilities;
-            totalPercentage += hasStockPercentage;
+            chartDataItem[tracerDrugCode] = 0;
+            if (fridayStockOutRate.carryingFacilities.length > 0) {
+                chartDataItem[tracerDrugCode] = 100 - fridayStockOutRate.percentage;
+            }
+
+            totalPercentage += chartDataItem[tracerDrugCode];
         });
         chartDataItem.average = (totalPercentage / tracerDrugs.length).toFixed(0);
 
