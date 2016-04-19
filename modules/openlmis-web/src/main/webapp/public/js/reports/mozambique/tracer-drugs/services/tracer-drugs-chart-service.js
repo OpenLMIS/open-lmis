@@ -149,11 +149,13 @@ services.factory('TracerDrugsChartService', function ($http, $filter, $q, messag
                     bullet: "round",
                     title: tracerDrugName,
                     valueField: tracerDrugcode,
+                    lineThickness: 2,
                     balloonFunction: makeBalloon(tracerDrugName, tracerDrugcode)
                 };
             }).value();
 
         tracerDrugGraphs.push({
+            id: "average",
             lineColor: "red",
             bullet: "round",
             title: messageService.get('report.tracer.average'),
@@ -161,15 +163,47 @@ services.factory('TracerDrugsChartService', function ($http, $filter, $q, messag
             dashLength: 5,
             balloonText: messageService.get('report.tracer.average') + ": [[average]]%"
         });
+        tracerDrugGraphs.push({
+            title: "All",
+            id: "all",
+            legendValueText: " ",
+            legendPeriodValueText: " "
+        });
 
         return tracerDrugGraphs;
     }
 
     function renderTracerDrugsChart(divId, chartDataItems, tracerDrugs) {
+
+        function onInit(eventArg) {
+            function legendHandler(event) {
+                if (event.dataItem.id == 'all') {
+                    _.chain(event.chart.graphs)
+                        .filter(function (graph) {
+                            return graph.id != 'all' && graph.id != "average";
+                        })
+                        .forEach(function (graph) {
+                            if (event.dataItem.hidden) {
+                                event.chart.hideGraph(graph);
+                            } else {
+                                event.chart.showGraph(graph);
+                            }
+                        });
+                }
+            }
+
+            eventArg.chart.legend.addListener('hideItem', legendHandler);
+            eventArg.chart.legend.addListener('showItem', legendHandler);
+        }
+
         var graphs = generateGraphs(tracerDrugs);
 
         var dateWeeklyString = 'YYYY' + ' ' + messageService.get('report.tracer.week') + ' ' + 'W';
         AmCharts.makeChart(divId, {
+            "listeners": [{
+                "event": "init",
+                "method": onInit
+            }],
             "type": "serial",
             "theme": "light",
             "legend": {
