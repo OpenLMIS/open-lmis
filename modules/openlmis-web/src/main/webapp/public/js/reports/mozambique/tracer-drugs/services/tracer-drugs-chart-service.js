@@ -167,6 +167,7 @@ services.factory('TracerDrugsChartService', function ($http, $filter, $q, messag
             title: messageService.get('report.tracer.average'),
             valueField: "average",
             dashLength: 5,
+            lineThickness: 4,
             balloonText: messageService.get('report.tracer.average') + ": [[average]]%"
         });
         tracerDrugGraphs.push({
@@ -181,25 +182,35 @@ services.factory('TracerDrugsChartService', function ($http, $filter, $q, messag
 
     function renderTracerDrugsChart(divId, chartDataItems, tracerDrugs) {
 
-        function onInit(eventArg) {
-            function legendHandler(event) {
-                if (event.dataItem.id == 'all') {
-                    _.chain(event.chart.graphs)
-                        .filter(function (graph) {
-                            return graph.id != 'all' && graph.id != "average";
-                        })
-                        .forEach(function (graph) {
-                            if (event.dataItem.hidden) {
-                                event.chart.hideGraph(graph);
-                            } else {
-                                event.chart.showGraph(graph);
-                            }
+        function onInit(initEvent) {
+            function toggleGraphsExclude(event, isToggleOff, excludes) {
+                _.chain(event.chart.graphs)
+                    .filter(function (graph) {
+                        return _.every(excludes, function (exclude) {
+                            return graph.id != exclude
                         });
+                    })
+                    .forEach(function (graph) {
+                        var start = new Date().getTime();
+                        if (isToggleOff) {
+                            event.chart.hideGraph(graph);
+                        } else {
+                            event.chart.showGraph(graph);
+                        }
+                        console.log(new Date().getTime() - start);
+                    });
+            }
+
+            function legendHandler(toggleEvent) {
+                if (toggleEvent.dataItem.id == 'all') {
+                    toggleGraphsExclude(toggleEvent, toggleEvent.dataItem.hidden, ['all', 'average']);
                 }
             }
 
-            eventArg.chart.legend.addListener('hideItem', legendHandler);
-            eventArg.chart.legend.addListener('showItem', legendHandler);
+            initEvent.chart.legend.addListener('hideItem', legendHandler);
+            initEvent.chart.legend.addListener('showItem', legendHandler);
+
+            toggleGraphsExclude(initEvent, true, ['average']);
         }
 
         var graphs = generateGraphs(tracerDrugs);
