@@ -1,4 +1,4 @@
-CREATE TYPE stock_history AS ( facility_name TEXT, drug_name TEXT, date TEXT, soh TEXT,
+CREATE TYPE stock_history AS ( facility_name TEXT, drug_name TEXT, date DATE , soh TEXT,
                                facility_code TEXT, drug_code TEXT, province_name TEXT, province_code TEXT, district_name TEXT, district_code TEXT);
 
 CREATE OR REPLACE FUNCTION soh_of_day(cardid INTEGER, day DATE)
