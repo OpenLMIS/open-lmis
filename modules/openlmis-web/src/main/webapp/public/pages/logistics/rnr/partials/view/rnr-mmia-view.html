@@ -121,17 +121,17 @@
             <td></td>
             <td></td>
         </tr>
-        <tr ng-repeat="otherItem in other">
+        <tr ng-repeat="solutionItem in solution">
             <td class="banner-text">{{$index+26}}</td>
-            <td class="product-code bg-color-lightblue">*{{otherItem.productCode}}*</td>
-            <td class="bg-color-lightblue align-left">{{otherItem.productPrimaryName}}</td>
-            <td>{{otherItem.productStrength}}</td>
-            <td>{{otherItem.beginningBalance}}</td>
-            <td>{{otherItem.quantityReceived}}</td>
-            <td>{{otherItem.quantityDispensed}}</td>
-            <td>{{otherItem.totalLossesAndAdjustments}}</td>
-            <td>{{otherItem.stockInHand}}</td>
-            <td><span ng-show="otherItem.expirationDate">{{otherItem.expirationDate}}</span></td>
+            <td class="product-code bg-color-lightblue">*{{solutionItem.productCode}}*</td>
+            <td class="bg-color-lightblue align-left">{{solutionItem.productPrimaryName}}</td>
+            <td>{{solutionItem.productStrength}}</td>
+            <td>{{solutionItem.beginningBalance}}</td>
+            <td>{{solutionItem.quantityReceived}}</td>
+            <td>{{solutionItem.quantityDispensed}}</td>
+            <td>{{solutionItem.totalLossesAndAdjustments}}</td>
+            <td>{{solutionItem.stockInHand}}</td>
+            <td><span ng-show="solutionItem.expirationDate">{{solutionItem.expirationDate}}</span></td>
         </tr>
 
         <tr>

@@ -19,30 +19,30 @@ describe('ViewRnrViaDetailController', function () {
     rnr: {
       facility: {code: "F10", name: "Health Facility 1"},
       fullSupplyLineItems: [
-        {id: 1, expirationDate: null},
-        {id: 2},
-        {id: 3, expirationDate: "28/02/2000"},
-        {id: 4, expirationDate: "28/02/2000"},
-        {id: 5, expirationDate: "28/02/2000"},
-        {id: 6, expirationDate: "28/02/2000"},
-        {id: 7, expirationDate: "28/02/2000"},
-        {id: 8, expirationDate: "28/02/2000"},
-        {id: 9, expirationDate: "28/02/2000"},
-        {id: 10, expirationDate: "28/02/2000"},
-        {id: 11, expirationDate: "28/02/2000"},
-        {id: 12, expirationDate: "28/02/2000"},
-        {id: 13, expirationDate: "28/02/2000"},
-        {id: 14, expirationDate: "28/02/2000"},
-        {id: 15, expirationDate: "28/02/2000"},
-        {id: 16, expirationDate: "28/02/2000"},
-        {id: 17, expirationDate: "28/02/2000"},
-        {id: 18, expirationDate: "28/02/2000"},
-        {id: 19, expirationDate: "28/02/2000"},
-        {id: 20, expirationDate: "28/02/2000"},
-        {id: 21, expirationDate: "28/02/2000"},
-        {id: 22, expirationDate: "28/02/2000"},
-        {id: 23, expirationDate: "28/02/2000"},
-        {id: 24, expirationDate: "28/02/2000"}],
+        {id: 1, expirationDate: null, categoryName: "Adult"},
+        {id: 2, categoryName: "Adult"},
+        {id: 3, expirationDate: "28/02/2000", categoryName: "Adult"},
+        {id: 4, expirationDate: "28/02/2000", categoryName: "Adult"},
+        {id: 5, expirationDate: "28/02/2000", categoryName: "Adult"},
+        {id: 6, expirationDate: "28/02/2000", categoryName: "Adult"},
+        {id: 7, expirationDate: "28/02/2000", categoryName: "Adult"},
+        {id: 8, expirationDate: "28/02/2000", categoryName: "Adult"},
+        {id: 9, expirationDate: "28/02/2000", categoryName: "Adult"},
+        {id: 10, expirationDate: "28/02/2000", categoryName: "Adult"},
+        {id: 11, expirationDate: "28/02/2000", categoryName: "Adult"},
+        {id: 12, expirationDate: "28/02/2000", categoryName: "Adult"},
+        {id: 13, expirationDate: "28/02/2000", categoryName: "Children"},
+        {id: 14, expirationDate: "28/02/2000", categoryName: "Children"},
+        {id: 15, expirationDate: "28/02/2000", categoryName: "Children"},
+        {id: 16, expirationDate: "28/02/2000", categoryName: "Children"},
+        {id: 17, expirationDate: "28/02/2000", categoryName: "Children"},
+        {id: 18, expirationDate: "28/02/2000", categoryName: "Children"},
+        {id: 19, expirationDate: "28/02/2000", categoryName: "Children"},
+        {id: 20, expirationDate: "28/02/2000", categoryName: "Children"},
+        {id: 21, expirationDate: "28/02/2000", categoryName: "Children"},
+        {id: 22, expirationDate: "28/02/2000", categoryName: "Children"},
+        {id: 23, expirationDate: "28/02/2000", categoryName: "Solution"},
+        {id: 24, expirationDate: "28/02/2000", categoryName: "Solution"}],
       period: {stringStartDate: "01/01/2014", stringEndDate: "31/01/2014", stringYear: "2014"},
       regimenLineItems: [
         {id: 40, categoryName: "Adults", patientsOnTreatment: 1},
@@ -126,7 +126,7 @@ describe('ViewRnrViaDetailController', function () {
     expect(scope.adult[2].expirationDate).toEqual("Feb 2000");
     expect(scope.adult.length).toBe(12);
     expect(scope.children.length).toBe(10);
-    expect(scope.other.length).toBe(2);
+    expect(scope.solution.length).toBe(2);
   });
 
   it('should calculate regime total',function(){

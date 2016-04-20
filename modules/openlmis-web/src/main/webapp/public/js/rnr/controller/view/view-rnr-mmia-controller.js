@@ -58,9 +58,15 @@ function ViewRnrMmiaController($scope, $route, Requisitions, messageService, dow
             formatExpirationDate(fullSupplyLineItems[i]);
         }
 
-        $scope.adult = fullSupplyLineItems.slice(0, 12);
-        $scope.children = fullSupplyLineItems.slice(12, 22);
-        $scope.other = fullSupplyLineItems.slice(22, 24);
+        $scope.adult = _.filter(fullSupplyLineItems, function (rnrLineItem) {
+            return rnrLineItem.categoryName === "Adult";
+        });
+        $scope.children = _.filter(fullSupplyLineItems, function (rnrLineItem) {
+            return rnrLineItem.categoryName === "Children";
+        });
+        $scope.solution = _.filter(fullSupplyLineItems, function (rnrLineItem) {
+            return rnrLineItem.categoryName === "Solution";
+        });
     };
 
     $scope.initPatient = function () {
