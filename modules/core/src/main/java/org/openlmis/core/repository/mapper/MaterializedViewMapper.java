@@ -10,4 +10,7 @@ public interface MaterializedViewMapper {
 
     @Select("SELECT refresh_start_carry_view()")
     Integer refreshCarryStartDates();
+
+    @Select("SELECT refresh_weekly_tracer_soh()")
+    Integer refreshWeeklyTracerSOH();
 }
