@@ -60,92 +60,31 @@
         </tr>
         </thead>
         <tbody>
-        <tr ng-repeat="adultItem in adult">
+        <tr ng-repeat="item in rnrLineItems">
             <td class="banner-text">{{$index+1}}</td>
-            <td class="product-code bg-color-green">*{{adultItem.productCode}}*</td>
-            <td class="bg-color-green align-left">{{adultItem.productPrimaryName}}</td>
-            <td>{{adultItem.productStrength}}</td>
-            <td>{{adultItem.beginningBalance}}</td>
-            <td>{{adultItem.quantityReceived}}</td>
-            <td>{{adultItem.quantityDispensed}}</td>
-            <td>{{adultItem.totalLossesAndAdjustments}}</td>
-            <td>{{adultItem.stockInHand}}</td>
-            <td><span ng-show="adultItem.expirationDate">{{adultItem.expirationDate}}</span></td>
-        </tr>
-        <tr>
-            <td class="banner-text bg-color-black">{{adult.length+1}}</td>
-            <td class="product-code bg-color-green"></td>
-            <td class="bg-color-green"></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-        </tr>
-        <tr>
-            <td class="banner-text bg-color-black">{{adult.length+2}}</td>
-            <td class="product-code bg-color-green"></td>
-            <td class="bg-color-green"></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
+
+            <td ng-if="item.categoryName === 'Adult'" class="product-code bg-color-green">{{item.productCode===undefined? '':
+                '*'+item.productCode+'*'}}
+            </td>
+            <td ng-if="item.categoryName === 'Adult'" class="bg-color-green align-left">{{item.productPrimaryName}}</td>
+
+
+            <td ng-if="item.categoryName === 'Children'" class="product-code bg-color-lightyellow">{{item.productCode===undefined? '': '*'+item.productCode+'*'}}</td>
+            <td ng-if="item.categoryName === 'Children'" class="bg-color-lightyellow align-left">{{item.productPrimaryName}}</td>
+
+
+            <td ng-if="item.categoryName === 'Solution'" class="product-code bg-color-lightblue">{{item.productCode===undefined? '': '*'+item.productCode+'*'}}</td>
+            <td ng-if="item.categoryName === 'Solution'" class="bg-color-lightblue align-left">{{item.productPrimaryName}}</td>
+
+            <td>{{item.productStrength}}</td>
+            <td>{{item.beginningBalance}}</td>
+            <td>{{item.quantityReceived}}</td>
+            <td>{{item.quantityDispensed}}</td>
+            <td>{{item.totalLossesAndAdjustments}}</td>
+            <td>{{item.stockInHand}}</td>
+            <td><span ng-show="adultItem.expirationDate">{{item.expirationDate}}</span></td>
         </tr>
 
-        <tr ng-repeat="childrenItem in children">
-            <td class="banner-text">{{$index+adult.length+3}}</td>
-            <td class="product-code bg-color-lightyellow">*{{childrenItem.productCode}}*</td>
-            <td class="bg-color-lightyellow align-left">{{childrenItem.productPrimaryName}}</td>
-            <td>{{childrenItem.productStrength}}</td>
-            <td>{{childrenItem.beginningBalance}}</td>
-            <td>{{childrenItem.quantityReceived}}</td>
-            <td>{{childrenItem.quantityDispensed}}</td>
-            <td>{{childrenItem.totalLossesAndAdjustments}}</td>
-            <td>{{childrenItem.stockInHand}}</td>
-            <td><span ng-show="childrenItem.expirationDate">{{childrenItem.expirationDate}}</span></td>
-        </tr>
-        <tr>
-            <td class="banner-text bg-color-">{{adult.length+children.length+3}}</td>
-            <td class="product-code bg-color-lightyellow"></td>
-            <td class="bg-color-lightyellow"></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-        </tr>
-        <tr ng-repeat="solutionItem in solution">
-            <td class="banner-text">{{$index+adult.length+children.length+4}}</td>
-            <td class="product-code bg-color-lightblue">*{{solutionItem.productCode}}*</td>
-            <td class="bg-color-lightblue align-left">{{solutionItem.productPrimaryName}}</td>
-            <td>{{solutionItem.productStrength}}</td>
-            <td>{{solutionItem.beginningBalance}}</td>
-            <td>{{solutionItem.quantityReceived}}</td>
-            <td>{{solutionItem.quantityDispensed}}</td>
-            <td>{{solutionItem.totalLossesAndAdjustments}}</td>
-            <td>{{solutionItem.stockInHand}}</td>
-            <td><span ng-show="solutionItem.expirationDate">{{solutionItem.expirationDate}}</span></td>
-        </tr>
-
-        <tr>
-            <td class="banner-text">{{adult.length+children.length+solution.length+4}}</td>
-            <td class="product-code bg-color-lightblue"></td>
-            <td class="bg-color-lightblue"></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-        </tr>
         </tbody>
     </table>
     <div class="separate"></div>

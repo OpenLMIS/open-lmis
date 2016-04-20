@@ -121,15 +121,22 @@ describe('ViewRnrViaDetailController', function () {
     scope.initProduct();
     //initMockRequisition();
 
-    expect(scope.adult[0].productCode).toEqual("0A001");
-    expect(scope.adult[1].productCode).toEqual("0A002");
-    expect(scope.adult[2].productCode).toEqual("0B001");
-    expect(scope.adult[1].expirationDate).toBe(null);
-    expect(scope.adult[0].expirationDate).toBe(undefined);
-    expect(scope.adult[2].expirationDate).toEqual("Feb 2000");
-    expect(scope.adult.length).toBe(12);
-    expect(scope.children.length).toBe(10);
-    expect(scope.solution.length).toBe(2);
+    var actualResult = _.groupBy(scope.rnrLineItems, function (item) {
+      return item.categoryName;
+    });
+
+    expect(actualResult.Adult[0].productCode).toEqual("0A001");
+    expect(actualResult.Adult[1].productCode).toEqual("0A002");
+    expect(actualResult.Adult[2].productCode).toEqual("0B001");
+    expect(actualResult.Adult[1].expirationDate).toBe(null);
+    expect(actualResult.Adult[0].expirationDate).toBe(undefined);
+    expect(actualResult.Adult[2].expirationDate).toEqual("Feb 2000");
+    expect(actualResult.Adult.length).toBe(14);
+    expect(actualResult.Adult[13].productCode).toBe(undefined);
+    expect(actualResult.Children.length).toBe(11);
+    expect(actualResult.Children[10].productCode).toBe(undefined);
+    expect(actualResult.Solution.length).toBe(3);
+    expect(actualResult.Solution[2].productCode).toBe(undefined);
   });
 
   it('should calculate regime total',function(){

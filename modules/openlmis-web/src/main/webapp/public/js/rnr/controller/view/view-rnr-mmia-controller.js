@@ -1,7 +1,5 @@
 function ViewRnrMmiaController($scope, $route, Requisitions, messageService, downloadPdfService, downloadSimamService) {
-    $scope.adult = [];
-    $scope.children = [];
-    $scope.other = [];
+    $scope.rnrLineItems = [];
 
     $scope.regimeTotal = 0;
     $scope.regimeAdult = [];
@@ -51,6 +49,21 @@ function ViewRnrMmiaController($scope, $route, Requisitions, messageService, dow
         $scope.month = messageService.get(month);
     };
 
+  function addEmptyLine(fullSupplyLineItems){
+
+        fullSupplyLineItems = _.groupBy(fullSupplyLineItems, function (item) {
+            return item.categoryName;
+        });
+
+        fullSupplyLineItems.Adult.push({categoryName: 'Adult'});
+        fullSupplyLineItems.Adult.push({categoryName: 'Adult'});
+        fullSupplyLineItems.Children.push({categoryName: 'Children'});
+        fullSupplyLineItems.Solution.push({categoryName: 'Solution'});
+
+        return $scope.rnrLineItems.concat(fullSupplyLineItems.Adult, fullSupplyLineItems.Children, fullSupplyLineItems.Solution);
+
+    }
+
     $scope.initProduct = function () {
         var fullSupplyLineItems = _.sortBy($scope.rnr.fullSupplyLineItems, 'productCode');
 
@@ -58,15 +71,7 @@ function ViewRnrMmiaController($scope, $route, Requisitions, messageService, dow
             formatExpirationDate(fullSupplyLineItems[i]);
         }
 
-        $scope.adult = _.filter(fullSupplyLineItems, function (rnrLineItem) {
-            return rnrLineItem.categoryName === "Adult";
-        });
-        $scope.children = _.filter(fullSupplyLineItems, function (rnrLineItem) {
-            return rnrLineItem.categoryName === "Children";
-        });
-        $scope.solution = _.filter(fullSupplyLineItems, function (rnrLineItem) {
-            return rnrLineItem.categoryName === "Solution";
-        });
+        $scope.rnrLineItems = addEmptyLine(fullSupplyLineItems);
     };
 
     $scope.initPatient = function () {
