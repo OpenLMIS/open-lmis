@@ -52,7 +52,7 @@ function ViewRnrMmiaController($scope, $route, Requisitions, messageService, dow
     };
 
     $scope.initProduct = function () {
-        var fullSupplyLineItems = $scope.rnr.fullSupplyLineItems;
+        var fullSupplyLineItems = _.sortBy($scope.rnr.fullSupplyLineItems, 'productCode');
 
         for (var i = 0; i < fullSupplyLineItems.length; i++) {
             formatExpirationDate(fullSupplyLineItems[i]);

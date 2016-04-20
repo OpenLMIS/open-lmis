@@ -19,9 +19,9 @@ describe('ViewRnrViaDetailController', function () {
     rnr: {
       facility: {code: "F10", name: "Health Facility 1"},
       fullSupplyLineItems: [
-        {id: 1, expirationDate: null, categoryName: "Adult"},
-        {id: 2, categoryName: "Adult"},
-        {id: 3, expirationDate: "28/02/2000", categoryName: "Adult"},
+        {id: 1, expirationDate: null, categoryName: "Adult", productCode: "0A002"},
+        {id: 2, categoryName: "Adult", productCode: "0A001"},
+        {id: 3, expirationDate: "28/02/2000", categoryName: "Adult", productCode: "0B001"},
         {id: 4, expirationDate: "28/02/2000", categoryName: "Adult"},
         {id: 5, expirationDate: "28/02/2000", categoryName: "Adult"},
         {id: 6, expirationDate: "28/02/2000", categoryName: "Adult"},
@@ -121,8 +121,11 @@ describe('ViewRnrViaDetailController', function () {
     scope.initProduct();
     //initMockRequisition();
 
-    expect(scope.adult[0].expirationDate).toBe(null);
-    expect(scope.adult[1].expirationDate).toBe(undefined);
+    expect(scope.adult[0].productCode).toEqual("0A001");
+    expect(scope.adult[1].productCode).toEqual("0A002");
+    expect(scope.adult[2].productCode).toEqual("0B001");
+    expect(scope.adult[1].expirationDate).toBe(null);
+    expect(scope.adult[0].expirationDate).toBe(undefined);
     expect(scope.adult[2].expirationDate).toEqual("Feb 2000");
     expect(scope.adult.length).toBe(12);
     expect(scope.children.length).toBe(10);
