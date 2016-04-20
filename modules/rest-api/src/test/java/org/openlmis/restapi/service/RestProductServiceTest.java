@@ -104,8 +104,6 @@ public class RestProductServiceTest {
     ProgramSupported programSupported2 = make(a(ProgramSupportedBuilder.defaultProgramSupported,
           with(ProgramSupportedBuilder.supportedProgram, makeProgram("PR2", "program 2"))));
 
-
-
     Facility facility = make(a(FacilityBuilder.defaultFacility));
     facility.setSupportedPrograms(asList(programSupported1, programSupported2));
     facility.setId(1L);
@@ -272,6 +270,7 @@ public class RestProductServiceTest {
     ProgramProduct programProduct = new ProgramProduct();
     programProduct.setProduct(makeProduct(productCode, "default product name"));
     programProduct.setProgram(makeProgram(programCode, "default program name"));
+    programProduct.setProductCategory(new ProductCategory("Code", "Other", 10));
     programProduct.setActive(isActive);
     return programProduct;
   }
