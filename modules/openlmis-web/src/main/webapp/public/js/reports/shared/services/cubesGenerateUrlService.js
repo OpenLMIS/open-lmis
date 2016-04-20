@@ -9,6 +9,10 @@ services.factory('CubesGenerateUrlService', function () {
         return baseUrl + cubesName + "/facts" + "?cut=" + generateCuts(cuts);
     };
 
+    var generateFactsUrlForCsvDownloading = function (cubesName, fields, cuts) {
+        return generateFactsUrl(cubesName, cuts) + "&fields=" + fields.join() + "&format=csv";
+    };
+
     function generateCuts(cuts) {
         return _.map(cuts, function (cut) {
             return cut.dimension + ":" + cut.values.join(";");
@@ -17,6 +21,7 @@ services.factory('CubesGenerateUrlService', function () {
 
     return {
         generateAggregateUrl: generateAggregateUrl,
-        generateFactsUrl: generateFactsUrl
+        generateFactsUrl: generateFactsUrl,
+        generateFactsUrlForCsvDownloading: generateFactsUrlForCsvDownloading
     };
 });
