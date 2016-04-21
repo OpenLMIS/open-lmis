@@ -142,12 +142,14 @@ describe('ViewRnrViaDetailController', function () {
   it('should calculate regime total',function(){
     scope.rnr = mockedRnrItem.rnr;
     scope.initRegime();
-    //initMockRequisition();
+
+    var actualRegimens = _.groupBy(scope.regimens, function (item) {
+      return item.categoryName;
+    });
 
     expect(scope.regimeTotal).toBe(19);
-    expect(scope.regimeAdult.length).toBe(9);
-    expect(scope.regimeChildren.length).toBe(10);
-
+    expect(actualRegimens.Adults.length).toBe(11);
+    expect(actualRegimens.Paediatrics.length).toBe(12);
   });
 
   function initMockRequisition() {

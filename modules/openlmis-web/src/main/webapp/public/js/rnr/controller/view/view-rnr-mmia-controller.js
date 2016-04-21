@@ -1,9 +1,7 @@
 function ViewRnrMmiaController($scope, $route, Requisitions, messageService, downloadPdfService, downloadSimamService) {
     $scope.rnrLineItems = [];
-
+    $scope.regimens =[];
     $scope.regimeTotal = 0;
-    $scope.regimeAdult = [];
-    $scope.regimeChildren = [];
 
     $scope.patient = [];
 
@@ -113,13 +111,19 @@ function ViewRnrMmiaController($scope, $route, Requisitions, messageService, dow
 
 
     $scope.initRegime = function () {
-        var regimens = $scope.rnr.regimenLineItems;
+      var regimens = _.groupBy($scope.rnr.regimenLineItems, function (item) {
+        return item.categoryName;
+      });
 
-        $scope.regimeAdult = _.filter(regimens, function(regimen){ return regimen.categoryName == "Adults"; });
+      regimens.Adults.push({categoryName: 'Adults'})
+      regimens.Adults.push({categoryName: 'Adults'})
 
-        $scope.regimeChildren = _.filter(regimens, function(regimen){ return regimen.categoryName == "Paediatrics"; });
+      regimens.Paediatrics.push({categoryName: 'Paediatrics'})
+      regimens.Paediatrics.push({categoryName: 'Paediatrics'})
 
-        calculateRegimeTotal(regimens);
+      $scope.regimens = $scope.regimens.concat(regimens.Adults, regimens.Paediatrics);
+
+      calculateRegimeTotal($scope.rnr.regimenLineItems);
     };
 
     var calculateRegimeTotal = function (regimens) {
