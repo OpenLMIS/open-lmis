@@ -35,7 +35,7 @@
     <hr/>
 
     <div ng-if="tree_data">
-        <h3 class="report-title" openlmis-message="subtitle.stock.out.single.report|selectedProduct.primaryName"></h3>
+        <h3 class="report-title" openlmis-message="subtitle.stock.out.single.report|selectedProduct.name"></h3>
 
         <tree-grid tree-data="tree_data" col-defs="col_defs" expand-on="expanding_property" expand-level="1"
                    icon-leaf="glyphicon" on-expanded="onExpanded(branch)"
