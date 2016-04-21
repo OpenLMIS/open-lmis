@@ -2,7 +2,6 @@ services.factory('TracerDrugsChartService', function ($http, $filter, $q, $timeo
 
     var drugCodekey = "drug.drug_code";
     var drugNameKey = "drug.drug_name";
-    var dateWeeklyString = 'YYYY' + ' ' + messageService.get('report.tracer.week') + ' ' + 'W';
 
     function getTracerDrugStockRateOnFriday(zone, friday, stockOuts, tracerDrugCode, carryStartDates) {
         var stockOutsOfTracerDrug = _.filter(stockOuts, function (stockOut) {
@@ -150,7 +149,7 @@ services.factory('TracerDrugsChartService', function ($http, $filter, $q, $timeo
             }).value();
     }
 
-    function makeTracerDrugsChart(divId, userSelectedStartDate, userSelectedEndDate, provinceCode, districtCode) {
+    function makeTracerDrugsChart(chartDivId, legendDivId,userSelectedStartDate, userSelectedEndDate, provinceCode, districtCode) {
         $http.get('/cubesreports/cube/products/facts?cut=is_tracer:true').success(function (tracerDrugs) {
             var stockOutPromise = getCubesRequestPromise(tracerDrugs, provinceCode, districtCode, userSelectedStartDate, userSelectedEndDate, "vw_stockouts", "overlapped_date");
             var carryStartDatesPromise = getCubesRequestPromise(tracerDrugs, provinceCode, districtCode, "", userSelectedEndDate, "vw_carry_start_dates", "carry_start");
@@ -160,7 +159,7 @@ services.factory('TracerDrugsChartService', function ($http, $filter, $q, $timeo
                 var carryStartDates = arrayOfResults[1].data;
                 var chartDataItems = generateTracerDrugsChartDataItems(tracerDrugs, stockOuts, carryStartDates, userSelectedStartDate, userSelectedEndDate, provinceCode, districtCode);
 
-                renderTracerDrugsChart(divId, chartDataItems, tracerDrugs);
+                renderTracerDrugsChart(chartDivId, legendDivId, chartDataItems, tracerDrugs);
             });
         });
     }
@@ -231,7 +230,9 @@ services.factory('TracerDrugsChartService', function ($http, $filter, $q, $timeo
         return tracerDrugGraphs;
     }
 
-    function renderTracerDrugsChart(divId, chartDataItems, tracerDrugs) {
+    function renderTracerDrugsChart(chartDivId, legendDivId,chartDataItems, tracerDrugs) {
+        var dateWeeklyString = 'YYYY' + ' ' + messageService.get('report.tracer.week') + ' ' + 'W';
+
         function onInit(initEvent) {
             function legendHandler(toggleEvent) {
                 if (toggleEvent.dataItem.id == 'all') {
@@ -243,7 +244,7 @@ services.factory('TracerDrugsChartService', function ($http, $filter, $q, $timeo
             initEvent.chart.legend.addListener('showItem', legendHandler);
         }
 
-        AmCharts.makeChart(divId, {
+        AmCharts.makeChart(chartDivId, {
             "listeners": [{
                 "event": "init",
                 "method": onInit
@@ -251,7 +252,7 @@ services.factory('TracerDrugsChartService', function ($http, $filter, $q, $timeo
             "type": "serial",
             "theme": "light",
             "legend": {
-                divId: "legend-div"
+                divId: legendDivId
             },
             "dataProvider": chartDataItems,
             "valueAxes": [{

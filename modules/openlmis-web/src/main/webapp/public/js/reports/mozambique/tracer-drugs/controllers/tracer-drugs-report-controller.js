@@ -14,7 +14,7 @@ function TracerDrugsReportController($scope, $controller, $filter,DateFormatServ
     });
 
     $scope.loadReport = function () {
-        TracerDrugsChartService.makeTracerDrugsChart('tracer-report', new Date($scope.reportParams.startTime), new Date($scope.reportParams.endTime), selectedProvinceCode, selectedDistrictCode);
+        TracerDrugsChartService.makeTracerDrugsChart('tracer-report', 'legend-div', new Date($scope.reportParams.startTime), new Date($scope.reportParams.endTime), selectedProvinceCode, selectedDistrictCode);
     };
 
     $scope.downLoadRawData = function () {
@@ -49,7 +49,7 @@ function TracerDrugsReportController($scope, $controller, $filter,DateFormatServ
         var defaultStartTime = DateFormatService.formatDateWithFirstDayOfMonth(new Date());
         var defaultEndTime = $scope.reportParams.endTime;
 
-        TracerDrugsChartService.makeTracerDrugsChart('tracer-report', new Date(defaultStartTime), new Date(defaultEndTime), undefined, undefined);
+        TracerDrugsChartService.makeTracerDrugsChart('tracer-report', 'legend-div', new Date(defaultStartTime), new Date(defaultEndTime), undefined, undefined);
     }
 
 }
