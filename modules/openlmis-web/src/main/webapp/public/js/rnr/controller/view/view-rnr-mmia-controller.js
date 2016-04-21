@@ -65,6 +65,9 @@ function ViewRnrMmiaController($scope, $route, Requisitions, messageService, dow
     $scope.initProduct = function () {
         var fullSupplyLineItems = _.sortBy($scope.rnr.fullSupplyLineItems, 'productCode');
 
+
+        console.log(fullSupplyLineItems);
+
         for (var i = 0; i < fullSupplyLineItems.length; i++) {
             formatExpirationDate(fullSupplyLineItems[i]);
         }
@@ -115,11 +118,11 @@ function ViewRnrMmiaController($scope, $route, Requisitions, messageService, dow
         return item.categoryName;
       });
 
-      regimens.Adults.push({categoryName: 'Adults'})
-      regimens.Adults.push({categoryName: 'Adults'})
+      regimens.Adults.push({categoryName: 'Adults'});
+      regimens.Adults.push({categoryName: 'Adults'});
 
-      regimens.Paediatrics.push({categoryName: 'Paediatrics'})
-      regimens.Paediatrics.push({categoryName: 'Paediatrics'})
+      regimens.Paediatrics.push({categoryName: 'Paediatrics'});
+      regimens.Paediatrics.push({categoryName: 'Paediatrics'});
 
       $scope.regimens = $scope.regimens.concat(regimens.Adults, regimens.Paediatrics);
 
