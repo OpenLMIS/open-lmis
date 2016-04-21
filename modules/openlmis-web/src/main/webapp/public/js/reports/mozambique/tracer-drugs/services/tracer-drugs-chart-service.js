@@ -250,7 +250,9 @@ services.factory('TracerDrugsChartService', function ($http, $filter, $q, $timeo
             }],
             "type": "serial",
             "theme": "light",
-            "legend": {},
+            "legend": {
+                divId: "legend-div"
+            },
             "dataProvider": chartDataItems,
             "valueAxes": [{
                 "axisThickness": 2,
