@@ -41,8 +41,9 @@ public interface RnrLineItemMapper {
   @Options(useGeneratedKeys = true, keyProperty = "lineItem.id")
   public Integer insert(@Param("lineItem") RnrLineItem rnrLineItem, @Param("previousNormalizedConsumptions") String previousNormalizedConsumptions);
 
-  @Select("SELECT requisition_line_items.*, products.strength, products.primaryname, products.isKit " +
+  @Select("SELECT requisition_line_items.*, products.strength, products.primaryname, products.isKit ,product_categories.name " +
       "FROM requisition_line_items, products " +
+      "INNER JOIN program_products on  products.id = program_products.productid INNER JOIN product_categories ON program_products.productcategoryid = product_categories.id " +
       "WHERE rnrId = #{rnrId} and requisition_line_items.fullSupply = true " +
       "and requisition_line_items.productcode = products.code " +
       "order by productDisplayOrder;")
@@ -50,7 +51,8 @@ public interface RnrLineItemMapper {
     @Result(property = "id", column = "id"),
     @Result(property = "isKit", column = "isKit"),
     @Result(property = "productStrength", column = "strength"),
-    @Result(property = "productPrimaryName", column = "primaryname"),
+    @Result(property = "productCategory", column = "name"),
+   @Result(property = "productPrimaryName", column = "primaryname"),
     @Result(property = "previousNormalizedConsumptions", column = "previousNormalizedConsumptions", typeHandler = StringToList.class),
     @Result(property = "lossesAndAdjustments", javaType = List.class, column = "id",
       many = @Many(select = "org.openlmis.rnr.repository.mapper.LossesAndAdjustmentsMapper.getByRnrLineItem"))

@@ -141,6 +141,7 @@ public class RnrLineItemMapperIT {
     lineItem.setFullSupply(true);
     lineItem.setReportingDays(10);
     lineItem.setPreviousStockInHand(5);
+    lineItem.setProductCategory("Other");
     rnrLineItemMapper.insert(lineItem, lineItem.getPreviousNormalizedConsumptions().toString());
 
     LossesAndAdjustments lossesAndAdjustmentsClinicReturn = new LossesAndAdjustments();
@@ -337,7 +338,7 @@ public class RnrLineItemMapperIT {
     assertThat(rnrLineItemMapper.getRnrLineItemsByRnrId(rnr.getId()).get(0).getProductCode(),
       is(lineItem2.getProductCode()));
     assertThat(rnrLineItemMapper.getRnrLineItemsByRnrId(rnr.getId()).get(0).getProductCategory(),
-      is(lineItem2.getProductCategory()));
+      is("Category 1"));
   }
 
   @Test
