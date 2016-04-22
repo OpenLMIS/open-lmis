@@ -49,30 +49,37 @@ function ViewRnrMmiaController($scope, $route, Requisitions, messageService, dow
 
   function addEmptyLine(fullSupplyLineItems){
 
-        fullSupplyLineItems = _.groupBy(fullSupplyLineItems, function (item) {
-            return item.categoryName;
-        });
+      fullSupplyLineItems = _.groupBy(fullSupplyLineItems, function (item) {
+          return item.categoryName;
+      });
 
-        fullSupplyLineItems.Adult.push({categoryName: 'Adult'});
-        fullSupplyLineItems.Adult.push({categoryName: 'Adult'});
-        fullSupplyLineItems.Children.push({categoryName: 'Children'});
-        fullSupplyLineItems.Solution.push({categoryName: 'Solution'});
+      if (fullSupplyLineItems.Adult !== undefined) {
+          fullSupplyLineItems.Adult.push({categoryName: 'Adult'});
+          fullSupplyLineItems.Adult.push({categoryName: 'Adult'});
+          $scope.rnrLineItems = $scope.rnrLineItems.concat(fullSupplyLineItems.Adult);
+      }
 
-        return $scope.rnrLineItems.concat(fullSupplyLineItems.Adult, fullSupplyLineItems.Children, fullSupplyLineItems.Solution);
+      if (fullSupplyLineItems.Children !==undefined){
+          fullSupplyLineItems.Children.push({categoryName: 'Children'});
+          $scope.rnrLineItems = $scope.rnrLineItems.concat(fullSupplyLineItems.Children);
+      }
 
+      if (fullSupplyLineItems.Solution!==undefined){
+          fullSupplyLineItems.Solution.push({categoryName: 'Solution'});
+          $scope.rnrLineItems = $scope.rnrLineItems.concat(fullSupplyLineItems.Solution);
+      }
     }
 
     $scope.initProduct = function () {
         var fullSupplyLineItems = _.sortBy($scope.rnr.fullSupplyLineItems, 'productCode');
 
-
-        console.log(fullSupplyLineItems);
-
         for (var i = 0; i < fullSupplyLineItems.length; i++) {
             formatExpirationDate(fullSupplyLineItems[i]);
         }
+        console.log(fullSupplyLineItems);
+        addEmptyLine(fullSupplyLineItems);
 
-        $scope.rnrLineItems = addEmptyLine(fullSupplyLineItems);
+        console.log($scope.rnrLineItems);
     };
 
     $scope.initPatient = function () {
@@ -114,19 +121,22 @@ function ViewRnrMmiaController($scope, $route, Requisitions, messageService, dow
 
 
     $scope.initRegime = function () {
-      var regimens = _.groupBy($scope.rnr.regimenLineItems, function (item) {
-        return item.categoryName;
-      });
+        var regimens = _.groupBy($scope.rnr.regimenLineItems, function (item) {
+            return item.categoryName;
+        });
 
-      regimens.Adults.push({categoryName: 'Adults'});
-      regimens.Adults.push({categoryName: 'Adults'});
+        if (regimens.Adults !== undefined) {
+            regimens.Adults.push({categoryName: 'Adults'});
+            regimens.Adults.push({categoryName: 'Adults'});
+            $scope.regimens = $scope.regimens.concat(regimens.Adults);
+        }
+        if (regimens.Paediatrics !== undefined) {
+            regimens.Paediatrics.push({categoryName: 'Paediatrics'});
+            regimens.Paediatrics.push({categoryName: 'Paediatrics'});
+            $scope.regimens = $scope.regimens.concat(regimens.Paediatrics);
+        }
 
-      regimens.Paediatrics.push({categoryName: 'Paediatrics'});
-      regimens.Paediatrics.push({categoryName: 'Paediatrics'});
-
-      $scope.regimens = $scope.regimens.concat(regimens.Adults, regimens.Paediatrics);
-
-      calculateRegimeTotal($scope.rnr.regimenLineItems);
+        calculateRegimeTotal($scope.rnr.regimenLineItems);
     };
 
     var calculateRegimeTotal = function (regimens) {

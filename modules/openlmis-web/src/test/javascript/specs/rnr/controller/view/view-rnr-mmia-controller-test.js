@@ -119,7 +119,6 @@ describe('ViewRnrViaDetailController', function () {
   it('should format validate',function(){
     scope.rnr = mockedRnrItem.rnr;
     scope.initProduct();
-    //initMockRequisition();
 
     var actualResult = _.groupBy(scope.rnrLineItems, function (item) {
       return item.categoryName;
@@ -137,6 +136,47 @@ describe('ViewRnrViaDetailController', function () {
     expect(actualResult.Children[10].productCode).toBe(undefined);
     expect(actualResult.Solution.length).toBe(3);
     expect(actualResult.Solution[2].productCode).toBe(undefined);
+  });
+
+  it('should initProduct exclude undefined category',function(){
+    var mockedRnrItem = {
+      rnr: {
+        facility: {code: "F10", name: "Health Facility 1"},
+        fullSupplyLineItems: [
+          {id: 1, expirationDate: null, categoryName: "Adult", productCode: "0A002"},
+          {id: 24, expirationDate: "28/02/2000", categoryName: "Solution"}],
+      }
+    };
+
+    scope.rnr = mockedRnrItem.rnr;
+    scope.initProduct();
+
+    var actualResult = _.groupBy(scope.rnrLineItems, function (item) {
+      return item.categoryName;
+    });
+
+    expect(actualResult.Adult.length).toBe(3);
+    expect(actualResult.Children).toBe(undefined);
+    expect(actualResult.Solution.length).toBe(2);
+  });
+
+  it('should initRegime exclude undefined category',function(){
+    var mockedRnrItem = {
+      rnr: {
+        facility: {code: "F10", name: "Health Facility 1"},
+        regimenLineItems: [
+          {id: 40, categoryName: "Adults", patientsOnTreatment: 1}]
+      }
+    };
+    scope.rnr = mockedRnrItem.rnr;
+    scope.initRegime();
+
+    var actualRegimens = _.groupBy(scope.regimens, function (item) {
+      return item.categoryName;
+    });
+
+    expect(actualRegimens.Adults.length).toBe(3);
+    expect(actualRegimens.Paediatrics).toBe(undefined);
   });
 
   it('should calculate regime total',function(){
