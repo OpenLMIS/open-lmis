@@ -1,4 +1,4 @@
-CREATE TYPE stock_history AS ( facility_name TEXT, drug_name TEXT, date DATE , soh TEXT,
+CREATE TYPE stock_history AS ( facility_name TEXT, drug_name TEXT, date DATE, soh TEXT,
                                facility_code TEXT, drug_code TEXT, province_name TEXT, province_code TEXT, district_name TEXT, district_code TEXT);
 
 CREATE OR REPLACE FUNCTION soh_of_day(cardid INTEGER, day DATE)
@@ -10,7 +10,7 @@ BEGIN
   FROM stock_card_entry_key_values
     JOIN stock_card_entries ON stock_card_entry_key_values.stockcardentryid = stock_card_entries.id
   WHERE keycolumn = 'soh' AND occurred <= day AND stock_card_entries.stockcardid = cardid
-  ORDER BY stockcardentryid ASC
+  ORDER BY stockcardentryid DESC
   LIMIT 1
   INTO soh;
 
