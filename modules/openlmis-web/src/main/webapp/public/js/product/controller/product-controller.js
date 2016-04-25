@@ -55,8 +55,8 @@ function ProductController($scope, productGroups, productForms, dosageUnits, pro
     $scope.product.dosageUnit = _.where($scope.dosageUnits, {code: $scope.selectedProductDosageUnitCode})[0];
   };
 
-  $scope.isSupportArchive = function () {
-    var toggleKey = {key: 'product.archive'};
+  $scope.isArchiveFieldHidden = function () {
+    var toggleKey = {key: 'product.archive.hidden'};
     FeatureToggleService.get(toggleKey, function (result) {
       return result.key;
     });
