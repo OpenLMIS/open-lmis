@@ -1,4 +1,4 @@
-function TracerDrugsReportController($scope, $controller, $filter,DateFormatService, TracerDrugsChartService, CubesGenerateUrlService) {
+function TracerDrugsReportController($scope, $controller, $filter, DateFormatService, TracerDrugsChartService, CubesGenerateUrlService) {
     $controller('BaseProductReportController', {$scope: $scope});
 
     $scope.getTimeRange = function (dateRange) {
@@ -18,8 +18,12 @@ function TracerDrugsReportController($scope, $controller, $filter,DateFormatServ
     };
 
     $scope.downLoadRawData = function () {
-        var fields = ["facility.facility_name", "drug.drug_name,date,soh"];
-        window.open(CubesGenerateUrlService.generateFactsUrlForCsvDownloading('vw_weekly_tracer_soh', fields, generateCutParams()));
+        var params = [{
+            dimension: "fields",
+            values: ["facility.facility_name", "drug.drug_name,date,soh"]
+        }, {dimension: "format", values: ["csv"]}];
+
+        window.open(CubesGenerateUrlService.generateFactsUrlWithParams('vw_weekly_tracer_soh', generateCutParams(), params));
     };
 
     function generateCutParams() {
