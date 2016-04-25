@@ -42,11 +42,17 @@ public interface RnrLineItemMapper {
   public Integer insert(@Param("lineItem") RnrLineItem rnrLineItem, @Param("previousNormalizedConsumptions") String previousNormalizedConsumptions);
 
   @Select("SELECT requisition_line_items.*, products.strength, products.primaryname, products.isKit ,product_categories.name " +
-      "FROM requisition_line_items, products " +
-      "INNER JOIN program_products on  products.id = program_products.productid INNER JOIN product_categories ON program_products.productcategoryid = product_categories.id " +
-      "WHERE rnrId = #{rnrId} and requisition_line_items.fullSupply = true " +
-      "and requisition_line_items.productcode = products.code " +
-      "order by productDisplayOrder;")
+    "FROM requisition_line_items " +
+    "INNER JOIN products ON requisition_line_items.productcode = products.code " +
+    "INNER JOIN program_products on  products.id = program_products.productid " +
+    "INNER JOIN product_categories ON program_products.productcategoryid = product_categories.id " +
+    "INNER JOIN programs ON program_products.programid = programs.id " +
+    "INNER JOIN requisitions ON requisition_line_items.rnrid = requisitions.id " +
+    "WHERE rnrId = #{rnrId} " +
+    "and requisition_line_items.fullSupply = true " +
+    "and requisition_line_items.productcode = products.code " +
+    "and (programs.id = requisitions.programid OR programs.parentid = requisitions.programid) " +
+    "order by productDisplayOrder;")
   @Results(value = {
     @Result(property = "id", column = "id"),
     @Result(property = "isKit", column = "isKit"),
