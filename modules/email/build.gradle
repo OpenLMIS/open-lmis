@@ -17,7 +17,7 @@ dependencies {
             'javax.mail:mail:1.4.5',
             'org.springframework.integration:spring-integration-core:2.2.3.RELEASE',
             'org.springframework.integration:spring-integration-jdbc:2.2.3.RELEASE',
-            'commons-collections:commons-collections:20040616',
+            'commons-collections:commons-collections:3.2.2',
             'commons-lang:commons-lang:2.6',
             project(':modules:db')
 
