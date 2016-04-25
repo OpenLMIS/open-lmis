@@ -199,7 +199,7 @@ describe("Stock Out All Products Report Controller", function () {
         expect(scope.reportData[0]["code"]).toEqual("Drug a");
         expect(scope.reportData[0]["totalDuration"]).toEqual(27);
         expect(scope.reportData[0]["occurrences"]).toEqual(2);
-        expect(scope.reportData[0]["avgDuration"]).toEqual('13.5');
+        expect(scope.reportData[0]["avgDuration"]).toEqual(13.5);
         expect(scope.reportData[0]["name"]).toEqual("Drug a name");
         expect(scope.reportParams.reportTitle).toEqual("Maputo Província,Marracuene,Habel Jafar");
     });

@@ -51,7 +51,7 @@ function StockOutAllProductsReportController($scope, $filter, $q, $controller, $
         drug.code = drug[0]['drug.drug_code'];
         drug.name = drug[0]['drug.drug_name'];
         drug.totalDuration = calculationData.totalDuration;
-        drug.avgDuration = calculationData.avgDuration;
+        drug.avgDuration = parseFloat(calculationData.avgDuration);
         drug.occurrences = calculationData.totalOccurrences;
         $scope.reportData.push(drug);
     }
