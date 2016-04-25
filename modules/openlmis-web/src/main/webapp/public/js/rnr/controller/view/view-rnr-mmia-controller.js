@@ -47,27 +47,30 @@ function ViewRnrMmiaController($scope, $route, Requisitions, messageService, dow
         $scope.month = messageService.get(month);
     };
 
-  function addEmptyLine(fullSupplyLineItems){
+    function addEmptyLine(fullSupplyLineItems) {
 
-      fullSupplyLineItems = _.groupBy(fullSupplyLineItems, function (item) {
-          return item.categoryName;
-      });
+        fullSupplyLineItems = _.groupBy(fullSupplyLineItems, function (item) {
+            return item.categoryName;
+        });
 
-      if (fullSupplyLineItems.Adult !== undefined) {
-          fullSupplyLineItems.Adult.push({categoryName: 'Adult'});
-          fullSupplyLineItems.Adult.push({categoryName: 'Adult'});
-          $scope.rnrLineItems = $scope.rnrLineItems.concat(fullSupplyLineItems.Adult);
-      }
+        if (fullSupplyLineItems.Adult === undefined) {
+            fullSupplyLineItems.Adult = [];
+        }
 
-      if (fullSupplyLineItems.Children !==undefined){
-          fullSupplyLineItems.Children.push({categoryName: 'Children'});
-          $scope.rnrLineItems = $scope.rnrLineItems.concat(fullSupplyLineItems.Children);
-      }
+        if (fullSupplyLineItems.Children === undefined) {
+            fullSupplyLineItems.Children = [];
 
-      if (fullSupplyLineItems.Solution!==undefined){
-          fullSupplyLineItems.Solution.push({categoryName: 'Solution'});
-          $scope.rnrLineItems = $scope.rnrLineItems.concat(fullSupplyLineItems.Solution);
-      }
+    }
+        if (fullSupplyLineItems.Solution === undefined) {
+            fullSupplyLineItems.Solution = [];
+        }
+
+        fullSupplyLineItems.Adult.push({categoryName: 'Adult'});
+        fullSupplyLineItems.Adult.push({categoryName: 'Adult'});
+        fullSupplyLineItems.Children.push({categoryName: 'Children'});
+        fullSupplyLineItems.Solution.push({categoryName: 'Solution'});
+
+        $scope.rnrLineItems = $scope.rnrLineItems.concat(fullSupplyLineItems.Adult, fullSupplyLineItems.Children, fullSupplyLineItems.Solution);
     }
 
     $scope.initProduct = function () {
@@ -76,10 +79,8 @@ function ViewRnrMmiaController($scope, $route, Requisitions, messageService, dow
         for (var i = 0; i < fullSupplyLineItems.length; i++) {
             formatExpirationDate(fullSupplyLineItems[i]);
         }
-        console.log(fullSupplyLineItems);
-        addEmptyLine(fullSupplyLineItems);
 
-        console.log($scope.rnrLineItems);
+        addEmptyLine(fullSupplyLineItems);
     };
 
     $scope.initPatient = function () {
@@ -125,17 +126,21 @@ function ViewRnrMmiaController($scope, $route, Requisitions, messageService, dow
             return item.categoryName;
         });
 
-        if (regimens.Adults !== undefined) {
-            regimens.Adults.push({categoryName: 'Adults'});
-            regimens.Adults.push({categoryName: 'Adults'});
-            $scope.regimens = $scope.regimens.concat(regimens.Adults);
-        }
-        if (regimens.Paediatrics !== undefined) {
-            regimens.Paediatrics.push({categoryName: 'Paediatrics'});
-            regimens.Paediatrics.push({categoryName: 'Paediatrics'});
-            $scope.regimens = $scope.regimens.concat(regimens.Paediatrics);
+        if (regimens.Adults === undefined) {
+            regimens.Adults = [];
         }
 
+        if (regimens.Paediatrics === undefined) {
+            regimens.Paediatrics = [];
+        }
+
+        regimens.Adults.push({categoryName: 'Adults'});
+        regimens.Adults.push({categoryName: 'Adults'});
+
+        regimens.Paediatrics.push({categoryName: 'Paediatrics'});
+        regimens.Paediatrics.push({categoryName: 'Paediatrics'});
+
+        $scope.regimens = $scope.regimens.concat(regimens.Adults, regimens.Paediatrics);
         calculateRegimeTotal($scope.rnr.regimenLineItems);
     };
 

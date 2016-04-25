@@ -156,7 +156,7 @@ describe('ViewRnrViaDetailController', function () {
     });
 
     expect(actualResult.Adult.length).toBe(3);
-    expect(actualResult.Children).toBe(undefined);
+    expect(actualResult.Children.length).toBe(1);
     expect(actualResult.Solution.length).toBe(2);
   });
 
@@ -176,7 +176,7 @@ describe('ViewRnrViaDetailController', function () {
     });
 
     expect(actualRegimens.Adults.length).toBe(3);
-    expect(actualRegimens.Paediatrics).toBe(undefined);
+    expect(actualRegimens.Paediatrics.length).toBe(2);
   });
 
   it('should calculate regime total',function(){
