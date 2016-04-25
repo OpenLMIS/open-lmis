@@ -41,13 +41,18 @@ function SaveRegimenTemplateController($scope, program, programRegimens, regimen
 
   filterRegimensByCategory($scope.regimens);
 
-  $scope.addNewRegimen = function () {
-    if (invalidRegimen($scope.newRegimen)) {
+  $scope.addNewRegimen = function()
+  {
+    if (invalidRegimen($scope.newRegimen))
+    {
       $scope.inputClass = true;
       $scope.newRegimenError = messageService.get('label.missing.values');
       $scope.regimensError = true;
-    } else {
-      if (!valid($scope.newRegimen)) {
+    }
+    else
+    {
+      if (!valid($scope.newRegimen))
+      {
         return;
       }
       $scope.newRegimen.programId = $scope.program.id;
@@ -61,10 +66,12 @@ function SaveRegimenTemplateController($scope, program, programRegimens, regimen
     }
   };
 
-  function valid(regimen) {
-    var regimens = _.reject(_.flatten($scope.regimensByCategory), function (regimen1) {
+  function valid(regimen)
+  {
+    var regimens = _.reject(_.flatten(_.values($scope.regimensByCategory)), function (regimen1) {
       return regimen1.$$hashKey == regimen.$$hashKey;
     });
+
     if (_.findWhere(regimens, {code: regimen.code})) {
       $scope.newRegimenError = "";
       $scope.error = messageService.get('error.duplicate.regimen.code');
@@ -99,8 +106,10 @@ function SaveRegimenTemplateController($scope, program, programRegimens, regimen
     $scope.error = "";
   };
 
-  function invalidRegimen(regimen) {
-    if (isUndefined(regimen.category) || isUndefined(regimen.code) || isUndefined(regimen.name)) {
+  function invalidRegimen(regimen)
+  {
+    if (isUndefined(regimen.category) || isUndefined(regimen.code) || isUndefined(regimen.name))
+    {
       $scope.regimensError = true;
       return true;
     }
