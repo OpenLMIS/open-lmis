@@ -1,4 +1,4 @@
-services.factory('TracerDrugsChartService', function ($http, $filter, $q, $timeout, messageService, CubesGenerateUrlService, StockoutSingleProductZoneChartService, CubesGenerateCutParamsService) {
+services.factory('TracerDrugsChartService', function ($http, $filter, $q, $timeout, messageService, CubesGenerateUrlService, StockoutSingleProductZoneChartService, CubesGenerateCutParamsService, ReportLocationConfigService) {
 
     var drugCodekey = "drug.drug_code";
     var drugNameKey = "drug.drug_name";
@@ -35,15 +35,8 @@ services.factory('TracerDrugsChartService', function ($http, $filter, $q, $timeo
         return dates;
     }
 
-    function getUserSelectedZoneConfig(province, district) {
-        var isOneDistrict = province !== undefined && district !== undefined;
-        var isOneProvince = province !== undefined && district === undefined;
-        var isAllProvinces = province === undefined && district === undefined;
-        return {isOneDistrict: isOneDistrict, isOneProvince: isOneProvince, isAllProvinces: isAllProvinces};
-    }
-
     function getZone(province, district) {
-        var locationConfig = getUserSelectedZoneConfig(province, district);
+        var locationConfig = ReportLocationConfigService.getUserSelectedLocationConfig(province, district);
 
         if (locationConfig.isOneDistrict) {
             return {
@@ -136,7 +129,7 @@ services.factory('TracerDrugsChartService', function ($http, $filter, $q, $timeo
             }).value();
     }
 
-    function makeTracerDrugsChart(chartDivId, legendDivId,userSelectedStartDate, userSelectedEndDate, province, district) {
+    function makeTracerDrugsChart(chartDivId, legendDivId, userSelectedStartDate, userSelectedEndDate, province, district) {
         $http.get('/cubesreports/cube/products/facts?cut=is_tracer:true').success(function (tracerDrugs) {
             var stockOutPromise = getCubesRequestPromise(tracerDrugs, province, district, userSelectedStartDate, userSelectedEndDate, "vw_stockouts", "overlapped_date");
             var carryStartDatesPromise = getCubesRequestPromise(tracerDrugs, province, district, "", userSelectedEndDate, "vw_carry_start_dates", "carry_start");
@@ -217,7 +210,7 @@ services.factory('TracerDrugsChartService', function ($http, $filter, $q, $timeo
         return tracerDrugGraphs;
     }
 
-    function renderTracerDrugsChart(chartDivId, legendDivId,chartDataItems, tracerDrugs) {
+    function renderTracerDrugsChart(chartDivId, legendDivId, chartDataItems, tracerDrugs) {
         var dateWeeklyString = 'YYYY' + ' ' + messageService.get('report.tracer.week') + ' ' + 'W';
 
         function onInit(initEvent) {
