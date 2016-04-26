@@ -59,8 +59,8 @@ function ViewRnrMmiaController($scope, $route, Requisitions, messageService, dow
 
         if (fullSupplyLineItems.Children === undefined) {
             fullSupplyLineItems.Children = [];
+        }
 
-    }
         if (fullSupplyLineItems.Solution === undefined) {
             fullSupplyLineItems.Solution = [];
         }
