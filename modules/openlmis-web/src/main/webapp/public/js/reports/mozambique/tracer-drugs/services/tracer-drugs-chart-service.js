@@ -1,4 +1,4 @@
-services.factory('TracerDrugsChartService', function ($http, $filter, $q, $timeout, messageService, CubesGenerateUrlService, StockoutSingleProductZoneChartService) {
+services.factory('TracerDrugsChartService', function ($http, $filter, $q, $timeout, messageService, CubesGenerateUrlService, StockoutSingleProductZoneChartService, CubesGenerateCutParamsService, ReportLocationConfigService) {
 
     var drugCodekey = "drug.drug_code";
     var drugNameKey = "drug.drug_name";
@@ -14,26 +14,13 @@ services.factory('TracerDrugsChartService', function ($http, $filter, $q, $timeo
         return StockoutSingleProductZoneChartService.generateChartDataItemsForZone(zone, friday, friday, stockOutsOfTracerDrug, carryStartDatesOfTracerDrug)[0];
     }
 
-    function getCubesRequestPromise(tracerDrugs, provinceCode, districtCode, userSelectedStartDate, userSelectedEndDate, cubesName, timeDimensionName) {
-        function addLocaltionCut(cuts) {
-            var locationConfig = getUserSelectedZoneConfig(provinceCode, districtCode);
-            if (locationConfig.isOneDistrict) {
-                cuts.push({dimension: "location", values: [[provinceCode, districtCode]]});
-            } else if (locationConfig.isOneProvince) {
-                cuts.push({dimension: "location", values: [[provinceCode]]});
-            }
-        }
+    function getCubesRequestPromise(tracerDrugs, province, district, userSelectedStartDate, userSelectedEndDate, cubesName, timeDimensionName) {
+        var cutsParams = CubesGenerateCutParamsService.generateCutsParams(timeDimensionName,
+            $filter('date')(userSelectedStartDate, "yyyy,MM,dd"),
+            $filter('date')(userSelectedEndDate, "yyyy,MM,dd"),
+            undefined, tracerDrugs, province, district);
 
-        var cuts = [{
-            dimension: "drug",
-            values: _.pluck(tracerDrugs, drugCodekey)
-        }, {
-            dimension: timeDimensionName,
-            values: [$filter('date')(userSelectedStartDate, "yyyy,MM,dd") + "-" + $filter('date')(userSelectedEndDate, "yyyy,MM,dd")]
-        }];
-
-        addLocaltionCut(cuts);
-        var requestUrl = CubesGenerateUrlService.generateFactsUrl(cubesName, cuts);
+        var requestUrl = CubesGenerateUrlService.generateFactsUrl(cubesName, cutsParams);
         return $http.get(requestUrl);
     }
 
@@ -48,25 +35,18 @@ services.factory('TracerDrugsChartService', function ($http, $filter, $q, $timeo
         return dates;
     }
 
-    function getUserSelectedZoneConfig(provinceCode, districtCode) {
-        var isOneDistrict = provinceCode !== undefined && districtCode !== undefined;
-        var isOneProvince = provinceCode !== undefined && districtCode === undefined;
-        var isAllProvinces = provinceCode === undefined && districtCode === undefined;
-        return {isOneDistrict: isOneDistrict, isOneProvince: isOneProvince, isAllProvinces: isAllProvinces};
-    }
-
-    function getZone(provinceCode, districtCode) {
-        var locationConfig = getUserSelectedZoneConfig(provinceCode, districtCode);
+    function getZone(province, district) {
+        var locationConfig = ReportLocationConfigService.getUserSelectedLocationConfig(province, district);
 
         if (locationConfig.isOneDistrict) {
             return {
-                zoneCode: districtCode,
+                zoneCode: district.code,
                 zonePropertyName: "location.district_code"
             };
         }
         else if (locationConfig.isOneProvince) {
             return {
-                zoneCode: provinceCode,
+                zoneCode: province.code,
                 zonePropertyName: "location.province_code"
             };
         }
@@ -75,14 +55,14 @@ services.factory('TracerDrugsChartService', function ($http, $filter, $q, $timeo
         }
     }
 
-    function generateTracerDurgDataItemForOneFriday(friday, tracerDrugs, provinceCode, districtCode, stockOuts, carryStartDates) {
+    function generateTracerDurgDataItemForOneFriday(friday, tracerDrugs, province, district, stockOuts, carryStartDates) {
         var chartDataItem = {date: friday};
 
         var totalPercentage = 0;
         _.forEach(tracerDrugs, function (tracerDrug) {
             var tracerDrugCode = tracerDrug[drugCodekey];
 
-            var fridayStockOutRate = getTracerDrugStockRateOnFriday(getZone(provinceCode, districtCode), friday, stockOuts, tracerDrugCode, carryStartDates);
+            var fridayStockOutRate = getTracerDrugStockRateOnFriday(getZone(province, district), friday, stockOuts, tracerDrugCode, carryStartDates);
             chartDataItem[tracerDrugCode + "StockOutFacilities"] = fridayStockOutRate.stockOutFacilities;
             chartDataItem[tracerDrugCode + "CarryingFacilities"] = fridayStockOutRate.carryingFacilities;
             chartDataItem[tracerDrugCode] = 0;
@@ -141,23 +121,23 @@ services.factory('TracerDrugsChartService', function ($http, $filter, $q, $timeo
         firstLinkedNode.showSelfAndNext(isToggleOff, event);
     }
 
-    function generateTracerDrugsChartDataItems(tracerDrugs, stockOuts, carryStartDates, userSelectedStartDate, userSelectedEndDate, provinceCode, districtCode) {
+    function generateTracerDrugsChartDataItems(tracerDrugs, stockOuts, carryStartDates, userSelectedStartDate, userSelectedEndDate, province, district) {
         var fridays = getFridaysBetween(userSelectedStartDate, userSelectedEndDate);
         return _.chain(fridays)
             .map(function (friday) {
-                return generateTracerDurgDataItemForOneFriday(friday, tracerDrugs, provinceCode, districtCode, stockOuts, carryStartDates);
+                return generateTracerDurgDataItemForOneFriday(friday, tracerDrugs, province, district, stockOuts, carryStartDates);
             }).value();
     }
 
-    function makeTracerDrugsChart(chartDivId, legendDivId,userSelectedStartDate, userSelectedEndDate, provinceCode, districtCode) {
+    function makeTracerDrugsChart(chartDivId, legendDivId, userSelectedStartDate, userSelectedEndDate, province, district) {
         $http.get('/cubesreports/cube/products/facts?cut=is_tracer:true').success(function (tracerDrugs) {
-            var stockOutPromise = getCubesRequestPromise(tracerDrugs, provinceCode, districtCode, userSelectedStartDate, userSelectedEndDate, "vw_stockouts", "overlapped_date");
-            var carryStartDatesPromise = getCubesRequestPromise(tracerDrugs, provinceCode, districtCode, "", userSelectedEndDate, "vw_carry_start_dates", "carry_start");
+            var stockOutPromise = getCubesRequestPromise(tracerDrugs, province, district, userSelectedStartDate, userSelectedEndDate, "vw_stockouts", "overlapped_date");
+            var carryStartDatesPromise = getCubesRequestPromise(tracerDrugs, province, district, "", userSelectedEndDate, "vw_carry_start_dates", "carry_start");
 
             $q.all([stockOutPromise, carryStartDatesPromise]).then(function (arrayOfResults) {
                 var stockOuts = arrayOfResults[0].data;
                 var carryStartDates = arrayOfResults[1].data;
-                var chartDataItems = generateTracerDrugsChartDataItems(tracerDrugs, stockOuts, carryStartDates, userSelectedStartDate, userSelectedEndDate, provinceCode, districtCode);
+                var chartDataItems = generateTracerDrugsChartDataItems(tracerDrugs, stockOuts, carryStartDates, userSelectedStartDate, userSelectedEndDate, province, district);
 
                 renderTracerDrugsChart(chartDivId, legendDivId, chartDataItems, tracerDrugs);
             });
@@ -230,7 +210,7 @@ services.factory('TracerDrugsChartService', function ($http, $filter, $q, $timeo
         return tracerDrugGraphs;
     }
 
-    function renderTracerDrugsChart(chartDivId, legendDivId,chartDataItems, tracerDrugs) {
+    function renderTracerDrugsChart(chartDivId, legendDivId, chartDataItems, tracerDrugs) {
         var dateWeeklyString = 'YYYY' + ' ' + messageService.get('report.tracer.week') + ' ' + 'W';
 
         function onInit(initEvent) {
