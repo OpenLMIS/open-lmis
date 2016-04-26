@@ -1,4 +1,4 @@
-function TracerDrugsReportController($scope, $controller, $filter, DateFormatService, TracerDrugsChartService, CubesGenerateUrlService, CubesGenerateCutParamsService) {
+function TracerDrugsReportController($scope, $controller, $filter, DateFormatService, TracerDrugsChartService, CubesGenerateUrlService) {
     $controller('BaseProductReportController', {$scope: $scope});
 
     $scope.getTimeRange = function (dateRange) {
@@ -6,32 +6,47 @@ function TracerDrugsReportController($scope, $controller, $filter, DateFormatSer
         $scope.reportParams.endTime = dateRange.endTime;
     };
 
+    var selectedProvinceCode = $scope.reportParams.provinceId ? $scope.getGeographicZoneById($scope.provinces, $scope.reportParams.provinceId).code : undefined;
+    var selectedDistrictCode = $scope.reportParams.districtId ? $scope.getGeographicZoneById($scope.districts, $scope.reportParams.districtId).code : undefined;
+
     $scope.$on('$viewContentLoaded', function () {
         renderDefaultTracerDrugsReport();
     });
 
     $scope.loadReport = function () {
-        TracerDrugsChartService.makeTracerDrugsChart('tracer-report', 'legend-div', new Date($scope.reportParams.startTime), new Date($scope.reportParams.endTime), getSelectedProvince(), getSelectedDistrict());
+        TracerDrugsChartService.makeTracerDrugsChart('tracer-report', 'legend-div', new Date($scope.reportParams.startTime), new Date($scope.reportParams.endTime), selectedProvinceCode, selectedDistrictCode);
     };
 
     $scope.downLoadRawData = function () {
         var params = [{
             dimension: "fields",
-            values: ["facility.facility_name","drug.drug_name","date","soh"]
+            values: ["facility.facility_name", "drug.drug_name,date,soh"]
         }, {dimension: "format", values: ["csv"]}];
 
-        window.open(CubesGenerateUrlService.generateFactsUrlWithParams('vw_weekly_tracer_soh', CubesGenerateCutParamsService.generateCutsParams('cutDate',
-            $filter('date')($scope.reportParams.startTime, "yyyy,MM,dd"),
-            $filter('date')($scope.reportParams.endTime, "yyyy,MM,dd"),
-            undefined, undefined, getSelectedProvince(), getSelectedDistrict()), params));
+        window.open(CubesGenerateUrlService.generateFactsUrlWithParams('vw_weekly_tracer_soh', generateCutParams(), params));
     };
 
-    function getSelectedProvince() {
-        return $scope.getGeographicZoneById($scope.provinces, $scope.reportParams.provinceId);
+    function generateCutParams() {
+        var cutsParams = [{
+            dimension: "cutDate",
+            values: [$filter('date')($scope.reportParams.startTime, "yyyy,MM,dd") + "-" + $filter('date')($scope.reportParams.endTime, "yyyy,MM,dd")]
+        }];
+        var zoneConfig = getUserSelectedZoneConfig(selectedProvinceCode, selectedDistrictCode);
+        if (zoneConfig.isOneDistrict) {
+            cutsParams.push({
+                dimension: "location",
+                values: [[selectedProvinceCode, selectedDistrictCode]]
+            });
+        } else if (zoneConfig.isOneProvince) {
+            cutsParams.push({dimension: "location", values: [selectedProvinceCode]});
+        }
+        return cutsParams;
     }
 
-    function getSelectedDistrict() {
-        return $scope.getGeographicZoneById($scope.districts, $scope.reportParams.districtId);
+    function getUserSelectedZoneConfig(provinceCode, districtCode) {
+        var isOneDistrict = provinceCode !== undefined && districtCode !== undefined;
+        var isOneProvince = provinceCode !== undefined && districtCode === undefined;
+        return {isOneDistrict: isOneDistrict, isOneProvince: isOneProvince};
     }
 
     function renderDefaultTracerDrugsReport() {

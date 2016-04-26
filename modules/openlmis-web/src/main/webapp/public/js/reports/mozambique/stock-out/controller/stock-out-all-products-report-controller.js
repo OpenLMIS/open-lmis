@@ -1,4 +1,4 @@
-function StockOutAllProductsReportController($scope, $filter, $q, $controller, $http, CubesGenerateUrlService, messageService, StockOutReportCalculationService, CubesGenerateCutParamsService) {
+function StockOutAllProductsReportController($scope, $filter, $q, $controller, $http, CubesGenerateUrlService, messageService, StockOutReportCalculationService) {
     $controller('BaseProductReportController', {$scope: $scope});
 
     $scope.getTimeRange = function (dateRange) {
@@ -19,16 +19,13 @@ function StockOutAllProductsReportController($scope, $filter, $q, $controller, $
     };
 
     function getStockOutDataFromCubes() {
-        var params = getStockReportRequestParam();
-        var cutsParams = CubesGenerateCutParamsService.generateCutsParams("overlapped_date", params.startTime, params.endTime,
-            params.selectedFacility, undefined, params.selectedProvince, params.selectedDistrict);
+        $http.get(CubesGenerateUrlService.generateFactsUrl('vw_stockouts', generateCutParams(getStockReportRequestParam())))
+            .success(function (data) {
+                $scope.reportData = [];
 
-        $http.get(CubesGenerateUrlService.generateFactsUrl('vw_stockouts', cutsParams)).success(function (data) {
-            $scope.reportData = [];
-
-            generateStockOutAverageReportData(data);
-            formatReportWhenSelectAllFacility();
-        });
+                generateStockOutAverageReportData(data);
+                formatReportWhenSelectAllFacility();
+            });
     }
 
     function generateStockOutAverageReportData(data) {
@@ -77,6 +74,26 @@ function StockOutAllProductsReportController($scope, $filter, $q, $controller, $
             return facility.id == $scope.reportParams.facilityId;
         });
         return params;
+    }
+
+    function generateCutParams(stockReportParams) {
+        var cutsParams = [{
+            dimension: "overlapped_date",
+            values: [stockReportParams.startTime + "-" + stockReportParams.endTime]
+        }];
+        if (stockReportParams.selectedFacility) {
+            cutsParams.push({dimension: "facility", values: [stockReportParams.selectedFacility.code]});
+        }
+
+        if (stockReportParams.selectedProvince && stockReportParams.selectedDistrict) {
+            cutsParams.push({
+                dimension: "location",
+                values: [[stockReportParams.selectedProvince.code, stockReportParams.selectedDistrict.code]]
+            });
+        } else if (stockReportParams.selectedProvince && !stockReportParams.selectedDistrict) {
+            cutsParams.push({dimension: "location", values: [stockReportParams.selectedProvince.code]});
+        }
+        return cutsParams;
     }
 
     function generateReportTitle() {

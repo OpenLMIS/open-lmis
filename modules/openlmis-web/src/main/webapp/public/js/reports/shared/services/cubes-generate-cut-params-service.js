@@ -1,4 +1,4 @@
-services.factory('CubesGenerateCutParamsService', function (ReportLocationConfigService) {
+services.factory('CubesGenerateCutParamsService', function () {
 
     var generateCutsParams = function (timeDimensionName, startTime, endTime, facility, drugs, province, district) {
         var cutsParams = [];
@@ -20,7 +20,7 @@ services.factory('CubesGenerateCutParamsService', function (ReportLocationConfig
             cutsParams.push({dimension: "drug", values: _.pluck(drugs, "drug.drug_code")});
         }
 
-        var locationConfig = ReportLocationConfigService.getUserSelectedLocationConfig(province, district);
+        var locationConfig = getUserSelectedLocationConfig(province, district);
         if (locationConfig.isOneDistrict) {
             cutsParams.push({
                 dimension: "location",
@@ -32,5 +32,15 @@ services.factory('CubesGenerateCutParamsService', function (ReportLocationConfig
         return cutsParams;
     };
 
-    return {generateCutsParams: generateCutsParams};
+    function getUserSelectedLocationConfig(province, district) {
+        var isOneDistrict = province !== undefined && district !== undefined;
+        var isOneProvince = province !== undefined && district === undefined;
+        var isAllProvinces = province === undefined && district === undefined;
+        return {isOneDistrict: isOneDistrict, isOneProvince: isOneProvince, isAllProvinces: isAllProvinces};
+    }
+
+    return {
+        generateCutsParams: generateCutsParams,
+        getUserSelectedLocationConfig: getUserSelectedLocationConfig
+    };
 });

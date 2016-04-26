@@ -1,4 +1,4 @@
-function ExpiryDatesReportController($scope, $filter, $controller, $http, CubesGenerateUrlService, messageService, DateFormatService, CubesGenerateCutParamsService) {
+function ExpiryDatesReportController($scope, $filter, $controller, $http, CubesGenerateUrlService, messageService, DateFormatService) {
     $controller('BaseProductReportController', {$scope: $scope});
 
     $scope.$on('$viewContentLoaded', function () {
@@ -24,10 +24,7 @@ function ExpiryDatesReportController($scope, $filter, $controller, $http, CubesG
     };
 
     function queryExpiryDatesReportDataFromCubes() {
-        var params = getExpiryDateReportsParams();
-        var cutsParams = CubesGenerateCutParamsService.generateCutsParams('occurred', undefined, params.endTime, params.selectedFacility, undefined,params.selectedProvince, params.selectedDistrict);
-
-        $http.get(CubesGenerateUrlService.generateAggregateUrl('vw_expiry_dates', ['facility.facility_code', 'drug.drug_code', 'expiry_dates'], cutsParams))
+        $http.get(CubesGenerateUrlService.generateAggregateUrl('vw_expiry_dates', ['facility.facility_code', 'drug.drug_code', 'expiry_dates'], generateCutParams()))
             .success(function (data) {
                 generateReportData(data.cells);
             });
@@ -101,6 +98,26 @@ function ExpiryDatesReportController($scope, $filter, $controller, $http, CubesG
             return facility.id == $scope.reportParams.facilityId;
         }));
         return params;
+    }
+
+    function generateCutParams() {
+        var expiryDatesParams = getExpiryDateReportsParams();
+        var cutsParams = [
+            {dimension: "occurred", values: ["-" + expiryDatesParams.endTime]}
+        ];
+        if (expiryDatesParams.selectedFacility) {
+            cutsParams.push({dimension: "facility", values: [expiryDatesParams.selectedFacility.code]});
+        }
+
+        if (expiryDatesParams.selectedProvince && expiryDatesParams.selectedDistrict) {
+            cutsParams.push({
+                dimension: "location",
+                values: [[expiryDatesParams.selectedProvince.code, expiryDatesParams.selectedDistrict.code]]
+            });
+        } else if (expiryDatesParams.selectedProvince && !expiryDatesParams.selectedDistrict) {
+            cutsParams.push({dimension: "location", values: [expiryDatesParams.selectedProvince.code]});
+        }
+        return cutsParams;
     }
 
     function generateReportTitle() {

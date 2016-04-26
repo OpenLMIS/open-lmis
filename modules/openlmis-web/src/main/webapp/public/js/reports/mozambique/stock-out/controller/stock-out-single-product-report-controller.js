@@ -1,4 +1,4 @@
-function StockOutSingleProductReportController($scope, $filter, $q, $controller, $http, $timeout, CubesGenerateUrlService, $routeParams, ProductReportService, StockoutSingleProductFacilityChartService, StockoutSingleProductZoneChartService, StockoutSingleProductTreeDataBuilder, CubesGenerateCutParamsService) {
+function StockOutSingleProductReportController($scope, $filter, $q, $controller, $http, $timeout, CubesGenerateUrlService, $routeParams, ProductReportService, StockoutSingleProductFacilityChartService, StockoutSingleProductZoneChartService, StockoutSingleProductTreeDataBuilder) {
     $controller('BaseProductReportController', {$scope: $scope});
 
     var stockOuts;
@@ -57,20 +57,35 @@ function StockOutSingleProductReportController($scope, $filter, $q, $controller,
         });
     }
 
+    function getCarryStartDatesRequestParam() {
+        return [{
+            dimension: "carry_start",
+            values: ["-" + $filter('date')($scope.reportParams.endTime, "yyyy,MM,dd")]
+        }, {
+            dimension: "drug",
+            values: [$scope.reportParams.productCode]
+        }];
+    }
+
+    function generateCutParams() {
+        var start = $filter('date')($scope.reportParams.startTime, "yyyy,MM,dd");
+        var end = $filter('date')($scope.reportParams.endTime, "yyyy,MM,dd");
+        return [{
+            dimension: "overlapped_date",
+            values: [start + "-" + end]
+        }, {
+            dimension: "drug",
+            values: [$scope.reportParams.productCode]
+        }];
+    }
+
     function getStockOutDataFromCubes() {
         if (!validateProduct()) {
             return;
         }
 
-        var selectedProduct = [{'drug.drug_code': $scope.reportParams.productCode}];
-        var selectedEndTime = $filter('date')($scope.reportParams.endTime, "yyyy,MM,dd");
-
-        var requestStockOuts = $http.get(CubesGenerateUrlService.generateFactsUrl('vw_stockouts', CubesGenerateCutParamsService.generateCutsParams('overlapped_date',
-            $filter('date')($scope.reportParams.startTime, "yyyy,MM,dd"), selectedEndTime, undefined, selectedProduct, undefined, undefined)));
-
-        var requestCarryStartDates = $http.get(CubesGenerateUrlService.generateFactsUrl('vw_carry_start_dates', CubesGenerateCutParamsService.generateCutsParams('carry_start',
-            undefined, selectedEndTime, undefined, selectedProduct, undefined, undefined)));
-
+        var requestStockOuts = $http.get(CubesGenerateUrlService.generateFactsUrl('vw_stockouts', generateCutParams()));
+        var requestCarryStartDates = $http.get(CubesGenerateUrlService.generateFactsUrl('vw_carry_start_dates', getCarryStartDatesRequestParam()));
         $q.all([requestStockOuts, requestCarryStartDates]).then(function (arrayOfResults) {
             stockOuts = arrayOfResults[0].data;
             carryStartDates = arrayOfResults[1].data;
