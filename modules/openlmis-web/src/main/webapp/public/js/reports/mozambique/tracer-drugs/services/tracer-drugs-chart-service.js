@@ -211,7 +211,7 @@ services.factory('TracerDrugsChartService', function ($http, $filter, $q, $timeo
     }
 
     function renderTracerDrugsChart(chartDivId, legendDivId, chartDataItems, tracerDrugs) {
-        var dateWeeklyString = 'YYYY' + ' ' + messageService.get('report.tracer.week') + ' ' + 'W';
+        var dateWeeklyString = messageService.get('report.tracer.week') + ' ' + 'W';
 
         function onInit(initEvent) {
             function legendHandler(toggleEvent) {
@@ -260,10 +260,10 @@ services.factory('TracerDrugsChartService', function ($http, $filter, $q, $timeo
                 "minorGridEnabled": true,
                 "dateFormats": [{
                     period: 'DD',
-                    format: dateWeeklyString
+                    format:  'YYYY' + ' ' + dateWeeklyString
                 }, {
                     period: 'WW',
-                    format: dateWeeklyString
+                    format:  'YYYY' + ' ' + dateWeeklyString
                 }, {
                     period: 'MM',
                     format: 'MM.YYYY'
