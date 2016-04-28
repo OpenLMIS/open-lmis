@@ -48,7 +48,7 @@ public interface RnrLineItemMapper {
     "INNER JOIN product_categories ON program_products.productcategoryid = product_categories.id " +
     "INNER JOIN programs ON program_products.programid = programs.id " +
     "INNER JOIN requisitions ON requisition_line_items.rnrid = requisitions.id " +
-    "WHERE rnrId = #{rnrId} " +
+    "WHERE rnrId = #{rnrId} and program_products.active = TRUE " +
     "and requisition_line_items.fullSupply = true " +
     "and requisition_line_items.productcode = products.code " +
     "and (programs.id = requisitions.programid OR programs.parentid = requisitions.programid) " +
