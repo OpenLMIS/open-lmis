@@ -15,10 +15,7 @@ function TracerDrugsReportController($scope, $controller, $filter, DateFormatSer
     };
 
     $scope.downLoadRawData = function () {
-        var params = [{
-            dimension: "fields",
-            values: ["facility.facility_name","drug.drug_name","date","soh"]
-        }, {dimension: "format", values: ["csv"]}];
+        var params = [{name: "fields", value: ["facility.facility_name","drug.drug_name","date","soh"]}, {name: "format", value: ["csv"]}];
 
         window.open(CubesGenerateUrlService.generateFactsUrlWithParams('vw_weekly_tracer_soh', CubesGenerateCutParamsService.generateCutsParams('cutDate',
             $filter('date')($scope.reportParams.startTime, "yyyy,MM,dd"),

@@ -25,11 +25,11 @@ describe("cubes generate url service test", function () {
 
     it("should generate url for csv downloading by cuts params and fields params", function(){
         var cubesName = "vw_weekly_tracer_soh";
-        var params = [{dimension:"fields", values: ["facility.facility_name","drug.drug_name,date,soh"]},{dimension:"format", values: ["csv"]}];
+        var params = [{name: "fields", value: ["facility.facility_name", "drug.drug_name", "date", "soh"]}, {name: "format", value: ["csv"]}];
         var cuts = [{dimension: "location", values: [["provinceCode1", "districtCode1"], ["provinceCode2", "districtCode2"]]},
                     {dimension: "cutDate", values: ["2015,12,3-2016,03,21"]}];
 
         expect(cubesGenerateUrlService.generateFactsUrlWithParams(cubesName, cuts, params))
-            .toEqual("/cubesreports/cube/vw_weekly_tracer_soh/facts?cut=location:provinceCode1,districtCode1;provinceCode2,districtCode2|cutDate:2015,12,3-2016,03,21&fields=facility.facility_name,drug.drug_name,date,soh&format=csv");
+            .toEqual("/cubesreports/cube/vw_weekly_tracer_soh/facts?cut=location:provinceCode1,districtCode1;provinceCode2,districtCode2|cutDate:2015,12,3-2016,03,21&fields=facility.facility_name%2Cdrug.drug_name%2Cdate%2Csoh&format=csv");
     });
 });
