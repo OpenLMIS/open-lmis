@@ -47,6 +47,8 @@ public class RestStockCardService {
 
         List<StockCardEntry> entries = createStockCardEntries(stockEvents, facilityId, userId);
         stockCardService.addStockCardEntries(entries);
+        stockCardService.updateAllStockCardSyncTimeForFacilityToNow(facilityId);
+
         return entries;
     }
 

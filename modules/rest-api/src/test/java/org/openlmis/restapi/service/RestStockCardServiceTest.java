@@ -165,6 +165,7 @@ public class RestStockCardServiceTest {
         List<StockCardEntry> stockCardEntries = restStockCardService.adjustStock(facilityId, stockEventList, userId);
 
         verify(stockCardService).addStockCardEntries(anyList());
+        verify(stockCardService).updateAllStockCardSyncTimeForFacilityToNow(facilityId);
 
         assertThat(stockCardEntries.get(0).getAdjustmentReason(), is(stockAdjustmentReason));
         assertThat(stockCardEntries.get(1).getAdjustmentReason(), is(stockAdjustmentReason2));
