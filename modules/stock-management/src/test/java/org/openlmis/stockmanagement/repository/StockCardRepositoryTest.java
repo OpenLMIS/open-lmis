@@ -98,11 +98,4 @@ public class StockCardRepositoryTest {
     stockCardRepository.updateAllStockCardSyncTimeForFacility(123L);
     verify(mapper).updateAllStockCardSyncTimeForFacilityToNow(123L);
   }
-
-  @Test
-  public void shouldCallMapperUpdateStockCardSyncTimeToNow() {
-    String stockCardProductCode = "123";
-    stockCardRepository.updateStockCardSyncTimeToNow(123L, stockCardProductCode);
-    verify(mapper).updateStockCardToSyncTimeToNow(123L,stockCardProductCode);
-  }
 }

@@ -151,7 +151,7 @@ public class RestStockCardControllerTest {
     @Test
     public void shouldReturnDataErrorIfUpdateNotSuccessful() {
         ArrayList<String> stockCardProductCodeList = new ArrayList<>();
-        doThrow(new DataException("")).when(restStockCardService).updateStockCardSyncTime(123L, stockCardProductCodeList);
+        doThrow(new DataException("")).when(restStockCardService).updateStockCardSyncTime(123L);
         ResponseEntity response = restStockCardController.updateStockCardsUpdatedTime(123L, stockCardProductCodeList);
         assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
     }

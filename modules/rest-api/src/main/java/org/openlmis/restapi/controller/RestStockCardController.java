@@ -60,10 +60,11 @@ public class RestStockCardController extends BaseController {
         return response("stockCards", stockCards);
     }
 
+    // TODO: 5/3/16 add new api to replace this
     @RequestMapping(value = "/rest-api/facilities/{facilityId}/unSyncedStockCards", method = POST, headers = ACCEPT_JSON)
     public ResponseEntity updateStockCardsUpdatedTime(@PathVariable long facilityId, @RequestBody(required = true) List<String> unsyncedStockCardProductCodes) {
         try {
-            restStockCardService.updateStockCardSyncTime(facilityId,unsyncedStockCardProductCodes);
+            restStockCardService.updateStockCardSyncTime(facilityId);
         } catch (DataException e) {
             return ResponseEntity.badRequest().build();
         }
