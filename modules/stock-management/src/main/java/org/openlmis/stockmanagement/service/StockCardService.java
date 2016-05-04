@@ -135,4 +135,18 @@ public class StockCardService {
     repository.updateAllStockCardSyncTimeForFacility(facilityId);
   }
 
+  public void updateStockCardSyncTimeToNow(long facilityId, final List<String> stockCardProductCodeList) {
+    for (StockCard stockCard : getStockCardsNotInList(facilityId, stockCardProductCodeList)) {
+      repository.updateStockCardSyncTimeToNow(facilityId, stockCard.getProduct().getCode());
+    }
+  }
+
+  private List<StockCard> getStockCardsNotInList(long facilityId, final List<String> stockCardProductCodeList) {
+    return FluentIterable.from(repository.getStockCards(facilityId)).filter(new Predicate<StockCard>() {
+        @Override
+        public boolean apply(StockCard input) {
+          return !stockCardProductCodeList.contains(input.getProduct().getCode());
+        }
+      }).toList();
+  }
 }

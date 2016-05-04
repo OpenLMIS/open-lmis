@@ -214,6 +214,15 @@ public class StockCardMapperIT {
     assertEquals(3, numOfResults);
   }
 
+  @Test
+  public void shouldUpdateStockCardsNotInProductCodeList() throws Exception {
+    insertTwoMoreStockCardsForDefaultFacility();
+
+    int numOfResults = mapper.updateStockCardToSyncTimeToNow(defaultFacility.getId(), "code2");
+
+    assertEquals(1, numOfResults);
+  }
+
   private void insertTwoMoreStockCardsForDefaultFacility() {
     Product product1 = make(a(ProductBuilder.defaultProduct, with(active, true), with(code, "Prod1")));
     Product product2 = make(a(ProductBuilder.defaultProduct, with(active, true), with(code, "code2")));

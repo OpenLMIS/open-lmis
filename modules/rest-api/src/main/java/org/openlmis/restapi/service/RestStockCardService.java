@@ -53,11 +53,16 @@ public class RestStockCardService {
     }
 
     @Transactional
-    public void updateStockCardSyncTime(Long facilityId) {
-        if (facilityId == null) {
+    public void updateStockCardSyncTime(Long facilityId, List<String> stockCardProductCodeList) {
+        if (facilityId == null || stockCardProductCodeList == null) {
             throw new DataException("");
         }
-        stockCardService.updateAllStockCardSyncTimeForFacilityToNow(facilityId);
+
+        if (stockCardProductCodeList.isEmpty()) {
+            stockCardService.updateAllStockCardSyncTimeForFacilityToNow(facilityId);
+        } else {
+            stockCardService.updateStockCardSyncTimeToNow(facilityId, stockCardProductCodeList);
+        }
     }
 
     public List<StockCardDTO> queryStockCardByOccurred(long facilityId, Date startTime, Date endTime) {

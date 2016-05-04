@@ -310,9 +310,17 @@ public class RestStockCardServiceTest {
 
     @Test
     public void shouldUpdateAllStockCardsUpdateDateWhenListIsEmpty() throws Exception {
-        restStockCardService.updateStockCardSyncTime(123L);
+        restStockCardService.updateStockCardSyncTime(123L, new ArrayList<String>());
 
         verify(stockCardService).updateAllStockCardSyncTimeForFacilityToNow(123L);
+    }
+
+    @Test
+    public void shouldUpdateStockCardsUpdateDate() throws Exception {
+        List<String> stockCardProductCodeList = asList("P1");
+        restStockCardService.updateStockCardSyncTime(123L, stockCardProductCodeList);
+
+        verify(stockCardService).updateStockCardSyncTimeToNow(123L, stockCardProductCodeList);
     }
 
     @Test

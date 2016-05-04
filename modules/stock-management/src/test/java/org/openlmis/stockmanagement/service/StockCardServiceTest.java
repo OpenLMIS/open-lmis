@@ -190,4 +190,18 @@ public class StockCardServiceTest {
         service.updateAllStockCardSyncTimeForFacilityToNow(123L);
         verify(repository).updateAllStockCardSyncTimeForFacility(123L);
     }
+
+    @Test
+    public void shouldCallRepositoryUpdateStockCardSyncTimeToNowForProductCodesNotInList() {
+
+        StockCard stockCard1 = new StockCard();
+        stockCard1.setProduct(make(a(ProductBuilder.defaultProduct, with(ProductBuilder.code, "P1"))));
+        StockCard stockCard2 = new StockCard();
+        stockCard2.setProduct(make(a(ProductBuilder.defaultProduct, with(ProductBuilder.code, "P2"))));
+        when(repository.getStockCards(123L)).thenReturn(asList(stockCard1, stockCard2));
+
+        service.updateStockCardSyncTimeToNow(123L, asList("P1"));
+        verify(repository, never()).updateStockCardSyncTimeToNow(123L, "P1");
+        verify(repository).updateStockCardSyncTimeToNow(123L, "P2");
+    }
 }
