@@ -5,8 +5,8 @@ describe("stock movement report controller", function () {
         "stockMovement":[
             {
                 "id": 17650,
-                "type": "ADJUSTMENT",
-                "quantity": 0,
+                "type": "RECEIVE",
+                "quantity": 110,
                 "referenceNumber": null,
                 "adjustmentReason": {
                     "id": null,
@@ -37,8 +37,8 @@ describe("stock movement report controller", function () {
             }
             , {
                 "id": 5390,
-                "type": "ADJUSTMENT",
-                "quantity": 0,
+                "type": "ISSUE",
+                "quantity": 10,
                 "referenceNumber": null,
                 "adjustmentReason": {
                     "id": null,
@@ -79,12 +79,17 @@ describe("stock movement report controller", function () {
         $controller(StockMovementReportController, {$scope: scope, $routeParams: routeParams});
     }));
 
-    it('should load stock movements successfully', function () {
+    iit('should load stock movements successfully', function () {
         httpBackend.expectGET('/reports/stockMovements?facilityId=199&productCode=productCode').respond(200, stockMovements);
 
         scope.loadStockMovements();
         httpBackend.flush();
 
         expect(scope.stockMovements.length).toBe(2);
+        expect(scope.stockMovements[0].entries).toBe(110);
+        expect(scope.stockMovements[0].soh).toBe('150');
+        expect(scope.stockMovements[0].signature).toBe('nhome');
+        expect(scope.stockMovements[1].issues).toBe(10);
+
     });
 });
