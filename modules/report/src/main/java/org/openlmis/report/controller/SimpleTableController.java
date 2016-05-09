@@ -33,6 +33,7 @@ import org.openlmis.report.mapper.AppInfoMapper;
 import org.openlmis.report.mapper.RequisitionReportsMapper;
 import org.openlmis.report.model.dto.RequisitionDTO;
 import org.openlmis.report.service.FacilityProductsReportDataProvider;
+import org.openlmis.stockmanagement.repository.StockCardRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -74,9 +75,11 @@ public class SimpleTableController extends BaseController {
     @Autowired
     private AppInfoMapper appInfoMapper;
 
+    @Autowired
+    private StockCardRepository stockCardRepository;
+
     @Value("${export.tmp.path}")
     protected String EXPORT_TMP_PATH;
-
     private static final Logger logger = LoggerFactory.getLogger(SimpleTableController.class);
 
     @RequestMapping(value = "/requisition-report", method = GET, headers = BaseController.ACCEPT_JSON)
@@ -105,6 +108,13 @@ public class SimpleTableController extends BaseController {
             @RequestParam(value = "facilityId", required = true) Long facilityId,
             @RequestParam(value = "endTime", required = false) final Date endTime) {
         return OpenLmisResponse.response("products", facilityProductsReportDataProvider.getReportDataForAllProducts(facilityId, endTime));
+    }
+
+    @RequestMapping(value = "/stockMovements", method = GET, headers = BaseController.ACCEPT_JSON)
+    public ResponseEntity<OpenLmisResponse> getStockMovementsByFacilityAndProduct(
+            @RequestParam(value = "facilityId", required = true) Long facilityId,
+            @RequestParam(value = "productCode", required = true) final String productCode) {
+        return OpenLmisResponse.response("stockMovement", stockCardRepository.getStockCardByFacilityAndProduct(facilityId, productCode).getEntries());
     }
 
     @RequestMapping(value = "/app-version-report", method = GET, headers = BaseController.ACCEPT_JSON)
