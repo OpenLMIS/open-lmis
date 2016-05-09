@@ -1,0 +1,30 @@
+<div id="stockMovements" ng-if="stockMovements">
+
+    <table class="table table-condensed table-bordered table-striped">
+        <tr class="gradient-header">
+            <th openlmis-message="stock.movement.date"></th>
+            <th openlmis-message="stock.movement.reason"></th>
+            <th openlmis-message="stock.movement.document.number"></th>
+            <th openlmis-message="stock.movement.entries"></th>
+            <th openlmis-message="stock.movement.negative.adjustment"></th>
+            <th openlmis-message="stock.movement.positive.adjustment"></th>
+            <th openlmis-message="stock.movement.issues"></th>
+            <th openlmis-message="stock.movement.soh"></th>
+            <th openlmis-message="stock.movement.signature"></th>
+        </tr>
+
+        <tr ng-repeat="entry in stockMovements">
+            <td>{{entry.occurred | date : 'dd MMMM yyyy' }}</td>
+            <td>{{entry.adjustmentReason.name}}</td>
+            <td>{{entry.referenceNumber}}</td>
+            <td>{{entry.entries}}</td>
+            <td>{{entry.negativeAdjustment}}</td>
+            <td>{{entry.positiveAdjustment}}</td>
+            <td>{{entry.issues}}</td>
+            <td>{{entry.soh}}</td>
+            <td>{{entry.signature}}</td>
+        </tr>
+    </table>
+</div>
+<label ng-show="stockMovements && stockMovements.length == 0">No Data</label>
+

@@ -1376,3 +1376,7 @@ services.factory('GeographicZoneService', function ($resource) {
         }
     };
 });
+
+services.factory('StockMovementService', function ($resource) {
+    return $resource('/reports/stockMovements', {}, {});
+});
