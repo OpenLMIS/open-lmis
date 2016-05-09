@@ -18,9 +18,11 @@ import org.openlmis.core.builder.FacilityBuilder;
 import org.openlmis.core.builder.ProductBuilder;
 import org.openlmis.core.domain.Facility;
 import org.openlmis.core.domain.Product;
+import org.openlmis.core.domain.StockAdjustmentReason;
 import org.openlmis.core.query.QueryExecutor;
 import org.openlmis.core.repository.mapper.FacilityMapper;
 import org.openlmis.core.repository.mapper.ProductMapper;
+import org.openlmis.core.repository.mapper.StockAdjustmentReasonMapper;
 import org.openlmis.core.utils.DateUtil;
 import org.openlmis.db.categories.IntegrationTests;
 import org.openlmis.stockmanagement.domain.StockCard;
@@ -61,10 +63,13 @@ public class StockCardMapperIT {
   @Autowired
   private StockCardMapper mapper;
 
+  @Autowired
+  private StockAdjustmentReasonMapper stockAdjustmentReasonMapper;
+
   private StockCard defaultCard;
   private Facility defaultFacility;
-  private Product defaultProduct;
 
+  private Product defaultProduct;
   @Autowired
   private QueryExecutor queryExecutor;
   private StockCard stockCard1;
@@ -122,11 +127,15 @@ public class StockCardMapperIT {
   @Test
   public void shouldGetStockCardByFacilityIdAndProductCode() {
     StockCardEntry entry = getStockCardEntry();
+    StockAdjustmentReason reason = StockAdjustmentReason.create("reason");
+    stockAdjustmentReasonMapper.insert(reason);
+    entry.setAdjustmentReason(reason);
     mapper.insertEntry(entry);
 
     StockCard stockCard = mapper.getByFacilityAndProduct(defaultFacility.getId(), defaultProduct.getCode());
     assertThat(stockCard.getProduct().getCode(), is(defaultProduct.getCode()));
     assertThat(stockCard.getFacility().getId(), is(defaultFacility.getId()));
+    assertThat(stockCard.getEntries().get(0).getAdjustmentReason().getName(), is("reason"));
   }
 
   @Test

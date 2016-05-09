@@ -3,6 +3,7 @@ package org.openlmis.stockmanagement.repository.mapper;
 import org.apache.ibatis.annotations.*;
 import org.openlmis.core.domain.Facility;
 import org.openlmis.core.domain.Product;
+import org.openlmis.core.domain.StockAdjustmentReason;
 import org.openlmis.stockmanagement.domain.*;
 import org.springframework.stereotype.Repository;
 
@@ -95,6 +96,8 @@ public interface StockCardMapper {
       " ORDER BY createddate DESC")
   @Results({
       @Result(property = "id", column = "id"),
+      @Result(property = "adjustmentReason", column = "adjustmentType", javaType = StockAdjustmentReason.class,
+              one = @One(select = "org.openlmis.core.repository.mapper.StockAdjustmentReasonMapper.getByName")),
       @Result(property = "extensions", column = "id", javaType = List.class,
           many = @Many(select = "getStockCardEntryExtensionAttributes"))
   })
