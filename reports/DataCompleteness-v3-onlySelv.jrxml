@@ -89,7 +89,7 @@ left join (
   ) as cte
 ) as fvcomp on (fvcomp.periodid=pp.id and fvcomp.deliveryzoneid=dz.id)
 left join users u on (d.createdby=u.id)
-where pp.startdate <= NOW() AND pp.startdate >= (now() - '4 months'::INTERVAL)
+where pp.startdate <= NOW() AND pp.startdate >= (now() - '6 months'::INTERVAL)
 AND ((pp.numberofmonths = 2 AND dz.name LIKE 'Nort%Gaza') OR (pp.numberofmonths = 1 AND dz.name NOT LIKE 'Nort%Gaza'))
 AND dz.name not like '%Nampula'
 order by pp.startdate desc
