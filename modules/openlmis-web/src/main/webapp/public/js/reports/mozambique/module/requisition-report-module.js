@@ -41,7 +41,7 @@ angular.module('requisition-report', ['openlmis', 'angularCombine', 'ngTable', '
                     templateUrl: 'stockout/single-product/partials/list.html',
                     reloadOnSearch: false
                 }).
-                when('/stock-movements/product/:productCode/facility/:facilityId', {
+                when('/stock-movements/product/:productCode/:productName/facility/:facilityId', {
                     controller: StockMovementReportController,
                     templateUrl: 'stock-movements/partials/list.html',
                     reloadOnSearch: false

@@ -50,6 +50,9 @@ function StockMovementReportController($scope, $routeParams, StockMovementServic
     };
 
     $scope.$on('$viewContentLoaded', function () {
+        $scope.productCode = $routeParams.productCode;
+        $scope.productName = $routeParams.productName;
+
         $scope.loadFacility();
         $scope.loadStockMovements();
     });
