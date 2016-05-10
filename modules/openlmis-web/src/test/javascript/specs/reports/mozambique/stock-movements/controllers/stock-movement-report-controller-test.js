@@ -1,6 +1,30 @@
 describe("stock movement report controller", function () {
     var scope, httpBackend, routeParams;
 
+    var facility = {
+        "facility": {"id":2,
+            "code":"HF1",
+            "name":"Marracuene",
+            "geographicZone":{
+                "id":5,
+                "code":"MARRACUENE",
+                "name":"Marracuene",
+                "level":{
+                    "id":3,
+                    "code":"district",
+                    "name":"District",
+                    "levelNumber":3},
+                "parent":{
+                    "code":"MAPUTO_PROVINCIA",
+                    "name":"Maputo Província",
+                    "level":{
+                        "code":"province",
+                        "name":"Province"}
+                }
+            },
+        }
+    }
+
     var stockMovements ={
         "stockMovement":[
             {
@@ -79,7 +103,7 @@ describe("stock movement report controller", function () {
         $controller(StockMovementReportController, {$scope: scope, $routeParams: routeParams});
     }));
 
-    iit('should load stock movements successfully', function () {
+    it('should load stock movements successfully', function () {
         httpBackend.expectGET('/reports/stockMovements?facilityId=199&productCode=productCode').respond(200, stockMovements);
 
         scope.loadStockMovements();
@@ -90,6 +114,18 @@ describe("stock movement report controller", function () {
         expect(scope.stockMovements[0].soh).toBe('150');
         expect(scope.stockMovements[0].signature).toBe('nhome');
         expect(scope.stockMovements[1].issues).toBe(10);
+
+    });
+
+    it('should load facility successfully', function () {
+        httpBackend.expectGET('/facilities/199.json').respond(200, facility);
+
+        scope.loadFacility();
+        httpBackend.flush();
+
+        expect(scope.facilityName).toBe("Marracuene");
+        expect(scope.district).toBe("Marracuene");
+        expect(scope.province).toBe("Maputo Província");
 
     });
 });

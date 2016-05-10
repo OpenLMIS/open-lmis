@@ -1,4 +1,14 @@
-function StockMovementReportController($scope, $routeParams, StockMovementService) {
+function StockMovementReportController($scope, $routeParams, StockMovementService, Facility) {
+
+    $scope.loadFacility = function() {
+        Facility.get({
+            id: $routeParams.facilityId
+        }, function(data) {
+            $scope.facilityName = data.facility.name;
+            $scope.district = data.facility.geographicZone.name;
+            $scope.province = data.facility.geographicZone.parent.name;
+        })
+    };
 
     $scope.loadStockMovements = function () {
         StockMovementService.get({
@@ -40,6 +50,7 @@ function StockMovementReportController($scope, $routeParams, StockMovementServic
     };
 
     $scope.$on('$viewContentLoaded', function () {
+        $scope.loadFacility();
         $scope.loadStockMovements();
     });
 }
