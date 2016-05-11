@@ -63,6 +63,7 @@ public class FacilityProductsReportDataProvider {
             @Override
             public FacilityProductReportEntry apply(FacilityProductReportEntry input) {
                 input.setFacilityName(facility.getName());
+                input.setFacilityCode(facility.getCode());
                 return input;
             }
         }).toList();

@@ -23,6 +23,7 @@ import static com.google.common.collect.Lists.newArrayList;
 public class FacilityProductReportEntry {
     private String productName;
     private String facilityName;
+    private String facilityCode;
     private long productQuantity;
     private Date soonestExpiryDate;
     private Date lastSyncDate;
