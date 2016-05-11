@@ -118,6 +118,12 @@ public class FacilityController extends BaseController {
     return response("facility", facilityService.getById(id));
   }
 
+  @RequestMapping(value = "/facilities/code/{code}", method = GET, headers = ACCEPT_JSON)
+  @PreAuthorize("@permissionEvaluator.hasPermission(principal, 'MANAGE_FACILITY, MANAGE_USER')")
+  public ResponseEntity<OpenLmisResponse> getFacilityByCode(@PathVariable(value = "code") String code) {
+    return response("facility", facilityService.getFacilityByCode(code));
+  }
+
   @RequestMapping(value = "/create/requisition/supervised/{programId}/facilities.json", method = GET)
   public ResponseEntity<ModelMap> getUserSupervisedFacilitiesSupportingProgram(@PathVariable(value = "programId") Long programId,
                                                                                HttpServletRequest request) {
