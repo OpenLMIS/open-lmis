@@ -29,18 +29,21 @@ services.factory('ProgramRnRColumnList', function ($resource) {
   return $resource('/rnr/:programId/columns.json', {}, {});
 });
 
-services.factory('FacilityCode', function ($resource) {
-  return $resource('/facilities/code/:code.json', {code: '@code'}, {});
-});
-
 services.factory('Facility', function ($resource) {
-  var resource = $resource('/facilities/:id.json', {id: '@id'}, update);
+  return {
+    getFacilityById: function () {
+      var resource = $resource('/facilities/:id.json', {id: '@id'}, update);
 
-  resource.restore = function (pathParams, success, error) {
-    $resource('/facilities/:id/restore.json', {}, update).update(pathParams, {}, success, error);
+      resource.restore = function (pathParams, success, error) {
+        $resource('/facilities/:id/restore.json', {}, update).update(pathParams, {}, success, error);
+      };
+
+      return resource;
+    },
+    getFacilityByCode: function () {
+        return $resource('/facilities/code/:code.json', {code: '@code'}, {});
+    }
   };
-
-  return resource;
 });
 
 services.factory("Facilities", function ($resource) {

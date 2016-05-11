@@ -1,7 +1,7 @@
-function StockMovementReportController($scope, $routeParams, FacilityCode, $http, CubesGenerateUrlService) {
+function StockMovementReportController($scope, $routeParams, Facility, $http, CubesGenerateUrlService) {
 
     $scope.loadFacilityAndStockMovements = function() {
-        FacilityCode.get({
+        Facility.getFacilityByCode().get({
             code: $routeParams.facilityCode
         }, function(data) {
             $scope.facilityName = data.facility.name;

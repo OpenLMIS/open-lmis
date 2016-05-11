@@ -179,7 +179,7 @@ function UserController($scope, $location, $dialog, Users, Facility, messageServ
 
     if (!utils.isNullOrUndefined($scope.user.facilityId)) {
       if (utils.isNullOrUndefined($scope.allSupportedPrograms)) {
-        Facility.get({id: $scope.user.facilityId}, function (data) {
+        Facility.getFacilityById().get({id: $scope.user.facilityId}, function (data) {
           $scope.allSupportedPrograms = _.filter(data.facility.supportedPrograms, function (supportedProgram) {
             return !supportedProgram.program.push;
           });

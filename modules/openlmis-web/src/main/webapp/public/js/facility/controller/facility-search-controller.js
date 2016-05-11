@@ -48,7 +48,7 @@ function FacilitySearchController($scope, Facility, $location, navigateBackServi
   function getFacilities(page, query) {
     query = query.trim();
     $scope.searchedQuery = query;
-    Facility.get({"searchParam": $scope.searchedQuery, "columnName": $scope.selectedSearchOption.value, "page": page}, function (data) {
+    Facility.getFacilityById().get({"searchParam": $scope.searchedQuery, "columnName": $scope.selectedSearchOption.value, "page": page}, function (data) {
       $scope.facilityList = data.facilities;
       $scope.pagination = data.pagination;
       $scope.totalItems = $scope.pagination.totalRecords;

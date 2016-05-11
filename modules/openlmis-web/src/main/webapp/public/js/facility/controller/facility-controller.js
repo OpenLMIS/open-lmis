@@ -97,9 +97,9 @@ function FacilityController($scope, facilityReferenceData, $routeParams, facilit
 
 
     if (!$scope.isEdit) {
-      Facility.save({}, $scope.facility, facilitySaveCallback, errorFunc);
+      Facility.getFacilityById().save({}, $scope.facility, facilitySaveCallback, errorFunc);
     } else {
-      Facility.update({id: $scope.facility.id}, $scope.facility, facilitySaveCallback, errorFunc);
+      Facility.getFacilityById().update({id: $scope.facility.id}, $scope.facility, facilitySaveCallback, errorFunc);
     }
   };
 
@@ -185,7 +185,7 @@ function FacilityController($scope, facilityReferenceData, $routeParams, facilit
 
   $scope.disableFacilityCallBack = function (result) {
     if (!result) return;
-    Facility.remove({id: $scope.facility.id}, {}, successFunc, errorFunc);
+    Facility.getFacilityById().remove({id: $scope.facility.id}, {}, successFunc, errorFunc);
   };
 
   $scope.showConfirmFacilityDisableWindow = function () {
@@ -208,7 +208,7 @@ function FacilityController($scope, facilityReferenceData, $routeParams, facilit
 
   $scope.enableFacilityCallBack = function (result) {
     if (!result) return;
-    Facility.restore({id: $scope.facility.id}, successFunc, errorFunc);
+    Facility.getFacilityById().restore({id: $scope.facility.id}, successFunc, errorFunc);
   };
 
   function updateProgramsToDisplay() {
@@ -302,7 +302,7 @@ FacilityController.resolve = {
     var facilityId = $route.current.params.facilityId;
 
     $timeout(function () {
-      Facility.get({id: facilityId}, function (data) {
+      Facility.getFacilityById().get({id: facilityId}, function (data) {
         deferred.resolve(data.facility);
       }, {});
     }, 100);
