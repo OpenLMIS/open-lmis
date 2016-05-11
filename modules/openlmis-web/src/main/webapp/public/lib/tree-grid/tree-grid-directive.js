@@ -22,6 +22,7 @@
                     "             <div ng-if=\"col.cellTemplate\" compile=\"col.cellTemplate\" cell-template-scope=\"col.cellTemplateScope\"></div>\n" +
                     "             <div ng-if=\'row.branch[col.field]'><span style='font-weight: bold;' openlmis-message='{{col.displayName}}'></span> : {{row.branch[col.field]}}</div>" +
                     "           </div>\n" +
+                                "<div ng-if='row.level===3'><a href='#/stock-movements/product/{{product.code}}/facility/{{row.branch.facilityCode}}'>View stock card</a> </div>\n" +
                     "           <div " +
                     "               class='treeLevel-{{row.level}}-Chart'" +
                     "               ng-init='onChartPlaceHolderShown({branch:row.branch})' " +
@@ -81,6 +82,7 @@
                     },
                     replace: true,
                     scope: {
+                        product: '=',
                         treeData: '=',
                         colDefs: '=',
                         expandOn: '=',
