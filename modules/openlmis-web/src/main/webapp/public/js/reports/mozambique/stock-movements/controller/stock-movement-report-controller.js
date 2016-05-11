@@ -1,8 +1,8 @@
-function StockMovementReportController($scope, $routeParams, StockMovementService, Facility, $http, CubesGenerateUrlService) {
+function StockMovementReportController($scope, $routeParams, FacilityCode, $http, CubesGenerateUrlService) {
 
     $scope.loadFacilityAndStockMovements = function() {
-        Facility.get({
-            id: $routeParams.facilityId
+        FacilityCode.get({
+            code: $routeParams.facilityCode
         }, function(data) {
             $scope.facilityName = data.facility.name;
             $scope.district = data.facility.geographicZone.name;
@@ -42,7 +42,6 @@ function StockMovementReportController($scope, $routeParams, StockMovementServic
 
     $scope.$on('$viewContentLoaded', function () {
         $scope.productCode = $routeParams.productCode;
-        $scope.productName = $routeParams.productName;
 
         $scope.loadFacilityAndStockMovements();
     });

@@ -62,13 +62,13 @@ describe("stock movement report controller", function () {
     beforeEach(inject(function (_$httpBackend_, $rootScope, $controller) {
         scope = $rootScope.$new();
         httpBackend = _$httpBackend_;
-        routeParams = {'facilityId': 199, 'productCode': 'productCode'};
+        routeParams = {'facilityCode': 'facilityCode', 'productCode': 'productCode'};
 
         $controller(StockMovementReportController, {$scope: scope, $routeParams: routeParams});
     }));
 
     it('should load facility and stock movements successfully', function () {
-        httpBackend.expectGET('/facilities/199.json').respond(200, facility);
+        httpBackend.expectGET('/facilities/code/facilityCode.json').respond(200, facility);
         httpBackend.expectGET('/cubesreports/cube/vw_stock_movements/facts?cut=facility:Marracuene|product:productCode').respond(200, stockMovements);
 
         scope.loadFacilityAndStockMovements();

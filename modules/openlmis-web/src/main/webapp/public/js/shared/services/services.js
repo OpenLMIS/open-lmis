@@ -29,6 +29,10 @@ services.factory('ProgramRnRColumnList', function ($resource) {
   return $resource('/rnr/:programId/columns.json', {}, {});
 });
 
+services.factory('FacilityCode', function ($resource) {
+  return $resource('/facilities/code/:code.json', {code: '@code'}, {});
+});
+
 services.factory('Facility', function ($resource) {
   var resource = $resource('/facilities/:id.json', {id: '@id'}, update);
 
