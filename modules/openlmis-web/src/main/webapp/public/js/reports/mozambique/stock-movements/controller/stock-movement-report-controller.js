@@ -1,59 +1,49 @@
-function StockMovementReportController($scope, $routeParams, StockMovementService, Facility) {
+function StockMovementReportController($scope, $routeParams, StockMovementService, Facility, $http, CubesGenerateUrlService) {
 
-    $scope.loadFacility = function() {
+    $scope.loadFacilityAndStockMovements = function() {
         Facility.get({
             id: $routeParams.facilityId
         }, function(data) {
             $scope.facilityName = data.facility.name;
             $scope.district = data.facility.geographicZone.name;
             $scope.province = data.facility.geographicZone.parent.name;
+
+            loadStockMovements();
         })
     };
 
-    $scope.loadStockMovements = function () {
-        StockMovementService.get({
-            facilityId: $routeParams.facilityId,
-            productCode: $routeParams.productCode
-        }, function (data) {
-            $scope.stockMovements = [];
+    var loadStockMovements = function () {
+        var cutsParams = [];
+        cutsParams.push({dimension: "facility", values: [$scope.facilityName]});
+        cutsParams.push({dimension: "product", values: [$routeParams.productCode]});
 
-            _.each(data.stockMovement, function (item) {
+        $http.get(CubesGenerateUrlService.generateFactsUrl('vw_stock_movements', cutsParams)).success(function (data) {
+            $scope.stockMovements = [];
+            _.each(data, function (item) {
                 setQuantityByType(item);
-                sliceExtensions(item);
                 $scope.stockMovements.push(item);
             })
         });
-
     };
 
     var setQuantityByType = function(item) {
-        switch (item.type) {
+        var quantity = item["movement.quantity"];
+        switch (item["movement.type"]) {
             case 'RECEIVE' :
-                item.entries = item.quantity;
+                item.entries = quantity;
             case 'ISSUE':
-                item.issues = item.quantity;
+                item.issues = quantity;
             case 'NEGATIVE_ADJUST':
-                item.negativeAdjustment = item.quantity;
+                item.negativeAdjustment = quantity;
             case 'POSITIVE_ADJUST':
-                item.positiveAdjustment = item.quantity;
+                item.positiveAdjustment = quantity;
         }
-    };
-
-    var sliceExtensions = function(item) {
-        _.each(item.extensions, function (extension) {
-            if (extension.key === "soh") {
-                item.soh = extension.value;
-            } else if (extension.key === "signature") {
-                item.signature = extension.value;
-            }
-        });
     };
 
     $scope.$on('$viewContentLoaded', function () {
         $scope.productCode = $routeParams.productCode;
         $scope.productName = $routeParams.productName;
 
-        $scope.loadFacility();
-        $scope.loadStockMovements();
+        $scope.loadFacilityAndStockMovements();
     });
 }

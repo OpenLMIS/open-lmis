@@ -31,15 +31,15 @@
         </tr>
 
         <tr ng-repeat="entry in stockMovements">
-            <td>{{entry.occurred | date : 'dd MMMM yyyy' }}</td>
-            <td>{{entry.adjustmentReason.name}}</td>
-            <td>{{entry.referenceNumber}}</td>
+            <td>{{entry["movement.date"] | date : 'dd MMMM yyyy' }}</td>
+            <td>{{entry.vw_stock_movements_reason}}</td>
+            <td>{{entry["movement.documentnumber"]}}</td>
             <td>{{entry.entries}}</td>
             <td>{{entry.negativeAdjustment}}</td>
             <td>{{entry.positiveAdjustment}}</td>
             <td>{{entry.issues}}</td>
-            <td>{{entry.soh}}</td>
-            <td>{{entry.signature}}</td>
+            <td>{{entry["movement.soh"]}}</td>
+            <td>{{entry["movement.signature"]}}</td>
         </tr>
     </table>
 </div>

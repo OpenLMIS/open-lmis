@@ -21,78 +21,42 @@ describe("stock movement report controller", function () {
                         "code":"province",
                         "name":"Province"}
                 }
-            },
+            }
         }
-    }
-
-    var stockMovements ={
-        "stockMovement":[
-            {
-                "id": 17650,
-                "type": "RECEIVE",
-                "quantity": 110,
-                "referenceNumber": null,
-                "adjustmentReason": {
-                    "id": null,
-                    "name": "INVENTORY",
-                    "description": "Inventory",
-                    "additive": true
-                },
-                "lotOnHand": null,
-                "notes": null,
-                "occurred": 1461513600000,
-                "extensions": [
-                    {
-                        "key": "expirationdates",
-                        "value": "8/8/2016",
-                        "syncedDate": 1461756504099
-                    },
-                    {
-                        "key": "signature",
-                        "value": "nhome",
-                        "syncedDate": 1461756504099
-                    },
-                    {
-                        "key": "soh",
-                        "value": "150",
-                        "syncedDate": 1461756504099
-                    }
-                ]
-            }
-            , {
-                "id": 5390,
-                "type": "ISSUE",
-                "quantity": 10,
-                "referenceNumber": null,
-                "adjustmentReason": {
-                    "id": null,
-                    "name": "INVENTORY",
-                    "description": "Inventory",
-                    "additive": true
-                },
-                "lotOnHand": null,
-                "notes": null,
-                "occurred": 1451318400000,
-                "extensions": [
-                    {
-                        "key": "expirationdates",
-                        "value": "8/8/2016",
-                        "syncedDate": 1451382261370
-                    },
-                    {
-                        "key": "signature",
-                        "value": "",
-                        "syncedDate": 1452757229588
-                    },
-                    {
-                        "key": "soh",
-                        "value": "160",
-                        "syncedDate": 1453109125420
-                    }
-                ]
-            }
-        ]
     };
+
+    var stockMovements =[
+        {
+            "movement.reason": "INVENTORY",
+            "product.product_name": "Levonorgestrel (Microlut) 30mcg Ciclo",
+            "movement.signature": null,
+            "facility": "Marracuene",
+            "movement.quantity": 110,
+            "movement.type": "RECEIVE",
+            "movement.soh": "150",
+            "movement.latest_soh": 212,
+            "movement.date": "2016-02-29T20:45:11+08:00",
+            "movement.documentnumber": null,
+            "product.product_code": "04F06Y",
+            "vw_stock_movements_reason": "INVENTORY",
+            "movement.expirationdates": "31/1/2018"
+        },
+        {
+            "movement.reason": "INVENTORY_POSITIVE",
+            "product.product_name": "Levonorgestrel (Microlut) 30mcg Ciclo",
+            "movement.signature": "nelso",
+            "facility": "Marracuene",
+            "movement.quantity": 10,
+            "movement.type": "ISSUE",
+            "movement.soh": "480",
+            "movement.latest_soh": 212,
+            "movement.date": "2016-03-02T17:28:33+08:00",
+            "movement.documentnumber": "",
+            "product.product_code": "04F06Y",
+            "vw_stock_movements_reason": "INVENTORY_POSITIVE",
+            "movement.expirationdates": "31/1/2018"
+        }
+    ];
 
     beforeEach(module('openlmis'));
     beforeEach(inject(function (_$httpBackend_, $rootScope, $controller) {
@@ -103,29 +67,20 @@ describe("stock movement report controller", function () {
         $controller(StockMovementReportController, {$scope: scope, $routeParams: routeParams});
     }));
 
-    it('should load stock movements successfully', function () {
-        httpBackend.expectGET('/reports/stockMovements?facilityId=199&productCode=productCode').respond(200, stockMovements);
-
-        scope.loadStockMovements();
-        httpBackend.flush();
-
-        expect(scope.stockMovements.length).toBe(2);
-        expect(scope.stockMovements[0].entries).toBe(110);
-        expect(scope.stockMovements[0].soh).toBe('150');
-        expect(scope.stockMovements[0].signature).toBe('nhome');
-        expect(scope.stockMovements[1].issues).toBe(10);
-
-    });
-
-    it('should load facility successfully', function () {
+    it('should load facility and stock movements successfully', function () {
         httpBackend.expectGET('/facilities/199.json').respond(200, facility);
+        httpBackend.expectGET('/cubesreports/cube/vw_stock_movements/facts?cut=facility:Marracuene|product:productCode').respond(200, stockMovements);
 
-        scope.loadFacility();
+        scope.loadFacilityAndStockMovements();
         httpBackend.flush();
 
         expect(scope.facilityName).toBe("Marracuene");
         expect(scope.district).toBe("Marracuene");
         expect(scope.province).toBe("Maputo Província");
+
+        expect(scope.stockMovements.length).toBe(2);
+        expect(scope.stockMovements[0].entries).toBe(110);
+        expect(scope.stockMovements[1].issues).toBe(10);
 
     });
 });
