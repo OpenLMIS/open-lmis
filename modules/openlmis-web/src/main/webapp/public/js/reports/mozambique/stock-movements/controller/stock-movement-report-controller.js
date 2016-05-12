@@ -26,7 +26,7 @@ function StockMovementReportController($scope, $routeParams, Facility, $http, Cu
     };
 
     var setQuantityByType = function(item) {
-        var quantity = item["movement.quantity"];
+        var quantity = Math.abs(item["movement.quantity"]);
         switch (item["movement.type"]) {
             case 'RECEIVE' :
                 item.entries = quantity;

@@ -47,7 +47,7 @@ describe("stock movement report controller", function () {
                 "product.product_name": "Levonorgestrel (Microlut) 30mcg Ciclo",
                 "movement.signature": "nelso",
                 "facility": "Marracuene",
-                "movement.quantity": 10,
+                "movement.quantity": -10,
                 "movement.type": "ISSUE",
                 "movement.soh": "480",
                 "movement.latest_soh": 212,
