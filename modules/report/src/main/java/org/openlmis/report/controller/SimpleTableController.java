@@ -186,8 +186,8 @@ public class SimpleTableController extends BaseController {
         try {
             map.put("facilities.csv", new URI("http://localhost:5555/cube/facilities/facts?format=csv"));
             map.put("products.csv", new URI("http://localhost:5555/cube/requisition_line_items/members/products?format=csv"));
-            map.put("latest_stock_at_different_facilities.csv", new URI("http://localhost:5555/cube/stock_cards/members/stock?cut=stock:expirationdates&format=csv"));
-            map.put("movement_history.csv", new URI("http://localhost:5555/cube/stock_cards/members/movement?cut=movement:signature&format=csv"));
+            map.put("latest_stock_at_different_facilities.csv", new URI("http://localhost:5555/cube/vw_stock_movements/members/stock?format=csv"));
+            map.put("movement_history.csv", new URI("http://localhost:5555/cube/vw_stock_movements/members/movement?format=csv"));
             map.put("requisition_mmia.csv", new URI("http://localhost:5555/cube/requisition_line_items/facts?cut=products:MMIA&format=csv"));
             map.put("requisition_via.csv", new URI("http://localhost:5555/cube/requisition_line_items/facts?cut=products:ESS_MEDS&format=csv"));
             map.put("regimens.csv", new URI("http://localhost:5555/cube/requisitions/members/regimen?format=csv"));
