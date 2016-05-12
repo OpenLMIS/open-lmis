@@ -81,8 +81,8 @@ describe("stock movement report controller", function () {
         expect(scope.province).toBe("Maputo Província");
 
         expect(scope.stockMovements.length).toBe(2);
-        expect(scope.stockMovements[0].entries).toBe(110);
-        expect(scope.stockMovements[1].issues).toBe(10);
+        expect(scope.stockMovements[1].entries).toBe(110);
+        expect(scope.stockMovements[0].issues).toBe(10);
 
     });
 });
