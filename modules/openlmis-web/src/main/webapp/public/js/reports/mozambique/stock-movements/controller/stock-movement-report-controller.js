@@ -9,7 +9,7 @@ function StockMovementReportController($scope, $routeParams, Facility, $http, Cu
             $scope.province = data.facility.geographicZone.parent.name;
 
             loadStockMovements();
-        })
+        });
     };
 
     var loadStockMovements = function () {
@@ -22,7 +22,7 @@ function StockMovementReportController($scope, $routeParams, Facility, $http, Cu
             _.each(data, function (item) {
                 setQuantityByType(item);
                 $scope.stockMovements.push(item);
-            })
+            });
         });
     };
 
@@ -31,12 +31,16 @@ function StockMovementReportController($scope, $routeParams, Facility, $http, Cu
         switch (item["movement.type"]) {
             case 'RECEIVE' :
                 item.entries = quantity;
+                break;
             case 'ISSUE':
                 item.issues = quantity;
+                break;
             case 'NEGATIVE_ADJUST':
                 item.negativeAdjustment = quantity;
+                break;
             case 'POSITIVE_ADJUST':
                 item.positiveAdjustment = quantity;
+                break;
         }
     };
 
