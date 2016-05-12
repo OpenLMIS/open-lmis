@@ -25,38 +25,39 @@ describe("stock movement report controller", function () {
         }
     };
 
-    var stockMovements =[
-        {
-            "movement.reason": "INVENTORY",
-            "product.product_name": "Levonorgestrel (Microlut) 30mcg Ciclo",
-            "movement.signature": null,
-            "facility": "Marracuene",
-            "movement.quantity": 110,
-            "movement.type": "RECEIVE",
-            "movement.soh": "150",
-            "movement.latest_soh": 212,
-            "movement.date": "2016-02-29T20:45:11+08:00",
-            "movement.documentnumber": null,
-            "product.product_code": "04F06Y",
-            "vw_stock_movements_reason": "INVENTORY",
-            "movement.expirationdates": "31/1/2018"
-        },
-        {
-            "movement.reason": "INVENTORY_POSITIVE",
-            "product.product_name": "Levonorgestrel (Microlut) 30mcg Ciclo",
-            "movement.signature": "nelso",
-            "facility": "Marracuene",
-            "movement.quantity": 10,
-            "movement.type": "ISSUE",
-            "movement.soh": "480",
-            "movement.latest_soh": 212,
-            "movement.date": "2016-03-02T17:28:33+08:00",
-            "movement.documentnumber": "",
-            "product.product_code": "04F06Y",
-            "vw_stock_movements_reason": "INVENTORY_POSITIVE",
-            "movement.expirationdates": "31/1/2018"
-        }
-    ];
+    var stockMovements = {
+        data: [
+            {
+                "movement.reason": "INVENTORY",
+                "product.product_name": "Levonorgestrel (Microlut) 30mcg Ciclo",
+                "movement.signature": null,
+                "facility": "Marracuene",
+                "movement.quantity": 110,
+                "movement.type": "RECEIVE",
+                "movement.soh": "150",
+                "movement.latest_soh": 212,
+                "movement.date": "2016-02-29T20:45:11+08:00",
+                "movement.documentnumber": null,
+                "product.product_code": "04F06Y",
+                "vw_stock_movements_reason": "INVENTORY",
+                "movement.expirationdates": "31/1/2018"
+            },
+            {
+                "movement.reason": "INVENTORY_POSITIVE",
+                "product.product_name": "Levonorgestrel (Microlut) 30mcg Ciclo",
+                "movement.signature": "nelso",
+                "facility": "Marracuene",
+                "movement.quantity": 10,
+                "movement.type": "ISSUE",
+                "movement.soh": "480",
+                "movement.latest_soh": 212,
+                "movement.date": "2016-03-02T17:28:33+08:00",
+                "movement.documentnumber": "",
+                "product.product_code": "04F06Y",
+                "vw_stock_movements_reason": "INVENTORY_POSITIVE",
+                "movement.expirationdates": "31/1/2018"
+            }]};
+
 
     beforeEach(module('openlmis'));
     beforeEach(inject(function (_$httpBackend_, $rootScope, $controller) {
@@ -69,7 +70,8 @@ describe("stock movement report controller", function () {
 
     it('should load facility and stock movements successfully', function () {
         httpBackend.expectGET('/facilities/code/facilityCode.json').respond(200, facility);
-        httpBackend.expectGET('/cubesreports/cube/vw_stock_movements/facts?cut=facility:Marracuene|product:productCode').respond(200, stockMovements);
+        httpBackend.expectGET('/cubesreports/cube/vw_stock_movements/members/movement?cut=movement:Marracuene,productCode').respond(200, stockMovements);
+        scope.productCode = 'productCode';
 
         scope.loadFacilityAndStockMovements();
         httpBackend.flush();

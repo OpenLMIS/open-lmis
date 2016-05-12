@@ -14,12 +14,11 @@ function StockMovementReportController($scope, $routeParams, Facility, $http, Cu
 
     var loadStockMovements = function () {
         var cutsParams = [];
-        cutsParams.push({dimension: "facility", values: [$scope.facilityName]});
-        cutsParams.push({dimension: "product", values: [$routeParams.productCode]});
+        cutsParams.push({dimension: "movement", values: [$scope.facilityName + "," + $scope.productCode]});
 
-        $http.get(CubesGenerateUrlService.generateFactsUrl('vw_stock_movements', cutsParams)).success(function (data) {
+        $http.get(CubesGenerateUrlService.generateMembersUrl('vw_stock_movements', cutsParams)).success(function (data) {
             $scope.stockMovements = [];
-            _.each(data, function (item) {
+            _.each(data.data, function (item) {
                 setQuantityByType(item);
                 $scope.stockMovements.push(item);
             });

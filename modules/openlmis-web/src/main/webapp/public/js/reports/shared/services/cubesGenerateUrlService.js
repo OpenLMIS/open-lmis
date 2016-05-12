@@ -9,6 +9,10 @@ services.factory('CubesGenerateUrlService', function () {
         return baseUrl + cubesName + "/facts" + "?cut=" + generateCuts(cuts);
     };
 
+    var generateMembersUrl = function (cubesName, cuts) {
+        return baseUrl + cubesName + "/members/" + cuts[0].dimension + "?cut=" + generateCuts(cuts);
+    };
+
     var generateFactsUrlWithParams = function (cubesName, cuts, params) {
         return generateFactsUrl(cubesName, cuts) + "&" + jQuery.param(params);
     };
@@ -22,6 +26,7 @@ services.factory('CubesGenerateUrlService', function () {
     return {
         generateAggregateUrl: generateAggregateUrl,
         generateFactsUrl: generateFactsUrl,
+        generateMembersUrl : generateMembersUrl,
         generateFactsUrlWithParams: generateFactsUrlWithParams
     };
 });
