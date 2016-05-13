@@ -31,7 +31,7 @@
         </tr>
 
         <tr ng-repeat="entry in stockMovements">
-            <td>{{entry["movement.date"] | date : 'dd MMMM yyyy' }}</td>
+            <td>{{formatDate(entry["movement.date"]) }}</td>
             <td>{{entry["movement.reason"]}}</td>
             <td>{{entry["movement.documentnumber"]}}</td>
             <td>{{entry.entries}}</td>

@@ -30,6 +30,12 @@ function StockMovementReportController($scope, $routeParams, Facility, $http, Cu
         });
     };
 
+    $scope.formatDate = function(date) {
+        var options = {year: 'numeric', day: 'numeric', month: 'long'};
+        return new Date(date).toLocaleDateString(locale, options);
+    };
+
+
     var setQuantityByType = function(item) {
         var quantity = Math.abs(item["movement.quantity"]);
         switch (item["movement.type"]) {
