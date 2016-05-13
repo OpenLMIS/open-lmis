@@ -30,7 +30,7 @@ function StockMovementReportController($scope, $routeParams, Facility, $http, Cu
     };
 
     $scope.formatDate = function(dateString) {
-        var options = {month: 'long'};
+        var options = {month: 'short'};
         var date = new Date(dateString);
 
         var year = date.getFullYear();
