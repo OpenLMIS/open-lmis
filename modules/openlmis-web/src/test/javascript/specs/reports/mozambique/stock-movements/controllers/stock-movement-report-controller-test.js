@@ -44,6 +44,22 @@ describe("stock movement report controller", function () {
                 "movement.expirationdates": "31/1/2018"
             },
             {
+                "movement.id": 3,
+                "movement.reason": "INVENTORY",
+                "product.product_name": "Levonorgestrel (Microlut) 30mcg Ciclo",
+                "movement.signature": null,
+                "facility": "Marracuene",
+                "movement.quantity": 220,
+                "movement.type": "RECEIVE",
+                "movement.soh": "150",
+                "movement.latest_soh": 212,
+                "movement.date": "2016-02-29",
+                "movement.documentnumber": null,
+                "product.product_code": "04F06Y",
+                "vw_stock_movements_reason": "INVENTORY",
+                "movement.expirationdates": "31/1/2018"
+            },
+            {
                 "movement.id": 1,
                 "movement.reason": "INVENTORY_POSITIVE",
                 "product.product_name": "Levonorgestrel (Microlut) 30mcg Ciclo",
@@ -82,9 +98,9 @@ describe("stock movement report controller", function () {
         expect(scope.district).toBe("Marracuene");
         expect(scope.province).toBe("Maputo Província");
 
-        expect(scope.stockMovements.length).toBe(2);
-        expect(scope.stockMovements[0].entries).toBe(110);
-        expect(scope.stockMovements[1].issues).toBe(10);
-
+        expect(scope.stockMovements.length).toBe(3);
+        expect(scope.stockMovements[1].entries).toBe(220);
+        expect(scope.stockMovements[2].entries).toBe(110);
+        expect(scope.stockMovements[0].issues).toBe(10);
     });
 });

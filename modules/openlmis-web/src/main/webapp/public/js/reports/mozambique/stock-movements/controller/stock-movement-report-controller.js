@@ -19,12 +19,13 @@ function StockMovementReportController($scope, $routeParams, Facility, $http, Cu
         $http.get(CubesGenerateUrlService.generateMembersUrl('vw_stock_movements', cutsParams)).success(function (data) {
             $scope.stockMovements = [];
             _.each(data.data, function (item) {
-                item.id = item["movement.id"];
                 setQuantityByType(item);
                 $scope.stockMovements.push(item);
             });
 
-            $scope.stockMovements = _.sortBy($scope.stockMovements, "id");
+            $scope.stockMovements = _.sortBy($scope.stockMovements, function(item) {
+                return [item["movement.date"], item["movement.id"]].join("_");
+            });
             $scope.stockMovements.reverse();
         });
     };
