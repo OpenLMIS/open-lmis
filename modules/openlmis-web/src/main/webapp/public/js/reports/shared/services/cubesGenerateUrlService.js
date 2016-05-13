@@ -9,8 +9,8 @@ services.factory('CubesGenerateUrlService', function () {
         return baseUrl + cubesName + "/facts" + "?cut=" + generateCuts(cuts);
     };
 
-    var generateMembersUrl = function (cubesName, cuts) {
-        return baseUrl + cubesName + "/members/" + cuts[0].dimension + "?cut=" + generateCuts(cuts);
+    var generateMembersUrl = function (cubesName, cut) {
+        return baseUrl + cubesName + "/members/" + cut.dimension + "?cut=" + cut.dimension + ":" + cut.value;
     };
 
     var generateFactsUrlWithParams = function (cubesName, cuts, params) {
