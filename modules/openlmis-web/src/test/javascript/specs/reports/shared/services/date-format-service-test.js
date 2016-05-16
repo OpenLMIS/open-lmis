@@ -18,4 +18,9 @@ describe("date format service test", function () {
         var formattedDate = dateFormatService.formatDateWithLastDayOfMonth(new Date("2011-11-11"));
         expect(formattedDate).toEqual("2011-11-30");
     });
+
+    it("should format date with local", function () {
+        var formattedDate = dateFormatService.formatDateWithLocale(new Date("2011-11-11"));
+        expect(formattedDate).toEqual("11 Nov 2011");
+    });
 });

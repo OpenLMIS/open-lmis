@@ -1,4 +1,4 @@
-function StockMovementReportController($scope, $routeParams, Facility, $http, CubesGenerateUrlService) {
+function StockMovementReportController($scope, $routeParams, Facility, $http, CubesGenerateUrlService, DateFormatService) {
 
     $scope.loadFacilityAndStockMovements = function() {
         Facility.getFacilityByCode().get({
@@ -30,14 +30,7 @@ function StockMovementReportController($scope, $routeParams, Facility, $http, Cu
     };
 
     $scope.formatDate = function(dateString) {
-        var options = {month: 'short'};
-        var date = new Date(dateString);
-
-        var year = date.getFullYear();
-        var day = date.getDate();
-        var month = date.toLocaleDateString(locale, options);
-
-        return day + " " + month + " " + year;
+        return DateFormatService.formatDateWithLocale(dateString);
     };
 
 
