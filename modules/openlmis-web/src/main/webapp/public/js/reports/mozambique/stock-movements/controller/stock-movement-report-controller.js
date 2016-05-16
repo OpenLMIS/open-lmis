@@ -2,7 +2,7 @@ function StockMovementReportController($scope, $routeParams, Facility, $http, Cu
 
     $scope.loadFacilityAndStockMovements = function() {
         Facility.getFacilityByCode().get({
-            code: $routeParams.facilityCode
+            code: $scope.facilityCode
         }, function(data) {
             $scope.facilityName = data.facility.name;
             $scope.district = data.facility.geographicZone.name;
@@ -13,7 +13,7 @@ function StockMovementReportController($scope, $routeParams, Facility, $http, Cu
     };
 
     var loadStockMovements = function () {
-        var cut = {dimension: "movement", value: $scope.facilityName + "," + $scope.productCode};
+        var cut = {dimension: "movement", value: $scope.facilityCode + "," + $scope.productCode};
 
         $http.get(CubesGenerateUrlService.generateMembersUrl('vw_stock_movements', cut)).success(function (data) {
             $scope.stockMovements = [];
@@ -54,6 +54,7 @@ function StockMovementReportController($scope, $routeParams, Facility, $http, Cu
 
     $scope.$on('$viewContentLoaded', function () {
         $scope.productCode = $routeParams.productCode;
+        $scope.facilityCode = $routeParams.facilityCode;
 
         $scope.loadFacilityAndStockMovements();
     });

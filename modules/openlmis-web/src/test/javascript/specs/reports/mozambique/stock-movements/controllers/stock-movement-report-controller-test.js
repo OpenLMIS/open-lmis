@@ -3,7 +3,7 @@ describe("stock movement report controller", function () {
 
     var facility = {
         "facility": {"id":2,
-            "code":"HF1",
+            "code":"facilityCode",
             "name":"Marracuene",
             "geographicZone":{
                 "id":5,
@@ -88,8 +88,9 @@ describe("stock movement report controller", function () {
 
     it('should load facility and stock movements successfully', function () {
         httpBackend.expectGET('/facilities/code/facilityCode.json').respond(200, facility);
-        httpBackend.expectGET('/cubesreports/cube/vw_stock_movements/members/movement?cut=movement:Marracuene,productCode').respond(200, stockMovements);
+        httpBackend.expectGET('/cubesreports/cube/vw_stock_movements/members/movement?cut=movement:facilityCode,productCode').respond(200, stockMovements);
         scope.productCode = 'productCode';
+        scope.facilityCode = 'facilityCode';
 
         scope.loadFacilityAndStockMovements();
         httpBackend.flush();
