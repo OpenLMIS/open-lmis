@@ -159,7 +159,7 @@ describe('ViewRnrListController', function () {
     ];
     //scope.openRequisition();
     openRequisition("/reference-data/toggle/new.rnr.view.json", {key:false});
-    expect(location.url()).toEqual("/requisition/1/2?supplyType=fullSupply&page=1");
+    expect(location.url()).toEqual("/requisition/1?supplyType=fullSupply&page=1");
   });
 
   it('should open a via requisition view', function () {
@@ -167,7 +167,7 @@ describe('ViewRnrListController', function () {
       {'id': 1, 'programId': 2,'programCode':'ESS_MEDS'}
     ];
     openRequisition("/reference-data/toggle/new.rnr.view.json", {key:true});
-    expect(location.url()).toEqual("/view-requisition-via/1/2?supplyType=fullSupply&page=1");
+    expect(location.url()).toEqual("/view-requisition-via/1?supplyType=fullSupply&page=1");
   });
 
   it('should open a mmia requisition view', function () {
@@ -175,7 +175,7 @@ describe('ViewRnrListController', function () {
       {'id': 1, 'programId': 2,'programCode':'MMIA'}
     ];
     openRequisition("/reference-data/toggle/new.rnr.view.json", {key:true});
-    expect(location.url()).toEqual("/view-requisition-mmia/1/2?supplyType=fullSupply&page=1");
+    expect(location.url()).toEqual("/view-requisition-mmia/1?supplyType=fullSupply&page=1");
   });
 
   it('should open a requisition with id 1 and for program 2 and full-supply and set data in navigateBackService', function () {
@@ -192,7 +192,7 @@ describe('ViewRnrListController', function () {
     scope.selectedProgramId = 2;
     //scope.openRequisition();
     openRequisition("/reference-data/toggle/new.rnr.view.json", {key:false});
-    expect(location.url()).toEqual("/requisition/1/2?supplyType=fullSupply&page=1");
+    expect(location.url()).toEqual("/requisition/1?supplyType=fullSupply&page=1");
     expect(navigateBackService.facilityId).toEqual(1);
     expect(navigateBackService.dateRangeStart).toEqual("10/10/2004");
     expect(navigateBackService.dateRangeEnd).toEqual("10/10/2014");

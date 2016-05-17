@@ -114,7 +114,7 @@ function ViewRnrListController($scope, facilities, RequisitionsForViewing, Progr
                 var urlMapping = {"VIA": "view-requisition-via/", "ESS_MEDS": "view-requisition-via/", "MMIA": "view-requisition-mmia/"};
                 url = urlMapping[$scope.selectedItems[0].programCode];
             }
-            url += $scope.selectedItems[0].id + "/" + $scope.selectedItems[0].programId + "?supplyType=fullSupply&page=1";
+            url += $scope.selectedItems[0].id + "?supplyType=fullSupply&page=1";
             $location.url(url);
         });
     }
