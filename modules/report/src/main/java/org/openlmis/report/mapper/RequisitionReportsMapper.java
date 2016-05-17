@@ -25,14 +25,16 @@ import java.util.List;
 @Repository
 public interface RequisitionReportsMapper {
 
-    @Select({"SELECT req.id id," +
-            "fac.name facilityName," +
-            "req.emergency emergency," +
-            "pro.name programName," +
-            "us.username submittedUser," +
-            "req.clientsubmittedtime clientSubmittedTime," +
-            "req.status requisitionStatus," +
-            "req.modifieddate webSubmittedTime" +
+    @Select({"SELECT req.id id, " +
+            "fac.name facilityName, " +
+            "req.emergency emergency, " +
+            "pro.name programName, " +
+            "us.username submittedUser, " +
+            "req.clientsubmittedtime clientSubmittedTime, " +
+            "req.status requisitionStatus, " +
+            "req.modifieddate webSubmittedTime, " +
+            "rp.periodenddate actualPeriodEnd, " +
+            "pp.enddate schedulePeriodEnd " +
             "  FROM requisitions req" +
             "  left join facilities fac" +
             "      on req.facilityid = fac.id" +
@@ -40,6 +42,10 @@ public interface RequisitionReportsMapper {
             "      on req.programid = pro.id" +
             "  left join users us" +
             "      on req.modifiedby=us.id" +
+            "  left join requisition_periods rp" +
+            "      on req.id = rp.rnrid " +
+            "  left join processing_periods pp " +
+            "      on req.periodid = pp.id" +
             "  where ",
             "(req.modifiedDate >= #{startDate} "
                     + "AND req.modifiedDate <= #{endDate})"})
