@@ -1,11 +1,13 @@
-function RequisitionReportController($scope, $filter, RequisitionReportService, DateFormatService, messageService) {
+function RequisitionReportController($scope, $filter, RequisitionReportService, messageService, DateFormatService, $window) {
+
     $scope.$on('$viewContentLoaded', function () {
         $scope.loadRequisitions();
     });
+    $scope.selectedItems = [];
 
     $scope.loadRequisitions = function () {
         var requisitionQueryParameters = {
-            startTime:  '2015-09-26 00:00:00',
+            startTime: '2015-09-26 00:00:00',
             endTime: $filter('date')(new Date(), 'yyyy-MM-dd HH:mm:ss')
         };
 
@@ -31,14 +33,61 @@ function RequisitionReportController($scope, $filter, RequisitionReportService, 
                     rnr.submittedStatus = messageService.get("rnr.report.submitted.status.late");
                 }
             }
+
+            rnr.inventoryDate = formatDate(rnr.actualPeriodEnd);
         });
     };
-    
-    $scope.formatDate = function(date) {
+
+    var formatDate = function (date) {
         return DateFormatService.formatDateWithLocale(date);
     };
+
     
     $scope.isLate = function(status) {
         return messageService.get("rnr.report.submitted.status.late") === status;
     };
+
+    function redirectPage() {
+        var url = "";
+        var urlMapping = {
+            "VIA": "/public/pages/logistics/rnr/index.html#/view-requisition-via/",
+            "ESS_MEDS": "/public/pages/logistics/rnr/index.html#/view-requisition-via/",
+            "MMIA": "/public/pages/logistics/rnr/index.html#/view-requisition-mmia/"
+        };
+
+        var selectedItem = $scope.selectedItems[0];
+        if (selectedItem.programName) {
+            url = urlMapping[selectedItem.programName];
+        }
+        url += selectedItem.id + "?supplyType=fullSupply&page=1";
+        $window.location.href = url;
+    }
+
+    $scope.rnrListGrid = {
+        data: 'requisitions',
+        displayFooter: false,
+        multiSelect: false,
+        selectedItems: $scope.selectedItems,
+        afterSelectionChange: redirectPage,
+        displaySelectionCheckbox: false,
+        enableColumnResize: true,
+        showColumnMenu: false,
+        showFilter: false,
+        enableSorting: true,
+        plugins: [new ngGridFlexibleHeightPlugin()],
+        sortInfo: {fields: ['webSubmittedTimeString'], directions: ['desc']},
+        columnDefs: [
+            {displayName: 'number', cellTemplate: '<div>{{$parent.$index + 1}}</div>', enableSorting: false ,width:100},
+            {field: 'programName', displayName: messageService.get("program.header"),width:150},
+            {field: 'type', displayName: 'Type',width:150},
+            {field: 'facilityName', displayName: messageService.get("option.value.facility.name"),width:200},
+            {field: 'submittedUser', displayName: 'Submitted User'},
+            {field: 'inventoryDate', displayName: 'Inventory Date'},
+            {field: 'submittedStatus', displayName: 'Submitted Status',width:150},
+            {field: 'clientSubmittedTimeString', displayName: 'Submitted Time'},
+            {field: 'webSubmittedTimeString', displayName: 'Sync Time'}
+        ]
+    };
+
+
 }

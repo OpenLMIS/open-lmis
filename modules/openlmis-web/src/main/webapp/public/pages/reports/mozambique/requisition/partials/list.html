@@ -1,6 +1,7 @@
 <div>
     <h3>Requisition Report</h3>
     <h4>Total : {{requisitions.length}} requisition(s)</h4>
+
     <table class="table table-condensed table-bordered table-striped">
         <tr class="gradient-header">
             <th>Number</th>
@@ -51,4 +52,8 @@
             <td>{{row.webSubmittedTimeString}}</td>
         </tr>
     </table>
+
+    <div id='viewReqList' ng-grid="rnrListGrid" style="height: auto; width: 100%;"
+         ng-show="requisitions.length"></div>
+
 </div>
