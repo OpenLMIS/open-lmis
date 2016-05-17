@@ -32,6 +32,7 @@ function DatePickerContainerController($scope, $filter, DateFormatService) {
     $scope.datePickerStartOptions = angular.extend(baseTimePickerOptions(), {
         maxDate: currentDate,
         onClose: function () {
+            notHideCalendar();
             $scope.timeTagSelected = "";
             var selectedYear = $("#ui-datepicker-div .ui-datepicker-year :selected").val();
             var selectedMonth = $("#ui-datepicker-div .ui-datepicker-month :selected").val();
@@ -44,6 +45,7 @@ function DatePickerContainerController($scope, $filter, DateFormatService) {
     $scope.datePickerEndOptions = angular.extend(baseTimePickerOptions(), {
         maxDate: DateFormatService.formatDateWithLastDayOfMonth(currentDate),
         onClose: function () {
+            notHideCalendar();
             $scope.timeTagSelected = "";
             var selectedYear = $("#ui-datepicker-div .ui-datepicker-year :selected").val();
             var selectedMonth = $("#ui-datepicker-div .ui-datepicker-month :selected").val();
@@ -75,5 +77,11 @@ function DatePickerContainerController($scope, $filter, DateFormatService) {
 
     $scope.checkCompletenessOfEndTime = function() {
         $scope.showIncompleteWarning = $scope.dateRange.endTime != DateFormatService.formatDateWithLastDayOfMonth(new Date($scope.dateRange.endTime));
+    };
+
+    var notHideCalendar = function() {
+        $("#ui-datepicker-div").removeClass("hide-calendar");
+        $("#ui-datepicker-div").removeClass('MonthDatePicker');
+        $("#ui-datepicker-div").removeClass('HideTodayButton');
     };
 }
