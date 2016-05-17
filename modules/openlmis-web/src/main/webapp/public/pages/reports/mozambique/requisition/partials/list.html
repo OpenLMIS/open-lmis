@@ -46,7 +46,7 @@
             <td>{{row.facilityName}}</td>
             <td>{{row.submittedUser}}</td>
             <td>{{formatDate(row.actualPeriodEnd)}}</td>
-            <td>{{row.submittedStatus}}</td>
+            <td ng-class="{late: ('Late' === '{{row.submittedStatus}}')}">{{row.submittedStatus}}</td>
             <td>{{row.clientSubmittedTimeString}}</td>
             <td>{{row.webSubmittedTimeString}}</td>
         </tr>
