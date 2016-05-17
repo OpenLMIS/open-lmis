@@ -1,4 +1,4 @@
-function RequisitionReportController($scope, $filter, RequisitionReportService, DateFormatService) {
+function RequisitionReportController($scope, $filter, RequisitionReportService, DateFormatService, messageService) {
     $scope.$on('$viewContentLoaded', function () {
         $scope.loadRequisitions();
     });
@@ -26,9 +26,9 @@ function RequisitionReportController($scope, $filter, RequisitionReportService, 
             if (rnr.clientSubmittedTime !== null) {
                 var FIVE_DAYS = 5 * 24 * 60 * 60 * 1000;
                 if (rnr.clientSubmittedTime <= rnr.schedulePeriodEnd + FIVE_DAYS) {
-                    rnr.submittedStatus = 'On time';
+                    rnr.submittedStatus = messageService.get("rnr.report.submitted.status.ontime");
                 } else {
-                    rnr.submittedStatus = 'Late';
+                    rnr.submittedStatus = messageService.get("rnr.report.submitted.status.late");
                 }
             }
         });
@@ -36,5 +36,9 @@ function RequisitionReportController($scope, $filter, RequisitionReportService, 
     
     $scope.formatDate = function(date) {
         return DateFormatService.formatDateWithLocale(date);
+    };
+    
+    $scope.isLate = function(status) {
+        return messageService.get("rnr.report.submitted.status.late") === status;
     };
 }
