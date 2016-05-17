@@ -22,7 +22,8 @@ function RequisitionReportController($scope, $filter, RequisitionReportService, 
                 rnr.actualPeriodEnd = rnr.schedulePeriodEnd;
             }
 
-            if (rnr.clientSubmittedTimeString !== null) {
+
+            if (rnr.clientSubmittedTime !== null) {
                 var FIVE_DAYS = 5 * 24 * 60 * 60 * 1000;
                 if (rnr.clientSubmittedTime <= rnr.schedulePeriodEnd + FIVE_DAYS) {
                     rnr.submittedStatus = 'On time';

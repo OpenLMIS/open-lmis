@@ -28,6 +28,19 @@ describe("requisition report controller", function () {
             "webSubmittedTime":1463453174780,
             "clientSubmittedTime":1463759999000,
             "requisitionStatus":"AUTHORIZED"
+        },
+        {   "id":150,
+            "programName":"VIA",
+            "type":"Normal",
+            "emergency":false,
+            "facilityName":"Matalane",
+            "submittedUser":"mystique",
+            "clientSubmittedTimeString":"",
+            "actualPeriodEnd":1456197080000,
+            "schedulePeriodEnd":1463759999000,
+            "webSubmittedTime":1463453174780,
+            "clientSubmittedTime":null,
+            "requisitionStatus":"AUTHORIZED"
         }
     ]};
 
@@ -50,12 +63,13 @@ describe("requisition report controller", function () {
         scope.loadRequisitions();
         httpBackend.flush();
 
-        expect(scope.requisitions.length).toBe(2);
+        expect(scope.requisitions.length).toBe(3);
 
         expect(scope.requisitions[0].actualPeriodEnd).toBe(1463759999000);
         expect(scope.requisitions[0].submittedStatus).toBe('Late');
         expect(scope.requisitions[1].actualPeriodEnd).toBe(1456197080000);
         expect(scope.requisitions[1].submittedStatus).toBe('On time');
+        expect(scope.requisitions[2].submittedStatus).toBe(undefined);
 
     });
 
