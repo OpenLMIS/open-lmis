@@ -75,15 +75,15 @@ function RequisitionReportController($scope, $filter, RequisitionReportService, 
         showFilter: false,
         enableSorting: true,
         plugins: [new ngGridFlexibleHeightPlugin()],
-        sortInfo: {fields: ['webSubmittedTimeString'], directions: ['desc']},
+        //sortInfo: {fields: ['webSubmittedTimeString'], directions: ['desc']},
         columnDefs: [
-            {displayName: 'number', cellTemplate: '<div>{{$parent.$index + 1}}</div>', enableSorting: false ,width:100},
+            {displayName: 'number', cellTemplate: '<div>{{$parent.$index + 1}}</div>',width:100 , sortable: false },
             {field: 'programName', displayName: messageService.get("program.header"),width:130},
             {field: 'type', displayName: 'Type',width:130},
             {field: 'facilityName', displayName: messageService.get("option.value.facility.name"),width:200},
             {field: 'submittedUser', displayName: 'Submitted User'},
             {field: 'inventoryDate', displayName: 'Inventory Date'},
-            {field: 'submittedStatus', displayName: 'Submitted Status',cellTemplate:'<div ng-class="{submitStatus: isLate(\'{{row.getProperty(col.field)}}\')}">  {{row.getProperty(col.field)}}</div>',width:150},
+            {field: 'submittedStatus', displayName: 'Submitted Status',cellTemplate:'<div ng-class="{submitStatus: isLate(\'{{row.getProperty(col.field)}}\')}">{{row.getProperty(col.field)}}</div>',width:150},
             {field: 'clientSubmittedTimeString', displayName: 'Submitted Time'},
             {field: 'webSubmittedTimeString', displayName: 'Sync Time'}
         ]
