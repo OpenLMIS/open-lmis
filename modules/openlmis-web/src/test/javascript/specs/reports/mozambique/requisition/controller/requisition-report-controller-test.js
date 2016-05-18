@@ -71,11 +71,19 @@ describe("requisition report controller", function () {
         expect(scope.requisitions[1].actualPeriodEnd).toBe(1456197080000);
         expect(scope.requisitions[1].submittedStatus).toBe(messageService.get("rnr.report.submitted.status.ontime"));
         expect(scope.requisitions[2].submittedStatus).toBe(undefined);
+    });
 
+    it('should get redirect url of rnr detail page', function () {
+        scope.selectedItems[0] = {
+            "id":150,
+            "programName":"VIA"
+        };
+
+        expect(scope.getRedirectUrl()).toBe("/public/pages/logistics/rnr/index.html#/view-requisition-via/150?supplyType=fullSupply&page=1");
     });
 
 
     var formatString = function(s) {
         return ("0" + s).slice(-2);
-    }
+    };
 });

@@ -73,7 +73,7 @@ function RequisitionReportController($scope, $filter, RequisitionReportService, 
         return DateFormatService.formatDateWithLocale(date);
     }
 
-    function getRedirectUrl() {
+    $scope.getRedirectUrl = function() {
         var url = "/public/pages/logistics/rnr/index.html#/";
         var urlMapping = {
             "VIA": "view-requisition-via/",
@@ -88,12 +88,11 @@ function RequisitionReportController($scope, $filter, RequisitionReportService, 
 
         url += selectedItem.id + "?supplyType=fullSupply&page=1";
         return url;
-    }
+    };
 
-    function redirectPage() {
+    function redirectPage () {
         FeatureToggleService.get({key: "redirect.view.rnr.page"}, function (result) {
-            var url = getRedirectUrl();
-            $window.location.href = url;
+            $window.location.href = $scope.getRedirectUrl();
         });
     }
 }
