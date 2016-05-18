@@ -37,7 +37,7 @@ function RequisitionReportController($scope, $filter, RequisitionReportService, 
         });
     };
 
-    $scope.submitStatusClass = function(status) {
+    $scope.getSubmitStatusClass = function(status) {
         var cellTemplateClass = "customCell";
         var lateStatusClass = "submitStatusLate";
         return messageService.get("rnr.report.submitted.status.late") === status ? lateStatusClass : cellTemplateClass;
@@ -63,9 +63,9 @@ function RequisitionReportController($scope, $filter, RequisitionReportService, 
             {field: 'facilityName', displayName: messageService.get("option.value.facility.name"),width:200},
             {field: 'submittedUser', displayName: 'Submitted User'},
             {field: 'inventoryDate', displayName: 'Inventory Date'},
-            {field: 'submittedStatus', displayName: 'Submitted Status',cellTemplate:'<div ng-class="submitStatusClass(\'{{row.getProperty(col.field)}}\')">{{row.getProperty(col.field)}}</div>'},
+            {field: 'submittedStatus', displayName: 'Submitted Status',cellTemplate:'<div ng-class="getSubmitStatusClass(\'{{row.getProperty(col.field)}}\')">{{row.getProperty(col.field)}}</div>'},
             {field: 'clientSubmittedTimeString', displayName: 'Submitted Time'},
-            {field: 'webSubmittedTimeString', displayName: 'Sync Time'}
+            {field: 'webSubmittedTimeString', displayName: 'Sync Time' }
         ]
     };
 
