@@ -1,4 +1,4 @@
-function RequisitionReportController($scope, $filter, RequisitionReportService, messageService, DateFormatService, $window) {
+function RequisitionReportController($scope, $filter, RequisitionReportService, messageService, DateFormatService,FeatureToggleService, $window) {
 
     $scope.$on('$viewContentLoaded', function () {
         $scope.loadRequisitions();
@@ -37,31 +37,11 @@ function RequisitionReportController($scope, $filter, RequisitionReportService, 
         });
     };
 
-    var formatDate = function (date) {
-        return DateFormatService.formatDateWithLocale(date);
-    };
-    
     $scope.submitStatusClass = function(status) {
         var cellTemplateClass = "customCell";
         var lateStatusClass = "submitStatusLate";
         return messageService.get("rnr.report.submitted.status.late") === status ? lateStatusClass : cellTemplateClass;
     };
-
-    function redirectPage() {
-        var url = "";
-        var urlMapping = {
-            "VIA": "/public/pages/logistics/rnr/index.html#/view-requisition-via/",
-            "ESS_MEDS": "/public/pages/logistics/rnr/index.html#/view-requisition-via/",
-            "MMIA": "/public/pages/logistics/rnr/index.html#/view-requisition-mmia/"
-        };
-
-        var selectedItem = $scope.selectedItems[0];
-        if (selectedItem.programName) {
-            url = urlMapping[selectedItem.programName];
-        }
-        url += selectedItem.id + "?supplyType=fullSupply&page=1";
-        $window.location.href = url;
-    }
 
     $scope.rnrListGrid = {
         data: 'requisitions',
@@ -88,4 +68,32 @@ function RequisitionReportController($scope, $filter, RequisitionReportService, 
             {field: 'webSubmittedTimeString', displayName: 'Sync Time'}
         ]
     };
+
+    function formatDate (date) {
+        return DateFormatService.formatDateWithLocale(date);
+    }
+
+    function getRedirectUrl() {
+        var url = "/public/pages/logistics/rnr/index.html#/";
+        var urlMapping = {
+            "VIA": "view-requisition-via/",
+            "ESS_MEDS": "view-requisition-via/",
+            "MMIA": "view-requisition-mmia/"
+        };
+
+        var selectedItem = $scope.selectedItems[0];
+        if (selectedItem.programName) {
+            url = url + urlMapping[selectedItem.programName];
+        }
+
+        url += selectedItem.id + "?supplyType=fullSupply&page=1";
+        return url;
+    }
+
+    function redirectPage() {
+        FeatureToggleService.get({key: "redirect.view.rnr.page"}, function (result) {
+            var url = getRedirectUrl();
+            $window.location.href = url;
+        });
+    }
 }
