@@ -1,5 +1,5 @@
 describe("requisition report controller", function () {
-    var scope, httpBackend;
+    var scope, httpBackend, messageService;
 
     var requisitions = {
     "rnr_list":[
@@ -45,9 +45,10 @@ describe("requisition report controller", function () {
     ]};
 
     beforeEach(module('openlmis'));
-    beforeEach(inject(function (_$httpBackend_, $rootScope, $controller) {
+    beforeEach(inject(function (_$httpBackend_, $rootScope, $controller,_messageService_) {
         scope = $rootScope.$new();
         httpBackend = _$httpBackend_;
+        messageService = _messageService_;
 
         $controller(RequisitionReportController, {$scope: scope});
     }));
@@ -66,9 +67,9 @@ describe("requisition report controller", function () {
         expect(scope.requisitions.length).toBe(3);
 
         expect(scope.requisitions[0].actualPeriodEnd).toBe(1463759999000);
-        expect(scope.requisitions[0].submittedStatus).toBe('Late');
+        expect(scope.requisitions[0].submittedStatus).toBe(messageService.get("rnr.report.submitted.status.late"));
         expect(scope.requisitions[1].actualPeriodEnd).toBe(1456197080000);
-        expect(scope.requisitions[1].submittedStatus).toBe('On time');
+        expect(scope.requisitions[1].submittedStatus).toBe(messageService.get("rnr.report.submitted.status.ontime"));
         expect(scope.requisitions[2].submittedStatus).toBe(undefined);
 
     });

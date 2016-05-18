@@ -41,7 +41,6 @@ function RequisitionReportController($scope, $filter, RequisitionReportService, 
     var formatDate = function (date) {
         return DateFormatService.formatDateWithLocale(date);
     };
-
     
     $scope.submitStatusClass = function(status) {
         var cellTemplateClass = "customCell";

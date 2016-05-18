@@ -22,6 +22,7 @@ module.exports = function (config) {
       'lib/angular-ui/ng-grid-1.6.3.js',
       'lib/angular-ui/bootstrap/ui-bootstrap-0.1.0.min.js',
       'lib/angular-ui/angular-ui.js',
+      'lib/angular-ui/ng-grid-flexible-height.js',
       'lib/indexed-db-angular-service/js/services/indexed-db.js',
       'lib/localstorage/localStorage.js',
       'lib/underscore/underscore-min.js',
