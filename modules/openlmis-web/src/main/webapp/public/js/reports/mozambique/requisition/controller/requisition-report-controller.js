@@ -13,17 +13,16 @@ function RequisitionReportController($scope, $filter, RequisitionReportService, 
 
         RequisitionReportService.get(requisitionQueryParameters, function (data) {
             $scope.requisitions = data.rnr_list;
-            setActualEndDateAndStubmittedStatus();
+            setInventoryDateAndStubmittedStatus();
         }, function () {
         });
     };
 
-    var setActualEndDateAndStubmittedStatus = function () {
+    var setInventoryDateAndStubmittedStatus = function () {
         _.each($scope.requisitions, function (rnr) {
             if (rnr.actualPeriodEnd === null) {
                 rnr.actualPeriodEnd = rnr.schedulePeriodEnd;
             }
-
 
             if (rnr.clientSubmittedTime !== null) {
                 var FIVE_DAYS = 5 * 24 * 60 * 60 * 1000;
@@ -89,6 +88,4 @@ function RequisitionReportController($scope, $filter, RequisitionReportService, 
             {field: 'webSubmittedTimeString', displayName: 'Sync Time'}
         ]
     };
-
-
 }
