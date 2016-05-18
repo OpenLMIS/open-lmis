@@ -1,4 +1,4 @@
-function StockOutSingleProductReportController($scope, $filter, $q, $controller, $http, $timeout, CubesGenerateUrlService, $routeParams, ProductReportService, StockoutSingleProductFacilityChartService, StockoutSingleProductZoneChartService, StockoutSingleProductTreeDataBuilder, CubesGenerateCutParamsService) {
+function StockOutSingleProductReportController($scope, $filter, $q, $controller, $http, $timeout, CubesGenerateUrlService, $routeParams, ProductReportService, StockoutSingleProductFacilityChartService, StockoutSingleProductZoneChartService, StockoutSingleProductTreeDataBuilder, CubesGenerateCutParamsService, FeatureToggleService) {
     $controller('BaseProductReportController', {$scope: $scope});
 
     var stockOuts;
@@ -33,6 +33,11 @@ function StockOutSingleProductReportController($scope, $filter, $q, $controller,
     };
 
     $scope.$on('$viewContentLoaded', function () {
+
+        FeatureToggleService.get({key: 'view.stock.movement'}, function (result) {
+              $scope.viewStockMovementToggle = result.key;
+        });
+
         $scope.loadProducts();
         $scope.loadHealthFacilities();
     });

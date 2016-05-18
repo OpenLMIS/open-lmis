@@ -1,7 +1,12 @@
-function SingleFacilityReportController($scope, $filter, $controller, ProductReportService) {
+function SingleFacilityReportController($scope, $filter, $controller, ProductReportService, FeatureToggleService) {
     $controller('BaseProductReportController', {$scope: $scope});
 
     $scope.$on('$viewContentLoaded', function () {
+
+        FeatureToggleService.get({key: 'view.stock.movement'}, function (result) {
+          $scope.viewStockMovementToggle = result.key;
+        });
+
         $scope.loadHealthFacilities();
     });
 

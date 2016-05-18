@@ -37,7 +37,8 @@
     <div ng-if="tree_data">
         <h3 class="report-title" openlmis-message="subtitle.stock.out.single.report|selectedProduct.name"></h3>
 
-        <tree-grid tree-data="tree_data" col-defs="col_defs" expand-on="expanding_property" expand-level="1" product = "selectedProduct"
+        <tree-grid tree-data="tree_data" col-defs="col_defs" expand-on="expanding_property" expand-level="1"
+                   product="selectedProduct" view-stock-movement-toggle="viewStockMovementToggle"
                    icon-leaf="glyphicon" on-expanded="onExpanded(branch)"
                    on-chart-place-holder-shown="onChartPlaceHolderShown(branch)">
 
