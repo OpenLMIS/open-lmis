@@ -85,5 +85,5 @@ describe("requisition report controller", function () {
 
     var formatString = function(s) {
         return ("0" + s).slice(-2);
-    };
+    }
 });
