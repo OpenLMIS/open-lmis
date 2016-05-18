@@ -43,8 +43,10 @@ function RequisitionReportController($scope, $filter, RequisitionReportService, 
     };
 
     
-    $scope.isLate = function(status) {
-        return messageService.get("rnr.report.submitted.status.late") === status;
+    $scope.submitStatusClass = function(status) {
+        var cellTemplateClass = "customCell";
+        var lateStatusClass = "submitStatusLate";
+        return messageService.get("rnr.report.submitted.status.late") === status ? lateStatusClass : cellTemplateClass;
     };
 
     function redirectPage() {
@@ -75,15 +77,15 @@ function RequisitionReportController($scope, $filter, RequisitionReportService, 
         showFilter: false,
         enableSorting: true,
         plugins: [new ngGridFlexibleHeightPlugin()],
-        //sortInfo: {fields: ['webSubmittedTimeString'], directions: ['desc']},
+        sortInfo: {fields: ['webSubmittedTimeString'], directions: ['desc']},
         columnDefs: [
-            {displayName: 'number', cellTemplate: '<div>{{$parent.$index + 1}}</div>',width:100 , sortable: false },
-            {field: 'programName', displayName: messageService.get("program.header"),width:130},
-            {field: 'type', displayName: 'Type',width:130},
+            {displayName: 'number', cellTemplate: '<div class="customCell">{{$parent.$index + 1}}</div>', sortable: false },
+            {field: 'programName', displayName: messageService.get("program.header")},
+            {field: 'type', displayName: 'Type'},
             {field: 'facilityName', displayName: messageService.get("option.value.facility.name"),width:200},
             {field: 'submittedUser', displayName: 'Submitted User'},
             {field: 'inventoryDate', displayName: 'Inventory Date'},
-            {field: 'submittedStatus', displayName: 'Submitted Status',cellTemplate:'<div ng-class="{submitStatus: isLate(\'{{row.getProperty(col.field)}}\')}">{{row.getProperty(col.field)}}</div>',width:150},
+            {field: 'submittedStatus', displayName: 'Submitted Status',cellTemplate:'<div ng-class="submitStatusClass(\'{{row.getProperty(col.field)}}\')">{{row.getProperty(col.field)}}</div>'},
             {field: 'clientSubmittedTimeString', displayName: 'Submitted Time'},
             {field: 'webSubmittedTimeString', displayName: 'Sync Time'}
         ]
