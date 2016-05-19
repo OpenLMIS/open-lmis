@@ -72,7 +72,7 @@ public class PDFGeneratorTest {
 
         //then
         verify(phantom).generatePDF(
-                "localhost:9091/public/pages/logistics/rnr/index.html#/view-requisition-" + urlPart + "/1/3",
+                "localhost:9091/public/pages/logistics/rnr/index.html#/view-requisition-" + urlPart + "/1",
                 "/app/tomcat/openlmis/emailattachment/cache/Requi1_HF2_Month1_Yellow Fever.pdf",
                 "helloid", urlPart);
     }

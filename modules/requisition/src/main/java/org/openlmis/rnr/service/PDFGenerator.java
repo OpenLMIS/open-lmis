@@ -40,8 +40,7 @@ public class PDFGenerator {
 
         String url = staticReferenceDataService.getPropertyValue("app.url") +
                 "/public/pages/logistics/rnr/index.html#/view-requisition-" +
-                rnrProgram.toString() + "/" +
-                rnrId + "/" + programId;
+                rnrProgram.toString() + "/" + rnrId;
 
         String sessionId = RequestContextHolder.currentRequestAttributes().getSessionId();
         nameForPdf = getNameForPdf(requisitionService.getFullRequisitionById(rnrId));
