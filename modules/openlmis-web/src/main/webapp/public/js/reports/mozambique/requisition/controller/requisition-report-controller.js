@@ -3,6 +3,11 @@ function RequisitionReportController($scope, $filter, RequisitionReportService, 
     $scope.$on('$viewContentLoaded', function () {
         $scope.loadRequisitions();
     });
+
+    $scope.$on('messagesPopulated', function () {
+        setInventoryDateAndSubmittedStatus();
+    });
+
     $scope.selectedItems = [];
 
     $scope.loadRequisitions = function () {
@@ -13,12 +18,12 @@ function RequisitionReportController($scope, $filter, RequisitionReportService, 
 
         RequisitionReportService.get(requisitionQueryParameters, function (data) {
             $scope.requisitions = data.rnr_list;
-            setInventoryDateAndStubmittedStatus();
+            setInventoryDateAndSubmittedStatus();
         }, function () {
         });
     };
 
-    var setInventoryDateAndStubmittedStatus = function () {
+    var setInventoryDateAndSubmittedStatus = function () {
         _.each($scope.requisitions, function (rnr) {
             if (rnr.actualPeriodEnd === null) {
                 rnr.actualPeriodEnd = rnr.schedulePeriodEnd;

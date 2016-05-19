@@ -29,6 +29,10 @@ function StockMovementReportController($scope, $routeParams, Facility, $http, Cu
         });
     };
 
+    $scope.$on('messagesPopulated', function () {
+        $scope.formatDate();
+    });
+
     $scope.formatDate = function(dateString) {
         return DateFormatService.formatDateWithLocale(dateString);
     };
