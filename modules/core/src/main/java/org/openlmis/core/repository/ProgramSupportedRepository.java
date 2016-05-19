@@ -106,6 +106,10 @@ public class ProgramSupportedRepository {
     mapper.update(programSupported);
   }
 
+  public void updateProgramSupportedStartDate(Long facilityId, Long programId, Date startDate) {
+    mapper.updateStartDate(facilityId, programId, startDate);
+  }
+
   public List<ProgramSupported> getActiveByFacilityId(Long facilityId) {
     return mapper.getActiveProgramsByFacilityId(facilityId);
   }

@@ -79,6 +79,8 @@ public class RestRequisitionServiceTest {
   public ExpectedException expectedException = ExpectedException.none();
 
   @Mock
+  ProgramSupportedService programSupportedService;
+  @Mock
   RequisitionService requisitionService;
   @Mock
   UserService userService;
@@ -114,6 +116,7 @@ public class RestRequisitionServiceTest {
   private SyncUpHashRepository syncUpHashRepository;
 
   private Facility facility;
+  private Program program;
 
   @Before
   public void setUp() throws Exception {
@@ -216,9 +219,10 @@ public class RestRequisitionServiceTest {
 
     ProgramSupported programSupported = make(a(defaultProgramSupported));
     facility = make(a(defaultFacility, with(facilityId, facility_id), with(programSupportedList, asList(programSupported)), with(virtualFacility, true)));
+    program = new Program(PROGRAM_ID);
 
     when(facilityService.getOperativeFacilityByCode(DEFAULT_AGENT_CODE)).thenReturn(facility);
-    when(programService.getValidatedProgramByCode(DEFAULT_PROGRAM_CODE)).thenReturn(new Program(PROGRAM_ID));
+    when(programService.getValidatedProgramByCode(DEFAULT_PROGRAM_CODE)).thenReturn(program);
     when(requisitionService.initiate(facility, new Program(PROGRAM_ID), user.getId(), false, null)).thenReturn(requisition);
     when(requisitionService.save(requisition)).thenReturn(requisition);
     when(productService.getByCode(validProductCode)).thenReturn(new Product());
@@ -339,6 +343,7 @@ public class RestRequisitionServiceTest {
   public void shouldThrowErrorIfPeriodValidationFails() throws Exception {
     expectedException.expect(DataException.class);
     expectedException.expectMessage("rnr.error");
+    when(requisitionService.getLastRegularRequisition(any(Facility.class), any(Program.class))).thenReturn(new Rnr());
 
     doThrow(new DataException("rnr.error")).when(restRequisitionCalculator).validatePeriod(any(Facility.class), any(Program.class), any(Date.class), any(Date.class));
 
@@ -369,6 +374,7 @@ public class RestRequisitionServiceTest {
   public void shouldThrowErrorIfProductValidationFails() throws Exception {
     expectedException.expect(DataException.class);
     expectedException.expectMessage("rnr.error");
+    when(requisitionService.getLastRegularRequisition(any(Facility.class), any(Program.class))).thenReturn(new Rnr());
 
     doThrow(new DataException("rnr.error")).when(restRequisitionCalculator).validateProducts(any(List.class), any(Rnr.class));
 
@@ -850,6 +856,20 @@ public class RestRequisitionServiceTest {
     }
     service.submitSdpReport(report, 1L);
     //No exception
+  }
+
+  @Test
+  public void shouldUpdateProgramGoLiveDateWhenLastRequisitionNotExists() throws Exception {
+    Mockito.when(staticReferenceDataService.getBoolean("toggle.skip.initial.requisition.validation")).thenReturn(true);
+
+    setUpRequisitionReportBeforeSubmit();
+    when(requisitionService.getLastRegularRequisition(facility, program)).thenReturn(null);
+    report.setActualPeriodStartDate("2016-05-17 09:00:00");
+
+    service.submitReport(report, 1L);
+
+    verify(programSupportedService).updateProgramSupportedStartDate(facility.getId(), program.getId(),
+        report.getActualPeriodStartDate());
   }
 
   private List<RnrColumn> getRnrColumns() {

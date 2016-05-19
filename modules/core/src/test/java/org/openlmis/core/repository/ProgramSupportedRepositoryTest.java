@@ -209,6 +209,16 @@ public class ProgramSupportedRepositoryTest {
   }
 
   @Test
+  public void shouldUpdateSupportedProgramStartDate() throws Exception {
+    Long facilityId = 100L;
+    Long programId = 200L;
+    Date startDate = new DateTime().toDate();
+    programSupportedRepository.updateProgramSupportedStartDate(facilityId, programId, startDate);
+
+    verify(programSupportedMapper).updateStartDate(facilityId, programId, startDate);
+  }
+
+  @Test
   public void shouldGetAllSupportedProgramsForFacility() throws Exception {
     final Facility facility = make(a(defaultFacility));
     facility.setId(1L);

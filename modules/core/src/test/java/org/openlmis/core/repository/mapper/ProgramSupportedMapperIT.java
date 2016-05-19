@@ -10,6 +10,7 @@
 
 package org.openlmis.core.repository.mapper;
 
+import org.joda.time.DateTime;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
@@ -23,12 +24,14 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.transaction.TransactionConfiguration;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Date;
 import java.util.List;
 
 import static com.natpryce.makeiteasy.MakeItEasy.*;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.nullValue;
 import static org.junit.Assert.assertThat;
+import static org.junit.Assert.assertTrue;
 import static org.openlmis.core.builder.FacilityBuilder.*;
 import static org.openlmis.core.builder.ProgramBuilder.*;
 import static org.openlmis.core.builder.ProgramSupportedBuilder.*;
@@ -134,6 +137,28 @@ public class ProgramSupportedMapperIT {
     ProgramSupported programSupportedFromDb = mapper.getBy(programSupported.getFacilityId(), programSupported.getProgram().getId());
 
     assertThat(programSupportedFromDb.getActive(), is(Boolean.FALSE));
+  }
+
+  @Test
+  public void shouldUpdateProgramStartDateByProgramAndFacility() throws Exception {
+    Facility facility = make(a(defaultFacility));
+    facilityMapper.insert(facility);
+
+    Program program = make(a(defaultProgram, with(programCode, YELLOW_FEVER)));
+    programMapper.insert(program);
+
+    ProgramSupported programSupported = make(a(defaultProgramSupported,
+        with(supportedFacilityId, facility.getId()),
+        with(supportedProgram, program)));
+
+    programSupported.setStartDate(new DateTime("2016-05-01").toDate());
+    mapper.insert(programSupported);
+
+    Date newStartDate = new DateTime("2016-05-17").toDate();
+    mapper.updateStartDate(facility.getId(), program.getId(), newStartDate);
+    ProgramSupported programSupportedFromDb = mapper.getBy(programSupported.getFacilityId(), programSupported.getProgram().getId());
+
+    assertThat(programSupportedFromDb.getStartDate().getTime(), is(newStartDate.getTime()));
   }
 
   @Test

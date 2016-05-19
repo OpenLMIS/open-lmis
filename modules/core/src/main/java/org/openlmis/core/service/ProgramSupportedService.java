@@ -23,6 +23,7 @@ import org.springframework.stereotype.Service;
 
 import java.net.URISyntaxException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -102,6 +103,10 @@ public class ProgramSupportedService {
     } else {
       repository.updateSupportedProgram(programSupported);
     }
+  }
+
+  public void updateProgramSupportedStartDate(Long facilityId, Long programId, Date startDate) {
+    repository.updateProgramSupportedStartDate(facilityId, programId, startDate);
   }
 
   public ProgramSupported getProgramSupported(ProgramSupported programSupported) {

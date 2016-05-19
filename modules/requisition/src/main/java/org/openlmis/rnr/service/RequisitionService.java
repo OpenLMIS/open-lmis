@@ -397,7 +397,7 @@ public class RequisitionService {
 
   public ProcessingPeriod getPeriodForInitiating(Facility facility, Program program) {
     Date programStartDate = programService.getProgramStartDate(facility.getId(), program.getId());
-    Rnr lastRegularRequisition = requisitionRepository.getLastRegularRequisition(facility, program);
+    Rnr lastRegularRequisition = getLastRegularRequisition(facility, program);
     Long periodIdForLastRequisition = null;
     if (lastRegularRequisition != null) {
       if (lastRegularRequisition.preAuthorize()) {
@@ -412,6 +412,10 @@ public class RequisitionService {
       throw new DataException("error.program.configuration.missing");
     }
     return periods.get(0);
+  }
+
+  public Rnr getLastRegularRequisition(Facility facility, Program program) {
+    return requisitionRepository.getLastRegularRequisition(facility, program);
   }
 
   public List<ProcessingPeriod> getAllPeriodsForInitiatingRequisition(Long facilityId, Long programId) {

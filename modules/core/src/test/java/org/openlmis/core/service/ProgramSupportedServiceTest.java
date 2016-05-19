@@ -10,6 +10,7 @@ package org.openlmis.core.service;
 
 import org.ict4h.atomfeed.server.service.Event;
 import org.ict4h.atomfeed.server.service.EventService;
+import org.joda.time.DateTime;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
@@ -325,6 +326,17 @@ public class ProgramSupportedServiceTest {
     verify(eventService).notify(event);
     verify(eventService).notify(virtualFacilityEvent);
 
+  }
+
+
+  @Test
+  public void shouldUpdateSupportedProgramStartDate() throws Exception {
+    Long facilityId = 100L;
+    Long programId = 200L;
+    Date startDate = new DateTime().toDate();
+    service.updateProgramSupportedStartDate(facilityId, programId, startDate);
+
+    verify(repository).updateProgramSupportedStartDate(facilityId, programId, startDate);
   }
 
   private ProgramSupported createSupportedProgram(String facilityCode, String programCode, boolean active, Date startDate) {

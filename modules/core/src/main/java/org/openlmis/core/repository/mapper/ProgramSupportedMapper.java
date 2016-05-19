@@ -16,6 +16,7 @@ import org.openlmis.core.domain.Program;
 import org.openlmis.core.domain.ProgramSupported;
 import org.springframework.stereotype.Repository;
 
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -52,6 +53,10 @@ public interface ProgramSupportedMapper {
     "WHERE facilityId=#{facilityId} AND programId=#{program.id}")
     //TODO use COALESCE for modifiedDate
   void update(ProgramSupported programSupported);
+
+  @Update({"UPDATE programs_supported SET startDate=#{startDate}, modifiedDate=now()",
+      "WHERE facilityId=#{facilityId} AND programId=#{programId}"})
+  void updateStartDate(@Param("facilityId") Long facilityId, @Param("programId") Long programId, @Param("startDate") Date startDate);
 
   @Select({"SELECT P.code, P.name, P.parentId ,P.isSupportEmergency FROM programs_supported PS INNER JOIN programs P ON P.id = PS.programId ",
     "WHERE PS.facilityId = #{facilityId} AND PS.active = TRUE AND P.active = TRUE"})

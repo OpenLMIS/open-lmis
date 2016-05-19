@@ -22,10 +22,7 @@ import org.junit.runners.BlockJUnit4ClassRunner;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.openlmis.core.builder.FacilityBuilder;
-import org.openlmis.core.builder.ProcessingPeriodBuilder;
-import org.openlmis.core.builder.SupervisoryNodeBuilder;
-import org.openlmis.core.builder.UserBuilder;
+import org.openlmis.core.builder.*;
 import org.openlmis.core.domain.*;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.core.message.OpenLmisMessage;
@@ -1753,6 +1750,16 @@ public class RequisitionServiceTest {
 
         requisitionService.initiate(FACILITY, PROGRAM, 1L, false, null);
         verify(regimenService).getByProgram(3L);
+    }
+
+    @Test
+    public void shouldGetLastRequisitionService() throws Exception {
+        Facility defaultFacility = make(a(FacilityBuilder.defaultFacility));
+        Program defaultProgram = make(a(ProgramBuilder.defaultProgram));
+
+        requisitionService.getLastRegularRequisition(defaultFacility, defaultProgram);
+
+        verify(requisitionRepository).getLastRegularRequisition(defaultFacility, defaultProgram);
     }
 
     private void setupForInitRnr() {

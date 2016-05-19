@@ -63,6 +63,8 @@ public class RestRequisitionService {
   @Autowired
   private ProgramService programService;
   @Autowired
+  private ProgramSupportedService programSupportedService;
+  @Autowired
   private RnrTemplateService rnrTemplateService;
   @Autowired
   private RestRequisitionCalculator restRequisitionCalculator;
@@ -90,6 +92,13 @@ public class RestRequisitionService {
 
     Facility reportingFacility = facilityService.getOperativeFacilityByCode(report.getAgentCode());
     Program reportingProgram = programService.getValidatedProgramByCode(report.getProgramCode());
+
+    if (staticReferenceDataService.getBoolean("toggle.skip.initial.requisition.validation")) {
+      Rnr lastRegularRequisition = requisitionService.getLastRegularRequisition(reportingFacility, reportingProgram);
+      if (lastRegularRequisition == null) {
+        programSupportedService.updateProgramSupportedStartDate(reportingFacility.getId(), reportingProgram.getId(), report.getActualPeriodStartDate());
+      }
+    }
 
     restRequisitionCalculator.validatePeriod(reportingFacility, reportingProgram, report.getActualPeriodStartDate(), report.getActualPeriodEndDate());
 
