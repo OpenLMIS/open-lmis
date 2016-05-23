@@ -42,8 +42,8 @@ describe("cubes generate url service test", function () {
 
     it("should generate url for facts", function(){
         var cubesName = "vw_stock_movements";
-        var cuts = [{dimension: "movement", values: [['facilitycode,productcode']]},
-            {dimension: "stock", values: [['facilitycode1,productcode1']]}];
+        var cuts = [{dimension: "movement", values: [['facilitycode'] , ['productcode']]},
+            {dimension: "stock", values: [['facilitycode1'], ['productcode1']]}];
         expect(cubesGenerateUrlService.generateFactsUrl(cubesName, cuts))
             .toEqual("/cubesreports/cube/vw_stock_movements/facts?cut=movement:facilitycode;productcode|stock:facilitycode1;productcode1");
     });

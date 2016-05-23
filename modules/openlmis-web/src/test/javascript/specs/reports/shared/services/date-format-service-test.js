@@ -1,11 +1,12 @@
 describe("date format service test", function () {
 
-    var dateFormatService;
+    var dateFormatService, messageService;
     beforeEach(module('openlmis'));
 
     beforeEach(function () {
-        inject(function (DateFormatService) {
+        inject(function (DateFormatService, _messageService_) {
             dateFormatService = DateFormatService;
+            messageService = _messageService_;
         })
     });
 
@@ -21,6 +22,6 @@ describe("date format service test", function () {
 
     it("should format date with local", function () {
         var formattedDate = dateFormatService.formatDateWithLocale(new Date("2011-11-11"));
-        expect(formattedDate).toEqual("11 Nov 2011");
+        expect(formattedDate).toEqual("11 " + messageService.get("month.abbr.11") + " 2011");
     });
 });
