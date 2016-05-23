@@ -35,7 +35,7 @@ describe("cubes generate url service test", function () {
 
     it("should generate url for members", function(){
         var cubesName = "vw_stock_movements";
-        var cut = {dimension: "movement", values: [['facilitycode,productcode']]};
+        var cut = {dimension: "movement", values: [['facilitycode' , 'productcode']]};
         expect(cubesGenerateUrlService.generateMembersUrl(cubesName, cut))
             .toEqual("/cubesreports/cube/vw_stock_movements/members/movement?cut=movement:facilitycode,productcode");
     });
