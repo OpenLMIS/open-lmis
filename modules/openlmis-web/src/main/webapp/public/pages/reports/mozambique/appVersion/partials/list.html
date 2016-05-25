@@ -1,7 +1,7 @@
 <div>
     <h3>App Version</h3>
     <h4>Total : {{appVersions.length}} row(s)</h4>
-    <table class="table table-condensed table-bordered table-striped">
+    <table class="table table-condensed table-bordered table-striped fixed-header-table header-table">
         <tr class="gradient-header">
             <th>Number</th>
             <th ng-click="sortType = 'userName'; sortReverse = !sortReverse">User
@@ -22,11 +22,16 @@
                 <span ng-show="sortType == 'appVersion' && sortReverse" class="icon-sort-down"></span></th>
 
         </tr>
-        <tr ng-repeat="appVersion in appVersions| orderBy:sortType:sortReverse">
-            <td>{{$index+1}}</td>
-            <td>{{appVersion.userName}}</td>
-            <td>{{appVersion.facilityName}}</td>
-            <td>{{appVersion.appVersion}}</td>
-        </tr>
     </table>
+    <div class="content-table">
+        <table class="table table-condensed table-bordered table-striped fixed-header-table">
+            <tr ng-repeat="appVersion in appVersions| orderBy:sortType:sortReverse">
+                <td>{{$index+1}}</td>
+                <td>{{appVersion.userName}}</td>
+                <td>{{appVersion.facilityName}}</td>
+                <td>{{appVersion.appVersion}}</td>
+            </tr>
+        </table>
+    </div>
+
 </div>
