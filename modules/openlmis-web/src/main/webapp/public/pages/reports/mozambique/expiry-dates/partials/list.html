@@ -1,4 +1,4 @@
-<div>
+<div class="expriy-dates">
     <div id="control-bar">
 
         <h3 class="report-title" openlmis-message="title.expiry.dates.all.report"></h3>
@@ -31,7 +31,7 @@
     <div id="report" ng-if="reportData.length > 0">
         <h3 class="report-title" openlmis-message="subtitle.expiry.dates.report|reportParams.reportTitle"></h3>
 
-        <table class="table table-condensed table-bordered table-striped">
+        <table class="table table-condensed table-bordered table-striped fixed-header-table header-table">
             <tr class="gradient-header">
                 <th ng-click="sortType = 'code'; sortReverse = !sortReverse" class="sortable sort-desc"
                     openlmis-message="report.drug.code">
@@ -49,19 +49,23 @@
                     <span ng-show="sortType == 'expiry_dates' && !sortReverse" class="icon-sort-up"></span>
                     <span ng-show="sortType == 'expiry_dates' && sortReverse" class="icon-sort-down"></span></th>
             </tr>
+        </table>
 
-            <tr ng-repeat="entry in reportData | orderBy:sortType:sortReverse">
-                <td>{{entry.code}}</td>
-                <td style="text-align: left"><a href="javascript:void(0);">{{entry.name}}</a></td>
-                <td class="expiry-dates-td">
-                    <p>
+        <div class="content-table">
+            <table class="table table-condensed table-bordered table-striped fixed-header-table">
+                <tr ng-repeat="entry in reportData | orderBy:sortType:sortReverse">
+                    <td>{{entry.code}}</td>
+                    <td style="text-align: left"><a href="javascript:void(0);">{{entry.name}}</a></td>
+                    <td class="expiry-dates-td">
+                        <p>
                         <span ng-class="{true: 'expiry-warning'}[highlightDate(expiryDate)]" ng-repeat="expiryDate in entry.expiry_dates">
                            {{formatDate(expiryDate)}}
                         </span>
-                    </p>
-                </td>
-            </tr>
-        </table>
+                        </p>
+                    </td>
+                </tr>
+            </table>
+        </div>
     </div>
     <label ng-show="reportData && reportData.length == 0">No Data</label>
 
