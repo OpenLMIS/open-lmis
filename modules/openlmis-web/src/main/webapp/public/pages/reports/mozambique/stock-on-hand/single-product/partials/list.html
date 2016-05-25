@@ -48,7 +48,7 @@
     <div id="report" ng-if="reportData">
         <h3 class="report-title" openlmis-message="subtitle.single.product.report|reportData[0].productName"></h3>
 
-        <table class="table table-condensed table-bordered table-striped">
+        <table class="table table-condensed table-bordered table-striped stock-on-hand-single header-table">
             <tr class="gradient-header">
                 <th ng-click="sortType = 'facilityName'; sortReverse = !sortReverse" class="sortable sort-desc" openlmis-message="report.health.facility">
                     <span ng-show="sortType != 'facilityName'" class="icon-sort"></span>
@@ -67,15 +67,19 @@
                     <span ng-show="sortType == 'lastSyncDate' && !sortReverse" class="icon-sort-up"></span>
                     <span ng-show="sortType == 'lastSyncDate' && sortReverse" class="icon-sort-down"></span></th>
             </tr>
-            <tr ng-repeat="entry in reportData | orderBy:sortType:sortReverse">
-                <td>{{entry.facilityName}}</td>
-                <td style="text-align: right" ng-style="entry.productQuantity == 0 && {'color':'#ab433f'}">{{entry.productQuantity | number:0}}</td>
-                <td>{{entry.soonestExpiryDate | date:'MMMM y'}}</td>
-                <td><span class="circle-icon" ng-style="checkLastSyncDate(entry.lastSyncDate)"> </span>
-                    <span>{{entry.lastSyncDate | date:'h:mm a d MMMM y'}}</span>
-                </td>
-            </tr>
         </table>
+        <div class="content-table">
+            <table class="table table-condensed table-bordered table-striped stock-on-hand-single">
+                <tr ng-repeat="entry in reportData | orderBy:sortType:sortReverse">
+                    <td>{{entry.facilityName}}</td>
+                    <td style="text-align: right" ng-style="entry.productQuantity == 0 && {'color':'#ab433f'}">{{entry.productQuantity | number:0}}</td>
+                    <td>{{entry.soonestExpiryDate | date:'MMMM y'}}</td>
+                    <td><span class="circle-icon" ng-style="checkLastSyncDate(entry.lastSyncDate)"> </span>
+                        <span>{{entry.lastSyncDate | date:'h:mm a d MMMM y'}}</span>
+                    </td>
+                </tr>
+            </table>
+        </div>
 
         <ng-include src="'/public/pages/reports/mozambique/product-report-footer.html'"/>
 
