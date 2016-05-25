@@ -45,10 +45,10 @@
 
     <hr/>
 
-    <div id="report" ng-if="reportData">
+    <div id="report" ng-if="reportData" class="stock-on-hand-single">
         <h3 class="report-title" openlmis-message="subtitle.single.product.report|reportData[0].productName"></h3>
 
-        <table class="table table-condensed table-bordered table-striped stock-on-hand-single header-table">
+        <table class="table table-condensed table-bordered table-striped fixed-header-table header-table">
             <tr class="gradient-header">
                 <th ng-click="sortType = 'facilityName'; sortReverse = !sortReverse" class="sortable sort-desc" openlmis-message="report.health.facility">
                     <span ng-show="sortType != 'facilityName'" class="icon-sort"></span>
@@ -69,7 +69,7 @@
             </tr>
         </table>
         <div class="content-table">
-            <table class="table table-condensed table-bordered table-striped stock-on-hand-single">
+            <table class="table table-condensed table-bordered table-striped fixed-header-table">
                 <tr ng-repeat="entry in reportData | orderBy:sortType:sortReverse">
                     <td>{{entry.facilityName}}</td>
                     <td style="text-align: right" ng-style="entry.productQuantity == 0 && {'color':'#ab433f'}">{{entry.productQuantity | number:0}}</td>
