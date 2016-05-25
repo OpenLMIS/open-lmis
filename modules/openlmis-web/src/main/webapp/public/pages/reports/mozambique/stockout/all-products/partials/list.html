@@ -1,4 +1,4 @@
-<div>
+<div class="all-product-stock-out">
     <div id="control-bar">
 
         <h3 class="report-title" openlmis-message="title.stock.out.all.report"></h3>
@@ -22,7 +22,7 @@
     <div id="report" ng-if="reportData.length > 0">
         <h3 class="report-title" openlmis-message="subtitle.stock.out.all.report|reportParams.reportTitle"></h3>
 
-        <table class="table table-condensed table-bordered table-striped">
+        <table class="table table-condensed table-bordered table-striped fixed-header-table header-table">
             <tr class="gradient-header">
                 <th ng-click="sortType = 'code'; sortReverse = !sortReverse" class="sortable sort-desc"
                     openlmis-message="code">
@@ -49,15 +49,20 @@
                     <span ng-show="sortType == 'totalDuration' && !sortReverse" class="icon-sort-up"></span>
                     <span ng-show="sortType == 'totalDuration' && sortReverse" class="icon-sort-down"></span></th>
             </tr>
-
-            <tr ng-repeat="entry in reportData | orderBy:sortType:sortReverse">
-                <td>{{entry.code}}</td>
-                <td style="text-align: left"><a href="#/stock-out-single-product/{{entry.code}}">{{entry.name}}</a></td>
-                <td>{{entry.avgDuration}}</td>
-                <td>{{entry.occurrences}}</td>
-                <td>{{entry.totalDuration}}</td>
-            </tr>
         </table>
+
+        <div class="content-table">
+            <table class="table table-condensed table-bordered table-striped fixed-header-table">
+                <tr ng-repeat="entry in reportData | orderBy:sortType:sortReverse">
+                    <td>{{entry.code}}</td>
+                    <td style="text-align: left"><a href="#/stock-out-single-product/{{entry.code}}">{{entry.name}}</a></td>
+                    <td>{{entry.avgDuration}}</td>
+                    <td>{{entry.occurrences}}</td>
+                    <td>{{entry.totalDuration}}</td>
+                </tr>
+            </table>
+
+        </div>
     </div>
     <label ng-show="reportData && reportData.length == 0">No Data</label>
     <label class="stock-out-report-buttom-msg" openlmis-message="label.stock.out.bottom.message"></label>
