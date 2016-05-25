@@ -19,7 +19,7 @@ import static org.springframework.web.bind.annotation.RequestMethod.GET;
 @NoArgsConstructor
 public class CubesReportProxyController {
 
-    private static final String CUBES_ADDRESS = "http://localhost:5555";
+    private static final String CUBES_ADDRESS = "http://localhost:15555";
 
     @Autowired
     private RestTemplate restTemplate;
