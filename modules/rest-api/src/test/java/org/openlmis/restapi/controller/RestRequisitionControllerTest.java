@@ -25,7 +25,9 @@ import org.openlmis.restapi.domain.ReplenishmentDTO;
 import org.openlmis.restapi.domain.Report;
 import org.openlmis.restapi.response.RestResponse;
 import org.openlmis.restapi.service.RestRequisitionService;
+import org.openlmis.rnr.builder.RnrLineItemBuilder;
 import org.openlmis.rnr.domain.Rnr;
+import org.openlmis.rnr.domain.RnrLineItem;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 import org.powermock.modules.junit4.PowerMockRunnerDelegate;
@@ -34,13 +36,17 @@ import org.springframework.http.ResponseEntity;
 
 import java.security.Principal;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
+import static com.natpryce.makeiteasy.MakeItEasy.a;
+import static com.natpryce.makeiteasy.MakeItEasy.make;
+import static java.util.Arrays.asList;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.*;
-import static org.openlmis.restapi.controller.RestRequisitionController.RNR;
-import static org.openlmis.restapi.controller.RestRequisitionController.UNEXPECTED_EXCEPTION;
+import static org.openlmis.restapi.controller.RestRequisitionController.*;
 import static org.openlmis.restapi.response.RestResponse.*;
 import static org.powermock.api.mockito.PowerMockito.mockStatic;
 import static org.powermock.api.mockito.PowerMockito.when;
@@ -78,8 +84,6 @@ public class RestRequisitionControllerTest {
     Rnr requisition = new Rnr();
     requisition.setId(1L);
     when(service.submitReport(report, 1L)).thenReturn(requisition);
-    ResponseEntity<RestResponse> expectResponse = new ResponseEntity<>(new RestResponse(RNR, requisition.getId()), OK);
-    when(RestResponse.response(RNR, requisition.getId(), HttpStatus.CREATED)).thenReturn(expectResponse);
 
     ResponseEntity<RestResponse> response = controller.submitRequisition(report, principal);
 
@@ -251,15 +255,20 @@ public class RestRequisitionControllerTest {
   }
 
   @Test
-  public void shouldReturnOKIfRnrIsNullAndNoException() {
+  public void shouldReturnOKIfRnrIsAlreadySubmittedAndNoException() {
     Report report = new Report();
+    Rnr rnr = new Rnr();
+    rnr.setId(123L);
+    HashMap<String, Integer> amcMap = new HashMap<>();
+
     when(service.submitReport(report, 1L)).thenReturn(null);
-    ResponseEntity<RestResponse> expectResponse = new ResponseEntity<>(new RestResponse(RNR, 0L), OK);
-    when(RestResponse.response(RNR, 0L, HttpStatus.OK)).thenReturn(expectResponse);
+    when(service.getRequisitionByFacilityCodeAndPeriod(report.getAgentCode(), report.getActualPeriodStartDate(), report.getActualPeriodEndDate(), report.getProgramCode())).thenReturn(asList(rnr));
+    when(service.getAmcsForRequisition(rnr)).thenReturn(amcMap);
 
     ResponseEntity<RestResponse> response = controller.submitRequisition(report, principal);
 
-    assertThat((Long) response.getBody().getData().get(RNR), is(0L));
+    assertThat((Long) response.getBody().getData().get(RNR), is(rnr.getId()));
+    assertThat((HashMap<String, Integer>)response.getBody().getData().get(AMC_LIST), is(amcMap));
     assertThat(response.getStatusCode(), is(HttpStatus.OK));
   }
 
@@ -274,6 +283,21 @@ public class RestRequisitionControllerTest {
 
     assertThat((Long) response.getBody().getData().get(RNR), is(0L));
     assertThat(response.getStatusCode(), is(HttpStatus.OK));
+  }
+
+  @Test
+  public void shouldReturnListOfAMCForRNR() {
+    Report report = new Report();
+    Rnr requisition = new Rnr();
+    RnrLineItem lineItem = make(a(RnrLineItemBuilder.defaultRnrLineItem));
+    Map<String, Integer> amcMap = new HashMap<>();
+    amcMap.put(lineItem.getProductCode(), lineItem.getAmc());
+
+    when(service.submitReport(report, 1L)).thenReturn(requisition);
+    when(service.getAmcsForRequisition(requisition)).thenReturn(amcMap);
+
+    ResponseEntity<RestResponse> response = controller.submitRequisition(report, principal);
+    assertThat(((Map<String, Integer>)response.getBody().getData().get(AMC_LIST)), is(amcMap));
   }
 
 }

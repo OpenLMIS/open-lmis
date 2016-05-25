@@ -36,10 +36,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.lang.reflect.Field;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.Iterator;
-import java.util.List;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 import static java.util.Arrays.asList;
 import static org.apache.commons.collections.CollectionUtils.find;
@@ -55,6 +53,8 @@ public class RestRequisitionService {
 
   public static final boolean EMERGENCY = false;
   private static final Logger logger = Logger.getLogger(RestRequisitionService.class);
+  private static final int PERIOD_START_DATE = 21;
+  private static final int PERIOD_END_DATE = 20;
   @Autowired
   private RequisitionService requisitionService;
   @Autowired
@@ -97,7 +97,7 @@ public class RestRequisitionService {
     if (staticReferenceDataService.getBoolean("toggle.skip.initial.requisition.validation")) {
       Rnr lastRegularRequisition = requisitionService.getLastRegularRequisition(reportingFacility, reportingProgram);
       if (lastRegularRequisition == null) {
-        programSupportedService.updateProgramSupportedStartDate(reportingFacility.getId(), reportingProgram.getId(), getDateOf21(report.getActualPeriodStartDate()));
+        programSupportedService.updateProgramSupportedStartDate(reportingFacility.getId(), reportingProgram.getId(), getDateFor(report.getActualPeriodStartDate(), PERIOD_START_DATE));
       }
     }
 
@@ -123,11 +123,11 @@ public class RestRequisitionService {
 
     rnr = requisitionService.submit(rnr);
 
-    Rnr authorize = requisitionService.authorize(rnr);
+    Rnr authorizedRnr = requisitionService.authorize(rnr);
 
     syncUpHashRepository.save(report.getSyncUpHash());
 
-    return authorize;
+    return authorizedRnr;
   }
 
   public void notifySubmittedEvent(Rnr rnr){
@@ -415,9 +415,31 @@ public class RestRequisitionService {
     }).toList();
   }
 
-  private Date getDateOf21(Date date) {
-    final int DAY_OF_PERIOD_START = 21;
+  private Date getDateFor(Date date, int dateToSetTo) {
     DateTime dateTime = new DateTime(date);
-    return new DateTime(dateTime.getYear(), dateTime.getMonthOfYear(), DAY_OF_PERIOD_START,0 , 0).toDate();
+    return new DateTime(dateTime.getYear(), dateTime.getMonthOfYear(), dateToSetTo, 0, 0).toDate();
+  }
+
+  public Map<String, Integer> getAmcsForRequisition(Rnr rnr) {
+    HashMap<String, Integer> amcMap = new HashMap<>();
+    for (RnrLineItem rnrLineItem: rnr.getAllLineItems()) {
+      amcMap.put(rnrLineItem.getProductCode(), rnrLineItem.getAmc());
+    }
+    return amcMap;
+  }
+
+  public List<Rnr> getRequisitionByFacilityCodeAndPeriod(String agentCode, Date actualPeriodStartDate, Date actualPeriodEndDate, String programCode) {
+    RequisitionSearchCriteria criteria = new RequisitionSearchCriteria();
+    Date startDate = getDateFor(actualPeriodStartDate, PERIOD_START_DATE);
+    Date endDate = getDateFor(actualPeriodEndDate, PERIOD_END_DATE);
+    String startDateCriteria = (new SimpleDateFormat(RequisitionSearchCriteria.CRITERIA_DATE_FORMAT)).format(startDate);
+    String endDateCriteria = (new SimpleDateFormat(RequisitionSearchCriteria.CRITERIA_DATE_FORMAT)).format(endDate);
+
+    criteria.setDateRangeStart(startDateCriteria);
+    criteria.setDateRangeEnd(endDateCriteria);
+    criteria.setEmergency(false);
+    criteria.setFacilityId(facilityService.getFacilityByCode(agentCode).getId());
+    criteria.setProgramId(programService.getIdForCode(programCode));
+    return requisitionService.get(criteria);
   }
 }

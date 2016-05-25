@@ -38,6 +38,7 @@ import org.openlmis.restapi.domain.ReplenishmentDTO;
 import org.openlmis.restapi.domain.Report;
 import org.openlmis.rnr.builder.PatientQuantificationsBuilder;
 import org.openlmis.rnr.builder.RequisitionBuilder;
+import org.openlmis.rnr.builder.RnrLineItemBuilder;
 import org.openlmis.rnr.domain.*;
 import org.openlmis.rnr.search.criteria.RequisitionSearchCriteria;
 import org.openlmis.rnr.service.RequisitionService;
@@ -49,6 +50,7 @@ import org.powermock.modules.junit4.PowerMockRunnerDelegate;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 import static com.natpryce.makeiteasy.MakeItEasy.*;
 import static java.util.Arrays.asList;
@@ -872,6 +874,39 @@ public class RestRequisitionServiceTest {
     ArgumentCaptor<Date> updateTimeCapture = ArgumentCaptor.forClass(Date.class);
     verify(programSupportedService).updateProgramSupportedStartDate(eq(facility.getId()), eq(program.getId()), updateTimeCapture.capture());
     assertThat(new DateTime(updateTimeCapture.getValue()), is(new DateTime(2016, 5, 21, 0 ,0)));
+  }
+
+  @Test
+  public void shouldReturnMapContainingAMCData() {
+    Rnr rnr = make(a(RequisitionBuilder.defaultRequisition));
+    RnrLineItem rnrLineItem1 = make(a(RnrLineItemBuilder.defaultRnrLineItem, with(RnrLineItemBuilder.productCode, "P1"), with(RnrLineItemBuilder.amc, 30)));
+    RnrLineItem rnrLineItem2 = make(a(RnrLineItemBuilder.defaultRnrLineItem, with(RnrLineItemBuilder.productCode, "P2"), with(RnrLineItemBuilder.amc, 20)));
+    rnr.setAllLineItems(asList(rnrLineItem1, rnrLineItem2));
+
+    Map<String, Integer> amcMap = service.getAmcsForRequisition(rnr);
+    assertEquals(30, amcMap.get("P1").intValue());
+    assertEquals(20, amcMap.get("P2").intValue());
+  }
+
+  @Test
+  public void shouldReturnRnrBasedOnFacilityProgramAndPeriod() {
+    Date actualPeriodStartDate = DateUtil.parseDate("2016-01-19", "yyyy-MM-dd");
+    Date actualPeriodEndDate = DateUtil.parseDate("2016-02-23", "yyyy-MM-dd");
+    Facility facility = make(a(FacilityBuilder.defaultFacility, with(FacilityBuilder.code, "F1")));
+    when(facilityService.getFacilityByCode("F1")).thenReturn(facility);
+    when(programService.getIdForCode("P1")).thenReturn(50L);
+    RequisitionSearchCriteria criteria = new RequisitionSearchCriteria();
+    criteria.setDateRangeStart("21-01-2016");
+    criteria.setDateRangeEnd("20-02-2016");
+    criteria.setEmergency(false);
+    criteria.setFacilityId(facility.getId());
+    criteria.setProgramId(50L);
+
+    List<Rnr> rnr = asList(new Rnr());
+    when(requisitionService.get(criteria)).thenReturn(rnr);
+
+    List<Rnr> actualRnr = service.getRequisitionByFacilityCodeAndPeriod("F1", actualPeriodStartDate, actualPeriodEndDate, "P1");
+    assertEquals(rnr, actualRnr);
   }
 
   private List<RnrColumn> getRnrColumns() {
