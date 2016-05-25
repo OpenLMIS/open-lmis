@@ -47,8 +47,6 @@ public class RnrLineItemBuilder {
   public static final Property<RnrLineItem, Integer> quantityRequested = newProperty();
   public static Property<RnrLineItem, String> productCategory = newProperty();
 
-  public static Property<RnrLineItem, Integer> amc = newProperty();
-
   public static final int DEFAULT_STOCK_IN_HAND = 4;
   public static final int DEFAULT_BEGINNING_BALANCE = 10;
   public static final int QUANTITY_RECEIVED = 3;
@@ -103,7 +101,7 @@ public class RnrLineItemBuilder {
       rnrLineItem.setDosesPerMonth(30);
       rnrLineItem.setDosesPerDispensingUnit(10);
       rnrLineItem.setNormalizedConsumption(37);
-      rnrLineItem.setAmc(lookup.valueOf(amc, 37));
+      rnrLineItem.setAmc(37);
       rnrLineItem.setMaxMonthsOfStock(2.3);
       rnrLineItem.setMaxStockQuantity(74);
       rnrLineItem.setCalculatedOrderQuantity(70);

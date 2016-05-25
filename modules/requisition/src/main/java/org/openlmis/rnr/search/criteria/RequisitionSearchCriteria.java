@@ -41,7 +41,6 @@ public class RequisitionSearchCriteria {
 
   @Getter(NONE)
   Boolean emergency = FALSE;
-  public static final String CRITERIA_DATE_FORMAT = "dd-MM-yyyy";
 
   public Boolean isEmergency() {
     return emergency;
@@ -50,7 +49,7 @@ public class RequisitionSearchCriteria {
   public Date getRangeStart() {
     Date rangeStartDate;
     try {
-      rangeStartDate = new SimpleDateFormat(CRITERIA_DATE_FORMAT).parse(this.dateRangeStart);
+      rangeStartDate = new SimpleDateFormat("dd-MM-yyyy").parse(this.dateRangeStart);
     } catch (ParseException e) {
       rangeStartDate = null;
     }

@@ -18,7 +18,6 @@ import org.openlmis.restapi.response.RestResponse;
 import org.openlmis.restapi.service.RestRequisitionService;
 import org.openlmis.rnr.domain.Rnr;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -45,7 +44,6 @@ import static org.springframework.web.bind.annotation.RequestMethod.*;
 public class RestRequisitionController extends BaseController {
 
   public static final String RNR = "requisitionId";
-  public static final String AMC_LIST = "AMCs";
 
   @Autowired
   private RestRequisitionService restRequisitionService;
@@ -61,12 +59,9 @@ public class RestRequisitionController extends BaseController {
     }
     if (requisition != null) {
       restRequisitionService.notifySubmittedEvent(requisition);
-    } else {
-      requisition = restRequisitionService.getRequisitionByFacilityCodeAndPeriod(report.getAgentCode(), report.getActualPeriodStartDate(), report.getActualPeriodEndDate(), report.getProgramCode()).get(0);
+      return response(RNR, requisition.getId(), CREATED);
     }
-    RestResponse restResponse = new RestResponse(RNR, requisition.getId());
-    restResponse.addData(AMC_LIST, restRequisitionService.getAmcsForRequisition(requisition));
-    return new ResponseEntity<>(restResponse, HttpStatus.OK);
+    return response(RNR, 0L, OK);
   }
 
   @RequestMapping(value = "/rest-api/sdp-requisitions", method = POST, headers = ACCEPT_JSON)
