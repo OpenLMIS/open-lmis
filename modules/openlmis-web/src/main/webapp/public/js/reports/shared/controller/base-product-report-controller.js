@@ -129,7 +129,7 @@ function BaseProductReportController($scope, $filter, ProductReportService, Faci
     $scope.cmmStatus = function (entry) {
         var cmm = entry.cmm;
         var soh = entry.productQuantity;
-        if (soh == 0) {
+        if (soh === 0) {
             return "stock-out";
         }
         if (cmm == -1) {
