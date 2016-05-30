@@ -17,6 +17,7 @@ import java.util.List;
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
+import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.verify;
 import static org.powermock.api.mockito.PowerMockito.when;
 
@@ -66,6 +67,18 @@ public class CMMRepositoryTest {
 
         Float cmmValue = repository.getCmmValue(9L, "P1", beginDate);
         assertThat(cmmValue, is(1.0F));
+    }
+
+    @Test
+    public void shouldUseNegativeOneAsCmmDefaultValueWhenRecordDoesNotExist() throws Exception {
+        //given: no record exists in cmm table
+        when(mapper.getCMMEntryByFacilityAndDayAndProductCode(any(Long.class), any(String.class), any(Date.class))).thenReturn(null);
+
+        //when: trying to get cmm value
+        Float cmmValue = repository.getCmmValue(123L, "whatever", new Date());
+
+        //then: should get -1
+        assertThat(cmmValue, is(-1f));
     }
 
     private CMMEntry createCMMEntry(Float cmmValue, String productCode, Date beginDate, Date endDate, Long facilityId) {

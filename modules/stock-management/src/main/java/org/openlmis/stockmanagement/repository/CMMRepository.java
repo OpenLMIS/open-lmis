@@ -9,6 +9,7 @@ import java.util.Date;
 
 @Repository
 public class CMMRepository {
+    private static final float DEFAULT_CMM_VALUE = -1f;
 
     @Autowired
     private CMMMapper mapper;
@@ -24,6 +25,11 @@ public class CMMRepository {
     }
 
     public Float getCmmValue(long facilityId, String productCode, Date day) {
-        return mapper.getCMMEntryByFacilityAndDayAndProductCode(facilityId, productCode, day).getCmmValue();
+        CMMEntry cmmEntry = mapper.getCMMEntryByFacilityAndDayAndProductCode(facilityId, productCode, day);
+        if (cmmEntry != null) {
+            return cmmEntry.getCmmValue();
+        } else {
+            return DEFAULT_CMM_VALUE;
+        }
     }
 }
