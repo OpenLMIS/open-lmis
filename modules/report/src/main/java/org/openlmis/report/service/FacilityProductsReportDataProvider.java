@@ -10,6 +10,7 @@ import org.openlmis.core.repository.mapper.FacilityMapper;
 import org.openlmis.core.repository.mapper.GeographicZoneMapper;
 import org.openlmis.report.model.dto.FacilityProductReportEntry;
 import org.openlmis.stockmanagement.domain.StockCard;
+import org.openlmis.stockmanagement.repository.CMMRepository;
 import org.openlmis.stockmanagement.repository.mapper.StockCardMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -38,6 +39,9 @@ public class FacilityProductsReportDataProvider {
 
     @Autowired
     private StockCardMapper stockCardMapper;
+
+    @Autowired
+    private CMMRepository cmmRepository;
 
     public List<FacilityProductReportEntry> getReportDataForSingleProduct(final Long geographicZoneId, final Long productId, final Date endTime) {
         List<Facility> facilities = getAllHealthFacilities();
@@ -108,6 +112,7 @@ public class FacilityProductsReportDataProvider {
                 FacilityProductReportEntry entry = new FacilityProductReportEntry(stockCard, endTime);
                 entry.setFacilityCode(facility.getCode());
                 entry.setFacilityName(facility.getName());
+                entry.setCmm(cmmRepository.getCmmValue(facility.getId(), stockCard.getProduct().getCode(), endTime));
                 return entry;
             }
         };

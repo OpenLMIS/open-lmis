@@ -24,7 +24,7 @@ public class CMMRepository {
         }
     }
 
-    public Float getCmmValue(long facilityId, String productCode, Date day) {
+    public Float getCmmValue(Long facilityId, String productCode, Date day) {
         CMMEntry cmmEntry = mapper.getCMMEntryByFacilityAndDayAndProductCode(facilityId, productCode, day);
         if (cmmEntry != null) {
             return cmmEntry.getCmmValue();
