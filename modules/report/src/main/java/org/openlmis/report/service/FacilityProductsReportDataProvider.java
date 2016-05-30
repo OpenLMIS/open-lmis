@@ -78,6 +78,18 @@ public class FacilityProductsReportDataProvider {
         return false;
     }
 
+    @Transactional
+    protected List<Facility> getAllHealthFacilities() {
+        List<Facility> allReportFacilities = facilityMapper.getAllReportFacilities();
+
+        return from(allReportFacilities).filter(new Predicate<Facility>() {
+            @Override
+            public boolean apply(Facility input) {
+                return isHealthFacility(input);
+            }
+        }).toList();
+    }
+
     private List<FacilityProductReportEntry> fillReportEntryList(final Long productId, final Date endTime, List<Facility> facilities) {
         List<FacilityProductReportEntry> reportEntryList = new ArrayList<>();
         for (Facility facility : facilities) {
@@ -106,18 +118,6 @@ public class FacilityProductsReportDataProvider {
                 return new FacilityProductReportEntry(stockCard, endTime);
             }
         };
-    }
-
-    @Transactional
-    protected List<Facility> getAllHealthFacilities() {
-        List<Facility> allReportFacilities = facilityMapper.getAllReportFacilities();
-
-        return from(allReportFacilities).filter(new Predicate<Facility>() {
-            @Override
-            public boolean apply(Facility input) {
-                return isHealthFacility(input);
-            }
-        }).toList();
     }
 
     private boolean isHealthFacility(Facility input) {
