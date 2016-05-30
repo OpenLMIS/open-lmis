@@ -80,11 +80,9 @@
                 <tr ng-repeat="entry in reportData | orderBy:sortType:sortReverse">
                     <td>{{entry.facilityName}}</td>
                     <td style="text-align: right" ng-class="cmmStatus(entry)">
-                        <span class="low-stock-tag" openlmis-message="stock.cmm.low.stock">
-                            Low stock
+                        <span class="label label-warning low-stock-tag" openlmis-message="stock.cmm.low.stock">
                         </span>
-                        <span class="over-stock-tag" openlmis-message="stock.cmm.over.stock">
-                            Overstock
+                        <span class="label label-info over-stock-tag" openlmis-message="stock.cmm.over.stock">
                         </span>
                         <span>
                             {{entry.productQuantity | number:0}}
