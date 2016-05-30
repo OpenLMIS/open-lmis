@@ -85,8 +85,8 @@ public class FacilityProductsReportDataProvider {
 
             Optional<FacilityProductReportEntry> entryOptional = from(stockCards).firstMatch(new Predicate<StockCard>() {
                 @Override
-                public boolean apply(StockCard input) {
-                    return input.getProduct().getId().equals(productId);
+                public boolean apply(StockCard stockCard) {
+                    return stockCard.getProduct().getId().equals(productId);
                 }
             }).transform(getReportEntry(endTime));
 
@@ -102,9 +102,8 @@ public class FacilityProductsReportDataProvider {
     private Function<StockCard, FacilityProductReportEntry> getReportEntry(final Date endTime) {
         return new Function<StockCard, FacilityProductReportEntry>() {
             @Override
-            public FacilityProductReportEntry apply(StockCard input) {
-                FacilityProductReportEntry reportEntry = new FacilityProductReportEntry(input, endTime);
-                return reportEntry;
+            public FacilityProductReportEntry apply(StockCard stockCard) {
+                return new FacilityProductReportEntry(stockCard, endTime);
             }
         };
     }
