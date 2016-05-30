@@ -44,7 +44,6 @@ public class FacilityProductsReportDataProvider {
         final GeographicZone geographicZone = geographicZoneMapper.getWithParentById(geographicZoneId);
 
         if (geographicZone != null) {
-
             facilities = from(facilities).filter(new Predicate<Facility>() {
                 @Override
                 public boolean apply(Facility facility) {
@@ -59,14 +58,7 @@ public class FacilityProductsReportDataProvider {
     public List<FacilityProductReportEntry> getReportDataForAllProducts(Long facilityId, final Date endTime) {
         List<StockCard> stockCards = stockCardMapper.getAllByFacility(facilityId);
         final Facility facility = facilityMapper.getById(facilityId);
-        return from(stockCards).transform(getReportEntry(endTime)).transform(new Function<FacilityProductReportEntry, FacilityProductReportEntry>() {
-            @Override
-            public FacilityProductReportEntry apply(FacilityProductReportEntry input) {
-                input.setFacilityName(facility.getName());
-                input.setFacilityCode(facility.getCode());
-                return input;
-            }
-        }).toList();
+        return from(stockCards).transform(getReportEntry(endTime, facility)).toList();
     }
 
     protected static boolean inGeographicZone(GeographicZone geographicZone, Facility facility) {
@@ -100,22 +92,23 @@ public class FacilityProductsReportDataProvider {
                 public boolean apply(StockCard stockCard) {
                     return stockCard.getProduct().getId().equals(productId);
                 }
-            }).transform(getReportEntry(endTime));
+            }).transform(getReportEntry(endTime, facility));
 
             if (entryOptional.isPresent()) {
-                FacilityProductReportEntry entry = entryOptional.get();
-                entry.setFacilityName(facility.getName());
-                reportEntryList.add(entry);
+                reportEntryList.add(entryOptional.get());
             }
         }
         return reportEntryList;
     }
 
-    private Function<StockCard, FacilityProductReportEntry> getReportEntry(final Date endTime) {
+    private Function<StockCard, FacilityProductReportEntry> getReportEntry(final Date endTime, final Facility facility) {
         return new Function<StockCard, FacilityProductReportEntry>() {
             @Override
             public FacilityProductReportEntry apply(StockCard stockCard) {
-                return new FacilityProductReportEntry(stockCard, endTime);
+                FacilityProductReportEntry entry = new FacilityProductReportEntry(stockCard, endTime);
+                entry.setFacilityCode(facility.getCode());
+                entry.setFacilityName(facility.getName());
+                return entry;
             }
         };
     }
