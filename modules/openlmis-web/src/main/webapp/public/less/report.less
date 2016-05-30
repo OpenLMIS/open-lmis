@@ -63,7 +63,7 @@ th.header {
   white-space: nowrap;
 }
 
-.table{
+.table {
   td {
     padding: 6px;
     color: #1a1a1a;
@@ -237,6 +237,54 @@ div.pagination div.btn-group {
   margin: 5px
 }
 
+.low-stock {
+  span {
+    color: orange;
+  }
+
+  .low-stock-tag {
+    display: inline;
+  }
+  .over-stock-tag {
+    display: none;
+  }
+}
+
+.over-stock {
+  span {
+    color: blue;
+  }
+
+  .low-stock-tag {
+    display: none;
+  }
+  .over-stock-tag {
+    display: inline;
+  }
+}
+
+.regular-stock {
+  .low-stock-tag {
+    display: none;
+  }
+  .over-stock-tag {
+    display: none;
+  }
+}
+
+.stock-out {
+  span {
+    color: red;
+  }
+
+  .low-stock-tag {
+    display: none;
+  }
+  .over-stock-tag {
+    display: none;
+  }
+}
+
 .report-title {
   text-align: center;
 }
@@ -252,12 +300,12 @@ div.pagination div.btn-group {
 }
 
 .date-picker {
-  width:60%;
-  text-align:right;
+  width: 60%;
+  text-align: right;
 }
 
-.date-picker  .form-cell {
-  text-align:left;
+.date-picker .form-cell {
+  text-align: left;
 }
 
 .time-tag ul li {
@@ -313,28 +361,28 @@ div.pagination div.btn-group {
   color: red;
 }
 
-.stock-out-report-buttom-msg{
+.stock-out-report-buttom-msg {
   text-align: center;
 }
 
-#tracer-report{
+#tracer-report {
   width: 100%;
   height: 700px
 }
 
-#legend-div{
+#legend-div {
   width: 100%;
 }
 
-.amcharts-balloon-div-categoryAxis{
+.amcharts-balloon-div-categoryAxis {
   text-transform: capitalize;
 }
 
 #viewReqList {
-    .ngViewport {
+  .ngViewport {
     height: 400px !important;
     overflow-y: auto !important;
-    }
+  }
 
 }
 
@@ -357,6 +405,7 @@ div.pagination div.btn-group {
     height: 490px;
   }
 }
+
 .stock-on-hand-all {
   .fixed-header-table {
     th:nth-child(1), td:nth-child(1), td:nth-child(2) {
@@ -442,7 +491,7 @@ div.pagination div.btn-group {
 }
 
 #report ::-webkit-scrollbar {
-    display: none;
+  display: none;
 }
 
 .content-table {

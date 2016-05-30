@@ -58,7 +58,7 @@ function BaseProductReportController($scope, $filter, ProductReportService, Faci
         $scope.fullGeoZoneList = _.union($scope.fullGeoZoneList, $scope.provinces, $scope.districts);
     };
 
-    $scope.selectedProvince = function(){
+    $scope.selectedProvince = function () {
         $scope.reportParams.districtId = "";
     };
 
@@ -68,7 +68,7 @@ function BaseProductReportController($scope, $filter, ProductReportService, Faci
     };
 
     $scope.fillGeographicZone = function () {
-        if (!$scope.reportParams.facilityId){
+        if (!$scope.reportParams.facilityId) {
             return;
         }
 
@@ -81,19 +81,19 @@ function BaseProductReportController($scope, $filter, ProductReportService, Faci
     };
 
     $scope.getParent = function (geoZoneId) {
-        return geoZoneId && _.find($scope.fullGeoZoneList, function(zone){
+        return geoZoneId && _.find($scope.fullGeoZoneList, function (zone) {
                 return $scope.getGeoZone(geoZoneId).parentId == zone.id;
             });
     };
 
     $scope.getGeoZone = function (id) {
-        return id && _.find($scope.fullGeoZoneList, function(zone){
-               return id == zone.id;
+        return id && _.find($scope.fullGeoZoneList, function (zone) {
+                return id == zone.id;
             });
     };
 
     $scope.getGeographicZoneById = function (zones, zoneId) {
-        return _.find(zones, function(zone){
+        return _.find(zones, function (zone) {
             return zone.id == zoneId;
         });
     };
@@ -111,7 +111,7 @@ function BaseProductReportController($scope, $filter, ProductReportService, Faci
         }
     };
 
-    $scope.checkDateValidRange = function() {
+    $scope.checkDateValidRange = function () {
         if ($scope.reportParams.startTime > $scope.reportParams.endTime) {
             showDateRangeInvalidWarningDialog();
             return false;
@@ -124,6 +124,26 @@ function BaseProductReportController($scope, $filter, ProductReportService, Faci
         return syncInterval <= 24 && {'background-color': 'green'} ||
             syncInterval > 24 * 3 && {'background-color': 'red'} ||
             {'background-color': 'orange'};
+    };
+
+    $scope.cmmStatus = function (entry) {
+        var cmm = entry.cmm;
+        var soh = entry.productQuantity;
+        if (soh == 0) {
+            return "stock-out";
+        }
+        if (cmm == -1) {
+            return "regular-stock";
+        }
+
+        if (soh < 0.05 * cmm) {//low stock
+            return "low-stock";
+        }
+        else if (soh > 2 * cmm) {//over stock
+            return "over-stock";
+        } else {
+            return "regular-stock";
+        }
     };
 
     function loadGeographicZones() {
@@ -141,7 +161,7 @@ function BaseProductReportController($scope, $filter, ProductReportService, Faci
             return null;
         }
 
-        return _.find(geographicZoneLevels, function(geographicZoneLevel){
+        return _.find(geographicZoneLevels, function (geographicZoneLevel) {
             return geographicZoneLevel.code == code;
         });
     }
