@@ -66,13 +66,19 @@ public class EpiUse {
       Long displayOrder1 = lineItem1.getProductGroup().getDisplayOrder();
       Long displayOrder2 = lineItem2.getProductGroup().getDisplayOrder();
 
-      if (null != displayOrder1 && null != displayOrder2) {
-        return Long.compare(displayOrder1, displayOrder2);
-      } else if (null != displayOrder1 || null != displayOrder2) {
-        return 1;
-      } else {
-        return lineItem1.getProductGroup().getCode().toLowerCase().compareTo(lineItem2.getProductGroup().getCode().toLowerCase());
+      if (null == displayOrder1 && null == displayOrder2) {
+        return String.CASE_INSENSITIVE_ORDER.compare(lineItem1.getProductGroup().getCode(), lineItem2.getProductGroup().getCode());
       }
+
+      if (null == displayOrder1) {
+        return 1;
+      }
+
+      if (null == displayOrder2) {
+        return -1;
+      }
+
+      return Long.compare(displayOrder1, displayOrder2);
     }
   }
 }
