@@ -19,8 +19,13 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.openlmis.core.domain.ProductGroup;
+import org.openlmis.core.exception.DataException;
 import org.openlmis.core.service.ProductGroupService;
 import org.openlmis.db.categories.UnitTests;
+import org.openlmis.upload.Importable;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import static org.mockito.Mockito.verify;
 
@@ -45,5 +50,17 @@ public class ProductGroupPersistenceHandlerTest {
     ProductGroup productGroup = new ProductGroup();
     productGroupPersistenceHandler.save(productGroup);
     verify(productGroupService).save(productGroup);
+  }
+
+  @Test
+  public void shouldThrowExceptionIfFoundDuplicateDisplayOrder() throws Exception {
+    List<Importable> importables = new ArrayList<>();
+    importables.add(new ProductGroup("PG1", "PG1", 1L));
+    importables.add(new ProductGroup("PG1", "PG1", 1L));
+
+    expectedEx.expect(DataException.class);
+    expectedEx.expectMessage("error.duplicate.product.group.display.order");
+
+    productGroupPersistenceHandler.preProcess(importables);
   }
 }

@@ -24,6 +24,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
+
 /**
  * AbstractModelPersistenceHandler is a base class used for persisting each record of the uploaded file.
  */
@@ -47,6 +49,10 @@ public abstract class AbstractModelPersistenceHandler implements RecordHandler<I
   @Getter
   @Setter
   String messageKey;
+
+  @Override
+  public void preProcess(List<Importable> importables) {
+  }
 
   @Override
   public void execute(Importable importable, int rowNumber, AuditFields auditFields) {
