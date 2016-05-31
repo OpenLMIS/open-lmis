@@ -21,7 +21,7 @@ function ViewRnrViaDetailController($scope, $route, $filter, $location, Requisit
         Requisitions.get({id: $route.current.params.rnr, operation:"skipped"}, function (data) {
             $scope.rnr = data.rnr;
 
-            $scope.rnr.submittedDate = $filter('date')(data.rnr.submittedDate,'dd/MM/yyyy');
+            $scope.rnr.submittedDate = $filter('date')(data.rnr.clientSubmittedTime,'dd/MM/yyyy');
 
             $scope.isEmergency = data.rnr.emergency;
             
