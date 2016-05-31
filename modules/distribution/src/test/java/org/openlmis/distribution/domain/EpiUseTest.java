@@ -32,7 +32,7 @@ public class EpiUseTest {
     FacilityProgramProduct facilityProgramProduct1 = mock(FacilityProgramProduct.class);
     FacilityProgramProduct facilityProgramProduct2 = mock(FacilityProgramProduct.class);
 
-    when(facilityProgramProduct1.getActiveProductGroup()).thenReturn(new ProductGroup("PG1", "PG1"));
+    when(facilityProgramProduct1.getActiveProductGroup()).thenReturn(new ProductGroup("PG1", "PG1", null));
     when(facilityProgramProduct2.getActiveProductGroup()).thenReturn(null);
 
     List<FacilityProgramProduct> programProducts = asList(facilityProgramProduct1, facilityProgramProduct2);
@@ -60,8 +60,8 @@ public class EpiUseTest {
     FacilityProgramProduct facilityProgramProduct2 = mock(FacilityProgramProduct.class);
     FacilityProgramProduct facilityProgramProduct3 = mock(FacilityProgramProduct.class);
 
-    ProductGroup productGroup1 = new ProductGroup("PG3", "PG3");
-    ProductGroup productGroup2 = new ProductGroup("PG1", "PG1");
+    ProductGroup productGroup1 = new ProductGroup("PG3", "PG3", null);
+    ProductGroup productGroup2 = new ProductGroup("PG1", "PG1", null);
 
     when(facilityProgramProduct1.getActiveProductGroup()).thenReturn(productGroup1);
     when(facilityProgramProduct2.getActiveProductGroup()).thenReturn(null);
