@@ -9,7 +9,7 @@ import java.util.Date;
 
 @Repository
 public class CMMRepository {
-    private static final float DEFAULT_CMM_VALUE = -1f;
+    public static final float DEFAULT_CMM_VALUE = -1f;
 
     @Autowired
     private CMMMapper mapper;

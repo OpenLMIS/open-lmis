@@ -21,6 +21,7 @@ import java.util.Date;
 import java.util.List;
 
 import static com.google.common.collect.FluentIterable.from;
+import static org.openlmis.stockmanagement.repository.CMMRepository.DEFAULT_CMM_VALUE;
 
 @Service
 @NoArgsConstructor
@@ -112,7 +113,11 @@ public class FacilityProductsReportDataProvider {
                 FacilityProductReportEntry entry = new FacilityProductReportEntry(stockCard, endTime);
                 entry.setFacilityCode(facility.getCode());
                 entry.setFacilityName(facility.getName());
-                entry.setCmm(cmmRepository.getCmmValue(facility.getId(), stockCard.getProduct().getCode(), endTime));
+                if (!stockCard.getProduct().getIsKit()) {
+                    entry.setCmm(cmmRepository.getCmmValue(facility.getId(), stockCard.getProduct().getCode(), endTime));
+                } else {
+                    entry.setCmm(DEFAULT_CMM_VALUE);
+                }
                 return entry;
             }
         };

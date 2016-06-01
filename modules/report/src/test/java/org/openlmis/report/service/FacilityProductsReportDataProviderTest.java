@@ -139,6 +139,22 @@ public class FacilityProductsReportDataProviderTest {
         assertThat(entryList.get(1).getCmm(), is(123f));
     }
 
+    @Test
+    public void kitProductshouldNotHaveCmm() throws Exception {
+        setupOneFacilityStockCardListWithOneCardOneEntry();
+        product.setIsKit(true);
+        when(stockCardMapper.getAllByFacility(facility.getId())).thenReturn(stockCards);
+        when(facilityMapper.getById(facility.getId())).thenReturn(facility);
+        when(cmmRepository.getCmmValue(anyLong(), anyString(), any(Date.class))).thenReturn(123f);
+
+        List<FacilityProductReportEntry> entryList = facilityProductsReportDataProvider.getReportDataForAllProducts(facility.getId(),
+                DateUtil.parseDate("2012-12-12 12:12:12"));
+
+        assertThat(entryList.size(), is(1));
+
+        assertThat(entryList.get(0).getCmm(), is(-1f));
+    }
+
     private void setupOneFacilityStockCardListWithOneCardOneEntry() {
         facility = make(a(FacilityBuilder.defaultFacility));
         product = make(a(ProductBuilder.defaultProduct, with(ProductBuilder.productId, 1L)));
