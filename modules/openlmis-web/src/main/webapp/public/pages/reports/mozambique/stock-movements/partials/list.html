@@ -27,6 +27,7 @@
             <th openlmis-message="stock.movement.positive.adjustment"></th>
             <th openlmis-message="stock.movement.issues"></th>
             <th openlmis-message="stock.movement.soh"></th>
+            <th openlmis-message="stock.movement.requestedquantity"></th>
             <th openlmis-message="stock.movement.signature"></th>
         </tr>
 
@@ -39,6 +40,7 @@
             <td>{{entry.positiveAdjustment}}</td>
             <td>{{entry.issues}}</td>
             <td>{{entry["movement.soh"]}}</td>
+            <td>{{entry.requestedQuantity}}</td>
             <td>{{entry["movement.signature"]}}</td>
         </tr>
     </table>
