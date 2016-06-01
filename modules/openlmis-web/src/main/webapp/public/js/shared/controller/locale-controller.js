@@ -16,8 +16,27 @@ function LocaleController($scope, $rootScope, $cookies, Locales, ChangeLocale, M
     messageService.populate();
   }, {});
 
+  $scope.setDatepickerDefaults = function(localeKey) {
+    if ($.datepicker) {
+      switch (localeKey) {
+        case 'pt':
+          $.datepicker.setDefaults($.datepicker.regional.pt);
+          break;
+        case 'fr':
+          $.datepicker.setDefaults($.datepicker.regional.fr);
+          break;
+        case 'es':
+          $.datepicker.setDefaults($.datepicker.regional.es);
+          break;
+        default:
+          $.datepicker.setDefaults($.datepicker.regional.en);
+      }
+    }
+  };
+
   $scope.changeLocale = function (localeKey) {
     $scope.selectedLocale = localeKey;
+    $scope.setDatepickerDefaults(localeKey);
     ChangeLocale.update({locale: localeKey}, {}, function (data) {
       Messages.get({}, function (data) {
         for (var attr in data.messages) {
@@ -29,4 +48,8 @@ function LocaleController($scope, $rootScope, $cookies, Locales, ChangeLocale, M
       }, {});
     });
   };
+
+  $rootScope.$on('$routeChangeSuccess', function () {
+    $scope.setDatepickerDefaults($cookies.lang);
+  });
 }
