@@ -36,7 +36,7 @@ public class RestStockCardController extends BaseController {
 
     @RequestMapping(value = "/rest-api/facilities/{facilityId}/stockCards", method = POST, headers = ACCEPT_JSON)
     public ResponseEntity adjustStock(@PathVariable long facilityId,
-                                      @RequestBody(required = true) List<StockEvent> events,
+                                      @RequestBody List<StockEvent> events,
                                       Principal principal) {
         try {
             restStockCardService.adjustStock(facilityId, events, loggedInUserId(principal));

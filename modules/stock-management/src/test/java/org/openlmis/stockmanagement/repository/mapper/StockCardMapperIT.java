@@ -35,7 +35,6 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.transaction.TransactionConfiguration;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.util.Date;
 import java.util.List;
@@ -100,11 +99,12 @@ public class StockCardMapperIT {
     List<StockCardEntry> entries = mapper.getEntries(defaultCard.getId());
     assertThat(entries.size(), is(1));
     assertThat(DateUtil.formatDate(entries.get(0).getCreatedDate()), is("2015-12-12 12:12:12"));
+    assertThat(entries.get(0).getRequestedQuantity(), is(500L));
 
   }
 
   private StockCardEntry getStockCardEntry() {
-    StockCardEntry entry = new StockCardEntry(defaultCard, StockCardEntryType.CREDIT, 1L, null, null);
+    StockCardEntry entry = new StockCardEntry(defaultCard, StockCardEntryType.CREDIT, 1L, null, null, 500L);
     entry.setCreatedDate(new Date());
     return entry;
   }
@@ -208,10 +208,6 @@ public class StockCardMapperIT {
 
     String latestExpirationDates = mapper.getStockCardLatestExpirationDates(defaultCard.getId());
     assertThat(latestExpirationDates, is(expirationDate));
-  }
-
-  private void updateModifiedDateForStockCard(Timestamp modifiedDate, Long stockCardId) throws SQLException {
-    queryExecutor.executeUpdate("UPDATE stock_cards SET modifieddate = ? WHERE id = ?", modifiedDate, stockCardId);
   }
 
   @Test

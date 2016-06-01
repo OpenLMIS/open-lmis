@@ -22,12 +22,12 @@ public class StockCardEntryTest {
 
   @Test(expected = NullPointerException.class)
   public void shouldErrorOnNullStockCard() {
-    new StockCardEntry(null, StockCardEntryType.ADJUSTMENT, 1L, null, null);
+    new StockCardEntry(null, StockCardEntryType.ADJUSTMENT, 1L, null, null, null);
   }
 
   @Test(expected = NullPointerException.class)
   public void shouldErrorOnNullType() {
-    new StockCardEntry(new StockCard(), null, 1L, null, null);
+    new StockCardEntry(new StockCard(), null, 1L, null, null, null);
   }
 
 }

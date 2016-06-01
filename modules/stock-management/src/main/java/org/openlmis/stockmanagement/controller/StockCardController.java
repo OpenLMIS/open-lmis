@@ -386,7 +386,7 @@ public class StockCardController extends BaseController
             Date occurred = event.getOccurred();
             String referenceNumber  = event.getReferenceNumber();
 
-            StockCardEntry entry = new StockCardEntry(card, entryType, quantity, occurred, referenceNumber);
+            StockCardEntry entry = new StockCardEntry(card, entryType, quantity, occurred, referenceNumber, null);
             entry.setAdjustmentReason(reason);
             entry.setLotOnHand(lotOnHand);
             Map<String, String> customProps = event.getCustomProps();

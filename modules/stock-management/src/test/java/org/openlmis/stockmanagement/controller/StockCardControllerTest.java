@@ -291,7 +291,7 @@ public class StockCardControllerTest {
     ResponseEntity response = controller.processStock(fId, Collections.singletonList(event), request);
 
     // verify
-    StockCardEntry entry = new StockCardEntry(dummyCard, StockCardEntryType.ADJUSTMENT, event.getQuantity() * -1, null, null);
+    StockCardEntry entry = new StockCardEntry(dummyCard, StockCardEntryType.ADJUSTMENT, event.getQuantity() * -1, null, null, null);
     entry.setAdjustmentReason(reason);
     verify(stockCardService).addStockCardEntries(Collections.singletonList(entry));
     assertThat(response.getStatusCode(), is(HttpStatus.OK));

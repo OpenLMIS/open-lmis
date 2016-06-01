@@ -204,6 +204,7 @@ public interface StockCardMapper {
       ", modifiedBy" +
       ", modifiedDate" +
       ", occurred" +
+      ", requestedQuantity" +
       ", referenceNumber)" +
       " VALUES ( #{stockCard.id}" +
       ", #{lotOnHand.id}" +
@@ -216,6 +217,7 @@ public interface StockCardMapper {
       ", #{modifiedBy}" +
       ", NOW()" +
       ", #{occurred}" +
+      ", #{requestedQuantity}" +
       ", #{referenceNumber})")
   @Options(useGeneratedKeys = true)
   int insertEntry(StockCardEntry entry);

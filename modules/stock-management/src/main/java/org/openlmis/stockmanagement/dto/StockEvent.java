@@ -47,6 +47,8 @@ public class StockEvent {
     private String reasonName;
     private String referenceNumber;
 
+    private Long requestedQuantity;
+
     private Map<String, String> customProps;
 
     public StockEvent() {
@@ -57,6 +59,7 @@ public class StockEvent {
         lotId = null;
         reasonName = null;
         referenceNumber = null;
+        requestedQuantity = null;
     }
 
     public long getQuantity() {

@@ -34,15 +34,18 @@ public class StockCardEntry extends BaseModel {
 
   private Date occurred;
 
+  private Long requestedQuantity;
+
   private List<StockCardEntryKV> extensions;
 
-  public StockCardEntry(StockCard card, StockCardEntryType type, long quantity, Date occurred, String referenceNumber) {
+  public StockCardEntry(StockCard card, StockCardEntryType type, long quantity, Date occurred, String referenceNumber, Long requestedQuantity) {
     this.stockCard = Objects.requireNonNull(card);
     this.type = Objects.requireNonNull(type);
     this.quantity = Objects.requireNonNull(quantity);
     this.extensions = new ArrayList<>();
     this.occurred = occurred;
     this.referenceNumber = referenceNumber;
+    this.requestedQuantity = requestedQuantity;
   }
 
   @JsonIgnore
