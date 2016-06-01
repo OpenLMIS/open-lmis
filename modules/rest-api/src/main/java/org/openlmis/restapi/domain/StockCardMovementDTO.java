@@ -34,6 +34,8 @@ public class StockCardMovementDTO {
 
     String occurred;
 
+    Long requested;
+
     public StockCardMovementDTO(StockCardEntry stockCardEntry) {
         this.documentNumber = stockCardEntry.getReferenceNumber();
         this.movementQuantity = abs(stockCardEntry.getQuantity());
@@ -44,6 +46,7 @@ public class StockCardMovementDTO {
             this.occurred = new SimpleDateFormat(DateUtil.FORMAT_DATE).format(stockCardEntry.getOccurred());
         }
         this.type = stockCardEntry.getType();
+        this.requested = stockCardEntry.getRequestedQuantity();
     }
 
     private void initCustomProps(StockCardEntry stockCardEntry) {
