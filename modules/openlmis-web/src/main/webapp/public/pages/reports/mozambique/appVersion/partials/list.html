@@ -1,22 +1,22 @@
 <div class="app-version">
-    <h3>App Version</h3>
-    <h4>Total : {{appVersions.length}} row(s)</h4>
+    <h3 openlmis-message="label.app.version"></h3>
+    <h4 openlmis-message="label.app.version.total|appVersions.length"></h4>
     <table class="table table-condensed table-bordered table-striped fixed-header-table header-table">
         <tr class="gradient-header">
-            <th>Number</th>
-            <th ng-click="sortType = 'userName'; sortReverse = !sortReverse">User
+            <th openlmis-message="label.app.version.number"></th>
+            <th openlmis-message="label.app.version.user" ng-click="sortType = 'userName'; sortReverse = !sortReverse">
                 <span ng-show="sortType != 'userName'" class="icon-sort"></span>
                 <span ng-show="sortType == 'userName' && !sortReverse" class="icon-sort-up"></span>
                 <span ng-show="sortType == 'userName' && sortReverse" class="icon-sort-down"></span>
             </th>
 
-            <th ng-click="sortType = 'facilityName'; sortReverse = !sortReverse">Facility Name
+            <th openlmis-message="label.app.version.facilityname" ng-click="sortType = 'facilityName'; sortReverse = !sortReverse">
                 <span ng-show="sortType != 'facilityName'" class="icon-sort"></span>
                 <span ng-show="sortType == 'facilityName' && !sortReverse" class="icon-sort-up"></span>
                 <span ng-show="sortType == 'facilityName' && sortReverse" class="icon-sort-down"></span>
             </th>
 
-            <th ng-click="sortType = 'appVersion'; sortReverse = !sortReverse">App Version
+            <th openlmis-message="label.app.version.appversion" ng-click="sortType = 'appVersion'; sortReverse = !sortReverse">
                 <span ng-show="sortType != 'appVersion'" class="icon-sort"></span>
                 <span ng-show="sortType == 'appVersion' && !sortReverse" class="icon-sort-up"></span>
                 <span ng-show="sortType == 'appVersion' && sortReverse" class="icon-sort-down"></span></th>

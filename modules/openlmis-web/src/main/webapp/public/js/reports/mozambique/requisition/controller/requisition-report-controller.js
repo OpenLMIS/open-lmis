@@ -60,15 +60,15 @@ function RequisitionReportController($scope, $filter, RequisitionReportService, 
         plugins: [new ngGridFlexibleHeightPlugin()],
         sortInfo: {fields: ['webSubmittedTimeString'], directions: ['desc']},
         columnDefs: [
-            {displayName: 'number', cellTemplate: '<div class="customCell">{{$parent.$index + 1}}</div>', sortable: false },
-            {field: 'programName', displayName: messageService.get("program.header")},
-            {field: 'type', displayName: 'Type'},
-            {field: 'facilityName', displayName: messageService.get("option.value.facility.name"),width:200},
-            {field: 'submittedUser', displayName: 'Submitted User'},
-            {field: 'inventoryDate', displayName: 'Inventory Date'},
-            {field: 'submittedStatus', displayName: 'Submitted Status',cellTemplate:'<div class="customCell" ng-class="{submitStatusLate: isSubmitLate(row.getProperty(col.field))}">{{row.getProperty(col.field)}}</div>'},
-            {field: 'clientSubmittedTimeString', displayName: 'Submitted Time'},
-            {field: 'webSubmittedTimeString', displayName: 'Sync Time' }
+            {displayName: messageService.get("label.report.requisitions.number"), cellTemplate: '<div class="customCell">{{$parent.$index + 1}}</div>', sortable: false },
+            {field: 'programName', displayName: messageService.get("label.report.requisitions.programname")},
+            {field: 'type', displayName: messageService.get("label.report.requisitions.type")},
+            {field: 'facilityName', displayName: messageService.get("label.report.requisitions.facilityname"),width:200},
+            {field: 'submittedUser', displayName: messageService.get("label.report.requisitions.submitteduser")},
+            {field: 'inventoryDate', displayName: messageService.get("label.report.requisitions.inventorydate")},
+            {field: 'submittedStatus', displayName: messageService.get("label.report.requisitions.submittedstatus"),cellTemplate:'<div class="customCell" ng-class="{submitStatusLate: isSubmitLate(row.getProperty(col.field))}">{{row.getProperty(col.field)}}</div>'},
+            {field: 'clientSubmittedTimeString', displayName: messageService.get("label.report.requisitions.submittedtime")},
+            {field: 'webSubmittedTimeString', displayName: messageService.get("label.report.requisitions.syncedtime") }
         ]
     };
 
