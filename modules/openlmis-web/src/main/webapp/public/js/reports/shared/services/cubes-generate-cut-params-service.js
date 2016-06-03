@@ -8,7 +8,7 @@ services.factory('CubesGenerateCutParamsService', function (ReportLocationConfig
 
         if (selectedStartTime !== undefined || selectedEndTime !== undefined) {
             cutsParams.push({
-                dimension: timeDimensionName, values: [selectedStartTime + "-" + selectedEndTime]
+                dimension: timeDimensionName, values: [selectedStartTime + "-" + selectedEndTime], skipEscape: true
             });
         }
 
