@@ -32,7 +32,8 @@ describe("cubes generate cut params service test", function () {
             .toEqual([
                 {
                     dimension: 'cutDate',
-                    values: ['2015,10,01-2016,04,01']
+                    values: ['2015,10,01-2016,04,01'],
+                    skipEscape : true
                 },
                 {
                     dimension: 'location',
@@ -45,7 +46,8 @@ describe("cubes generate cut params service test", function () {
             .toEqual([
                 {
                     dimension: 'carry_start',
-                    values: ['-2016,04,01']
+                    values: ['-2016,04,01'],
+                    skipEscape : true
                 },
                 {
                     dimension: 'drug',
@@ -58,7 +60,8 @@ describe("cubes generate cut params service test", function () {
             .toEqual([
                 {
                     dimension: 'overlapped_date',
-                    values: ['2015,10,01-2016,04,01']
+                    values: ['2015,10,01-2016,04,01'],
+                    skipEscape : true
                 },
                 {
                     dimension: 'facility',
@@ -79,7 +82,8 @@ describe("cubes generate cut params service test", function () {
             .toEqual([
                 {
                     dimension: 'overlapped_date',
-                    values: ['2015,10,01-2016,04,01']
+                    values: ['2015,10,01-2016,04,01'],
+                    skipEscape : true
                 },
                 {
                     dimension: 'drug',
