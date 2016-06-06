@@ -9,16 +9,28 @@ services.factory('DateFormatService', function ($filter, messageService) {
     };
 
     var formatDateWithLocale = function (dateString) {
-        var date = new Date(dateString);
-
-        //dd MMM yyyy
-        var month = 'month.abbr.' + (date.getMonth() + 1);
-        return date.getDate() + " " + messageService.get(month) + " " + date.getFullYear();
+        return formatDate(dateString, true)
     };
+
+    var formatDateWithLocaleNoDay = function (dateString) {
+        return formatDate(dateString, false)
+    };
+
+    function formatDate(dateString, withDay) {
+        var date = new Date(dateString);
+        var monthYear = messageService.get('month.abbr.' + (date.getMonth() + 1)) + " " + date.getFullYear();
+
+        if (withDay) {
+            return date.getDate() + " " + monthYear;
+        } else {
+            return monthYear;
+        }
+    }
 
     return {
         formatDateWithFirstDayOfMonth: formatDateWithFirstDayOfMonth,
         formatDateWithLastDayOfMonth: formatDateWithLastDayOfMonth,
-        formatDateWithLocale: formatDateWithLocale
+        formatDateWithLocale: formatDateWithLocale,
+        formatDateWithLocaleNoDay: formatDateWithLocaleNoDay
     };
 });

@@ -1,4 +1,4 @@
-function BaseProductReportController($scope, $filter, ProductReportService, FacilityService, GeographicZoneService, $dialog) {
+function BaseProductReportController($scope, $filter, ProductReportService, FacilityService, GeographicZoneService, $dialog, DateFormatService) {
     $scope.provinces = [];
     $scope.districts = [];
     $scope.facilities = [];
@@ -143,6 +143,12 @@ function BaseProductReportController($scope, $filter, ProductReportService, Faci
             return "over-stock";
         } else {
             return "regular-stock";
+        }
+    };
+
+    $scope.formatDate = function (dateString) {
+        if (dateString) {
+            return DateFormatService.formatDateWithLocaleNoDay(dateString);
         }
     };
 
