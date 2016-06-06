@@ -9,11 +9,11 @@ services.factory('DateFormatService', function ($filter, messageService) {
     };
 
     var formatDateWithLocale = function (dateString) {
-        return formatDate(dateString, true)
+        return formatDate(dateString, true);
     };
 
     var formatDateWithLocaleNoDay = function (dateString) {
-        return formatDate(dateString, false)
+        return formatDate(dateString, false);
     };
 
     function formatDate(dateString, withDay) {
