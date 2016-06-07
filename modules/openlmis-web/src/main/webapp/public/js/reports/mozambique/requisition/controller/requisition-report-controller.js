@@ -95,7 +95,9 @@ function RequisitionReportController($scope, $filter, RequisitionReportService, 
 
     function redirectPage () {
         FeatureToggleService.get({key: "redirect.view.rnr.page"}, function (result) {
-            $window.location.href = $scope.getRedirectUrl();
+            if (result.key){
+                $window.location.href = $scope.getRedirectUrl();
+            }
         });
     }
 }
