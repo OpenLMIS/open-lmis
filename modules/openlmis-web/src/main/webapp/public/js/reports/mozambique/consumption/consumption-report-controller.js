@@ -1,4 +1,4 @@
-function ConsumptionReportController($scope, $controller, $filter, $http, $q, CubesGenerateCutParamsService, CubesGenerateUrlService, DateFormatService) {
+function ConsumptionReportController($scope, $controller, $filter, $http, $q, CubesGenerateCutParamsService, CubesGenerateUrlService, DateFormatService, messageService) {
     $controller('BaseProductReportController', {$scope: $scope});
 
     $scope.$on('$viewContentLoaded', function () {
@@ -23,13 +23,16 @@ function ConsumptionReportController($scope, $controller, $filter, $http, $q, Cu
             "dataProvider": consumptionInPeriods,
             "graphs": [{
                 "bullet": "round",
-                "valueField": "soh"
+                "valueField": "soh",
+                "balloonText": messageService.get("stock.movement.soh")+": [[value]]"
             }, {
                 "bullet": "round",
-                "valueField": "cmm"
+                "valueField": "cmm",
+                "balloonText": "CMM: [[value]]"
             }, {
                 "bullet": "round",
-                "valueField": "total_quantity"
+                "valueField": "total_quantity",
+                "balloonText": messageService.get("consumption.chart.balloon.text")+": [[value]]"
             }],
             "chartScrollbar": {
                 "oppositeAxis": false,
