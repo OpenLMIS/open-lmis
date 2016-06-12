@@ -11,21 +11,21 @@ function ExpiryDatesReportController($scope, $filter, $controller, $http, CubesG
         queryExpiryDatesReportDataFromCubes();
     };
 
-    $scope.highlightDate = function(date) {
+    $scope.highlightDate = function (date) {
         var today = new Date();
         var sixMonthsFromNow = new Date(today.getFullYear(), today.getMonth() - 1 + 6, today.getDate());
         var compareDate = DateFormatService.formatDateWithLastDayOfMonth(sixMonthsFromNow);
         return date <= compareDate;
     };
 
-    $scope.formatDate = function(date) {
+    $scope.formatDate = function (date) {
         var options = {year: 'numeric', month: 'long'};
         return new Date(date).toLocaleString(locale, options);
     };
 
     function queryExpiryDatesReportDataFromCubes() {
         var params = getExpiryDateReportsParams();
-        var cutsParams = CubesGenerateCutParamsService.generateCutsParams('occurred', undefined, params.endTime, params.selectedFacility, undefined,params.selectedProvince, params.selectedDistrict);
+        var cutsParams = CubesGenerateCutParamsService.generateCutsParams('occurred', undefined, params.endTime, params.selectedFacility, undefined, params.selectedProvince, params.selectedDistrict);
 
         $http.get(CubesGenerateUrlService.generateAggregateUrl('vw_expiry_dates', ['facility.facility_code', 'drug.drug_code', 'expiry_dates'], cutsParams))
             .success(function (data) {
@@ -38,10 +38,10 @@ function ExpiryDatesReportController($scope, $filter, $controller, $http, CubesG
 
         var expiryDatesHash = {};
 
-        _.forEach(_.groupBy(data, 'facility.facility_code'), function(item) {
+        _.forEach(_.groupBy(data, 'facility.facility_code'), function (item) {
             var expiryDatesForTheFacility = getExpiryDatesBeforeOccurredForFacility(item);
 
-            _.forEach(expiryDatesForTheFacility, function(expiryDateItem, drugCode) {
+            _.forEach(expiryDatesForTheFacility, function (expiryDateItem, drugCode) {
                 if (expiryDatesHash[drugCode]) {
                     expiryDatesHash[drugCode].expiry_dates = expiryDatesHash[drugCode].expiry_dates + "," + expiryDateItem.expiry_dates;
                 } else {
@@ -50,7 +50,7 @@ function ExpiryDatesReportController($scope, $filter, $controller, $http, CubesG
             });
         });
 
-        _.forEach(_.values(expiryDatesHash), function(drug) {
+        _.forEach(_.values(expiryDatesHash), function (drug) {
             if (drug.expiry_dates) {
                 drug.expiry_dates = convertDateListToArray(drug.expiry_dates);
             }
@@ -59,9 +59,11 @@ function ExpiryDatesReportController($scope, $filter, $controller, $http, CubesG
     }
 
     function convertDateListToArray(expiryDates) {
-        var validDates = expiryDates.split(",").filter(function(value) { return value; } );
+        var validDates = expiryDates.split(",").filter(function (value) {
+            return value;
+        });
         var datesForDisplay = [];
-        _.forEach(validDates, function(value) {
+        _.forEach(validDates, function (value) {
             var date = new Date(value.split("/")[2], value.split("/")[1] - 1, value.split("/")[0]);
             date = DateFormatService.formatDateWithLastDayOfMonth(date);
             datesForDisplay.push(date);
@@ -74,7 +76,7 @@ function ExpiryDatesReportController($scope, $filter, $controller, $http, CubesG
         _.forEach(dataForOneFacility, function (item) {
             var occurredDate = item.last_occurred;
             var drugCode = item['drug.drug_code'];
-            if (drugOccurredHash[drugCode] ) {
+            if (drugOccurredHash[drugCode]) {
                 if (occurredDate > drugOccurredHash[drugCode].occurred_date) {
                     drugOccurredHash[drugCode].occurred_date = occurredDate;
                     drugOccurredHash[drugCode].expiry_dates = item.expiry_dates;
@@ -95,11 +97,7 @@ function ExpiryDatesReportController($scope, $filter, $controller, $http, CubesG
     function getExpiryDateReportsParams() {
         var params = {};
         params.endTime = new Date($scope.reportParams.endTime).getTime();
-        params.selectedProvince = $scope.getGeographicZoneById($scope.provinces, $scope.reportParams.provinceId);
-        params.selectedDistrict = $scope.getGeographicZoneById($scope.districts, $scope.reportParams.districtId);
-        params.selectedFacility = ($scope.facilities.find(function (facility) {
-            return facility.id == $scope.reportParams.facilityId;
-        }));
+        $scope.locationIdToCode(params);
         return params;
     }
 

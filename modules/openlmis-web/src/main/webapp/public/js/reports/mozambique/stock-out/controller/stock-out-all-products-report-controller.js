@@ -66,11 +66,7 @@ function StockOutAllProductsReportController($scope, $filter, $q, $controller, $
         var params = {};
         params.startTime = $filter('date')($scope.reportParams.startTime, "yyyy,MM,dd");
         params.endTime = $filter('date')($scope.reportParams.endTime, "yyyy,MM,dd");
-        params.selectedProvince = $scope.getGeographicZoneById($scope.provinces, $scope.reportParams.provinceId);
-        params.selectedDistrict = $scope.getGeographicZoneById($scope.districts, $scope.reportParams.districtId);
-        params.selectedFacility = _.find($scope.facilities, function (facility) {
-            return facility.id == $scope.reportParams.facilityId;
-        });
+        $scope.locationIdToCode(params);
         return params;
     }
 
