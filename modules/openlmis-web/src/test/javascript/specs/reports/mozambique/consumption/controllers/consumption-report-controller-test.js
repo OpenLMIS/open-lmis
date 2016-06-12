@@ -1,4 +1,4 @@
-ddescribe("consumption report controller", function () {
+describe("consumption report controller", function () {
     var scope;
 
     beforeEach(module('openlmis'));
@@ -24,7 +24,7 @@ ddescribe("consumption report controller", function () {
 
     it('should only split one period when selected range in one period', function () {
         var periods = scope.splitPeriods("2016-01-01", "2016-01-05");
-    
+
         expect(periods.length).toBe(1);
         expect(periods).toEqual([
             {periodStart: new Date("2015-12-21"), periodEnd: new Date("2016-01-20")}

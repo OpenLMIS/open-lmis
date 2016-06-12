@@ -3,7 +3,11 @@ services.factory('CubesGenerateUrlService', function () {
     var cubesSpecialCharacters = "-|;:,";
 
     var generateAggregateUrl = function (cubesName, drillDowns, cuts) {
-        return baseUrl + cubesName + "/aggregate" + "?drilldown=" + drillDowns.join("|") + "&cut=" + generateCuts(cuts);
+        if (drillDowns.length > 0) {
+            return baseUrl + cubesName + "/aggregate" + "?drilldown=" + drillDowns.join("|") + "&cut=" + generateCuts(cuts);
+        } else {
+            return baseUrl + cubesName + "/aggregate" + "?cut=" + generateCuts(cuts);
+        }
     };
 
     var generateFactsUrl = function (cubesName, cuts) {
