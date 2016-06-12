@@ -51,9 +51,9 @@ angular.module('requisition-report', ['openlmis', 'angularCombine', 'ngTable', '
                     templateUrl: 'tracer-drugs/partials/list.html',
                     reloadOnSearch: false
                 }).
-                when('/consumption-movements', {
-                    controller: StockOutSingleProductReportController,
-                    templateUrl: 'consumption-movements/partials/list.html',
+                when('/consumption', {
+                    controller: ConsumptionReportController,
+                    templateUrl: 'consumption/partials/list.html',
                     reloadOnSearch: false
                 }).otherwise({redirectTo: '/'});
         }]).run(
