@@ -138,7 +138,7 @@ describe("Stock Out All Products Report Controller", function () {
 
         "overlapped_month": "2016-02-01",
         "overlap_duration": 6
-    }];;
+    }];
 
     beforeEach(module('openlmis'));
     beforeEach(module('ui.bootstrap.dialog'));
@@ -151,7 +151,7 @@ describe("Stock Out All Products Report Controller", function () {
         $controller(StockOutAllProductsReportController, {$scope: scope});
 
         spyOn(messageService, 'get').andCallFake(function (value) {
-            if (value == 'report.stock.out.occurrences') return "Stockout occurrences"
+            if (value == 'report.stock.out.occurrences') return "Stockout occurrences";
             if (value == 'report.avg.stock.out.occurrences') return "Average stockout occurrences"
         });
     }));
