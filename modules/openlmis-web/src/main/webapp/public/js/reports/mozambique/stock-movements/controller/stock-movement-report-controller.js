@@ -1,4 +1,4 @@
-function StockMovementReportController($scope, $routeParams, Facility, $http, CubesGenerateUrlService, DateFormatService) {
+function StockMovementReportController($scope, $routeParams, Facility, $http, CubesGenerateUrlService, DateFormatService,$cacheFactory) {
 
     $scope.loadFacilityAndStockMovements = function() {
         Facility.getFacilityByCode().get({
@@ -7,7 +7,14 @@ function StockMovementReportController($scope, $routeParams, Facility, $http, Cu
             $scope.facilityName = data.facility.name;
             $scope.district = data.facility.geographicZone.name;
             $scope.province = data.facility.geographicZone.parent.name;
-
+            
+            if($cacheFactory.get('keepHistoryInViewRequisitionList') != undefined){
+                $scope.cache=$cacheFactory.get('keepHistoryInViewRequisitionList');
+                $scope.cache.put('facilityName',data.facility.name);
+                $scope.cache.put('district',data.facility.geographicZone.name);
+                $scope.cache.put('province',data.facility.geographicZone.parent.name);
+            }
+            
             loadStockMovements();
         });
     };
