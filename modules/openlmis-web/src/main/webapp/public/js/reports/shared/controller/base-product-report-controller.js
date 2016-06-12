@@ -1,10 +1,13 @@
-function BaseProductReportController($scope, $filter, ProductReportService, FacilityService, GeographicZoneService, $dialog, DateFormatService) {
+function BaseProductReportController($scope, $filter, ProductReportService, FacilityService, GeographicZoneService, $dialog, DateFormatService,$location,$cacheFactory) {
     $scope.provinces = [];
     $scope.districts = [];
     $scope.facilities = [];
     $scope.fullGeoZoneList = [];
     $scope.reportParams = {};
     $scope.products = [];
+    if($cacheFactory.get('keepHistoryInViewRequisitionList') != undefined && $location.path().indexOf("stock-on-hand-all-products") < 0){
+        $cacheFactory.get('keepHistoryInViewRequisitionList').destroy();
+    }
 
     $scope.todayDateString = $filter('date')(new Date(), "yyyy-MM-dd");
 

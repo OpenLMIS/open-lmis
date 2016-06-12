@@ -13,7 +13,6 @@ function SingleFacilityReportController($scope, $filter, $controller, ProductRep
             $('.district-choose .select2-choice .select2-chosen').html($scope.cache.get('district'));
             $('.province-choose .select2-choice .select2-chosen').html($scope.cache.get('province'));
             $scope.reportParams.endTime=$filter('date')($scope.cache.get('endTime'), "yyyy-MM-dd");
-            console.log($scope.cache.get('facilityName')+"**"+$scope.cache.get('district')+"**"+$scope.cache.get('province'))
         }, 1000);
         loadReportAction();
     }
