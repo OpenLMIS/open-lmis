@@ -14,5 +14,6 @@ public class MaterializedViewRefresher {
         materializedViewMapper.refreshStockouts();
         materializedViewMapper.refreshCarryStartDates();
         materializedViewMapper.refreshWeeklyTracerSOH();
+        materializedViewMapper.refreshPeriodMovements();
     }
 }

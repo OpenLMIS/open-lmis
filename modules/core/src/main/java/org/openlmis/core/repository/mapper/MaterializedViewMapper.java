@@ -13,4 +13,7 @@ public interface MaterializedViewMapper {
 
     @Select("SELECT refresh_weekly_tracer_soh()")
     Integer refreshWeeklyTracerSOH();
+
+    @Select("SELECT refresh_period_movements()")
+    Integer refreshPeriodMovements();
 }
