@@ -50,6 +50,11 @@ angular.module('requisition-report', ['openlmis', 'angularCombine', 'ngTable', '
                     controller: TracerDrugsReportController,
                     templateUrl: 'tracer-drugs/partials/list.html',
                     reloadOnSearch: false
+                }).
+                when('/consumption-movements', {
+                    controller: StockOutSingleProductReportController,
+                    templateUrl: 'consumption-movements/partials/list.html',
+                    reloadOnSearch: false
                 }).otherwise({redirectTo: '/'});
         }]).run(
     function ($rootScope, AuthorizationService) {
