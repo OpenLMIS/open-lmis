@@ -7,7 +7,9 @@ function ConsumptionReportController($scope, $controller) {
     });
 
     $scope.generateConsumptionReport = function () {
-        $scope.locationIdToCode($scope.reportParams);
+        if ($scope.checkDateValidRange()) {
+            $scope.locationIdToCode($scope.reportParams);
+        }
     };
 
     $scope.splitPeriods = function (start, end) {
@@ -44,11 +46,10 @@ function ConsumptionReportController($scope, $controller) {
             var periods = [first];
 
             var next = nextPeriod(first);
-            while (next.periodStart.getTime() !== last.periodStart.getTime()) {
+            while (next.periodStart.getTime() <= last.periodStart.getTime()) {
                 periods.push(next);
                 next = nextPeriod(next);
             }
-            periods.push(last);
 
             return periods;
         }
