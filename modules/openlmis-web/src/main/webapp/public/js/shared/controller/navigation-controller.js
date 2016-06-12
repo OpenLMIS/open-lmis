@@ -34,6 +34,9 @@ function NavigationController($scope, ConfigSettingsByKey, localStorageService, 
     FeatureToggleService.get({key: 'tracer.drugs.report'}, function (result) {
       $scope.isTracerDrugsReportToggleOn = result.key;
     });
+    FeatureToggleService.get({key: 'consumption.movements.report'}, function (result) {
+     $scope.isConsumptionMovementsReportOn = result.key;
+    });
    }();
 
   $scope.loadRights = function () {
