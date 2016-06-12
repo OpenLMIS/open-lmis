@@ -1,11 +1,6 @@
 function TracerDrugsReportController($scope, $controller, $filter, DateFormatService, TracerDrugsChartService, CubesGenerateUrlService, CubesGenerateCutParamsService) {
     $controller('BaseProductReportController', {$scope: $scope});
 
-    $scope.getTimeRange = function (dateRange) {
-        $scope.reportParams.startTime = dateRange.startTime;
-        $scope.reportParams.endTime = dateRange.endTime;
-    };
-
     $scope.$on('$viewContentLoaded', function () {
         renderDefaultTracerDrugsReport();
     });

@@ -27,11 +27,6 @@ function StockOutSingleProductReportController($scope, $filter, $q, $controller,
         }
     ];
 
-    $scope.getTimeRange = function (dateRange) {
-        $scope.reportParams.startTime = dateRange.startTime;
-        $scope.reportParams.endTime = dateRange.endTime;
-    };
-
     $scope.$on('$viewContentLoaded', function () {
 
         FeatureToggleService.get({key: 'view.stock.movement'}, function (result) {

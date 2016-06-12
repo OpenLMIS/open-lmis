@@ -1,11 +1,6 @@
 function StockOutAllProductsReportController($scope, $filter, $q, $controller, $http, CubesGenerateUrlService, messageService, StockOutReportCalculationService, CubesGenerateCutParamsService) {
     $controller('BaseProductReportController', {$scope: $scope});
 
-    $scope.getTimeRange = function (dateRange) {
-        $scope.reportParams.startTime = dateRange.startTime;
-        $scope.reportParams.endTime = dateRange.endTime;
-    };
-
     $scope.$on('$viewContentLoaded', function () {
         $scope.loadProducts();
         $scope.loadHealthFacilities();

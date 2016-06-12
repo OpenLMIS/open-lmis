@@ -13,6 +13,11 @@ function BaseProductReportController($scope, $filter, ProductReportService, Faci
         $scope.reportParams.endTime = $scope.todayDateString;
     });
 
+    $scope.getTimeRange = function (dateRange) {
+        $scope.reportParams.startTime = dateRange.startTime;
+        $scope.reportParams.endTime = dateRange.endTime;
+    };
+    
     $scope.loadProducts = function () {
         ProductReportService.loadAllProducts().get({}, function (data) {
             $scope.products = data.products;
