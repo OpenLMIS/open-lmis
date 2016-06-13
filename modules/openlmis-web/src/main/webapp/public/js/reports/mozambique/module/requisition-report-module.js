@@ -55,6 +55,11 @@ angular.module('requisition-report', ['openlmis', 'angularCombine', 'ngTable', '
                     controller: ConsumptionReportController,
                     templateUrl: 'consumption/partials/list.html',
                     reloadOnSearch: false
+                }).
+                when('/adjustment', {
+                    controller: AdjustmentOccurrencesReportController,
+                    templateUrl: 'adjustment/partials/list.html',
+                    reloadOnSearch: false
                 }).otherwise({redirectTo: '/'});
         }]).run(
     function ($rootScope, AuthorizationService) {
