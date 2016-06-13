@@ -151,10 +151,14 @@ function BaseProductReportController($scope, $filter, ProductReportService, Faci
         }
     };
 
-    $scope.formatDate = function (dateString) {
+    $scope.formatMonth = function (dateString) {
         if (dateString) {
             return DateFormatService.formatDateWithLocaleNoDay(dateString);
         }
+    };
+
+    $scope.formatDateWithDay = function (dateString) {
+        return DateFormatService.formatDateWithLocale(dateString);
     };
 
     $scope.locationIdToCode = function (params) {

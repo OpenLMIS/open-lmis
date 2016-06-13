@@ -76,9 +76,9 @@
                             {{entry.productQuantity | number:0}}
                         </span>
                     </td>
-                    <td>{{formatDate(entry.soonestExpiryDate)}}</td>
+                    <td>{{formatMonth(entry.soonestExpiryDate)}}</td>
                     <td><span class="circle-icon" ng-style="checkLastSyncDate(entry.lastSyncDate)"> </span>
-                        <span>{{entry.lastSyncDate | date:'h:mm a'}} {{formatDate(entry.lastSyncDate)}}</span>
+                        <span>{{entry.lastSyncDate | date:'h:mm a'}} {{formatDateWithDay(entry.lastSyncDate)}}</span>
                     </td>
                 </tr>
             </table>
