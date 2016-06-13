@@ -7,7 +7,7 @@ function ConsumptionReportController($scope, $controller, $filter, $http, $q, Cu
     });
 
     $scope.generateConsumptionReport = function () {
-        if ($scope.checkDateValidRange()) {
+        if ($scope.checkDateValidRange() && validateProduct()) {
             $scope.locationIdToCode($scope.reportParams);
             var promises = requestConsumptionDataForEachPeriod();
             $q.all(promises).then(function (consumptionsInPeriods) {
@@ -24,7 +24,7 @@ function ConsumptionReportController($scope, $controller, $filter, $http, $q, Cu
             "graphs": [{
                 "bullet": "round",
                 "valueField": "soh",
-                "balloonText": messageService.get("stock.movement.soh")+": [[value]]"
+                "balloonText": messageService.get("stock.movement.soh") + ": [[value]]"
             }, {
                 "bullet": "round",
                 "valueField": "cmm",
@@ -32,7 +32,7 @@ function ConsumptionReportController($scope, $controller, $filter, $http, $q, Cu
             }, {
                 "bullet": "round",
                 "valueField": "total_quantity",
-                "balloonText": messageService.get("consumption.chart.balloon.text")+": [[value]]"
+                "balloonText": messageService.get("consumption.chart.balloon.text") + ": [[value]]"
             }],
             "chartScrollbar": {
                 "oppositeAxis": false,
@@ -65,6 +65,11 @@ function ConsumptionReportController($scope, $controller, $filter, $http, $q, Cu
                     return consumptionData;
                 });
         });
+    }
+
+    function validateProduct() {
+        $scope.noProductSelected = !$scope.reportParams.productCode;
+        return !$scope.noProductSelected;
     }
 
     $scope.splitPeriods = function (start, end) {
