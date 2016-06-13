@@ -42,6 +42,8 @@ public class RightName {
   public static final String MANAGE_SUPPLY_LINE = "MANAGE_SUPPLY_LINE";
   public static final String MANAGE_FACILITY_APPROVED_PRODUCT = "MANAGE_FACILITY_APPROVED_PRODUCT";
   public static final String MANAGE_PRODUCT = "MANAGE_PRODUCT";
+  public static final String VIEW_SYNCHRONIZED_DATA = "VIEW_SYNCHRONIZED_DATA";
+  public static final String EDIT_SYNCHRONIZED_DATA = "EDIT_SYNCHRONIZED_DATA";
 
   public static String commaSeparateRightNames(String... rightNames) {
     return Arrays.toString(rightNames).replace("[", "{").replace("]", "}");
