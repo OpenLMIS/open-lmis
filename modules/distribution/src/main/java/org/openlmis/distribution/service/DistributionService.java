@@ -76,4 +76,8 @@ public class DistributionService {
   public Distribution getBy(Long distributionId) {
     return repository.getBy(distributionId);
   }
+
+  public List<Distribution> getFullSyncedDistributions() {
+    return repository.getFullSyncedDistributions();
+  }
 }

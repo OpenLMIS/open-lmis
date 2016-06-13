@@ -56,4 +56,13 @@ public interface DistributionMapper {
     @Result(property = "program.id", column = "programId")
   })
   Distribution getBy(Long distributionId);
+
+  @Select({"SELECT * FROM distributions WHERE status = 'SYNCED'"})
+  @Results(value = {
+          @Result(property = "deliveryZone", column = "deliveryZoneId", javaType = Long.class,
+                  one = @One(select = "org.openlmis.core.repository.mapper.DeliveryZoneMapper.getById")),
+          @Result(property = "period.id", column = "periodId"),
+          @Result(property = "program.id", column = "programId")
+  })
+  List<Distribution> getFullSyncedDistributions();
 }
