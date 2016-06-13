@@ -23,6 +23,10 @@ public class DummyRecordHandler implements RecordHandler<DummyImportable> {
   private List<Importable> importedObjects = new ArrayList<>();
 
   @Override
+  public void preProcess(List<DummyImportable> importables) {
+  }
+
+  @Override
   public void execute(DummyImportable importable, int rowNumber, AuditFields auditFields) {
     this.importedObjects.add(importable);
   }

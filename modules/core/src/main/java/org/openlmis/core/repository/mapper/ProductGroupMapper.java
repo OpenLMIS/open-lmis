@@ -25,14 +25,14 @@ import java.util.List;
 @Repository
 public interface ProductGroupMapper {
 
-  @Insert("INSERT INTO product_groups(code, name, createdBy, modifiedDate, modifiedBy) VALUES (#{code}, #{name}, #{createdBy}, #{modifiedDate}, #{modifiedBy})")
+  @Insert("INSERT INTO product_groups(code, name, createdBy, modifiedDate, modifiedBy, displayOrder) VALUES (#{code}, #{name}, #{createdBy}, #{modifiedDate}, #{modifiedBy}, #{displayOrder})")
   @Options(useGeneratedKeys = true)
   public void insert(ProductGroup productGroup);
 
   @Select("SELECT * FROM product_groups WHERE code=#{code}")
   ProductGroup getByCode(String code);
 
-  @Update("UPDATE product_groups SET code = #{code}, name = #{name}, modifiedDate = #{modifiedDate}, modifiedBy = #{modifiedBy} WHERE id = #{id}")
+  @Update("UPDATE product_groups SET code = #{code}, name = #{name}, modifiedDate = #{modifiedDate}, modifiedBy = #{modifiedBy}, displayOrder = #{displayOrder} WHERE id = #{id}")
   void update(ProductGroup productGroup);
 
   @Select("SELECT * FROM product_groups WHERE id=#{id}")

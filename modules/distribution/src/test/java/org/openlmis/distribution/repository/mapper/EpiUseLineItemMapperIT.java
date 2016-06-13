@@ -109,7 +109,7 @@ public class EpiUseLineItemMapperIT {
 
     facilityMapper.insert(facility);
 
-    productGroup = new ProductGroup("PG1", "Product Group 1");
+    productGroup = new ProductGroup("PG1", "Product Group 1", null);
     productGroupMapper.insert(productGroup);
 
     facilityVisit = new FacilityVisit(facility, distribution);
@@ -167,7 +167,7 @@ public class EpiUseLineItemMapperIT {
     EpiUseLineItem epiUseLineItem1 = new EpiUseLineItem(facilityVisit, productGroup);
     mapper.insertLineItem(epiUseLineItem1);
 
-    ProductGroup productGroup2 = new ProductGroup("PG0", "Product Group 0");
+    ProductGroup productGroup2 = new ProductGroup("PG0", "Product Group 0", null);
     productGroupMapper.insert(productGroup2);
     EpiUseLineItem epiUseLineItem2 = new EpiUseLineItem(facilityVisit, productGroup2);
     mapper.insertLineItem(epiUseLineItem2);

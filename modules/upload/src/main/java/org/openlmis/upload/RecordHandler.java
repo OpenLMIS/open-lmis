@@ -12,11 +12,15 @@ package org.openlmis.upload;
 
 import org.openlmis.upload.model.AuditFields;
 
+import java.util.List;
+
 /**
  * This interface is implemented by all record handlers.
  */
 
 public interface RecordHandler<I extends Importable> {
+
+  public void preProcess(List<I> importables);
 
   public void execute(I importable, int rowNumber, AuditFields auditFields);
 

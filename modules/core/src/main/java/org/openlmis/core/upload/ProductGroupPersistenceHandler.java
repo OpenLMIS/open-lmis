@@ -12,9 +12,15 @@ package org.openlmis.core.upload;
 
 import org.openlmis.core.domain.BaseModel;
 import org.openlmis.core.domain.ProductGroup;
+import org.openlmis.core.exception.DataException;
 import org.openlmis.core.service.ProductGroupService;
+import org.openlmis.upload.Importable;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 /**
  * ProductGroupPersistenceHandler is used for uploads of ProductGroup. It uploads each ProductGroup record by record.
@@ -37,6 +43,24 @@ public class ProductGroupPersistenceHandler extends AbstractModelPersistenceHand
   @Override
   protected void save(BaseModel record) {
     productGroupService.save((ProductGroup) record);
+  }
+
+  @Override
+  public void preProcess(List<Importable> importables) {
+    Set<Long> displayOrders = new HashSet<>();
+
+    for (int i = 0; i < importables.size(); i++) {
+      ProductGroup productGroup = (ProductGroup) importables.get(i);
+      Long displayOrder = productGroup.getDisplayOrder();
+
+      if (null != displayOrder) {
+        if (displayOrders.contains(displayOrder)) {
+          throw new DataException("error.duplicate.product.group.display.order", i + 1);
+        }
+
+        displayOrders.add(displayOrder);
+      }
+    }
   }
 
   @Override
