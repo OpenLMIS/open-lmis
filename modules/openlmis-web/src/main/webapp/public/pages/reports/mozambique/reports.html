@@ -48,6 +48,11 @@
                 <a href="/public/pages/reports/mozambique/index.html#/consumption"
                    openlmis-message="menu.report.consumption.movements"></a>
             </li>
+
+            <li ng-show="hasPermission('VIEW_ADJUSTMENT_OCCURRENCES_REPORT') && isAdjustmentOccurrencesReportOn">
+                <a href="/public/pages/reports/mozambique/index.html#/adjustment"
+                   openlmis-message="menu.report.adjustment.occurrences"></a>
+            </li>
         </ul>
     </div>
 </li>

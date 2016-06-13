@@ -37,6 +37,9 @@ function NavigationController($scope, ConfigSettingsByKey, localStorageService, 
     FeatureToggleService.get({key: 'consumption.movements.report'}, function (result) {
      $scope.isConsumptionMovementsReportOn = result.key;
     });
+    FeatureToggleService.get({key: 'adjustment.occurrences.report'}, function (result) {
+     $scope.isAdjustmentOccurrencesReportOn = result.key;
+    });
    }();
 
   $scope.loadRights = function () {
