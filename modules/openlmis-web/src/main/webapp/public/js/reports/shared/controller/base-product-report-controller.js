@@ -5,8 +5,8 @@ function BaseProductReportController($scope, $filter, ProductReportService, Faci
     $scope.fullGeoZoneList = [];
     $scope.reportParams = {};
     $scope.products = [];
-    if($cacheFactory.get('keepHistoryInViewRequisitionList') != undefined && $location.path().indexOf("stock-on-hand-all-products") < 0){
-        $cacheFactory.get('keepHistoryInViewRequisitionList').destroy();
+    if($cacheFactory.get('keepHistoryInStockOnHandPage') != undefined && $location.path().indexOf("stock-on-hand-all-products") < 0){
+        $cacheFactory.get('keepHistoryInStockOnHandPage').put('saveDataOfStockOnHand',"no");
     }
 
     $scope.todayDateString = $filter('date')(new Date(), "yyyy-MM-dd");

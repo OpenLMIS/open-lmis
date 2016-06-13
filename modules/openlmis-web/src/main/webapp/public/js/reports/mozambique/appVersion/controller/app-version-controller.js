@@ -1,4 +1,4 @@
-function VersionReportController($scope, VersionReportService) {
+function VersionReportController($scope, VersionReportService,$cacheFactory) {
     $scope.$on('$viewContentLoaded', function () {
         $scope.loadUserSummary();
     });
@@ -9,4 +9,8 @@ function VersionReportController($scope, VersionReportService) {
             $scope.sortType = 'userName';
         });
     };
+
+    if($cacheFactory.get('keepHistoryInStockOnHandPage') != undefined){
+        $cacheFactory.get('keepHistoryInStockOnHandPage').put('saveDataOfStockOnHand',"no");
+    }
 }

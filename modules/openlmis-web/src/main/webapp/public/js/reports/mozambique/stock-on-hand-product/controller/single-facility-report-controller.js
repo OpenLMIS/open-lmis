@@ -1,20 +1,21 @@
 function SingleFacilityReportController($scope, $filter, $controller, ProductReportService, FeatureToggleService,$cacheFactory,$timeout) {
     $controller('BaseProductReportController', {$scope: $scope});
 
-    if($cacheFactory.get('keepHistoryInViewRequisitionList') === undefined){
-        $scope.cache = $cacheFactory('keepHistoryInViewRequisitionList',{capacity: 10});
+    if($cacheFactory.get('keepHistoryInStockOnHandPage') === undefined){
+        $scope.cache = $cacheFactory('keepHistoryInStockOnHandPage',{capacity: 10});
     }
     else{
-        $scope.cache=$cacheFactory.get('keepHistoryInViewRequisitionList');
-
-        $scope.reportParams.facilityId=$scope.cache.get('facilityId');
-        $timeout(function(){
-            $('.facility-choose .select2-choice .select2-chosen').html($scope.cache.get('facilityName'));
-            $('.district-choose .select2-choice .select2-chosen').html($scope.cache.get('district'));
-            $('.province-choose .select2-choice .select2-chosen').html($scope.cache.get('province'));
-            $scope.reportParams.endTime=$filter('date')($scope.cache.get('endTime'), "yyyy-MM-dd");
-        }, 1000);
-        loadReportAction();
+        $scope.cache=$cacheFactory.get('keepHistoryInStockOnHandPage');
+        if($scope.cache.get('saveDataOfStockOnHand') === "yes"){
+            $scope.reportParams.facilityId=$scope.cache.get('facilityId');
+            $timeout(function(){
+                $('.facility-choose .select2-choice .select2-chosen').html($scope.cache.get('facilityName'));
+                $('.district-choose .select2-choice .select2-chosen').html($scope.cache.get('district'));
+                $('.province-choose .select2-choice .select2-chosen').html($scope.cache.get('province'));
+                $scope.reportParams.endTime=$filter('date')($scope.cache.get('endTime'), "yyyy-MM-dd");
+            }, 1000);
+            loadReportAction();
+        }
     }
 
     $scope.$on('$viewContentLoaded', function () {

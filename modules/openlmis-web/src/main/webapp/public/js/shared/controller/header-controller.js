@@ -12,8 +12,8 @@ function HeaderController($scope, localStorageService, loginConfig, ConfigSettin
   $scope.loginConfig = loginConfig;
   $scope.user = localStorageService.get(localStorageKeys.USERNAME);
   $scope.userId = localStorageService.get(localStorageKeys.USER_ID);
-  if($cacheFactory.get('keepHistoryInViewRequisitionList') != undefined && $location.path().indexOf("stock-on-hand-all-products") < 0){
-    $cacheFactory.get('keepHistoryInViewRequisitionList').destroy();
+  if($cacheFactory.get('keepHistoryInStockOnHandPage') != undefined && $location.path().indexOf("stock-on-hand-all-products") < 0){
+    $cacheFactory.get('keepHistoryInStockOnHandPage').put('saveDataOfStockOnHand',"no");
   }
   var isGoogleAnalyticsEnabled  = localStorageService.get('ENABLE_GOOGLE_ANALYTICS');
   // load this only once

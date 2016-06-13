@@ -1,4 +1,4 @@
-function RequisitionReportController($scope, $filter, RequisitionReportService, messageService, DateFormatService,FeatureToggleService, $window) {
+function RequisitionReportController($scope, $filter, RequisitionReportService, messageService, DateFormatService,FeatureToggleService, $window,$cacheFactory) {
 
     $scope.$on('$viewContentLoaded', function () {
         $scope.loadRequisitions();
@@ -99,5 +99,8 @@ function RequisitionReportController($scope, $filter, RequisitionReportService, 
                 $window.location.href = $scope.getRedirectUrl();
             }
         });
+    }
+    if($cacheFactory.get('keepHistoryInStockOnHandPage') != undefined){
+        $cacheFactory.get('keepHistoryInStockOnHandPage').put('saveDataOfStockOnHand',"no");
     }
 }
