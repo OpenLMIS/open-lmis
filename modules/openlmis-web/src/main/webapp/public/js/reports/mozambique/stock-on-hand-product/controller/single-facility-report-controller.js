@@ -1,18 +1,18 @@
-function SingleFacilityReportController($scope, $filter, $controller, ProductReportService, FeatureToggleService,$cacheFactory,$timeout) {
+function SingleFacilityReportController($scope, $filter, $controller, ProductReportService, FeatureToggleService, $cacheFactory, $timeout) {
     $controller('BaseProductReportController', {$scope: $scope});
 
-    if($cacheFactory.get('keepHistoryInStockOnHandPage') === undefined){
-        $scope.cache = $cacheFactory('keepHistoryInStockOnHandPage',{capacity: 10});
+    if ($cacheFactory.get('keepHistoryInStockOnHandPage') === undefined) {
+        $scope.cache = $cacheFactory('keepHistoryInStockOnHandPage', {capacity: 10});
     }
-    else{
-        $scope.cache=$cacheFactory.get('keepHistoryInStockOnHandPage');
-        if($scope.cache.get('saveDataOfStockOnHand') === "yes"){
-            $scope.reportParams.facilityId=$scope.cache.get('facilityId');
-            $timeout(function(){
+    else {
+        $scope.cache = $cacheFactory.get('keepHistoryInStockOnHandPage');
+        if ($scope.cache.get('saveDataOfStockOnHand') === "yes") {
+            $scope.reportParams.facilityId = $scope.cache.get('facilityId');
+            $timeout(function () {
                 $('.facility-choose .select2-choice .select2-chosen').html($scope.cache.get('facilityName'));
                 $('.district-choose .select2-choice .select2-chosen').html($scope.cache.get('district'));
                 $('.province-choose .select2-choice .select2-chosen').html($scope.cache.get('province'));
-                $scope.reportParams.endTime=$filter('date')($scope.cache.get('endTime'), "yyyy-MM-dd");
+                $scope.reportParams.endTime = $filter('date')($scope.cache.get('endTime'), "yyyy-MM-dd");
             }, 1000);
             loadReportAction();
         }
@@ -21,7 +21,7 @@ function SingleFacilityReportController($scope, $filter, $controller, ProductRep
     $scope.$on('$viewContentLoaded', function () {
 
         FeatureToggleService.get({key: 'view.stock.movement'}, function (result) {
-          $scope.viewStockMovementToggle = result.key;
+            $scope.viewStockMovementToggle = result.key;
         });
 
         $scope.loadHealthFacilities();
@@ -33,13 +33,13 @@ function SingleFacilityReportController($scope, $filter, $controller, ProductRep
         params.facilityId = $scope.reportParams.facilityId;
 
         $scope.cache.put('endTime', $scope.reportParams.endTime);
-        $scope.cache.put('facilityId',$scope.reportParams.facilityId);
+        $scope.cache.put('facilityId', $scope.reportParams.facilityId);
         if (validateFacility()) {
             ProductReportService.loadFacilityReport().get(params, function (data) {
                 $scope.reportData = data.products;
             });
         }
-    };
+    }
 
     function validateFacility() {
         $scope.invalid = !$scope.reportParams.facilityId;

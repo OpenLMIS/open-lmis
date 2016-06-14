@@ -1,27 +1,27 @@
-function StockMovementReportController($scope, $routeParams, Facility, $http, CubesGenerateUrlService, DateFormatService,$cacheFactory) {
+function StockMovementReportController($scope, $routeParams, Facility, $http, CubesGenerateUrlService, DateFormatService, $cacheFactory) {
 
-    $scope.loadFacilityAndStockMovements = function() {
+    $scope.loadFacilityAndStockMovements = function () {
         Facility.getFacilityByCode().get({
             code: $scope.facilityCode
-        }, function(data) {
+        }, function (data) {
             $scope.facilityName = data.facility.name;
             $scope.district = data.facility.geographicZone.name;
             $scope.province = data.facility.geographicZone.parent.name;
-            
-            if($cacheFactory.get('keepHistoryInStockOnHandPage') != undefined){
-                $scope.cache=$cacheFactory.get('keepHistoryInStockOnHandPage');
-                $scope.cache.put('facilityName',data.facility.name);
-                $scope.cache.put('district',data.facility.geographicZone.name);
-                $scope.cache.put('province',data.facility.geographicZone.parent.name);
-                $scope.cache.put('saveDataOfStockOnHand',"yes");
+
+            if ($cacheFactory.get('keepHistoryInStockOnHandPage') !== undefined) {
+                $scope.cache = $cacheFactory.get('keepHistoryInStockOnHandPage');
+                $scope.cache.put('facilityName', data.facility.name);
+                $scope.cache.put('district', data.facility.geographicZone.name);
+                $scope.cache.put('province', data.facility.geographicZone.parent.name);
+                $scope.cache.put('saveDataOfStockOnHand', "yes");
             }
-            
+
             loadStockMovements();
         });
     };
 
     var loadStockMovements = function () {
-        var cut = {dimension: "movement", values: [[$scope.facilityCode , $scope.productCode]]};
+        var cut = {dimension: "movement", values: [[$scope.facilityCode, $scope.productCode]]};
 
         $http.get(CubesGenerateUrlService.generateMembersUrl('vw_stock_movements', cut)).success(function (data) {
             $scope.stockMovements = [];
@@ -30,7 +30,7 @@ function StockMovementReportController($scope, $routeParams, Facility, $http, Cu
                 $scope.stockMovements.push(item);
             });
 
-            $scope.stockMovements = _.sortBy($scope.stockMovements, function(item) {
+            $scope.stockMovements = _.sortBy($scope.stockMovements, function (item) {
                 return [item["movement.date"], item["movement.id"]].join("_");
             });
             $scope.stockMovements.reverse();
@@ -41,12 +41,12 @@ function StockMovementReportController($scope, $routeParams, Facility, $http, Cu
         $scope.formatDate();
     });
 
-    $scope.formatDate = function(dateString) {
+    $scope.formatDate = function (dateString) {
         return DateFormatService.formatDateWithLocale(dateString);
     };
 
 
-    var setQuantityByType = function(item) {
+    var setQuantityByType = function (item) {
         var quantity = Math.abs(item["movement.quantity"]);
         switch (item["movement.type"]) {
             case 'RECEIVE' :
