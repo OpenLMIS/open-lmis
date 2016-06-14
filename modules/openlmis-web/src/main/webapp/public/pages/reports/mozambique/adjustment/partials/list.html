@@ -21,6 +21,19 @@
         <div ng-include="'/public/pages/reports/mozambique/product-report-selection.html'"></div>
 
         <div class="report-selection">
+            <label class="labels" openlmis-message="label.adjustment.type"></label>
+
+            <div class="form-fields">
+                <select ui-select2 style="width:160px;" class="large-input" name="select-facility"
+                        ng-model="reportParams.adjustmentType"
+                        ng-init="reportParams.adjustmentType = adjustmentTypes[0].value" >
+                    <option ng-repeat='option in adjustmentTypes' value="{{option.value}}">{{option.name}}</option>
+                </select>
+            </div>
+
+        </div>
+
+        <div class="report-selection">
             <input type="submit" class="btn btn-primary" ng-click="generateAdjustmentReport()"
                    openlmis-message="button.generateReport"/>
         </div>
