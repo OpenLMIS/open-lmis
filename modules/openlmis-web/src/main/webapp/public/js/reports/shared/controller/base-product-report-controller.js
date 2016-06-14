@@ -8,7 +8,9 @@ function BaseProductReportController($scope, $filter, ProductReportService,$cach
     if($cacheFactory.get('keepHistoryInStockOnHandPage') != undefined && $location.path().indexOf("stock-on-hand-all-products") < 0){
         $cacheFactory.get('keepHistoryInStockOnHandPage').put('saveDataOfStockOnHand',"no");
     }
-
+    if($cacheFactory.get('BaseProductReportController') != undefined && $location.path().indexOf("stock-out-all-products") < 0){
+        $cacheFactory.get('BaseProductReportController').put('saveDataOfStockOutReport',"no");
+    }
     $scope.todayDateString = $filter('date')(new Date(), "yyyy-MM-dd");
 
     $scope.$on('$viewContentLoaded', function () {

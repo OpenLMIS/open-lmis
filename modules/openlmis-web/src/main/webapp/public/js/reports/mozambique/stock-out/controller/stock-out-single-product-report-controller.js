@@ -1,4 +1,4 @@
-function StockOutSingleProductReportController($scope, $filter, $q, $controller, $http, $timeout, CubesGenerateUrlService, $routeParams, ProductReportService, StockoutSingleProductFacilityChartService, StockoutSingleProductZoneChartService, StockoutSingleProductTreeDataBuilder, CubesGenerateCutParamsService, FeatureToggleService) {
+function StockOutSingleProductReportController($scope, $filter, $q, $controller, $http, $timeout, CubesGenerateUrlService, $routeParams, ProductReportService, StockoutSingleProductFacilityChartService, StockoutSingleProductZoneChartService, StockoutSingleProductTreeDataBuilder, CubesGenerateCutParamsService, FeatureToggleService,$cacheFactory) {
     $controller('BaseProductReportController', {$scope: $scope});
 
     var stockOuts;
@@ -127,4 +127,7 @@ function StockOutSingleProductReportController($scope, $filter, $q, $controller,
             }
         });
     };
+    if($cacheFactory.get('keepHistoryInStockOutReportPage') != undefined){
+        $cacheFactory.get('keepHistoryInStockOutReportPage').put('saveDataOfStockOutReport',"yes");
+    }
 }

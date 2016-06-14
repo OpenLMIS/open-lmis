@@ -13,4 +13,7 @@ function VersionReportController($scope, VersionReportService,$cacheFactory) {
     if($cacheFactory.get('keepHistoryInStockOnHandPage') != undefined){
         $cacheFactory.get('keepHistoryInStockOnHandPage').put('saveDataOfStockOnHand',"no");
     }
+    if($cacheFactory.get('BaseProductReportController') != undefined){
+        $cacheFactory.get('BaseProductReportController').put('saveDataOfStockOutReport',"no");
+    }
 }

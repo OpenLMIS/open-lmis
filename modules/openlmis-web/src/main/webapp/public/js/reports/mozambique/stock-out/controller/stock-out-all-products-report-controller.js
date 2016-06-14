@@ -1,20 +1,54 @@
-function StockOutAllProductsReportController($scope, $filter, $q, $controller, $http, CubesGenerateUrlService, messageService, StockOutReportCalculationService, CubesGenerateCutParamsService) {
+function StockOutAllProductsReportController($scope, $filter, $q, $controller, $http, CubesGenerateUrlService, messageService, StockOutReportCalculationService, CubesGenerateCutParamsService,$cacheFactory,$timeout) {
     $controller('BaseProductReportController', {$scope: $scope});
+
+    if($cacheFactory.get('keepHistoryInStockOutReportPage') === undefined){
+        $scope.cache = $cacheFactory('keepHistoryInStockOutReportPage',{capacity: 10});
+    }
+    else{
+        $scope.cache=$cacheFactory.get('keepHistoryInStockOutReportPage');
+        if($scope.cache.get('saveDataOfStockOutReport') === "yes"){
+            $timeout(function waitSelectIsShow(){
+                if($('.facility-choose .select2-choice .select2-chosen').html() != undefined){
+                    var params=$scope.cache.get('dataOfStockOutReport');
+                    if(params.selectedProvince != null){
+                        $('.province-choose .select2-choice .select2-chosen').html(params.selectedProvince.name);
+                    }
+                    if(params.selectedDistrict != null){
+                        $('.district-choose .select2-choice .select2-chosen').html(params.selectedDistrict.name);
+                    }
+                    if(params.selectedFacility != null){
+                        $('.facility-choose .select2-choice .select2-chosen').html(params.selectedFacility.name);
+                    }
+                    $('#startTime').val($scope.cache.get('startTime'));
+                    $('#endTime').val($scope.cache.get('endTime'));
+                    loadReportAction();
+                }
+                else{
+                    $timeout(waitSelectIsShow, 1000);
+                }
+            }, 1000);
+        }
+    }
 
     $scope.$on('$viewContentLoaded', function () {
         $scope.loadProducts();
         $scope.loadHealthFacilities();
     });
 
-    $scope.loadReport = function () {
+    $scope.loadReport = loadReportAction;
+    function loadReportAction() {
         if ($scope.checkDateValidRange()) {
             generateReportTitle();
             getStockOutDataFromCubes();
         }
-    };
+    }
 
     function getStockOutDataFromCubes() {
-        var params = getStockReportRequestParam();
+        var params = putHistoryDataToParams();
+        $scope.cache.put('dataOfStockOutReport', params);
+        $scope.cache.put('startTime', $scope.reportParams.startTime);
+        $scope.cache.put('endTime',$scope.reportParams.endTime);
+        $scope.cache.put('saveDataOfStockOutReport',"no");
         var cutsParams = CubesGenerateCutParamsService.generateCutsParams("overlapped_date", params.startTime, params.endTime,
             params.selectedFacility, undefined, params.selectedProvince, params.selectedDistrict);
 
@@ -71,7 +105,7 @@ function StockOutAllProductsReportController($scope, $filter, $q, $controller, $
     }
 
     function generateReportTitle() {
-        var stockReportParams = getStockReportRequestParam();
+        var stockReportParams = putHistoryDataToParams();
         var reportTitle = "";
         if (stockReportParams.selectedProvince) {
             reportTitle = stockReportParams.selectedProvince.name;
@@ -83,5 +117,15 @@ function StockOutAllProductsReportController($scope, $filter, $q, $controller, $
             reportTitle += reportTitle === "" ? stockReportParams.selectedFacility.name : ("," + stockReportParams.selectedFacility.name);
         }
         $scope.reportParams.reportTitle = reportTitle || messageService.get("label.all");
+    }
+    function putHistoryDataToParams() {
+        var stockReportParams = getStockReportRequestParam();
+        if($cacheFactory.get('keepHistoryInStockOutReportPage') != undefined){
+            $scope.cache=$cacheFactory.get('keepHistoryInStockOutReportPage')
+            if($scope.cache.get('saveDataOfStockOutReport') === "yes"){
+                stockReportParams = $scope.cache.get('dataOfStockOutReport');
+            }
+        }
+        return stockReportParams;
     }
 }
