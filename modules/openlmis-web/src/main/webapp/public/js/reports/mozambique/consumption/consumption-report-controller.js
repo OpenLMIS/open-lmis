@@ -54,7 +54,7 @@ function ConsumptionReportController($scope, $controller, $filter, $http, $q, Cu
                 $scope.reportParams.selectedProvince,
                 $scope.reportParams.selectedDistrict
             );
-            cutParams.push({dimension: 'reason_code', values: ['CONSUMPTION']});
+            cutParams.push({dimension: 'reason_code', values: ['CONSUMPTION', 'NO_MOVEMENT_IN_PERIOD']});
             return $http
                 .get(CubesGenerateUrlService.generateAggregateUrl("vw_period_movements", [], cutParams))
                 .then(function (consumptionData) {
