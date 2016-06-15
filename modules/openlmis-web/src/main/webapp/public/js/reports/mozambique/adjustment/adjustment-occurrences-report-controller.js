@@ -41,38 +41,38 @@ function AdjustmentOccurrencesReportController($scope, $controller, $filter, $ht
       }],
       "graphs": [
         {
-          "balloonText": "EXPIRED_RETURN_TO_SUPPLIER: [[value]]",
+          "balloonText": messageService.get("adjustment.chart.expired.return.to.supplier") + ": [[value]]",
           "fillAlphas": 0.6,
           "lineAlpha": 0.4,
-          "title": "EXPIRED_RETURN_TO_SUPPLIER",
+          "title":  messageService.get("adjustment.chart.expired.return.to.supplier"),
           "valueField": "EXPIRED_RETURN_TO_SUPPLIER"
         },
         {
-          "balloonText": "DAMAGED: [[value]]",
+          "balloonText": messageService.get("adjustment.chart.damaged") + ": [[value]]",
           "fillAlphas": 0.6,
           "lineAlpha": 0.4,
-          "title": "DAMAGED",
+          "title": messageService.get("adjustment.chart.damaged"),
           "valueField": "DAMAGED"
         },
         {
-          "balloonText": "LOANS_DEPOSIT: [[value]]",
+          "balloonText": messageService.get("adjustment.chart.loans.deposit") + ": [[value]]",
           "fillAlphas": 0.6,
           "lineAlpha": 0.4,
-          "title": "LOANS_DEPOSIT",
+          "title": messageService.get("adjustment.chart.loans.deposit"),
           "valueField": "LOANS_DEPOSIT"
         },
         {
-          "balloonText": "INVENTORY_NEGATIVE: [[value]]",
+          "balloonText": messageService.get("adjustment.chart.inventory.negative") + ": [[value]]",
           "fillAlphas": 0.6,
           "lineAlpha": 0.4,
-          "title": "INVENTORY_NEGATIVE",
+          "title": messageService.get("adjustment.chart.inventory.negative"),
           "valueField": "INVENTORY_NEGATIVE"
         },
         {
-          "balloonText": "PROD_DEFECTIVE: [[value]]",
+          "balloonText": messageService.get("adjustment.chart.prod.defective") + ": [[value]]",
           "fillAlphas": 0.6,
           "lineAlpha": 0.4,
-          "title": "PROD_DEFECTIVE",
+          "title": messageService.get("adjustment.chart.prod.defective"),
           "valueField": "PROD_DEFECTIVE"
         }
       ],
