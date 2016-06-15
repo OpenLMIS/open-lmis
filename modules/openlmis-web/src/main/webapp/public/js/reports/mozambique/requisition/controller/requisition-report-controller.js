@@ -119,8 +119,8 @@ function RequisitionReportController($scope, $filter, RequisitionReportService, 
     if ($cacheFactory.get('keepHistoryInStockOnHandPage') !== undefined) {
         $cacheFactory.get('keepHistoryInStockOnHandPage').put('saveDataOfStockOnHand', "no");
     }
-    if($cacheFactory.get('keepHistoryInStockOutReportPage') != undefined){
-        $cacheFactory.get('keepHistoryInStockOutReportPage').put('saveDataOfStockOutReport',"no");
-        $cacheFactory.get('keepHistoryInStockOutReportPage').put('saveDataOfStockOutReportForSingleProduct',"no");
+    if ($cacheFactory.get('keepHistoryInStockOutReportPage') !== undefined) {
+        $cacheFactory.get('keepHistoryInStockOutReportPage').put('saveDataOfStockOutReport', "no");
+        $cacheFactory.get('keepHistoryInStockOutReportPage').put('saveDataOfStockOutReportForSingleProduct', "no");
     }
 }

@@ -8,22 +8,21 @@ function StockOutAllProductsReportController($scope, $filter, $q, $controller, $
         $scope.cache=$cacheFactory.get('keepHistoryInStockOutReportPage');
         if($scope.cache.get('saveDataOfStockOutReport') === "yes"){
             $timeout(function waitSelectIsShow(){
-                if($('.facility-choose .select2-choice .select2-chosen').html() != undefined){
+                if ($('.facility-choose .select2-choice .select2-chosen').html() !== undefined) {
                     var params=$scope.cache.get('dataOfStockOutReport');
-                    if(params.selectedProvince != null){
+                    if (params.selectedProvince !== null) {
                         $('.province-choose .select2-choice .select2-chosen').html(params.selectedProvince.name);
                     }
-                    if(params.selectedDistrict != null){
+                    if (params.selectedDistrict !== null) {
                         $('.district-choose .select2-choice .select2-chosen').html(params.selectedDistrict.name);
                     }
-                    if(params.selectedFacility != null){
+                    if (params.selectedFacility !== null) {
                         $('.facility-choose .select2-choice .select2-chosen').html(params.selectedFacility.name);
                     }
                     $('#startTime').val($scope.cache.get('startTime'));
                     $('#endTime').val($scope.cache.get('endTime'));
                     loadReportAction();
-                }
-                else{
+                } else {
                     $timeout(waitSelectIsShow, 1000);
                 }
             }, 1000);
@@ -120,9 +119,9 @@ function StockOutAllProductsReportController($scope, $filter, $q, $controller, $
     }
     function putHistoryDataToParams() {
         var stockReportParams = getStockReportRequestParam();
-        if($cacheFactory.get('keepHistoryInStockOutReportPage') != undefined){
-            $scope.cache=$cacheFactory.get('keepHistoryInStockOutReportPage')
-            if($scope.cache.get('saveDataOfStockOutReport') === "yes"){
+        if ($cacheFactory.get('keepHistoryInStockOutReportPage') !== undefined) {
+            $scope.cache=$cacheFactory.get('keepHistoryInStockOutReportPage');
+            if ($scope.cache.get('saveDataOfStockOutReport') === "yes") {
                 stockReportParams = $scope.cache.get('dataOfStockOutReport');
             }
         }
