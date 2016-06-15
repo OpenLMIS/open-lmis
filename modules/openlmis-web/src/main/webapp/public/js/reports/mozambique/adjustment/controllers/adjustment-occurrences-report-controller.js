@@ -3,7 +3,7 @@ function AdjustmentOccurrencesReportController($scope, $controller, $filter, $ht
 
   $scope.adjustmentTypes = [
     {value: "negative", name: "Negative Adjustment"},
-    {value: "positive", name:"Positive Adjustment"}
+    {value: "positive", name: "Positive Adjustment"}
   ];
 
   $scope.$on("$viewContentLoaded", function () {
@@ -18,12 +18,13 @@ function AdjustmentOccurrencesReportController($scope, $controller, $filter, $ht
       var promises = requestAdjustmentDataForEachPeriod();
       $q.all(promises).then(function (adjustmentsInPeriods) {
         var adjustmentsData = _.pluck(_.pluck(adjustmentsInPeriods, "data"), "adjustment");
-        var selectedProduct = _.find($scope.products, function(product){return product.code===$scope.reportParams.productCode});
+        var selectedProduct = _.find($scope.products, function (product) {
+          return product.code === $scope.reportParams.productCode;
+        });
         var selectedAdjustmentType = $scope.reportParams.adjustmentType;
 
-        var label = selectedAdjustmentType.charAt(0).toUpperCase() +  selectedAdjustmentType.slice(1)
-            + ' adjustments '
-            + (selectedProduct ? 'for '+selectedProduct.primaryName : '');
+        var label = selectedAdjustmentType.charAt(0).toUpperCase() + selectedAdjustmentType.slice(1) +
+            ' adjustments ' + (selectedProduct ? 'for ' + selectedProduct.primaryName : '');
 
         AdjustmentOccurrencesChartService.renderAdjustmentChart("adjustments-report", adjustmentsData, selectedAdjustmentType, label);
       });
@@ -72,7 +73,7 @@ function AdjustmentOccurrencesReportController($scope, $controller, $filter, $ht
     });
   }
 
-  $scope.generateCutParamsByAdjustmentType = function (period, adjustmentType){
+  $scope.generateCutParamsByAdjustmentType = function (period, adjustmentType) {
     var cutParams = CubesGenerateCutParamsService.generateCutsParams("periodstart",
         $filter("date")(period.periodStart, "yyyy,MM,dd"),
         $filter("date")(period.periodStart, "yyyy,MM,dd"),
@@ -103,6 +104,6 @@ function AdjustmentOccurrencesReportController($scope, $controller, $filter, $ht
       values: adjustmentReasonCodes[adjustmentType]
     });
     return cutParams;
-  }
+  };
 
 }
