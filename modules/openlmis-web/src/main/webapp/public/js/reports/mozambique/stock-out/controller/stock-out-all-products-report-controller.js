@@ -1,15 +1,15 @@
-function StockOutAllProductsReportController($scope, $filter, $q, $controller, $http, CubesGenerateUrlService, messageService, StockOutReportCalculationService, CubesGenerateCutParamsService,$cacheFactory,$timeout) {
+function StockOutAllProductsReportController($scope, $filter, $q, $controller, $http, CubesGenerateUrlService, messageService, StockOutReportCalculationService, CubesGenerateCutParamsService, $cacheFactory, $timeout) {
     $controller('BaseProductReportController', {$scope: $scope});
 
-    if($cacheFactory.get('keepHistoryInStockOutReportPage') === undefined){
-        $scope.cache = $cacheFactory('keepHistoryInStockOutReportPage',{capacity: 10});
+    if ($cacheFactory.get('keepHistoryInStockOutReportPage') === undefined) {
+        $scope.cache = $cacheFactory('keepHistoryInStockOutReportPage', {capacity: 10});
     }
-    else{
-        $scope.cache=$cacheFactory.get('keepHistoryInStockOutReportPage');
-        if($scope.cache.get('saveDataOfStockOutReport') === "yes"){
-            $timeout(function waitSelectIsShow(){
+    else {
+        $scope.cache = $cacheFactory.get('keepHistoryInStockOutReportPage');
+        if ($scope.cache.get('saveDataOfStockOutReport') === "yes") {
+            $timeout(function waitSelectIsShow() {
                 if ($('.facility-choose .select2-choice .select2-chosen').html() !== undefined) {
-                    var params=$scope.cache.get('dataOfStockOutReport');
+                    var params = $scope.cache.get('dataOfStockOutReport');
                     if (params.selectedProvince !== null) {
                         $('.province-choose .select2-choice .select2-chosen').html(params.selectedProvince.name);
                     }
@@ -19,10 +19,15 @@ function StockOutAllProductsReportController($scope, $filter, $q, $controller, $
                     if (params.selectedFacility !== null) {
                         $('.facility-choose .select2-choice .select2-chosen').html(params.selectedFacility.name);
                     }
-                    $('#startTime').val($scope.cache.get('startTime'));
-                    $('#endTime').val($scope.cache.get('endTime'));
+
+                    $scope.$broadcast("update-date-pickers", {
+                        startTime: $scope.cache.get('startTime'),
+                        endTime: $scope.cache.get('endTime')
+                    });
+
                     loadReportAction();
-                } else {
+                }
+                else {
                     $timeout(waitSelectIsShow, 1000);
                 }
             }, 1000);
@@ -46,8 +51,8 @@ function StockOutAllProductsReportController($scope, $filter, $q, $controller, $
         var params = putHistoryDataToParams();
         $scope.cache.put('dataOfStockOutReport', params);
         $scope.cache.put('startTime', $scope.reportParams.startTime);
-        $scope.cache.put('endTime',$scope.reportParams.endTime);
-        $scope.cache.put('saveDataOfStockOutReport',"no");
+        $scope.cache.put('endTime', $scope.reportParams.endTime);
+        $scope.cache.put('saveDataOfStockOutReport', "no");
         var cutsParams = CubesGenerateCutParamsService.generateCutsParams("overlapped_date", params.startTime, params.endTime,
             params.selectedFacility, undefined, params.selectedProvince, params.selectedDistrict);
 
@@ -117,10 +122,11 @@ function StockOutAllProductsReportController($scope, $filter, $q, $controller, $
         }
         $scope.reportParams.reportTitle = reportTitle || messageService.get("label.all");
     }
+
     function putHistoryDataToParams() {
         var stockReportParams = getStockReportRequestParam();
         if ($cacheFactory.get('keepHistoryInStockOutReportPage') !== undefined) {
-            $scope.cache=$cacheFactory.get('keepHistoryInStockOutReportPage');
+            $scope.cache = $cacheFactory.get('keepHistoryInStockOutReportPage');
             if ($scope.cache.get('saveDataOfStockOutReport') === "yes") {
                 stockReportParams = $scope.cache.get('dataOfStockOutReport');
             }

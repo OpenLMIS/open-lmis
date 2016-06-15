@@ -61,25 +61,29 @@ function DatePickerContainerController($scope, $filter, DateFormatService) {
         $scope.dateRange.endTime = todayDateString;
     };
 
-    $scope.$watch('dateRange.startTime', function(){
-        $scope.getTimeRange({
-            'dateRange': $scope.dateRange
-        },true);
+    $scope.$on("update-date-pickers", function (event, range) {
+        $scope.dateRange = range;
     });
 
-    $scope.$watch('dateRange.endTime', function(){
+    $scope.$watch('dateRange.startTime', function () {
+        $scope.getTimeRange({
+            'dateRange': $scope.dateRange
+        }, true);
+    });
+
+    $scope.$watch('dateRange.endTime', function () {
         $scope.checkCompletenessOfEndTime();
 
         $scope.getTimeRange({
             'dateRange': $scope.dateRange
-        },true);
+        }, true);
     });
 
-    $scope.checkCompletenessOfEndTime = function() {
+    $scope.checkCompletenessOfEndTime = function () {
         $scope.showIncompleteWarning = $scope.dateRange.endTime != DateFormatService.formatDateWithLastDayOfMonth(new Date($scope.dateRange.endTime));
     };
 
-    var notHideCalendar = function() {
+    var notHideCalendar = function () {
         $("#ui-datepicker-div").removeClass("hide-calendar");
         $("#ui-datepicker-div").removeClass('MonthDatePicker');
         $("#ui-datepicker-div").removeClass('HideTodayButton');
