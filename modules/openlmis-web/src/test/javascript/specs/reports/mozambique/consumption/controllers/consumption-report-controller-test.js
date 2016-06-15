@@ -10,7 +10,7 @@ describe("consumption report controller", function () {
     }));
 
     it('should split for each period in selected range', function () {
-        var periods = scope.splitPeriods("2016-01-01", "2016-05-05");
+        var periods = scope.splitPeriods("2016-01-01", "2016-04-21");
 
         expect(periods.length).toBe(5);
         expect(periods).toEqual([
@@ -23,7 +23,7 @@ describe("consumption report controller", function () {
     });
 
     it('should only split one period when selected range in one period', function () {
-        var periods = scope.splitPeriods("2016-01-01", "2016-01-05");
+        var periods = scope.splitPeriods("2016-01-01", "2016-01-19");
 
         expect(periods.length).toBe(1);
         expect(periods).toEqual([

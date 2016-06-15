@@ -85,7 +85,7 @@ function ConsumptionReportController($scope, $controller, $filter, $http, $q, Cu
         function periodOf(date) {
             var coveredDate = new Date(date);
             var periodStart, periodEnd;
-            if (coveredDate.getDay() < periodStartDay) {
+            if (coveredDate.getDate() < periodStartDay) {
                 periodStart = shiftMonthAtDay(coveredDate, previousMonth, periodStartDay);
                 periodEnd = shiftMonthAtDay(coveredDate, thisMonth, periodEndDay);
             } else {
