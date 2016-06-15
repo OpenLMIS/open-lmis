@@ -1,4 +1,4 @@
-function RequisitionReportController($scope, $filter, RequisitionReportService, messageService, DateFormatService,FeatureToggleService, $window,$cacheFactory) {
+function RequisitionReportController($scope, $filter, RequisitionReportService, messageService, DateFormatService, FeatureToggleService, $window, $cacheFactory) {
 
     $scope.$on('$viewContentLoaded', function () {
         $scope.loadRequisitions();
@@ -42,7 +42,7 @@ function RequisitionReportController($scope, $filter, RequisitionReportService, 
         });
     };
 
-    $scope.isSubmitLate = function(status) {
+    $scope.isSubmitLate = function (status) {
         return messageService.get("rnr.report.submitted.status.late") === status;
     };
 
@@ -60,23 +60,38 @@ function RequisitionReportController($scope, $filter, RequisitionReportService, 
         plugins: [new ngGridFlexibleHeightPlugin()],
         sortInfo: {fields: ['webSubmittedTimeString'], directions: ['desc']},
         columnDefs: [
-            {displayName: messageService.get("label.report.requisitions.number"), cellTemplate: '<div class="customCell">{{$parent.$index + 1}}</div>', sortable: false },
+            {
+                displayName: messageService.get("label.report.requisitions.number"),
+                cellTemplate: '<div class="customCell">{{$parent.$index + 1}}</div>',
+                sortable: false
+            },
             {field: 'programName', displayName: messageService.get("label.report.requisitions.programname")},
             {field: 'type', displayName: messageService.get("label.report.requisitions.type")},
-            {field: 'facilityName', displayName: messageService.get("label.report.requisitions.facilityname"),width:200},
+            {
+                field: 'facilityName',
+                displayName: messageService.get("label.report.requisitions.facilityname"),
+                width: 200
+            },
             {field: 'submittedUser', displayName: messageService.get("label.report.requisitions.submitteduser")},
             {field: 'inventoryDate', displayName: messageService.get("label.report.requisitions.inventorydate")},
-            {field: 'submittedStatus', displayName: messageService.get("label.report.requisitions.submittedstatus"),cellTemplate:'<div class="customCell" ng-class="{submitStatusLate: isSubmitLate(row.getProperty(col.field))}">{{row.getProperty(col.field)}}</div>'},
-            {field: 'clientSubmittedTimeString', displayName: messageService.get("label.report.requisitions.submittedtime")},
-            {field: 'webSubmittedTimeString', displayName: messageService.get("label.report.requisitions.syncedtime") }
+            {
+                field: 'submittedStatus',
+                displayName: messageService.get("label.report.requisitions.submittedstatus"),
+                cellTemplate: '<div class="customCell" ng-class="{submitStatusLate: isSubmitLate(row.getProperty(col.field))}">{{row.getProperty(col.field)}}</div>'
+            },
+            {
+                field: 'clientSubmittedTimeString',
+                displayName: messageService.get("label.report.requisitions.submittedtime")
+            },
+            {field: 'webSubmittedTimeString', displayName: messageService.get("label.report.requisitions.syncedtime")}
         ]
     };
 
-    function formatDate (date) {
+    function formatDate(date) {
         return DateFormatService.formatDateWithLocale(date);
     }
 
-    $scope.getRedirectUrl = function() {
+    $scope.getRedirectUrl = function () {
         var url = "/public/pages/logistics/rnr/index.html#/";
         var urlMapping = {
             "VIA": "view-requisition-via/",
@@ -93,15 +108,16 @@ function RequisitionReportController($scope, $filter, RequisitionReportService, 
         return url;
     };
 
-    function redirectPage () {
+    function redirectPage() {
         FeatureToggleService.get({key: "redirect.view.rnr.page"}, function (result) {
-            if (result.key){
+            if (result.key) {
                 $window.location.href = $scope.getRedirectUrl();
             }
         });
     }
-    if($cacheFactory.get('keepHistoryInStockOnHandPage') != undefined){
-        $cacheFactory.get('keepHistoryInStockOnHandPage').put('saveDataOfStockOnHand',"no");
+
+    if ($cacheFactory.get('keepHistoryInStockOnHandPage') !== undefined) {
+        $cacheFactory.get('keepHistoryInStockOnHandPage').put('saveDataOfStockOnHand', "no");
     }
     if($cacheFactory.get('keepHistoryInStockOutReportPage') != undefined){
         $cacheFactory.get('keepHistoryInStockOutReportPage').put('saveDataOfStockOutReport',"no");

@@ -1,4 +1,4 @@
-function VersionReportController($scope, VersionReportService,$cacheFactory) {
+function VersionReportController($scope, VersionReportService, $cacheFactory) {
     $scope.$on('$viewContentLoaded', function () {
         $scope.loadUserSummary();
     });
@@ -10,8 +10,8 @@ function VersionReportController($scope, VersionReportService,$cacheFactory) {
         });
     };
 
-    if($cacheFactory.get('keepHistoryInStockOnHandPage') != undefined){
-        $cacheFactory.get('keepHistoryInStockOnHandPage').put('saveDataOfStockOnHand',"no");
+    if ($cacheFactory.get('keepHistoryInStockOnHandPage') !== undefined) {
+        $cacheFactory.get('keepHistoryInStockOnHandPage').put('saveDataOfStockOnHand', "no");
     }
     if($cacheFactory.get('keepHistoryInStockOutReportPage') != undefined){
         $cacheFactory.get('keepHistoryInStockOutReportPage').put('saveDataOfStockOutReport',"no");

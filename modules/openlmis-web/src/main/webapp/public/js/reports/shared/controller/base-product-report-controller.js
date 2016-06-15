@@ -1,12 +1,12 @@
-function BaseProductReportController($scope, $filter, ProductReportService,$cacheFactory, FacilityService, GeographicZoneService, $dialog, DateFormatService,$location) {
+function BaseProductReportController($scope, $filter, ProductReportService, $cacheFactory, FacilityService, GeographicZoneService, $dialog, DateFormatService, $location) {
     $scope.provinces = [];
     $scope.districts = [];
     $scope.facilities = [];
     $scope.fullGeoZoneList = [];
     $scope.reportParams = {};
     $scope.products = [];
-    if($cacheFactory.get('keepHistoryInStockOnHandPage') != undefined && $location.path().indexOf("stock-on-hand-all-products") < 0){
-        $cacheFactory.get('keepHistoryInStockOnHandPage').put('saveDataOfStockOnHand',"no");
+    if ($cacheFactory.get('keepHistoryInStockOnHandPage') !== undefined && $location.path().indexOf("stock-on-hand-all-products") < 0) {
+        $cacheFactory.get('keepHistoryInStockOnHandPage').put('saveDataOfStockOnHand', "no");
     }
     if($cacheFactory.get('BaseProductReportController') != undefined && $location.path().indexOf("stock-out-all-products") < 0){
         $cacheFactory.get('BaseProductReportController').put('saveDataOfStockOutReport',"no");
