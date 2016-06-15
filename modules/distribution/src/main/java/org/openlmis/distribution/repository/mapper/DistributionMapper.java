@@ -12,6 +12,9 @@ package org.openlmis.distribution.repository.mapper;
 
 
 import org.apache.ibatis.annotations.*;
+import org.openlmis.core.domain.DeliveryZone;
+import org.openlmis.core.domain.ProcessingPeriod;
+import org.openlmis.core.domain.Program;
 import org.openlmis.distribution.domain.Distribution;
 import org.openlmis.distribution.domain.DistributionStatus;
 import org.springframework.stereotype.Repository;
@@ -61,8 +64,54 @@ public interface DistributionMapper {
   @Results(value = {
           @Result(property = "deliveryZone", column = "deliveryZoneId", javaType = Long.class,
                   one = @One(select = "org.openlmis.core.repository.mapper.DeliveryZoneMapper.getById")),
-          @Result(property = "period.id", column = "periodId"),
-          @Result(property = "program.id", column = "programId")
+          @Result(property = "period", column = "periodId", javaType = Long.class,
+                  one = @One(select = "org.openlmis.core.repository.mapper.ProcessingPeriodMapper.getById")),
+          @Result(property = "program", column = "programId", javaType = Long.class,
+                  one = @One(select = "org.openlmis.core.repository.mapper.ProgramMapper.getById"))
   })
   List<Distribution> getFullSyncedDistributions();
+
+  @Select({"SELECT * FROM distributions WHERE status = 'SYNCED' AND programId = #{programId}"})
+  @Results(value = {
+          @Result(property = "deliveryZone", column = "deliveryZoneId", javaType = Long.class,
+                  one = @One(select = "org.openlmis.core.repository.mapper.DeliveryZoneMapper.getById")),
+          @Result(property = "period", column = "periodId", javaType = Long.class,
+                  one = @One(select = "org.openlmis.core.repository.mapper.ProcessingPeriodMapper.getById")),
+          @Result(property = "program", column = "programId", javaType = Long.class,
+                  one = @One(select = "org.openlmis.core.repository.mapper.ProgramMapper.getById"))
+  })
+  List<Distribution> getFullSyncedDistributionsForProgram(@Param("programId") Long programId);
+
+  @Select({"SELECT * FROM distributions WHERE status = 'SYNCED' AND deliveryZoneId = #{deliveryZoneId} AND programId = #{programId}"})
+  @Results(value = {
+          @Result(property = "deliveryZone", column = "deliveryZoneId", javaType = Long.class,
+                  one = @One(select = "org.openlmis.core.repository.mapper.DeliveryZoneMapper.getById")),
+          @Result(property = "period", column = "periodId", javaType = Long.class,
+                  one = @One(select = "org.openlmis.core.repository.mapper.ProcessingPeriodMapper.getById")),
+          @Result(property = "program", column = "programId", javaType = Long.class,
+                  one = @One(select = "org.openlmis.core.repository.mapper.ProgramMapper.getById"))
+  })
+  List<Distribution> getFullSyncedDistributionsForProgramAndDeliveryZone(@Param("programId") Long programId, @Param("deliveryZoneId")Long deliveryZoneId);
+
+  @Select({"SELECT * FROM distributions WHERE status = 'SYNCED' AND programId = #{programId} AND periodId = #{periodId}"})
+  @Results(value = {
+          @Result(property = "deliveryZone", column = "deliveryZoneId", javaType = Long.class,
+                  one = @One(select = "org.openlmis.core.repository.mapper.DeliveryZoneMapper.getById")),
+          @Result(property = "period", column = "periodId", javaType = Long.class,
+                  one = @One(select = "org.openlmis.core.repository.mapper.ProcessingPeriodMapper.getById")),
+          @Result(property = "program", column = "programId", javaType = Long.class,
+                  one = @One(select = "org.openlmis.core.repository.mapper.ProgramMapper.getById"))
+  })
+  List<Distribution> getFullSyncedDistributionsForProgramAndPeriod(@Param("programId") Long programId, @Param("periodId") Long periodId);
+
+  @Select({"SELECT * FROM distributions WHERE status = 'SYNCED' AND deliveryZoneId = #{deliveryZoneId} AND programId = #{programId} AND periodId = #{periodId}"})
+  @Results(value = {
+          @Result(property = "deliveryZone", column = "deliveryZoneId", javaType = Long.class,
+                  one = @One(select = "org.openlmis.core.repository.mapper.DeliveryZoneMapper.getById")),
+          @Result(property = "period", column = "periodId", javaType = Long.class,
+                  one = @One(select = "org.openlmis.core.repository.mapper.ProcessingPeriodMapper.getById")),
+          @Result(property = "program", column = "programId", javaType = Long.class,
+                  one = @One(select = "org.openlmis.core.repository.mapper.ProgramMapper.getById"))
+  })
+  List<Distribution> getFullSyncedDistributionsForProgramAndDeliveryZoneAndPeriod(@Param("programId") Long programId, @Param("deliveryZoneId")Long deliveryZoneId, @Param("periodId") Long periodId);
 }

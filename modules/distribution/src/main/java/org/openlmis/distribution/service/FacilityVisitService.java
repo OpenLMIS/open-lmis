@@ -41,6 +41,10 @@ public class FacilityVisitService {
     return repository.getBy(facilityId, distributionId);
   }
 
+  public List<FacilityVisit> getByDistributionId(Long distributionId) {
+    return repository.getByDistributionId(distributionId);
+  }
+
   public List<FacilityVisit> getUnSyncedFacilities(Long distributionId) {
     return repository.getUnSyncedFacilities(distributionId);
   }
