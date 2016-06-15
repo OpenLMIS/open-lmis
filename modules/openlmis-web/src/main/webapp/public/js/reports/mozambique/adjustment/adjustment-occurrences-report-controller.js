@@ -17,34 +17,21 @@ function AdjustmentOccurrencesReportController($scope, $controller, $filter, $ht
 
       var promises = requestAdjustmentDataForEachPeriod();
       $q.all(promises).then(function (adjustmentsInPeriods) {
-        renderAdjustmentChart(_.pluck(_.pluck(adjustmentsInPeriods, "data"), "adjustment"));
+        var adjustmentsData = _.pluck(_.pluck(adjustmentsInPeriods, "data"), "adjustment");
+
+        renderAdjustmentChart(adjustmentsData, $scope.reportParams.adjustmentType);
       });
     }
   };
 
-  function renderAdjustmentChart(adjustmentsInPeriods) {
-    AmCharts.makeChart("adjustments-report", {
-      "type": "serial",
-      "theme": "light",
-      "allLabels": [{
-        "text": "Free label",
-        "bold": true,
-        "align":"center"
-      }],
-      "legend": {
-        "position": "bottom",
-        "valueAlign": "left"
-      },
-      "dataProvider": adjustmentsInPeriods,
-      "valueAxes": [{
-        "stackType": "regular"
-      }],
-      "graphs": [
+  function renderAdjustmentChart(adjustmentsInPeriods, adjustmentType) {
+    var adjustmentGraphConfigs = {
+      "negative": [
         {
           "balloonText": messageService.get("adjustment.chart.expired.return.to.supplier") + ": [[value]]",
           "fillAlphas": 0.6,
           "lineAlpha": 0.4,
-          "title":  messageService.get("adjustment.chart.expired.return.to.supplier"),
+          "title": messageService.get("adjustment.chart.expired.return.to.supplier"),
           "valueField": "EXPIRED_RETURN_TO_SUPPLIER"
         },
         {
@@ -76,6 +63,69 @@ function AdjustmentOccurrencesReportController($scope, $controller, $filter, $ht
           "valueField": "PROD_DEFECTIVE"
         }
       ],
+      "positive":[
+        {
+          "balloonText": messageService.get("adjustment.chart.customer.return") + ": [[value]]",
+          "fillAlphas": 0.6,
+          "lineAlpha": 0.4,
+          "title": messageService.get("adjustment.chart.customer.return"),
+          "valueField": "CUSTOMER_RETURN"
+        },
+        {
+          "balloonText": messageService.get("adjustment.chart.expired.return.from.customer") + ": [[value]]",
+          "fillAlphas": 0.6,
+          "lineAlpha": 0.4,
+          "title": messageService.get("adjustment.chart.expired.return.from.customer"),
+          "valueField": "EXPIRED_RETURN_FROM_CUSTOMER"
+        },
+        {
+          "balloonText": messageService.get("adjustment.chart.donation") + ": [[value]]",
+          "fillAlphas": 0.6,
+          "lineAlpha": 0.4,
+          "title": messageService.get("adjustment.chart.donation"),
+          "valueField": "DONATION"
+        },
+        {
+          "balloonText": messageService.get("adjustment.chart.loans.received") + ": [[value]]",
+          "fillAlphas": 0.6,
+          "lineAlpha": 0.4,
+          "title": messageService.get("adjustment.chart.loans.received"),
+          "valueField": "LOANS_RECEIVED"
+        },
+        {
+          "balloonText": messageService.get("adjustment.chart.inventory.positive") + ": [[value]]",
+          "fillAlphas": 0.6,
+          "lineAlpha": 0.4,
+          "title": messageService.get("adjustment.chart.inventory.positive"),
+          "valueField": "INVENTORY_POSITIVE"
+        },
+        {
+          "balloonText": messageService.get("adjustment.chart.return.from.quarantine") + ": [[value]]",
+          "fillAlphas": 0.6,
+          "lineAlpha": 0.4,
+          "title": messageService.get("adjustment.chart.return.from.quarantine"),
+          "valueField": "RETURN_FROM_QUARANTINE"
+        }
+      ]
+    };
+
+    AmCharts.makeChart("adjustments-report", {
+      "type": "serial",
+      "theme": "light",
+      "allLabels": [{
+        "text": "Free label",
+        "bold": true,
+        "align":"center"
+      }],
+      "legend": {
+        "position": "bottom",
+        "valueAlign": "left"
+      },
+      "dataProvider": adjustmentsInPeriods,
+      "valueAxes": [{
+        "stackType": "regular"
+      }],
+      "graphs": adjustmentGraphConfigs[adjustmentType],
       "chartScrollbar": {
         "oppositeAxis": false,
         "offset": 30
@@ -110,8 +160,18 @@ function AdjustmentOccurrencesReportController($scope, $controller, $filter, $ht
             "INVENTORY_NEGATIVE",
             "PROD_DEFECTIVE"]
         });
+      } else {
+        cutParams.push({
+          dimension: "reason_code",
+          values: [
+            "CUSTOMER_RETURN",
+            "EXPIRED_RETURN_FROM_CUSTOMER",
+            "DONATION",
+            "LOANS_RECEIVED",
+            "INVENTORY_POSITIVE",
+            "RETURN_FROM_QUARANTINE"]
+        });
       }
-
 
       return $http
           .get(CubesGenerateUrlService.generateAggregateUrl("vw_period_movements", ["reason_code"], cutParams))
@@ -122,7 +182,14 @@ function AdjustmentOccurrencesReportController($scope, $controller, $filter, $ht
               "DAMAGED": 0,
               "LOANS_DEPOSIT": 0,
               "INVENTORY_NEGATIVE": 0,
-              "PROD_DEFECTIVE": 0
+              "PROD_DEFECTIVE": 0,
+
+              "CUSTOMER_RETURN": 0,
+              "EXPIRED_RETURN_FROM_CUSTOMER": 0,
+              "DONATION": 0,
+              "LOANS_RECEIVED": 0,
+              "INVENTORY_POSITIVE": 0,
+              "RETURN_FROM_QUARANTINE": 0
             };
 
             _.map(adjustmentData.data.cells, function (cell) {
