@@ -12,7 +12,7 @@ function AdjustmentOccurrencesReportController($scope, $controller, $filter, $ht
   });
 
   $scope.generateAdjustmentReport = function () {
-    if ($scope.checkDateValidRange()) {
+    if ($scope.checkDateValidRange() && validateProduct()) {
       $scope.locationIdToCode($scope.reportParams);
 
       var promises = requestAdjustmentDataForEachPeriod();
@@ -105,5 +105,10 @@ function AdjustmentOccurrencesReportController($scope, $controller, $filter, $ht
     });
     return cutParams;
   };
+
+  function validateProduct() {
+    $scope.noProductSelected = !$scope.reportParams.productCode;
+    return !$scope.noProductSelected;
+  }
 
 }
