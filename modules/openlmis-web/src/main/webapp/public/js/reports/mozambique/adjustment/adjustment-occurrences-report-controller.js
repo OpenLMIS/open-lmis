@@ -18,13 +18,19 @@ function AdjustmentOccurrencesReportController($scope, $controller, $filter, $ht
       var promises = requestAdjustmentDataForEachPeriod();
       $q.all(promises).then(function (adjustmentsInPeriods) {
         var adjustmentsData = _.pluck(_.pluck(adjustmentsInPeriods, "data"), "adjustment");
+        var selectedProduct = _.find($scope.products, function(product){return product.code===$scope.reportParams.productCode});
+        var selectedAdjustmentType = $scope.reportParams.adjustmentType;
 
-        renderAdjustmentChart(adjustmentsData, $scope.reportParams.adjustmentType);
+        var label = selectedAdjustmentType.charAt(0).toUpperCase() +  selectedAdjustmentType.slice(1)
+            + ' adjustments for '
+            + selectedProduct.primaryName;
+
+        renderAdjustmentChart(adjustmentsData, selectedAdjustmentType, label);
       });
     }
   };
 
-  function renderAdjustmentChart(adjustmentsInPeriods, adjustmentType) {
+  function renderAdjustmentChart(adjustmentsInPeriods, adjustmentType, label) {
     var adjustmentGraphConfigs = {
       "negative": [
         {
@@ -113,7 +119,7 @@ function AdjustmentOccurrencesReportController($scope, $controller, $filter, $ht
       "type": "serial",
       "theme": "light",
       "allLabels": [{
-        "text": "Free label",
+        "text": label,
         "bold": true,
         "align":"center"
       }],
