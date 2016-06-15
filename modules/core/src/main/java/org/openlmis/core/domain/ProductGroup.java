@@ -37,4 +37,7 @@ public class ProductGroup extends BaseModel implements Importable {
 
   @ImportField(mandatory = true, name = "Product Group Name")
   private String name;
+
+  @ImportField(name = "Display Order")
+  private Long displayOrder;
 }

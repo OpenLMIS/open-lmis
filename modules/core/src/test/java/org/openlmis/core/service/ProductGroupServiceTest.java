@@ -78,13 +78,13 @@ public class ProductGroupServiceTest {
 
   @Test
   public void shouldValidateAndReturnNullIfGroupCodeEmpty() throws Exception {
-    assertThat(service.validateAndReturn(new ProductGroup(null,"name")), is(nullValue()));
+    assertThat(service.validateAndReturn(new ProductGroup(null,"name", null)), is(nullValue()));
   }
 
   @Test
   public void shouldValidateAndSetProductGroup() throws Exception {
-    ProductGroup group1 = new ProductGroup("code1", "name1");
-    ProductGroup group2 = new ProductGroup("code1", "name2");
+    ProductGroup group1 = new ProductGroup("code1", "name1", null);
+    ProductGroup group2 = new ProductGroup("code1", "name2", null);
 
     when(repository.getByCode("code1")).thenReturn(group2);
 
@@ -95,7 +95,7 @@ public class ProductGroupServiceTest {
 
   @Test
   public void shouldRaiseInvalidReferenceDataProductGroupError() throws Exception {
-    ProductGroup group = new ProductGroup("invalid product group code","name");
+    ProductGroup group = new ProductGroup("invalid product group code","name", null);
     when(repository.getByCode("invalid product group code")).thenReturn(null);
 
     expectedEx.expect(dataExceptionMatcher("error.reference.data.invalid.product.group"));

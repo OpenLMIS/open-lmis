@@ -25,6 +25,8 @@ import org.supercsv.util.CsvContext;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * This class has logic to invoke corresponding respective record handler to parse data from input stream into the corresponding model.
@@ -45,11 +47,20 @@ public class CSVParser {
       csvBeanReader = new CsvBeanReader(modelClass, inputStream);
       headers = csvBeanReader.getHeaders();
       csvBeanReader.validateHeaders();
+      List<Importable> importedModels = new ArrayList<>();
       Importable importedModel;
 
       while ((importedModel = csvBeanReader.readWithCellProcessors()) != null) {
-        recordHandler.execute(importedModel, csvBeanReader.getRowNumber(), auditFields);
+        importedModels.add(importedModel);
       }
+
+      recordHandler.preProcess(importedModels);
+
+      for (int i = 0; i < importedModels.size(); i++) {
+        importedModel = importedModels.get(i);
+        recordHandler.execute(importedModel, i, auditFields);
+      }
+
       recordHandler.postProcess(auditFields);
     } catch (SuperCsvConstraintViolationException constraintException) {
       if (constraintException.getMessage().contains("^\\d{1,2}/\\d{1,2}/\\d{4}$")) {
