@@ -7,19 +7,18 @@ function SingleFacilityReportController($scope, $filter, $controller, ProductRep
     else{
         $scope.cache=$cacheFactory.get('keepHistoryInStockOnHandPage');
         if($scope.cache.get('saveDataOfStockOnHand') === "yes"){
-            $scope.reportParams.facilityId=$scope.cache.get('facilityId');
             $timeout(function waitHistorySelectShow(){
                 if ($('.select2-container .select2-choice .select2-chosen').html() != undefined) {
                     $('.facility-choose .select2-choice .select2-chosen').html($scope.cache.get('facilityName'));
                     $('.district-choose .select2-choice .select2-chosen').html($scope.cache.get('district'));
                     $('.province-choose .select2-choice .select2-chosen').html($scope.cache.get('province'));
                     $scope.reportParams.endTime=$filter('date')($scope.cache.get('endTime'), "yyyy-MM-dd");
+                    $scope.reportParams.facilityId=$scope.cache.get('facilityId');
+                    loadReportAction();
                 } else {
                     $timeout(waitHistorySelectShow,1000);
                 }
             }, 1000);
-            $scope.reportParams.endTime=$scope.cache.get('endTime');
-            loadReportAction();
         }
     }
 

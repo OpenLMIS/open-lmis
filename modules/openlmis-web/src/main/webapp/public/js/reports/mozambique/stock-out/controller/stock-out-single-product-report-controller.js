@@ -44,11 +44,15 @@ function StockOutSingleProductReportController($scope, $filter, $q, $controller,
         });
     };
 
-    $scope.loadReport = function () {
+    $scope.loadReport = loadReportAction;
+    function loadReportAction() {
         if ($scope.checkDateValidRange()) {
             $scope.selectedProduct = getProductByCode($scope.reportParams.productCode);
             getStockOutDataFromCubes();
         }
+        $scope.cache.put('singleProductData', $scope.reportParams);
+        $scope.cache.put('singleProductName',$('.select2-container .select2-choice > .select2-chosen').html());
+        $scope.cache.put('saveDataOfStockOutReportForSingleProduct',"no");
     };
 
     function getProductByCode(code) {
@@ -127,7 +131,26 @@ function StockOutSingleProductReportController($scope, $filter, $q, $controller,
             }
         });
     };
-    if($cacheFactory.get('keepHistoryInStockOutReportPage') != undefined){
-        $cacheFactory.get('keepHistoryInStockOutReportPage').put('saveDataOfStockOutReport',"yes");
+    if($cacheFactory.get('keepHistoryInStockOutReportPage') === undefined){
+        $scope.cache = $cacheFactory('keepHistoryInStockOutReportPage',{capacity: 10});
+    }
+    else{
+        $scope.cache=$cacheFactory.get('keepHistoryInStockOutReportPage');
+        $scope.cache.put('saveDataOfStockOutReport',"yes");
+        if($scope.cache.get('saveDataOfStockOutReportForSingleProduct') === "yes"){
+            $scope.cache.put('saveDataOfStockOutReport',"no");
+            $timeout(function waitSelectIsShow(){
+                if($('.select2-container .select2-choice .select2-chosen').html() != undefined){
+                    $('.select2-container .select2-choice .select2-chosen').html($scope.cache.get('singleProductName'));
+                    $('#startTime').val($scope.cache.get('singleProductData').startTime);
+                    $('#endTime').val($scope.cache.get('singleProductData').endTime);
+                    $scope.reportParams=$scope.cache.get('singleProductData');
+                    loadReportAction();
+                }
+                else{
+                    $timeout(waitSelectIsShow, 1000);
+                }
+            }, 1000);
+        }
     }
 }
