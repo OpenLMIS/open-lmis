@@ -10,7 +10,11 @@
 
 function ReviewDataController($scope, ReviewDataFilters) {
 
-  $scope.filters = ReviewDataFilters.get();
+  $scope.filters = ReviewDataFilters.get({}, function () {
+    $scope.filters.selected = {
+      program: $scope.filters.filter.programs[0]
+    };
+  });
 
 }
 
