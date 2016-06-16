@@ -32,19 +32,23 @@ function SingleFacilityReportController($scope, $filter, $controller, ProductRep
     });
 
     $scope.loadReport = loadReportAction;
+    
     function loadReportAction() {
         var params = {endTime: $filter('date')($scope.reportParams.endTime, "yyyy-MM-dd HH:mm:ss")};
         params.facilityId = $scope.reportParams.facilityId;
 
-        $scope.cache.put('endTime', $scope.reportParams.endTime);
-        $scope.cache.put('facilityId', $scope.reportParams.facilityId);
         if (validateFacility()) {
             ProductReportService.loadFacilityReport().get(params, function (data) {
                 $scope.reportData = data.products;
             });
         }
     }
-
+    
+    $scope.saveHistory = function () {
+        $scope.cache.put('endTime', $scope.reportParams.endTime);
+        $scope.cache.put('facilityId', $scope.reportParams.facilityId);
+    };
+    
     function validateFacility() {
         $scope.invalid = !$scope.reportParams.facilityId;
         return !$scope.invalid;

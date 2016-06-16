@@ -136,14 +136,16 @@ function StockOutSingleProductReportController($scope, $filter, $q, $controller,
     }
     else{
         $scope.cache=$cacheFactory.get('keepHistoryInStockOutReportPage');
-        $scope.cache.put('saveDataOfStockOutReport',"yes");
-        if($scope.cache.get('saveDataOfStockOutReportForSingleProduct') === "yes"){
-            $scope.cache.put('saveDataOfStockOutReport',"no");
+        $scope.cache.put('saveDataOfStockOutReport', "yes");
+        if ($scope.cache.get('saveDataOfStockOutReportForSingleProduct') === "yes") {
+            $scope.cache.put('saveDataOfStockOutReport', "no");
             $timeout(function waitSelectIsShow() {
                 if ($('.select2-container .select2-choice .select2-chosen').html() !== undefined) {
                     $('.select2-container .select2-choice .select2-chosen').html($scope.cache.get('singleProductName'));
-                    $('#startTime').val($scope.cache.get('singleProductData').startTime);
-                    $('#endTime').val($scope.cache.get('singleProductData').endTime);
+                    $scope.$broadcast("update-date-pickers", {
+                        startTime: $scope.cache.get('singleProductData').startTime,
+                        endTime: $scope.cache.get('singleProductData').endTime
+                    });
                     $scope.reportParams=$scope.cache.get('singleProductData');
                     loadReportAction();
                 } else {

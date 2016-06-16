@@ -10,13 +10,13 @@ function StockOutAllProductsReportController($scope, $filter, $q, $controller, $
             $timeout(function waitSelectIsShow() {
                 if ($('.facility-choose .select2-choice .select2-chosen').html() !== undefined) {
                     var params = $scope.cache.get('dataOfStockOutReport');
-                    if (params.selectedProvince !== null) {
+                    if (params.selectedProvince !== undefined) {
                         $('.province-choose .select2-choice .select2-chosen').html(params.selectedProvince.name);
                     }
-                    if (params.selectedDistrict !== null) {
+                    if (params.selectedDistrict !== undefined) {
                         $('.district-choose .select2-choice .select2-chosen').html(params.selectedDistrict.name);
                     }
-                    if (params.selectedFacility !== null) {
+                    if (params.selectedFacility !== undefined) {
                         $('.facility-choose .select2-choice .select2-chosen').html(params.selectedFacility.name);
                     }
 
@@ -24,10 +24,9 @@ function StockOutAllProductsReportController($scope, $filter, $q, $controller, $
                         startTime: $scope.cache.get('startTime'),
                         endTime: $scope.cache.get('endTime')
                     });
-
+                    $scope.reportParams.facilityId=$scope.cache.get('dataOfStockOutReport').selectedFacility.id;
                     loadReportAction();
-                }
-                else {
+                } else {
                     $timeout(waitSelectIsShow, 1000);
                 }
             }, 1000);
@@ -46,12 +45,15 @@ function StockOutAllProductsReportController($scope, $filter, $q, $controller, $
             getStockOutDataFromCubes();
         }
     }
-
-    function getStockOutDataFromCubes() {
-        var params = putHistoryDataToParams();
-        $scope.cache.put('dataOfStockOutReport', params);
+    
+    $scope.saveHistory=function () {
+        $scope.cache.put('dataOfStockOutReport', putHistoryDataToParams());
         $scope.cache.put('startTime', $scope.reportParams.startTime);
         $scope.cache.put('endTime', $scope.reportParams.endTime);
+    };
+    
+    function getStockOutDataFromCubes() {
+        var params = putHistoryDataToParams();
         $scope.cache.put('saveDataOfStockOutReport', "no");
         var cutsParams = CubesGenerateCutParamsService.generateCutsParams("overlapped_date", params.startTime, params.endTime,
             params.selectedFacility, undefined, params.selectedProvince, params.selectedDistrict);
@@ -127,8 +129,15 @@ function StockOutAllProductsReportController($scope, $filter, $q, $controller, $
         var stockReportParams = getStockReportRequestParam();
         if ($cacheFactory.get('keepHistoryInStockOutReportPage') !== undefined) {
             $scope.cache = $cacheFactory.get('keepHistoryInStockOutReportPage');
+            var stockReportParamsBuff = $scope.cache.get('dataOfStockOutReport');
             if ($scope.cache.get('saveDataOfStockOutReport') === "yes") {
-                stockReportParams = $scope.cache.get('dataOfStockOutReport');
+                stockReportParams = stockReportParamsBuff;
+            } else if (stockReportParamsBuff !== undefined) {
+                if ($scope.reportParams.facilityId === stockReportParamsBuff.selectedFacility.id) {
+                    stockReportParamsBuff.startTime = $filter('date')($scope.reportParams.startTime, "yyyy,MM,dd");
+                    stockReportParamsBuff.endTime = $filter('date')($scope.reportParams.endTime, "yyyy,MM,dd");
+                    stockReportParams = stockReportParamsBuff;
+                }
             }
         }
         return stockReportParams;

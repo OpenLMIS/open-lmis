@@ -55,7 +55,7 @@
             <table class="table table-condensed table-bordered table-striped fixed-header-table">
                 <tr ng-repeat="entry in reportData | orderBy:sortType:sortReverse">
                     <td>{{entry.code}}</td>
-                    <td style="text-align: left"><a href="#/stock-out-single-product/{{entry.code}}">{{entry.name}}</a></td>
+                    <td style="text-align: left"><a href="#/stock-out-single-product/{{entry.code}}" ng-click="saveHistory()">{{entry.name}}</a></td>
                     <td>{{entry.avgDuration}}</td>
                     <td>{{entry.occurrences}}</td>
                     <td>{{entry.totalDuration}}</td>
