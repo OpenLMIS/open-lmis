@@ -22,6 +22,7 @@ import org.openlmis.distribution.domain.FacilityDistribution;
 import org.openlmis.distribution.domain.FacilityVisit;
 import org.openlmis.distribution.service.DistributionService;
 import org.openlmis.distribution.service.FacilityDistributionService;
+import org.openlmis.web.model.ReviewDataColumnOrder;
 import org.openlmis.web.model.ReviewDataFilter;
 import org.openlmis.web.model.ReviewDataFilters;
 import org.openlmis.web.model.SynchronizedDistribution;
@@ -33,15 +34,19 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.apache.commons.lang3.ObjectUtils;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
+import static org.apache.commons.lang3.BooleanUtils.isTrue;
 import static org.openlmis.web.response.OpenLmisResponse.response;
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
 import static org.springframework.web.bind.annotation.RequestMethod.POST;
@@ -125,7 +130,39 @@ public class ReviewDataController extends BaseController {
       }
     }
 
+    Collections.sort(list, sortByColumn(filter.getOrder()));
+
     return response("list", list);
+  }
+
+  private Comparator<SynchronizedDistribution> sortByColumn(final ReviewDataColumnOrder order) {
+    Comparator<SynchronizedDistribution> comparator = new Comparator<SynchronizedDistribution>() {
+      @Override
+      public int compare(SynchronizedDistribution a, SynchronizedDistribution b) {
+        switch (order.getColumn()) {
+          case "province":
+            return ObjectUtils.compare(a.getProvince(), b.getProvince());
+          case "deliveryZone":
+            return ObjectUtils.compare(a.getDeliveryZone(), b.getDeliveryZone());
+          case "period":
+            return ObjectUtils.compare(a.getPeriod(), b.getPeriod());
+          case "initiated":
+            return ObjectUtils.compare(a.getInitiated(), b.getInitiated());
+          case "synchronized":
+            return ObjectUtils.compare(a.getSync(), b.getSync());
+          case "lastViewed":
+            return ObjectUtils.compare(a.getLastViewed(), b.getLastViewed());
+          case "lastEdited":
+            return ObjectUtils.compare(a.getLastEdited(), b.getLastEdited());
+          case "editedBy":
+            return ObjectUtils.compare(a.getEditedBy(), b.getEditedBy());
+          default:
+            return 0;
+        }
+      }
+    };
+
+    return isTrue(order.getDescending()) ? Collections.reverseOrder(comparator) : comparator;
   }
 
   private boolean isViewable(Date syncDate, Long userId) {

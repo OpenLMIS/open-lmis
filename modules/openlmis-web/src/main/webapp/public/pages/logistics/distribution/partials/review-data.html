@@ -71,16 +71,42 @@
         <table class="table table-striped table-bordered">
           <thead>
           <tr>
-            <th openlmis-message="label.province"></th>
-            <th openlmis-message="label.delivery.zone"></th>
-            <th openlmis-message="label.period"></th>
-            <th openlmis-message="label.initiated"></th>
-            <th openlmis-message="label.synchronized"></th>
-            <th openlmis-message="label.last.viewed"></th>
-            <th openlmis-message="label.last.edited"></th>
-            <th openlmis-message="label.edited.by"></th>
+            <th ng-click="sort('province')">
+              <span openlmis-message="label.province"></span>
+              <i class="pull-right" ng-class="isSort('province')"></i>
+            </th>
+            <th ng-click="sort('deliveryZone')">
+              <span openlmis-message="label.delivery.zone"></span>
+              <i class="pull-right" ng-class="isSort('deliveryZone')"></i>
+            </th>
+            <th ng-click="sort('period')">
+              <span openlmis-message="label.period"></span>
+              <i class="pull-right" ng-class="isSort('period')"></i>
+            </th>
+            <th ng-click="sort('initiated')">
+              <span openlmis-message="label.initiated"></span>
+              <i class="pull-right" ng-class="isSort('initiated')"></i>
+            </th>
+            <th ng-click="sort('synchronized')">
+              <span openlmis-message="label.synchronized"></span>
+              <i class="pull-right" ng-class="isSort('synchronized')"></i>
+            </th>
+            <th ng-click="sort('lastViewed')">
+              <span openlmis-message="label.last.viewed"></span>
+              <i class="pull-right" ng-class="isSort('lastViewed')"></i>
+            </th>
+            <th ng-click="sort('lastEdited')">
+              <span openlmis-message="label.last.edited"></span>
+              <i class="pull-right" ng-class="isSort('lastEdited')"></i>
+            </th>
+            <th ng-click="sort('editedBy')">
+              <span openlmis-message="label.edited.by"></span>
+              <i class="pull-right" ng-class="isSort('editedBy')"></i>
+            </th>
             <th></th>
-            <th openlmis-message="label.edit.history"></th>
+            <th>
+              <span openlmis-message="label.edit.history"></span>
+            </th>
           </tr>
           </thead>
           <tbody>
