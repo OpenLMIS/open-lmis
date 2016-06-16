@@ -17,6 +17,8 @@ import lombok.NoArgsConstructor;
 import org.codehaus.jackson.map.annotate.JsonSerialize;
 import org.openlmis.core.domain.BaseModel;
 import org.openlmis.core.domain.ProductGroup;
+import org.openlmis.distribution.dto.EpiUseLineItemDTO;
+import org.openlmis.distribution.dto.Reading;
 
 import static org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion.NON_EMPTY;
 
@@ -45,5 +47,24 @@ public class EpiUseLineItem extends BaseModel {
     this.productGroup = productGroup;
     this.createdBy = facilityVisit.getCreatedBy();
     this.modifiedBy = facilityVisit.getModifiedBy();
+  }
+
+  public EpiUseLineItemDTO transform() {
+    EpiUseLineItemDTO dto = new EpiUseLineItemDTO();
+    dto.setId(id);
+    dto.setCreatedBy(createdBy);
+    dto.setCreatedDate(createdDate);
+    dto.setModifiedBy(modifiedBy);
+    dto.setModifiedDate(modifiedDate);
+    dto.setFacilityVisitId(facilityVisitId);
+    dto.setProductGroup(productGroup);
+    dto.setStockAtFirstOfMonth(new Reading(stockAtFirstOfMonth));
+    dto.setStockAtEndOfMonth(new Reading(stockAtEndOfMonth));
+    dto.setReceived(new Reading(received));
+    dto.setLoss(new Reading(loss));
+    dto.setDistributed(new Reading(distributed));
+    dto.setExpirationDate(new Reading(expirationDate));
+
+    return dto;
   }
 }
