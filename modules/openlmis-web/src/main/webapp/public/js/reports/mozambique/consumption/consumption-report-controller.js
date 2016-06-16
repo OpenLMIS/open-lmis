@@ -54,7 +54,22 @@ function ConsumptionReportController($scope, $controller, $filter, $http, $q, Cu
                 $scope.reportParams.selectedProvince,
                 $scope.reportParams.selectedDistrict
             );
-            cutParams.push({dimension: 'reason_code', values: ['CONSUMPTION', 'NO_MOVEMENT_IN_PERIOD']});
+            cutParams.push({dimension: 'reason_code', values: [
+                'UNPACK_KIT',
+                'DEFAULT_ISSUE',
+                'PUB_PHARMACY',
+                'MATERNITY',
+                'GENERAL_WARD',
+                'ACC_EMERGENCY',
+                'MOBILE_UNIT',
+                'LABORATORY',
+                'UATS',
+                'PNCTL',
+                'PAV',
+                'DENTAL_WARD',
+                'ISSUE',
+                'NO_MOVEMENT_IN_PERIOD'
+            ]});
             return $http
                 .get(CubesGenerateUrlService.generateAggregateUrl("vw_period_movements", [], cutParams))
                 .then(function (consumptionData) {
