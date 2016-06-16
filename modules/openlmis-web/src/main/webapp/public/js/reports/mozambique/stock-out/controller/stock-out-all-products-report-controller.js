@@ -9,22 +9,13 @@ function StockOutAllProductsReportController($scope, $filter, $q, $controller, $
         if ($scope.cache.get('saveDataOfStockOutReport') === "yes") {
             $timeout(function waitSelectIsShow() {
                 if ($('.facility-choose .select2-choice .select2-chosen').html() !== undefined) {
-                    var params = $scope.cache.get('dataOfStockOutReport');
-                    if (params.selectedProvince !== undefined) {
-                        $('.province-choose .select2-choice .select2-chosen').html(params.selectedProvince.name);
-                    }
-                    if (params.selectedDistrict !== undefined) {
-                        $('.district-choose .select2-choice .select2-chosen').html(params.selectedDistrict.name);
-                    }
-                    if (params.selectedFacility !== undefined) {
-                        $('.facility-choose .select2-choice .select2-chosen').html(params.selectedFacility.name);
-                    }
-
                     $scope.$broadcast("update-date-pickers", {
                         startTime: $scope.cache.get('startTime'),
                         endTime: $scope.cache.get('endTime')
                     });
-                    $scope.reportParams.facilityId=$scope.cache.get('dataOfStockOutReport').selectedFacility.id;
+                    $scope.reportParams.facilityId = $scope.cache.get('dataOfStockOutReport').selectedFacility.id;
+                    $scope.reportParams.provinceId = $scope.cache.get('dataOfStockOutReport').selectedProvince.id;
+                    $scope.reportParams.districtId = $scope.cache.get('dataOfStockOutReport').selectedDistrict.id;
                     loadReportAction();
                 } else {
                     $timeout(waitSelectIsShow, 1000);
@@ -133,11 +124,7 @@ function StockOutAllProductsReportController($scope, $filter, $q, $controller, $
             if ($scope.cache.get('saveDataOfStockOutReport') === "yes") {
                 stockReportParams = stockReportParamsBuff;
             } else if (stockReportParamsBuff !== undefined) {
-                if ($scope.reportParams.facilityId === stockReportParamsBuff.selectedFacility.id) {
-                    stockReportParamsBuff.startTime = $filter('date')($scope.reportParams.startTime, "yyyy,MM,dd");
-                    stockReportParamsBuff.endTime = $filter('date')($scope.reportParams.endTime, "yyyy,MM,dd");
-                    stockReportParams = stockReportParamsBuff;
-                }
+                stockReportParams = getStockReportRequestParam();
             }
         }
         return stockReportParams;

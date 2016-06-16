@@ -9,13 +9,9 @@ function StockMovementReportController($scope, $routeParams, Facility, $http, Cu
             $scope.province = data.facility.geographicZone.parent.name;
 
             if ($cacheFactory.get('keepHistoryInStockOnHandPage') !== undefined) {
-                $scope.cache = $cacheFactory.get('keepHistoryInStockOnHandPage');
-                $scope.cache.put('facilityName', data.facility.name);
-                $scope.cache.put('district', data.facility.geographicZone.name);
-                $scope.cache.put('province', data.facility.geographicZone.parent.name);
-                $scope.cache.put('saveDataOfStockOnHand', "yes");
+                $cacheFactory.get('keepHistoryInStockOnHandPage').put('saveDataOfStockOnHand', "yes");
             }
-            if($cacheFactory.get('keepHistoryInStockOutReportPage') !== undefined){
+            if ($cacheFactory.get('keepHistoryInStockOutReportPage') !== undefined) {
                 $cacheFactory.get('keepHistoryInStockOutReportPage').put('saveDataOfStockOutReportForSingleProduct', "yes");
             }
 

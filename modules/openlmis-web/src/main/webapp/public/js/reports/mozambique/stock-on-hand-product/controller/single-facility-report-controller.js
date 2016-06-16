@@ -9,11 +9,10 @@ function SingleFacilityReportController($scope, $filter, $controller, ProductRep
         if ($scope.cache.get('saveDataOfStockOnHand') === "yes") {
             $timeout(function waitHistorySelectShow() {
                 if ($('.select2-container .select2-choice .select2-chosen').html() !== undefined) {
-                    $('.facility-choose .select2-choice .select2-chosen').html($scope.cache.get('facilityName'));
-                    $('.district-choose .select2-choice .select2-chosen').html($scope.cache.get('district'));
-                    $('.province-choose .select2-choice .select2-chosen').html($scope.cache.get('province'));
-                    $scope.reportParams.endTime = $filter('date')($scope.cache.get('endTime'), "yyyy-MM-dd");
-                    $scope.reportParams.facilityId = $scope.cache.get('facilityId');
+                    $scope.reportParams.facilityId = $scope.cache.get('dataOfStockOnHandReport').facilityId;
+                    $scope.reportParams.provinceId = $scope.cache.get('dataOfStockOnHandReport').provinceId;
+                    $scope.reportParams.districtId = $scope.cache.get('dataOfStockOnHandReport').districtId;
+                    $scope.reportParams.endTime = $filter('date')($scope.cache.get('dataOfStockOnHandReport').endTime, "yyyy-MM-dd");
                     loadReportAction();
                 } else {
                     $timeout(waitHistorySelectShow, 1000);
@@ -45,8 +44,8 @@ function SingleFacilityReportController($scope, $filter, $controller, ProductRep
     }
     
     $scope.saveHistory = function () {
-        $scope.cache.put('endTime', $scope.reportParams.endTime);
-        $scope.cache.put('facilityId', $scope.reportParams.facilityId);
+        $scope.cache.put('dataOfStockOnHandReport',$scope.reportParams);
+        console.log($scope.reportParams);
     };
     
     function validateFacility() {

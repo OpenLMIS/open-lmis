@@ -51,7 +51,6 @@ function StockOutSingleProductReportController($scope, $filter, $q, $controller,
             getStockOutDataFromCubes();
         }
         $scope.cache.put('singleProductData', $scope.reportParams);
-        $scope.cache.put('singleProductName', $('.select2-container .select2-choice > .select2-chosen').html());
         $scope.cache.put('saveDataOfStockOutReportForSingleProduct', "no");
     }
 
@@ -141,7 +140,7 @@ function StockOutSingleProductReportController($scope, $filter, $q, $controller,
             $scope.cache.put('saveDataOfStockOutReport', "no");
             $timeout(function waitSelectIsShow() {
                 if ($('.select2-container .select2-choice .select2-chosen').html() !== undefined) {
-                    $('.select2-container .select2-choice .select2-chosen').html($scope.cache.get('singleProductName'));
+                    $scope.reportParams.productCode = $scope.cache.get('singleProductData').productCode;
                     $scope.$broadcast("update-date-pickers", {
                         startTime: $scope.cache.get('singleProductData').startTime,
                         endTime: $scope.cache.get('singleProductData').endTime
