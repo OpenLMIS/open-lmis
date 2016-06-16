@@ -20,4 +20,8 @@ public class ReviewDataColumnOrder {
     private String column;
     private Boolean descending;
 
+    public Boolean getDescending() {
+        return descending == null ? false : descending;
+    }
+
 }
