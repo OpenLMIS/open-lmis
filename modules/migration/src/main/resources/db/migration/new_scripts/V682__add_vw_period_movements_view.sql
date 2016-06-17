@@ -1,26 +1,27 @@
+CREATE OR REPLACE FUNCTION existing_card_ids_in_period(periodEnd TIMESTAMP)
+  RETURNS SETOF INTEGER AS $BODY$
+BEGIN
+  RETURN QUERY (SELECT DISTINCT stock_cards.id
+                FROM stock_cards
+                  JOIN stock_card_entries ON stock_cards.id = stock_card_entries.stockcardid
+                WHERE occurred <= periodEnd);
+END
+$BODY$
+LANGUAGE 'plpgsql';
+
 CREATE OR REPLACE FUNCTION records_group_by_reason(cardid INTEGER, periodStart TIMESTAMP, periodEnd TIMESTAMP)
   RETURNS TABLE(reason_code TEXT, occurrences BIGINT, total_quantity BIGINT) AS $BODY$
 BEGIN
   RETURN QUERY (SELECT
-                        (SELECT CASE
-                                WHEN adjustmenttype IN ('PUB_PHARMACY',
-                                                        'MATERNITY',
-                                                        'GENERAL_WARD',
-                                                        'ACC_EMERGENCY',
-                                                        'LABORATORY',
-                                                        'UATS',
-                                                        'PNCTL',
-                                                        'PAV',
-                                                        'DENTAL_WARD',
-                                                        'UNPACK_KIT')
-                                  THEN 'CONSUMPTION'
-                                ELSE adjustmenttype
-                                END AS reason) :: TEXT AS reason_code,
-                        count(adjustmenttype)          AS occurrences,
-                        abs(sum(quantity))             AS total_quantity
-                      FROM stock_card_entries
-                      WHERE stockcardid = cardid AND occurred >= periodStart AND occurred <= periodEnd
-                      GROUP BY reason_code) ;
+                  adjustment_types.name :: TEXT AS reason_code,
+                  count(entries.adjustmenttype) AS occurrences,
+                  abs(sum(entries.quantity))    AS total_quantity
+                FROM stock_card_entries entries
+                  JOIN losses_adjustments_types adjustment_types
+                    ON entries.adjustmenttype = adjustment_types.name
+                WHERE entries.stockcardid = cardid AND entries.occurred >= periodStart AND entries.occurred <= periodEnd
+                GROUP BY reason_code
+  );
 END
 $BODY$
 LANGUAGE 'plpgsql';
@@ -37,19 +38,13 @@ BEGIN
                 WHERE stockcardid = cardid AND occurred >= periodStart AND occurred <= periodEnd)
   INTO found;
 
-  SELECT exists(SELECT adjustmenttype
+  SELECT exists(SELECT
+                  adjustmenttype,
+                  category
                 FROM stock_card_entries
-                WHERE adjustmenttype IN ('PUB_PHARMACY',
-                                         'MATERNITY',
-                                         'GENERAL_WARD',
-                                         'ACC_EMERGENCY',
-                                         'LABORATORY',
-                                         'UATS',
-                                         'PNCTL',
-                                         'PAV',
-                                         'DENTAL_WARD',
-                                         'UNPACK_KIT') AND stockcardid = cardid AND occurred >= periodStart AND
-                      occurred <= periodEnd)
+                  JOIN losses_adjustments_types
+                    ON stock_card_entries.adjustmenttype = losses_adjustments_types.name
+                WHERE category = 'ISSUE' AND stockcardid = cardid AND occurred >= periodStart AND occurred <= periodEnd)
   INTO has_consumption;
 
   IF (found)
@@ -63,7 +58,7 @@ BEGIN
                     FROM records_group_by_reason(cardid, periodStart, periodEnd)
                     UNION
                     SELECT
-                      'CONSUMPTION' :: TEXT,
+                      'ISSUE' :: TEXT,
                       0 :: BIGINT,
                       0 :: BIGINT);
     END IF;
@@ -146,11 +141,3 @@ CREATE MATERIALIZED VIEW vw_period_movements AS
        ON ZONE.parentid = parent_zone.id);
 
 CREATE UNIQUE INDEX idx_vw_period_movements ON vw_period_movements (uuid);
-
-CREATE OR REPLACE FUNCTION refresh_period_movements()
-  RETURNS INT LANGUAGE plpgsql
-AS $$
-BEGIN
-  REFRESH MATERIALIZED VIEW CONCURRENTLY vw_period_movements;
-  RETURN 1;
-END $$;
