@@ -8,49 +8,50 @@
  * You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org. 
  */
 
-function createDistributionService(name, sharedDistributions) {
-  return ['$dialog', sharedDistributions, 'IndexedDB', function ($dialog, SharedDistributions, IndexedDB) {
+distributionModule.service('distributionService', function ($dialog, SharedDistributions, IndexedDB) {
 
-    var _this = this;
+  var _this = this;
 
-    this.applyNR = function (applyFunc) {
-      var dialogOpts = {
-        id: "distributionInitiated",
-        header: 'label.apply.nr.all',
-        body: 'message.apply.nr'
+  this.applyNR = function (applyFunc) {
+    var dialogOpts = {
+      id: "distributionInitiated",
+      header: 'label.apply.nr.all',
+      body: 'message.apply.nr'
+    };
+
+    var callback = function () {
+      return function (result) {
+        if (!result) return;
+
+        applyFunc();
+        _this.save(_this.distribution);
       };
-
-      var callback = function () {
-        return function (result) {
-          if (!result) return;
-
-          applyFunc();
-          _this.save(_this.distribution);
-        };
-      };
-
-      OpenLmisDialog.newDialog(dialogOpts, callback(), $dialog);
     };
 
-    this.isCached = function (distribution) {
-      return !!_.find(SharedDistributions.distributionList, function (cachedDistribution) {
-        return cachedDistribution.deliveryZone.id == distribution.deliveryZone.id &&
-          cachedDistribution.program.id == distribution.program.id &&
-          cachedDistribution.period.id == distribution.period.id;
-      });
-    };
+    OpenLmisDialog.newDialog(dialogOpts, callback(), $dialog);
+  };
 
-    this.save = function (distribution) {
-      IndexedDB.put(name, distribution, null, null, SharedDistributions.update);
-    };
+  this.isCached = function (distribution) {
+    return !!_this.get(distribution);
+  };
 
-    this.deleteDistribution = function (id) {
-      IndexedDB.delete(name, id, null, null, function () {
-        SharedDistributions.update();
-      });
-    };
-  }];
-}
+  this.get = function (distribution) {
+    return _.find(SharedDistributions.distributionList, function (cachedDistribution) {
+      return cachedDistribution.deliveryZone.id == distribution.deliveryZone.id &&
+        cachedDistribution.program.id == distribution.program.id &&
+        cachedDistribution.period.id == distribution.period.id;
+    });
+  };
 
-distributionModule.service('distributionService', createDistributionService('distributions', 'SharedDistributions'));
-distributionModule.service('reviewDistributionService', createDistributionService('reviewDistributions', 'ReviewSharedDistributions'));
+  this.save = function (distribution) {
+    IndexedDB.put('distributions', distribution, null, null, SharedDistributions.update);
+  };
+
+  this.deleteDistribution = function (id) {
+    IndexedDB.delete('distributions', id, null, null, function () {
+      SharedDistributions.update();
+    });
+  };
+});
+
+

@@ -126,6 +126,8 @@ public class ReviewDataService {
     item.setLastEdited(null);
     item.setEditedBy(null);
 
+    item.setFacilityId(value.getFacilityId());
+
     return item;
   }
 

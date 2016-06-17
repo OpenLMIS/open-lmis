@@ -8,7 +8,7 @@
  * You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org. 
  */
 
-function ReviewDataController($scope, SynchronizedDistributions, ReviewDataFilters, reviewDistributionService, $http) {
+function ReviewDataController($scope, SynchronizedDistributions, ReviewDataFilters, distributionService, $http, $location) {
   var empty = {};
 
   $scope.message = '';
@@ -69,19 +69,25 @@ function ReviewDataController($scope, SynchronizedDistributions, ReviewDataFilte
         return;
       }
 
-      reviewDistributionService.save(distribution);
+      distribution.review = {
+        edit: item.edit,
+        view: item.view
+      };
+
+      distributionService.save(distribution);
       $scope.message = message;
-      execute();
+      execute(distribution.id);
     }
 
-    function execute() {
-      alert(action);
+    function execute(distributionId) {
+      $location.path('/record-facility-data/' + distributionId + '/' + item.facilityId + '/visit-info/');
     }
 
-    if (!reviewDistributionService.isCached(distribution)) {
+    if (!distributionService.isCached(distribution)) {
       $http.post('/review-data/distribution.json', distribution).success(onSuccess).error(onFailure);
     } else {
-      execute();
+      distribution = distributionService.get(distribution);
+      execute(distribution.id);
     }
 
   };

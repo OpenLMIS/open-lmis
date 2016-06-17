@@ -18,7 +18,11 @@ function DistributionListController($scope, SharedDistributions, SyncFacilityDis
 
   SharedDistributions.update();
 
-  $scope.sharedDistributions = SharedDistributions;
+  $scope.getDistributions = function () {
+    return _.filter(SharedDistributions.distributionList, function (elem) {
+      return !elem.review;
+    });
+  };
 
   $scope.syncDistribution = function (distributionId) {
     $scope.syncMessage = null;
