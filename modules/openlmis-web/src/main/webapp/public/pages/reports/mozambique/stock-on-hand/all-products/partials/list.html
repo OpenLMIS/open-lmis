@@ -36,6 +36,7 @@
 
     <div id="report" ng-if="reportData" class="stock-on-hand-all">
         <h3 class="report-title" openlmis-message="subtitle.all.product.report|reportData[0].facilityName"></h3>
+        <h4 openlmis-message="label.report.data.total|reportData.length"></h4>
         <table class="table table-condensed table-bordered table-striped fixed-header-table header-table">
             <tr class="gradient-header">
                 <th ng-click="sortType = 'productName'; sortReverse = !sortReverse" class="sortable sort-desc"
