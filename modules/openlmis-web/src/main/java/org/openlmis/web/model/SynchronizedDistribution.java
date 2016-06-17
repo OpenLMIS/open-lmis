@@ -7,6 +7,8 @@ import lombok.NoArgsConstructor;
 import org.codehaus.jackson.annotate.JsonIgnoreProperties;
 import org.codehaus.jackson.annotate.JsonProperty;
 import org.codehaus.jackson.map.annotate.JsonSerialize;
+import org.openlmis.core.domain.DeliveryZone;
+import org.openlmis.core.domain.ProcessingPeriod;
 import org.openlmis.core.serializer.DateSerializer;
 import org.openlmis.core.serializer.DateTimeSerializer;
 
@@ -23,8 +25,8 @@ import static org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion.NON_EMPT
 public class SynchronizedDistribution {
 
     private String province;
-    private String deliveryZone;
-    private String period;
+    private DeliveryZone deliveryZone;
+    private ProcessingPeriod period;
 
     @JsonSerialize(using = DateSerializer.class)
     private Date initiated;

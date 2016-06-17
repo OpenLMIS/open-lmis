@@ -15,6 +15,7 @@ import org.openlmis.core.service.UserService;
 import org.openlmis.distribution.domain.Distribution;
 import org.openlmis.distribution.domain.FacilityDistribution;
 import org.openlmis.distribution.domain.FacilityVisit;
+import org.openlmis.distribution.dto.DistributionDTO;
 import org.openlmis.distribution.service.DistributionService;
 import org.openlmis.distribution.service.FacilityDistributionService;
 import org.openlmis.web.model.ReviewDataFilter;
@@ -98,12 +99,21 @@ public class ReviewDataService {
     return list;
   }
 
+  public DistributionDTO getDistribution(Distribution arg) {
+    Distribution distribution = distributionService.getFullSyncedDistribution(arg);
+    Map<Long, FacilityDistribution> facilityDistributionMap = facilityDistributionService.getData(distribution);
+
+    distribution.setFacilityDistributions(facilityDistributionMap);
+
+    return distribution.transform();
+  }
+
   private SynchronizedDistribution create(Long userId, Distribution distribution, FacilityDistribution value, FacilityVisit visit) {
     SynchronizedDistribution item = new SynchronizedDistribution();
 
     item.setProvince(value.getGeographicZone());
-    item.setDeliveryZone(distribution.getDeliveryZone().getName());
-    item.setPeriod(distribution.getPeriod().getName());
+    item.setDeliveryZone(distribution.getDeliveryZone());
+    item.setPeriod(distribution.getPeriod());
 
     item.setInitiated(distribution.getCreatedDate());
     item.setSync(visit.getSyncDate());
