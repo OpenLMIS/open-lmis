@@ -13,9 +13,15 @@ function StockOutAllProductsReportController($scope, $filter, $q, $controller, $
                         startTime: $scope.cache.get('startTime'),
                         endTime: $scope.cache.get('endTime')
                     });
-                    $scope.reportParams.facilityId = $scope.cache.get('dataOfStockOutReport').selectedFacility.id;
-                    $scope.reportParams.provinceId = $scope.cache.get('dataOfStockOutReport').selectedProvince.id;
-                    $scope.reportParams.districtId = $scope.cache.get('dataOfStockOutReport').selectedDistrict.id;
+                    if ($scope.cache.get('dataOfStockOutReport').selectedFacility !== undefined) {
+                        $scope.reportParams.facilityId = $scope.cache.get('dataOfStockOutReport').selectedFacility.id;
+                    }
+                    if ($scope.cache.get('dataOfStockOutReport').selectedProvince !== undefined) {
+                        $scope.reportParams.provinceId = $scope.cache.get('dataOfStockOutReport').selectedProvince.id;
+                    }
+                    if ($scope.cache.get('dataOfStockOutReport').selectedDistrict !== undefined) {
+                        $scope.reportParams.districtId = $scope.cache.get('dataOfStockOutReport').selectedDistrict.id;
+                    }
                     loadReportAction();
                 } else {
                     $timeout(waitSelectIsShow, 1000);
