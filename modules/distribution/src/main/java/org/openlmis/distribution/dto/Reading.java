@@ -32,10 +32,16 @@ import static org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion.NON_EMPT
 @JsonSerialize(include = NON_EMPTY)
 public class Reading {
 
+  private Reading original;
   private String value;
   private Boolean notRecorded;
 
   public Reading(String value, Boolean notRecorded) {
+    this(null, value, notRecorded);
+  }
+
+  public Reading(Reading original, String value, Boolean notRecorded) {
+    this.original = original;
     this.value = value;
     this.notRecorded = ((isBlank(value)) && (!notRecorded)) ? true : notRecorded;
   }
@@ -47,6 +53,8 @@ public class Reading {
       value = obj.toString();
       notRecorded = false;
     }
+
+    original = new Reading(value, notRecorded);
   }
 
   public String getEffectiveValue() {
