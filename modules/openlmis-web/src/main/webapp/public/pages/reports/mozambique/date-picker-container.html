@@ -52,13 +52,29 @@
                 <span openlmis-message="label.end.date"></span>
             </label>
 
-            <div class="stock-out-date-picker">
-                <input name="endTime" id="endTime" type="text"
-                       ui-date=datePickerEndOptions
-                       ui-date-format
-                       readonly
-                       ng-model="dateRange.endTime"/>
+            <div  ng-switch="pickerType">
+                <div ng-switch-when="period">
+                    <div class="stock-out-date-picker">
+                        <input name="endTime" type="text"
+                               ui-date=periodEndOptions
+                               ui-date-format
+                               readonly
+                               ng-model="dateRange.endTime"/>
+                    </div>
+                </div>
+
+
+                <div ng-switch-default>
+                    <div class="stock-out-date-picker">
+                        <input name="endTime" id="endTime" type="text"
+                               ui-date=datePickerEndOptions
+                               ui-date-format
+                               readonly
+                               ng-model="dateRange.endTime"/>
+                    </div>
+                </div>
             </div>
+
         </div>
     </div>
 </div>

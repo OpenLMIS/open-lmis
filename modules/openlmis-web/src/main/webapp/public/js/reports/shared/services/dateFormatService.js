@@ -12,6 +12,10 @@ services.factory('DateFormatService', function ($filter, messageService) {
         return $filter('date')(new Date(date.getFullYear(), date.getMonth(), 21), "yyyy-MM-dd");
     };
 
+    var formatDateWithEndDayOfPeriod = function (date) {
+        return $filter('date')(new Date(date.getFullYear(), date.getMonth(), 20), "yyyy-MM-dd");
+    };
+
     var formatDateWithLocale = function (dateString) {
         return formatDate(dateString, true);
     };
@@ -36,6 +40,7 @@ services.factory('DateFormatService', function ($filter, messageService) {
         formatDateWithLastDayOfMonth: formatDateWithLastDayOfMonth,
         formatDateWithLocale: formatDateWithLocale,
         formatDateWithLocaleNoDay: formatDateWithLocaleNoDay,
-        formatDateWithStartDayOfPeriod: formatDateWithStartDayOfPeriod
+        formatDateWithStartDayOfPeriod: formatDateWithStartDayOfPeriod,
+        formatDateWithEndDayOfPeriod: formatDateWithEndDayOfPeriod
     };
 });
