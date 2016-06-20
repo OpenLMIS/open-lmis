@@ -1,13 +1,29 @@
 <div class="time-container">
     <div id="time-tag-div">
-        <div class="time-tag">
-            <ul>
-                <li ng-repeat="timeTag in timeTags">
-                    <a ng-class="{'selected': timeTagSelected == timeTag}" ng-click=changeTimeOption(timeTag)
-                       openlmis-message="label.last.{{timeTag}}" href=""></a>
-                    <span>|</span>
-                </li>
-            </ul>
+        <div ng-switch="pickerType">
+            <div ng-switch-when="period">
+                <div class="time-tag">
+                    <ul>
+                        <li ng-repeat="periodTag in periodTags">
+                            <a ng-class="{'selected': periodTagSelected == periodTag}" ng-click=changePeriodOption(periodTag)
+                               openlmis-message="label.period.{{periodTag}}" href=""></a>
+                            <span>|</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <div ng-switch-default>
+                <div class="time-tag">
+                    <ul>
+                        <li ng-repeat="timeTag in timeTags">
+                            <a ng-class="{'selected': timeTagSelected == timeTag}" ng-click=changeTimeOption(timeTag)
+                               openlmis-message="label.last.{{timeTag}}" href=""></a>
+                            <span>|</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
         </div>
 
         <div ng-show="showIncompleteWarning" id="stock-out-incomplete-warning"

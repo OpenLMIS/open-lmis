@@ -19,13 +19,22 @@ function DatePickerContainerController($scope, $filter, DateFormatService) {
         todayDateString;
 
     $scope.timeTagSelected = "month";
+    $scope.periodTagSelected = "period";
 
     var timeOptions = {
         "month": new Date(),
         "3month": new Date().setMonth(currentDate.getMonth() - 2),
         "year": new Date().setMonth(currentDate.getMonth() - 11)
     };
+
+    var periodOptions = {
+        "period": defaultPeriodStartDate,
+        "3periods": new Date().setMonth(defaultPeriodStartDate.getMonth() - 2),
+        "year": new Date().setMonth(defaultPeriodStartDate.getMonth() - 11)
+    };
+
     $scope.timeTags = Object.keys(timeOptions);
+    $scope.periodTags = Object.keys(periodOptions);
     $scope.showDateRangeInvalidWarning = false;
 
     function baseTimePickerOptions() {
@@ -101,6 +110,12 @@ function DatePickerContainerController($scope, $filter, DateFormatService) {
         $scope.timeTagSelected = timeTag;
         $scope.dateRange.startTime = DateFormatService.formatDateWithFirstDayOfMonth(new Date(timeOptions[timeTag]));
         $scope.dateRange.endTime = todayDateString;
+    };
+
+    $scope.changePeriodOption = function (periodTag) {
+        $scope.periodTagSelected = periodTag;
+        $scope.dateRange.startTime = DateFormatService.formatDateWithStartDayOfPeriod(new Date(periodOptions[periodTag]));
+        $scope.dateRange.endTime = DateFormatService.formatDateWithEndDayOfPeriod(new Date(startTime.getFullYear(), startTime.getMonth()+1));
     };
 
     $scope.$on("update-date-pickers", function (event, range) {
