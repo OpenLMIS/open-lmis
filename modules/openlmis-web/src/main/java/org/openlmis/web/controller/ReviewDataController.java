@@ -38,7 +38,7 @@ public class ReviewDataController extends BaseController {
   }
 
   @RequestMapping(value = "review-data/distribution", method = POST, headers = ACCEPT_JSON)
-  @PreAuthorize("@distributionPermissionService.hasPermission(principal, 'MANAGE_DISTRIBUTION', #distribution)")
+  @PreAuthorize("@permissionEvaluator.hasPermission(principal, 'VIEW_SYNCHRONIZED_DATA, EDIT_SYNCHRONIZED_DATA')")
   public ResponseEntity<OpenLmisResponse> create(@RequestBody Distribution distribution) {
     OpenLmisResponse openLmisResponse = new OpenLmisResponse("distribution", reviewDataService.getDistribution(distribution));
     openLmisResponse.addData(SUCCESS, messageService.message("message.distribution.created.success",
