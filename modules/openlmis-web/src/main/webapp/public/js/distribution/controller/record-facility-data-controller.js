@@ -8,7 +8,7 @@
  * You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org. 
  */
 
-function RecordFacilityDataController($scope, $location, $routeParams, distributionService) {
+function RecordFacilityDataController($scope, $location, $routeParams, distributionService, AuthorizationService) {
   $scope.label = $routeParams.facility ? 'label.change.facility' : "label.select.facility";
 
   $scope.distribution = distributionService.distribution;
@@ -20,6 +20,8 @@ function RecordFacilityDataController($scope, $location, $routeParams, distribut
     return facility.geographicZone;
   });
   $scope.facilitySelected = $scope.distribution.facilityDistributions[$routeParams.facility];
+
+  $scope.hasPermission = AuthorizationService.hasPermission;
 
   $scope.format = function (dropDownObj) {
     if (dropDownObj.element[0].value) {
@@ -33,7 +35,33 @@ function RecordFacilityDataController($scope, $location, $routeParams, distribut
   };
 
   $scope.chooseFacility = function () {
-    if ($routeParams.facility != $scope.facilitySelected.facilityId)
+    if ($routeParams.facility != $scope.facilitySelected.facilityId) {
+      if (distributionService.distributionReview) {
+        distributionService.distributionReview.currentScreen = 'visit-info';
+      }
+
       $location.path('record-facility-data/' + $routeParams.distribution + '/' + $scope.facilitySelected.facilityId + '/visit-info');
+    }
+  };
+
+  function editMode(change) {
+    if (distributionService.distributionReview) {
+      if (change) {
+        distributionService.distributionReview.editMode[distributionService.distributionReview.currentScreen] ^= true;
+      }
+
+      return distributionService.distributionReview.editMode[distributionService.distributionReview.currentScreen];
+    }
+
+    return false;
+  }
+
+  $scope.toggleEditMode = function () {
+    var value = editMode(true);
+    $('[disable-form]').find('input, textarea').prop('disabled', function () { return !value; });
+  };
+
+  $scope.sync = function () {
+    alert('Sync ' + editMode(false));
   };
 }

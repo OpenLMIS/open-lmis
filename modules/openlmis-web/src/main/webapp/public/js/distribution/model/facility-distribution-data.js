@@ -54,10 +54,15 @@ function FacilityDistribution(facilityDistribution) {
 
   };
 
-  FacilityDistribution.prototype.isDisabled = function (tabName) {
+  FacilityDistribution.prototype.isDisabled = function (tabName, review) {
+    if (review) {
+      return !review.editMode[tabName || review.currentScreen];
+    }
+
     if ([DistributionStatus.SYNCED, DistributionStatus.DUPLICATE].indexOf(this.status) != -1) {
       return true;
     }
+
     return (this.facilityVisit.visited === false && ["refrigerators", "epi-inventory", "epi-use"].indexOf(tabName) != -1);
   };
 

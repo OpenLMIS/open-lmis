@@ -15,7 +15,7 @@
   src="'/public/pages/logistics/distribution/partials/record-facility-menu.html'"></ng-include>
 
 <div class="facility-info" ng-init="facilityData = distribution.facilityDistributions[selectedFacilityId]">
-<div id="coverageContainer" class="refrigerator-container" disable-form="{{facilityData.isDisabled()}}">
+<div id="coverageContainer" class="refrigerator-container" disable-form="{{facilityData.isDisabled(null, distributionReview)}}">
 <h3>
   <span id="adultHeader" openlmis-message="label.coverage.adult"></span>
   <input id="adultCoverageApplyNRToAll" type="button" ng-click="applyNRAll()" class="pull-right btn"

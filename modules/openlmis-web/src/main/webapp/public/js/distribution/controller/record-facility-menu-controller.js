@@ -14,6 +14,10 @@ function RecordFacilityMenuController($scope, $location, $routeParams, distribut
   $scope.distributionData = $scope.distribution.facilityDistributions[$routeParams.facility];
 
   $scope.changeRoute = function (routeName) {
+    if (distributionService.distributionReview) {
+      distributionService.distributionReview.currentScreen = routeName;
+    }
+
     $location.path($location.$$path.replace(getURLName(), routeName));
   };
 
