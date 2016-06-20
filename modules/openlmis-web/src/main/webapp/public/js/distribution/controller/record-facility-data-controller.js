@@ -47,10 +47,10 @@ function RecordFacilityDataController($scope, $location, $routeParams, distribut
   function editMode(change) {
     if (distributionService.distributionReview) {
       if (change) {
-        distributionService.distributionReview.editMode[distributionService.distributionReview.currentScreen] ^= true;
+        distributionService.distributionReview.editMode[$routeParams.facility][distributionService.distributionReview.currentScreen] ^= true;
       }
 
-      return distributionService.distributionReview.editMode[distributionService.distributionReview.currentScreen];
+      return distributionService.distributionReview.editMode[$routeParams.facility][distributionService.distributionReview.currentScreen];
     }
 
     return false;

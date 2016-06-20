@@ -87,25 +87,29 @@ function ReviewDataController($scope, SynchronizedDistributions, ReviewDataFilte
 
       distributionService.save(distribution, true);
       $scope.message = message;
-      execute(distribution.id);
+      execute(distribution);
     }
 
-    function execute(distributionId) {
+    function execute(distribution) {
       distributionService.distributionReview = {
         edit: item.edit,
         view: item.view,
         editMode: {}
       };
 
-      $http.post('/review-data/distribution/lastViewed', distributionId);
-      $location.path('/record-facility-data/' + distributionId + '/');
+      $.each(distribution.facilityDistributions, function (facilityId) {
+        distributionService.distributionReview.editMode[facilityId] = {};
+      });
+
+      $http.post('/review-data/distribution/lastViewed', distribution.id);
+      $location.path('/record-facility-data/' + distribution.id + '/');
     }
 
     if (!distributionService.isCached(distribution)) {
       $http.post('/review-data/distribution.json', distribution).success(onSuccess).error(onFailure);
     } else {
       distribution = distributionService.get(distribution);
-      execute(distribution.id);
+      execute(distribution);
     }
 
   };
