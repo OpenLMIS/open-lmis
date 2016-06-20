@@ -44,6 +44,7 @@ public class Distribution extends BaseModel {
   DistributionStatus status;
   Map<Long, FacilityDistribution> facilityDistributions;
   Date syncDate;
+  Date lastViewed;
 
   @SuppressWarnings("unused")
   public String getZpp() {

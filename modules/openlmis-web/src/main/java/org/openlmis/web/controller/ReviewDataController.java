@@ -1,6 +1,7 @@
 package org.openlmis.web.controller;
 
 import org.openlmis.distribution.domain.Distribution;
+import org.openlmis.distribution.service.DistributionService;
 import org.openlmis.web.model.ReviewDataFilter;
 import org.openlmis.web.response.OpenLmisResponse;
 import org.openlmis.web.service.ReviewDataService;
@@ -8,8 +9,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseStatus;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -24,6 +27,9 @@ public class ReviewDataController extends BaseController {
 
   @Autowired
   private ReviewDataService reviewDataService;
+
+  @Autowired
+  private DistributionService distributionService;
 
   @RequestMapping(value = "review-data/filters", method = GET, headers = ACCEPT_JSON)
   @PreAuthorize("@permissionEvaluator.hasPermission(principal, 'VIEW_SYNCHRONIZED_DATA, EDIT_SYNCHRONIZED_DATA')")
@@ -44,6 +50,13 @@ public class ReviewDataController extends BaseController {
     openLmisResponse.addData(SUCCESS, messageService.message("message.distribution.created.success",
         distribution.getDeliveryZone().getName(), distribution.getProgram().getName(), distribution.getPeriod().getName()));
     return openLmisResponse.response(OK);
+  }
+
+  @RequestMapping(value = "review-data/distribution/lastViewed", method = POST)
+  @PreAuthorize("@permissionEvaluator.hasPermission(principal, 'VIEW_SYNCHRONIZED_DATA, EDIT_SYNCHRONIZED_DATA')")
+  @ResponseStatus(OK)
+  public void updateLastViewed(@RequestBody Long distributionId) {
+    distributionService.updateLastViewed(distributionId);
   }
 
 }

@@ -50,6 +50,9 @@ public class DistributionRepository {
     }
   }
 
+  public void updateLastViewed(Long distributionId) {
+    mapper.updateLastViewed(distributionId);
+  }
 
   public List<Long> getSyncedPeriodsForDeliveryZoneAndProgram(Long zoneId, Long programId) {
     return mapper.getSyncedPeriodsForDeliveryZoneAndProgram(zoneId, programId);
