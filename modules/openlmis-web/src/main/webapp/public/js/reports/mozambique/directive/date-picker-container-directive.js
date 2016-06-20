@@ -3,7 +3,8 @@ function datePickerContainer(){
         restrict: 'E',
         controller: 'DatePickerContainerController',
         scope: {
-            getTimeRange: '&'
+            getTimeRange: '&',
+            pickerType: '@'
         },
         templateUrl:'date-picker-container.html'
     };

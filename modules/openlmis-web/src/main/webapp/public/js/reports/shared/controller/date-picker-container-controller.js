@@ -3,7 +3,9 @@ function DatePickerContainerController($scope, $filter, DateFormatService) {
     var todayDateString = $filter('date')(new Date(), "yyyy-MM-dd");
 
     $scope.dateRange = {};
-    $scope.dateRange.startTime = DateFormatService.formatDateWithFirstDayOfMonth(new Date());
+    $scope.dateRange.startTime = $scope.pickerType=="period" ?
+        DateFormatService.formatDateWithStartDayOfPeriod(new Date()) :
+        DateFormatService.formatDateWithFirstDayOfMonth(new Date());
     $scope.dateRange.endTime = todayDateString;
     $scope.timeTagSelected = "month";
 
@@ -28,6 +30,19 @@ function DatePickerContainerController($scope, $filter, DateFormatService) {
             }
         };
     }
+
+    $scope.periodStartOptions = angular.extend(baseTimePickerOptions(), {
+        maxDate: currentDate.getDate() < 21 ?  new Date(currentDate.getFullYear(), currentDate.getMonth(), 21): currentDate,
+        onClose: function () {
+            notHideCalendar();
+            $scope.timeTagSelected = "";
+            var selectedYear = $("#ui-datepicker-div .ui-datepicker-year :selected").val();
+            var selectedMonth = $("#ui-datepicker-div .ui-datepicker-month :selected").val();
+            $scope.$apply(function () {
+                $scope.dateRange.startTime = selectedMonth === null ? DateFormatService.formatDateWithStartDayOfPeriod(currentDate) : $filter('date')(new Date(selectedYear, selectedMonth, 21), "yyyy-MM-dd");
+            });
+        }
+    });
 
     $scope.datePickerStartOptions = angular.extend(baseTimePickerOptions(), {
         maxDate: currentDate,

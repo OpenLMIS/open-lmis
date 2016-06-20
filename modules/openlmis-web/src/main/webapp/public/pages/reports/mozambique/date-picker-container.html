@@ -14,20 +14,35 @@
              openlmis-message="label.stock.out.incomplete.warning"></div>
     </div>
 
-
     <div class="date-picker">
         <div class="form-cell">
             <label>
                 <span openlmis-message="label.start.date"></span>
             </label>
 
-            <div class="stock-out-date-picker">
-                <input name="startTime" id="startTime" type="text"
-                       ui-date=datePickerStartOptions
-                       ui-date-format
-                       readonly
-                       ng-model="dateRange.startTime"/>
+            <div ng-switch="pickerType">
+                <div ng-switch-when="period">
+                    <div class="stock-out-date-picker">
+                        <input name="startTime"  type="text"
+                               ui-date=periodStartOptions
+                               ui-date-format
+                               readonly
+                               ng-model="dateRange.startTime"
+                        />
+                    </div>
+                </div>
+
+                <div ng-switch-default>
+                    <div class="stock-out-date-picker">
+                        <input name="startTime" id="startTime" type="text"
+                               ui-date=datePickerStartOptions
+                               ui-date-format
+                               readonly
+                               ng-model="dateRange.startTime"/>
+                    </div>
+                </div>
             </div>
+
         </div>
 
         <div> -</div>
