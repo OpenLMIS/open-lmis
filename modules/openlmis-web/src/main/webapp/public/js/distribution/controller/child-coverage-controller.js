@@ -11,6 +11,7 @@
 function ChildCoverageController($scope, $routeParams, distributionService) {
 
   $scope.distribution = distributionService.distribution;
+  $scope.distributionReview = distributionService.distributionReview;
   $scope.selectedFacilityId = $routeParams.facility;
   $scope.childCoverage = $scope.distribution.facilityDistributions[$scope.selectedFacilityId].childCoverage;
 

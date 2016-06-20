@@ -12,7 +12,11 @@ function FacilityVisit(facilityVisitJson) {
   $.extend(true, this, facilityVisitJson);
   var mandatoryList = ['verifiedBy', 'confirmedBy', 'visitDate'];
 
-  FacilityVisit.prototype.computeStatus = function () {
+  FacilityVisit.prototype.computeStatus = function (review) {
+    if (review) {
+      return DistributionStatus.SYNCED;
+    }
+
     if (isUndefined(this.visited)) {
       return DistributionStatus.EMPTY;
     }

@@ -19,6 +19,7 @@ import org.openlmis.distribution.repository.mapper.DistributionMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -43,6 +44,10 @@ public class DistributionRepository {
 
   public void updateDistributionStatus(Long distributionId, DistributionStatus status, Long modifiedBy) {
     mapper.updateDistributionStatus(distributionId, status, modifiedBy);
+
+    if (status == DistributionStatus.SYNCED) {
+      mapper.updateSyncDate(distributionId);
+    }
   }
 
 

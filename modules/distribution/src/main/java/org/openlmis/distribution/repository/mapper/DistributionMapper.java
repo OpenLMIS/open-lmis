@@ -12,9 +12,6 @@ package org.openlmis.distribution.repository.mapper;
 
 
 import org.apache.ibatis.annotations.*;
-import org.openlmis.core.domain.DeliveryZone;
-import org.openlmis.core.domain.ProcessingPeriod;
-import org.openlmis.core.domain.Program;
 import org.openlmis.distribution.domain.Distribution;
 import org.openlmis.distribution.domain.DistributionStatus;
 import org.springframework.stereotype.Repository;
@@ -47,6 +44,9 @@ public interface DistributionMapper {
 
   @Update({"UPDATE distributions SET status =  #{status}, modifiedBy = #{modifiedBy}, modifiedDate = DEFAULT WHERE id = #{id}"})
   void updateDistributionStatus(@Param("id") Long id, @Param("status") DistributionStatus status, @Param("modifiedBy") Long modifiedBy);
+
+  @Update({"UPDATE distributions SET syncDate = CURRENT_TIMESTAMP WHERE id = #{id} AND syncDate IS NULL"})
+  void updateSyncDate(@Param("id") Long id);
 
   @Select({"SELECT periodId from distributions where deliveryZoneId = #{deliveryZoneId} AND programId = #{programId} and status = 'SYNCED'"})
   List<Long> getSyncedPeriodsForDeliveryZoneAndProgram(@Param("deliveryZoneId") Long deliveryZoneId, @Param("programId") Long programId);

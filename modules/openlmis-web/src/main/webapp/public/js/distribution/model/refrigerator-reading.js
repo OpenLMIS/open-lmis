@@ -12,7 +12,10 @@ function RefrigeratorReading(facilityVisitId, refrigeratorReading) {
 
   var fieldList = ['temperature', 'functioningCorrectly', 'lowAlarmEvents', 'highAlarmEvents', 'problemSinceLastTime'];
 
-  RefrigeratorReading.prototype.computeStatus = function () {
+  RefrigeratorReading.prototype.computeStatus = function (review) {
+    if (review) {
+      return DistributionStatus.SYNCED;
+    }
 
     var statusClass = DistributionStatus.COMPLETE;
     var _this = this;

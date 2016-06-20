@@ -53,10 +53,13 @@ public class ChildCoverageLineItem extends CoverageLineItem {
     dto.setCreatedDate(createdDate);
     dto.setModifiedBy(modifiedBy);
     dto.setModifiedDate(modifiedDate);
+    dto.setVaccination(vaccination);
     dto.setHealthCenter11Months(new Reading(healthCenter11Months));
     dto.setHealthCenter23Months(new Reading(healthCenter23Months));
     dto.setOutreach11Months(new Reading(outreach11Months));
     dto.setOutreach23Months(new Reading(outreach23Months));
+    dto.setFacilityVisitId(facilityVisitId);
+    dto.setTargetGroup(targetGroup);
 
     return dto;
   }

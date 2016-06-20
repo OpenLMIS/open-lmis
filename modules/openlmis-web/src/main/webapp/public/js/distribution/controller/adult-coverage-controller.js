@@ -10,6 +10,7 @@
 
 function AdultCoverageController($scope, $routeParams, distributionService) {
   $scope.distribution = distributionService.distribution;
+  $scope.distributionReview = distributionService.distributionReview;
   $scope.selectedFacilityId = $routeParams.facility;
   $scope.adultCoverage = $scope.distribution.facilityDistributions[$scope.selectedFacilityId].adultCoverage;
 

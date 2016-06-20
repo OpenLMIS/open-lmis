@@ -30,7 +30,11 @@ function EpiInventory(epiInventory) {
     return (!isUndefined(lineItem[field].value) || lineItem[field].notRecorded);
   }
 
-  EpiInventory.prototype.computeStatus = function (visited) {
+  EpiInventory.prototype.computeStatus = function (visited, review) {
+    if (review) {
+      return DistributionStatus.SYNCED;
+    }
+
     if (visited === false) {
       return DistributionStatus.COMPLETE;
     }
