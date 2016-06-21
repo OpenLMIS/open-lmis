@@ -8,7 +8,7 @@
  * You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org. 
  */
 
-function RecordFacilityDataController($scope, $location, $routeParams, distributionService, AuthorizationService, $dialog) {
+function RecordFacilityDataController($scope, $location, $routeParams, distributionService, AuthorizationService, $dialog, $http) {
   $scope.label = $routeParams.facility ? 'label.change.facility' : "label.select.facility";
 
   $scope.distribution = distributionService.distribution;
