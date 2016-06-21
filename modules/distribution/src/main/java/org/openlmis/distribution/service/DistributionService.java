@@ -104,4 +104,8 @@ public class DistributionService {
   public List<DistributionEdit> getEditInProgress(Long distributionId, Long userId, Long periodInSeconds) {
     return repository.getEditInProgress(distributionId, userId, periodInSeconds);
   }
+
+  public void deleteDistributionEdit(Long distributionId, Long userId) {
+    repository.deleteDistributionEdit(distributionId, userId);
+  }
 }

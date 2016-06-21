@@ -73,7 +73,9 @@ public class ReviewDataController extends BaseController {
 
   @RequestMapping(value = "review-data/distribution/sync", method = POST, headers = ACCEPT_JSON)
   @PreAuthorize("@permissionEvaluator.hasPermission(principal, 'VIEW_SYNCHRONIZED_DATA, EDIT_SYNCHRONIZED_DATA')")
-  public ResponseEntity<OpenLmisResponse> sync(@RequestBody DistributionDTO distribution) {
+  public ResponseEntity<OpenLmisResponse> sync(@RequestBody DistributionDTO distribution, HttpServletRequest request) {
+    reviewDataService.deleteDistributionEdit(distribution.getId(), loggedInUserId(request));
+
     try {
       OpenLmisResponse response = new OpenLmisResponse();
       response.addData(SUCCESS, "");
