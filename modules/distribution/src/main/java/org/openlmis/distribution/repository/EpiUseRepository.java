@@ -40,4 +40,8 @@ public class EpiUseRepository {
     List<EpiUseLineItem> epiUseLineItems = mapper.getBy(facilityVisitId);
     return new EpiUse(epiUseLineItems);
   }
+
+  public EpiUseLineItem getLineById(Long id) {
+    return mapper.getLineById(id);
+  }
 }

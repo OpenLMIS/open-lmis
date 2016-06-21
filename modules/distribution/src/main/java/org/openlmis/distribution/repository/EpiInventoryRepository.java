@@ -39,4 +39,12 @@ public class EpiInventoryRepository {
   public EpiInventory getBy(Long facilityVisitId) {
     return new EpiInventory(mapper.getLineItemsBy(facilityVisitId));
   }
+
+  public EpiInventoryLineItem getById(Long id) {
+    return mapper.getById(id);
+  }
+
+  public void save(EpiInventoryLineItem line) {
+    mapper.updateLineItem(line);
+  }
 }
