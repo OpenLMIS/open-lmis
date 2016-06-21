@@ -67,9 +67,15 @@ public class EpiInventoryLineItem extends BaseModel {
     dto.setModifiedBy(modifiedBy);
     dto.setModifiedDate(modifiedDate);
     dto.setFacilityVisitId(facilityVisitId);
+    dto.setIdealQuantity(idealQuantity);
+    dto.setIdealQuantityByPackSize(idealQuantityByPackSize);
     dto.setExistingQuantity(new Reading(existingQuantity));
     dto.setSpoiledQuantity(new Reading(spoiledQuantity));
     dto.setDeliveredQuantity(deliveredQuantity);
+    dto.setProgramProductId(programProductId);
+    dto.setProductCode(productCode);
+    dto.setProductName(productName);
+    dto.setProductDisplayOrder(productDisplayOrder);
 
     return dto;
   }
