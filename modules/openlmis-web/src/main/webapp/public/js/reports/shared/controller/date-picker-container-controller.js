@@ -8,13 +8,13 @@ function DatePickerContainerController($scope, $filter, DateFormatService) {
         new Date(currentDate.getFullYear(), currentDate.getMonth() - 1, 21) :
         new Date(currentDate.getFullYear(), currentDate.getMonth(), 21);
 
-    $scope.dateRange.startTime = $scope.pickerType=="period" ?
+    $scope.dateRange.startTime = $scope.pickerType === "period" ?
         DateFormatService.formatDateWithStartDayOfPeriod(defaultPeriodStartDate) :
         DateFormatService.formatDateWithFirstDayOfMonth(new Date());
 
     var startTime = new Date($scope.dateRange.startTime);
 
-    $scope.dateRange.endTime = $scope.pickerType=="period" ?
+    $scope.dateRange.endTime = $scope.pickerType === "period" ?
         DateFormatService.formatDateWithEndDayOfPeriod(new Date(startTime.getFullYear(), startTime.getMonth()+1)) :
         todayDateString;
 
