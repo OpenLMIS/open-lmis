@@ -47,6 +47,13 @@ public class EpiInventoryLineItemDTO extends BaseModel {
   private String productName;
   private Integer productDisplayOrder;
 
+  public EpiInventoryLineItemDTO(Long facilityVisitId, Reading existingQuantity, Reading spoiledQuantity, Integer deliveredQuantity) {
+    this.facilityVisitId = facilityVisitId;
+    this.existingQuantity = existingQuantity;
+    this.spoiledQuantity = spoiledQuantity;
+    this.deliveredQuantity = deliveredQuantity;
+  }
+
   public EpiInventoryLineItem transform() {
     EpiInventoryLineItem lineItem = new EpiInventoryLineItem(this.facilityVisitId,
       this.existingQuantity.parsePositiveInt(),
