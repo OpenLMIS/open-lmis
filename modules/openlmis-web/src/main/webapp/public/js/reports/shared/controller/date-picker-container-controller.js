@@ -39,7 +39,7 @@ function DatePickerContainerController($scope, $filter, DateFormatService) {
 
     function baseTimePickerOptions() {
         return {
-            dateFormat: 'yy-mm-dd',
+            dateFormat: 'dd/mm/yy',
             changeYear: true,
             changeMonth: true,
             showMonthAfterYear: true,
