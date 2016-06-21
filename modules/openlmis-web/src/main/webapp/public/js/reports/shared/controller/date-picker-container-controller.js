@@ -1,4 +1,4 @@
-function DatePickerContainerController($scope, $filter, DateFormatService) {
+function DatePickerContainerController($scope, $filter, DateFormatService, messageService) {
     var currentDate = new Date();
     var todayDateString = $filter('date')(new Date(), "yyyy-MM-dd");
 
@@ -51,8 +51,22 @@ function DatePickerContainerController($scope, $filter, DateFormatService) {
         };
     }
 
+    var monthNamesForStartPeriod = [];
+    var monthNamesForEndPeriod = [];
+    var monthNumbers = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
+
+    monthNumbers.forEach(function (month) {
+        var monthNamesString = messageService.get("month.abbr." + month);
+
+        monthNamesForStartPeriod.push("21 " + monthNamesString);
+        monthNamesForEndPeriod.push("20 " + monthNamesString);
+    });
+
+
     $scope.periodStartOptions = angular.extend(baseTimePickerOptions(), {
         maxDate: defaultPeriodStartDate,
+        showMonthAfterYear: false,
+        monthNamesShort: monthNamesForStartPeriod,
         onClose: function () {
             notHideCalendar();
             $scope.timeTagSelected = "";
@@ -67,6 +81,8 @@ function DatePickerContainerController($scope, $filter, DateFormatService) {
     });
 
     $scope.periodEndOptions = angular.extend(baseTimePickerOptions(), {
+        showMonthAfterYear: false,
+        monthNamesShort: monthNamesForEndPeriod,
         onClose: function () {
             notHideCalendar();
             $scope.timeTagSelected = "";
