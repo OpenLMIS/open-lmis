@@ -14,6 +14,7 @@ import org.openlmis.core.domain.DeliveryZone;
 import org.openlmis.core.domain.ProcessingPeriod;
 import org.openlmis.core.domain.Program;
 import org.openlmis.distribution.domain.Distribution;
+import org.openlmis.distribution.domain.DistributionEdit;
 import org.openlmis.distribution.domain.DistributionStatus;
 import org.openlmis.distribution.repository.mapper.DistributionMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -84,5 +85,17 @@ public class DistributionRepository {
     }
 
     return mapper.getFullSyncedDistributionsForProgram(program.getId());
+  }
+
+  public void insertEditInProgress(Long userId, Long distributionId) {
+    DistributionEdit edit = mapper.getEditInProgressForUser(distributionId, userId);
+
+    if (null == edit) {
+      mapper.insertEditInProgress(userId, distributionId);
+    }
+  }
+
+  public List<DistributionEdit> getEditInProgress(Long distributionId, Long userId, Long periodInSeconds) {
+    return mapper.getEditInProgress(distributionId, userId, periodInSeconds);
   }
 }

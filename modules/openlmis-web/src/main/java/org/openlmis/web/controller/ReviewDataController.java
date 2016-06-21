@@ -1,12 +1,14 @@
 package org.openlmis.web.controller;
 
 import org.openlmis.distribution.domain.Distribution;
+import org.openlmis.distribution.domain.DistributionEdit;
 import org.openlmis.distribution.dto.DistributionDTO;
 import org.openlmis.distribution.service.DistributionService;
 import org.openlmis.web.model.ReviewDataFilter;
 import org.openlmis.web.response.OpenLmisResponse;
 import org.openlmis.web.service.ReviewDataService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
@@ -16,6 +18,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
 import javax.servlet.http.HttpServletRequest;
+
+import java.util.List;
 
 import static org.openlmis.web.response.OpenLmisResponse.SUCCESS;
 import static org.openlmis.web.response.OpenLmisResponse.response;
@@ -45,10 +49,23 @@ public class ReviewDataController extends BaseController {
     return response("list", reviewDataService.get(filter, loggedInUserId(request)));
   }
 
-  @RequestMapping(value = "review-data/distribution", method = POST, headers = ACCEPT_JSON)
+  @RequestMapping(value = "review-data/distribution/check", method = POST, headers = ACCEPT_JSON)
   @PreAuthorize("@permissionEvaluator.hasPermission(principal, 'VIEW_SYNCHRONIZED_DATA, EDIT_SYNCHRONIZED_DATA')")
-  public ResponseEntity<OpenLmisResponse> create(@RequestBody Distribution distribution) {
-    OpenLmisResponse openLmisResponse = new OpenLmisResponse("distribution", reviewDataService.getDistribution(distribution));
+  public ResponseEntity<OpenLmisResponse> check(@RequestBody Distribution distribution, HttpServletRequest request) {
+    DistributionEdit distributionEdit = reviewDataService.checkInProgress(distribution, loggedInUserId(request));
+    OpenLmisResponse response = new OpenLmisResponse();
+
+    if (null != distributionEdit) {
+      response.addData("inProgress", distributionEdit);
+    }
+
+    return response.response(OK);
+  }
+
+  @RequestMapping(value = "review-data/distribution/get", method = POST, headers = ACCEPT_JSON)
+  @PreAuthorize("@permissionEvaluator.hasPermission(principal, 'VIEW_SYNCHRONIZED_DATA, EDIT_SYNCHRONIZED_DATA')")
+  public ResponseEntity<OpenLmisResponse> getDistribution(@RequestBody Distribution distribution, HttpServletRequest request) {
+    OpenLmisResponse openLmisResponse = new OpenLmisResponse("distribution", reviewDataService.getDistribution(distribution, loggedInUserId(request)));
     openLmisResponse.addData(SUCCESS, messageService.message("message.distribution.created.success",
         distribution.getDeliveryZone().getName(), distribution.getProgram().getName(), distribution.getPeriod().getName()));
     return openLmisResponse.response(OK);
