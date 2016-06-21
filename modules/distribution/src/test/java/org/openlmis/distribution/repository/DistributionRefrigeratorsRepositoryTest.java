@@ -10,6 +10,7 @@
 
 package org.openlmis.distribution.repository;
 
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
@@ -25,6 +26,7 @@ import static org.mockito.Mockito.*;
 
 @Category(UnitTests.class)
 @RunWith(MockitoJUnitRunner.class)
+@Ignore
 public class DistributionRefrigeratorsRepositoryTest {
 
   @InjectMocks
