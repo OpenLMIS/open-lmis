@@ -10,7 +10,7 @@
 
 CREATE TABLE distributions_edit_history (
   distributionId    INTEGER NOT NULL REFERENCES distributions (id),
-  district          VARCHAR(500) NOT NULL
+  district          VARCHAR(500) NOT NULL,
   facilityId        INTEGER NOT NULL REFERENCES facilities (id),
   dataScreen        VARCHAR(500) NOT NULL,
   editedItem        VARCHAR(500) NOT NULL,
