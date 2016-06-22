@@ -44,17 +44,20 @@ public class RefrigeratorReadingDTO extends BaseModel {
   Reading lowAlarmEvents;
   Reading highAlarmEvents;
   Reading problemSinceLastTime;
-  RefrigeratorProblem problems;
+  RefrigeratorProblemDTO problems;
   String notes;
 
   public RefrigeratorReading transform() {
     refrigerator.setModifiedBy(this.modifiedBy);
     refrigerator.setCreatedBy(this.createdBy);
     refrigerator.validate();
+
+    RefrigeratorProblem problem = problems.transform();
+
     if ("N".equalsIgnoreCase(functioningCorrectly.getEffectiveValue())) {
-      problems.validate();
+      problem.validate();
     } else {
-      problems = null;
+      problem = new RefrigeratorProblem();
     }
 
     RefrigeratorReading reading = new RefrigeratorReading(this.refrigerator, this.facilityVisitId,
@@ -63,7 +66,7 @@ public class RefrigeratorReadingDTO extends BaseModel {
       this.lowAlarmEvents.parsePositiveInt(),
       this.highAlarmEvents.parsePositiveInt(),
       this.problemSinceLastTime.getEffectiveValue(),
-      this.problems,
+      problem,
       this.notes);
     reading.setCreatedBy(this.createdBy);
     reading.setModifiedBy(this.modifiedBy);

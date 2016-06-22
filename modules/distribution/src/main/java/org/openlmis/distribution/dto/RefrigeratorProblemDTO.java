@@ -8,7 +8,7 @@
  *  You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org.
  */
 
-package org.openlmis.distribution.domain;
+package org.openlmis.distribution.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -17,11 +17,8 @@ import lombok.NoArgsConstructor;
 import org.codehaus.jackson.annotate.JsonIgnoreProperties;
 import org.codehaus.jackson.map.annotate.JsonSerialize;
 import org.openlmis.core.domain.BaseModel;
-import org.openlmis.core.exception.DataException;
-import org.openlmis.distribution.dto.Reading;
-import org.openlmis.distribution.dto.RefrigeratorProblemDTO;
+import org.openlmis.distribution.domain.RefrigeratorProblem;
 
-import static org.apache.commons.lang3.BooleanUtils.isTrue;
 import static org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion.NON_EMPTY;
 
 /**
@@ -35,39 +32,34 @@ import static org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion.NON_EMPT
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonSerialize(include = NON_EMPTY)
 @EqualsAndHashCode(callSuper = false)
-public class RefrigeratorProblem extends BaseModel {
+public class RefrigeratorProblemDTO extends BaseModel {
 
   Long readingId;
-  Boolean operatorError;
-  Boolean burnerProblem;
-  Boolean gasLeakage;
-  Boolean egpFault;
-  Boolean thermostatSetting;
-  Boolean other;
-  String otherProblemExplanation;
+  Reading operatorError;
+  Reading burnerProblem;
+  Reading gasLeakage;
+  Reading egpFault;
+  Reading thermostatSetting;
+  Reading other;
+  Reading otherProblemExplanation;
 
-  public void validate() {
-    if (!(isTrue(operatorError) || isTrue(burnerProblem) || isTrue(gasLeakage) || isTrue(egpFault) || isTrue(thermostatSetting) || isTrue(other))) {
-      throw new DataException("error.invalid.reading.value");
-    }
+  public RefrigeratorProblem transform() {
+    RefrigeratorProblem problem = new RefrigeratorProblem();
+    problem.setId(id);
+    problem.setCreatedBy(createdBy);
+    problem.setCreatedDate(createdDate);
+    problem.setModifiedBy(modifiedBy);
+    problem.setModifiedDate(modifiedDate);
+    problem.setReadingId(readingId);
+    problem.setOperatorError(operatorError.parseBoolean());
+    problem.setBurnerProblem(burnerProblem.parseBoolean());
+    problem.setGasLeakage(gasLeakage.parseBoolean());
+    problem.setEgpFault(egpFault.parseBoolean());
+    problem.setThermostatSetting(thermostatSetting.parseBoolean());
+    problem.setOther(other.parseBoolean());
+    problem.setOtherProblemExplanation(otherProblemExplanation.getEffectiveValue());
+
+    return problem;
   }
 
-  public RefrigeratorProblemDTO transform() {
-    RefrigeratorProblemDTO dto = new RefrigeratorProblemDTO();
-    dto.setId(id);
-    dto.setCreatedBy(createdBy);
-    dto.setCreatedDate(createdDate);
-    dto.setModifiedBy(modifiedBy);
-    dto.setModifiedDate(modifiedDate);
-    dto.setReadingId(readingId);
-    dto.setOperatorError(new Reading(operatorError));
-    dto.setBurnerProblem(new Reading(burnerProblem));
-    dto.setGasLeakage(new Reading(gasLeakage));
-    dto.setEgpFault(new Reading(egpFault));
-    dto.setThermostatSetting(new Reading(thermostatSetting));
-    dto.setOther(new Reading(other));
-    dto.setOtherProblemExplanation(new Reading(otherProblemExplanation));
-
-    return dto;
-  }
 }

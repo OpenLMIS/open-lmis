@@ -18,7 +18,6 @@ import lombok.NoArgsConstructor;
 import org.codehaus.jackson.annotate.JsonIgnoreProperties;
 import org.codehaus.jackson.map.annotate.JsonSerialize;
 import org.openlmis.core.domain.BaseModel;
-import org.openlmis.distribution.domain.Facilitator;
 import org.openlmis.distribution.domain.FacilityVisit;
 import org.openlmis.distribution.domain.ReasonForNotVisiting;
 
@@ -39,8 +38,8 @@ public class FacilityVisitDTO extends BaseModel {
   private Long facilityId;
   private Long facilityCatchmentPopulation;
 
-  private Facilitator confirmedBy;
-  private Facilitator verifiedBy;
+  private FacilitatorDTO confirmedBy;
+  private FacilitatorDTO verifiedBy;
   private Reading observations;
 
   private Reading visitDate;
@@ -53,8 +52,8 @@ public class FacilityVisitDTO extends BaseModel {
   private Reading synced;
 
   public FacilityVisit transform() {
-    Facilitator confirmedBy = Optional.fromNullable(this.confirmedBy).or(new Facilitator());
-    Facilitator verifiedBy = Optional.fromNullable(this.verifiedBy).or(new Facilitator());
+    FacilitatorDTO confirmedBy = Optional.fromNullable(this.confirmedBy).or(new FacilitatorDTO());
+    FacilitatorDTO verifiedBy = Optional.fromNullable(this.verifiedBy).or(new FacilitatorDTO());
     String observations = Optional.fromNullable(this.observations).or(Reading.EMPTY).getEffectiveValue();
     Date visitDate = Optional.fromNullable(this.visitDate).or(Reading.EMPTY).parseDate();
     Boolean visited = Optional.fromNullable(this.visited).or(Reading.EMPTY).parseBoolean();
@@ -78,8 +77,8 @@ public class FacilityVisitDTO extends BaseModel {
     facilityVisit.setDistributionId(distributionId);
     facilityVisit.setFacilityId(facilityId);
 
-    facilityVisit.setConfirmedBy(confirmedBy);
-    facilityVisit.setVerifiedBy(verifiedBy);
+    facilityVisit.setConfirmedBy(confirmedBy.transform());
+    facilityVisit.setVerifiedBy(verifiedBy.transform());
     facilityVisit.setObservations(observations);
 
     facilityVisit.setVisitDate(visitDate);

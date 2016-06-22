@@ -28,11 +28,19 @@ public class DistributionRefrigeratorsRepository {
   private DistributionRefrigeratorsMapper mapper;
 
 
-  public void saveReading(RefrigeratorReading reading) {
+  public void saveReading(RefrigeratorReading reading, boolean withProblem) {
     if (null != reading.getId()) {
-      updateReading(reading);
+      updateReading(reading, withProblem);
     } else {
-      insertReading(reading);
+      insertReading(reading, withProblem);
+    }
+  }
+
+  public void saveProblem(RefrigeratorProblem problem) {
+    if (null != problem.getId()) {
+      mapper.updateProblem(problem);
+    } else {
+      mapper.insertProblem(problem);
     }
   }
 
@@ -41,27 +49,35 @@ public class DistributionRefrigeratorsRepository {
   }
 
   public RefrigeratorReading getReading(Long id) {
-    return mapper.getReading(id);
+    RefrigeratorReading reading = mapper.getReading(id);
+
+    if (reading.getProblem() == null) {
+      reading.setProblem(new RefrigeratorProblem());
+    }
+
+    return reading;
   }
 
-  private void insertReading(RefrigeratorReading reading) {
+  public RefrigeratorProblem getProblem(Long id) {
+    return mapper.getProblem(id);
+  }
+
+  private void insertReading(RefrigeratorReading reading, boolean withProblem) {
     mapper.insertReading(reading);
 
-    RefrigeratorProblem problem = reading.getProblem();
-    if (problem != null) {
+    if (withProblem) {
+      RefrigeratorProblem problem = reading.getProblem();
       problem.setReadingId(reading.getId());
       mapper.insertProblem(problem);
     }
   }
 
-  private void updateReading(RefrigeratorReading reading) {
+  private void updateReading(RefrigeratorReading reading, boolean withProblem) {
     mapper.updateReading(reading);
 
-    RefrigeratorProblem problem = reading.getProblem();
-    if (problem != null) {
+    if (withProblem) {
+      RefrigeratorProblem problem = reading.getProblem();
       mapper.updateProblem(problem);
-    } else {
-      mapper.deleteProblem(reading.getId());
     }
   }
 }
