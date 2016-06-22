@@ -62,16 +62,37 @@ function RecordFacilityDataController($scope, $location, $routeParams, distribut
   };
 
   function onSuccess(data) {
-    $scope.message = data.success;
-  }
+    var results = data.results;
 
-  function onFailure(data) {
-    $scope.error = data.error;
+    if (results.conflict) {
+      if (!$scope.syncResults.conflicts[results.facilityId]) {
+        $scope.syncResults.conflicts[results.facilityId] = {};
+      }
+
+      $.each(results.details, function (ignore, elem) {
+        if (!$scope.syncResults.conflicts[results.facilityId][elem.dataScreenUI]) {
+          $scope.syncResults.conflicts[results.facilityId][elem.dataScreenUI] = [];
+        }
+
+        $scope.syncResults.conflicts[results.facilityId][elem.dataScreenUI].push(elem);
+        $scope.syncResults.length += 1;
+      });
+    }
   }
 
   function syncCallback(result) {
+    var distributionId = $scope.distribution.id;
+    var url = '/review-data/distribution/' + distributionId + '/sync.json';
+
+    $scope.syncResults = {
+      conflicts: {},
+      length: 0
+    };
+
     if (result) {
-      $http.post('/review-data/distribution/sync.json', $scope.distribution).success(onSuccess).error(onFailure);
+      $.each($scope.distribution.facilityDistributions, function (ignore, facilityDistribution) {
+        $http.post(url, $scope.facilityDistribution).success(onSuccess);
+      });
     }
   }
 
@@ -84,4 +105,45 @@ function RecordFacilityDataController($scope, $location, $routeParams, distribut
 
     OpenLmisDialog.newDialog(dialogOpts, syncCallback, $dialog);
   };
+
+  $scope.abandonAll = function () {
+    $scope.syncResults = {
+      conflicts: {},
+      length: 0
+    };
+  };
+
+  $scope.abandon = function (facility, dataScreenUI, detail) {
+    var idx = $scope.syncResults.conflicts[facility][dataScreenUI].indexOf(detail);
+
+    $scope.syncResults.length -= 1;
+
+    if (idx >= 0) {
+      $scope.syncResults.conflicts[facility][dataScreenUI].splice(idx, 1);
+    }
+  };
+
+  function forceSync(facility, dataScreenUI, detail) {
+    var distributionId = $scope.distribution.id;
+    var url = '/review-data/distribution/' + distributionId + '/force-sync.json';
+
+    $http.post(url, detail).success(function () {
+      $scope.abandon(facility, dataScreenUI, detail);
+    });
+  }
+
+  $scope.forceSyncAll = function () {
+    $.each($scope.syncResults, function (facility, conflicts) {
+      $.each(conflicts, function (dataScreenUI, details) {
+        $.each(details, function (ignore, detail) {
+          forceSync(facility, dataScreenUI, detail);
+        });
+      });
+    });
+  };
+
+  $scope.forceSync = function (facility, dataScreenUI, detail) {
+    forceSync(facility, dataScreenUI, detail);
+  };
+
 }

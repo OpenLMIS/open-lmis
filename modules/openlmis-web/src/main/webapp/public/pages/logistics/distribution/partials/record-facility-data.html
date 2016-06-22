@@ -86,6 +86,70 @@
             </div>
         </div>
     </div>
+
+    <!-- sync conflict modal -->
+
+    <div id="synchronizationConflictModal" show="syncResults.length" modal="syncResults.length" options="{'backdrop':'static', 'escape':false}">
+        <div class="modal-header">
+            <h3>
+                <span openlmis-message="label.distribution.synchronization.conflict"></span>
+            </h3>
+        </div>
+
+        <div class="modal-body">
+            <div ng-repeat="(facility, conflicts) in syncResults.conflicts">
+                <div class="row-fluid info-box">
+                    <div class="info-box-labels">
+                        <strong openlmis-message="label.coverage.health.center"></strong>
+                        <span> :&nbsp;</span>
+                        <span openlmis-message="distribution.facilityDistributions[facility].facilityName"></span>
+                    </div>
+                </div>
+                <div ng-repeat="(dataScreenUI, details) in conflicts">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th colspan="5">
+                                    <strong openlmis-message="label.distribution.history.header.data.screen"></strong>
+                                    <span> :&nbsp;</span>
+                                    <span openlmis-message="dataScreenUI"></span>
+                                </th>
+                            </tr>
+                            <tr>
+                                <th openlmis-message="label.distribution.history.header.edited.item"></th>
+                                <th openlmis-message="label.distribution.history.header.current.value"></th>
+                                <th openlmis-message="label.distribution.history.header.old.value"></th>
+                                <th openlmis-message="label.distribution.history.header.new.value"></th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr ng-repeat="detail in details">
+                                <td class="span2">{{detail.editedItem}}</td>
+                                <td class="span2">{{detail.originalValue}}</td>
+                                <td class="span2">{{detail.previousValue}}</td>
+                                <td class="span2">{{detail.newValue}}</td>
+                                <td class="span2">
+                                    <a class="btn btn-primary" ng-href="abandon(facility, dataScreenUI, detail)">
+                                        <span openlmis-message="button.abandon"></span>
+                                    </a>
+                                    <a class="btn btn-primary" ng-href="forceSync(facility, dataScreenUI, detail)">
+                                        <span openlmis-message="button.force.edit"></span>
+                                    </a>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer" ng-if="syncResults.length > 1">
+            <a class="btn btn-primary" ng-click="abandonAll()">
+                <span openlmis-message="button.abandon.all"></span>
+            </a>
+            <a class="btn btn-primary" ng-click="forceSyncAll()">
+                <span openlmis-message="button.force.edit.all"></span>
+            </a>
+        </div>
+    </div>
 </div>
-<div class="alert alert-success" id="successMsgDiv" fade-out="3000" openlmis-message="message" ng-show="message"></div>
-<div class="alert alert-danger" id="ErrorMsgDiv" fade-out="3000" openlmis-message="error" ng-show="error"></div>
