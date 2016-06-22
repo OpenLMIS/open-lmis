@@ -24,6 +24,8 @@ import static org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion.NON_EMPT
 @JsonSerialize(include = NON_EMPTY)
 public class SynchronizedDistribution {
 
+    private Long distributionId;
+
     private String province;
     private DeliveryZone deliveryZone;
     private ProcessingPeriod period;

@@ -18,6 +18,7 @@ import org.openlmis.core.domain.Program;
 import org.openlmis.distribution.domain.Distribution;
 import org.openlmis.distribution.domain.DistributionEdit;
 import org.openlmis.distribution.domain.DistributionStatus;
+import org.openlmis.distribution.domain.DistributionsEditHistory;
 import org.openlmis.distribution.domain.FacilityDistribution;
 import org.openlmis.distribution.repository.DistributionRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -107,5 +108,17 @@ public class DistributionService {
 
   public void deleteDistributionEdit(Long distributionId, Long userId) {
     repository.deleteDistributionEdit(distributionId, userId);
+  }
+
+  public List<DistributionsEditHistory> getHistory(Long distributionId) {
+    return repository.getHistory(distributionId);
+  }
+
+  public DistributionsEditHistory getLastHistory(Long distributionId) {
+    return repository.getLastHistory(distributionId);
+  }
+
+  public void insertHistory(DistributionsEditHistory history) {
+    repository.insertHistory(history);
   }
 }

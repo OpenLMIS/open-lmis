@@ -1,5 +1,6 @@
 package org.openlmis.web.controller;
 
+import org.apache.commons.io.IOUtils;
 import org.openlmis.distribution.domain.Distribution;
 import org.openlmis.distribution.domain.DistributionEdit;
 import org.openlmis.distribution.dto.FacilityDistributionDTO;
@@ -9,15 +10,23 @@ import org.openlmis.web.response.OpenLmisResponse;
 import org.openlmis.web.service.ReviewDataService;
 import org.openlmis.web.util.FacilityDistributionEditResults;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
 
 import static org.openlmis.web.response.OpenLmisResponse.SUCCESS;
 import static org.openlmis.web.response.OpenLmisResponse.response;
@@ -80,6 +89,35 @@ public class ReviewDataController extends BaseController {
   @ResponseStatus(OK)
   public void updateLastViewed(@RequestBody Long distributionId) {
     distributionService.updateLastViewed(distributionId);
+  }
+
+  @RequestMapping(value = "review-data/distribution/{id}/csv", produces = "text/csv", method = RequestMethod.GET)
+  @PreAuthorize("@permissionEvaluator.hasPermission(principal, 'VIEW_SYNCHRONIZED_DATA, EDIT_SYNCHRONIZED_DATA')")
+  @ResponseBody
+  public byte[] getHistoryAsCSV(@PathVariable Long id, HttpServletResponse response) throws IOException {
+    File csv = reviewDataService.getHistoryAsCSV(id);
+
+    response.setHeader("Content-Disposition", "attachment; filename=" + csv.getName());
+
+    try (FileInputStream stream = new FileInputStream(csv)) {
+      return  IOUtils.toByteArray(stream);
+    }
+  }
+
+  @RequestMapping(value = "review-data/distribution/{id}/pdf", produces = "application/pdf", method = RequestMethod.GET)
+  @PreAuthorize("@permissionEvaluator.hasPermission(principal, 'VIEW_SYNCHRONIZED_DATA, EDIT_SYNCHRONIZED_DATA')")
+  @ResponseBody
+  public ResponseEntity<byte[]> getHistoryAsPDF(@PathVariable Long id) throws IOException {
+    File pdf = reviewDataService.getHistoryAsPDF(id);
+
+    HttpHeaders headers = new HttpHeaders();
+    headers.setContentType(MediaType.parseMediaType("application/pdf"));
+    headers.setContentDispositionFormData(pdf.getName(), pdf.getName());
+    headers.setCacheControl("must-revalidate, post-check=0, pre-check=0");
+
+    try (FileInputStream stream = new FileInputStream(pdf)) {
+      return new ResponseEntity<>(IOUtils.toByteArray(stream), headers, OK);
+    }
   }
 
 }
