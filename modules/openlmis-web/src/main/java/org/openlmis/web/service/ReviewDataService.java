@@ -1,10 +1,15 @@
 package org.openlmis.web.service;
 
+import com.itextpdf.text.Chunk;
 import com.itextpdf.text.Document;
 import com.itextpdf.text.DocumentException;
 import com.itextpdf.text.Element;
+import com.itextpdf.text.Font;
 import com.itextpdf.text.PageSize;
 import com.itextpdf.text.Paragraph;
+import com.itextpdf.text.Phrase;
+import com.itextpdf.text.Rectangle;
+import com.itextpdf.text.pdf.PdfPCell;
 import com.itextpdf.text.pdf.PdfPTable;
 import com.itextpdf.text.pdf.PdfWriter;
 import org.joda.time.DateTime;
@@ -16,6 +21,7 @@ import org.openlmis.core.domain.Facility;
 import org.openlmis.core.domain.GeographicZone;
 import org.openlmis.core.domain.ProcessingPeriod;
 import org.openlmis.core.domain.Program;
+import org.openlmis.core.domain.User;
 import org.openlmis.core.service.DeliveryZoneService;
 import org.openlmis.core.service.FacilityService;
 import org.openlmis.core.service.MessageService;
@@ -29,6 +35,7 @@ import org.openlmis.distribution.dto.DistributionDTO;
 import org.openlmis.distribution.dto.FacilityDistributionDTO;
 import org.openlmis.distribution.service.DistributionService;
 import org.openlmis.distribution.service.FacilityDistributionService;
+import org.openlmis.distribution.util.EditedItemUI;
 import org.openlmis.web.model.ReviewDataFilter;
 import org.openlmis.web.model.ReviewDataFilters;
 import org.openlmis.web.model.SynchronizedDistribution;
@@ -51,6 +58,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -207,15 +215,27 @@ public class ReviewDataService {
 
   public File getHistoryAsCSV(Long distributionId) throws IOException {
     String fileName = "history_" + distributionId;
-    File tmp = File.createTempFile(fileName, "csv");
+    File tmp = File.createTempFile(fileName, ".csv");
 
     try (ICsvBeanWriter writer = new CsvBeanWriter(new FileWriter(tmp), CsvPreference.STANDARD_PREFERENCE)) {
       String[] header = getHeader();
       writer.writeHeader(header);
 
       List<DistributionsEditHistory> history = distributionService.getHistory(distributionId);
+      history.add(new DistributionsEditHistory(null,"Bopa", new Facility(null,null,"CS Bopa",null,null,null,false),"EPI Inventory", "Spoiled Quantity BCG", "300", "30", new Date(), new User(null, "admin")));
+
       for (DistributionsEditHistory item : history) {
-        writer.write(item, header);
+        Map<String, Object> record = new HashMap<>();
+        record.put(header[0], item.getDistrict());
+        record.put(header[1], item.getFacility().getName());
+        record.put(header[2], item.getDataScreen());
+        record.put(header[3], item.getEditedItem());
+        record.put(header[4], item.getOriginalValue());
+        record.put(header[5], item.getNewValue());
+        record.put(header[6], item.getEditedDatetime());
+        record.put(header[7], item.getEditedBy());
+
+        writer.write(record, header);
       }
     }
 
@@ -224,19 +244,19 @@ public class ReviewDataService {
 
   public File getHistoryAsPDF(Long distributionId) throws IOException {
     String fileName = "history_" + distributionId;
-    File tmp = File.createTempFile(fileName, "pdf");
+    File tmp = File.createTempFile(fileName, ".pdf");
 
     Document document = new Document(PageSize.A4);
 
     try {
-      @SuppressWarnings("unused")
-      PdfWriter writer = PdfWriter.getInstance(document, new FileOutputStream(tmp));
-      document.open();
+      Font headerFont = new Font(Font.FontFamily.HELVETICA, 10, Font.BOLD);
+      Font normalFont = new Font(Font.FontFamily.HELVETICA, 6, Font.NORMAL);
+      Font boldFont = new Font(Font.FontFamily.HELVETICA, 6, Font.BOLD);
 
-      Paragraph title = new Paragraph(messageService.message("label.distribution.history.header"));
+      Paragraph title = new Paragraph(messageService.message("label.distribution.history.header"), headerFont);
       title.setAlignment(Element.ALIGN_CENTER);
 
-      Paragraph currentDate = new Paragraph(DATE_FORMAT.format(new Date()));
+      Paragraph currentDate = new Paragraph(DATE_FORMAT.format(new Date()), normalFont);
       currentDate.setAlignment(Element.ALIGN_RIGHT);
 
       Distribution distribution = distributionService.getBy(distributionId);
@@ -252,34 +272,65 @@ public class ReviewDataService {
       FacilityDistribution value = iterator.next().getValue();
       String geographicZone = value.getGeographicZone();
 
-      Paragraph info = new Paragraph();
-      info.add(new Paragraph(messageService.message("label.distribution.history.header.program", distribution.getProgram().getName())));
-      info.add(new Paragraph(messageService.message("label.distribution.history.header.province", geographicZone)));
-      info.add(new Paragraph(messageService.message("label.distribution.history.header.delivery.zone", distribution.getDeliveryZone().getName())));
-      info.add(new Paragraph(messageService.message("label.distribution.history.header.period", distribution.getPeriod().getName())));
+      Paragraph program = new Paragraph();
+      program.add(new Phrase(messageService.message("label.distribution.history.header.program"), normalFont));
+      program.add(new Phrase(" "));
+      program.add(new Phrase(distribution.getProgram().getName(), boldFont));
 
+      Paragraph province = new Paragraph();
+      province.add(new Phrase(messageService.message("label.distribution.history.header.province"), normalFont));
+      province.add(new Phrase(" "));
+      province.add(new Phrase(geographicZone, boldFont));
+
+      Paragraph deliveryZone = new Paragraph();
+      deliveryZone.add(new Phrase(messageService.message("label.distribution.history.header.delivery.zone"), normalFont));
+      deliveryZone.add(new Phrase(" "));
+      deliveryZone.add(new Phrase(distribution.getDeliveryZone().getName(), boldFont));
+
+      Paragraph period = new Paragraph();
+      period.add(new Phrase(messageService.message("label.distribution.history.header.period"), normalFont));
+      period.add(new Phrase(" "));
+      period.add(new Phrase(distribution.getPeriod().getName(), boldFont));
+
+      PdfPTable infoTable = new PdfPTable(4);
+      infoTable.setWidthPercentage(100);
+      infoTable.setSpacingBefore(0f);
+      infoTable.setSpacingAfter(0f);
+
+      infoTable.addCell(createCenterCell(program));
+      infoTable.addCell(createCenterCell(province));
+      infoTable.addCell(createCenterCell(deliveryZone));
+      infoTable.addCell(createCenterCell(period));
 
       PdfPTable dataTable = new PdfPTable(HEADER.length);
+      dataTable.setWidthPercentage(100);
+      dataTable.setSpacingBefore(0f);
+      dataTable.setSpacingAfter(0f);
 
       for (String header : getHeader()) {
-        dataTable.addCell(header);
+        dataTable.addCell(createCenterCell(new Paragraph(header, boldFont)));
       }
 
       List<DistributionsEditHistory> history = distributionService.getHistory(distributionId);
+
       for (DistributionsEditHistory item : history) {
-        dataTable.addCell(item.getDistrict());
-        dataTable.addCell(item.getFacility().getName());
-        dataTable.addCell(item.getDataScreen());
-        dataTable.addCell(item.getEditedItem());
-        dataTable.addCell(item.getOriginalValue());
-        dataTable.addCell(item.getNewValue());
-        dataTable.addCell(DATE_TIME_FORMAT.format(item.getEditedDatetime()));
-        dataTable.addCell(item.getEditedBy().getUserName());
+        dataTable.addCell(createLeftCell(new Paragraph(item.getDistrict(), normalFont)));
+        dataTable.addCell(createLeftCell(new Paragraph(item.getFacility().getName(), normalFont)));
+        dataTable.addCell(createLeftCell(new Paragraph(item.getDataScreen(), normalFont)));
+        dataTable.addCell(createLeftCell(new Paragraph(item.getEditedItem(), normalFont)));
+        dataTable.addCell(createLeftCell(new Paragraph(item.getOriginalValue(), normalFont)));
+        dataTable.addCell(createLeftCell(new Paragraph(item.getNewValue(), normalFont)));
+        dataTable.addCell(createLeftCell(new Paragraph(DATE_TIME_FORMAT.format(item.getEditedDatetime()), normalFont)));
+        dataTable.addCell(createLeftCell(new Paragraph(item.getEditedBy().getUserName(), normalFont)));
       }
+
+      PdfWriter.getInstance(document, new FileOutputStream(tmp));
+      document.open();
 
       document.add(title);
       document.add(currentDate);
-      document.add(info);
+      document.add(infoTable);
+      document.add(Chunk.NEWLINE);
       document.add(dataTable);
     } catch (DocumentException e) {
       throw new IOException(e);
@@ -300,6 +351,26 @@ public class ReviewDataService {
     return header;
   }
 
+  private PdfPCell createLeftCell(Element element) {
+    PdfPCell cell = new PdfPCell();
+    cell.setBorder(Rectangle.NO_BORDER);
+    cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
+    cell.setHorizontalAlignment(Element.ALIGN_LEFT);
+    cell.addElement(element);
+
+    return cell;
+  }
+
+  private PdfPCell createCenterCell(Element element) {
+    PdfPCell cell = new PdfPCell();
+    cell.setBorder(Rectangle.NO_BORDER);
+    cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
+    cell.setHorizontalAlignment(Element.ALIGN_CENTER);
+    cell.addElement(element);
+
+    return cell;
+  }
+
   private void createHistory(Long userId, Distribution distribution, FacilityDistribution facilityDistribution,
                  FacilityDistributionEditDetail detail) {
     Facility facility = facilityService.getById(facilityDistribution.getFacilityId());
@@ -310,8 +381,8 @@ public class ReviewDataService {
     history.setDistrict(facility.getGeographicZone().getName());
     history.setFacility(facility);
 
-    history.setDataScreen(detail.getDataScreen());
-    history.setEditedItem(detail.getEditedItem());
+    history.setDataScreen(messageService.message(detail.getDataScreenUI()));
+    history.setEditedItem(createEditedItem(detail.getEditedItemUI()));
 
     history.setOriginalValue(detail.getOriginalValue().toString());
     history.setNewValue(detail.getNewValue().toString());
@@ -319,6 +390,23 @@ public class ReviewDataService {
     history.setEditedBy(userService.getById(userId));
 
     distributionService.insertHistory(history);
+  }
+
+  private String createEditedItem(EditedItemUI ui) {
+    StringBuilder sb = new StringBuilder();
+
+    for (int i = 0; i < ui.getTranslate().size(); ++i) {
+      String format = i == 0 ? "%s" : " (%s)";
+      String message = messageService.message(ui.getTranslate().get(i));
+
+      sb.append(String.format(format, message));
+    }
+
+    for (String value : ui.getNoTranslate()) {
+      sb.append(String.format(" (%s)", value));
+    }
+
+    return sb.toString();
   }
 
   private SynchronizedDistribution create(Long userId, Distribution distribution, String geographicZone) {
