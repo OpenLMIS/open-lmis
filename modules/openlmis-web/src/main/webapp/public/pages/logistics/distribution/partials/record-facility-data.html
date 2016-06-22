@@ -125,7 +125,16 @@
                         </thead>
                         <tbody>
                             <tr ng-repeat="detail in details">
-                                <td class="span2">{{detail.editedItem}}</td>
+                                <td class="span2">
+                                    <span ng-repeat="translate in detail.editedItemUI.translate">
+                                        <span ng-if="!$first">&nbsp;(</span>
+                                        <span openlmis-message="translate"></span>
+                                        <span ng-if="!$first">)</span>
+                                    </span>
+                                    <span ng-repeat="noTranslate in detail.editedItemUI.noTranslate">
+                                        &nbsp;(<span openlmis-message="noTranslate"></span>)
+                                    </span>
+                                </td>
                                 <td class="span2">{{detail.originalValue}}</td>
                                 <td class="span2">{{detail.previousValue}}</td>
                                 <td class="span2">{{detail.newValue}}</td>
