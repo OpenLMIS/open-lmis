@@ -50,14 +50,14 @@ function RefrigeratorReading(facilityVisitId, refrigeratorReading) {
     }
 
     if (statusClass === DistributionStatus.COMPLETE && _this.functioningCorrectly && _this.functioningCorrectly.value === 'N') {
-      if (isEmpty(_this.problems)) statusClass = DistributionStatus.INCOMPLETE;
+      if (!_this.problems) statusClass = DistributionStatus.INCOMPLETE;
       else {
         var hasAtLeastOneProblem = _.find(_.values(_this.problems),
           function (problemValue) {
             return problemValue && problemValue.value === true;
           });
 
-        if (!hasAtLeastOneProblem)
+        if (!_this.problems || !hasAtLeastOneProblem)
           statusClass = DistributionStatus.INCOMPLETE;
 
         if (hasAtLeastOneProblem && !isEmpty(_this.problems.other) && isEmpty(_this.problems.otherProblemExplanation)) {

@@ -10,6 +10,7 @@
 
 package org.openlmis.distribution.repository;
 
+import com.google.common.base.Optional;
 import org.openlmis.distribution.domain.DistributionRefrigerators;
 import org.openlmis.distribution.domain.RefrigeratorProblem;
 import org.openlmis.distribution.domain.RefrigeratorReading;
@@ -52,7 +53,7 @@ public class DistributionRefrigeratorsRepository {
     RefrigeratorReading reading = mapper.getReading(id);
 
     if (reading.getProblem() == null) {
-      reading.setProblem(new RefrigeratorProblem());
+      reading.setProblem(new RefrigeratorProblem(reading.getId()));
     }
 
     return reading;
@@ -66,7 +67,7 @@ public class DistributionRefrigeratorsRepository {
     mapper.insertReading(reading);
 
     if (withProblem) {
-      RefrigeratorProblem problem = reading.getProblem();
+      RefrigeratorProblem problem = Optional.fromNullable(reading.getProblem()).or(new RefrigeratorProblem());
       problem.setReadingId(reading.getId());
       mapper.insertProblem(problem);
     }
@@ -77,7 +78,13 @@ public class DistributionRefrigeratorsRepository {
 
     if (withProblem) {
       RefrigeratorProblem problem = reading.getProblem();
-      mapper.updateProblem(problem);
+
+      if (problem == null) {
+        problem = new RefrigeratorProblem(reading.getId());
+        mapper.insertProblem(problem);
+      } else {
+        mapper.updateProblem(problem);
+      }
     }
   }
 }

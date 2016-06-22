@@ -71,7 +71,7 @@ public class EpiInventoryLineItem extends BaseModel {
     dto.setIdealQuantityByPackSize(idealQuantityByPackSize);
     dto.setExistingQuantity(new Reading(existingQuantity));
     dto.setSpoiledQuantity(new Reading(spoiledQuantity));
-    dto.setDeliveredQuantity(deliveredQuantity);
+    dto.setDeliveredQuantity(new Reading(deliveredQuantity));
     dto.setProgramProductId(programProductId);
     dto.setProductCode(productCode);
     dto.setProductName(productName);

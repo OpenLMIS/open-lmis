@@ -23,7 +23,7 @@ describe('epi inventory', function () {
 
   it('should set status as incomplete if only deliveredQuantity is valid', function () {
     var epiInventory = new EpiInventory({lineItems: [
-      {existingQuantity: undefined, deliveredQuantity: 2, spoiledQuantity: undefined}
+      {existingQuantity: undefined, deliveredQuantity: {value: 2}, spoiledQuantity: undefined}
     ]});
 
     var status = epiInventory.computeStatus();
@@ -53,7 +53,7 @@ describe('epi inventory', function () {
 
   it('should set status as complete if form is completely filled and all fields valid', function() {
     var epiInventory = new EpiInventory({lineItems: [
-      {existingQuantity: {notRecorded: true}, deliveredQuantity: 1, spoiledQuantity: {value: 1, notRecorded: false}}
+      {existingQuantity: {notRecorded: true}, deliveredQuantity: {value: 1}, spoiledQuantity: {value: 1, notRecorded: false}}
     ]});
 
     var status = epiInventory.computeStatus();
@@ -63,7 +63,7 @@ describe('epi inventory', function () {
 
   it('should set all NR flags to true', function() {
     var epiInventory = new EpiInventory({lineItems: [
-      {existingQuantity: {notRecorded: false}, deliveredQuantity: 1, spoiledQuantity: {value: 1, notRecorded: false}}
+      {existingQuantity: {notRecorded: false}, deliveredQuantity: {value: 1}, spoiledQuantity: {value: 1, notRecorded: false}}
     ]});
 
     var status = epiInventory.setNotRecorded();

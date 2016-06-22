@@ -66,7 +66,7 @@ public class RefrigeratorReadingDTO extends BaseModel {
     if ("N".equalsIgnoreCase(functioningCorrectly)) {
       problem.validate();
     } else {
-      problem = new RefrigeratorProblem();
+      problem = new RefrigeratorProblem(id);
     }
 
     RefrigeratorReading reading = new RefrigeratorReading(this.refrigerator, this.facilityVisitId,
