@@ -77,11 +77,11 @@
               <td class="col-delivered-quantity">
                 <div>
                   <span class="position-relative">
-                    <input id="deliveredQuantity{{ $index }}" type="number" ng-model="lineItem.deliveredQuantity"
+                    <input id="deliveredQuantity{{ $index }}" type="number" ng-model="lineItem.deliveredQuantity.value"
                            name="deliveredQuantityNR{{ $index }}" ng-trim=false
                            numeric-validator="positiveInteger,7" min="0" max="9999999" step="1"
                            error-holder="deliveredQuantityError{{$index}}"
-                           ng-class="{'required-error': !facilityData.isDisabled('epi-inventory', distributionReview) && !lineItem.deliveredQuantity.hasValue()}"/>
+                           ng-class="{'required-error': !facilityData.isDisabled('epi-inventory', distributionReview) && !lineItem.deliveredQuantity.value.hasValue()}"/>
                     <span id="deliveredQuantityError{{$index}}"
                           class="rnr-form-error"
                           openlmis-message="error.number.only"

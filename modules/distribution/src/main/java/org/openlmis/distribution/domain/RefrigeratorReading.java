@@ -78,7 +78,7 @@ public class RefrigeratorReading extends BaseModel {
     dto.setHighAlarmEvents(new Reading(highAlarmEvents));
     dto.setProblemSinceLastTime(new Reading(problemSinceLastTime));
     dto.setProblems(problem.transform());
-    dto.setNotes(notes);
+    dto.setNotes(new Reading(notes));
 
     return dto;
   }

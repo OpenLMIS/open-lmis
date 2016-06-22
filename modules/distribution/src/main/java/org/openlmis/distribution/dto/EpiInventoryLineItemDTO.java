@@ -41,13 +41,13 @@ public class EpiInventoryLineItemDTO extends BaseModel {
   private Integer idealQuantityByPackSize;
   private Reading existingQuantity;
   private Reading spoiledQuantity;
-  private Integer deliveredQuantity;
+  private Reading deliveredQuantity;
   private Long programProductId;
   private String productCode;
   private String productName;
   private Integer productDisplayOrder;
 
-  public EpiInventoryLineItemDTO(Long facilityVisitId, Reading existingQuantity, Reading spoiledQuantity, Integer deliveredQuantity) {
+  public EpiInventoryLineItemDTO(Long facilityVisitId, Reading existingQuantity, Reading spoiledQuantity, Reading deliveredQuantity) {
     this.facilityVisitId = facilityVisitId;
     this.existingQuantity = existingQuantity;
     this.spoiledQuantity = spoiledQuantity;
@@ -55,10 +55,11 @@ public class EpiInventoryLineItemDTO extends BaseModel {
   }
 
   public EpiInventoryLineItem transform() {
-    EpiInventoryLineItem lineItem = new EpiInventoryLineItem(this.facilityVisitId,
-      this.existingQuantity.parsePositiveInt(),
-      this.spoiledQuantity.parsePositiveInt(),
-      this.deliveredQuantity);
+    Integer existingQuantity = Reading.safeRead(this.existingQuantity).parsePositiveInt();
+    Integer spoiledQuantity = Reading.safeRead(this.spoiledQuantity).parsePositiveInt();
+    Integer deliveredQuantity = Reading.safeRead(this.deliveredQuantity).parsePositiveInt();
+
+    EpiInventoryLineItem lineItem = new EpiInventoryLineItem(this.facilityVisitId, existingQuantity, spoiledQuantity, deliveredQuantity);
 
     lineItem.setId(this.id);
     lineItem.setModifiedBy(this.modifiedBy);

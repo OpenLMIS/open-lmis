@@ -53,7 +53,7 @@ public class FacilityDistributionEditHandler {
   static {
     POSITIVE_INTS.put(AdultCoverageLineItem.class, Arrays.asList("healthCenterTetanus1", "outreachTetanus1", "healthCenterTetanus2To5", "outreachTetanus2To5"));
     POSITIVE_INTS.put(ChildCoverageLineItem.class, Arrays.asList("healthCenter11Months", "outreach11Months", "healthCenter23Months", "outreach23Months"));
-    POSITIVE_INTS.put(EpiInventoryLineItem.class, Arrays.asList("existingQuantity", "spoiledQuantity"));
+    POSITIVE_INTS.put(EpiInventoryLineItem.class, Arrays.asList("existingQuantity", "spoiledQuantity", "deliveredQuantity"));
     POSITIVE_INTS.put(EpiUseLineItem.class, Arrays.asList("stockAtFirstOfMonth", "stockAtEndOfMonth", "received", "loss", "distributed"));
     POSITIVE_INTS.put(OpenedVialLineItem.class, Collections.singletonList("openedVials"));
     POSITIVE_INTS.put(RefrigeratorReading.class, Arrays.asList("lowAlarmEvents", "highAlarmEvents"));
