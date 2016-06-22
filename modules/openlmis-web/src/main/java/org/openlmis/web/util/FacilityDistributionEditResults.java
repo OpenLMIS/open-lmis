@@ -27,24 +27,31 @@ public class FacilityDistributionEditResults {
     this.facilityId = facilityId;
   }
 
-  public void allow(Object parent, Object original, String originalPropertyName, Object originalProperty, Object previousProperty, Object replacementProperty) {
-    create(parent, original, originalPropertyName, originalProperty, previousProperty, replacementProperty, false);
+  public void allow(Object parent, String parentProperty, Object original, String originalPropertyName, Object originalProperty, Object previousProperty, Object replacementProperty) {
+    create(parent, parentProperty, original, originalPropertyName, originalProperty, previousProperty, replacementProperty, false);
   }
 
-  public void deny(Object parent, Object original, String originalPropertyName, Object originalProperty, Object previousProperty, Object replacementProperty) {
+  public void deny(Object parent, String parentProperty, Object original, String originalPropertyName, Object originalProperty, Object previousProperty, Object replacementProperty) {
     conflict = true;
-    create(parent, original, originalPropertyName, originalProperty, previousProperty, replacementProperty, true);
+    create(parent, parentProperty, original, originalPropertyName, originalProperty, previousProperty, replacementProperty, true);
   }
 
-  private void create(Object parent, Object original, String originalPropertyName, Object originalProperty, Object previousProperty, Object replacementProperty, boolean conflict) {
+  private void create(Object parent, String parentProperty, Object original, String originalPropertyName, Object originalProperty, Object previousProperty, Object replacementProperty, boolean conflict) {
     FacilityDistributionEditDetail detail = new FacilityDistributionEditDetail();
-    detail.setDataScreenId(original instanceof BaseModel ? ((BaseModel) original).getId() : null);
+
+    detail.setParentDataScreenId(parent instanceof BaseModel ? ((BaseModel) original).getId() : null);
     detail.setParentDataScreen(parent.getClass().getSimpleName());
+    detail.setParentProperty(parentProperty);
+
+    detail.setDataScreenId(original instanceof BaseModel ? ((BaseModel) original).getId() : null);
     detail.setDataScreen(original.getClass().getSimpleName());
+
     detail.setEditedItem(originalPropertyName);
+
     detail.setOriginalValue(originalProperty);
     detail.setPreviousValue(previousProperty);
     detail.setNewValue(replacementProperty);
+
     detail.setConflict(conflict);
 
     details.add(detail);
