@@ -336,8 +336,10 @@ public class ReviewDataService {
 
     item.setLastViewed(distribution.getLastViewed());
 
-    item.setLastEdited(history.getEditedDatetime());
-    item.setEditedBy(history.getEditedBy().getUserName());
+    if (null != history) {
+      item.setLastEdited(history.getEditedDatetime());
+      item.setEditedBy(history.getEditedBy().getUserName());
+    }
 
     return item;
   }

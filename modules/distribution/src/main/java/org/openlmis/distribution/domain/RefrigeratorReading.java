@@ -11,6 +11,7 @@
 package org.openlmis.distribution.domain;
 
 
+import com.google.common.base.Optional;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -74,6 +75,8 @@ public class RefrigeratorReading extends BaseModel {
   }
 
   public RefrigeratorReadingDTO transform() {
+    RefrigeratorProblem problem = Optional.fromNullable(this.problem).or(new RefrigeratorProblem(id));
+
     RefrigeratorReadingDTO dto = new RefrigeratorReadingDTO();
     dto.setId(id);
     dto.setCreatedBy(createdBy);
