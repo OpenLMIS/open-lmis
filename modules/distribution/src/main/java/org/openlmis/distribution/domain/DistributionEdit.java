@@ -13,7 +13,6 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.codehaus.jackson.annotate.JsonIgnoreProperties;
 import org.codehaus.jackson.map.annotate.JsonSerialize;
-import org.codehaus.jackson.map.annotate.JsonSerialize;
 import org.openlmis.core.domain.User;
 import org.openlmis.core.serializer.DateTimeSerializer;
 
@@ -27,26 +26,34 @@ import static org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion.NON_EMPT
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class DistributionEdit implements Comparable<DistributionEdit> {
 
-    User user;
-    Distribution distribution;
+  User user;
+  Distribution distribution;
 
-    @JsonSerialize(using = DateTimeSerializer.class)
-    Date startedAt;
+  @JsonSerialize(using = DateTimeSerializer.class)
+  Date startedAt;
 
-    @Override
-    public int compareTo(DistributionEdit arg) {
-        if (startedAt == arg.startedAt) {
-            return 0;
-        }
-
-        if (startedAt == null) {
-            return 1;
-        }
-
-        if (arg.startedAt == null) {
-            return -1;
-        }
-
-        return Long.compare(arg.getStartedAt().getTime(), startedAt.getTime());
+  @Override
+  public int compareTo(DistributionEdit arg) {
+    if (this == arg) {
+      return 0;
     }
+
+    if (arg == null) {
+      return -1;
+    }
+
+    if (startedAt == arg.startedAt) {
+      return 0;
+    }
+
+    if (startedAt == null) {
+      return 1;
+    }
+
+    if (arg.startedAt == null) {
+      return -1;
+    }
+
+    return Long.compare(arg.startedAt.getTime(), startedAt.getTime());
+  }
 }

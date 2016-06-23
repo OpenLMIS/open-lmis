@@ -10,34 +10,34 @@ import java.util.Map;
 import static org.apache.commons.lang3.StringUtils.isBlank;
 
 public final class DomainFieldMapping {
-    private static final Map<Class, Map<String, String>> DOMAIN_TO_DTO_MAP = new HashMap<>();
+  private static final Map<Class, Map<String, String>> DOMAIN_TO_DTO_MAP = new HashMap<>();
 
-    static {
-        Map<String, String> refrigeratorReadingDTO = new HashMap<>();
-        refrigeratorReadingDTO.put("problem", "problems");
+  static {
+    Map<String, String> refrigeratorReadingDTO = new HashMap<>();
+    refrigeratorReadingDTO.put("problem", "problems");
 
-        Map<String, String> vaccinationFullCoverageDTO = new HashMap<>();
-        vaccinationFullCoverageDTO.put("femaleHealthCenter", "femaleHealthCenterReading");
-        vaccinationFullCoverageDTO.put("femaleOutreach", "femaleMobileBrigadeReading");
-        vaccinationFullCoverageDTO.put("maleHealthCenter", "maleHealthCenterReading");
-        vaccinationFullCoverageDTO.put("maleOutreach", "maleMobileBrigadeReading");
+    Map<String, String> vaccinationFullCoverageDTO = new HashMap<>();
+    vaccinationFullCoverageDTO.put("femaleHealthCenter", "femaleHealthCenterReading");
+    vaccinationFullCoverageDTO.put("femaleOutreach", "femaleMobileBrigadeReading");
+    vaccinationFullCoverageDTO.put("maleHealthCenter", "maleHealthCenterReading");
+    vaccinationFullCoverageDTO.put("maleOutreach", "maleMobileBrigadeReading");
 
-        Map<String, String> openedVialLineItemDTO = new HashMap<>();
-        openedVialLineItemDTO.put("openedVials", "openedVial");
+    Map<String, String> openedVialLineItemDTO = new HashMap<>();
+    openedVialLineItemDTO.put("openedVials", "openedVial");
 
-        DOMAIN_TO_DTO_MAP.put(RefrigeratorReadingDTO.class, refrigeratorReadingDTO);
-        DOMAIN_TO_DTO_MAP.put(VaccinationFullCoverageDTO.class, vaccinationFullCoverageDTO);
-        DOMAIN_TO_DTO_MAP.put(OpenedVialLineItemDTO.class, openedVialLineItemDTO);
-    }
+    DOMAIN_TO_DTO_MAP.put(RefrigeratorReadingDTO.class, refrigeratorReadingDTO);
+    DOMAIN_TO_DTO_MAP.put(VaccinationFullCoverageDTO.class, vaccinationFullCoverageDTO);
+    DOMAIN_TO_DTO_MAP.put(OpenedVialLineItemDTO.class, openedVialLineItemDTO);
+  }
 
-    private DomainFieldMapping() {
-        throw new UnsupportedOperationException();
-    }
+  private DomainFieldMapping() {
+    throw new UnsupportedOperationException();
+  }
 
-    public static String fieldMapping(Class clazz, String propertyName) {
-        Map<String, String> map = DOMAIN_TO_DTO_MAP.get(clazz);
-        String newName = null != map ? map.get(propertyName) : null;
-        return isBlank(newName) ? propertyName : newName;
-    }
+  public static String fieldMapping(Class clazz, String propertyName) {
+    Map<String, String> map = DOMAIN_TO_DTO_MAP.get(clazz);
+    String newName = null != map ? map.get(propertyName) : null;
+    return isBlank(newName) ? propertyName : newName;
+  }
 
 }

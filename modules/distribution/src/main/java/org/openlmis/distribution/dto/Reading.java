@@ -16,6 +16,7 @@ import lombok.NoArgsConstructor;
 import org.codehaus.jackson.map.annotate.JsonDeserialize;
 import org.codehaus.jackson.map.annotate.JsonSerialize;
 import org.openlmis.core.exception.DataException;
+import org.openlmis.distribution.domain.ReasonForNotVisiting;
 import org.openlmis.distribution.serializer.DistributionReadingDeSerializer;
 
 import java.text.ParseException;
@@ -37,7 +38,7 @@ import static org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion.NON_EMPT
 @JsonDeserialize(using = DistributionReadingDeSerializer.class)
 @JsonSerialize(include = NON_EMPTY)
 public class Reading {
-  private static final Reading EMPTY = new Reading();
+  static final Reading EMPTY = new Reading();
 
   public static Reading safeRead(Reading reading) {
     return Optional.fromNullable(reading).or(EMPTY);
@@ -141,5 +142,14 @@ public class Reading {
         throw new RuntimeException(ex);
       }
     }
+  }
+
+  public ReasonForNotVisiting parseReasonForNotVisiting() {
+    String stringValue = getEffectiveValue();
+    if (stringValue == null) {
+      return null;
+    }
+
+    return ReasonForNotVisiting.valueOf(stringValue);
   }
 }

@@ -23,7 +23,6 @@ import org.openlmis.distribution.domain.ReasonForNotVisiting;
 
 import java.util.Date;
 
-import static org.apache.commons.lang.BooleanUtils.isFalse;
 import static org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion.NON_EMPTY;
 
 @Data
@@ -58,13 +57,9 @@ public class FacilityVisitDTO extends BaseModel {
     Date visitDate = Reading.safeRead(this.visitDate).parseDate();
     Boolean visited = Reading.safeRead(this.visited).parseBoolean();
     String vehicleId = Reading.safeRead(this.vehicleId).getEffectiveValue();
-    ReasonForNotVisiting reasonForNotVisiting = null;
+    ReasonForNotVisiting reasonForNotVisiting = Reading.safeRead(this.reasonForNotVisiting).parseReasonForNotVisiting();
     String otherReasonDescription = Reading.safeRead(this.otherReasonDescription).getEffectiveValue();
     Boolean synced = Reading.safeRead(this.synced).parseBoolean();
-
-    if (null != this.reasonForNotVisiting && isFalse(this.reasonForNotVisiting.getNotRecorded())) {
-      reasonForNotVisiting = ReasonForNotVisiting.valueOf(this.reasonForNotVisiting.getEffectiveValue());
-    }
 
     FacilityVisit facilityVisit = new FacilityVisit();
 

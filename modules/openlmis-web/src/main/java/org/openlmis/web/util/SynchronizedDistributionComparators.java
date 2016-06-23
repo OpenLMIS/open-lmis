@@ -1,5 +1,6 @@
 package org.openlmis.web.util;
 
+import org.apache.commons.lang3.ObjectUtils;
 import org.openlmis.web.model.ReviewDataColumnOrder;
 import org.openlmis.web.model.SynchronizedDistribution;
 
@@ -35,63 +36,51 @@ public final class SynchronizedDistributionComparators {
     PROVINCE {
       @Override
       public int compare(SynchronizedDistribution a, SynchronizedDistribution b) {
-        return compare(a.getProvince(), b.getProvince());
+        return ObjectUtils.compare(a.getProvince(), b.getProvince());
       }
     },
     DELIVERY_ZONE {
       @Override
       public int compare(SynchronizedDistribution a, SynchronizedDistribution b) {
-        return compare(a.getDeliveryZone().getName(), b.getDeliveryZone().getName());
+        return ObjectUtils.compare(a.getDeliveryZone().getName(), b.getDeliveryZone().getName());
       }
     },
     PERIOD {
       @Override
       public int compare(SynchronizedDistribution a, SynchronizedDistribution b) {
-        return compare(a.getPeriod().getName(), b.getPeriod().getName());
+        return ObjectUtils.compare(a.getPeriod().getName(), b.getPeriod().getName());
       }
     },
     INITIATED {
       @Override
       public int compare(SynchronizedDistribution a, SynchronizedDistribution b) {
-        return compare(a.getInitiated(), b.getInitiated());
+        return ObjectUtils.compare(a.getInitiated(), b.getInitiated());
       }
     },
     SYNCHRONIZED {
       @Override
       public int compare(SynchronizedDistribution a, SynchronizedDistribution b) {
-        return compare(a.getSync(), b.getSync());
+        return ObjectUtils.compare(a.getSync(), b.getSync());
       }
     },
     LAST_VIEWED {
       @Override
       public int compare(SynchronizedDistribution a, SynchronizedDistribution b) {
-        return compare(a.getLastViewed(), b.getLastViewed());
+        return ObjectUtils.compare(a.getLastViewed(), b.getLastViewed());
       }
     },
     LAST_EDITED {
       @Override
       public int compare(SynchronizedDistribution a, SynchronizedDistribution b) {
-        return compare(a.getLastEdited(), b.getLastEdited());
+        return ObjectUtils.compare(a.getLastEdited(), b.getLastEdited());
       }
     },
     EDITED_BY {
       @Override
       public int compare(SynchronizedDistribution a, SynchronizedDistribution b) {
-        return compare(a.getEditedBy(), b.getEditedBy());
+        return ObjectUtils.compare(a.getEditedBy(), b.getEditedBy());
       }
     };
-
-    protected <T extends Comparable<? super T>> int compare(T a, T b) {
-      if (a == b) {
-        return 0;
-      } else if (a == null) {
-        return -1;
-      } else if (b == null) {
-        return 1;
-      }
-
-      return a.compareTo(b);
-    }
 
   }
 }

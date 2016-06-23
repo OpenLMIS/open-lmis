@@ -22,6 +22,7 @@ import org.junit.rules.ExpectedException;
 import org.openlmis.db.categories.UnitTests;
 import org.openlmis.distribution.dto.Reading;
 
+import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.mock;
@@ -68,5 +69,37 @@ public class DistributionReadingDeSerializerTest {
     Reading reading = new DistributionReadingDeSerializer().deserialize(jp, mock(DeserializationContext.class));
     assertThat(reading.getValue(), is("55"));
     assertThat(reading.getNotRecorded(), is(false));
+  }
+
+  @Test
+  public void shouldReturnReadingWithOriginal() throws Exception {
+    JsonNode originalNode = mock(JsonNode.class);
+    JsonNode originalValueNode = mock(JsonNode.class);
+    JsonNode originalNotRecordedNode = mock(JsonNode.class);
+
+    JsonNode valueNode = mock(JsonNode.class);
+    JsonNode notRecordedNode = mock(JsonNode.class);
+
+    when(jsonNode.has("original")).thenReturn(true);
+    when(jsonNode.get("original")).thenReturn(originalNode);
+    when(originalNode.get("value")).thenReturn(originalValueNode);
+    when(originalNode.get("notRecorded")).thenReturn(originalNotRecordedNode);
+    when(jsonNode.get("value")).thenReturn(valueNode);
+    when(jsonNode.get("notRecorded")).thenReturn(notRecordedNode);
+
+    when(originalValueNode.asText()).thenReturn("22");
+    when(originalNotRecordedNode.getBooleanValue()).thenReturn(false);
+    when(valueNode.asText()).thenReturn("55");
+    when(notRecordedNode.getBooleanValue()).thenReturn(false);
+
+    Reading reading = new DistributionReadingDeSerializer().deserialize(jp, mock(DeserializationContext.class));
+
+    assertThat(reading.getOriginal(), is(notNullValue()));
+    assertThat(reading.getValue(), is("55"));
+    assertThat(reading.getNotRecorded(), is(false));
+
+    Reading original = reading.getOriginal();
+    assertThat(original.getValue(), is("22"));
+    assertThat(original.getNotRecorded(), is(false));
   }
 }
