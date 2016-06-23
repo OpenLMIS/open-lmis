@@ -275,43 +275,26 @@ public class RequisitionController extends BaseController {
   public ResponseEntity<OpenLmisResponse> saveRnr(@RequestBody Rnr rnr,
                                                   @PathVariable("id") Long id,
                                                   HttpServletRequest request) {
-    try {
-      rnr.setId(id);
-      rnr.setModifiedBy(loggedInUserId(request));
-      requisitionService.save(rnr);
-      return OpenLmisResponse.success(messageService.message(RNR_SAVE_SUCCESS));
-    } catch (DataException e) {
-      return OpenLmisResponse.error(e, BAD_REQUEST);
-    }
+
+    //request from website is forbidden
+    return OpenLmisResponse.error("Bad request", BAD_REQUEST);
   }
 
   @RequestMapping(value = "/requisitions/{id}/submit", method = PUT, headers = ACCEPT_JSON)
   public ResponseEntity<OpenLmisResponse> submit(@PathVariable("id") Long id,
                                                  HttpServletRequest request) {
-    try {
-      Rnr rnr = new Rnr(id);
-      rnr.setModifiedBy(loggedInUserId(request));
-      Rnr submittedRnr = requisitionService.submit(rnr);
 
-      return success(messageService.message(requisitionService.getSubmitMessageBasedOnSupervisoryNode(submittedRnr.getFacility(),
-        submittedRnr.getProgram())));
-    } catch (DataException e) {
-      return error(e, BAD_REQUEST);
-    }
+    //request from website is forbidden
+    return OpenLmisResponse.error("Bad request", BAD_REQUEST);
+
   }
 
   @RequestMapping(value = "/requisitions/{id}/authorize", method = PUT, headers = ACCEPT_JSON)
   public ResponseEntity<OpenLmisResponse> authorize(@PathVariable("id") Long id,
                                                     HttpServletRequest request) {
-    try {
-      Rnr rnr = new Rnr(id);
-      rnr.setModifiedBy(loggedInUserId(request));
-      Rnr authorizedRnr = requisitionService.authorize(rnr);
-      return success(messageService.message(requisitionService.getAuthorizeMessageBasedOnSupervisoryNode(
-        authorizedRnr.getFacility(), authorizedRnr.getProgram())));
-    } catch (DataException e) {
-      return error(e, BAD_REQUEST);
-    }
+
+    //request from website is forbidden
+    return OpenLmisResponse.error("Bad request", BAD_REQUEST);
   }
 
   @RequestMapping(value = "/requisitions/{id}/approve", method = PUT, headers = ACCEPT_JSON)

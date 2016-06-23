@@ -14,6 +14,7 @@ import org.hamcrest.CoreMatchers;
 import org.hamcrest.Matcher;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.Ignore;
 import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
 import org.junit.runners.BlockJUnit4ClassRunner;
@@ -246,6 +247,7 @@ public class RequisitionControllerTest {
     assertFalse((boolean) requisitionData.getBody().getData().get(CAN_APPROVE_RNR));
   }
 
+  @Ignore("save function is forbidden")
   @Test
   public void shouldSaveWIPRnr() throws Exception {
 
@@ -265,6 +267,7 @@ public class RequisitionControllerTest {
     assertThat(response.getBody().getErrorMsg(), is(equalTo(errorMessage)));
   }
 
+  @Ignore("submit rnr function is forbidden")
   @Test
   public void shouldAllowSubmittingOfRnrAndTagWithModifiedBy() throws Exception {
     Rnr rnr = new Rnr(1L);
@@ -282,6 +285,7 @@ public class RequisitionControllerTest {
     assertThat(rnr.getModifiedBy(), is(USER_ID));
   }
 
+  @Ignore
   @Test
   public void shouldReturnErrorMessageIfRnrNotValid() throws Exception {
     Rnr rnr = new Rnr(1L);
@@ -295,6 +299,7 @@ public class RequisitionControllerTest {
     assertThat(response.getBody().getErrorMsg(), is("some error"));
   }
 
+  @Ignore
   @Test
   public void shouldGiveMessageAndAuthorizeRnr() throws Exception {
     String code = RequisitionService.RNR_AUTHORIZED_SUCCESSFULLY;
@@ -317,6 +322,7 @@ public class RequisitionControllerTest {
     assertThat(response.getStatusCode(), is(HttpStatus.OK));
   }
 
+  @Ignore
   @Test
   public void shouldNotAuthorizeRnrAndGiveErrorMessage() throws Exception {
     String errorMessage = "some error";
@@ -329,6 +335,7 @@ public class RequisitionControllerTest {
     assertThat(response.getBody().getErrorMsg(), is("some error"));
   }
 
+  @Ignore
   @Test
   public void shouldGiveErrorResponseIfThereIsAnyExceptionWhileSavingRnr() throws Exception {
     String errorMessage = "some error";
@@ -339,6 +346,7 @@ public class RequisitionControllerTest {
     assertThat(response.getBody().getErrorMsg(), is(errorMessage));
   }
 
+  @Ignore
   @Test
   public void shouldGiveSuccessResponseIfRnrSavedSuccessfully() throws Exception {
 
