@@ -104,7 +104,7 @@ public class ReportLookupService {
     private DosageUnitReportMapper dosageUnitMapper;
 
     @Autowired
-    private FacilityLookupReportMapper facilityReportMapper;
+    protected FacilityLookupReportMapper facilityReportMapper;
 
     @Autowired
     private ProcessingPeriodReportMapper processingPeriodMapper;
