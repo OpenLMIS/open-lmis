@@ -35,6 +35,9 @@ public class ProfileBaseLookupServiceTest {
     @InjectMocks
     private ProfileBaseLookupService profileBaseLookupService;
 
+    private long parentZoneId = 123L;
+    private long zoneId = 456L;
+
     @Before
     public void setUp() throws Exception {
         MockHttpServletRequest request = new MockHttpServletRequest();
@@ -54,14 +57,28 @@ public class ProfileBaseLookupServiceTest {
         profileBaseLookupService.getAllZones();
 
         //then
-        verify(zoneMapper).getZoneAndChildren(123L);
+        verify(zoneMapper).getZoneAndChildren(parentZoneId);
+    }
+
+    @Test
+    public void shouldGetOneDistrictAndItsParentProvinceForNonDPMUser() throws Exception {
+        //given
+        Facility facility = createFacilityWithTypeCode("whatever");
+        when(facilityRepository.getById(anyLong())).thenReturn(facility);
+
+        //when
+        profileBaseLookupService.getAllZones();
+
+        //then
+        verify(zoneMapper).getZoneAndParent(zoneId);
     }
 
     private Facility createFacilityWithTypeCode(String facilityTypeCode) {
         GeographicZone parent = new GeographicZone();
-        parent.setId(123L);
+        parent.setId(parentZoneId);
 
         GeographicZone geographicZone = new GeographicZone();
+        geographicZone.setId(zoneId);
         geographicZone.setParent(parent);
 
         FacilityType facilityType = new FacilityType();

@@ -40,6 +40,13 @@ public interface GeographicZoneReportMapper {
     @Select("SELECT * from geographic_zones WHERE id=#{id} OR parentid=#{id}")
     List<GeographicZone> getZoneAndChildren(@Param("id") Long id);
 
+    @Select("SELECT * " +
+            "FROM geographic_zones g " +
+            "WHERE id = #{id} OR id = (SELECT parentid" +
+            "                      FROM geographic_zones" +
+            "                      WHERE id = #{id});")
+    List<GeographicZone> getZoneAndParent(@Param("id") Long id);
+
     @Select("SELECT * FROM geographic_zones gz INNER JOIN geographic_levels gl ON gz.levelId = gl.id " +
             "  where levelId = #{geographicLevelId} ORDER BY gz.id,gl.id")
     List<GeographicZone> getGeographicZoneByLevel(Long id);

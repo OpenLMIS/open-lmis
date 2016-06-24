@@ -32,7 +32,8 @@ public class ProfileBaseLookupService extends ReportLookupService {
             Long provinceZoneId = facility.getGeographicZone().getParent().getId();
             return geographicZoneMapper.getZoneAndChildren(provinceZoneId);
         } else {
-            return super.getAllZones();
+            Long districtZoneId = facility.getGeographicZone().getId();
+            return geographicZoneMapper.getZoneAndParent(districtZoneId);
         }
     }
 
