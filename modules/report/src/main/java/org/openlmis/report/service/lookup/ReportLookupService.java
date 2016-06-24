@@ -49,6 +49,7 @@ import org.openlmis.report.model.report.TimelinessReport;
 import org.openlmis.report.util.Constants;
 import org.openlmis.report.util.StringHelper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
@@ -56,6 +57,7 @@ import java.util.*;
 import static org.openlmis.core.domain.RightName.MANAGE_EQUIPMENT_INVENTORY;
 
 @Service
+@Primary
 @NoArgsConstructor
 public class ReportLookupService {
     @Autowired
@@ -93,7 +95,7 @@ public class ReportLookupService {
     private FacilityTypeReportMapper facilityTypeMapper;
 
     @Autowired
-    private GeographicZoneReportMapper geographicZoneMapper;
+    protected GeographicZoneReportMapper geographicZoneMapper;
 
     @Autowired
     private GeographicLevelReportMapper geographicLevelMapper;
@@ -385,6 +387,7 @@ public class ReportLookupService {
     public List<Facility> getFacilityByGeographicZoneTree(Long userId, Long zoneId, Long programId) {
         return facilityReportMapper.getFacilitiesByGeographicZoneTree(userId, zoneId, programId);
     }
+
     public List<Facility> getFacilityByGeographicZone(Long userId, Long zoneId) {
         return facilityReportMapper.getFacilitiesByGeographicZone(userId, zoneId);
     }
@@ -672,7 +675,7 @@ public class ReportLookupService {
         return productMapper.getRmnchProducts();
     }
 
-    public List<ProcessingPeriod> getLastPeriods(Long programId){
+    public List<ProcessingPeriod> getLastPeriods(Long programId) {
         return processingPeriodMapper.getLastPeriods(programId);
     }
 
@@ -720,7 +723,7 @@ public class ReportLookupService {
         return yearList;
     }
 
-    public Long getCurrentPeriodIdForVaccine(){
+    public Long getCurrentPeriodIdForVaccine() {
         return processingPeriodMapper.getCurrentPeriodIdForVaccine();
     }
 

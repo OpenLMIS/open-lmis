@@ -28,20 +28,24 @@ import static com.fasterxml.jackson.databind.annotation.JsonSerialize.Inclusion.
 @EqualsAndHashCode(callSuper = false)
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class FacilityType extends BaseModel {
-  private String code;
-  private String name;
-  private String description;
-  private Integer levelId;
-  private Integer nominalMaxMonth;
-  private Double nominalEop;
-  private Integer displayOrder;
-  private boolean active;
+    private String code;
+    private String name;
+    private String description;
+    private Integer levelId;
+    private Integer nominalMaxMonth;
+    private Double nominalEop;
+    private Integer displayOrder;
+    private boolean active;
 
-  public FacilityType(String code) {
-    this.code = code;
-  }
+    public FacilityType(String code) {
+        this.code = code;
+    }
 
-  public FacilityType(Long id) {
-    this.id = id;
-  }
+    public FacilityType(Long id) {
+        this.id = id;
+    }
+
+    public boolean is(String typeCode) {
+        return typeCode.equals(this.code);
+    }
 }
