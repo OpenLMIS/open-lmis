@@ -17,16 +17,17 @@
     <div class="login-form" ng-controller="LoginController">
         <h2 id="signInLabel" openlmis-message="label.sign.in"></h2>
 
-        <form ng-submit="doLogin()" novalidate>
+        <form ng-submit="doLogin()" novalidate autocomplete="off">
             <fieldset>
                 <div class="login-form-row">
                     <input ng-model="username" type="text" id="username" openlmis-message="placeholder.username"
                            required
-                           autofocus/>
+                           autofocus
+                           autocomplete="off"/>
                 </div>
                 <div class="login-form-row">
                     <input ng-model="password" type="password" id="password" openlmis-message="placeholder.password"
-                           required/>
+                           required autocomplete="off"/>
                 </div>
                 <div id="loginError" class="alert alert-error" ng-bind="loginError" ng-show="loginError"></div>
                 <div class="login-form-row">
