@@ -6,9 +6,17 @@
     <label class="labels" openlmis-message="label.facility"></label>
 
     <div class="form-fields">
-        <select ui-select2 style="width:160px;" class="large-input" ng-change="fillGeographicZone();" name="select-facility" ng-model="reportParams.facilityId">
-            <option ng-repeat="option in facilities | facilityFilter:districts:reportParams.districtId:reportParams.provinceId" value="{{option.id}}">{{option.name}}</option>
-            <option value="">ALL</option>
+        <select ui-select2
+                ng-change="fillGeographicZone();"
+                ng-model="reportParams.facilityId"
+
+                style="width:160px;"
+                class="large-input"
+                name="select-facility"
+                id="facilitiesDropDown">
+            <option ng-repeat="option in facilities | facilityFilter:districts:reportParams.districtId:reportParams.provinceId"
+                    value="{{option.id}}">{{option.name}}
+            </option>
         </select>
     </div>
 

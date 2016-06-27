@@ -1,4 +1,4 @@
-function BaseProductReportController($scope, $filter, ProductReportService, $cacheFactory, FacilityService, GeographicZoneService, $dialog, DateFormatService, $location) {
+function BaseProductReportController($scope, $filter, ProductReportService, $cacheFactory, FacilityService, GeographicZoneService, $dialog, DateFormatService, $location, $timeout) {
     $scope.provinces = [];
     $scope.districts = [];
     $scope.facilities = [];
@@ -9,7 +9,7 @@ function BaseProductReportController($scope, $filter, ProductReportService, $cac
         $cacheFactory.get('keepHistoryInStockOnHandPage').put('saveDataOfStockOnHand', "no");
     }
     if ($cacheFactory.get('BaseProductReportController') !== undefined && $location.path().indexOf("stock-out-all-products") < 0) {
-        $cacheFactory.get('BaseProductReportController').put('saveDataOfStockOutReport',"no");
+        $cacheFactory.get('BaseProductReportController').put('saveDataOfStockOutReport', "no");
     }
     $scope.todayDateString = $filter('date')(new Date(), "yyyy-MM-dd");
 
@@ -52,6 +52,7 @@ function BaseProductReportController($scope, $filter, ProductReportService, $cac
                 });
             });
             $scope.facilities = healthFacilities;
+            addAllOption($scope.facilities, "facilitiesDropDown");
         });
     };
 
@@ -66,6 +67,8 @@ function BaseProductReportController($scope, $filter, ProductReportService, $cac
             }
         });
         $scope.fullGeoZoneList = _.union($scope.fullGeoZoneList, $scope.provinces, $scope.districts);
+        addAllOption($scope.provinces, "provincesDropDown");
+        addAllOption($scope.districts, "districtsDropDown");
     };
 
     $scope.selectedProvince = function () {
@@ -173,6 +176,17 @@ function BaseProductReportController($scope, $filter, ProductReportService, $cac
             return facility.id == $scope.reportParams.facilityId;
         }));
     };
+
+    function addAllOption(locations, elementId) {
+        if (locations.length > 1) {
+            $timeout(function () {
+                $("#" + elementId).append($('<option>', {
+                    value: "",
+                    text: 'ALL'
+                }));
+            });
+        }
+    }
 
     function loadGeographicZones() {
         GeographicZoneService.loadGeographicLevel().get({}, function (data) {
