@@ -54,7 +54,7 @@ public class ProfileBaseLookupService extends ReportLookupService {
         }
     }
 
-    private Facility getCurrentUserFacility() {
+    public Facility getCurrentUserFacility() {
         Long currentUserId = (Long) ((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes())
                 .getRequest().getSession().getAttribute(USER_ID);
 

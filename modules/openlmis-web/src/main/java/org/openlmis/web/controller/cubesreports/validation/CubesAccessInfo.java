@@ -33,20 +33,26 @@ public class CubesAccessInfo {
         }
     }
 
-    private static void assignLocations(String s, CubesAccessInfo cubesAccessInfo) {
-        String[] dimensions = s.split("=")[1].split("\\|");
+    private static void assignLocations(String queryString, CubesAccessInfo cubesAccessInfo) {
+        if (queryString.contains("=") && queryString.contains("\\|")) {
+            String[] dimensions = queryString.split("=")[1].split("\\|");
 
-        for (String dimension : dimensions) {
-            if (dimension.startsWith("facility")) {
-                cubesAccessInfo.facility = dimension.split(":")[1];
-            } else if (dimension.startsWith("location")) {
-                String provinceAndDistrictInString = dimension.split(":")[1];
-                String[] provinceAndDistrict = provinceAndDistrictInString.split(",");
-                cubesAccessInfo.province = provinceAndDistrict[0];
-                if (provinceAndDistrict.length > 1) {
-                    cubesAccessInfo.district = provinceAndDistrict[1];
+            for (String dimension : dimensions) {
+                if (dimension.startsWith("facility")) {
+                    cubesAccessInfo.facility = dimension.split(":")[1];
+                } else if (dimension.startsWith("location")) {
+                    assignProvinceAndDistrict(cubesAccessInfo, dimension);
                 }
             }
+        }
+    }
+
+    private static void assignProvinceAndDistrict(CubesAccessInfo cubesAccessInfo, String dimension) {
+        String provinceAndDistrictInString = dimension.split(":")[1];
+        String[] provinceAndDistrict = provinceAndDistrictInString.split(",");
+        cubesAccessInfo.province = provinceAndDistrict[0];
+        if (provinceAndDistrict.length > 1) {
+            cubesAccessInfo.district = provinceAndDistrict[1];
         }
     }
 }
