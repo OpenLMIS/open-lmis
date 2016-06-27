@@ -33,7 +33,7 @@
 
         <tr ng-repeat="entry in stockMovements">
             <td>{{formatDate(entry["movement.date"]) }}</td>
-            <td>{{entry["movement.reason"]}}</td>
+            <td openlmis-message="stock.movement.{{entry['movement.reason']}}"></td>
             <td>{{entry["movement.documentnumber"]}}</td>
             <td>{{entry.entries}}</td>
             <td>{{entry.negativeAdjustment}}</td>
