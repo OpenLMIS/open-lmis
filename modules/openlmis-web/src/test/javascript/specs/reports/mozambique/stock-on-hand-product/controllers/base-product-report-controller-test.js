@@ -1,5 +1,5 @@
 describe("Base Product Report Controller", function () {
-    var scope, geoZoneData, levels, httpBackend, dateFilter, facilityData, fullGeoZoneList,cacheFactory;
+    var scope, geoZoneData, levels, httpBackend, dateFilter, facilityData, fullGeoZoneList, cacheFactory;
 
     levels = [{
         "id": 5,
@@ -79,20 +79,20 @@ describe("Base Product Report Controller", function () {
         id: 1,
         name: "testDist",
         parentId: 2
-    },{
+    }, {
         code: "testProv",
         id: 2,
         name: "testProv",
         parentId: 7
-    }]
+    }];
 
     beforeEach(module('openlmis'));
-    beforeEach(inject(function (_$httpBackend_,$rootScope, $http, $filter, ProductReportService,$cacheFactory) {
+    beforeEach(inject(function (_$httpBackend_, $rootScope, $http, $filter, ProductReportService, $cacheFactory, $timeout) {
         scope = $rootScope.$new();
         httpBackend = _$httpBackend_;
         dateFilter = $filter('date');
-        cacheFactory=$cacheFactory;
-        BaseProductReportController(scope, $filter, ProductReportService,cacheFactory);
+        cacheFactory = $cacheFactory;
+        BaseProductReportController(scope, $filter, ProductReportService, cacheFactory, $timeout);
     }));
 
     it('should get provinces and districts', function () {

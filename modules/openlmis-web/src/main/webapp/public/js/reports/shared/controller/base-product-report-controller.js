@@ -1,4 +1,4 @@
-function BaseProductReportController($scope, $filter, ProductReportService, $cacheFactory, FacilityService, GeographicZoneService, $dialog, DateFormatService, $location, $timeout) {
+function BaseProductReportController($scope, $filter, ProductReportService, $cacheFactory, $timeout, FacilityService, GeographicZoneService, $dialog, DateFormatService, $location) {
     $scope.provinces = [];
     $scope.districts = [];
     $scope.facilities = [];
