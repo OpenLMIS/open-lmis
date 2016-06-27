@@ -16,8 +16,7 @@ import java.util.ArrayList;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.when;
-import static org.openlmis.core.domain.moz.MozFacilityTypes.DNM;
-import static org.openlmis.core.domain.moz.MozFacilityTypes.DPM;
+import static org.openlmis.core.domain.moz.MozFacilityTypes.*;
 
 @RunWith(PowerMockRunner.class)
 public class CubesReportValidationServiceTest {
@@ -52,7 +51,15 @@ public class CubesReportValidationServiceTest {
 
     @Test
     public void shouldValidateDistrictAccessOfDDMUser() throws Exception {
+        when(profileBaseLookupService.getCurrentUserFacility()).thenReturn(createFacilityWithType(DDM));
 
+        when(profileBaseLookupService.getAllZones()).thenReturn(createGeoZones("MATOLA"));
+        boolean isValid = cubesReportValidationService.isQueryValid("/cube/vw_period_movements/aggregate", "?cut=facility:HF8|drug:08S01Z|location:MAPUTO_PROVINCIA,MATOLA");
+        assertTrue(isValid);
+
+        when(profileBaseLookupService.getAllZones()).thenReturn(createGeoZones("xxx"));
+        isValid = cubesReportValidationService.isQueryValid("/cube/vw_period_movements/aggregate", "?cut=facility:HF8|drug:08S01Z|location:MAPUTO_PROVINCIA,MATOLA");
+        assertFalse(isValid);
     }
 
     @Test

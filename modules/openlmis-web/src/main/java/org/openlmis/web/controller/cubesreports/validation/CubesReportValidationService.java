@@ -1,7 +1,6 @@
 package org.openlmis.web.controller.cubesreports.validation;
 
 import com.google.common.base.Predicate;
-import com.google.common.collect.FluentIterable;
 import org.openlmis.core.domain.moz.MozFacilityTypes;
 import org.openlmis.report.model.dto.GeographicZone;
 import org.openlmis.report.service.lookup.ProfileBaseLookupService;
@@ -10,8 +9,8 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
-import static org.openlmis.core.domain.moz.MozFacilityTypes.DNM;
-import static org.openlmis.core.domain.moz.MozFacilityTypes.DPM;
+import static com.google.common.collect.FluentIterable.from;
+import static org.openlmis.core.domain.moz.MozFacilityTypes.*;
 
 @Service
 public class CubesReportValidationService {
@@ -26,18 +25,33 @@ public class CubesReportValidationService {
             return false;
         }
 
+        List<GeographicZone> legalZones = profileBaseLookupService.getAllZones();
         if (cubesAccessInfo.getCurrentUserFacilityType() == DNM) {
             return true;
         } else if (cubesAccessInfo.getCurrentUserFacilityType() == DPM) {
-            List<GeographicZone> legalZones = profileBaseLookupService.getAllZones();
-            return FluentIterable.from(legalZones).anyMatch(new Predicate<GeographicZone>() {
-                @Override
-                public boolean apply(GeographicZone zone) {
-                    return zone.getCode().equals(cubesAccessInfo.getProvince());
-                }
-            });
+            return from(legalZones).anyMatch(isProvinceMatch(cubesAccessInfo));
+        } else if (cubesAccessInfo.getCurrentUserFacilityType() == DDM) {
+            return from(legalZones).anyMatch(isDistrictMatch(cubesAccessInfo));
         }
 
         return false;
+    }
+
+    private Predicate<GeographicZone> isDistrictMatch(final CubesAccessInfo cubesAccessInfo) {
+        return new Predicate<GeographicZone>() {
+            @Override
+            public boolean apply(GeographicZone zone) {
+                return zone.getCode().equals(cubesAccessInfo.getDistrict());
+            }
+        };
+    }
+
+    private Predicate<GeographicZone> isProvinceMatch(final CubesAccessInfo cubesAccessInfo) {
+        return new Predicate<GeographicZone>() {
+            @Override
+            public boolean apply(GeographicZone zone) {
+                return zone.getCode().equals(cubesAccessInfo.getProvince());
+            }
+        };
     }
 }
