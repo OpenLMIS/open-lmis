@@ -3,8 +3,7 @@ package org.openlmis.web.controller.cubesreports.validation;
 import lombok.Getter;
 import org.openlmis.core.domain.moz.MozFacilityTypes;
 
-import static org.openlmis.core.domain.moz.MozFacilityTypes.DNM;
-import static org.openlmis.core.domain.moz.MozFacilityTypes.DPM;
+import static org.openlmis.core.domain.moz.MozFacilityTypes.*;
 
 @Getter
 public class CubesAccessInfo {
@@ -44,6 +43,8 @@ public class CubesAccessInfo {
             return false;
         } else if (currentUserFacilityType == DPM) {
             return province == null;
+        } else if (currentUserFacilityType == DDM) {
+            return district == null;
         }
         return true;
     }

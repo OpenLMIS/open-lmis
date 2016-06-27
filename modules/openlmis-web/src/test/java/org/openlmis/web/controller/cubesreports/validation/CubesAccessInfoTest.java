@@ -73,6 +73,21 @@ public class CubesAccessInfoTest {
         assertFalse(isMissing);
     }
 
+    @Test
+    public void DDMUserCanMissFacilityInfo() throws Exception {
+        CubesAccessInfo noLocation = noLocationWithType(DDM);
+        boolean isMissing = noLocation.isLocationInfoMissing();
+        assertTrue(isMissing);
+
+        CubesAccessInfo noFacility = noFacilityWithType(DDM);
+        isMissing = noFacility.isLocationInfoMissing();
+        assertFalse(isMissing);
+
+        CubesAccessInfo onlyProvinceWithType = onlyProvinceWithType(DDM);
+        isMissing = onlyProvinceWithType.isLocationInfoMissing();
+        assertTrue(isMissing);
+    }
+
     private CubesAccessInfo onlyProvinceWithType(MozFacilityTypes facilityType) {
         return CubesAccessInfo.createInstance(facilityType, "?cut=drug:08S01Z|location:MAPUTO_PROVINCIA");
     }
