@@ -88,15 +88,30 @@ public class CubesAccessInfoTest {
         assertTrue(isMissing);
     }
 
+    @Test
+    public void FacilityUserCanNotMissAnything() throws Exception {
+        CubesAccessInfo noLocation = noLocationWithType(CSRUR_I);
+        boolean isMissing = noLocation.isLocationInfoMissing();
+        assertTrue(isMissing);
+
+        CubesAccessInfo noFacility = noFacilityWithType(CSRUR_I);
+        isMissing = noFacility.isLocationInfoMissing();
+        assertTrue(isMissing);
+
+        CubesAccessInfo onlyProvinceWithType = onlyProvinceWithType(CSRUR_I);
+        isMissing = onlyProvinceWithType.isLocationInfoMissing();
+        assertTrue(isMissing);
+    }
+
+    private CubesAccessInfo noFacilityWithType(MozFacilityTypes facilityType) {
+        return CubesAccessInfo.createInstance(facilityType, "?cut=drug:08S01Z|location:MAPUTO_PROVINCIA,MATOLA");
+    }
+
     private CubesAccessInfo onlyProvinceWithType(MozFacilityTypes facilityType) {
         return CubesAccessInfo.createInstance(facilityType, "?cut=drug:08S01Z|location:MAPUTO_PROVINCIA");
     }
 
     private CubesAccessInfo noLocationWithType(MozFacilityTypes facilityType) {
         return CubesAccessInfo.createInstance(facilityType, "?cut=drug:08S01Z");
-    }
-
-    private CubesAccessInfo noFacilityWithType(MozFacilityTypes facilityType) {
-        return CubesAccessInfo.createInstance(facilityType, "?cut=drug:08S01Z|location:MAPUTO_PROVINCIA,MATOLA");
     }
 }

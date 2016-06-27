@@ -21,6 +21,18 @@ public class CubesAccessInfo {
         return cubesAccessInfo;
     }
 
+    public boolean isLocationInfoMissing() {
+        if (currentUserFacilityType == DNM) {
+            return false;
+        } else if (currentUserFacilityType == DPM) {
+            return province == null;
+        } else if (currentUserFacilityType == DDM) {
+            return district == null;
+        } else {
+            return facility == null;
+        }
+    }
+
     private static void assignLocations(String s, CubesAccessInfo cubesAccessInfo) {
         String[] dimensions = s.split("=")[1].split("\\|");
 
@@ -36,16 +48,5 @@ public class CubesAccessInfo {
                 }
             }
         }
-    }
-
-    public boolean isLocationInfoMissing() {
-        if (currentUserFacilityType == DNM) {
-            return false;
-        } else if (currentUserFacilityType == DPM) {
-            return province == null;
-        } else if (currentUserFacilityType == DDM) {
-            return district == null;
-        }
-        return true;
     }
 }
