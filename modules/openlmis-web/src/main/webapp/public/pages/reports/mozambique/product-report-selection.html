@@ -13,7 +13,7 @@
                 style="width:160px;"
                 class="large-input"
                 name="select-facility"
-                id="facilitiesDropDown">
+                id="facilityDropDown">
             <option ng-repeat="option in facilities | facilityFilter:districts:reportParams.districtId:reportParams.provinceId"
                     value="{{option.id}}">{{option.name}}
             </option>

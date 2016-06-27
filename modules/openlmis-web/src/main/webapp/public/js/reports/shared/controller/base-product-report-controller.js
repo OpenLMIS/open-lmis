@@ -52,7 +52,7 @@ function BaseProductReportController($scope, $filter, ProductReportService, $cac
                 });
             });
             $scope.facilities = healthFacilities;
-            addAllOption($scope.facilities, "facilitiesDropDown");
+            addAllOption($scope.facilities, "facility");
         });
     };
 
@@ -67,8 +67,8 @@ function BaseProductReportController($scope, $filter, ProductReportService, $cac
             }
         });
         $scope.fullGeoZoneList = _.union($scope.fullGeoZoneList, $scope.provinces, $scope.districts);
-        addAllOption($scope.provinces, "provincesDropDown");
-        addAllOption($scope.districts, "districtsDropDown");
+        addAllOption($scope.provinces, "province");
+        addAllOption($scope.districts, "district");
     };
 
     $scope.selectedProvince = function () {
@@ -177,15 +177,16 @@ function BaseProductReportController($scope, $filter, ProductReportService, $cac
         }));
     };
 
-    function addAllOption(locations, elementId) {
-        if (locations.length > 1) {
-            $timeout(function () {
-                $("#" + elementId).append($('<option>', {
+    function addAllOption(locations, location) {
+        $timeout(function () {
+            if (locations.length > 1) {
+                $("#" + location + "DropDown").append($('<option>', {
                     value: "",
                     text: 'ALL'
                 }));
-            });
-        }
+            }
+            $scope.reportParams[location + "Id"] = locations[0].id;
+        });
     }
 
     function loadGeographicZones() {
