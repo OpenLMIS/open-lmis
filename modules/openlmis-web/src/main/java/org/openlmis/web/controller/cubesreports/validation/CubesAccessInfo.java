@@ -4,6 +4,7 @@ import lombok.Getter;
 import org.openlmis.core.domain.moz.MozFacilityTypes;
 
 import static org.openlmis.core.domain.moz.MozFacilityTypes.DNM;
+import static org.openlmis.core.domain.moz.MozFacilityTypes.DPM;
 
 @Getter
 public class CubesAccessInfo {
@@ -41,6 +42,8 @@ public class CubesAccessInfo {
     public boolean isLocationInfoMissing() {
         if (currentUserFacilityType == DNM) {
             return false;
+        } else if (currentUserFacilityType == DPM) {
+            return province == null;
         }
         return true;
     }

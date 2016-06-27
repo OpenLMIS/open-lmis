@@ -1,11 +1,11 @@
 package org.openlmis.web.controller.cubesreports.validation;
 
 import org.junit.Test;
+import org.openlmis.core.domain.moz.MozFacilityTypes;
 
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.isEmptyOrNullString;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertThat;
+import static org.junit.Assert.*;
 import static org.openlmis.core.domain.moz.MozFacilityTypes.*;
 
 public class CubesAccessInfoTest {
@@ -21,7 +21,7 @@ public class CubesAccessInfoTest {
 
     @Test
     public void shouldParseQueryStringWhenFacilityIsMissing() throws Exception {
-        CubesAccessInfo cubesAccessInfo = CubesAccessInfo.createInstance(CSRUR_II, "?cut=drug:08S01Z|location:MAPUTO_PROVINCIA,MATOLA");
+        CubesAccessInfo cubesAccessInfo = noFacilityWithType(CSRUR_II);
 
         assertThat(cubesAccessInfo.getCurrentUserFacilityType(), is(CSRUR_II));
         assertThat(cubesAccessInfo.getFacility(), isEmptyOrNullString());
@@ -31,7 +31,7 @@ public class CubesAccessInfoTest {
 
     @Test
     public void shouldParseQueryStringWhenDistrictIsMissing() throws Exception {
-        CubesAccessInfo cubesAccessInfo = CubesAccessInfo.createInstance(DDM, "?cut=drug:08S01Z|location:MAPUTO_PROVINCIA");
+        CubesAccessInfo cubesAccessInfo = onlyProvinceWithType(DDM);
 
         assertThat(cubesAccessInfo.getCurrentUserFacilityType(), is(DDM));
         assertThat(cubesAccessInfo.getFacility(), isEmptyOrNullString());
@@ -41,7 +41,7 @@ public class CubesAccessInfoTest {
 
     @Test
     public void shouldParseQueryStringWhenAllLocationsAreMissing() throws Exception {
-        CubesAccessInfo cubesAccessInfo = CubesAccessInfo.createInstance(DPM, "?cut=drug:08S01Z");
+        CubesAccessInfo cubesAccessInfo = noLocationWithType(DPM);
 
         assertThat(cubesAccessInfo.getCurrentUserFacilityType(), is(DPM));
         assertThat(cubesAccessInfo.getFacility(), isEmptyOrNullString());
@@ -51,10 +51,37 @@ public class CubesAccessInfoTest {
 
     @Test
     public void nationalUserCanMissAllLocationInfo() throws Exception {
-        CubesAccessInfo cubesAccessInfo = CubesAccessInfo.createInstance(DNM, "?cut=drug:08S01Z");
+        CubesAccessInfo cubesAccessInfo = noLocationWithType(DNM);
 
         boolean isMissing = cubesAccessInfo.isLocationInfoMissing();
 
         assertFalse(isMissing);
+    }
+
+    @Test
+    public void DMPUserCanMissDistrictAndFacilityInfo() throws Exception {
+        CubesAccessInfo noLocation = noLocationWithType(DPM);
+        boolean isMissing = noLocation.isLocationInfoMissing();
+        assertTrue(isMissing);
+
+        CubesAccessInfo noFacility = noFacilityWithType(DPM);
+        isMissing = noFacility.isLocationInfoMissing();
+        assertFalse(isMissing);
+
+        CubesAccessInfo onlyProvinceWithType = onlyProvinceWithType(DPM);
+        isMissing = onlyProvinceWithType.isLocationInfoMissing();
+        assertFalse(isMissing);
+    }
+
+    private CubesAccessInfo onlyProvinceWithType(MozFacilityTypes facilityType) {
+        return CubesAccessInfo.createInstance(facilityType, "?cut=drug:08S01Z|location:MAPUTO_PROVINCIA");
+    }
+
+    private CubesAccessInfo noLocationWithType(MozFacilityTypes facilityType) {
+        return CubesAccessInfo.createInstance(facilityType, "?cut=drug:08S01Z");
+    }
+
+    private CubesAccessInfo noFacilityWithType(MozFacilityTypes facilityType) {
+        return CubesAccessInfo.createInstance(facilityType, "?cut=drug:08S01Z|location:MAPUTO_PROVINCIA,MATOLA");
     }
 }
