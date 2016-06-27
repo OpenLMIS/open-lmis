@@ -34,7 +34,7 @@ public class CubesAccessInfo {
     }
 
     private static void assignLocations(String queryString, CubesAccessInfo cubesAccessInfo) {
-        if (queryString.contains("=") && queryString.contains("\\|")) {
+        if (queryString.contains("=")) {
             String[] dimensions = queryString.split("=")[1].split("\\|");
 
             for (String dimension : dimensions) {
