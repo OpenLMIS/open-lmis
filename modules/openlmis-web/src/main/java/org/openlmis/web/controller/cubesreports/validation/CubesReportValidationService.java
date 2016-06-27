@@ -23,12 +23,15 @@ public class CubesReportValidationService {
     private ProfileBaseLookupService profileBaseLookupService;
 
     public boolean isQueryValid(String queryUri, String queryString) {
-        String facilityTypeCode = profileBaseLookupService.getCurrentUserFacility().getFacilityType().getCode();
-        final CubesAccessInfo cubesAccessInfo = CubesAccessInfo.createInstance(MozFacilityTypes.getEnum(facilityTypeCode), queryString);
-        if (cubesAccessInfo.isLocationInfoMissing()) {
-            return false;
-        }
+        final CubesAccessInfo cubesAccessInfo = createAccessInfo(queryString);
 
+        boolean noLocationMissing = !cubesAccessInfo.isLocationInfoMissing();
+        boolean locationAccessAllowed = validateLocationAccessAuth(cubesAccessInfo);
+
+        return noLocationMissing && locationAccessAllowed;
+    }
+
+    private boolean validateLocationAccessAuth(CubesAccessInfo cubesAccessInfo) {
         List<GeographicZone> legalZones = profileBaseLookupService.getAllZones();
         List<Facility> legalFacilities = profileBaseLookupService.getAllFacilities(new RowBounds(NO_ROW_OFFSET, NO_ROW_LIMIT));
 
@@ -41,6 +44,11 @@ public class CubesReportValidationService {
         } else {
             return from(legalFacilities).anyMatch(isFacilityMatch(cubesAccessInfo));
         }
+    }
+
+    private CubesAccessInfo createAccessInfo(String queryString) {
+        String facilityTypeCode = profileBaseLookupService.getCurrentUserFacility().getFacilityType().getCode();
+        return CubesAccessInfo.createInstance(MozFacilityTypes.getEnum(facilityTypeCode), queryString);
     }
 
     private Predicate<Facility> isFacilityMatch(final CubesAccessInfo cubesAccessInfo) {
