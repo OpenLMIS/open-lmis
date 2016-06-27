@@ -31,7 +31,9 @@ public class ProfileBaseLookupService extends ReportLookupService {
     public List<GeographicZone> getAllZones() {
         Facility facility = getCurrentUserFacility();
 
-        if (facility.getFacilityType().is(DPM.toString())) {
+        if (facility.getFacilityType().is(DNM.toString())) {
+            return super.getAllZones();
+        } else if (facility.getFacilityType().is(DPM.toString())) {
             Long provinceZoneId = facility.getGeographicZone().getParent().getId();
             return geographicZoneMapper.getZoneAndChildren(provinceZoneId);
         } else {

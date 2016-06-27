@@ -1,10 +1,11 @@
 package org.openlmis.core.domain.moz;
 
 public enum MozFacilityTypes {
-    DPM("DPM"),
-    DDM("DDM"),
-    CSRUR_I("CSRUR-I"),
-    CSRUR_II("CSRUR-II"),;
+    DNM("DNM"),//national
+    DPM("DPM"),//province
+    DDM("DDM"),//district
+    CSRUR_I("CSRUR-I"),//facility
+    CSRUR_II("CSRUR-II"),;//facility
 
     private String code;
 

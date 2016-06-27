@@ -53,6 +53,19 @@ public class ProfileBaseLookupServiceTest {
     }
 
     @Test
+    public void nationalUserShouldGetAllProvinces() throws Exception {
+        //given
+        Facility facility = createFacilityWithTypeCode("DNM");
+        when(facilityRepository.getById(anyLong())).thenReturn(facility);
+
+        //when
+        profileBaseLookupService.getAllZones();
+
+        //then
+        verify(zoneMapper).getAll();
+    }
+
+    @Test
     public void shouldGetOneProvinceAndAllDistrictsUnderItForDPMUser() throws Exception {
         //given
         Facility facility = createFacilityWithTypeCode("DPM");
