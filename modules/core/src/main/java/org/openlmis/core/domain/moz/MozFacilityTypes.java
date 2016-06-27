@@ -17,4 +17,13 @@ public enum MozFacilityTypes {
     public String toString() {
         return code;
     }
+
+    public static MozFacilityTypes getEnum(String value) {
+        for (MozFacilityTypes v : values()) {
+            if (v.code.equalsIgnoreCase(value)) {
+                return v;
+            }
+        }
+        throw new IllegalArgumentException();
+    }
 }

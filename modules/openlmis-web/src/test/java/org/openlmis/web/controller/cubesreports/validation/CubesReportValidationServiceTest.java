@@ -1,5 +1,6 @@
 package org.openlmis.web.controller.cubesreports.validation;
 
+import org.apache.ibatis.session.RowBounds;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -15,6 +16,7 @@ import java.util.ArrayList;
 
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
+import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.when;
 import static org.openlmis.core.domain.moz.MozFacilityTypes.*;
 
@@ -63,8 +65,24 @@ public class CubesReportValidationServiceTest {
     }
 
     @Test
-    public void shouldValidateFacilityAcessOfFacilityUser() throws Exception {
+    public void shouldValidateFacilityAccessOfFacilityUser() throws Exception {
+        when(profileBaseLookupService.getCurrentUserFacility()).thenReturn(createFacilityWithType(CSRUR_I));
 
+        when(profileBaseLookupService.getAllFacilities(any(RowBounds.class))).thenReturn(createFacilities("HF8"));
+        boolean isValid = cubesReportValidationService.isQueryValid("/cube/vw_period_movements/aggregate", "?cut=facility:HF8|drug:08S01Z|location:MAPUTO_PROVINCIA,MATOLA");
+        assertTrue(isValid);
+
+        when(profileBaseLookupService.getAllFacilities(any(RowBounds.class))).thenReturn(createFacilities("xxx"));
+        isValid = cubesReportValidationService.isQueryValid("/cube/vw_period_movements/aggregate", "?cut=facility:HF8|drug:08S01Z|location:MAPUTO_PROVINCIA,MATOLA");
+        assertFalse(isValid);
+    }
+
+    private ArrayList<org.openlmis.report.model.dto.Facility> createFacilities(String aaa) {
+        ArrayList<org.openlmis.report.model.dto.Facility> facilities = new ArrayList<>();
+        org.openlmis.report.model.dto.Facility facility = new org.openlmis.report.model.dto.Facility();
+        facility.setCode(aaa);
+        facilities.add(facility);
+        return facilities;
     }
 
     private Facility createFacilityWithType(MozFacilityTypes facilityTypes) {
