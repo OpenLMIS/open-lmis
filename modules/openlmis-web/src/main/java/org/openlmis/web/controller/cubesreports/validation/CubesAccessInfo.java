@@ -3,6 +3,8 @@ package org.openlmis.web.controller.cubesreports.validation;
 import lombok.Getter;
 import org.openlmis.core.domain.moz.MozFacilityTypes;
 
+import static org.openlmis.core.domain.moz.MozFacilityTypes.DNM;
+
 @Getter
 public class CubesAccessInfo {
     private MozFacilityTypes currentUserFacilityType;
@@ -34,5 +36,12 @@ public class CubesAccessInfo {
                 }
             }
         }
+    }
+
+    public boolean isLocationInfoMissing() {
+        if (currentUserFacilityType == DNM) {
+            return false;
+        }
+        return true;
     }
 }

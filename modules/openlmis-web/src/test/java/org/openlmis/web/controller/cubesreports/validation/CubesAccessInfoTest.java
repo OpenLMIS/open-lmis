@@ -4,6 +4,7 @@ import org.junit.Test;
 
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.isEmptyOrNullString;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertThat;
 import static org.openlmis.core.domain.moz.MozFacilityTypes.*;
 
@@ -46,5 +47,14 @@ public class CubesAccessInfoTest {
         assertThat(cubesAccessInfo.getFacility(), isEmptyOrNullString());
         assertThat(cubesAccessInfo.getDistrict(), isEmptyOrNullString());
         assertThat(cubesAccessInfo.getProvince(), isEmptyOrNullString());
+    }
+
+    @Test
+    public void nationalUserCanMissAllLocationInfo() throws Exception {
+        CubesAccessInfo cubesAccessInfo = CubesAccessInfo.createInstance(DNM, "?cut=drug:08S01Z");
+
+        boolean isMissing = cubesAccessInfo.isLocationInfoMissing();
+
+        assertFalse(isMissing);
     }
 }
