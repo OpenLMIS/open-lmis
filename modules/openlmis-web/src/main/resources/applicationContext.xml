@@ -63,6 +63,7 @@
         <property name="cookieName" value="lang"/>
         <property name="defaultLocale" value="${defaultLocale}"/>
         <property name="cookieMaxAge" value="0x7fffffff"/>
+        <property name="cookieHttpOnly" value="true" />
     </bean>
 
     <import resource="classpath:/springSecurityContext.xml"/>
