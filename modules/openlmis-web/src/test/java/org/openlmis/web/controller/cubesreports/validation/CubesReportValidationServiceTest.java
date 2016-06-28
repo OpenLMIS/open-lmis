@@ -77,6 +77,14 @@ public class CubesReportValidationServiceTest {
         assertFalse(isValid);
     }
 
+    @Test
+    public void shouldExcludeCertainCubesAccessFromValidation() throws Exception {
+        when(profileBaseLookupService.getCurrentUserFacility()).thenReturn(createFacilityWithType(CSRUR_I));
+
+        assertTrue(cubesReportValidationService.isQueryValid("/cube/products/facts", "whatever"));
+        assertTrue(cubesReportValidationService.isQueryValid("/cube/vw_carry_start_dates/facts", "whatever"));
+    }
+
     private ArrayList<org.openlmis.report.model.dto.Facility> createFacilities(String aaa) {
         ArrayList<org.openlmis.report.model.dto.Facility> facilities = new ArrayList<>();
         org.openlmis.report.model.dto.Facility facility = new org.openlmis.report.model.dto.Facility();

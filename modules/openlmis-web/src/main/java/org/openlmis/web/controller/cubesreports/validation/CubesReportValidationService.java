@@ -12,26 +12,29 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 import static com.google.common.collect.FluentIterable.from;
+import static java.util.Arrays.asList;
 import static org.apache.ibatis.session.RowBounds.NO_ROW_LIMIT;
 import static org.apache.ibatis.session.RowBounds.NO_ROW_OFFSET;
 import static org.openlmis.core.domain.moz.MozFacilityTypes.*;
 
 @Service
 public class CubesReportValidationService {
+    private static List<String> excludedCubes = asList("products", "vw_carry_start_dates");
 
     @Autowired
     private ProfileBaseLookupService profileBaseLookupService;
 
-    public boolean isQueryValid(String queryUri, String queryString) {
+    public boolean isQueryValid(final String queryUri, final String queryString) {
         final CubesAccessInfo cubesAccessInfo = createAccessInfo(queryString);
 
+        boolean isCubeExcluded = isCubeExcluded(queryUri);
         boolean noLocationMissing = !cubesAccessInfo.isLocationInfoMissing();
-        boolean locationAccessAllowed = validateLocationAccessAuth(cubesAccessInfo);
+        boolean isLocationAccessAllowed = isLocationAccessAllowed(cubesAccessInfo);
 
-        return noLocationMissing && locationAccessAllowed;
+        return isCubeExcluded || (noLocationMissing && isLocationAccessAllowed);
     }
 
-    private boolean validateLocationAccessAuth(CubesAccessInfo cubesAccessInfo) {
+    private boolean isLocationAccessAllowed(CubesAccessInfo cubesAccessInfo) {
         List<GeographicZone> legalZones = profileBaseLookupService.getAllZones();
         List<Facility> legalFacilities = profileBaseLookupService.getAllFacilities(new RowBounds(NO_ROW_OFFSET, NO_ROW_LIMIT));
 
@@ -76,5 +79,14 @@ public class CubesReportValidationService {
                 return zone.getCode().equals(cubesAccessInfo.getProvince());
             }
         };
+    }
+
+    private boolean isCubeExcluded(final String queryUri) {
+        return from(excludedCubes).anyMatch(new Predicate<String>() {
+            @Override
+            public boolean apply(String excludedCube) {
+                return queryUri.contains(excludedCube);
+            }
+        });
     }
 }
