@@ -1,8 +1,10 @@
 package org.openlmis.web.controller.cubesreports.validation;
 
+import com.google.common.base.Function;
 import com.google.common.base.Predicate;
 import org.apache.ibatis.session.RowBounds;
 import org.openlmis.core.domain.moz.MozFacilityTypes;
+import org.openlmis.core.repository.GeographicZoneRepository;
 import org.openlmis.report.model.dto.Facility;
 import org.openlmis.report.model.dto.GeographicZone;
 import org.openlmis.report.service.lookup.ProfileBaseLookupService;
@@ -24,19 +26,28 @@ public class CubesReportValidationService {
     @Autowired
     private ProfileBaseLookupService profileBaseLookupService;
 
+    @Autowired
+    private GeographicZoneRepository geographicZoneRepository;
+
     public boolean isQueryValid(final String queryUri, final String queryString) {
         final CubesAccessInfo cubesAccessInfo = createAccessInfo(queryString);
 
         boolean isCubeExcluded = isCubeExcluded(queryUri);
-        boolean noLocationMissing = !cubesAccessInfo.isLocationInfoMissing();
         boolean isLocationAccessAllowed = isLocationAccessAllowed(cubesAccessInfo);
 
-        return isCubeExcluded || (noLocationMissing && isLocationAccessAllowed);
+        return isCubeExcluded || (isLocationAccessAllowed);
     }
 
     private boolean isLocationAccessAllowed(CubesAccessInfo cubesAccessInfo) {
         List<GeographicZone> legalZones = profileBaseLookupService.getAllZones();
         List<Facility> legalFacilities = profileBaseLookupService.getAllFacilities(new RowBounds(NO_ROW_OFFSET, NO_ROW_LIMIT));
+
+        cubesAccessInfo.fillMissingLocation(from(legalZones).transform(new Function<GeographicZone, org.openlmis.core.domain.GeographicZone>() {
+            @Override
+            public org.openlmis.core.domain.GeographicZone apply(GeographicZone zone) {
+                return geographicZoneRepository.getByCode(zone.getCode());
+            }
+        }).toList(), legalFacilities);
 
         if (cubesAccessInfo.getCurrentUserFacilityType() == DNM) {
             return true;

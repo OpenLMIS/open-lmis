@@ -1,14 +1,25 @@
 package org.openlmis.web.controller.cubesreports.validation;
 
 import org.junit.Test;
+import org.openlmis.core.domain.GeographicLevel;
+import org.openlmis.core.domain.GeographicZone;
 import org.openlmis.core.domain.moz.MozFacilityTypes;
+import org.openlmis.report.model.dto.Facility;
 
+import java.util.List;
+
+import static java.util.Arrays.asList;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.isEmptyOrNullString;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertThat;
 import static org.openlmis.core.domain.moz.MozFacilityTypes.*;
 
 public class CubesAccessInfoTest {
+
+    private String noLocationQueryString = "?cut=drug:08S01Z";
+    private String noFacilityQueryString = "?cut=drug:08S01Z|location:MAPUTO_PROVINCIA,MATOLA";
+    private String onlyProvinceQueryString = "?cut=drug:08S01Z|location:MAPUTO_PROVINCIA";
+
     @Test
     public void shouldParseProvinceDistrictFacilityFromQueryString() throws Exception {
         CubesAccessInfo cubesAccessInfo = CubesAccessInfo.createInstance(CSRUR_I, "?cut=facility:HF8|drug:08S01Z|location:MAPUTO_PROVINCIA,MATOLA");
@@ -50,68 +61,85 @@ public class CubesAccessInfoTest {
     }
 
     @Test
-    public void nationalUserCanMissAllLocationInfo() throws Exception {
+    public void shouldNotFillAnyLocationInfoForNationalUser() throws Exception {
         CubesAccessInfo cubesAccessInfo = noLocationWithType(DNM);
 
-        boolean isMissing = cubesAccessInfo.isLocationInfoMissing();
+        String filled = cubesAccessInfo.fillMissingLocation(asList(createZone("a", "Province")), createFacilities("c"));
 
-        assertFalse(isMissing);
+        assertThat(filled, is(noLocationQueryString));
     }
 
     @Test
-    public void DMPUserCanMissDistrictAndFacilityInfo() throws Exception {
+    public void shouldFillProvinceInfoForDPMUser() throws Exception {
         CubesAccessInfo noLocation = noLocationWithType(DPM);
-        boolean isMissing = noLocation.isLocationInfoMissing();
-        assertTrue(isMissing);
+        String filled = noLocation.fillMissingLocation(asList(createZone("a", "province")), createFacilities("c"));
+        assertThat(filled, is(noLocationQueryString + "|location:a"));
 
         CubesAccessInfo noFacility = noFacilityWithType(DPM);
-        isMissing = noFacility.isLocationInfoMissing();
-        assertFalse(isMissing);
+        filled = noFacility.fillMissingLocation(asList(createZone("a", "province")), createFacilities("c"));
+        assertThat(filled, is(noFacilityQueryString));
 
         CubesAccessInfo onlyProvinceWithType = onlyProvinceWithType(DPM);
-        isMissing = onlyProvinceWithType.isLocationInfoMissing();
-        assertFalse(isMissing);
+        filled = onlyProvinceWithType.fillMissingLocation(asList(createZone("a", "province")), createFacilities("c"));
+        assertThat(filled, is(onlyProvinceQueryString));
     }
 
     @Test
-    public void DDMUserCanMissFacilityInfo() throws Exception {
+    public void shouldFillDistrictInfoForDDMUser() throws Exception {
         CubesAccessInfo noLocation = noLocationWithType(DDM);
-        boolean isMissing = noLocation.isLocationInfoMissing();
-        assertTrue(isMissing);
+        String filled = noLocation.fillMissingLocation(asList(createZone("a", "province"), createZone("b", "district")), createFacilities("c"));
+        assertThat(filled, is(noLocationQueryString + "|location:a,b"));
 
         CubesAccessInfo noFacility = noFacilityWithType(DDM);
-        isMissing = noFacility.isLocationInfoMissing();
-        assertFalse(isMissing);
+        filled = noFacility.fillMissingLocation(asList(createZone("a", "province"), createZone("b", "district")), createFacilities("c"));
+        assertThat(filled, is(noFacilityQueryString));
 
         CubesAccessInfo onlyProvinceWithType = onlyProvinceWithType(DDM);
-        isMissing = onlyProvinceWithType.isLocationInfoMissing();
-        assertTrue(isMissing);
+        filled = onlyProvinceWithType.fillMissingLocation(asList(createZone("a", "province"), createZone("b", "district")), createFacilities("c"));
+        assertThat(filled, is(onlyProvinceQueryString + ",b"));
     }
 
     @Test
-    public void FacilityUserCanNotMissAnything() throws Exception {
+    public void shouldFillFacilityInfoForFacilityUser() throws Exception {
         CubesAccessInfo noLocation = noLocationWithType(CSRUR_I);
-        boolean isMissing = noLocation.isLocationInfoMissing();
-        assertTrue(isMissing);
+        String filled = noLocation.fillMissingLocation(asList(createZone("a", "province"), createZone("b", "district")), createFacilities("c"));
+        assertThat(filled, is(noLocationQueryString + "|facility:c"));
 
         CubesAccessInfo noFacility = noFacilityWithType(CSRUR_I);
-        isMissing = noFacility.isLocationInfoMissing();
-        assertTrue(isMissing);
+        filled = noFacility.fillMissingLocation(asList(createZone("a", "province"), createZone("b", "district")), createFacilities("c"));
+        assertThat(filled, is(noFacilityQueryString + "|facility:c"));
 
         CubesAccessInfo onlyProvinceWithType = onlyProvinceWithType(CSRUR_I);
-        isMissing = onlyProvinceWithType.isLocationInfoMissing();
-        assertTrue(isMissing);
+        filled = onlyProvinceWithType.fillMissingLocation(asList(createZone("a", "province"), createZone("b", "district")), createFacilities("c"));
+        assertThat(filled, is(onlyProvinceQueryString + "|facility:c"));
+    }
+
+    private List<Facility> createFacilities(String code) {
+        Facility facility = new Facility();
+        facility.setCode(code);
+        return asList(facility);
+    }
+
+    private GeographicZone createZone(String zoneCode, String levelCode) {
+        GeographicLevel level = new GeographicLevel();
+        level.setCode(levelCode);
+
+        GeographicZone geographicZone = new GeographicZone();
+        geographicZone.setCode(zoneCode);
+        geographicZone.setLevel(level);
+
+        return geographicZone;
     }
 
     private CubesAccessInfo noFacilityWithType(MozFacilityTypes facilityType) {
-        return CubesAccessInfo.createInstance(facilityType, "?cut=drug:08S01Z|location:MAPUTO_PROVINCIA,MATOLA");
+        return CubesAccessInfo.createInstance(facilityType, noFacilityQueryString);
     }
 
     private CubesAccessInfo onlyProvinceWithType(MozFacilityTypes facilityType) {
-        return CubesAccessInfo.createInstance(facilityType, "?cut=drug:08S01Z|location:MAPUTO_PROVINCIA");
+        return CubesAccessInfo.createInstance(facilityType, onlyProvinceQueryString);
     }
 
     private CubesAccessInfo noLocationWithType(MozFacilityTypes facilityType) {
-        return CubesAccessInfo.createInstance(facilityType, "?cut=drug:08S01Z");
+        return CubesAccessInfo.createInstance(facilityType, noLocationQueryString);
     }
 }
