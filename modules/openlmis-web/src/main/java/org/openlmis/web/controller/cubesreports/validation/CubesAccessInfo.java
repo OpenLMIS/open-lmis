@@ -69,12 +69,14 @@ public class CubesAccessInfo {
         });
         String facility = Joiner.on(';').join(facilityCodes);
         this.facility = facility;
-        cubesQueryString += "|" + FACILITY_DIMENSION + facility;
+        Optional<String> cutParameter = extractCutParameter(cubesQueryString);
+        cubesQueryString = cubesQueryString.replace(cutParameter.get(), (cutParameter.get() + "|" + FACILITY_DIMENSION + facility));
     }
 
     private void fillProvince(List<GeographicZone> geographicZones) {
         if (province == null) {
-            cubesQueryString += "|" + LOCATION_DIMENSION;
+            Optional<String> cutParameter = extractCutParameter(cubesQueryString);
+            cubesQueryString = cubesQueryString.replace(cutParameter.get(), cutParameter.get() + "|" + LOCATION_DIMENSION);
 
             final Optional<GeographicZone> province = from(geographicZones).firstMatch(isLevel("province"));
             if (province.isPresent()) {
@@ -111,11 +113,11 @@ public class CubesAccessInfo {
     }
 
     private void fillDimension(Function<String, String> dimensionFunc) {
-        if (cubesQueryString.contains(CUT_SEPARATOR)) {
-            String[] split = cubesQueryString.split(CUT_SEPARATOR);
-            String[] dimensions = split[1].split("\\|");
+        Optional<String> cutParameter = extractCutParameter(cubesQueryString);
+        if (cutParameter.isPresent()) {
+            String[] dimensions = cutParameter.get().split("\\|");
             FluentIterable<String> transform = from(Arrays.asList(dimensions)).transform(dimensionFunc);
-            cubesQueryString = split[0] + CUT_SEPARATOR + Joiner.on('|').join(transform);
+            cubesQueryString = cubesQueryString.replace(cutParameter.get(), Joiner.on('|').join(transform));
         }
     }
 
@@ -129,8 +131,9 @@ public class CubesAccessInfo {
     }
 
     private static void assignLocations(String queryString, CubesAccessInfo cubesAccessInfo) {
-        if (queryString.contains(CUT_SEPARATOR)) {
-            String[] dimensions = queryString.split(CUT_SEPARATOR)[1].split("\\|");
+        Optional<String> cutParameter = extractCutParameter(queryString);
+        if (cutParameter.isPresent()) {
+            String[] dimensions = cutParameter.get().split("\\|");
 
             for (String dimension : dimensions) {
                 if (isFacilityDimension(dimension)) {
@@ -140,6 +143,21 @@ public class CubesAccessInfo {
                 }
             }
         }
+    }
+
+    private static Optional<String> extractCutParameter(String queryString) {
+        String[] parameters = queryString.split("&");
+        return from(Arrays.asList(parameters)).firstMatch(new Predicate<String>() {
+            @Override
+            public boolean apply(String parameter) {
+                return parameter.contains(CUT_SEPARATOR);
+            }
+        }).transform(new Function<String, String>() {
+            @Override
+            public String apply(String cut) {
+                return cut.split(CUT_SEPARATOR)[1];
+            }
+        });
     }
 
     private static boolean isLocationDimension(String dimension) {

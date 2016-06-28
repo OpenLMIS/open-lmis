@@ -31,25 +31,22 @@ public class CubesReportValidationService {
 
     public CubesAccessInfo validate(final String queryUri, final String queryString) {
         final CubesAccessInfo cubesAccessInfo = createAccessInfo(queryString);
-
         boolean isCubeExcluded = isCubeExcluded(queryUri);
-        boolean isLocationAccessAllowed = isLocationAccessAllowed(cubesAccessInfo);
-
-        cubesAccessInfo.setValid(isCubeExcluded || (isLocationAccessAllowed));
-
-        return cubesAccessInfo;
+        if (isCubeExcluded) {
+            cubesAccessInfo.setValid(true);
+            return cubesAccessInfo;
+        } else {
+            boolean isLocationAccessAllowed = isLocationAccessAllowed(cubesAccessInfo);
+            cubesAccessInfo.setValid(isLocationAccessAllowed);
+            return cubesAccessInfo;
+        }
     }
 
     private boolean isLocationAccessAllowed(CubesAccessInfo cubesAccessInfo) {
         List<GeographicZone> legalZones = profileBaseLookupService.getAllZones();
         List<Facility> legalFacilities = profileBaseLookupService.getAllFacilities(new RowBounds(NO_ROW_OFFSET, NO_ROW_LIMIT));
 
-        cubesAccessInfo.fillMissingLocation(from(legalZones).transform(new Function<GeographicZone, org.openlmis.core.domain.GeographicZone>() {
-            @Override
-            public org.openlmis.core.domain.GeographicZone apply(GeographicZone zone) {
-                return geographicZoneRepository.getByCode(zone.getCode());
-            }
-        }).toList(), legalFacilities);
+        fillMissingLocations(cubesAccessInfo, legalZones, legalFacilities);
 
         if (cubesAccessInfo.getCurrentUserFacilityType() == DNM) {
             return true;
@@ -65,6 +62,15 @@ public class CubesReportValidationService {
     private CubesAccessInfo createAccessInfo(String queryString) {
         String facilityTypeCode = profileBaseLookupService.getCurrentUserFacility().getFacilityType().getCode();
         return CubesAccessInfo.createInstance(MozFacilityTypes.getEnum(facilityTypeCode), queryString);
+    }
+
+    private void fillMissingLocations(CubesAccessInfo cubesAccessInfo, List<GeographicZone> legalZones, List<Facility> legalFacilities) {
+        cubesAccessInfo.fillMissingLocation(from(legalZones).transform(new Function<GeographicZone, org.openlmis.core.domain.GeographicZone>() {
+            @Override
+            public org.openlmis.core.domain.GeographicZone apply(GeographicZone zone) {
+                return geographicZoneRepository.getByCode(zone.getCode());
+            }
+        }).toList(), legalFacilities);
     }
 
     private Predicate<Facility> isFacilityMatch(final CubesAccessInfo cubesAccessInfo) {

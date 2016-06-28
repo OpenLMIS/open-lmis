@@ -16,9 +16,9 @@ import static org.openlmis.core.domain.moz.MozFacilityTypes.*;
 
 public class CubesAccessInfoTest {
 
-    private String noLocationQueryString = "?cut=drug:08S01Z";
-    private String noFacilityQueryString = "?cut=drug:08S01Z|location:MAPUTO_PROVINCIA,MATOLA";
-    private String onlyProvinceQueryString = "?cut=drug:08S01Z|location:MAPUTO_PROVINCIA";
+    private String noLocationQueryString = "?cut=drug:08S01Z&somethingelse=whatever";
+    private String noFacilityQueryString = "?cut=drug:08S01Z|location:MAPUTO_PROVINCIA,MATOLA&somethingelse=whatever";
+    private String onlyProvinceQueryString = "?cut=drug:08S01Z|location:MAPUTO_PROVINCIA&somethingelse=whatever";
 
     @Test
     public void shouldParseProvinceDistrictFacilityFromQueryString() throws Exception {
@@ -73,45 +73,45 @@ public class CubesAccessInfoTest {
     public void shouldFillProvinceInfoForDPMUser() throws Exception {
         CubesAccessInfo noLocation = noLocationWithType(DPM);
         String filled = noLocation.fillMissingLocation(asList(createZone("a", "province")), createFacilities("c"));
-        assertThat(filled, is(noLocationQueryString + "|location:a"));
+        assertThat(filled, is("?cut=drug:08S01Z|location:a&somethingelse=whatever"));
 
         CubesAccessInfo noFacility = noFacilityWithType(DPM);
         filled = noFacility.fillMissingLocation(asList(createZone("a", "province")), createFacilities("c"));
-        assertThat(filled, is(noFacilityQueryString));
+        assertThat(filled, is("?cut=drug:08S01Z|location:MAPUTO_PROVINCIA,MATOLA&somethingelse=whatever"));
 
         CubesAccessInfo onlyProvinceWithType = onlyProvinceWithType(DPM);
         filled = onlyProvinceWithType.fillMissingLocation(asList(createZone("a", "province")), createFacilities("c"));
-        assertThat(filled, is(onlyProvinceQueryString));
+        assertThat(filled, is("?cut=drug:08S01Z|location:MAPUTO_PROVINCIA&somethingelse=whatever"));
     }
 
     @Test
     public void shouldFillDistrictInfoForDDMUser() throws Exception {
         CubesAccessInfo noLocation = noLocationWithType(DDM);
         String filled = noLocation.fillMissingLocation(asList(createZone("a", "province"), createZone("b", "district")), createFacilities("c"));
-        assertThat(filled, is(noLocationQueryString + "|location:a,b"));
+        assertThat(filled, is("?cut=drug:08S01Z|location:a,b&somethingelse=whatever"));
 
         CubesAccessInfo noFacility = noFacilityWithType(DDM);
         filled = noFacility.fillMissingLocation(asList(createZone("a", "province"), createZone("b", "district")), createFacilities("c"));
-        assertThat(filled, is(noFacilityQueryString));
+        assertThat(filled, is("?cut=drug:08S01Z|location:MAPUTO_PROVINCIA,MATOLA&somethingelse=whatever"));
 
         CubesAccessInfo onlyProvinceWithType = onlyProvinceWithType(DDM);
         filled = onlyProvinceWithType.fillMissingLocation(asList(createZone("a", "province"), createZone("b", "district")), createFacilities("c"));
-        assertThat(filled, is(onlyProvinceQueryString + ",b"));
+        assertThat(filled, is("?cut=drug:08S01Z|location:MAPUTO_PROVINCIA,b&somethingelse=whatever"));
     }
 
     @Test
     public void shouldFillFacilityInfoForFacilityUser() throws Exception {
         CubesAccessInfo noLocation = noLocationWithType(CSRUR_I);
         String filled = noLocation.fillMissingLocation(asList(createZone("a", "province"), createZone("b", "district")), createFacilities("c"));
-        assertThat(filled, is(noLocationQueryString + "|facility:c"));
+        assertThat(filled, is("?cut=drug:08S01Z|facility:c&somethingelse=whatever"));
 
         CubesAccessInfo noFacility = noFacilityWithType(CSRUR_I);
         filled = noFacility.fillMissingLocation(asList(createZone("a", "province"), createZone("b", "district")), createFacilities("c"));
-        assertThat(filled, is(noFacilityQueryString + "|facility:c"));
+        assertThat(filled, is("?cut=drug:08S01Z|location:MAPUTO_PROVINCIA,MATOLA|facility:c&somethingelse=whatever"));
 
         CubesAccessInfo onlyProvinceWithType = onlyProvinceWithType(CSRUR_I);
         filled = onlyProvinceWithType.fillMissingLocation(asList(createZone("a", "province"), createZone("b", "district")), createFacilities("c"));
-        assertThat(filled, is(onlyProvinceQueryString + "|facility:c"));
+        assertThat(filled, is("?cut=drug:08S01Z|location:MAPUTO_PROVINCIA|facility:c&somethingelse=whatever"));
     }
 
     private List<Facility> createFacilities(String code) {
