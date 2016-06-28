@@ -6,6 +6,7 @@ import com.google.common.base.Optional;
 import com.google.common.base.Predicate;
 import com.google.common.collect.FluentIterable;
 import lombok.Getter;
+import lombok.Setter;
 import org.openlmis.core.domain.GeographicZone;
 import org.openlmis.core.domain.moz.MozFacilityTypes;
 import org.openlmis.report.model.dto.Facility;
@@ -28,6 +29,9 @@ public class CubesAccessInfo {
     private String facility;
     private String district;
     private String province;
+
+    @Setter
+    private boolean isValid;
 
     public static CubesAccessInfo createInstance(MozFacilityTypes currentUserFacilityType, String cubesQueryString) {
         CubesAccessInfo cubesAccessInfo = new CubesAccessInfo();

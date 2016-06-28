@@ -29,13 +29,15 @@ public class CubesReportValidationService {
     @Autowired
     private GeographicZoneRepository geographicZoneRepository;
 
-    public boolean isQueryValid(final String queryUri, final String queryString) {
+    public CubesAccessInfo validate(final String queryUri, final String queryString) {
         final CubesAccessInfo cubesAccessInfo = createAccessInfo(queryString);
 
         boolean isCubeExcluded = isCubeExcluded(queryUri);
         boolean isLocationAccessAllowed = isLocationAccessAllowed(cubesAccessInfo);
 
-        return isCubeExcluded || (isLocationAccessAllowed);
+        cubesAccessInfo.setValid(isCubeExcluded || (isLocationAccessAllowed));
+
+        return cubesAccessInfo;
     }
 
     private boolean isLocationAccessAllowed(CubesAccessInfo cubesAccessInfo) {

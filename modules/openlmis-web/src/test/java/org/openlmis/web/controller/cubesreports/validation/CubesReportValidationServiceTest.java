@@ -43,7 +43,7 @@ public class CubesReportValidationServiceTest {
     public void shouldNotValidateNationalUserAccess() throws Exception {
         when(profileBaseLookupService.getCurrentUserFacility()).thenReturn(createFacilityWithType(DNM));
 
-        boolean isValid = cubesReportValidationService.isQueryValid("/cube/vw_period_movements/aggregate", "whatever");
+        boolean isValid = cubesReportValidationService.validate("/cube/vw_period_movements/aggregate", "whatever").isValid();
 
         assertTrue(isValid);
     }
@@ -53,11 +53,11 @@ public class CubesReportValidationServiceTest {
         when(profileBaseLookupService.getCurrentUserFacility()).thenReturn(createFacilityWithType(DPM));
 
         when(profileBaseLookupService.getAllZones()).thenReturn(createGeoZones("MAPUTO_PROVINCIA"));
-        boolean isValid = cubesReportValidationService.isQueryValid("/cube/vw_period_movements/aggregate", "?cut=facility:HF8|drug:08S01Z|location:MAPUTO_PROVINCIA,MATOLA");
+        boolean isValid = cubesReportValidationService.validate("/cube/vw_period_movements/aggregate", "?cut=facility:HF8|drug:08S01Z|location:MAPUTO_PROVINCIA,MATOLA").isValid();
         assertTrue(isValid);
 
         when(profileBaseLookupService.getAllZones()).thenReturn(createGeoZones("xxx"));
-        isValid = cubesReportValidationService.isQueryValid("/cube/vw_period_movements/aggregate", "?cut=facility:HF8|drug:08S01Z|location:MAPUTO_PROVINCIA,MATOLA");
+        isValid = cubesReportValidationService.validate("/cube/vw_period_movements/aggregate", "?cut=facility:HF8|drug:08S01Z|location:MAPUTO_PROVINCIA,MATOLA").isValid();
         assertFalse(isValid);
     }
 
@@ -66,11 +66,11 @@ public class CubesReportValidationServiceTest {
         when(profileBaseLookupService.getCurrentUserFacility()).thenReturn(createFacilityWithType(DDM));
 
         when(profileBaseLookupService.getAllZones()).thenReturn(createGeoZones("MATOLA"));
-        boolean isValid = cubesReportValidationService.isQueryValid("/cube/vw_period_movements/aggregate", "?cut=facility:HF8|drug:08S01Z|location:MAPUTO_PROVINCIA,MATOLA");
+        boolean isValid = cubesReportValidationService.validate("/cube/vw_period_movements/aggregate", "?cut=facility:HF8|drug:08S01Z|location:MAPUTO_PROVINCIA,MATOLA").isValid();
         assertTrue(isValid);
 
         when(profileBaseLookupService.getAllZones()).thenReturn(createGeoZones("xxx"));
-        isValid = cubesReportValidationService.isQueryValid("/cube/vw_period_movements/aggregate", "?cut=facility:HF8|drug:08S01Z|location:MAPUTO_PROVINCIA,MATOLA");
+        isValid = cubesReportValidationService.validate("/cube/vw_period_movements/aggregate", "?cut=facility:HF8|drug:08S01Z|location:MAPUTO_PROVINCIA,MATOLA").isValid();
         assertFalse(isValid);
     }
 
@@ -79,11 +79,11 @@ public class CubesReportValidationServiceTest {
         when(profileBaseLookupService.getCurrentUserFacility()).thenReturn(createFacilityWithType(CSRUR_I));
 
         when(profileBaseLookupService.getAllFacilities(any(RowBounds.class))).thenReturn(createFacilities("HF8"));
-        boolean isValid = cubesReportValidationService.isQueryValid("/cube/vw_period_movements/aggregate", "?cut=facility:HF8|drug:08S01Z|location:MAPUTO_PROVINCIA,MATOLA");
+        boolean isValid = cubesReportValidationService.validate("/cube/vw_period_movements/aggregate", "?cut=facility:HF8|drug:08S01Z|location:MAPUTO_PROVINCIA,MATOLA").isValid();
         assertTrue(isValid);
 
         when(profileBaseLookupService.getAllFacilities(any(RowBounds.class))).thenReturn(createFacilities("xxx"));
-        isValid = cubesReportValidationService.isQueryValid("/cube/vw_period_movements/aggregate", "?cut=facility:HF8|drug:08S01Z|location:MAPUTO_PROVINCIA,MATOLA");
+        isValid = cubesReportValidationService.validate("/cube/vw_period_movements/aggregate", "?cut=facility:HF8|drug:08S01Z|location:MAPUTO_PROVINCIA,MATOLA").isValid();
         assertFalse(isValid);
     }
 
@@ -91,8 +91,8 @@ public class CubesReportValidationServiceTest {
     public void shouldExcludeCertainCubesAccessFromValidation() throws Exception {
         when(profileBaseLookupService.getCurrentUserFacility()).thenReturn(createFacilityWithType(CSRUR_I));
 
-        assertTrue(cubesReportValidationService.isQueryValid("/cube/products/facts", "whatever"));
-        assertTrue(cubesReportValidationService.isQueryValid("/cube/vw_carry_start_dates/facts", "whatever"));
+        assertTrue(cubesReportValidationService.validate("/cube/products/facts", "whatever").isValid());
+        assertTrue(cubesReportValidationService.validate("/cube/vw_carry_start_dates/facts", "whatever").isValid());
     }
 
     private ArrayList<org.openlmis.report.model.dto.Facility> createFacilities(String aaa) {
