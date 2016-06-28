@@ -34,13 +34,13 @@ public class CubesAccessInfo {
     }
 
     private static void assignLocations(String queryString, CubesAccessInfo cubesAccessInfo) {
-        if (queryString.contains("=")) {
-            String[] dimensions = queryString.split("=")[1].split("\\|");
+        if (queryString.contains("cut=")) {
+            String[] dimensions = queryString.split("cut=")[1].split("\\|");
 
             for (String dimension : dimensions) {
-                if (dimension.startsWith("facility")) {
+                if (dimension.startsWith("facility:")) {
                     cubesAccessInfo.facility = dimension.split(":")[1];
-                } else if (dimension.startsWith("location")) {
+                } else if (dimension.startsWith("location:")) {
                     assignProvinceAndDistrict(cubesAccessInfo, dimension);
                 }
             }
