@@ -62,7 +62,7 @@ public class CubesAccessInfoTest {
 
     @Test
     public void shouldNotFillAnyLocationInfoForNationalUser() throws Exception {
-        CubesAccessInfo cubesAccessInfo = noLocationWithType(DNM);
+        CubesAccessInfo cubesAccessInfo = noLocationWithType(Central);
 
         String filled = cubesAccessInfo.fillMissingLocation(asList(createZone("a", "Province")), createFacilities("c"));
 

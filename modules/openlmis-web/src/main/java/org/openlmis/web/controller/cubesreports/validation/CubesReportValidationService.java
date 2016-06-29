@@ -48,7 +48,7 @@ public class CubesReportValidationService {
 
         fillMissingLocations(cubesAccessInfo, legalZones, legalFacilities);
 
-        if (cubesAccessInfo.getCurrentUserFacilityType() == DNM) {
+        if (cubesAccessInfo.getCurrentUserFacilityType() == Central) {
             return true;
         } else if (cubesAccessInfo.getCurrentUserFacilityType() == DPM) {
             return from(legalZones).anyMatch(isProvinceMatch(cubesAccessInfo));

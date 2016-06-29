@@ -41,7 +41,7 @@ public class CubesReportValidationServiceTest {
 
     @Test
     public void shouldNotValidateNationalUserAccess() throws Exception {
-        when(profileBaseLookupService.getCurrentUserFacility()).thenReturn(createFacilityWithType(DNM));
+        when(profileBaseLookupService.getCurrentUserFacility()).thenReturn(createFacilityWithType(Central));
 
         boolean isValid = cubesReportValidationService.validate("/cube/vw_period_movements/aggregate", "whatever").isValid();
 

@@ -55,7 +55,7 @@ public class ProfileBaseLookupServiceTest {
     @Test
     public void nationalUserShouldGetAllProvinces() throws Exception {
         //given
-        Facility facility = createFacilityWithTypeCode("DNM");
+        Facility facility = createFacilityWithTypeCode("Central");
         when(facilityRepository.getById(anyLong())).thenReturn(facility);
 
         //when
