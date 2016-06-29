@@ -14,10 +14,6 @@ services.factory('CubesGenerateUrlService', function () {
         return baseUrl + cubesName + "/facts" + "?cut=" + generateCuts(cuts);
     };
 
-    var generateMembersUrl = function (cubesName, cut) {
-        return baseUrl + cubesName + "/members/" + cut.dimension + "?cut=" + generateCuts([cut]);
-    };
-
     var generateFactsUrlWithParams = function (cubesName, cuts, params) {
         return generateFactsUrl(cubesName, cuts) + "&" + jQuery.param(params);
     };
@@ -52,7 +48,6 @@ services.factory('CubesGenerateUrlService', function () {
     return {
         generateAggregateUrl: generateAggregateUrl,
         generateFactsUrl: generateFactsUrl,
-        generateMembersUrl: generateMembersUrl,
         generateFactsUrlWithParams: generateFactsUrlWithParams
     };
 });

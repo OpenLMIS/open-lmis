@@ -51,13 +51,6 @@ describe("cubes generate url service test", function () {
             .toEqual("/cubesreports/cube/vw_weekly_tracer_soh/facts?cut=location:provinceCode1,districtCode1;provinceCode2,districtCode2|cutDate:2015,12,3-2016,03,21&fields=facility.facility_name%2Cdrug.drug_name%2Cdate%2Csoh&format=csv");
     });
 
-    it("should generate url for members", function () {
-        var cubesName = "vw_stock_movements";
-        var cut = {dimension: "movement", values: [['facilitycode', 'productcode']]};
-        expect(cubesGenerateUrlService.generateMembersUrl(cubesName, cut))
-            .toEqual("/cubesreports/cube/vw_stock_movements/members/movement?cut=movement:facilitycode,productcode");
-    });
-
     it("should generate url for facts", function () {
         var cubesName = "vw_stock_movements";
         var cuts = [{dimension: "movement", values: [['facilitycode'], ['productcode']]},

@@ -1,30 +1,29 @@
 function StockMovementReportController($scope, $routeParams, Facility, $http, CubesGenerateUrlService, DateFormatService, $cacheFactory) {
 
     $scope.loadFacilityAndStockMovements = function () {
-        Facility.getFacilityByCode().get({
-            code: $scope.facilityCode
-        }, function (data) {
-            $scope.facilityName = data.facility.name;
-            $scope.district = data.facility.geographicZone.name;
-            $scope.province = data.facility.geographicZone.parent.name;
+        if ($cacheFactory.get('keepHistoryInStockOnHandPage') !== undefined) {
+            $cacheFactory.get('keepHistoryInStockOnHandPage').put('saveDataOfStockOnHand', "yes");
+        }
+        if ($cacheFactory.get('keepHistoryInStockOutReportPage') !== undefined) {
+            $cacheFactory.get('keepHistoryInStockOutReportPage').put('saveDataOfStockOutReportForSingleProduct', "yes");
+        }
 
-            if ($cacheFactory.get('keepHistoryInStockOnHandPage') !== undefined) {
-                $cacheFactory.get('keepHistoryInStockOnHandPage').put('saveDataOfStockOnHand', "yes");
-            }
-            if ($cacheFactory.get('keepHistoryInStockOutReportPage') !== undefined) {
-                $cacheFactory.get('keepHistoryInStockOutReportPage').put('saveDataOfStockOutReportForSingleProduct', "yes");
-            }
-
-            loadStockMovements();
-        });
+        loadStockMovements();
     };
 
     var loadStockMovements = function () {
-        var cut = {dimension: "movement", values: [[$scope.facilityCode, $scope.productCode]]};
+        var cuts = [
+            {dimension: "movement", values: [$scope.productCode]},
+            {dimension: "facility", values: [$scope.facilityCode]}];
 
-        $http.get(CubesGenerateUrlService.generateMembersUrl('vw_stock_movements', cut)).success(function (data) {
+        $http.get(CubesGenerateUrlService.generateFactsUrl('vw_stock_movements', cuts)).success(function (data) {
+            var firstEntry = data[0];
+            $scope.facilityName = firstEntry["facility.facility_name"];
+            $scope.district = firstEntry["location.district_name"];
+            $scope.province = firstEntry["location.province_name"];
+
             $scope.stockMovements = [];
-            _.each(data.data, function (item) {
+            _.each(data, function (item) {
                 setQuantityByType(item);
                 $scope.stockMovements.push(item);
             });
