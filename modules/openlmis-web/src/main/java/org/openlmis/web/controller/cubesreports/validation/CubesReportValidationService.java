@@ -21,7 +21,7 @@ import static org.openlmis.core.domain.moz.MozFacilityTypes.*;
 
 @Service
 public class CubesReportValidationService {
-    private static List<String> excludedCubes = asList("products", "vw_carry_start_dates");
+    private static List<String> excludedCubes = asList("products");
 
     @Autowired
     private ProfileBaseLookupService profileBaseLookupService;

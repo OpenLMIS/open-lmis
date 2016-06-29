@@ -92,7 +92,6 @@ public class CubesReportValidationServiceTest {
         when(profileBaseLookupService.getCurrentUserFacility()).thenReturn(createFacilityWithType(CSRUR_I));
 
         assertTrue(cubesReportValidationService.validate("/cube/products/facts", "whatever").isValid());
-        assertTrue(cubesReportValidationService.validate("/cube/vw_carry_start_dates/facts", "whatever").isValid());
     }
 
     private ArrayList<org.openlmis.report.model.dto.Facility> createFacilities(String aaa) {
