@@ -75,9 +75,16 @@ function ExpiryDatesReportController($scope, $filter, $controller, $http, CubesG
         var drugOccurredHash = {};
         _.forEach(dataForOneFacility, function (item) {
             var createddate = item.last_createddate;
+            var occurredDate = item.last_occurred;
             var drugCode = item['drug.drug_code'];
             if (drugOccurredHash[drugCode]) {
-                if (createddate > drugOccurredHash[drugCode].createddate) {
+                if (occurredDate === drugOccurredHash[drugCode].occurred_date) {
+                    if (createddate > drugOccurredHash[drugCode].createddate) {
+                        drugOccurredHash[drugCode].createddate = createddate;
+                        drugOccurredHash[drugCode].expiry_dates = item.expiry_dates;
+                    }
+                } else if(occurredDate > drugOccurredHash[drugCode].occurred_date) {
+                    drugOccurredHash[drugCode].occurred_date = occurredDate;
                     drugOccurredHash[drugCode].createddate = createddate;
                     drugOccurredHash[drugCode].expiry_dates = item.expiry_dates;
                 }
@@ -87,6 +94,7 @@ function ExpiryDatesReportController($scope, $filter, $controller, $http, CubesG
                     name: item['drug.drug_name'],
                     expiry_dates: item.expiry_dates,
                     createddate: createddate,
+                    occurred_date: occurredDate,
                     facility_code: item['facility.facility_code']
                 };
             }

@@ -11,7 +11,8 @@ describe("Expiry Dates Report Controller", function () {
                 "facility.facility_code": "HF2",
                 "occurred_sum": 5856192000000.0,
                 "expiry_dates": "20/7/2017, 31/5/2016",
-                "last_occurred": 1443657600000.0 //10/1/2015
+                "last_occurred": 1443657600000.0, //10/1/2015
+                "last_createddate": 1443657600000.0
             },
             {
                 "drug.drug_code": "01A02",
@@ -20,7 +21,9 @@ describe("Expiry Dates Report Controller", function () {
                 "facility.facility_code": "HF2",
                 "occurred_sum": 2928096000000.0,
                 "expiry_dates": "31/10/2016,31/5/2021",
-                "last_occurred": 1440979200000.0 //8/31/2015
+                "last_occurred": 1440979200000.0, //8/31/2015
+                "last_createddate": 1440979200000.0
+
             },
             {
                 "drug.drug_code": "01A01",
@@ -29,7 +32,8 @@ describe("Expiry Dates Report Controller", function () {
                 "facility.facility_code": "HF5",
                 "occurred_sum": 2928096000000.0,
                 "expiry_dates": "31/1/2018,31/7/2017",
-                "last_occurred": 1438300800000.0 //7/31/2015
+                "last_occurred": 1438300800000.0, //7/31/2015
+                "last_createddate": 1438300800000.0
             },
             {
                 "drug.drug_code": "01A02",
@@ -38,7 +42,8 @@ describe("Expiry Dates Report Controller", function () {
                 "facility.facility_code": "HF5",
                 "occurred_sum": 2928096000000.0,
                 "expiry_dates": "31/8/2016,30/4/2017,31/5/2018",
-                "last_occurred": 1433030400000.0 //5/31/2015
+                "last_occurred": 1433030400000.0, //5/31/2015
+                "last_createddate": 1433030400000.0
             },
             {
                 "drug.drug_code": "01A02",
@@ -47,7 +52,8 @@ describe("Expiry Dates Report Controller", function () {
                 "facility.facility_code": "HF5",
                 "occurred_sum": 2928096000000.0,
                 "expiry_dates": "",
-                "last_occurred": 1467244800000.0 //6/30/2015
+                "last_occurred": 1467244800000.0, //6/30/2015
+                "last_createddate": 1467244800000.0
             }
         ]
     };
