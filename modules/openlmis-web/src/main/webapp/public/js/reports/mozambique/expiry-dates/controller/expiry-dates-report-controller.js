@@ -104,7 +104,7 @@ function ExpiryDatesReportController($scope, $filter, $controller, $http, CubesG
 
     function getExpiryDateReportsParams() {
         var params = {};
-        params.endTime = new Date($scope.reportParams.endTime).getTime();
+        params.endTime = new Date($scope.reportParams.endTime).setHours(23,59,59,999);
         $scope.locationIdToCode(params);
         return params;
     }
