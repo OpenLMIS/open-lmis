@@ -47,6 +47,7 @@ function AdjustmentOccurrencesReportController($scope, $controller, $filter, $ht
               "LOANS_DEPOSIT": 0,
               "INVENTORY_NEGATIVE": 0,
               "PROD_DEFECTIVE": 0,
+              "RETURN_TO_DDM":0,
 
               "CUSTOMER_RETURN": 0,
               "EXPIRED_RETURN_FROM_CUSTOMER": 0,
@@ -89,7 +90,8 @@ function AdjustmentOccurrencesReportController($scope, $controller, $filter, $ht
         "DAMAGED",
         "LOANS_DEPOSIT",
         "INVENTORY_NEGATIVE",
-        "PROD_DEFECTIVE"],
+        "PROD_DEFECTIVE",
+        "RETURN_TO_DDM"],
       "positive": [
         "CUSTOMER_RETURN",
         "EXPIRED_RETURN_FROM_CUSTOMER",

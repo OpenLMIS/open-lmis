@@ -4,82 +4,89 @@ services.factory('AdjustmentOccurrencesChartService', function (messageService) 
     var adjustmentGraphConfigs = {
       "negative": [
         {
-          "balloonText": messageService.get("adjustment.chart.inventory.negative") + ": [[value]]",
+          "balloonText": messageService.get("stock.movement.INVENTORY_NEGATIVE") + ": [[value]]",
           "fillAlphas": 0.6,
           "lineAlpha": 0.4,
-          "title": messageService.get("adjustment.chart.inventory.negative"),
+          "title": messageService.get("stock.movement.INVENTORY_NEGATIVE"),
           "valueField": "INVENTORY_NEGATIVE"
         },
         {
-          "balloonText": messageService.get("adjustment.chart.expired.return.to.supplier") + ": [[value]]",
+          "balloonText": messageService.get("stock.movement.EXPIRED_RETURN_TO_SUPPLIER") + ": [[value]]",
           "fillAlphas": 0.6,
           "lineAlpha": 0.4,
-          "title": messageService.get("adjustment.chart.expired.return.to.supplier"),
+          "title": messageService.get("stock.movement.EXPIRED_RETURN_TO_SUPPLIER"),
           "valueField": "EXPIRED_RETURN_TO_SUPPLIER"
         },
         {
-          "balloonText": messageService.get("adjustment.chart.damaged") + ": [[value]]",
+          "balloonText": messageService.get("stock.movement.DAMAGED") + ": [[value]]",
           "fillAlphas": 0.6,
           "lineAlpha": 0.4,
-          "title": messageService.get("adjustment.chart.damaged"),
+          "title": messageService.get("stock.movement.DAMAGED"),
           "valueField": "DAMAGED"
         },
         {
-          "balloonText": messageService.get("adjustment.chart.loans.deposit") + ": [[value]]",
+          "balloonText": messageService.get("stock.movement.LOANS_DEPOSIT") + ": [[value]]",
           "fillAlphas": 0.6,
           "lineAlpha": 0.4,
-          "title": messageService.get("adjustment.chart.loans.deposit"),
+          "title": messageService.get("stock.movement.LOANS_DEPOSIT"),
           "valueField": "LOANS_DEPOSIT"
         },
         {
-          "balloonText": messageService.get("adjustment.chart.prod.defective") + ": [[value]]",
+          "balloonText": messageService.get("stock.movement.PROD_DEFECTIVE") + ": [[value]]",
           "fillAlphas": 0.6,
           "lineAlpha": 0.4,
-          "title": messageService.get("adjustment.chart.prod.defective"),
+          "title": messageService.get("stock.movement.PROD_DEFECTIVE"),
           "valueField": "PROD_DEFECTIVE"
+        },
+        {
+          "balloonText": messageService.get("stock.movement.RETURN_TO_DDM") + ": [[value]]",
+          "fillAlphas": 0.6,
+          "lineAlpha": 0.4,
+          "title": messageService.get("stock.movement.RETURN_TO_DDM"),
+          "valueField": "RETURN_TO_DDM"
         }
       ],
       "positive":[
         {
-          "balloonText": messageService.get("adjustment.chart.customer.return") + ": [[value]]",
+          "balloonText": messageService.get("stock.movement.CUSTOMER_RETURN") + ": [[value]]",
           "fillAlphas": 0.6,
           "lineAlpha": 0.4,
-          "title": messageService.get("adjustment.chart.customer.return"),
+          "title": messageService.get("stock.movement.CUSTOMER_RETURN"),
           "valueField": "CUSTOMER_RETURN"
         },
         {
-          "balloonText": messageService.get("adjustment.chart.expired.return.from.customer") + ": [[value]]",
+          "balloonText": messageService.get("stock.movement.EXPIRED_RETURN_FROM_CUSTOMER") + ": [[value]]",
           "fillAlphas": 0.6,
           "lineAlpha": 0.4,
-          "title": messageService.get("adjustment.chart.expired.return.from.customer"),
+          "title": messageService.get("stock.movement.EXPIRED_RETURN_FROM_CUSTOMER"),
           "valueField": "EXPIRED_RETURN_FROM_CUSTOMER"
         },
         {
-          "balloonText": messageService.get("adjustment.chart.donation") + ": [[value]]",
+          "balloonText": messageService.get("stock.movement.DONATION") + ": [[value]]",
           "fillAlphas": 0.6,
           "lineAlpha": 0.4,
-          "title": messageService.get("adjustment.chart.donation"),
+          "title": messageService.get("stock.movement.DONATION"),
           "valueField": "DONATION"
         },
         {
-          "balloonText": messageService.get("adjustment.chart.loans.received") + ": [[value]]",
+          "balloonText": messageService.get("stock.movement.LOANS_RECEIVED") + ": [[value]]",
           "fillAlphas": 0.6,
           "lineAlpha": 0.4,
-          "title": messageService.get("adjustment.chart.loans.received"),
+          "title": messageService.get("stock.movement.LOANS_RECEIVED"),
           "valueField": "LOANS_RECEIVED"
         },
         {
-          "balloonText": messageService.get("adjustment.chart.inventory.positive") + ": [[value]]",
+          "balloonText": messageService.get("stock.movement.INVENTORY_POSITIVE") + ": [[value]]",
           "fillAlphas": 0.6,
           "lineAlpha": 0.4,
-          "title": messageService.get("adjustment.chart.inventory.positive"),
+          "title": messageService.get("stock.movement.INVENTORY_POSITIVE"),
           "valueField": "INVENTORY_POSITIVE"
         },
         {
-          "balloonText": messageService.get("adjustment.chart.return.from.quarantine") + ": [[value]]",
+          "balloonText": messageService.get("stock.movement.RETURN_FROM_QUARANTINE") + ": [[value]]",
           "fillAlphas": 0.6,
           "lineAlpha": 0.4,
-          "title": messageService.get("adjustment.chart.return.from.quarantine"),
+          "title": messageService.get("stock.movement.RETURN_FROM_QUARANTINE"),
           "valueField": "RETURN_FROM_QUARANTINE"
         }
       ]
