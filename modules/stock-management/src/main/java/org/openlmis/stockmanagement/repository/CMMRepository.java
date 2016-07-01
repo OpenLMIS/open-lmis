@@ -5,8 +5,6 @@ import org.openlmis.stockmanagement.repository.mapper.CMMMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
-import java.util.Date;
-
 @Repository
 public class CMMRepository {
     public static final float DEFAULT_CMM_VALUE = -1f;
@@ -21,15 +19,6 @@ public class CMMRepository {
         } else {
             entry.setId(existingEntry.getId());
             mapper.update(entry);
-        }
-    }
-
-    public Float getCmmValue(Long facilityId, String productCode, Date day) {
-        CMMEntry cmmEntry = mapper.getCMMEntryByFacilityAndDayAndProductCode(facilityId, productCode, day);
-        if (cmmEntry != null) {
-            return cmmEntry.getCmmValue();
-        } else {
-            return DEFAULT_CMM_VALUE;
         }
     }
 }

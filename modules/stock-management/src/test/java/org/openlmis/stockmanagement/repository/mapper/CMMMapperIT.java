@@ -23,7 +23,8 @@ import java.util.Date;
 import static com.natpryce.makeiteasy.MakeItEasy.a;
 import static com.natpryce.makeiteasy.MakeItEasy.make;
 import static org.hamcrest.Matchers.is;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertThat;
 import static org.openlmis.core.utils.DateUtil.parseDate;
 
 @Category(IntegrationTests.class)
@@ -81,21 +82,5 @@ public class CMMMapperIT {
         cmmMapper.update(cmmEntry);
         CMMEntry cmmEntryActual = cmmMapper.getCMMEntryByFacilityAndPeriodAndProductCode(defaultFacility.getId(), defaultProduct.getCode(), periodBegin, periodEnd);
         assertThat(cmmEntryActual.getCmmValue().floatValue(), is(5.0F));
-    }
-
-    @Test
-    public void shouldGetCmmByDayInPeriod() throws Exception {
-        //given
-        cmmMapper.insert(cmmEntry);
-        Date queryDay = parseDate("2016-01-21", "yyyy-MM-dd");
-
-        //when
-        CMMEntry cmmEntryActual = cmmMapper.getCMMEntryByFacilityAndDayAndProductCode(defaultFacility.getId(), defaultProduct.getCode(), queryDay);
-        assertEquals(cmmEntry.getCmmValue(), cmmEntryActual.getCmmValue());
-
-        //when
-        queryDay = parseDate("2016-02-25", "yyyy-MM-dd");
-        cmmEntryActual = cmmMapper.getCMMEntryByFacilityAndDayAndProductCode(defaultFacility.getId(), defaultProduct.getCode(), queryDay);
-        assertNull(cmmEntryActual);
     }
 }

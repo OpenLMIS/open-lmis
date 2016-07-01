@@ -32,7 +32,6 @@ import org.openlmis.core.web.controller.BaseController;
 import org.openlmis.report.mapper.AppInfoMapper;
 import org.openlmis.report.mapper.RequisitionReportsMapper;
 import org.openlmis.report.model.dto.RequisitionDTO;
-import org.openlmis.report.service.FacilityProductsReportDataProvider;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -69,9 +68,6 @@ public class SimpleTableController extends BaseController {
     private RequisitionReportsMapper requisitionReportsMapper;
 
     @Autowired
-    private FacilityProductsReportDataProvider facilityProductsReportDataProvider;
-
-    @Autowired
     private AppInfoMapper appInfoMapper;
 
     @Value("${export.tmp.path}")
@@ -89,22 +85,6 @@ public class SimpleTableController extends BaseController {
             requisitionDTO.assignType();
         }
         return OpenLmisResponse.response("rnr_list", requisitions);
-    }
-
-
-    @RequestMapping(value = "/single-product-report", method = GET, headers = BaseController.ACCEPT_JSON)
-    public ResponseEntity<OpenLmisResponse> singleProductReport(
-            @RequestParam(value = "geographicZoneId", required = false) Long geographicZoneId,
-            @RequestParam(value = "productId") final Long productId,
-            @RequestParam(value = "endTime", required = false) final Date endTime) {
-        return OpenLmisResponse.response("products", facilityProductsReportDataProvider.getReportDataForSingleProduct(geographicZoneId, productId, endTime));
-    }
-
-    @RequestMapping(value = "/all-products-report", method = GET, headers = BaseController.ACCEPT_JSON)
-    public ResponseEntity<OpenLmisResponse> allProductsReport(
-            @RequestParam(value = "facilityId", required = true) Long facilityId,
-            @RequestParam(value = "endTime", required = false) final Date endTime) {
-        return OpenLmisResponse.response("products", facilityProductsReportDataProvider.getReportDataForAllProducts(facilityId, endTime));
     }
 
     @RequestMapping(value = "/app-version-report", method = GET, headers = BaseController.ACCEPT_JSON)
@@ -129,8 +109,8 @@ public class SimpleTableController extends BaseController {
 
         if (zipFile != null) {
             try {
-            FileInputStream fileInputStream = new FileInputStream(zipFile);
-            IOUtils.copy(fileInputStream, response.getOutputStream());
+                FileInputStream fileInputStream = new FileInputStream(zipFile);
+                IOUtils.copy(fileInputStream, response.getOutputStream());
                 response.flushBuffer();
                 fileInputStream.close();
                 FileUtils.deleteDirectory(directory);
