@@ -1343,12 +1343,6 @@ services.factory('ProductReportService', function ($resource) {
         loadAllProducts: function () {
             return $resource('/rest-api/lookup/products', {paging: false}, {});
         },
-        loadProductReport: function () {
-            return $resource('/reports/single-product-report', {}, {save: {method: 'POST'}});
-        },
-        loadFacilityReport: function () {
-            return $resource('/reports/all-products-report', {}, {save: {method: 'POST'}});
-        },
         loadProductsWithStockCards: function () {
             return $resource('/reports/products-with-stock-cards', {}, {});
         }
