@@ -141,7 +141,7 @@ function BaseProductReportController($scope, $filter, ProductReportService, $cac
 
     $scope.cmmStatus = function (entry) {
         var cmm = entry.cmm;
-        var soh = entry.productQuantity;
+        var soh = entry.soh;
         if (soh === 0) {
             return "stock-out";
         }

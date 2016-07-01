@@ -1,4 +1,4 @@
-function SingleFacilityReportController($scope, $filter, $controller, ProductReportService, FeatureToggleService, $cacheFactory, $timeout) {
+function SingleFacilityReportController($scope, $filter, $controller, $http, CubesGenerateCutParamsService, CubesGenerateUrlService, FeatureToggleService, $cacheFactory, $timeout) {
     $controller('BaseProductReportController', {$scope: $scope});
 
     if ($cacheFactory.get('keepHistoryInStockOnHandPage') === undefined) {
@@ -30,27 +30,37 @@ function SingleFacilityReportController($scope, $filter, $controller, ProductRep
         $scope.loadHealthFacilities();
     });
 
-    $scope.loadReport = loadReportAction;
-    
-    function loadReportAction() {
-        var params = {endTime: $filter('date')($scope.reportParams.endTime, "yyyy-MM-dd HH:mm:ss")};
-        params.facilityId = $scope.reportParams.facilityId;
-
+    $scope.loadReport = function () {
         if (validateFacility()) {
-            ProductReportService.loadFacilityReport().get(params, function (data) {
-                $scope.reportData = data.products;
+            var params = $scope.reportParams;
+            $scope.locationIdToCode(params);
+            var cutsParams = CubesGenerateCutParamsService.generateCutsParams("occurred", undefined, $filter('date')(params.endTime, "yyyy,MM,dd"),
+                params.selectedFacility, undefined, params.selectedProvince, params.selectedDistrict);
+
+            $http.get(CubesGenerateUrlService.generateFactsUrl('vw_daily_full_soh', cutsParams)).success(function (sohEntries) {
+                $scope.reportData = _.chain(sohEntries)
+                    .groupBy(function (sohEntry) {
+                        return sohEntry['drug.drug_code'];
+                    })
+                    .map(function (sameCodeEntries) {
+                        var maxOccurredDateEntry = _.max(sameCodeEntries, function (entry) {
+                            return new Date(entry.occurred_date);
+                        });
+                        maxOccurredDateEntry.soh = parseInt(maxOccurredDateEntry.soh);
+                        return maxOccurredDateEntry;
+                    })
+                    .value();
             });
         }
-    }
-    
+    };
+
     $scope.saveHistory = function () {
-        $scope.cache.put('dataOfStockOnHandReport',$scope.reportParams);
+        $scope.cache.put('dataOfStockOnHandReport', $scope.reportParams);
         console.log($scope.reportParams);
     };
-    
+
     function validateFacility() {
         $scope.invalid = !$scope.reportParams.facilityId;
         return !$scope.invalid;
     }
-
 }

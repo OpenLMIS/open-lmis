@@ -35,51 +35,53 @@
     <hr/>
 
     <div id="report" ng-if="reportData" class="stock-on-hand-all">
-        <h3 class="report-title" openlmis-message="subtitle.all.product.report|reportData[0].facilityName"></h3>
+        <h3 class="report-title" openlmis-message="subtitle.all.product.report|reportData[0]['facility.facility_name']"></h3>
         <h4 openlmis-message="label.report.data.total|reportData.length"></h4>
         <table class="table table-condensed table-bordered table-striped fixed-header-table header-table">
             <tr class="gradient-header">
-                <th ng-click="sortType = 'productName'; sortReverse = !sortReverse" class="sortable sort-desc"
+                <th ng-click="sortType = 'drug.drug_name'; sortReverse = !sortReverse" class="sortable sort-desc"
                     openlmis-message="report.drug.name">
-                    <span ng-show="sortType != 'productName'" class="icon-sort"></span>
-                    <span ng-show="sortType == 'productName' && !sortReverse" class="icon-sort-up"></span>
-                    <span ng-show="sortType == 'productName' && sortReverse" class="icon-sort-down"></span></th>
-                <th ng-click="sortType = 'productQuantity'; sortReverse = !sortReverse" class="sortable sort-desc"
+                    <span ng-show="sortType != 'drug.drug_name'" class="icon-sort"></span>
+                    <span ng-show="sortType == 'drug.drug_name' && !sortReverse" class="icon-sort-up"></span>
+                    <span ng-show="sortType == 'drug.drug_name' && sortReverse" class="icon-sort-down"></span></th>
+                <th ng-click="sortType = 'soh'; sortReverse = !sortReverse" class="sortable sort-desc"
                     openlmis-message="report.drug.quantity">
-                    <span ng-show="sortType != 'productQuantity'" class="icon-sort"></span>
-                    <span ng-show="sortType == 'productQuantity' && !sortReverse" class="icon-sort-up"></span>
-                    <span ng-show="sortType == 'productQuantity' && sortReverse" class="icon-sort-down"></span></th>
-                <th ng-click="sortType = 'soonestExpiryDate'; sortReverse = !sortReverse" class="sortable sort-desc"
+                    <span ng-show="sortType != 'soh'" class="icon-sort"></span>
+                    <span ng-show="sortType == 'soh' && !sortReverse" class="icon-sort-up"></span>
+                    <span ng-show="sortType == 'soh' && sortReverse" class="icon-sort-down"></span></th>
+                <th ng-click="sortType = 'expiry_date'; sortReverse = !sortReverse" class="sortable sort-desc"
                     openlmis-message="report.soonest.expiry.date">
-                    <span ng-show="sortType != 'soonestExpiryDate'" class="icon-sort"></span>
-                    <span ng-show="sortType == 'soonestExpiryDate' && !sortReverse" class="icon-sort-up"></span>
-                    <span ng-show="sortType == 'soonestExpiryDate' && sortReverse" class="icon-sort-down"></span></th>
-                <th ng-click="sortType = 'lastSyncDate'; sortReverse = !sortReverse" class="sortable sort-desc"
+                    <span ng-show="sortType != 'expiry_date'" class="icon-sort"></span>
+                    <span ng-show="sortType == 'expiry_date' && !sortReverse" class="icon-sort-up"></span>
+                    <span ng-show="sortType == 'expiry_date' && sortReverse" class="icon-sort-down"></span></th>
+                <th ng-click="sortType = 'last_sync_date'; sortReverse = !sortReverse" class="sortable sort-desc"
                     openlmis-message="report.last.update.date">
-                    <span ng-show="sortType != 'lastSyncDate'" class="icon-sort"></span>
-                    <span ng-show="sortType == 'lastSyncDate' && !sortReverse" class="icon-sort-up"></span>
-                    <span ng-show="sortType == 'lastSyncDate' && sortReverse" class="icon-sort-down"></span></th>
+                    <span ng-show="sortType != 'last_sync_date'" class="icon-sort"></span>
+                    <span ng-show="sortType == 'last_sync_date' && !sortReverse" class="icon-sort-up"></span>
+                    <span ng-show="sortType == 'last_sync_date' && sortReverse" class="icon-sort-down"></span></th>
             </tr>
         </table>
         <div class="content-table">
             <table class="table table-condensed table-bordered table-striped fixed-header-table">
                 <tr ng-repeat="entry in reportData | orderBy:sortType:sortReverse">
                     <td ng-show="viewStockMovementToggle"><a
-                            href="#/stock-movements/product/{{entry.code}}/facility/{{entry.facilityCode}}" ng-click="saveHistory()">{{entry.productName}}
-                        [{{entry.code}}]</a></td>
-                    <td ng-show="!viewStockMovementToggle">{{entry.productName}} [{{entry.code}}]</td>
+                            href="#/stock-movements/product/{{entry['drug.drug_code']}}/facility/{{entry['facility.facility_code']}}"
+                            ng-click="saveHistory()">{{entry['drug.drug_name']}}
+                        [{{entry['drug.drug_code']}}]</a></td>
+                    <td ng-show="!viewStockMovementToggle">{{entry['drug.drug_name']}} [{{entry['drug.drug_code']}}]
+                    </td>
                     <td style="text-align: right" ng-class="cmmStatus(entry)">
                         <span class="label label-warning low-stock-tag" openlmis-message="stock.cmm.low.stock">
                         </span>
                         <span class="label label-info over-stock-tag" openlmis-message="stock.cmm.over.stock">
                         </span>
                         <span>
-                            {{entry.productQuantity | number:0}}
+                            {{entry.soh | number:0}}
                         </span>
                     </td>
-                    <td>{{formatMonth(entry.soonestExpiryDate)}}</td>
-                    <td><span class="circle-icon" ng-style="checkLastSyncDate(entry.lastSyncDate)"> </span>
-                        <span>{{entry.lastSyncDate | date:'h:mm a'}} {{formatDateWithDay(entry.lastSyncDate)}}</span>
+                    <td>{{formatMonth(entry.expiry_date)}}</td>
+                    <td><span class="circle-icon" ng-style="checkLastSyncDate(entry.last_sync_date)"> </span>
+                        <span>{{entry.last_sync_date | date:'h:mm a'}} {{formatDateWithDay(entry.last_sync_date)}}</span>
                     </td>
                 </tr>
             </table>
