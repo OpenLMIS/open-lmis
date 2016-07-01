@@ -76,8 +76,8 @@ public class FacilityVisit extends BaseModel {
       return;
     }
     this.observations = null;
-    this.confirmedBy = null;
-    this.verifiedBy = null;
+    this.confirmedBy = new Facilitator();
+    this.verifiedBy = new Facilitator();
     this.vehicleId = null;
     this.visitDate = null;
   }

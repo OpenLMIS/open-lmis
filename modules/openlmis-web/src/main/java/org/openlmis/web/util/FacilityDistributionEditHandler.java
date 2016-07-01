@@ -4,7 +4,9 @@ import org.openlmis.distribution.domain.AdultCoverageLineItem;
 import org.openlmis.distribution.domain.ChildCoverageLineItem;
 import org.openlmis.distribution.domain.EpiInventoryLineItem;
 import org.openlmis.distribution.domain.EpiUseLineItem;
+import org.openlmis.distribution.domain.Facilitator;
 import org.openlmis.distribution.domain.FacilityDistribution;
+import org.openlmis.distribution.domain.FacilityVisit;
 import org.openlmis.distribution.domain.OpenedVialLineItem;
 import org.openlmis.distribution.domain.RefrigeratorProblem;
 import org.openlmis.distribution.domain.RefrigeratorReading;
@@ -74,7 +76,7 @@ public class FacilityDistributionEditHandler {
 
         String addictional = getAddictional(parent, original);
 
-        if (previousValue.equals(originalProperty)) {
+        if (Objects.equals(previousValue, originalProperty)) {
           // a user works on current version of the given property
           results.allow(parent, parentProperty, original, originalPropertyName, originalProperty, previousValue, newValue, addictional);
           continue;
@@ -94,6 +96,10 @@ public class FacilityDistributionEditHandler {
             checkProperties(results, original, originalPropertyName, originalList.get(i), replacementList.get(i));
           }
         } else {
+          if (original instanceof FacilityVisit && (originalPropertyName.equals("confirmedBy") || originalPropertyName.equals("verifiedBy")) && originalProperty == null) {
+            originalProperty = new Facilitator();
+          }
+
           checkProperties(results, original, originalPropertyName, originalProperty, replacementProperty);
         }
       }

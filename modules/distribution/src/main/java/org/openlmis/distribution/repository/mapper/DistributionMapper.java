@@ -152,7 +152,7 @@ public interface DistributionMapper {
   void deleteDistributionEdit(@Param("distributionId") Long distributionId, @Param("userId") Long userId);
 
   @Insert({"INSERT INTO distributions_edit_history (distributionId, district, facilityId, dataScreen, editedItem, originalValue, newValue, editedBy) VALUES",
-          "(#{distribution.id), #{district}, #{facility.id}, #{dataScreen}, #{editedItem}, #{originalValue}, #{newValue}, #{editedBy}"})
+          "(#{distribution.id}, #{district}, #{facility.id}, #{dataScreen}, #{editedItem}, #{originalValue}, #{newValue}, #{editedBy.id})"})
   void insertHistory(DistributionsEditHistory history);
 
   @Select({"SELECT * FROM distributions_edit_history WHERE distributionId = #{distributionId} ORDER BY editedDatetime ASC"})
