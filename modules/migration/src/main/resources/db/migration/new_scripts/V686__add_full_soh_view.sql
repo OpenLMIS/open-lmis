@@ -30,8 +30,6 @@ END
 $$
 LANGUAGE 'plpgsql';
 
-DROP MATERIALIZED VIEW vw_daily_full_soh;
-
 CREATE MATERIALIZED VIEW vw_daily_full_soh AS
   (SELECT DISTINCT ON (facility_code, drug_code, occurred)
      facilities.name                                                          AS facility_name,
