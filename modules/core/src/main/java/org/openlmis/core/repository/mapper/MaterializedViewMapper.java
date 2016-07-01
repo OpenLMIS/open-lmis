@@ -16,4 +16,7 @@ public interface MaterializedViewMapper {
 
     @Select("SELECT refresh_period_movements()")
     Integer refreshPeriodMovements();
+
+    @Select("SELECT refresh_daily_full_soh();")
+    Integer refreshDailyFullSoh();
 }
