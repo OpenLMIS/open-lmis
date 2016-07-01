@@ -95,6 +95,7 @@ function RequisitionReportController($scope, $filter, RequisitionReportService, 
         var url = "/public/pages/logistics/rnr/index.html#/";
         var urlMapping = {
             "VIA": "view-requisition-via/",
+            "VIA Classica": "view-requisition-via/",
             "ESS_MEDS": "view-requisition-via/",
             "MMIA": "view-requisition-mmia/"
         };
