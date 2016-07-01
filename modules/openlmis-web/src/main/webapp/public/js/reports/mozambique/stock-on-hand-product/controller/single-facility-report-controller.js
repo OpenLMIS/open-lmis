@@ -46,7 +46,7 @@ function SingleFacilityReportController($scope, $filter, $controller, $http, Cub
                         var maxOccurredDateEntry = _.max(sameCodeEntries, function (entry) {
                             return new Date(entry.occurred_date);
                         });
-                        maxOccurredDateEntry.soh = parseInt(maxOccurredDateEntry.soh);
+                        maxOccurredDateEntry.soh = Number(maxOccurredDateEntry.soh);
                         return maxOccurredDateEntry;
                     })
                     .value();
