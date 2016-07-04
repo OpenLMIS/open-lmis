@@ -1,6 +1,5 @@
 This is the Moz implementation of OpenLMIS.
 
-
 License Terms
 ---------------------------
 This program is part of the OpenLMIS logistics management information system platform software. Copyright © 2013, 2014, 2015 VillageReach, JSI, and ThoughtWorks.
