@@ -25,7 +25,8 @@ describe("adjustment occurrences report controller", function () {
         "DAMAGED",
         "LOANS_DEPOSIT",
         "INVENTORY_NEGATIVE",
-        "PROD_DEFECTIVE"
+        "PROD_DEFECTIVE",
+        "RETURN_TO_DDM"
       ]
     });
   });
