@@ -28,6 +28,71 @@ import static org.openlmis.distribution.util.ReadingParser.parse;
 
 public class FacilityDistributionEditHandler {
 
+  public boolean modified(FacilityDistributionDTO dto) {
+    try {
+      return isPropertyModified(dto);
+    } catch (IllegalAccessException | NoSuchMethodException | InvocationTargetException e) {
+      throw new IllegalStateException(e);
+    }
+  }
+
+  private boolean isPropertyModified(Object bean) throws IllegalAccessException, NoSuchMethodException, InvocationTargetException {
+    Class beanClass = bean.getClass();
+    PropertyDescriptor[] descriptors = getPropertyDescriptors(beanClass);
+    boolean modified = false;
+
+    for (PropertyDescriptor descriptor : descriptors) {
+      String name = descriptor.getName();
+
+      if (omit(bean, name)) {
+        continue;
+      }
+
+      Object value = getProperty(bean, name);
+
+      if (value instanceof Reading) {
+        Reading reading = (Reading) value;
+        Reading original = reading.getOriginal();
+
+        if (Objects.equals(original.getValue(), reading.getValue()) && Objects.equals(original.getNotRecorded(), reading.getNotRecorded())) {
+          // no change
+          continue;
+        }
+
+        modified = true;
+      }
+
+      // if given bean is modified, we don't have to go deeper
+      if (modified) {
+        break;
+      }
+
+      if (isDTO(beanClass, name)) {
+        if (value instanceof List) {
+          List list = (List) value;
+
+          for (Object element : list) {
+            modified = isPropertyModified(element);
+
+            // if one of the element in the list was modified, we don't have to check another
+            if (modified) {
+              break;
+            }
+          }
+        } else {
+          value = removeNullReference(bean, name, value);
+          modified = isPropertyModified(value);
+        }
+      }
+
+      if (modified) {
+        break;
+      }
+    }
+
+    return modified;
+  }
+
   public FacilityDistributionEditResults check(FacilityDistribution original, FacilityDistributionDTO replacement) {
     FacilityDistributionEditResults results = new FacilityDistributionEditResults(original.getFacilityId());
 
@@ -49,11 +114,7 @@ public class FacilityDistributionEditHandler {
       String originalPropertyName = originalDescriptor.getName();
       String replacementPropertyName = fieldMapping(replacementClass, originalPropertyName);
 
-      if (originalPropertyName.equals("class")) {
-        continue;
-      }
-
-      if (original instanceof FacilityDistribution && originalPropertyName.equals("facility")) {
+      if (omit(original, originalPropertyName)) {
         continue;
       }
 
@@ -96,18 +157,15 @@ public class FacilityDistributionEditHandler {
             checkProperties(results, original, originalPropertyName, originalList.get(i), replacementList.get(i));
           }
         } else {
-          if (original instanceof FacilityVisit && (originalPropertyName.equals("confirmedBy") || originalPropertyName.equals("verifiedBy")) && originalProperty == null) {
-            originalProperty = new Facilitator();
-          }
-
+          originalProperty = removeNullReference(original, originalPropertyName, originalProperty);
           checkProperties(results, original, originalPropertyName, originalProperty, replacementProperty);
         }
       }
     }
   }
 
-  private boolean isDTO(Class replacementClass, String replacementPropertyName) {
-    Field field = getField(replacementClass, replacementPropertyName, true);
+  private boolean isDTO(Class beanClass, String propertyName) {
+    Field field = getField(beanClass, propertyName, true);
     Class<?> clazz = field.getType();
 
     if (field.getType().isAssignableFrom(List.class)) {
@@ -149,6 +207,28 @@ public class FacilityDistributionEditHandler {
     }
 
     return null;
+  }
+
+  private Object removeNullReference(Object bean, String propertyName, Object propertyValue) {
+    if (null == propertyValue) {
+      if (bean instanceof FacilityVisit && ("confirmedBy".equals(propertyName) || "verifiedBy".equals(propertyName))) {
+        return new Facilitator();
+      }
+
+      if (bean instanceof RefrigeratorReading && "problem".equals(propertyName)) {
+        RefrigeratorReading refrigeratorReading = (RefrigeratorReading) bean;
+        return new RefrigeratorProblem(refrigeratorReading.getId());
+      }
+    }
+
+    return propertyValue;
+  }
+
+  private boolean omit(Object bean, String propertyName) {
+    return "class".equals(propertyName)
+            || bean instanceof FacilityDistribution && "facility".equals(propertyName)
+            || bean instanceof FacilityDistributionDTO && ("distributionId".equals(propertyName) || "modifiedBy".equals(propertyName));
+
   }
 
 }

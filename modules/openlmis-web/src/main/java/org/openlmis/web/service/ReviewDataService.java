@@ -180,31 +180,36 @@ public class ReviewDataService {
 
   @Transactional
   public FacilityDistributionEditResults update(Long distributionId, FacilityDistributionDTO replacement, Long userId) {
+    FacilityDistributionEditHandler handler = new FacilityDistributionEditHandler();
+
     deleteDistributionEdit(distributionId, userId);
 
-    replacement.setModifiedBy(userId);
+    if (handler.modified(replacement)) {
+      replacement.setModifiedBy(userId);
 
-    Distribution distribution = distributionService.getBy(distributionId);
-    Map<Long, FacilityDistribution> facilityDistributions = facilityDistributionService.getData(distribution);
-    FacilityDistribution original = facilityDistributions.get(replacement.getFacilityId());
+      Distribution distribution = distributionService.getBy(distributionId);
+      Map<Long, FacilityDistribution> facilityDistributions = facilityDistributionService.getData(distribution);
+      FacilityDistribution original = facilityDistributions.get(replacement.getFacilityId());
 
-    FacilityDistributionEditHandler handler = new FacilityDistributionEditHandler();
-    FacilityDistributionEditResults results = handler.check(original, replacement);
+      FacilityDistributionEditResults results = handler.check(original, replacement);
 
-    Iterator<FacilityDistributionEditDetail> iterator = results.getDetails().iterator();
+      Iterator<FacilityDistributionEditDetail> iterator = results.getDetails().iterator();
 
-    while (iterator.hasNext()) {
-      FacilityDistributionEditDetail detail = iterator.next();
+      while (iterator.hasNext()) {
+        FacilityDistributionEditDetail detail = iterator.next();
 
-      if (!detail.isConflict()) {
-        facilityDistributionEditService.save(detail);
-        createHistory(userId, distribution, original, detail);
+        if (!detail.isConflict()) {
+          facilityDistributionEditService.save(detail);
+          createHistory(userId, distribution, original, detail);
 
-        iterator.remove();
+          iterator.remove();
+        }
       }
-    }
 
-    return results;
+      return results;
+    } else {
+      return new FacilityDistributionEditResults(replacement.getFacilityId());
+    }
   }
 
   public void update(FacilityDistributionEditDetail detail) {
