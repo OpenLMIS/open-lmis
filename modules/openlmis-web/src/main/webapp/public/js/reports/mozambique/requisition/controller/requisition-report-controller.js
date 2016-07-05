@@ -19,6 +19,7 @@ function RequisitionReportController($scope, $filter, RequisitionReportService, 
         RequisitionReportService.get(requisitionQueryParameters, function (data) {
             $scope.requisitions = data.rnr_list;
             setInventoryDateAndSubmittedStatus();
+            renameRequisitionType();
         }, function () {
         });
     };
@@ -39,6 +40,17 @@ function RequisitionReportController($scope, $filter, RequisitionReportService, 
             }
 
             rnr.inventoryDate = formatDate(rnr.actualPeriodEnd);
+        });
+    };
+
+    var renameRequisitionType = function () {
+        _.each($scope.requisitions, function (rnr) {
+            if (rnr.type === "Normal") {
+                rnr.type = messageService.get("label.requisition.type.normal");
+            }
+            if (rnr.type === "Emergency") {
+                rnr.type = messageService.get("label.requisition.type.emergency");
+            }
         });
     };
 
