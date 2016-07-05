@@ -133,7 +133,7 @@ function BaseProductReportController($scope, $filter, ProductReportService, $cac
     };
 
     $scope.checkLastSyncDate = function (time) {
-        var syncInterval = (new Date() - time) / 1000 / 3600;
+        var syncInterval = (new Date() - new Date(time)) / 1000 / 3600;
         return syncInterval <= 24 && {'background-color': 'green'} ||
             syncInterval > 24 * 3 && {'background-color': 'red'} ||
             {'background-color': 'orange'};
