@@ -1,9 +1,9 @@
-function AdjustmentOccurrencesReportController($scope, $controller, $filter, $http, $q, AdjustmentOccurrencesChartService, CubesGenerateCutParamsService, CubesGenerateUrlService, DateFormatService) {
+function AdjustmentOccurrencesReportController($scope, $controller, $filter, $http, $q, AdjustmentOccurrencesChartService, CubesGenerateCutParamsService, CubesGenerateUrlService, DateFormatService, messageService) {
   $controller("BaseProductReportController", {$scope: $scope});
 
   $scope.adjustmentTypes = [
-    {value: "negative", name: "Negative Adjustment"},
-    {value: "positive", name: "Positive Adjustment"}
+    {value: "negative", name: messageService.get("stock.movement.negative.adjustment")},
+    {value: "positive", name: messageService.get("stock.movement.positive.adjustment")}
   ];
 
   $scope.$on("$viewContentLoaded", function () {
