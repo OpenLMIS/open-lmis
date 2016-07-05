@@ -10,6 +10,7 @@ import org.openlmis.distribution.domain.FacilityVisit;
 import org.openlmis.distribution.domain.OpenedVialLineItem;
 import org.openlmis.distribution.domain.RefrigeratorProblem;
 import org.openlmis.distribution.domain.RefrigeratorReading;
+import org.openlmis.distribution.dto.DistributionRefrigeratorsDTO;
 import org.openlmis.distribution.dto.FacilityDistributionDTO;
 import org.openlmis.distribution.dto.Reading;
 
@@ -17,6 +18,7 @@ import java.beans.PropertyDescriptor;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.ParameterizedType;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -68,6 +70,8 @@ public class FacilityDistributionEditHandler {
       }
 
       if (isDTO(beanClass, name)) {
+        value = removeNullReference(bean, name, value);
+
         if (value instanceof List) {
           List list = (List) value;
 
@@ -80,7 +84,6 @@ public class FacilityDistributionEditHandler {
             }
           }
         } else {
-          value = removeNullReference(bean, name, value);
           modified = isPropertyModified(value);
         }
       }
@@ -149,6 +152,8 @@ public class FacilityDistributionEditHandler {
       }
 
       if (isDTO(replacementClass, replacementPropertyName)) {
+        originalProperty = removeNullReference(original, originalPropertyName, originalProperty);
+
         if (originalProperty instanceof List) {
           List originalList = (List) originalProperty;
           List replacementList = (List) replacementProperty;
@@ -157,7 +162,6 @@ public class FacilityDistributionEditHandler {
             checkProperties(results, original, originalPropertyName, originalList.get(i), replacementList.get(i));
           }
         } else {
-          originalProperty = removeNullReference(original, originalPropertyName, originalProperty);
           checkProperties(results, original, originalPropertyName, originalProperty, replacementProperty);
         }
       }
@@ -218,6 +222,10 @@ public class FacilityDistributionEditHandler {
       if (bean instanceof RefrigeratorReading && "problem".equals(propertyName)) {
         RefrigeratorReading refrigeratorReading = (RefrigeratorReading) bean;
         return new RefrigeratorProblem(refrigeratorReading.getId());
+      }
+
+      if (bean instanceof DistributionRefrigeratorsDTO && "readings".equals(propertyName)) {
+        return new ArrayList<>();
       }
     }
 

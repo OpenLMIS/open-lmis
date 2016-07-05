@@ -116,16 +116,15 @@ function RecordFacilityDataController($scope, $location, $routeParams, distribut
   $scope.abandon = function (facility, dataScreenUI, detail) {
     var idx = $scope.syncResults.conflicts[facility][dataScreenUI].indexOf(detail);
 
-    $scope.syncResults.length -= 1;
-
     if (idx >= 0) {
+      $scope.syncResults.length -= 1;
       $scope.syncResults.conflicts[facility][dataScreenUI].splice(idx, 1);
     }
   };
 
   function forceSync(facility, dataScreenUI, detail) {
     var distributionId = $scope.distribution.id;
-    var url = '/review-data/distribution/' + distributionId + '/force-sync.json';
+    var url = '/review-data/distribution/' + distributionId + '/' + $routeParams.facility + '/force-sync.json';
 
     $http.post(url, detail).success(function () {
       $scope.abandon(facility, dataScreenUI, detail);
