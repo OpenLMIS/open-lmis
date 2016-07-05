@@ -139,10 +139,10 @@
                                 <td class="span2">{{detail.previousValue}}</td>
                                 <td class="span2">{{detail.newValue}}</td>
                                 <td class="span2">
-                                    <a class="btn btn-primary" ng-href="abandon(facility, dataScreenUI, detail)">
+                                    <a class="btn btn-primary" ng-click="abandon(facility, dataScreenUI, detail)">
                                         <span openlmis-message="button.abandon"></span>
                                     </a>
-                                    <a class="btn btn-primary" ng-href="forceSync(facility, dataScreenUI, detail)">
+                                    <a class="btn btn-primary" ng-click="forceSync(facility, dataScreenUI, detail)">
                                         <span openlmis-message="button.force.edit"></span>
                                     </a>
                                 </td>
