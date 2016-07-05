@@ -30,7 +30,8 @@ function SingleFacilityReportController($scope, $filter, $controller, $http, Cub
         $scope.loadHealthFacilities();
     });
 
-    $scope.loadReport = function () {
+    $scope.loadReport = loadReportAction;
+    function loadReportAction() {
         if (validateFacility()) {
             var params = $scope.reportParams;
             $scope.locationIdToCode(params);
@@ -52,7 +53,7 @@ function SingleFacilityReportController($scope, $filter, $controller, $http, Cub
                     .value();
             });
         }
-    };
+    }
 
     $scope.saveHistory = function () {
         $scope.cache.put('dataOfStockOnHandReport', $scope.reportParams);
