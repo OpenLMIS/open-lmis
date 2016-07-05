@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Created with Jaspersoft Studio version 6.1.0.final using JasperReports Library version 6.1.0  -->
-<!-- 2016-01-27T10:32:52 -->
+<!-- 2016-07-05T14:48:19 -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="DataCompleteness" language="groovy" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="4143d326-c43c-4353-92cc-93e1adfb6ab1">
 	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="SELV-UAT"/>
 	<style name="Table_TH" mode="Opaque" backcolor="#F0F8FF">
@@ -89,7 +89,7 @@ left join (
   ) as cte
 ) as fvcomp on (fvcomp.periodid=pp.id and fvcomp.deliveryzoneid=dz.id)
 left join users u on (d.createdby=u.id)
-where pp.startdate <= NOW() AND pp.startdate >= (now() - '6 months'::INTERVAL)
+where pp.startdate <= NOW() AND pp.startdate >= (now() - '13 months'::INTERVAL)
 AND ((pp.numberofmonths = 2 AND dz.name LIKE 'Nort%Gaza') OR (pp.numberofmonths = 1 AND dz.name NOT LIKE 'Nort%Gaza'))
 AND dz.name not like '%Nampula'
 order by pp.startdate desc
