@@ -95,7 +95,7 @@ public interface VaccinationCoverageMapper {
   void updateAdultCoverageLineItem(AdultCoverageLineItem adultCoverageLineItem);
 
   @Update({"UPDATE full_coverages SET facilityVisitId = #{facilityVisitId}, femaleHealthCenter = #{femaleHealthCenter}, femaleOutreach = #{femaleOutreach},",
-    "maleHealthCenter = #{maleHealthCenter}, maleOutreach = #{maleOutreach}, modifiedBy = #{modifiedBy}, modifiedDate=DEFAULT"})
+    "maleHealthCenter = #{maleHealthCenter}, maleOutreach = #{maleOutreach}, modifiedBy = #{modifiedBy}, modifiedDate=DEFAULT WHERE id = #{id}"})
   void updateFullCoverage(VaccinationFullCoverage fullCoverage);
 
   @Select("SELECT * FROM vaccination_child_coverage_line_items WHERE id = #{id}")

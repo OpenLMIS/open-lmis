@@ -48,7 +48,7 @@ public interface DistributionRefrigeratorsMapper {
 
   @Update({"UPDATE refrigerator_problems SET readingId = #{readingId}, operatorError = COALESCE(#{operatorError}, FALSE), burnerProblem = COALESCE(#{burnerProblem}, FALSE),",
     "gasLeakage = COALESCE(#{gasLeakage}, FALSE), egpFault = COALESCE(#{egpFault}, FALSE), thermostatSetting = COALESCE(#{thermostatSetting}, FALSE),",
-    "other = COALESCE(#{other}, FALSE), otherProblemExplanation = #{otherProblemExplanation}, modifiedBy = #{modifiedBy}, modifiedDate=DEFAULT"})
+    "other = COALESCE(#{other}, FALSE), otherProblemExplanation = #{otherProblemExplanation}, modifiedBy = #{modifiedBy}, modifiedDate=DEFAULT WHERE id = #{id}"})
   void updateProblem(RefrigeratorProblem problem);
 
   @Select({"SELECT * FROM refrigerator_readings where facilityVisitId = #{facilityVisitId} ORDER BY LOWER(refrigeratorSerialNumber)"})
