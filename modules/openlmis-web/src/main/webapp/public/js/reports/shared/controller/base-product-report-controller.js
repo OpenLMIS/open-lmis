@@ -1,4 +1,4 @@
-function BaseProductReportController($scope, $filter, ProductReportService, $cacheFactory, $timeout, FacilityService, GeographicZoneService, $dialog, DateFormatService, $location) {
+function BaseProductReportController($scope, $filter, ProductReportService, $cacheFactory, $timeout, FacilityService, GeographicZoneService, $dialog, DateFormatService, $location, messageService) {
     $scope.provinces = [];
     $scope.districts = [];
     $scope.facilities = [];
@@ -182,7 +182,7 @@ function BaseProductReportController($scope, $filter, ProductReportService, $cac
             if (locations.length > 1) {
                 $("#" + location + "DropDown").append($('<option>', {
                     value: "",
-                    text: 'ALL'
+                    text: messageService.get("report.option.all")
                 }));
             }
             $scope.reportParams[location + "Id"] = locations[0].id;
