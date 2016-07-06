@@ -24,7 +24,6 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.TimeZone;
 
-import static org.apache.commons.lang3.StringUtils.isBlank;
 import static org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion.NON_EMPTY;
 
 /**
@@ -45,17 +44,17 @@ public class Reading {
   }
 
   private Reading original;
-  private String value;
+  private Object value;
   private Boolean notRecorded;
 
-  public Reading(String value, Boolean notRecorded) {
+  public Reading(Object value, Boolean notRecorded) {
     this(null, value, notRecorded);
   }
 
-  public Reading(Reading original, String value, Boolean notRecorded) {
+  public Reading(Reading original, Object value, Boolean notRecorded) {
     this.original = original;
     this.value = value;
-    this.notRecorded = ((isBlank(value)) && (!notRecorded)) ? true : notRecorded;
+    this.notRecorded = ((null == value) && (!notRecorded)) ? true : notRecorded;
   }
 
   public Reading(Date date, String format) {
@@ -73,7 +72,7 @@ public class Reading {
     if (null == obj) {
       notRecorded = true;
     } else {
-      value = obj.toString();
+      value = obj;
       notRecorded = false;
     }
 
@@ -81,7 +80,7 @@ public class Reading {
   }
 
   public String getEffectiveValue() {
-    return (notRecorded == null || !notRecorded) ? value : null;
+    return (notRecorded == null || !notRecorded) ? value.toString() : null;
   }
 
   public Integer parsePositiveInt() {

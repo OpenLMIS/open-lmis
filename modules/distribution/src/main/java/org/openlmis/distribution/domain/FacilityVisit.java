@@ -98,7 +98,7 @@ public class FacilityVisit extends BaseModel {
     dto.setConfirmedBy(confirmedBy.transform());
     dto.setVerifiedBy(verifiedBy.transform());
     dto.setObservations(new Reading(observations));
-    dto.setVisitDate(new Reading(visitDate, "MM/dd/yyyy"));
+    dto.setVisitDate(new Reading(visitDate, "yyyy-MM-dd"));
     dto.setVisited(new Reading(visited));
     dto.setVehicleId(new Reading(vehicleId));
     dto.setReasonForNotVisiting(new Reading(reasonForNotVisiting));
