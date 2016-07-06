@@ -85,6 +85,10 @@ function RecordFacilityDataController($scope, $location, $route, $routeParams, d
     distributionService.distribution = results.distribution;
   }
 
+  function onError(data) {
+    $scope.errorMessage = data.error;
+  }
+
   function syncCallback(result) {
     var distributionId = $scope.distribution.id;
     var url = '/review-data/distribution/' + distributionId + '/sync.json';
@@ -96,7 +100,7 @@ function RecordFacilityDataController($scope, $location, $route, $routeParams, d
 
     if (result) {
       $.each($scope.distribution.facilityDistributions, function (ignore, facilityDistribution) {
-        $http.post(url, facilityDistribution).success(onSuccess);
+        $http.post(url, facilityDistribution).success(onSuccess).error(onError);
       });
     }
   }
@@ -127,17 +131,23 @@ function RecordFacilityDataController($scope, $location, $route, $routeParams, d
     }
   };
 
+  function onSuccessForceSync(data) {
+    IndexedDB.put('distributions', data.distribution);
+    $scope.distribution = data.distribution;
+    distributionService.distribution = data.distribution;
+
+    $scope.abandon(facility, dataScreenUI, detail);
+  }
+
+  function onErrorForceSync(data) {
+    $scope.errorMessage = data.error;
+  }
+
   function forceSync(facility, dataScreenUI, detail) {
     var distributionId = $scope.distribution.id;
     var url = '/review-data/distribution/' + distributionId + '/' + $routeParams.facility + '/force-sync.json';
 
-    $http.post(url, detail).success(function (data) {
-      IndexedDB.put('distributions', data.distribution);
-      $scope.distribution = data.distribution;
-      distributionService.distribution = data.distribution;
-
-      $scope.abandon(facility, dataScreenUI, detail);
-    });
+    $http.post(url, detail).success(onSuccessForceSync).error(onErrorForceSync);
   }
 
   $scope.forceSyncAll = function () {
