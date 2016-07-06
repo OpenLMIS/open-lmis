@@ -40,4 +40,24 @@ function VisitInfoController($scope, distributionService, $routeParams) {
 
     return [true, ""];
   };
+
+  $scope.setApplicableVisitInfo = function () {
+    var visit = $scope.distribution.facilityDistributions[$scope.selectedFacility].facilityVisit;
+
+    if (isUndefined(visit.visited)) {
+        return;
+    }
+
+    if (visit.visited.value === 'true') {
+      visit.reasonForNotVisiting = {};
+      visit.otherReasonDescription = {};
+      return;
+    }
+
+    visit.observations = {};
+    visit.confirmedBy = {};
+    visit.verifiedBy = {};
+    visit.vehicleId = {};
+    visit.visitDate = {};
+  };
 }
