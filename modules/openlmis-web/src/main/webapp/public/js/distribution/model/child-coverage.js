@@ -63,14 +63,25 @@ ChildCoverage.prototype.computeStatus = function (review) {
   return this.status;
 };
 
+function setNotRecorded(field) {
+  if (field) {
+    delete field.value;
+    field.notRecorded = true;
+
+    return field;
+  } else {
+    return {notRecorded: true};
+  }
+}
+
 ChildCoverage.prototype.setNotRecorded = function () {
   this.childCoverageLineItems.forEach(function (lineItem) {
-    lineItem.healthCenter11Months = {notRecorded: true};
-    lineItem.healthCenter23Months = {notRecorded: true};
-    lineItem.outreach11Months = {notRecorded: true};
-    lineItem.outreach23Months = {notRecorded: true};
+    lineItem.healthCenter11Months = setNotRecorded(lineItem.healthCenter11Months);
+    lineItem.healthCenter23Months = setNotRecorded(lineItem.healthCenter23Months);
+    lineItem.outreach11Months = setNotRecorded(lineItem.outreach11Months);
+    lineItem.outreach23Months = setNotRecorded(lineItem.outreach23Months);
   });
   this.openedVialLineItems.forEach(function (lineItem) {
-    lineItem.openedVial = {notRecorded: true};
+    lineItem.openedVial = setNotRecorded(lineItem.openedVial);
   });
 };
