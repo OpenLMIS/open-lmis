@@ -53,7 +53,7 @@ public class DistributionReadingDeSerializerTest {
     when(jsonNode.get("notRecorded")).thenReturn(null);
 
     Reading reading = new DistributionReadingDeSerializer().deserialize(jp, mock(DeserializationContext.class));
-    assertThat(reading.getValue(), is("55"));
+    assertThat(reading.getEffectiveValue(), is("55"));
   }
 
   @Test
@@ -67,7 +67,7 @@ public class DistributionReadingDeSerializerTest {
     when(notRecordedNode.getBooleanValue()).thenReturn(false);
 
     Reading reading = new DistributionReadingDeSerializer().deserialize(jp, mock(DeserializationContext.class));
-    assertThat(reading.getValue(), is("55"));
+    assertThat(reading.getEffectiveValue(), is("55"));
     assertThat(reading.getNotRecorded(), is(false));
   }
 
@@ -95,11 +95,11 @@ public class DistributionReadingDeSerializerTest {
     Reading reading = new DistributionReadingDeSerializer().deserialize(jp, mock(DeserializationContext.class));
 
     assertThat(reading.getOriginal(), is(notNullValue()));
-    assertThat(reading.getValue(), is("55"));
+    assertThat(reading.getEffectiveValue(), is("55"));
     assertThat(reading.getNotRecorded(), is(false));
 
     Reading original = reading.getOriginal();
-    assertThat(original.getValue(), is("22"));
+    assertThat(original.getEffectiveValue(), is("22"));
     assertThat(original.getNotRecorded(), is(false));
   }
 }

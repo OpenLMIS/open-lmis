@@ -181,17 +181,20 @@ public class ReviewDataService {
   @Transactional
   public FacilityDistributionEditResults update(Long distributionId, FacilityDistributionDTO replacement, Long userId) {
     FacilityDistributionEditHandler handler = new FacilityDistributionEditHandler();
+    FacilityDistributionEditResults results;
 
     deleteDistributionEdit(distributionId, userId);
 
+    Distribution distribution = distributionService.getBy(distributionId);
+    distribution = distributionService.getFullSyncedDistribution(distribution);
+    Map<Long, FacilityDistribution> facilityDistributions = facilityDistributionService.getData(distribution);
+    distribution.setFacilityDistributions(facilityDistributions);
+
     if (handler.modified(replacement)) {
       replacement.setModifiedBy(userId);
-
-      Distribution distribution = distributionService.getBy(distributionId);
-      Map<Long, FacilityDistribution> facilityDistributions = facilityDistributionService.getData(distribution);
       FacilityDistribution original = facilityDistributions.get(replacement.getFacilityId());
 
-      FacilityDistributionEditResults results = handler.check(original, replacement);
+      results = handler.check(original, replacement);
 
       Iterator<FacilityDistributionEditDetail> iterator = results.getDetails().iterator();
 
@@ -205,11 +208,13 @@ public class ReviewDataService {
           iterator.remove();
         }
       }
-
-      return results;
     } else {
-      return new FacilityDistributionEditResults(replacement.getFacilityId());
+      results = new FacilityDistributionEditResults(replacement.getFacilityId());
     }
+
+    results.setDistribution(distribution.transform());
+
+    return results;
   }
 
   public void update(Long distributionId, Long facilityId, FacilityDistributionEditDetail detail, Long userId) {

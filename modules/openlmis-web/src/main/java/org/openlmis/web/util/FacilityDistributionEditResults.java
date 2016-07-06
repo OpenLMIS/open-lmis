@@ -6,6 +6,7 @@ import lombok.NoArgsConstructor;
 import org.codehaus.jackson.annotate.JsonIgnoreProperties;
 import org.codehaus.jackson.map.annotate.JsonSerialize;
 import org.openlmis.core.domain.BaseModel;
+import org.openlmis.distribution.dto.DistributionDTO;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,6 +22,7 @@ import static org.openlmis.distribution.util.UIMapping.getField;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class FacilityDistributionEditResults {
   private List<FacilityDistributionEditDetail> details;
+  private DistributionDTO distribution;
   private Long facilityId;
   private boolean conflict;
 
