@@ -26,8 +26,10 @@ public final class UIMapping {
     DATA_SCREEN_MAPPING.put("VaccinationFullCoverage", "label.coverage.full");
 
     DATA_SCREEN_MAPPING.put("ChildCoverageLineItem", "label.coverage.children");
+    DATA_SCREEN_MAPPING.put("VaccinationChildCoverage", "label.coverage.children");
 
     DATA_SCREEN_MAPPING.put("AdultCoverageLineItem", "label.coverage.adult");
+    DATA_SCREEN_MAPPING.put("VaccinationAdultCoverage", "label.coverage.adult");
 
     DATA_SCREEN_MAPPING.put("OpenedVialLineItem", PARENT);
   }
