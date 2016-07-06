@@ -3,6 +3,7 @@ package org.openlmis.web.controller;
 import org.apache.commons.io.IOUtils;
 import org.openlmis.distribution.domain.Distribution;
 import org.openlmis.distribution.domain.DistributionEdit;
+import org.openlmis.distribution.dto.DistributionDTO;
 import org.openlmis.distribution.dto.FacilityDistributionDTO;
 import org.openlmis.distribution.service.DistributionService;
 import org.openlmis.web.model.ReviewDataFilter;
@@ -85,9 +86,9 @@ public class ReviewDataController extends BaseController {
 
   @RequestMapping(value = "review-data/distribution/{id}/{facility}/force-sync", method = POST, headers = ACCEPT_JSON)
   @PreAuthorize("@permissionEvaluator.hasPermission(principal, 'VIEW_SYNCHRONIZED_DATA, EDIT_SYNCHRONIZED_DATA')")
-  @ResponseStatus(OK)
-  public void forceSync(@PathVariable Long id, @PathVariable Long facility, @RequestBody FacilityDistributionEditDetail detail, HttpServletRequest request) {
-    reviewDataService.update(id, facility, detail, loggedInUserId(request));
+  public ResponseEntity<OpenLmisResponse> forceSync(@PathVariable Long id, @PathVariable Long facility, @RequestBody FacilityDistributionEditDetail detail, HttpServletRequest request) {
+    DistributionDTO distribution = reviewDataService.update(id, facility, detail, loggedInUserId(request));
+    return response("distribution", distribution);
   }
 
   @RequestMapping(value = "review-data/distribution/lastViewed", method = POST)

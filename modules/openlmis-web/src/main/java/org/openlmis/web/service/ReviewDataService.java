@@ -217,13 +217,16 @@ public class ReviewDataService {
     return results;
   }
 
-  public void update(Long distributionId, Long facilityId, FacilityDistributionEditDetail detail, Long userId) {
+  public DistributionDTO update(Long distributionId, Long facilityId, FacilityDistributionEditDetail detail, Long userId) {
     Distribution distribution = distributionService.getBy(distributionId);
+    distribution = distributionService.getFullSyncedDistribution(distribution);
     Map<Long, FacilityDistribution> facilityDistributions = facilityDistributionService.getData(distribution);
-    FacilityDistribution original = facilityDistributions.get(facilityId);
+    distribution.setFacilityDistributions(facilityDistributions);
 
     facilityDistributionEditService.save(detail);
-    createHistory(userId, distribution, detail, original.getFacilityId());
+    createHistory(userId, distribution, detail, facilityId);
+
+    return distribution.transform();
   }
 
   public File getHistoryAsCSV(Long distributionId) throws IOException {
