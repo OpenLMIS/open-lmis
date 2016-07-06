@@ -23,7 +23,7 @@ function Refrigerators(facilityVisitId, refrigerators) {
       return DistributionStatus.SYNCED;
     }
 
-    if (visited === false) {
+    if (visited === 'false') {
       return DistributionStatus.COMPLETE;
     }
     if (_.findWhere(this.readings, {status: DistributionStatus.INCOMPLETE})) {

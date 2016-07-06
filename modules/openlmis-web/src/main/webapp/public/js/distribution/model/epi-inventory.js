@@ -37,7 +37,7 @@ function EpiInventory(epiInventory) {
       return DistributionStatus.SYNCED;
     }
 
-    if (visited === false) {
+    if (visited === 'false') {
       return DistributionStatus.COMPLETE;
     }
     var statusClass;

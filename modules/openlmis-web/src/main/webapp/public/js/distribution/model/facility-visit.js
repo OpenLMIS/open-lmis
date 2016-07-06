@@ -25,7 +25,7 @@ function FacilityVisit(facilityVisitJson) {
       return DistributionStatus.EMPTY;
     }
 
-    if (this.visited && this.visited.value) {
+    if (this.visited && this.visited.value === 'true') {
       var visitedObservationStatus = computeStatusForObservation.call(this);
       return visitedObservationStatus === DistributionStatus.EMPTY ? DistributionStatus.INCOMPLETE : visitedObservationStatus;
     }

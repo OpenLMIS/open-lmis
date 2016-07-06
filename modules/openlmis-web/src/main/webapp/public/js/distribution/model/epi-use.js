@@ -40,7 +40,7 @@ function EpiUse(epiUse) {
     var _this = this;
     var statusClass;
 
-    if (visited === false) {
+    if (visited === 'false') {
       return DistributionStatus.COMPLETE;
     }
 
