@@ -72,8 +72,10 @@
     <servlet>
         <servlet-name>open-lmis</servlet-name>
         <servlet-class>org.openlmis.web.DispatcherServlet</servlet-class>
+        <multipart-config>
+            <max-request-size>1048576</max-request-size><!--1MB-->
+        </multipart-config>
     </servlet>
-
     <servlet-mapping>
         <servlet-name>open-lmis</servlet-name>
         <url-pattern>/</url-pattern>
