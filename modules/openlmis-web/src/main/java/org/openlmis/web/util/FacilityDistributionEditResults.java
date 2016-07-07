@@ -1,5 +1,6 @@
 package org.openlmis.web.util;
 
+import com.google.common.base.Predicate;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
@@ -8,9 +9,12 @@ import org.codehaus.jackson.map.annotate.JsonSerialize;
 import org.openlmis.core.domain.BaseModel;
 import org.openlmis.distribution.dto.DistributionDTO;
 
+import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.google.common.base.Predicates.not;
+import static com.google.common.collect.FluentIterable.from;
 import static org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion.NON_EMPTY;
 import static org.openlmis.distribution.util.UIMapping.getDataScreen;
 import static org.openlmis.distribution.util.UIMapping.getField;
@@ -21,6 +25,9 @@ import static org.openlmis.distribution.util.UIMapping.getField;
 @JsonSerialize(include = NON_EMPTY)
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class FacilityDistributionEditResults {
+  private static final Predicate<FacilityDistributionEditDetail> VISITED_PREDICATE = new VisitedPredicate();
+  private static final Predicate<FacilityDistributionEditDetail> NOT_VISITED_PREDICATE = not(VISITED_PREDICATE);
+
   private List<FacilityDistributionEditDetail> details;
   private DistributionDTO distribution;
   private Long facilityId;
@@ -29,6 +36,20 @@ public class FacilityDistributionEditResults {
   public FacilityDistributionEditResults(Long facilityId) {
     this.details = new ArrayList<>();
     this.facilityId = facilityId;
+  }
+
+  public List<FacilityDistributionEditDetail> getDetails() {
+    FacilityDistributionEditDetail visited = from(details).firstMatch(VISITED_PREDICATE).orNull();
+
+    if (null != visited) {
+      List<FacilityDistributionEditDetail> tmp = new ArrayList<>(details.size());
+      tmp.add(visited);
+      tmp.addAll(from(details).filter(NOT_VISITED_PREDICATE).toImmutableList());
+
+      return tmp;
+    }
+
+    return details;
   }
 
   public void allow(Object parent, String parentProperty, Object original,
@@ -70,5 +91,14 @@ public class FacilityDistributionEditResults {
     detail.setEditedItemUI(getField(detail.getDataScreen(), detail.getEditedItem(), detail.getParentDataScreen(), detail.getParentProperty(), addictional));
 
     details.add(detail);
+  }
+
+  private static final class VisitedPredicate implements Predicate<FacilityDistributionEditDetail> {
+
+    @Override
+    public boolean apply(@Nullable FacilityDistributionEditDetail input) {
+      return null != input && input.getDataScreen().equals("FacilityVisit") && input.getEditedItem().equals("visited");
+    }
+
   }
 }

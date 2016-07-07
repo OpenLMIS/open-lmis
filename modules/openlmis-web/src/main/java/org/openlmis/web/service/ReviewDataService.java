@@ -212,6 +212,10 @@ public class ReviewDataService {
       results = new FacilityDistributionEditResults(replacement.getFacilityId());
     }
 
+    distribution = distributionService.getFullSyncedDistribution(distribution);
+    facilityDistributions = facilityDistributionService.getData(distribution);
+    distribution.setFacilityDistributions(facilityDistributions);
+
     results.setDistribution(distribution.transform());
 
     return results;
@@ -225,6 +229,10 @@ public class ReviewDataService {
 
     facilityDistributionEditService.save(detail);
     createHistory(userId, distribution, detail, facilityId);
+
+    distribution = distributionService.getFullSyncedDistribution(distribution);
+    facilityDistributions = facilityDistributionService.getData(distribution);
+    distribution.setFacilityDistributions(facilityDistributions);
 
     return distribution.transform();
   }
