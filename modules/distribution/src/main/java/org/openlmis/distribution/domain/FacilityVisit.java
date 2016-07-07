@@ -30,8 +30,8 @@ import java.util.Date;
 import static org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion.NON_EMPTY;
 
 /**
- *  FacilityVisit represents an entity which keeps track of whether facility was visited or not. If visited then
- *  records visit date, vehicle and facilitator's information. And if not visited then records reason for not visiting.
+ * FacilityVisit represents an entity which keeps track of whether facility was visited or not. If visited then
+ * records visit date, vehicle and facilitator's information. And if not visited then records reason for not visiting.
  */
 
 @Data
@@ -105,18 +105,32 @@ public class FacilityVisit extends BaseModel {
     dto.setOtherReasonDescription(new Reading(otherReasonDescription));
     dto.setSynced(new Reading(synced));
 
-    dto.getConfirmedBy().getName().setNotRecorded(false);
-    dto.getConfirmedBy().getTitle().setNotRecorded(false);
-    dto.getVerifiedBy().getName().setNotRecorded(false);
-    dto.getVerifiedBy().getTitle().setNotRecorded(false);
-    dto.getObservations().setNotRecorded(false);
-    dto.getVisitDate().setNotRecorded(false);
-    dto.getVisited().setNotRecorded(false);
-    dto.getVehicleId().setNotRecorded(false);
-    dto.getReasonForNotVisiting().setNotRecorded(false);
-    dto.getOtherReasonDescription().setNotRecorded(false);
-    dto.getSynced().setNotRecorded(false);
+    setNotRecorded(dto.getConfirmedBy().getName());
+    setNotRecorded(dto.getConfirmedBy().getTitle());
+    setNotRecorded(dto.getVerifiedBy().getName());
+    setNotRecorded(dto.getVerifiedBy().getTitle());
+    setNotRecorded(dto.getObservations());
+    setNotRecorded(dto.getVisitDate());
+    setNotRecorded(dto.getVisited());
+    setNotRecorded(dto.getVehicleId());
+    setNotRecorded(dto.getReasonForNotVisiting());
+    setNotRecorded(dto.getOtherReasonDescription());
+    setNotRecorded(dto.getSynced());
 
     return dto;
+  }
+
+  private void setNotRecorded(Reading reading) {
+    if (null == reading) {
+      return;
+    }
+
+    reading.setNotRecorded(false);
+
+    if (null == reading.getOriginal()) {
+      return;
+    }
+
+    reading.getOriginal().setNotRecorded(false);
   }
 }
