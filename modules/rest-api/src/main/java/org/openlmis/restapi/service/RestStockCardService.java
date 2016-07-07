@@ -85,18 +85,18 @@ public class RestStockCardService {
                 throw new DataException(errorInStockEvent);
             }
 
-            StockCard stockCard = getOrCreateStockCard(facilityId, stockEvent.getProductCode(), stockCardMap);
+            StockCard stockCard = getOrCreateStockCard(facilityId, stockEvent.getProductCode(), stockCardMap, userId);
             StockCardEntry entry = createStockCardEntry(stockEvent, stockCard, userId);
             entries.add(entry);
         }
         return entries;
     }
 
-    private StockCard getOrCreateStockCard(Long facilityId, String productCode, Map<String, StockCard> stockCardMap) {
+    private StockCard getOrCreateStockCard(Long facilityId, String productCode, Map<String, StockCard> stockCardMap, Long userId) {
         StockCard stockCard;
 
         if (stockCardMap.get(productCode) == null) {
-            stockCard = stockCardService.getOrCreateStockCard(facilityId, productCode);
+            stockCard = stockCardService.getOrCreateStockCard(facilityId, productCode, userId);
             stockCardMap.put(productCode, stockCard);
         } else {
             stockCard = stockCardMap.get(productCode);

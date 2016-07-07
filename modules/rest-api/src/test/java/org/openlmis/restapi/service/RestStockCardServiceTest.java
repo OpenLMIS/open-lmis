@@ -85,7 +85,7 @@ public class RestStockCardServiceTest {
         when(productService.getByCode(productCode)).thenReturn(defaultProduct);
 
         StockCard expectedStockCard = StockCard.createZeroedStockCard(defaultFacility, defaultProduct);
-        when(stockCardService.getOrCreateStockCard(facilityId, productCode)).thenReturn(expectedStockCard);
+        when(stockCardService.getOrCreateStockCard(facilityId, productCode, 123L)).thenReturn(expectedStockCard);
     }
 
     @Test
@@ -138,12 +138,12 @@ public class RestStockCardServiceTest {
         when(productService.getByCode(productCode2)).thenReturn(product2);
         mockReasonWithName(reasonName);
 
-        when(stockCardService.getOrCreateStockCard(facilityId, productCode)).thenReturn(StockCard.createZeroedStockCard(defaultFacility, defaultProduct));
-        when(stockCardService.getOrCreateStockCard(facilityId, productCode2)).thenReturn(StockCard.createZeroedStockCard(defaultFacility, product2));
+        when(stockCardService.getOrCreateStockCard(facilityId, productCode, 123L)).thenReturn(StockCard.createZeroedStockCard(defaultFacility, defaultProduct));
+        when(stockCardService.getOrCreateStockCard(facilityId, productCode2, 123L)).thenReturn(StockCard.createZeroedStockCard(defaultFacility, product2));
 
         restStockCardService.adjustStock(facilityId, stockEventList, userId);
-        verify(stockCardService).getOrCreateStockCard(facilityId, productCode);
-        verify(stockCardService).getOrCreateStockCard(facilityId, productCode2);
+        verify(stockCardService).getOrCreateStockCard(facilityId, productCode, 123L);
+        verify(stockCardService).getOrCreateStockCard(facilityId, productCode2, 123L);
     }
 
     @Test
@@ -274,7 +274,7 @@ public class RestStockCardServiceTest {
     public void shouldNotCreateNewStockCardReferenceWhenTheCardAlreadyExists() {
         mockReasonWithName(reasonName);
         restStockCardService.adjustStock(facilityId, stockEventList, userId);
-        verify(stockCardService).getOrCreateStockCard(facilityId, productCode); //should only invoke once
+        verify(stockCardService).getOrCreateStockCard(facilityId, productCode, 123L); //should only invoke once
     }
 
     @Test

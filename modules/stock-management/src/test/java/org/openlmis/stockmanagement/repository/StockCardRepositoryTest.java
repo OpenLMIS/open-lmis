@@ -19,7 +19,6 @@ import org.openlmis.stockmanagement.repository.mapper.StockCardMapper;
 import org.powermock.modules.junit4.PowerMockRunner;
 import org.powermock.modules.junit4.PowerMockRunnerDelegate;
 
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -62,7 +61,7 @@ public class StockCardRepositoryTest {
     StockCard dummyCard = StockCard.createZeroedStockCard(defaultFacility, defaultProduct);
     when(mapper.getByFacilityAndProduct(defaultFacility.getId(), defaultProduct.getCode())).thenReturn(dummyCard);
 
-    StockCard stockCard = stockCardRepository.getOrCreateStockCard(defaultFacility.getId(), defaultProduct.getCode());
+    StockCard stockCard = stockCardRepository.getOrCreateStockCard(defaultFacility.getId(), defaultProduct.getCode(), 123L);
     assertThat(stockCard, is(dummyCard));
   }
 
@@ -72,10 +71,11 @@ public class StockCardRepositoryTest {
     when(facilityRepository.getById(defaultFacility.getId())).thenReturn(defaultFacility);
     when(productRepository.getByCode(defaultProduct.getCode())).thenReturn(defaultProduct);
 
-    StockCard stockCard = stockCardRepository.getOrCreateStockCard(defaultFacility.getId(), defaultProduct.getCode());
+    StockCard stockCard = stockCardRepository.getOrCreateStockCard(defaultFacility.getId(), defaultProduct.getCode(), 123L);
     verify(mapper).insert(stockCard);
     assertThat(stockCard.getFacility(), is(defaultFacility));
     assertThat(stockCard.getProduct(), is(defaultProduct));
+    assertThat(stockCard.getCreatedBy(), is(123L));
   }
 
   @Test

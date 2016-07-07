@@ -10,7 +10,6 @@
 
 package org.openlmis.stockmanagement.service;
 
-import com.google.common.base.Function;
 import com.google.common.base.Predicate;
 import com.google.common.collect.FluentIterable;
 import lombok.NoArgsConstructor;
@@ -95,8 +94,8 @@ public class StockCardService {
     return lotOnHand;
   }
 
-  public StockCard getOrCreateStockCard(Long facilityId, String productCode) {
-    return repository.getOrCreateStockCard(facilityId, productCode);
+  public StockCard getOrCreateStockCard(Long facilityId, String productCode, Long userId) {
+    return repository.getOrCreateStockCard(facilityId, productCode, userId);
   }
 
   public StockCard getStockCardById(Long facilityId, Long stockCardId) {

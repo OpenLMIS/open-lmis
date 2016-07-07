@@ -284,7 +284,7 @@ public class StockCardControllerTest {
     when(facilityRepository.getById(fId)).thenReturn(defaultFacility);
     when(productService.getByCode(pCode)).thenReturn(defaultProduct);
     when(stockAdjustmentReasonRepository.getAdjustmentReasonByName(reasonName)).thenReturn(reason);
-    when(stockCardService.getOrCreateStockCard(fId, pCode)).thenReturn(dummyCard);
+    when(stockCardService.getOrCreateStockCard(fId, pCode, 123L)).thenReturn(dummyCard);
     when(lotRepository.getLotOnHandByStockCardAndLot(eq(dummyCard.getId()), any(Long.class))).thenReturn(null);
     setupPermissionCalls(Collections.singletonList(new Right("MANAGE_STOCK", RightType.REQUISITION)));
 
@@ -330,7 +330,7 @@ public class StockCardControllerTest {
     when(facilityRepository.getById(fId)).thenReturn(defaultFacility);
     when(productService.getByCode(pCode)).thenReturn(defaultProduct);
     when(stockAdjustmentReasonRepository.getAdjustmentReasonByName(reasonName)).thenReturn(reason);
-    when(stockCardService.getOrCreateStockCard(fId, pCode)).thenReturn(dummyCard);
+    when(stockCardService.getOrCreateStockCard(fId, pCode, 123L)).thenReturn(dummyCard);
     when(lotRepository.getLotOnHandByStockCardAndLot(eq(dummyCard.getId()), any(Long.class))).thenReturn(null);
     setupPermissionCalls(Collections.<Right>emptyList());
 

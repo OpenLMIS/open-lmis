@@ -356,7 +356,7 @@ public class StockCardController extends BaseController
             }
 
             // get or create stock card
-            StockCard card = service.getOrCreateStockCard(facilityId, productCode);
+            StockCard card = service.getOrCreateStockCard(facilityId, productCode, 123L);
             if(null == card)
                 return OpenLmisResponse.error(messageService.message("error.stock.card.get"), HttpStatus.INTERNAL_SERVER_ERROR);
 

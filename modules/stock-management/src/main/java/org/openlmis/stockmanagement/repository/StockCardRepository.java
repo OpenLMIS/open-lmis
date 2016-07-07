@@ -33,9 +33,10 @@ public class StockCardRepository {
    *
    * @param facilityId the id of the facility
    * @param productCode  the code of the product
+   * @param userId
    * @return the persisted stock card.
    */
-  public StockCard getOrCreateStockCard(long facilityId, String productCode) {
+  public StockCard getOrCreateStockCard(long facilityId, String productCode, Long userId) {
     StockCard card = mapper.getByFacilityAndProduct(facilityId, productCode);
     if (null == card) {
       Facility facility = facilityRepository.getById(facilityId);
@@ -43,6 +44,7 @@ public class StockCardRepository {
       Objects.requireNonNull(facility);
       Objects.requireNonNull(product);
       card = StockCard.createZeroedStockCard(facility, product);
+      card.setCreatedBy(userId);
       mapper.insert(card);
     }
 
