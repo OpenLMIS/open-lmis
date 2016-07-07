@@ -61,7 +61,8 @@ function SingleFacilityReportController($scope, $filter, $controller, $http, Cub
     };
 
     function validateFacility() {
-        $scope.invalid = !$scope.reportParams.facilityId;
+        var facilityId = $scope.reportParams.facilityId;
+        $scope.invalid = !facilityId || facilityId === ' ';
         return !$scope.invalid;
     }
 }
