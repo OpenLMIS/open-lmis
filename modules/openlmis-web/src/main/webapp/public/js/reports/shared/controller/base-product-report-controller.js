@@ -181,11 +181,10 @@ function BaseProductReportController($scope, $filter, ProductReportService, $cac
         $timeout(function () {
             if (locations.length > 1) {
                 $("#" + location + "DropDown").append($('<option>', {
-                    value: "",
+                    value: " ",
                     text: messageService.get("report.option.all")
                 }));
             }
-            $scope.reportParams[location + "Id"] = locations[0].id;
         });
     }
 
