@@ -20,6 +20,7 @@ public class LargeRequestFilter extends OncePerRequestFilter {
         if (request.getContentLength() > MAX_REQUEST_SIZE) {
             response.reset();
             response.sendError(HttpStatus.FORBIDDEN.value(), "Request size too larger!");
+            return;
         }
         filterChain.doFilter(request, response);
     }
