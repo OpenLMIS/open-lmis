@@ -11,7 +11,7 @@ import java.io.IOException;
 
 public class LargeRequestFilter extends OncePerRequestFilter {
 
-    public static final int MAX_REQUEST_SIZE = 2097152;
+    public static final int MAX_REQUEST_SIZE = 5242880;  // 5 MB
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
