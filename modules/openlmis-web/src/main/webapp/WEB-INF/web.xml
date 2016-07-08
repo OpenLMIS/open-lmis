@@ -72,14 +72,6 @@
     <filter>
         <filter-name>largeRequestFilter</filter-name>
         <filter-class>org.openlmis.web.interceptor.LargeRequestFilter</filter-class>
-        <init-param>
-            <param-name>includePayload</param-name>
-            <param-value>true</param-value>
-        </init-param>
-        <init-param>
-            <param-name>maxPayloadLength</param-name>
-            <param-value>99999</param-value>
-        </init-param>
     </filter>
 
     <filter-mapping>

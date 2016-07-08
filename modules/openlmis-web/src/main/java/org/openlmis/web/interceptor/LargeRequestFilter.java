@@ -21,6 +21,7 @@ public class LargeRequestFilter extends OncePerRequestFilter {
             response.reset();
             response.sendError(HttpStatus.FORBIDDEN.value(), "Request size too larger!");
         }
+        filterChain.doFilter(request, response);
     }
 
 }
