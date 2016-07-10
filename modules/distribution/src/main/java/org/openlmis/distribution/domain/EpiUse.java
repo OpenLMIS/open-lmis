@@ -18,8 +18,15 @@ import org.codehaus.jackson.annotate.JsonIgnoreProperties;
 import org.openlmis.core.domain.Facility;
 import org.openlmis.core.domain.FacilityProgramProduct;
 import org.openlmis.core.domain.ProductGroup;
+import org.openlmis.distribution.dto.EpiUseDTO;
+import org.openlmis.distribution.dto.EpiUseLineItemDTO;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 /**
  *  EpiUse represents a container for list of EpiUseLineItem.
@@ -54,6 +61,19 @@ public class EpiUse {
         this.lineItems.add(new EpiUseLineItem(facilityVisit, productGroup));
       }
     }
+  }
+
+  public EpiUseDTO transform() {
+    EpiUseDTO dto = new EpiUseDTO();
+
+    List<EpiUseLineItemDTO> lineItems = new ArrayList<>();
+    for (EpiUseLineItem lineItem : this.lineItems) {
+      lineItems.add(lineItem.transform());
+    }
+
+    dto.setLineItems(lineItems);
+
+    return dto;
   }
 
   /**

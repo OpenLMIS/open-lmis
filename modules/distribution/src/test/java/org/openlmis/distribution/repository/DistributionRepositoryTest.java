@@ -18,13 +18,17 @@ import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.openlmis.db.categories.UnitTests;
 import org.openlmis.distribution.domain.Distribution;
+import org.openlmis.distribution.domain.DistributionStatus;
 import org.openlmis.distribution.repository.mapper.DistributionMapper;
 
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
+import static org.openlmis.distribution.domain.DistributionStatus.COMPLETED;
 import static org.openlmis.distribution.domain.DistributionStatus.INITIATED;
+import static org.openlmis.distribution.domain.DistributionStatus.SYNCED;
 
 @Category(UnitTests.class)
 @RunWith(MockitoJUnitRunner.class)
@@ -54,4 +58,29 @@ public class DistributionRepositoryTest {
 
     verify(mapper).get(distribution);
   }
+
+  @Test
+  public void shouldSetSyncDateIfDistributionStatusIsSynced() {
+    Long distributionId = 10L;
+    DistributionStatus status = SYNCED;
+    Long userId = 15L;
+
+    repository.updateDistributionStatus(distributionId, status, userId);
+
+    verify(mapper).updateDistributionStatus(distributionId, status, userId);
+    verify(mapper).updateSyncDate(distributionId);
+  }
+
+  @Test
+  public void shouldNotSetSyncDateIfDistributionStatusIsNotSynced() {
+    Long distributionId = 10L;
+    DistributionStatus status = COMPLETED;
+    Long userId = 15L;
+
+    repository.updateDistributionStatus(distributionId, status, userId);
+
+    verify(mapper).updateDistributionStatus(distributionId, status, userId);
+    verify(mapper, never()).updateSyncDate(distributionId);
+  }
+
 }

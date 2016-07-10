@@ -28,13 +28,22 @@ public class DistributionReadingDeSerializer extends JsonDeserializer<Reading> {
   public Reading deserialize(JsonParser jp, DeserializationContext ctxt) throws IOException {
     ObjectCodec objectCodec = jp.getCodec();
     JsonNode jsonNode = objectCodec.readTree(jp);
+    Reading originalReading = null;
 
+    if (jsonNode.has("original")) {
+      originalReading = createReading(jsonNode.get("original"), null);
+    }
+
+    return createReading(jsonNode, originalReading);
+  }
+
+  private Reading createReading(JsonNode jsonNode, Reading original) {
     JsonNode value = jsonNode.get("value");
     JsonNode notRecorded = jsonNode.get("notRecorded");
 
     String stringValue = value != null ? value.asText() : null;
     Boolean notRecordedValue = notRecorded != null && notRecorded.getBooleanValue();
 
-    return new Reading(stringValue, notRecordedValue);
+    return new Reading(original, stringValue, notRecordedValue);
   }
 }

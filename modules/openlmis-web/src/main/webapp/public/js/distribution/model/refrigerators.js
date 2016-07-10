@@ -18,7 +18,11 @@ function Refrigerators(facilityVisitId, refrigerators) {
     _this.readings[i] = new RefrigeratorReading(facilityVisitId, value);
   });
 
-  Refrigerators.prototype.computeStatus = function (visited) {
+  Refrigerators.prototype.computeStatus = function (visited, review) {
+    if (review) {
+      return DistributionStatus.SYNCED;
+    }
+
     if (visited === false) {
       return DistributionStatus.COMPLETE;
     }

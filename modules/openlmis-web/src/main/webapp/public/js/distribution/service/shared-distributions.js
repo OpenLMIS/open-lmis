@@ -11,28 +11,57 @@
 distributionModule.service('SharedDistributions', function (IndexedDB, $rootScope) {
 
   this.distributionList = [];
+  this.reviewList = [];
 
   var thisService = this;
 
-  this.update = function () {
-    IndexedDB.execute(function (connection) {
-      var transaction = connection.transaction('distributions');
+  function getReviews(connection) {
+    var transaction = connection.transaction('reviews');
+    var cursorRequest = transaction.objectStore('reviews').openCursor();
+    var aggregate = [];
 
-      var cursorRequest = transaction.objectStore('distributions').openCursor();
-      var aggregate = [];
+    cursorRequest.onsuccess = function (event) {
+      var cursor = event.target.result;
+      if (cursor) {
+        aggregate.push(cursor.value);
+        cursor['continue']();
+      }
+    };
 
-      cursorRequest.onsuccess = function (event) {
-        var cursor = event.target.result;
-        if (cursor) {
-          aggregate.push(new Distribution(cursor.value));
-          cursor['continue']();
-        }
-      };
+    transaction.oncomplete = function (e) {
+      thisService.reviewList = aggregate;
+      if (!$rootScope.$$phase)$rootScope.$apply();
+    };
+  }
 
-      transaction.oncomplete = function (e) {
-        thisService.distributionList = aggregate;
-        if (!$rootScope.$$phase)$rootScope.$apply();
-      };
+  function getDistributions(connection) {
+    var transaction = connection.transaction('distributions');
+    var cursorRequest = transaction.objectStore('distributions').openCursor();
+    var aggregate = [];
+
+    cursorRequest.onsuccess = function (event) {
+      var cursor = event.target.result;
+      if (cursor) {
+        aggregate.push(new Distribution(cursor.value));
+        cursor['continue']();
+      }
+    };
+
+    transaction.oncomplete = function (e) {
+      thisService.distributionList = aggregate;
+      if (!$rootScope.$$phase)$rootScope.$apply();
+    };
+  }
+
+  thisService.isReview = function (distribution) {
+    return _.find(thisService.reviewList, function (item) {
+      return item.distributionId === distribution.id;
     });
   };
+
+  thisService.update = function () {
+    IndexedDB.execute(getDistributions);
+    IndexedDB.execute(getReviews);
+  };
+
 });

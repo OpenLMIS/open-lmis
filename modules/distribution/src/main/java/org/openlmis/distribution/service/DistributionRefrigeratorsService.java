@@ -15,6 +15,7 @@ import org.apache.commons.collections.Predicate;
 import org.openlmis.core.domain.Refrigerator;
 import org.openlmis.core.service.RefrigeratorService;
 import org.openlmis.distribution.domain.DistributionRefrigerators;
+import org.openlmis.distribution.domain.RefrigeratorProblem;
 import org.openlmis.distribution.domain.RefrigeratorReading;
 import org.openlmis.distribution.repository.DistributionRefrigeratorsRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -63,11 +64,27 @@ public class DistributionRefrigeratorsService {
       }
       refrigeratorService.save(refrigerator);
 
-      repository.saveReading(reading);
+      repository.saveReading(reading, true);
     }
   }
 
   public DistributionRefrigerators getBy(Long facilityVisitId) {
     return repository.getBy(facilityVisitId);
+  }
+
+  public RefrigeratorReading getReading(Long id) {
+    return repository.getReading(id);
+  }
+
+  public RefrigeratorProblem getProblem(Long id) {
+    return repository.getProblem(id);
+  }
+
+  public void saveReading(RefrigeratorReading reading) {
+    repository.saveReading(reading, false);
+  }
+
+  public void saveProblem(RefrigeratorProblem problem) {
+    repository.saveProblem(problem);
   }
 }

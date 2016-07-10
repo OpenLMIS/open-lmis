@@ -43,6 +43,7 @@ CACHE:
 /public/pages/logistics/distribution/partials/list.html
 /public/pages/logistics/distribution/partials/init.html
 /public/pages/logistics/distribution/partials/record-facility-data.html
+/public/pages/logistics/distribution/partials/record-facility-data-offline.html
 /public/pages/logistics/distribution/partials/record-facility-menu.html
 /public/pages/logistics/distribution/partials/view-load-amount.html
 /public/pages/logistics/distribution/partials/epi-use.html
@@ -53,6 +54,7 @@ CACHE:
 /public/pages/logistics/distribution/partials/full-coverage.html
 /public/pages/logistics/distribution/partials/child-coverage.html
 /public/pages/logistics/distribution/partials/adult-coverage.html
+/public/pages/logistics/distribution/partials/review-data.html
 
 /public/js/distribution/directives/auto-save.js
 /public/js/distribution/resolve/distribution-resolve.js
@@ -85,6 +87,7 @@ CACHE:
 /public/js/distribution/controller/visit-info-controller.js
 /public/js/distribution/controller/child-coverage-controller.js
 /public/js/distribution/controller/adult-coverage-controller.js
+/public/js/distribution/controller/review-data-controller.js
 
 /public/js/shared/controller/locale-controller.js
 /public/lib/select2/select2.png
@@ -118,6 +121,7 @@ FALLBACK:
 / /public/pages/offline.html
 /public/pages/header.html /public/pages/header-offline.html
 /public/pages/navigation.html /public/pages/navigation-offline.html
+/public/pages/logistics/distribution/partials/record-facility-data.html /public/pages/logistics/distribution/partials/record-facility-data-offline.html
 
 NETWORK:
 *

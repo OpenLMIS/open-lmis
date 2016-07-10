@@ -90,7 +90,6 @@ public class DistributionRefrigeratorsMapperIT {
 
   private Refrigerator refrigerator;
   private Long createdBy = 1L;
-  ;
   private RefrigeratorReading reading;
   private FacilityVisit facilityVisit;
 
@@ -133,7 +132,6 @@ public class DistributionRefrigeratorsMapperIT {
     facilityVisitMapper.insert(facilityVisit);
 
     reading.setFacilityVisitId(facilityVisit.getId());
-
   }
 
   @Test

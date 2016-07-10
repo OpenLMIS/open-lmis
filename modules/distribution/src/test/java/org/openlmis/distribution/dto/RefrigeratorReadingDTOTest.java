@@ -17,9 +17,12 @@ import org.openlmis.db.categories.UnitTests;
 import org.openlmis.distribution.domain.RefrigeratorProblem;
 import org.openlmis.distribution.domain.RefrigeratorReading;
 
+import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.hamcrest.CoreMatchers.nullValue;
 import static org.junit.Assert.assertThat;
+import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 
@@ -35,11 +38,11 @@ public class RefrigeratorReadingDTOTest {
     Reading highAlarmEvents = new Reading("", true);
     Reading problemSinceLastTime = new Reading("Y", false);
     RefrigeratorProblem problems = new RefrigeratorProblem(3L, false, true, false, false, false, false, null);
-    String notes = "Notes";
+    Reading notes = new Reading("Notes");
     Long facilityId = 2L;
 
     RefrigeratorReading expectedReading = new RefrigeratorReading(new Refrigerator("brand", "model", "serial number", facilityId, true), facilityVisitId, 32.4F,
-      "N", 2, null, "Y", problems, notes);
+      "N", 2, null, "Y", problems, "Notes");
 
     RefrigeratorReadingDTO refrigeratorReadingDTO = new RefrigeratorReadingDTO(new Refrigerator("brand", "model", "serial number", facilityId, true),
       facilityVisitId,
@@ -48,12 +51,29 @@ public class RefrigeratorReadingDTOTest {
       lowAlarmEvents,
       highAlarmEvents,
       problemSinceLastTime,
-      problems,
+      problems.transform(),
       notes);
 
     RefrigeratorReading refrigeratorReading = refrigeratorReadingDTO.transform();
 
-    assertThat(refrigeratorReading, is(expectedReading));
+    assertThat(refrigeratorReading.getFacilityVisitId(), is(expectedReading.getFacilityVisitId()));
+    assertThat(refrigeratorReading.getTemperature(), is(expectedReading.getTemperature()));
+    assertThat(refrigeratorReading.getFunctioningCorrectly(), is(expectedReading.getFunctioningCorrectly()));
+    assertThat(refrigeratorReading.getLowAlarmEvents(), is(expectedReading.getLowAlarmEvents()));
+    assertThat(refrigeratorReading.getHighAlarmEvents(), is(expectedReading.getHighAlarmEvents()));
+    assertThat(refrigeratorReading.getProblemSinceLastTime(), is(expectedReading.getProblemSinceLastTime()));
+
+    assertThat(refrigeratorReading.getProblem(), is(notNullValue()));
+    assertThat(refrigeratorReading.getProblem().getReadingId(), is(expectedReading.getProblem().getReadingId()));
+    assertThat(refrigeratorReading.getProblem().getOperatorError(), is(expectedReading.getProblem().getOperatorError()));
+    assertThat(refrigeratorReading.getProblem().getBurnerProblem(), is(expectedReading.getProblem().getBurnerProblem()));
+    assertThat(refrigeratorReading.getProblem().getGasLeakage(), is(expectedReading.getProblem().getGasLeakage()));
+    assertThat(refrigeratorReading.getProblem().getEgpFault(), is(expectedReading.getProblem().getEgpFault()));
+    assertThat(refrigeratorReading.getProblem().getThermostatSetting(), is(expectedReading.getProblem().getThermostatSetting()));
+    assertThat(refrigeratorReading.getProblem().getOther(), is(expectedReading.getProblem().getOther()));
+    assertThat(refrigeratorReading.getProblem().getOtherProblemExplanation(), is(expectedReading.getProblem().getOtherProblemExplanation()));
+
+    assertThat(refrigeratorReading.getNotes(), is(expectedReading.getNotes()));
   }
 
   @Test
@@ -65,6 +85,8 @@ public class RefrigeratorReadingDTOTest {
     Reading highAlarmEvents = new Reading("", true);
     Reading problemSinceLastTime = new Reading("Y", false);
     RefrigeratorProblem problems = mock(RefrigeratorProblem.class);
+    RefrigeratorProblemDTO problem = mock(RefrigeratorProblemDTO.class);
+    doReturn(problems).when(problem).transform();
     String notes = "Notes";
     Long facilityId = 2L;
 
@@ -78,8 +100,8 @@ public class RefrigeratorReadingDTOTest {
       lowAlarmEvents,
       highAlarmEvents,
       problemSinceLastTime,
-      problems,
-      notes);
+      problem,
+      new Reading(notes));
 
     RefrigeratorReading refrigeratorReading = refrigeratorReadingDTO.transform();
 
@@ -88,7 +110,7 @@ public class RefrigeratorReadingDTOTest {
   }
 
   @Test
-  public void shouldSetProblemsToNullIfProblemSinceLastVisitIsFalse() throws Exception {
+  public void shouldSetEmptyProblemsIfProblemSinceLastVisitIsFalse() throws Exception {
     Long facilityVisitId = 5L;
     Reading temperature = new Reading("32.4", false);
     Reading functioningCorrectly = new Reading("Y", false);
@@ -96,6 +118,7 @@ public class RefrigeratorReadingDTOTest {
     Reading highAlarmEvents = new Reading("", true);
     Reading problemSinceLastTime = new Reading("N", false);
     RefrigeratorProblem problems = new RefrigeratorProblem();
+    RefrigeratorProblemDTO problem = problems.transform();
     String notes = "Notes";
     Long facilityId = 2L;
 
@@ -106,15 +129,23 @@ public class RefrigeratorReadingDTOTest {
       lowAlarmEvents,
       highAlarmEvents,
       problemSinceLastTime,
-      problems,
-      notes);
+      problem,
+      new Reading(notes));
 
     RefrigeratorReading refrigeratorReading = refrigeratorReadingDTO.transform();
 
     RefrigeratorReading expectedReading = new RefrigeratorReading(new Refrigerator("brand", "model", "serial number", facilityId, true), facilityVisitId, 32.4F,
-      "Y", 2, null, "N", null, notes);
+      "Y", 2, null, "N", problems, notes);
 
     assertThat(refrigeratorReading, is(expectedReading));
-    assertThat(refrigeratorReading.getProblem(), is(nullValue()));
+    assertThat(refrigeratorReading.getProblem(), is(equalTo(problems)));
+
+    assertThat(problems.getOperatorError(), is(nullValue()));
+    assertThat(problems.getBurnerProblem(), is(nullValue()));
+    assertThat(problems.getGasLeakage(), is(nullValue()));
+    assertThat(problems.getEgpFault(), is(nullValue()));
+    assertThat(problems.getThermostatSetting(), is(nullValue()));
+    assertThat(problems.getOther(), is(nullValue()));
+    assertThat(problems.getOtherProblemExplanation(), is(nullValue()));
   }
 }

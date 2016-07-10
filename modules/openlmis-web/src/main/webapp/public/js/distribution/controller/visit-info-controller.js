@@ -10,6 +10,7 @@
 
 function VisitInfoController($scope, distributionService, $routeParams) {
   $scope.distribution = distributionService.distribution;
+  $scope.distributionReview = distributionService.distributionReview;
   $scope.selectedFacility = $routeParams.facility;
 
   $scope.convertToDateObject = function (dateText) {
@@ -39,4 +40,36 @@ function VisitInfoController($scope, distributionService, $routeParams) {
 
     return [true, ""];
   };
+
+  $scope.setApplicableVisitInfo = function () {
+    var visit = $scope.distribution.facilityDistributions[$scope.selectedFacility].facilityVisit;
+
+    if (isUndefined(visit.visited)) {
+        return;
+    }
+
+    if (visit.visited.value) {
+      visit.reasonForNotVisiting = setApplicableField(visit.reasonForNotVisiting);
+      visit.otherReasonDescription = setApplicableField(visit.otherReasonDescription);
+      return;
+    }
+
+    visit.observations = setApplicableField(visit.observations);
+    visit.confirmedBy = setApplicableField(visit.confirmedBy);
+    visit.verifiedBy = setApplicableField(visit.verifiedBy);
+    visit.vehicleId = setApplicableField(visit.vehicleId);
+    visit.visitDate = setApplicableField(visit.visitDate);
+  };
+
+  function setApplicableField(field) {
+    if (isUndefined(field)) {
+        return {};
+    }
+
+    if (isUndefined(field.original)) {
+        return {};
+    }
+
+    return { original: field.original };
+  }
 }

@@ -14,11 +14,16 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+import org.apache.commons.lang3.ObjectUtils;
 import org.openlmis.core.domain.Facility;
 import org.openlmis.core.domain.ProcessingPeriod;
+import org.openlmis.distribution.dto.ChildCoverageDTO;
+import org.openlmis.distribution.dto.ChildCoverageLineItemDTO;
+import org.openlmis.distribution.dto.OpenedVialLineItemDTO;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import static java.util.Arrays.asList;
@@ -38,15 +43,15 @@ public class VaccinationChildCoverage extends VaccinationCoverage {
   private static List<String> validProductVials = Collections.unmodifiableList(asList(
     "BCG", "Polio10", "Polio20", "Penta1", "Penta10", "PCV", "Measles"));
 
+  private static List<String> validVaccinations = Collections.unmodifiableList(asList(
+    "BCG", "Polio (Newborn)", "Polio 1st dose", "Polio 2nd dose",
+    "Polio 3rd dose", "Penta 1st dose", "Penta 2nd dose", "Penta 3rd dose",
+    "PCV10 1st dose", "PCV10 2nd dose", "PCV10 3rd dose", "Measles"));
+
   public VaccinationChildCoverage(FacilityVisit facilityVisit, Facility facility,
                                   ProcessingPeriod period, List<TargetGroupProduct> targetGroupProducts,
                                   List<ProductVial> productVials) {
     super(facilityVisit, facility, productVials, validProductVials);
-    List<String> validVaccinations = Collections.unmodifiableList(
-      asList("BCG", "Polio (Newborn)", "Polio 1st dose", "Polio 2nd dose",
-        "Polio 3rd dose", "Penta 1st dose", "Penta 2nd dose", "Penta 3rd dose",
-        "PCV10 1st dose", "PCV10 2nd dose", "PCV10 3rd dose", "Measles"));
-
     createChildCoverageLineItems(facilityVisit, facility, targetGroupProducts, validVaccinations, period.getNumberOfMonths());
   }
 
@@ -58,5 +63,31 @@ public class VaccinationChildCoverage extends VaccinationCoverage {
       TargetGroupProduct targetGroup = getTargetGroupForLineItem(targetGroupProducts, vaccination);
       this.childCoverageLineItems.add(new ChildCoverageLineItem(facilityVisit, facility, targetGroup, vaccination, processingPeriodMonths));
     }
+  }
+
+  public ChildCoverageDTO transform() {
+    ChildCoverageDTO dto = new ChildCoverageDTO();
+
+    List<ChildCoverageLineItemDTO> childCoverageLineItems = new ArrayList<>();
+    for (ChildCoverageLineItem childCoverageLineItem : this.childCoverageLineItems) {
+      childCoverageLineItems.add(childCoverageLineItem.transform());
+    }
+
+    Collections.sort(childCoverageLineItems, new Comparator<ChildCoverageLineItemDTO>() {
+        @Override
+        public int compare(ChildCoverageLineItemDTO o1, ChildCoverageLineItemDTO o2) {
+            return ObjectUtils.compare(o1.getId(), o2.getId());
+        }
+    });
+
+    List<OpenedVialLineItemDTO> openedVialLineItems = new ArrayList<>();
+    for (OpenedVialLineItem openedVialLineItem : this.openedVialLineItems) {
+      openedVialLineItems.add(openedVialLineItem.transform());
+    }
+
+    dto.setChildCoverageLineItems(childCoverageLineItems);
+    dto.setOpenedVialLineItems(openedVialLineItems);
+
+    return dto;
   }
 }

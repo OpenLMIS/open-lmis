@@ -22,8 +22,8 @@ import org.openlmis.distribution.domain.VaccinationFullCoverage;
 import static org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion.NON_EMPTY;
 
 /**
- *  DTO for VaccinationFullCoverage. It contains facilityVisitId and
- *  client side representation of VaccinationFullCoverage attributes.
+ * DTO for VaccinationFullCoverage. It contains facilityVisitId and
+ * client side representation of VaccinationFullCoverage attributes.
  */
 
 @Data
@@ -41,12 +41,18 @@ public class VaccinationFullCoverageDTO extends BaseModel {
   private Reading maleMobileBrigadeReading;
 
   public VaccinationFullCoverage transform() {
-    VaccinationFullCoverage vaccinationFullCoverage = new VaccinationFullCoverage(this.facilityVisitId, this.femaleHealthCenterReading.parsePositiveInt(),
-      this.femaleMobileBrigadeReading.parsePositiveInt(),
-      this.maleHealthCenterReading.parsePositiveInt(),
-      this.maleMobileBrigadeReading.parsePositiveInt());
+    Integer femaleHealthCenter = Reading.safeRead(this.femaleHealthCenterReading).parsePositiveInt();
+    Integer femaleOutreach = Reading.safeRead(this.femaleMobileBrigadeReading).parsePositiveInt();
+    Integer maleHealthCenter = Reading.safeRead(this.maleHealthCenterReading).parsePositiveInt();
+    Integer maleOutreach = Reading.safeRead(this.maleMobileBrigadeReading).parsePositiveInt();
+
+    VaccinationFullCoverage vaccinationFullCoverage = new VaccinationFullCoverage(this.facilityVisitId, femaleHealthCenter,
+        femaleOutreach,
+        maleHealthCenter,
+        maleOutreach);
     vaccinationFullCoverage.setModifiedBy(this.modifiedBy);
     vaccinationFullCoverage.setCreatedBy(this.createdBy);
+
     return vaccinationFullCoverage;
   }
 }

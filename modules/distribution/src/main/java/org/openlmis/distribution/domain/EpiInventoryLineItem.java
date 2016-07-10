@@ -16,6 +16,8 @@ import lombok.NoArgsConstructor;
 import org.codehaus.jackson.map.annotate.JsonSerialize;
 import org.openlmis.core.domain.BaseModel;
 import org.openlmis.core.domain.FacilityProgramProduct;
+import org.openlmis.distribution.dto.EpiInventoryLineItemDTO;
+import org.openlmis.distribution.dto.Reading;
 
 import static org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion.NON_EMPTY;
 
@@ -55,5 +57,26 @@ public class EpiInventoryLineItem extends BaseModel {
     this.existingQuantity = existingQuantity;
     this.spoiledQuantity = spoiledQuantity;
     this.deliveredQuantity = deliveredQuantity;
+  }
+
+  public EpiInventoryLineItemDTO transform() {
+    EpiInventoryLineItemDTO dto = new EpiInventoryLineItemDTO();
+    dto.setId(id);
+    dto.setCreatedBy(createdBy);
+    dto.setCreatedDate(createdDate);
+    dto.setModifiedBy(modifiedBy);
+    dto.setModifiedDate(modifiedDate);
+    dto.setFacilityVisitId(facilityVisitId);
+    dto.setIdealQuantity(idealQuantity);
+    dto.setIdealQuantityByPackSize(idealQuantityByPackSize);
+    dto.setExistingQuantity(new Reading(existingQuantity));
+    dto.setSpoiledQuantity(new Reading(spoiledQuantity));
+    dto.setDeliveredQuantity(new Reading(deliveredQuantity));
+    dto.setProgramProductId(programProductId);
+    dto.setProductCode(productCode);
+    dto.setProductName(productName);
+    dto.setProductDisplayOrder(productDisplayOrder);
+
+    return dto;
   }
 }

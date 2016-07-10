@@ -25,7 +25,7 @@ public class EpiInventoryLineItemDTOTest {
   @Test
   public void shouldTransformEpiInventoryLineItemDTOToEpiInventoryLineItem() throws Exception {
 
-    EpiInventoryLineItemDTO epiInventoryLineItemDTO = new EpiInventoryLineItemDTO(1L, new Reading("34", false), new Reading(null, true), 56);
+    EpiInventoryLineItemDTO epiInventoryLineItemDTO = new EpiInventoryLineItemDTO(1L, new Reading("34", false), new Reading(null, true), new Reading("56", false));
     EpiInventoryLineItem epiInventoryLineItem = epiInventoryLineItemDTO.transform();
 
     assertThat(epiInventoryLineItem.getDeliveredQuantity(), is(56));

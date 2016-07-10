@@ -11,6 +11,7 @@
 package org.openlmis.distribution.domain;
 
 
+import com.google.common.base.Optional;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -19,6 +20,8 @@ import org.codehaus.jackson.annotate.JsonIgnoreProperties;
 import org.codehaus.jackson.map.annotate.JsonSerialize;
 import org.openlmis.core.domain.BaseModel;
 import org.openlmis.core.domain.Refrigerator;
+import org.openlmis.distribution.dto.Reading;
+import org.openlmis.distribution.dto.RefrigeratorReadingDTO;
 
 import static org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion.NON_EMPTY;
 
@@ -53,16 +56,44 @@ public class RefrigeratorReading extends BaseModel {
 
   public void setCreatedBy(Long createdBy) {
     this.createdBy = createdBy;
-    if (this.problem != null) {
-      this.problem.setCreatedBy(createdBy);
+
+    if (null == problem) {
+      this.problem = new RefrigeratorProblem(id);
     }
+
+    this.problem.setCreatedBy(createdBy);
   }
 
   public void setModifiedBy(Long modifiedBy) {
     this.modifiedBy = modifiedBy;
-    if (this.problem != null) {
-      this.problem.setModifiedBy(modifiedBy);
+
+    if (null == problem) {
+      this.problem = new RefrigeratorProblem(id);
     }
+
+    this.problem.setModifiedBy(modifiedBy);
+  }
+
+  public RefrigeratorReadingDTO transform() {
+    RefrigeratorProblem problem = Optional.fromNullable(this.problem).or(new RefrigeratorProblem(id));
+
+    RefrigeratorReadingDTO dto = new RefrigeratorReadingDTO();
+    dto.setId(id);
+    dto.setCreatedBy(createdBy);
+    dto.setCreatedDate(createdDate);
+    dto.setModifiedBy(modifiedBy);
+    dto.setModifiedDate(modifiedDate);
+    dto.setRefrigerator(refrigerator);
+    dto.setFacilityVisitId(facilityVisitId);
+    dto.setTemperature(new Reading(temperature));
+    dto.setFunctioningCorrectly(new Reading(functioningCorrectly));
+    dto.setLowAlarmEvents(new Reading(lowAlarmEvents));
+    dto.setHighAlarmEvents(new Reading(highAlarmEvents));
+    dto.setProblemSinceLastTime(new Reading(problemSinceLastTime));
+    dto.setProblems(problem.transform());
+    dto.setNotes(new Reading(notes));
+
+    return dto;
   }
 }
 

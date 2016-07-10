@@ -23,7 +23,11 @@ function FacilityDistribution(facilityDistribution) {
 
   this.status = facilityDistribution.status;
 
-  FacilityDistribution.prototype.computeStatus = function () {
+  FacilityDistribution.prototype.computeStatus = function (review) {
+    if (review) {
+      this.status = DistributionStatus.SYNCED;
+      return this.status;
+    }
 
     var forms = [this.epiUse, this.refrigerators, this.facilityVisit, this.epiInventory, this.fullCoverage, this.childCoverage, this.adultCoverage];
     var overallStatus;
@@ -32,7 +36,7 @@ function FacilityDistribution(facilityDistribution) {
     }
     var that = this;
     $.each(forms, function (index, form) {
-      var computedStatus = form.computeStatus(that.facilityVisit.visited);
+      var computedStatus = form.computeStatus(that.facilityVisit.visited && that.facilityVisit.visited.value);
       if (computedStatus === DistributionStatus.COMPLETE && (overallStatus === DistributionStatus.COMPLETE || !overallStatus)) {
         overallStatus = DistributionStatus.COMPLETE;
       } else if (computedStatus === DistributionStatus.EMPTY && (!overallStatus || overallStatus == DistributionStatus.EMPTY)) {
@@ -50,11 +54,16 @@ function FacilityDistribution(facilityDistribution) {
 
   };
 
-  FacilityDistribution.prototype.isDisabled = function (tabName) {
+  FacilityDistribution.prototype.isDisabled = function (tabName, review) {
+    if (review) {
+      return !review.editMode[this.facilityId][tabName || review.currentScreen];
+    }
+
     if ([DistributionStatus.SYNCED, DistributionStatus.DUPLICATE].indexOf(this.status) != -1) {
       return true;
     }
-    return (this.facilityVisit.visited === false && ["refrigerators", "epi-inventory", "epi-use"].indexOf(tabName) != -1);
+
+    return ((this.facilityVisit.visited && this.facilityVisit.visited.value === false) && ["refrigerators", "epi-inventory", "epi-use"].indexOf(tabName) != -1);
   };
 
 }

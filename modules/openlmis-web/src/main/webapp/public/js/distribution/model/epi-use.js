@@ -32,7 +32,11 @@ function EpiUse(epiUse) {
     });
   };
 
-  EpiUse.prototype.computeStatus = function (visited) {
+  EpiUse.prototype.computeStatus = function (visited, review) {
+    if (review) {
+      return DistributionStatus.SYNCED;
+    }
+
     var _this = this;
     var statusClass;
 

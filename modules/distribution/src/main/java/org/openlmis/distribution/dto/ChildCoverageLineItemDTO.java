@@ -14,8 +14,8 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.codehaus.jackson.annotate.JsonIgnoreProperties;
 import org.codehaus.jackson.map.annotate.JsonSerialize;
-import org.openlmis.core.domain.BaseModel;
 import org.openlmis.distribution.domain.ChildCoverageLineItem;
+import org.openlmis.distribution.domain.CoverageLineItem;
 
 import static org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion.NON_EMPTY;
 
@@ -27,21 +27,28 @@ import static org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion.NON_EMPT
 @EqualsAndHashCode(callSuper = false)
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonSerialize(include = NON_EMPTY)
-public class ChildCoverageLineItemDTO extends BaseModel {
+public class ChildCoverageLineItemDTO extends CoverageLineItem {
 
+  private String vaccination;
   private Reading healthCenter11Months;
   private Reading outreach11Months;
   private Reading healthCenter23Months;
   private Reading outreach23Months;
 
   public ChildCoverageLineItem transform() {
+    Integer healthCenter11Months = Reading.safeRead(this.healthCenter11Months).parsePositiveInt();
+    Integer healthCenter23Months = Reading.safeRead(this.healthCenter23Months).parsePositiveInt();
+    Integer outreach11Months = Reading.safeRead(this.outreach11Months).parsePositiveInt();
+    Integer outreach23Months = Reading.safeRead(this.outreach23Months).parsePositiveInt();
+
     ChildCoverageLineItem lineItem = new ChildCoverageLineItem();
-    lineItem.setHealthCenter11Months(healthCenter11Months.parsePositiveInt());
-    lineItem.setHealthCenter23Months(healthCenter23Months.parsePositiveInt());
-    lineItem.setOutreach11Months(outreach11Months.parsePositiveInt());
-    lineItem.setOutreach23Months(outreach23Months.parsePositiveInt());
+    lineItem.setHealthCenter11Months(healthCenter11Months);
+    lineItem.setHealthCenter23Months(healthCenter23Months);
+    lineItem.setOutreach11Months(outreach11Months);
+    lineItem.setOutreach23Months(outreach23Months);
     lineItem.setId(this.id);
     lineItem.setModifiedBy(this.modifiedBy);
+
     return lineItem;
   }
 }

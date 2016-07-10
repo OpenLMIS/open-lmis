@@ -37,4 +37,7 @@ public interface EpiInventoryLineItemMapper {
   @Update({"UPDATE epi_inventory_line_items SET spoiledQuantity = #{spoiledQuantity}, deliveredQuantity = #{deliveredQuantity},",
     "existingQuantity = #{existingQuantity}, modifiedBy = #{modifiedBy}, modifiedDate = DEFAULT WHERE id = #{id}"})
   void updateLineItem(EpiInventoryLineItem lineItem);
+
+  @Select({"SELECT * FROM epi_inventory_line_items WHERE id = #{id}"})
+  EpiInventoryLineItem getById(Long id);
 }

@@ -12,8 +12,13 @@
 
 package org.openlmis.distribution.service;
 
+import org.openlmis.core.domain.DeliveryZone;
+import org.openlmis.core.domain.ProcessingPeriod;
+import org.openlmis.core.domain.Program;
 import org.openlmis.distribution.domain.Distribution;
+import org.openlmis.distribution.domain.DistributionEdit;
 import org.openlmis.distribution.domain.DistributionStatus;
+import org.openlmis.distribution.domain.DistributionsEditHistory;
 import org.openlmis.distribution.domain.FacilityDistribution;
 import org.openlmis.distribution.repository.DistributionRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -69,11 +74,51 @@ public class DistributionService {
     return distributionStatus;
   }
 
+  public void updateLastViewed(Long distributionId) {
+    repository.updateLastViewed(distributionId);
+  }
+
   public List<Long> getSyncedPeriodsForDeliveryZoneAndProgram(Long zoneId, Long programId) {
     return repository.getSyncedPeriodsForDeliveryZoneAndProgram(zoneId, programId);
   }
 
   public Distribution getBy(Long distributionId) {
     return repository.getBy(distributionId);
+  }
+
+  public Distribution getFullSyncedDistribution(Distribution distribution) {
+    return repository.getFullSyncedDistribution(distribution);
+  }
+
+  public List<Distribution> getFullSyncedDistributions() {
+    return repository.getFullSyncedDistributions();
+  }
+
+  public List<Distribution> getFullSyncedDistributions(Program program, DeliveryZone deliveryZone, ProcessingPeriod period) {
+    return repository.getFullSyncedDistributions(program, deliveryZone, period);
+  }
+
+  public void insertEditInProgress(Long userId, Long distributionId) {
+    repository.insertEditInProgress(userId, distributionId);
+  }
+
+  public List<DistributionEdit> getEditInProgress(Long distributionId, Long userId, Long periodInSeconds) {
+    return repository.getEditInProgress(distributionId, userId, periodInSeconds);
+  }
+
+  public void deleteDistributionEdit(Long distributionId, Long userId) {
+    repository.deleteDistributionEdit(distributionId, userId);
+  }
+
+  public List<DistributionsEditHistory> getHistory(Long distributionId) {
+    return repository.getHistory(distributionId);
+  }
+
+  public DistributionsEditHistory getLastHistory(Long distributionId) {
+    return repository.getLastHistory(distributionId);
+  }
+
+  public void insertHistory(DistributionsEditHistory history) {
+    repository.insertHistory(history);
   }
 }
