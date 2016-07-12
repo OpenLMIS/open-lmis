@@ -25,10 +25,10 @@
 
             <div class="form-fields">
                 <select ui-select2 style="width:160px;" class="large-input" name="select-facility"
-                        ng-model="reportParams.adjustmentType"
-                        ng-init="reportParams.adjustmentType = adjustmentTypes[0].value" >
+                        ng-model="reportParams.adjustmentType">
                     <option ng-repeat='option in adjustmentTypes' value="{{option.value}}">{{option.name}}</option>
                 </select>
+                <span class="field-error" ng-show="noAdjustmentTypeSelected" openlmis-message="report.missing.adjustmentType"></span>
             </div>
 
         </div>

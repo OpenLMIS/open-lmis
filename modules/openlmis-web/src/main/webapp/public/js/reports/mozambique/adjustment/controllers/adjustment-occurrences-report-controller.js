@@ -12,7 +12,7 @@ function AdjustmentOccurrencesReportController($scope, $controller, $filter, $ht
   });
 
   $scope.generateAdjustmentReport = function () {
-    if ($scope.checkDateValidRange() && validateProduct()) {
+    if ($scope.checkDateValidRange() && validateProduct() && validateAdjustmentType()) {
       $scope.locationIdToCode($scope.reportParams);
 
       var promises = requestAdjustmentDataForEachPeriod();
@@ -23,8 +23,13 @@ function AdjustmentOccurrencesReportController($scope, $controller, $filter, $ht
         });
         var selectedAdjustmentType = $scope.reportParams.adjustmentType;
 
+        if (selectedAdjustmentType === 'negative') {
+          label = messageService.get("stock.movement.negative.adjustment.title");
+        } else {
+          label = messageService.get("stock.movement.positive.adjustment.title");
+        }
         var label = selectedAdjustmentType.charAt(0).toUpperCase() + selectedAdjustmentType.slice(1) +
-            ' adjustments ' + (selectedProduct ? 'for ' + selectedProduct.primaryName : '');
+            ' adjustments for ' + selectedProduct.primaryName;
 
         AdjustmentOccurrencesChartService.renderAdjustmentChart("adjustments-report", adjustmentsData, selectedAdjustmentType, label);
       });
@@ -111,6 +116,11 @@ function AdjustmentOccurrencesReportController($scope, $controller, $filter, $ht
   function validateProduct() {
     $scope.noProductSelected = !$scope.reportParams.productCode;
     return !$scope.noProductSelected;
+  }
+
+  function validateAdjustmentType() {
+    $scope.noAdjustmentTypeSelected = !$scope.reportParams.adjustmentType;
+    return !$scope.noAdjustmentTypeSelected;
   }
 
 }
