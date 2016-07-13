@@ -26,7 +26,6 @@ function SingleFacilityReportController($scope, $filter, $controller, $http, Cub
         FeatureToggleService.get({key: 'view.stock.movement'}, function (result) {
             $scope.viewStockMovementToggle = result.key;
         });
-        $scope.viewStockCardMessage = messageService.get("report.view.stock.card");
         $scope.loadHealthFacilities();
     });
 

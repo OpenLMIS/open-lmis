@@ -35,6 +35,7 @@ function StockOutSingleProductReportController($scope, $filter, $q, $controller,
 
         $scope.loadProducts();
         $scope.loadHealthFacilities();
+        $scope.viewStockCardMessage = messageService.get("report.view.stock.card");
     });
 
     $scope.loadProducts = function () {
