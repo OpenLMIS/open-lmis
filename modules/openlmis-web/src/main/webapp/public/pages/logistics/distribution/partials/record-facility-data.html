@@ -9,6 +9,7 @@
   -->
 
 <div class="record-facility-data" ng-controller="RecordFacilityDataController">
+    <div class="alert alert-success" id="syncSuccessMsgDiv" fade-out="3000" openlmis-message="message" ng-show="message"></div>
     <div class="alert alert-danger" id="syncFailureMsgDiv" fade-out="3000" openlmis-message="errorMessage" ng-show="errorMessage"></div>
     <div class="row-fluid facility-heading">
         <div class="span5" ng-show="facilitySelected">
@@ -49,7 +50,8 @@
         <span id="cannotSyncLegendLabel" openlmis-message="label.distribution.legend.cannot.synchronize"></span>
       </span>
       <button class="btn btn-primary" ng-if="hasPermission('EDIT_SYNCHRONIZED_DATA') && distributionReview.edit && facilitySelected" ng-click="toggleEditMode()">
-        <span openlmis-message="button.edit"></span>
+        <span ng-if="!distributionReview.editMode[facilitySelected.facilityId][distributionReview.currentScreen]" openlmis-message="button.edit"></span>
+        <span ng-if="distributionReview.editMode[facilitySelected.facilityId][distributionReview.currentScreen]" openlmis-message="button.cancel"></span>
       </button>
       <button class="btn btn-primary" ng-if="hasPermission('EDIT_SYNCHRONIZED_DATA') && distributionReview.edit && facilitySelected" ng-disabled="!distributionReview.editMode[facilitySelected.facilityId][distributionReview.currentScreen]" ng-click="sync()">
         <span openlmis-message="button.sync"></span>

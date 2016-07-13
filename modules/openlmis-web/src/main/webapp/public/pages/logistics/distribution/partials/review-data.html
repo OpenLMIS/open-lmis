@@ -26,7 +26,7 @@
             <span class="label-required">*</span>
           </label>
           <div class="form-field">
-            <select id="selectProgram" ng-model="filters.selected.program" ng-change="reloadList()"
+            <select id="selectProgram" ng-model="filters.selected.program"
                 ng-options="p as p.name for p in filters.filter.programs">
             </select>
           </div>
@@ -36,7 +36,7 @@
             <span openlmis-message="label.province"></span>
           </label>
           <div class="form-field">
-            <select id="selectProvince" ng-model="filters.selected.province" ng-change="reloadList()"
+            <select id="selectProvince" ng-model="filters.selected.province"
                 ng-options="g as g.name for g in filters.filter.geographicZones">
               <option openlmis-message="label.all"></option>
             </select>
@@ -47,7 +47,7 @@
             <span openlmis-message="label.delivery.zone"></span>
           </label>
           <div class="form-field">
-            <select id="selectDeliveryZone" ng-model="filters.selected.deliveryZone" ng-change="reloadList()"
+            <select id="selectDeliveryZone" ng-model="filters.selected.deliveryZone"
                 ng-options="d as d.name for d in filters.filter.deliveryZones">
               <option openlmis-message="label.all"></option>
             </select>
@@ -58,10 +58,17 @@
             <span openlmis-message="label.period"></span>
           </label>
           <div class="form-field">
-            <select id="selectperiod" ng-model="filters.selected.period" ng-change="reloadList()"
+            <select id="selectperiod" ng-model="filters.selected.period"
                 ng-options="p as p.name for p in filters.filter.periods">
               <option openlmis-message="label.all"></option>
             </select>
+          </div>
+        </div>
+        <div class="form-cell">
+          <div class="form-field">
+            <button type="button" class="btn btn-primary" ng-click="reloadList()" ng-disabled="!filters.selected.program">
+              <span openlmis-message="button.view"></span>
+            </button>
           </div>
         </div>
       </div>
