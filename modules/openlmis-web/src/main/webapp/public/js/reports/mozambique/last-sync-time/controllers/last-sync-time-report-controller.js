@@ -133,7 +133,8 @@ function LastSyncTimeReportController($scope, $http, GeographicZoneService, Cube
       'labelRadius': 5,
       'radius': '40%',
       'innerRadius': '60%',
-      'labelText': '[[]]'
+      'labelText': '[[]]',
+      'colors': ['green', 'orange', 'red']
     });
   }
 }
