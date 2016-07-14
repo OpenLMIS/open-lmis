@@ -82,6 +82,10 @@ public class FacilityService {
     return geographicZoneRepository.getAllGeographicZones();
   }
 
+  public List<GeographicZone> searchByLevelNumber(Integer levelNumber) {
+    return geographicZoneRepository.searchByLevelNumber(levelNumber);
+  }
+
   public Facility getHomeFacility(Long userId) {
     return facilityRepository.getHomeFacility(userId);
   }
