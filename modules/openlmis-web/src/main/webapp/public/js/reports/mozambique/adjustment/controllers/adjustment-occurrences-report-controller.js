@@ -23,13 +23,13 @@ function AdjustmentOccurrencesReportController($scope, $controller, $filter, $ht
         });
         var selectedAdjustmentType = $scope.reportParams.adjustmentType;
 
+        var label = "";
+
         if (selectedAdjustmentType === 'negative') {
-          label = messageService.get("stock.movement.negative.adjustment.title");
+          label = messageService.get("stock.movement.negative.adjustment.title") + " " + selectedProduct.primaryName;
         } else {
-          label = messageService.get("stock.movement.positive.adjustment.title");
+          label = messageService.get("stock.movement.positive.adjustment.title") + " " + selectedProduct.primaryName;
         }
-        var label = selectedAdjustmentType.charAt(0).toUpperCase() + selectedAdjustmentType.slice(1) +
-            ' adjustments for ' + selectedProduct.primaryName;
 
         AdjustmentOccurrencesChartService.renderAdjustmentChart("adjustments-report", adjustmentsData, selectedAdjustmentType, label);
       });

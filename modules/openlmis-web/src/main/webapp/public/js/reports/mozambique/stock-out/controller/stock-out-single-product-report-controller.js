@@ -1,4 +1,4 @@
-function StockOutSingleProductReportController($scope, $filter, $q, $controller, $http, $timeout, CubesGenerateUrlService, $routeParams, ProductReportService, StockoutSingleProductFacilityChartService, StockoutSingleProductZoneChartService, StockoutSingleProductTreeDataBuilder, CubesGenerateCutParamsService, FeatureToggleService, messageService, $cacheFactory) {
+function StockOutSingleProductReportController($scope, $filter, $q, $controller, $http, $timeout, CubesGenerateUrlService, $routeParams, ProductReportService, StockoutSingleProductFacilityChartService, StockoutSingleProductZoneChartService, StockoutSingleProductTreeDataBuilder, CubesGenerateCutParamsService, FeatureToggleService, $cacheFactory) {
     $controller('BaseProductReportController', {$scope: $scope});
 
     var stockOuts;
@@ -35,7 +35,6 @@ function StockOutSingleProductReportController($scope, $filter, $q, $controller,
 
         $scope.loadProducts();
         $scope.loadHealthFacilities();
-        $scope.viewStockCardMessage = messageService.get("report.view.stock.card");
     });
 
     $scope.loadProducts = function () {
