@@ -172,9 +172,9 @@ function BaseProductReportController($scope, $filter, ProductReportService, $cac
     $scope.locationIdToCode = function (params) {
         params.selectedProvince = $scope.getGeographicZoneById($scope.provinces, $scope.reportParams.provinceId);
         params.selectedDistrict = $scope.getGeographicZoneById($scope.districts, $scope.reportParams.districtId);
-        params.selectedFacility = ($scope.facilities.find(function (facility) {
+        params.selectedFacility = _.find($scope.facilities, function (facility) {
             return facility.id == $scope.reportParams.facilityId;
-        }));
+        });
     };
 
     function addAllOption(locations, location) {
