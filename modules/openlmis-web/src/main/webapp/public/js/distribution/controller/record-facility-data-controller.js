@@ -48,6 +48,11 @@ function RecordFacilityDataController($scope, $location, $route, $routeParams, d
     var propertyName;
     var propertyValue;
 
+    if (bean instanceof Refrigerators) {
+      bean.restore();
+      return;
+    }
+
     for (propertyName in bean) {
       if (bean.hasOwnProperty(propertyName)) {
         propertyValue = bean[propertyName];
@@ -56,7 +61,7 @@ function RecordFacilityDataController($scope, $location, $route, $routeParams, d
             if (propertyValue.type === 'reading') {
               bean[propertyName].value = propertyValue.original.value;
               bean[propertyName].notRecorded = propertyValue.original.notRecorded;
-            } else {
+            } else if (_.isObject(propertyValue)) {
               restore(propertyValue);
             }
         }
@@ -82,12 +87,16 @@ function RecordFacilityDataController($scope, $location, $route, $routeParams, d
   }
 
   function same(a, b) {
-    return a.value === b.value && a.notRecorded === b.notRecorded;
+    return a && b && a.value === b.value && a.notRecorded === b.notRecorded;
   }
 
   function modified(bean) {
     var propertyName;
     var propertyValue;
+
+    if (bean instanceof Refrigerators) {
+      return bean.modified();
+    }
 
     for (propertyName in bean) {
       if (bean.hasOwnProperty(propertyName)) {
@@ -98,7 +107,7 @@ function RecordFacilityDataController($scope, $location, $route, $routeParams, d
               if (!same(propertyValue, propertyValue.original)) {
                 return true;
               }
-            } else {
+            } else if (_.isObject(propertyValue)) {
               var result = modified(propertyValue);
 
               if (result) {
@@ -159,6 +168,8 @@ function RecordFacilityDataController($scope, $location, $route, $routeParams, d
 
     $scope.distribution = results.distribution;
     distributionService.save(results.distribution);
+    distributionService.distributionReview.editMode[$routeParams.facility][distributionService.distributionReview.currentScreen] ^= true;
+    $route.reload();
   }
 
   function onError(data) {

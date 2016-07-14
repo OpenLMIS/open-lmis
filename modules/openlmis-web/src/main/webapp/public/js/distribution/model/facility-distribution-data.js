@@ -63,7 +63,7 @@ function FacilityDistribution(facilityDistribution) {
       return true;
     }
 
-    return ((this.facilityVisit.visited && this.facilityVisit.visited.value === false) && ["refrigerators", "epi-inventory", "epi-use"].indexOf(tabName) != -1);
+    return ((this.facilityVisit.visited && this.facilityVisit.visited.value === false) && ["refrigerator-data", "epi-inventory", "epi-use"].indexOf(tabName) != -1);
   };
 
   FacilityDistribution.prototype.getByScreen = function (screenName) {
