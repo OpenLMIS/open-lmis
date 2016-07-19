@@ -219,7 +219,7 @@ function RecordFacilityDataController($scope, $location, $route, $routeParams, d
           $route.reload();
         }
 
-        $http.post('/review-data/distribution/get.json', distribution).success(onSuccess).error(onFailure)
+        $http.post('/review-data/distribution/get.json', distribution).success(onSuccess).error(onFailure);
       });
     }
   }
