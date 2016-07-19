@@ -129,7 +129,7 @@ public class FacilityDistributionService {
                                               List<TargetGroupProduct> childrenTargetGroupProducts,
                                               List<TargetGroupProduct> adultTargetGroupProducts,
                                               List<ProductVial> childProductVials, List<ProductVial> adultProductVials) {
-    List<RefrigeratorReading> refrigeratorReadings = getRefrigeratorReadings(facility.getId(), refrigerators);
+    List<RefrigeratorReading> refrigeratorReadings = getRefrigeratorReadings(facility.getId(), refrigerators, null);
 
     FacilityVisit facilityVisit = new FacilityVisit(facility, distribution);
     facilityVisitService.save(facilityVisit);
@@ -158,7 +158,7 @@ public class FacilityDistributionService {
     return facilityDistribution;
   }
 
-  private List<RefrigeratorReading> getRefrigeratorReadings(final Long facilityId, List<Refrigerator> refrigerators) {
+  private List<RefrigeratorReading> getRefrigeratorReadings(final Long facilityId, List<Refrigerator> refrigerators, final Long facilityVisitId) {
     return (List<RefrigeratorReading>) collect(select(refrigerators, new Predicate() {
       @Override
       public boolean evaluate(Object o) {
@@ -168,7 +168,9 @@ public class FacilityDistributionService {
       @Override
       public Object transform(Object o) {
         Refrigerator refrigerator = (Refrigerator) o;
-        RefrigeratorReading reading = distributionRefrigeratorsService.getByRefrigeratorIdAndSerialNumber(refrigerator.getId(), refrigerator.getSerialNumber());
+        RefrigeratorReading reading = null == facilityVisitId
+          ? null
+          : distributionRefrigeratorsService.getByRefrigeratorIdAndSerialNumber(refrigerator.getId(), refrigerator.getSerialNumber(), facilityVisitId);
         return null == reading ? new RefrigeratorReading(refrigerator) : reading;
       }
     });
@@ -198,7 +200,7 @@ public class FacilityDistributionService {
     EpiUse epiUse = epiUseService.getBy(facilityVisit.getId());
 
     List<Refrigerator> refrigerators = refrigeratorService.getRefrigeratorsForADeliveryZoneAndProgram(distribution.getDeliveryZone().getId(), distribution.getProgram().getId());
-    DistributionRefrigerators distributionRefrigerators = new DistributionRefrigerators(getRefrigeratorReadings(facilityVisit.getFacilityId(), refrigerators));
+    DistributionRefrigerators distributionRefrigerators = new DistributionRefrigerators(getRefrigeratorReadings(facilityVisit.getFacilityId(), refrigerators,facilityVisit.getId()));
 
     Facility facility = facilityService.getById(facilityVisit.getFacilityId());
 
