@@ -88,5 +88,5 @@ public interface DistributionRefrigeratorsMapper {
           @Result(column = "id", property = "id"),
           @Result(column = "id", property = "problem", javaType = RefrigeratorProblem.class, one = @One(select = "getProblemByReadingId")),
   })
-  RefrigeratorReading getByRefrigeratorIdAndSerialNumber(Long refrigeratorId, String serialNumber);
+  RefrigeratorReading getByRefrigeratorIdAndSerialNumber(@Param("refrigeratorId") Long refrigeratorId, @Param("serialNumber") String serialNumber);
 }
