@@ -125,7 +125,7 @@ public class ReviewDataService {
   private Integer distributionEditProvinceLevel;
 
   public ReviewDataFilters getFilters() {
-    List<Program> programs = programService.getAll();
+    List<Program> programs = programService.getAllPushPrograms();
     List<GeographicZone> geographicZones = facilityService.searchByLevelNumber(distributionEditProvinceLevel);
     List<DeliveryZone> deliveryZones = deliveryZoneService.getAll();
 
