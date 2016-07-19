@@ -88,7 +88,7 @@ public class DistributionRefrigeratorsService {
     repository.saveProblem(problem);
   }
 
-  public RefrigeratorReading getByRefrigeratorIdAndSerialNumber(Long id, String serialNumber) {
-    return repository.getByRefrigeratorIdAndSerialNumber(id, serialNumber);
+  public RefrigeratorReading getByRefrigeratorIdAndSerialNumber(Long refrigeratorId, String serialNumber) {
+    return repository.getByRefrigeratorIdAndSerialNumber(refrigeratorId, serialNumber);
   }
 }
