@@ -87,4 +87,8 @@ public class DistributionRefrigeratorsService {
   public void saveProblem(RefrigeratorProblem problem) {
     repository.saveProblem(problem);
   }
+
+  public RefrigeratorReading getBySerialNumber(String serialNumber) {
+    return repository.getBySerialNumber(serialNumber);
+  }
 }
