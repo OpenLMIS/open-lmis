@@ -97,7 +97,7 @@
             <property name="useCacheControlNoStore" value="true"/>
             <property name="cacheMappings">
                 <props>
-                    <prop key="/public/**">${public.pages.cache.duration}</prop>
+                    <prop key="/public/v*/**">${public.pages.cache.duration}</prop>
                 </props>
             </property>
         </bean>
