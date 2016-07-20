@@ -44,6 +44,20 @@ public class Reading {
     return Optional.fromNullable(reading).or(EMPTY);
   }
 
+  public static void notRecorded(Reading reading) {
+    if (null == reading) {
+      return;
+    }
+
+    reading.setNotRecorded(false);
+
+    if (null == reading.getOriginal()) {
+      return;
+    }
+
+    reading.getOriginal().setNotRecorded(false);
+  }
+
   private String type = "reading";
   private Reading original;
   private Object value;
