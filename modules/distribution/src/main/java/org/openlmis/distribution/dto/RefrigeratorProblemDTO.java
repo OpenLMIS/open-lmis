@@ -43,6 +43,10 @@ public class RefrigeratorProblemDTO extends BaseModel {
   Reading other;
   Reading otherProblemExplanation;
 
+  public RefrigeratorProblemDTO(Long readingId) {
+    this.readingId = readingId;
+  }
+
   public RefrigeratorProblem transform() {
     Boolean operatorError = Reading.safeRead(this.operatorError).parseBoolean();
     Boolean burnerProblem = Reading.safeRead(this.burnerProblem).parseBoolean();
