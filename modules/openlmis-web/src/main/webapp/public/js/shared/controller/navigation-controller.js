@@ -40,6 +40,9 @@ function NavigationController($scope, ConfigSettingsByKey, localStorageService, 
     FeatureToggleService.get({key: 'adjustment.occurrences.report'}, function (result) {
      $scope.isAdjustmentOccurrencesReportOn = result.key;
     });
+    FeatureToggleService.get({key: 'last.sync.time.report'}, function (result) {
+     $scope.isLastSyncTimeReportOn = result.key;
+    });
    }();
 
   $scope.loadRights = function () {

@@ -53,6 +53,11 @@
                 <a href="/public/pages/reports/mozambique/index.html#/adjustment"
                    openlmis-message="menu.report.adjustment.occurrences"></a>
             </li>
+
+            <li ng-show="hasPermission('VIEW_LAST_SYNC_TIME_REPORTS') && isLastSyncTimeReportOn">
+                <a href="/public/pages/reports/mozambique/index.html#/last-sync-time"
+                   openlmis-message="menu.report.last.sync.time.report"></a>
+            </li>
         </ul>
     </div>
 </li>
