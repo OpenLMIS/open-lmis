@@ -32,5 +32,5 @@ public class GeographicZone {
   private Double latitude;
   private Double longitude;
   private Integer levelId;
-
+  private String levelCode;
 }

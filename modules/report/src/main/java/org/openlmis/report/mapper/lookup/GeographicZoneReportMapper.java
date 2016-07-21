@@ -32,12 +32,18 @@ import java.util.List;
 @Repository
 public interface GeographicZoneReportMapper {
 
-    @Select("SELECT g.* , p.id as parentId" +
-            "   FROM " +
-            "       geographic_zones g left join geographic_zones p on g.parentId = p.id order by p.name, g.name")
+    @Select("SELECT g.* , p.id as parentId, l.code as levelCode FROM geographic_zones g " +
+            "LEFT JOIN geographic_zones p " +
+            "ON g.parentId = p.id " +
+            "LEFT JOIN geographic_levels l " +
+            "ON g.levelId = l.id " +
+            "ORDER BY p.name, g.name")
     List<GeographicZone> getAll();
 
-    @Select("SELECT * from geographic_zones WHERE id=#{id} OR parentid=#{id}")
+    @Select("SELECT g.*, l.code as levelCode from geographic_zones g " +
+            "LEFT JOIN geographic_levels l " +
+            "ON g.levelId = l.id " +
+            "WHERE id=#{id} OR parentid=#{id}")
     List<GeographicZone> getZoneAndChildren(@Param("id") Long id);
 
     @Select("SELECT * " +

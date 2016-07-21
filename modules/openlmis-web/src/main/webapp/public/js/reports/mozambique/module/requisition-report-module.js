@@ -60,6 +60,11 @@ angular.module('requisition-report', ['openlmis', 'angularCombine', 'ngTable', '
                     controller: AdjustmentOccurrencesReportController,
                     templateUrl: 'adjustment/partials/list.html',
                     reloadOnSearch: false
+                }).
+                when('/last-sync-time', {
+                    controller: LastSyncTimeReportController,
+                    templateUrl: 'last-sync-time/partials/list.html',
+                    reloadOnSearch: false
                 }).otherwise({redirectTo: '/'});
         }]).run(
     function ($rootScope, AuthorizationService) {
