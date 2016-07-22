@@ -1,10 +1,22 @@
-function LastSyncTimeReportController($scope, $http, GeographicZoneService, CubesGenerateUrlService, CubesGenerateCutParamsService) {
+function LastSyncTimeReportController($scope, $http, GeographicZoneService, CubesGenerateUrlService, CubesGenerateCutParamsService, DateFormatService) {
 
   $scope.provinces = [];
   $scope.districts = [];
   $scope.tree_data = [];
   $scope.col_defs = [{
-    field: 'LastSyncTime'
+    field: 'LastSyncTime',
+    cellTemplate: '<div ng-if=\'row.branch[col.field] \'>' +
+                    '<span class=\'circle-icon\' ng-style=\'cellTemplateScope.checkLastSyncDate(row.branch[col.field])\'> </span>' +
+                    '<span>{{row.branch[col.field]}}</span>' +
+                    '</div>',
+    cellTemplateScope: {
+      checkLastSyncDate: function(date) {
+        var syncInterval = (new Date() - new Date(date)) / 1000 / 3600;
+        return syncInterval <= 24 && {'background-color': 'green'} ||
+            syncInterval > 24 * 3 && {'background-color': 'red'} ||
+            {'background-color': 'orange'};
+      }
+    }
   }];
 
   $scope.$on('$viewContentLoaded', function () {
@@ -40,9 +52,9 @@ function LastSyncTimeReportController($scope, $http, GeographicZoneService, Cube
 
     $http.get(CubesGenerateUrlService.generateFactsUrl('vw_sync_time', cutsParams)).success(function(data){
       buildTreeData(data);
-      var lessThan1DayCount =0;
-      var lessThan3DaysCount =0;
-      var moreThan3DaysCount =0;
+      var lessThan1DayCount = 0;
+      var lessThan3DaysCount = 0;
+      var moreThan3DaysCount = 0;
       var currentTime = new Date();
       var oneDay = 86400000;
       var threeDay = 259200000;
@@ -122,4 +134,11 @@ function LastSyncTimeReportController($scope, $http, GeographicZoneService, Cube
       'labelText': '[[]]'
     });
   }
+
+  $scope.formatDateWithDay = function (dateString) {
+    return 'abc';
+    //return DateFormatService.formatDateWithLocale(dateString);
+  };
+
+
 }

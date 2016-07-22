@@ -7,12 +7,6 @@
           $templateCache.put('template/treeGrid/syncTimeTreeGrid.html',
               "<div class=\"table-responsive\">\n" +
               " <table class=\"table tree-grid\">\n" +
-              "   <thead>\n" +
-              "     <tr>\n" +
-              "       <th><a ng-if=\"expandingProperty.sortable\" ng-click=\"sortBy(expandingProperty)\">{{expandingProperty.displayName || expandingProperty.field || expandingProperty}}</a><span ng-if=\"!expandingProperty.sortable\">{{expandingProperty.displayName || expandingProperty.field || expandingProperty}}</span><i ng-if=\"expandingProperty.sorted\" class=\"{{expandingProperty.sortingIcon}} pull-right\"></i></th>\n" +
-              "       <th ng-repeat=\"col in colDefinitions\"><a ng-if=\"col.sortable\" ng-click=\"sortBy(col)\">{{col.displayName || col.field}}</a><span ng-if=\"!col.sortable\">{{col.displayName || col.field}}</span><i ng-if=\"col.sorted\" class=\"{{col.sortingIcon}} pull-right\"></i></th>\n" +
-              "     </tr>\n" +
-              "   </thead>\n" +
               "   <tbody>\n" +
               "     <tr ng-repeat=\"row in tree_rows | searchFor:$parent.filterString:expandingProperty:colDefinitions track by row.branch.uid\"\n" +
               "       ng-class=\"'level-' + {{ row.level }} + (row.branch.selected ? ' active':'')\" class=\"tree-grid-row\">\n" +
@@ -25,7 +19,6 @@
               "       </td>\n" +
               "       <td ng-repeat=\"col in colDefinitions\">\n" +
               "         <div ng-if=\"col.cellTemplate\" compile=\"col.cellTemplate\" cell-template-scope=\"col.cellTemplateScope\"></div>\n" +
-              "         <div ng-if=\"!col.cellTemplate\">{{row.branch[col.field]}}</div>\n" +
               "       </td>\n" +
               "     </tr>\n" +
               "   </tbody>\n" +
