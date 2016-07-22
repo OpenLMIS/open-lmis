@@ -47,11 +47,11 @@ function LastSyncTimeReportController($scope, $http, GeographicZoneService, Cube
       var oneDay = 86400000;
       var threeDay = 259200000;
 
-      _.forEach(data,function(){
-        var interval = currentTime - new Date(data['last_sync_time']);
-        if( interval < oneDay){
+      _.forEach(data, function (item) {
+        var interval = currentTime - new Date(item['last_sync_time']);
+        if (interval < oneDay) {
           lessThan1DayCount++;
-        } else if (interval > threeDay ){
+        } else if (interval > threeDay) {
           moreThan3DaysCount++;
         } else {
           lessThan3DaysCount++;
@@ -93,30 +93,33 @@ function LastSyncTimeReportController($scope, $http, GeographicZoneService, Cube
   }
 
   function drawDonutChart(lessThan1DayCount, lessThan3DaysCount, moreThan3DaysCount) {
-    AmCharts.makeChart( "chart-div", {
-      "type": "pie",
-      "theme": "light",
-      "dataProvider": [ {
-        "title": lessThan1DayCount + "Health facilities last updated in the last 24 hours",
-        "value": lessThan1DayCount
+    AmCharts.makeChart('sync-time-chart', {
+      'type': 'pie',
+      'theme': 'light',
+      'dataProvider': [
+        {
+          'title': lessThan1DayCount + ' Health facilities last updated in the last 24 hours',
+          'value': lessThan1DayCount
+        },
+        {
+          'title': lessThan3DaysCount + ' Health facilities last updated in the last 3 days',
+          'value': lessThan3DaysCount
+        },
+        {
+          'title': moreThan3DaysCount + ' Health facilities last updated more than 3 days ago',
+          'value': moreThan3DaysCount
+        }
+      ],
+      'legend': {
+        'position': 'right',
+        'valueText': ''
       },
-        {
-          "title": lessThan3DaysCount + "Health facilities last updated in the last 3 days",
-          "value": lessThan3DaysCount
-        } ,
-        {
-          "title": moreThan3DaysCount + "Health facilities last updated more than 3 days ago",
-          "value": moreThan3DaysCount
-        }],
-      "titleField": "title",
-      "valueField": "value",
-      "labelRadius": 5,
-      "radius": "42%",
-      "innerRadius": "60%",
-      "labelText": "[[title]]",
-      "export": {
-        "enabled": true
-      }
-    } );
+      'titleField': 'title',
+      'valueField': 'value',
+      'labelRadius': 5,
+      'radius': '40%',
+      'innerRadius': '60%',
+      'labelText': '[[]]'
+    });
   }
 }
