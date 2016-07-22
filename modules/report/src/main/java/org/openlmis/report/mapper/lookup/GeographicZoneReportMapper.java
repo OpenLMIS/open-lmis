@@ -46,8 +46,10 @@ public interface GeographicZoneReportMapper {
             "WHERE id=#{id} OR parentid=#{id}")
     List<GeographicZone> getZoneAndChildren(@Param("id") Long id);
 
-    @Select("SELECT * " +
+    @Select("SELECT g.*, l.code as levelCode " +
             "FROM geographic_zones g " +
+            "LEFT JOIN geographic_levels l " +
+            "ON g.levelId = l.id " +
             "WHERE id = #{id} OR id = (SELECT parentid" +
             "                      FROM geographic_zones" +
             "                      WHERE id = #{id});")

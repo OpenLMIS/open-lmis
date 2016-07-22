@@ -3,8 +3,11 @@ services.factory('CubesGenerateCutParamsService', function (ReportLocationConfig
     var generateCutsParams = function (timeDimensionName, startTime, endTime, facility, drugs, province, district) {
         var cutsParams = [];
 
-        var selectedStartTime = startTime === undefined ? "" : startTime;
-        var selectedEndTime = endTime === undefined ? "" : endTime;
+        var selectedStartTime, selectedEndTime;
+        if (timeDimensionName) {
+            selectedStartTime = startTime === undefined ? "" : startTime;
+            selectedEndTime = endTime === undefined ? "" : endTime;
+        }
 
         if (selectedStartTime !== undefined || selectedEndTime !== undefined) {
             cutsParams.push({

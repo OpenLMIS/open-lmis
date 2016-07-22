@@ -1,4 +1,4 @@
-angular.module('requisition-report', ['openlmis', 'angularCombine', 'ngTable', 'ui.bootstrap.dialog', 'treeGrid', 'ngGrid']).config(['$routeProvider',
+angular.module('requisition-report', ['openlmis', 'angularCombine', 'ngTable', 'ui.bootstrap.dialog', 'treeGrid', 'ngGrid', 'syncTimeTreeGrid']).config(['$routeProvider',
         function ($routeProvider) {
             $routeProvider.
                 when('/requisition', {
