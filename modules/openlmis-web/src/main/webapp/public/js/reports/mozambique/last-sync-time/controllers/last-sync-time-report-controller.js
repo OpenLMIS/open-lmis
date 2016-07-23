@@ -60,7 +60,7 @@ function LastSyncTimeReportController($scope, $http, GeographicZoneService, Cube
       var threeDay = 259200000;
 
       _.forEach(data, function (item) {
-        var interval = currentTime - new Date(item['last_sync_time']);
+        var interval = currentTime - new Date(item.last_sync_time);
         if (interval < oneDay) {
           lessThan1DayCount++;
         } else if (interval > threeDay) {
@@ -76,23 +76,22 @@ function LastSyncTimeReportController($scope, $http, GeographicZoneService, Cube
   function buildTreeData(syncTimeData) {
     _.forEach($scope.provinces, function(province) {
       var provinceItem = {
-        Name: province['name'],
+        Name: province.name,
         LastSyncTime: '',
         children: []
       };
       _.forEach($scope.districts, function(district) {
-        if (province['id'] === district['parentId']) {
+        if (province.id === district.parentId) {
           var districtItem = {
-            Name: district['name'],
+            Name: district.name,
             LastSyncTime: '',
             children: []
           };
           _.forEach(syncTimeData, function(facilityData) {
-            if (facilityData['location.district_code'] === district.code
-                && facilityData['location.province_code'] === province.code) {
+            if (facilityData['location.district_code'] === district.code && facilityData['location.province_code'] === province.code) {
               var facilityItem = {
                 Name: facilityData['facility.facility_name'],
-                LastSyncTime: facilityData['last_sync_time']
+                LastSyncTime: facilityData.last_sync_time
               };
               districtItem.children.push(facilityItem);
             }
