@@ -1,4 +1,4 @@
-describe('last sync time controller', function () {
+xdescribe('last sync time controller', function () {
   var scope, httpBackend;
 
   beforeEach(module('openlmis'));
