@@ -1,8 +1,9 @@
-function LastSyncTimeReportController($scope, $http, GeographicZoneService, CubesGenerateUrlService, CubesGenerateCutParamsService, DateFormatService) {
+function LastSyncTimeReportController($scope, $http, GeographicZoneService, CubesGenerateUrlService, CubesGenerateCutParamsService, DateFormatService, messageService) {
 
   $scope.provinces = [];
   $scope.districts = [];
   $scope.tree_data = [];
+  $scope.location = '';
   $scope.col_defs = [{
     field: 'LastSyncTime',
     cellTemplateScope: {
@@ -41,12 +42,15 @@ function LastSyncTimeReportController($scope, $http, GeographicZoneService, Cube
     if($scope.provinces.length > 1) {
       cutsParams = CubesGenerateCutParamsService.generateCutsParams(undefined, undefined, undefined,
           undefined, undefined, undefined, undefined);
+      $scope.location = messageService.get('header.location.national');
     } else if ($scope.districts.length > 1) {
       cutsParams = CubesGenerateCutParamsService.generateCutsParams(undefined, undefined, undefined,
           undefined, undefined, $scope.provinces[0], undefined);
+      $scope.location = $scope.provinces[0].name;
     } else {
       cutsParams = CubesGenerateCutParamsService.generateCutsParams(undefined, undefined, undefined,
           undefined, undefined, $scope.provinces[0], $scope.districts[0]);
+      $scope.location = $scope.districts[0].name;
     }
 
     $http.get(CubesGenerateUrlService.generateFactsUrl('vw_sync_time', cutsParams)).success(function(data){
@@ -108,15 +112,15 @@ function LastSyncTimeReportController($scope, $http, GeographicZoneService, Cube
       'theme': 'light',
       'dataProvider': [
         {
-          'title': lessThan1DayCount + ' Health facilities last updated in the last 24 hours',
+          'title': lessThan1DayCount + messageService.get('tablet.update.chart.last24.hours'),
           'value': lessThan1DayCount
         },
         {
-          'title': lessThan3DaysCount + ' Health facilities last updated in the last 3 days',
+          'title': lessThan3DaysCount + messageService.get('tablet.update.chart.last3.days'),
           'value': lessThan3DaysCount
         },
         {
-          'title': moreThan3DaysCount + ' Health facilities last updated more than 3 days ago',
+          'title': moreThan3DaysCount + messageService.get('tablet.update.chart.more.than3.days'),
           'value': moreThan3DaysCount
         }
       ],
