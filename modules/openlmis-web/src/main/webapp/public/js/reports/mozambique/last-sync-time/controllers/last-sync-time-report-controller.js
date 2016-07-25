@@ -32,7 +32,6 @@ function LastSyncTimeReportController($scope, $http, GeographicZoneService, Cube
           $scope.districts.push(zone);
         }
       });
-      loadSyncTimeData();
     });
   }
 
