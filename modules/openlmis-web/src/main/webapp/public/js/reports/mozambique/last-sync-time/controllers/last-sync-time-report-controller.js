@@ -112,15 +112,15 @@ function LastSyncTimeReportController($scope, $http, GeographicZoneService, Cube
       'theme': 'light',
       'dataProvider': [
         {
-          'title': lessThan1DayCount + messageService.get('tablet.update.chart.last24.hours'),
+          'title': lessThan1DayCount + ' ' + messageService.get('tablet.update.chart.last24.hours'),
           'value': lessThan1DayCount
         },
         {
-          'title': lessThan3DaysCount + messageService.get('tablet.update.chart.last3.days'),
+          'title': lessThan3DaysCount + ' ' + messageService.get('tablet.update.chart.last3.days'),
           'value': lessThan3DaysCount
         },
         {
-          'title': moreThan3DaysCount + messageService.get('tablet.update.chart.more.than3.days'),
+          'title': moreThan3DaysCount + ' ' + messageService.get('tablet.update.chart.more.than3.days'),
           'value': moreThan3DaysCount
         }
       ],

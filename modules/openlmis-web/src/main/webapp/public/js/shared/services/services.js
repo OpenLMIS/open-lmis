@@ -471,3 +471,7 @@ services.factory('FeatureToggleService', function ($q, $timeout, $resource) {
 services.factory('AppPropertiesService', function ($q, $timeout, $resource) {
   return $resource('/reference-data/:key.json', {key: '@key'});
 });
+
+services.factory('HomeFacilityService', function ($resource) {
+  return $resource('/rest-api/lookup/home-facility', {}, {});
+});

@@ -66,6 +66,7 @@ public class LookupController {
     public static final String REGIMEN_PRODUCT_COMBINATIONS = "regimen-product-combinations";
     public static final String REGIMEN_COMBINATION_CONSTITUENTS = "regimen-combination-constituents";
     public static final String REGIMEN_CONSTITUENT_DOSAGES = "regimen-constituent-dosages";
+    public static final String HOME_FACILITY = "home-facility";
 
     @Autowired
     private ProfileBaseLookupService lookupService;
@@ -136,6 +137,16 @@ public class LookupController {
                                         @RequestParam(value = "paging", defaultValue = "true") Boolean paging) {
         RowBounds rowBounds = paging ? new RowBounds(page, pageSize) : new RowBounds(RowBounds.NO_ROW_OFFSET, RowBounds.NO_ROW_LIMIT);
         return RestResponse.response(FACILITIES, lookupService.getAllFacilities(rowBounds));
+    }
+
+    @ApiOperation(value = "home-facility", notes = "Returns home facility for current user.", response = org.openlmis.core.domain.Facility.class)
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Successful request", response = org.openlmis.core.domain.Facility.class),
+            @ApiResponse(code = 500, message = "Internal server error")}
+    )
+    @RequestMapping(value = "/rest-api/lookup/home-facility", method = RequestMethod.GET, headers = ACCEPT_JSON)
+    public ResponseEntity getFacilities() {
+        return RestResponse.response(HOME_FACILITY, lookupService.getCurrentUserFacility());
     }
 
     @ApiOperation(value = "Facility Detail by Code", notes = "Returns Facility Detail by Code", response = Facility.class)

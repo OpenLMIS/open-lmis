@@ -8,7 +8,7 @@
  * You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org. 
  */
 
-function NavigationController($scope, ConfigSettingsByKey, localStorageService, Locales, $location, $window, FeatureToggleService, AppPropertiesService) {
+function NavigationController($scope, ConfigSettingsByKey, localStorageService, Locales, $location, $window, FeatureToggleService, AppPropertiesService, HomeFacilityService) {
 
   ConfigSettingsByKey.get({key: 'LOGIN_SUCCESS_DEFAULT_LANDING_PAGE'}, function (data){
     $scope.homePage =  data.settings.value;
@@ -95,4 +95,18 @@ function NavigationController($scope, ConfigSettingsByKey, localStorageService, 
       $scope.showNetworkError = true;
     }, {});
   };
+
+  $scope.loadHomeFacility = function() {
+    HomeFacilityService.get({}, function (data) {
+          if (!data['home-facility']) {
+            $scope.canViewUpdateReport = false;
+          } else if (data['home-facility'].facilityType.code === 'CSRUR-I' ||
+              data['home-facility'].facilityType.code === 'CSRUR-II' ) {
+            $scope.canViewUpdateReport = false;
+          } else {
+            $scope.canViewUpdateReport = true;
+          }
+        }
+    );
+  }();
 }
