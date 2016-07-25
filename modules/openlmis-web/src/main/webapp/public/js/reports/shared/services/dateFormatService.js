@@ -35,12 +35,18 @@ services.factory('DateFormatService', function ($filter, messageService) {
         }
     }
 
+    function formatDateWithTimeAndLocale(dateString){
+        var date = new Date(dateString);
+        return $filter('date')(date, "hh:mm a dd MMMM yyyy");
+    }
+
     return {
         formatDateWithFirstDayOfMonth: formatDateWithFirstDayOfMonth,
         formatDateWithLastDayOfMonth: formatDateWithLastDayOfMonth,
         formatDateWithLocale: formatDateWithLocale,
         formatDateWithLocaleNoDay: formatDateWithLocaleNoDay,
         formatDateWithStartDayOfPeriod: formatDateWithStartDayOfPeriod,
-        formatDateWithEndDayOfPeriod: formatDateWithEndDayOfPeriod
+        formatDateWithEndDayOfPeriod: formatDateWithEndDayOfPeriod,
+        formatDateWithTimeAndLocale: formatDateWithTimeAndLocale
     };
 });

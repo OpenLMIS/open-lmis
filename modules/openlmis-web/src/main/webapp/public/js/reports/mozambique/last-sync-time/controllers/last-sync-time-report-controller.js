@@ -5,16 +5,15 @@ function LastSyncTimeReportController($scope, $http, GeographicZoneService, Cube
   $scope.tree_data = [];
   $scope.col_defs = [{
     field: 'LastSyncTime',
-    cellTemplate: '<div ng-if=\'row.branch[col.field] \'>' +
-                    '<span class=\'circle-icon\' ng-style=\'cellTemplateScope.checkLastSyncDate(row.branch[col.field])\'> </span>' +
-                    '<span>{{row.branch[col.field]}}</span>' +
-                    '</div>',
     cellTemplateScope: {
       checkLastSyncDate: function(date) {
         var syncInterval = (new Date() - new Date(date)) / 1000 / 3600;
         return syncInterval <= 24 && {'background-color': 'green'} ||
             syncInterval > 24 * 3 && {'background-color': 'red'} ||
             {'background-color': 'orange'};
+      },
+      formatDateTime: function(dateString) {
+        return DateFormatService.formatDateWithTimeAndLocale(dateString);
       }
     }
   }];
@@ -32,6 +31,7 @@ function LastSyncTimeReportController($scope, $http, GeographicZoneService, Cube
           $scope.districts.push(zone);
         }
       });
+      loadSyncTimeData();
     });
   }
 
@@ -132,11 +132,4 @@ function LastSyncTimeReportController($scope, $http, GeographicZoneService, Cube
       'labelText': '[[]]'
     });
   }
-
-  $scope.formatDateWithDay = function (dateString) {
-    return 'abc';
-    //return DateFormatService.formatDateWithLocale(dateString);
-  };
-
-
 }

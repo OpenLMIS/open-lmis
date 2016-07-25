@@ -18,7 +18,10 @@
               "             {{row.branch[expandingProperty.field] || row.branch[expandingProperty]}}</span>\n" +
               "       </td>\n" +
               "       <td ng-repeat=\"col in colDefinitions\">\n" +
-              "         <div ng-if=\"col.cellTemplate\" compile=\"col.cellTemplate\" cell-template-scope=\"col.cellTemplateScope\"></div>\n" +
+              "           <div ng-if=\"row.branch[col.field] \" compile=\"col.cellTemplate\" cell-template-scope=\"col.cellTemplateScope\">" +
+              "           <span class=\"circle-icon\" ng-style=\"cellTemplateScope.checkLastSyncDate(row.branch[col.field])\"> </span>" +
+              "           <span>{{cellTemplateScope.formatDateTime(row.branch[col.field])}}</span>" +
+              "           </div>" +
               "       </td>\n" +
               "     </tr>\n" +
               "   </tbody>\n" +
