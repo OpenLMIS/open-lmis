@@ -11,9 +11,6 @@ function ConsumptionReportController($scope, $controller, $filter, $http, $q, Cu
             $scope.locationIdToCode($scope.reportParams);
             var promises = requestConsumptionDataForEachPeriod();
             $q.all(promises).then(function (consumptionsInPeriods) {
-                _.map(consumptionsInPeriods, function(consumptionsInPeriod){
-                    consumptionsInPeriod.data.summary.soh = consumptionsInPeriod.data.cells[0] ? consumptionsInPeriod.data.cells[0].soh : null;
-                });
                 renderConsumptionChart(_.pluck(_.pluck(consumptionsInPeriods, 'data'), 'summary'));
             });
         }
@@ -74,7 +71,7 @@ function ConsumptionReportController($scope, $controller, $filter, $http, $q, Cu
                 'NO_MOVEMENT_IN_PERIOD'
             ]});
             return $http
-                .get(CubesGenerateUrlService.generateAggregateUrl("vw_period_movements", ["reason_code"], cutParams))
+                .get(CubesGenerateUrlService.generateAggregateUrl("vw_period_movements", [], cutParams))
                 .then(function (consumptionData) {
                     consumptionData.data.summary.period =
                         DateFormatService.formatDateWithLocale(period.periodStart) +
