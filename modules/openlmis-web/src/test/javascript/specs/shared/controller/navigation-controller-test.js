@@ -14,7 +14,7 @@ describe("NavigationController", function () {
   var scope, ctrl, $httpBackend, $location, window, rights;
   beforeEach(module('openlmis'));
 
-  beforeEach(inject(function ($rootScope, $controller, _localStorageService_, _$httpBackend_, _$location_,_FeatureToggleService_, _AppPropertiesService_) {
+  beforeEach(inject(function ($rootScope, $controller, _localStorageService_, _$httpBackend_, _$location_,_FeatureToggleService_, _AppPropertiesService_, _HomeFacilityService_) {
     $httpBackend = _$httpBackend_;
     $location = _$location_;
     window = {};
@@ -22,10 +22,12 @@ describe("NavigationController", function () {
     localStorageService = _localStorageService_;
     FeatureToggleService = _FeatureToggleService_;
     AppPropertiesService = _AppPropertiesService_;
+    HomeFacilityService = _HomeFacilityService_;
     rights = [{name:'MANAGE_FACILITY',type:'ADMIN'},{name:'UPLOADS', type: 'REPORTING'}];
     spyOn(localStorageService, 'get').andReturn(JSON.stringify(rights));
     spyOn(FeatureToggleService,'get').andReturn({"key":true});
     spyOn(AppPropertiesService, 'get').andReturn("");
+    spyOn(HomeFacilityService, 'get').andReturn("");
     ctrl = $controller(NavigationController, {$scope: scope, localStorageService: localStorageService, $window: window});
   }));
 
