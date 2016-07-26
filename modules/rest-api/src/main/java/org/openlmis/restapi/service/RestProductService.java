@@ -41,7 +41,7 @@ public class RestProductService {
 
   @Transactional
   public Product buildAndSave(Product product) {
-    productService.save(buildProduct(product));
+    productService.save(buildProduct(product), true);
     return product;
   }
 

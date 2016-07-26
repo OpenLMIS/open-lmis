@@ -142,7 +142,7 @@ public class ProductRepositoryTest {
   @Test
   public void shouldUpdateProduct() {
     Product product = new Product();
-    repository.update(product);
+    repository.update(product, false);
     verify(mockedMapper).update(product);
   }
 
@@ -213,7 +213,7 @@ public class ProductRepositoryTest {
     List<KitProduct> newKitProductList = asList(kitProduct3, kitProduct4);
     product.setKitProductList(newKitProductList);
 
-    repository.update(product);
+    repository.update(product, true);
 
     verify(mockedMapper).deleteKitProduct(kitProduct1);
     verify(mockedMapper).deleteKitProduct(kitProduct2);

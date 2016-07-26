@@ -47,7 +47,7 @@ public class ProductRepository {
     try {
       mapper.insert(product);
       if (!product.getKitProductList().isEmpty()) {
-        for (KitProduct kitProduct: product.getKitProductList()) {
+        for (KitProduct kitProduct : product.getKitProductList()) {
           mapper.insertKitProduct(kitProduct);
         }
       }
@@ -63,10 +63,13 @@ public class ProductRepository {
     }
   }
 
-  public void update(Product product) {
+  public void update(Product product, boolean updateKitProductList) {
     try {
       mapper.update(product);
-      updateKitProductList(product);
+
+      if (updateKitProductList) {
+        updateKitProductList(product);
+      }
 
     } catch (DuplicateKeyException duplicateKeyException) {
       throw new DataException("error.duplicate.product.code");
@@ -85,13 +88,13 @@ public class ProductRepository {
     List<KitProduct> newKitProductList = product.getKitProductList();
 
     if (!oldKitProductList.isEmpty()) {
-      for (KitProduct kitProduct: oldKitProductList) {
+      for (KitProduct kitProduct : oldKitProductList) {
         mapper.deleteKitProduct(kitProduct);
       }
     }
 
     if (!newKitProductList.isEmpty()) {
-      for (KitProduct kitProduct: product.getKitProductList()) {
+      for (KitProduct kitProduct : product.getKitProductList()) {
         mapper.insertKitProduct(kitProduct);
       }
     }
@@ -128,7 +131,7 @@ public class ProductRepository {
     return mapper.getById(id);
   }
 
-  public List<Product> getAllProducts(){
+  public List<Product> getAllProducts() {
     return mapper.list();
   }
 
@@ -137,11 +140,11 @@ public class ProductRepository {
   }
 
 
-  public List<Product> getProductCodeForUpdateStatus(){
+  public List<Product> getProductCodeForUpdateStatus() {
     return mapper.getAllProductWithCode();
   }
 
-  public void updateProductStatus(boolean active, long id){
+  public void updateProductStatus(boolean active, long id) {
     mapper.updateProductActiveStatus(active, id);
   }
 }

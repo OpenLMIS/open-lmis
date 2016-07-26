@@ -75,7 +75,7 @@ public class ProductServiceTest {
     when(productGroupService.validateAndReturn(product.getProductGroup())).thenReturn(null);
     when(productFormService.validateAndReturn(product.getForm())).thenReturn(null);
     when(repository.getDosageUnitByCode("code")).thenReturn(newUnit);
-    service.save(product);
+    service.save(product, false);
 
     assertThat(product.getDosageUnit(), is(newUnit));
     verify(repository).insert(product);
@@ -88,7 +88,7 @@ public class ProductServiceTest {
     Product spyProduct = spy(new Product());
     doNothing().when(spyProduct).validate();
 
-    service.save(spyProduct);
+    service.save(spyProduct, false);
 
     verify(spyProduct).validate();
   }
@@ -104,7 +104,7 @@ public class ProductServiceTest {
     when(repository.getDosageUnitByCode("code")).thenReturn(null);
     expectedEx.expect(dataExceptionMatcher("error.reference.data.invalid.dosage.unit"));
 
-    service.save(product);
+    service.save(product, false);
 
     verify(repository, never()).insert(product);
     verify(productGroupService).validateAndReturn(null);
@@ -122,7 +122,7 @@ public class ProductServiceTest {
     when(productFormService.validateAndReturn(product.getForm())).thenReturn(null);
     when(repository.getByCode("P1")).thenReturn(null);
 
-    service.save(product);
+    service.save(product, false);
 
     verify(productGroupService).validateAndReturn(null);
     verify(productFormService).validateAndReturn(null);
@@ -142,9 +142,9 @@ public class ProductServiceTest {
     List<ProgramProduct> programProducts = new ArrayList<>();
     when(programProductService.getByProductCode("proCode")).thenReturn(programProducts);
 
-    service.save(product);
+    service.save(product, false);
 
-    verify(repository).update(product);
+    verify(repository).update(product, false);
     verify(productGroupService).validateAndReturn(null);
     verify(productFormService).validateAndReturn(null);
   }
@@ -163,7 +163,7 @@ public class ProductServiceTest {
     when(productFormService.validateAndReturn(product.getForm())).thenReturn(null);
     when(programProductService.getByProductCode(productCode)).thenReturn(asList(existingProgramProduct));
 
-    service.save(product);
+    service.save(product, false);
 
     verify(programService).setFeedSendFlag(existingProgramProduct.getProgram(), true);
     verify(productGroupService).validateAndReturn(null);
@@ -185,7 +185,7 @@ public class ProductServiceTest {
     when(productFormService.validateAndReturn(product.getForm())).thenReturn(null);
     when(programProductService.getByProductCode(productCode)).thenReturn(asList(hivProduct, tbProduct));
 
-    service.save(product);
+    service.save(product, false);
 
     verify(programService).setFeedSendFlag(tbProduct.getProgram(), true);
     verify(programService).setFeedSendFlag(hivProduct.getProgram(), true);
@@ -202,7 +202,7 @@ public class ProductServiceTest {
     product.setPackSize(5);
     when(productGroupService.validateAndReturn(product.getProductGroup())).thenReturn(null);
     when(productFormService.validateAndReturn(product.getForm())).thenReturn(null);
-    service.save(product);
+    service.save(product, false);
 
     verify(programService, never()).setFeedSendFlag(any(Program.class), anyBoolean());
     verify(programProductService, never()).getByProductCode(anyString());
@@ -224,7 +224,7 @@ public class ProductServiceTest {
     final ProgramProduct existingProgramProduct = make(a(defaultProgramProduct, with(active, false), with(productActive, true)));
     when(programProductService.getByProductCode(productCode)).thenReturn(asList(existingProgramProduct));
 
-    service.save(product);
+    service.save(product, false);
 
     verify(programService, never()).setFeedSendFlag(any(Program.class), anyBoolean());
     verify(productGroupService).validateAndReturn(null);
@@ -245,7 +245,7 @@ public class ProductServiceTest {
     final ProgramProduct existingProgramProduct = make(a(defaultProgramProduct, with(active, false), with(productActive, false)));
     when(programProductService.getByProductCode(productCode)).thenReturn(asList(existingProgramProduct));
 
-    service.save(product);
+    service.save(product, false);
 
     verify(programService, never()).setFeedSendFlag(any(Program.class), anyBoolean());
     verify(productGroupService).validateAndReturn(null);

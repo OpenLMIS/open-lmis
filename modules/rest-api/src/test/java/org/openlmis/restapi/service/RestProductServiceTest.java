@@ -93,7 +93,7 @@ public class RestProductServiceTest {
 
     restProductService.buildAndSave(product);
 
-    verify(productService).save(product);
+    verify(productService).save(product, true);
 
   }
 

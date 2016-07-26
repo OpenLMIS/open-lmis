@@ -49,7 +49,7 @@ public class ProductService {
   private ProductFormService productFormService;
 
   @Transactional
-  public void save(Product product) {
+  public void save(Product product, boolean updateKitProductList) {
 
     product.validate();
 
@@ -69,7 +69,7 @@ public class ProductService {
 
     List<ProgramProduct> existingProgramProducts = programProductService.getByProductCode(product.getCode());
 
-    repository.update(product);
+    repository.update(product, updateKitProductList);
 
     notifyProgramCatalogChange(product, existingProgramProducts);
   }

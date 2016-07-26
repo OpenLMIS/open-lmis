@@ -37,7 +37,7 @@ public class ProductPersistenceHandler extends AbstractModelPersistenceHandler {
 
   @Override
   protected void save(BaseModel record) {
-    productService.save((Product) record);
+    productService.save((Product) record, false);
   }
 
   @Override

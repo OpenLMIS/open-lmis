@@ -1,6 +1,5 @@
 package org.openlmis.core.upload;
 
-import lombok.NoArgsConstructor;
 import org.openlmis.core.domain.BaseModel;
 import org.openlmis.core.domain.Product;
 import org.openlmis.core.exception.DataException;
@@ -49,7 +48,7 @@ public class ProductsUpdateHandler extends AbstractModelPersistenceHandler {
 
     @Override
     protected void save(BaseModel record) {
-        productService.save((Product) record);
+        productService.save((Product) record, false);
     }
 
     @Override

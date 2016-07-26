@@ -45,7 +45,7 @@ public class ProductPersistenceHandlerTest {
   public void shouldSaveImportedProduct() throws Exception {
     Product product = new Product();
     productPersistenceHandler.save(product);
-    verify(productService).save(product);
+    verify(productService).save(product, false);
   }
 
   @Test

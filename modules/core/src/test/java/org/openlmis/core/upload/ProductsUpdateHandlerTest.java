@@ -17,17 +17,16 @@ import org.openlmis.core.service.ProductFormService;
 import org.openlmis.core.service.ProductService;
 import org.openlmis.core.utils.DateUtil;
 import org.openlmis.db.categories.UnitTests;
-import org.openlmis.upload.annotation.ImportField;
 import org.openlmis.upload.model.AuditFields;
-import org.openlmis.upload.model.Field;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.*;
+import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.anyBoolean;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
@@ -105,7 +104,7 @@ public class ProductsUpdateHandlerTest {
 
         //then
         assertThat(products.get(0).getActive(), is(true));
-        verify(productService).save(products.get(0));
+        verify(productService).save(products.get(0), false);
     }
 
     @Test
@@ -125,7 +124,7 @@ public class ProductsUpdateHandlerTest {
 
         //then
         assertThat(product.getActive(), is(true));
-        verify(productService).save(existingProduct);
+        verify(productService).save(existingProduct, false);
     }
 
     @Test
@@ -151,7 +150,7 @@ public class ProductsUpdateHandlerTest {
         verify(productService).updateProductStatus(false,1l);
 
         ArgumentCaptor<Product> captor = ArgumentCaptor.forClass(Product.class);
-        verify(productService).save(captor.capture());
+        verify(productService).save(captor.capture(), anyBoolean());
         List<Product> captorAllValues = captor.getAllValues();
         assertEquals(uploadProduct, captorAllValues.get(0));
     }
@@ -177,7 +176,7 @@ public class ProductsUpdateHandlerTest {
         //then
         verify(productService).getProductsForUpdateStatus();
         assertThat(product.getActive(), is(true));
-        verify(productService).save(existingProduct);
+        verify(productService).save(existingProduct, false);
         assertThat(existingProduct.getPrimaryName(), is("new name"));
         assertThat(existingProduct.getSpecialStorageInstructions(), is("SpecialStorageInstructions"));
         assertThat(existingProduct.getFormId(), is(10l));
@@ -236,7 +235,7 @@ public class ProductsUpdateHandlerTest {
 
 
         //then
-        verify(productService).save(existingProduct);
+        verify(productService).save(existingProduct, false);
         assertThat(existingProduct.getActive(),is(true));
         assertThat(existingProduct.getCode(),is("Code"));
         assertNull(existingProduct.getStrength());

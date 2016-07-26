@@ -100,7 +100,7 @@ public class ProductController extends BaseController {
       Long userId = loggedInUserId(request);
       product.setCreatedBy(userId);
       product.setModifiedBy(userId);
-      service.save(product);
+      service.save(product, false);
       programProductService.saveAll(programProducts, product);
     } catch (DataException e) {
       response = OpenLmisResponse.error(e, BAD_REQUEST);
@@ -123,7 +123,7 @@ public class ProductController extends BaseController {
       Long userId = loggedInUserId(request);
       product.setId(id);
       product.setModifiedBy(userId);
-      service.save(product);
+      service.save(product, false);
       programProductService.saveAll(programProducts, product);
       priceScheduleService.saveAll(productPriceSchedules, product);
     } catch (DataException e) {
