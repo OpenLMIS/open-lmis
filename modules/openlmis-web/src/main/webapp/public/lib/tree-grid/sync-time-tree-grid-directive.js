@@ -66,7 +66,7 @@
 
       .directive('syncTimeTreeGrid', [
         '$timeout',
-        'treegridTemplate',
+        'syncTimeTreegridTemplate',
         function ($timeout,
                   treegridTemplate) {
 
@@ -677,7 +677,7 @@
         }
       ])
 
-      .provider('treegridTemplate', function () {
+      .provider('syncTimeTreegridTemplate', function () {
         var templatePath = 'template/treeGrid/syncTimeTreeGrid.html';
 
         this.setPath = function (path) {
