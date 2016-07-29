@@ -36,8 +36,10 @@ services.factory('DateFormatService', function ($filter, messageService) {
     }
 
     function formatDateWithTimeAndLocale(dateString){
+        var dateWithLocale = formatDateWithLocale(dateString);
         var date = new Date(dateString);
-        return $filter('date')(date, "hh:mm a dd MMMM yyyy");
+        var time =  $filter('date')(date, "hh:mm a");
+        return time + ' ' +dateWithLocale;
     }
 
     return {
