@@ -1,19 +1,23 @@
-xdescribe('last sync time controller', function () {
-  var scope, httpBackend;
+describe('last sync time controller', function () {
+  var scope, httpBackend, window;
 
   beforeEach(module('openlmis'));
   beforeEach(module('ui.bootstrap.dialog'));
 
-  beforeEach(inject(function ($controller, $rootScope, _$httpBackend_) {
+  beforeEach(inject(function ($controller, $rootScope, _$httpBackend_, _$window_) {
     scope = $rootScope.$new();
     scope.provinces = [];
     scope.districts = [];
     httpBackend = _$httpBackend_;
-    $controller(LastSyncTimeReportController, {$scope: scope});
+    window = _$window_;
+    window.AmCharts = {makeChart: function(){return {};}};
+    $controller(LastSyncTimeReportController, {$scope: scope, $window: window});
   }));
 
   it('should load provinces and districts based on profile', function () {
-
+    httpBackend
+        .when('GET', '/cubesreports/cube/vw_sync_time/facts?cut=location:MAPUTO_PROVINCIA')
+        .respond(200, { foo: 'bar' });
 
     httpBackend.expectGET('/rest-api/lookup/geographic-zones').respond(200, {
       'geographic-zones': [{
