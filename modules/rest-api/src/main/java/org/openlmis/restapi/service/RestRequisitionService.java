@@ -17,6 +17,7 @@ import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
 import org.apache.commons.collections.Transformer;
 import org.apache.log4j.Logger;
+import org.joda.time.DateTime;
 import org.openlmis.core.domain.*;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.core.repository.SyncUpHashRepository;
@@ -96,7 +97,7 @@ public class RestRequisitionService {
     if (staticReferenceDataService.getBoolean("toggle.skip.initial.requisition.validation")) {
       Rnr lastRegularRequisition = requisitionService.getLastRegularRequisition(reportingFacility, reportingProgram);
       if (lastRegularRequisition == null) {
-        programSupportedService.updateProgramSupportedStartDate(reportingFacility.getId(), reportingProgram.getId(), report.getActualPeriodStartDate());
+        programSupportedService.updateProgramSupportedStartDate(reportingFacility.getId(), reportingProgram.getId(), getDateOf21(report.getActualPeriodStartDate()));
       }
     }
 
@@ -412,5 +413,11 @@ public class RestRequisitionService {
         return Report.prepareForREST(input);
       }
     }).toList();
+  }
+
+  private Date getDateOf21(Date date) {
+    final int DAY_OF_PERIOD_START = 21;
+    DateTime dateTime = new DateTime(date);
+    return new DateTime(dateTime.getYear(), dateTime.getMonthOfYear(), DAY_OF_PERIOD_START,0 , 0).toDate();
   }
 }

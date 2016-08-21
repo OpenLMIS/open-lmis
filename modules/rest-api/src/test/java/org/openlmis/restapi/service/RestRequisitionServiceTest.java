@@ -11,6 +11,7 @@
 package org.openlmis.restapi.service;
 
 import org.apache.commons.codec.binary.Base64;
+import org.joda.time.DateTime;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -868,8 +869,9 @@ public class RestRequisitionServiceTest {
 
     service.submitReport(report, 1L);
 
-    verify(programSupportedService).updateProgramSupportedStartDate(facility.getId(), program.getId(),
-        report.getActualPeriodStartDate());
+    ArgumentCaptor<Date> updateTimeCapture = ArgumentCaptor.forClass(Date.class);
+    verify(programSupportedService).updateProgramSupportedStartDate(eq(facility.getId()), eq(program.getId()), updateTimeCapture.capture());
+    assertThat(new DateTime(updateTimeCapture.getValue()), is(new DateTime(2016, 5, 21, 0 ,0)));
   }
 
   private List<RnrColumn> getRnrColumns() {
