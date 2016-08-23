@@ -24,10 +24,11 @@ import org.openlmis.stockmanagement.domain.Lot;
 
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @Data
-@EqualsAndHashCode(callSuper = false)
+@EqualsAndHashCode()
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class StockEvent {
 
@@ -48,6 +49,8 @@ public class StockEvent {
     private String referenceNumber;
 
     private Long requestedQuantity;
+
+    private List<LotEvent> lotEventList;
 
     private Map<String, String> customProps;
 
