@@ -55,14 +55,6 @@ public class StockEvent {
     private Map<String, String> customProps;
 
     public StockEvent() {
-        facilityId = null;
-        productCode = null;
-        occurred = null;
-        quantity = null;
-        lotId = null;
-        reasonName = null;
-        referenceNumber = null;
-        requestedQuantity = null;
     }
 
     public long getQuantity() {

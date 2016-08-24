@@ -1,5 +1,7 @@
 package org.openlmis.restapi.service;
 
+import com.google.common.base.Function;
+import com.google.common.collect.FluentIterable;
 import lombok.NoArgsConstructor;
 import org.openlmis.core.domain.StockAdjustmentReason;
 import org.openlmis.core.exception.DataException;
@@ -9,9 +11,8 @@ import org.openlmis.core.repository.SyncUpHashRepository;
 import org.openlmis.core.service.ProductService;
 import org.openlmis.restapi.domain.StockCardDTO;
 import org.openlmis.restapi.domain.StockCardMovementDTO;
-import org.openlmis.stockmanagement.domain.StockCard;
-import org.openlmis.stockmanagement.domain.StockCardEntry;
-import org.openlmis.stockmanagement.domain.StockCardEntryType;
+import org.openlmis.stockmanagement.domain.*;
+import org.openlmis.stockmanagement.dto.LotEvent;
 import org.openlmis.stockmanagement.dto.StockEvent;
 import org.openlmis.stockmanagement.service.StockCardService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -104,17 +105,51 @@ public class RestStockCardService {
         return stockCard;
     }
 
-    private StockCardEntry createStockCardEntry(StockEvent stockEvent, StockCard stockCard, Long userId) {
-        StockAdjustmentReason stockAdjustmentReason = stockAdjustmentReasonRepository.getAdjustmentReasonByName(stockEvent.getReasonName());
+    private StockCardEntry createStockCardEntry(StockEvent stockEvent, final StockCard stockCard, Long userId) {
+        final StockAdjustmentReason stockAdjustmentReason = stockAdjustmentReasonRepository.getAdjustmentReasonByName(stockEvent.getReasonName());
 
         long quantity = stockEvent.getQuantity();
         quantity = stockAdjustmentReason.getAdditive() ? quantity : quantity * -1;
 
-        StockCardEntry entry = new StockCardEntry(stockCard, StockCardEntryType.ADJUSTMENT, quantity, stockEvent.getOccurred(), stockEvent.getReferenceNumber(), stockEvent.getRequestedQuantity());
+        final StockCardEntry entry = new StockCardEntry(stockCard, StockCardEntryType.ADJUSTMENT, quantity, stockEvent.getOccurred(), stockEvent.getReferenceNumber(), stockEvent.getRequestedQuantity());
         entry.setAdjustmentReason(stockAdjustmentReason);
         entry.setCreatedBy(userId);
         entry.setModifiedBy(userId);
         entry.setCreatedDate(stockEvent.getCreatedTime());
+        if (stockEvent.getLotEventList() != null) {
+            entry.setLotOnHandList(new ArrayList<LotOnHand>());
+            entry.setLotMovementItems(FluentIterable.from(stockEvent.getLotEventList()).transform(new Function<LotEvent, LotMovementItem>() {
+                @Override
+                public LotMovementItem apply(LotEvent lotEvent) {
+                    LotMovementItem lotMovementItem;
+                    long lotMovementQuantity = stockAdjustmentReason.getAdditive() ? lotEvent.getQuantity() : lotEvent.getQuantity() * -1;
+
+                    LotOnHand lotOnHand = stockCardService.getLotOnHandByLotNumberAndProductCode(lotEvent.getLotNumber(), stockCard.getProduct().getCode());
+
+                    if (lotOnHand == null) {
+                        Lot lot = new Lot();
+                        lot.setLotCode(lotEvent.getLotNumber());
+                        lot.setExpirationDate(lotEvent.getExpirationDate());
+                        lot.setProduct(stockCard.getProduct());
+
+                        lotOnHand = new LotOnHand();
+                        lotOnHand.setStockCard(stockCard);
+                        lotOnHand.setLot(lot);
+                        lotOnHand.setQuantityOnHand(0L);
+                    }
+                    lotOnHand.setQuantityOnHand(lotOnHand.getQuantityOnHand() + lotMovementQuantity);
+                    entry.getLotOnHandList().add(entry.getLotOnHandList().size(), lotOnHand);
+
+                    lotMovementItem = new LotMovementItem(lotOnHand.getLot(), lotMovementQuantity, entry);
+                    if (lotEvent.getCustomProps() != null) {
+                        for (String key : lotEvent.getCustomProps().keySet()) {
+                            lotMovementItem.addKeyValue(key, lotEvent.getCustomProps().get(key));
+                        }
+                    }
+                    return lotMovementItem;
+                }
+            }).toList());
+        }
 
         Map<String, String> customProps = stockEvent.getCustomProps();
         if (null != customProps) {

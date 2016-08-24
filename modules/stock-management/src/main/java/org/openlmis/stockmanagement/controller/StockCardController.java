@@ -14,7 +14,8 @@ import com.wordnik.swagger.annotations.Api;
 import com.wordnik.swagger.annotations.ApiOperation;
 import lombok.NoArgsConstructor;
 import org.apache.log4j.Logger;
-import org.openlmis.core.domain.*;
+import org.openlmis.core.domain.Product;
+import org.openlmis.core.domain.Right;
 import org.openlmis.core.domain.StockAdjustmentReason;
 import org.openlmis.core.repository.FacilityRepository;
 import org.openlmis.core.repository.StockAdjustmentReasonRepository;
@@ -27,7 +28,6 @@ import org.openlmis.stockmanagement.dto.StockEventType;
 import org.openlmis.stockmanagement.repository.LotRepository;
 import org.openlmis.stockmanagement.repository.StockCardRepository;
 import org.openlmis.stockmanagement.service.StockCardService;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -388,7 +388,7 @@ public class StockCardController extends BaseController
 
             StockCardEntry entry = new StockCardEntry(card, entryType, quantity, occurred, referenceNumber, null);
             entry.setAdjustmentReason(reason);
-            entry.setLotOnHand(lotOnHand);
+            entry.getLotOnHandList().add(lotOnHand);
             Map<String, String> customProps = event.getCustomProps();
             if (null != customProps) {
                 for (String k : customProps.keySet()) {

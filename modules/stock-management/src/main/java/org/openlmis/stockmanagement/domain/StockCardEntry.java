@@ -8,7 +8,10 @@ import lombok.NoArgsConstructor;
 import org.openlmis.core.domain.BaseModel;
 import org.openlmis.core.domain.StockAdjustmentReason;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.Objects;
 
 @Data
 @NoArgsConstructor
@@ -28,7 +31,7 @@ public class StockCardEntry extends BaseModel {
 
   private StockAdjustmentReason adjustmentReason;
 
-  private LotOnHand lotOnHand;
+  private List<LotOnHand> lotOnHandList;
 
   String notes;
 
@@ -37,6 +40,8 @@ public class StockCardEntry extends BaseModel {
   private Long requestedQuantity;
 
   private List<StockCardEntryKV> extensions;
+
+  private List<LotMovementItem> lotMovementItems;
 
   public StockCardEntry(StockCard card, StockCardEntryType type, long quantity, Date occurred, String referenceNumber, Long requestedQuantity) {
     this.stockCard = Objects.requireNonNull(card);

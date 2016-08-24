@@ -14,7 +14,7 @@ import com.google.common.base.Predicate;
 import com.google.common.collect.FluentIterable;
 import lombok.NoArgsConstructor;
 import org.openlmis.core.repository.ProductRepository;
-import org.openlmis.core.service.*;
+import org.openlmis.core.service.FacilityService;
 import org.openlmis.stockmanagement.domain.Lot;
 import org.openlmis.stockmanagement.domain.LotOnHand;
 import org.openlmis.stockmanagement.domain.StockCard;
@@ -25,7 +25,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.*;
+import java.util.Date;
+import java.util.List;
+import java.util.Objects;
 
 
 /**
@@ -118,7 +120,7 @@ public class StockCardService {
     repository.persistStockCardEntry(entry);
     repository.updateStockCard(card);
 
-    LotOnHand lotOnHand = entry.getLotOnHand();
+    LotOnHand lotOnHand = entry.getLotOnHandList().get(0);
     if (null != lotOnHand) {
       lotOnHand.addToQuantityOnHand(entry.getQuantity());
       lotRepository.saveLotOnHand(lotOnHand);
@@ -147,5 +149,9 @@ public class StockCardService {
           return !stockCardProductCodeList.contains(input.getProduct().getCode());
         }
       }).toList();
+  }
+
+  public LotOnHand getLotOnHandByLotNumberAndProductCode(String lotNumber, String productCode) {
+    return null;
   }
 }

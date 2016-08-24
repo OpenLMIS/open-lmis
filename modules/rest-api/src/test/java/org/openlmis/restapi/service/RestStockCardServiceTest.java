@@ -7,6 +7,7 @@ import org.junit.experimental.categories.Category;
 import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
 import org.junit.runners.BlockJUnit4ClassRunner;
+import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.openlmis.core.builder.FacilityBuilder;
@@ -24,18 +25,14 @@ import org.openlmis.db.categories.UnitTests;
 import org.openlmis.restapi.domain.StockCardDTO;
 import org.openlmis.restapi.domain.StockCardMovementDTO;
 import org.openlmis.stockmanagement.builder.StockEventBuilder;
-import org.openlmis.stockmanagement.domain.StockCard;
-import org.openlmis.stockmanagement.domain.StockCardEntry;
-import org.openlmis.stockmanagement.domain.StockCardEntryKV;
+import org.openlmis.stockmanagement.domain.*;
+import org.openlmis.stockmanagement.dto.LotEvent;
 import org.openlmis.stockmanagement.dto.StockEvent;
 import org.openlmis.stockmanagement.service.StockCardService;
 import org.powermock.modules.junit4.PowerMockRunner;
 import org.powermock.modules.junit4.PowerMockRunnerDelegate;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
+import java.util.*;
 
 import static com.natpryce.makeiteasy.MakeItEasy.*;
 import static java.util.Arrays.asList;
@@ -101,7 +98,7 @@ public class RestStockCardServiceTest {
     public void shouldThrowDataExceptionIfInvalidAdjustment() throws Exception {
         expectedException.expect(DataException.class);
         expectedException.expectMessage("error.stockmanagement.invalidadjustment");
-        mockReasonWithName("some reason");
+        mockReasonWithName("some reason", true);
         stockEvent2.setReasonName(null);
 
         restStockCardService.adjustStock(facilityId, stockEventList, userId);
@@ -136,7 +133,7 @@ public class RestStockCardServiceTest {
         stockEvent2.setProductCode(productCode2);
 
         when(productService.getByCode(productCode2)).thenReturn(product2);
-        mockReasonWithName(reasonName);
+        mockReasonWithName(reasonName, true);
 
         when(stockCardService.getOrCreateStockCard(facilityId, productCode, 123L)).thenReturn(StockCard.createZeroedStockCard(defaultFacility, defaultProduct));
         when(stockCardService.getOrCreateStockCard(facilityId, productCode2, 123L)).thenReturn(StockCard.createZeroedStockCard(defaultFacility, product2));
@@ -217,7 +214,7 @@ public class RestStockCardServiceTest {
 
     @Test
     public void shouldAddStockCardEntriesWithUserId() throws Exception {
-        mockReasonWithName(reasonName);
+        mockReasonWithName(reasonName, true);
 
         List<StockCardEntry> stockCardEntries = restStockCardService.adjustStock(facilityId, stockEventList, userId);
 
@@ -232,7 +229,7 @@ public class RestStockCardServiceTest {
         expirationDates.put("expirationDates", "10/10/2016, 11/11/2016");
         stockEvent1.setCustomProps(expirationDates);
 
-        mockReasonWithName(reasonName);
+        mockReasonWithName(reasonName, true);
 
         List<StockCardEntry> stockCardEntries = restStockCardService.adjustStock(facilityId, stockEventList, userId);
 
@@ -247,7 +244,7 @@ public class RestStockCardServiceTest {
         Date occurred2 = new Date();
         stockEvent2.setOccurred(occurred2);
 
-        mockReasonWithName(reasonName);
+        mockReasonWithName(reasonName, true);
 
         List<StockCardEntry> stockCardEntries = restStockCardService.adjustStock(facilityId, stockEventList, userId);
 
@@ -262,7 +259,7 @@ public class RestStockCardServiceTest {
         String referenceNumber2 = "456";
         stockEvent2.setReferenceNumber(referenceNumber2);
 
-        mockReasonWithName(reasonName);
+        mockReasonWithName(reasonName, true);
 
         List<StockCardEntry> stockCardEntries = restStockCardService.adjustStock(facilityId, stockEventList, userId);
 
@@ -272,7 +269,7 @@ public class RestStockCardServiceTest {
 
     @Test
     public void shouldNotCreateNewStockCardReferenceWhenTheCardAlreadyExists() {
-        mockReasonWithName(reasonName);
+        mockReasonWithName(reasonName, true);
         restStockCardService.adjustStock(facilityId, stockEventList, userId);
         verify(stockCardService).getOrCreateStockCard(facilityId, productCode, 123L); //should only invoke once
     }
@@ -327,7 +324,7 @@ public class RestStockCardServiceTest {
     public void shouldNotSaveStockCardEntriesWhenHashExists() throws Exception {
         //given
         when(syncUpHashRepository.hashExists(anyString())).thenReturn(true);
-        mockReasonWithName(reasonName);
+        mockReasonWithName(reasonName, true);
 
         //when
         List<StockCardEntry> savedEntries = restStockCardService.adjustStock(facilityId, stockEventList, userId);
@@ -341,7 +338,7 @@ public class RestStockCardServiceTest {
     public void shouldSaveStockCardEntriesWhenHashDoesNotExist() throws Exception {
         //given
         when(syncUpHashRepository.hashExists(anyString())).thenReturn(false);
-        mockReasonWithName(reasonName);
+        mockReasonWithName(reasonName, true);
 
         //when
         List<StockCardEntry> savedEntries = restStockCardService.adjustStock(facilityId, stockEventList, userId);
@@ -351,9 +348,101 @@ public class RestStockCardServiceTest {
         assertThat(savedEntries.size(), is(2));
     }
 
-    private void mockReasonWithName(String reasonName) {
+    @Test
+    public void shouldSaveNewLotInformationIfStockEventIncludesLot() throws Exception {
+        when(syncUpHashRepository.hashExists(anyString())).thenReturn(false);
+        mockReasonWithName(reasonName, true);
+
+        LotEvent lotEvent1 = new LotEvent("lotNumber1", new Date(), 10L);
+        Map<String, String> keyValues = new HashMap<>();
+        keyValues.put("SOH", "10");
+        lotEvent1.setCustomProps(keyValues);
+        LotEvent lotEvent2 = new LotEvent("lotNumber2", new Date(), 20L);
+        LotEvent lotEvent3 = new LotEvent("lotNumber3", new Date(), 30L);
+        stockEventList.get(0).setLotEventList(asList(lotEvent1, lotEvent2, lotEvent3));
+
+        List<StockCardEntry> savedEntries = restStockCardService.adjustStock(facilityId, stockEventList, userId);
+
+        ArgumentCaptor<List> captor = ArgumentCaptor.forClass(List.class);
+        verify(stockCardService).addStockCardEntries(captor.capture());
+        List<List> captorAllValues = captor.getAllValues();
+        assertEquals(3, ((StockCardEntry) captorAllValues.get(0).get(0)).getLotMovementItems().size());
+        assertEquals("lotNumber1", ((StockCardEntry) captorAllValues.get(0).get(0)).getLotMovementItems().get(0).getLot().getLotCode());
+        assertEquals(10L, ((StockCardEntry) captorAllValues.get(0).get(0)).getLotMovementItems().get(0).getQuantity(), 0L);
+        assertEquals("10", ((StockCardEntry) captorAllValues.get(0).get(0)).getLotMovementItems().get(0).getExtensions().get(0).getValue());
+        assertEquals(10L, ((StockCardEntry) captorAllValues.get(0).get(0)).getLotOnHandList().get(0).getQuantityOnHand(), 10L);
+        assertThat(savedEntries.size(), is(2));
+    }
+
+    @Test
+    public void shouldUpdateExistingLotInfoIfStockEventIncludesLot() throws Exception {
+        when(syncUpHashRepository.hashExists(anyString())).thenReturn(false);
+        mockReasonWithName("RECEIVE", true);
+        mockReasonWithName("ISSUE", false);
+
+        String productCode = "ABC";
+        Product productForStockCardInLotTest = make(a(ProductBuilder.defaultProduct, with(ProductBuilder.code, productCode)));
+        StockCard stockCardForLotsTest = new StockCard();
+        stockCardForLotsTest.setProduct(productForStockCardInLotTest);
+
+        when(stockCardService.getOrCreateStockCard(facilityId, productForStockCardInLotTest.getCode(), userId)).thenReturn(stockCardForLotsTest);
+
+        //set up stock movement info
+        List<StockEvent> newStockEventList = new ArrayList<>();
+        StockEvent newStockEvent1 = make(a(StockEventBuilder.defaultStockEvent,
+                with(StockEventBuilder.productCode, productForStockCardInLotTest.getCode()),
+                with(StockEventBuilder.reasonName, "RECEIVE"),
+                with(StockEventBuilder.quantity, quantity)));
+        LotEvent lotEvent1 = new LotEvent("lotNumber1", new Date(), 10L);
+        newStockEvent1.setLotEventList(asList(lotEvent1));
+        newStockEventList.add(newStockEvent1);
+
+        StockEvent newStockEvent2 = make(a(StockEventBuilder.defaultStockEvent,
+                with(StockEventBuilder.productCode, productForStockCardInLotTest.getCode()),
+                with(StockEventBuilder.reasonName, "ISSUE"),
+                with(StockEventBuilder.quantity, quantity)
+        ));
+        LotEvent lotEvent2 = new LotEvent("lotNumber2", new Date(), 10L);
+        newStockEvent2.setLotEventList(asList(lotEvent2));
+        newStockEventList.add(newStockEvent2);
+
+        when(productService.getByCode(newStockEvent1.getProductCode())).thenReturn(productForStockCardInLotTest);
+        when(productService.getByCode(newStockEvent2.getProductCode())).thenReturn(productForStockCardInLotTest);
+
+        //set up existing lot
+        Lot lot = new Lot();
+        lot.setProduct(make(a(ProductBuilder.defaultProduct)));
+        lot.setLotCode(lotEvent1.getLotNumber());
+        lot.setExpirationDate(lotEvent1.getExpirationDate());
+        LotOnHand lotOnHand = new LotOnHand();
+        lotOnHand.setLot(lot);
+        lotOnHand.setQuantityOnHand(100L);
+        lotOnHand.setStockCard(stockCardForLotsTest);
+        when(stockCardService.getLotOnHandByLotNumberAndProductCode(lotEvent1.getLotNumber(), productCode)).thenReturn(lotOnHand);
+
+        Lot lot2 = new Lot();
+        lot2.setProduct(make(a(ProductBuilder.defaultProduct)));
+        lot2.setLotCode(lotEvent1.getLotNumber());
+        lot2.setExpirationDate(lotEvent1.getExpirationDate());
+        LotOnHand lotOnHand2 = new LotOnHand();
+        lotOnHand2.setLot(lot2);
+        lotOnHand2.setQuantityOnHand(100L);
+        lotOnHand2.setStockCard(stockCardForLotsTest);
+        when(stockCardService.getLotOnHandByLotNumberAndProductCode(lotEvent2.getLotNumber(), productCode)).thenReturn(lotOnHand2);
+
+        restStockCardService.adjustStock(facilityId, newStockEventList, userId);
+
+        ArgumentCaptor<List> captor = ArgumentCaptor.forClass(List.class);
+        verify(stockCardService).addStockCardEntries(captor.capture());
+        List<List> captorAllValues = captor.getAllValues();
+
+        assertEquals(110L, ((StockCardEntry) captorAllValues.get(0).get(0)).getLotOnHandList().get(0).getQuantityOnHand(), 0L);
+        assertEquals(90L, ((StockCardEntry) captorAllValues.get(0).get(1)).getLotOnHandList().get(0).getQuantityOnHand(), 0L);
+    }
+
+    private void mockReasonWithName(String reasonName, boolean additive) {
         StockAdjustmentReason stockAdjustmentReason = new StockAdjustmentReason();
-        stockAdjustmentReason.setAdditive(true);
+        stockAdjustmentReason.setAdditive(additive);
         when(stockAdjustmentReasonRepository.getAdjustmentReasonByName(reasonName)).thenReturn(stockAdjustmentReason);
     }
 
