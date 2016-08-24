@@ -31,7 +31,7 @@ public class StockCardEntry extends BaseModel {
 
   private StockAdjustmentReason adjustmentReason;
 
-  private List<LotOnHand> lotOnHandList;
+  private List<LotOnHand> lotOnHandList = new ArrayList<>();
 
   String notes;
 
@@ -41,7 +41,7 @@ public class StockCardEntry extends BaseModel {
 
   private List<StockCardEntryKV> extensions;
 
-  private List<LotMovementItem> lotMovementItems;
+  private List<LotMovementItem> lotMovementItems = new ArrayList<>();
 
   public StockCardEntry(StockCard card, StockCardEntryType type, long quantity, Date occurred, String referenceNumber, Long requestedQuantity) {
     this.stockCard = Objects.requireNonNull(card);

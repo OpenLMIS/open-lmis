@@ -1,7 +1,5 @@
 package org.openlmis.restapi.service;
 
-import com.google.common.base.Function;
-import com.google.common.collect.FluentIterable;
 import lombok.NoArgsConstructor;
 import org.openlmis.core.domain.StockAdjustmentReason;
 import org.openlmis.core.exception.DataException;
@@ -118,37 +116,7 @@ public class RestStockCardService {
         entry.setCreatedDate(stockEvent.getCreatedTime());
         if (stockEvent.getLotEventList() != null) {
             entry.setLotOnHandList(new ArrayList<LotOnHand>());
-            entry.setLotMovementItems(FluentIterable.from(stockEvent.getLotEventList()).transform(new Function<LotEvent, LotMovementItem>() {
-                @Override
-                public LotMovementItem apply(LotEvent lotEvent) {
-                    LotMovementItem lotMovementItem;
-                    long lotMovementQuantity = stockAdjustmentReason.getAdditive() ? lotEvent.getQuantity() : lotEvent.getQuantity() * -1;
-
-                    LotOnHand lotOnHand = stockCardService.getLotOnHandByLotNumberAndProductCode(lotEvent.getLotNumber(), stockCard.getProduct().getCode());
-
-                    if (lotOnHand == null) {
-                        Lot lot = new Lot();
-                        lot.setLotCode(lotEvent.getLotNumber());
-                        lot.setExpirationDate(lotEvent.getExpirationDate());
-                        lot.setProduct(stockCard.getProduct());
-
-                        lotOnHand = new LotOnHand();
-                        lotOnHand.setStockCard(stockCard);
-                        lotOnHand.setLot(lot);
-                        lotOnHand.setQuantityOnHand(0L);
-                    }
-                    lotOnHand.setQuantityOnHand(lotOnHand.getQuantityOnHand() + lotMovementQuantity);
-                    entry.getLotOnHandList().add(entry.getLotOnHandList().size(), lotOnHand);
-
-                    lotMovementItem = new LotMovementItem(lotOnHand.getLot(), lotMovementQuantity, entry);
-                    if (lotEvent.getCustomProps() != null) {
-                        for (String key : lotEvent.getCustomProps().keySet()) {
-                            lotMovementItem.addKeyValue(key, lotEvent.getCustomProps().get(key));
-                        }
-                    }
-                    return lotMovementItem;
-                }
-            }).toList());
+            transformLotEventListToLotOnHandAndLotMovementItems(stockEvent.getLotEventList(), stockAdjustmentReason, entry);
         }
 
         Map<String, String> customProps = stockEvent.getCustomProps();
@@ -158,6 +126,36 @@ public class RestStockCardService {
             }
         }
         return entry;
+    }
+
+    private void transformLotEventListToLotOnHandAndLotMovementItems(List<LotEvent> lotEvents, StockAdjustmentReason stockAdjustmentReason, StockCardEntry entry) {
+        for (LotEvent lotEvent : lotEvents) {
+            LotMovementItem lotMovementItem;
+            long lotMovementQuantity = stockAdjustmentReason.getAdditive() ? lotEvent.getQuantity() : lotEvent.getQuantity() * -1;
+
+            LotOnHand lotOnHand = stockCardService.getLotOnHandByLotNumberAndProductCode(lotEvent.getLotNumber(), entry.getStockCard().getProduct().getCode());
+            if (lotOnHand == null) {
+                Lot lot = new Lot();
+                lot.setLotCode(lotEvent.getLotNumber());
+                lot.setExpirationDate(lotEvent.getExpirationDate());
+                lot.setProduct(entry.getStockCard().getProduct());
+
+                lotOnHand = new LotOnHand();
+                lotOnHand.setStockCard(entry.getStockCard());
+                lotOnHand.setLot(lot);
+                lotOnHand.setQuantityOnHand(0L);
+            }
+            lotOnHand.setQuantityOnHand(lotOnHand.getQuantityOnHand() + lotMovementQuantity);
+
+            lotMovementItem = new LotMovementItem(lotOnHand.getLot(), lotMovementQuantity, entry);
+            if (lotEvent.getCustomProps() != null) {
+                for (String key : lotEvent.getCustomProps().keySet()) {
+                    lotMovementItem.addKeyValue(key, lotEvent.getCustomProps().get(key));
+                }
+            }
+            entry.getLotOnHandList().add(lotOnHand);
+            entry.getLotMovementItems().add(lotMovementItem);
+        }
     }
 
     private boolean validFacility(Long facilityId) {
