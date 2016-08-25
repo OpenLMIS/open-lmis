@@ -11,9 +11,7 @@ import org.openlmis.core.domain.Product;
 import org.openlmis.core.repository.mapper.FacilityMapper;
 import org.openlmis.core.repository.mapper.ProductMapper;
 import org.openlmis.db.categories.IntegrationTests;
-import org.openlmis.stockmanagement.domain.Lot;
-import org.openlmis.stockmanagement.domain.LotOnHand;
-import org.openlmis.stockmanagement.domain.StockCard;
+import org.openlmis.stockmanagement.domain.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
@@ -24,7 +22,9 @@ import java.util.Date;
 
 import static com.natpryce.makeiteasy.MakeItEasy.a;
 import static com.natpryce.makeiteasy.MakeItEasy.make;
+import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertThat;
 
 @Category(IntegrationTests.class)
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -83,5 +83,27 @@ public class LotMapperIT {
         LotOnHand actualLotOnHand = lotMapper.getLotOnHandByLotNumberAndProductCodeAndFacilityId(defaultLot.getLotCode(), defaultProduct.getCode(), defaultFacility.getId());
         assertEquals("TEST", actualLotOnHand.getLot().getLotCode());
         assertEquals(100L, actualLotOnHand.getQuantityOnHand(), 0L);
+    }
+
+    @Test
+    public void shouldUpdateLotOnHand() throws Exception {
+        LotOnHand existingLotOnHand = lotMapper.getLotOnHandByLotNumberAndProductCodeAndFacilityId(defaultLot.getLotCode(), defaultProduct.getCode(), defaultFacility.getId());
+        existingLotOnHand.setQuantityOnHand(99L);
+        lotMapper.updateLotOnHand(existingLotOnHand);
+
+        LotOnHand updatedLotOnHand = lotMapper.getLotOnHandByLotNumberAndProductCodeAndFacilityId(defaultLot.getLotCode(), defaultProduct.getCode(), defaultFacility.getId());
+        assertEquals(99L, updatedLotOnHand.getQuantityOnHand(), 0L);
+    }
+
+    @Test
+    public void shouldInsertLotMovementItem() throws Exception {
+        StockCardEntryLotItem stockCardEntryLotItem = new StockCardEntryLotItem(defaultLot, 5L);
+        stockCardEntryLotItem.addKeyValue("SOH", "500");
+        StockCardEntry stockCardEntry = new StockCardEntry(defaultCard, StockCardEntryType.ADJUSTMENT, 10L, new Date(), "", null);
+        stockCardMapper.insertEntry(stockCardEntry);
+        stockCardEntryLotItem.setStockCardEntryId(stockCardEntry.getId());
+        lotMapper.insertLotMovementItem(stockCardEntryLotItem);
+        assertThat(stockCardEntryLotItem.getQuantity(), is(lotMapper.getLotMovementItemsByStockEntry(stockCardEntry.getId()).get(0).getQuantity()));
+        assertThat(stockCardEntryLotItem.getExtensions().get(0).getValue(), is("500"));
     }
 }

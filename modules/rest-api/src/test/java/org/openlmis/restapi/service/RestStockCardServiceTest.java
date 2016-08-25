@@ -366,11 +366,11 @@ public class RestStockCardServiceTest {
         ArgumentCaptor<List> captor = ArgumentCaptor.forClass(List.class);
         verify(stockCardService).addStockCardEntries(captor.capture());
         List<List> captorAllValues = captor.getAllValues();
-        assertEquals(3, ((StockCardEntry) captorAllValues.get(0).get(0)).getLotMovementItems().size());
-        assertEquals("lotNumber1", ((StockCardEntry) captorAllValues.get(0).get(0)).getLotMovementItems().get(0).getLot().getLotCode());
-        assertEquals(10L, ((StockCardEntry) captorAllValues.get(0).get(0)).getLotMovementItems().get(0).getQuantity(), 0L);
-        assertEquals("10", ((StockCardEntry) captorAllValues.get(0).get(0)).getLotMovementItems().get(0).getExtensions().get(0).getValue());
-        assertEquals(10L, ((StockCardEntry) captorAllValues.get(0).get(0)).getLotOnHandList().get(0).getQuantityOnHand(), 10L);
+        assertEquals(3, ((StockCardEntry) captorAllValues.get(0).get(0)).getStockCardEntryLotItems().size());
+        assertEquals("lotNumber1", ((StockCardEntry) captorAllValues.get(0).get(0)).getStockCardEntryLotItems().get(0).getLot().getLotCode());
+        assertEquals(10L, ((StockCardEntry) captorAllValues.get(0).get(0)).getStockCardEntryLotItems().get(0).getQuantity(), 0L);
+        assertEquals("10", ((StockCardEntry) captorAllValues.get(0).get(0)).getStockCardEntryLotItems().get(0).getExtensions().get(0).getValue());
+        assertEquals(10L, ((StockCardEntry) captorAllValues.get(0).get(0)).getStockCard().getLotsOnHand().get(0).getQuantityOnHand(), 10L);
         assertThat(savedEntries.size(), is(2));
     }
 
@@ -419,17 +419,17 @@ public class RestStockCardServiceTest {
         lotOnHand.setLot(lot);
         lotOnHand.setQuantityOnHand(100L);
         lotOnHand.setStockCard(stockCardForLotsTest);
-        when(stockCardService.getLotOnHandByLotNumberAndProductCodeAndFacilityId(lotEvent1.getLotNumber(), productCode, facilityId)).thenReturn(lotOnHand);
 
         Lot lot2 = new Lot();
         lot2.setProduct(make(a(ProductBuilder.defaultProduct)));
-        lot2.setLotCode(lotEvent1.getLotNumber());
+        lot2.setLotCode(lotEvent2.getLotNumber());
         lot2.setExpirationDate(lotEvent1.getExpirationDate());
         LotOnHand lotOnHand2 = new LotOnHand();
         lotOnHand2.setLot(lot2);
         lotOnHand2.setQuantityOnHand(100L);
         lotOnHand2.setStockCard(stockCardForLotsTest);
-        when(stockCardService.getLotOnHandByLotNumberAndProductCodeAndFacilityId(lotEvent2.getLotNumber(), productCode, facilityId)).thenReturn(lotOnHand2);
+
+        stockCardForLotsTest.setLotsOnHand(asList(lotOnHand,lotOnHand2));
 
         restStockCardService.adjustStock(facilityId, newStockEventList, userId);
 
@@ -437,8 +437,8 @@ public class RestStockCardServiceTest {
         verify(stockCardService).addStockCardEntries(captor.capture());
         List<List> captorAllValues = captor.getAllValues();
 
-        assertEquals(110L, ((StockCardEntry) captorAllValues.get(0).get(0)).getLotOnHandList().get(0).getQuantityOnHand(), 0L);
-        assertEquals(90L, ((StockCardEntry) captorAllValues.get(0).get(1)).getLotOnHandList().get(0).getQuantityOnHand(), 0L);
+        assertEquals(110L, ((StockCardEntry) captorAllValues.get(0).get(0)).getStockCard().getLotsOnHand().get(0).getQuantityOnHand(), 0L);
+        assertEquals(90L, ((StockCardEntry) captorAllValues.get(0).get(0)).getStockCard().getLotsOnHand().get(1).getQuantityOnHand(), 0L);
     }
 
     private void mockReasonWithName(String reasonName, boolean additive) {

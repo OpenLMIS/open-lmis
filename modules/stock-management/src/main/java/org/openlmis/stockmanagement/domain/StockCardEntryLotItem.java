@@ -1,6 +1,7 @@
 package org.openlmis.stockmanagement.domain;
 
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.openlmis.core.domain.BaseModel;
 
 import java.util.ArrayList;
@@ -8,23 +9,26 @@ import java.util.Date;
 import java.util.List;
 
 @Data
-public class LotMovementItem extends BaseModel {
+@NoArgsConstructor
+public class StockCardEntryLotItem extends BaseModel {
 
-    private StockCardEntry stockCardEntry;
+    private Long stockCardEntryId;
 
     private Lot lot;
 
     private Long quantity;
 
-    private List<LotMovementItemKV> extensions = new ArrayList<>();
+    private Date effectiveDate;
 
-    public LotMovementItem(Lot lot, Long quantity, StockCardEntry entry) {
+    private List<StockCardEntryLotItemKV> extensions = new ArrayList<>();
+
+    public StockCardEntryLotItem(Lot lot, Long quantity) {
         this.lot = lot;
         this.quantity = quantity;
     }
 
     public void addKeyValue(String key, String value) {
         String newKey = key.trim().toLowerCase();
-        extensions.add(new LotMovementItemKV(newKey, value, new Date()));
+        extensions.add(new StockCardEntryLotItemKV(newKey, value, new Date()));
     }
 }

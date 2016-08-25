@@ -125,7 +125,7 @@ public class StockCardRepositoryTest {
     lotOnHand.setQuantityOnHand(100L);
     lotOnHand.setStockCard(stockCard);
     lotOnHand.setId(1L);
-    LotMovementItem lotMovementItem1 = new LotMovementItem(lot, 10L, stockCardEntry);
+    StockCardEntryLotItem stockCardEntryLotItem1 = new StockCardEntryLotItem(lot, 10L);
 
     Lot lot2 = new Lot();
     lot2.setProduct(defaultProduct);
@@ -135,19 +135,50 @@ public class StockCardRepositoryTest {
     lotOnHand2.setLot(lot2);
     lotOnHand2.setQuantityOnHand(100L);
     lotOnHand2.setStockCard(stockCard);
-    LotMovementItem lotMovementItem2 = new LotMovementItem(lot2, 20L, stockCardEntry);
+    StockCardEntryLotItem stockCardEntryLotItem2 = new StockCardEntryLotItem(lot2, 20L);
 
-    stockCardEntry.setLotMovementItems(asList(lotMovementItem1, lotMovementItem2));
-    stockCardEntry.setLotOnHandList(asList(lotOnHand,lotOnHand2));
+    stockCard.setLotsOnHand(asList(lotOnHand,lotOnHand2));
+    stockCardEntry.setStockCardEntryLotItems(asList(stockCardEntryLotItem1, stockCardEntryLotItem2));
+    stockCardEntry.getStockCard().setLotsOnHand(asList(lotOnHand,lotOnHand2));
+
     stockCardRepository.persistStockCardEntry(stockCardEntry);
 
+    verify(lotMapper, times(2)).insertLotMovementItem(Matchers.any(StockCardEntryLotItem.class));
+    verify(lotMapper).insertLotMovementItem(stockCardEntryLotItem1);
+    verify(lotMapper).insertLotMovementItem(stockCardEntryLotItem2);
+  }
+
+  @Test
+  public void shouldUpdateStockCardWithLotsOnHand() throws Exception {
+    StockCard stockCard = new StockCard();
+    stockCard.setFacility(defaultFacility);
+    stockCard.setProduct(defaultProduct);
+    Lot lot = new Lot();
+    lot.setProduct(defaultProduct);
+    lot.setLotCode("AAA");
+    lot.setExpirationDate(new Date());
+    lot.setId(1L);
+    LotOnHand lotOnHand = new LotOnHand();
+    lotOnHand.setLot(lot);
+    lotOnHand.setQuantityOnHand(100L);
+    lotOnHand.setStockCard(stockCard);
+    lotOnHand.setId(1L);
+
+    Lot lot2 = new Lot();
+    lot2.setProduct(defaultProduct);
+    lot2.setLotCode("BBB");
+    lot2.setExpirationDate(new Date());
+    LotOnHand lotOnHand2 = new LotOnHand();
+    lotOnHand2.setLot(lot2);
+    lotOnHand2.setQuantityOnHand(100L);
+    lotOnHand2.setStockCard(stockCard);
+    stockCard.setLotsOnHand(asList(lotOnHand,lotOnHand2));
+
+    stockCardRepository.updateStockCard(stockCard);
 
     verify(lotMapper, never()).insert(lot);
     verify(lotMapper).insert(lot2);
     verify(lotMapper).updateLotOnHand(lotOnHand);
     verify(lotMapper).insertLotOnHand(lotOnHand2);
-    verify(lotMapper, times(2)).insertLotMovementItem(Matchers.any(LotMovementItem.class));
-    verify(lotMapper).insertLotMovementItem(lotMovementItem1);
-    verify(lotMapper).insertLotMovementItem(lotMovementItem2);
   }
 }

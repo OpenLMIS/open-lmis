@@ -87,7 +87,16 @@ public class StockCardRepository {
     for (StockCardEntryKV item : entry.getExtensions()) {
       mapper.insertEntryKeyValue(entry, item.getKey(), item.getValue());
     }
-    for (LotOnHand lotOnHand : entry.getLotOnHandList()) {
+
+    for (StockCardEntryLotItem stockCardEntryLotItem : entry.getStockCardEntryLotItems()) {
+      lotMapper.insertLotMovementItem(stockCardEntryLotItem);
+    }
+  }
+
+  public void updateStockCard(StockCard card) {
+    Objects.requireNonNull(card);
+    mapper.update(card);
+    for (LotOnHand lotOnHand : card.getLotsOnHand()) {
       if (lotOnHand.getId() == null) {
         lotMapper.insert(lotOnHand.getLot());
         lotMapper.insertLotOnHand(lotOnHand);
@@ -95,15 +104,6 @@ public class StockCardRepository {
         lotMapper.updateLotOnHand(lotOnHand);
       }
     }
-
-    for (LotMovementItem lotMovementItem : entry.getLotMovementItems()) {
-      lotMapper.insertLotMovementItem(lotMovementItem);
-    }
-  }
-
-  public void updateStockCard(StockCard card) {
-    Objects.requireNonNull(card);
-    mapper.update(card);
   }
 
   public List<StockCard> queryStockCardByOccurred(Long facilityId, Date startTime, Date endTime) {

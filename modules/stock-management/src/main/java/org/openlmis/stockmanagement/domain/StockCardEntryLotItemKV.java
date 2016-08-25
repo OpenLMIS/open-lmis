@@ -11,7 +11,7 @@ import java.util.Date;
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode()
-public class LotMovementItemKV {
+public class StockCardEntryLotItemKV {
     private String key;
     private String value;
     private Date syncedDate;

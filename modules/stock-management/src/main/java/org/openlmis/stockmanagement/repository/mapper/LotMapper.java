@@ -2,11 +2,10 @@ package org.openlmis.stockmanagement.repository.mapper;
 
 import org.apache.ibatis.annotations.*;
 import org.openlmis.core.domain.Product;
-import org.openlmis.stockmanagement.domain.Lot;
-import org.openlmis.stockmanagement.domain.LotMovementItem;
-import org.openlmis.stockmanagement.domain.LotOnHand;
-import org.openlmis.stockmanagement.domain.StockCard;
+import org.openlmis.stockmanagement.domain.*;
 import org.springframework.stereotype.Repository;
+
+import java.util.List;
 
 @Repository
 public interface LotMapper {
@@ -123,5 +122,27 @@ public interface LotMapper {
           one = @One(select = "org.openlmis.core.repository.mapper.ProductMapper.getById"))
   Lot getLotById(Long lotId);
 
-  void insertLotMovementItem(LotMovementItem lotMovementItem);
+  @Insert("INSERT INTO stock_card_entry_lot_items " +
+          " (stockCardEntryId, lotId, quantity, effectiveDate, createdBy, createdDate, modifiedBy, modifiedDate) " +
+          "VALUES " +
+          " (#{stockCardEntryId}, #{lot.id}, #{quantity}, #{effectiveDate}, #{createdBy}, NOW(), #{modifiedBy}, NOW())")
+  @Options(useGeneratedKeys = true)
+  void insertLotMovementItem(StockCardEntryLotItem stockCardEntryLotItem);
+
+  @Select("SELECT * " +
+          "FROM stock_card_entry_lot_items s " +
+          "WHERE stockCardEntryId = #{stockCardEntryId}")
+  @Results({
+      @Result(property = "lot", column = "lotId", javaType = Lot.class,
+              one = @One(select = "org.openlmis.stockmanagement.repository.mapper.LotMapper.getLotById")),
+      @Result(property = "extensions", column = "id", javaType = List.class,
+          many = @Many(select = "getStockCardEntryLotItemExtensions"))
+  })
+  List<StockCardEntryLotItem> getLotMovementItemsByStockEntry(Long stockCardEntryId);
+
+  @Select("SELECT s.keycolumn as key, " +
+          "s.valuecolumn as value " +
+          "FROM stock_card_entry_lot_items_key_values s " +
+          "WHERE stockCardEntryLotItemId = #{stockCardEntryLotItemId}")
+  List<StockCardEntryLotItemKV> getStockCardEntryLotItemExtensions(Long stockCardEntryLotItemId);
 }

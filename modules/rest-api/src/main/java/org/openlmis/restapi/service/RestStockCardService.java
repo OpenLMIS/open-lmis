@@ -1,5 +1,7 @@
 package org.openlmis.restapi.service;
 
+import com.google.common.base.Predicate;
+import com.google.common.collect.FluentIterable;
 import lombok.NoArgsConstructor;
 import org.openlmis.core.domain.StockAdjustmentReason;
 import org.openlmis.core.exception.DataException;
@@ -85,6 +87,11 @@ public class RestStockCardService {
             }
 
             StockCard stockCard = getOrCreateStockCard(facilityId, stockEvent.getProductCode(), stockCardMap, userId);
+            if (stockCard.getLotsOnHand() == null) {
+                stockCard.setLotsOnHand(new ArrayList<LotOnHand>());
+            } else {
+                stockCard.setLotsOnHand(new ArrayList<>(stockCard.getLotsOnHand()));
+            }
             StockCardEntry entry = createStockCardEntry(stockEvent, stockCard, userId);
             entries.add(entry);
         }
@@ -128,12 +135,17 @@ public class RestStockCardService {
     }
 
     private void transformLotEventListToLotOnHandAndLotMovementItems(List<LotEvent> lotEvents, StockAdjustmentReason stockAdjustmentReason, StockCardEntry entry, Long userId) {
-        for (LotEvent lotEvent : lotEvents) {
-            LotMovementItem lotMovementItem;
+        for (final LotEvent lotEvent : lotEvents) {
+            StockCardEntryLotItem stockCardEntryLotItem;
             long lotMovementQuantity = stockAdjustmentReason.getAdditive() ? lotEvent.getQuantity() : lotEvent.getQuantity() * -1;
 
-            LotOnHand lotOnHand = stockCardService.getLotOnHandByLotNumberAndProductCodeAndFacilityId(lotEvent.getLotNumber(),
-                    entry.getStockCard().getProduct().getCode(), entry.getStockCard().getFacility().getId());
+            LotOnHand lotOnHand = FluentIterable.from(entry.getStockCard().getLotsOnHand()).firstMatch(new Predicate<LotOnHand>() {
+                @Override
+                public boolean apply(LotOnHand input) {
+                    return input.getLot().getLotCode().equals(lotEvent.getLotNumber());
+                }
+            }).orNull();
+
             if (lotOnHand == null) {
                 Lot lot = new Lot();
                 lot.setLotCode(lotEvent.getLotNumber());
@@ -146,21 +158,21 @@ public class RestStockCardService {
                 lotOnHand.setLot(lot);
                 lotOnHand.setQuantityOnHand(0L);
                 lotOnHand.setCreatedBy(userId);
+                entry.getStockCard().getLotsOnHand().add(lotOnHand);
             }
             lotOnHand.setQuantityOnHand(lotOnHand.getQuantityOnHand() + lotMovementQuantity);
             lotOnHand.setModifiedBy(userId);
 
-            lotMovementItem = new LotMovementItem(lotOnHand.getLot(), lotMovementQuantity, entry);
-            lotMovementItem.setCreatedBy(userId);
-            lotMovementItem.setModifiedBy(userId);
+            stockCardEntryLotItem = new StockCardEntryLotItem(lotOnHand.getLot(), lotMovementQuantity);
+            stockCardEntryLotItem.setCreatedBy(userId);
+            stockCardEntryLotItem.setModifiedBy(userId);
 
             if (lotEvent.getCustomProps() != null) {
                 for (String key : lotEvent.getCustomProps().keySet()) {
-                    lotMovementItem.addKeyValue(key, lotEvent.getCustomProps().get(key));
+                    stockCardEntryLotItem.addKeyValue(key, lotEvent.getCustomProps().get(key));
                 }
             }
-            entry.getLotOnHandList().add(lotOnHand);
-            entry.getLotMovementItems().add(lotMovementItem);
+            entry.getStockCardEntryLotItems().add(stockCardEntryLotItem);
         }
     }
 
