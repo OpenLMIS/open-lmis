@@ -31,6 +31,8 @@ public class StockCardEntry extends BaseModel {
 
   private StockAdjustmentReason adjustmentReason;
 
+  private LotOnHand lotOnHand;
+
   private List<LotOnHand> lotOnHandList = new ArrayList<>();
 
   String notes;

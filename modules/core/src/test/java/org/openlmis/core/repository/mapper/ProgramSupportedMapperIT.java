@@ -201,10 +201,13 @@ public class ProgramSupportedMapperIT {
     List<ProgramSupported> programsSupported = mapper.getActiveProgramsByFacilityId(facility.getId());
 
     assertThat(programsSupported.size(), is(2));
-    assertThat(programsSupported.get(0).getProgram().getCode(), is(programParent.getCode()));
-    assertThat(programsSupported.get(0).getProgram().getIsSupportEmergency(), is(false));
-    assertThat(programsSupported.get(1).getProgram().getCode(), is(programSupported.getProgram().getCode()));
-    assertThat(programsSupported.get(1).getProgram().getParent().getCode(), is(programParent.getCode()));
+    if (programsSupported.get(0).getProgram().getCode().equals(programParent.getCode())) {
+      assertThat(programsSupported.get(0).getProgram().getCode(), is(programParent.getCode()));
+      assertThat(programsSupported.get(0).getProgram().getIsSupportEmergency(), is(false));
+    } else {
+      assertThat(programsSupported.get(0).getProgram().getCode(), is(programSupported.getProgram().getCode()));
+      assertThat(programsSupported.get(0).getProgram().getParent().getCode(), is(programParent.getCode()));
+    }
   }
 
   @Test

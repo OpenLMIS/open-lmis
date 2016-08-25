@@ -388,7 +388,7 @@ public class StockCardController extends BaseController
 
             StockCardEntry entry = new StockCardEntry(card, entryType, quantity, occurred, referenceNumber, null);
             entry.setAdjustmentReason(reason);
-            entry.getLotOnHandList().add(lotOnHand);
+            entry.setLotOnHand(lotOnHand);
             Map<String, String> customProps = event.getCustomProps();
             if (null != customProps) {
                 for (String k : customProps.keySet()) {

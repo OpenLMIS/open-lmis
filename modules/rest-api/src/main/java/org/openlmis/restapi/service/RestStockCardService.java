@@ -115,7 +115,6 @@ public class RestStockCardService {
         entry.setModifiedBy(userId);
         entry.setCreatedDate(stockEvent.getCreatedTime());
         if (stockEvent.getLotEventList() != null) {
-            entry.setLotOnHandList(new ArrayList<LotOnHand>());
             transformLotEventListToLotOnHandAndLotMovementItems(stockEvent.getLotEventList(), stockAdjustmentReason, entry);
         }
 

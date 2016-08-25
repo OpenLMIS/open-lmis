@@ -120,7 +120,7 @@ public class StockCardService {
     repository.persistStockCardEntry(entry);
     repository.updateStockCard(card);
 
-    LotOnHand lotOnHand = entry.getLotOnHandList().get(0);
+    LotOnHand lotOnHand = entry.getLotOnHand();
     if (null != lotOnHand) {
       lotOnHand.addToQuantityOnHand(entry.getQuantity());
       lotRepository.saveLotOnHand(lotOnHand);
