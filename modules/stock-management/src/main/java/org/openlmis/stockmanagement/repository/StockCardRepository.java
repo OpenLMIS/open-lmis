@@ -5,14 +5,16 @@ import org.openlmis.core.domain.Facility;
 import org.openlmis.core.domain.Product;
 import org.openlmis.core.repository.FacilityRepository;
 import org.openlmis.core.repository.ProductRepository;
-import org.openlmis.stockmanagement.domain.StockCard;
-import org.openlmis.stockmanagement.domain.StockCardEntry;
-import org.openlmis.stockmanagement.domain.StockCardEntryKV;
+import org.openlmis.stockmanagement.domain.*;
+import org.openlmis.stockmanagement.repository.mapper.LotMapper;
 import org.openlmis.stockmanagement.repository.mapper.StockCardMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.Objects;
 
 @Component
 @NoArgsConstructor
@@ -26,6 +28,9 @@ public class StockCardRepository {
 
   @Autowired
   StockCardMapper mapper;
+
+  @Autowired
+  LotMapper lotMapper;
 
   /**
    * Will get or create a stock card for the given facility and product.  If the facility or product do not exist,
@@ -81,6 +86,18 @@ public class StockCardRepository {
     mapper.insertEntry(entry);
     for (StockCardEntryKV item : entry.getExtensions()) {
       mapper.insertEntryKeyValue(entry, item.getKey(), item.getValue());
+    }
+    for (LotOnHand lotOnHand : entry.getLotOnHandList()) {
+      if (lotOnHand.getId() == null) {
+        lotMapper.insert(lotOnHand.getLot());
+        lotMapper.insertLotOnHand(lotOnHand);
+      } else {
+        lotMapper.updateLotOnHand(lotOnHand);
+      }
+    }
+
+    for (LotMovementItem lotMovementItem : entry.getLotMovementItems()) {
+      lotMapper.insertLotMovementItem(lotMovementItem);
     }
   }
 

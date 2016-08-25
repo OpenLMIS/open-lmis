@@ -115,7 +115,7 @@ public class RestStockCardService {
         entry.setModifiedBy(userId);
         entry.setCreatedDate(stockEvent.getCreatedTime());
         if (stockEvent.getLotEventList() != null) {
-            transformLotEventListToLotOnHandAndLotMovementItems(stockEvent.getLotEventList(), stockAdjustmentReason, entry);
+            transformLotEventListToLotOnHandAndLotMovementItems(stockEvent.getLotEventList(), stockAdjustmentReason, entry, userId);
         }
 
         Map<String, String> customProps = stockEvent.getCustomProps();
@@ -127,7 +127,7 @@ public class RestStockCardService {
         return entry;
     }
 
-    private void transformLotEventListToLotOnHandAndLotMovementItems(List<LotEvent> lotEvents, StockAdjustmentReason stockAdjustmentReason, StockCardEntry entry) {
+    private void transformLotEventListToLotOnHandAndLotMovementItems(List<LotEvent> lotEvents, StockAdjustmentReason stockAdjustmentReason, StockCardEntry entry, Long userId) {
         for (LotEvent lotEvent : lotEvents) {
             LotMovementItem lotMovementItem;
             long lotMovementQuantity = stockAdjustmentReason.getAdditive() ? lotEvent.getQuantity() : lotEvent.getQuantity() * -1;
@@ -139,15 +139,21 @@ public class RestStockCardService {
                 lot.setLotCode(lotEvent.getLotNumber());
                 lot.setExpirationDate(lotEvent.getExpirationDate());
                 lot.setProduct(entry.getStockCard().getProduct());
+                lot.setCreatedBy(userId);
 
                 lotOnHand = new LotOnHand();
                 lotOnHand.setStockCard(entry.getStockCard());
                 lotOnHand.setLot(lot);
                 lotOnHand.setQuantityOnHand(0L);
+                lotOnHand.setCreatedBy(userId);
             }
             lotOnHand.setQuantityOnHand(lotOnHand.getQuantityOnHand() + lotMovementQuantity);
+            lotOnHand.setModifiedBy(userId);
 
             lotMovementItem = new LotMovementItem(lotOnHand.getLot(), lotMovementQuantity, entry);
+            lotMovementItem.setCreatedBy(userId);
+            lotMovementItem.setModifiedBy(userId);
+
             if (lotEvent.getCustomProps() != null) {
                 for (String key : lotEvent.getCustomProps().keySet()) {
                     lotMovementItem.addKeyValue(key, lotEvent.getCustomProps().get(key));

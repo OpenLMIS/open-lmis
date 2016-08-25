@@ -476,13 +476,13 @@ public class RestStockCardServiceTest {
         stockCardEntry.setQuantity(quantity);
         stockCardEntry.setAdjustmentReason(new StockAdjustmentReason());
         ArrayList<StockCardEntryKV> extensions = new ArrayList<>();
-        extensions.add(stockCArdEntryBuilder("signature", signature, 0));
-        extensions.add(stockCArdEntryBuilder("expirationdates", expirationDates, 1));
+        extensions.add(stockCardEntryBuilder("signature", signature, 0));
+        extensions.add(stockCardEntryBuilder("expirationdates", expirationDates, 1));
         stockCardEntry.setExtensions(extensions);
         return stockCardEntry;
     }
 
-    private StockCardEntryKV stockCArdEntryBuilder(String key, String value, int index) {
+    private StockCardEntryKV stockCardEntryBuilder(String key, String value, int index) {
         StockCardEntryKV element = new StockCardEntryKV();
         element.setKey(key);
         element.setValue(value);

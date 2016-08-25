@@ -33,6 +33,7 @@ public class StockCardEntry extends BaseModel {
 
   private LotOnHand lotOnHand;
 
+  //In our case, one stock movement contains multiple lots
   private List<LotOnHand> lotOnHandList = new ArrayList<>();
 
   String notes;

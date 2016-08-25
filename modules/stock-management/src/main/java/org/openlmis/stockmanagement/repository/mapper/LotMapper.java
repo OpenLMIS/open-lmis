@@ -3,6 +3,7 @@ package org.openlmis.stockmanagement.repository.mapper;
 import org.apache.ibatis.annotations.*;
 import org.openlmis.core.domain.Product;
 import org.openlmis.stockmanagement.domain.Lot;
+import org.openlmis.stockmanagement.domain.LotMovementItem;
 import org.openlmis.stockmanagement.domain.LotOnHand;
 import org.openlmis.stockmanagement.domain.StockCard;
 import org.springframework.stereotype.Repository;
@@ -121,4 +122,6 @@ public interface LotMapper {
   @Result(property = "product", column = "productid", javaType = Product.class,
           one = @One(select = "org.openlmis.core.repository.mapper.ProductMapper.getById"))
   Lot getLotById(Long lotId);
+
+  void insertLotMovementItem(LotMovementItem lotMovementItem);
 }
