@@ -144,6 +144,11 @@ public interface StockCardMapper {
       " LIMIT 1) tmp")
   String getStockCardLatestExpirationDates(@Param("stockCardEntryId")Long stockCardEntryId);
 
+  @Select("SELECT s.*" +
+          " FROM stock_cards s" +
+          " WHERE s.id = #{id}")
+  StockCard getStockCardById(Long id);
+
   @Select("SELECT loh.*" +
           " FROM lots_on_hand loh" +
           " WHERE loh.stockcardid = #{stockCardId}")

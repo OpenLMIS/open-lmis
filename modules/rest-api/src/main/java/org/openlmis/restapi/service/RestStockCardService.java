@@ -133,7 +133,8 @@ public class RestStockCardService {
             LotMovementItem lotMovementItem;
             long lotMovementQuantity = stockAdjustmentReason.getAdditive() ? lotEvent.getQuantity() : lotEvent.getQuantity() * -1;
 
-            LotOnHand lotOnHand = stockCardService.getLotOnHandByLotNumberAndProductCode(lotEvent.getLotNumber(), entry.getStockCard().getProduct().getCode());
+            LotOnHand lotOnHand = stockCardService.getLotOnHandByLotNumberAndProductCodeAndFacilityId(lotEvent.getLotNumber(),
+                    entry.getStockCard().getProduct().getCode(), entry.getStockCard().getFacility().getId());
             if (lotOnHand == null) {
                 Lot lot = new Lot();
                 lot.setLotCode(lotEvent.getLotNumber());

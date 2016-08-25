@@ -151,7 +151,7 @@ public class StockCardService {
       }).toList();
   }
 
-  public LotOnHand getLotOnHandByLotNumberAndProductCode(String lotNumber, String productCode) {
-    return null;
+  public LotOnHand getLotOnHandByLotNumberAndProductCodeAndFacilityId(String lotNumber, String code, Long facilityId) {
+    return lotRepository.getLotOnHandByLotNumberAndProductCodeAndFacilityId(lotNumber, code, facilityId);
   }
 }

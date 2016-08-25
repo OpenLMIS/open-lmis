@@ -204,4 +204,14 @@ public class StockCardServiceTest {
         verify(repository, never()).updateStockCardSyncTimeToNow(123L, "P1");
         verify(repository).updateStockCardSyncTimeToNow(123L, "P2");
     }
+
+    @Test
+    public void shouldReturnLotOnHandByLotNumberAndProductCode() throws Exception {
+        StockCard stockCard1 = new StockCard();
+        stockCard1.setProduct(make(a(ProductBuilder.defaultProduct, with(ProductBuilder.code, "P1"))));
+        stockCard1.setFacility(defaultFacility);
+
+        service.getLotOnHandByLotNumberAndProductCodeAndFacilityId(lot.getLotCode(), stockCard1.getProduct().getCode(), stockCard1.getFacility().getId());
+        verify(lotRepository).getLotOnHandByLotNumberAndProductCodeAndFacilityId(lot.getLotCode(), stockCard1.getProduct().getCode(), stockCard1.getFacility().getId());
+    }
 }

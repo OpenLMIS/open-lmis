@@ -384,6 +384,7 @@ public class RestStockCardServiceTest {
         Product productForStockCardInLotTest = make(a(ProductBuilder.defaultProduct, with(ProductBuilder.code, productCode)));
         StockCard stockCardForLotsTest = new StockCard();
         stockCardForLotsTest.setProduct(productForStockCardInLotTest);
+        stockCardForLotsTest.setFacility(defaultFacility);
 
         when(stockCardService.getOrCreateStockCard(facilityId, productForStockCardInLotTest.getCode(), userId)).thenReturn(stockCardForLotsTest);
 
@@ -418,7 +419,7 @@ public class RestStockCardServiceTest {
         lotOnHand.setLot(lot);
         lotOnHand.setQuantityOnHand(100L);
         lotOnHand.setStockCard(stockCardForLotsTest);
-        when(stockCardService.getLotOnHandByLotNumberAndProductCode(lotEvent1.getLotNumber(), productCode)).thenReturn(lotOnHand);
+        when(stockCardService.getLotOnHandByLotNumberAndProductCodeAndFacilityId(lotEvent1.getLotNumber(), productCode, facilityId)).thenReturn(lotOnHand);
 
         Lot lot2 = new Lot();
         lot2.setProduct(make(a(ProductBuilder.defaultProduct)));
@@ -428,7 +429,7 @@ public class RestStockCardServiceTest {
         lotOnHand2.setLot(lot2);
         lotOnHand2.setQuantityOnHand(100L);
         lotOnHand2.setStockCard(stockCardForLotsTest);
-        when(stockCardService.getLotOnHandByLotNumberAndProductCode(lotEvent2.getLotNumber(), productCode)).thenReturn(lotOnHand2);
+        when(stockCardService.getLotOnHandByLotNumberAndProductCodeAndFacilityId(lotEvent2.getLotNumber(), productCode, facilityId)).thenReturn(lotOnHand2);
 
         restStockCardService.adjustStock(facilityId, newStockEventList, userId);
 

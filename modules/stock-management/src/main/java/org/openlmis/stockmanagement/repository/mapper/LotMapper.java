@@ -4,6 +4,7 @@ import org.apache.ibatis.annotations.*;
 import org.openlmis.core.domain.Product;
 import org.openlmis.stockmanagement.domain.Lot;
 import org.openlmis.stockmanagement.domain.LotOnHand;
+import org.openlmis.stockmanagement.domain.StockCard;
 import org.springframework.stereotype.Repository;
 
 @Repository
@@ -93,4 +94,31 @@ public interface LotMapper {
           ", modifiedDate = NOW()" +
       "WHERE id = #{id}")
   int updateLotOnHand(LotOnHand lotOnHand);
+
+  @Select("SELECT loh.* FROM lots_on_hand loh " +
+          "JOIN lots l on l.id = loh.lotid " +
+          "JOIN stock_cards s on s.id = loh.stockcardid " +
+          "JOIN products p on p.id = s.productid " +
+          "JOIN facilities f on f.id = s.facilityid " +
+          "WHERE f.id = #{facilityId} AND p.code = #{productCode} AND l.lotnumber = #{lotCode}")
+  @Results({
+          @Result(
+                  property = "stockCard", column = "stockcardid", javaType = StockCard.class,
+                  one = @One(select = "org.openlmis.stockmanagement.repository.mapper.StockCardMapper.getStockCardById")),
+          @Result(
+                  property = "lot", column = "lotId", javaType = Lot.class,
+                  one = @One(select = "org.openlmis.stockmanagement.repository.mapper.LotMapper.getLotById"))
+  })
+  LotOnHand getLotOnHandByLotNumberAndProductCodeAndFacilityId(@Param("lotCode") String lotCode,
+                                                               @Param("productCode") String productCode, @Param("facilityId") Long facilityId);
+
+  @Select("SELECT l.lotnumber as lotCode," +
+          "l.manufacturername as manufacturerName," +
+          "l.manufacturedate as manufactureDate, " +
+          "l.expirationdate as expirationDate " +
+          "FROM lots l " +
+          "WHERE id = #{lotId}")
+  @Result(property = "product", column = "productid", javaType = Product.class,
+          one = @One(select = "org.openlmis.core.repository.mapper.ProductMapper.getById"))
+  Lot getLotById(Long lotId);
 }

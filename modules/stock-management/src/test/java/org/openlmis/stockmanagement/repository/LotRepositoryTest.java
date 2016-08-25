@@ -68,4 +68,10 @@ public class LotRepositoryTest {
         assertEquals(l.getManufacturerName(), lot.getManufacturerName());
         assertEquals(l.getExpirationDate(), lot.getExpirationDate());
     }
+
+    @Test
+    public void shouldGetExistingLotOnHand() throws Exception {
+        repository.getLotOnHandByLotNumberAndProductCodeAndFacilityId("123", "p123", 1L);
+        verify(mapper).getLotOnHandByLotNumberAndProductCodeAndFacilityId("123", "p123", 1L);
+    }
 }

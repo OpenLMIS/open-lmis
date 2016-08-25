@@ -45,4 +45,8 @@ public class LotRepository {
       mapper.updateLotOnHand(lotOnHand);
     }
   }
+
+    public LotOnHand getLotOnHandByLotNumberAndProductCodeAndFacilityId(String lotCode, String productCode, Long facilityId) {
+        return mapper.getLotOnHandByLotNumberAndProductCodeAndFacilityId(lotCode, productCode, facilityId);
+    }
 }
