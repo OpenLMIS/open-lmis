@@ -89,7 +89,12 @@ public class StockCardRepository {
     }
 
     for (StockCardEntryLotItem stockCardEntryLotItem : entry.getStockCardEntryLotItems()) {
-      lotMapper.insertLotMovementItem(stockCardEntryLotItem);
+      stockCardEntryLotItem.setStockCardEntryId(entry.getId());
+      lotMapper.insertStockCardEntryLotItem(stockCardEntryLotItem);
+
+      for (StockCardEntryLotItemKV stockCardEntryLotItemKV : stockCardEntryLotItem.getExtensions()) {
+        lotMapper.insertStockCardEntryLotItemKV(stockCardEntryLotItem, stockCardEntryLotItemKV);
+      }
     }
   }
 

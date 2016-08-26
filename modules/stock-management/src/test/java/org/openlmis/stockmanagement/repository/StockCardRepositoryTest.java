@@ -4,9 +4,12 @@ import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
 import org.junit.runners.BlockJUnit4ClassRunner;
+import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Matchers;
 import org.mockito.Mock;
+import org.mockito.invocation.InvocationOnMock;
+import org.mockito.stubbing.Answer;
 import org.openlmis.core.builder.FacilityBuilder;
 import org.openlmis.core.builder.ProductBuilder;
 import org.openlmis.core.domain.Facility;
@@ -25,8 +28,9 @@ import java.util.List;
 
 import static com.natpryce.makeiteasy.MakeItEasy.*;
 import static java.util.Arrays.asList;
+import static org.hamcrest.CoreMatchers.any;
 import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertThat;
+import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 
 @Category(UnitTests.class)
@@ -115,6 +119,7 @@ public class StockCardRepositoryTest {
     stockCard.setFacility(defaultFacility);
     stockCard.setProduct(defaultProduct);
     StockCardEntry stockCardEntry = new StockCardEntry(stockCard, StockCardEntryType.CREDIT, 100L, new Date(), "", 0L);
+
     Lot lot = new Lot();
     lot.setProduct(defaultProduct);
     lot.setLotCode("AAA");
@@ -126,6 +131,7 @@ public class StockCardRepositoryTest {
     lotOnHand.setStockCard(stockCard);
     lotOnHand.setId(1L);
     StockCardEntryLotItem stockCardEntryLotItem1 = new StockCardEntryLotItem(lot, 10L);
+    stockCardEntryLotItem1.addKeyValue("SOH", "100");
 
     Lot lot2 = new Lot();
     lot2.setProduct(defaultProduct);
@@ -136,16 +142,33 @@ public class StockCardRepositoryTest {
     lotOnHand2.setQuantityOnHand(100L);
     lotOnHand2.setStockCard(stockCard);
     StockCardEntryLotItem stockCardEntryLotItem2 = new StockCardEntryLotItem(lot2, 20L);
+    stockCardEntryLotItem2.addKeyValue("SOH", "200");
 
     stockCard.setLotsOnHand(asList(lotOnHand,lotOnHand2));
     stockCardEntry.setStockCardEntryLotItems(asList(stockCardEntryLotItem1, stockCardEntryLotItem2));
     stockCardEntry.getStockCard().setLotsOnHand(asList(lotOnHand,lotOnHand2));
 
+    doAnswer(new Answer<Void>() {
+      public Void answer(InvocationOnMock invocation) {
+        ((StockCardEntry) invocation.getArguments()[0]).setId(123L);
+        return null;
+      }
+    }).when(mapper).insertEntry(stockCardEntry);
+
     stockCardRepository.persistStockCardEntry(stockCardEntry);
 
-    verify(lotMapper, times(2)).insertLotMovementItem(Matchers.any(StockCardEntryLotItem.class));
-    verify(lotMapper).insertLotMovementItem(stockCardEntryLotItem1);
-    verify(lotMapper).insertLotMovementItem(stockCardEntryLotItem2);
+    ArgumentCaptor<StockCardEntryLotItem> captor = ArgumentCaptor.forClass(StockCardEntryLotItem.class);
+
+    verify(mapper).insertEntry(stockCardEntry);
+
+    verify(lotMapper,times(2)).insertStockCardEntryLotItem(captor.capture());
+    assertEquals(123L, captor.getAllValues().get(0).getStockCardEntryId(), 0L);
+    assertEquals(123L, captor.getAllValues().get(1).getStockCardEntryId(), 0L);
+
+    ArgumentCaptor<StockCardEntryLotItemKV> captor2 = ArgumentCaptor.forClass(StockCardEntryLotItemKV.class);
+    verify(lotMapper, times(2)).insertStockCardEntryLotItemKV(Matchers.any(StockCardEntryLotItem.class), captor2.capture());
+    assertEquals("100", captor2.getAllValues().get(0).getValue());
+    assertEquals("200", captor2.getAllValues().get(1).getValue());
   }
 
   @Test

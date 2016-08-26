@@ -1,14 +1,20 @@
 package org.openlmis.stockmanagement.dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
 import org.openlmis.core.serializer.DateDeserializer;
 
 import java.util.Date;
 import java.util.Map;
 
 @Data
+@NoArgsConstructor
+@EqualsAndHashCode()
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class LotEvent {
 
     private String lotNumber;

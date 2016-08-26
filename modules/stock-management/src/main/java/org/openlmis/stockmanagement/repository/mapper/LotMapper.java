@@ -3,6 +3,7 @@ package org.openlmis.stockmanagement.repository.mapper;
 import org.apache.ibatis.annotations.*;
 import org.openlmis.core.domain.Product;
 import org.openlmis.stockmanagement.domain.*;
+import org.springframework.security.access.method.P;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -89,7 +90,7 @@ public interface LotMapper {
 
   @Update("UPDATE lots_on_hand " +
       "SET quantityOnHand = #{quantityOnHand}" +
-          ", effectiveDate = NOW()" +
+          ", effectiveDate = #{effectiveDate}" +
           ", modifiedBy = #{modifiedBy}" +
           ", modifiedDate = NOW()" +
       "WHERE id = #{id}")
@@ -127,7 +128,7 @@ public interface LotMapper {
           "VALUES " +
           " (#{stockCardEntryId}, #{lot.id}, #{quantity}, #{effectiveDate}, #{createdBy}, NOW(), #{modifiedBy}, NOW())")
   @Options(useGeneratedKeys = true)
-  void insertLotMovementItem(StockCardEntryLotItem stockCardEntryLotItem);
+  void insertStockCardEntryLotItem(StockCardEntryLotItem stockCardEntryLotItem);
 
   @Select("SELECT * " +
           "FROM stock_card_entry_lot_items s " +
@@ -145,4 +146,12 @@ public interface LotMapper {
           "FROM stock_card_entry_lot_items_key_values s " +
           "WHERE stockCardEntryLotItemId = #{stockCardEntryLotItemId}")
   List<StockCardEntryLotItemKV> getStockCardEntryLotItemExtensions(Long stockCardEntryLotItemId);
+
+  @Insert("INSERT INTO stock_card_entry_lot_items_key_values " +
+          "(stockCardEntryLotItemId, keyColumn, valueColumn, createdBy, createdDate, modifiedBy, modifiedDate) " +
+          "VALUES " +
+          "(#{stockCardEntryLotItem.id}, #{stockCardEntryLotItemKV.key}, #{stockCardEntryLotItemKV.value}, " +
+          "#{stockCardEntryLotItem.createdBy}, NOW(), #{stockCardEntryLotItem.modifiedBy}, NOW())")
+  void insertStockCardEntryLotItemKV(@Param("stockCardEntryLotItem") StockCardEntryLotItem stockCardEntryLotItem,
+                                     @Param("stockCardEntryLotItemKV") StockCardEntryLotItemKV stockCardEntryLotItemKV);
 }

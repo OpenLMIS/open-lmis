@@ -102,8 +102,20 @@ public class LotMapperIT {
         StockCardEntry stockCardEntry = new StockCardEntry(defaultCard, StockCardEntryType.ADJUSTMENT, 10L, new Date(), "", null);
         stockCardMapper.insertEntry(stockCardEntry);
         stockCardEntryLotItem.setStockCardEntryId(stockCardEntry.getId());
-        lotMapper.insertLotMovementItem(stockCardEntryLotItem);
+        lotMapper.insertStockCardEntryLotItem(stockCardEntryLotItem);
         assertThat(stockCardEntryLotItem.getQuantity(), is(lotMapper.getLotMovementItemsByStockEntry(stockCardEntry.getId()).get(0).getQuantity()));
         assertThat(stockCardEntryLotItem.getExtensions().get(0).getValue(), is("500"));
+    }
+
+    @Test
+    public void shouldInsertLotMovementItemKV() throws Exception {
+        StockCardEntryLotItem stockCardEntryLotItem = new StockCardEntryLotItem(defaultLot, 5L);
+        stockCardEntryLotItem.addKeyValue("SOH", "500");
+        StockCardEntry stockCardEntry = new StockCardEntry(defaultCard, StockCardEntryType.ADJUSTMENT, 10L, new Date(), "", null);
+        stockCardMapper.insertEntry(stockCardEntry);
+        stockCardEntryLotItem.setStockCardEntryId(stockCardEntry.getId());
+        lotMapper.insertStockCardEntryLotItem(stockCardEntryLotItem);
+        lotMapper.insertStockCardEntryLotItemKV(stockCardEntryLotItem, stockCardEntryLotItem.getExtensions().get(0));
+        assertEquals(stockCardEntryLotItem.getExtensions().get(0).getValue(), lotMapper.getStockCardEntryLotItemExtensions(stockCardEntryLotItem.getId()).get(0).getValue());
     }
 }

@@ -14,6 +14,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
 import org.apache.commons.collections.map.DefaultedMap;
 import org.apache.commons.lang3.StringUtils;
 import org.openlmis.core.domain.StockAdjustmentReason;
@@ -28,6 +29,7 @@ import java.util.List;
 import java.util.Map;
 
 @Data
+@NoArgsConstructor
 @EqualsAndHashCode()
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class StockEvent {
@@ -53,9 +55,6 @@ public class StockEvent {
     private List<LotEvent> lotEventList;
 
     private Map<String, String> customProps;
-
-    public StockEvent() {
-    }
 
     public long getQuantity() {
         return Math.abs(quantity);
