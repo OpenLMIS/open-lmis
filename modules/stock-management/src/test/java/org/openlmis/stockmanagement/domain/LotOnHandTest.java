@@ -23,7 +23,7 @@ public class LotOnHandTest {
         keyValues.add(new StockCardEntryKV("testkey1", "testvalue1", new Date()));
         keyValues.add(new StockCardEntryKV("testkey2", "testvalue2", new Date()));
         LotOnHand lotOnHand = LotOnHand.createZeroedLotOnHand(new Lot(), new StockCard());
-        lotOnHand.setKeyValues(keyValues);
+        lotOnHand.setExtensions(keyValues);
 
         Map<String, String> customProps = lotOnHand.getCustomProps();
 
@@ -39,7 +39,7 @@ public class LotOnHandTest {
         keyValues.add(new StockCardEntryKV("testkey1", "testvalue2", new Date(3)));
         keyValues.add(new StockCardEntryKV("testkey1", "testvalue3", new Date(1)));
         LotOnHand lotOnHand = LotOnHand.createZeroedLotOnHand(new Lot(), new StockCard());
-        lotOnHand.setKeyValues(keyValues);
+        lotOnHand.setExtensions(keyValues);
 
         Map<String, String> customProps = lotOnHand.getCustomProps();
 
@@ -57,7 +57,7 @@ public class LotOnHandTest {
         keyValues.add(new StockCardEntryKV("testkey2", "testvalue3", new Date(3)));
         keyValues.add(new StockCardEntryKV("testkey2", "testvalue1", new Date(1)));
         LotOnHand lotOnHand = LotOnHand.createZeroedLotOnHand(new Lot(), new StockCard());
-        lotOnHand.setKeyValues(keyValues);
+        lotOnHand.setExtensions(keyValues);
 
         Map<String, String> customProps = lotOnHand.getCustomProps();
 

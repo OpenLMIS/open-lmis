@@ -10,6 +10,7 @@
 
 package org.openlmis.stockmanagement.repository.mapper;
 
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
@@ -19,16 +20,12 @@ import org.openlmis.core.builder.ProductBuilder;
 import org.openlmis.core.domain.Facility;
 import org.openlmis.core.domain.Product;
 import org.openlmis.core.domain.StockAdjustmentReason;
-import org.openlmis.core.query.QueryExecutor;
 import org.openlmis.core.repository.mapper.FacilityMapper;
 import org.openlmis.core.repository.mapper.ProductMapper;
 import org.openlmis.core.repository.mapper.StockAdjustmentReasonMapper;
 import org.openlmis.core.utils.DateUtil;
 import org.openlmis.db.categories.IntegrationTests;
-import org.openlmis.stockmanagement.domain.StockCard;
-import org.openlmis.stockmanagement.domain.StockCardEntry;
-import org.openlmis.stockmanagement.domain.StockCardEntryKV;
-import org.openlmis.stockmanagement.domain.StockCardEntryType;
+import org.openlmis.stockmanagement.domain.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
@@ -69,10 +66,11 @@ public class StockCardMapperIT {
   private Facility defaultFacility;
 
   private Product defaultProduct;
-  @Autowired
-  private QueryExecutor queryExecutor;
   private StockCard stockCard1;
   private StockCard stockCard2;
+
+  @Autowired
+  private LotMapper lotMapper;
 
   @Before
   public void setup() {
@@ -165,6 +163,18 @@ public class StockCardMapperIT {
   @Test
   public void shouldReturnStockCardBasicInfoWhenGiveFacilityId() throws Exception {
 
+    Lot lot = new Lot();
+    lot.setLotCode("TEST");
+    lot.setExpirationDate(new Date());
+    lot.setProduct(defaultProduct);
+    lotMapper.insert(lot);
+
+    LotOnHand lotOnHand = new LotOnHand();
+    lotOnHand.setLot(lot);
+    lotOnHand.setStockCard(defaultCard);
+    lotOnHand.setQuantityOnHand(100L);
+    lotMapper.insertLotOnHand(lotOnHand);
+
     StockCardEntry entry = getStockCardEntry();
     String expirationDate = "2015/1/1";
     mapper.insertEntry(entry);
@@ -173,14 +183,32 @@ public class StockCardMapperIT {
     List<StockCard> stockCards = mapper.queryStockCardBasicInfo(defaultFacility.getId());
     assertThat(stockCards.size(), is(1));
     assertThat(stockCards.get(0).getProduct().getCode(), is(ProductBuilder.PRODUCT_CODE));
+    assertThat(stockCards.get(0).getLotsOnHand().get(0).getLot().getLotCode(), is("TEST"));
+    assertThat(stockCards.get(0).getLotsOnHand().get(0).getQuantityOnHand(), is(100L));
   }
 
   @Test
   public void shouldReturnStockCardEntryByOccurredDateRange() throws Exception {
 
+    Lot lot = new Lot();
+    lot.setLotCode("TEST");
+    lot.setExpirationDate(new Date());
+    lot.setProduct(defaultProduct);
+    lotMapper.insert(lot);
+
+    LotOnHand lotOnHand = new LotOnHand();
+    lotOnHand.setLot(lot);
+    lotOnHand.setStockCard(defaultCard);
+    lotOnHand.setQuantityOnHand(100L);
+    lotMapper.insertLotOnHand(lotOnHand);
+
     StockCardEntry entry = getStockCardEntry();
     entry.setOccurred(DateUtil.parseDate("2015-11-12 00:00:00"));
     mapper.insertEntry(entry);
+
+    StockCardEntryLotItem stockCardEntryLotItem = new StockCardEntryLotItem(lot, 100L);
+    stockCardEntryLotItem.setStockCardEntryId(entry.getId());
+    lotMapper.insertStockCardEntryLotItem(stockCardEntryLotItem);
 
     StockCardEntry entry2 = getStockCardEntry();
     entry2.setOccurred(DateUtil.parseDate("2015-11-13 00:00:00"));
@@ -196,6 +224,7 @@ public class StockCardMapperIT {
     List<StockCardEntry> stockCardsEntries = mapper.queryStockCardEntriesByDateRange(defaultCard.getId(),
         startDate, endDate);
     assertThat(stockCardsEntries.size(), is(1));
+    assertThat(stockCardsEntries.get(0).getStockCardEntryLotItems().get(0).getQuantity(), is(100L));
   }
 
 
@@ -226,6 +255,25 @@ public class StockCardMapperIT {
     int numOfResults = mapper.updateStockCardToSyncTimeToNow(defaultFacility.getId(), "code2");
 
     assertEquals(1, numOfResults);
+  }
+
+  @Test
+  public void shouldGetLotByHandByStockCardId() throws Exception {
+    Lot lot = new Lot();
+    lot.setLotCode("TEST");
+    lot.setExpirationDate(new Date());
+    lot.setProduct(defaultProduct);
+    lotMapper.insert(lot);
+
+    LotOnHand lotOnHand = new LotOnHand();
+    lotOnHand.setLot(lot);
+    lotOnHand.setStockCard(defaultCard);
+    lotOnHand.setQuantityOnHand(100L);
+    lotMapper.insertLotOnHand(lotOnHand);
+
+    List<LotOnHand> lotsOnHand = mapper.getLotsOnHand(defaultCard.getId());
+    Assert.assertThat(lotsOnHand.get(0).getLot().getLotCode(), is("TEST"));
+    Assert.assertThat(lotsOnHand.get(0).getQuantityOnHand(), is(100L));
   }
 
   private void insertTwoMoreStockCardsForDefaultFacility() {

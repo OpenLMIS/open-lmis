@@ -6,11 +6,13 @@ import lombok.NoArgsConstructor;
 import org.openlmis.core.utils.DateUtil;
 import org.openlmis.stockmanagement.domain.StockCardEntry;
 import org.openlmis.stockmanagement.domain.StockCardEntryKV;
+import org.openlmis.stockmanagement.domain.StockCardEntryLotItem;
 import org.openlmis.stockmanagement.domain.StockCardEntryType;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 
 import static com.fasterxml.jackson.databind.annotation.JsonSerialize.Inclusion.NON_EMPTY;
 import static java.lang.Math.abs;
@@ -36,6 +38,8 @@ public class StockCardMovementDTO {
 
     Long requested;
 
+    List<StockCardEntryLotItem> stockCardEntryLotItemList;
+
     public StockCardMovementDTO(StockCardEntry stockCardEntry) {
         this.documentNumber = stockCardEntry.getReferenceNumber();
         this.movementQuantity = abs(stockCardEntry.getQuantity());
@@ -47,6 +51,7 @@ public class StockCardMovementDTO {
         }
         this.type = stockCardEntry.getType();
         this.requested = stockCardEntry.getRequestedQuantity();
+        this.stockCardEntryLotItemList = stockCardEntry.getStockCardEntryLotItems();
     }
 
     private void initCustomProps(StockCardEntry stockCardEntry) {

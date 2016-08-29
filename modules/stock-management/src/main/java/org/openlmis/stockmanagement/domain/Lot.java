@@ -1,9 +1,11 @@
 package org.openlmis.stockmanagement.domain;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import lombok.*;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
 import org.openlmis.core.domain.BaseModel;
 import org.openlmis.core.domain.Product;
 import org.openlmis.core.serializer.DateDeserializer;
@@ -18,6 +20,7 @@ import java.util.Date;
 @JsonIgnoreProperties(ignoreUnknown=true)
 public class Lot extends BaseModel
 {
+    @JsonIgnore
     private Product product;
 
     private String lotCode;

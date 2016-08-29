@@ -3,7 +3,6 @@ package org.openlmis.stockmanagement.repository.mapper;
 import org.apache.ibatis.annotations.*;
 import org.openlmis.core.domain.Product;
 import org.openlmis.stockmanagement.domain.*;
-import org.springframework.security.access.method.P;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -108,20 +107,10 @@ public interface LotMapper {
                   one = @One(select = "org.openlmis.stockmanagement.repository.mapper.StockCardMapper.getStockCardById")),
           @Result(
                   property = "lot", column = "lotId", javaType = Lot.class,
-                  one = @One(select = "org.openlmis.stockmanagement.repository.mapper.LotMapper.getLotById"))
+                  one = @One(select = "getById"))
   })
   LotOnHand getLotOnHandByLotNumberAndProductCodeAndFacilityId(@Param("lotCode") String lotCode,
                                                                @Param("productCode") String productCode, @Param("facilityId") Long facilityId);
-
-  @Select("SELECT l.lotnumber as lotCode," +
-          "l.manufacturername as manufacturerName," +
-          "l.manufacturedate as manufactureDate, " +
-          "l.expirationdate as expirationDate " +
-          "FROM lots l " +
-          "WHERE id = #{lotId}")
-  @Result(property = "product", column = "productid", javaType = Product.class,
-          one = @One(select = "org.openlmis.core.repository.mapper.ProductMapper.getById"))
-  Lot getLotById(Long lotId);
 
   @Insert("INSERT INTO stock_card_entry_lot_items " +
           " (stockCardEntryId, lotId, quantity, effectiveDate, createdBy, createdDate, modifiedBy, modifiedDate) " +
@@ -135,7 +124,7 @@ public interface LotMapper {
           "WHERE stockCardEntryId = #{stockCardEntryId}")
   @Results({
       @Result(property = "lot", column = "lotId", javaType = Lot.class,
-              one = @One(select = "org.openlmis.stockmanagement.repository.mapper.LotMapper.getLotById")),
+              one = @One(select = "getById")),
       @Result(property = "extensions", column = "id", javaType = List.class,
           many = @Many(select = "getStockCardEntryLotItemExtensions"))
   })

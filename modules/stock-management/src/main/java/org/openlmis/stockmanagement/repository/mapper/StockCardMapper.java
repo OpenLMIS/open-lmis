@@ -21,8 +21,9 @@ public interface StockCardMapper {
       @Result(property = "facility", column = "facilityId", javaType = Facility.class,
           one = @One(select = "org.openlmis.core.repository.mapper.FacilityMapper.getById")),
       @Result(property = "product", column = "productId", javaType = Product.class,
-          one = @One(select = "org.openlmis.core.repository.mapper.ProductMapper.getById"))
-
+          one = @One(select = "org.openlmis.core.repository.mapper.ProductMapper.getById")),
+      @Result(property = "lotsOnHand", column = "id", javaType = List.class,
+          many = @Many(select = "getLotsOnHand"))
   })
   List<StockCard> queryStockCardBasicInfo(@Param("facilityId")Long facilityId);
 
@@ -113,7 +114,9 @@ public interface StockCardMapper {
       @Result(property = "adjustmentReason", column = "adjustmentType",
           one = @One(select ="org.openlmis.core.repository.mapper.StockAdjustmentReasonMapper.getByName")),
       @Result(property = "extensions", column = "id", javaType = List.class,
-          many = @Many(select = "getStockCardEntryExtensionAttributes"))
+          many = @Many(select = "getStockCardEntryExtensionAttributes")),
+      @Result(property = "stockCardEntryLotItems", column = "id", javaType = List.class,
+          many = @Many(select = "org.openlmis.stockmanagement.repository.mapper.LotMapper.getLotMovementItemsByStockEntry"))
   })
   List<StockCardEntry> queryStockCardEntriesByDateRange(@Param("stockCardId")Long stockCardId,
                                                         @Param("startDate")Date startDate,
@@ -162,8 +165,8 @@ public interface StockCardMapper {
   })
   List<LotOnHand> getLotsOnHand(@Param("stockCardId")Long stockCardId);
 
-  @Select("SELECT scekv.keycolumn key" +
-          ", scekv.valuecolumn value" +
+  @Select("SELECT scekv.keycolumn AS key" +
+          ", scekv.valuecolumn AS value" +
           ", scekv.modifieddate AS synceddate" +
           " FROM stock_card_entries sce" +
           "   JOIN stock_card_entry_key_values scekv ON scekv.stockcardentryid = sce.id" +

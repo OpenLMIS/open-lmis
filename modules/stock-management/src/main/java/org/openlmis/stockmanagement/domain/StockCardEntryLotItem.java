@@ -1,5 +1,6 @@
 package org.openlmis.stockmanagement.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.openlmis.core.domain.BaseModel;
@@ -12,6 +13,7 @@ import java.util.List;
 @NoArgsConstructor
 public class StockCardEntryLotItem extends BaseModel {
 
+    @JsonIgnore
     private Long stockCardEntryId;
 
     private Lot lot;

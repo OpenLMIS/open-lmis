@@ -33,7 +33,7 @@ public class LotOnHand extends BaseModel {
   private Date effectiveDate;
 
   @JsonIgnore
-  private List<StockCardEntryKV> keyValues;
+  private List<StockCardEntryKV> extensions;
 
   @JsonIgnore
   private StockCardEntryKVReduceStrategy strategy;
@@ -45,14 +45,14 @@ public class LotOnHand extends BaseModel {
     this.stockCard = stockCard;
     this.quantityOnHand = 0L;
     this.effectiveDate = new Date();
-    this.keyValues = new ArrayList<>();
+    this.extensions = new ArrayList<>();
     this.strategy = null;
   }
 
   public Map<String, String> getCustomProps() {
     if (null == strategy) strategy = new LatestSyncedStrategy();
 
-    Map<String, String> customProps = StockManagementUtils.getKeyValueAggregate(keyValues, strategy);
+    Map<String, String> customProps = StockManagementUtils.getKeyValueAggregate(extensions, strategy);
 
     return customProps.isEmpty() ? null : customProps;
   }

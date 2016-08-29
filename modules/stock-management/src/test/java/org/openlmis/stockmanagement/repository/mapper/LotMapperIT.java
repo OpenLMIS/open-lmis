@@ -23,8 +23,7 @@ import java.util.Date;
 import static com.natpryce.makeiteasy.MakeItEasy.a;
 import static com.natpryce.makeiteasy.MakeItEasy.make;
 import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertThat;
+import static org.junit.Assert.*;
 
 @Category(IntegrationTests.class)
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -117,5 +116,13 @@ public class LotMapperIT {
         lotMapper.insertStockCardEntryLotItem(stockCardEntryLotItem);
         lotMapper.insertStockCardEntryLotItemKV(stockCardEntryLotItem, stockCardEntryLotItem.getExtensions().get(0));
         assertEquals(stockCardEntryLotItem.getExtensions().get(0).getValue(), lotMapper.getStockCardEntryLotItemExtensions(stockCardEntryLotItem.getId()).get(0).getValue());
+    }
+
+    @Test
+    public void shouldGetLotById() throws Exception {
+        Lot lotResult = lotMapper.getById(defaultLot.getId());
+        assertThat(lotResult.getLotCode(), is("TEST"));
+        assertThat(lotResult.getProduct().getCode(), is(defaultProduct.getCode()));
+        assertNotNull(lotResult.getExpirationDate());
     }
 }

@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.openlmis.core.domain.Product;
+import org.openlmis.stockmanagement.domain.LotOnHand;
 import org.openlmis.stockmanagement.domain.StockCard;
 
 import java.util.ArrayList;
@@ -21,11 +22,14 @@ public class StockCardDTO {
 
     long stockOnHand;
 
+    private List<LotOnHand> lotOnHandItems;
+
 
     public StockCardDTO(StockCard stockCard) {
         this.product = initProduct(stockCard.getProduct());
         this.stockOnHand = stockCard.getTotalQuantityOnHand();
         this.stockMovementItems = new ArrayList<>();
+        this.lotOnHandItems = stockCard.getLotsOnHand();
     }
 
     private Product initProduct( Product StockCardProduct) {
