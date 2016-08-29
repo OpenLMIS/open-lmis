@@ -60,7 +60,7 @@ public interface LotMapper {
   LotOnHand getLotOnHandByStockCardAndLotObject(@Param("stockCardId")Long stockCardId, @Param("lot")Lot lot);
 
   @Insert("INSERT into lots " +
-      " (productId, lotNumber, manufacturerName, manufactureDate, expirationDate" +
+      " (productId, lotCode, manufacturerName, manufactureDate, expirationDate" +
       ", createdBy, createdDate, modifiedBy, modifiedDate) " +
       "values " +
       " (#{product.id}, #{lotCode}, #{manufacturerName}, #{manufactureDate}, #{expirationDate}" +
@@ -69,7 +69,7 @@ public interface LotMapper {
   void insert(Lot lot);
 
   @Update("UPDATE lots " +
-      "SET lotNumber = #{lotCode}" +
+      "SET lotCode = #{lotCode}" +
       ", manufacturerName = #{manufacturerName}" +
       ", manufactureDate = #{manufactureDate}" +
       ", expirationDate = #{expirationDate}" +

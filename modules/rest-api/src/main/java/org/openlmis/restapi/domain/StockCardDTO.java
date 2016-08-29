@@ -22,14 +22,14 @@ public class StockCardDTO {
 
     long stockOnHand;
 
-    private List<LotOnHand> lotOnHandItems;
+    private List<LotOnHand> lotsOnHand;
 
 
     public StockCardDTO(StockCard stockCard) {
         this.product = initProduct(stockCard.getProduct());
         this.stockOnHand = stockCard.getTotalQuantityOnHand();
         this.stockMovementItems = new ArrayList<>();
-        this.lotOnHandItems = stockCard.getLotsOnHand();
+        this.lotsOnHand = stockCard.getLotsOnHand();
     }
 
     private Product initProduct( Product StockCardProduct) {

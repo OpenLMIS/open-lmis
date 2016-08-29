@@ -43,7 +43,7 @@ public class StockCardMovementDTOTest {
     StockCardEntry entry = getStockCardEntry();
     entry.setStockCardEntryLotItems(asList(getLotItem(entry)));
     StockCardMovementDTO stockCardMovementDTO = new StockCardMovementDTO(entry);
-    assertThat(stockCardMovementDTO.getLotMovementItems().get(0).getLotNumber(), is("TEST"));
+    assertThat(stockCardMovementDTO.getLotMovementItems().get(0).getLotCode(), is("TEST"));
   }
 
   private StockCardEntry getStockCardEntry() {

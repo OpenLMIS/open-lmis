@@ -15,12 +15,12 @@ import static com.fasterxml.jackson.databind.annotation.JsonSerialize.Inclusion.
 @JsonSerialize(include = NON_EMPTY)
 public class LotMovementDTO {
 
-  String lotNumber;
+  String lotCode;
   Long quantity;
   HashMap<String,String> extensions = new HashMap<>();
 
   public LotMovementDTO(StockCardEntryLotItem stockCardEntryLotItem) {
-    this.lotNumber = stockCardEntryLotItem.getLot().getLotCode();
+    this.lotCode = stockCardEntryLotItem.getLot().getLotCode();
     this.quantity = stockCardEntryLotItem.getQuantity();
     initCustomProps(stockCardEntryLotItem);
   }
