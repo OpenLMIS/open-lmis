@@ -1,6 +1,8 @@
 package org.openlmis.restapi.domain;
 
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.google.common.base.Function;
+import com.google.common.collect.FluentIterable;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.openlmis.core.utils.DateUtil;
@@ -38,7 +40,7 @@ public class StockCardMovementDTO {
 
     Long requested;
 
-    List<StockCardEntryLotItem> stockCardEntryLotItemList;
+    List<LotMovementDTO> lotMovementItems;
 
     public StockCardMovementDTO(StockCardEntry stockCardEntry) {
         this.documentNumber = stockCardEntry.getReferenceNumber();
@@ -51,7 +53,12 @@ public class StockCardMovementDTO {
         }
         this.type = stockCardEntry.getType();
         this.requested = stockCardEntry.getRequestedQuantity();
-        this.stockCardEntryLotItemList = stockCardEntry.getStockCardEntryLotItems();
+        this.lotMovementItems = FluentIterable.from(stockCardEntry.getStockCardEntryLotItems()).transform(new Function<StockCardEntryLotItem, LotMovementDTO>() {
+          @Override
+          public LotMovementDTO apply(StockCardEntryLotItem stockCardEntryLotItem) {
+            return new LotMovementDTO(stockCardEntryLotItem);
+          }
+        }).toList();
     }
 
     private void initCustomProps(StockCardEntry stockCardEntry) {

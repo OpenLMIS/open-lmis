@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.openlmis.core.domain.BaseModel;
@@ -12,12 +13,15 @@ import org.openlmis.core.serializer.DateDeserializer;
 
 import java.util.Date;
 
+import static com.fasterxml.jackson.databind.annotation.JsonSerialize.Inclusion.NON_EMPTY;
+
 /**
  * Lot represents a product-batch, with a specific manufacturer, manufacture date, etc.
  */
 @Data
 @EqualsAndHashCode(callSuper=false)
 @JsonIgnoreProperties(ignoreUnknown=true)
+@JsonSerialize(include = NON_EMPTY)
 public class Lot extends BaseModel
 {
     @JsonIgnore
