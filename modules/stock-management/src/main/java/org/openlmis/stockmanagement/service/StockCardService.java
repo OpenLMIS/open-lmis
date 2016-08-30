@@ -15,10 +15,7 @@ import com.google.common.collect.FluentIterable;
 import lombok.NoArgsConstructor;
 import org.openlmis.core.repository.ProductRepository;
 import org.openlmis.core.service.FacilityService;
-import org.openlmis.stockmanagement.domain.Lot;
-import org.openlmis.stockmanagement.domain.LotOnHand;
-import org.openlmis.stockmanagement.domain.StockCard;
-import org.openlmis.stockmanagement.domain.StockCardEntry;
+import org.openlmis.stockmanagement.domain.*;
 import org.openlmis.stockmanagement.repository.LotRepository;
 import org.openlmis.stockmanagement.repository.StockCardRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,6 +23,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Objects;
 
@@ -67,7 +65,6 @@ public class StockCardService {
       Lot l = lotRepository.getOrCreateLot(lot);
       lotOnHand = LotOnHand.createZeroedLotOnHand(l, stockCard);
       lotRepository.saveLotOnHand(lotOnHand);
-      stockCard.getLotsOnHand().add(lotOnHand);
     }
 
     Objects.requireNonNull(lotOnHand);
@@ -120,12 +117,37 @@ public class StockCardService {
     card.addToTotalQuantityOnHand(entry.getQuantity());
     repository.updateStockCard(card);
     repository.persistStockCardEntry(entry);
-    repository.updateLotsOnHandForStockCard(card, entry.getStockCardEntryLotItems());
+
+    createLotMovementsAndUpdateLotOnHand(entry);
 
     LotOnHand lotOnHand = entry.getLotOnHand();
     if (null != lotOnHand) {
       lotOnHand.addToQuantityOnHand(entry.getQuantity());
       lotRepository.saveLotOnHand(lotOnHand);
+    }
+  }
+
+  private void createLotMovementsAndUpdateLotOnHand(StockCardEntry entry) {
+    HashMap<String, LotOnHand> lotOnHandMap = new HashMap<>();
+    if (entry.getStockCard().getLotsOnHand() != null) {
+      for (LotOnHand lotOnHand : entry.getStockCard().getLotsOnHand()) {
+        lotOnHandMap.put(lotOnHand.getLot().getLotCode(), lotOnHand);
+      }
+    }
+
+    for (StockCardEntryLotItem stockCardEntryLotItem : entry.getStockCardEntryLotItems()) {
+      stockCardEntryLotItem.setStockCardEntryId(entry.getId());
+      LotOnHand lotOnHand = lotOnHandMap.get(stockCardEntryLotItem.getLot().getLotCode());
+      if (lotOnHand != null) {
+        lotOnHand.addToQuantityOnHand(stockCardEntryLotItem.getQuantity());
+      }
+      lotRepository.createStockCardEntryLotItem(stockCardEntryLotItem);
+    }
+
+    if (entry.getStockCard().getLotsOnHand() != null) {
+      for (LotOnHand lotOnHand : entry.getStockCard().getLotsOnHand()) {
+        lotRepository.saveLotOnHand(lotOnHand);
+      }
     }
   }
 

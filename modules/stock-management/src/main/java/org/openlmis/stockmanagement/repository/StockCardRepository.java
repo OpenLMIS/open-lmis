@@ -87,15 +87,6 @@ public class StockCardRepository {
     for (StockCardEntryKV item : entry.getExtensions()) {
       mapper.insertEntryKeyValue(entry, item.getKey(), item.getValue());
     }
-
-    for (StockCardEntryLotItem stockCardEntryLotItem : entry.getStockCardEntryLotItems()) {
-      stockCardEntryLotItem.setStockCardEntryId(entry.getId());
-      lotMapper.insertStockCardEntryLotItem(stockCardEntryLotItem);
-
-      for (StockCardEntryLotItemKV stockCardEntryLotItemKV : stockCardEntryLotItem.getExtensions()) {
-        lotMapper.insertStockCardEntryLotItemKV(stockCardEntryLotItem, stockCardEntryLotItemKV);
-      }
-    }
   }
 
   public void updateStockCard(StockCard card) {
@@ -141,9 +132,5 @@ public class StockCardRepository {
 
   public void updateStockCardSyncTimeToNow(long facilityId, String stockCardProductCode) {
     mapper.updateStockCardToSyncTimeToNow(facilityId, stockCardProductCode);
-  }
-
-  public void updateLotsOnHandForStockCard(StockCard card, List<StockCardEntryLotItem> stockCardEntryLotItems) {
-
   }
 }

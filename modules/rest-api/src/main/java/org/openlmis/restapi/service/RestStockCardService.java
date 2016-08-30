@@ -93,7 +93,7 @@ public class RestStockCardService {
 
             StockCard stockCard = getOrCreateStockCard(facilityId, stockEvent.getProductCode(), stockCardMap, userId);
 
-            StockCardEntry entry = convertStockEventToStockCardEntry(stockEvent, stockCard, lotMap, userId);
+            StockCardEntry entry = processStockEvent(stockEvent, stockCard, lotMap, userId);
             entries.add(entry);
         }
         return entries;
@@ -111,7 +111,7 @@ public class RestStockCardService {
         return stockCard;
     }
 
-    private StockCardEntry convertStockEventToStockCardEntry(StockEvent stockEvent, final StockCard stockCard, Map<String, Lot> lotMap, Long userId) {
+    private StockCardEntry processStockEvent(StockEvent stockEvent, final StockCard stockCard, Map<String, Lot> lotMap, Long userId) {
         final StockAdjustmentReason stockAdjustmentReason = stockAdjustmentReasonRepository.getAdjustmentReasonByName(stockEvent.getReasonName());
 
         long quantity = stockEvent.getQuantity();
@@ -123,7 +123,7 @@ public class RestStockCardService {
         entry.setModifiedBy(userId);
         entry.setCreatedDate(stockEvent.getCreatedTime());
         if (stockEvent.getLotEventList() != null) {
-            convertLotEventListToLotMovementItems(stockEvent.getLotEventList(), stockAdjustmentReason, entry, lotMap, userId);
+            processLotEvents(stockEvent.getLotEventList(), stockAdjustmentReason, entry, lotMap, userId);
         }
 
         Map<String, String> customProps = stockEvent.getCustomProps();
@@ -135,13 +135,14 @@ public class RestStockCardService {
         return entry;
     }
 
-    private void convertLotEventListToLotMovementItems(List<LotEvent> lotEvents, StockAdjustmentReason stockAdjustmentReason, StockCardEntry entry, Map<String, Lot> lotMap, Long userId) {
+    private void processLotEvents(List<LotEvent> lotEvents, StockAdjustmentReason stockAdjustmentReason, StockCardEntry entry, Map<String, Lot> lotMap, Long userId) {
         for (final LotEvent lotEvent : lotEvents) {
             StockCardEntryLotItem stockCardEntryLotItem;
             long lotMovementQuantity = stockAdjustmentReason.getAdditive() ? lotEvent.getQuantity() : lotEvent.getQuantity() * -1;
 
             Lot lot = getOrCreateLot(lotEvent, lotMap, entry.getStockCard().getProduct(), userId);
-            stockCardService.getOrCreateLotOnHand(lot, entry.getStockCard());
+            LotOnHand lotOnHand = stockCardService.getOrCreateLotOnHand(lot, entry.getStockCard());
+            entry.getStockCard().getLotsOnHand().add(lotOnHand);
 
             stockCardEntryLotItem = new StockCardEntryLotItem(lot, lotMovementQuantity);
             stockCardEntryLotItem.setCreatedBy(userId);

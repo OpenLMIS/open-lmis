@@ -4,6 +4,8 @@ import lombok.NoArgsConstructor;
 import org.openlmis.core.domain.Product;
 import org.openlmis.stockmanagement.domain.Lot;
 import org.openlmis.stockmanagement.domain.LotOnHand;
+import org.openlmis.stockmanagement.domain.StockCardEntryLotItem;
+import org.openlmis.stockmanagement.domain.StockCardEntryLotItemKV;
 import org.openlmis.stockmanagement.repository.mapper.LotMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -66,4 +68,11 @@ public class LotRepository {
     public LotOnHand getLotOnHandByLotNumberAndProductCodeAndFacilityId(String lotCode, String productCode, Long facilityId) {
         return mapper.getLotOnHandByLotNumberAndProductCodeAndFacilityId(lotCode, productCode, facilityId);
     }
+
+  public void createStockCardEntryLotItem(StockCardEntryLotItem stockCardEntryLotItem) {
+    mapper.insertStockCardEntryLotItem(stockCardEntryLotItem);
+    for (StockCardEntryLotItemKV stockCardEntryLotItemKV : stockCardEntryLotItem.getExtensions()) {
+      mapper.insertStockCardEntryLotItemKV(stockCardEntryLotItem, stockCardEntryLotItemKV);
+    }
+  }
 }

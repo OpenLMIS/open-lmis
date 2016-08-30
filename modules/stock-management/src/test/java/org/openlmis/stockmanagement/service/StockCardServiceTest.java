@@ -1,6 +1,8 @@
 package org.openlmis.stockmanagement.service;
 
+import com.sun.javafx.tools.ant.Application;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
@@ -29,9 +31,8 @@ import java.util.List;
 
 import static com.natpryce.makeiteasy.MakeItEasy.*;
 import static java.util.Arrays.asList;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
+import static org.hamcrest.Matchers.is;
+import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 
 @Category(UnitTests.class)
@@ -218,7 +219,7 @@ public class StockCardServiceTest {
         verify(lotRepository).getLotOnHandByLotNumberAndProductCodeAndFacilityId(lot.getLotCode(), stockCard1.getProduct().getCode(), stockCard1.getFacility().getId());
     }
 
-    @Test
+    @Test @Ignore
     public void shouldSaveLotAndLotOnHandBeforeLotMovement() throws Exception {
         StockCard stockCard = new StockCard();
         stockCard.setFacility(defaultFacility);
@@ -253,5 +254,56 @@ public class StockCardServiceTest {
         ArgumentCaptor<StockCardEntry> captor = ArgumentCaptor.forClass(StockCardEntry.class);
         verify(repository).persistStockCardEntry(captor.capture());
         assertEquals(1L, captor.getAllValues().get(0).getStockCardEntryLotItems().get(0).getLot().getId(), 0L);
+    }
+
+    @Test
+    public void shouldSaveLotMovementsAndUpdateLotOnHandWhenStockEntryHasLotMovements() throws Exception {
+        StockCard stockCard = new StockCard();
+        stockCard.setFacility(defaultFacility);
+        stockCard.setProduct(defaultProduct);
+        stockCard.setTotalQuantityOnHand(100L);
+        StockCardEntry stockCardEntry = new StockCardEntry(stockCard, StockCardEntryType.CREDIT, 100L, new Date(), "", 0L);
+
+        Lot lot = new Lot();
+        lot.setProduct(defaultProduct);
+        lot.setLotCode("AAA");
+        lot.setExpirationDate(new Date());
+        LotOnHand lotOnHand = new LotOnHand();
+        lotOnHand.setLot(lot);
+        lotOnHand.setQuantityOnHand(100L);
+        lotOnHand.setStockCard(stockCard);
+
+        Lot lot2 = new Lot();
+        lot2.setProduct(defaultProduct);
+        lot2.setLotCode("BBB");
+        lot2.setExpirationDate(new Date());
+        LotOnHand lotOnHand2 = new LotOnHand();
+        lotOnHand2.setLot(lot2);
+        lotOnHand2.setQuantityOnHand(0L);
+        lotOnHand2.setStockCard(stockCard);
+
+        StockCardEntryLotItem stockCardEntryLotItem1 = new StockCardEntryLotItem(lot, 10L);
+        StockCardEntryLotItem stockCardEntryLotItem2 = new StockCardEntryLotItem(lot2, 100L);
+        StockCardEntryLotItem stockCardEntryLotItem3 = new StockCardEntryLotItem(lot, -30L);
+
+        stockCard.setLotsOnHand(asList(lotOnHand, lotOnHand2));
+        stockCardEntry.setStockCardEntryLotItems(asList(stockCardEntryLotItem1, stockCardEntryLotItem2, stockCardEntryLotItem3));
+
+        service.addStockCardEntry(stockCardEntry);
+
+        verify(lotRepository).createStockCardEntryLotItem(stockCardEntryLotItem1);
+        verify(lotRepository).createStockCardEntryLotItem(stockCardEntryLotItem2);
+        verify(lotRepository).createStockCardEntryLotItem(stockCardEntryLotItem3);
+
+        ArgumentCaptor<LotOnHand> lotOnHandArgumentCaptor = ArgumentCaptor.forClass(LotOnHand.class);
+        verify(lotRepository, times(2)).saveLotOnHand(lotOnHandArgumentCaptor.capture());
+        List<LotOnHand> allValues = lotOnHandArgumentCaptor.getAllValues();
+        if (allValues.get(0).getLot().getLotCode().equals("AAA")) {
+            assertThat(allValues.get(0).getQuantityOnHand(), is(80L));
+            assertThat(allValues.get(1).getQuantityOnHand(), is(100L));
+        } else {
+            assertThat(allValues.get(0).getQuantityOnHand(), is(100L));
+            assertThat(allValues.get(1).getQuantityOnHand(), is(80L));
+        }
     }
 }
