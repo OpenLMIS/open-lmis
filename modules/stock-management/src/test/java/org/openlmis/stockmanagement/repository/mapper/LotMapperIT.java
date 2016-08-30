@@ -133,4 +133,12 @@ public class LotMapperIT {
     assertThat(lotResult.getProduct().getCode(), is(defaultProduct.getCode()));
     assertNotNull(lotResult.getExpirationDate());
   }
+
+  @Test
+  public void shouldGetLotOnHandByLotAndStockCard() throws Exception {
+    LotOnHand lotOnHand = lotMapper.getLotOnHandByStockCardAndLot(defaultCard.getId(), defaultLot.getId());
+
+    assertThat(lotOnHand.getQuantityOnHand(), is(100L));
+    assertThat(lotOnHand.getLot().getLotCode(), is(defaultLot.getLotCode()));
+  }
 }

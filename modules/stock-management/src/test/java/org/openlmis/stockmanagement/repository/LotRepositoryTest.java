@@ -18,7 +18,6 @@ import java.util.Date;
 import java.util.List;
 
 import static com.natpryce.makeiteasy.MakeItEasy.*;
-import static org.hamcrest.Matchers.any;
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
@@ -88,7 +87,7 @@ public class LotRepositoryTest {
     when(mapper.getLotByLotNumberAndProductId("ABC", product.getId())).thenReturn(null);
 
     Date expirationDate = new Date();
-    repository.getOrCreateLot("ABC", expirationDate, product, 1L);
+    repository.getOrCreateLotByLotNumberAndProductId("ABC", expirationDate, product, 1L);
     ArgumentCaptor<Lot> captor = ArgumentCaptor.forClass(Lot.class);
     verify(mapper).insert(captor.capture());
     List<Lot> allValues = captor.getAllValues();
@@ -103,7 +102,7 @@ public class LotRepositoryTest {
     when(mapper.getLotByLotNumberAndProductId("ABC", product.getId())).thenReturn(new Lot());
 
     Date expirationDate = new Date();
-    repository.getOrCreateLot("ABC", expirationDate, product, 1L);
+    repository.getOrCreateLotByLotNumberAndProductId("ABC", expirationDate, product, 1L);
     verify(mapper, never()).insert(Matchers.any(Lot.class));
   }
 }

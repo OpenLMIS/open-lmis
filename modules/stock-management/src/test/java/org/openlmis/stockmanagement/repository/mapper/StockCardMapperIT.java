@@ -274,6 +274,7 @@ public class StockCardMapperIT {
     List<LotOnHand> lotsOnHand = mapper.getLotsOnHand(defaultCard.getId());
     Assert.assertThat(lotsOnHand.get(0).getLot().getLotCode(), is("TEST"));
     Assert.assertThat(lotsOnHand.get(0).getQuantityOnHand(), is(100L));
+    Assert.assertThat(lotsOnHand.get(0).getId(), is(lotOnHand.getId()));
   }
 
   private void insertTwoMoreStockCardsForDefaultFacility() {

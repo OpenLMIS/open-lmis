@@ -21,7 +21,7 @@ public class LotMovementDTO {
 
   public LotMovementDTO(StockCardEntryLotItem stockCardEntryLotItem) {
     this.lotNumber = stockCardEntryLotItem.getLot().getLotCode();
-    this.quantity = stockCardEntryLotItem.getQuantity();
+    this.quantity = Math.abs(stockCardEntryLotItem.getQuantity());
     initCustomProps(stockCardEntryLotItem);
   }
 

@@ -147,8 +147,7 @@ public class RestStockCardService {
       long lotMovementQuantity = stockAdjustmentReason.getAdditive() ? lotEvent.getQuantity() : lotEvent.getQuantity() * -1;
 
       Lot lot = getOrCreateLot(lotEvent, lotMap, entry.getStockCard().getProduct(), userId);
-      LotOnHand lotOnHand = stockCardService.getOrCreateLotOnHand(lot, entry.getStockCard());
-      entry.getStockCard().getLotsOnHand().add(lotOnHand);
+      stockCardService.createLotOnHandIfNotExist(lot, entry.getStockCard());
 
       stockCardEntryLotItem = new StockCardEntryLotItem(lot, lotMovementQuantity);
       stockCardEntryLotItem.setCreatedBy(userId);
@@ -167,7 +166,7 @@ public class RestStockCardService {
     Lot lot;
 
     if (lotMap.get(lotEvent.getLotNumber()) == null) {
-      lot = lotService.getOrCreateLot(lotEvent.getLotNumber(), lotEvent.getExpirationDate(), product, userId);
+      lot = lotService.getOrCreateLotByLotNumberAndProduct(lotEvent.getLotNumber(), lotEvent.getExpirationDate(), product, userId);
       lotMap.put(lotEvent.getLotNumber(), lot);
     } else {
       lot = lotMap.get(lotEvent.getLotNumber());

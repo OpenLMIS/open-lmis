@@ -16,7 +16,7 @@ public class LotService {
   @Autowired
   private LotRepository lotRepository;
 
-  public Lot getOrCreateLot(String lotNumber, Date expirationDate, Product product, Long userId) {
-    return lotRepository.getOrCreateLot(lotNumber, expirationDate, product, userId);
+  public Lot getOrCreateLotByLotNumberAndProduct(String lotNumber, Date expirationDate, Product product, Long userId) {
+    return lotRepository.getOrCreateLotByLotNumberAndProductId(lotNumber, expirationDate, product, userId);
   }
 }

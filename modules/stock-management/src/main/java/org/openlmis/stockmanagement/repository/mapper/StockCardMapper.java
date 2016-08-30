@@ -152,13 +152,10 @@ public interface StockCardMapper {
       " WHERE s.id = #{id}")
   StockCard getStockCardById(Long id);
 
-  @Select("SELECT loh.*" +
-      " FROM lots_on_hand loh" +
-      " WHERE loh.stockcardid = #{stockCardId}")
+  @Select("SELECT *" +
+      " FROM lots_on_hand" +
+      " WHERE stockcardid = #{stockCardId}")
   @Results({
-      @Result(
-          property = "extensions", column = "id", javaType = List.class,
-          one = @One(select = "getLotOnHandKeyValues")),
       @Result(
           property = "lot", column = "lotId", javaType = Lot.class,
           one = @One(select = "org.openlmis.stockmanagement.repository.mapper.LotMapper.getById"))

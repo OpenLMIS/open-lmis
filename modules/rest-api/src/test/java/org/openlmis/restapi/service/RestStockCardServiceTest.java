@@ -1,7 +1,6 @@
 package org.openlmis.restapi.service;
 
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
@@ -383,13 +382,13 @@ public class RestStockCardServiceTest {
     Lot lot2 = new Lot();
     lot2.setLotCode("lotNumber3");
 
-    when(lotService.getOrCreateLot("lotNumber", expirationDate, defaultProduct, userId)).thenReturn(lot);
-    when(lotService.getOrCreateLot("lotNumber3", expirationDate3, defaultProduct, userId)).thenReturn(lot2);
+    when(lotService.getOrCreateLotByLotNumberAndProduct("lotNumber", expirationDate, defaultProduct, userId)).thenReturn(lot);
+    when(lotService.getOrCreateLotByLotNumberAndProduct("lotNumber3", expirationDate3, defaultProduct, userId)).thenReturn(lot2);
 
     restStockCardService.adjustStock(facilityId, stockEventList, userId);
 
     ArgumentCaptor<String> captor = ArgumentCaptor.forClass(String.class);
-    verify(lotService, times(2)).getOrCreateLot(captor.capture(), Matchers.any(Date.class), Matchers.any(Product.class), anyLong());
+    verify(lotService, times(2)).getOrCreateLotByLotNumberAndProduct(captor.capture(), Matchers.any(Date.class), Matchers.any(Product.class), anyLong());
     List<String> captorAllValues = captor.getAllValues();
     assertThat(captorAllValues.size(), is(2));
     assertThat(captorAllValues.get(0), is("lotNumber"));

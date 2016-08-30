@@ -42,7 +42,7 @@ public class LotRepository {
     return l;
   }
 
-  public Lot getOrCreateLot(String lotNumber, Date expirationDate, Product product, Long userId) {
+  public Lot getOrCreateLotByLotNumberAndProductId(String lotNumber, Date expirationDate, Product product, Long userId) {
     Lot lot = mapper.getLotByLotNumberAndProductId(lotNumber, product.getId());
     if (null == lot) {
       lot = new Lot();

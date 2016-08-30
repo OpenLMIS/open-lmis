@@ -266,4 +266,28 @@ public class StockCardServiceTest {
       assertThat(allValues.get(1).getQuantityOnHand(), is(80L));
     }
   }
+
+  @Test
+  public void shouldCreateLotOnHandIfNotExist() throws Exception {
+    StockCard stockCard = new StockCard();
+    stockCard.setFacility(defaultFacility);
+    stockCard.setProduct(defaultProduct);
+    stockCard.setTotalQuantityOnHand(100L);
+
+    Lot lot = new Lot();
+    lot.setProduct(defaultProduct);
+    lot.setLotCode("AAA");
+    lot.setExpirationDate(new Date());
+
+    when(lotRepository.getLotOnHandByStockCardAndLot(stockCard.getId(), lot.getId())).thenReturn(null);
+
+    ArgumentCaptor<LotOnHand> captor = ArgumentCaptor.forClass(LotOnHand.class);
+    service.createLotOnHandIfNotExist(lot, stockCard);
+
+    verify(lotRepository).saveLotOnHand(captor.capture());
+    List<LotOnHand> allValues = captor.getAllValues();
+
+    assertThat(allValues.get(0).getLot(), is(lot));
+    assertThat(allValues.get(0).getStockCard(), is(stockCard));
+  }
 }

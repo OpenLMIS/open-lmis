@@ -22,10 +22,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
 
 /**
@@ -65,6 +62,22 @@ public class StockCardService {
       Lot l = lotRepository.getOrCreateLot(lot);
       lotOnHand = LotOnHand.createZeroedLotOnHand(l, stockCard);
       lotRepository.saveLotOnHand(lotOnHand);
+    }
+
+    Objects.requireNonNull(lotOnHand);
+    return lotOnHand;
+  }
+
+  public LotOnHand createLotOnHandIfNotExist(Lot lot, StockCard stockCard) {
+    if (stockCard.getLotsOnHand() == null) {
+      stockCard.setLotsOnHand(new ArrayList<LotOnHand>());
+    }
+
+    LotOnHand lotOnHand = lotRepository.getLotOnHandByStockCardAndLot(stockCard.getId(), lot.getId());
+    if (null == lotOnHand) {
+      lotOnHand = LotOnHand.createZeroedLotOnHand(lot, stockCard);
+      lotRepository.saveLotOnHand(lotOnHand);
+      stockCard.getLotsOnHand().add(lotOnHand);
     }
 
     Objects.requireNonNull(lotOnHand);
