@@ -143,4 +143,6 @@ public interface LotMapper {
           "#{stockCardEntryLotItem.createdBy}, NOW(), #{stockCardEntryLotItem.modifiedBy}, NOW())")
   void insertStockCardEntryLotItemKV(@Param("stockCardEntryLotItem") StockCardEntryLotItem stockCardEntryLotItem,
                                      @Param("stockCardEntryLotItemKV") StockCardEntryLotItemKV stockCardEntryLotItemKV);
+
+  Lot getLotByLotNumberAndProductId(String lotNumber, Long id);
 }

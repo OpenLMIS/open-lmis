@@ -1,12 +1,14 @@
 package org.openlmis.stockmanagement.repository;
 
 import lombok.NoArgsConstructor;
+import org.openlmis.core.domain.Product;
 import org.openlmis.stockmanagement.domain.Lot;
 import org.openlmis.stockmanagement.domain.LotOnHand;
 import org.openlmis.stockmanagement.repository.mapper.LotMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.util.Date;
 import java.util.Objects;
 
 @Component
@@ -36,6 +38,21 @@ public class LotRepository {
     }
 
     return l;
+  }
+
+  public Lot getOrCreateLot(String lotNumber, Date expirationDate, Product product, Long userId) {
+    Lot lot = mapper.getLotByLotNumberAndProductId(lotNumber, product.getId());
+    if (null == lot) {
+      lot = new Lot();
+      lot.setLotCode(lotNumber);
+      lot.setProduct(product);
+      lot.setExpirationDate(expirationDate);
+      lot.setCreatedBy(userId);
+      lot.setModifiedBy(userId);
+      mapper.insert(lot);
+    }
+
+    return lot;
   }
 
   public void saveLotOnHand(LotOnHand lotOnHand) {

@@ -101,14 +101,6 @@ public class StockCardRepository {
   public void updateStockCard(StockCard card) {
     Objects.requireNonNull(card);
     mapper.update(card);
-    for (LotOnHand lotOnHand : card.getLotsOnHand()) {
-      if (lotOnHand.getId() == null) {
-        lotMapper.insert(lotOnHand.getLot());
-        lotMapper.insertLotOnHand(lotOnHand);
-      } else {
-        lotMapper.updateLotOnHand(lotOnHand);
-      }
-    }
   }
 
   public List<StockCard> queryStockCardByOccurred(Long facilityId, Date startTime, Date endTime) {
@@ -149,5 +141,9 @@ public class StockCardRepository {
 
   public void updateStockCardSyncTimeToNow(long facilityId, String stockCardProductCode) {
     mapper.updateStockCardToSyncTimeToNow(facilityId, stockCardProductCode);
+  }
+
+  public void updateLotsOnHandForStockCard(StockCard card, List<StockCardEntryLotItem> stockCardEntryLotItems) {
+
   }
 }

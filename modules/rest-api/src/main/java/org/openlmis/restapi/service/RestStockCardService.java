@@ -1,8 +1,7 @@
 package org.openlmis.restapi.service;
 
-import com.google.common.base.Predicate;
-import com.google.common.collect.FluentIterable;
 import lombok.NoArgsConstructor;
+import org.openlmis.core.domain.Product;
 import org.openlmis.core.domain.StockAdjustmentReason;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.core.repository.FacilityRepository;
@@ -14,6 +13,7 @@ import org.openlmis.restapi.domain.StockCardMovementDTO;
 import org.openlmis.stockmanagement.domain.*;
 import org.openlmis.stockmanagement.dto.LotEvent;
 import org.openlmis.stockmanagement.dto.StockEvent;
+import org.openlmis.stockmanagement.service.LotService;
 import org.openlmis.stockmanagement.service.StockCardService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -40,7 +40,10 @@ public class RestStockCardService {
     @Autowired
     private StockCardService stockCardService;
 
-    @Transactional
+    @Autowired
+    private LotService lotService;
+
+  @Transactional
     public List<StockCardEntry> adjustStock(Long facilityId, List<StockEvent> stockEvents, Long userId) {
         if (!validFacility(facilityId)) {
             throw new DataException("error.facility.unknown");
@@ -74,6 +77,8 @@ public class RestStockCardService {
 
     private List<StockCardEntry> createStockCardEntries(List<StockEvent> stockEvents, Long facilityId, Long userId) {
         Map<String, StockCard> stockCardMap = new HashMap<>();
+        Map<String, Lot> lotMap = new HashMap<>();
+
         List<StockCardEntry> entries = new ArrayList<>();
         for (StockEvent stockEvent : stockEvents) {
             if (syncUpHashRepository.hashExists(stockEvent.getSyncUpHash())) {
@@ -87,12 +92,8 @@ public class RestStockCardService {
             }
 
             StockCard stockCard = getOrCreateStockCard(facilityId, stockEvent.getProductCode(), stockCardMap, userId);
-            if (stockCard.getLotsOnHand() == null) {
-                stockCard.setLotsOnHand(new ArrayList<LotOnHand>());
-            } else {
-                stockCard.setLotsOnHand(new ArrayList<>(stockCard.getLotsOnHand()));
-            }
-            StockCardEntry entry = createStockCardEntry(stockEvent, stockCard, userId);
+
+            StockCardEntry entry = convertStockEventToStockCardEntry(stockEvent, stockCard, lotMap, userId);
             entries.add(entry);
         }
         return entries;
@@ -110,7 +111,7 @@ public class RestStockCardService {
         return stockCard;
     }
 
-    private StockCardEntry createStockCardEntry(StockEvent stockEvent, final StockCard stockCard, Long userId) {
+    private StockCardEntry convertStockEventToStockCardEntry(StockEvent stockEvent, final StockCard stockCard, Map<String, Lot> lotMap, Long userId) {
         final StockAdjustmentReason stockAdjustmentReason = stockAdjustmentReasonRepository.getAdjustmentReasonByName(stockEvent.getReasonName());
 
         long quantity = stockEvent.getQuantity();
@@ -122,7 +123,7 @@ public class RestStockCardService {
         entry.setModifiedBy(userId);
         entry.setCreatedDate(stockEvent.getCreatedTime());
         if (stockEvent.getLotEventList() != null) {
-            transformLotEventListToLotOnHandAndLotMovementItems(stockEvent.getLotEventList(), stockAdjustmentReason, entry, userId);
+            convertLotEventListToLotMovementItems(stockEvent.getLotEventList(), stockAdjustmentReason, entry, lotMap, userId);
         }
 
         Map<String, String> customProps = stockEvent.getCustomProps();
@@ -134,36 +135,15 @@ public class RestStockCardService {
         return entry;
     }
 
-    private void transformLotEventListToLotOnHandAndLotMovementItems(List<LotEvent> lotEvents, StockAdjustmentReason stockAdjustmentReason, StockCardEntry entry, Long userId) {
+    private void convertLotEventListToLotMovementItems(List<LotEvent> lotEvents, StockAdjustmentReason stockAdjustmentReason, StockCardEntry entry, Map<String, Lot> lotMap, Long userId) {
         for (final LotEvent lotEvent : lotEvents) {
             StockCardEntryLotItem stockCardEntryLotItem;
             long lotMovementQuantity = stockAdjustmentReason.getAdditive() ? lotEvent.getQuantity() : lotEvent.getQuantity() * -1;
 
-            LotOnHand lotOnHand = FluentIterable.from(entry.getStockCard().getLotsOnHand()).firstMatch(new Predicate<LotOnHand>() {
-                @Override
-                public boolean apply(LotOnHand input) {
-                    return input.getLot().getLotCode().equals(lotEvent.getLotNumber());
-                }
-            }).orNull();
+            Lot lot = getOrCreateLot(lotEvent, lotMap, entry.getStockCard().getProduct(), userId);
+            stockCardService.getOrCreateLotOnHand(lot, entry.getStockCard());
 
-            if (lotOnHand == null) {
-                Lot lot = new Lot();
-                lot.setLotCode(lotEvent.getLotNumber());
-                lot.setExpirationDate(lotEvent.getExpirationDate());
-                lot.setProduct(entry.getStockCard().getProduct());
-                lot.setCreatedBy(userId);
-
-                lotOnHand = new LotOnHand();
-                lotOnHand.setStockCard(entry.getStockCard());
-                lotOnHand.setLot(lot);
-                lotOnHand.setQuantityOnHand(0L);
-                lotOnHand.setCreatedBy(userId);
-                entry.getStockCard().getLotsOnHand().add(lotOnHand);
-            }
-            lotOnHand.setQuantityOnHand(lotOnHand.getQuantityOnHand() + lotMovementQuantity);
-            lotOnHand.setModifiedBy(userId);
-
-            stockCardEntryLotItem = new StockCardEntryLotItem(lotOnHand.getLot(), lotMovementQuantity);
+            stockCardEntryLotItem = new StockCardEntryLotItem(lot, lotMovementQuantity);
             stockCardEntryLotItem.setCreatedBy(userId);
             stockCardEntryLotItem.setModifiedBy(userId);
 
@@ -176,7 +156,19 @@ public class RestStockCardService {
         }
     }
 
-    private boolean validFacility(Long facilityId) {
+  private Lot getOrCreateLot(LotEvent lotEvent, Map<String, Lot> lotMap, Product product, Long userId) {
+      Lot lot;
+
+      if (lotMap.get(lotEvent.getLotNumber()) == null) {
+          lot = lotService.getOrCreateLot(lotEvent.getLotNumber(), lotEvent.getExpirationDate(), product, userId);
+          lotMap.put(lotEvent.getLotNumber(), lot);
+      } else {
+          lot = lotMap.get(lotEvent.getLotNumber());
+      }
+      return lot;
+  }
+
+  private boolean validFacility(Long facilityId) {
         return facilityRepository.getById(facilityId) != null;
     }
 

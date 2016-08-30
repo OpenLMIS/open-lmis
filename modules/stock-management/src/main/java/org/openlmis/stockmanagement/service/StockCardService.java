@@ -67,6 +67,7 @@ public class StockCardService {
       Lot l = lotRepository.getOrCreateLot(lot);
       lotOnHand = LotOnHand.createZeroedLotOnHand(l, stockCard);
       lotRepository.saveLotOnHand(lotOnHand);
+      stockCard.getLotsOnHand().add(lotOnHand);
     }
 
     Objects.requireNonNull(lotOnHand);
@@ -119,6 +120,7 @@ public class StockCardService {
     card.addToTotalQuantityOnHand(entry.getQuantity());
     repository.updateStockCard(card);
     repository.persistStockCardEntry(entry);
+    repository.updateLotsOnHandForStockCard(card, entry.getStockCardEntryLotItems());
 
     LotOnHand lotOnHand = entry.getLotOnHand();
     if (null != lotOnHand) {
