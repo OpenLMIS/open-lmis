@@ -36,8 +36,8 @@ public class StockCardRepository {
    * Will get or create a stock card for the given facility and product.  If the facility or product do not exist,
    * an exception will be thrown.
    *
-   * @param facilityId the id of the facility
-   * @param productCode  the code of the product
+   * @param facilityId  the id of the facility
+   * @param productCode the code of the product
    * @param userId
    * @return the persisted stock card.
    */
@@ -59,7 +59,8 @@ public class StockCardRepository {
 
   /**
    * Gets a stock card by facility id and product id
-   * @param facilityId the id of the facility
+   *
+   * @param facilityId  the id of the facility
    * @param productCode the code of the product
    * @return the unique stock card, or null if stock card, facility, or product do not exist.
    */

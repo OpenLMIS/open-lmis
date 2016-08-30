@@ -31,98 +31,98 @@ import static org.junit.Assert.*;
 @Transactional
 @TransactionConfiguration(defaultRollback = true, transactionManager = "openLmisTransactionManager")
 public class LotMapperIT {
-    @Autowired
-    private FacilityMapper facilityMapper;
+  @Autowired
+  private FacilityMapper facilityMapper;
 
-    @Autowired
-    private ProductMapper productMapper;
+  @Autowired
+  private ProductMapper productMapper;
 
-    @Autowired
-    private StockCardMapper stockCardMapper;
+  @Autowired
+  private StockCardMapper stockCardMapper;
 
-    @Autowired
-    private LotMapper lotMapper;
+  @Autowired
+  private LotMapper lotMapper;
 
-    private StockCard defaultCard;
-    private Facility defaultFacility;
-    private Product defaultProduct;
-    private Lot defaultLot;
-    private LotOnHand defaultLotOnHand;
+  private StockCard defaultCard;
+  private Facility defaultFacility;
+  private Product defaultProduct;
+  private Lot defaultLot;
+  private LotOnHand defaultLotOnHand;
 
-    @Before
-    public void setup() {
-        defaultFacility = make(a(FacilityBuilder.defaultFacility));
-        defaultProduct = make(a(ProductBuilder.defaultProduct));
-        facilityMapper.insert(defaultFacility);
-        productMapper.insert(defaultProduct);
+  @Before
+  public void setup() {
+    defaultFacility = make(a(FacilityBuilder.defaultFacility));
+    defaultProduct = make(a(ProductBuilder.defaultProduct));
+    facilityMapper.insert(defaultFacility);
+    productMapper.insert(defaultProduct);
 
-        defaultCard = new StockCard();
-        defaultCard.setFacility(defaultFacility);
-        defaultCard.setProduct(defaultProduct);
-        defaultCard.setTotalQuantityOnHand(0L);
+    defaultCard = new StockCard();
+    defaultCard.setFacility(defaultFacility);
+    defaultCard.setProduct(defaultProduct);
+    defaultCard.setTotalQuantityOnHand(0L);
 
-        stockCardMapper.insert(defaultCard);
+    stockCardMapper.insert(defaultCard);
 
-        defaultLot = new Lot();
-        defaultLot.setLotCode("TEST");
-        defaultLot.setExpirationDate(new Date());
-        defaultLot.setProduct(defaultProduct);
-        lotMapper.insert(defaultLot);
+    defaultLot = new Lot();
+    defaultLot.setLotCode("TEST");
+    defaultLot.setExpirationDate(new Date());
+    defaultLot.setProduct(defaultProduct);
+    lotMapper.insert(defaultLot);
 
-        defaultLotOnHand = new LotOnHand();
-        defaultLotOnHand.setLot(defaultLot);
-        defaultLotOnHand.setStockCard(defaultCard);
-        defaultLotOnHand.setQuantityOnHand(100L);
+    defaultLotOnHand = new LotOnHand();
+    defaultLotOnHand.setLot(defaultLot);
+    defaultLotOnHand.setStockCard(defaultCard);
+    defaultLotOnHand.setQuantityOnHand(100L);
 
-        lotMapper.insertLotOnHand(defaultLotOnHand);
-    }
+    lotMapper.insertLotOnHand(defaultLotOnHand);
+  }
 
-    @Test
-    public void shouldGetLotByLotNumberAndProductCodeAndFacilityId() throws Exception {
-        LotOnHand actualLotOnHand = lotMapper.getLotOnHandByLotNumberAndProductCodeAndFacilityId(defaultLot.getLotCode(), defaultProduct.getCode(), defaultFacility.getId());
-        assertEquals("TEST", actualLotOnHand.getLot().getLotCode());
-        assertEquals(100L, actualLotOnHand.getQuantityOnHand(), 0L);
-    }
+  @Test
+  public void shouldGetLotByLotNumberAndProductCodeAndFacilityId() throws Exception {
+    LotOnHand actualLotOnHand = lotMapper.getLotOnHandByLotNumberAndProductCodeAndFacilityId(defaultLot.getLotCode(), defaultProduct.getCode(), defaultFacility.getId());
+    assertEquals("TEST", actualLotOnHand.getLot().getLotCode());
+    assertEquals(100L, actualLotOnHand.getQuantityOnHand(), 0L);
+  }
 
-    @Test
-    public void shouldUpdateLotOnHand() throws Exception {
-        LotOnHand existingLotOnHand = lotMapper.getLotOnHandByLotNumberAndProductCodeAndFacilityId(defaultLot.getLotCode(), defaultProduct.getCode(), defaultFacility.getId());
-        existingLotOnHand.setQuantityOnHand(99L);
-        lotMapper.updateLotOnHand(existingLotOnHand);
+  @Test
+  public void shouldUpdateLotOnHand() throws Exception {
+    LotOnHand existingLotOnHand = lotMapper.getLotOnHandByLotNumberAndProductCodeAndFacilityId(defaultLot.getLotCode(), defaultProduct.getCode(), defaultFacility.getId());
+    existingLotOnHand.setQuantityOnHand(99L);
+    lotMapper.updateLotOnHand(existingLotOnHand);
 
-        LotOnHand updatedLotOnHand = lotMapper.getLotOnHandByLotNumberAndProductCodeAndFacilityId(defaultLot.getLotCode(), defaultProduct.getCode(), defaultFacility.getId());
-        assertEquals(99L, updatedLotOnHand.getQuantityOnHand(), 0L);
-    }
+    LotOnHand updatedLotOnHand = lotMapper.getLotOnHandByLotNumberAndProductCodeAndFacilityId(defaultLot.getLotCode(), defaultProduct.getCode(), defaultFacility.getId());
+    assertEquals(99L, updatedLotOnHand.getQuantityOnHand(), 0L);
+  }
 
-    @Test
-    public void shouldInsertLotMovementItem() throws Exception {
-        StockCardEntryLotItem stockCardEntryLotItem = new StockCardEntryLotItem(defaultLot, 5L);
-        stockCardEntryLotItem.addKeyValue("SOH", "500");
-        StockCardEntry stockCardEntry = new StockCardEntry(defaultCard, StockCardEntryType.ADJUSTMENT, 10L, new Date(), "", null);
-        stockCardMapper.insertEntry(stockCardEntry);
-        stockCardEntryLotItem.setStockCardEntryId(stockCardEntry.getId());
-        lotMapper.insertStockCardEntryLotItem(stockCardEntryLotItem);
-        assertThat(stockCardEntryLotItem.getQuantity(), is(lotMapper.getLotMovementItemsByStockEntry(stockCardEntry.getId()).get(0).getQuantity()));
-        assertThat(stockCardEntryLotItem.getExtensions().get(0).getValue(), is("500"));
-    }
+  @Test
+  public void shouldInsertLotMovementItem() throws Exception {
+    StockCardEntryLotItem stockCardEntryLotItem = new StockCardEntryLotItem(defaultLot, 5L);
+    stockCardEntryLotItem.addKeyValue("SOH", "500");
+    StockCardEntry stockCardEntry = new StockCardEntry(defaultCard, StockCardEntryType.ADJUSTMENT, 10L, new Date(), "", null);
+    stockCardMapper.insertEntry(stockCardEntry);
+    stockCardEntryLotItem.setStockCardEntryId(stockCardEntry.getId());
+    lotMapper.insertStockCardEntryLotItem(stockCardEntryLotItem);
+    assertThat(stockCardEntryLotItem.getQuantity(), is(lotMapper.getLotMovementItemsByStockEntry(stockCardEntry.getId()).get(0).getQuantity()));
+    assertThat(stockCardEntryLotItem.getExtensions().get(0).getValue(), is("500"));
+  }
 
-    @Test
-    public void shouldInsertLotMovementItemKV() throws Exception {
-        StockCardEntryLotItem stockCardEntryLotItem = new StockCardEntryLotItem(defaultLot, 5L);
-        stockCardEntryLotItem.addKeyValue("SOH", "500");
-        StockCardEntry stockCardEntry = new StockCardEntry(defaultCard, StockCardEntryType.ADJUSTMENT, 10L, new Date(), "", null);
-        stockCardMapper.insertEntry(stockCardEntry);
-        stockCardEntryLotItem.setStockCardEntryId(stockCardEntry.getId());
-        lotMapper.insertStockCardEntryLotItem(stockCardEntryLotItem);
-        lotMapper.insertStockCardEntryLotItemKV(stockCardEntryLotItem, stockCardEntryLotItem.getExtensions().get(0));
-        assertEquals(stockCardEntryLotItem.getExtensions().get(0).getValue(), lotMapper.getStockCardEntryLotItemExtensions(stockCardEntryLotItem.getId()).get(0).getValue());
-    }
+  @Test
+  public void shouldInsertLotMovementItemKV() throws Exception {
+    StockCardEntryLotItem stockCardEntryLotItem = new StockCardEntryLotItem(defaultLot, 5L);
+    stockCardEntryLotItem.addKeyValue("SOH", "500");
+    StockCardEntry stockCardEntry = new StockCardEntry(defaultCard, StockCardEntryType.ADJUSTMENT, 10L, new Date(), "", null);
+    stockCardMapper.insertEntry(stockCardEntry);
+    stockCardEntryLotItem.setStockCardEntryId(stockCardEntry.getId());
+    lotMapper.insertStockCardEntryLotItem(stockCardEntryLotItem);
+    lotMapper.insertStockCardEntryLotItemKV(stockCardEntryLotItem, stockCardEntryLotItem.getExtensions().get(0));
+    assertEquals(stockCardEntryLotItem.getExtensions().get(0).getValue(), lotMapper.getStockCardEntryLotItemExtensions(stockCardEntryLotItem.getId()).get(0).getValue());
+  }
 
-    @Test
-    public void shouldGetLotById() throws Exception {
-        Lot lotResult = lotMapper.getById(defaultLot.getId());
-        assertThat(lotResult.getLotCode(), is("TEST"));
-        assertThat(lotResult.getProduct().getCode(), is(defaultProduct.getCode()));
-        assertNotNull(lotResult.getExpirationDate());
-    }
+  @Test
+  public void shouldGetLotById() throws Exception {
+    Lot lotResult = lotMapper.getById(defaultLot.getId());
+    assertThat(lotResult.getLotCode(), is("TEST"));
+    assertThat(lotResult.getProduct().getCode(), is(defaultProduct.getCode()));
+    assertNotNull(lotResult.getExpirationDate());
+  }
 }

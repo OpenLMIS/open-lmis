@@ -31,44 +31,44 @@ import static org.springframework.web.bind.annotation.RequestMethod.POST;
 @Api(value = "Stock Card", description = "Stock card update", position = 0)
 public class RestStockCardController extends BaseController {
 
-    @Autowired
-    private RestStockCardService restStockCardService;
+  @Autowired
+  private RestStockCardService restStockCardService;
 
-    @RequestMapping(value = "/rest-api/facilities/{facilityId}/stockCards", method = POST, headers = ACCEPT_JSON)
-    public ResponseEntity adjustStock(@PathVariable long facilityId,
-                                      @RequestBody List<StockEvent> events,
-                                      Principal principal) {
-        try {
-            restStockCardService.adjustStock(facilityId, events, loggedInUserId(principal));
-        } catch (DataException e) {
-            return error(e.getOpenLmisMessage(), BAD_REQUEST);
-        }
-
-        return RestResponse.success("msg.stockmanagement.adjuststocksuccess");
+  @RequestMapping(value = "/rest-api/facilities/{facilityId}/stockCards", method = POST, headers = ACCEPT_JSON)
+  public ResponseEntity adjustStock(@PathVariable long facilityId,
+                                    @RequestBody List<StockEvent> events,
+                                    Principal principal) {
+    try {
+      restStockCardService.adjustStock(facilityId, events, loggedInUserId(principal));
+    } catch (DataException e) {
+      return error(e.getOpenLmisMessage(), BAD_REQUEST);
     }
 
-    @RequestMapping(value = "/rest-api/facilities/{facilityId}/stockCards", method = GET, headers = ACCEPT_JSON)
-    public ResponseEntity getStockMovements(@PathVariable long facilityId,
-                                            @RequestParam(value = "startTime", required = false)@DateTimeFormat(pattern="yyyy-MM-dd") final Date startTime,
-                                            @RequestParam(value = "endTime", required = false)@DateTimeFormat(pattern="yyyy-MM-dd") final Date endTime) {
-        List<StockCardDTO> stockCards;
-        try {
-            stockCards = restStockCardService.queryStockCardByOccurred(facilityId,startTime,endTime);
-        } catch (DataException e) {
-            return error(e.getOpenLmisMessage(), BAD_REQUEST);
-        }
-        return response("stockCards", stockCards);
-    }
+    return RestResponse.success("msg.stockmanagement.adjuststocksuccess");
+  }
 
-    @RequestMapping(value = "/rest-api/facilities/{facilityId}/unSyncedStockCards", method = POST, headers = ACCEPT_JSON)
-    public ResponseEntity updateStockCardsUpdatedTime(@PathVariable long facilityId, @RequestBody(required = true) List<String> unsyncedStockCardProductCodes) {
-        try {
-            restStockCardService.updateStockCardSyncTime(facilityId,unsyncedStockCardProductCodes);
-        } catch (DataException e) {
-            return ResponseEntity.badRequest().build();
-        }
-        return ResponseEntity.ok(null);
+  @RequestMapping(value = "/rest-api/facilities/{facilityId}/stockCards", method = GET, headers = ACCEPT_JSON)
+  public ResponseEntity getStockMovements(@PathVariable long facilityId,
+                                          @RequestParam(value = "startTime", required = false) @DateTimeFormat(pattern = "yyyy-MM-dd") final Date startTime,
+                                          @RequestParam(value = "endTime", required = false) @DateTimeFormat(pattern = "yyyy-MM-dd") final Date endTime) {
+    List<StockCardDTO> stockCards;
+    try {
+      stockCards = restStockCardService.queryStockCardByOccurred(facilityId, startTime, endTime);
+    } catch (DataException e) {
+      return error(e.getOpenLmisMessage(), BAD_REQUEST);
     }
+    return response("stockCards", stockCards);
+  }
+
+  @RequestMapping(value = "/rest-api/facilities/{facilityId}/unSyncedStockCards", method = POST, headers = ACCEPT_JSON)
+  public ResponseEntity updateStockCardsUpdatedTime(@PathVariable long facilityId, @RequestBody(required = true) List<String> unsyncedStockCardProductCodes) {
+    try {
+      restStockCardService.updateStockCardSyncTime(facilityId, unsyncedStockCardProductCodes);
+    } catch (DataException e) {
+      return ResponseEntity.badRequest().build();
+    }
+    return ResponseEntity.ok(null);
+  }
 
 
 }

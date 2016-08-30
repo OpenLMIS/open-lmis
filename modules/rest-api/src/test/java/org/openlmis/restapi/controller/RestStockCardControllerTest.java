@@ -43,124 +43,124 @@ import static org.springframework.http.HttpStatus.BAD_REQUEST;
 @PrepareForTest({RestResponse.class})
 public class RestStockCardControllerTest {
 
-    @Mock
-    RestStockCardService restStockCardService;
+  @Mock
+  RestStockCardService restStockCardService;
 
-    @InjectMocks
-    RestStockCardController restStockCardController;
+  @InjectMocks
+  RestStockCardController restStockCardController;
 
-    Principal principal;
-    private StockCard stockCard;
-    private List<StockEvent> stockEventList;
-    private Long facilityId;
-    private long userId;
+  Principal principal;
+  private StockCard stockCard;
+  private List<StockEvent> stockEventList;
+  private Long facilityId;
+  private long userId;
 
-    @Before
-    public void setUp() throws Exception {
-        principal = mock(Principal.class);
-        when(principal.getName()).thenReturn("123");
-    }
+  @Before
+  public void setUp() throws Exception {
+    principal = mock(Principal.class);
+    when(principal.getName()).thenReturn("123");
+  }
 
-    @Test
-    public void shouldReturnStatusOKIfNoException() throws Exception {
-        setupStockData();
-        mockStatic(RestResponse.class);
+  @Test
+  public void shouldReturnStatusOKIfNoException() throws Exception {
+    setupStockData();
+    mockStatic(RestResponse.class);
 
-        String successMsg = "msg.stockmanagement.adjuststocksuccess";
-        ResponseEntity<RestResponse> expectedResponse = new ResponseEntity<>(new RestResponse(SUCCESS, successMsg), HttpStatus.OK);
-        when(RestResponse.success(successMsg)).thenReturn(expectedResponse);
+    String successMsg = "msg.stockmanagement.adjuststocksuccess";
+    ResponseEntity<RestResponse> expectedResponse = new ResponseEntity<>(new RestResponse(SUCCESS, successMsg), HttpStatus.OK);
+    when(RestResponse.success(successMsg)).thenReturn(expectedResponse);
 
-        ResponseEntity<RestResponse> response = restStockCardController.adjustStock(facilityId, stockEventList, principal);
+    ResponseEntity<RestResponse> response = restStockCardController.adjustStock(facilityId, stockEventList, principal);
 
-        verify(restStockCardService).adjustStock(facilityId, stockEventList, userId);
-        assertThat(response.getStatusCode(), is(HttpStatus.OK));
-        assertThat(response.getBody().getSuccess(), is(successMsg));
-    }
+    verify(restStockCardService).adjustStock(facilityId, stockEventList, userId);
+    assertThat(response.getStatusCode(), is(HttpStatus.OK));
+    assertThat(response.getBody().getSuccess(), is(successMsg));
+  }
 
-    @Test
-    public void shouldReturnStatusBadRequestIfDataException() throws Exception {
-        setupStockData();
-        mockStatic(RestResponse.class);
+  @Test
+  public void shouldReturnStatusBadRequestIfDataException() throws Exception {
+    setupStockData();
+    mockStatic(RestResponse.class);
 
-        DataException dataException = new DataException("invalid data");
-        doThrow(dataException).when(restStockCardService).adjustStock(facilityId, stockEventList, userId);
+    DataException dataException = new DataException("invalid data");
+    doThrow(dataException).when(restStockCardService).adjustStock(facilityId, stockEventList, userId);
 
-        ResponseEntity<RestResponse> expectedResponse = new ResponseEntity<>(new RestResponse(ERROR, "invalid data"), HttpStatus.BAD_REQUEST);
-        when(error(dataException.getOpenLmisMessage(), HttpStatus.BAD_REQUEST)).thenReturn(expectedResponse);
+    ResponseEntity<RestResponse> expectedResponse = new ResponseEntity<>(new RestResponse(ERROR, "invalid data"), HttpStatus.BAD_REQUEST);
+    when(error(dataException.getOpenLmisMessage(), HttpStatus.BAD_REQUEST)).thenReturn(expectedResponse);
 
-        ResponseEntity<RestResponse> response = restStockCardController.adjustStock(facilityId, stockEventList, principal);
+    ResponseEntity<RestResponse> response = restStockCardController.adjustStock(facilityId, stockEventList, principal);
 
-        assertThat(response.getStatusCode(), is(HttpStatus.BAD_REQUEST));
-        assertThat((String) response.getBody().getData().get(ERROR), is("invalid data"));
-    }
+    assertThat(response.getStatusCode(), is(HttpStatus.BAD_REQUEST));
+    assertThat((String) response.getBody().getData().get(ERROR), is("invalid data"));
+  }
 
-    @Test
-    public void shouldReturnStockCardDTOListIfNoException() throws Exception {
-        //given
-        setupStockData();
-        StockCardDTO stockCard = new StockCardDTO();
+  @Test
+  public void shouldReturnStockCardDTOListIfNoException() throws Exception {
+    //given
+    setupStockData();
+    StockCardDTO stockCard = new StockCardDTO();
 
 
-        stockCard.setStockMovementItems(asList(new StockCardMovementDTO()));
-        List<StockCardDTO> stockCards = asList(stockCard);
+    stockCard.setStockMovementItems(asList(new StockCardMovementDTO()));
+    List<StockCardDTO> stockCards = asList(stockCard);
 
-        String startTime = "2015-10-10";
-        String endTime = "2015-10-11";
-        Date start = DateUtil.parseDate(startTime, DateUtil.FORMAT_DATE);
-        Date end = DateUtil.parseDate(endTime, DateUtil.FORMAT_DATE);
-        when(restStockCardService.queryStockCardByOccurred(facilityId, start, end)).thenReturn(stockCards);
+    String startTime = "2015-10-10";
+    String endTime = "2015-10-11";
+    Date start = DateUtil.parseDate(startTime, DateUtil.FORMAT_DATE);
+    Date end = DateUtil.parseDate(endTime, DateUtil.FORMAT_DATE);
+    when(restStockCardService.queryStockCardByOccurred(facilityId, start, end)).thenReturn(stockCards);
 
-        //when
-        ResponseEntity<RestResponse> response = restStockCardController.getStockMovements(facilityId, start, end);
+    //when
+    ResponseEntity<RestResponse> response = restStockCardController.getStockMovements(facilityId, start, end);
 
-        //then
-        assertEquals(HttpStatus.OK, response.getStatusCode());
+    //then
+    assertEquals(HttpStatus.OK, response.getStatusCode());
 
-        List<StockCardDTO> responseStockCardDTOs = (List<StockCardDTO>) (response.getBody().getData().get("stockCards"));
-        assertNotNull(responseStockCardDTOs);
-    }
+    List<StockCardDTO> responseStockCardDTOs = (List<StockCardDTO>) (response.getBody().getData().get("stockCards"));
+    assertNotNull(responseStockCardDTOs);
+  }
 
-    @Test
-    public void shouldReturnStockMovementsOnExceptionIfDataException() throws Exception {
-        setupStockData();
-        String errorMessage = "invalid data";
-        DataException dataException = new DataException(errorMessage);
-        String startTime = "2015-10-10";
-        String endTime = "2015-10-11";
-        Date start = DateUtil.parseDate(startTime, DateUtil.FORMAT_DATE);
-        Date end = DateUtil.parseDate(endTime, DateUtil.FORMAT_DATE);
+  @Test
+  public void shouldReturnStockMovementsOnExceptionIfDataException() throws Exception {
+    setupStockData();
+    String errorMessage = "invalid data";
+    DataException dataException = new DataException(errorMessage);
+    String startTime = "2015-10-10";
+    String endTime = "2015-10-11";
+    Date start = DateUtil.parseDate(startTime, DateUtil.FORMAT_DATE);
+    Date end = DateUtil.parseDate(endTime, DateUtil.FORMAT_DATE);
 
-        mockStatic(RestResponse.class);
+    mockStatic(RestResponse.class);
 
-        ResponseEntity<RestResponse> expectedResponse = new ResponseEntity<>(new RestResponse(ERROR, errorMessage), BAD_REQUEST);
+    ResponseEntity<RestResponse> expectedResponse = new ResponseEntity<>(new RestResponse(ERROR, errorMessage), BAD_REQUEST);
 
-        Mockito.when(RestResponse.error(dataException.getOpenLmisMessage(), BAD_REQUEST)).thenReturn(expectedResponse);
-        when(restStockCardService.queryStockCardByOccurred(facilityId, start, end)).thenThrow(dataException);
+    Mockito.when(RestResponse.error(dataException.getOpenLmisMessage(), BAD_REQUEST)).thenReturn(expectedResponse);
+    when(restStockCardService.queryStockCardByOccurred(facilityId, start, end)).thenThrow(dataException);
 
-        ResponseEntity<RestResponse> response = restStockCardController.getStockMovements(facilityId, start, end);
-        assertThat(response.getStatusCode(), is(HttpStatus.BAD_REQUEST));
-        assertThat((String) response.getBody().getData().get(ERROR), is(errorMessage));
-    }
+    ResponseEntity<RestResponse> response = restStockCardController.getStockMovements(facilityId, start, end);
+    assertThat(response.getStatusCode(), is(HttpStatus.BAD_REQUEST));
+    assertThat((String) response.getBody().getData().get(ERROR), is(errorMessage));
+  }
 
-    @Test
-    public void shouldReturnSuccessIfUpdateSuccessfully() {
-        ResponseEntity response = restStockCardController.updateStockCardsUpdatedTime(123L, new ArrayList<String>());
-        assertEquals(HttpStatus.OK, response.getStatusCode());
-    }
+  @Test
+  public void shouldReturnSuccessIfUpdateSuccessfully() {
+    ResponseEntity response = restStockCardController.updateStockCardsUpdatedTime(123L, new ArrayList<String>());
+    assertEquals(HttpStatus.OK, response.getStatusCode());
+  }
 
-    @Test
-    public void shouldReturnDataErrorIfUpdateNotSuccessful() {
-        ArrayList<String> stockCardProductCodeList = new ArrayList<>();
-        doThrow(new DataException("")).when(restStockCardService).updateStockCardSyncTime(123L, stockCardProductCodeList);
-        ResponseEntity response = restStockCardController.updateStockCardsUpdatedTime(123L, stockCardProductCodeList);
-        assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
-    }
+  @Test
+  public void shouldReturnDataErrorIfUpdateNotSuccessful() {
+    ArrayList<String> stockCardProductCodeList = new ArrayList<>();
+    doThrow(new DataException("")).when(restStockCardService).updateStockCardSyncTime(123L, stockCardProductCodeList);
+    ResponseEntity response = restStockCardController.updateStockCardsUpdatedTime(123L, stockCardProductCodeList);
+    assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
+  }
 
-    private void setupStockData() {
-        stockCard = new StockCard();
-        stockCard.setId(123L);
-        stockEventList = new ArrayList<>();
-        facilityId = 100L;
-        userId = 123L;
-    }
+  private void setupStockData() {
+    stockCard = new StockCard();
+    stockCard.setId(123L);
+    stockEventList = new ArrayList<>();
+    facilityId = 100L;
+    userId = 123L;
+  }
 }

@@ -19,7 +19,7 @@ public interface LotMapper {
           one = @One(select = "org.openlmis.core.repository.mapper.ProductMapper.getById")),
       @Result(property = "lotCode", column = "lotnumber")
   })
-  Lot getById(@Param("id")Long id);
+  Lot getById(@Param("id") Long id);
 
   @Select("SELECT *" +
       " FROM lots" +
@@ -43,7 +43,7 @@ public interface LotMapper {
           property = "lot", column = "lotId", javaType = Lot.class,
           one = @One(select = "getById"))
   })
-  LotOnHand getLotOnHandByStockCardAndLot(@Param("stockCardId")Long stockCardId, @Param("lotId")Long lotId);
+  LotOnHand getLotOnHandByStockCardAndLot(@Param("stockCardId") Long stockCardId, @Param("lotId") Long lotId);
 
   @Select("SELECT *" +
       " FROM lots_on_hand loh" +
@@ -57,7 +57,7 @@ public interface LotMapper {
           property = "lot", column = "lotId", javaType = Lot.class,
           one = @One(select = "getById"))
   })
-  LotOnHand getLotOnHandByStockCardAndLotObject(@Param("stockCardId")Long stockCardId, @Param("lot")Lot lot);
+  LotOnHand getLotOnHandByStockCardAndLotObject(@Param("stockCardId") Long stockCardId, @Param("lot") Lot lot);
 
   @Insert("INSERT into lots " +
       " (productId, lotNumber, manufacturerName, manufactureDate, expirationDate" +
@@ -89,60 +89,60 @@ public interface LotMapper {
 
   @Update("UPDATE lots_on_hand " +
       "SET quantityOnHand = #{quantityOnHand}" +
-          ", effectiveDate = #{effectiveDate}" +
-          ", modifiedBy = #{modifiedBy}" +
-          ", modifiedDate = NOW()" +
+      ", effectiveDate = #{effectiveDate}" +
+      ", modifiedBy = #{modifiedBy}" +
+      ", modifiedDate = NOW()" +
       "WHERE id = #{id}")
   int updateLotOnHand(LotOnHand lotOnHand);
 
   @Select("SELECT loh.* FROM lots_on_hand loh " +
-          "JOIN lots l on l.id = loh.lotid " +
-          "JOIN stock_cards s on s.id = loh.stockcardid " +
-          "JOIN products p on p.id = s.productid " +
-          "JOIN facilities f on f.id = s.facilityid " +
-          "WHERE f.id = #{facilityId} AND p.code = #{productCode} AND l.lotnumber = #{lotCode}")
+      "JOIN lots l on l.id = loh.lotid " +
+      "JOIN stock_cards s on s.id = loh.stockcardid " +
+      "JOIN products p on p.id = s.productid " +
+      "JOIN facilities f on f.id = s.facilityid " +
+      "WHERE f.id = #{facilityId} AND p.code = #{productCode} AND l.lotnumber = #{lotCode}")
   @Results({
-          @Result(
-                  property = "stockCard", column = "stockcardid", javaType = StockCard.class,
-                  one = @One(select = "org.openlmis.stockmanagement.repository.mapper.StockCardMapper.getStockCardById")),
-          @Result(
-                  property = "lot", column = "lotId", javaType = Lot.class,
-                  one = @One(select = "getById"))
+      @Result(
+          property = "stockCard", column = "stockcardid", javaType = StockCard.class,
+          one = @One(select = "org.openlmis.stockmanagement.repository.mapper.StockCardMapper.getStockCardById")),
+      @Result(
+          property = "lot", column = "lotId", javaType = Lot.class,
+          one = @One(select = "getById"))
   })
   LotOnHand getLotOnHandByLotNumberAndProductCodeAndFacilityId(@Param("lotCode") String lotCode,
                                                                @Param("productCode") String productCode, @Param("facilityId") Long facilityId);
 
   @Insert("INSERT INTO stock_card_entry_lot_items " +
-          " (stockCardEntryId, lotId, quantity, effectiveDate, createdBy, createdDate, modifiedBy, modifiedDate) " +
-          "VALUES " +
-          " (#{stockCardEntryId}, #{lot.id}, #{quantity}, #{effectiveDate}, #{createdBy}, NOW(), #{modifiedBy}, NOW())")
+      " (stockCardEntryId, lotId, quantity, effectiveDate, createdBy, createdDate, modifiedBy, modifiedDate) " +
+      "VALUES " +
+      " (#{stockCardEntryId}, #{lot.id}, #{quantity}, #{effectiveDate}, #{createdBy}, NOW(), #{modifiedBy}, NOW())")
   @Options(useGeneratedKeys = true)
   void insertStockCardEntryLotItem(StockCardEntryLotItem stockCardEntryLotItem);
 
   @Select("SELECT * " +
-          "FROM stock_card_entry_lot_items s " +
-          "WHERE stockCardEntryId = #{stockCardEntryId}")
+      "FROM stock_card_entry_lot_items s " +
+      "WHERE stockCardEntryId = #{stockCardEntryId}")
   @Results({
       @Result(property = "lot", column = "lotId", javaType = Lot.class,
-              one = @One(select = "getById")),
+          one = @One(select = "getById")),
       @Result(property = "extensions", column = "id", javaType = List.class,
           many = @Many(select = "getStockCardEntryLotItemExtensions"))
   })
   List<StockCardEntryLotItem> getLotMovementItemsByStockEntry(Long stockCardEntryId);
 
   @Select("SELECT s.keycolumn as key, " +
-          "s.valuecolumn as value " +
-          "FROM stock_card_entry_lot_items_key_values s " +
-          "WHERE stockCardEntryLotItemId = #{stockCardEntryLotItemId}")
+      "s.valuecolumn as value " +
+      "FROM stock_card_entry_lot_items_key_values s " +
+      "WHERE stockCardEntryLotItemId = #{stockCardEntryLotItemId}")
   List<StockCardEntryLotItemKV> getStockCardEntryLotItemExtensions(Long stockCardEntryLotItemId);
 
   @Insert("INSERT INTO stock_card_entry_lot_items_key_values " +
-          "(stockCardEntryLotItemId, keyColumn, valueColumn, createdBy, createdDate, modifiedBy, modifiedDate) " +
-          "VALUES " +
-          "(#{stockCardEntryLotItem.id}, #{stockCardEntryLotItemKV.key}, #{stockCardEntryLotItemKV.value}, " +
-          "#{stockCardEntryLotItem.createdBy}, NOW(), #{stockCardEntryLotItem.modifiedBy}, NOW())")
+      "(stockCardEntryLotItemId, keyColumn, valueColumn, createdBy, createdDate, modifiedBy, modifiedDate) " +
+      "VALUES " +
+      "(#{stockCardEntryLotItem.id}, #{stockCardEntryLotItemKV.key}, #{stockCardEntryLotItemKV.value}, " +
+      "#{stockCardEntryLotItem.createdBy}, NOW(), #{stockCardEntryLotItem.modifiedBy}, NOW())")
   void insertStockCardEntryLotItemKV(@Param("stockCardEntryLotItem") StockCardEntryLotItem stockCardEntryLotItem,
                                      @Param("stockCardEntryLotItemKV") StockCardEntryLotItemKV stockCardEntryLotItemKV);
 
-  Lot getLotByLotNumberAndProductId(String lotNumber, Long id);
+  Lot getLotByLotNumberAndProductId(@Param("lotNumber") String lotNumber, @Param("productId") Long productId);
 }

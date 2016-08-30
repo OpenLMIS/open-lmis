@@ -65,9 +65,9 @@ public class LotRepository {
     }
   }
 
-    public LotOnHand getLotOnHandByLotNumberAndProductCodeAndFacilityId(String lotCode, String productCode, Long facilityId) {
-        return mapper.getLotOnHandByLotNumberAndProductCodeAndFacilityId(lotCode, productCode, facilityId);
-    }
+  public LotOnHand getLotOnHandByLotNumberAndProductCodeAndFacilityId(String lotCode, String productCode, Long facilityId) {
+    return mapper.getLotOnHandByLotNumberAndProductCodeAndFacilityId(lotCode, productCode, facilityId);
+  }
 
   public void createStockCardEntryLotItem(StockCardEntryLotItem stockCardEntryLotItem) {
     mapper.insertStockCardEntryLotItem(stockCardEntryLotItem);

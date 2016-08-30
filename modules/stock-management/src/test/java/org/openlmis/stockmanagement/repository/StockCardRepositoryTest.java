@@ -56,11 +56,10 @@ public class StockCardRepositoryTest {
   @InjectMocks
   private StockCardRepository stockCardRepository;
 
-  static  {
+  static {
     defaultFacility = make(a(FacilityBuilder.defaultFacility, with(FacilityBuilder.facilityId, 1L)));
     defaultProduct = make(a(ProductBuilder.defaultProduct, with(ProductBuilder.code, "CODE")));
   }
-
 
 
   @Test
@@ -110,7 +109,7 @@ public class StockCardRepositoryTest {
   public void shouldCallMapperUpdateStockCardSyncTimeToNow() {
     String stockCardProductCode = "123";
     stockCardRepository.updateStockCardSyncTimeToNow(123L, stockCardProductCode);
-    verify(mapper).updateStockCardToSyncTimeToNow(123L,stockCardProductCode);
+    verify(mapper).updateStockCardToSyncTimeToNow(123L, stockCardProductCode);
   }
 
   @Test
@@ -144,9 +143,9 @@ public class StockCardRepositoryTest {
     StockCardEntryLotItem stockCardEntryLotItem2 = new StockCardEntryLotItem(lot2, 20L);
     stockCardEntryLotItem2.addKeyValue("SOH", "200");
 
-    stockCard.setLotsOnHand(asList(lotOnHand,lotOnHand2));
+    stockCard.setLotsOnHand(asList(lotOnHand, lotOnHand2));
     stockCardEntry.setStockCardEntryLotItems(asList(stockCardEntryLotItem1, stockCardEntryLotItem2));
-    stockCardEntry.getStockCard().setLotsOnHand(asList(lotOnHand,lotOnHand2));
+    stockCardEntry.getStockCard().setLotsOnHand(asList(lotOnHand, lotOnHand2));
 
     doAnswer(new Answer<Void>() {
       public Void answer(InvocationOnMock invocation) {
@@ -161,7 +160,7 @@ public class StockCardRepositoryTest {
 
     verify(mapper).insertEntry(stockCardEntry);
 
-    verify(lotMapper,times(2)).insertStockCardEntryLotItem(captor.capture());
+    verify(lotMapper, times(2)).insertStockCardEntryLotItem(captor.capture());
     assertEquals(123L, captor.getAllValues().get(0).getStockCardEntryId(), 0L);
     assertEquals(123L, captor.getAllValues().get(1).getStockCardEntryId(), 0L);
 
@@ -195,7 +194,7 @@ public class StockCardRepositoryTest {
     lotOnHand2.setLot(lot2);
     lotOnHand2.setQuantityOnHand(100L);
     lotOnHand2.setStockCard(stockCard);
-    stockCard.setLotsOnHand(asList(lotOnHand,lotOnHand2));
+    stockCard.setLotsOnHand(asList(lotOnHand, lotOnHand2));
 
     stockCardRepository.updateStockCard(stockCard);
 

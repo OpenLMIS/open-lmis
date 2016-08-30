@@ -153,10 +153,10 @@ public class StockCardService {
 
   @Transactional
   public void addStockCardEntries(List<StockCardEntry> entries) {
-    for(StockCardEntry entry : entries) addStockCardEntry(entry);
+    for (StockCardEntry entry : entries) addStockCardEntry(entry);
   }
 
-  public void updateAllStockCardSyncTimeForFacilityToNow(long facilityId){
+  public void updateAllStockCardSyncTimeForFacilityToNow(long facilityId) {
     repository.updateAllStockCardSyncTimeForFacility(facilityId);
   }
 
@@ -168,11 +168,11 @@ public class StockCardService {
 
   private List<StockCard> getStockCardsNotInList(long facilityId, final List<String> stockCardProductCodeList) {
     return FluentIterable.from(repository.getStockCards(facilityId)).filter(new Predicate<StockCard>() {
-        @Override
-        public boolean apply(StockCard input) {
-          return !stockCardProductCodeList.contains(input.getProduct().getCode());
-        }
-      }).toList();
+      @Override
+      public boolean apply(StockCard input) {
+        return !stockCardProductCodeList.contains(input.getProduct().getCode());
+      }
+    }).toList();
   }
 
   public LotOnHand getLotOnHandByLotNumberAndProductCodeAndFacilityId(String lotNumber, String code, Long facilityId) {
