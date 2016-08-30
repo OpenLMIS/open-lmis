@@ -93,6 +93,12 @@ public class RestStockCardService {
 
             StockCard stockCard = getOrCreateStockCard(facilityId, stockEvent.getProductCode(), stockCardMap, userId);
 
+            if (stockCard.getLotsOnHand() == null) {
+              stockCard.setLotsOnHand(new ArrayList<LotOnHand>());
+            } else {
+              stockCard.setLotsOnHand(new ArrayList<>(stockCard.getLotsOnHand()));
+            }
+
             StockCardEntry entry = processStockEvent(stockEvent, stockCard, lotMap, userId);
             entries.add(entry);
         }

@@ -10,5 +10,5 @@ CREATE TABLE facility_lot_conflicts(
   createdby INTEGER ,
   createddate TIMESTAMP WITH TIME ZONE DEFAULT now(),
   modifiedby INTEGER ,
-  modifieddate TIMESTAMP WITH TIME ZONE DEFAULT now(),
+  modifieddate TIMESTAMP WITH TIME ZONE DEFAULT now()
 )

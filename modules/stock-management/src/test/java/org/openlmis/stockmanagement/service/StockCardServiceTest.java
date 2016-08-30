@@ -1,6 +1,5 @@
 package org.openlmis.stockmanagement.service;
 
-import com.sun.javafx.tools.ant.Application;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -8,7 +7,6 @@ import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
 import org.junit.runners.BlockJUnit4ClassRunner;
 import org.mockito.ArgumentCaptor;
-import org.mockito.InOrder;
 import org.mockito.Mock;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
@@ -25,7 +23,6 @@ import org.openlmis.stockmanagement.repository.StockCardRepository;
 import org.powermock.modules.junit4.PowerMockRunner;
 import org.powermock.modules.junit4.PowerMockRunnerDelegate;
 
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
