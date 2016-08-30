@@ -394,8 +394,8 @@ public class RestStockCardServiceTest {
     assertThat(captorAllValues.get(0), is("lotNumber"));
     assertThat(captorAllValues.get(1), is("lotNumber3"));
 
-    verify(stockCardService, times(2)).getOrCreateLotOnHand(lot, stockCard);
-    verify(stockCardService).getOrCreateLotOnHand(lot2, stockCard);
+    verify(stockCardService, times(2)).createLotOnHandIfNotExist(lot, stockCard);
+    verify(stockCardService).createLotOnHandIfNotExist(lot2, stockCard);
   }
 
   public LotOnHand createLotOnHand(StockCard stockCardForLotsTest, Lot lot) {

@@ -56,9 +56,13 @@ public class LotOnHand extends BaseModel {
   public Map<String, String> getCustomProps() {
     if (null == strategy) strategy = new LatestSyncedStrategy();
 
-    Map<String, String> customProps = StockManagementUtils.getKeyValueAggregate(extensions, strategy);
+    if (extensions != null){
+      Map<String, String> customProps = StockManagementUtils.getKeyValueAggregate(extensions, strategy);
 
-    return customProps.isEmpty() ? null : customProps;
+      return customProps.isEmpty() ? null : customProps;
+    } else {
+      return null;
+    }
   }
 
   public void addToQuantityOnHand(long quantity) {
