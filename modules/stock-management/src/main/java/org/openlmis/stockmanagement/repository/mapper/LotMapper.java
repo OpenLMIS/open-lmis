@@ -144,5 +144,15 @@ public interface LotMapper {
   void insertStockCardEntryLotItemKV(@Param("stockCardEntryLotItem") StockCardEntryLotItem stockCardEntryLotItem,
                                      @Param("stockCardEntryLotItemKV") StockCardEntryLotItemKV stockCardEntryLotItemKV);
 
+  @Select("SELECT *" +
+      " FROM lots" +
+      " WHERE lotnumber = #{lotNumber}" +
+      " AND productid = #{productId}")
+  @Results({
+      @Result(
+          property = "product", column = "productId", javaType = Product.class,
+          one = @One(select = "org.openlmis.core.repository.mapper.ProductMapper.getById")),
+      @Result(property = "lotCode", column = "lotnumber")
+  })
   Lot getLotByLotNumberAndProductId(@Param("lotNumber") String lotNumber, @Param("productId") Long productId);
 }

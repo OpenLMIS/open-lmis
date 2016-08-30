@@ -113,7 +113,7 @@ public class StockCardRepositoryTest {
   }
 
   @Test
-  public void shouldPersistLotMovementsIfStockEntryContainsThem() {
+  public void shouldPersistStockMovement() {
     StockCard stockCard = new StockCard();
     stockCard.setFacility(defaultFacility);
     stockCard.setProduct(defaultProduct);
@@ -156,22 +156,11 @@ public class StockCardRepositoryTest {
 
     stockCardRepository.persistStockCardEntry(stockCardEntry);
 
-    ArgumentCaptor<StockCardEntryLotItem> captor = ArgumentCaptor.forClass(StockCardEntryLotItem.class);
-
     verify(mapper).insertEntry(stockCardEntry);
-
-    verify(lotMapper, times(2)).insertStockCardEntryLotItem(captor.capture());
-    assertEquals(123L, captor.getAllValues().get(0).getStockCardEntryId(), 0L);
-    assertEquals(123L, captor.getAllValues().get(1).getStockCardEntryId(), 0L);
-
-    ArgumentCaptor<StockCardEntryLotItemKV> captor2 = ArgumentCaptor.forClass(StockCardEntryLotItemKV.class);
-    verify(lotMapper, times(2)).insertStockCardEntryLotItemKV(Matchers.any(StockCardEntryLotItem.class), captor2.capture());
-    assertEquals("100", captor2.getAllValues().get(0).getValue());
-    assertEquals("200", captor2.getAllValues().get(1).getValue());
   }
 
   @Test
-  public void shouldUpdateStockCardWithLotsOnHand() throws Exception {
+  public void shouldUpdateStockCard() throws Exception {
     StockCard stockCard = new StockCard();
     stockCard.setFacility(defaultFacility);
     stockCard.setProduct(defaultProduct);
@@ -197,10 +186,5 @@ public class StockCardRepositoryTest {
     stockCard.setLotsOnHand(asList(lotOnHand, lotOnHand2));
 
     stockCardRepository.updateStockCard(stockCard);
-
-    verify(lotMapper, never()).insert(lot);
-    verify(lotMapper).insert(lot2);
-    verify(lotMapper).updateLotOnHand(lotOnHand);
-    verify(lotMapper).insertLotOnHand(lotOnHand2);
   }
 }

@@ -125,4 +125,12 @@ public class LotMapperIT {
     assertThat(lotResult.getProduct().getCode(), is(defaultProduct.getCode()));
     assertNotNull(lotResult.getExpirationDate());
   }
+
+  @Test
+  public void shouldGetLotByCodeAndProductId() throws Exception {
+    Lot lotResult = lotMapper.getLotByLotNumberAndProductId(defaultLot.getLotCode(), defaultLot.getProduct().getId());
+    assertThat(lotResult.getLotCode(), is("TEST"));
+    assertThat(lotResult.getProduct().getCode(), is(defaultProduct.getCode()));
+    assertNotNull(lotResult.getExpirationDate());
+  }
 }
