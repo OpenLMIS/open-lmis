@@ -5,6 +5,7 @@ import org.openlmis.core.domain.Product;
 import org.openlmis.stockmanagement.domain.*;
 import org.springframework.stereotype.Repository;
 
+import java.util.Date;
 import java.util.List;
 
 @Repository
@@ -155,4 +156,10 @@ public interface LotMapper {
       @Result(property = "lotCode", column = "lotnumber")
   })
   Lot getLotByLotNumberAndProductId(@Param("lotNumber") String lotNumber, @Param("productId") Long productId);
+
+  @Insert("INSERT INTO lot_conflicts " +
+      "(expirationdate, lotid, createdby, modifiedby) " +
+      "VALUES " +
+      "(#{expirationDate}, #{existingLotId}, #{userId}, #{userId})")
+  void insertLotConflict(@Param("existingLotId") long existingLotId, @Param("expirationDate") Date expirationDate, @Param("userId") long userId);
 }

@@ -20,6 +20,7 @@ import java.util.List;
 import static com.natpryce.makeiteasy.MakeItEasy.*;
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
@@ -86,8 +87,11 @@ public class LotRepositoryTest {
     Product product = make(a(ProductBuilder.defaultProduct));
     when(mapper.getLotByLotNumberAndProductId("ABC", product.getId())).thenReturn(null);
 
+    assertNull(repository.getLotByLotNumberAndProductId("ABC", product.getId()));
+
     Date expirationDate = new Date();
-    repository.getOrCreateLotByLotNumberAndProductId("ABC", expirationDate, product, 1L);
+    repository.createLotWithLotNumberAndExpirationDateAndProductId("ABC", expirationDate, product, 1L);
+
     ArgumentCaptor<Lot> captor = ArgumentCaptor.forClass(Lot.class);
     verify(mapper).insert(captor.capture());
     List<Lot> allValues = captor.getAllValues();
@@ -97,12 +101,9 @@ public class LotRepositoryTest {
   }
 
   @Test
-  public void shouldNotCreateLotIfExist() throws Exception {
-    Product product = make(a(ProductBuilder.defaultProduct));
-    when(mapper.getLotByLotNumberAndProductId("ABC", product.getId())).thenReturn(new Lot());
-
-    Date expirationDate = new Date();
-    repository.getOrCreateLotByLotNumberAndProductId("ABC", expirationDate, product, 1L);
-    verify(mapper, never()).insert(Matchers.any(Lot.class));
+  public void shouldSaveConflictLot() throws Exception {
+    Date date = new Date();
+    repository.saveLotConflict(1L, date, 1L);
+    verify(mapper).insertLotConflict(1L, date, 1L);
   }
 }

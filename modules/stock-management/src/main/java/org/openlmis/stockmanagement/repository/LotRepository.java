@@ -42,18 +42,19 @@ public class LotRepository {
     return l;
   }
 
-  public Lot getOrCreateLotByLotNumberAndProductId(String lotNumber, Date expirationDate, Product product, Long userId) {
-    Lot lot = mapper.getLotByLotNumberAndProductId(lotNumber, product.getId());
-    if (null == lot) {
-      lot = new Lot();
-      lot.setLotCode(lotNumber);
-      lot.setProduct(product);
-      lot.setExpirationDate(expirationDate);
-      lot.setCreatedBy(userId);
-      lot.setModifiedBy(userId);
-      mapper.insert(lot);
-    }
+  public Lot getLotByLotNumberAndProductId(String lotNumber, Long productId) {
+    return mapper.getLotByLotNumberAndProductId(lotNumber, productId);
 
+  }
+
+  public Lot createLotWithLotNumberAndExpirationDateAndProductId(String lotNumber, Date expirationDate, Product product, Long userId) {
+    Lot lot = new Lot();
+    lot.setLotCode(lotNumber);
+    lot.setProduct(product);
+    lot.setExpirationDate(expirationDate);
+    lot.setCreatedBy(userId);
+    lot.setModifiedBy(userId);
+    mapper.insert(lot);
     return lot;
   }
 
@@ -74,5 +75,9 @@ public class LotRepository {
     for (StockCardEntryLotItemKV stockCardEntryLotItemKV : stockCardEntryLotItem.getExtensions()) {
       mapper.insertStockCardEntryLotItemKV(stockCardEntryLotItem, stockCardEntryLotItemKV);
     }
+  }
+
+  public void saveLotConflict(Long existingLotId, Date expirationDate, Long userId) {
+    mapper.insertLotConflict(existingLotId, expirationDate, userId);
   }
 }

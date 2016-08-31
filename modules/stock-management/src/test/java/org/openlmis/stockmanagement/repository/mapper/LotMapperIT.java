@@ -8,8 +8,10 @@ import org.openlmis.core.builder.FacilityBuilder;
 import org.openlmis.core.builder.ProductBuilder;
 import org.openlmis.core.domain.Facility;
 import org.openlmis.core.domain.Product;
+import org.openlmis.core.query.QueryExecutor;
 import org.openlmis.core.repository.mapper.FacilityMapper;
 import org.openlmis.core.repository.mapper.ProductMapper;
+import org.openlmis.core.utils.DateUtil;
 import org.openlmis.db.categories.IntegrationTests;
 import org.openlmis.stockmanagement.domain.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,6 +20,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.transaction.TransactionConfiguration;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.sql.ResultSet;
 import java.util.Date;
 
 import static com.natpryce.makeiteasy.MakeItEasy.a;
@@ -42,6 +45,9 @@ public class LotMapperIT {
 
   @Autowired
   private LotMapper lotMapper;
+
+  @Autowired
+  QueryExecutor queryExecutor;
 
   private StockCard defaultCard;
   private Facility defaultFacility;
@@ -140,5 +146,16 @@ public class LotMapperIT {
 
     assertThat(lotOnHand.getQuantityOnHand(), is(100L));
     assertThat(lotOnHand.getLot().getLotCode(), is(defaultLot.getLotCode()));
+  }
+
+  @Test
+  public void shouldInsertLotConflict() throws Exception {
+    Date expirationDate = DateUtil.parseDate("2020-10-30", DateUtil.FORMAT_DATE);
+    lotMapper.insertLotConflict(defaultLot.getId(), expirationDate, 1L);
+    ResultSet resultSet = queryExecutor.execute("SELECT * FROM lot_conflicts WHERE lotid = " + defaultLot.getId());
+    resultSet.next();
+    assertThat(resultSet.getDate("expirationdate"), is(expirationDate));
+    assertThat(resultSet.getLong("createdby"), is(1L));
+    assertNotNull(resultSet.getDate("createddate"));
   }
 }

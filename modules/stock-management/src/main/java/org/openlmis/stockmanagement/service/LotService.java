@@ -17,6 +17,15 @@ public class LotService {
   private LotRepository lotRepository;
 
   public Lot getOrCreateLotByLotNumberAndProduct(String lotNumber, Date expirationDate, Product product, Long userId) {
-    return lotRepository.getOrCreateLotByLotNumberAndProductId(lotNumber, expirationDate, product, userId);
+    Lot existingLot = lotRepository.getLotByLotNumberAndProductId(lotNumber, product.getId());
+    if (existingLot == null) {
+      return lotRepository.createLotWithLotNumberAndExpirationDateAndProductId(lotNumber, expirationDate, product, userId);
+    }
+
+    if (!expirationDate.equals(existingLot.getExpirationDate())) {
+      lotRepository.saveLotConflict(existingLot.getId(), expirationDate, userId);
+    }
+
+    return existingLot;
   }
 }
