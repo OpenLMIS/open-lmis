@@ -149,7 +149,7 @@ public class LotMapperIT {
   }
 
   @Test
-  public void shouldInsertLotConflict() throws Exception {
+  public void shouldInsertLotConflictButNotInsertDuplicate() throws Exception {
     Date expirationDate = DateUtil.parseDate("2020-10-30", DateUtil.FORMAT_DATE);
     lotMapper.insertLotConflict(defaultLot.getId(), expirationDate, 1L);
     ResultSet resultSet = queryExecutor.execute("SELECT * FROM lot_conflicts WHERE lotid = " + defaultLot.getId());
@@ -157,5 +157,10 @@ public class LotMapperIT {
     assertThat(resultSet.getDate("expirationdate"), is(expirationDate));
     assertThat(resultSet.getLong("createdby"), is(1L));
     assertNotNull(resultSet.getDate("createddate"));
+
+    lotMapper.insertLotConflict(defaultLot.getId(), expirationDate, 1L);
+    resultSet = queryExecutor.execute("SELECT count(*) FROM lot_conflicts WHERE lotid = " + defaultLot.getId());
+    resultSet.next();
+    assertThat(resultSet.getInt("count"), is(1));
   }
 }

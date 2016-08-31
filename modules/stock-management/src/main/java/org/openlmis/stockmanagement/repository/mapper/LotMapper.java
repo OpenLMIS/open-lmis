@@ -159,7 +159,14 @@ public interface LotMapper {
 
   @Insert("INSERT INTO lot_conflicts " +
       "(expirationdate, lotid, createdby, modifiedby) " +
-      "VALUES " +
-      "(#{expirationDate}, #{existingLotId}, #{userId}, #{userId})")
+      "SELECT " +
+      "#{expirationDate}, #{existingLotId}, #{userId}, #{userId} " +
+      "WHERE NOT EXISTS " +
+      "(SELECT expirationdate, lotid, createdby, modifiedby " +
+      "FROM lot_conflicts " +
+      "WHERE expirationdate = #{expirationDate} " +
+      "AND lotid = #{existingLotId} " +
+      "AND createdby = #{userId} " +
+      "AND modifiedby = #{userId})")
   void insertLotConflict(@Param("existingLotId") long existingLotId, @Param("expirationDate") Date expirationDate, @Param("userId") long userId);
 }
