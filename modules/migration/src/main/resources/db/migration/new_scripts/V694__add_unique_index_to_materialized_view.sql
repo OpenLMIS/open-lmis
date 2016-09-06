@@ -89,7 +89,7 @@ CREATE MATERIALIZED VIEW vw_daily_full_soh AS
      stock_cards.modifieddate                                                 AS last_sync_date,
      cmm_at_day(facilities.id, products.code, occurred)                       AS cmm,
 
-     uuid_in(md5(random() :: TEXT || now() :: TEXT) :: cstring) AS uuid
+     uuid_in(md5(random() :: TEXT || now() :: TEXT) :: cstring)               AS uuid
 
    FROM stock_card_entries
      JOIN stock_cards ON stock_card_entries.stockcardid = stock_cards.id
@@ -99,6 +99,3 @@ CREATE MATERIALIZED VIEW vw_daily_full_soh AS
      JOIN geographic_zones AS parent_zone ON ZONE.parentid = parent_zone.id
      LEFT JOIN cmm_entries ON facilities.id = cmm_entries.facilityid
    ORDER BY facility_code, drug_code, occurred, stock_card_entries.createddate DESC);
-
-CREATE UNIQUE INDEX idx_vw_daily_full_soh ON vw_daily_full_soh (uuid);
-

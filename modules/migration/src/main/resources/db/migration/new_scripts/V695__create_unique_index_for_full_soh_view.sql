@@ -1,0 +1,1 @@
+CREATE UNIQUE INDEX idx_vw_daily_full_soh ON vw_daily_full_soh (uuid, facility_code, drug_code, last_sync_date);
