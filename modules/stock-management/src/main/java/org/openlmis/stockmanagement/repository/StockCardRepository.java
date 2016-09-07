@@ -138,6 +138,6 @@ public class StockCardRepository {
   }
 
   public void insertLotOnHandValuesForStockEntry(LotOnHand lotOnHand, StockCardEntry entry) {
-    mapper.insertEntryKeyValue(entry, LOT_PREFIX + lotOnHand.getLot().getLotCode(), "" + lotOnHand.getQuantityOnHand());
+    mapper.insertEntryKeyValue(entry, LOT_PREFIX + lotOnHand.getLot().getId(), "" + lotOnHand.getQuantityOnHand());
   }
 }
