@@ -160,6 +160,7 @@ public class StockCardService {
     if (entry.getStockCard().getLotsOnHand() != null) {
       for (LotOnHand lotOnHand : entry.getStockCard().getLotsOnHand()) {
         lotRepository.saveLotOnHand(lotOnHand);
+        repository.insertLotOnHandValuesForStockEntry(lotOnHand, entry);
       }
     }
   }

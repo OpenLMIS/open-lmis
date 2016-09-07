@@ -20,6 +20,8 @@ import java.util.Objects;
 @NoArgsConstructor
 public class StockCardRepository {
 
+  private static final String LOT_PREFIX = "LOT#";
+
   @Autowired
   private FacilityRepository facilityRepository;
 
@@ -133,5 +135,9 @@ public class StockCardRepository {
 
   public void updateStockCardSyncTimeToNow(long facilityId, String stockCardProductCode) {
     mapper.updateStockCardToSyncTimeToNow(facilityId, stockCardProductCode);
+  }
+
+  public void insertLotOnHandValuesForStockEntry(LotOnHand lotOnHand, StockCardEntry entry) {
+    mapper.insertEntryKeyValue(entry, LOT_PREFIX + lotOnHand.getLot().getLotCode(), "" + lotOnHand.getQuantityOnHand());
   }
 }

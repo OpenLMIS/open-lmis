@@ -1,5 +1,6 @@
 package org.openlmis.stockmanagement.service;
 
+import org.hamcrest.Matchers;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -28,6 +29,7 @@ import java.util.List;
 
 import static com.natpryce.makeiteasy.MakeItEasy.*;
 import static java.util.Arrays.asList;
+import static org.hamcrest.Matchers.any;
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
@@ -254,6 +256,8 @@ public class StockCardServiceTest {
     verify(lotRepository).createStockCardEntryLotItem(stockCardEntryLotItem1);
     verify(lotRepository).createStockCardEntryLotItem(stockCardEntryLotItem2);
     verify(lotRepository).createStockCardEntryLotItem(stockCardEntryLotItem3);
+
+    verify(repository, times(2)).insertLotOnHandValuesForStockEntry(org.mockito.Matchers.any(LotOnHand.class), org.mockito.Matchers.any(StockCardEntry.class));
 
     ArgumentCaptor<LotOnHand> lotOnHandArgumentCaptor = ArgumentCaptor.forClass(LotOnHand.class);
     verify(lotRepository, times(2)).saveLotOnHand(lotOnHandArgumentCaptor.capture());
