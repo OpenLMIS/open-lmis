@@ -1,4 +1,4 @@
-function ExpiryDatesReportController($scope, $filter, $controller, $http, CubesGenerateUrlService, messageService, DateFormatService, CubesGenerateCutParamsService) {
+function ExpiryDatesReportController($scope, $controller, $http, CubesGenerateUrlService, messageService, DateFormatService, CubesGenerateCutParamsService) {
     $controller('BaseProductReportController', {$scope: $scope});
 
     $scope.$on('$viewContentLoaded', function () {

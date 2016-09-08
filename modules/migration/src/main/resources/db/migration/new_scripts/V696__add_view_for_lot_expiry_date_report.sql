@@ -14,9 +14,10 @@ CREATE OR REPLACE VIEW vw_lot_expiry_dates AS
       parent_zone.code     AS province_code,
       products.code        AS drug_code,
       products.primaryname AS drug_name,
-      (EXTRACT(EPOCH FROM occurred) * 1000) AS occurred,
+      (EXTRACT(EPOCH FROM stock_card_entries.createddate) * 1000) AS createddate,
+      (EXTRACT(EPOCH FROM stock_card_entries.occurred) * 1000) AS occurred,
       stock_card_entry_key_values.keycolumn AS lot_id,
-      stock_card_entry_key_values.valuecolumn  AS lot_on_hand
+      NULLIF(stock_card_entry_key_values.valuecolumn, '')::int AS lot_on_hand
     FROM facilities
       JOIN geographic_zones AS zone ON facilities.geographiczoneid = zone.id
       JOIN geographic_zones AS parent_zone ON zone.parentid = parent_zone.id

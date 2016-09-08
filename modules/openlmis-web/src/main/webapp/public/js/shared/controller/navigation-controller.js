@@ -43,6 +43,9 @@ function NavigationController($scope, ConfigSettingsByKey, localStorageService, 
     FeatureToggleService.get({key: 'last.sync.time.report'}, function (result) {
      $scope.isLastSyncTimeReportOn = result.key;
     });
+    FeatureToggleService.get({key: 'lot.expiry.dates.report'}, function (result) {
+      $scope.isLotExpiryDatesToggleOn = result.key;
+    });
    }();
 
   $scope.loadRights = function () {

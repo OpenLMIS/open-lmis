@@ -34,8 +34,13 @@
                    openlmis-message="menu.report.stockout.single.reports"></a>
             </li>
 
-            <li ng-show="hasPermission('VIEW_EXPIRY_DATES_REPORT') && isExpiryDatesToggleOn">
+            <li ng-show="hasPermission('VIEW_EXPIRY_DATES_REPORT') && isExpiryDatesToggleOn && isLotExpiryDatesToggleOff">
                 <a href="/public/pages/reports/mozambique/index.html#/expiry-dates"
+                   openlmis-message="menu.report.expiry.dates"></a>
+            </li>
+
+            <li ng-show="hasPermission('VIEW_EXPIRY_DATES_REPORT') && isExpiryDatesToggleOn && isLotExpiryDatesToggleOn">
+                <a href="/public/pages/reports/mozambique/index.html#/lot-expiry-dates"
                    openlmis-message="menu.report.expiry.dates"></a>
             </li>
 
