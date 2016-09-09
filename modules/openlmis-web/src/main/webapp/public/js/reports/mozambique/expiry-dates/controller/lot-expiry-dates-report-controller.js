@@ -12,10 +12,9 @@ function LotExpiryDatesReportController($scope, $controller, $http, CubesGenerat
   };
 
   $scope.highlightDate = function (date) {
-    var today = new Date();
-    var sixMonthsFromNow = new Date(today.getFullYear(), today.getMonth() - 1 + 6, today.getDate());
-    var compareDate = new Date(DateFormatService.formatDateWithLastDayOfMonth(sixMonthsFromNow));
-    return date <= compareDate;
+    var selectedDate = new Date($scope.reportParams.endTime);
+    var threeMonthsFromOccurred = new Date(selectedDate.getFullYear(), selectedDate.getMonth() + 3, selectedDate.getDate());
+    return date <= threeMonthsFromOccurred;
   };
 
   function queryLotExpiryDatesReportDataFromCubes() {
