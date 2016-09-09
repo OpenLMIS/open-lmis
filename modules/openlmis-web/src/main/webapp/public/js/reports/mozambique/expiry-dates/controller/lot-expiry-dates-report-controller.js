@@ -14,7 +14,7 @@ function LotExpiryDatesReportController($scope, $controller, $http, CubesGenerat
   $scope.highlightDate = function (date) {
     var today = new Date();
     var sixMonthsFromNow = new Date(today.getFullYear(), today.getMonth() - 1 + 6, today.getDate());
-    var compareDate = DateFormatService.formatDateWithLastDayOfMonth(sixMonthsFromNow);
+    var compareDate = new Date(DateFormatService.formatDateWithLastDayOfMonth(sixMonthsFromNow));
     return date <= compareDate;
   };
 
@@ -56,13 +56,15 @@ function LotExpiryDatesReportController($scope, $controller, $http, CubesGenerat
       _.forEach(_.keys(drug.lot_expiry_dates), function (oneLotExpiryDate) {
         if (drug.lot_expiry_dates[oneLotExpiryDate] > 0) {
           var lotExpiryDateObj = {
-            "lot_expiry": oneLotExpiryDate,
+            "lot_expiry": oneLotExpiryDate.split(" - ")[0] + " - " + formatExpiryDate(oneLotExpiryDate.split(" - ")[1]),
+            "expiry_date": new Date(oneLotExpiryDate.split(" - ")[1]),
             "lot_on_hand": drug.lot_expiry_dates[oneLotExpiryDate]
           };
           expiryDateArray.push(lotExpiryDateObj);
         }
       });
-      drug.lot_expiry_dates = expiryDateArray;
+      drug.lot_expiry_dates = _.sortBy(_.uniq(expiryDateArray), 'expiry_date');
+      drug.first_expiry_date = drug.lot_expiry_dates[0].expiry_date;
       $scope.reportData.push(drug);
     });
   }
@@ -80,10 +82,10 @@ function LotExpiryDatesReportController($scope, $controller, $http, CubesGenerat
       var drugCode = item['drug.drug_code'];
 
       if (drugOccurredHash[drugCode]) {
-        if (drugOccurredHash[drugCode].lot_expiry_dates[item.lot_number + " - " + formatExpiryDate(item.expiry_dates)] === undefined || ((occurredDate === drugOccurredHash[drugCode].occurred_date && createdDate >= drugOccurredHash[drugCode].createddate) || occurredDate > drugOccurredHash[drugCode].occurred_date)) {
+        if (drugOccurredHash[drugCode].lot_expiry_dates[item.lot_number + " - " + item.expiry_date] === undefined || ((occurredDate === drugOccurredHash[drugCode].occurred_date && createdDate >= drugOccurredHash[drugCode].createddate) || occurredDate > drugOccurredHash[drugCode].occurred_date)) {
           drugOccurredHash[drugCode].occurred_date = occurredDate;
           drugOccurredHash[drugCode].createddate = createdDate;
-          drugOccurredHash[drugCode].lot_expiry_dates[item.lot_number + " - " + formatExpiryDate(item.expiry_dates)] = item.lotonhand;
+          drugOccurredHash[drugCode].lot_expiry_dates[item.lot_number + " - " + item.expiry_date] = item.lotonhand;
         }
       } else {
         drugOccurredHash[drugCode] = {
@@ -94,7 +96,7 @@ function LotExpiryDatesReportController($scope, $controller, $http, CubesGenerat
           lot_expiry_dates: {},
           facility_code: item['facility.facility_code']
         };
-        drugOccurredHash[drugCode].lot_expiry_dates[item.lot_number + " - " + formatExpiryDate(item.expiry_dates)] = item.lotonhand;
+        drugOccurredHash[drugCode].lot_expiry_dates[item.lot_number + " - " + item.expiry_date] = item.lotonhand;
       }
     });
     return drugOccurredHash;
