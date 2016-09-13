@@ -1,11 +1,14 @@
-CREATE OR REPLACE VIEW vw_lot_expiry_dates AS
+CREATE MATERIALIZED VIEW vw_lot_expiry_dates AS
 
   SELECT
+    uuid_in(md5(random() :: TEXT || now() :: TEXT) :: cstring) AS uuid,
+
     lots.lotnumber      AS lot_number,
     lots.expirationdate AS expiration_date,
     stock_entry_loh.*
   FROM
     (SELECT
+      stock_card_entries.id AS stock_card_entry_id,
       facilities.name      AS facility_name,
       facilities.code      AS facility_code,
       zone.name            AS district_name,
@@ -29,3 +32,13 @@ CREATE OR REPLACE VIEW vw_lot_expiry_dates AS
     ORDER BY facility_code, drug_code, occurred, stock_card_entries.id DESC) stock_entry_loh
   JOIN lots
   ON stock_entry_loh.lot_id = ('LOT#' || lots.id);
+
+CREATE UNIQUE INDEX idx_vw_lot_expiry_dates ON vw_lot_expiry_dates (uuid);
+
+CREATE OR REPLACE FUNCTION refresh_vw_lot_expiry_dates()
+  RETURNS INT LANGUAGE plpgsql
+AS $$
+BEGIN
+  REFRESH MATERIALIZED VIEW CONCURRENTLY vw_lot_expiry_dates;
+  RETURN 1;
+END $$;
