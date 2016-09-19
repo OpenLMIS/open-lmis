@@ -27,6 +27,7 @@ import org.openlmis.restapi.domain.RegimenLineItemForRest;
 import org.openlmis.restapi.domain.ReplenishmentDTO;
 import org.openlmis.restapi.domain.Report;
 import org.openlmis.rnr.domain.*;
+import org.openlmis.rnr.repository.mapper.RegimenLineItemMapper;
 import org.openlmis.rnr.search.criteria.RequisitionSearchCriteria;
 import org.openlmis.rnr.service.RegimenColumnService;
 import org.openlmis.rnr.service.RequisitionService;
@@ -82,6 +83,8 @@ public class RestRequisitionService {
   private RegimenService regimenService;
   @Autowired
   private RegimenColumnService regimenColumnService;
+  @Autowired
+  private RegimenLineItemMapper regimenLineItemMapper;
 
   @Transactional
   public Rnr submitReport(Report report, Long userId) {
@@ -112,7 +115,13 @@ public class RestRequisitionService {
     if (reportingFacility.getVirtualFacility())
       restRequisitionCalculator.setDefaultValues(rnr);
 
-    copyRegimens(rnr, report, userId);
+    if (staticReferenceDataService.getBoolean("toggle.mmia.custom.regimen")) {
+      List<RegimenLineItem> regimenLineItems = checkAndInsertCustomRegimenItems(report, rnr, userId, reportingProgram.getId());
+      regimenLineItems.addAll(0, rnr.getRegimenLineItems());
+      rnr.setRegimenLineItems(regimenLineItems);
+    }
+
+    copyRegimens(rnr, report);
 
     requisitionService.save(rnr);
 
@@ -210,8 +219,7 @@ public class RestRequisitionService {
 
     markSkippedLineItems(rnr, report);
 
-
-    copyRegimens(rnr, report, userId);
+    copyRegimens(rnr, report);
     // if you have come this far, then do it, it is your day. make the submission.
     // i cannot believe we do all of these three at the same time.
     // but then this is what zambia specifically asked.
@@ -252,41 +260,44 @@ public class RestRequisitionService {
   }
 
 
-  private void copyRegimens(Rnr rnr, Report report, Long userId) {
+  private void copyRegimens(Rnr rnr, Report report) {
     if (report.getRegimens() != null) {
-      for (RegimenLineItemForRest regimenLineItemForRest : report.getRegimens()) {
-        RegimenLineItem regimenLineItem;
-        if (staticReferenceDataService.getBoolean("toggle.mmia.custom.regimen")) {
-          regimenLineItem = new RegimenLineItem(regimenLineItemForRest.getCode(), regimenLineItemForRest.getName(), regimenLineItemForRest.getPatientsOnTreatment(), regimenService.queryRegimenCategoryByName(regimenLineItemForRest.getCategoryName()));
-        } else {
-          regimenLineItem = new RegimenLineItem();
-          regimenLineItem.setCode(regimenLineItemForRest.getCode());
-          regimenLineItem.setName(regimenLineItemForRest.getName());
-          regimenLineItem.setPatientsOnTreatment(regimenLineItemForRest.getPatientsOnTreatment());
-        }
-
+      for (RegimenLineItem regimenLineItem : report.getRegimens()) {
         RegimenLineItem correspondingRegimenLineItem = rnr.findCorrespondingRegimenLineItem(regimenLineItem);
         if (correspondingRegimenLineItem == null) {
-          regimenLineItem.setRnrId(rnr.getId());
-
-          if(staticReferenceDataService.getBoolean("toggle.mmia.custom.regimen")) {
-            regimenLineItem.setCode(String.format("%03d", regimenService.listAll().size() + 1));
-
-            rnr.getRegimenLineItems().add(regimenLineItem);
-
-            if (regimenService.getRegimensByCategoryIdAndName(regimenLineItem.getCategory().getId(), regimenLineItem.getName()) == null) {
-              Regimen regimen = new Regimen(regimenLineItem.getName(), regimenLineItem.getCode(), rnr.getProgram().getId(), true, regimenLineItem.getCategory(), regimenService.getRegimensByCategory(regimenLineItem.getCategory()).size(), true);
-              regimenService.save(regimen, userId);
-            }
-
-            correspondingRegimenLineItem = regimenLineItem;
-          } else {
-            throw new DataException("error.invalid.regimen");
-          }
+          throw new DataException("error.invalid.regimen");
         }
         correspondingRegimenLineItem.populate(regimenLineItem);
       }
     }
+  }
+
+  private List<RegimenLineItem> checkAndInsertCustomRegimenItems(Report report, Rnr rnr, Long userId, Long programId) {
+    List<RegimenLineItem> customRegimenItems = new ArrayList<>();
+    if (report.getRegimens() != null) {
+      for (RegimenLineItemForRest regimenLineItemForRest : report.getRegimens()) {
+        if (regimenLineItemForRest.getCode() == null) {
+          RegimenCategory regimenCategory = regimenService.queryRegimenCategoryByName(regimenLineItemForRest.getCategoryName());
+          regimenLineItemForRest.setCategory(regimenCategory);
+          Regimen regimen = regimenService.getRegimensByCategoryIdAndName(regimenCategory.getId(), regimenLineItemForRest.getName());
+          if (regimen == null) {
+            regimen = new Regimen(regimenLineItemForRest.getName(), null, programId, true, regimenCategory, regimenService.getRegimensByCategory(regimenCategory).size(), true);
+            regimen.setCode(String.format("%03d", regimenService.listAll().size() + 1));
+            regimenService.save(regimen, userId);
+          }
+
+          regimenLineItemForRest.setCode(regimen.getCode());
+
+          RegimenLineItem regimenLineItem = new RegimenLineItem(rnr.getId(), regimenCategory, userId, userId);
+          regimenLineItem.setCode(regimen.getCode());
+          regimenLineItem.setName(regimen.getName());
+          regimenLineItem.setRegimenDisplayOrder(regimen.getDisplayOrder());
+          regimenLineItemMapper.insert(regimenLineItem);
+          customRegimenItems.add(regimenLineItem);
+        }
+      }
+    }
+    return customRegimenItems;
   }
 
   private void insertPatientQuantificationLineItems(Report report, Rnr rnr) {

@@ -24,6 +24,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.openlmis.core.builder.FacilityBuilder;
+import org.openlmis.core.builder.RegimenBuilder;
 import org.openlmis.core.domain.*;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.core.repository.SyncUpHashRepository;
@@ -39,6 +40,7 @@ import org.openlmis.restapi.domain.Report;
 import org.openlmis.rnr.builder.PatientQuantificationsBuilder;
 import org.openlmis.rnr.builder.RequisitionBuilder;
 import org.openlmis.rnr.domain.*;
+import org.openlmis.rnr.repository.mapper.RegimenLineItemMapper;
 import org.openlmis.rnr.search.criteria.RequisitionSearchCriteria;
 import org.openlmis.rnr.service.RequisitionService;
 import org.openlmis.rnr.service.RnrTemplateService;
@@ -115,6 +117,8 @@ public class RestRequisitionServiceTest {
   private ProductService productService;
   @Mock
   private SyncUpHashRepository syncUpHashRepository;
+  @Mock
+  private RegimenLineItemMapper regimenLineItemMapper;
 
   private Facility facility;
   private Program program;
@@ -463,64 +467,66 @@ public class RestRequisitionServiceTest {
 
   @Test
   public void shouldSaveRegimenAndAddRegimenLineItemToRnrWhenThereIsANewRegime() throws Exception {
-    Program program = new Program();
-    report.setProducts(new ArrayList<RnrLineItem>());
-    RegimenLineItem reportRegimenLineItem = make(a(defaultRegimenLineItem, with(patientsOnTreatment, 10), with(patientsStoppedTreatment, 5)));
-    report.setRegimens(asList(RegimenLineItemForRest.convertFromRegimenLineItem(reportRegimenLineItem)));
+    when(staticReferenceDataService.getBoolean("toggle.mmia.custom.regimen")).thenReturn(true);
 
+    Program program = new Program();
     when(programService.getValidatedProgramByCode(report.getProgramCode())).thenReturn(program);
 
     Facility facility = make(a(FacilityBuilder.defaultFacility, with(FacilityBuilder.virtualFacility, true)));
     when(facilityService.getOperativeFacilityByCode(report.getAgentCode())).thenReturn(facility);
-    when(staticReferenceDataService.getBoolean("toggle.mmia.custom.regimen")).thenReturn(true);
+
+    report.setProducts(new ArrayList<RnrLineItem>());
+    RegimenLineItem reportRegimenLineItem = make(a(defaultRegimenLineItem, with(patientsOnTreatment, 10), with(patientsStoppedTreatment, 5)));
+    reportRegimenLineItem.setCode(null);
+    report.setRegimens(asList(RegimenLineItemForRest.convertFromRegimenLineItem(reportRegimenLineItem)));
+    RegimenCategory category = reportRegimenLineItem.getCategory();
+    category.setId(1l);
+    when(regimenService.queryRegimenCategoryByName(category.getName())).thenReturn(category);
+    when(regimenService.getRegimensByCategoryIdAndName(category.getId(), reportRegimenLineItem.getName())).thenReturn(null);
 
     Rnr rnr = new Rnr();
     rnr.setId(2L);
     rnr.setProgram(program);
+    reportRegimenLineItem.setCode("001");
+    rnr.setRegimenLineItems(asList(reportRegimenLineItem));
     when(requisitionService.initiate(facility, program, 3l, false, null)).thenReturn(rnr);
     when(rnrTemplateService.fetchProgramTemplateForRequisition(any(Long.class))).thenReturn(new ProgramRnrTemplate(new ArrayList<RnrColumn>()));
 
-    RegimenCategory category = reportRegimenLineItem.getCategory();
-    category.setId(1l);
-    when(regimenService.queryRegimenCategoryByName(anyString())).thenReturn(category);
-    when(regimenService.getRegimensByCategory(category)).thenReturn(asList(category));
-    when(regimenService.getRegimensByCategoryIdAndName(anyLong(), anyString())).thenReturn(null);
-    when(regimenService.listAll()).thenReturn(new ArrayList<Regimen>());
     service.submitReport(report, 3l);
 
     ArgumentCaptor<Regimen> argument = ArgumentCaptor.forClass(Regimen.class);
     verify(regimenService).save(argument.capture(), anyLong());
     assertTrue(argument.getValue().isCustom());
-    assertThat(rnr.getRegimenLineItems().size(), is(1));
-    assertThat(rnr.getRegimenLineItems().get(0).getRnrId(), is(2L));
-    assertThat(rnr.getRegimenLineItems().get(0).getCode(), is("001"));
   }
 
   @Test
   public void shouldNotSaveRegimenAndAddRegimenLineItemToRnrWhenThereIsARegimeNotIncludedInTemplateButInDB() throws Exception {
+    when(staticReferenceDataService.getBoolean("toggle.mmia.custom.regimen")).thenReturn(true);
+
     Program program = new Program();
-    report.setProducts(new ArrayList<RnrLineItem>());
-    RegimenLineItem reportRegimenLineItem = make(a(defaultRegimenLineItem, with(patientsOnTreatment, 10), with(patientsStoppedTreatment, 5)));
-    report.setRegimens(asList(RegimenLineItemForRest.convertFromRegimenLineItem(reportRegimenLineItem)));
-
     when(programService.getValidatedProgramByCode(report.getProgramCode())).thenReturn(program);
-
     Facility facility = make(a(FacilityBuilder.defaultFacility, with(FacilityBuilder.virtualFacility, true)));
     when(facilityService.getOperativeFacilityByCode(report.getAgentCode())).thenReturn(facility);
-    when(staticReferenceDataService.getBoolean("toggle.mmia.custom.regimen")).thenReturn(true);
+
+    report.setProducts(new ArrayList<RnrLineItem>());
+    RegimenLineItem reportRegimenLineItem = make(a(defaultRegimenLineItem, with(patientsOnTreatment, 10), with(patientsStoppedTreatment, 5)));
+    reportRegimenLineItem.setCode(null);
+    report.setRegimens(asList(RegimenLineItemForRest.convertFromRegimenLineItem(reportRegimenLineItem)));
+
+    RegimenCategory category = reportRegimenLineItem.getCategory();
+    category.setId(1l);
+    Regimen existingRegimen = make(a(RegimenBuilder.defaultRegimen, with(RegimenBuilder.category, category)));
+    when(regimenService.queryRegimenCategoryByName(reportRegimenLineItem.getCategoryName())).thenReturn(category);
+    when(regimenService.getRegimensByCategoryIdAndName(category.getId(), reportRegimenLineItem.getName())).thenReturn(existingRegimen);
 
     Rnr rnr = new Rnr();
     rnr.setProgram(program);
     when(requisitionService.initiate(facility, program, 3l, false, null)).thenReturn(rnr);
     when(rnrTemplateService.fetchProgramTemplateForRequisition(any(Long.class))).thenReturn(new ProgramRnrTemplate(new ArrayList<RnrColumn>()));
 
-    RegimenCategory category = reportRegimenLineItem.getCategory();
-    category.setId(1l);
-    when(regimenService.queryRegimenCategoryByName(anyString())).thenReturn(category);
-    when(regimenService.getRegimensByCategory(category)).thenReturn(asList(category));
-    when(regimenService.getRegimensByCategoryIdAndName(anyLong(), anyString())).thenReturn(new Regimen());
     service.submitReport(report, 3l);
     verify(regimenService, never()).save(any(Regimen.class), anyLong());
+    verify(regimenLineItemMapper).insert(any(RegimenLineItem.class));
     assertThat(rnr.getRegimenLineItems().size(), is(1));
   }
 

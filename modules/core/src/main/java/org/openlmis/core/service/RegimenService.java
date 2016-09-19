@@ -48,22 +48,6 @@ public class RegimenService {
 
   public Regimen getById(Long id){return repository.getById(id);}
 
-  public List<DosageFrequency> getAllDosageFrequencies(){
-      return repository.getAllDosageFrequencies();
-  }
-
-  public List<RegimenProductCombination> getAllRegimenProductCombinations(){
-      return repository.getAllRegimenProductCombinations();
-  }
-
-  public List<RegimenCombinationConstituent> getAllRegimenCombinationConstituents(){
-        return repository.getAllRegimenCombinationConstituents();
-  }
-
-  public List<RegimenConstituentDosage> getAllRegimenConstituentDosages(){
-        return repository.getAllRegimenConstituentsDosages();
-  }
-
   public List getRegimensByCategory(RegimenCategory category) {
     return repository.getRegimensByCategory(category);
   }
@@ -72,7 +56,7 @@ public class RegimenService {
     return repository.getRegimenCategoryByName(name);
   }
 
-  public Object getRegimensByCategoryIdAndName(Long categoryId, String name) {
+  public Regimen getRegimensByCategoryIdAndName(Long categoryId, String name) {
     return repository.getRegimensByCategoryIdAndName(categoryId, name);
   }
 
