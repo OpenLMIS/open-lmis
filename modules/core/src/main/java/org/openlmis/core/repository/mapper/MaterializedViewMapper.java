@@ -19,4 +19,10 @@ public interface MaterializedViewMapper {
 
     @Select("SELECT refresh_daily_full_soh();")
     Integer refreshDailyFullSoh();
+
+    @Select("SELECT refresh_vw_lot_daily_full_soh();")
+    Integer refreshLotDailyFullSoh();
+
+    @Select("SELECT refresh_vw_lot_expiry_dates();")
+    Integer refreshLotExpiryDate();
 }
