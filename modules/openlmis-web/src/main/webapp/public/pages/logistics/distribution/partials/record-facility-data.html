@@ -11,10 +11,11 @@
 <div class="record-facility-data" ng-controller="RecordFacilityDataController">
     <div class="row-fluid facility-heading">
         <div class="span5" ng-show="facilitySelected">
-      <span id="facilityStatus"
-            ng-class="distribution.facilityDistributions[facilitySelected.facilityId].computeStatus()">
-        <div id="facilityIndicator" class="status-icon pull-left position-fixing"></div>
-      </span>
+            
+          <span id="facilityStatus"
+                ng-class="distribution.facilityDistributions[facilitySelected.facilityId].computeStatus()">
+            <div id="facilityIndicator" class="status-icon pull-left position-fixing"></div>
+          </span>
 
             <h2>
                 <span id='healthCenterLabel' openlmis-message="label.coverage.health.center"></span>
@@ -51,6 +52,7 @@
     </div>
     <div class="info-box">
         <div class="row-fluid">
+
             <div class="span3 facility-change-dropdown">
                 <select ui-select2="{formatResult: format}" openlmis-message="label" id="selectFacility"
                         ng-model="facilitySelected.facilityId"
@@ -64,6 +66,13 @@
                         </option>
                     </optgroup>
                 </select>
+            </div>
+
+            <div style="display:none;">
+                <div>facilitySelected.facilityId: {{facilitySelected.facilityId}}</div>
+                <div>distribution.deliveryZone.id: {{distribution.deliveryZone.id}}</div>
+                <div>distribution.period.id: {{distribution.period.id}}</div>
+                <div>distribution.id: {{distribution.id}}</div>
             </div>
 
             <div class="span3 offset1 info-box-labels">
