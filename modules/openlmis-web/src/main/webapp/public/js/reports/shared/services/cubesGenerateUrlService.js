@@ -11,6 +11,9 @@ services.factory('CubesGenerateUrlService', function () {
     };
 
     var generateFactsUrl = function (cubesName, cuts) {
+        if(cuts.length === 0) {
+            return baseUrl + cubesName  + "/facts";
+        }
         return baseUrl + cubesName + "/facts" + "?cut=" + generateCuts(cuts);
     };
 
