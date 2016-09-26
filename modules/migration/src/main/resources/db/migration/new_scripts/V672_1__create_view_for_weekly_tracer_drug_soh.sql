@@ -81,8 +81,8 @@ END
 $BODY$
 LANGUAGE 'plpgsql';
 
--- CREATE MATERIALIZED VIEW vw_weekly_tracer_soh AS (SELECT *
---                                                   FROM tracer_drugs_weekly_stock_history());
+CREATE MATERIALIZED VIEW vw_weekly_tracer_soh AS (SELECT *
+                                                  FROM tracer_drugs_weekly_stock_history());
 
 CREATE OR REPLACE FUNCTION refresh_weekly_tracer_soh()
   RETURNS INT LANGUAGE plpgsql

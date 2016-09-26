@@ -1,4 +1,4 @@
-DROP MATERIALIZED VIEW IF EXISTS vw_stockouts;
+DROP MATERIALIZED VIEW vw_stockouts;
 
 CREATE MATERIALIZED VIEW vw_stockouts AS
   SELECT
@@ -55,7 +55,7 @@ CREATE MATERIALIZED VIEW vw_carry_start_dates AS
 
 CREATE UNIQUE INDEX idx_vw_carry_start_dates ON vw_carry_start_dates (uuid);
 
-DROP MATERIALIZED VIEW IF EXISTS vw_weekly_tracer_soh;
+DROP MATERIALIZED VIEW vw_weekly_tracer_soh;
 
 CREATE MATERIALIZED VIEW vw_weekly_tracer_soh AS
 (SELECT
@@ -65,7 +65,7 @@ CREATE MATERIALIZED VIEW vw_weekly_tracer_soh AS
 
 CREATE UNIQUE INDEX idx_vw_weekly_tracer_soh ON vw_weekly_tracer_soh (uuid);
 
-DROP MATERIALIZED VIEW IF EXISTS vw_daily_full_soh;
+DROP MATERIALIZED VIEW vw_daily_full_soh;
 
 CREATE MATERIALIZED VIEW vw_daily_full_soh AS
   (SELECT
