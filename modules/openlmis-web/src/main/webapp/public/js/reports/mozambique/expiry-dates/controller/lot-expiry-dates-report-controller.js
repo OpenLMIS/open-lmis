@@ -63,7 +63,7 @@ function LotExpiryDatesReportController($scope, $controller, $http, CubesGenerat
         }
       });
       drug.lot_expiry_dates = _.sortBy(_.uniq(expiryDateArray), 'expiry_date');
-      if(drug.lot_expiry_dates.length != 0) {
+      if(drug.lot_expiry_dates.length > 0) {
         drug.first_expiry_date = drug.lot_expiry_dates[0].expiry_date;
         $scope.reportData.push(drug);
       }
