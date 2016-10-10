@@ -25,6 +25,7 @@ function SingleProductReportController($scope, $filter, $controller, $http, Cube
             return new Date(entry.occurred_date);
           });
           maxOccurredDateEntry.soh = Number(maxOccurredDateEntry.soh);
+          maxOccurredDateEntry.facility_name = maxOccurredDateEntry['facility.facility_name'];
           return maxOccurredDateEntry;
         })
         .value();

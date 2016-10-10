@@ -52,6 +52,9 @@ function SingleFacilityReportController($scope, $filter, $controller, $http, Cub
             return new Date(entry.occurred_date);
           });
           maxOccurredDateEntry.soh = Number(maxOccurredDateEntry.soh);
+
+          maxOccurredDateEntry.drug_name = maxOccurredDateEntry['drug.drug_name'];
+          maxOccurredDateEntry.drug_code = maxOccurredDateEntry['drug.drug_code'];
           return maxOccurredDateEntry;
         })
         .value();

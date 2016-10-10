@@ -53,11 +53,11 @@
         <h4 openlmis-message="label.report.facility.total|reportData.length"></h4>
         <table class="table table-condensed table-bordered table-striped fixed-header-table header-table">
             <tr class="gradient-header">
-                <th ng-click="sortType = 'facility.facility_name'; sortReverse = !sortReverse" class="sortable sort-desc"
+                <th ng-click="sortType = 'facility_name'; sortReverse = !sortReverse" class="sortable sort-desc"
                     openlmis-message="report.health.facility">
-                    <span ng-show="sortType != 'facility.facility_name'" class="icon-sort"></span>
-                    <span ng-show="sortType == 'facility.facility_name' && !sortReverse" class="icon-sort-up"></span>
-                    <span ng-show="sortType == 'facility.facility_name' && sortReverse" class="icon-sort-down"></span></th>
+                    <span ng-show="sortType != 'facility_name'" class="icon-sort"></span>
+                    <span ng-show="sortType == 'facility_name' && !sortReverse" class="icon-sort-up"></span>
+                    <span ng-show="sortType == 'facility_name' && sortReverse" class="icon-sort-down"></span></th>
                 <th ng-click="sortType = 'soh'; sortReverse = !sortReverse" class="sortable sort-desc"
                     openlmis-message="report.drug.quantity">
                     <span ng-show="sortType != 'soh'" class="icon-sort"></span>
@@ -78,7 +78,7 @@
         <div class="content-table">
             <table class="table table-condensed table-bordered table-striped fixed-header-table">
                 <tr ng-repeat="entry in reportData | orderBy:sortType:sortReverse">
-                    <td>{{entry['facility.facility_name']}}</td>
+                    <td>{{entry.facility_name}}</td>
                     <td style="text-align: right" ng-class="cmmStatus(entry)">
                         <span class="label label-warning low-stock-tag" openlmis-message="stock.cmm.low.stock">
                         </span>
