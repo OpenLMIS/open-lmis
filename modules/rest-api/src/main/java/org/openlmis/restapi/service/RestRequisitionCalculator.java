@@ -82,7 +82,9 @@ public class RestRequisitionCalculator {
       throw new DataException("error.rnr.period.duplicate");
     }
 
-    if (periodStartDate != null && new DateTime(periodForInitialize.getStartDate()).getMonthOfYear() != new DateTime(periodStartDate).getMonthOfYear()) {
+    if (periodStartDate != null
+        && new DateTime(periodForInitialize.getStartDate()).getMonthOfYear() != new DateTime(periodStartDate).getMonthOfYear()
+        && new DateTime(periodForInitialize.getEndDate()).getMonthOfYear() != new DateTime(periodEndDate).getMonthOfYear()) {
       throw new DataException("error.rnr.period.invalid");
     }
   }
