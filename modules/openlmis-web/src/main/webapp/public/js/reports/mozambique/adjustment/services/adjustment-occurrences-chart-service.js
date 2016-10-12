@@ -111,10 +111,14 @@ services.factory('AdjustmentOccurrencesChartService', function (messageService) 
       "graphs": adjustmentGraphConfigs[adjustmentType],
       "chartScrollbar": {
         "oppositeAxis": false,
-        "offset": 30
+        "offset": 90
       },
       "chartCursor": {},
-      "categoryField": "period"
+      "categoryField": "period",
+      "categoryAxis": {
+        "autoRotateCount": 5,
+        "autoRotateAngle": 45
+      }
     });
   }
 

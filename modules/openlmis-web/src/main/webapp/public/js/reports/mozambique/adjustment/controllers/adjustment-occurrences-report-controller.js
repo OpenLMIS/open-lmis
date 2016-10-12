@@ -68,9 +68,9 @@ function AdjustmentOccurrencesReportController($scope, $controller, $filter, $ht
               adjustment[reason] = occurrences;
             });
 
-            adjustment.period = DateFormatService.formatDateWithLocale(period.periodStart) +
+            adjustment.period = DateFormatService.formatDateWithLocaleNoDay(period.periodStart) +
                 "-" +
-                DateFormatService.formatDateWithLocale(period.periodEnd);
+                DateFormatService.formatDateWithLocaleNoDay(period.periodEnd);
 
             adjustmentData.data.adjustment = adjustment;
 
