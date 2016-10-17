@@ -111,7 +111,7 @@ services.factory('AdjustmentOccurrencesChartService', function (messageService) 
       "graphs": adjustmentGraphConfigs[adjustmentType],
       "chartScrollbar": {
         "oppositeAxis": false,
-        "offset": 90
+        "offset": 100
       },
       "chartCursor": {},
       "categoryField": "period",
