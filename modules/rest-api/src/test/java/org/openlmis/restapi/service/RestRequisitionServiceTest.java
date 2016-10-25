@@ -510,12 +510,13 @@ public class RestRequisitionServiceTest {
 
     report.setProducts(new ArrayList<RnrLineItem>());
     RegimenLineItem reportRegimenLineItem = make(a(defaultRegimenLineItem, with(patientsOnTreatment, 10), with(patientsStoppedTreatment, 5)));
-    reportRegimenLineItem.setCode(null);
+    reportRegimenLineItem.setCode("XXX");
     report.setRegimens(asList(RegimenLineItemForRest.convertFromRegimenLineItem(reportRegimenLineItem)));
 
     RegimenCategory category = reportRegimenLineItem.getCategory();
     category.setId(1l);
     Regimen existingRegimen = make(a(RegimenBuilder.defaultRegimen, with(RegimenBuilder.category, category)));
+    existingRegimen.setCustom(true);
     when(regimenService.queryRegimenCategoryByName(reportRegimenLineItem.getCategoryName())).thenReturn(category);
     when(regimenService.getRegimensByCategoryIdAndName(category.getId(), reportRegimenLineItem.getName())).thenReturn(existingRegimen);
 

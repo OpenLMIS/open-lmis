@@ -276,16 +276,17 @@ public class RestRequisitionService {
     List<RegimenLineItem> customRegimenItems = new ArrayList<>();
     if (report.getRegimens() != null) {
       for (RegimenLineItemForRest regimenLineItemForRest : report.getRegimens()) {
-        if (regimenLineItemForRest.getCode() == null) {
-          RegimenCategory regimenCategory = regimenService.queryRegimenCategoryByName(regimenLineItemForRest.getCategoryName());
-          regimenLineItemForRest.setCategory(regimenCategory);
-          Regimen regimen = regimenService.getRegimensByCategoryIdAndName(regimenCategory.getId(), regimenLineItemForRest.getName());
-          if (regimen == null) {
-            regimen = new Regimen(regimenLineItemForRest.getName(), null, programId, true, regimenCategory, regimenService.getRegimensByCategory(regimenCategory).size(), true);
-            regimen.setCode(String.format("%03d", regimenService.listAll().size() + 1));
-            regimenService.save(regimen, userId);
-          }
+        RegimenCategory regimenCategory = regimenService.queryRegimenCategoryByName(regimenLineItemForRest.getCategoryName());
+        regimenLineItemForRest.setCategory(regimenCategory);
+        Regimen regimen = regimenService.getRegimensByCategoryIdAndName(regimenCategory.getId(), regimenLineItemForRest.getName());
 
+        if (regimen == null) {
+          regimen = new Regimen(regimenLineItemForRest.getName(), null, programId, true, regimenCategory, regimenService.getRegimensByCategory(regimenCategory).size(), true);
+          regimen.setCode(String.format("%03d", regimenService.listAll().size() + 1));
+          regimenService.save(regimen, userId);
+        }
+
+        if (regimen.isCustom()) {
           regimenLineItemForRest.setCode(regimen.getCode());
 
           RegimenLineItem regimenLineItem = new RegimenLineItem(rnr.getId(), regimenCategory, userId, userId);
