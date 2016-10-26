@@ -122,11 +122,7 @@ function RequisitionReportController($scope, $filter, RequisitionReportService, 
     };
 
     function redirectPage() {
-        FeatureToggleService.get({key: "redirect.view.rnr.page"}, function (result) {
-            if (result.key) {
-                $window.location.href = $scope.getRedirectUrl();
-            }
-        });
+        $window.location.href = $scope.getRedirectUrl();
     }
 
     if ($cacheFactory.get('keepHistoryInStockOnHandPage') !== undefined) {
