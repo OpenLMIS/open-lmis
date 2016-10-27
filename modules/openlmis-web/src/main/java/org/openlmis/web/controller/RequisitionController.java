@@ -145,6 +145,7 @@ public class RequisitionController extends BaseController {
   }
 
   @RequestMapping(value = "/requisitions/{id}/skipped", method = GET)
+  @PostAuthorize("@requisitionPermissionService.hasPermission(principal, returnObject.body.data.get(\"rnr\"), 'VIEW_REQUISITION')")
   public ResponseEntity<OpenLmisResponse> getByIdWithOutSkippedItems(@PathVariable Long id, HttpServletRequest request) {
     try {
       Rnr rnr = requisitionService.getFullRequisitionById(id);
