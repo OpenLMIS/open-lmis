@@ -15,6 +15,7 @@ import org.openlmis.core.domain.*;
 import org.openlmis.core.service.ProgramSupportedService;
 import org.openlmis.core.service.RoleAssignmentService;
 import org.openlmis.core.service.RoleRightsService;
+import org.openlmis.core.service.UserService;
 import org.openlmis.rnr.domain.Rnr;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -41,6 +42,9 @@ public class RequisitionPermissionService {
   private RoleAssignmentService roleAssignmentService;
   @Autowired
   ProgramSupportedService programSupportedService;
+  @Autowired
+  UserService userService;
+
 
   public Boolean hasPermission(Long userId, Facility facility, Program program, String rightName) {
     ProgramSupported programSupported = programSupportedService.getByFacilityIdAndProgramId(facility.getId(), program.getId());
@@ -49,6 +53,10 @@ public class RequisitionPermissionService {
     }
 
     List<Right> userRights = roleRightsService.getRightsForUserAndFacilityProgram(userId, facility, program);
+    if (rightName.equals(VIEW_REQUISITION)) {
+      List<Right> allRightsForUser = roleRightsService.getRights(userId);
+      return any(userRights, with(rightName)) || any(allRightsForUser, with(VIEW_REQUISITION_REPORT));
+    }
     return any(userRights, with(rightName));
   }
 

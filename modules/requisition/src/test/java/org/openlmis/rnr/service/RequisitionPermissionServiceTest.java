@@ -39,8 +39,7 @@ import static org.mockito.Mockito.*;
 import static org.openlmis.core.builder.ProgramSupportedBuilder.defaultProgramSupported;
 import static org.openlmis.core.builder.ProgramSupportedBuilder.isActive;
 import static org.openlmis.core.domain.RightName.*;
-import static org.openlmis.core.domain.RightType.FULFILLMENT;
-import static org.openlmis.core.domain.RightType.REQUISITION;
+import static org.openlmis.core.domain.RightType.*;
 import static org.openlmis.rnr.builder.RequisitionBuilder.program;
 import static org.openlmis.rnr.builder.RequisitionBuilder.status;
 import static org.openlmis.rnr.domain.RnrStatus.*;
@@ -222,6 +221,23 @@ public class RequisitionPermissionServiceTest {
     when(roleRightsService.getRights(1L)).thenReturn(rights);
     assertThat(requisitionPermissionService.hasPermission(1L, CONVERT_TO_ORDER), is(true));
     assertThat(requisitionPermissionService.hasPermission(1L, CREATE_REQUISITION), is(false));
+  }
+
+  @Test
+  public void shouldReturnTrueIfUserHasNoRightsForViewRequisitionDetailsButHasRightsForRequisitionReport() {
+    Rnr rnr = new Rnr();
+    Facility facility = new Facility(facilityId);
+    Program program = new Program(programId);
+
+    rnr.setProgram(program);
+    rnr.setFacility(facility);
+
+    List<Right> rights = asList(new Right(VIEW_REQUISITION_REPORT, REPORT));
+
+    when(roleRightsService.getRightsForUserAndFacilityProgram(userId, facility, program)).thenReturn(anyList());
+    when(roleRightsService.getRights(userId)).thenReturn(rights);
+
+    assertThat(requisitionPermissionService.hasPermission(userId, facility, program, VIEW_REQUISITION), is(false));
   }
 
   private RoleAssignment roleAssignmentWithSupervisoryNodeId(Long supervisoryNodeId, Long programId) {
