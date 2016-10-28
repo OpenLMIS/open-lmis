@@ -45,7 +45,7 @@ function BaseProductReportController($scope, $filter, ProductReportService, $cac
             _.forEach(facilities, function (facility) {
                 _.forEach(facilityTypes, function (type) {
                     if (type.id == facility.typeId) {
-                        if (type.code != "DDM" && type.code != "DPM") {
+                        if (type.code != "DDM" && type.code != "DPM" && type.code != "Central") {
                             healthFacilities.push(facility);
                         }
                     }
