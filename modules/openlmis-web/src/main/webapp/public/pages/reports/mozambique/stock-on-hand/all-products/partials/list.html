@@ -79,7 +79,9 @@
                             {{entry.soh | number:0}}
                         </span>
                     </td>
-                    <td>{{formatMonth(entry.expiry_date)}}</td>
+                    <td><span>{{formatMonth(entry.expiry_date)}} (</span>
+                        <span openlmis-message="report.stock.on.hand.amount"></span>
+                        <span>{{entry.soonest_expiring_loh}})</span></td>
                     <td><span class="circle-icon" ng-style="checkLastSyncDate(entry.last_sync_date)"> </span>
                         <span>{{entry.last_sync_date | date:'h:mm a'}} {{formatDateWithDay(entry.last_sync_date)}}</span>
                     </td>

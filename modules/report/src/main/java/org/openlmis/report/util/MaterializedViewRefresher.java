@@ -16,7 +16,7 @@ public class MaterializedViewRefresher {
         materializedViewMapper.refreshWeeklyTracerSOH();
         materializedViewMapper.refreshPeriodMovements();
         materializedViewMapper.refreshDailyFullSoh();
-        materializedViewMapper.refreshLotDailyFullSoh();
         materializedViewMapper.refreshLotExpiryDate();
+        materializedViewMapper.refreshLotDailyFullSoh();
     }
 }

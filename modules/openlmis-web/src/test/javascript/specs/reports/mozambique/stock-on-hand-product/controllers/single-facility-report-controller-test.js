@@ -1,5 +1,5 @@
 describe("Single facility Report Controller", function () {
-    var scope, facilityProductData, httpBackend, dateFilter;
+    var scope, facilityProductData, httpBackend, dateFilter, lotExpiryDateService;
 
     facilityProductData = [
         {
@@ -43,11 +43,11 @@ describe("Single facility Report Controller", function () {
 
     beforeEach(module('openlmis'));
     beforeEach(module('ui.bootstrap.dialog'));
-    beforeEach(inject(function (_$httpBackend_, $rootScope, $filter, $controller) {
+    beforeEach(inject(function (_$httpBackend_, $rootScope, $filter, $controller, LotExpiryDateService) {
         scope = $rootScope.$new();
         httpBackend = _$httpBackend_;
         dateFilter = $filter('date');
-
+        lotExpiryDateService = LotExpiryDateService;
         $controller(SingleFacilityReportController, {$scope: scope});
     }));
 
@@ -57,6 +57,8 @@ describe("Single facility Report Controller", function () {
         scope.loadReport();
         expect(scope.invalid).toBe(true);
         scope.reportParams.facilityId = 414;
+
+        spyOn(lotExpiryDateService, 'populateLotOnHandInformationForSoonestExpiryDate');
 
         httpBackend.expectGET('/cubesreports/cube/vw_daily_full_soh/facts?cut=occurred:-').respond(200, facilityProductData);
         scope.loadReport();

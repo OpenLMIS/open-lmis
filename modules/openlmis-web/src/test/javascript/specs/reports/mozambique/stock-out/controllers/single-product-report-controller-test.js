@@ -1,5 +1,5 @@
 describe("Single product Report Controller", function () {
-    var scope, productData, httpBackend;
+    var scope, productData, httpBackend, lotExpiryDateService;
 
     productData = [
         {
@@ -43,10 +43,10 @@ describe("Single product Report Controller", function () {
 
     beforeEach(module('openlmis'));
     beforeEach(module('ui.bootstrap.dialog'));
-    beforeEach(inject(function (_$httpBackend_, $rootScope, $controller) {
+    beforeEach(inject(function (_$httpBackend_, $rootScope, $controller, LotExpiryDateService) {
         scope = $rootScope.$new();
         httpBackend = _$httpBackend_;
-
+        lotExpiryDateService = LotExpiryDateService;
         $controller(SingleProductReportController, {$scope: scope});
     }));
 
@@ -55,6 +55,8 @@ describe("Single product Report Controller", function () {
         scope.loadReport();
         expect(scope.invalid).toBe(true);
         scope.reportParams.productCode = '01A01';
+
+        spyOn(lotExpiryDateService, 'populateLotOnHandInformationForSoonestExpiryDate');
 
         httpBackend.expectGET('/cubesreports/cube/vw_daily_full_soh/facts?cut=occurred:-|drug:01A01').respond(200, productData);
         scope.loadReport();
