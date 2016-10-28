@@ -1,4 +1,4 @@
-function SingleFacilityReportController($scope, $filter, $controller, $http, CubesGenerateCutParamsService, CubesGenerateUrlService, FeatureToggleService, $cacheFactory, $timeout) {
+function SingleFacilityReportController($scope, $filter, $controller, $http, CubesGenerateCutParamsService, CubesGenerateUrlService, FeatureToggleService, $cacheFactory, $timeout, LotExpiryDateService) {
   $controller('BaseProductReportController', {$scope: $scope});
 
   if ($cacheFactory.get('keepHistoryInStockOnHandPage') === undefined) {
@@ -58,6 +58,9 @@ function SingleFacilityReportController($scope, $filter, $controller, $http, Cub
           return maxOccurredDateEntry;
         })
         .value();
+
+      $scope.lotOnHandHash = {};
+      LotExpiryDateService.populateLotOnHandInformationForSoonestExpiryDate($scope.reportData, $scope.lotOnHandHash);
     });
   }
 

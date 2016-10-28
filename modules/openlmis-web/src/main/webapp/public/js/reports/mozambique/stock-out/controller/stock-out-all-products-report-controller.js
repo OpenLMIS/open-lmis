@@ -1,4 +1,4 @@
-function StockOutAllProductsReportController($scope, $filter, $q, $controller, $http, CubesGenerateUrlService, messageService, StockOutReportCalculationService, CubesGenerateCutParamsService, $cacheFactory, $timeout) {
+function StockOutAllProductsReportController($scope, $filter, $controller, $http, CubesGenerateUrlService, messageService, StockOutReportCalculationService, CubesGenerateCutParamsService, $cacheFactory, $timeout) {
     $controller('BaseProductReportController', {$scope: $scope});
 
     if ($cacheFactory.get('keepHistoryInStockOutReportPage') === undefined) {

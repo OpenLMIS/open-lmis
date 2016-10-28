@@ -1,4 +1,4 @@
-function SingleProductReportController($scope, $filter, $controller, $http, CubesGenerateCutParamsService, CubesGenerateUrlService, FeatureToggleService) {
+function SingleProductReportController($scope, $filter, $controller, $http, CubesGenerateCutParamsService, CubesGenerateUrlService, FeatureToggleService, LotExpiryDateService) {
   $controller('BaseProductReportController', {$scope: $scope});
 
   $scope.$on('$viewContentLoaded', function () {
@@ -29,6 +29,9 @@ function SingleProductReportController($scope, $filter, $controller, $http, Cube
           return maxOccurredDateEntry;
         })
         .value();
+
+      $scope.lotOnHandHash = {};
+      LotExpiryDateService.populateLotOnHandInformationForSoonestExpiryDate($scope.reportData, $scope.lotOnHandHash);
     });
   }
 

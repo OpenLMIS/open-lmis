@@ -32,9 +32,12 @@ services.factory('CubesGenerateUrlService', function () {
         }).join("|");
     }
 
-    function escapeCubesSpecialCharacters(stringOrArray) {
-        if (typeof stringOrArray === "string") {
-            return encodeURIComponent(_.map(stringOrArray, function (char) {
+    function escapeCubesSpecialCharacters(values) {
+        if (typeof values === "number") {
+            return values;
+        }
+        if (typeof values === "string") {
+            return encodeURIComponent(_.map(values, function (char) {
                 if (cubesSpecialCharacters.indexOf(char) != -1) {
                     return "\\" + char;
                 } else {
@@ -42,7 +45,7 @@ services.factory('CubesGenerateUrlService', function () {
                 }
             }).join(""));
         } else {
-            return _.map(stringOrArray, function (str) {
+            return _.map(values, function (str) {
                 return escapeCubesSpecialCharacters(str);
             });
         }
