@@ -1,4 +1,4 @@
-DROP MATERIALIZED VIEW vw_lot_daily_full_soh;
+DROP MATERIALIZED VIEW IF EXISTS vw_lot_daily_full_soh;
 
 CREATE MATERIALIZED VIEW vw_lot_daily_full_soh AS
   (SELECT DISTINCT ON (facility_code, drug_code, occurred)
