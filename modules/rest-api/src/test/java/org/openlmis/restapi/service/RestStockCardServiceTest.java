@@ -398,6 +398,58 @@ public class RestStockCardServiceTest {
     verify(stockCardService).createLotOnHandIfNotExist(lot2, stockCard);
   }
 
+  @Test
+  public void shouldCreateNewLotForSameLotNumberDifferentProduct() throws Exception {
+    when(syncUpHashRepository.hashExists(anyString())).thenReturn(false);
+    mockReasonWithName(reasonName, true);
+    Date expirationDate = DateUtil.parseDate("2017-1-31", DateUtil.FORMAT_DATE);
+
+    Product p1 = defaultProduct;
+    Product p2 = make(a(ProductBuilder.defaultProduct, with(ProductBuilder.code, "different product code")));
+    when(productService.getByCode(p2.getCode())).thenReturn(p2);
+
+    LotEvent lotEvent1 = new LotEvent("lotNumber", expirationDate, 10L);
+    LotEvent lotEvent2 = new LotEvent("lotNumber", expirationDate, 20L);
+
+    List<StockEvent> stockEvents = new ArrayList<>();
+    StockEvent stockEvent1 = make(a(StockEventBuilder.defaultStockEvent));
+    stockEvent1.setProductCode(p1.getCode());
+    stockEvent1.setLotEventList(asList(lotEvent1));
+
+    StockEvent stockEvent2 = make(a(StockEventBuilder.defaultStockEvent));
+    stockEvent2.setProductCode(p2.getCode());
+    stockEvent2.setLotEventList(asList(lotEvent2));
+
+    stockEvents.add(stockEvent1);
+    stockEvents.add(stockEvent2);
+
+    Lot lot = new Lot();
+    lot.setLotCode("lotNumber");
+    lot.setProduct(p1);
+
+    Lot lot2 = new Lot();
+    lot2.setLotCode("lotNumber");
+    lot2.setProduct(p2);
+
+    StockCard stockCard2 = StockCard.createZeroedStockCard(defaultFacility, p2);
+    when(stockCardService.getOrCreateStockCard(facilityId, p2.getCode(), userId)).thenReturn(stockCard2);
+
+    when(lotService.getOrCreateLotByLotNumberAndProduct("lotNumber", expirationDate, p1, userId)).thenReturn(lot);
+    when(lotService.getOrCreateLotByLotNumberAndProduct("lotNumber", expirationDate, p2, userId)).thenReturn(lot2);
+
+    restStockCardService.adjustStock(facilityId, stockEvents, userId);
+
+    ArgumentCaptor<String> captor = ArgumentCaptor.forClass(String.class);
+    verify(lotService, times(2)).getOrCreateLotByLotNumberAndProduct(captor.capture(), Matchers.any(Date.class), Matchers.any(Product.class), anyLong());
+    List<String> captorAllValues = captor.getAllValues();
+    assertThat(captorAllValues.size(), is(2));
+    assertThat(captorAllValues.get(0), is("lotNumber"));
+    assertThat(captorAllValues.get(1), is("lotNumber"));
+
+    verify(stockCardService).createLotOnHandIfNotExist(lot, stockCard);
+    verify(stockCardService).createLotOnHandIfNotExist(lot2, stockCard2);
+  }
+
   public LotOnHand createLotOnHand(StockCard stockCardForLotsTest, Lot lot) {
     LotOnHand lotOnHand = new LotOnHand();
     lotOnHand.setLot(lot);

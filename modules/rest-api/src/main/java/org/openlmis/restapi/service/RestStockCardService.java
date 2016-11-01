@@ -164,11 +164,11 @@ public class RestStockCardService {
   private Lot getOrCreateLot(LotEvent lotEvent, Map<String, Lot> lotMap, Product product, Long userId) {
     Lot lot;
 
-    if (lotMap.get(lotEvent.getLotNumber()) == null) {
+    if (lotMap.get(lotEvent.getLotNumber() + "|" + product.getCode()) == null) {
       lot = lotService.getOrCreateLotByLotNumberAndProduct(lotEvent.getLotNumber(), lotEvent.getExpirationDate(), product, userId);
-      lotMap.put(lotEvent.getLotNumber(), lot);
+      lotMap.put(lotEvent.getLotNumber() + "|" + product.getCode(), lot);
     } else {
-      lot = lotMap.get(lotEvent.getLotNumber());
+      lot = lotMap.get(lotEvent.getLotNumber() + "|" + product.getCode());
     }
     return lot;
   }
