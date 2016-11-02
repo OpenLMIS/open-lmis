@@ -50,10 +50,10 @@ function SingleProductReportController($scope, $filter, $controller, $http, Cube
   $scope.generateRedirectToExpiryDateReportURL = function(facilityCode) {
     var date = $filter('date')($scope.reportParams.endTime, "yyyy-MM-dd");
 
-    var redirectedURL = "/public/pages/reports/mozambique/index.html#/lot-expiry-dates" + "?"
-        + "facilityCode=" + facilityCode + "&"
-        + "date=" + date + "&"
-        + "drugCode=" + $scope.reportParams.productCode;
+    var redirectedURL = "/public/pages/reports/mozambique/index.html#/lot-expiry-dates" + "?" +
+        "facilityCode=" + facilityCode + "&" +
+        "date=" + date + "&" +
+        "drugCode=" + $scope.reportParams.productCode;
     return redirectedURL;
   };
 
