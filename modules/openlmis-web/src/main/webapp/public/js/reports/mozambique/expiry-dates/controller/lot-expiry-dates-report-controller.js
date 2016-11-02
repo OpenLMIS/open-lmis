@@ -1,5 +1,15 @@
-function LotExpiryDatesReportController($scope, $controller, $http, CubesGenerateUrlService, messageService, DateFormatService, CubesGenerateCutParamsService) {
+function LotExpiryDatesReportController($scope, $controller, $http, CubesGenerateUrlService, messageService, DateFormatService, CubesGenerateCutParamsService, $routeParams, $timeout, $location, $anchorScroll) {
   $controller('BaseProductReportController', {$scope: $scope});
+
+  $scope.populateOptions = function () {
+    if(!_.isEmpty($routeParams)) {
+      $scope.reportParams.endTime = $routeParams.date;
+      if($routeParams.facilityCode) {
+        $scope.reportParams.facilityId = $scope.getFacilityByCode($routeParams.facilityCode).id;
+      }
+      $scope.loadReport();
+    }
+  };
 
   $scope.$on('$viewContentLoaded', function () {
     $scope.loadProducts();
@@ -124,4 +134,9 @@ function LotExpiryDatesReportController($scope, $controller, $http, CubesGenerat
     }
     $scope.reportParams.reportTitle = reportTitle || messageService.get("label.all");
   }
+
+  $timeout(function () {
+    $(".content-table")[0].scrollTop += ($("#" + $routeParams.drugCode).offset().top - $(".content-table").offset().top - 10);
+    $("#" + $routeParams.drugCode).parent().parent().addClass("highlight");
+  }, 1000);
 }

@@ -53,6 +53,7 @@ function BaseProductReportController($scope, $filter, ProductReportService, $cac
             });
             $scope.facilities = healthFacilities;
             addAllOption($scope.facilities, "facility");
+            $scope.populateOptions ? $scope.populateOptions() : undefined;
         });
     };
 
@@ -174,6 +175,12 @@ function BaseProductReportController($scope, $filter, ProductReportService, $cac
         params.selectedDistrict = $scope.getGeographicZoneById($scope.districts, $scope.reportParams.districtId);
         params.selectedFacility = _.find($scope.facilities, function (facility) {
             return facility.id == $scope.reportParams.facilityId;
+        });
+    };
+
+    $scope.getFacilityByCode = function (facilityCode) {
+        return _.find($scope.facilities, function (facility) {
+            return facility.code == facilityCode;
         });
     };
 

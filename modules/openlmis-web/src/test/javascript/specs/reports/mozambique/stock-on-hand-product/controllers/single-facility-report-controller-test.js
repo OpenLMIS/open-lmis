@@ -1,5 +1,5 @@
 describe("Single facility Report Controller", function () {
-    var scope, facilityProductData, httpBackend, dateFilter, lotExpiryDateService;
+    var scope, facilityProductData, httpBackend, dateFilter, lotExpiryDateService, window;
 
     facilityProductData = [
         {
@@ -43,11 +43,12 @@ describe("Single facility Report Controller", function () {
 
     beforeEach(module('openlmis'));
     beforeEach(module('ui.bootstrap.dialog'));
-    beforeEach(inject(function (_$httpBackend_, $rootScope, $filter, $controller, LotExpiryDateService) {
+    beforeEach(inject(function (_$httpBackend_, $rootScope, $filter, $controller, LotExpiryDateService, $window) {
         scope = $rootScope.$new();
         httpBackend = _$httpBackend_;
         dateFilter = $filter('date');
         lotExpiryDateService = LotExpiryDateService;
+        window = $window;
         $controller(SingleFacilityReportController, {$scope: scope});
     }));
 
@@ -68,4 +69,17 @@ describe("Single facility Report Controller", function () {
         expect(scope.reportData[0]['drug.drug_name']).toEqual("Hidralazina25mg/5mLInjectável");
         expect(scope.reportData[0].occurred_date).toEqual("2016-01-15");
     });
+
+    it('should redirect to lot expiry date report', function () {
+        var drugCode = 'test';
+        scope.reportParams = {
+            endTime: '2016-11-01',
+            selectedFacility: {
+                id:'1',
+                code:'HF1'
+            }
+        };
+
+        expect(scope.generateRedirectToExpiryDateReportURL(drugCode)).toBe('/public/pages/reports/mozambique/index.html#/lot-expiry-dates?facilityCode=HF1&date=2016-11-01&drugCode=test');
+    })
 });

@@ -127,4 +127,10 @@ describe("Base Product Report Controller", function () {
         expect(scope.reportParams.provinceId).toEqual(2);
 
     });
+
+    it('should get facility code', function () {
+        scope.facilities = facilityData;
+        expect(scope.getFacilityByCode('HF3')).toBe(facilityData[1]);
+        expect(scope.getFacilityByCode('HF8')).toBe(facilityData[0]);
+    });
 });

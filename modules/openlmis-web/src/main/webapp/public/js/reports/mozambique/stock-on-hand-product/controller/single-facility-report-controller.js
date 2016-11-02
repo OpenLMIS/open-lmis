@@ -1,4 +1,4 @@
-function SingleFacilityReportController($scope, $filter, $controller, $http, CubesGenerateCutParamsService, CubesGenerateUrlService, FeatureToggleService, $cacheFactory, $timeout, LotExpiryDateService) {
+function SingleFacilityReportController($scope, $filter, $controller, $http, CubesGenerateCutParamsService, CubesGenerateUrlService, FeatureToggleService, $cacheFactory, $timeout, LotExpiryDateService, $window) {
   $controller('BaseProductReportController', {$scope: $scope});
 
   if ($cacheFactory.get('keepHistoryInStockOnHandPage') === undefined) {
@@ -77,6 +77,21 @@ function SingleFacilityReportController($scope, $filter, $controller, $http, Cub
   $scope.saveHistory = function () {
     $scope.cache.put('dataOfStockOnHandReport', $scope.reportParams);
     console.log($scope.reportParams);
+  };
+
+  $scope.generateRedirectToExpiryDateReportURL = function (drugCode) {
+    var date = $filter('date')($scope.reportParams.endTime, "yyyy-MM-dd");
+
+    var redirectedURL = "/public/pages/reports/mozambique/index.html#/lot-expiry-dates" + "?"
+        + "facilityCode=" + $scope.reportParams.selectedFacility.code + "&"
+        + "date=" + date + "&"
+        + "drugCode=" + drugCode;
+
+    return redirectedURL;
+  };
+
+  $scope.redirectToLotExpiryDateReport = function(drugCode) {
+    $window.location.href = $scope.generateRedirectToExpiryDateReportURL(drugCode);
   };
 
   function validateFacility() {

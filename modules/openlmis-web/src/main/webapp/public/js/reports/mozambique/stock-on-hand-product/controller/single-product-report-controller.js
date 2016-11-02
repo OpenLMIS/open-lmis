@@ -1,4 +1,4 @@
-function SingleProductReportController($scope, $filter, $controller, $http, CubesGenerateCutParamsService, CubesGenerateUrlService, FeatureToggleService, LotExpiryDateService) {
+function SingleProductReportController($scope, $filter, $controller, $http, CubesGenerateCutParamsService, CubesGenerateUrlService, FeatureToggleService, LotExpiryDateService, $window) {
   $controller('BaseProductReportController', {$scope: $scope});
 
   $scope.$on('$viewContentLoaded', function () {
@@ -26,6 +26,7 @@ function SingleProductReportController($scope, $filter, $controller, $http, Cube
           });
           maxOccurredDateEntry.soh = Number(maxOccurredDateEntry.soh);
           maxOccurredDateEntry.facility_name = maxOccurredDateEntry['facility.facility_name'];
+          maxOccurredDateEntry.facility_code = maxOccurredDateEntry['facility.facility_code'];
           return maxOccurredDateEntry;
         })
         .value();
@@ -44,6 +45,20 @@ function SingleProductReportController($scope, $filter, $controller, $http, Cube
         params.selectedFacility, selectedProduct, params.selectedProvince, params.selectedDistrict);
       populateDateEntry(cutsParams);
     }
+  };
+
+  $scope.generateRedirectToExpiryDateReportURL = function(facilityCode) {
+    var date = $filter('date')($scope.reportParams.endTime, "yyyy-MM-dd");
+
+    var redirectedURL = "/public/pages/reports/mozambique/index.html#/lot-expiry-dates" + "?"
+        + "facilityCode=" + facilityCode + "&"
+        + "date=" + date + "&"
+        + "drugCode=" + $scope.reportParams.productCode;
+    return redirectedURL;
+  };
+
+  $scope.redirectToLotExpiryDateReport = function(facilityCode) {
+    $window.location.href = $scope.generateRedirectToExpiryDateReportURL(facilityCode);
   };
 
   function validateProduct() {
