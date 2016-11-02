@@ -88,7 +88,7 @@
                             {{entry.soh | number:0}}
                         </span>
                     </td>
-                    <td><a ng-click="redirectToLotExpiryDateReport(entry.facility_code)">
+                    <td><a ng-click="redirectToLotExpiryDateReport(entry.facility_code)" style="cursor:pointer;">
                         <span>{{formatMonth(entry.expiry_date)}} (</span>
                         <span openlmis-message="report.stock.on.hand.amount"></span>
                         <span>{{entry.soonest_expiring_loh}})</span>
