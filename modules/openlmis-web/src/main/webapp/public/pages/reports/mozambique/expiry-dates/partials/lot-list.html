@@ -52,8 +52,8 @@
         </table>
 
         <div class="content-table">
-            <table class="table table-condensed table-bordered table-striped fixed-header-table">
-                <tr ng-repeat="entry in reportData | orderBy:sortType:sortReverse">
+            <table class="table table-condensed table-bordered table-striped fixed-header-table" >
+                <tr ng-repeat="entry in reportData | orderBy:sortType:sortReverse" on-finish-render>
                     <td><a id="{{entry.code}}" href="#{{entry.code}}"></a>{{entry.code}}</td>
                     <td>{{entry.name}}</td>
                     <td class="expiry-dates-td">

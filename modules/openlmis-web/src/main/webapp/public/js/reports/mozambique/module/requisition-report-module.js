@@ -80,4 +80,5 @@ angular.module('requisition-report', ['openlmis', 'angularCombine', 'ngTable', '
     }).filter("districtFilter", DistrictFilter)
     .filter("provinceFilter", ProvinceFilter)
     .filter("facilityFilter", FacilityFilter)
-    .directive('datePickerContainer', datePickerContainer);
+    .directive('datePickerContainer', datePickerContainer)
+    .directive('onFinishRender',onFinishRender);

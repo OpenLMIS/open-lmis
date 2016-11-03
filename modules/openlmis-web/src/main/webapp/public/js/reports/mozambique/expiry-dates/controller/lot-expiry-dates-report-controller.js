@@ -7,6 +7,7 @@ function LotExpiryDatesReportController($scope, $controller, $http, CubesGenerat
       if($routeParams.facilityCode) {
         $scope.reportParams.facilityId = $scope.getFacilityByCode($routeParams.facilityCode).id;
       }
+      $scope.cursor = $routeParams.drug_code;
       $scope.loadReport();
     }
   };
@@ -135,8 +136,8 @@ function LotExpiryDatesReportController($scope, $controller, $http, CubesGenerat
     $scope.reportParams.reportTitle = reportTitle || messageService.get("label.all");
   }
 
-  $timeout(function () {
+$scope.$on('ngRepeatFinished', function () {
     $(".content-table")[0].scrollTop += ($("#" + $routeParams.drugCode).offset().top - $(".content-table").offset().top - 10);
     $("#" + $routeParams.drugCode).parent().parent().addClass("highlight");
-  }, 1000);
+  });
 }
