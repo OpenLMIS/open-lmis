@@ -55,6 +55,7 @@ function SingleFacilityReportController($scope, $filter, $controller, $http, Cub
 
           maxOccurredDateEntry.drug_name = maxOccurredDateEntry['drug.drug_name'];
           maxOccurredDateEntry.drug_code = maxOccurredDateEntry['drug.drug_code'];
+          maxOccurredDateEntry.estimated_months = (maxOccurredDateEntry.cmm === -1.0 || maxOccurredDateEntry.cmm === 0) ? undefined : Math.floor(10 * maxOccurredDateEntry.soh/maxOccurredDateEntry.cmm)/10;
           return maxOccurredDateEntry;
         })
         .value();

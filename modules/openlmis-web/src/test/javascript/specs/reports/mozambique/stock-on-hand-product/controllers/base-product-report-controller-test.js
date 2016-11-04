@@ -133,4 +133,16 @@ describe("Base Product Report Controller", function () {
         expect(scope.getFacilityByCode('HF3')).toBe(facilityData[1]);
         expect(scope.getFacilityByCode('HF8')).toBe(facilityData[0]);
     });
+
+    iit('should return highlight style if drug has expiration risk', function () {
+        scope.reportParams.endTime = '2016-11-01';
+        var entry = {
+            expiry_date: '2017-02-28',
+            estimated_months: 3.2
+        };
+        expect(scope.hasExpirationRisk(entry)).toEqual({'background-color': 'yellow'});
+
+        scope.reportParams.endTime = '2016-10-01';
+        expect(scope.hasExpirationRisk(entry)).toBe(undefined);
+    });
 });

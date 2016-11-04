@@ -140,6 +140,19 @@ function BaseProductReportController($scope, $filter, ProductReportService, $cac
             {'background-color': 'orange'};
     };
 
+    $scope.hasExpirationRisk = function (entry) {
+        if (!angular.isUndefined(entry.estimated_months)) {
+            var selectedDate = new Date($scope.reportParams.endTime);
+            var estimatedDrugUseUpDate = new Date(selectedDate.getFullYear(), selectedDate.getMonth() + Math.floor(entry.estimated_months) + 1, 0);
+            var expiryDate = new Date(entry.expiry_date);
+            var expiryDateWithLastDate = new Date(expiryDate.getFullYear(), expiryDate.getMonth() + 1, 0);
+            if (entry.expiry_date!== null && expiryDateWithLastDate <= estimatedDrugUseUpDate) {
+                return {'background-color': 'yellow'};
+            }
+        }
+
+    };
+
     $scope.cmmStatus = function (entry) {
         var cmm = entry.cmm;
         var soh = entry.soh;

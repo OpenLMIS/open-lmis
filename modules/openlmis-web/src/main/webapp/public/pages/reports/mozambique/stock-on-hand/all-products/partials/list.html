@@ -54,6 +54,11 @@
                     <span ng-show="sortType != 'expiry_date'" class="icon-sort"></span>
                     <span ng-show="sortType == 'expiry_date' && !sortReverse" class="icon-sort-up"></span>
                     <span ng-show="sortType == 'expiry_date' && sortReverse" class="icon-sort-down"></span></th>
+                <th ng-click="sortType = 'estimated_months'; sortReverse = !sortReverse" class="sortable sort-desc"
+                    openlmis-message="report.estimated.consumption.month">
+                    <span ng-show="sortType != 'estimated_months'" class="icon-sort"></span>
+                    <span ng-show="sortType == 'estimated_months' && !sortReverse" class="icon-sort-up"></span>
+                    <span ng-show="sortType == 'estimated_months' && sortReverse" class="icon-sort-down"></span></th>
                 <th ng-click="sortType = 'last_sync_date'; sortReverse = !sortReverse" class="sortable sort-desc"
                     openlmis-message="report.last.update.date">
                     <span ng-show="sortType != 'last_sync_date'" class="icon-sort"></span>
@@ -62,7 +67,7 @@
             </tr>
         </table>
         <div class="content-table">
-            <table class="table table-condensed table-bordered table-striped fixed-header-table">
+            <table class="table table-condensed table-bordered table-striped fixed-header-table" enableVerticalScrollbar="2">
                 <tr ng-repeat="entry in reportData | orderBy:sortType:sortReverse">
                     <td ng-show="viewStockMovementToggle"><a
                             href="#/stock-movements/product/{{entry.drug_code}}/facility/{{entry['facility.facility_code']}}"
@@ -84,6 +89,7 @@
                         <span openlmis-message="report.stock.on.hand.amount"></span>
                         <span>{{entry.soonest_expiring_loh}})</span>
                     </a></td>
+                    <td><span ng-hide="angular.isUndefined(entry.estimated_months)" ng-style="hasExpirationRisk(entry)">{{entry.estimated_months}}</span></td>
                     <td><span class="circle-icon" ng-style="checkLastSyncDate(entry.last_sync_date)"> </span>
                         <span>{{entry.last_sync_date | date:'h:mm a'}} {{formatDateWithDay(entry.last_sync_date)}}</span>
                     </td>
