@@ -11,6 +11,7 @@
                 class="large-input"
                 name="districts"
                 id="districtDropDown">
+            <option></option>
             <option ng-repeat="option in districts | districtFilter:reportParams.provinceId" value="{{option.id}}">
                 {{option.name}}
             </option>
