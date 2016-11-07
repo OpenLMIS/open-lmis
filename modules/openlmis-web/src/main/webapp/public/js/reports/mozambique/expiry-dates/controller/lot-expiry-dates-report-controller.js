@@ -137,7 +137,9 @@ function LotExpiryDatesReportController($scope, $controller, $http, CubesGenerat
   }
 
 $scope.$on('ngRepeatFinished', function () {
-    $(".content-table")[0].scrollTop += ($("#" + $routeParams.drugCode).offset().top - $(".content-table").offset().top - 10);
-    $("#" + $routeParams.drugCode).parent().parent().addClass("highlight");
+    if(!_.isEmpty($routeParams)) {
+      $(".content-table")[0].scrollTop += ($("#" + $routeParams.drugCode).offset().top - $(".content-table").offset().top - 10);
+      $("#" + $routeParams.drugCode).parent().parent().addClass("highlight");
+    }
   });
 }

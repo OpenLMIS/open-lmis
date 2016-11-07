@@ -134,7 +134,7 @@ describe("Base Product Report Controller", function () {
         expect(scope.getFacilityByCode('HF8')).toBe(facilityData[0]);
     });
 
-    iit('should return highlight style if drug has expiration risk', function () {
+    it('should return highlight style if drug has expiration risk', function () {
         scope.reportParams.endTime = '2016-11-01';
         var entry = {
             expiry_date: '2017-02-28',
