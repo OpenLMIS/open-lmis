@@ -30,6 +30,13 @@
 
         <div style="clear: both"></div>
 
+        <div>
+            <label>
+                <span openlmis-message="label.search"></span>
+            </label>
+            <input type="text" ng-model="searchValue"/>
+        </div>
+
     </div>
 
     <hr/>
@@ -68,11 +75,11 @@
         </table>
         <div class="content-table">
             <table class="table table-condensed table-bordered table-striped fixed-header-table" enableVerticalScrollbar="2">
-                <tr ng-repeat="entry in reportData | orderBy:sortType:sortReverse">
-                    <td ng-show="viewStockMovementToggle"><a
-                            href="#/stock-movements/product/{{entry.drug_code}}/facility/{{entry['facility.facility_code']}}"
-                            ng-click="saveHistory()">{{entry.drug_name}}
-                        [{{entry.drug_code}}]</a></td>
+                <tr ng-repeat="entry in reportData | filter: searchValue | orderBy:sortType:sortReverse">
+                    <td ng-show="viewStockMovementToggle">
+                        <a href="#/stock-movements/product/{{entry.drug_code}}/facility/{{entry['facility.facility_code']}}"
+                            ng-click="saveHistory()">{{entry.drug_name}} [{{entry.drug_code}}]</a>
+                    </td>
                     <td ng-show="!viewStockMovementToggle">{{entry.drug_name}} [{{entry.drug_code}}]
                     </td>
                     <td style="text-align: right" ng-class="cmmStatus(entry)">
@@ -85,13 +92,13 @@
                         </span>
                     </td>
                     <td><a ng-click="redirectToLotExpiryDateReport(entry.drug_code)" style="cursor:pointer;" ng-show="entry.soonest_expiring_loh">
-                        <span>{{formatMonth(entry.expiry_date)}} (</span>
+                        <span>{{entry.formatted_expiry_date}} (</span>
                         <span openlmis-message="report.stock.on.hand.amount"></span>
                         <span>{{entry.soonest_expiring_loh}})</span>
                     </a></td>
                     <td class="align-right"><span ng-hide="angular.isUndefined(entry.estimated_months)"><img src="/public/images/exclamation.png" class="exclamation" ng-show="hasExpirationRisk(entry)"> {{entry.estimated_months}}</span></td>
                     <td><span class="circle-icon" ng-style="checkLastSyncDate(entry.last_sync_date)"> </span>
-                        <span>{{entry.last_sync_date | date:'h:mm a'}} {{formatDateWithDay(entry.last_sync_date)}}</span>
+                        <span>{{entry.formatted_last_sync_date}}</span>
                     </td>
                 </tr>
             </table>

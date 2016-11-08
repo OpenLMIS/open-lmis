@@ -145,4 +145,25 @@ describe("Base Product Report Controller", function () {
         scope.reportParams.endTime = '2016-10-01';
         expect(scope.hasExpirationRisk(entry)).toBeFalsy();
     });
+
+    it('should set cmm status according to cmm and soh', function () {
+        var entry1 = {
+            cmm: 10,
+            soh: 40
+        };
+
+        var entry2 = {
+            cmm: 10,
+            soh: 1
+        };
+
+        var entry3 = {
+            cmm: 100,
+            soh: 1
+        };
+
+        expect(scope.cmmStatus(entry1)).toEqual('over-stock');
+        expect(scope.cmmStatus(entry2)).toEqual('regular-stock');
+        expect(scope.cmmStatus(entry3)).toEqual('low-stock');
+    });
 });

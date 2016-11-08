@@ -5,6 +5,14 @@ function BaseProductReportController($scope, $filter, ProductReportService, $cac
     $scope.fullGeoZoneList = [];
     $scope.reportParams = {};
     $scope.products = [];
+
+    var CMM_STATUS = {
+        stockOut: 'stock-out',
+        regularStock: 'regular-stock',
+        overStock: 'over-stock',
+        lowStock: 'low-stock'
+    };
+
     if ($cacheFactory.get('keepHistoryInStockOnHandPage') !== undefined && $location.path().indexOf("stock-on-hand-all-products") < 0) {
         $cacheFactory.get('keepHistoryInStockOnHandPage').put('saveDataOfStockOnHand', "no");
     }
@@ -157,20 +165,30 @@ function BaseProductReportController($scope, $filter, ProductReportService, $cac
         var cmm = entry.cmm;
         var soh = entry.soh;
         if (soh === 0) {
-            return "stock-out";
+            return CMM_STATUS.stockOut;
         }
         if (cmm == -1) {
-            return "regular-stock";
+            return CMM_STATUS.regularStock;
         }
 
         if (soh < 0.05 * cmm) {//low stock
-            return "low-stock";
+            return CMM_STATUS.lowStock;
         }
         else if (soh > 2 * cmm) {//over stock
-            return "over-stock";
+            return CMM_STATUS.overStock;
         } else {
-            return "regular-stock";
+            return CMM_STATUS.regularStock;
         }
+    };
+
+    $scope.getEntryStockStatus = function(entry) {
+        if ($scope.cmmStatus(entry) === CMM_STATUS.lowStock) {
+            return messageService.get('stock.cmm.low.stock');
+        }
+        if ($scope.cmmStatus(entry) === CMM_STATUS.overStock) {
+            return messageService.get('stock.cmm.over.stock');
+        }
+        return '';
     };
 
     $scope.formatMonth = function (dateString) {
@@ -181,6 +199,10 @@ function BaseProductReportController($scope, $filter, ProductReportService, $cac
 
     $scope.formatDateWithDay = function (dateString) {
         return DateFormatService.formatDateWithLocale(dateString);
+    };
+
+    $scope.formatDateWithTimeAndLocale = function (dateString) {
+        return DateFormatService.formatDateWithTimeAndLocale(dateString);
     };
 
     $scope.locationIdToCode = function (params) {
