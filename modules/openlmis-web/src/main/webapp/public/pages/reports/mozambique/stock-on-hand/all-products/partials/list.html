@@ -89,7 +89,7 @@
                         <span openlmis-message="report.stock.on.hand.amount"></span>
                         <span>{{entry.soonest_expiring_loh}})</span>
                     </a></td>
-                    <td><span ng-hide="angular.isUndefined(entry.estimated_months)" ng-style="hasExpirationRisk(entry)">{{entry.estimated_months}}</span></td>
+                    <td class="align-right"><span ng-hide="angular.isUndefined(entry.estimated_months)"><img src="/public/images/exclamation.png" class="exclamation" ng-show="hasExpirationRisk(entry)"> {{entry.estimated_months}}</span></td>
                     <td><span class="circle-icon" ng-style="checkLastSyncDate(entry.last_sync_date)"> </span>
                         <span>{{entry.last_sync_date | date:'h:mm a'}} {{formatDateWithDay(entry.last_sync_date)}}</span>
                     </td>

@@ -147,10 +147,10 @@ function BaseProductReportController($scope, $filter, ProductReportService, $cac
             var expiryDate = new Date(entry.expiry_date);
             var expiryDateWithLastDate = new Date(expiryDate.getFullYear(), expiryDate.getMonth() + 1, 0);
             if (entry.expiry_date!== null && expiryDateWithLastDate <= estimatedDrugUseUpDate) {
-                return {'background-color': 'yellow'};
+                return true;
             }
         }
-
+        return false;
     };
 
     $scope.cmmStatus = function (entry) {
