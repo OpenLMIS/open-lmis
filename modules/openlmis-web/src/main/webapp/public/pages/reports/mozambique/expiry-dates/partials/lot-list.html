@@ -24,6 +24,8 @@
 
         <div style="clear: both"></div>
 
+        <div ng-include="'/public/pages/reports/mozambique/search-field.html'"></div>
+
     </div>
 
     <hr/>
@@ -53,7 +55,7 @@
 
         <div class="content-table">
             <table class="table table-condensed table-bordered table-striped fixed-header-table" >
-                <tr ng-repeat="entry in reportData | orderBy:sortType:sortReverse" on-finish-render>
+                <tr ng-repeat="entry in reportData | orderBy:sortType:sortReverse | filter: searchValue" on-finish-render>
                     <td><a id="{{entry.code}}" href="#{{entry.code}}"></a>{{entry.code}}</td>
                     <td>{{entry.name}}</td>
                     <td class="expiry-dates-td">
