@@ -28,6 +28,12 @@ function SingleProductReportController($scope, $filter, $controller, $http, Cube
           maxOccurredDateEntry.facility_name = maxOccurredDateEntry['facility.facility_name'];
           maxOccurredDateEntry.facility_code = maxOccurredDateEntry['facility.facility_code'];
           maxOccurredDateEntry.estimated_months = (maxOccurredDateEntry.cmm === -1.0 || maxOccurredDateEntry.cmm === 0) ? undefined : Math.floor(10 * maxOccurredDateEntry.soh/maxOccurredDateEntry.cmm)/10;
+
+          maxOccurredDateEntry.formatted_expiry_date = $scope.formatMonth(maxOccurredDateEntry['expiry_date']) ;
+          var rawLastSyncDate = maxOccurredDateEntry['last_sync_date'];
+          maxOccurredDateEntry.formatted_last_sync_date = $scope.formatDateWithTimeAndLocale(rawLastSyncDate);
+          maxOccurredDateEntry.stock_status = $scope.getEntryStockStatus(maxOccurredDateEntry);
+
           return maxOccurredDateEntry;
         })
         .value();
