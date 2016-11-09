@@ -2,6 +2,11 @@
     <h3 openlmis-message="title.requisitions.report"></h3>
     <h4 openlmis-message="label.report.requisitions.total|requisitions.length"></h4>
 
+    <div class="search-field">
+        <label openlmis-message="label.search"></label>
+        <input type="text" ng-model="filterOptions.filterText" />
+    </div>
+
     <div id='viewReqList' ng-grid="rnrListGrid" class="gridStyleAutoFillHeight"
          ng-show="requisitions.length"></div>
 

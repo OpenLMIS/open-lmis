@@ -58,6 +58,17 @@ function RequisitionReportController($scope, $filter, RequisitionReportService, 
         return messageService.get("rnr.report.submitted.status.late") === status;
     };
 
+    $scope.filterOptions = {
+        filterText: '',
+        useExternalFilter: false
+    };
+
+    $scope.$on('filterChanged', function (evt, text) {
+        console.log(text);
+        $scope.filteringText = text;
+    });
+
+
     $scope.rnrListGrid = {
         data: 'requisitions',
         displayFooter: false,
@@ -67,10 +78,12 @@ function RequisitionReportController($scope, $filter, RequisitionReportService, 
         displaySelectionCheckbox: false,
         enableColumnResize: true,
         showColumnMenu: false,
-        showFilter: false,
         enableSorting: true,
         plugins: [new ngGridFlexibleHeightPlugin()],
         sortInfo: {fields: ['webSubmittedTimeString'], directions: ['desc']},
+        enableFiltering: true,
+        filterOptions: $scope.filterOptions,
+        showFilter: false,
         columnDefs: [
             {
                 displayName: messageService.get("label.report.requisitions.number"),
