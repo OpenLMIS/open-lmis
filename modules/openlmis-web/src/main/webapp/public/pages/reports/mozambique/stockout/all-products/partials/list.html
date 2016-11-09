@@ -12,6 +12,8 @@
 
         <div style="clear: both"></div>
 
+        <div ng-include="'/public/pages/reports/mozambique/search-field.html'"></div>
+
     </div>
 
     <hr/>
@@ -52,8 +54,8 @@
         </table>
 
         <div class="content-table">
-            <table class="table table-condensed table-bordered table-striped fixed-header-table">
-                <tr ng-repeat="entry in reportData | orderBy:sortType:sortReverse">
+            <table class="table table-condensed table-bordered table-striped fixed-header-table" enableVerticalScrollbar="2">
+                <tr ng-repeat="entry in reportData | orderBy:sortType:sortReverse | filter: searchValue">
                     <td>{{entry.code}}</td>
                     <td style="text-align: left"><a href="#/stock-out-single-product/{{entry.code}}" ng-click="saveHistory()">{{entry.name}}</a></td>
                     <td>{{entry.avgDuration}}</td>
