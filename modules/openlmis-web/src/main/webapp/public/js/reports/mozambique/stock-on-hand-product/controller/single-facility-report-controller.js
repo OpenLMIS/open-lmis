@@ -56,8 +56,8 @@ function SingleFacilityReportController($scope, $filter, $controller, $http, Cub
           maxOccurredDateEntry.drug_name = maxOccurredDateEntry['drug.drug_name'];
           maxOccurredDateEntry.drug_code = maxOccurredDateEntry['drug.drug_code'];
 
-          maxOccurredDateEntry.formatted_expiry_date = $scope.formatMonth(maxOccurredDateEntry['expiry_date']) ;
-          var rawLastSyncDate = maxOccurredDateEntry['last_sync_date'];
+          maxOccurredDateEntry.formatted_expiry_date = $scope.formatMonth(maxOccurredDateEntry.expiry_date) ;
+          var rawLastSyncDate = maxOccurredDateEntry.last_sync_date;
           maxOccurredDateEntry.formatted_last_sync_date = $scope.formatDateWithTimeAndLocale(rawLastSyncDate);
           maxOccurredDateEntry.estimated_months = (maxOccurredDateEntry.cmm === -1.0 || maxOccurredDateEntry.cmm === 0) ? undefined : Math.floor(10 * maxOccurredDateEntry.soh/maxOccurredDateEntry.cmm)/10;
           maxOccurredDateEntry.stock_status = $scope.getEntryStockStatus(maxOccurredDateEntry);
