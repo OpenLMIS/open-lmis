@@ -21,6 +21,6 @@ public interface CMMMapper {
     @Select("SELECT * FROM cmm_entries WHERE facilityId = #{facilityId} and productCode = #{productCode} and periodBegin <= #{day} and periodEnd >= #{day}")
     CMMEntry getCMMEntryByFacilityAndDayAndProductCode(@Param("facilityId") Long facilityId, @Param("productCode") String productCode, @Param("day") Date day);
 
-    @Update("UPDATE cmm_entries SET cmmValue = #{cmmValue} WHERE id = #{id}")
+    @Update("UPDATE cmm_entries SET cmmValue = #{cmmValue}, modifieddate= NOW() WHERE id = #{id}")
     void update(CMMEntry entry);
 }
