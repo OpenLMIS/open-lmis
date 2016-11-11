@@ -105,4 +105,21 @@ function SingleFacilityReportController($scope, $filter, $controller, $http, Cub
     $scope.invalid = !facilityId || facilityId === ' ';
     return !$scope.invalid;
   }
+
+  $scope.partialPropertiesFilter = function(searchValue) {
+    return function(entry) {
+      var regex = new RegExp(searchValue, "gi");
+
+      return regex.test(entry.cmm.toString()) ||
+          regex.test(entry.soh.toString()) ||
+          regex.test(entry.expiry_date)||
+          regex.test(entry.estimated_months) ||
+          regex.test(entry.formatted_expiry_date) ||
+          regex.test(entry.soonest_expiring_loh) ||
+          regex.test(entry.stock_status) ||
+          regex.test(entry.drug_code) ||
+          regex.test(entry.drug_name) ||
+          regex.test(entry.formatted_last_sync_date);
+    };
+  };
 }

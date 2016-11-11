@@ -70,7 +70,7 @@
         </table>
         <div class="content-table">
             <table class="table table-condensed table-bordered table-striped fixed-header-table" enableVerticalScrollbar="2">
-                <tr ng-repeat="entry in reportData | filter: searchValue | orderBy:sortType:sortReverse">
+                <tr ng-repeat="entry in reportData | orderBy:sortType:sortReverse | filter: partialPropertiesFilter(searchValue)">
                     <td ng-show="viewStockMovementToggle">
                         <a href="#/stock-movements/product/{{entry.drug_code}}/facility/{{entry['facility.facility_code']}}"
                             ng-click="saveHistory()">{{entry.drug_name}} [{{entry.drug_code}}]</a>
