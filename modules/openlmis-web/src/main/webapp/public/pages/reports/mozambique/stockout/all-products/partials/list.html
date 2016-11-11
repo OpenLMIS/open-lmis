@@ -55,7 +55,7 @@
 
         <div class="content-table">
             <table class="table table-condensed table-bordered table-striped fixed-header-table" enableVerticalScrollbar="2">
-                <tr ng-repeat="entry in reportData | orderBy:sortType:sortReverse | filter: searchValue">
+                <tr ng-repeat="entry in reportData | orderBy:sortType:sortReverse | filter: partialPropertiesFilter(searchValue)">
                     <td>{{entry.code}}</td>
                     <td style="text-align: left"><a href="#/stock-out-single-product/{{entry.code}}" ng-click="saveHistory()">{{entry.name}}</a></td>
                     <td>{{entry.avgDuration}}</td>

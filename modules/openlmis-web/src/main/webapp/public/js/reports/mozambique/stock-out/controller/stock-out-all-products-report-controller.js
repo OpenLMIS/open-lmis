@@ -135,4 +135,16 @@ function StockOutAllProductsReportController($scope, $filter, $controller, $http
         }
         return stockReportParams;
     }
+
+    $scope.partialPropertiesFilter = function(searchValue) {
+        return function(entry) {
+            var regex = new RegExp(searchValue, "gi");
+
+            return regex.test(entry.code)||
+                regex.test(entry.name) ||
+                regex.test(entry.avgDuration.toString()) ||
+                regex.test(entry.occurrences.toString()) ||
+                regex.test(entry.totalDuration.toString());
+        };
+    };
 }
