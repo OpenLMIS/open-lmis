@@ -63,12 +63,6 @@ function RequisitionReportController($scope, $filter, RequisitionReportService, 
         useExternalFilter: false
     };
 
-    $scope.$on('filterChanged', function (evt, text) {
-        console.log(text);
-        $scope.filteringText = text;
-    });
-
-
     $scope.rnrListGrid = {
         data: 'requisitions',
         displayFooter: false,
