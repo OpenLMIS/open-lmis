@@ -11,9 +11,6 @@
         </div>
 
         <div style="clear: both"></div>
-
-        <div ng-include="'/public/pages/reports/mozambique/search-field.html'"></div>
-
     </div>
 
     <hr/>
@@ -23,7 +20,10 @@
 
     <div id="report" ng-if="reportData.length > 0">
         <h3 class="report-title" openlmis-message="subtitle.stock.out.all.report|reportParams.reportTitle"></h3>
-        <h4 openlmis-message="label.report.data.total|reportData.length"></h4>
+        <div class="report-subtitle">
+            <h4 class="report-total-entries" openlmis-message="label.report.data.total|reportData.length"></h4>
+            <div ng-include="'/public/pages/reports/mozambique/search-field.html'"></div>
+        </div>
         <table class="table table-condensed table-bordered table-striped fixed-header-table header-table">
             <tr class="gradient-header">
                 <th ng-click="sortType = 'code'; sortReverse = !sortReverse" class="sortable sort-desc"
