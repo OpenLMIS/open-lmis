@@ -1,4 +1,4 @@
-function LotExpiryDatesReportController($scope, $controller, $http, CubesGenerateUrlService, messageService, DateFormatService, CubesGenerateCutParamsService, $routeParams, $timeout, $location, $anchorScroll) {
+function LotExpiryDatesReportController($scope, $controller, $http, CubesGenerateUrlService, messageService, CubesGenerateCutParamsService, $routeParams, $filter) {
   $controller('BaseProductReportController', {$scope: $scope});
 
   $scope.populateOptions = function () {
@@ -136,8 +136,18 @@ function LotExpiryDatesReportController($scope, $controller, $http, CubesGenerat
     $scope.reportParams.reportTitle = reportTitle || messageService.get("label.all");
   }
 
-$scope.$on('ngRepeatFinished', function () {
-    if(!_.isEmpty($routeParams)) {
+  $scope.partialPropertiesFilter = function(searchValue) {
+    return function(entry) {
+      var regex = new RegExp(searchValue, "gi");
+
+      return regex.test(entry.code) ||
+          regex.test(entry.name) ||
+          regex.test(_.pluck(entry.lot_expiry_dates, 'lot_expiry').join(' '));
+    };
+  };
+
+  $scope.$on('ngRepeatFinished', function () {
+    if (!_.isEmpty($routeParams)) {
       $(".content-table")[0].scrollTop += ($("#" + $routeParams.drugCode).offset().top - $(".content-table").offset().top - 10);
       $("#" + $routeParams.drugCode).parent().parent().addClass("highlight");
     }
