@@ -17,4 +17,14 @@ function VersionReportController($scope, VersionReportService, $cacheFactory) {
         $cacheFactory.get('keepHistoryInStockOutReportPage').put('saveDataOfStockOutReport', "no");
         $cacheFactory.get('keepHistoryInStockOutReportPage').put('saveDataOfStockOutReportForSingleProduct', "no");
     }
+
+    $scope.partialPropertiesFilter = function(searchValue) {
+        return function(entry) {
+            var regex = new RegExp(searchValue, "gi");
+
+            return regex.test(entry.userName) ||
+                regex.test(entry.facilityName) ||
+                regex.test(entry.appVersion);
+        };
+    };
 }

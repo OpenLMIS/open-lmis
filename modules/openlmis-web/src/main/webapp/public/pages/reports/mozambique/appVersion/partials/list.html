@@ -28,7 +28,7 @@
     </table>
     <div class="content-table">
         <table class="table table-condensed table-bordered table-striped fixed-header-table">
-            <tr ng-repeat="appVersion in appVersions| orderBy:sortType:sortReverse | filter: searchValue">
+            <tr ng-repeat="appVersion in appVersions| orderBy:sortType:sortReverse | filter: partialPropertiesFilter(searchValue)">
                 <td>{{$index+1}}</td>
                 <td>{{appVersion.userName}}</td>
                 <td>{{appVersion.facilityName}}</td>
