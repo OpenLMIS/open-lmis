@@ -9,13 +9,8 @@ function TracerDrugsReportController($scope, $controller, $filter, DateFormatSer
         TracerDrugsChartService.makeTracerDrugsChart('tracer-report', 'legend-div', new Date($scope.reportParams.startTime), new Date($scope.reportParams.endTime), getSelectedProvince(), getSelectedDistrict());
     };
 
-    $scope.downLoadRawData = function () {
-        var params = [{name: "fields", value: ["facility.facility_name","drug.drug_name","date","soh"]}, {name: "format", value: ["csv"]}];
-
-        window.open(CubesGenerateUrlService.generateFactsUrlWithParams('vw_weekly_tracer_soh', CubesGenerateCutParamsService.generateCutsParams('cutDate',
-            $filter('date')($scope.reportParams.startTime, "yyyy,MM,dd"),
-            $filter('date')($scope.reportParams.endTime, "yyyy,MM,dd"),
-            undefined, undefined, getSelectedProvince(), getSelectedDistrict()), params));
+    $scope.exportXLSX = function() {
+        TracerDrugsChartService.exportXLSX($scope.reportParams.startTime, $scope.reportParams.endTime,  getSelectedProvince(), getSelectedDistrict());
     };
 
     function getSelectedProvince() {

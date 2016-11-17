@@ -1,4 +1,4 @@
-services.factory('TracerDrugsChartService', function ($http, $filter, $q, $timeout, messageService, CubesGenerateUrlService, StockoutSingleProductZoneChartService, CubesGenerateCutParamsService, ReportLocationConfigService) {
+services.factory('TracerDrugsChartService', function ($http, $filter, $q, $timeout, messageService, CubesGenerateUrlService, StockoutSingleProductZoneChartService, CubesGenerateCutParamsService, ReportLocationConfigService, $window) {
 
     var drugCodekey = "drug.drug_code";
     var drugNameKey = "drug.drug_name";
@@ -275,9 +275,49 @@ services.factory('TracerDrugsChartService', function ($http, $filter, $q, $timeo
         });
     }
 
+    function exportXLSX(startTime, endTime, province, district) {
+        var params = [{name: "fields", value: ["facility.facility_name","drug.drug_name","drug.drug_code","date","soh"]}];
+
+        $http.get(CubesGenerateUrlService.generateFactsUrlWithParams('vw_weekly_tracer_soh', CubesGenerateCutParamsService.generateCutsParams('cutDate',
+            $filter('date')(startTime, "yyyy,MM,dd"),
+            $filter('date')(endTime, "yyyy,MM,dd"),
+            undefined, undefined, province, district), params)).success(function (tracerDrugs) {
+
+            var data = [];
+            tracerDrugs.forEach(function (tracerDrug) {
+                var newTracerDrug = {};
+                newTracerDrug.drugCode = tracerDrug['drug.drug_code'];
+                newTracerDrug.drugName = tracerDrug['drug.drug_name'];
+                newTracerDrug.province = province.name;
+                newTracerDrug.district = district.name;
+                newTracerDrug.facility = tracerDrug['facility.facility_name'];
+                newTracerDrug.quantity = tracerDrug.soh;
+                newTracerDrug.date = tracerDrug.date;
+                data.push(newTracerDrug)
+            });
+
+            $http({
+                url: '/reports/download/tracerReport',
+                method: 'POST',
+                data: JSON.stringify(data),
+                headers: {
+                    'Content-type': 'application/json'
+                },
+                responseType: "blob"
+            }).success(function (data, status, headers, config) {
+                var blob = new Blob([data], {type: "application/vnd.ms-excel"});
+                saveAs(blob, "tracer-drugs.xlsx");
+            }).error(function (data, status, headers, config) {
+
+            });
+
+        });
+    }
+
     return {
         generateGraphs: generateGraphs,
         generateTracerDrugsChartDataItems: generateTracerDrugsChartDataItems,
-        makeTracerDrugsChart: makeTracerDrugsChart
+        makeTracerDrugsChart: makeTracerDrugsChart,
+        exportXLSX: exportXLSX
     };
 });
