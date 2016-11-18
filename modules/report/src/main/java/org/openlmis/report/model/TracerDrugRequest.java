@@ -1,14 +1,17 @@
 package org.openlmis.report.model;
 
-import java.util.Date;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
-import lombok.*;
+import java.util.Date;
 
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class TracerDrugRequest {
+public class TracerDrugRequest implements ReportData {
 
     private String drugCode;
 

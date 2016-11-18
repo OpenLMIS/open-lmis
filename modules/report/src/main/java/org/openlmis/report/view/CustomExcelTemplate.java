@@ -4,22 +4,26 @@ import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.openlmis.report.model.TracerDrugRequest;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.Collection;
+import java.util.List;
 import java.util.Map;
 
 public class CustomExcelTemplate  extends AbstractXlsxView {
 
-    private static final String KEY_EXCEL_DATA = "KEY_EXCEL_DATA";
+    private static final String KEY_EXCEL_CONTENT = "KEY_EXCEL_CONTENT";
+    private static final String KEY_EXCEL_HEADERS = "KEY_EXCEL_HEADERS";
+    private static final DateFormat DATE_FORMAT = new SimpleDateFormat("dd/MM/yyyy");
 
-    public static ModelAndView newModelAndView(Object data) {
+    public static ModelAndView newModelAndView(Object reportContent, List<String> reportHeaders) {
         ModelAndView modelAndView = new ModelAndView(INSTANCE);
-        modelAndView.addObject(KEY_EXCEL_DATA, data);
+        modelAndView.addObject(KEY_EXCEL_CONTENT, reportContent);
+        modelAndView.addObject(KEY_EXCEL_HEADERS, reportHeaders);
         return modelAndView;
     }
 
@@ -28,29 +32,32 @@ public class CustomExcelTemplate  extends AbstractXlsxView {
     @Override
     protected void buildExcelDocument(Map<String, Object> model, Workbook workbook, HttpServletRequest request, HttpServletResponse response) throws Exception {
 
-        @SuppressWarnings("unchecked")
-        Object data = model.get(KEY_EXCEL_DATA);
+        Object reportContent = model.get(KEY_EXCEL_CONTENT);
+        Object reportHeaders = model.get(KEY_EXCEL_HEADERS);
 
-        if (!(data instanceof Collection)) {
+        if (!(reportContent instanceof Collection)) {
             throw new IllegalArgumentException("Type is not correct");
         }
-        Collection<?> list = (Collection<?>) data;
+
+        if (!(reportHeaders instanceof Collection)) {
+            throw new IllegalArgumentException("Type is not correct");
+        }
+
+        Collection<?> reportContentList = (Collection<?>) reportContent;
+        Collection<String> reportHeaderList = (Collection<String>) reportHeaders;
 
         int rowIndex = 0;
+        int headerCellIndex = 0;
 
         Sheet sheet = workbook.createSheet();
         Row header = sheet.createRow(rowIndex++);
 
-        header.createCell(0).setCellValue("Drug Code");
-        header.createCell(1).setCellValue("Drug Name");
-        header.createCell(2).setCellValue("Province");
-        header.createCell(3).setCellValue("District");
-        header.createCell(4).setCellValue("Facility");
-        header.createCell(5).setCellValue("Drug Quantity");
-        header.createCell(6).setCellValue("Date");
+        for (String reportHeader : reportHeaderList) {
+            header.createCell(headerCellIndex).setCellValue(reportHeader);
+            headerCellIndex++;
+        }
 
-
-        for (Object o : list) {
+        for (Object o : reportContentList) {
             TracerDrugRequest item = (TracerDrugRequest) o;
             Row itemRow = sheet.createRow(rowIndex++);
 
@@ -60,7 +67,7 @@ public class CustomExcelTemplate  extends AbstractXlsxView {
             itemRow.createCell(3).setCellValue(item.getDistrict());
             itemRow.createCell(4).setCellValue(item.getFacility());
             itemRow.createCell(5).setCellValue(item.getQuantity());
-            itemRow.createCell(6).setCellValue(item.getDate());
+            itemRow.createCell(6).setCellValue(DATE_FORMAT.format(item.getDate()));
         }
     }
 }

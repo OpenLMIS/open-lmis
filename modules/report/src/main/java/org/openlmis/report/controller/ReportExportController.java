@@ -16,18 +16,19 @@ import lombok.NoArgsConstructor;
 import org.openlmis.core.web.controller.BaseController;
 import org.openlmis.report.ReportManager;
 import org.openlmis.report.ReportOutputOption;
-import org.openlmis.report.model.TracerDrugRequest;
+import org.openlmis.report.model.ExportRequest;
 import org.openlmis.report.service.lookup.ReportLookupService;
 import org.openlmis.report.view.CustomExcelTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.*;
-import java.util.List;
+import java.io.IOException;
 
 import static org.springframework.web.bind.annotation.RequestMethod.POST;
 
@@ -98,11 +99,8 @@ public class ReportExportController extends BaseController {
     }
 
     @RequestMapping(value = "/download/tracerReport", method = POST, headers = ACCEPT_JSON)
-    public ModelAndView generateReport(@RequestBody List<TracerDrugRequest> tracerDrugs,
-                                       HttpServletResponse response,
-                                       HttpServletRequest request) throws IOException {
-
-        return CustomExcelTemplate.newModelAndView(tracerDrugs);
+    public ModelAndView generateReport(@RequestBody ExportRequest exportRequest) throws IOException {
+        return CustomExcelTemplate.newModelAndView(exportRequest.getReportContent(), exportRequest.getReportHeaders());
     }
 
 }
