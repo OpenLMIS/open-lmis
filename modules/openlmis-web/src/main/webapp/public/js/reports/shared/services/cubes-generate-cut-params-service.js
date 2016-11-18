@@ -20,7 +20,14 @@ services.factory('CubesGenerateCutParamsService', function (ReportLocationConfig
         }
 
         if (drugs) {
-            cutsParams.push({dimension: "drug", values: _.pluck(drugs, "drug.drug_code")});
+            var everyDrugHasDrugCode = _.every(drugs, function (drug) {
+                return drug.hasOwnProperty("drug.drug_code");
+            });
+            if (everyDrugHasDrugCode) {
+                cutsParams.push({dimension: "drug", values: _.pluck(drugs, "drug.drug_code")});
+            } else {
+                !_.isEmpty(drugs) && cutsParams.push({dimension: "drug", values: drugs});
+            }
         }
 
         var locationConfig = ReportLocationConfigService.getUserSelectedLocationConfig(province, district);

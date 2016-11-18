@@ -94,5 +94,23 @@ describe("cubes generate cut params service test", function () {
                 }]);
     });
 
+    it("should generate cut params with drugs when drug is array", function () {
+        var drugArray = ['drugCode3', 'drugCode4'];
+        expect(cubesGenerateCutParamsService.generateCutsParams("overlapped_date", "2015,10,01", "2016,04,01", undefined, drugArray, province, district))
+            .toEqual([
+                {
+                    dimension: 'overlapped_date',
+                    values: ['2015,10,01-2016,04,01'],
+                    skipEscape : true
+                },
+                {
+                    dimension: 'drug',
+                    values: ['drugCode3', 'drugCode4']
+                }, {
+                    dimension: 'location',
+                    values: [['provinceCode', 'districtCode']]
+                }]);
+    });
+
 
 });
