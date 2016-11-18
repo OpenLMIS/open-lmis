@@ -2,7 +2,7 @@ services.factory('TracerDrugsChartService', function ($http, $filter, $q, $timeo
 
     var drugCodekey = "drug.drug_code";
     var drugNameKey = "drug.drug_name";
-
+    var selectedDrugs = [];
     function getTracerDrugStockRateOnFriday(zone, friday, stockOuts, tracerDrugCode, carryStartDates) {
         var stockOutsOfTracerDrug = _.filter(stockOuts, function (stockOut) {
             return stockOut[drugCodekey] === tracerDrugCode;
@@ -232,7 +232,14 @@ services.factory('TracerDrugsChartService', function ($http, $filter, $q, $timeo
             "type": "serial",
             "theme": "light",
             "legend": {
-                divId: legendDivId
+                divId: legendDivId,
+                "listeners": [{
+                    "event": "hideItem",
+                    "method": handleLegendClick
+                }, {
+                    "event": "showItem",
+                    "method": handleLegendClick
+                }]
             },
             "dataProvider": chartDataItems,
             "valueAxes": [{
@@ -275,43 +282,59 @@ services.factory('TracerDrugsChartService', function ($http, $filter, $q, $timeo
         });
     }
 
+
+    function handleLegendClick(evt) {
+        var hidden = evt.dataItem.hidden;
+        if (evt.type === "hideItem") {
+            _.uniq(selectedDrugs);
+            var index = selectedDrugs.indexOf(evt.dataItem.valueField);
+            if (index > -1) {
+                selectedDrugs.splice(index, 1);
+            }
+        } else {
+            selectedDrugs.push(evt.dataItem.valueField)
+        }
+    }
+
     function exportXLSX(startTime, endTime, province, district) {
-        var params = [{name: "fields", value: ["facility.facility_name","drug.drug_name","drug.drug_code","date","soh"]}];
+        var params = [{name: 'fields', value: ['facility.facility_name', 'drug.drug_name', 'drug.drug_code', 'date', 'soh']}];
 
-        $http.get(CubesGenerateUrlService.generateFactsUrlWithParams('vw_weekly_tracer_soh', CubesGenerateCutParamsService.generateCutsParams('cutDate',
-            $filter('date')(startTime, "yyyy,MM,dd"),
-            $filter('date')(endTime, "yyyy,MM,dd"),
-            undefined, undefined, province, district), params)).success(function (tracerDrugs) {
+        if(province && district) {
+            _.isEmpty(selectedDrugs) && (selectedDrugs = undefined);
+            $http.get(CubesGenerateUrlService.generateFactsUrlWithParams('vw_weekly_tracer_soh', CubesGenerateCutParamsService.generateCutsParams('cutDate',
+                $filter('date')(startTime, "yyyy,MM,dd"),
+                $filter('date')(endTime, "yyyy,MM,dd"),
+                undefined, selectedDrugs, province, district), params)).success(function (tracerDrugs) {
 
-            var data = [];
-            tracerDrugs.forEach(function (tracerDrug) {
-                var newTracerDrug = {};
-                newTracerDrug.drugCode = tracerDrug['drug.drug_code'];
-                newTracerDrug.drugName = tracerDrug['drug.drug_name'];
-                newTracerDrug.province = province.name;
-                newTracerDrug.district = district.name;
-                newTracerDrug.facility = tracerDrug['facility.facility_name'];
-                newTracerDrug.quantity = tracerDrug.soh;
-                newTracerDrug.date = tracerDrug.date;
-                data.push(newTracerDrug)
+                var data = [];
+                tracerDrugs.forEach(function (tracerDrug) {
+                    var newTracerDrug = {};
+                    newTracerDrug.drugCode = tracerDrug['drug.drug_code'];
+                    newTracerDrug.drugName = tracerDrug['drug.drug_name'];
+                    newTracerDrug.province = province.name;
+                    newTracerDrug.district = district.name;
+                    newTracerDrug.facility = tracerDrug['facility.facility_name'];
+                    newTracerDrug.quantity = tracerDrug.soh;
+                    newTracerDrug.date = tracerDrug.date;
+                    data.push(newTracerDrug)
+                });
+
+                $http({
+                    url: '/reports/download/tracerReport',
+                    method: 'POST',
+                    data: JSON.stringify(data),
+                    headers: {
+                        'Content-type': 'application/json'
+                    },
+                    responseType: 'blob'
+                }).success(function (data, status, headers, config) {
+                    var blob = new Blob([data], {type: "application/vnd.ms-excel"});
+                    saveAs(blob, "tracer-drugs.xlsx");
+                }).error(function (data, status, headers, config) {
+
+                });
             });
-
-            $http({
-                url: '/reports/download/tracerReport',
-                method: 'POST',
-                data: JSON.stringify(data),
-                headers: {
-                    'Content-type': 'application/json'
-                },
-                responseType: "blob"
-            }).success(function (data, status, headers, config) {
-                var blob = new Blob([data], {type: "application/vnd.ms-excel"});
-                saveAs(blob, "tracer-drugs.xlsx");
-            }).error(function (data, status, headers, config) {
-
-            });
-
-        });
+        }
     }
 
     return {

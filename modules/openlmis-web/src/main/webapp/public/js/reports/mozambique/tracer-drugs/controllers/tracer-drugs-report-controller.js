@@ -1,4 +1,4 @@
-function TracerDrugsReportController($scope, $controller, $filter, DateFormatService, TracerDrugsChartService, CubesGenerateUrlService, CubesGenerateCutParamsService) {
+function TracerDrugsReportController($scope, $controller, DateFormatService, TracerDrugsChartService) {
     $controller('BaseProductReportController', {$scope: $scope});
 
     $scope.$on('$viewContentLoaded', function () {
@@ -19,6 +19,10 @@ function TracerDrugsReportController($scope, $controller, $filter, DateFormatSer
 
     function getSelectedDistrict() {
         return $scope.getGeographicZoneById($scope.districts, $scope.reportParams.districtId);
+    }
+
+    function getSelectProduct() {
+
     }
 
     function renderDefaultTracerDrugsReport() {
