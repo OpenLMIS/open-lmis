@@ -130,6 +130,7 @@ services.factory('TracerDrugsChartService', function ($http, $filter, $q, $timeo
     }
 
     function makeTracerDrugsChart(chartDivId, legendDivId, userSelectedStartDate, userSelectedEndDate, province, district) {
+        selectedDrugs = [];
         $http.get('/cubesreports/cube/products/facts?cut=is_tracer:true').success(function (tracerDrugs) {
             var stockOutPromise = getCubesRequestPromise(tracerDrugs, province, district, userSelectedStartDate, userSelectedEndDate, "vw_stockouts", "overlapped_date");
             var carryStartDatesPromise = getCubesRequestPromise(tracerDrugs, province, district, "", userSelectedEndDate, "vw_carry_start_dates", "carry_start");
@@ -297,60 +298,63 @@ services.factory('TracerDrugsChartService', function ($http, $filter, $q, $timeo
     }
 
     function exportXLSX(startTime, endTime, province, district) {
-        var params = [{name: 'fields', value: ['facility.facility_name', 'drug.drug_name', 'drug.drug_code', 'date', 'soh']}];
+        var params = [{
+          name: 'fields',
+          value: ['facility.facility_name', 'drug.drug_name', 'drug.drug_code', 'date', 'soh']
+        }];
 
-        if(province && district) {
-            var everyDrugIsSolid = _.every(selectedDrugs, function (drug) {
-                return drug;
-            });
-            var drugParams = (!_.isEmpty(selectedDrugs) && everyDrugIsSolid) ? selectedDrugs : undefined;
+        var everyDrugIsSolid = _.every(selectedDrugs, function (drug) {
+          return drug;
+        });
+        var drugParams = (!_.isEmpty(selectedDrugs) && everyDrugIsSolid) ? selectedDrugs : undefined;
 
-            $http.get(CubesGenerateUrlService.generateFactsUrlWithParams('vw_weekly_tracer_soh', CubesGenerateCutParamsService.generateCutsParams('cutDate',
-                $filter('date')(startTime, "yyyy,MM,dd"),
-                $filter('date')(endTime, "yyyy,MM,dd"),
-                undefined, drugParams, province, district), params)).success(function (tracerDrugs) {
+        $http.get(CubesGenerateUrlService.generateFactsUrlWithParams('vw_weekly_tracer_soh', CubesGenerateCutParamsService.generateCutsParams('cutDate',
+            $filter('date')(startTime, "yyyy,MM,dd"),
+            $filter('date')(endTime, "yyyy,MM,dd"),
+            undefined, drugParams, province, district), params)).success(function (tracerDrugs) {
 
-                var data = {
-                    reportHeaders: [
-                        messageService.get('report.header.drug.code'),
-                        messageService.get('report.header.drug.name'),
-                        messageService.get('report.header.province'),
-                        messageService.get('report.header.district'),
-                        messageService.get('report.header.facility'),
-                        messageService.get('report.header.drug.quantity'),
-                        messageService.get('report.header.date')
-                    ],
-                    reportContent: []
-                };
+        var data = {
+          reportHeaders: [
+            messageService.get('report.header.drug.code'),
+            messageService.get('report.header.drug.name'),
+            messageService.get('report.header.province'),
+            messageService.get('report.header.district'),
+            messageService.get('report.header.facility'),
+            messageService.get('report.header.drug.quantity'),
+            messageService.get('report.header.date')
+          ],
+          reportContent: []
+        };
 
-                tracerDrugs.forEach(function (tracerDrug) {
-                    var newTracerDrug = {};
-                    newTracerDrug.drugCode = tracerDrug['drug.drug_code'];
-                    newTracerDrug.drugName = tracerDrug['drug.drug_name'];
-                    newTracerDrug.province = province.name;
-                    newTracerDrug.district = district.name;
-                    newTracerDrug.facility = tracerDrug['facility.facility_name'];
-                    newTracerDrug.quantity = tracerDrug.soh;
-                    newTracerDrug.date = tracerDrug.date;
-                    data.reportContent.push(newTracerDrug);
-                });
+        tracerDrugs.forEach(function (tracerDrug) {
+            var newTracerDrug = {};
+            newTracerDrug.drugCode = tracerDrug['drug.drug_code'];
+            newTracerDrug.drugName = tracerDrug['drug.drug_name'];
+            newTracerDrug.province = province ? province.name : 'All';
+            newTracerDrug.district = district ? district.name : 'All';
+            newTracerDrug.facility = tracerDrug['facility.facility_name'];
+            newTracerDrug.quantity = tracerDrug.soh;
+            newTracerDrug.date = tracerDrug.date;
+            data.reportContent.push(newTracerDrug);
+        });
 
-                $http({
-                    url: '/reports/download/tracerReport',
-                    method: 'POST',
-                    data: JSON.stringify(data),
-                    headers: {
-                        'Content-type': 'application/json'
-                    },
-                    responseType: 'blob'
-                }).success(function (data, status, headers, config) {
-                    var blob = new Blob([data], {type: "application/vnd.ms-excel"});
-                    saveAs(blob, "tracer-drugs.xlsx");
-                }).error(function (data, status, headers, config) {
-
-                });
-            });
-        }
+        $http({
+            url: '/reports/download/tracerReport',
+            method: 'POST',
+            data: JSON.stringify(data),
+            headers: {
+                'Content-type': 'application/json'
+            },
+            responseType: 'blob'
+        }).success(function (data, status, headers, config) {
+            if(data.size>0) {
+                var blob = new Blob([data], {type: "application/vnd.ms-excel"});
+                saveAs(blob, "tracer-drugs.xlsx");
+            }
+        }).error(function (error, status) {
+            console.log(error);
+        });
+      });
     }
 
     return {
