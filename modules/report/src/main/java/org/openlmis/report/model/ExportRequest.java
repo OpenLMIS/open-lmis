@@ -5,7 +5,9 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 @Getter
 @Setter
@@ -13,7 +15,7 @@ import java.util.List;
 @AllArgsConstructor
 public class ExportRequest {
 
-    private List<String> reportHeaders;
+    private LinkedHashMap<String,String> reportHeaders;
 
-    private List<TracerDrugRequest> reportContent;
+    private List<Map<String, String>> reportContent;
 }

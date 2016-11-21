@@ -314,16 +314,16 @@ services.factory('TracerDrugsChartService', function ($http, $filter, $q, $timeo
             undefined, drugParams, province, district), params)).success(function (tracerDrugs) {
 
         var data = {
-          reportHeaders: [
-            messageService.get('report.header.drug.code'),
-            messageService.get('report.header.drug.name'),
-            messageService.get('report.header.province'),
-            messageService.get('report.header.district'),
-            messageService.get('report.header.facility'),
-            messageService.get('report.header.drug.quantity'),
-            messageService.get('report.header.date')
-          ],
-          reportContent: []
+            reportHeaders: {
+                drugCode: messageService.get('report.header.drug.code'),
+                drugName: messageService.get('report.header.drug.name'),
+                province: messageService.get('report.header.province'),
+                district: messageService.get('report.header.district'),
+                facility: messageService.get('report.header.facility'),
+                quantity: messageService.get('report.header.drug.quantity'),
+                date: messageService.get('report.header.date')
+            },
+            reportContent: []
         };
 
         tracerDrugs.forEach(function (tracerDrug) {
@@ -339,7 +339,7 @@ services.factory('TracerDrugsChartService', function ($http, $filter, $q, $timeo
         });
 
         $http({
-            url: '/reports/download/tracerReport',
+            url: '/reports/download/excel',
             method: 'POST',
             data: JSON.stringify(data),
             headers: {

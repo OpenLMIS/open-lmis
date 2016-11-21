@@ -98,7 +98,7 @@ public class ReportExportController extends BaseController {
         showReport("equipment_replacement_list", outputOption, request, response);
     }
 
-    @RequestMapping(value = "/download/tracerReport", method = POST, headers = ACCEPT_JSON)
+    @RequestMapping(value = "/download/excel", method = POST, headers = ACCEPT_JSON)
     public ModelAndView generateReport(@RequestBody ExportRequest exportRequest) throws IOException {
         if (exportRequest.getReportContent().size() == 0 ) return null;
         return CustomExcelTemplate.newModelAndView(exportRequest.getReportContent(), exportRequest.getReportHeaders());
