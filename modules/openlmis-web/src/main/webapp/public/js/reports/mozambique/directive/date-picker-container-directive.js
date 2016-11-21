@@ -4,8 +4,7 @@ function datePickerContainer(){
         controller: 'DatePickerContainerController',
         scope: {
             getTimeRange: '&',
-            pickerType: '@',
-            tagOptions: '@'
+            pickerType: '@'
         },
         templateUrl:'date-picker-container.html'
     };
