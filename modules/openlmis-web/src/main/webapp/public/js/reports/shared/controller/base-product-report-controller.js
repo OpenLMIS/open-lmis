@@ -219,6 +219,12 @@ function BaseProductReportController($scope, $filter, ProductReportService, $cac
         });
     };
 
+    $scope.getDrugByCode = function (drugCode) {
+        return _.find($scope.products, function (product) {
+            return product.code == drugCode;
+        });
+    };
+
     function addAllOption(locations, location) {
         $timeout(function () {
             if (locations.length > 1) {

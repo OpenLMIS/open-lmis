@@ -6,14 +6,66 @@ function ConsumptionReportController($scope, $controller, $filter, $http, $q, Cu
         $scope.loadHealthFacilities();
     });
 
+    var consumptionInPeriods;
+
     $scope.generateConsumptionReport = function () {
         if ($scope.checkDateValidRange() && validateProduct()) {
             $scope.locationIdToCode($scope.reportParams);
             var promises = requestConsumptionDataForEachPeriod();
             $q.all(promises).then(function (consumptionsInPeriods) {
-                renderConsumptionChart(_.pluck(_.pluck(consumptionsInPeriods, 'data'), 'summary'));
+                consumptionInPeriods = _.pluck(_.pluck(consumptionsInPeriods, 'data'), 'summary');
+                renderConsumptionChart(consumptionInPeriods);
             });
         }
+    };
+
+    $scope.exportXLSX = function() {
+        var data = {
+            reportHeaders: {
+                drugCode: messageService.get('report.header.drug.code'),
+                drugName: messageService.get('report.header.drug.name'),
+                province: messageService.get('report.header.province'),
+                district: messageService.get('report.header.district'),
+                facility: messageService.get('report.header.facility'),
+                period: messageService.get('report.header.period'),
+                cmm: messageService.get('report.header.cmm'),
+                consumption: messageService.get('report.header.consumption.during.period'),
+                soh: messageService.get('report.header.soh.at.period.end')
+            },
+            reportContent: []
+        };
+
+        consumptionInPeriods.forEach(function (consumptionInPeriod) {
+            var consumptionReportContent = {};
+            consumptionReportContent.drugCode = $scope.reportParams.productCode;
+            consumptionReportContent.drugName = $scope.getDrugByCode($scope.reportParams.productCode).primaryName;
+            consumptionReportContent.province = $scope.reportParams.selectedProvince ? $scope.reportParams.selectedProvince.name : 'All';
+            consumptionReportContent.district = $scope.reportParams.selectedDistrict ? $scope.reportParams.selectedDistrict.name : 'All';
+            consumptionReportContent.facility = $scope.reportParams.selectedFacility ? $scope.reportParams.selectedFacility.name : 'All';
+            consumptionReportContent.period = consumptionInPeriod.period;
+            consumptionReportContent.cmm = consumptionInPeriod.cmm;
+            consumptionReportContent.consumption = consumptionInPeriod['total_quantity'];
+            consumptionReportContent.soh = consumptionInPeriod.soh;
+
+            data.reportContent.push(consumptionReportContent);
+        });
+
+        $http({
+            url: '/reports/download/excel',
+            method: 'POST',
+            data: JSON.stringify(data),
+            headers: {
+                'Content-type': 'application/json'
+            },
+            responseType: 'blob'
+        }).success(function (data, status, headers, config) {
+            if(data.size>0) {
+                var blob = new Blob([data], {type: "application/vnd.ms-excel"});
+                saveAs(blob, "consumption-report.xlsx");
+            }
+        }).error(function (error, status) {
+            console.log(error);
+        });
     };
 
     function renderConsumptionChart(consumptionInPeriods) {

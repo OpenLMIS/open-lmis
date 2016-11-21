@@ -166,4 +166,39 @@ describe("Base Product Report Controller", function () {
         expect(scope.cmmStatus(entry2)).toEqual('regular-stock');
         expect(scope.cmmStatus(entry3)).toEqual('low-stock');
     });
+
+
+    it('should get drug name by code', function () {
+        scope.products = [
+            {
+                "id": 588,
+                "code": "08S01Z",
+                "primaryName": "ABACAVIR + LAMIVUDINA60mg + 30mg, 60Cps(Baby)Embalagem",
+                "description": "ABACAVIR + LAMIVUDINA",
+                "strength": "60mg + 30mg, 60Cps(Baby)"
+            },
+            {
+                "id": 1156,
+                "code": "23A04",
+                "primaryName": "ADESIVO ELáSTICO (10CM X 2CM)SEM DOSAGEMRolo",
+                "description": "ADESIVO ELáSTICO (10CM X 2CM)",
+                "strength": "SEM DOSAGEM"
+            },
+            {
+                "id": 1152,
+                "code": "23A02",
+                "primaryName": "ADESIVO ESPARADRAPO (TRANSPORE) (10CM X 10M)SEM DOSAGEMRolo",
+                "description": "ADESIVO ESPARADRAPO (TRANSPORE) (10CM X 10M)",
+                "strength": "SEM DOSAGEM"
+            }
+        ];
+
+        expect(scope.getDrugByCode('23A04')).toEqual({
+            id: 1156,
+            code: '23A04',
+            primaryName: 'ADESIVO ELáSTICO (10CM X 2CM)SEM DOSAGEMRolo',
+            description: 'ADESIVO ELáSTICO (10CM X 2CM)',
+            strength: 'SEM DOSAGEM'
+        });
+    });
 });
