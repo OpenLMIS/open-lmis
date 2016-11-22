@@ -25,10 +25,7 @@
                    openlmis-message="button.generateReport"/>
         </div>
 
-        <div class="report-selection">
-            <input type="button" class="btn btn-primary btn-export" ng-click="exportXLSX()"
-                   openlmis-message="button.tracer.downloadRawData"/>
-        </div>
+        <div ng-include="'/public/pages/reports/mozambique/export-data-button.html'"></div>
 
         <div style="clear: both"></div>
     </div>
