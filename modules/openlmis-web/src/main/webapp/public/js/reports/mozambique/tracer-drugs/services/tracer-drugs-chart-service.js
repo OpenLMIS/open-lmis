@@ -336,7 +336,7 @@ services.factory('TracerDrugsChartService', function ($http, $filter, $q, $timeo
                 data.reportContent.push(newTracerDrug);
             });
 
-            ReportExportExcelService.exportAsXlsx(data, 'tracer-drugs');
+            ReportExportExcelService.exportAsXlsx(data, messageService.get('report.file.tracer.drugs.report'));
       });
     }
 

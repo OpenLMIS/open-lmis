@@ -50,7 +50,7 @@ function ConsumptionReportController($scope, $controller, $filter, $http, $q, Cu
             data.reportContent.push(consumptionReportContent);
         });
 
-        ReportExportExcelService.exportAsXlsx(data, 'consumption-report');
+        ReportExportExcelService.exportAsXlsx(data, messageService.get('report.file.consumption.report'));
     };
 
     function renderConsumptionChart(consumptionInPeriods) {
