@@ -1,5 +1,23 @@
-function AdjustmentOccurrencesReportController($scope, $controller, $filter, $http, $q, AdjustmentOccurrencesChartService, CubesGenerateCutParamsService, CubesGenerateUrlService, DateFormatService, messageService) {
+function AdjustmentOccurrencesReportController($scope, $controller, $filter, $http, $q, AdjustmentOccurrencesChartService, CubesGenerateCutParamsService, CubesGenerateUrlService, DateFormatService, messageService, ReportExportExcelService) {
   $controller("BaseProductReportController", {$scope: $scope});
+
+  var adjustmentsData;
+  var adjustmentReasonCodes = {
+    "negative": [
+      "EXPIRED_RETURN_TO_SUPPLIER",
+      "DAMAGED",
+      "LOANS_DEPOSIT",
+      "INVENTORY_NEGATIVE",
+      "PROD_DEFECTIVE",
+      "RETURN_TO_DDM"],
+    "positive": [
+      "CUSTOMER_RETURN",
+      "EXPIRED_RETURN_FROM_CUSTOMER",
+      "DONATION",
+      "LOANS_RECEIVED",
+      "INVENTORY_POSITIVE",
+      "RETURN_FROM_QUARANTINE"]
+  };
 
   $scope.adjustmentTypes = [
     {value: "negative", name: messageService.get("stock.movement.negative.adjustment")},
@@ -17,7 +35,7 @@ function AdjustmentOccurrencesReportController($scope, $controller, $filter, $ht
 
       var promises = requestAdjustmentDataForEachPeriod();
       $q.all(promises).then(function (adjustmentsInPeriods) {
-        var adjustmentsData = _.pluck(_.pluck(adjustmentsInPeriods, "data"), "adjustment");
+        adjustmentsData = _.pluck(_.pluck(adjustmentsInPeriods, "data"), "adjustment");
         var selectedProduct = _.find($scope.products, function (product) {
           return product.code === $scope.reportParams.productCode;
         });
@@ -89,28 +107,51 @@ function AdjustmentOccurrencesReportController($scope, $controller, $filter, $ht
         $scope.reportParams.selectedDistrict
     );
 
-    var adjustmentReasonCodes = {
-      "negative": [
-        "EXPIRED_RETURN_TO_SUPPLIER",
-        "DAMAGED",
-        "LOANS_DEPOSIT",
-        "INVENTORY_NEGATIVE",
-        "PROD_DEFECTIVE",
-        "RETURN_TO_DDM"],
-      "positive": [
-        "CUSTOMER_RETURN",
-        "EXPIRED_RETURN_FROM_CUSTOMER",
-        "DONATION",
-        "LOANS_RECEIVED",
-        "INVENTORY_POSITIVE",
-        "RETURN_FROM_QUARANTINE"]
-    };
-
     cutParams.push({
       dimension: "reason_code",
       values: adjustmentReasonCodes[adjustmentType]
     });
     return cutParams;
+  };
+
+  $scope.exportXLSX = function() {
+    var data = {
+      reportHeaders: {
+        drugCode: messageService.get('report.header.drug.code'),
+        drugName: messageService.get('report.header.drug.name'),
+        province: messageService.get('report.header.province'),
+        district: messageService.get('report.header.district'),
+        facility: messageService.get('report.header.facility'),
+        adjustmentType: messageService.get('report.header.adjustment.type'),
+        adjustmentReason: messageService.get('report.header.adjustment.reason'),
+        occurrencesPeriod: messageService.get('report.header.occurrences.period'),
+        occurrencesTimes: messageService.get('report.header.occurrences.times')
+      },
+      reportContent: []
+    };
+
+    adjustmentsData.forEach(function(adjustment) {
+      var selectedReasonKeys = adjustmentReasonCodes[$scope.reportParams.adjustmentType];
+
+      selectedReasonKeys.forEach(function (selectedReasonKey) {
+        var adjustmentReportContent = {};
+        adjustmentReportContent.drugCode = $scope.reportParams.productCode;
+        adjustmentReportContent.drugName = $scope.getDrugByCode($scope.reportParams.productCode).primaryName;
+        adjustmentReportContent.province = $scope.reportParams.selectedProvince ? $scope.reportParams.selectedProvince.name : 'All';
+        adjustmentReportContent.district = $scope.reportParams.selectedDistrict ? $scope.reportParams.selectedDistrict.name : 'All';
+        adjustmentReportContent.facility = $scope.reportParams.selectedFacility ? $scope.reportParams.selectedFacility.name : 'All';
+        adjustmentReportContent.adjustmentType = _.find($scope.adjustmentTypes, {value: $scope.reportParams.adjustmentType}).name;
+
+        var reasonDescriptionKey = 'stock.movement.' + selectedReasonKey;
+        adjustmentReportContent.adjustmentReason = messageService.get(reasonDescriptionKey);
+        adjustmentReportContent.occurrencesPeriod = adjustment.period;
+        adjustmentReportContent.occurrencesTimes = adjustment[selectedReasonKey];
+
+        data.reportContent.push(adjustmentReportContent);
+      });
+    });
+
+    ReportExportExcelService.exportAsXlsx(data, messageService.get('report.file.adjustment.occurrences.report'));
   };
 
   function validateProduct() {

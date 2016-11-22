@@ -33,10 +33,15 @@
 
         </div>
 
+        <div style="clear: both"></div>
+
         <div class="report-selection">
             <input type="submit" class="btn btn-primary" ng-click="generateAdjustmentReport()"
                    openlmis-message="button.generateReport"/>
         </div>
+
+        <div ng-include="'/public/pages/reports/mozambique/export-data-button.html'"></div>
+
         <div style="clear: both"></div>
     </div>
 
