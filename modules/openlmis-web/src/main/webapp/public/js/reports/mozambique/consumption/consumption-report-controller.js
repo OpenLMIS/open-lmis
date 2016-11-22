@@ -1,4 +1,4 @@
-function ConsumptionReportController($scope, $controller, $filter, $http, $q, CubesGenerateCutParamsService, CubesGenerateUrlService, DateFormatService, messageService) {
+function ConsumptionReportController($scope, $controller, $filter, $http, $q, CubesGenerateCutParamsService, CubesGenerateUrlService, DateFormatService, messageService, ReportExportExcelService) {
     $controller('BaseProductReportController', {$scope: $scope});
 
     $scope.$on('$viewContentLoaded', function () {
@@ -50,22 +50,7 @@ function ConsumptionReportController($scope, $controller, $filter, $http, $q, Cu
             data.reportContent.push(consumptionReportContent);
         });
 
-        $http({
-            url: '/reports/download/excel',
-            method: 'POST',
-            data: JSON.stringify(data),
-            headers: {
-                'Content-type': 'application/json'
-            },
-            responseType: 'blob'
-        }).success(function (data, status, headers, config) {
-            if(data.size>0) {
-                var blob = new Blob([data], {type: "application/vnd.ms-excel"});
-                saveAs(blob, "consumption-report.xlsx");
-            }
-        }).error(function (error, status) {
-            console.log(error);
-        });
+        ReportExportExcelService.exportAsXlsx(data, 'consumption-report');
     };
 
     function renderConsumptionChart(consumptionInPeriods) {

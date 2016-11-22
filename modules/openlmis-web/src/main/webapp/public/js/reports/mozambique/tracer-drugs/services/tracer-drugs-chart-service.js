@@ -1,4 +1,4 @@
-services.factory('TracerDrugsChartService', function ($http, $filter, $q, $timeout, messageService, CubesGenerateUrlService, StockoutSingleProductZoneChartService, CubesGenerateCutParamsService, ReportLocationConfigService, $window) {
+services.factory('TracerDrugsChartService', function ($http, $filter, $q, $timeout, messageService, CubesGenerateUrlService, StockoutSingleProductZoneChartService, CubesGenerateCutParamsService, ReportLocationConfigService, ReportExportExcelService) {
 
     var drugCodekey = "drug.drug_code";
     var drugNameKey = "drug.drug_name";
@@ -285,7 +285,6 @@ services.factory('TracerDrugsChartService', function ($http, $filter, $q, $timeo
 
 
     function handleLegendClick(evt) {
-        var hidden = evt.dataItem.hidden;
         if (evt.type === "hideItem") {
             _.uniq(selectedDrugs);
             var index = selectedDrugs.indexOf(evt.dataItem.valueField);
@@ -312,48 +311,32 @@ services.factory('TracerDrugsChartService', function ($http, $filter, $q, $timeo
             $filter('date')(startTime, "yyyy,MM,dd"),
             $filter('date')(endTime, "yyyy,MM,dd"),
             undefined, drugParams, province, district), params)).success(function (tracerDrugs) {
+            var data = {
+                    reportHeaders: {
+                    drugCode: messageService.get('report.header.drug.code'),
+                    drugName: messageService.get('report.header.drug.name'),
+                    province: messageService.get('report.header.province'),
+                    district: messageService.get('report.header.district'),
+                    facility: messageService.get('report.header.facility'),
+                    quantity: messageService.get('report.header.drug.quantity'),
+                    date: messageService.get('report.header.date')
+                    },
+                    reportContent: []
+                };
 
-        var data = {
-            reportHeaders: {
-                drugCode: messageService.get('report.header.drug.code'),
-                drugName: messageService.get('report.header.drug.name'),
-                province: messageService.get('report.header.province'),
-                district: messageService.get('report.header.district'),
-                facility: messageService.get('report.header.facility'),
-                quantity: messageService.get('report.header.drug.quantity'),
-                date: messageService.get('report.header.date')
-            },
-            reportContent: []
-        };
+            tracerDrugs.forEach(function (tracerDrug) {
+                var newTracerDrug = {};
+                newTracerDrug.drugCode = tracerDrug['drug.drug_code'];
+                newTracerDrug.drugName = tracerDrug['drug.drug_name'];
+                newTracerDrug.province = province ? province.name : 'All';
+                newTracerDrug.district = district ? district.name : 'All';
+                newTracerDrug.facility = tracerDrug['facility.facility_name'];
+                newTracerDrug.quantity = tracerDrug.soh;
+                newTracerDrug.date = tracerDrug.date;
+                data.reportContent.push(newTracerDrug);
+            });
 
-        tracerDrugs.forEach(function (tracerDrug) {
-            var newTracerDrug = {};
-            newTracerDrug.drugCode = tracerDrug['drug.drug_code'];
-            newTracerDrug.drugName = tracerDrug['drug.drug_name'];
-            newTracerDrug.province = province ? province.name : 'All';
-            newTracerDrug.district = district ? district.name : 'All';
-            newTracerDrug.facility = tracerDrug['facility.facility_name'];
-            newTracerDrug.quantity = tracerDrug.soh;
-            newTracerDrug.date = tracerDrug.date;
-            data.reportContent.push(newTracerDrug);
-        });
-
-        $http({
-            url: '/reports/download/excel',
-            method: 'POST',
-            data: JSON.stringify(data),
-            headers: {
-                'Content-type': 'application/json'
-            },
-            responseType: 'blob'
-        }).success(function (data, status, headers, config) {
-            if(data.size>0) {
-                var blob = new Blob([data], {type: "application/vnd.ms-excel"});
-                saveAs(blob, "tracer-drugs.xlsx");
-            }
-        }).error(function (error, status) {
-            console.log(error);
-        });
+            ReportExportExcelService.exportAsXlsx(data, 'tracer-drugs');
       });
     }
 
