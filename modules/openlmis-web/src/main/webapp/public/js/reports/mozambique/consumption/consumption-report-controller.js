@@ -44,7 +44,7 @@ function ConsumptionReportController($scope, $controller, $filter, $http, $q, Cu
             consumptionReportContent.facility = $scope.reportParams.selectedFacility ? $scope.reportParams.selectedFacility.name : 'All';
             consumptionReportContent.period = consumptionInPeriod.period;
             consumptionReportContent.cmm = consumptionInPeriod.cmm;
-            consumptionReportContent.consumption = consumptionInPeriod['total_quantity'];
+            consumptionReportContent.consumption = consumptionInPeriod.total_quantity;
             consumptionReportContent.soh = consumptionInPeriod.soh;
 
             data.reportContent.push(consumptionReportContent);
