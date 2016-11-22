@@ -9,7 +9,7 @@ function ConsumptionReportController($scope, $controller, $filter, $http, $q, Cu
     var consumptionInPeriods;
 
     $scope.generateConsumptionReport = function () {
-        if ($scope.checkDateValidRange() && validateProduct()) {
+        if ($scope.checkDateValidRange() && validateProduct() && validateFacility()) {
             $scope.locationIdToCode($scope.reportParams);
             var promises = requestConsumptionDataForEachPeriod();
             $q.all(promises).then(function (consumptionsInPeriods) {
@@ -130,4 +130,8 @@ function ConsumptionReportController($scope, $controller, $filter, $http, $q, Cu
         return !$scope.noProductSelected;
     }
 
+    function validateFacility() {
+        $scope.invalid = !parseInt($scope.reportParams.facilityId,10);
+        return !$scope.invalid;
+    }
 }
