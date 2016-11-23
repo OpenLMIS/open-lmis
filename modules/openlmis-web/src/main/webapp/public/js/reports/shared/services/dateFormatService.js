@@ -42,6 +42,11 @@ services.factory('DateFormatService', function ($filter, messageService) {
         return time + ' ' +dateWithLocale;
     }
 
+    function formatDateWith24HoursTime(dateString) {
+        var date = Date.parse(dateString);
+        return $filter('date')(date, 'dd/MM/yyyy HH:mm');
+    }
+
     return {
         formatDateWithFirstDayOfMonth: formatDateWithFirstDayOfMonth,
         formatDateWithLastDayOfMonth: formatDateWithLastDayOfMonth,
@@ -49,6 +54,7 @@ services.factory('DateFormatService', function ($filter, messageService) {
         formatDateWithLocaleNoDay: formatDateWithLocaleNoDay,
         formatDateWithStartDayOfPeriod: formatDateWithStartDayOfPeriod,
         formatDateWithEndDayOfPeriod: formatDateWithEndDayOfPeriod,
-        formatDateWithTimeAndLocale: formatDateWithTimeAndLocale
+        formatDateWithTimeAndLocale: formatDateWithTimeAndLocale,
+        formatDateWith24HoursTime: formatDateWith24HoursTime
     };
 });

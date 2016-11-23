@@ -34,4 +34,11 @@ describe("date format service test", function () {
         var formattedDate = dateFormatService.formatDateWithEndDayOfPeriod(new Date("2011-11-11"));
         expect(formattedDate).toEqual("2011-11-20");
     });
+
+    it('should format date with full time', function() {
+        var dateString = '2016-10-25T19:54:00.998865+08:00';
+        var formattedDate = dateFormatService.formatDateWith24HoursTime(dateString);
+
+        expect(formattedDate).toEqual('25/10/2016 19:54');
+    });
 });
