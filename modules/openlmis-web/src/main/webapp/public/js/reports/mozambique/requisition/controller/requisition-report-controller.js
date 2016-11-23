@@ -1,4 +1,4 @@
-function RequisitionReportController($scope, $filter, RequisitionReportService, messageService, DateFormatService, FeatureToggleService, $window, $cacheFactory) {
+function RequisitionReportController($scope, $filter, RequisitionReportService, messageService, DateFormatService, FeatureToggleService, $window, $cacheFactory, ReportExportExcelService) {
 
     $scope.$on('$viewContentLoaded', function () {
         $scope.loadRequisitions();
@@ -143,4 +143,39 @@ function RequisitionReportController($scope, $filter, RequisitionReportService, 
         $cacheFactory.get('keepHistoryInStockOutReportPage').put('saveDataOfStockOutReport', "no");
         $cacheFactory.get('keepHistoryInStockOutReportPage').put('saveDataOfStockOutReportForSingleProduct', "no");
     }
+
+    $scope.exportXLSX = function() {
+        var data = {
+            reportHeaders: {
+                programName: messageService.get('report.header.program.name'),
+                type: messageService.get('report.header.type'),
+                //get parent Node in later story
+                facilityName: messageService.get('report.header.facility.name'),
+                submittedUser: messageService.get('report.header.submitted.user'),
+                inventoryDate: messageService.get('report.header.inventory.date'),
+                submittedStatus: messageService.get('report.header.submitted.status'),
+                submittedTime: messageService.get('report.header.submitted.time'),
+                syncTime: messageService.get('report.header.sync.time')
+            },
+            reportContent: []
+        };
+
+        if($scope.requisitions) {
+            $scope.requisitions.forEach(function (requisition) {
+                var requisitionContent = {};
+                requisitionContent.programName = requisition.programName;
+                requisitionContent.type = requisition.type;
+                //get Parent Node in later story
+                requisitionContent.facilityName = requisition.facilityName;
+                requisitionContent.submittedUser = requisition.submittedUser;
+                requisitionContent.inventoryDate = requisition.inventoryDate;
+                requisitionContent.submittedStatus = requisition.submittedStatus;
+                requisitionContent.submittedTime = requisition.clientSubmittedTimeString;
+                requisitionContent.syncTime = requisition.webSubmittedTimeString;
+                data.reportContent.push(requisitionContent);
+            });
+
+            ReportExportExcelService.exportAsXlsx(data, messageService.get('report.file.requisition.report'));
+        }
+    };
 }
