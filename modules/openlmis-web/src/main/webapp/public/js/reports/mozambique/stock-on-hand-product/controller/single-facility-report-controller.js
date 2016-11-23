@@ -157,9 +157,7 @@ function SingleFacilityReportController($scope, $filter, $controller, $http, Cub
         singleFacilitySOHReportContent.lastUpdateFromTablet = DateFormatService.formatDateWith24HoursTime(sohReportData.last_sync_date);
         data.reportContent.push(singleFacilitySOHReportContent);
       });
-
       ReportExportExcelService.exportAsXlsx(data, messageService.get('report.file.single.facility.soh.report'));
     }
-
   };
 }
