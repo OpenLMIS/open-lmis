@@ -168,16 +168,16 @@ function StockOutAllProductsReportController($scope, $filter, $controller, $http
         };
 
         if($scope.reportData) {
-            $scope.reportData.forEach(function (sohReportData) {
+            $scope.reportData.forEach(function (stockoutReportData) {
                 var singleFacilityStockoutReportContent = {};
-                singleFacilityStockoutReportContent.drugCode = sohReportData.code;
-                singleFacilityStockoutReportContent.drugName = sohReportData.name;
+                singleFacilityStockoutReportContent.drugCode = stockoutReportData.code;
+                singleFacilityStockoutReportContent.drugName = stockoutReportData.name;
                 singleFacilityStockoutReportContent.province = $scope.reportParams.selectedProvince ? $scope.reportParams.selectedProvince.name : 'All';
                 singleFacilityStockoutReportContent.district = $scope.reportParams.selectedDistrict ? $scope.reportParams.selectedDistrict.name : 'All';
                 singleFacilityStockoutReportContent.facility = $scope.reportParams.selectedFacility ? $scope.reportParams.selectedFacility.name : 'All';
-                singleFacilityStockoutReportContent.avgDuration =  sohReportData.avgDuration;
-                singleFacilityStockoutReportContent.totalStockoutOccurrences = sohReportData.occurrences;
-                singleFacilityStockoutReportContent.totalDaysStockedOut = sohReportData.totalDuration;
+                singleFacilityStockoutReportContent.avgDuration =  stockoutReportData.avgDuration;
+                singleFacilityStockoutReportContent.totalStockoutOccurrences = stockoutReportData.occurrences;
+                singleFacilityStockoutReportContent.totalDaysStockedOut = stockoutReportData.totalDuration;
                 singleFacilityStockoutReportContent.reportStartDate = $filter('date')($scope.reportParams.startTime, 'dd/MM/yyyy');
                 singleFacilityStockoutReportContent.reportEndDate =  $filter('date')($scope.reportParams.endTime, 'dd/MM/yyyy');
                 data.reportContent.push(singleFacilityStockoutReportContent);

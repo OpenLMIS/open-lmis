@@ -123,7 +123,7 @@ function SingleProductReportController($scope, $filter, $controller, $http, Cube
         singleProductSOHReportContent.lastUpdateFromTablet = DateFormatService.formatDateWith24HoursTime(sohReportData.last_sync_date);
         data.reportContent.push(singleProductSOHReportContent);
       });
-      ReportExportExcelService.exportAsXlsx(data, messageService.get('report.file.single.drug.soh.report'));
+      ReportExportExcelService.exportAsXlsx(data, messageService.get('report.file.single.product.soh.report'));
     }
   };
 }

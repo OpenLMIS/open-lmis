@@ -1,4 +1,4 @@
-function StockOutSingleProductReportController($scope, $filter, $q, $controller, $http, $timeout, CubesGenerateUrlService, $routeParams, ProductReportService, StockoutSingleProductFacilityChartService, StockoutSingleProductZoneChartService, StockoutSingleProductTreeDataBuilder, CubesGenerateCutParamsService, FeatureToggleService, $cacheFactory) {
+function StockOutSingleProductReportController($scope, $filter, $q, $controller, $http, $timeout, CubesGenerateUrlService, $routeParams, ProductReportService, StockoutSingleProductFacilityChartService, StockoutSingleProductZoneChartService, StockoutSingleProductTreeDataBuilder, CubesGenerateCutParamsService, FeatureToggleService, $cacheFactory, messageService, ReportExportExcelService) {
     $controller('BaseProductReportController', {$scope: $scope});
 
     var stockOuts;
@@ -47,6 +47,8 @@ function StockOutSingleProductReportController($scope, $filter, $q, $controller,
     $scope.loadReport = loadReportAction;
     function loadReportAction() {
         if ($scope.checkDateValidRange()) {
+            var params = $scope.reportParams;
+            $scope.locationIdToCode(params);
             $scope.selectedProduct = getProductByCode($scope.reportParams.productCode);
             getStockOutDataFromCubes();
         }
@@ -130,10 +132,10 @@ function StockOutSingleProductReportController($scope, $filter, $q, $controller,
             }
         });
     };
-    if($cacheFactory.get('keepHistoryInStockOutReportPage') === undefined){
+
+    if($cacheFactory.get('keepHistoryInStockOutReportPage') === undefined) {
         $scope.cache = $cacheFactory('keepHistoryInStockOutReportPage',{capacity: 10});
-    }
-    else{
+    } else {
         $scope.cache=$cacheFactory.get('keepHistoryInStockOutReportPage');
         $scope.cache.put('saveDataOfStockOutReport', "yes");
         if ($scope.cache.get('saveDataOfStockOutReportForSingleProduct') === "yes") {
@@ -153,4 +155,74 @@ function StockOutSingleProductReportController($scope, $filter, $q, $controller,
             }, 1000);
         }
     }
+
+
+    $scope.exportXLSX = function() {
+        var data = {
+            reportHeaders: {
+                drugCode: messageService.get('report.header.drug.code'),
+                drugName: messageService.get('report.header.drug.name'),
+                province: messageService.get('report.header.province'),
+                district: messageService.get('report.header.district'),
+                facility: messageService.get('report.header.facility'),
+                avgDuration: messageService.get('report.header.avg.duration'),
+                totalStockoutOccurrences: messageService.get('report.header.total.stockout.occurrences'),
+                totalDaysStockedOut: messageService.get('report.header.total.days.stocked.out'),
+                reportStartDate: messageService.get('report.header.report.start.date'),
+                reportEndDate: messageService.get('report.header.report.end.date')
+            },
+            reportContent: []
+        };
+
+        if($scope.tree_data) {
+            var stockoutReportData= $scope.tree_data;
+            var drugCode = $scope.reportParams.productCode;
+            var drugName = $scope.getDrugByCode($scope.reportParams.productCode).name;
+
+            stockoutReportData.forEach(function (provinceLevelData) {
+                var provinceLevelContent = {};
+                provinceLevelContent.drugCode = drugCode;
+                provinceLevelContent.drugName = drugName;
+                provinceLevelContent.province = provinceLevelData.name;
+                provinceLevelContent.district = '[All]';
+                provinceLevelContent.facility = '[All]';
+                provinceLevelContent.totalStockoutOccurrences = provinceLevelData.totalOccurrences;
+                provinceLevelContent.avgDuration =  provinceLevelData.avgDuration;
+                provinceLevelContent.reportStartDate = $filter('date')($scope.reportParams.startTime, 'dd/MM/yyyy');
+                provinceLevelContent.reportEndDate =  $filter('date')($scope.reportParams.endTime, 'dd/MM/yyyy');
+                data.reportContent.push(provinceLevelContent);
+
+                provinceLevelData.children.forEach(function (districtLevelData) {
+                    var districtLevelContent = {};
+                    districtLevelContent.drugCode = drugCode;
+                    districtLevelContent.drugName = drugName;
+                    districtLevelContent.province = provinceLevelContent.province;
+                    districtLevelContent.district = districtLevelData.name;
+                    districtLevelContent.facility = '[All]';
+                    districtLevelContent.totalStockoutOccurrences = districtLevelData.totalOccurrences;
+                    districtLevelContent.avgDuration =  districtLevelData.avgDuration;
+                    districtLevelContent.reportStartDate = $filter('date')($scope.reportParams.startTime, 'dd/MM/yyyy');
+                    districtLevelContent.reportEndDate =  $filter('date')($scope.reportParams.endTime, 'dd/MM/yyyy');
+                    data.reportContent.push(districtLevelContent);
+
+                    districtLevelData.children.forEach(function (facilityLevelData) {
+                        var facilityLevelContent = {};
+                        facilityLevelContent.drugCode = drugCode;
+                        facilityLevelContent.drugName = drugName;
+                        facilityLevelContent.province = districtLevelContent.province;
+                        facilityLevelContent.district = districtLevelContent.district;
+                        facilityLevelContent.facility = facilityLevelData.name;
+                        facilityLevelContent.totalStockoutOccurrences = facilityLevelData.totalOccurrences;
+                        facilityLevelContent.avgDuration =  facilityLevelData.avgDuration;
+                        facilityLevelContent.totalDaysStockedOut = facilityLevelData.totalDuration;
+                        facilityLevelContent.reportStartDate = $filter('date')($scope.reportParams.startTime, 'dd/MM/yyyy');
+                        facilityLevelContent.reportEndDate =  $filter('date')($scope.reportParams.endTime, 'dd/MM/yyyy');
+                        data.reportContent.push(facilityLevelContent);
+                    });
+                });
+            });
+
+            ReportExportExcelService.exportAsXlsx(data, messageService.get('report.file.single.product.stockout.report'));
+        }
+    };
 }
