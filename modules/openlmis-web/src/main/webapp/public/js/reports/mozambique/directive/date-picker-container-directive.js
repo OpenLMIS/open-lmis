@@ -5,7 +5,6 @@ function datePickerContainer(){
         scope: {
             getTimeRange: '&',
             pickerType: '@',
-            tagOptions: '@'
         },
         templateUrl:'date-picker-container.html'
     };

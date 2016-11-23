@@ -5,7 +5,21 @@
                 <div class="time-tag">
                     <ul>
                         <li ng-repeat="periodTag in periodTags">
-                            <a ng-class="{'selected': periodTagSelected == periodTag}" ng-click=changePeriodOption(periodTag)
+                            <a ng-class="{'selected': periodTagSelected == periodTag}"
+                               ng-click=changePeriodOption(periodTag)
+                               openlmis-message="label.period.{{periodTag}}" href=""></a>
+                            <span>|</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <div ng-switch-when="period-no-current">
+                <div class="time-tag">
+                    <ul>
+                        <li ng-repeat="periodTag in periodTags">
+                            <a ng-class="{'selected': periodTagSelected == periodTag}"
+                               ng-click=changePeriodOption(periodTag)
                                openlmis-message="label.period.{{periodTag}}" href=""></a>
                             <span>|</span>
                         </li>
@@ -49,6 +63,17 @@
                     </div>
                 </div>
 
+                <div ng-switch-when="period-no-current">
+                    <div class="stock-out-date-picker">
+                        <input name="startTime" type="text"
+                               ui-date=periodStartOptions
+                               ui-date-format
+                               readonly
+                               ng-model="dateRange.startTime"
+                        />
+                    </div>
+                </div>
+
                 <div ng-switch-default>
                     <div class="stock-out-date-picker">
                         <input name="startTime" id="startTime" type="text"
@@ -69,6 +94,16 @@
                 </label>
 
                 <div ng-switch-when="period">
+                    <div class="stock-out-date-picker">
+                        <input name="endTime" type="text"
+                               ui-date=periodEndOptions
+                               ui-date-format
+                               readonly
+                               ng-model="dateRange.endTime"/>
+                    </div>
+                </div>
+
+                <div ng-switch-when="period-no-current">
                     <div class="stock-out-date-picker">
                         <input name="endTime" type="text"
                                ui-date=periodEndOptions
