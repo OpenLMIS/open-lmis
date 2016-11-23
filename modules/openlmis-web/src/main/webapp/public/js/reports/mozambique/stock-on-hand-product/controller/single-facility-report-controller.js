@@ -1,4 +1,4 @@
-function SingleFacilityReportController($scope, $filter, $controller, $http, CubesGenerateCutParamsService, CubesGenerateUrlService, FeatureToggleService, $cacheFactory, $timeout, LotExpiryDateService, $window) {
+function SingleFacilityReportController($scope, $filter, $controller, $http, CubesGenerateCutParamsService, CubesGenerateUrlService, FeatureToggleService, $cacheFactory, $timeout, LotExpiryDateService, $window, messageService, DateFormatService, ReportExportExcelService) {
   $controller('BaseProductReportController', {$scope: $scope});
 
   if ($cacheFactory.get('keepHistoryInStockOnHandPage') === undefined) {
@@ -121,5 +121,45 @@ function SingleFacilityReportController($scope, $filter, $controller, $http, Cub
           regex.test(entry.drug_name) ||
           regex.test(entry.formatted_last_sync_date);
     };
+  };
+
+  $scope.exportXLSX = function() {
+    var data = {
+      reportHeaders: {
+        drugCode: messageService.get('report.header.drug.code'),
+        drugName: messageService.get('report.header.drug.name'),
+        province: messageService.get('report.header.province'),
+        district: messageService.get('report.header.district'),
+        facility: messageService.get('report.header.facility'),
+        quantity: messageService.get('report.header.drug.quantity'),
+        status: messageService.get('report.header.status'),
+        earliestDrugExpiryDate: messageService.get('report.header.earliest.drug.expiry.date'),
+        lotStockOnHand: messageService.get('report.header.lot.stock.on.hand'),
+        estimatedMonths: messageService.get('report.header.estimated.months'),
+        lastUpdateFromTablet: messageService.get('report.header.last.update.from.tablet')
+      },
+      reportContent: []
+    };
+
+    if($scope.reportData) {
+      $scope.reportData.forEach(function (sohReportData) {
+        var singleFacilitySOHReportContent = {};
+        singleFacilitySOHReportContent.drugCode = sohReportData.drug_code;
+        singleFacilitySOHReportContent.drugName = sohReportData.drug_name;
+        singleFacilitySOHReportContent.province = $scope.reportParams.selectedProvince ? $scope.reportParams.selectedProvince.name : 'All';
+        singleFacilitySOHReportContent.district = $scope.reportParams.selectedDistrict ? $scope.reportParams.selectedDistrict.name : 'All';
+        singleFacilitySOHReportContent.facility = $scope.reportParams.selectedFacility ? $scope.reportParams.selectedFacility.name : 'All';
+        singleFacilitySOHReportContent.quantity = sohReportData.soh;
+        singleFacilitySOHReportContent.status = sohReportData.stock_status;
+        singleFacilitySOHReportContent.earliestDrugExpiryDate = sohReportData.formatted_expiry_date;
+        singleFacilitySOHReportContent.lotStockOnHand = sohReportData.soonest_expiring_loh;
+        singleFacilitySOHReportContent.estimatedMonths = sohReportData.estimated_months;
+        singleFacilitySOHReportContent.lastUpdateFromTablet = DateFormatService.formatDateWith24HoursTime(sohReportData.last_sync_date);
+        data.reportContent.push(singleFacilitySOHReportContent);
+      });
+
+      ReportExportExcelService.exportAsXlsx(data, messageService.get('report.file.single.facility.soh.report'));
+    }
+
   };
 }
