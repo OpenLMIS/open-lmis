@@ -1,4 +1,4 @@
-function LastSyncTimeReportController($scope, $http, GeographicZoneService, CubesGenerateUrlService, CubesGenerateCutParamsService, DateFormatService, messageService) {
+function LastSyncTimeReportController($scope, $http, GeographicZoneService, CubesGenerateUrlService, CubesGenerateCutParamsService, DateFormatService, messageService, $filter, ReportExportExcelService) {
 
   $scope.provinces = [];
   $scope.districts = [];
@@ -79,22 +79,22 @@ function LastSyncTimeReportController($scope, $http, GeographicZoneService, Cube
   function buildTreeData(syncTimeData) {
     _.forEach($scope.provinces, function(province) {
       var provinceItem = {
-        Name: province.name,
-        LastSyncTime: '',
+        name: province.name,
+        lastSyncTime: '',
         children: []
       };
       _.forEach($scope.districts, function(district) {
         if (province.id === district.parentId) {
           var districtItem = {
-            Name: district.name,
-            LastSyncTime: '',
+            name: district.name,
+            lastSyncTime: '',
             children: []
           };
           _.forEach(syncTimeData, function(facilityData) {
             if (facilityData['location.district_code'] === district.code && facilityData['location.province_code'] === province.code) {
               var facilityItem = {
-                Name: facilityData['facility.facility_name'],
-                LastSyncTime: facilityData.last_sync_time
+                name: facilityData['facility.facility_name'],
+                lastSyncTime: facilityData.last_sync_time
               };
               districtItem.children.push(facilityItem);
             }
@@ -137,4 +137,36 @@ function LastSyncTimeReportController($scope, $http, GeographicZoneService, Cube
       'colors': ['green', 'orange', 'red']
     });
   }
+
+  $scope.exportXLSX = function() {
+    var data = {
+      reportHeaders: {
+        province: messageService.get('report.header.province'),
+        district: messageService.get('report.header.district'),
+        facility: messageService.get('report.header.facility'),
+        lastUpdatedTime: messageService.get('report.header.last.updated.time')
+      },
+      reportContent: []
+    };
+
+    if($scope.tree_data.length > 0) {
+      var tabletUpdateData= $scope.tree_data;
+
+      tabletUpdateData.forEach(function (provinceLevelData) {
+        provinceLevelData.children.forEach(function (districtLevelData) {
+          districtLevelData.children.forEach(function (facilityLevelData) {
+            var tabletUpdateReportContent = {};
+            tabletUpdateReportContent.province = provinceLevelData.name;
+            tabletUpdateReportContent.district = districtLevelData.name;
+            tabletUpdateReportContent.facility = facilityLevelData.name;
+            tabletUpdateReportContent.lastUpdatedTime =  $filter('date')(facilityLevelData.lastSyncTime, 'dd/MM/yyyy HH:mm');
+            data.reportContent.push(tabletUpdateReportContent);
+          });
+        });
+      });
+
+      ReportExportExcelService.exportAsXlsx(data, messageService.get('report.file.tablet.update.report'));
+    }
+  };
+
 }

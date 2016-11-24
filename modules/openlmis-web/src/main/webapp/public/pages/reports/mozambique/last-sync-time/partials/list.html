@@ -7,6 +7,10 @@
 
     <h3 class="report-title" openlmis-message="title.last.sync.time.report"></h3>
 
+    <div class="report-subtitle">
+        <div ng-include="'/public/pages/reports/mozambique/export-data-button.html'"></div>
+    </div>
+
     <sync-time-tree-grid col-defs= "col_defs" icon-leaf="icon_none" tree-data="tree_data"></sync-time-tree-grid>
 
 </div>
