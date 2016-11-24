@@ -77,7 +77,22 @@ function DatePickerContainerController($scope, $filter, DateFormatService, messa
         showMonthAfterYear: false,
         monthNamesShort: monthNamesForStartPeriod,
         onClose: function () {
-            notHideCalendar();
+            $scope.timeTagSelected = "";
+            var selectedYear = $("#ui-datepicker-div .ui-datepicker-year :selected").val();
+            var selectedMonth = $("#ui-datepicker-div .ui-datepicker-month :selected").val();
+            $scope.$apply(function () {
+                $scope.dateRange.startTime = selectedMonth === null ?
+                    DateFormatService.formatDateWithStartDayOfPeriod(currentDate) :
+                    DateFormatService.formatDateWithStartDayOfPeriod(new Date(selectedYear, selectedMonth));
+            });
+        }
+    });
+
+    $scope.periodNoCurrentStartOptions = angular.extend(baseTimePickerOptions(), {
+        maxDate: new Date(defaultEndTime.getFullYear(),defaultEndTime.getMonth()-1,21),
+        showMonthAfterYear: false,
+        monthNamesShort: monthNamesForStartPeriod,
+        onClose: function () {
             $scope.timeTagSelected = "";
             var selectedYear = $("#ui-datepicker-div .ui-datepicker-year :selected").val();
             var selectedMonth = $("#ui-datepicker-div .ui-datepicker-month :selected").val();
@@ -93,7 +108,6 @@ function DatePickerContainerController($scope, $filter, DateFormatService, messa
         showMonthAfterYear: false,
         monthNamesShort: monthNamesForEndPeriod,
         onClose: function () {
-            notHideCalendar();
             $scope.timeTagSelected = "";
             var selectedYear = $("#ui-datepicker-div .ui-datepicker-year :selected").val();
             var selectedMonth = $("#ui-datepicker-div .ui-datepicker-month :selected").val();
@@ -103,6 +117,10 @@ function DatePickerContainerController($scope, $filter, DateFormatService, messa
                     DateFormatService.formatDateWithEndDayOfPeriod(new Date(selectedYear, selectedMonth));
             });
         }
+    });
+
+    $scope.periodNoCurrentEndOptions = angular.extend($scope.periodEndOptions, {
+        maxDate: defaultEndTime
     });
 
     $scope.datePickerStartOptions = angular.extend(baseTimePickerOptions(), {
