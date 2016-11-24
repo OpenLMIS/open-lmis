@@ -165,7 +165,7 @@ function RequisitionReportController($scope, $filter, RequisitionReportService, 
                 var requisitionContent = {};
                 requisitionContent.programName = requisition.programName;
                 requisitionContent.type = requisition.type;
-                //get Parent Node in later story
+                //get Parent Node in later story: get info in backend service: approverService.getNextApprovers(requisition.getId())
                 requisitionContent.facilityName = requisition.facilityName;
                 requisitionContent.submittedUser = requisition.submittedUser;
                 requisitionContent.inventoryDate = requisition.inventoryDate;

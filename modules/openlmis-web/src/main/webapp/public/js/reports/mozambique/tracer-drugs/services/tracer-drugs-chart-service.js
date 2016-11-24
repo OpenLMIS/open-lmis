@@ -328,8 +328,8 @@ services.factory('TracerDrugsChartService', function ($http, $filter, $q, $timeo
                 var newTracerDrug = {};
                 newTracerDrug.drugCode = tracerDrug['drug.drug_code'];
                 newTracerDrug.drugName = tracerDrug['drug.drug_name'];
-                newTracerDrug.province = province ? province.name : 'All';
-                newTracerDrug.district = district ? district.name : 'All';
+                newTracerDrug.province = province ? province.name : '[All]';
+                newTracerDrug.district = district ? district.name : '[All]';
                 newTracerDrug.facility = tracerDrug['facility.facility_name'];
                 newTracerDrug.quantity = tracerDrug.soh;
                 newTracerDrug.date = tracerDrug.date;

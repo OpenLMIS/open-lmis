@@ -137,9 +137,9 @@ function AdjustmentOccurrencesReportController($scope, $controller, $filter, $ht
         var adjustmentReportContent = {};
         adjustmentReportContent.drugCode = $scope.reportParams.productCode;
         adjustmentReportContent.drugName = $scope.getDrugByCode($scope.reportParams.productCode).primaryName;
-        adjustmentReportContent.province = $scope.reportParams.selectedProvince ? $scope.reportParams.selectedProvince.name : 'All';
-        adjustmentReportContent.district = $scope.reportParams.selectedDistrict ? $scope.reportParams.selectedDistrict.name : 'All';
-        adjustmentReportContent.facility = $scope.reportParams.selectedFacility ? $scope.reportParams.selectedFacility.name : 'All';
+        adjustmentReportContent.province = $scope.reportParams.selectedProvince ? $scope.reportParams.selectedProvince.name : '[All]';
+        adjustmentReportContent.district = $scope.reportParams.selectedDistrict ? $scope.reportParams.selectedDistrict.name : '[All]';
+        adjustmentReportContent.facility = $scope.reportParams.selectedFacility ? $scope.reportParams.selectedFacility.name : '[All]';
         adjustmentReportContent.adjustmentType = _.find($scope.adjustmentTypes, {value: $scope.reportParams.adjustmentType}).name;
 
         var reasonDescriptionKey = 'stock.movement.' + selectedReasonKey;

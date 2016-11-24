@@ -112,8 +112,8 @@ function SingleProductReportController($scope, $filter, $controller, $http, Cube
         var singleProductSOHReportContent = {};
         singleProductSOHReportContent.drugCode = $scope.reportParams.productCode;
         singleProductSOHReportContent.drugName = $scope.getDrugByCode($scope.reportParams.productCode).primaryName;
-        singleProductSOHReportContent.province = $scope.reportParams.selectedProvince ? $scope.reportParams.selectedProvince.name : 'All';
-        singleProductSOHReportContent.district = $scope.reportParams.selectedDistrict ? $scope.reportParams.selectedDistrict.name : 'All';
+        singleProductSOHReportContent.province = $scope.reportParams.selectedProvince ? $scope.reportParams.selectedProvince.name : '[All]';
+        singleProductSOHReportContent.district = $scope.reportParams.selectedDistrict ? $scope.reportParams.selectedDistrict.name : '[All]';
         singleProductSOHReportContent.facility = sohReportData.facility_name;
         singleProductSOHReportContent.quantity = sohReportData.soh;
         singleProductSOHReportContent.status = sohReportData.stock_status;

@@ -39,9 +39,9 @@ function ConsumptionReportController($scope, $controller, $filter, $http, $q, Cu
             var consumptionReportContent = {};
             consumptionReportContent.drugCode = $scope.reportParams.productCode;
             consumptionReportContent.drugName = $scope.getDrugByCode($scope.reportParams.productCode).primaryName;
-            consumptionReportContent.province = $scope.reportParams.selectedProvince ? $scope.reportParams.selectedProvince.name : 'All';
-            consumptionReportContent.district = $scope.reportParams.selectedDistrict ? $scope.reportParams.selectedDistrict.name : 'All';
-            consumptionReportContent.facility = $scope.reportParams.selectedFacility ? $scope.reportParams.selectedFacility.name : 'All';
+            consumptionReportContent.province = $scope.reportParams.selectedProvince ? $scope.reportParams.selectedProvince.name : '[All]';
+            consumptionReportContent.district = $scope.reportParams.selectedDistrict ? $scope.reportParams.selectedDistrict.name : '[All]';
+            consumptionReportContent.facility = $scope.reportParams.selectedFacility ? $scope.reportParams.selectedFacility.name : '[All]';
             consumptionReportContent.period = consumptionInPeriod.period;
             consumptionReportContent.cmm = consumptionInPeriod.cmm;
             consumptionReportContent.consumption = consumptionInPeriod.total_quantity;

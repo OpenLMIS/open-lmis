@@ -172,9 +172,9 @@ function StockOutAllProductsReportController($scope, $filter, $controller, $http
                 var singleFacilityStockoutReportContent = {};
                 singleFacilityStockoutReportContent.drugCode = stockoutReportData.code;
                 singleFacilityStockoutReportContent.drugName = stockoutReportData.name;
-                singleFacilityStockoutReportContent.province = $scope.reportParams.selectedProvince ? $scope.reportParams.selectedProvince.name : 'All';
-                singleFacilityStockoutReportContent.district = $scope.reportParams.selectedDistrict ? $scope.reportParams.selectedDistrict.name : 'All';
-                singleFacilityStockoutReportContent.facility = $scope.reportParams.selectedFacility ? $scope.reportParams.selectedFacility.name : 'All';
+                singleFacilityStockoutReportContent.province = $scope.reportParams.selectedProvince ? $scope.reportParams.selectedProvince.name : '[All]';
+                singleFacilityStockoutReportContent.district = $scope.reportParams.selectedDistrict ? $scope.reportParams.selectedDistrict.name : '[All]';
+                singleFacilityStockoutReportContent.facility = $scope.reportParams.selectedFacility ? $scope.reportParams.selectedFacility.name : '[All]';
                 singleFacilityStockoutReportContent.avgDuration =  stockoutReportData.avgDuration;
                 singleFacilityStockoutReportContent.totalStockoutOccurrences = stockoutReportData.occurrences;
                 singleFacilityStockoutReportContent.totalDaysStockedOut = stockoutReportData.totalDuration;

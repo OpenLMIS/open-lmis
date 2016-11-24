@@ -146,9 +146,9 @@ function SingleFacilityReportController($scope, $filter, $controller, $http, Cub
         var singleFacilitySOHReportContent = {};
         singleFacilitySOHReportContent.drugCode = sohReportData.drug_code;
         singleFacilitySOHReportContent.drugName = sohReportData.drug_name;
-        singleFacilitySOHReportContent.province = $scope.reportParams.selectedProvince ? $scope.reportParams.selectedProvince.name : 'All';
-        singleFacilitySOHReportContent.district = $scope.reportParams.selectedDistrict ? $scope.reportParams.selectedDistrict.name : 'All';
-        singleFacilitySOHReportContent.facility = $scope.reportParams.selectedFacility ? $scope.reportParams.selectedFacility.name : 'All';
+        singleFacilitySOHReportContent.province = $scope.reportParams.selectedProvince ? $scope.reportParams.selectedProvince.name : '[All]';
+        singleFacilitySOHReportContent.district = $scope.reportParams.selectedDistrict ? $scope.reportParams.selectedDistrict.name : '[All]';
+        singleFacilitySOHReportContent.facility = $scope.reportParams.selectedFacility ? $scope.reportParams.selectedFacility.name : '[All]';
         singleFacilitySOHReportContent.quantity = sohReportData.soh;
         singleFacilitySOHReportContent.status = sohReportData.stock_status;
         singleFacilitySOHReportContent.earliestDrugExpiryDate = sohReportData.formatted_expiry_date;
