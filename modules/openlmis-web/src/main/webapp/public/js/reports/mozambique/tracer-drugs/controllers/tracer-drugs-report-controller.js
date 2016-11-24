@@ -21,10 +21,6 @@ function TracerDrugsReportController($scope, $controller, DateFormatService, Tra
         return $scope.getGeographicZoneById($scope.districts, $scope.reportParams.districtId);
     }
 
-    function getSelectProduct() {
-
-    }
-
     function renderDefaultTracerDrugsReport() {
         var defaultStartTime = DateFormatService.formatDateWithFirstDayOfMonth(new Date());
         var defaultEndTime = $scope.reportParams.endTime;

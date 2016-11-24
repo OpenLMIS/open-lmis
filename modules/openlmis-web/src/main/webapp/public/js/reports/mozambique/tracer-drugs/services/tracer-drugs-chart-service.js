@@ -3,6 +3,8 @@ services.factory('TracerDrugsChartService', function ($http, $filter, $q, $timeo
     var drugCodekey = "drug.drug_code";
     var drugNameKey = "drug.drug_name";
     var selectedDrugs = [];
+    var chartDataItems;
+
     function getTracerDrugStockRateOnFriday(zone, friday, stockOuts, tracerDrugCode, carryStartDates) {
         var stockOutsOfTracerDrug = _.filter(stockOuts, function (stockOut) {
             return stockOut[drugCodekey] === tracerDrugCode;
@@ -138,7 +140,7 @@ services.factory('TracerDrugsChartService', function ($http, $filter, $q, $timeo
             $q.all([stockOutPromise, carryStartDatesPromise]).then(function (arrayOfResults) {
                 var stockOuts = arrayOfResults[0].data;
                 var carryStartDates = arrayOfResults[1].data;
-                var chartDataItems = generateTracerDrugsChartDataItems(tracerDrugs, stockOuts, carryStartDates, userSelectedStartDate, userSelectedEndDate, province, district);
+                chartDataItems = generateTracerDrugsChartDataItems(tracerDrugs, stockOuts, carryStartDates, userSelectedStartDate, userSelectedEndDate, province, district);
 
                 renderTracerDrugsChart(chartDivId, legendDivId, chartDataItems, tracerDrugs);
             });
@@ -307,37 +309,39 @@ services.factory('TracerDrugsChartService', function ($http, $filter, $q, $timeo
         });
         var drugParams = (!_.isEmpty(selectedDrugs) && everyDrugIsSolid) ? selectedDrugs : undefined;
 
-        $http.get(CubesGenerateUrlService.generateFactsUrlWithParams('vw_weekly_tracer_soh', CubesGenerateCutParamsService.generateCutsParams('cutDate',
-            $filter('date')(startTime, "yyyy,MM,dd"),
-            $filter('date')(endTime, "yyyy,MM,dd"),
-            undefined, drugParams, province, district), params)).success(function (tracerDrugs) {
-            var data = {
+        if(chartDataItems) {
+            $http.get(CubesGenerateUrlService.generateFactsUrlWithParams('vw_weekly_tracer_soh', CubesGenerateCutParamsService.generateCutsParams('cutDate',
+                $filter('date')(startTime, "yyyy,MM,dd"),
+                $filter('date')(endTime, "yyyy,MM,dd"),
+                undefined, drugParams, province, district), params)).success(function (tracerDrugs) {
+                var data = {
                     reportHeaders: {
-                    drugCode: messageService.get('report.header.drug.code'),
-                    drugName: messageService.get('report.header.drug.name'),
-                    province: messageService.get('report.header.province'),
-                    district: messageService.get('report.header.district'),
-                    facility: messageService.get('report.header.facility'),
-                    quantity: messageService.get('report.header.drug.quantity'),
-                    date: messageService.get('report.header.date')
+                        drugCode: messageService.get('report.header.drug.code'),
+                        drugName: messageService.get('report.header.drug.name'),
+                        province: messageService.get('report.header.province'),
+                        district: messageService.get('report.header.district'),
+                        facility: messageService.get('report.header.facility'),
+                        quantity: messageService.get('report.header.drug.quantity'),
+                        date: messageService.get('report.header.date')
                     },
                     reportContent: []
                 };
 
-            tracerDrugs.forEach(function (tracerDrug) {
-                var newTracerDrug = {};
-                newTracerDrug.drugCode = tracerDrug['drug.drug_code'];
-                newTracerDrug.drugName = tracerDrug['drug.drug_name'];
-                newTracerDrug.province = province ? province.name : '[All]';
-                newTracerDrug.district = district ? district.name : '[All]';
-                newTracerDrug.facility = tracerDrug['facility.facility_name'];
-                newTracerDrug.quantity = tracerDrug.soh;
-                newTracerDrug.date = tracerDrug.date;
-                data.reportContent.push(newTracerDrug);
-            });
+                tracerDrugs.forEach(function (tracerDrug) {
+                    var newTracerDrug = {};
+                    newTracerDrug.drugCode = tracerDrug['drug.drug_code'];
+                    newTracerDrug.drugName = tracerDrug['drug.drug_name'];
+                    newTracerDrug.province = province ? province.name : '[All]';
+                    newTracerDrug.district = district ? district.name : '[All]';
+                    newTracerDrug.facility = tracerDrug['facility.facility_name'];
+                    newTracerDrug.quantity = tracerDrug.soh;
+                    newTracerDrug.date = tracerDrug.date;
+                    data.reportContent.push(newTracerDrug);
+                });
 
-            ReportExportExcelService.exportAsXlsx(data, messageService.get('report.file.tracer.drugs.report'));
-      });
+                ReportExportExcelService.exportAsXlsx(data, messageService.get('report.file.tracer.drugs.report'));
+            });
+        }
     }
 
     return {
