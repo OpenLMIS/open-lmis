@@ -139,14 +139,12 @@ describe("stock out single product tree data builder test", function () {
             name: "PA name",
             avgDuration: '15.5',
             totalOccurrences: 2,
-            totalDuration: 31,
             provinceCode: "PA",
             children: [
                 {
                     name: "DA name",
                     avgDuration: '15.5',
                     totalOccurrences: 2,
-                    totalDuration: 31,
                     districtCode: "DA",
                     children: [{
                         name: "FA name",
@@ -168,7 +166,6 @@ describe("stock out single product tree data builder test", function () {
                     name: "DA2 name",
                     avgDuration: 0,
                     totalOccurrences: 0,
-                    totalDuration: 0,
                     districtCode: "DA2",
                     children: [{
                         name: "FA3 name",
@@ -184,14 +181,12 @@ describe("stock out single product tree data builder test", function () {
             name: "PB name",
             avgDuration: '6.0',
             totalOccurrences: 1,
-            totalDuration: 6,
             provinceCode: "PB",
             children: [
                 {
                     name: "DB name",
                     avgDuration: '6.0',
                     totalOccurrences: 1,
-                    totalDuration: 6,
                     districtCode: "DB",
                     children: [{
                         name: "FB name",

@@ -44,7 +44,6 @@ services.factory('StockoutSingleProductTreeDataBuilder', function (StockOutRepor
             name: carryingFacilitiesInDistrict[0][districtNameKey],
             avgDuration: districtResult.avgDuration,
             totalOccurrences: districtResult.totalOccurrences,
-            totalDuration: districtResult.totalDuration,
             districtCode: districtCode,
             children: facilityTreeData
         };
@@ -67,7 +66,6 @@ services.factory('StockoutSingleProductTreeDataBuilder', function (StockOutRepor
             name: carryingFacilitiesInProvince[0][provinceNameKey],
             avgDuration: provinceResult.avgDuration,
             totalOccurrences: provinceResult.totalOccurrences,
-            totalDuration: provinceResult.totalDuration,
             provinceCode: provinceCode,
             children: districtTreeData
         };
