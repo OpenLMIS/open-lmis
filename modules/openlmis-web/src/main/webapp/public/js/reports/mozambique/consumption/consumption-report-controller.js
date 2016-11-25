@@ -9,7 +9,7 @@ function ConsumptionReportController($scope, $controller, $filter, $http, $q, Cu
     var consumptionInPeriods;
 
     $scope.generateConsumptionReport = function () {
-        if ($scope.checkDateValidRange() && validateProduct() && validateFacility()) {
+        if ($scope.checkDateValidRange() && validateProduct()) {
             $scope.locationIdToCode($scope.reportParams);
             var promises = requestConsumptionDataForEachPeriod();
             $q.all(promises).then(function (consumptionsInPeriods) {
@@ -19,7 +19,7 @@ function ConsumptionReportController($scope, $controller, $filter, $http, $q, Cu
         }
     };
 
-    $scope.exportXLSX = function() {
+    $scope.exportXLSX = function () {
         var data = {
             reportHeaders: {
                 drugCode: messageService.get('report.header.drug.code'),
@@ -54,34 +54,61 @@ function ConsumptionReportController($scope, $controller, $filter, $http, $q, Cu
     };
 
     function renderConsumptionChart(consumptionInPeriods) {
-        AmCharts.makeChart("consumption-report", {
-            "type": "serial",
-            "theme": "light",
-            "dataProvider": consumptionInPeriods,
-            "graphs": [{
-                "bullet": "round",
-                "valueField": "soh",
-                "balloonText": messageService.get("stock.movement.soh") + ": [[value]]"
-            }, {
-                "bullet": "round",
-                "valueField": "cmm",
-                "balloonText": "CMM: [[value]]"
-            }, {
-                "bullet": "round",
-                "valueField": "total_quantity",
-                "balloonText": messageService.get("consumption.chart.balloon.text") + ": [[value]]"
-            }],
-            "chartScrollbar": {
-                "oppositeAxis": false,
-                "offset": 100
-            },
-            "chartCursor": {},
-            "categoryField": "period",
-            "categoryAxis": {
-                "autoRotateCount": 5,
-                "autoRotateAngle": 45
-            }
-        });
+        if (validateFacility()) {
+            AmCharts.makeChart("consumption-report", {
+                "type": "serial",
+                "theme": "light",
+                "dataProvider": consumptionInPeriods,
+                "graphs": [{
+                    "bullet": "round",
+                    "valueField": "soh",
+                    "balloonText": messageService.get("stock.movement.soh") + ": [[value]]"
+                }, {
+                    "bullet": "round",
+                    "valueField": "cmm",
+                    "balloonText": "CMM: [[value]]"
+                }, {
+                    "bullet": "round",
+                    "valueField": "total_quantity",
+                    "balloonText": messageService.get("consumption.chart.balloon.text") + ": [[value]]"
+                }],
+                "chartScrollbar": {
+                    "oppositeAxis": false,
+                    "offset": 100
+                },
+                "chartCursor": {},
+                "categoryField": "period",
+                "categoryAxis": {
+                    "autoRotateCount": 5,
+                    "autoRotateAngle": 45
+                }
+            });
+        } else {
+            AmCharts.makeChart("consumption-report", {
+                "type": "serial",
+                "theme": "light",
+                "dataProvider": consumptionInPeriods,
+                "graphs": [{
+                    "bullet": "round",
+                    "valueField": "soh",
+                    "balloonText": messageService.get("stock.movement.soh") + ": [[value]]"
+                }, {
+                    "bullet": "round",
+                    "valueField": "total_quantity",
+                    "balloonText": messageService.get("consumption.chart.balloon.text") + ": [[value]]"
+                }],
+                "chartScrollbar": {
+                    "oppositeAxis": false,
+                    "offset": 100
+                },
+                "chartCursor": {},
+                "categoryField": "period",
+                "categoryAxis": {
+                    "autoRotateCount": 5,
+                    "autoRotateAngle": 45
+                }
+            });
+        }
     }
 
     function requestConsumptionDataForEachPeriod() {
@@ -131,7 +158,6 @@ function ConsumptionReportController($scope, $controller, $filter, $http, $q, Cu
     }
 
     function validateFacility() {
-        $scope.invalid = !parseInt($scope.reportParams.facilityId,10);
-        return !$scope.invalid;
+        return !!parseInt($scope.reportParams.facilityId, 10);
     }
 }
