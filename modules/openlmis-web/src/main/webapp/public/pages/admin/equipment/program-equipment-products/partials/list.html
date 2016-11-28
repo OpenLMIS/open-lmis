@@ -33,7 +33,7 @@
         <tr>
           <td>
             <div>
-              <input id="equipment-add-new" type="button" value="Add New" ng-click="addNewEquipment()"
+              <input id="equipment-add-new" type="button" openlmis-message="button.add.new" ng-click="addNewEquipment()"
                      ng-show="equipmentsLoaded"
                      ng-disabled="currentProgramEquipment.program == null || currentProgramEquipment.program == undefined"
                      class="pull-right btn btn-primary"/></div>
@@ -79,7 +79,7 @@
           <td>&nbsp;</td>
           <td>
             <div>
-              <input id="product-add-new" type="button" value="Add New" ng-click="addNewProduct()"
+              <input id="product-add-new" type="button" openlmis-message="button.add.new" ng-click="addNewProduct()"
 
                         ng-disabled="currentProgramEquipment.id == null || currentProgramEquipment.id == undefined"
                         class="pull-right btn btn-primary"/></div>

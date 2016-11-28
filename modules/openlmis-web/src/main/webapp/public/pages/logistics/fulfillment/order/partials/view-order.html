@@ -57,7 +57,7 @@
     <div class="form-group">
         <h3 ng-show="orders != undefined" openlmis-message="label.order.list"></h3>
       <div id="noFilterSelected" ng-show="orders == undefined" >
-        <span>Please select value in all required filters above</span>
+        <span openlmis-message="label.missing.filter.values"></span>
       </div>
         <div class="alert alert-info" id="noOrdersPresent" ng-show="orders != undefined && orders.length == 0" >
             <span openlmis-message="message.no.order"></span>
