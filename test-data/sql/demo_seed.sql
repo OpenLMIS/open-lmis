@@ -1226,3 +1226,47 @@ INSERT INTO vaccination_child_coverage_line_items (id, facilityvisitid, vaccinat
 INSERT INTO vaccination_child_coverage_line_items (id, facilityvisitid, vaccination, targetgroup, healthcenter11months, outreach11months, healthcenter23months, outreach23months, createdby, createddate, modifiedby, modifieddate) VALUES (71, 6, 'PCV10 3rd dose', NULL, NULL, NULL, NULL, NULL, 4, '2016-04-21 20:45:23.800028', 4, '2016-04-21 20:45:23.800028');
 INSERT INTO vaccination_child_coverage_line_items (id, facilityvisitid, vaccination, targetgroup, healthcenter11months, outreach11months, healthcenter23months, outreach23months, createdby, createddate, modifiedby, modifieddate) VALUES (72, 6, 'Measles', NULL, NULL, NULL, NULL, NULL, 4, '2016-04-21 20:45:23.800028', 4, '2016-04-21 20:45:23.800028');
 SELECT pg_catalog.setval('vaccination_child_coverage_line_items_id_seq', 72, true);
+
+/*
+See OLMIS2-41. This SQL is being added as-is prior to another demo. When time permits, it should probably be refactored.
+Specifically, the new DELETE statements should be removed along with the initial INSERT statements they seek to undo.
+*/
+BEGIN TRANSACTION;
+  INSERT INTO supply_lines VALUES(7, NULL, 3, 5, 8, true, 1);
+
+  INSERT INTO supply_lines VALUES(8, NULL, 1, 5, 8, true, 1);
+
+  DELETE FROM orders WHERE id IN
+  (
+    SELECT id FROM requisitions WHERE facilityid = 3 AND programid = 5
+  );
+
+  DELETE FROM requisition_status_changes WHERE rnrid IN
+  (
+    SELECT id FROM requisitions WHERE facilityid = 3 AND programid = 5
+  );
+
+  DELETE FROM comments WHERE rnrid IN
+  (
+    SELECT id FROM requisitions WHERE facilityid = 3 AND programid = 5
+  );
+
+  DELETE FROM equipment_status_line_items WHERE rnrid IN
+  (
+    SELECT id FROM requisitions WHERE facilityid = 3 AND programid = 5
+  );
+
+
+  DELETE FROM regimen_line_items WHERE rnrid IN
+  (
+    SELECT id FROM requisitions WHERE facilityid = 3 AND programid = 5
+  );
+
+  DELETE FROM requisition_line_items WHERE rnrid IN
+  (
+    SELECT id FROM requisitions WHERE facilityid = 3 AND programid = 5
+  );
+
+  DELETE FROM requisitions WHERE facilityid = 3 AND programid = 5;
+END TRANSACTION;
+
