@@ -10,8 +10,6 @@
             <input type="submit" class="btn btn-primary" ng-click="loadReport()" openlmis-message="button.generateReport"/>
         </div>
 
-        <div ng-include="'/public/pages/reports/mozambique/export-data-button.html'"></div>
-
         <div style="clear: both"></div>
     </div>
 
@@ -21,7 +19,11 @@
 
     <hr/>
 
-    <div id="tracer-report"></div>
-    <div id="legend-div"></div>
+    <div class="over-flow-hidden">
+        <div id="tracer-report"></div>
+        <div id="legend-div"></div>
+        <div ng-include="'/public/pages/reports/mozambique/export-data-button.html'"></div>
+    </div>
+
 
 </div>

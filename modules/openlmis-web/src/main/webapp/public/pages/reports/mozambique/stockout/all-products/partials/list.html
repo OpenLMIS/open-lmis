@@ -10,8 +10,6 @@
                    openlmis-message="button.generateReport"/>
         </div>
 
-        <div ng-include="'/public/pages/reports/mozambique/export-data-button.html'"></div>
-
         <div style="clear: both"></div>
     </div>
 
@@ -67,6 +65,11 @@
             </table>
 
         </div>
+
+        <div>
+            <div ng-include="'/public/pages/reports/mozambique/export-data-button.html'"></div>
+        </div>
+
     </div>
     <label ng-show="reportData && reportData.length == 0">No Data</label>
     <label class="stock-out-report-buttom-msg" openlmis-message="label.stock.out.bottom.message"></label>

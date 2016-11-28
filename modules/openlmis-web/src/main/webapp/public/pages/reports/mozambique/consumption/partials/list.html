@@ -25,8 +25,6 @@
                    openlmis-message="button.generateReport"/>
         </div>
 
-        <div ng-include="'/public/pages/reports/mozambique/export-data-button.html'"></div>
-
         <div style="clear: both"></div>
     </div>
 
@@ -34,6 +32,10 @@
     <date-picker-container get-time-range="getTimeRange(dateRange)" picker-type="period-no-current"></date-picker-container>
     <hr/>
 
-    <div id="consumption-report"></div>
-
+    <div class="over-flow-hidden">
+        <div id="consumption-report"></div>
+        <div ng-if="consumptionInPeriods.length > 0">
+            <div ng-include="'/public/pages/reports/mozambique/export-data-button.html'"></div>
+        </div>
+    </div>
 </div>

@@ -1,7 +1,7 @@
 function AdjustmentOccurrencesReportController($scope, $controller, $filter, $http, $q, AdjustmentOccurrencesChartService, CubesGenerateCutParamsService, CubesGenerateUrlService, DateFormatService, messageService, ReportExportExcelService) {
   $controller("BaseProductReportController", {$scope: $scope});
 
-  var adjustmentsData;
+  $scope.adjustmentsData = undefined;
   var adjustmentReasonCodes = {
     "negative": [
       "EXPIRED_RETURN_TO_SUPPLIER",
@@ -35,7 +35,7 @@ function AdjustmentOccurrencesReportController($scope, $controller, $filter, $ht
 
       var promises = requestAdjustmentDataForEachPeriod();
       $q.all(promises).then(function (adjustmentsInPeriods) {
-        adjustmentsData = _.pluck(_.pluck(adjustmentsInPeriods, "data"), "adjustment");
+        $scope.adjustmentsData = _.pluck(_.pluck(adjustmentsInPeriods, "data"), "adjustment");
         var selectedProduct = _.find($scope.products, function (product) {
           return product.code === $scope.reportParams.productCode;
         });
@@ -49,7 +49,7 @@ function AdjustmentOccurrencesReportController($scope, $controller, $filter, $ht
           label = messageService.get("stock.movement.positive.adjustment.title") + " " + selectedProduct.primaryName;
         }
 
-        AdjustmentOccurrencesChartService.renderAdjustmentChart("adjustments-report", adjustmentsData, selectedAdjustmentType, label);
+        AdjustmentOccurrencesChartService.renderAdjustmentChart("adjustments-report", $scope.adjustmentsData, selectedAdjustmentType, label);
       });
     }
   };
@@ -130,7 +130,7 @@ function AdjustmentOccurrencesReportController($scope, $controller, $filter, $ht
       reportContent: []
     };
 
-    adjustmentsData.forEach(function(adjustment) {
+    $scope.adjustmentsData.forEach(function(adjustment) {
       var selectedReasonKeys = adjustmentReasonCodes[$scope.reportParams.adjustmentType];
 
       selectedReasonKeys.forEach(function (selectedReasonKey) {

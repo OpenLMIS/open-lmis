@@ -6,15 +6,15 @@ function ConsumptionReportController($scope, $controller, $filter, $http, $q, Cu
         $scope.loadHealthFacilities();
     });
 
-    var consumptionInPeriods;
+    $scope.consumptionInPeriods = undefined;
 
     $scope.generateConsumptionReport = function () {
         if ($scope.checkDateValidRange() && validateProduct()) {
             $scope.locationIdToCode($scope.reportParams);
             var promises = requestConsumptionDataForEachPeriod();
             $q.all(promises).then(function (consumptionsInPeriods) {
-                consumptionInPeriods = _.pluck(_.pluck(consumptionsInPeriods, 'data'), 'summary');
-                renderConsumptionChart(consumptionInPeriods);
+                $scope.consumptionInPeriods = _.pluck(_.pluck(consumptionsInPeriods, 'data'), 'summary');
+                renderConsumptionChart($scope.consumptionInPeriods);
             });
         }
     };
@@ -35,7 +35,7 @@ function ConsumptionReportController($scope, $controller, $filter, $http, $q, Cu
             reportContent: []
         };
 
-        consumptionInPeriods.forEach(function (consumptionInPeriod) {
+        $scope.consumptionInPeriods.forEach(function (consumptionInPeriod) {
             var consumptionReportContent = {};
             consumptionReportContent.drugCode = $scope.reportParams.productCode;
             consumptionReportContent.drugName = $scope.getDrugByCode($scope.reportParams.productCode).primaryName;

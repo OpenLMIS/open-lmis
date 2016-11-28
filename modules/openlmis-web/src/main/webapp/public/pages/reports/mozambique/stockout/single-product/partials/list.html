@@ -24,8 +24,6 @@
                    openlmis-message="button.generateReport"/>
         </div>
 
-        <div ng-include="'/public/pages/reports/mozambique/export-data-button.html'"></div>
-
         <div style="clear: both"></div>
 
     </div>
@@ -45,6 +43,8 @@
                    on-chart-place-holder-shown="onChartPlaceHolderShown(branch)">
 
         </tree-grid>
+
+        <div ng-include="'/public/pages/reports/mozambique/export-data-button.html'"></div>
     </div>
 
     <label ng-show="tree_data && tree_data.length == 0">No Data</label>
