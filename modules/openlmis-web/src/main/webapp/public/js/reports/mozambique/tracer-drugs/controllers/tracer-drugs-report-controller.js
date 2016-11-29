@@ -1,4 +1,4 @@
-function TracerDrugsReportController($scope, $controller, DateFormatService, TracerDrugsChartService) {
+function TracerDrugsReportController($scope, $controller, DateFormatService, TracerDrugsChartService, $timeout, $q, $http) {
     $controller('BaseProductReportController', {$scope: $scope});
 
     $scope.$on('$viewContentLoaded', function () {
@@ -25,7 +25,37 @@ function TracerDrugsReportController($scope, $controller, DateFormatService, Tra
         var defaultStartTime = DateFormatService.formatDateWithFirstDayOfMonth(new Date());
         var defaultEndTime = $scope.reportParams.endTime;
 
-        TracerDrugsChartService.makeTracerDrugsChart('tracer-report', 'legend-div', new Date(defaultStartTime), new Date(defaultEndTime), undefined, undefined);
+        var getHomeFacility = $http.get('/rest-api/lookup/home-facility');
+        $q.when(getHomeFacility).then(function (result) {
+            var homeFacility = result.data['home-facility'];
+            $timeout(function () {
+                setDefaultLocation(homeFacility);
+                TracerDrugsChartService.makeTracerDrugsChart('tracer-report', 'legend-div', new Date(defaultStartTime), new Date(defaultEndTime), getSelectedProvince(), getSelectedDistrict());
+            }, 1000);
+        });
     }
+
+    function setDefaultLocation(homeFacility) {
+        var facilityType = homeFacility.facilityType.code;
+        if(facilityType === 'Central'){
+            if($scope.provinces.length === 1) {
+                $scope.reportParams.provinceId = $scope.provinces[0].id;
+            } else {
+                $scope.reportParams.provinceId = ' ';
+            }
+            $scope.reportParams.districtId = ' ';
+        }
+
+        if (facilityType === 'DPM') {
+            $scope.reportParams.provinceId = $scope.provinces[0].id;
+            $scope.reportParams.districtId = ' ';
+        }
+
+        if (facilityType === 'DDM') {
+            $scope.reportParams.districtId = $scope.districts[0].id;
+        }
+
+    }
+
 
 }

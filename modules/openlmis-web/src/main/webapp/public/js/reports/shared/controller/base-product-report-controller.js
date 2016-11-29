@@ -1,11 +1,11 @@
-function BaseProductReportController($scope, $filter, ProductReportService, $cacheFactory, $timeout, FacilityService, GeographicZoneService, $dialog, DateFormatService, $location, messageService) {
+function BaseProductReportController($scope, $filter, ProductReportService, $cacheFactory, $timeout, FacilityService, GeographicZoneService, $dialog, DateFormatService, $location, messageService, HomeFacilityService) {
     $scope.provinces = [];
     $scope.districts = [];
     $scope.facilities = [];
     $scope.fullGeoZoneList = [];
     $scope.reportParams = {};
     $scope.products = [];
-
+    $scope.homeFacility = {};
     var CMM_STATUS = {
         stockOut: 'stock-out',
         regularStock: 'regular-stock',
@@ -23,8 +23,19 @@ function BaseProductReportController($scope, $filter, ProductReportService, $cac
 
     $scope.$on('$viewContentLoaded', function () {
         loadGeographicZones();
+        loadHomeFacility();
         $scope.reportParams.endTime = $scope.todayDateString;
     });
+
+     function loadHomeFacility() {
+        HomeFacilityService.get({}, function (data) {
+            setHomeFacility(data);
+        });
+    }
+
+    function setHomeFacility(data) {
+        $scope.homeFacility = data['home-facility'];
+    }
 
     $scope.getTimeRange = function (dateRange) {
         $scope.reportParams.startTime = dateRange.startTime;
