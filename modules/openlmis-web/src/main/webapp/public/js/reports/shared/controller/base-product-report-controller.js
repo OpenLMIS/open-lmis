@@ -97,7 +97,7 @@ function BaseProductReportController($scope, $filter, ProductReportService, $cac
 
     $scope.fillProvince = function () {
         var parent = $scope.getParent($scope.reportParams.districtId);
-        $scope.reportParams.provinceId = !parent ? undefined : parent.id;
+        $scope.reportParams.provinceId = !parent ? $scope.reportParams.provinceId : parent.id;
     };
 
     $scope.fillGeographicZone = function () {
@@ -115,7 +115,9 @@ function BaseProductReportController($scope, $filter, ProductReportService, $cac
 
     $scope.getParent = function (geoZoneId) {
         return geoZoneId && _.find($scope.fullGeoZoneList, function (zone) {
-                return $scope.getGeoZone(geoZoneId).parentId == zone.id;
+                if($scope.getGeoZone(geoZoneId)) {
+                    return $scope.getGeoZone(geoZoneId).parentId == zone.id;
+                }
             });
     };
 
