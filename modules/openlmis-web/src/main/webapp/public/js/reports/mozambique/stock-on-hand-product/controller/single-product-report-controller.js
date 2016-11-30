@@ -90,6 +90,8 @@ function SingleProductReportController($scope, $filter, $controller, $http, Cube
   };
 
   $scope.exportXLSX = function() {
+    var params = $scope.reportParams;
+    $scope.locationIdToCode(params);
     var data = {
       reportHeaders: {
         drugCode: messageService.get('report.header.drug.code'),
