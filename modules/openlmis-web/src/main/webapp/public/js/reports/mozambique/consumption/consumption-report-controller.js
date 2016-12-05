@@ -43,14 +43,14 @@ function ConsumptionReportController($scope, $controller, $filter, $http, $q, Cu
             consumptionReportContent.district = $scope.reportParams.selectedDistrict ? $scope.reportParams.selectedDistrict.name : '[All]';
             consumptionReportContent.facility = $scope.reportParams.selectedFacility ? $scope.reportParams.selectedFacility.name : '[All]';
             consumptionReportContent.period = consumptionInPeriod.period;
-            consumptionReportContent.cmm = consumptionInPeriod.cmm;
+            consumptionReportContent.cmm = $scope.reportParams.selectedFacility ? consumptionInPeriod.cmm : '';
             consumptionReportContent.consumption = consumptionInPeriod.total_quantity;
             consumptionReportContent.soh = consumptionInPeriod.soh;
 
             data.reportContent.push(consumptionReportContent);
         });
 
-        ReportExportExcelService.exportAsXlsx(data, messageService.get('report.file.consumption.report'));
+        ReportExportExcelService.exportAsXlsx(data, messageService.get('report.file.historical.data.report'));
     };
 
     function renderConsumptionChart(consumptionInPeriods) {
