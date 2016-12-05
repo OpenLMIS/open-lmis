@@ -18,7 +18,7 @@ import org.junit.runners.BlockJUnit4ClassRunner;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.openlmis.db.categories.UnitTests;
-import org.openlmis.restapi.domain.ProgramDataForm;
+import org.openlmis.restapi.domain.ProgramDataFormDTO;
 import org.openlmis.restapi.response.RestResponse;
 import org.openlmis.restapi.service.RestProgramDataService;
 import org.powermock.core.classloader.annotations.PrepareForTest;
@@ -36,6 +36,8 @@ import static org.mockito.Mockito.verify;
 import static org.openlmis.restapi.response.RestResponse.SUCCESS;
 import static org.powermock.api.mockito.PowerMockito.mockStatic;
 import static org.powermock.api.mockito.PowerMockito.when;
+
+ogramDataForm;
 
 @Category(UnitTests.class)
 @RunWith(PowerMockRunner.class)
@@ -65,10 +67,10 @@ public class RestProgramDataControllerTest {
     ResponseEntity<RestResponse> expectedResponse = new ResponseEntity<>(new RestResponse(SUCCESS, successMsgCode), HttpStatus.OK);
     when(RestResponse.success(successMsgCode)).thenReturn(expectedResponse);
 
-    ProgramDataForm programFormData = new ProgramDataForm();
-    ResponseEntity<RestResponse> response = restProgramDataController.createProgramDataForm(123L, "RAPID_TEST", programFormData, principal);
+    ProgramDataFormDTO programFormData = new ProgramDataFormDTO();
+    ResponseEntity<RestResponse> response = restProgramDataController.createProgramDataForm(programFormData, principal);
 
-    verify(restProgramDataService).createProgramDataForm(123L, "RAPID_TEST", programFormData, 1L);
+    verify(restProgramDataService).createProgramDataForm(programFormData, 1L);
     assertThat(response.getStatusCode(), is(HttpStatus.OK));
   }
 

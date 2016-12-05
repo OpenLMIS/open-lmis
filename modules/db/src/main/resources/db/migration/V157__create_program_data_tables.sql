@@ -14,8 +14,11 @@ CREATE UNIQUE INDEX uc_supplemental_programs_lower_code ON programs (LOWER(code)
 
 CREATE TABLE program_data_forms (
   id                      SERIAL PRIMARY KEY,
+  facilityId              INTEGER REFERENCES facilities(id),
   supplementalProgramId   INTEGER REFERENCES supplemental_programs(id),
-  periodId                INTEGER REFERENCES processing_periods(id),
+  startDate               TIMESTAMP,
+  endDate                 TIMESTAMP,
+  submittedTime           TIMESTAMP,
   createdBy               INTEGER,
   modifiedBy              INTEGER,
   createdDate             TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
