@@ -1,5 +1,7 @@
 package org.openlmis.restapi.service;
 
+import com.google.common.base.Function;
+import com.google.common.collect.FluentIterable;
 import org.openlmis.core.domain.Facility;
 import org.openlmis.core.domain.moz.ProgramDataColumn;
 import org.openlmis.core.domain.moz.ProgramDataForm;
@@ -17,6 +19,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.List;
 
 @Service
 public class RestProgramDataService {
@@ -70,5 +73,14 @@ public class RestProgramDataService {
       programDataForm.getProgramDataItems().add(programDataItem);
     }
     return programDataForm;
+  }
+
+  public List<ProgramDataFormDTO> getProgramDataFormsByFacility(Long facilityId) {
+    return FluentIterable.from(programDataRepository.getProgramDataFormsByFacilityId(facilityId)).transform(new Function<ProgramDataForm, ProgramDataFormDTO>() {
+      @Override
+      public ProgramDataFormDTO apply(ProgramDataForm input) {
+        return ProgramDataFormDTO.prepareForRest(input);
+      }
+    }).toList();
   }
 }

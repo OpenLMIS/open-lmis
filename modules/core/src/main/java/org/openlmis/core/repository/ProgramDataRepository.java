@@ -7,6 +7,8 @@ import org.openlmis.core.repository.mapper.ProgramDataMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
+
 @Component
 public class ProgramDataRepository {
 
@@ -21,5 +23,9 @@ public class ProgramDataRepository {
     for (ProgramDataItem programDataItem : programDataForm.getProgramDataItems()) {
       programDataItemMapper.insert(programDataItem);
     }
+  }
+
+  public List<ProgramDataForm> getProgramDataFormsByFacilityId(Long facilityId) {
+    return programDataMapper.getByFacilityId(facilityId);
   }
 }

@@ -14,6 +14,7 @@ import org.openlmis.core.builder.FacilityBuilder;
 import org.openlmis.core.domain.Facility;
 import org.openlmis.core.domain.moz.ProgramDataColumn;
 import org.openlmis.core.domain.moz.ProgramDataForm;
+import org.openlmis.core.domain.moz.ProgramDataItem;
 import org.openlmis.core.domain.moz.SupplementalProgram;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.core.repository.ProgramDataRepository;
@@ -30,6 +31,7 @@ import org.openlmis.restapi.domain.ProgramDataFormItemDTO;
 import org.powermock.modules.junit4.PowerMockRunner;
 import org.powermock.modules.junit4.PowerMockRunnerDelegate;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -180,5 +182,42 @@ public class RestProgramDataServiceTest {
     restProgramDataService.createProgramDataForm(make(a(ProgramDataFormBuilder.defaultProgramDataForm)), 1L);
 
     verify(syncUpHashRepository).save(anyString());
+  }
+
+  @Test
+  public void shouldGetProgramFormsByFacility() throws Exception {
+    Facility facility = make(a(FacilityBuilder.defaultFacility));
+    SupplementalProgram supplementalProgram = new SupplementalProgram("P1", "", "", true);
+    Date startDate = DateUtil.parseDate("2016-10-21", DateUtil.FORMAT_DATE);
+    Date endDate = DateUtil.parseDate("2016-11-20", DateUtil.FORMAT_DATE);
+    Date submittedTime = new Date();
+
+    ProgramDataForm programDataForm = new ProgramDataForm(facility, supplementalProgram,
+        startDate, endDate, submittedTime, new ArrayList<ProgramDataItem>());
+    ProgramDataColumn programDataColumn1 = new ProgramDataColumn("A1", "", "", supplementalProgram);
+    ProgramDataColumn programDataColumn2 = new ProgramDataColumn("A2", "", "", supplementalProgram);
+    ProgramDataItem programDataItem1 = new ProgramDataItem(programDataForm, "category 1", programDataColumn1, 10L);
+    ProgramDataItem programDataItem2 = new ProgramDataItem(programDataForm, "category 1", programDataColumn2, 5L);
+    ProgramDataItem programDataItem3 = new ProgramDataItem(programDataForm, "category 2", programDataColumn2, 100L);
+    programDataForm.getProgramDataItems().addAll(asList(programDataItem1, programDataItem2, programDataItem3));
+
+    Date startDate2 = DateUtil.parseDate("2016-11-21", DateUtil.FORMAT_DATE);
+    Date endDate2 = DateUtil.parseDate("2016-12-20", DateUtil.FORMAT_DATE);
+    ProgramDataForm programDataForm2 = new ProgramDataForm(facility, supplementalProgram,
+        startDate2, endDate2, submittedTime, new ArrayList<ProgramDataItem>());
+    ProgramDataItem programDataItem4 = new ProgramDataItem(programDataForm2, "category 1", programDataColumn1, 20L);
+    ProgramDataItem programDataItem5 = new ProgramDataItem(programDataForm2, "category 2", programDataColumn2, 25L);
+    programDataForm2.getProgramDataItems().addAll(asList(programDataItem4, programDataItem5));
+    when(programDataRepository.getProgramDataFormsByFacilityId(12L)).thenReturn(asList(programDataForm, programDataForm2));
+
+    List<ProgramDataFormDTO> programDataFormDTOs = restProgramDataService.getProgramDataFormsByFacility(12L);
+    assertThat(programDataFormDTOs.size(), is(2));
+    assertThat(programDataFormDTOs.get(0).getFacilityId(), is(facility.getId()));
+    assertThat(programDataFormDTOs.get(0).getPeriodBegin(), is(startDate));
+    assertThat(programDataFormDTOs.get(0).getPeriodEnd(), is(endDate));
+    assertThat(programDataFormDTOs.get(0).getProgramDataFormItems().size(), is(3));
+    assertThat(programDataFormDTOs.get(0).getProgramDataFormItems().get(0).getColumnCode(), is("A1"));
+    assertThat(programDataFormDTOs.get(0).getProgramDataFormItems().get(0).getName(), is("category 1"));
+    assertThat(programDataFormDTOs.get(0).getProgramDataFormItems().get(0).getValue(), is(10L));
   }
 }

@@ -17,4 +17,12 @@ public interface ProgramDataColumnMapper {
           many = @Many(select = "org.openlmis.core.repository.mapper.SupplementalProgramMapper.getById"))
   })
   ProgramDataColumn getColumnByCode(String code);
+
+  @Select("SELECT * FROM program_data_columns WHERE id=#{id}")
+  @Results({
+      @Result(
+          property = "supplementalProgram", column = "supplementalProgramId", javaType = SupplementalProgram.class,
+          many = @Many(select = "org.openlmis.core.repository.mapper.SupplementalProgramMapper.getById"))
+  })
+  ProgramDataColumn getColumnById(Long id);
 }

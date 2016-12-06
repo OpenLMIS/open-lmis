@@ -17,6 +17,7 @@ import org.junit.runner.RunWith;
 import org.junit.runners.BlockJUnit4ClassRunner;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.openlmis.core.domain.moz.ProgramDataForm;
 import org.openlmis.db.categories.UnitTests;
 import org.openlmis.restapi.domain.ProgramDataFormDTO;
 import org.openlmis.restapi.response.RestResponse;
@@ -28,7 +29,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
 import java.security.Principal;
+import java.util.List;
 
+import static java.util.Arrays.asList;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.mock;
@@ -72,4 +75,14 @@ public class RestProgramDataControllerTest {
     assertThat(response.getStatusCode(), is(HttpStatus.OK));
   }
 
+  @Test
+  public void shouldReturnOKWithProgramDataFormsWhenGettingProgramDataByFacility() throws Exception {
+    List<ProgramDataFormDTO> programForms = asList(new ProgramDataFormDTO(), new ProgramDataFormDTO());
+    when(restProgramDataService.getProgramDataFormsByFacility(12L)).thenReturn(programForms);
+
+    ResponseEntity<RestResponse> responseEntity = restProgramDataController.getProgramDataFormsByFacility(12L);
+    verify(restProgramDataService).getProgramDataFormsByFacility(12L);
+    assertThat(responseEntity.getStatusCode(), is(HttpStatus.OK));
+    assertThat(((List<ProgramDataForm>) responseEntity.getBody().getData().get("programData")).size(), is(2));
+  }
 }
