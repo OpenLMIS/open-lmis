@@ -121,12 +121,12 @@ public class RestProgramDataServiceTest {
     assertThat(convertedProgramDataForm.getEndDate(), is(periodEndDate));
     assertThat(convertedProgramDataForm.getSubmittedTime(), is(submittedTime));
     assertThat(convertedProgramDataForm.getFacility().getCode(), is("F1"));
-    assertThat(convertedProgramDataForm.getDataItemList().size(), is(2));
+    assertThat(convertedProgramDataForm.getProgramDataItems().size(), is(2));
     assertThat(convertedProgramDataForm.getCreatedBy(), is(1L));
     assertThat(convertedProgramDataForm.getModifiedBy(), is(1L));
-    assertThat(convertedProgramDataForm.getDataItemList().get(0).getName(), is("PUBLIC_PHARMACY"));
-    assertThat(convertedProgramDataForm.getDataItemList().get(0).getValue(), is(100L));
-    assertThat(convertedProgramDataForm.getDataItemList().get(0).getProgramDataColumn(), is(column));
+    assertThat(convertedProgramDataForm.getProgramDataItems().get(0).getName(), is("PUBLIC_PHARMACY"));
+    assertThat(convertedProgramDataForm.getProgramDataItems().get(0).getValue(), is(100L));
+    assertThat(convertedProgramDataForm.getProgramDataItems().get(0).getProgramDataColumn(), is(column));
   }
 
   @Test

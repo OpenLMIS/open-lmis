@@ -56,7 +56,7 @@ public class RestProgramDataService {
     programDataForm.setCreatedBy(userId);
     programDataForm.setModifiedBy(userId);
 
-    programDataForm.setDataItemList(new ArrayList<ProgramDataItem>());
+    programDataForm.setProgramDataItems(new ArrayList<ProgramDataItem>());
     for (ProgramDataFormItemDTO programDataFormItemDTO : requestBodyData.getProgramDataFormItems()) {
       ProgramDataColumn programDataColumn = programDataColumnMapper.getColumnByCode(programDataFormItemDTO.getColumnCode());
       if (programDataColumn == null) {
@@ -66,7 +66,7 @@ public class RestProgramDataService {
       programDataItem.setName(programDataFormItemDTO.getName());
       programDataItem.setValue(programDataFormItemDTO.getValue());
       programDataItem.setProgramDataColumn(programDataColumn);
-      programDataForm.getDataItemList().add(programDataItem);
+      programDataForm.getProgramDataItems().add(programDataItem);
     }
 
     programDataRepository.createProgramDataForm(programDataForm);

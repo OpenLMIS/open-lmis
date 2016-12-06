@@ -26,25 +26,25 @@ CREATE TABLE program_data_forms (
 );
 
 CREATE TABLE program_data_columns (
-  id                    SERIAL PRIMARY KEY,
-  code                  VARCHAR(50) NOT NULL,
-  label                 VARCHAR(250),
-  description           TEXT,
-  supplmentalProgramId  INTEGER REFERENCES supplemental_programs(id),
-  createdBy             INTEGER,
-  modifiedBy            INTEGER,
-  createdDate           TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-  modifiedDate          TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+  id                     SERIAL PRIMARY KEY,
+  code                   VARCHAR(50) NOT NULL,
+  label                  VARCHAR(250),
+  description            TEXT,
+  supplementalProgramId  INTEGER REFERENCES supplemental_programs(id),
+  createdBy              INTEGER,
+  modifiedBy             INTEGER,
+  createdDate            TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  modifiedDate           TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
 CREATE TABLE program_data_items (
-  id                SERIAL PRIMARY KEY,
-  formId            INTEGER REFERENCES program_data_forms(id),
-  name              VARCHAR(50),
-  templateColumnId  INTEGER REFERENCES program_data_columns(id),
-  value             INTEGER,
-  createdBy         INTEGER,
-  modifiedBy        INTEGER,
-  createdDate       TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-  modifiedDate      TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+  id                   SERIAL PRIMARY KEY,
+  formId               INTEGER REFERENCES program_data_forms(id),
+  name                 VARCHAR(50),
+  programDataColumnId  INTEGER REFERENCES program_data_columns(id),
+  value                INTEGER,
+  createdBy            INTEGER,
+  modifiedBy           INTEGER,
+  createdDate          TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  modifiedDate         TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );

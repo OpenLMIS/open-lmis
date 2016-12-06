@@ -9,6 +9,7 @@ import java.util.List;
 
 @Data
 @NoArgsConstructor
+@AllArgsConstructor
 @EqualsAndHashCode
 public class ProgramDataForm extends BaseModel {
   @Getter
@@ -28,5 +29,5 @@ public class ProgramDataForm extends BaseModel {
   private Date submittedTime;
   @Getter
   @Setter
-  private List<ProgramDataItem> dataItemList;
+  private List<ProgramDataItem> programDataItems;
 }
