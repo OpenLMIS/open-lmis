@@ -22,6 +22,7 @@ public class ProgramDataFormDTO {
   private Date periodBegin;
   @JsonDeserialize(using = DateDeserializer.class)
   private Date periodEnd;
+  @JsonDeserialize(using = DateDeserializer.class)
   private Date submittedTime;
   private List<ProgramDataFormItemDTO> programDataFormItems;
 
