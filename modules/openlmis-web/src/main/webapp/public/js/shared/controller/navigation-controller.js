@@ -46,6 +46,9 @@ function NavigationController($scope, ConfigSettingsByKey, localStorageService, 
     FeatureToggleService.get({key: 'lot.expiry.dates.report'}, function (result) {
       $scope.isLotExpiryDatesToggleOn = result.key;
     });
+    FeatureToggleService.get({key: 'rapid.test.report'}, function (result) {
+      $scope.isRapidTestReportOn = result.key;
+    });
    }();
 
   $scope.loadRights = function () {

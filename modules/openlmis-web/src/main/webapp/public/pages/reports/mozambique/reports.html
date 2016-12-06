@@ -63,6 +63,11 @@
                 <a href="/public/pages/reports/mozambique/index.html#/last-sync-time"
                    openlmis-message="menu.report.last.sync.time"></a>
             </li>
+
+            <li ng-show="hasPermission('VIEW_RAPID_TEST_REPORTS') && isRapidTestReportOn">
+                <a href="/public/pages/reports/mozambique/index.html#/rapid-test"
+                   openlmis-message="menu.report.rapid.test.report"></a>
+            </li>
         </ul>
     </div>
 </li>

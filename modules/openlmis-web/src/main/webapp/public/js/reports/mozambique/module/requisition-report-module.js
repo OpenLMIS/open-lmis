@@ -70,6 +70,11 @@ angular.module('requisition-report', ['openlmis', 'angularCombine', 'ngTable', '
                     controller: LastSyncTimeReportController,
                     templateUrl: 'last-sync-time/partials/list.html',
                     reloadOnSearch: false
+                }).
+                when('/rapid-test', {
+                  controller: RapidTestReportController,
+                  templateUrl: 'rapid-test/partials/list.html',
+                  reloadOnSearch: false
                 }).otherwise({redirectTo: '/'});
         }]).run(
     function ($rootScope, AuthorizationService) {
