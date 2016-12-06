@@ -45,14 +45,17 @@ public class RestProgramDataService {
     if (facility == null) {
       throw new DataException("error.facility.unknown");
     }
-    ProgramDataForm programDataForm = new ProgramDataForm();
-    programDataForm.setFacility(facility);
 
+    ProgramDataForm programDataForm = convertRequestBodyDataToProgramDataForm(requestBodyData, userId, facility);
+
+    programDataRepository.createProgramDataForm(programDataForm);
+    syncUpHashRepository.save(requestBodyData.getSyncUpHash());
+  }
+
+  public ProgramDataForm convertRequestBodyDataToProgramDataForm(ProgramDataFormDTO requestBodyData, long userId, Facility facility) {
     SupplementalProgram supplementalProgram = supplementalProgramMapper.getSupplementalProgramByCode(requestBodyData.getProgramCode());
-    programDataForm.setSupplementalProgram(supplementalProgram);
-    programDataForm.setStartDate(requestBodyData.getPeriodBegin());
-    programDataForm.setEndDate(requestBodyData.getPeriodEnd());
-    programDataForm.setSubmittedTime(requestBodyData.getSubmittedTime());
+    ProgramDataForm programDataForm = new ProgramDataForm(facility, supplementalProgram, requestBodyData.getPeriodBegin(),
+        requestBodyData.getPeriodEnd(), requestBodyData.getSubmittedTime(), new ArrayList<ProgramDataItem>());
     programDataForm.setCreatedBy(userId);
     programDataForm.setModifiedBy(userId);
 
@@ -62,14 +65,10 @@ public class RestProgramDataService {
       if (programDataColumn == null) {
         throw new DataException("error.wrong.program.column");
       }
-      ProgramDataItem programDataItem = new ProgramDataItem();
-      programDataItem.setName(programDataFormItemDTO.getName());
-      programDataItem.setValue(programDataFormItemDTO.getValue());
-      programDataItem.setProgramDataColumn(programDataColumn);
+      ProgramDataItem programDataItem = new ProgramDataItem(programDataForm, programDataFormItemDTO.getName(),
+          programDataColumn, programDataFormItemDTO.getValue());
       programDataForm.getProgramDataItems().add(programDataItem);
     }
-
-    programDataRepository.createProgramDataForm(programDataForm);
-    syncUpHashRepository.save(requestBodyData.getSyncUpHash());
+    return programDataForm;
   }
 }

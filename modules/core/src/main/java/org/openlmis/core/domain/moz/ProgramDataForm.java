@@ -12,22 +12,16 @@ import java.util.List;
 @AllArgsConstructor
 @EqualsAndHashCode
 public class ProgramDataForm extends BaseModel {
-  @Getter
-  @Setter
+
   private Facility facility;
-  @Getter
-  @Setter
+
   private SupplementalProgram supplementalProgram;
-  @Getter
-  @Setter
+
   private Date startDate;
-  @Getter
-  @Setter
+
   private Date endDate;
-  @Getter
-  @Setter
+
   private Date submittedTime;
-  @Getter
-  @Setter
+
   private List<ProgramDataItem> programDataItems;
 }
