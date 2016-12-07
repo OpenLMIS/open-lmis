@@ -51,6 +51,22 @@ function RapidTestReportController($scope, $controller, CubesGenerateCutParamsSe
     });
   }
 
+  $scope.partialPropertiesFilter = function(searchValue) {
+    return function(entry) {
+      var regex = new RegExp(searchValue, "gi");
+
+      return regex.test(entry.formatted_name)||
+          regex.test(entry['HIV-DETERMINE-CONSUME']) ||
+          regex.test(entry['HIV-DETERMINE-POSITIVE']) ||
+          regex.test(entry['HIV-UNIGOLD-CONSUME']) ||
+          regex.test(entry['HIV-UNIGOLD-POSITIVE']) ||
+          regex.test(entry['SYPHILLIS-CONSUME']) ||
+          regex.test(entry['SYPHILLIS-POSITIVE']) ||
+          regex.test(entry['MALARIA-CONSUME']) ||
+          regex.test(entry['MALARIA-POSITIVE']);
+    };
+  };
+
   $scope.exportXLSX = function() {
     var data = {
       reportHeaders: {
