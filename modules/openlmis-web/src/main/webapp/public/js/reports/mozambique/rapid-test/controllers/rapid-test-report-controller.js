@@ -33,7 +33,7 @@ function RapidTestReportController($scope, $controller, CubesGenerateCutParamsSe
             item_name: group[0].item_name,
             column_code: group[0].column_code,
             item_total_value:  _(group).reduce(function(item, next_item) { return item + next_item.item_value; }, 0)
-          }
+          };
         });
         var dataGroupedByName = _(dataAggregatedByNameAndCode).groupBy('item_name');
         var formattedData = _(dataGroupedByName).map(function (group, key) {
@@ -42,7 +42,7 @@ function RapidTestReportController($scope, $controller, CubesGenerateCutParamsSe
           item.formatted_name = messageService.get('report.rapid.test.' + key);
           _.each(group, function (itemInGroup) {
             var code = itemInGroup.column_code;
-            item[code] = itemInGroup.item_total_value
+            item[code] = itemInGroup.item_total_value;
           });
           return item;
         });
