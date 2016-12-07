@@ -1,4 +1,4 @@
-function RapidTestReportController($scope, $controller, CubesGenerateCutParamsService, CubesGenerateUrlService, $filter, $http, messageService) {
+function RapidTestReportController($scope, $controller, CubesGenerateCutParamsService, CubesGenerateUrlService, $filter, $http, messageService, ReportExportExcelService) {
   $controller("BaseProductReportController", {$scope: $scope});
 
   $scope.location = '';
@@ -46,9 +46,53 @@ function RapidTestReportController($scope, $controller, CubesGenerateCutParamsSe
           });
           return item;
         });
-
         $scope.rapidTestReportData = formattedData;
       }
     });
   }
+
+  $scope.exportXLSX = function() {
+    var data = {
+      reportHeaders: {
+        item_name: '',
+        consume_hiv_determine: messageService.get('report.consume') +': ' + messageService.get('report.hiv.determine'),
+        positive_hiv_determine: messageService.get('report.positive') +': ' + messageService.get('report.hiv.determine'),
+        consume_hiv_unigold: messageService.get('report.consume') +': ' + messageService.get('report.hiv.unigold'),
+        positive_hiv_unigold: messageService.get('report.positive') +': ' + messageService.get('report.hiv.unigold'),
+        consume_syphillis: messageService.get('report.consume') +': ' + messageService.get('report.syphillis'),
+        positive_syphillis: messageService.get('report.positive') +': ' + messageService.get('report.syphillis'),
+        consume_malaria: messageService.get('report.consume') +': ' + messageService.get('report.malaria'),
+        positive_malaria: messageService.get('report.positive') +': ' + messageService.get('report.malaria'),
+        province: messageService.get('report.header.province'),
+        district: messageService.get('report.header.district'),
+        facility: messageService.get('report.header.facility'),
+        reportStartDate: messageService.get('report.header.report.start.date'),
+        reportEndDate: messageService.get('report.header.report.end.date')
+      },
+      reportContent: []
+    };
+
+    if($scope.rapidTestReportData) {
+      $scope.rapidTestReportData.forEach(function (reportContent) {
+        var rapidTestReportContent = {};
+        rapidTestReportContent.item_name = reportContent.formatted_name;
+        rapidTestReportContent.consume_hiv_determine = reportContent['HIV-DETERMINE-CONSUME'];
+        rapidTestReportContent.positive_hiv_determine = reportContent['HIV-DETERMINE-POSITIVE'];
+        rapidTestReportContent.consume_hiv_unigold = reportContent['HIV-UNIGOLD-CONSUME'];
+        rapidTestReportContent.positive_hiv_unigold = reportContent['HIV-UNIGOLD-POSITIVE'];
+        rapidTestReportContent.consume_syphillis = reportContent['SYPHILLIS-CONSUME'];
+        rapidTestReportContent.positive_syphillis = reportContent['SYPHILLIS-POSITIVE'];
+        rapidTestReportContent.consume_malaria = reportContent['MALARIA-CONSUME'];
+        rapidTestReportContent.positive_malaria = reportContent['MALARIA-POSITIVE'];
+        rapidTestReportContent.province = $scope.reportParams.selectedProvince ? $scope.reportParams.selectedProvince.name : '[All]';
+        rapidTestReportContent.district = $scope.reportParams.selectedDistrict ? $scope.reportParams.selectedDistrict.name : '[All]';
+        rapidTestReportContent.facility = $scope.reportParams.selectedFacility ? $scope.reportParams.selectedFacility.name : '[All]';
+        rapidTestReportContent.reportStartDate = $filter('date')($scope.reportParams.startTime, 'dd/MM/yyyy');
+        rapidTestReportContent.reportEndDate =  $filter('date')($scope.reportParams.endTime, 'dd/MM/yyyy');
+        data.reportContent.push(rapidTestReportContent);
+      });
+      ReportExportExcelService.exportAsXlsx(data, messageService.get('report.file.rapid.test.report'));
+    }
+  };
+
 }
