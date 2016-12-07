@@ -11,6 +11,7 @@ import org.openlmis.core.domain.moz.ProgramDataForm;
 import org.openlmis.core.domain.moz.ProgramDataItem;
 import org.openlmis.core.hash.Encoder;
 import org.openlmis.core.serializer.DateDeserializer;
+import org.openlmis.core.serializer.DateTimeDeserializer;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -28,7 +29,7 @@ public class ProgramDataFormDTO {
   private Date periodBegin;
   @JsonDeserialize(using = DateDeserializer.class)
   private Date periodEnd;
-  @JsonDeserialize(using = DateDeserializer.class)
+  @JsonDeserialize(using = DateTimeDeserializer.class)
   private Date submittedTime;
   private List<ProgramDataFormItemDTO> programDataFormItems;
 
