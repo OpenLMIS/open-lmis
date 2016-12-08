@@ -5,6 +5,7 @@ import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
 import org.openlmis.core.builder.FacilityBuilder;
 import org.openlmis.core.domain.Facility;
+import org.openlmis.core.domain.Signature;
 import org.openlmis.core.domain.moz.ProgramDataColumn;
 import org.openlmis.core.domain.moz.ProgramDataForm;
 import org.openlmis.core.domain.moz.ProgramDataItem;
@@ -24,6 +25,7 @@ import java.util.List;
 
 import static com.natpryce.makeiteasy.MakeItEasy.a;
 import static com.natpryce.makeiteasy.MakeItEasy.make;
+import static java.util.Arrays.asList;
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
 
@@ -51,6 +53,9 @@ public class ProgramDataMapperIT {
 
   @Autowired
   QueryExecutor queryExecutor;
+
+  @Autowired
+  SignatureMapper signatureMapper;
 
   @Test
   public void shouldInsertProgramDataFormWithItems() throws SQLException {
@@ -97,6 +102,15 @@ public class ProgramDataMapperIT {
     programDataItemMapper.insert(programDataItem1);
     programDataItemMapper.insert(programDataItem2);
 
+    Signature signature1 = new Signature(Signature.Type.SUBMITTER, "mystique");
+    Signature signature2 = new Signature(Signature.Type.APPROVER, "magneto");
+    List<Signature> signatures = asList(signature1, signature2);
+    programDataForm.setProgramDataFormSignatures(signatures);
+    signatureMapper.insertSignature(signature1);
+    signatureMapper.insertSignature(signature2);
+    programDataMapper.insertProgramDataFormSignature(programDataForm, signature1);
+    programDataMapper.insertProgramDataFormSignature(programDataForm, signature2);
+
     List<ProgramDataForm> programDataFormResult = programDataMapper.getByFacilityId(facility.getId());
     assertThat(programDataFormResult.get(0).getFacility().getCode(), is(facility.getCode()));
     assertThat(programDataFormResult.get(0).getSupplementalProgram().getCode(), is(supplementalProgram.getCode()));
@@ -105,5 +119,6 @@ public class ProgramDataMapperIT {
     assertThat(programDataFormResult.get(0).getCreatedBy(), is(1L));
     assertThat(programDataFormResult.get(0).getModifiedBy(), is(1L));
     assertThat(programDataFormResult.get(0).getProgramDataItems().size(), is(2));
+    assertThat(programDataFormResult.get(0).getProgramDataFormSignatures().size(), is(2));
   }
 }

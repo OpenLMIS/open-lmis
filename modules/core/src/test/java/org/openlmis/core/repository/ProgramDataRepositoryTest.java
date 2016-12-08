@@ -6,10 +6,12 @@ import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
+import org.openlmis.core.domain.Signature;
 import org.openlmis.core.domain.moz.ProgramDataForm;
 import org.openlmis.core.domain.moz.ProgramDataItem;
 import org.openlmis.core.repository.mapper.ProgramDataItemMapper;
 import org.openlmis.core.repository.mapper.ProgramDataMapper;
+import org.openlmis.core.repository.mapper.SignatureMapper;
 import org.openlmis.db.categories.UnitTests;
 
 import java.util.List;
@@ -30,6 +32,9 @@ public class ProgramDataRepositoryTest {
   @Mock
   private ProgramDataItemMapper programDataItemMapper;
 
+  @Mock
+  private SignatureMapper signatureMapper;
+
   @InjectMocks
   private ProgramDataRepository programDataRepository;
 
@@ -43,10 +48,16 @@ public class ProgramDataRepositoryTest {
     programDataItem2.setName("DEF");
     programDataItem2.setProgramDataForm(programDataForm);
     programDataForm.setProgramDataItems(asList(programDataItem1, programDataItem2));
+    List<Signature> signatures = asList(new Signature(Signature.Type.SUBMITTER, "AB"));
+    programDataForm.setProgramDataFormSignatures(signatures);
+
     programDataRepository.createProgramDataForm(programDataForm);
+
     verify(programDataMapper).insert(programDataForm);
     verify(programDataItemMapper).insert(programDataItem1);
     verify(programDataItemMapper).insert(programDataItem2);
+    verify(programDataMapper).insertProgramDataFormSignature(programDataForm, signatures.get(0));
+    verify(signatureMapper).insertSignature(signatures.get(0));
   }
 
   @Test

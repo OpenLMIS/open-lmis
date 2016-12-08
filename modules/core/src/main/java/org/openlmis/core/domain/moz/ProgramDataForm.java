@@ -1,15 +1,17 @@
 package org.openlmis.core.domain.moz;
 
-import lombok.*;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
 import org.openlmis.core.domain.BaseModel;
 import org.openlmis.core.domain.Facility;
+import org.openlmis.core.domain.Signature;
 
 import java.util.Date;
 import java.util.List;
 
 @Data
 @NoArgsConstructor
-@AllArgsConstructor
 @EqualsAndHashCode
 public class ProgramDataForm extends BaseModel {
 
@@ -24,4 +26,14 @@ public class ProgramDataForm extends BaseModel {
   private Date submittedTime;
 
   private List<ProgramDataItem> programDataItems;
+
+  private List<Signature> programDataFormSignatures;
+
+  public ProgramDataForm(Facility facility, SupplementalProgram supplementalProgram, Date startDate, Date endDate, Date submittedTime) {
+    this.facility = facility;
+    this.supplementalProgram = supplementalProgram;
+    this.startDate = startDate;
+    this.endDate = endDate;
+    this.submittedTime = submittedTime;
+  }
 }

@@ -12,6 +12,7 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.openlmis.core.builder.FacilityBuilder;
 import org.openlmis.core.domain.Facility;
+import org.openlmis.core.domain.Signature;
 import org.openlmis.core.domain.moz.ProgramDataColumn;
 import org.openlmis.core.domain.moz.ProgramDataForm;
 import org.openlmis.core.domain.moz.ProgramDataItem;
@@ -31,7 +32,6 @@ import org.openlmis.restapi.domain.ProgramDataFormItemDTO;
 import org.powermock.modules.junit4.PowerMockRunner;
 import org.powermock.modules.junit4.PowerMockRunnerDelegate;
 
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -84,6 +84,9 @@ public class RestProgramDataServiceTest {
         with(ProgramDataFormBuilder.periodEnd, periodEndDate),
         with(ProgramDataFormBuilder.submittedTime, submittedTime)));
 
+    List<Signature> signatures = asList(new Signature(Signature.Type.SUBMITTER, "mystique"), new Signature(Signature.Type.APPROVER, "magneto"));
+    programDataFormDTO.setProgramDataFormSignatures(signatures);
+
     SupplementalProgram formProgram = new SupplementalProgram();
     formProgram.setCode("RAPID_TEST");
     when(supplementalProgramMapper.getSupplementalProgramByCode("RAPID_TEST")).thenReturn(formProgram);
@@ -126,6 +129,8 @@ public class RestProgramDataServiceTest {
     assertThat(convertedProgramDataForm.getProgramDataItems().size(), is(2));
     assertThat(convertedProgramDataForm.getCreatedBy(), is(1L));
     assertThat(convertedProgramDataForm.getModifiedBy(), is(1L));
+    assertThat(convertedProgramDataForm.getProgramDataFormSignatures().get(0).getType(), is(Signature.Type.SUBMITTER));
+    assertThat(convertedProgramDataForm.getProgramDataFormSignatures().get(0).getText(), is("mystique"));
     assertThat(convertedProgramDataForm.getProgramDataItems().get(0).getName(), is("PUBLIC_PHARMACY"));
     assertThat(convertedProgramDataForm.getProgramDataItems().get(0).getValue(), is(100L));
     assertThat(convertedProgramDataForm.getProgramDataItems().get(0).getProgramDataColumn(), is(column));
@@ -193,21 +198,23 @@ public class RestProgramDataServiceTest {
     Date submittedTime = new Date();
 
     ProgramDataForm programDataForm = new ProgramDataForm(facility, supplementalProgram,
-        startDate, endDate, submittedTime, new ArrayList<ProgramDataItem>());
+        startDate, endDate, submittedTime);
     ProgramDataColumn programDataColumn1 = new ProgramDataColumn("A1", "", "", supplementalProgram);
     ProgramDataColumn programDataColumn2 = new ProgramDataColumn("A2", "", "", supplementalProgram);
     ProgramDataItem programDataItem1 = new ProgramDataItem(programDataForm, "category 1", programDataColumn1, 10L);
     ProgramDataItem programDataItem2 = new ProgramDataItem(programDataForm, "category 1", programDataColumn2, 5L);
     ProgramDataItem programDataItem3 = new ProgramDataItem(programDataForm, "category 2", programDataColumn2, 100L);
-    programDataForm.getProgramDataItems().addAll(asList(programDataItem1, programDataItem2, programDataItem3));
+    programDataForm.setProgramDataItems(asList(programDataItem1, programDataItem2, programDataItem3));
+    List<Signature> signatures = asList(new Signature(Signature.Type.SUBMITTER, "mystique"), new Signature(Signature.Type.APPROVER, "magneto"));
+    programDataForm.setProgramDataFormSignatures(signatures);
 
     Date startDate2 = DateUtil.parseDate("2016-11-21", DateUtil.FORMAT_DATE);
     Date endDate2 = DateUtil.parseDate("2016-12-20", DateUtil.FORMAT_DATE);
     ProgramDataForm programDataForm2 = new ProgramDataForm(facility, supplementalProgram,
-        startDate2, endDate2, submittedTime, new ArrayList<ProgramDataItem>());
+        startDate2, endDate2, submittedTime);
     ProgramDataItem programDataItem4 = new ProgramDataItem(programDataForm2, "category 1", programDataColumn1, 20L);
     ProgramDataItem programDataItem5 = new ProgramDataItem(programDataForm2, "category 2", programDataColumn2, 25L);
-    programDataForm2.getProgramDataItems().addAll(asList(programDataItem4, programDataItem5));
+    programDataForm2.setProgramDataItems(asList(programDataItem4, programDataItem5));
     when(programDataRepository.getProgramDataFormsByFacilityId(12L)).thenReturn(asList(programDataForm, programDataForm2));
 
     List<ProgramDataFormDTO> programDataFormDTOs = restProgramDataService.getProgramDataFormsByFacility(12L);
@@ -219,5 +226,7 @@ public class RestProgramDataServiceTest {
     assertThat(programDataFormDTOs.get(0).getProgramDataFormItems().get(0).getColumnCode(), is("A1"));
     assertThat(programDataFormDTOs.get(0).getProgramDataFormItems().get(0).getName(), is("category 1"));
     assertThat(programDataFormDTOs.get(0).getProgramDataFormItems().get(0).getValue(), is(10L));
+    assertThat(programDataFormDTOs.get(0).getProgramDataFormSignatures().get(0).getType(), is(Signature.Type.SUBMITTER));
+    assertThat(programDataFormDTOs.get(0).getProgramDataFormSignatures().get(0).getText(), is("mystique"));
   }
 }
