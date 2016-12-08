@@ -83,6 +83,6 @@ public class RestProgramDataControllerTest {
     ResponseEntity<RestResponse> responseEntity = restProgramDataController.getProgramDataFormsByFacility(12L);
     verify(restProgramDataService).getProgramDataFormsByFacility(12L);
     assertThat(responseEntity.getStatusCode(), is(HttpStatus.OK));
-    assertThat(((List<ProgramDataForm>) responseEntity.getBody().getData().get("programData")).size(), is(2));
+    assertThat(((List<ProgramDataForm>) responseEntity.getBody().getData().get("programDataForm")).size(), is(2));
   }
 }
