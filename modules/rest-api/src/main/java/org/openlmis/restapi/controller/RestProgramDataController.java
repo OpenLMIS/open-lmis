@@ -37,6 +37,6 @@ public class RestProgramDataController extends BaseController {
   @RequestMapping(value = "/rest-api/programData/facilities/{facilityId}", method = GET)
   public ResponseEntity getProgramDataFormsByFacility(@PathVariable Long facilityId) {
     List<ProgramDataFormDTO> programDataFormList = restProgramDataService.getProgramDataFormsByFacility(facilityId);
-    return RestResponse.response("programData", programDataFormList);
+    return RestResponse.response("programDataForms", programDataFormList);
   }
 }
