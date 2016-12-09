@@ -56,14 +56,14 @@ function RapidTestReportController($scope, $controller, CubesGenerateCutParamsSe
       var regex = new RegExp(searchValue, "gi");
 
       return regex.test(entry.formatted_name)||
-          regex.test(entry['HIV-DETERMINE-CONSUME']) ||
-          regex.test(entry['HIV-DETERMINE-POSITIVE']) ||
-          regex.test(entry['HIV-UNIGOLD-CONSUME']) ||
-          regex.test(entry['HIV-UNIGOLD-POSITIVE']) ||
-          regex.test(entry['SYPHILLIS-CONSUME']) ||
-          regex.test(entry['SYPHILLIS-POSITIVE']) ||
-          regex.test(entry['MALARIA-CONSUME']) ||
-          regex.test(entry['MALARIA-POSITIVE']);
+          regex.test(entry.CONSUME_HIVDETERMINE) ||
+          regex.test(entry.POSITIVE_HIVDETERMINE) ||
+          regex.test(entry.CONSUME_HIVUNIGOLD) ||
+          regex.test(entry.POSITIVE_HIVUNIGOLD) ||
+          regex.test(entry.CONSUME_SYPHILLIS) ||
+          regex.test(entry.POSITIVE_SYPHILLIS) ||
+          regex.test(entry.CONSUME_MALARIA) ||
+          regex.test(entry.POSITIVE_MALARIA);
     };
   };
 
@@ -92,14 +92,14 @@ function RapidTestReportController($scope, $controller, CubesGenerateCutParamsSe
       $scope.rapidTestReportData.forEach(function (reportContent) {
         var rapidTestReportContent = {};
         rapidTestReportContent.item_name = reportContent.formatted_name;
-        rapidTestReportContent.consume_hiv_determine = reportContent['HIV-DETERMINE-CONSUME'];
-        rapidTestReportContent.positive_hiv_determine = reportContent['HIV-DETERMINE-POSITIVE'];
-        rapidTestReportContent.consume_hiv_unigold = reportContent['HIV-UNIGOLD-CONSUME'];
-        rapidTestReportContent.positive_hiv_unigold = reportContent['HIV-UNIGOLD-POSITIVE'];
-        rapidTestReportContent.consume_syphillis = reportContent['SYPHILLIS-CONSUME'];
-        rapidTestReportContent.positive_syphillis = reportContent['SYPHILLIS-POSITIVE'];
-        rapidTestReportContent.consume_malaria = reportContent['MALARIA-CONSUME'];
-        rapidTestReportContent.positive_malaria = reportContent['MALARIA-POSITIVE'];
+        rapidTestReportContent.consume_hiv_determine = reportContent.CONSUME_HIVDETERMINE;
+        rapidTestReportContent.positive_hiv_determine = reportContent.POSITIVE_HIVDETERMINE;
+        rapidTestReportContent.consume_hiv_unigold = reportContent.CONSUME_HIVUNIGOLD;
+        rapidTestReportContent.positive_hiv_unigold = reportContent.POSITIVE_HIVUNIGOLD;
+        rapidTestReportContent.consume_syphillis = reportContent.CONSUME_SYPHILLIS;
+        rapidTestReportContent.positive_syphillis = reportContent.POSITIVE_SYPHILLIS;
+        rapidTestReportContent.consume_malaria = reportContent.CONSUME_MALARIA;
+        rapidTestReportContent.positive_malaria = reportContent.POSITIVE_MALARIA;
         rapidTestReportContent.province = $scope.reportParams.selectedProvince ? $scope.reportParams.selectedProvince.name : '[All]';
         rapidTestReportContent.district = $scope.reportParams.selectedDistrict ? $scope.reportParams.selectedDistrict.name : '[All]';
         rapidTestReportContent.facility = $scope.reportParams.selectedFacility ? $scope.reportParams.selectedFacility.name : '[All]';

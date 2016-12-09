@@ -27,60 +27,60 @@
             <tr class="gradient-header">
                 <th ng-click="sortType = 'item_name'; sortReverse = !sortReverse" class="sortable sort-desc">
                     <span></span></th>
-                <th ng-click="sortType = '[HIV-DETERMINE-CONSUME]'; sortReverse = !sortReverse" class="sortable sort-desc">
+                <th ng-click="sortType = '[CONSUME_HIVDETERMINE]'; sortReverse = !sortReverse" class="sortable sort-desc">
                     <span openlmis-message="report.consume"></span>:<br/><span  openlmis-message="report.hiv.determine"></span>
-                    <span ng-show="sortType != '[HIV-DETERMINE-CONSUME]'" class="icon-sort"></span>
-                    <span ng-show="sortType == '[HIV-DETERMINE-CONSUME]' && !sortReverse" class="icon-sort-up"></span>
-                    <span ng-show="sortType == '[HIV-DETERMINE-CONSUME]' && sortReverse" class="icon-sort-down"></span></th>
-                <th ng-click="sortType = '[HIV-DETERMINE-POSITIVE]'; sortReverse = !sortReverse" class="sortable sort-desc">
+                    <span ng-show="sortType != '[CONSUME_HIVDETERMINE]'" class="icon-sort"></span>
+                    <span ng-show="sortType == '[CONSUME_HIVDETERMINE]' && !sortReverse" class="icon-sort-up"></span>
+                    <span ng-show="sortType == '[CONSUME_HIVDETERMINE]' && sortReverse" class="icon-sort-down"></span></th>
+                <th ng-click="sortType = '[POSITIVE_HIVDETERMINE]'; sortReverse = !sortReverse" class="sortable sort-desc">
                     <span openlmis-message="report.positive"></span>:<br/><span  openlmis-message="report.hiv.determine"></span>
-                    <span ng-show="sortType != '[HIV-DETERMINE-POSITIVE]'" class="icon-sort"></span>
-                    <span ng-show="sortType == '[HIV-DETERMINE-POSITIVE]' && !sortReverse" class="icon-sort-up"></span>
-                    <span ng-show="sortType == '[HIV-DETERMINE-POSITIVE]' && sortReverse" class="icon-sort-down"></span></th>
-                <th ng-click="sortType = '[HIV-UNIGOLD-CONSUME]'; sortReverse = !sortReverse" class="sortable sort-desc">
+                    <span ng-show="sortType != '[POSITIVE_HIVDETERMINE]'" class="icon-sort"></span>
+                    <span ng-show="sortType == '[POSITIVE_HIVDETERMINE]' && !sortReverse" class="icon-sort-up"></span>
+                    <span ng-show="sortType == '[POSITIVE_HIVDETERMINE]' && sortReverse" class="icon-sort-down"></span></th>
+                <th ng-click="sortType = '[CONSUME_HIVUNIGOLD]'; sortReverse = !sortReverse" class="sortable sort-desc">
                     <span openlmis-message="report.consume"></span>:<br/><span openlmis-message="report.hiv.unigold"></span>
-                    <span ng-show="sortType != '[HIV-UNIGOLD-CONSUME]'" class="icon-sort"></span>
-                    <span ng-show="sortType == '[HIV-UNIGOLD-CONSUME]' && !sortReverse" class="icon-sort-up"></span>
-                    <span ng-show="sortType == '[HIV-UNIGOLD-CONSUME]' && sortReverse" class="icon-sort-down"></span></th>
-                <th ng-click="sortType = '[HIV-UNIGOLD-POSITIVE]'; sortReverse = !sortReverse" class="sortable sort-desc">
+                    <span ng-show="sortType != '[CONSUME_HIVUNIGOLD]'" class="icon-sort"></span>
+                    <span ng-show="sortType == '[CONSUME_HIVUNIGOLD]' && !sortReverse" class="icon-sort-up"></span>
+                    <span ng-show="sortType == '[CONSUME_HIVUNIGOLD]' && sortReverse" class="icon-sort-down"></span></th>
+                <th ng-click="sortType = '[POSITIVE_HIVUNIGOLD]'; sortReverse = !sortReverse" class="sortable sort-desc">
                     <span openlmis-message="report.positive"></span>:<br/> <span openlmis-message="report.hiv.unigold"></span>
-                    <span ng-show="sortType != '[HIV-UNIGOLD-POSITIVE]'" class="icon-sort"></span>
-                    <span ng-show="sortType == '[HIV-UNIGOLD-POSITIVE]' && !sortReverse" class="icon-sort-up"></span>
-                    <span ng-show="sortType == '[HIV-UNIGOLD-POSITIVE]' && sortReverse" class="icon-sort-down"></span></th>
-                <th ng-click="sortType = '[SYPHILLIS-CONSUME]'; sortReverse = !sortReverse" class="sortable sort-desc">
+                    <span ng-show="sortType != '[POSITIVE_HIVUNIGOLD]'" class="icon-sort"></span>
+                    <span ng-show="sortType == '[POSITIVE_HIVUNIGOLD]' && !sortReverse" class="icon-sort-up"></span>
+                    <span ng-show="sortType == '[POSITIVE_HIVUNIGOLD]' && sortReverse" class="icon-sort-down"></span></th>
+                <th ng-click="sortType = '[CONSUME_SYPHILLIS]'; sortReverse = !sortReverse" class="sortable sort-desc">
                     <span openlmis-message="report.consume"></span>:<br/><span openlmis-message="report.syphillis"></span>
-                    <span ng-show="sortType != '[SYPHILLIS-CONSUME]'" class="icon-sort"></span>
-                    <span ng-show="sortType == '[SYPHILLIS-CONSUME]' && !sortReverse" class="icon-sort-up"></span>
-                    <span ng-show="sortType == '[SYPHILLIS-CONSUME]' && sortReverse" class="icon-sort-down"></span></th>
-                <th ng-click="sortType = '[SYPHILLIS-POSITIVE]'; sortReverse = !sortReverse" class="sortable sort-desc">
+                    <span ng-show="sortType != '[CONSUME_SYPHILLIS]'" class="icon-sort"></span>
+                    <span ng-show="sortType == '[CONSUME_SYPHILLIS]' && !sortReverse" class="icon-sort-up"></span>
+                    <span ng-show="sortType == '[CONSUME_SYPHILLIS]' && sortReverse" class="icon-sort-down"></span></th>
+                <th ng-click="sortType = '[POSITIVE_SYPHILLIS]'; sortReverse = !sortReverse" class="sortable sort-desc">
                     <span openlmis-message="report.positive"></span>:<br/><span openlmis-message="report.syphillis"></span>
-                    <span ng-show="sortType != '[SYPHILLIS-POSITIVE]'" class="icon-sort"></span>
-                    <span ng-show="sortType == '[SYPHILLIS-POSITIVE]' && !sortReverse" class="icon-sort-up"></span>
-                    <span ng-show="sortType == '[SYPHILLIS-POSITIVE]' && sortReverse" class="icon-sort-down"></span></th>
-                <th ng-click="sortType = '[MALARIA-CONSUME]'; sortReverse = !sortReverse" class="sortable sort-desc">
+                    <span ng-show="sortType != '[POSITIVE_SYPHILLIS]'" class="icon-sort"></span>
+                    <span ng-show="sortType == '[POSITIVE_SYPHILLIS]' && !sortReverse" class="icon-sort-up"></span>
+                    <span ng-show="sortType == '[POSITIVE_SYPHILLIS]' && sortReverse" class="icon-sort-down"></span></th>
+                <th ng-click="sortType = '[CONSUME_MALARIA]'; sortReverse = !sortReverse" class="sortable sort-desc">
                     <span openlmis-message="report.consume"></span>:<br/><span openlmis-message="report.malaria"></span>
-                    <span ng-show="sortType != '[MALARIA-CONSUME]'" class="icon-sort"></span>
-                    <span ng-show="sortType == '[MALARIA-CONSUME]' && !sortReverse" class="icon-sort-up"></span>
-                    <span ng-show="sortType == '[MALARIA-CONSUME]' && sortReverse" class="icon-sort-down"></span></th>
-                <th ng-click="sortType = '[MALARIA-POSITIVE]'; sortReverse = !sortReverse" class="sortable sort-desc">
+                    <span ng-show="sortType != '[CONSUME_MALARIA]'" class="icon-sort"></span>
+                    <span ng-show="sortType == '[CONSUME_MALARIA]' && !sortReverse" class="icon-sort-up"></span>
+                    <span ng-show="sortType == '[CONSUME_MALARIA]' && sortReverse" class="icon-sort-down"></span></th>
+                <th ng-click="sortType = '[POSITIVE_MALARIA]'; sortReverse = !sortReverse" class="sortable sort-desc">
                     <span openlmis-message="report.positive"></span>:<br/><span openlmis-message="report.malaria"></span>
-                    <span ng-show="sortType != '[MALARIA-POSITIVE]'" class="icon-sort"></span>
-                    <span ng-show="sortType == '[MALARIA-POSITIVE]' && !sortReverse" class="icon-sort-up"></span>
-                    <span ng-show="sortType == '[MALARIA-POSITIVE]' && sortReverse" class="icon-sort-down"></span></th>
+                    <span ng-show="sortType != '[POSITIVE_MALARIA]'" class="icon-sort"></span>
+                    <span ng-show="sortType == '[POSITIVE_MALARIA]' && !sortReverse" class="icon-sort-up"></span>
+                    <span ng-show="sortType == '[POSITIVE_MALARIA]' && sortReverse" class="icon-sort-down"></span></th>
             </tr>
         </table>
         <div class="content-table">
             <table class="table table-condensed table-bordered table-striped fixed-header-table" enableVerticalScrollbar="2">
                 <tr ng-repeat="entry in rapidTestReportData | orderBy:sortType:sortReverse | filter: partialPropertiesFilter(searchValue)">
                     <td>{{entry.formatted_name}}</td>
-                    <td>{{entry['HIV-DETERMINE-CONSUME']}}</td>
-                    <td>{{entry['HIV-DETERMINE-POSITIVE']}}</td>
-                    <td>{{entry['HIV-UNIGOLD-CONSUME']}}</td>
-                    <td>{{entry['HIV-UNIGOLD-POSITIVE']}}</td>
-                    <td>{{entry['SYPHILLIS-CONSUME']}}</td>
-                    <td>{{entry['SYPHILLIS-POSITIVE']}}</td>
-                    <td>{{entry['MALARIA-CONSUME']}}</td>
-                    <td>{{entry['MALARIA-POSITIVE']}}</td>
+                    <td>{{entry['CONSUME_HIVDETERMINE']}}</td>
+                    <td>{{entry['POSITIVE_HIVDETERMINE']}}</td>
+                    <td>{{entry['CONSUME_HIVUNIGOLD']}}</td>
+                    <td>{{entry['POSITIVE_HIVUNIGOLD']}}</td>
+                    <td>{{entry['CONSUME_SYPHILLIS']}}</td>
+                    <td>{{entry['POSITIVE_SYPHILLIS']}}</td>
+                    <td>{{entry['CONSUME_MALARIA']}}</td>
+                    <td>{{entry['POSITIVE_MALARIA']}}</td>
                 </tr>
             </table>
         </div>
