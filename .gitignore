@@ -27,3 +27,4 @@ gradlew
 gradlew.bat
 modules/export/src/main/resources/generated/
 .ideaDataSources/
+dataSources/
