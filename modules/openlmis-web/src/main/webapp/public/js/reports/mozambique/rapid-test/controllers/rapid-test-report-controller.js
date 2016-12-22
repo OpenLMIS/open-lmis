@@ -38,7 +38,7 @@ function RapidTestReportController($scope, $controller, CubesGenerateCutParamsSe
           };
         });
         var dataGroupedByName = _(dataAggregatedByNameAndCode).groupBy('item_name');
-        var formattedData = _(dataGroupedByName).map(function (group, key) {
+        $scope.rapidTestReportData = _(dataGroupedByName).map(function (group, key) {
           var item = {};
           item.item_name = key;
           item.formatted_name = messageService.get('report.rapid.test.' + key);
@@ -48,10 +48,7 @@ function RapidTestReportController($scope, $controller, CubesGenerateCutParamsSe
           });
           return item;
         });
-        $scope.rapidTestReportData = formattedData;
-        console.log($scope.rapidTestReportData);
         $scope.calculateTotalValues();
-        console.log($scope.totalValues);
       }
     });
   }
