@@ -1,3 +1,5 @@
+DROP MATERIALIZED VIEW IF EXISTS vw_lot_daily_full_soh;
+
 DROP MATERIALIZED VIEW IF EXISTS vw_lot_expiry_dates;
 
 CREATE MATERIALIZED VIEW vw_lot_expiry_dates AS
@@ -39,8 +41,6 @@ CREATE MATERIALIZED VIEW vw_lot_expiry_dates AS
   ON stock_entry_loh.lot_id = ('LOT#' || lots.id);
 
 CREATE UNIQUE INDEX idx_vw_lot_expiry_dates ON vw_lot_expiry_dates (uuid);
-
-DROP MATERIALIZED VIEW IF EXISTS vw_lot_daily_full_soh;
 
 CREATE MATERIALIZED VIEW vw_lot_daily_full_soh AS
   (SELECT DISTINCT ON (facility_code, drug_code, occurred_date)
