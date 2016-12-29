@@ -1,1 +1,0 @@
-ALTER TABLE requisitions ALTER COLUMN clientsubmittednotes TYPE text;
