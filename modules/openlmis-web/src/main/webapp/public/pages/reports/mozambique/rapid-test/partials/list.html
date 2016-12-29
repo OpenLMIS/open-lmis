@@ -90,7 +90,7 @@
             <table class="table table-condensed table-bordered table-striped fixed-header-table"
                    enableVerticalScrollbar="2">
                 <tr ng-repeat="entry in rapidTestReportData | orderBy:sortType:sortReverse | filter: partialPropertiesFilter(searchValue)">
-                    <td>{{entry.formatted_name}}</td>
+                    <td openlmis-message="stock.movement.{{entry.formatted_name}}"></td>
                     <td>{{entry['CONSUME_HIVDETERMINE']}}</td>
                     <td>{{entry['POSITIVE_HIVDETERMINE']}}</td>
                     <td>{{entry['CONSUME_HIVUNIGOLD']}}</td>
