@@ -67,7 +67,6 @@ CREATE MATERIALIZED VIEW vw_lot_daily_full_soh AS
 
    FROM vw_lot_expiry_dates
      LEFT JOIN cmm_entries ON vw_lot_expiry_dates.facility_id = cmm_entries.facilityid
-     AND vw_lot_expiry_dates.lot_on_hand > 0
      GROUP BY vw_lot_expiry_dates.facility_name, vw_lot_expiry_dates.facility_code,
       vw_lot_expiry_dates.district_name, vw_lot_expiry_dates.district_code,
       vw_lot_expiry_dates.province_name, vw_lot_expiry_dates.province_code,
