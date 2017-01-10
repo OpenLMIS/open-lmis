@@ -4,25 +4,12 @@ function DatePickerContainerController($scope, $filter, DateFormatService, messa
 
     $scope.dateRange = {};
 
+    $scope.timeTagSelected = "month";
+    $scope.periodTagSelected = $scope.pickerType === "period-no-current" ? "3periods" : "period";
+
     var defaultPeriodStartDate = currentDate.getDate() < 21 ?
         new Date(currentDate.getFullYear(), currentDate.getMonth() - 1, 21) :
         new Date(currentDate.getFullYear(), currentDate.getMonth(), 21);
-
-    if ($scope.pickerType === "period") {
-        $scope.dateRange.startTime = DateFormatService.formatDateWithStartDayOfPeriod(defaultPeriodStartDate);
-        $scope.dateRange.endTime = DateFormatService.formatDateWithEndDayOfPeriod(new Date(new Date(defaultPeriodStartDate.getFullYear(), defaultPeriodStartDate.getMonth() + 1)));
-    } else if ($scope.pickerType === "period-no-current") {
-        $scope.dateRange.startTime = DateFormatService.formatDateWithStartDayOfPeriod(new Date(new Date().setMonth(defaultPeriodStartDate.getMonth() - 3)));
-        $scope.dateRange.endTime = DateFormatService.formatDateWithEndDayOfPeriod(defaultPeriodStartDate);
-    } else {
-        $scope.dateRange.startTime = DateFormatService.formatDateWithFirstDayOfMonth(new Date());
-        $scope.dateRange.endTime = todayDateString;
-    }
-
-    var defaultEndTime = new Date($scope.dateRange.endTime);
-
-    $scope.timeTagSelected = "month";
-    $scope.periodTagSelected = $scope.pickerType === "period-no-current" ? "3periods" : "period";
 
     var threeMonthsAgo = new Date().setMonth(new Date().getMonth() - 2);
     var aYearAgo = new Date().setMonth(new Date().getMonth() - 11);
@@ -46,6 +33,19 @@ function DatePickerContainerController($scope, $filter, DateFormatService, messa
     } else {
         yearBeforeIncludingCurrent = new Date(yearBeforeIncludingCurrent).setYear(currentDate.getFullYear() - 1);
     }
+
+    if ($scope.pickerType === "period") {
+        $scope.dateRange.startTime = DateFormatService.formatDateWithStartDayOfPeriod(defaultPeriodStartDate);
+        $scope.dateRange.endTime = DateFormatService.formatDateWithEndDayOfPeriod(new Date(new Date(defaultPeriodStartDate.getFullYear(), defaultPeriodStartDate.getMonth() + 1)));
+    } else if ($scope.pickerType === "period-no-current") {
+        $scope.dateRange.startTime = DateFormatService.formatDateWithStartDayOfPeriod(new Date(threePeriodsBeforeExcludingCurrent));
+        $scope.dateRange.endTime = DateFormatService.formatDateWithEndDayOfPeriod(defaultPeriodStartDate);
+    } else {
+        $scope.dateRange.startTime = DateFormatService.formatDateWithFirstDayOfMonth(new Date());
+        $scope.dateRange.endTime = todayDateString;
+    }
+
+    var defaultEndTime = new Date($scope.dateRange.endTime);
 
     var timeOptions = {
         "month": new Date(),
