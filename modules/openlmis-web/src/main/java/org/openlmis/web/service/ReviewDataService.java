@@ -123,6 +123,10 @@ public class ReviewDataService {
     return last;
   }
 
+  public void deleteDistributionEdit(Long distributionId, Long userId) {
+    distributionService.deleteDistributionEdit(distributionId, userId);
+  }
+
   public DistributionDTO getDistribution(Distribution arg, Long userId) {
     Distribution distribution = distributionService.getFullSyncedDistribution(arg);
     distributionService.insertEditInProgress(userId, distribution.getId());
@@ -173,5 +177,4 @@ public class ReviewDataService {
     Days days = Days.daysBetween(new DateTime(syncDate), DateTime.now());
     return days.getDays() <= eligibilityEdit;
   }
-
 }

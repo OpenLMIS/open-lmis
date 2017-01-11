@@ -146,4 +146,7 @@ public interface DistributionMapper {
           @Result(property = "distribution.id", column = "distributionId")
   })
   List<DistributionEdit> getEditInProgress(@Param("distributionId") Long distributionId, @Param("userId") Long userId, @Param("periodInSeconds") Long periodInSeconds);
+
+  @Delete("DELETE FROM distribution_edits WHERE distributionId = #{distributionId} AND userId = #{userId}")
+  void deleteDistributionEdit(@Param("distributionId") Long distributionId, @Param("userId") Long userId);
 }
