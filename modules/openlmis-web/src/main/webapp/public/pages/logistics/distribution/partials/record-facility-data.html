@@ -51,7 +51,7 @@
       <button class="btn btn-primary" ng-if="hasPermission('EDIT_SYNCHRONIZED_DATA') && distributionReview.edit && facilitySelected" ng-click="toggleEditMode()">
         <span openlmis-message="button.edit"></span>
       </button>
-      <button class="btn btn-primary" ng-if="hasPermission('EDIT_SYNCHRONIZED_DATA') && distributionReview.edit && facilitySelected" ng-disabled="!distributionReview.editMode[distributionReview.currentScreen]" ng-click="sync()">
+      <button class="btn btn-primary" ng-if="hasPermission('EDIT_SYNCHRONIZED_DATA') && distributionReview.edit && facilitySelected" ng-disabled="!distributionReview.editMode[facilitySelected.facilityId][distributionReview.currentScreen]" ng-click="sync()">
         <span openlmis-message="button.sync"></span>
       </button>
         </div>

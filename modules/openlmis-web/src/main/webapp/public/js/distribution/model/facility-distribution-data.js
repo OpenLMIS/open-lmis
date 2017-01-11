@@ -56,7 +56,7 @@ function FacilityDistribution(facilityDistribution) {
 
   FacilityDistribution.prototype.isDisabled = function (tabName, review) {
     if (review) {
-      return !review.editMode[tabName || review.currentScreen];
+      return !review.editMode[this.facilityId][tabName || review.currentScreen];
     }
 
     if ([DistributionStatus.SYNCED, DistributionStatus.DUPLICATE].indexOf(this.status) != -1) {
