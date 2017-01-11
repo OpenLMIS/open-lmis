@@ -91,7 +91,7 @@ public class FacilityDistribution {
     dto.setFacilityName(facilityName);
     dto.setPopulation(population);
     dto.setGeographicZone(geographicZone);
-    dto.setFacilityVisit(facilityVisit);
+    dto.setFacilityVisit(facilityVisit.transform());
     dto.setEpiUse(epiUse.transform());
     dto.setEpiInventory(epiInventory.transform());
     dto.setRefrigerators(refrigerators.transform());

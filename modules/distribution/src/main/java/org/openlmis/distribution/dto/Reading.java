@@ -17,6 +17,11 @@ import org.codehaus.jackson.map.annotate.JsonSerialize;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.distribution.serializer.DistributionReadingDeSerializer;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.TimeZone;
+
 import static org.apache.commons.lang3.StringUtils.isBlank;
 import static org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion.NON_EMPTY;
 
@@ -45,6 +50,17 @@ public class Reading {
     this.original = original;
     this.value = value;
     this.notRecorded = ((isBlank(value)) && (!notRecorded)) ? true : notRecorded;
+  }
+
+  public Reading(Date date, String format) {
+    if (null == date) {
+      notRecorded = true;
+    } else {
+      value = new SimpleDateFormat(format).format(date);
+      notRecorded = false;
+    }
+
+    original = new Reading(value, notRecorded);
   }
 
   public Reading(Object obj) {
@@ -91,5 +107,34 @@ public class Reading {
     }
 
     return Float.parseFloat(stringValue);
+  }
+
+  public Boolean parseBoolean() {
+    String stringValue = getEffectiveValue();
+    if (stringValue == null) {
+      return null;
+    }
+
+    return Boolean.parseBoolean(stringValue);
+  }
+
+  public Date parseDate() {
+    String stringValue = getEffectiveValue();
+    if (stringValue == null) {
+      return null;
+    }
+
+    try {
+      return new Date(Long.parseLong(stringValue));
+    } catch (NumberFormatException e) {
+      try {
+        String format = stringValue.contains("/") ? "dd/MM/yyyy" : "yyyy-MM-dd";
+        SimpleDateFormat dateFormat = new SimpleDateFormat(format);
+        dateFormat.setTimeZone(TimeZone.getDefault());
+        return dateFormat.parse(stringValue);
+      } catch (ParseException ex) {
+        throw new RuntimeException(ex);
+      }
+    }
   }
 }

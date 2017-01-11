@@ -21,6 +21,8 @@ import org.codehaus.jackson.map.annotate.JsonSerialize;
 import org.openlmis.core.domain.BaseModel;
 import org.openlmis.core.domain.Facility;
 import org.openlmis.core.serializer.DateDeserializer;
+import org.openlmis.distribution.dto.FacilityVisitDTO;
+import org.openlmis.distribution.dto.Reading;
 
 import java.util.Date;
 
@@ -77,5 +79,28 @@ public class FacilityVisit extends BaseModel {
     this.verifiedBy = null;
     this.vehicleId = null;
     this.visitDate = null;
+  }
+
+  public FacilityVisitDTO transform() {
+    FacilityVisitDTO dto = new FacilityVisitDTO();
+    dto.setId(id);
+    dto.setCreatedBy(createdBy);
+    dto.setCreatedDate(createdDate);
+    dto.setModifiedBy(modifiedBy);
+    dto.setModifiedDate(modifiedDate);
+    dto.setDistributionId(distributionId);
+    dto.setFacilityId(facilityId);
+    dto.setFacilityCatchmentPopulation(facilityCatchmentPopulation);
+    dto.setConfirmedBy(confirmedBy);
+    dto.setVerifiedBy(verifiedBy);
+    dto.setObservations(new Reading(observations));
+    dto.setVisitDate(new Reading(visitDate, "MM/dd/yyyy"));
+    dto.setVisited(new Reading(visited));
+    dto.setVehicleId(new Reading(vehicleId));
+    dto.setReasonForNotVisiting(new Reading(reasonForNotVisiting));
+    dto.setOtherReasonDescription(new Reading(otherReasonDescription));
+    dto.setSynced(new Reading(synced));
+
+    return dto;
   }
 }

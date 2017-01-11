@@ -24,35 +24,35 @@
                  openlmis-message="label.was.facility.visited|facilityData.facilityName|distribution.period.name"></label>
 
           <div>
-            <input id="facilityVisitedYes" type="radio" ng-model="facilityData.facilityVisit.visited"
+            <input id="facilityVisitedYes" type="radio" ng-model="facilityData.facilityVisit.visited.value"
                    ng-value="true">
             <label for="facilityVisitedYes" class="radio-label" openlmis-message="label.yes"></label>
-            <input id="facilityVisitedNo" type="radio" ng-model="facilityData.facilityVisit.visited"
+            <input id="facilityVisitedNo" type="radio" ng-model="facilityData.facilityVisit.visited.value"
                    ng-value="false">
             <label for="facilityVisitedNo" class="radio-label" openlmis-message="label.no"></label>
           </div>
         </div>
 
-        <div ng-show="facilityData.facilityVisit.visited === true">
+        <div ng-show="facilityData.facilityVisit.visited.value === true">
           <div class="form-row clearfix">
             <span id="visitDateContainer">
               <label for="visitDate" openlmis-message="label.visit.date"></label>
               <input id="visitDate" type="text" ui-date="{dateFormat: 'dd/mm/yy', changeYear: true, defaultDate: distribution.period.stringStartDate, beforeShowDay: beforeDatepickerShowDay}"
                      ui-date-format="yy-mm-dd"
-                     readonly ng-model="facilityData.facilityVisit.visitDate"
-                     ng-class="{'required-error': !facilityData.facilityVisit.visitDate}"/>
+                     readonly ng-model="facilityData.facilityVisit.visitDate.value"
+                     ng-class="{'required-error': !facilityData.facilityVisit.visitDate.value}"/>
             </span>
 
             <span id="vehicleIdContainer">
               <label for="vehicleId" openlmis-message="label.vehicle.id"></label>
-              <input id="vehicleId" maxlength="20" type="text" ng-model="facilityData.facilityVisit.vehicleId"/>
+              <input id="vehicleId" maxlength="20" type="text" ng-model="facilityData.facilityVisit.vehicleId.value"/>
             </span>
           </div>
 
           <div class="form-row clearfix">
             <label openlmis-message="label.observations"></label>
             <textarea id="observations" maxlength="1000"
-                      ng-model="facilityData.facilityVisit.observations"></textarea>
+                      ng-model="facilityData.facilityVisit.observations.value"></textarea>
           </div>
           <div class="signatures clearfix">
             <div class="details-container">
@@ -92,7 +92,7 @@
           </div>
         </div>
 
-        <div class="form-row" ng-show="facilityData.facilityVisit.visited === false">
+        <div class="form-row" ng-show="facilityData.facilityVisit.visited.value === false">
           <div class="form-group not-visit-reason-form">
             <div class="form-row clearfix">
               <label class="radio-label" openlmis-message="label.reason.for.no.visit"></label>
@@ -100,72 +100,73 @@
 
             <div class="form-row clearfix">
               <input id="badWeather{{ $index }}" type="radio"
-                     ng-model="facilityData.facilityVisit.reasonForNotVisiting"
+                     ng-model="facilityData.facilityVisit.reasonForNotVisiting.value"
                      value="{{reasons.badWeather}}"/>
               <label class="radio-label" for="badWeather{{ $index }}"
                      openlmis-message="label.bad.weather"></label>
             </div>
             <div class="form-row clearfix">
               <input id="noTransport{{ $index }}" type="radio"
-                     ng-model="facilityData.facilityVisit.reasonForNotVisiting"
+                     ng-model="facilityData.facilityVisit.reasonForNotVisiting.value"
                      value="{{reasons.noTransport}}"/>
               <label class="radio-label" for="noTransport{{ $index }}"
                      openlmis-message="label.no.transport"></label>
             </div>
             <div class="form-row clearfix">
               <input id="facilityClosed{{ $index }}" type="radio"
-                     ng-model="facilityData.facilityVisit.reasonForNotVisiting"
+                     ng-model="facilityData.facilityVisit.reasonForNotVisiting.value"
                      value="{{reasons.facilityClosed}}"/>
               <label class="radio-label" for="facilityClosed{{ $index }}"
                      openlmis-message="label.facility.closed"></label>
             </div>
             <div class="form-row clearfix">
               <input id="refrigeratorsNotWorking{{ $index }}" type="radio"
-                     ng-model="facilityData.facilityVisit.reasonForNotVisiting"
+                     ng-model="facilityData.facilityVisit.reasonForNotVisiting.value"
                      value="{{reasons.refrigeratorsNotWorking}}"/>
               <label class="radio-label" for="refrigeratorsNotWorking{{ $index }}"
                      openlmis-message="label.refrigerators.not.working"></label>
             </div>
             <div class="form-row clearfix">
               <input id="noRefrigerators{{ $index }}" type="radio"
-                     ng-model="facilityData.facilityVisit.reasonForNotVisiting"
+                     ng-model="facilityData.facilityVisit.reasonForNotVisiting.value"
                      value="{{reasons.noRefrigerators}}"/>
               <label class="radio-label" for="noRefrigerators{{ $index }}"
                      openlmis-message="label.no.refrigerators"></label>
            </div>
             <div class="form-row clearfix">
-              <input id="unavailableFuelFunds{{ $index }}" type="radio"
-                     ng-model="facilityData.facilityVisit.reasonForNotVisiting"
+
+              <input id="unavailableFunds{{ $index }}" type="radio"
+                     ng-model="facilityData.facilityVisit.reasonForNotVisiting.value"
                      value="{{reasons.unavailableFuelFunds}}"/>
               <label class="radio-label" for="unavailableFuelFunds{{ $index }}"
                      openlmis-message="label.unavailable.funds.fuel"></label>
             </div>
             <div class="form-row clearfix">
              <input id="unavailablePerDiemFunds{{ $index }}" type="radio"
-                     ng-model="facilityData.facilityVisit.reasonForNotVisiting"
+                     ng-model="facilityData.facilityVisit.reasonForNotVisiting.value"
                      value="{{reasons.unavailablePerDiemFunds}}"/>
              <label class="radio-label" for="unavailablePerDiemFunds{{ $index }}"
                      openlmis-message="label.unavailable.funds.perdiem"></label>
             </div>
             <div class="form-row clearfix">
               <input id="notPartOfProgram{{ $index }}" type="radio"
-                     ng-model="facilityData.facilityVisit.reasonForNotVisiting"
+                     ng-model="facilityData.facilityVisit.reasonForNotVisiting.value"
                      value="{{reasons.notPartOfProgram}}"/>
               <label class="radio-label" for="notPartOfProgram{{ $index }}"
                      openlmis-message="label.not.part.of.program"></label>
             </div>
             <div class="form-row clearfix">
               <input id="other{{ $index }}" type="radio"
-                     ng-model="facilityData.facilityVisit.reasonForNotVisiting" value="{{reasons.other}}"
-                     ng-click="facilityData.facilityVisit.otherReasonDescription = (facilityData.facilityVisit.reasonForNotVisiting === reasons.other ? facilityData.facilityVisit.otherReasonDescription : undefined)"/>
+                     ng-model="facilityData.facilityVisit.reasonForNotVisiting.value" value="{{reasons.other}}"
+                     ng-click="facilityData.facilityVisit.otherReasonDescription.value = (facilityData.facilityVisit.reasonForNotVisiting.value === reasons.other ? facilityData.facilityVisit.otherReasonDescription.value : undefined)"/>
               <label class="radio-label" for="other{{ $index }}" openlmis-message="label.other"></label>
             </div>
             <div class="form-row clearfix">
-              <textarea ng-model="facilityData.facilityVisit.otherReasonDescription"
+              <textarea ng-model="facilityData.facilityVisit.otherReasonDescription.value"
                         id="otherTextBox"
-                        ng-show="facilityData.facilityVisit.reasonForNotVisiting === reasons.other"
+                        ng-show="facilityData.facilityVisit.reasonForNotVisiting.value === reasons.other"
                         maxlength="255"
-                        ng-class="{'required-error': !facilityData.facilityVisit.otherReasonDescription}">
+                        ng-class="{'required-error': !facilityData.facilityVisit.otherReasonDescription.value}">
               </textarea>
             </div>
           </div>

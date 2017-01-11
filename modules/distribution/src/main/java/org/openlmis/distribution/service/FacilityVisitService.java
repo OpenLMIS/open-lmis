@@ -29,6 +29,7 @@ public class FacilityVisitService {
       throw new DataException("error.facility.already.synced");
     }
     facilityVisit.setSynced(true);
+    facilityVisit.setFacilityCatchmentPopulation(existingVisit.getFacilityCatchmentPopulation());
     repository.update(facilityVisit);
     return facilityVisit;
   }

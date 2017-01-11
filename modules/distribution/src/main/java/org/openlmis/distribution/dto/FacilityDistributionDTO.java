@@ -19,7 +19,6 @@ import org.openlmis.distribution.domain.DistributionRefrigerators;
 import org.openlmis.distribution.domain.EpiInventory;
 import org.openlmis.distribution.domain.EpiUse;
 import org.openlmis.distribution.domain.FacilityDistribution;
-import org.openlmis.distribution.domain.FacilityVisit;
 import org.openlmis.distribution.domain.VaccinationAdultCoverage;
 import org.openlmis.distribution.domain.VaccinationChildCoverage;
 import org.openlmis.distribution.domain.VaccinationFullCoverage;
@@ -45,7 +44,7 @@ public class FacilityDistributionDTO {
   private Long population;
   private String geographicZone;
 
-  private FacilityVisit facilityVisit;
+  private FacilityVisitDTO facilityVisit;
   private EpiUseDTO epiUse;
   private EpiInventoryDTO epiInventory;
   private DistributionRefrigeratorsDTO refrigerators;
@@ -53,7 +52,7 @@ public class FacilityDistributionDTO {
   private ChildCoverageDTO childCoverage;
   private AdultCoverageDTO adultCoverage;
 
-  public FacilityDistributionDTO(FacilityVisit facilityVisit, EpiUseDTO epiUse, EpiInventoryDTO epiInventory,
+  public FacilityDistributionDTO(FacilityVisitDTO facilityVisit, EpiUseDTO epiUse, EpiInventoryDTO epiInventory,
                                  DistributionRefrigeratorsDTO refrigerators, VaccinationFullCoverageDTO fullCoverage,
                                  ChildCoverageDTO childCoverage, AdultCoverageDTO adultCoverage) {
     this.facilityVisit = facilityVisit;
@@ -66,7 +65,7 @@ public class FacilityDistributionDTO {
   }
 
   public FacilityDistribution transform() {
-    return new FacilityDistribution(facilityVisit, epiUse.transform(), refrigerators.transform(),
+    return new FacilityDistribution(facilityVisit.transform(), epiUse.transform(), refrigerators.transform(),
       epiInventory.transform(), fullCoverage.transform(), childCoverage.transform(), adultCoverage.transform());
   }
 

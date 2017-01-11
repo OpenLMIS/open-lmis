@@ -26,6 +26,7 @@ import org.openlmis.core.service.UserService;
 import org.openlmis.db.categories.UnitTests;
 import org.openlmis.distribution.domain.*;
 import org.openlmis.distribution.dto.FacilityDistributionDTO;
+import org.openlmis.distribution.dto.FacilityVisitDTO;
 import org.openlmis.distribution.service.DistributionService;
 import org.openlmis.distribution.service.FacilityDistributionService;
 import org.openlmis.web.response.OpenLmisResponse;
@@ -154,7 +155,7 @@ public class DistributionControllerTest {
     Distribution distribution = new Distribution();
     distribution.setId(1L);
     FacilityDistributionDTO facilityDistributionDTO = spy(new FacilityDistributionDTO());
-    facilityDistributionDTO.setFacilityVisit(new FacilityVisit());
+    facilityDistributionDTO.setFacilityVisit(new FacilityVisitDTO());
     FacilityDistribution facilityDistributionData = new FacilityDistribution(null, null, new DistributionRefrigerators(EMPTY_LIST), null, null, null, null);
 
     FacilityDistribution syncedFacilityDistribution = new FacilityDistribution();
@@ -184,7 +185,7 @@ public class DistributionControllerTest {
     Distribution distribution = new Distribution();
     distribution.setId(1L);
     FacilityDistributionDTO facilityDistributionDTO = spy(new FacilityDistributionDTO());
-    facilityDistributionDTO.setFacilityVisit(new FacilityVisit());
+    facilityDistributionDTO.setFacilityVisit(new FacilityVisitDTO());
     FacilityDistribution facilityDistribution = new FacilityDistribution();
     doNothing().when(facilityDistributionDTO).setModifiedBy(USER_ID);
     doReturn(facilityDistribution).when(facilityDistributionDTO).transform();
