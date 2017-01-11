@@ -13,6 +13,7 @@ package org.openlmis.distribution.repository.mapper;
 
 import org.apache.ibatis.annotations.*;
 import org.openlmis.distribution.domain.Distribution;
+import org.openlmis.distribution.domain.DistributionEdit;
 import org.openlmis.distribution.domain.DistributionStatus;
 import org.springframework.stereotype.Repository;
 
@@ -127,5 +128,22 @@ public interface DistributionMapper {
           @Result(property = "program", column = "programId", javaType = Long.class,
                   one = @One(select = "org.openlmis.core.repository.mapper.ProgramMapper.getById"))
   })
-  List<Distribution> getFullSyncedDistributionsForProgramAndDeliveryZoneAndPeriod(@Param("programId") Long programId, @Param("deliveryZoneId")Long deliveryZoneId, @Param("periodId") Long periodId);
+  List<Distribution> getFullSyncedDistributionsForProgramAndDeliveryZoneAndPeriod(@Param("programId") Long programId, @Param("deliveryZoneId") Long deliveryZoneId, @Param("periodId") Long periodId);
+
+  @Insert({"INSERT INTO distribution_edits (userId, distributionId) VALUES (#{userId}, #{distributionId})"})
+  void insertEditInProgress(@Param("userId") Long userId, @Param("distributionId") Long distributionId);
+
+  @Select({"SELECT * FROM distribution_edits WHERE distributionId = #{distributionId} AND userId = #{userId}"})
+  @Results(value = {
+          @Result(property = "user.id", column = "userId"),
+          @Result(property = "distribution.id", column = "distributionId")
+  })
+  DistributionEdit getEditInProgressForUser(@Param("distributionId") Long distributionId, @Param("userId") Long userId);
+
+  @Select({"SELECT * FROM distribution_edits WHERE distributionId = #{distributionId} AND userId <> #{userId} AND EXTRACT(EPOCH FROM CURRENT_TIMESTAMP - startedAt) <= #{periodInSeconds}"})
+  @Results(value = {
+          @Result(property = "user.id", column = "userId"),
+          @Result(property = "distribution.id", column = "distributionId")
+  })
+  List<DistributionEdit> getEditInProgress(@Param("distributionId") Long distributionId, @Param("userId") Long userId, @Param("periodInSeconds") Long periodInSeconds);
 }

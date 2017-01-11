@@ -16,6 +16,7 @@ import org.openlmis.core.domain.DeliveryZone;
 import org.openlmis.core.domain.ProcessingPeriod;
 import org.openlmis.core.domain.Program;
 import org.openlmis.distribution.domain.Distribution;
+import org.openlmis.distribution.domain.DistributionEdit;
 import org.openlmis.distribution.domain.DistributionStatus;
 import org.openlmis.distribution.domain.FacilityDistribution;
 import org.openlmis.distribution.repository.DistributionRepository;
@@ -94,5 +95,13 @@ public class DistributionService {
 
   public List<Distribution> getFullSyncedDistributions(Program program, DeliveryZone deliveryZone, ProcessingPeriod period) {
     return repository.getFullSyncedDistributions(program, deliveryZone, period);
+  }
+
+  public void insertEditInProgress(Long userId, Long distributionId) {
+    repository.insertEditInProgress(userId, distributionId);
+  }
+
+  public List<DistributionEdit> getEditInProgress(Long distributionId, Long userId, Long periodInSeconds) {
+    return repository.getEditInProgress(distributionId, userId, periodInSeconds);
   }
 }

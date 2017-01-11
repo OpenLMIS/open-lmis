@@ -13,6 +13,7 @@ import org.openlmis.core.service.FacilityService;
 import org.openlmis.core.service.ProgramService;
 import org.openlmis.core.service.UserService;
 import org.openlmis.distribution.domain.Distribution;
+import org.openlmis.distribution.domain.DistributionEdit;
 import org.openlmis.distribution.domain.FacilityDistribution;
 import org.openlmis.distribution.domain.FacilityVisit;
 import org.openlmis.distribution.dto.DistributionDTO;
@@ -32,6 +33,7 @@ import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 import static org.openlmis.core.domain.RightName.EDIT_SYNCHRONIZED_DATA;
 import static org.openlmis.core.domain.RightName.VIEW_SYNCHRONIZED_DATA;
@@ -62,6 +64,9 @@ public class ReviewDataService {
 
   @Value("${eligibility.edit}")
   private Long eligibilityEdit;
+
+  @Value("${distribution.edit.in.progress}")
+  private Long distributionEditInProgress;
 
   public ReviewDataFilters getFilters() {
     List<Program> programs = programService.getAll();
@@ -102,8 +107,26 @@ public class ReviewDataService {
     return list;
   }
 
-  public DistributionDTO getDistribution(Distribution arg) {
+  public DistributionEdit checkInProgress(Distribution arg, Long userId) {
+    Distribution distribution = distributionService.get(arg);
+
+    List<DistributionEdit> inProgress = distributionService.getEditInProgress(distribution.getId(), userId, TimeUnit.MINUTES.toSeconds(distributionEditInProgress));
+    Collections.sort(inProgress);
+
+    DistributionEdit last = inProgress.isEmpty() ? null : inProgress.get(0);
+
+    if (null != last) {
+      last.setDistribution(null);
+      last.setUser(userService.getById(last.getUser().getId()));
+    }
+
+    return last;
+  }
+
+  public DistributionDTO getDistribution(Distribution arg, Long userId) {
     Distribution distribution = distributionService.getFullSyncedDistribution(arg);
+    distributionService.insertEditInProgress(userId, distribution.getId());
+
     Map<Long, FacilityDistribution> facilityDistributionMap = facilityDistributionService.getData(distribution);
 
     distribution.setFacilityDistributions(facilityDistributionMap);

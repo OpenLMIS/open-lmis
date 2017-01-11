@@ -8,7 +8,7 @@
  * You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org. 
  */
 
-function ReviewDataController($scope, SynchronizedDistributions, ReviewDataFilters, distributionService, $http, $location, SharedDistributions, $rootScope) {
+function ReviewDataController($scope, SynchronizedDistributions, ReviewDataFilters, distributionService, $http, $location, SharedDistributions, $rootScope, messageService, $dialog) {
   var empty = {};
 
   $scope.message = '';
@@ -72,6 +72,21 @@ function ReviewDataController($scope, SynchronizedDistributions, ReviewDataFilte
           period: item.period
         };
 
+    function goTo(distribution) {
+      distributionService.distributionReview = {
+        edit: item.edit,
+        view: item.view,
+        editMode: {}
+      };
+
+      $.each(distribution.facilityDistributions, function (facilityId) {
+        distributionService.distributionReview.editMode[facilityId] = {};
+      });
+
+      $http.post('/review-data/distribution/lastViewed', distribution.id);
+      $location.path('/record-facility-data/' + distribution.id + '/');
+    }
+
     function onFailure(data) {
         $scope.message = data.error;
     }
@@ -87,31 +102,39 @@ function ReviewDataController($scope, SynchronizedDistributions, ReviewDataFilte
 
       distributionService.save(distribution, true);
       $scope.message = message;
-      execute(distribution);
+      goTo(distribution);
     }
 
-    function execute(distribution) {
-      distributionService.distributionReview = {
-        edit: item.edit,
-        view: item.view,
-        editMode: {}
-      };
-
-      $.each(distribution.facilityDistributions, function (facilityId) {
-        distributionService.distributionReview.editMode[facilityId] = {};
-      });
-
-      $http.post('/review-data/distribution/lastViewed', distribution.id);
-      $location.path('/record-facility-data/' + distribution.id + '/');
+    function getDistribution() {
+      if (!distributionService.isCached(distribution)) {
+        $http.post('/review-data/distribution/get.json', distribution).success(onSuccess).error(onFailure);
+      } else {
+        distribution = distributionService.get(distribution);
+        goTo(distribution);
+      }
     }
 
-    if (!distributionService.isCached(distribution)) {
-      $http.post('/review-data/distribution.json', distribution).success(onSuccess).error(onFailure);
-    } else {
-      distribution = distributionService.get(distribution);
-      execute(distribution);
+    function dialogCallback(result) {
+      if (result) {
+        getDistribution();
+      }
     }
 
+    function onCheckSuccess(data) {
+      if (data.inProgress) {
+        var dialogOpts = {
+          id: 'distributionInProgress',
+          header: 'label.distribution.in.progress',
+          body: messageService.get('message.distribution.already.edit', data.inProgress.user.userName, data.inProgress.startedAt)
+        };
+
+        OpenLmisDialog.newDialog(dialogOpts, dialogCallback, $dialog);
+      } else {
+        getDistribution();
+      }
+    }
+
+    $http.post('/review-data/distribution/check.json', distribution).success(onCheckSuccess);
   };
 
 }
