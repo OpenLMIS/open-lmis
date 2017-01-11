@@ -44,6 +44,7 @@ CACHE:
 /public/pages/logistics/distribution/partials/list.html
 /public/pages/logistics/distribution/partials/init.html
 /public/pages/logistics/distribution/partials/record-facility-data.html
+/public/pages/logistics/distribution/partials/record-facility-data-offline.html
 /public/pages/logistics/distribution/partials/record-facility-menu.html
 /public/pages/logistics/distribution/partials/view-load-amount.html
 /public/pages/logistics/distribution/partials/epi-use.html
@@ -123,6 +124,7 @@ FALLBACK:
 / /public/pages/offline.html
 /public/pages/header.html /public/pages/header-offline.html
 /public/pages/navigation.html /public/pages/navigation-offline.html
+/public/pages/logistics/distribution/partials/record-facility-data.html /public/pages/logistics/distribution/partials/record-facility-data-offline.html
 
 NETWORK:
 *

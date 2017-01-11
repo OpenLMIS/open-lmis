@@ -138,4 +138,42 @@
       </div>
     </div>
   </div>
+
+  <div ng-show="appCacheState !== undefined">
+    <div class="modal-backdrop"></div>
+
+    <div class="modal app-cache-status-modal" show="appCacheState !== 'progress'" >
+      <div class="modal-body">
+
+        <div ng-show="appCacheState === 'progress'">
+          <div id="downloadingLoader"></div>
+          <strong openlmis-message='message.downloading.app.data'></strong>
+          <div openlmis-message='message.downloading.in.progress'></div>
+        </div>
+
+        <div ng-show="appCacheState === 'cached'">
+          <div>
+            <i class="icon icon-ok-circle"></i>
+            <span id="successMessage" openlmis-message='message.downloading.success'></span>
+          </div>
+        </div>
+
+        <div ng-show="appCacheState === 'error'">
+          <div>
+            <i class="icon icon-exclamation-sign"></i>
+            <span id="errorMessage" openlmis-message='message.downloading.failed'></span>
+          </div>
+        </div>
+      </div>
+
+      <div class="modal-footer" ng-hide="appCacheState === 'progress'">
+        <input type="button" ng-show="appCacheState === 'cached'" href="" ng-click="close();" class="btn btn-primary"
+               openlmis-message='button.close' />
+
+        <input type="button" ng-show="appCacheState === 'error'" href="" ng-click="reload();" class="btn btn-primary"
+               openlmis-message='button.retry' />
+      </div>
+    </div>
+  </div>
+
 </div>

@@ -8,22 +8,38 @@
  * You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org. 
  */
 
-function ReviewDataController($scope, SynchronizedDistributions, ReviewDataFilters, distributionService, $http, $location) {
+function ReviewDataController($scope, SynchronizedDistributions, ReviewDataFilters, distributionService, $http, $location, SharedDistributions, $rootScope) {
   var empty = {};
 
   $scope.message = '';
 
+  $scope.reload = function() {
+    window.location.reload();
+  };
+
+  $scope.close = function() {
+    $rootScope.appCacheState = undefined;
+  };
+
   $scope.filters = ReviewDataFilters.get(empty, function () {
     $scope.filters.selected = {
-      program: $scope.filters.filter.programs[0],
+      program: $scope.filters && $scope.filters.filter && $scope.filters.filter.programs[0],
       order: {}
     };
 
     $scope.sort('synchronized');
   });
 
+  function getDistributions() {
+    return _.filter(SharedDistributions.distributionList, function (elem) {
+      return SharedDistributions.isReview(elem);
+    });
+  }
+
   $scope.reloadList = function () {
-    $scope.distributionsList = SynchronizedDistributions.get(empty, $scope.filters.selected);
+    $scope.distributionsList = SynchronizedDistributions.get(empty, $scope.filters.selected, undefined, function () {
+      $scope.distributionsList = getDistributions();
+    });
   };
 
   $scope.sort = function (column) {
