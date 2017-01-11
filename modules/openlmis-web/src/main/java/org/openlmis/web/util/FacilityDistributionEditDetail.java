@@ -5,6 +5,7 @@ import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import org.codehaus.jackson.annotate.JsonIgnoreProperties;
 import org.codehaus.jackson.map.annotate.JsonSerialize;
+import org.openlmis.distribution.util.EditedItemUI;
 
 import static org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion.NON_EMPTY;
 
@@ -21,8 +22,10 @@ public class FacilityDistributionEditDetail {
 
   private Long dataScreenId;
   private String dataScreen;
+  private String dataScreenUI;
 
   private String editedItem;
+  private EditedItemUI editedItemUI;
 
   private Object originalValue;
   private Object previousValue;
@@ -30,39 +33,4 @@ public class FacilityDistributionEditDetail {
 
   private boolean conflict;
 
-  public String getDataScreenUI() {
-    switch (dataScreen) {
-      case "FacilityVisit":
-      case "Facilitator":
-        return "visit-info";
-      case "EpiInventoryLineItem":
-        return "epi-inventory";
-      case "RefrigeratorReading":
-      case "RefrigeratorProblem":
-        return "refrigerator-data";
-      case "EpiUseLineItem":
-        return "epi-use";
-      case "VaccinationFullCoverage":
-        return "full-coverage";
-      case "ChildCoverageLineItem":
-        return "child-coverage";
-      case "OpenedVialLineItem":
-        switch (parentDataScreen) {
-          case "VaccinationAdultCoverage":
-            return "adult-coverage";
-          case "VaccinationChildCoverage":
-            return "child-coverage";
-          default:
-            return "";
-        }
-      case "AdultCoverageLineItem":
-        return "adult-coverage";
-      default:
-        return "";
-    }
-  }
-
-  public void setDataScreenUI() {
-    // nothing to do
-  }
 }

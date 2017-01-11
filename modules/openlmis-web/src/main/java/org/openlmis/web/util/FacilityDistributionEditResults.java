@@ -11,6 +11,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion.NON_EMPTY;
+import static org.openlmis.distribution.util.UIMapping.getDataScreen;
+import static org.openlmis.distribution.util.UIMapping.getField;
 
 @Data
 @NoArgsConstructor
@@ -27,16 +29,24 @@ public class FacilityDistributionEditResults {
     this.facilityId = facilityId;
   }
 
-  public void allow(Object parent, String parentProperty, Object original, String originalPropertyName, Object originalProperty, Object previousProperty, Object replacementProperty) {
-    create(parent, parentProperty, original, originalPropertyName, originalProperty, previousProperty, replacementProperty, false);
+  public void allow(Object parent, String parentProperty, Object original,
+                    String originalPropertyName, Object originalProperty, Object previousProperty,
+                    Object replacementProperty, String addictional) {
+    create(parent, parentProperty, original, originalPropertyName, originalProperty,
+            previousProperty, replacementProperty, false, addictional);
   }
 
-  public void deny(Object parent, String parentProperty, Object original, String originalPropertyName, Object originalProperty, Object previousProperty, Object replacementProperty) {
+  public void deny(Object parent, String parentProperty, Object original,
+                   String originalPropertyName, Object originalProperty, Object previousProperty,
+                   Object replacementProperty, String addictional) {
     conflict = true;
-    create(parent, parentProperty, original, originalPropertyName, originalProperty, previousProperty, replacementProperty, true);
+    create(parent, parentProperty, original, originalPropertyName, originalProperty,
+            previousProperty, replacementProperty, true, addictional);
   }
 
-  private void create(Object parent, String parentProperty, Object original, String originalPropertyName, Object originalProperty, Object previousProperty, Object replacementProperty, boolean conflict) {
+  private void create(Object parent, String parentProperty, Object original,
+                      String originalPropertyName, Object originalProperty, Object previousProperty,
+                      Object replacementProperty, boolean conflict, String addictional) {
     FacilityDistributionEditDetail detail = new FacilityDistributionEditDetail();
 
     detail.setParentDataScreenId(parent instanceof BaseModel ? ((BaseModel) original).getId() : null);
@@ -53,6 +63,9 @@ public class FacilityDistributionEditResults {
     detail.setNewValue(replacementProperty);
 
     detail.setConflict(conflict);
+
+    detail.setDataScreenUI(getDataScreen(detail.getDataScreen(), detail.getParentDataScreen()));
+    detail.setEditedItemUI(getField(detail.getDataScreen(), detail.getEditedItem(), detail.getParentDataScreen(), detail.getParentProperty(), addictional));
 
     details.add(detail);
   }
