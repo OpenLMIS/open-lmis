@@ -10,6 +10,9 @@
 
 package org.openlmis.distribution.repository;
 
+import org.openlmis.core.domain.DeliveryZone;
+import org.openlmis.core.domain.ProcessingPeriod;
+import org.openlmis.core.domain.Program;
 import org.openlmis.distribution.domain.Distribution;
 import org.openlmis.distribution.domain.DistributionStatus;
 import org.openlmis.distribution.repository.mapper.DistributionMapper;
@@ -54,5 +57,21 @@ public class DistributionRepository {
 
   public List<Distribution> getFullSyncedDistributions() {
     return mapper.getFullSyncedDistributions();
+  }
+
+  public List<Distribution> getFullSyncedDistributions(Program program, DeliveryZone deliveryZone, ProcessingPeriod period) {
+    if (null != deliveryZone && null != period) {
+        return mapper.getFullSyncedDistributionsForProgramAndDeliveryZoneAndPeriod(program.getId(), deliveryZone.getId(), period.getId());
+    }
+
+    if (null != deliveryZone) {
+        return mapper.getFullSyncedDistributionsForProgramAndDeliveryZone(program.getId(), deliveryZone.getId());
+    }
+
+    if (null != period) {
+        return mapper.getFullSyncedDistributionsForProgramAndPeriod(program.getId(), period.getId());
+    }
+
+    return mapper.getFullSyncedDistributionsForProgram(program.getId());
   }
 }

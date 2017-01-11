@@ -182,6 +182,17 @@ public class FacilityDistributionService {
     return facilityDistributions;
   }
 
+  public Map<Long, FacilityDistribution> getData(Distribution distribution) {
+    Map<Long, FacilityDistribution> facilityDistributions = new HashMap<>();
+
+    List<FacilityVisit> visits = facilityVisitService.getByDistributionId(distribution.getId());
+    for (FacilityVisit visit : visits) {
+      facilityDistributions.put(visit.getFacilityId(), getDistributionData(visit, distribution));
+    }
+
+    return facilityDistributions;
+  }
+
   private FacilityDistribution getDistributionData(FacilityVisit facilityVisit, Distribution distribution) {
     EpiUse epiUse = epiUseService.getBy(facilityVisit.getId());
 

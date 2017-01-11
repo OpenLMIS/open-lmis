@@ -22,7 +22,7 @@
             <span class="label-required">*</span>
           </label>
           <div class="form-field">
-            <select id="selectProgram" ng-model="filters.selected.program"
+            <select id="selectProgram" ng-model="filters.selected.program" ng-change="reloadList()"
                 ng-options="p as p.name for p in filters.filter.programs">
             </select>
           </div>
@@ -32,7 +32,7 @@
             <span openlmis-message="label.province"></span>
           </label>
           <div class="form-field">
-            <select id="selectProvince" ng-model="filters.selected.province"
+            <select id="selectProvince" ng-model="filters.selected.province" ng-change="reloadList()"
                 ng-options="g as g.name for g in filters.filter.geographicZones">
               <option openlmis-message="label.all"></option>
             </select>
@@ -43,7 +43,7 @@
             <span openlmis-message="label.delivery.zone"></span>
           </label>
           <div class="form-field">
-            <select id="selectDeliveryZone" ng-model="filters.selected.deliveryZone"
+            <select id="selectDeliveryZone" ng-model="filters.selected.deliveryZone" ng-change="reloadList()"
                 ng-options="d as d.name for d in filters.filter.deliveryZones">
               <option openlmis-message="label.all"></option>
             </select>
@@ -54,7 +54,7 @@
             <span openlmis-message="label.period"></span>
           </label>
           <div class="form-field">
-            <select id="selectperiod" ng-model="filters.selected.period"
+            <select id="selectperiod" ng-model="filters.selected.period" ng-change="reloadList()"
                 ng-options="p as p.name for p in filters.filter.periods">
               <option openlmis-message="label.all"></option>
             </select>
@@ -84,28 +84,16 @@
           </tr>
           </thead>
           <tbody>
-          <tr>
-            <td>Example province</td>
-            <td>Example delivery zone</td>
-            <td>Example period</td>
-            <td>00/00/0000</td>
-            <td>00/00/0000</td>
-            <td>00/00/0000</td>
-            <td>00/00/0000 00:00</td>
-            <td>Admin</td>
-            <td>Edit Data</td>
-            <td>Download CSV | Print</td>
-          </tr>
-          <tr>
-            <td>Example province</td>
-            <td>Example delivery zone</td>
-            <td>Example period</td>
-            <td>00/00/0000</td>
-            <td>00/00/0000</td>
-            <td>00/00/0000</td>
-            <td></td>
-            <td></td>
-            <td>View Data</td>
+          <tr ng-repeat="item in distributionsList.list">
+            <td>{{item.province}}</td>
+            <td>{{item.deliveryZone}}</td>
+            <td>{{item.period}}</td>
+            <td>{{item.initiated}}</td>
+            <td>{{item.synchronized}}</td>
+            <td>{{item.lastViewed}}</td>
+            <td>{{item.lasdtEdited}}</td>
+            <td>{{item.editedBy}}</td>
+            <td>Edit Data / View data</td>
             <td>Download CSV | Print</td>
           </tr>
           </tbody>

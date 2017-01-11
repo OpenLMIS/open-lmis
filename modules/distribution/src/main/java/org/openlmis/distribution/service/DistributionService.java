@@ -12,6 +12,9 @@
 
 package org.openlmis.distribution.service;
 
+import org.openlmis.core.domain.DeliveryZone;
+import org.openlmis.core.domain.ProcessingPeriod;
+import org.openlmis.core.domain.Program;
 import org.openlmis.distribution.domain.Distribution;
 import org.openlmis.distribution.domain.DistributionStatus;
 import org.openlmis.distribution.domain.FacilityDistribution;
@@ -79,5 +82,9 @@ public class DistributionService {
 
   public List<Distribution> getFullSyncedDistributions() {
     return repository.getFullSyncedDistributions();
+  }
+
+  public List<Distribution> getFullSyncedDistributions(Program program, DeliveryZone deliveryZone, ProcessingPeriod period) {
+    return repository.getFullSyncedDistributions(program, deliveryZone, period);
   }
 }
