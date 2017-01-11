@@ -29,4 +29,40 @@ public class FacilityDistributionEditDetail {
   private Object newValue;
 
   private boolean conflict;
+
+  public String getDataScreenUI() {
+    switch (dataScreen) {
+      case "FacilityVisit":
+      case "Facilitator":
+        return "visit-info";
+      case "EpiInventoryLineItem":
+        return "epi-inventory";
+      case "RefrigeratorReading":
+      case "RefrigeratorProblem":
+        return "refrigerator-data";
+      case "EpiUseLineItem":
+        return "epi-use";
+      case "VaccinationFullCoverage":
+        return "full-coverage";
+      case "ChildCoverageLineItem":
+        return "child-coverage";
+      case "OpenedVialLineItem":
+        switch (parentDataScreen) {
+          case "VaccinationAdultCoverage":
+            return "adult-coverage";
+          case "VaccinationChildCoverage":
+            return "child-coverage";
+          default:
+            return "";
+        }
+      case "AdultCoverageLineItem":
+        return "adult-coverage";
+      default:
+        return "";
+    }
+  }
+
+  public void setDataScreenUI() {
+    // nothing to do
+  }
 }
