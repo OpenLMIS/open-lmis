@@ -46,6 +46,10 @@ public class RefrigeratorProblem extends BaseModel {
   Boolean other;
   String otherProblemExplanation;
 
+  public RefrigeratorProblem(Long readingId) {
+    this.readingId = readingId;
+  }
+
   public void validate() {
     if (!(isTrue(operatorError) || isTrue(burnerProblem) || isTrue(gasLeakage) || isTrue(egpFault) || isTrue(thermostatSetting) || isTrue(other))) {
       throw new DataException("error.invalid.reading.value");

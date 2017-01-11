@@ -43,7 +43,7 @@ public class DistributionRefrigeratorsRepositoryTest {
 
     when(refrigeratorReading.getProblem()).thenReturn(refrigeratorProblem);
     when(refrigeratorReading.getId()).thenReturn(readingId);
-    repository.saveReading(refrigeratorReading);
+    repository.saveReading(refrigeratorReading, true);
 
     verify(mapper).insertReading(refrigeratorReading);
     verify(refrigeratorProblem).setReadingId(readingId);
@@ -57,7 +57,7 @@ public class DistributionRefrigeratorsRepositoryTest {
 
     when(refrigeratorReading.getProblem()).thenReturn(null);
     when(refrigeratorReading.getId()).thenReturn(readingId);
-    repository.saveReading(refrigeratorReading);
+    repository.saveReading(refrigeratorReading, true);
 
     verify(mapper).insertReading(refrigeratorReading);
     verify(mapper, never()).insertProblem(refrigeratorReading.getProblem());

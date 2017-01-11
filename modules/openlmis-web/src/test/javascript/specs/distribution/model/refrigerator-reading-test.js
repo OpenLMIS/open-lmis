@@ -97,7 +97,7 @@ describe('RefrigeratorReading', function () {
     refrigeratorReading = new RefrigeratorReading(facilityVisitId, {temperature: {notRecorded: true}, functioningCorrectly: {value: 'N'},
       lowAlarmEvents: {value: 3}, highAlarmEvents: {value: 6, notRecorded: true}, problemSinceLastTime: {value: 'N'}});
 
-    refrigeratorReading.problems = {operatorError: true};
+    refrigeratorReading.problems = {operatorError: {value: true}};
     var status = refrigeratorReading.computeStatus();
 
     expect(status).toEqual(DistributionStatus.COMPLETE);
