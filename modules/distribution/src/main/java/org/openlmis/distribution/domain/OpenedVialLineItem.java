@@ -17,6 +17,8 @@ import lombok.NoArgsConstructor;
 import org.codehaus.jackson.map.annotate.JsonSerialize;
 import org.openlmis.core.domain.BaseModel;
 import org.openlmis.core.domain.Facility;
+import org.openlmis.distribution.dto.OpenedVialLineItemDTO;
+import org.openlmis.distribution.dto.Reading;
 
 import static org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion.NON_EMPTY;
 
@@ -46,5 +48,17 @@ public class OpenedVialLineItem extends BaseModel {
     this.packSize = productVial != null ? facility.getPackSizeFor(productVial.getProductCode()) : null;
     this.createdBy = facilityVisit.getCreatedBy();
     this.modifiedBy = facilityVisit.getModifiedBy();
+  }
+
+  public OpenedVialLineItemDTO transform() {
+    OpenedVialLineItemDTO dto = new OpenedVialLineItemDTO();
+    dto.setId(id);
+    dto.setCreatedBy(createdBy);
+    dto.setCreatedDate(createdDate);
+    dto.setModifiedBy(modifiedBy);
+    dto.setModifiedDate(modifiedDate);
+    dto.setOpenedVial(new Reading(openedVials));
+
+    return dto;
   }
 }

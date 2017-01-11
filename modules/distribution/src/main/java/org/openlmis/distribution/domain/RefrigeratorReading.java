@@ -19,6 +19,11 @@ import org.codehaus.jackson.annotate.JsonIgnoreProperties;
 import org.codehaus.jackson.map.annotate.JsonSerialize;
 import org.openlmis.core.domain.BaseModel;
 import org.openlmis.core.domain.Refrigerator;
+import org.openlmis.distribution.dto.Reading;
+import org.openlmis.distribution.dto.RefrigeratorReadingDTO;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import static org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion.NON_EMPTY;
 
@@ -63,6 +68,26 @@ public class RefrigeratorReading extends BaseModel {
     if (this.problem != null) {
       this.problem.setModifiedBy(modifiedBy);
     }
+  }
+
+  public RefrigeratorReadingDTO transform() {
+    RefrigeratorReadingDTO dto = new RefrigeratorReadingDTO();
+    dto.setId(id);
+    dto.setCreatedBy(createdBy);
+    dto.setCreatedDate(createdDate);
+    dto.setModifiedBy(modifiedBy);
+    dto.setModifiedDate(modifiedDate);
+    dto.setRefrigerator(refrigerator);
+    dto.setFacilityVisitId(facilityVisitId);
+    dto.setTemperature(new Reading(temperature));
+    dto.setFunctioningCorrectly(new Reading(functioningCorrectly));
+    dto.setLowAlarmEvents(new Reading(lowAlarmEvents));
+    dto.setHighAlarmEvents(new Reading(highAlarmEvents));
+    dto.setProblemSinceLastTime(new Reading(problemSinceLastTime));
+    dto.setProblems(problem);
+    dto.setNotes(notes);
+
+    return dto;
   }
 }
 

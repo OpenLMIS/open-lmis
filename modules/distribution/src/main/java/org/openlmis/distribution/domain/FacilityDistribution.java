@@ -18,6 +18,7 @@ import lombok.NoArgsConstructor;
 import org.codehaus.jackson.annotate.JsonIgnoreProperties;
 import org.codehaus.jackson.map.annotate.JsonSerialize;
 import org.openlmis.core.domain.Facility;
+import org.openlmis.distribution.dto.FacilityDistributionDTO;
 
 import java.util.List;
 
@@ -81,5 +82,18 @@ public class FacilityDistribution {
     this.facilityName = facility.getName();
     this.population = facility.getCatchmentPopulation();
     this.geographicZone = facility.getGeographicZone().getName();
+  }
+
+  public FacilityDistributionDTO transform() {
+    FacilityDistributionDTO dto = new FacilityDistributionDTO();
+    dto.setFacilityVisit(facilityVisit);
+    dto.setEpiUse(epiUse.transform());
+    dto.setEpiInventory(epiInventory.transform());
+    dto.setRefrigerators(refrigerators.transform());
+    dto.setFullCoverage(fullCoverage.transform());
+    dto.setChildCoverage(childCoverage.transform());
+    dto.setAdultCoverage(adultCoverage.transform());
+
+    return dto;
   }
 }

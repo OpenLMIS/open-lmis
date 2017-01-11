@@ -16,6 +16,8 @@ import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import org.codehaus.jackson.map.annotate.JsonSerialize;
 import org.openlmis.core.domain.Facility;
+import org.openlmis.distribution.dto.AdultCoverageLineItemDTO;
+import org.openlmis.distribution.dto.Reading;
 
 import static org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion.NON_EMPTY;
 
@@ -43,5 +45,20 @@ public class AdultCoverageLineItem extends CoverageLineItem {
                                String demographicGroup, Integer processingPeriodMonths) {
     super(facilityVisit, facility, targetGroupForLineItem, processingPeriodMonths);
     this.demographicGroup = demographicGroup;
+  }
+
+  public AdultCoverageLineItemDTO transform() {
+    AdultCoverageLineItemDTO dto = new AdultCoverageLineItemDTO();
+    dto.setId(id);
+    dto.setCreatedBy(createdBy);
+    dto.setCreatedDate(createdDate);
+    dto.setModifiedBy(modifiedBy);
+    dto.setModifiedDate(modifiedDate);
+    dto.setHealthCenterTetanus1(new Reading(healthCenterTetanus1));
+    dto.setOutreachTetanus1(new Reading(outreachTetanus1));
+    dto.setHealthCenterTetanus2To5(new Reading(healthCenterTetanus2To5));
+    dto.setOutreachTetanus2To5(new Reading(outreachTetanus2To5));
+
+    return dto;
   }
 }

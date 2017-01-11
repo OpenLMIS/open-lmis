@@ -41,6 +41,15 @@ public class Reading {
     this.notRecorded = ((isBlank(value)) && (!notRecorded)) ? true : notRecorded;
   }
 
+  public Reading(Object obj) {
+    if (null == obj) {
+      notRecorded = true;
+    } else {
+      value = obj.toString();
+      notRecorded = false;
+    }
+  }
+
   public String getEffectiveValue() {
     return (notRecorded == null || !notRecorded) ? value : null;
   }
