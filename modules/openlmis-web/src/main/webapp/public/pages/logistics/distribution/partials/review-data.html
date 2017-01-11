@@ -136,7 +136,7 @@
                 <span openlmis-message="link.download.csv"></span>
               </a>
               <span> | </span>
-              <a href="/review-data/distribution/{{item.distributionId}}/pdf">
+              <a ng-click="getPDF(item.distributionId)" style="cursor: pointer;">
                 <span openlmis-message="button.print"></span>
               </a>
             </td>

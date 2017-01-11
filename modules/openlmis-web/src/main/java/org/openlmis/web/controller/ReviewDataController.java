@@ -11,8 +11,6 @@ import org.openlmis.web.service.ReviewDataService;
 import org.openlmis.web.util.FacilityDistributionEditDetail;
 import org.openlmis.web.util.FacilityDistributionEditResults;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
@@ -115,16 +113,14 @@ public class ReviewDataController extends BaseController {
   @RequestMapping(value = "review-data/distribution/{id}/pdf", produces = "application/pdf", method = RequestMethod.GET)
   @PreAuthorize("@permissionEvaluator.hasPermission(principal, 'VIEW_SYNCHRONIZED_DATA, EDIT_SYNCHRONIZED_DATA')")
   @ResponseBody
-  public ResponseEntity<byte[]> getHistoryAsPDF(@PathVariable Long id) throws IOException {
+  public byte[] getHistoryAsPDF(@PathVariable Long id, HttpServletResponse response) throws IOException {
     File pdf = reviewDataService.getHistoryAsPDF(id);
 
-    HttpHeaders headers = new HttpHeaders();
-    headers.setContentType(MediaType.parseMediaType("application/pdf"));
-    headers.setContentDispositionFormData(pdf.getName(), pdf.getName());
-    headers.setCacheControl("must-revalidate, post-check=0, pre-check=0");
+    response.setHeader("Content-Disposition", "inline; filename=file.pdf");
+    response.setContentType("application/pdf");
 
     try (FileInputStream stream = new FileInputStream(pdf)) {
-      return new ResponseEntity<>(IOUtils.toByteArray(stream), headers, OK);
+      return  IOUtils.toByteArray(stream);
     }
   }
 
