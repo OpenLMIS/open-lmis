@@ -13,14 +13,38 @@ function ReviewDataController($scope, SynchronizedDistributions, ReviewDataFilte
 
   $scope.filters = ReviewDataFilters.get(empty, function () {
     $scope.filters.selected = {
-      program: $scope.filters.filter.programs[0]
+      program: $scope.filters.filter.programs[0],
+      order: {}
     };
 
-    $scope.reloadList();
+    $scope.sort('synchronized');
   });
 
   $scope.reloadList = function () {
     $scope.distributionsList = SynchronizedDistributions.get(empty, $scope.filters.selected);
+  };
+
+  $scope.sort = function (column) {
+    if ($scope.filters.selected.order.column === column) {
+      $scope.filters.selected.order.descending = !$scope.filters.selected.order.descending;
+    } else {
+      $scope.filters.selected.order.column = column;
+      $scope.filters.selected.order.descending = true;
+    }
+
+    $scope.reloadList();
+  };
+
+  $scope.isSort = function (column) {
+    if ($scope.filters.selected && $scope.filters.selected.order.column === column) {
+      if ($scope.filters.selected.order.descending) {
+        return 'icon-angle-down';
+      } else {
+        return 'icon-angle-up';
+      }
+    }
+
+    return 'hide';
   };
 
 }

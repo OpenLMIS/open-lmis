@@ -25,6 +25,7 @@ public class ReviewDataFilter {
     private GeographicZone province;
     private DeliveryZone deliveryZone;
     private ProcessingPeriod period;
+    private ReviewDataColumnOrder order;
 
     public boolean isProvinceSelected() {
         return null != province;
