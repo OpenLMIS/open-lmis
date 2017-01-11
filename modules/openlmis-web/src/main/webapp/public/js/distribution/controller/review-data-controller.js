@@ -80,6 +80,7 @@ function ReviewDataController($scope, SynchronizedDistributions, ReviewDataFilte
         view: item.view
       };
 
+      $http.post('/review-data/distribution/lastViewed', distributionId);
       $location.path('/record-facility-data/' + distributionId + '/');
     }
 

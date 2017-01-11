@@ -72,6 +72,10 @@ public class DistributionService {
     return distributionStatus;
   }
 
+  public void updateLastViewed(Long distributionId) {
+    repository.updateLastViewed(distributionId);
+  }
+
   public List<Long> getSyncedPeriodsForDeliveryZoneAndProgram(Long zoneId, Long programId) {
     return repository.getSyncedPeriodsForDeliveryZoneAndProgram(zoneId, programId);
   }

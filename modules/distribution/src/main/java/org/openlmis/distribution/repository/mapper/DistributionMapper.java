@@ -48,6 +48,9 @@ public interface DistributionMapper {
   @Update({"UPDATE distributions SET syncDate = CURRENT_TIMESTAMP WHERE id = #{id} AND syncDate IS NULL"})
   void updateSyncDate(@Param("id") Long id);
 
+  @Update({"UPDATE distributions SET lastViewed = CURRENT_TIMESTAMP WHERE id = #{id}"})
+  void updateLastViewed(@Param("id") Long id);
+
   @Select({"SELECT periodId from distributions where deliveryZoneId = #{deliveryZoneId} AND programId = #{programId} and status = 'SYNCED'"})
   List<Long> getSyncedPeriodsForDeliveryZoneAndProgram(@Param("deliveryZoneId") Long deliveryZoneId, @Param("programId") Long programId);
 

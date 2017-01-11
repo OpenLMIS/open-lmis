@@ -9,3 +9,4 @@
 --
 
 ALTER TABLE distributions ADD COLUMN syncDate TIMESTAMP;
+ALTER TABLE distributions ADD COLUMN lastViewed TIMESTAMP;

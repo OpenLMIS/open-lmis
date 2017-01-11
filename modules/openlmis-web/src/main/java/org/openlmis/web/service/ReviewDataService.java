@@ -124,8 +124,9 @@ public class ReviewDataService {
     item.setView(isViewable(distribution.getSyncDate(), userId));
     item.setEdit(isEditable(distribution.getSyncDate(), userId));
 
+    item.setLastViewed(distribution.getLastViewed());
+
     // those values need to be read from edit history
-    item.setLastViewed(null);
     item.setLastEdited(null);
     item.setEditedBy(null);
 
