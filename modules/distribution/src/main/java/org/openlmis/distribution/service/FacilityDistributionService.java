@@ -173,21 +173,20 @@ public class FacilityDistributionService {
   }
 
   public Map<Long, FacilityDistribution> get(Distribution distribution) {
-    Map<Long, FacilityDistribution> facilityDistributions = new HashMap<>();
-
     List<FacilityVisit> unSyncedFacilities = facilityVisitService.getUnSyncedFacilities(distribution.getId());
-    for (FacilityVisit facilityVisit : unSyncedFacilities) {
-      facilityDistributions.put(facilityVisit.getFacilityId(), getDistributionData(facilityVisit, distribution));
-    }
-    return facilityDistributions;
+    return getFacilityDistributions(distribution, unSyncedFacilities);
   }
 
   public Map<Long, FacilityDistribution> getData(Distribution distribution) {
+    List<FacilityVisit> visits = facilityVisitService.getByDistributionId(distribution.getId());
+    return getFacilityDistributions(distribution, visits);
+  }
+
+  private Map<Long, FacilityDistribution> getFacilityDistributions(Distribution distribution, List<FacilityVisit> unSyncedFacilities) {
     Map<Long, FacilityDistribution> facilityDistributions = new HashMap<>();
 
-    List<FacilityVisit> visits = facilityVisitService.getByDistributionId(distribution.getId());
-    for (FacilityVisit visit : visits) {
-      facilityDistributions.put(visit.getFacilityId(), getDistributionData(visit, distribution));
+    for (FacilityVisit facilityVisit : unSyncedFacilities) {
+      facilityDistributions.put(facilityVisit.getFacilityId(), getDistributionData(facilityVisit, distribution));
     }
 
     return facilityDistributions;

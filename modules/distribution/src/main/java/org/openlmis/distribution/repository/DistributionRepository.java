@@ -31,7 +31,6 @@ public class DistributionRepository {
   @Autowired
   DistributionMapper mapper;
 
-
   public Distribution create(Distribution distribution) {
     distribution.setStatus(DistributionStatus.INITIATED);
     mapper.insert(distribution);
@@ -61,15 +60,15 @@ public class DistributionRepository {
 
   public List<Distribution> getFullSyncedDistributions(Program program, DeliveryZone deliveryZone, ProcessingPeriod period) {
     if (null != deliveryZone && null != period) {
-        return mapper.getFullSyncedDistributionsForProgramAndDeliveryZoneAndPeriod(program.getId(), deliveryZone.getId(), period.getId());
+      return mapper.getFullSyncedDistributionsForProgramAndDeliveryZoneAndPeriod(program.getId(), deliveryZone.getId(), period.getId());
     }
 
     if (null != deliveryZone) {
-        return mapper.getFullSyncedDistributionsForProgramAndDeliveryZone(program.getId(), deliveryZone.getId());
+      return mapper.getFullSyncedDistributionsForProgramAndDeliveryZone(program.getId(), deliveryZone.getId());
     }
 
     if (null != period) {
-        return mapper.getFullSyncedDistributionsForProgramAndPeriod(program.getId(), period.getId());
+      return mapper.getFullSyncedDistributionsForProgramAndPeriod(program.getId(), period.getId());
     }
 
     return mapper.getFullSyncedDistributionsForProgram(program.getId());
