@@ -70,4 +70,12 @@ public class DistributionRefrigeratorsService {
   public DistributionRefrigerators getBy(Long facilityVisitId) {
     return repository.getBy(facilityVisitId);
   }
+
+  public RefrigeratorReading getReading(Long id) {
+    return repository.getReading(id);
+  }
+
+  public void saveReading(RefrigeratorReading reading) {
+    repository.saveReading(reading);
+  }
 }

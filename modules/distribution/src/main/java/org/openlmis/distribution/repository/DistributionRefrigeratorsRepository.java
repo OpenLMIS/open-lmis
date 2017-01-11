@@ -29,6 +29,22 @@ public class DistributionRefrigeratorsRepository {
 
 
   public void saveReading(RefrigeratorReading reading) {
+    if (null != reading.getId()) {
+      updateReading(reading);
+    } else {
+      insertReading(reading);
+    }
+  }
+
+  public DistributionRefrigerators getBy(Long facilityVisitId) {
+    return new DistributionRefrigerators(mapper.getBy(facilityVisitId));
+  }
+
+  public RefrigeratorReading getReading(Long id) {
+    return mapper.getReading(id);
+  }
+
+  private void insertReading(RefrigeratorReading reading) {
     mapper.insertReading(reading);
 
     RefrigeratorProblem problem = reading.getProblem();
@@ -38,7 +54,14 @@ public class DistributionRefrigeratorsRepository {
     }
   }
 
-  public DistributionRefrigerators getBy(Long facilityVisitId) {
-    return new DistributionRefrigerators(mapper.getBy(facilityVisitId));
+  private void updateReading(RefrigeratorReading reading) {
+    mapper.updateReading(reading);
+
+    RefrigeratorProblem problem = reading.getProblem();
+    if (problem != null) {
+      mapper.updateProblem(problem);
+    } else {
+      mapper.deleteProblem(reading.getId());
+    }
   }
 }
