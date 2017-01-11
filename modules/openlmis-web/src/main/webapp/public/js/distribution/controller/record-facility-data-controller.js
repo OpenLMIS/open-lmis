@@ -61,9 +61,17 @@ function RecordFacilityDataController($scope, $location, $routeParams, distribut
     $('[disable-form]').find('input, textarea').prop('disabled', function () { return !value; });
   };
 
+  function onSuccess(data) {
+    $scope.message = data.success;
+  }
+
+  function onFailure(data) {
+    $scope.error = data.error;
+  }
+
   function syncCallback(result) {
     if (result) {
-      alert('Sync ' + editMode(false));
+      $http.post('/review-data/distribution/sync.json', $scope.distribution).success(onSuccess).error(onFailure);
     }
   }
 

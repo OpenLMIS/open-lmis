@@ -1,6 +1,7 @@
 package org.openlmis.web.controller;
 
 import org.openlmis.distribution.domain.Distribution;
+import org.openlmis.distribution.dto.DistributionDTO;
 import org.openlmis.distribution.service.DistributionService;
 import org.openlmis.web.model.ReviewDataFilter;
 import org.openlmis.web.response.OpenLmisResponse;
@@ -18,6 +19,7 @@ import javax.servlet.http.HttpServletRequest;
 
 import static org.openlmis.web.response.OpenLmisResponse.SUCCESS;
 import static org.openlmis.web.response.OpenLmisResponse.response;
+import static org.springframework.http.HttpStatus.CONFLICT;
 import static org.springframework.http.HttpStatus.OK;
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
 import static org.springframework.web.bind.annotation.RequestMethod.POST;
@@ -50,6 +52,19 @@ public class ReviewDataController extends BaseController {
     openLmisResponse.addData(SUCCESS, messageService.message("message.distribution.created.success",
         distribution.getDeliveryZone().getName(), distribution.getProgram().getName(), distribution.getPeriod().getName()));
     return openLmisResponse.response(OK);
+  }
+
+  @RequestMapping(value = "review-data/distribution/sync", method = POST, headers = ACCEPT_JSON)
+  @PreAuthorize("@permissionEvaluator.hasPermission(principal, 'VIEW_SYNCHRONIZED_DATA, EDIT_SYNCHRONIZED_DATA')")
+  public ResponseEntity<OpenLmisResponse> sync(@RequestBody DistributionDTO distribution) {
+    try {
+      OpenLmisResponse response = new OpenLmisResponse();
+      response.addData(SUCCESS, "");
+
+      return response.response(OK);
+    } catch (Exception e) {
+      return OpenLmisResponse.error(e.getMessage(), CONFLICT);
+    }
   }
 
   @RequestMapping(value = "review-data/distribution/lastViewed", method = POST)
