@@ -45,4 +45,6 @@ public class SynchronizedDistribution {
 
     private Boolean edit;
     private Boolean view;
+
+    private Long facilityId;
 }

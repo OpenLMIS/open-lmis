@@ -86,6 +86,11 @@ public class FacilityDistribution {
 
   public FacilityDistributionDTO transform() {
     FacilityDistributionDTO dto = new FacilityDistributionDTO();
+    dto.setFacilityId(facilityId);
+    dto.setFacilityCode(facilityCode);
+    dto.setFacilityName(facilityName);
+    dto.setPopulation(population);
+    dto.setGeographicZone(geographicZone);
     dto.setFacilityVisit(facilityVisit);
     dto.setEpiUse(epiUse.transform());
     dto.setEpiInventory(epiInventory.transform());

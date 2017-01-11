@@ -101,7 +101,7 @@ describe('DistributionListController', function () {
   }
 
   it('should set distributions in scope', function () {
-    expect(scope.sharedDistributions).toBe(sharedDistribution);
+    expect(scope.getDistributions()[0]).toBe(sharedDistribution.distributionList[0]);
   });
 
   it('should refresh shared distributions on load', function () {
@@ -203,7 +203,7 @@ describe('DistributionListController', function () {
       'facilityDistributions': {'44': new FacilityDistribution({status: DistributionStatus.SYNCED, facilityVisit: {id: 1}}),
         '45': new FacilityDistribution({status: DistributionStatus.SYNCED, facilityVisit: {id: 1}})}};
 
-    scope.sharedDistributions.distributionList = [distribution];
+    scope.getDistributions = function () { return [distribution]; };
 
     scope.showConfirmDistributionSync(1);
 

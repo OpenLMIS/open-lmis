@@ -33,6 +33,12 @@ import static org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion.NON_EMPT
 @JsonSerialize(include = NON_EMPTY)
 public class FacilityDistributionDTO {
 
+  private Long facilityId;
+  private String facilityCode;
+  private String facilityName;
+  private Long population;
+  private String geographicZone;
+
   private FacilityVisit facilityVisit;
   private EpiUseDTO epiUse;
   private EpiInventoryDTO epiInventory;
