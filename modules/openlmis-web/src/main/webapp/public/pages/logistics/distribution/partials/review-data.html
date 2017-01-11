@@ -1,0 +1,73 @@
+<!--
+  ~ This program is part of the OpenLMIS logistics management information system platform software.
+  ~ Copyright © 2013 VillageReach
+  ~
+  ~ This program is free software: you can redistribute it and/or modify it under the terms of the GNU Affero General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
+  ~  
+  ~ This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Affero General Public License for more details.
+  ~ You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org. 
+  -->
+<div>
+    <select id="selectProgram" ng-model="filters.selected.program"
+            ng-options="p as p.name for p in filters.filter.programs">
+        <option openlmis-message="label.all"></option>
+    </select>
+    <select id="selectProvince" ng-model="filters.selected.province"
+            ng-options="g as g.name for g in filters.filter.geographicZones">
+        <option openlmis-message="label.all"></option>
+    </select>
+    <select id="selectDeliveryZone" ng-model="filters.selected.deliveryZone"
+            ng-options="d as d.name for d in filters.filter.deliveryZones">
+        <option openlmis-message="label.all"></option>
+    </select>
+    <select id="selectperiod" ng-model="filters.selected.period"
+            ng-options="p as p.name for p in filters.filter.periods">
+        <option openlmis-message="label.all"></option>
+    </select>
+    <div>
+        <p openlmis-message="label.synchronized.distributions.list"></p>
+    </div>
+    <table>
+        <thead>
+            <tr>
+                <th openlmis-message="label.province"></th>
+                <th openlmis-message="label.delivery.zone"></th>
+                <th openlmis-message="label.period"></th>
+                <th openlmis-message="label.initiated"></th>
+                <th openlmis-message="label.synchronized"></th>
+                <th openlmis-message="label.last.viewed"></th>
+                <th openlmis-message="label.last.edited"></th>
+                <th openlmis-message="label.edited.by"></th>
+                <th></th>
+                <th openlmis-message="label.edit.history"></th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>Example province</td>
+                <td>Example delivery zone</td>
+                <td>Example period</td>
+                <td>00/00/0000</td>
+                <td>00/00/0000</td>
+                <td>00/00/0000</td>
+                <td>00/00/0000 00:00</td>
+                <td>Admin</td>
+                <td>Edit Data</td>
+                <td>Download CSV | Print</td>
+            </tr>
+            <tr>
+                <td>Example province</td>
+                <td>Example delivery zone</td>
+                <td>Example period</td>
+                <td>00/00/0000</td>
+                <td>00/00/0000</td>
+                <td>00/00/0000</td>
+                <td></td>
+                <td></td>
+                <td>View Data</td>
+                <td>Download CSV | Print</td>
+            </tr>
+        </tbody>
+    </table>
+    <pre>{{ filters | json }}</pre>
+</div>
