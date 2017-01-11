@@ -201,6 +201,10 @@ public class ReviewDataService {
     return results;
   }
 
+  public void update(FacilityDistributionEditDetail detail) {
+    facilityDistributionEditService.save(detail);
+  }
+
   public File getHistoryAsCSV(Long distributionId) throws IOException {
     String fileName = "history_" + distributionId;
     File tmp = File.createTempFile(fileName, "csv");
