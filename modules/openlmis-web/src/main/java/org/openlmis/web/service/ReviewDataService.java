@@ -15,13 +15,16 @@ import org.openlmis.core.service.UserService;
 import org.openlmis.distribution.domain.Distribution;
 import org.openlmis.distribution.domain.DistributionEdit;
 import org.openlmis.distribution.domain.FacilityDistribution;
-import org.openlmis.distribution.domain.FacilityVisit;
 import org.openlmis.distribution.dto.DistributionDTO;
+import org.openlmis.distribution.dto.FacilityDistributionDTO;
 import org.openlmis.distribution.service.DistributionService;
 import org.openlmis.distribution.service.FacilityDistributionService;
 import org.openlmis.web.model.ReviewDataFilter;
 import org.openlmis.web.model.ReviewDataFilters;
 import org.openlmis.web.model.SynchronizedDistribution;
+import org.openlmis.web.util.FacilityDistributionEditDetail;
+import org.openlmis.web.util.FacilityDistributionEditHandler;
+import org.openlmis.web.util.FacilityDistributionEditResults;
 import org.openlmis.web.util.SynchronizedDistributionComparators;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -61,6 +64,9 @@ public class ReviewDataService {
 
   @Autowired
   private PermissionEvaluator permissionEvaluator;
+
+  @Autowired
+  private FacilityDistributionEditService facilityDistributionEditService;
 
   @Value("${eligibility.edit}")
   private Long eligibilityEdit;
@@ -138,6 +144,32 @@ public class ReviewDataService {
     return distribution.transform();
   }
 
+  public FacilityDistributionEditResults update(Long distributionId, FacilityDistributionDTO replacement, Long userId) {
+    deleteDistributionEdit(distributionId, userId);
+
+    replacement.setModifiedBy(userId);
+
+    Distribution distribution = distributionService.getBy(distributionId);
+    Map<Long, FacilityDistribution> facilityDistributions = facilityDistributionService.getData(distribution);
+    FacilityDistribution original = facilityDistributions.get(replacement.getFacilityId());
+
+    FacilityDistributionEditHandler handler = new FacilityDistributionEditHandler();
+    FacilityDistributionEditResults results = handler.check(original, replacement);
+
+    Iterator<FacilityDistributionEditDetail> iterator = results.getDetails().iterator();
+
+    while (iterator.hasNext()) {
+      FacilityDistributionEditDetail detail = iterator.next();
+
+      if (!detail.isConflict()) {
+        facilityDistributionEditService.save(detail);
+        iterator.remove();
+      }
+    }
+
+    return results;
+  }
+
   private SynchronizedDistribution create(Long userId, Distribution distribution, String geographicZone) {
     SynchronizedDistribution item = new SynchronizedDistribution();
 
@@ -177,4 +209,5 @@ public class ReviewDataService {
     Days days = Days.daysBetween(new DateTime(syncDate), DateTime.now());
     return days.getDays() <= eligibilityEdit;
   }
+
 }
