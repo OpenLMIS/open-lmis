@@ -37,9 +37,15 @@ import static org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion.NON_EMPT
 public class EpiInventoryLineItemDTO extends BaseModel {
 
   private Long facilityVisitId;
+  private Integer idealQuantity;
+  private Integer idealQuantityByPackSize;
   private Reading existingQuantity;
   private Reading spoiledQuantity;
   private Integer deliveredQuantity;
+  private Long programProductId;
+  private String productCode;
+  private String productName;
+  private Integer productDisplayOrder;
 
   public EpiInventoryLineItem transform() {
     EpiInventoryLineItem lineItem = new EpiInventoryLineItem(this.facilityVisitId,
