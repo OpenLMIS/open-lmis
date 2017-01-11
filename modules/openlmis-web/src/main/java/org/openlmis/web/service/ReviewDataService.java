@@ -21,7 +21,6 @@ import org.openlmis.core.domain.Facility;
 import org.openlmis.core.domain.GeographicZone;
 import org.openlmis.core.domain.ProcessingPeriod;
 import org.openlmis.core.domain.Program;
-import org.openlmis.core.domain.User;
 import org.openlmis.core.service.DeliveryZoneService;
 import org.openlmis.core.service.FacilityService;
 import org.openlmis.core.service.MessageService;
@@ -46,8 +45,8 @@ import org.openlmis.web.util.SynchronizedDistributionComparators;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-import org.supercsv.io.CsvBeanWriter;
-import org.supercsv.io.ICsvBeanWriter;
+import org.supercsv.io.CsvMapWriter;
+import org.supercsv.io.ICsvMapWriter;
 import org.supercsv.prefs.CsvPreference;
 
 import java.io.File;
@@ -217,12 +216,11 @@ public class ReviewDataService {
     String fileName = "history_" + distributionId;
     File tmp = File.createTempFile(fileName, ".csv");
 
-    try (ICsvBeanWriter writer = new CsvBeanWriter(new FileWriter(tmp), CsvPreference.STANDARD_PREFERENCE)) {
+    try (ICsvMapWriter writer = new CsvMapWriter(new FileWriter(tmp), CsvPreference.STANDARD_PREFERENCE)) {
       String[] header = getHeader();
       writer.writeHeader(header);
 
       List<DistributionsEditHistory> history = distributionService.getHistory(distributionId);
-      history.add(new DistributionsEditHistory(null,"Bopa", new Facility(null,null,"CS Bopa",null,null,null,false),"EPI Inventory", "Spoiled Quantity BCG", "300", "30", new Date(), new User(null, "admin")));
 
       for (DistributionsEditHistory item : history) {
         Map<String, Object> record = new HashMap<>();
@@ -233,7 +231,7 @@ public class ReviewDataService {
         record.put(header[4], item.getOriginalValue());
         record.put(header[5], item.getNewValue());
         record.put(header[6], item.getEditedDatetime());
-        record.put(header[7], item.getEditedBy());
+        record.put(header[7], item.getEditedBy().getUserName());
 
         writer.write(record, header);
       }
