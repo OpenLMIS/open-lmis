@@ -77,7 +77,8 @@ function ReviewDataController($scope, SynchronizedDistributions, ReviewDataFilte
     function execute(distributionId) {
       distributionService.distributionReview = {
         edit: item.edit,
-        view: item.view
+        view: item.view,
+        editMode: {}
       };
 
       $http.post('/review-data/distribution/lastViewed', distributionId);
