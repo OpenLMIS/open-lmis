@@ -64,14 +64,14 @@ public class FacilityDistributionEditHandler {
     FacilityDistributionEditResults results = new FacilityDistributionEditResults(original.getFacilityId());
 
     try {
-      checkProperties(results, null, original, replacement);
+      checkProperties(results, null, null, original, replacement);
       return results;
     } catch (IllegalAccessException | NoSuchMethodException | InvocationTargetException e) {
       throw new IllegalStateException(e);
     }
   }
 
-  private void checkProperties(FacilityDistributionEditResults results, Object parent, Object original, Object replacement) throws IllegalAccessException, NoSuchMethodException, InvocationTargetException {
+  private void checkProperties(FacilityDistributionEditResults results, Object parent, String parentProperty, Object original, Object replacement) throws IllegalAccessException, NoSuchMethodException, InvocationTargetException {
     Class originalClass = original.getClass();
     Class replacementClass = replacement.getClass();
 
@@ -96,17 +96,17 @@ public class FacilityDistributionEditHandler {
 
         if (previousValue.equals(originalProperty)) {
           // a user works on current version of the given property
-          results.allow(parent, original, originalPropertyName, originalProperty, previousValue, newValue);
+          results.allow(parent, parentProperty, original, originalPropertyName, originalProperty, previousValue, newValue);
           continue;
         }
 
         // a user works on different version of the given property
-        results.deny(parent, original, originalPropertyName, originalProperty, previousValue, newValue);
+        results.deny(parent, parentProperty, original, originalPropertyName, originalProperty, previousValue, newValue);
         continue;
       }
 
-      if (goDeep(replacementPropertyType)) {
-        checkProperties(results, original, originalProperty, replacementProperty);
+      if (isDTO(replacementPropertyType)) {
+        checkProperties(results, original, originalPropertyName, originalProperty, replacementProperty);
       }
     }
   }
@@ -142,9 +142,9 @@ public class FacilityDistributionEditHandler {
     throw new IllegalArgumentException("Unsupported type " + type);
   }
 
-  private boolean goDeep(Class clazz) {
+  private boolean isDTO(Class clazz) {
     String name = clazz.getPackage().getName();
-    return !clazz.equals(Reading.class) && name.startsWith("org.openlmis");
+    return !clazz.equals(Reading.class) && name.startsWith("org.openlmis.distribution.dto");
   }
 
   private String propertyMap(Class clazz, String propertyName) {

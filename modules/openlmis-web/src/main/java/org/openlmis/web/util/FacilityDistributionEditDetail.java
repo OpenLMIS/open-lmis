@@ -15,12 +15,18 @@ import static org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion.NON_EMPT
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class FacilityDistributionEditDetail {
 
-  private Long dataScreenId;
+  private Long parentDataScreenId;
   private String parentDataScreen;
+  private String parentProperty;
+
+  private Long dataScreenId;
   private String dataScreen;
+
   private String editedItem;
+
   private Object originalValue;
   private Object previousValue;
   private Object newValue;
+
   private boolean conflict;
 }
