@@ -86,7 +86,7 @@ public class ReviewDataController extends BaseController {
           item.setDeliveryZone(distribution.getDeliveryZone().getName());
           item.setPeriod(distribution.getPeriod().getName());
           item.setInitiated(distribution.getCreatedDate());
-          item.setSync(null);
+          item.setSync(entry.getValue().getFacilityVisit().getSyncDate());
           item.setLastViewed(null);
           item.setLastEdited(distribution.getModifiedDate());
 

@@ -54,6 +54,7 @@ public class FacilityVisit extends BaseModel {
   private String otherReasonDescription;
 
   private Boolean synced;
+  private Date syncDate;
 
   public FacilityVisit(Facility facility, Distribution distribution) {
     this.distributionId = distribution.getId();
