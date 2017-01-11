@@ -40,4 +40,7 @@ public class SynchronizedDistribution {
     private Date lastEdited;
 
     private String editedBy;
+
+    private Boolean edit;
+    private Boolean view;
 }

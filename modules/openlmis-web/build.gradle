@@ -172,6 +172,7 @@ dependencies {
     'org.testng:testng:6.1.1',
     'com.itextpdf:itextpdf:5.4.0',
     'org.apache.httpcomponents:httpclient:4.1.2',
+    'joda-time:joda-time:2.9.4',
     project(':modules:authentication'),
     project(':modules:requisition'),
     project(':modules:core'),

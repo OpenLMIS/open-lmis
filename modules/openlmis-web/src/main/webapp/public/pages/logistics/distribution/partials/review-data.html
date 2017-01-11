@@ -93,7 +93,14 @@
             <td>{{item.lastViewed}}</td>
             <td>{{item.lastEdited}}</td>
             <td>{{item.editedBy}}</td>
-            <td>Edit Data / View data</td>
+            <td>
+              <a ng-if="item.edit" href="#">
+                <span openlmis-message="label.edit.data"></span>
+              </a>
+              <a ng-if="item.view" href="#">
+                <span openlmis-message="label.view.data"></span>
+              </a>
+            </td>
             <td>Download CSV | Print</td>
           </tr>
           </tbody>
