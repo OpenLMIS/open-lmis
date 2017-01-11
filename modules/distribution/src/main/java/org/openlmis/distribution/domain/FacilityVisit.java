@@ -12,6 +12,7 @@
 
 package org.openlmis.distribution.domain;
 
+import com.google.common.base.Optional;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
@@ -82,6 +83,9 @@ public class FacilityVisit extends BaseModel {
   }
 
   public FacilityVisitDTO transform() {
+    Facilitator confirmedBy = Optional.fromNullable(this.confirmedBy).or(new Facilitator());
+    Facilitator verifiedBy = Optional.fromNullable(this.verifiedBy).or(new Facilitator());
+
     FacilityVisitDTO dto = new FacilityVisitDTO();
     dto.setId(id);
     dto.setCreatedBy(createdBy);
