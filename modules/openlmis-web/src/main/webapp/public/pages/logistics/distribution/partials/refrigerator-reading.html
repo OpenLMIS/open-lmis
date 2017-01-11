@@ -10,10 +10,10 @@
 
 <form auto-save="distribution" object-store="distributions"
       disable-form="{{isFormDisabled()}}">
-<div class="row-fluid" ng-class="refrigeratorReading.computeStatus()">
-    <div class="span1 status-cell">
-        <span class="status-icon"></span>
-    </div>
+<div class="row-fluid" ng-class="refrigeratorReading.computeStatus(distributionReview)">
+  <div class="span1 status-cell">
+    <span class="status-icon"></span>
+  </div>
   <div class="span3" ng-bind="refrigeratorReading.refrigerator.serialNumber"></div>
   <div class="span2" ng-bind="refrigeratorReading.refrigerator.brand"></div>
     <div class="span3" ng-bind="refrigeratorReading.refrigerator.model"></div>

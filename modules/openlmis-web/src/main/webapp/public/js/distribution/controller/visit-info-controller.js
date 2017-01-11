@@ -10,6 +10,7 @@
 
 function VisitInfoController($scope, distributionService, $routeParams) {
   $scope.distribution = distributionService.distribution;
+  $scope.distributionReview = distributionService.distributionReview;
   $scope.selectedFacility = $routeParams.facility;
 
   $scope.convertToDateObject = function (dateText) {

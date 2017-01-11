@@ -69,18 +69,18 @@ function ReviewDataController($scope, SynchronizedDistributions, ReviewDataFilte
         return;
       }
 
-      distribution.review = {
-        edit: item.edit,
-        view: item.view
-      };
-
-      distributionService.save(distribution);
+      distributionService.save(distribution, true);
       $scope.message = message;
       execute(distribution.id);
     }
 
     function execute(distributionId) {
-      $location.path('/record-facility-data/' + distributionId + '/' + item.facilityId + '/visit-info/');
+      distributionService.distributionReview = {
+        edit: item.edit,
+        view: item.view
+      };
+
+      $location.path('/record-facility-data/' + distributionId + '/');
     }
 
     if (!distributionService.isCached(distribution)) {

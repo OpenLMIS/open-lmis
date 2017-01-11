@@ -29,7 +29,10 @@ import static org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion.NON_EMPT
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class OpenedVialLineItemDTO extends BaseModel {
 
+  private Long facilityVisitId;
+  private String productVialName;
   private Reading openedVial;
+  private Integer packSize;
 
   public OpenedVialLineItem transform() {
     OpenedVialLineItem lineItem = new OpenedVialLineItem();

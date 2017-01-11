@@ -22,7 +22,11 @@ function AdultCoverage(facilityVisitId, adultCoverageJSON) {
   });
 }
 
-AdultCoverage.prototype.computeStatus = function () {
+AdultCoverage.prototype.computeStatus = function (review) {
+  if (review) {
+    return DistributionStatus.SYNCED;
+  }
+
   var status;
 
   var isValid = function (field) {

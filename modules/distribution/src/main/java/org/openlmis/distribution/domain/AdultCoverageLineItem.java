@@ -54,10 +54,13 @@ public class AdultCoverageLineItem extends CoverageLineItem {
     dto.setCreatedDate(createdDate);
     dto.setModifiedBy(modifiedBy);
     dto.setModifiedDate(modifiedDate);
+    dto.setDemographicGroup(demographicGroup);
     dto.setHealthCenterTetanus1(new Reading(healthCenterTetanus1));
     dto.setOutreachTetanus1(new Reading(outreachTetanus1));
     dto.setHealthCenterTetanus2To5(new Reading(healthCenterTetanus2To5));
     dto.setOutreachTetanus2To5(new Reading(outreachTetanus2To5));
+    dto.setFacilityVisitId(facilityVisitId);
+    dto.setTargetGroup(targetGroup);
 
     return dto;
   }

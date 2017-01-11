@@ -182,10 +182,10 @@ public class FacilityDistributionService {
     return getFacilityDistributions(distribution, visits);
   }
 
-  private Map<Long, FacilityDistribution> getFacilityDistributions(Distribution distribution, List<FacilityVisit> unSyncedFacilities) {
+  private Map<Long, FacilityDistribution> getFacilityDistributions(Distribution distribution, List<FacilityVisit> facilityVisits) {
     Map<Long, FacilityDistribution> facilityDistributions = new HashMap<>();
 
-    for (FacilityVisit facilityVisit : unSyncedFacilities) {
+    for (FacilityVisit facilityVisit : facilityVisits) {
       facilityDistributions.put(facilityVisit.getFacilityId(), getDistributionData(facilityVisit, distribution));
     }
 

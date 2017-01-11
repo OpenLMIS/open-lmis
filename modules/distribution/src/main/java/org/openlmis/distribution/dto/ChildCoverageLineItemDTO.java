@@ -15,8 +15,8 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.codehaus.jackson.annotate.JsonIgnoreProperties;
 import org.codehaus.jackson.map.annotate.JsonSerialize;
-import org.openlmis.core.domain.BaseModel;
 import org.openlmis.distribution.domain.ChildCoverageLineItem;
+import org.openlmis.distribution.domain.CoverageLineItem;
 
 import static org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion.NON_EMPTY;
 
@@ -28,8 +28,9 @@ import static org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion.NON_EMPT
 @EqualsAndHashCode(callSuper = false)
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonSerialize(include = NON_EMPTY)
-public class ChildCoverageLineItemDTO extends BaseModel {
+public class ChildCoverageLineItemDTO extends CoverageLineItem {
 
+  private String vaccination;
   private Reading healthCenter11Months;
   private Reading outreach11Months;
   private Reading healthCenter23Months;

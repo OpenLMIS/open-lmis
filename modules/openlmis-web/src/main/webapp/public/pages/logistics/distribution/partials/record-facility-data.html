@@ -11,9 +11,9 @@
 <div class="record-facility-data" ng-controller="RecordFacilityDataController">
     <div class="row-fluid facility-heading">
         <div class="span5" ng-show="facilitySelected">
-            
+
           <span id="facilityStatus"
-                ng-class="distribution.facilityDistributions[facilitySelected.facilityId].computeStatus()">
+                ng-class="distribution.facilityDistributions[facilitySelected.facilityId].computeStatus(distributionReview)">
             <div id="facilityIndicator" class="status-icon pull-left position-fixing"></div>
           </span>
 
@@ -28,15 +28,15 @@
             <h2 id="noFacilitySelectedMessage" openlmis-message="message.no.facility.selected"></h2>
         </div>
         <div id="legend" class="pull-right distribution-legend">
-      <span class="is-empty">
+      <span class="is-empty" ng-if="!distributionReview">
         <span id="notStartedLegendIcon" class="status-icon"></span>
         <span id="notStartedLegendLabel" openlmis-message="label.distribution.legend.not.started"></span>
       </span>
-      <span class="is-incomplete">
+      <span class="is-incomplete" ng-if="!distributionReview">
         <span id="partialLegendIcon" class="status-icon"></span>
         <span id="partialLegendLabel" openlmis-message="label.distribution.legend.partial.complete"></span>
       </span>
-      <span class="is-complete">
+      <span class="is-complete" ng-if="!distributionReview">
         <span id="completedLegendIcon" class="status-icon"></span>
         <span id="completedLegendLabel" openlmis-message="label.distribution.legend.not.complete"></span>
       </span>
@@ -44,7 +44,7 @@
         <span id="syncedLegendIcon" class="status-icon"></span>
         <span id="syncedLegendLabel" openlmis-message="label.distribution.legend.synchronized"></span>
       </span>
-      <span class="is-duplicate">
+      <span class="is-duplicate" ng-if="!distributionReview">
         <span id="cannotSyncLegendIcon" class="status-icon"></span>
         <span id="cannotSyncLegendLabel" openlmis-message="label.distribution.legend.cannot.synchronize"></span>
       </span>
@@ -61,7 +61,7 @@
                     <optgroup ng-repeat="zone in geographicZones" label="{{ zone }}">
                         <option ng-repeat="facility in zoneFacilityMap[zone] | orderBy: 'facilityName'"
                                 value="{{ facility.facilityId }}"
-                                ng-class="distribution.facilityDistributions[facility.id].computeStatus()">
+                                ng-class="distribution.facilityDistributions[facility.id].computeStatus(distributionReview)">
                             {{ facility.facilityCode }} - {{ facility.facilityName }}
                         </option>
                     </optgroup>

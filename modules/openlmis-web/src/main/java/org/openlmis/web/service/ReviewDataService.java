@@ -29,6 +29,7 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -83,15 +84,17 @@ public class ReviewDataService {
 
     for (Distribution distribution : distributions) {
       Map<Long, FacilityDistribution> facilityDistributionMap = facilityDistributionService.getData(distribution);
+      Iterator<Map.Entry<Long, FacilityDistribution>> iterator = facilityDistributionMap.entrySet().iterator();
 
-      for (Map.Entry<Long, FacilityDistribution> entry : facilityDistributionMap.entrySet()) {
-        FacilityDistribution value = entry.getValue();
+      if (!iterator.hasNext()) {
+        continue;
+      }
 
-        if (!filter.isProvinceSelected() || value.getGeographicZone().equalsIgnoreCase(filter.getProvince().getName())) {
-          FacilityVisit visit = value.getFacilityVisit();
+      FacilityDistribution value = iterator.next().getValue();
+      String geographicZone = value.getGeographicZone();
 
-          list.add(create(userId, distribution, value, visit));
-        }
+      if (!filter.isProvinceSelected() || geographicZone.equalsIgnoreCase(filter.getProvince().getName())) {
+        list.add(create(userId, distribution, geographicZone));
       }
     }
 
@@ -108,25 +111,23 @@ public class ReviewDataService {
     return distribution.transform();
   }
 
-  private SynchronizedDistribution create(Long userId, Distribution distribution, FacilityDistribution value, FacilityVisit visit) {
+  private SynchronizedDistribution create(Long userId, Distribution distribution, String geographicZone) {
     SynchronizedDistribution item = new SynchronizedDistribution();
 
-    item.setProvince(value.getGeographicZone());
+    item.setProvince(geographicZone);
     item.setDeliveryZone(distribution.getDeliveryZone());
     item.setPeriod(distribution.getPeriod());
 
     item.setInitiated(distribution.getCreatedDate());
-    item.setSync(visit.getSyncDate());
+    item.setSync(distribution.getSyncDate());
 
-    item.setView(isViewable(visit.getSyncDate(), userId));
-    item.setEdit(isEditable(visit.getSyncDate(), userId));
+    item.setView(isViewable(distribution.getSyncDate(), userId));
+    item.setEdit(isEditable(distribution.getSyncDate(), userId));
 
     // those values need to be read from edit history
     item.setLastViewed(null);
     item.setLastEdited(null);
     item.setEditedBy(null);
-
-    item.setFacilityId(value.getFacilityId());
 
     return item;
   }

@@ -15,8 +15,14 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.codehaus.jackson.annotate.JsonIgnoreProperties;
 import org.codehaus.jackson.map.annotate.JsonSerialize;
+import org.openlmis.distribution.domain.DistributionRefrigerators;
+import org.openlmis.distribution.domain.EpiInventory;
+import org.openlmis.distribution.domain.EpiUse;
 import org.openlmis.distribution.domain.FacilityDistribution;
 import org.openlmis.distribution.domain.FacilityVisit;
+import org.openlmis.distribution.domain.VaccinationAdultCoverage;
+import org.openlmis.distribution.domain.VaccinationChildCoverage;
+import org.openlmis.distribution.domain.VaccinationFullCoverage;
 
 import static org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion.NON_EMPTY;
 
@@ -46,6 +52,18 @@ public class FacilityDistributionDTO {
   private VaccinationFullCoverageDTO fullCoverage;
   private ChildCoverageDTO childCoverage;
   private AdultCoverageDTO adultCoverage;
+
+  public FacilityDistributionDTO(FacilityVisit facilityVisit, EpiUseDTO epiUse, EpiInventoryDTO epiInventory,
+                                 DistributionRefrigeratorsDTO refrigerators, VaccinationFullCoverageDTO fullCoverage,
+                                 ChildCoverageDTO childCoverage, AdultCoverageDTO adultCoverage) {
+    this.facilityVisit = facilityVisit;
+    this.epiUse = epiUse;
+    this.refrigerators = refrigerators;
+    this.epiInventory = epiInventory;
+    this.fullCoverage = fullCoverage;
+    this.childCoverage = childCoverage;
+    this.adultCoverage = adultCoverage;
+  }
 
   public FacilityDistribution transform() {
     return new FacilityDistribution(facilityVisit, epiUse.transform(), refrigerators.transform(),

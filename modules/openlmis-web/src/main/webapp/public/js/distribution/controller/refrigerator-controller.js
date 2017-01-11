@@ -10,6 +10,7 @@
 
 function RefrigeratorController($scope, $dialog, IndexedDB, $routeParams, distributionService) {
   $scope.distribution = distributionService.distribution;
+  $scope.distributionReview = distributionService.distributionReview;
   $scope.selectedFacilityId = $routeParams.facility;
 
   $scope.edit = {};

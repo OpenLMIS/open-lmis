@@ -21,6 +21,7 @@ import org.openlmis.core.domain.Program;
 import org.openlmis.distribution.dto.DistributionDTO;
 import org.openlmis.distribution.dto.FacilityDistributionDTO;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -42,6 +43,7 @@ public class Distribution extends BaseModel {
   ProcessingPeriod period;
   DistributionStatus status;
   Map<Long, FacilityDistribution> facilityDistributions;
+  Date syncDate;
 
   @SuppressWarnings("unused")
   public String getZpp() {

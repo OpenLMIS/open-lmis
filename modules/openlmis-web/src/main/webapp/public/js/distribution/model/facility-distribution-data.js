@@ -23,7 +23,11 @@ function FacilityDistribution(facilityDistribution) {
 
   this.status = facilityDistribution.status;
 
-  FacilityDistribution.prototype.computeStatus = function () {
+  FacilityDistribution.prototype.computeStatus = function (review) {
+    if (review) {
+      this.status = DistributionStatus.SYNCED;
+      return this.status;
+    }
 
     var forms = [this.epiUse, this.refrigerators, this.facilityVisit, this.epiInventory, this.fullCoverage, this.childCoverage, this.adultCoverage];
     var overallStatus;

@@ -6,7 +6,6 @@ import org.openlmis.distribution.repository.FacilityVisitRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.Date;
 import java.util.List;
 
 /**
@@ -30,7 +29,6 @@ public class FacilityVisitService {
       throw new DataException("error.facility.already.synced");
     }
     facilityVisit.setSynced(true);
-    facilityVisit.setSyncDate(new Date());
     repository.update(facilityVisit);
     return facilityVisit;
   }

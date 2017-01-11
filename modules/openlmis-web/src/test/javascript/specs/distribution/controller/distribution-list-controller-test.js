@@ -48,8 +48,10 @@ describe('DistributionListController', function () {
         location = $location;
         window = {};
 
-        sharedDistribution = {update: function () {
-        }};
+        sharedDistribution = {
+          update: function () { },
+          isReview: function () { return false; }
+        };
 
         var facilityDistribution1 = new FacilityDistribution(
           {facilityId: 44, 'epiUse': {'productGroups': [

@@ -12,6 +12,7 @@ function RecordFacilityDataController($scope, $location, $routeParams, distribut
   $scope.label = $routeParams.facility ? 'label.change.facility' : "label.select.facility";
 
   $scope.distribution = distributionService.distribution;
+  $scope.distributionReview = distributionService.distributionReview;
   $scope.geographicZones = _.sortBy(_.uniq(_.pluck($scope.distribution.facilityDistributions, 'geographicZone')), function(zone){
     return zone;
   });
@@ -23,7 +24,7 @@ function RecordFacilityDataController($scope, $location, $routeParams, distribut
   $scope.format = function (dropDownObj) {
     if (dropDownObj.element[0].value) {
       var facilityId = utils.parseIntWithBaseTen(dropDownObj.element[0].value);
-      return "<div class='" + $scope.distribution.facilityDistributions[facilityId].computeStatus() + "'>" +
+      return "<div class='" + $scope.distribution.facilityDistributions[facilityId].computeStatus($scope.distributionReview) + "'>" +
         "<span id=" + facilityId + " class='status-icon'></span>" + dropDownObj.text +
         "</div>";
     } else {

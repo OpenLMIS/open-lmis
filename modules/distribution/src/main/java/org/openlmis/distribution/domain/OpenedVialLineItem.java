@@ -57,7 +57,10 @@ public class OpenedVialLineItem extends BaseModel {
     dto.setCreatedDate(createdDate);
     dto.setModifiedBy(modifiedBy);
     dto.setModifiedDate(modifiedDate);
+    dto.setFacilityVisitId(facilityVisitId);
+    dto.setProductVialName(productVialName);
     dto.setOpenedVial(new Reading(openedVials));
+    dto.setPackSize(packSize);
 
     return dto;
   }
