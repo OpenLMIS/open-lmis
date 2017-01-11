@@ -22,9 +22,6 @@ import org.openlmis.core.domain.Refrigerator;
 import org.openlmis.distribution.dto.Reading;
 import org.openlmis.distribution.dto.RefrigeratorReadingDTO;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import static org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion.NON_EMPTY;
 
 /**
@@ -58,16 +55,12 @@ public class RefrigeratorReading extends BaseModel {
 
   public void setCreatedBy(Long createdBy) {
     this.createdBy = createdBy;
-    if (this.problem != null) {
-      this.problem.setCreatedBy(createdBy);
-    }
+    this.problem.setCreatedBy(createdBy);
   }
 
   public void setModifiedBy(Long modifiedBy) {
     this.modifiedBy = modifiedBy;
-    if (this.problem != null) {
-      this.problem.setModifiedBy(modifiedBy);
-    }
+    this.problem.setModifiedBy(modifiedBy);
   }
 
   public RefrigeratorReadingDTO transform() {
@@ -84,7 +77,7 @@ public class RefrigeratorReading extends BaseModel {
     dto.setLowAlarmEvents(new Reading(lowAlarmEvents));
     dto.setHighAlarmEvents(new Reading(highAlarmEvents));
     dto.setProblemSinceLastTime(new Reading(problemSinceLastTime));
-    dto.setProblems(problem);
+    dto.setProblems(problem.transform());
     dto.setNotes(notes);
 
     return dto;

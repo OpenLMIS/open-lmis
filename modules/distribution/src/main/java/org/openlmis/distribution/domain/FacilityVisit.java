@@ -91,8 +91,8 @@ public class FacilityVisit extends BaseModel {
     dto.setDistributionId(distributionId);
     dto.setFacilityId(facilityId);
     dto.setFacilityCatchmentPopulation(facilityCatchmentPopulation);
-    dto.setConfirmedBy(confirmedBy);
-    dto.setVerifiedBy(verifiedBy);
+    dto.setConfirmedBy(confirmedBy.transform());
+    dto.setVerifiedBy(verifiedBy.transform());
     dto.setObservations(new Reading(observations));
     dto.setVisitDate(new Reading(visitDate, "MM/dd/yyyy"));
     dto.setVisited(new Reading(visited));

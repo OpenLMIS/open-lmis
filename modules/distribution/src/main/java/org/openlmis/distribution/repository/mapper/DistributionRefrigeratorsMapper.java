@@ -10,7 +10,6 @@
 
 package org.openlmis.distribution.repository.mapper;
 
-import org.apache.ibatis.annotations.Delete;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.One;
 import org.apache.ibatis.annotations.Options;
@@ -58,9 +57,6 @@ public interface DistributionRefrigeratorsMapper {
       "other = COALESCE(#{other}, FALSE), otherProblemExplanation = #{otherProblemExplanation}, modifiedBy = #{modifiedBy}, modifiedDate=DEFAULT"})
   void updateProblem(RefrigeratorProblem problem);
 
-  @Delete({"DELETE FROM refrigerator_problems WHERE readingId = #{readingId}"})
-  void deleteProblem(Long readingId);
-
   @Select({"SELECT * FROM refrigerator_readings where facilityVisitId = #{facilityVisitId} ORDER BY LOWER(refrigeratorSerialNumber)"})
   @Results(value = {
       @Result(column = "refrigeratorId", property = "refrigerator.id"),
@@ -85,4 +81,7 @@ public interface DistributionRefrigeratorsMapper {
       @Result(column = "id", property = "problem", javaType = RefrigeratorProblem.class, one = @One(select = "getProblemByReadingId")),
   })
   RefrigeratorReading getReading(Long id);
+
+  @Select({"SELECT * FROM refrigerator_problems where id = #{id}"})
+  RefrigeratorProblem getProblem(Long id);
 }
