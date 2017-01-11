@@ -15,6 +15,7 @@ import org.apache.ibatis.annotations.*;
 import org.openlmis.distribution.domain.Distribution;
 import org.openlmis.distribution.domain.DistributionEdit;
 import org.openlmis.distribution.domain.DistributionStatus;
+import org.openlmis.distribution.domain.DistributionsEditHistory;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -149,4 +150,30 @@ public interface DistributionMapper {
 
   @Delete("DELETE FROM distribution_edits WHERE distributionId = #{distributionId} AND userId = #{userId}")
   void deleteDistributionEdit(@Param("distributionId") Long distributionId, @Param("userId") Long userId);
+
+  @Insert({"INSERT INTO distributions_edit_history (distributionId, district, facilityId, dataScreen, editedItem, originalValue, newValue, editedBy) VALUES",
+          "(#{distribution.id), #{district}, #{facility.id}, #{dataScreen}, #{editedItem}, #{originalValue}, #{newValue}, #{editedBy}"})
+  void insertHistory(DistributionsEditHistory history);
+
+  @Select({"SELECT * FROM distributions_edit_history WHERE distributionId = #{distributionId} ORDER BY editedDatetime ASC"})
+  @Results(value = {
+          @Result(property = "distribution", column = "distributionId", javaType = Long.class,
+                  one = @One(select = "getBy")),
+          @Result(property = "facility", column = "facilityId", javaType = Long.class,
+                  one = @One(select = "org.openlmis.core.repository.mapper.FacilityMapper.getById")),
+          @Result(property = "editedBy", column = "editedBy", javaType = Long.class,
+                  one = @One(select = "org.openlmis.core.repository.mapper.UserMapper.getById"))
+  })
+  List<DistributionsEditHistory> getHistory(@Param("distributionId") Long distributionId);
+
+  @Select({"SELECT * FROM distributions_edit_history WHERE distributionId = #{distributionId} ORDER BY editedDatetime DESC LIMIT 1"})
+  @Results(value = {
+          @Result(property = "distribution", column = "distributionId", javaType = Long.class,
+                  one = @One(select = "getBy")),
+          @Result(property = "facility", column = "facilityId", javaType = Long.class,
+                  one = @One(select = "org.openlmis.core.repository.mapper.FacilityMapper.getById")),
+          @Result(property = "editedBy", column = "editedBy", javaType = Long.class,
+                  one = @One(select = "org.openlmis.core.repository.mapper.UserMapper.getById"))
+  })
+  DistributionsEditHistory getLastHistory(Long distributionId);
 }

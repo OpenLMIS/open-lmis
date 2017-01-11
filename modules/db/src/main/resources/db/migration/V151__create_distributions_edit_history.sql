@@ -16,6 +16,6 @@ CREATE TABLE distributions_edit_history (
   editedItem        VARCHAR(500) NOT NULL,
   originalValue     VARCHAR(500) NOT NULL,
   newValue          VARCHAR(500) NOT NULL,
-  editedDatetime    TIMESTAMP NOT NULL,
+  editedDatetime    TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
   editedBy          INTEGER NOT NULL REFERENCES users (id)
 );

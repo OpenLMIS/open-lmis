@@ -16,11 +16,11 @@ import org.openlmis.core.domain.Program;
 import org.openlmis.distribution.domain.Distribution;
 import org.openlmis.distribution.domain.DistributionEdit;
 import org.openlmis.distribution.domain.DistributionStatus;
+import org.openlmis.distribution.domain.DistributionsEditHistory;
 import org.openlmis.distribution.repository.mapper.DistributionMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
-import java.util.Date;
 import java.util.List;
 
 /**
@@ -102,4 +102,18 @@ public class DistributionRepository {
   public void deleteDistributionEdit(Long distributionId, Long userId) {
     mapper.deleteDistributionEdit(distributionId, userId);
   }
+
+  public List<DistributionsEditHistory> getHistory(Long distributionId) {
+    return mapper.getHistory(distributionId);
+  }
+
+  public DistributionsEditHistory getLastHistory(Long distributionId) {
+    return mapper.getLastHistory(distributionId);
+  }
+
+  public void insertHistory(DistributionsEditHistory history) {
+    mapper.insertHistory(history);
+  }
+
+
 }

@@ -131,7 +131,15 @@
                 <span openlmis-message="label.view.data"></span>
               </a>
             </td>
-            <td>Download CSV | Print</td>
+            <td>
+              <a href="/review-data/distribution/{{item.distributionId}}/csv">
+                <span openlmis-message="link.download.csv"></span>
+              </a>
+              <span> | </span>
+              <a href="/review-data/distribution/{{item.distributionId}}/pdf">
+                <span openlmis-message="button.print"></span>
+              </a>
+            </td>
           </tr>
           </tbody>
         </table>
