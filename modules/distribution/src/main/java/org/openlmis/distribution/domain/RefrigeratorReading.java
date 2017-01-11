@@ -58,8 +58,9 @@ public class RefrigeratorReading extends BaseModel {
 
     if (null == problem) {
       this.problem = new RefrigeratorProblem(id);
-      this.problem.setCreatedBy(createdBy);
     }
+
+    this.problem.setCreatedBy(createdBy);
   }
 
   public void setModifiedBy(Long modifiedBy) {
@@ -67,8 +68,9 @@ public class RefrigeratorReading extends BaseModel {
 
     if (null == problem) {
       this.problem = new RefrigeratorProblem(id);
-      this.problem.setModifiedBy(modifiedBy);
     }
+
+    this.problem.setModifiedBy(modifiedBy);
   }
 
   public RefrigeratorReadingDTO transform() {
