@@ -54,6 +54,10 @@ public class DistributionRepository {
     return mapper.getBy(distributionId);
   }
 
+  public Distribution getFullSyncedDistribution(Distribution distribution) {
+    return mapper.getFullSyncedDistribution(distribution);
+  }
+
   public List<Distribution> getFullSyncedDistributions() {
     return mapper.getFullSyncedDistributions();
   }

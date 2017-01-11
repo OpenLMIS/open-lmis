@@ -80,6 +80,10 @@ public class DistributionService {
     return repository.getBy(distributionId);
   }
 
+  public Distribution getFullSyncedDistribution(Distribution distribution) {
+    return repository.getFullSyncedDistribution(distribution);
+  }
+
   public List<Distribution> getFullSyncedDistributions() {
     return repository.getFullSyncedDistributions();
   }

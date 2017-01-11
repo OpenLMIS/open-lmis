@@ -13,6 +13,10 @@
     <span openlmis-message="link.review.data"></span>
   </h2>
 
+  <br/>
+
+  <div class="alert alert-success" id="saveSuccessMsgDiv" fade-out="3000" openlmis-message="message" ng-show="message"></div>
+
   <div class="app-form">
     <div id="filter-section" class="form-group">
       <div class="form-row clearfix">
@@ -112,18 +116,18 @@
           <tbody>
           <tr ng-repeat="item in distributionsList.list">
             <td>{{item.province}}</td>
-            <td>{{item.deliveryZone}}</td>
-            <td>{{item.period}}</td>
+            <td>{{item.deliveryZone.name}}</td>
+            <td>{{item.period.name}}</td>
             <td>{{item.initiated}}</td>
             <td>{{item.synchronized}}</td>
             <td>{{item.lastViewed}}</td>
             <td>{{item.lastEdited}}</td>
             <td>{{item.editedBy}}</td>
             <td>
-              <a ng-if="item.edit" href="#">
+              <a ng-if="item.edit" ng-click="cacheData(item, 'edit')" style="cursor: pointer;">
                 <span openlmis-message="label.edit.data"></span>
               </a>
-              <a ng-if="item.view" href="#">
+              <a ng-if="item.view" ng-click="cacheData(item, 'view')" style="cursor: pointer;">
                 <span openlmis-message="label.view.data"></span>
               </a>
             </td>

@@ -8,31 +8,36 @@
  * You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org. 
  */
 
-distributionModule.service('SharedDistributions', function (IndexedDB, $rootScope) {
+function createSharedDistributions(name) {
+  return ['IndexedDB', '$rootScope', function (IndexedDB, $rootScope) {
 
-  this.distributionList = [];
+    this.distributionList = [];
 
-  var thisService = this;
+    var thisService = this;
 
-  this.update = function () {
-    IndexedDB.execute(function (connection) {
-      var transaction = connection.transaction('distributions');
+    this.update = function () {
+      IndexedDB.execute(function (connection) {
+        var transaction = connection.transaction(name);
 
-      var cursorRequest = transaction.objectStore('distributions').openCursor();
-      var aggregate = [];
+        var cursorRequest = transaction.objectStore(name).openCursor();
+        var aggregate = [];
 
-      cursorRequest.onsuccess = function (event) {
-        var cursor = event.target.result;
-        if (cursor) {
-          aggregate.push(new Distribution(cursor.value));
-          cursor['continue']();
-        }
-      };
+        cursorRequest.onsuccess = function (event) {
+          var cursor = event.target.result;
+          if (cursor) {
+            aggregate.push(new Distribution(cursor.value));
+            cursor['continue']();
+          }
+        };
 
-      transaction.oncomplete = function (e) {
-        thisService.distributionList = aggregate;
-        if (!$rootScope.$$phase)$rootScope.$apply();
-      };
-    });
-  };
-});
+        transaction.oncomplete = function (e) {
+          thisService.distributionList = aggregate;
+          if (!$rootScope.$$phase)$rootScope.$apply();
+        };
+      });
+    };
+  }];
+}
+
+distributionModule.service('SharedDistributions', createSharedDistributions('distributions'));
+distributionModule.service('ReviewSharedDistributions', createSharedDistributions('reviewDistributions'));

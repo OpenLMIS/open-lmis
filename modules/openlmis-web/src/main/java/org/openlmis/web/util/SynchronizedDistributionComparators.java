@@ -41,13 +41,13 @@ public final class SynchronizedDistributionComparators {
         DELIVERY_ZONE {
             @Override
             public int compare(SynchronizedDistribution a, SynchronizedDistribution b) {
-                return compare(a.getDeliveryZone(), b.getDeliveryZone());
+                return compare(a.getDeliveryZone().getName(), b.getDeliveryZone().getName());
             }
         },
         PERIOD {
             @Override
             public int compare(SynchronizedDistribution a, SynchronizedDistribution b) {
-                return compare(a.getPeriod(), b.getPeriod());
+                return compare(a.getPeriod().getName(), b.getPeriod().getName());
             }
         },
         INITIATED {
