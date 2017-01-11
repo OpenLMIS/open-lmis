@@ -44,6 +44,14 @@ public class RefrigeratorProblemDTO extends BaseModel {
   Reading otherProblemExplanation;
 
   public RefrigeratorProblem transform() {
+    Boolean operatorError = Reading.safeRead(this.operatorError).parseBoolean();
+    Boolean burnerProblem = Reading.safeRead(this.burnerProblem).parseBoolean();
+    Boolean gasLeakage = Reading.safeRead(this.gasLeakage).parseBoolean();
+    Boolean egpFault = Reading.safeRead(this.egpFault).parseBoolean();
+    Boolean thermostatSetting = Reading.safeRead(this.thermostatSetting).parseBoolean();
+    Boolean other = Reading.safeRead(this.other).parseBoolean();
+    String effectiveValue = Reading.safeRead(otherProblemExplanation).getEffectiveValue();
+
     RefrigeratorProblem problem = new RefrigeratorProblem();
     problem.setId(id);
     problem.setCreatedBy(createdBy);
@@ -51,13 +59,13 @@ public class RefrigeratorProblemDTO extends BaseModel {
     problem.setModifiedBy(modifiedBy);
     problem.setModifiedDate(modifiedDate);
     problem.setReadingId(readingId);
-    problem.setOperatorError(operatorError.parseBoolean());
-    problem.setBurnerProblem(burnerProblem.parseBoolean());
-    problem.setGasLeakage(gasLeakage.parseBoolean());
-    problem.setEgpFault(egpFault.parseBoolean());
-    problem.setThermostatSetting(thermostatSetting.parseBoolean());
-    problem.setOther(other.parseBoolean());
-    problem.setOtherProblemExplanation(otherProblemExplanation.getEffectiveValue());
+    problem.setOperatorError(operatorError);
+    problem.setBurnerProblem(burnerProblem);
+    problem.setGasLeakage(gasLeakage);
+    problem.setEgpFault(egpFault);
+    problem.setThermostatSetting(thermostatSetting);
+    problem.setOther(other);
+    problem.setOtherProblemExplanation(effectiveValue);
 
     return problem;
   }

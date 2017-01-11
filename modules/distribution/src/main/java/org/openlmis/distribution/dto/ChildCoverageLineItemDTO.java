@@ -37,18 +37,19 @@ public class ChildCoverageLineItemDTO extends CoverageLineItem {
   private Reading outreach23Months;
 
   public ChildCoverageLineItem transform() {
+    Integer healthCenter11Months = Reading.safeRead(this.healthCenter11Months).parsePositiveInt();
+    Integer healthCenter23Months = Reading.safeRead(this.healthCenter23Months).parsePositiveInt();
+    Integer outreach11Months = Reading.safeRead(this.outreach11Months).parsePositiveInt();
+    Integer outreach23Months = Reading.safeRead(this.outreach23Months).parsePositiveInt();
+
     ChildCoverageLineItem lineItem = new ChildCoverageLineItem();
-    lineItem.setHealthCenter11Months(getSafely(healthCenter11Months).parsePositiveInt());
-    lineItem.setHealthCenter23Months(getSafely(healthCenter23Months).parsePositiveInt());
-    lineItem.setOutreach11Months(getSafely(outreach11Months).parsePositiveInt());
-    lineItem.setOutreach23Months(getSafely(outreach23Months).parsePositiveInt());
+    lineItem.setHealthCenter11Months(healthCenter11Months);
+    lineItem.setHealthCenter23Months(healthCenter23Months);
+    lineItem.setOutreach11Months(outreach11Months);
+    lineItem.setOutreach23Months(outreach23Months);
     lineItem.setId(this.id);
     lineItem.setModifiedBy(this.modifiedBy);
 
     return lineItem;
-  }
-
-  private Reading getSafely(Reading input) {
-    return Optional.fromNullable(input).or(Reading.EMPTY);
   }
 }

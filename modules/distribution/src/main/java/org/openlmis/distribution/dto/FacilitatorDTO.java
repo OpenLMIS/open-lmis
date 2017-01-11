@@ -1,6 +1,5 @@
 package org.openlmis.distribution.dto;
 
-import com.google.common.base.Optional;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -19,8 +18,8 @@ public class FacilitatorDTO {
   private Reading title;
 
   public Facilitator transform() {
-    String name = Optional.fromNullable(this.name).or(Reading.EMPTY).getEffectiveValue();
-    String title = Optional.fromNullable(this.title).or(Reading.EMPTY).getEffectiveValue();
+    String name = Reading.safeRead(this.name).getEffectiveValue();
+    String title = Reading.safeRead(this.title).getEffectiveValue();
 
     return new Facilitator(name, title);
   }

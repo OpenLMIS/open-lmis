@@ -54,13 +54,13 @@ public class FacilityVisitDTO extends BaseModel {
   public FacilityVisit transform() {
     FacilitatorDTO confirmedBy = Optional.fromNullable(this.confirmedBy).or(new FacilitatorDTO());
     FacilitatorDTO verifiedBy = Optional.fromNullable(this.verifiedBy).or(new FacilitatorDTO());
-    String observations = Optional.fromNullable(this.observations).or(Reading.EMPTY).getEffectiveValue();
-    Date visitDate = Optional.fromNullable(this.visitDate).or(Reading.EMPTY).parseDate();
-    Boolean visited = Optional.fromNullable(this.visited).or(Reading.EMPTY).parseBoolean();
-    String vehicleId = Optional.fromNullable(this.vehicleId).or(Reading.EMPTY).getEffectiveValue();
+    String observations = Reading.safeRead(this.observations).getEffectiveValue();
+    Date visitDate = Reading.safeRead(this.visitDate).parseDate();
+    Boolean visited = Reading.safeRead(this.visited).parseBoolean();
+    String vehicleId = Reading.safeRead(this.vehicleId).getEffectiveValue();
     ReasonForNotVisiting reasonForNotVisiting = null;
-    String otherReasonDescription = Optional.fromNullable(this.otherReasonDescription).or(Reading.EMPTY).getEffectiveValue();
-    Boolean synced = Optional.fromNullable(this.synced).or(Reading.EMPTY).parseBoolean();
+    String otherReasonDescription = Reading.safeRead(this.otherReasonDescription).getEffectiveValue();
+    Boolean synced = Reading.safeRead(this.synced).parseBoolean();
 
     if (null != this.reasonForNotVisiting && isFalse(this.reasonForNotVisiting.getNotRecorded())) {
       reasonForNotVisiting = ReasonForNotVisiting.valueOf(this.reasonForNotVisiting.getEffectiveValue());

@@ -25,8 +25,10 @@ function EpiInventory(epiInventory) {
   };
 
   function isValid(lineItem, field) {
-    if (isUndefined(lineItem[field]) || field === 'deliveredQuantity')
-      return !isUndefined(lineItem[field]);
+    if (isUndefined(lineItem[field]) || field === 'deliveredQuantity') {
+      return !isUndefined(lineItem[field]) && !isUndefined(lineItem[field].value);
+    }
+
     return (!isUndefined(lineItem[field].value) || lineItem[field].notRecorded);
   }
 

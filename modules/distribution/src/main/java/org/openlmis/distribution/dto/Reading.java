@@ -10,6 +10,7 @@
 
 package org.openlmis.distribution.dto;
 
+import com.google.common.base.Optional;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.codehaus.jackson.map.annotate.JsonDeserialize;
@@ -36,7 +37,11 @@ import static org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion.NON_EMPT
 @JsonDeserialize(using = DistributionReadingDeSerializer.class)
 @JsonSerialize(include = NON_EMPTY)
 public class Reading {
-  public static final Reading EMPTY = new Reading();
+  private static final Reading EMPTY = new Reading();
+
+  public static Reading safeRead(Reading reading) {
+    return Optional.fromNullable(reading).or(EMPTY);
+  }
 
   private Reading original;
   private String value;

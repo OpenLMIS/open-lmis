@@ -36,13 +36,19 @@ public class AdultCoverageLineItemDTO extends CoverageLineItem {
   private Reading outreachTetanus2To5;
 
   public AdultCoverageLineItem transform() {
+    Integer healthCenterTetanus1 = Reading.safeRead(this.healthCenterTetanus1).parsePositiveInt();
+    Integer outreachTetanus1 = Reading.safeRead(this.outreachTetanus1).parsePositiveInt();
+    Integer healthCenterTetanus2To5 = Reading.safeRead(this.healthCenterTetanus2To5).parsePositiveInt();
+    Integer outreachTetanus2To5 = Reading.safeRead(this.outreachTetanus2To5).parsePositiveInt();
+
     AdultCoverageLineItem adultCoverageLineItem = new AdultCoverageLineItem();
     adultCoverageLineItem.setId(this.id);
-    adultCoverageLineItem.setHealthCenterTetanus1(this.healthCenterTetanus1.parsePositiveInt());
-    adultCoverageLineItem.setOutreachTetanus1(this.outreachTetanus1.parsePositiveInt());
-    adultCoverageLineItem.setHealthCenterTetanus2To5(this.healthCenterTetanus2To5.parsePositiveInt());
-    adultCoverageLineItem.setOutreachTetanus2To5(this.outreachTetanus2To5.parsePositiveInt());
+    adultCoverageLineItem.setHealthCenterTetanus1(healthCenterTetanus1);
+    adultCoverageLineItem.setOutreachTetanus1(outreachTetanus1);
+    adultCoverageLineItem.setHealthCenterTetanus2To5(healthCenterTetanus2To5);
+    adultCoverageLineItem.setOutreachTetanus2To5(outreachTetanus2To5);
     adultCoverageLineItem.setModifiedBy(this.modifiedBy);
+
     return adultCoverageLineItem;
   }
 }
