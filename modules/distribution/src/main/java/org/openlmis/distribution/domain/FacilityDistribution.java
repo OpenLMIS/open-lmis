@@ -41,6 +41,7 @@ public class FacilityDistribution {
   private String facilityName;
   private Long population;
   private String geographicZone;
+  private String facilityTypeCode;
   private FacilityVisit facilityVisit;
   private EpiUse epiUse;
   private DistributionRefrigerators refrigerators;
@@ -82,6 +83,7 @@ public class FacilityDistribution {
     this.facilityName = facility.getName();
     this.population = facility.getCatchmentPopulation();
     this.geographicZone = facility.getGeographicZone().getName();
+    this.facilityTypeCode = facility.getFacilityType().getCode();
   }
 
   public FacilityDistributionDTO transform() {
@@ -89,6 +91,7 @@ public class FacilityDistribution {
     dto.setFacilityId(facilityId);
     dto.setFacilityCode(facilityCode);
     dto.setFacilityName(facilityName);
+    dto.setFacilityTypeCode(facilityTypeCode);
     dto.setPopulation(population);
     dto.setGeographicZone(geographicZone);
     dto.setFacilityVisit(facilityVisit.transform());

@@ -29,7 +29,8 @@ describe("RecordFacilityMenuController", function () {
         },
           facilityVisit: {
             id: 1
-          }
+          },
+          facilityTypeCode: 'lvl3_hospital'
         }
       }
     });

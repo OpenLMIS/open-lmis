@@ -29,9 +29,15 @@ public class VaccinationCoverageService {
   private VaccinationCoverageRepository repository;
 
   public void save(FacilityDistribution facilityDistribution) {
-    repository.saveFullCoverage(facilityDistribution.getFullCoverage());
-    repository.saveChildCoverage(facilityDistribution.getChildCoverage());
-    repository.saveAdultCoverage(facilityDistribution.getAdultCoverage());
+    if(facilityDistribution.getFullCoverage() != null) {
+      repository.saveFullCoverage(facilityDistribution.getFullCoverage());
+    }
+    if(facilityDistribution.getChildCoverage() != null) {
+      repository.saveChildCoverage(facilityDistribution.getChildCoverage());
+    }
+    if(facilityDistribution.getAdultCoverage() != null) {
+      repository.saveAdultCoverage(facilityDistribution.getAdultCoverage());
+    }
   }
 
   public VaccinationFullCoverage getFullCoverageBy(Long facilityVisitId) {

@@ -16,8 +16,12 @@ import org.openlmis.db.categories.UnitTests;
 import org.openlmis.distribution.domain.*;
 
 import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertThat;
+import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @Category(UnitTests.class)
@@ -66,6 +70,26 @@ public class FacilityDistributionDTOTest {
     assertThat(facilityDistribution.getEpiInventory(), is(epiInventory));
     assertThat(facilityDistribution.getChildCoverage(), is(childCoverage));
     assertThat(facilityDistribution.getAdultCoverage(), is(adultCoverage));
+  }
+
+  @Test
+  public void shouldNotTransformEmptyCoverageDTO() {
+    FacilityVisitDTO facilityVisitDto = new FacilityVisitDTO();
+    EpiUseDTO epiUseDTO = mock(EpiUseDTO.class);
+    DistributionRefrigeratorsDTO distributionRefrigeratorsDTO = mock(DistributionRefrigeratorsDTO.class);
+    EpiInventoryDTO epiInventoryDTO = mock(EpiInventoryDTO.class);
+    ChildCoverageDTO childCoverageDTO = null;
+    AdultCoverageDTO adultCoverageDTO = null;
+    VaccinationFullCoverageDTO coverageDTO = null;
+
+    FacilityDistributionDTO facilityDistributionDTO = new FacilityDistributionDTO(facilityVisitDto, epiUseDTO,
+        epiInventoryDTO, distributionRefrigeratorsDTO, coverageDTO, childCoverageDTO, adultCoverageDTO);
+
+    FacilityDistribution facilityDistribution = facilityDistributionDTO.transform();
+
+    assertNull(facilityDistribution.getAdultCoverage());
+    assertNull(facilityDistribution.getFullCoverage());
+    assertNull(facilityDistribution.getChildCoverage());
   }
 
   @Test
