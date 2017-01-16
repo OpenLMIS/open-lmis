@@ -14,7 +14,7 @@
 datepicker.regional.pt = {
 	closeText: "Fechar",
 	prevText: "Ante",
-	nextText: "Segu",
+	nextText: "Prox",
 	currentText: "Hoje",
 	monthNames: [ "Janeiro","Fevereiro","Março","Abril","Maio","Junho",
 	"Julho","Agosto","Setembro","Outubro","Novembro","Dezembro" ],
