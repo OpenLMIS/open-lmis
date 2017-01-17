@@ -14,6 +14,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+import org.apache.commons.lang.ObjectUtils;
 import org.openlmis.core.domain.Facility;
 import org.openlmis.core.domain.ProcessingPeriod;
 import org.openlmis.distribution.dto.ChildCoverageDTO;
@@ -22,6 +23,7 @@ import org.openlmis.distribution.dto.OpenedVialLineItemDTO;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import static java.util.Arrays.asList;
@@ -74,6 +76,13 @@ public class VaccinationChildCoverage extends VaccinationCoverage {
     for (ChildCoverageLineItem childCoverageLineItem : this.childCoverageLineItems) {
       childCoverageLineItems.add(childCoverageLineItem.transform());
     }
+
+    Collections.sort(childCoverageLineItems, new Comparator<ChildCoverageLineItemDTO>() {
+      @Override
+      public int compare(ChildCoverageLineItemDTO o1, ChildCoverageLineItemDTO o2) {
+        return ObjectUtils.compare(o1.getId(), o2.getId());
+      }
+    });
 
     List<OpenedVialLineItemDTO> openedVialLineItems = new ArrayList<>();
     for (OpenedVialLineItem openedVialLineItem : this.openedVialLineItems) {
