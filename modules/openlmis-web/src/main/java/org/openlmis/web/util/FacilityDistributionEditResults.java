@@ -51,7 +51,7 @@ public class FacilityDistributionEditResults {
                       Object replacementProperty, boolean conflict, String addictional) {
     FacilityDistributionEditDetail detail = new FacilityDistributionEditDetail();
 
-    detail.setParentDataScreenId(parent instanceof BaseModel ? ((BaseModel) original).getId() : null);
+    detail.setParentDataScreenId(parent instanceof BaseModel ? ((BaseModel) parent).getId() : null);
     detail.setParentDataScreen(parent.getClass().getSimpleName());
     detail.setParentProperty(parentProperty);
 
