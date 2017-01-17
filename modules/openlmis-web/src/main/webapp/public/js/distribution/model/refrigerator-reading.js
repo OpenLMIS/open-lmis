@@ -60,7 +60,8 @@ function RefrigeratorReading(facilityVisitId, refrigeratorReading) {
         if (!_this.problems || !hasAtLeastOneProblem)
           statusClass = DistributionStatus.INCOMPLETE;
 
-        if (hasAtLeastOneProblem && !isEmpty(_this.problems.other) && isEmpty(_this.problems.otherProblemExplanation)) {
+        if (hasAtLeastOneProblem && _this.problems.other && _this.problems.other.value
+          && (!_this.problems.otherProblemExplanation || !_this.problems.otherProblemExplanation.value)) {
           statusClass = DistributionStatus.INCOMPLETE;
         }
       }
