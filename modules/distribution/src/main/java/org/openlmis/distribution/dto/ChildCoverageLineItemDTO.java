@@ -10,7 +10,6 @@
 
 package org.openlmis.distribution.dto;
 
-import com.google.common.base.Optional;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.codehaus.jackson.annotate.JsonIgnoreProperties;
@@ -31,6 +30,7 @@ import static org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion.NON_EMPT
 public class ChildCoverageLineItemDTO extends CoverageLineItem {
 
   private String vaccination;
+  private Integer displayOrder;
   private Reading healthCenter11Months;
   private Reading outreach11Months;
   private Reading healthCenter23Months;

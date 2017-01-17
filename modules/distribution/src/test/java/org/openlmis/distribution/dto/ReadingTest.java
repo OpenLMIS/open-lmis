@@ -17,13 +17,23 @@ import org.junit.rules.ExpectedException;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.db.categories.UnitTests;
 
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
+
 import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.hamcrest.CoreMatchers.nullValue;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 
 @Category(UnitTests.class)
 public class ReadingTest {
+  private static final String[] DATE_FORMATS = {
+      "MM/yy", "MM/yyyy", "yy/MM", "yyyy/MM", "dd/MM/yy", "dd/MM/yyyy", "MM/dd/yy", "MM/dd/yyyy", "yy/MM/dd", "yyyy/MM/dd",
+      "MM-yy", "MM-yyyy", "yy-MM", "yyyy-MM", "dd-MM-yy", "dd-MM-yyyy", "MM-dd-yy", "MM-dd-yyyy", "yy-MM-dd", "yyyy-MM-dd",
+      "MMyy", "MMyyyy", "yyMM", "yyyyMM", "ddMMyy", "ddMMyyyy", "MMddyy", "MMddyyyy", "yyMMdd", "yyyyMMdd"
+  };
 
   @Rule
   public ExpectedException expectedException = ExpectedException.none();
@@ -70,4 +80,71 @@ public class ReadingTest {
 
     reading.parsePositiveInt();
   }
+
+  @Test
+  public void shouldReturnPassedReadingInstance() {
+    Reading reading = new Reading(1);
+    assertThat(Reading.safeRead(reading), is(reading));
+  }
+
+  @Test
+  public void shouldReturnEmptyIfReadingParamIsNull() {
+    assertThat(Reading.safeRead(null), is(Reading.EMPTY));
+  }
+
+  @Test
+  public void shouldFormatDateByGivenFormat() {
+    Calendar calendar = Calendar.getInstance();
+    calendar.set(2016, Calendar.JUNE, 23);
+
+    for (String format : DATE_FORMATS) {
+      Date time = calendar.getTime();
+      Reading date = new Reading(time, format);
+      SimpleDateFormat formatter = new SimpleDateFormat(format);
+
+      assertThat(date.getValue(), is(notNullValue()));
+      assertThat(date.getNotRecorded(), is(false));
+      assertThat(date.getValue(), is(formatter.format(time)));
+    }
+  }
+
+  @Test
+  public void shouldParseBooleanValue() {
+    assertThat(new Reading(null).parseBoolean(), is(nullValue()));
+    assertThat(new Reading(true).parseBoolean(), is(true));
+    assertThat(new Reading(false).parseBoolean(), is(false));
+  }
+
+  @Test
+  public void shouldParseDateValue() {
+    Calendar calendar = Calendar.getInstance();
+    calendar.set(2016, Calendar.JUNE, 23);
+    Date time = calendar.getTime();
+
+    assertThat(new Reading(null).parseDate(), is(nullValue()));
+
+    Date first = new Reading(time.getTime()).parseDate();
+    Date second = new Reading("23/06/2016").parseDate();
+    Date third = new Reading("2016-06-23").parseDate();
+
+    assertThat(getField(first, Calendar.YEAR), is(2016));
+    assertThat(getField(second, Calendar.YEAR), is(2016));
+    assertThat(getField(third, Calendar.YEAR), is(2016));
+
+    assertThat(getField(first, Calendar.MONTH), is(Calendar.JUNE));
+    assertThat(getField(second, Calendar.MONTH), is(Calendar.JUNE));
+    assertThat(getField(third, Calendar.MONTH), is(Calendar.JUNE));
+
+    assertThat(getField(first, Calendar.DAY_OF_MONTH), is(23));
+    assertThat(getField(second, Calendar.DAY_OF_MONTH), is(23));
+    assertThat(getField(third, Calendar.DAY_OF_MONTH), is(23));
+  }
+
+  private int getField(Date time, int field) {
+    Calendar calendar = Calendar.getInstance();
+    calendar.setTime(time);
+
+    return calendar.get(field);
+  }
+
 }

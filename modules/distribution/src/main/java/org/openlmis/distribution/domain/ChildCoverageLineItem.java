@@ -56,6 +56,7 @@ public class ChildCoverageLineItem extends CoverageLineItem {
     dto.setModifiedBy(modifiedBy);
     dto.setModifiedDate(modifiedDate);
     dto.setVaccination(vaccination);
+    dto.setDisplayOrder(displayOrder);
     dto.setHealthCenter11Months(new Reading(healthCenter11Months));
     dto.setHealthCenter23Months(new Reading(healthCenter23Months));
     dto.setOutreach11Months(new Reading(outreach11Months));

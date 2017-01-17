@@ -45,6 +45,7 @@ import org.openlmis.web.util.SynchronizedDistributionComparators;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.supercsv.io.CsvMapWriter;
 import org.supercsv.io.ICsvMapWriter;
 import org.supercsv.prefs.CsvPreference;
@@ -180,6 +181,7 @@ public class ReviewDataService {
     return distribution.transform();
   }
 
+  @Transactional
   public FacilityDistributionEditResults update(Long distributionId, FacilityDistributionDTO replacement, Long userId) {
     deleteDistributionEdit(distributionId, userId);
 

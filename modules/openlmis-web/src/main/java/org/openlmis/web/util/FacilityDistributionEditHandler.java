@@ -12,11 +12,15 @@ import org.openlmis.distribution.dto.FacilityDistributionDTO;
 import org.openlmis.distribution.dto.Reading;
 
 import java.beans.PropertyDescriptor;
+import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.ParameterizedType;
+import java.util.List;
+import java.util.Objects;
 
 import static org.apache.commons.beanutils.PropertyUtils.getProperty;
 import static org.apache.commons.beanutils.PropertyUtils.getPropertyDescriptors;
-import static org.apache.commons.beanutils.PropertyUtils.getPropertyType;
+import static org.apache.commons.lang.reflect.FieldUtils.getField;
 import static org.openlmis.distribution.util.DomainFieldMapping.fieldMapping;
 import static org.openlmis.distribution.util.ReadingParser.parse;
 
@@ -43,8 +47,15 @@ public class FacilityDistributionEditHandler {
       String originalPropertyName = originalDescriptor.getName();
       String replacementPropertyName = fieldMapping(replacementClass, originalPropertyName);
 
+      if (originalPropertyName.equals("class")) {
+        continue;
+      }
+
+      if (original instanceof FacilityDistribution && originalPropertyName.equals("facility")) {
+        continue;
+      }
+
       Class originalPropertyType = originalDescriptor.getPropertyType();
-      Class replacementPropertyType = getPropertyType(replacement, replacementPropertyName);
 
       Object originalProperty = getProperty(original, originalPropertyName);
       Object replacementProperty = getProperty(replacement, replacementPropertyName);
@@ -55,6 +66,11 @@ public class FacilityDistributionEditHandler {
 
         Object previousValue = parse(previous, originalClass, originalPropertyName, originalPropertyType);
         Object newValue = parse(reading, originalClass, originalPropertyName, originalPropertyType);
+
+        if (Objects.equals(previousValue, newValue)) {
+          // no change
+          continue;
+        }
 
         String addictional = getAddictional(parent, original);
 
@@ -69,13 +85,30 @@ public class FacilityDistributionEditHandler {
         continue;
       }
 
-      if (isDTO(replacementPropertyType)) {
-        checkProperties(results, original, originalPropertyName, originalProperty, replacementProperty);
+      if (isDTO(replacementClass, replacementPropertyName)) {
+        if (originalProperty instanceof List) {
+          List originalList = (List) originalProperty;
+          List replacementList = (List) replacementProperty;
+
+          for (int i = 0; i < originalList.size(); ++i) {
+            checkProperties(results, original, originalPropertyName, originalList.get(i), replacementList.get(i));
+          }
+        } else {
+          checkProperties(results, original, originalPropertyName, originalProperty, replacementProperty);
+        }
       }
     }
   }
 
-  private boolean isDTO(Class clazz) {
+  private boolean isDTO(Class replacementClass, String replacementPropertyName) {
+    Field field = getField(replacementClass, replacementPropertyName, true);
+    Class<?> clazz = field.getType();
+
+    if (field.getType().isAssignableFrom(List.class)) {
+      ParameterizedType genericType = (ParameterizedType) field.getGenericType();
+      clazz = (Class<?>) genericType.getActualTypeArguments()[0];
+    }
+
     String name = clazz.getPackage().getName();
     return !clazz.equals(Reading.class) && name.startsWith("org.openlmis.distribution.dto");
   }

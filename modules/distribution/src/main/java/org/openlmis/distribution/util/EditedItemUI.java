@@ -16,23 +16,23 @@ import static org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion.NON_EMPT
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class EditedItemUI {
 
-    @Getter
-    @Setter
-    private List<String> translate = new ArrayList<>();
+  @Getter
+  @Setter
+  private List<String> translate = new ArrayList<>();
 
-    @Getter
-    @Setter
-    private List<String> noTranslate = new ArrayList<>();
+  @Getter
+  @Setter
+  private List<String> noTranslate = new ArrayList<>();
 
-    EditedItemUI() {
-    }
+  EditedItemUI() {
+  }
 
-    void addTransalte(String value) {
-        this.translate.add(value);
-    }
+  void addTransalte(String value) {
+    this.translate.add(value);
+  }
 
-    void addNoTransalte(String value) {
-        this.translate.add(value);
-    }
+  void addNoTransalte(String value) {
+    this.noTranslate.add(value);
+  }
 
 }
