@@ -1,5 +1,6 @@
 package org.openlmis.web.util;
 
+import com.google.common.base.Optional;
 import com.google.common.base.Predicate;
 import com.google.common.collect.FluentIterable;
 import org.openlmis.core.domain.Refrigerator;
@@ -18,6 +19,7 @@ import org.openlmis.distribution.domain.RefrigeratorReading;
 import org.openlmis.distribution.dto.DistributionRefrigeratorsDTO;
 import org.openlmis.distribution.dto.FacilityDistributionDTO;
 import org.openlmis.distribution.dto.Reading;
+import org.openlmis.distribution.dto.RefrigeratorReadingDTO;
 import org.openlmis.distribution.repository.DistributionRefrigeratorsRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -268,8 +270,15 @@ public class FacilityDistributionEditHandler {
     if (!equalLists) {
       if (originalReadings.size() == replacementReadings.size()) {
         // update readings
-        for (int i = 0; i < originalReadings.size(); ++i) {
-          checkProperties(results, original, "readings", originalReadings.get(i), replacementReadings.get(i));
+        for (RefrigeratorReading originalRefrigeratorReading : originalReadings) {
+          Refrigerator refrigerator = originalRefrigeratorReading.getRefrigerator();
+          Optional<RefrigeratorReadingDTO> replacementRefrigeratorReading = FluentIterable
+                  .from(replacement.getReadings())
+                  .firstMatch(new FindRefrigeratorReadingDTO(refrigerator.getSerialNumber()));
+
+          if (replacementRefrigeratorReading.isPresent()) {
+            checkProperties(results, original, "readings", originalRefrigeratorReading, replacementRefrigeratorReading.get());
+          }
         }
       } else {
         // remove existing readings
@@ -302,12 +311,26 @@ public class FacilityDistributionEditHandler {
   private static final class FindRefrigeratorReading implements Predicate<RefrigeratorReading> {
     private String serialNumber;
 
-    public FindRefrigeratorReading(String serialNumber) {
+    FindRefrigeratorReading(String serialNumber) {
       this.serialNumber = serialNumber;
     }
 
     @Override
     public boolean apply(@Nullable RefrigeratorReading input) {
+      return null != input && input.getRefrigerator().getSerialNumber().equals(serialNumber);
+    }
+
+  }
+
+  private static final class FindRefrigeratorReadingDTO implements Predicate<RefrigeratorReadingDTO> {
+    private String serialNumber;
+
+    FindRefrigeratorReadingDTO(String serialNumber) {
+      this.serialNumber = serialNumber;
+    }
+
+    @Override
+    public boolean apply(@Nullable RefrigeratorReadingDTO input) {
       return null != input && input.getRefrigerator().getSerialNumber().equals(serialNumber);
     }
 

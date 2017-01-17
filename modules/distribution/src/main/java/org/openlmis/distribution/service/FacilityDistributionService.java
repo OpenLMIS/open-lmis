@@ -167,7 +167,9 @@ public class FacilityDistributionService {
     }), new Transformer() {
       @Override
       public Object transform(Object o) {
-        return new RefrigeratorReading((Refrigerator) o);
+        Refrigerator refrigerator = (Refrigerator) o;
+        RefrigeratorReading reading = distributionRefrigeratorsService.getBySerialNumber(refrigerator.getSerialNumber());
+        return null == reading ? new RefrigeratorReading(refrigerator) : reading;
       }
     });
   }

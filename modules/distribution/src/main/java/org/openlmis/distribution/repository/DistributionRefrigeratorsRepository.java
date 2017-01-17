@@ -87,4 +87,8 @@ public class DistributionRefrigeratorsRepository {
       }
     }
   }
+
+  public RefrigeratorReading getBySerialNumber(String serialNumber) {
+    return mapper.getBySerialNumber(serialNumber);
+  }
 }
