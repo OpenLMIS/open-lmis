@@ -25,15 +25,15 @@
 
           <div>
             <input id="facilityVisitedYes" type="radio" ng-model="facilityData.facilityVisit.visited.value"
-                   ng-value="true">
+                   ng-value="'true'">
             <label for="facilityVisitedYes" class="radio-label" openlmis-message="label.yes"></label>
             <input id="facilityVisitedNo" type="radio" ng-model="facilityData.facilityVisit.visited.value"
-                   ng-value="false">
+                   ng-value="'false'">
             <label for="facilityVisitedNo" class="radio-label" openlmis-message="label.no"></label>
           </div>
         </div>
 
-        <div ng-show="facilityData.facilityVisit.visited.value === true">
+        <div ng-show="facilityData.facilityVisit.visited.value === 'true'">
           <div class="form-row clearfix">
             <span id="visitDateContainer">
               <label for="visitDate" openlmis-message="label.visit.date"></label>
@@ -92,7 +92,7 @@
           </div>
         </div>
 
-        <div class="form-row" ng-show="facilityData.facilityVisit.visited.value === false">
+        <div class="form-row" ng-show="facilityData.facilityVisit.visited.value === 'false'">
           <div class="form-group not-visit-reason-form">
             <div class="form-row clearfix">
               <label class="radio-label" openlmis-message="label.reason.for.no.visit"></label>
