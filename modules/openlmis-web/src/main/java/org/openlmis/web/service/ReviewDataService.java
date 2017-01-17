@@ -381,8 +381,8 @@ public class ReviewDataService {
     history.setDataScreen(messageService.message(detail.getDataScreenUI()));
     history.setEditedItem(createEditedItem(detail.getEditedItemUI()));
 
-    history.setOriginalValue(detail.getOriginalValue().toString());
-    history.setNewValue(detail.getNewValue().toString());
+    history.setOriginalValue(null == detail.getOriginalValue() ? "" : detail.getOriginalValue().toString());
+    history.setNewValue(null == detail.getNewValue() ? "": detail.getNewValue().toString());
 
     history.setEditedBy(userService.getById(userId));
 

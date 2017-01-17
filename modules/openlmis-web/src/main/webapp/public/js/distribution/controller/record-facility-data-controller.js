@@ -91,7 +91,7 @@ function RecordFacilityDataController($scope, $location, $routeParams, distribut
 
     if (result) {
       $.each($scope.distribution.facilityDistributions, function (ignore, facilityDistribution) {
-        $http.post(url, $scope.facilityDistribution).success(onSuccess);
+        $http.post(url, facilityDistribution).success(onSuccess);
       });
     }
   }
