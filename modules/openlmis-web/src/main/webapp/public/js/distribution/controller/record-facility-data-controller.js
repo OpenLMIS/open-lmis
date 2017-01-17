@@ -135,8 +135,6 @@ function RecordFacilityDataController($scope, $location, $route, $routeParams, d
     IndexedDB.put('distributions', data.distribution);
     $scope.distribution = data.distribution;
     distributionService.distribution = data.distribution;
-
-    $scope.abandon(facility, dataScreenUI, detail);
   }
 
   function onErrorForceSync(data) {
@@ -148,6 +146,7 @@ function RecordFacilityDataController($scope, $location, $route, $routeParams, d
     var url = '/review-data/distribution/' + distributionId + '/' + $routeParams.facility + '/force-sync.json';
 
     $http.post(url, detail).success(onSuccessForceSync).error(onErrorForceSync);
+    $scope.abandon(facility, dataScreenUI, detail);
   }
 
   $scope.forceSyncAll = function () {
