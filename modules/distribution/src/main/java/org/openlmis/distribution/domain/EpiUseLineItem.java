@@ -65,6 +65,7 @@ public class EpiUseLineItem extends BaseModel {
     dto.setLoss(new Reading(loss));
     dto.setDistributed(new Reading(distributed));
     dto.setExpirationDate(new Reading(expirationDate));
+    dto.setNumberOfStockoutDays(new Reading(numberOfStockoutDays));
 
     return dto;
   }

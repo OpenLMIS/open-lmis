@@ -37,6 +37,7 @@ public final class ReadingParser {
     POSITIVE_INTS.put(EpiUseLineItem.class, "received");
     POSITIVE_INTS.put(EpiUseLineItem.class, "loss");
     POSITIVE_INTS.put(EpiUseLineItem.class, "distributed");
+    POSITIVE_INTS.put(EpiUseLineItem.class, "numberOfStockoutDays");
 
     POSITIVE_INTS.put(OpenedVialLineItem.class, "openedVials");
 
