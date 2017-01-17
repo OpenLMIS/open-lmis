@@ -149,7 +149,7 @@ public class FacilityDistributionEditHandler {
         Object previousValue = parse(previous, originalClass, originalPropertyName, originalPropertyType);
         Object newValue = null == previous ? null : parse(reading, originalClass, originalPropertyName, originalPropertyType);
 
-        if (null != newValue && Objects.equals(previousValue, newValue)) {
+        if (Objects.equals(previousValue, newValue)) {
           // no change
           continue;
         }
