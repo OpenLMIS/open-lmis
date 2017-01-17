@@ -93,6 +93,8 @@ public class RefrigeratorReading extends BaseModel {
     dto.setProblems(problem.transform());
     dto.setNotes(new Reading(notes));
 
+    dto.getNotes().setNotRecorded(false);
+
     return dto;
   }
 }

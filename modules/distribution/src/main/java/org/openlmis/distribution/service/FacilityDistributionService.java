@@ -168,9 +168,12 @@ public class FacilityDistributionService {
       @Override
       public Object transform(Object o) {
         Refrigerator refrigerator = (Refrigerator) o;
-        RefrigeratorReading reading = null == facilityVisitId
-          ? null
-          : distributionRefrigeratorsService.getByRefrigeratorIdAndSerialNumber(refrigerator.getId(), refrigerator.getSerialNumber(), facilityVisitId);
+
+        if (null == facilityVisitId) {
+          return new RefrigeratorReading(refrigerator);
+        }
+
+        RefrigeratorReading reading = distributionRefrigeratorsService.getByRefrigeratorIdAndSerialNumber(refrigerator.getId(), refrigerator.getSerialNumber(), facilityVisitId);
         return null == reading ? new RefrigeratorReading(refrigerator) : reading;
       }
     });
@@ -200,7 +203,7 @@ public class FacilityDistributionService {
     EpiUse epiUse = epiUseService.getBy(facilityVisit.getId());
 
     List<Refrigerator> refrigerators = refrigeratorService.getRefrigeratorsForADeliveryZoneAndProgram(distribution.getDeliveryZone().getId(), distribution.getProgram().getId());
-    DistributionRefrigerators distributionRefrigerators = new DistributionRefrigerators(getRefrigeratorReadings(facilityVisit.getFacilityId(), refrigerators,facilityVisit.getId()));
+    DistributionRefrigerators distributionRefrigerators = new DistributionRefrigerators(getRefrigeratorReadings(facilityVisit.getFacilityId(), refrigerators, facilityVisit.getId()));
 
     Facility facility = facilityService.getById(facilityVisit.getFacilityId());
 

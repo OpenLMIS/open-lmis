@@ -39,7 +39,7 @@
                         <div class="form-cell">
                             <label openlmis-message="label.refrigerator.temperature"></label>
             <span class="position-relative">
-              <input type="number" min="-999.9" max="999.9" step="0.1" name="temperature{{$index}}"
+              <input type="number" min="-999.9" max="999.9" step="0.1" name="temperature{{$index}}" lang="en"
                      ng-model="refrigeratorReading.temperature.value" numeric-validator="numericValue,3,1"
                      error-holder="temperatureError{{$index}}" class="right-justified"  ng-trim="false"/>
               <span id="temperatureError{{$index}}" class="rnr-form-error" openlmis-message="error.number.only"
