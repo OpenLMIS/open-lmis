@@ -44,21 +44,11 @@ function RecordFacilityDataController($scope, $location, $route, $routeParams, d
     }
   };
 
-  function editMode(change) {
+  $scope.toggleEditMode = function () {
     if (distributionService.distributionReview) {
-      if (change) {
-        distributionService.distributionReview.editMode[$routeParams.facility][distributionService.distributionReview.currentScreen] ^= true;
-      }
-
-      return distributionService.distributionReview.editMode[$routeParams.facility][distributionService.distributionReview.currentScreen];
+      distributionService.distributionReview.editMode[$routeParams.facility][distributionService.distributionReview.currentScreen] ^= true;
     }
 
-    return false;
-  }
-
-  $scope.toggleEditMode = function () {
-    var value = editMode(true);
-    $('[disable-form]').find('input, textarea').prop('disabled', function () { return !value; });
     $route.reload();
   };
 
