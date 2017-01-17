@@ -132,17 +132,14 @@ public class ReviewDataService {
 
     for (Distribution distribution : distributions) {
       Map<Long, FacilityDistribution> facilityDistributionMap = facilityDistributionService.getData(distribution);
-      Iterator<Map.Entry<Long, FacilityDistribution>> iterator = facilityDistributionMap.entrySet().iterator();
 
-      if (!iterator.hasNext()) {
-        continue;
-      }
+      for (Map.Entry<Long, FacilityDistribution> entry : facilityDistributionMap.entrySet()) {
+        FacilityDistribution value = entry.getValue();
+        String geographicZone = value.getGeographicZone();
 
-      FacilityDistribution value = iterator.next().getValue();
-      String geographicZone = value.getGeographicZone();
-
-      if (!filter.isProvinceSelected() || geographicZone.equalsIgnoreCase(filter.getProvince().getName())) {
-        list.add(create(userId, distribution, geographicZone));
+        if (!filter.isProvinceSelected() || geographicZone.equalsIgnoreCase(filter.getProvince().getName())) {
+          list.add(create(userId, distribution, geographicZone));
+        }
       }
     }
 
