@@ -25,10 +25,10 @@
 
           <div>
             <input id="facilityVisitedYes" type="radio" ng-model="facilityData.facilityVisit.visited.value"
-                   ng-value="'true'">
+                   ng-value="'true'" ng-change="setApplicableVisitInfo()">
             <label for="facilityVisitedYes" class="radio-label" openlmis-message="label.yes"></label>
             <input id="facilityVisitedNo" type="radio" ng-model="facilityData.facilityVisit.visited.value"
-                   ng-value="'false'">
+                   ng-value="'false'" ng-change="setApplicableVisitInfo()">
             <label for="facilityVisitedNo" class="radio-label" openlmis-message="label.no"></label>
           </div>
         </div>
