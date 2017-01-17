@@ -126,7 +126,10 @@
             <td>{{item.deliveryZone.name}}</td>
             <td>{{item.period.name}}</td>
             <td>{{item.initiated}}</td>
-            <td>{{item.synchronized}}</td>
+            <td>
+              <span ng-if="item.synchronized">{{item.synchronized}}</span>
+              <span ng-if="!item.synchronized" openlmis-message="label.not.available"></span>
+            </td>
             <td>{{item.lastViewed}}</td>
             <td>{{item.lastEdited}}</td>
             <td>{{item.editedBy}}</td>
