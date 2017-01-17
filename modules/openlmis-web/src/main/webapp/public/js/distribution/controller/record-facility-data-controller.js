@@ -8,7 +8,7 @@
  * You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org. 
  */
 
-function RecordFacilityDataController($scope, $location, $route, $routeParams, distributionService, AuthorizationService, $dialog, $http, IndexedDB) {
+function RecordFacilityDataController($scope, $location, $route, $routeParams, distributionService, AuthorizationService, $dialog, $http) {
   $scope.label = $routeParams.facility ? 'label.change.facility' : "label.select.facility";
 
   $scope.distribution = distributionService.distribution;
@@ -70,9 +70,8 @@ function RecordFacilityDataController($scope, $location, $route, $routeParams, d
       });
     }
 
-    IndexedDB.put('distributions', results.distribution);
     $scope.distribution = results.distribution;
-    distributionService.distribution = results.distribution;
+    distributionService.save(results.distribution);
   }
 
   function onError(data) {
@@ -122,9 +121,8 @@ function RecordFacilityDataController($scope, $location, $route, $routeParams, d
   };
 
   function onSuccessForceSync(data) {
-    IndexedDB.put('distributions', data.distribution);
     $scope.distribution = data.distribution;
-    distributionService.distribution = data.distribution;
+    distributionService.save(data.distribution);
   }
 
   function onErrorForceSync(data) {
