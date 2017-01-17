@@ -79,6 +79,10 @@ function RefrigeratorReading(facilityVisitId, refrigeratorReading) {
     $.extend(true, this, refrigeratorReading);
     $(fieldList).each(function (i, fieldName) {
       _this[fieldName] = _this[fieldName] || {};
+
+      if (!_this[fieldName].type) {
+        _this[fieldName].type = 'reading';
+      }
     });
     this.computeStatus();
   }

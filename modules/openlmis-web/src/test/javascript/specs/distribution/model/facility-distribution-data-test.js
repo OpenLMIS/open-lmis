@@ -70,7 +70,7 @@ describe('Facility Distribution data', function () {
 
   it("should disable refrigerator form if facility is not visited and tab is 'refrigerators'", function () {
     facilityDistribution.facilityVisit.visited = {value: false};
-    expect(facilityDistribution.isDisabled('refrigerators')).toEqual(true);
+    expect(facilityDistribution.isDisabled('refrigerator-data')).toEqual(true);
   });
 
   it("should disable epi-inventory form if facility is not visited and tab is 'epi-inventory'", function () {
@@ -80,7 +80,7 @@ describe('Facility Distribution data', function () {
 
   it("should not disable refrigerator form if facility is visited and tab is 'refrigerators'", function () {
     facilityDistribution.facilityVisit.visited = {value: true};
-    expect(facilityDistribution.isDisabled('refrigerators')).toEqual(false);
+    expect(facilityDistribution.isDisabled('refrigerator-data')).toEqual(false);
   });
 
   it("should not disable epi-inventory form if facility is visited and tab is 'epi-inventory'", function () {

@@ -1,7 +1,12 @@
 package org.openlmis.web.util;
 
+import com.google.common.base.Predicate;
+import com.google.common.collect.FluentIterable;
+import org.openlmis.core.domain.Refrigerator;
+import org.openlmis.core.service.RefrigeratorService;
 import org.openlmis.distribution.domain.AdultCoverageLineItem;
 import org.openlmis.distribution.domain.ChildCoverageLineItem;
+import org.openlmis.distribution.domain.DistributionRefrigerators;
 import org.openlmis.distribution.domain.EpiInventoryLineItem;
 import org.openlmis.distribution.domain.EpiUseLineItem;
 import org.openlmis.distribution.domain.Facilitator;
@@ -13,7 +18,11 @@ import org.openlmis.distribution.domain.RefrigeratorReading;
 import org.openlmis.distribution.dto.DistributionRefrigeratorsDTO;
 import org.openlmis.distribution.dto.FacilityDistributionDTO;
 import org.openlmis.distribution.dto.Reading;
+import org.openlmis.distribution.repository.DistributionRefrigeratorsRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
+import javax.annotation.Nullable;
 import java.beans.PropertyDescriptor;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
@@ -28,7 +37,14 @@ import static org.apache.commons.lang.reflect.FieldUtils.getField;
 import static org.openlmis.distribution.util.DomainFieldMapping.fieldMapping;
 import static org.openlmis.distribution.util.ReadingParser.parse;
 
+@Component
 public class FacilityDistributionEditHandler {
+
+  @Autowired
+  private RefrigeratorService refrigeratorService;
+
+  @Autowired
+  private DistributionRefrigeratorsRepository distributionRefrigeratorsRepository;
 
   public boolean modified(FacilityDistributionDTO dto) {
     try {
@@ -56,7 +72,7 @@ public class FacilityDistributionEditHandler {
         Reading reading = (Reading) value;
         Reading original = reading.getOriginal();
 
-        if (Objects.equals(original.getValue(), reading.getValue()) && Objects.equals(original.getNotRecorded(), reading.getNotRecorded())) {
+        if (null != original && Objects.equals(original.getValue(), reading.getValue()) && Objects.equals(original.getNotRecorded(), reading.getNotRecorded())) {
           // no change
           continue;
         }
@@ -131,9 +147,9 @@ public class FacilityDistributionEditHandler {
         Reading previous = reading.getOriginal();
 
         Object previousValue = parse(previous, originalClass, originalPropertyName, originalPropertyType);
-        Object newValue = parse(reading, originalClass, originalPropertyName, originalPropertyType);
+        Object newValue = null == previous ? null : parse(reading, originalClass, originalPropertyName, originalPropertyType);
 
-        if (Objects.equals(previousValue, newValue)) {
+        if (null != newValue && Objects.equals(previousValue, newValue)) {
           // no change
           continue;
         }
@@ -155,11 +171,15 @@ public class FacilityDistributionEditHandler {
         originalProperty = removeNullReference(original, originalPropertyName, originalProperty);
 
         if (originalProperty instanceof List) {
-          List originalList = (List) originalProperty;
-          List replacementList = (List) replacementProperty;
+          if (parent instanceof FacilityDistribution && original instanceof DistributionRefrigerators && replacement instanceof DistributionRefrigeratorsDTO) {
+            checkRefrigerators(results, (FacilityDistribution) parent, (DistributionRefrigerators)original, (DistributionRefrigeratorsDTO) replacement);
+          } else {
+            List originalList = (List) originalProperty;
+            List replacementList = (List) replacementProperty;
 
-          for (int i = 0; i < originalList.size(); ++i) {
-            checkProperties(results, original, originalPropertyName, originalList.get(i), replacementList.get(i));
+            for (int i = 0; i < originalList.size(); ++i) {
+              checkProperties(results, original, originalPropertyName, originalList.get(i), replacementList.get(i));
+            }
           }
         } else {
           checkProperties(results, original, originalPropertyName, originalProperty, replacementProperty);
@@ -236,6 +256,60 @@ public class FacilityDistributionEditHandler {
     return "class".equals(propertyName)
             || bean instanceof FacilityDistribution && "facility".equals(propertyName)
             || bean instanceof FacilityDistributionDTO && ("distributionId".equals(propertyName) || "modifiedBy".equals(propertyName));
+
+  }
+
+  private void checkRefrigerators(FacilityDistributionEditResults results, FacilityDistribution parent, DistributionRefrigerators original, DistributionRefrigeratorsDTO replacement) throws IllegalAccessException, NoSuchMethodException, InvocationTargetException {
+    List<RefrigeratorReading> originalReadings = original.getReadings();
+    List<RefrigeratorReading> replacementReadings = replacement.transform().getReadings();
+
+    boolean equalLists = originalReadings.size() == replacementReadings.size() && originalReadings.containsAll(replacementReadings);
+
+    if (!equalLists) {
+      if (originalReadings.size() == replacementReadings.size()) {
+        // update readings
+        for (int i = 0; i < originalReadings.size(); ++i) {
+          checkProperties(results, original, "readings", originalReadings.get(i), replacementReadings.get(i));
+        }
+      } else {
+        // remove existing readings
+        for (RefrigeratorReading reading : originalReadings) {
+          Refrigerator refrigerator = reading.getRefrigerator();
+          boolean exist = FluentIterable.from(replacementReadings).anyMatch(new FindRefrigeratorReading(refrigerator.getSerialNumber()));
+
+          if (!exist) {
+            refrigerator.setEnabled(false);
+            refrigeratorService.save(refrigerator);
+          }
+        }
+
+        // create new reading
+        for (RefrigeratorReading reading : replacementReadings) {
+          Refrigerator refrigerator = reading.getRefrigerator();
+          boolean exist = FluentIterable.from(originalReadings).anyMatch(new FindRefrigeratorReading(refrigerator.getSerialNumber()));
+
+          if (!exist) {
+            refrigerator.setFacilityId(parent.getFacilityId());
+            refrigerator.setEnabled(true);
+            refrigeratorService.save(refrigerator);
+            distributionRefrigeratorsRepository.saveReading(reading, true);
+          }
+        }
+      }
+    }
+  }
+
+  private static final class FindRefrigeratorReading implements Predicate<RefrigeratorReading> {
+    private String serialNumber;
+
+    public FindRefrigeratorReading(String serialNumber) {
+      this.serialNumber = serialNumber;
+    }
+
+    @Override
+    public boolean apply(@Nullable RefrigeratorReading input) {
+      return null != input && input.getRefrigerator().getSerialNumber().equals(serialNumber);
+    }
 
   }
 

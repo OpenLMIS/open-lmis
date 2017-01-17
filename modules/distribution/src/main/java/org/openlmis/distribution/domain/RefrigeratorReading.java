@@ -47,7 +47,7 @@ public class RefrigeratorReading extends BaseModel {
   private Integer lowAlarmEvents;
   private Integer highAlarmEvents;
   private String problemSinceLastTime;
-  private RefrigeratorProblem problem;
+  private RefrigeratorProblem problem = new RefrigeratorProblem();
   private String notes;
 
   public RefrigeratorReading(Refrigerator refrigerator) {

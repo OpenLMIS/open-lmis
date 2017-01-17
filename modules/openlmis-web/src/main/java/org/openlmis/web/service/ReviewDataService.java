@@ -112,6 +112,9 @@ public class ReviewDataService {
   @Autowired
   private MessageService messageService;
 
+  @Autowired
+  private FacilityDistributionEditHandler facilityDistributionEditHandler;
+
   @Value("${eligibility.edit}")
   private Long eligibilityEdit;
 
@@ -217,7 +220,6 @@ public class ReviewDataService {
 
   @Transactional
   public FacilityDistributionEditResults update(Long distributionId, FacilityDistributionDTO replacement, Long userId) {
-    FacilityDistributionEditHandler handler = new FacilityDistributionEditHandler();
     FacilityDistributionEditResults results;
 
     deleteDistributionEdit(distributionId, userId);
@@ -227,11 +229,11 @@ public class ReviewDataService {
     Map<Long, FacilityDistribution> facilityDistributions = facilityDistributionService.getData(distribution);
     distribution.setFacilityDistributions(facilityDistributions);
 
-    if (handler.modified(replacement)) {
+    if (facilityDistributionEditHandler.modified(replacement)) {
       replacement.setModifiedBy(userId);
       FacilityDistribution original = facilityDistributions.get(replacement.getFacilityId());
 
-      results = handler.check(original, replacement);
+      results = facilityDistributionEditHandler.check(original, replacement);
 
       Iterator<FacilityDistributionEditDetail> iterator = results.getDetails().iterator();
 

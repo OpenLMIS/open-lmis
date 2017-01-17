@@ -50,7 +50,11 @@ function RefrigeratorController($scope, $dialog, IndexedDB, $routeParams, distri
     $scope.addRefrigeratorModal = $scope.isDuplicateSerialNumber = undefined;
   };
 
-  $scope.isFormDisabled = function () {
+  $scope.isFormDisabled = function (review) {
+    if (review) {
+      return !review.editMode[$routeParams.facility][review.currentScreen];
+    }
+
     return ($scope.distribution.facilityDistributions[$scope.selectedFacilityId].status === DistributionStatus.SYNCED) ||
         ($scope.distribution.facilityDistributions[$scope.selectedFacilityId].facilityVisit.visited.value === false);
   };

@@ -14,8 +14,15 @@ function Refrigerators(facilityVisitId, refrigerators) {
 
   var _this = this;
   this.facilityVisitId = facilityVisitId;
+  this.initReadings = [];
+
+  if (!this.readings) {
+    this.readings = [];
+  }
+
   $(this.readings).each(function (i, value) {
     _this.readings[i] = new RefrigeratorReading(facilityVisitId, value);
+    _this.initReadings.push(new RefrigeratorReading(facilityVisitId, value));
   });
 
   Refrigerators.prototype.computeStatus = function (visited, review) {
@@ -39,10 +46,20 @@ function Refrigerators(facilityVisitId, refrigerators) {
   };
 
   Refrigerators.prototype.addReading = function (reading) {
-    if (!this.readings) {
-      this.readings = [];
-    }
-
     this.readings.push(new RefrigeratorReading(facilityVisitId, reading));
+  };
+
+  Refrigerators.prototype.restore = function () {
+    var _this = this;
+
+    _this.readings = [];
+
+    $(_this.initReadings).each(function (ignore, value) {
+      _this.readings.push(new RefrigeratorReading(_this.facilityVisitId, value));
+    });
+  };
+
+  Refrigerators.prototype.modified = function () {
+    return !_.isEqual(this.readings, this.initReadings);
   };
 }
