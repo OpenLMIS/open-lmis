@@ -15,7 +15,7 @@
     src="'/public/pages/logistics/distribution/partials/record-facility-menu.html'"></ng-include>
 
   <div class="facility-info" ng-init="facilityData = distribution.facilityDistributions[selectedFacilityId]">
-    <div class="refrigerator-container" disable-form="{{facilityData.isDisabled('epi-use')}}">
+    <div class="refrigerator-container" disable-form="{{facilityData.isDisabled('epi-use', distributionReview)}}">
       <h3>
         <span id="epiUsePageHeader" openlmis-message="header.epi.use"></span>
         <input id="epiUseApplyNrAll" type="button" ng-click="applyNRAll()"
@@ -69,7 +69,7 @@
                            name="stockAtFirstOfMonth{{$index}}" ng-trim=false
                            numeric-validator="positiveInteger,7" min="0" max="9999999" step="1"
                            error-holder="stockAtFirstOfMonthError{{$index}}"
-                           ng-class="{'required-error': !facilityData.isDisabled('epi-use') && !(lineItem.stockAtFirstOfMonth.value.hasValue() ||
+                           ng-class="{'required-error': !facilityData.isDisabled('epi-use', distributionReview) && !(lineItem.stockAtFirstOfMonth.value.hasValue() ||
                              lineItem.stockAtFirstOfMonth.notRecorded)}"/>
                     <span id="stockAtFirstOfMonthError{{$index}}"
                           class="rnr-form-error"
@@ -92,7 +92,7 @@
                            name="received{{$index}}" ng-trim=false
                            numeric-validator="positiveInteger,7" min="0" max="9999999" step="1"
                            error-holder="receivedError{{$index}}"
-                           ng-class="{'required-error': !facilityData.isDisabled('epi-use') && !(lineItem.received.value.hasValue() ||
+                           ng-class="{'required-error': !facilityData.isDisabled('epi-use', distributionReview) && !(lineItem.received.value.hasValue() ||
                              lineItem.received.notRecorded)}"/>
                     <span id="receivedError{{$index}}"
                           class="rnr-form-error"
@@ -117,7 +117,7 @@
                            name="distributed{{$index}}" ng-trim=false
                            numeric-validator="positiveInteger,7" min="0" max="9999999" step="1"
                            error-holder="distributedError{{$index}}"
-                           ng-class="{'required-error': !facilityData.isDisabled('epi-use') && !(lineItem.distributed.value.hasValue() ||
+                           ng-class="{'required-error': !facilityData.isDisabled('epi-use', distributionReview) && !(lineItem.distributed.value.hasValue() ||
                              lineItem.distributed.notRecorded)}"/>
                     <span id="distributedError{{$index}}"
                           class="rnr-form-error"
@@ -138,7 +138,7 @@
                            ng-model="lineItem.loss.value" ng-trim=false
                            name="loss{{$index}}" numeric-validator="positiveInteger,7" min="0" max="9999999" step="1"
                            error-holder="lossError{{$index}}"
-                           ng-class="{'required-error': !facilityData.isDisabled('epi-use') && !(lineItem.loss.value.hasValue() ||
+                           ng-class="{'required-error': !facilityData.isDisabled('epi-use', distributionReview) && !(lineItem.loss.value.hasValue() ||
                              lineItem.loss.notRecorded)}"/>
                     <span id="lossError{{$index}}" class="rnr-form-error"
                           openlmis-message="error.number.only"
@@ -159,7 +159,7 @@
                            name="stockAtEndOfMonth{{$index}}" ng-trim=false
                            numeric-validator="positiveInteger,7" min="0" max="9999999" step="1"
                            error-holder="stockAtEndOfMonthError{{$index}}"
-                           ng-class="{'required-error': !facilityData.isDisabled('epi-use') && !(lineItem.stockAtEndOfMonth.value.hasValue() ||
+                           ng-class="{'required-error': !facilityData.isDisabled('epi-use', distributionReview) && !(lineItem.stockAtEndOfMonth.value.hasValue() ||
                              lineItem.stockAtEndOfMonth.notRecorded)}"/>
                     <span id="stockAtEndOfMonthError{{$index}}"
                           class="rnr-form-error"
@@ -184,7 +184,7 @@
                            date-validator="date"
                            showError="lineItem.expirationDate.notRecorded"
                            error-holder="expirationDateError{{$index}}"
-                           ng-class="{'required-error': !facilityData.isDisabled('epi-use') && !(lineItem.expirationDate.value ||
+                           ng-class="{'required-error': !facilityData.isDisabled('epi-use', distributionReview) && !(lineItem.expirationDate.value ||
                              lineItem.expirationDate.notRecorded)}"/>
                     <span class="rnr-form-error"
                           id="expirationDateError{{$index}}"

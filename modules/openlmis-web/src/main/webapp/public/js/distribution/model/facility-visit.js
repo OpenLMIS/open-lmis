@@ -12,20 +12,28 @@ function FacilityVisit(facilityVisitJson) {
   $.extend(true, this, facilityVisitJson);
   var mandatoryList = ['verifiedBy', 'confirmedBy', 'visitDate'];
 
-  FacilityVisit.prototype.computeStatus = function () {
-    if (isUndefined(this.visited)) {
+  function isEmpty(field) {
+    return !field || (isUndefined(field.value) && !field.notRecorded);
+  }
+
+  FacilityVisit.prototype.computeStatus = function (review) {
+    if (review) {
+      return DistributionStatus.SYNCED;
+    }
+
+    if (isEmpty(this.visited)) {
       return DistributionStatus.EMPTY;
     }
 
-    if (this.visited) {
+    if (this.visited && this.visited.value) {
       var visitedObservationStatus = computeStatusForObservation.call(this);
       return visitedObservationStatus === DistributionStatus.EMPTY ? DistributionStatus.INCOMPLETE : visitedObservationStatus;
     }
 
-    if (this.reasonForNotVisiting === 'OTHER') {
-      return (isUndefined(this.otherReasonDescription) ? DistributionStatus.INCOMPLETE : DistributionStatus.COMPLETE);
+    if (this.reasonForNotVisiting && this.reasonForNotVisiting.value === 'OTHER') {
+      return (isEmpty(this.otherReasonDescription) ? DistributionStatus.INCOMPLETE : DistributionStatus.COMPLETE);
     }
-    return isUndefined(this.reasonForNotVisiting) ? DistributionStatus.INCOMPLETE : DistributionStatus.COMPLETE;
+    return isEmpty(this.reasonForNotVisiting) ? DistributionStatus.INCOMPLETE : DistributionStatus.COMPLETE;
   };
 
   function computeStatusForObservation() {
@@ -33,8 +41,8 @@ function FacilityVisit(facilityVisitJson) {
     var _this = this;
 
     function validateFields(fieldName) {
-      if (['observations', 'visitDate'].indexOf(fieldName) != -1) return !isUndefined(_this[fieldName]);
-      return !(isUndefined(_this[fieldName].name) || isUndefined(_this[fieldName].title));
+      if (['observations', 'visitDate'].indexOf(fieldName) != -1) return !isEmpty(_this[fieldName]);
+      return !(isEmpty(_this[fieldName].name) || isEmpty(_this[fieldName].title));
     }
 
     function isValid(fieldName) {
@@ -42,7 +50,7 @@ function FacilityVisit(facilityVisitJson) {
       return validateFields(fieldName);
     }
 
-    function isEmpty(fieldName) {
+    function _isEmpty(fieldName) {
       if (!_this[fieldName]) return true;
       return validateFields(fieldName);
     }
@@ -50,9 +58,9 @@ function FacilityVisit(facilityVisitJson) {
     $(mandatoryList).each(function (i, fieldName) {
       if (isValid(fieldName) && (status == DistributionStatus.COMPLETE || !status)) {
         status = DistributionStatus.COMPLETE;
-      } else if (!isValid(fieldName) && isEmpty(fieldName) && (!status || status == DistributionStatus.EMPTY)) {
+      } else if (!isValid(fieldName) && _isEmpty(fieldName) && (!status || status == DistributionStatus.EMPTY)) {
         status = DistributionStatus.EMPTY;
-      } else if ((!isValid(fieldName) && status === DistributionStatus.COMPLETE) || (isValid(fieldName) && status === DistributionStatus.EMPTY) || (!isEmpty(fieldName))) {
+      } else if ((!isValid(fieldName) && status === DistributionStatus.COMPLETE) || (isValid(fieldName) && status === DistributionStatus.EMPTY) || (!_isEmpty(fieldName))) {
         status = DistributionStatus.INCOMPLETE;
         return false;
       }

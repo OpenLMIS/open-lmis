@@ -1,0 +1,198 @@
+<!--
+  ~ This program is part of the OpenLMIS logistics management information system platform software.
+  ~ Copyright © 2013 VillageReach
+  ~
+  ~ This program is free software: you can redistribute it and/or modify it under the terms of the GNU Affero General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
+  ~  
+  ~ This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Affero General Public License for more details.
+  ~ You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org. 
+  -->
+<div class="review-data">
+
+  <h2>
+    <span openlmis-message="link.review.data"></span>
+  </h2>
+
+  <br/>
+
+  <div class="alert alert-success" id="saveSuccessMsgDiv" fade-out="3000" openlmis-message="message" ng-show="message"></div>
+
+  <div class="app-form">
+    <div id="filter-section" class="form-group">
+      <div class="form-row clearfix">
+        <div class="form-cell">
+          <label for="selectProgram">
+            <span openlmis-message="label.program"></span>
+            <span class="label-required">*</span>
+          </label>
+          <div class="form-field">
+            <select id="selectProgram" ng-model="filters.selected.program"
+                ng-options="p as p.name for p in filters.filter.programs">
+              <option openlmis-message="label.select.program"></option>
+            </select>
+          </div>
+        </div>
+        <div class="form-cell">
+          <label for="selectProvince">
+            <span openlmis-message="label.province"></span>
+          </label>
+          <div class="form-field">
+            <select id="selectProvince" ng-model="filters.selected.province"
+                ng-options="g as g.name for g in filters.filter.geographicZones">
+              <option openlmis-message="label.all"></option>
+            </select>
+          </div>
+        </div>
+        <div class="form-cell">
+          <label for="selectDeliveryZone">
+            <span openlmis-message="label.delivery.zone"></span>
+          </label>
+          <div class="form-field">
+            <select id="selectDeliveryZone" ng-model="filters.selected.deliveryZone"
+                ng-options="d as d.name for d in filters.filter.deliveryZones">
+              <option openlmis-message="label.all"></option>
+            </select>
+          </div>
+        </div>
+        <div class="form-cell">
+          <label for="selectperiod">
+            <span openlmis-message="label.period"></span>
+          </label>
+          <div class="form-field">
+            <select id="selectperiod" ng-model="filters.selected.period"
+                ng-options="p as p.name for p in filters.filter.periods">
+              <option openlmis-message="label.all"></option>
+            </select>
+          </div>
+        </div>
+        <div class="form-cell">
+          <div class="form-field">
+            <button type="button" class="btn btn-primary" ng-click="reloadList()" ng-disabled="!filters.selected.program">
+              <span openlmis-message="button.view"></span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="form-group">
+
+      <h3 openlmis-message="label.synchronized.distributions.list"></h3>
+
+      <div class="form-row clearfix">
+        <table class="table table-striped table-bordered">
+          <thead>
+          <tr>
+            <th ng-click="sort('province')">
+              <span openlmis-message="label.province"></span>
+              <i class="pull-right" ng-class="isSort('province')"></i>
+            </th>
+            <th ng-click="sort('deliveryZone')">
+              <span openlmis-message="label.delivery.zone"></span>
+              <i class="pull-right" ng-class="isSort('deliveryZone')"></i>
+            </th>
+            <th ng-click="sort('period')">
+              <span openlmis-message="label.period"></span>
+              <i class="pull-right" ng-class="isSort('period')"></i>
+            </th>
+            <th ng-click="sort('initiated')">
+              <span openlmis-message="label.initiated"></span>
+              <i class="pull-right" ng-class="isSort('initiated')"></i>
+            </th>
+            <th ng-click="sort('synchronized')">
+              <span openlmis-message="label.synchronized"></span>
+              <i class="pull-right" ng-class="isSort('synchronized')"></i>
+            </th>
+            <th ng-click="sort('lastViewed')">
+              <span openlmis-message="label.last.viewed"></span>
+              <i class="pull-right" ng-class="isSort('lastViewed')"></i>
+            </th>
+            <th ng-click="sort('lastEdited')">
+              <span openlmis-message="label.last.edited"></span>
+              <i class="pull-right" ng-class="isSort('lastEdited')"></i>
+            </th>
+            <th ng-click="sort('editedBy')">
+              <span openlmis-message="label.edited.by"></span>
+              <i class="pull-right" ng-class="isSort('editedBy')"></i>
+            </th>
+            <th></th>
+            <th>
+              <span openlmis-message="label.edit.history"></span>
+            </th>
+          </tr>
+          </thead>
+          <tbody>
+          <tr ng-repeat="item in distributionsList.list">
+            <td>{{item.province}}</td>
+            <td>{{item.deliveryZone.name}}</td>
+            <td>{{item.period.name}}</td>
+            <td>{{item.initiated}}</td>
+            <td>
+              <span ng-if="item.synchronized">{{item.synchronized}}</span>
+              <span ng-if="!item.synchronized" openlmis-message="label.not.available"></span>
+            </td>
+            <td>{{item.lastViewed}}</td>
+            <td>{{item.lastEdited}}</td>
+            <td>{{item.editedBy}}</td>
+            <td>
+              <a ng-if="item.edit" ng-click="cacheData(item, 'edit')" style="cursor: pointer;">
+                <span openlmis-message="label.edit.data"></span>
+              </a>
+              <a ng-if="item.view" ng-click="cacheData(item, 'view')" style="cursor: pointer;">
+                <span openlmis-message="label.view.data"></span>
+              </a>
+            </td>
+            <td>
+              <a href="/review-data/distribution/{{item.distributionId}}/csv">
+                <span openlmis-message="link.download.csv"></span>
+              </a>
+              <span> | </span>
+              <a ng-click="getPDF(item.distributionId)" style="cursor: pointer;">
+                <span openlmis-message="button.print"></span>
+              </a>
+            </td>
+          </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <div ng-show="appCacheState !== undefined">
+    <div class="modal-backdrop"></div>
+
+    <div class="modal app-cache-status-modal" show="appCacheState !== 'progress'" >
+      <div class="modal-body">
+
+        <div ng-show="appCacheState === 'progress'">
+          <div id="downloadingLoader"></div>
+          <strong openlmis-message='message.downloading.app.data'></strong>
+          <div openlmis-message='message.downloading.in.progress'></div>
+        </div>
+
+        <div ng-show="appCacheState === 'cached'">
+          <div>
+            <i class="icon icon-ok-circle"></i>
+            <span id="successMessage" openlmis-message='message.downloading.success'></span>
+          </div>
+        </div>
+
+        <div ng-show="appCacheState === 'error'">
+          <div>
+            <i class="icon icon-exclamation-sign"></i>
+            <span id="errorMessage" openlmis-message='message.downloading.failed'></span>
+          </div>
+        </div>
+      </div>
+
+      <div class="modal-footer" ng-hide="appCacheState === 'progress'">
+        <input type="button" ng-show="appCacheState === 'cached'" href="" ng-click="close();" class="btn btn-primary"
+               openlmis-message='button.close' />
+
+        <input type="button" ng-show="appCacheState === 'error'" href="" ng-click="reload();" class="btn btn-primary"
+               openlmis-message='button.retry' />
+      </div>
+    </div>
+  </div>
+
+</div>

@@ -15,6 +15,8 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import org.openlmis.core.domain.BaseModel;
+import org.openlmis.distribution.dto.Reading;
+import org.openlmis.distribution.dto.VaccinationFullCoverageDTO;
 
 /**
  *  VaccinationFullCoverage represents an entity that records overall coverage data including in-clinic vaccinations
@@ -38,5 +40,21 @@ public class VaccinationFullCoverage extends BaseModel {
     this.femaleOutreach = femaleMobileBrigadeReading;
     this.maleHealthCenter = maleHealthCenterReading;
     this.maleOutreach = maleMobileBrigadeReading;
+  }
+
+  public VaccinationFullCoverageDTO transform() {
+    VaccinationFullCoverageDTO dto = new VaccinationFullCoverageDTO();
+    dto.setId(id);
+    dto.setCreatedBy(createdBy);
+    dto.setCreatedDate(createdDate);
+    dto.setModifiedBy(modifiedBy);
+    dto.setModifiedDate(modifiedDate);
+    dto.setFacilityVisitId(facilityVisitId);
+    dto.setFemaleHealthCenterReading(new Reading(femaleHealthCenter));
+    dto.setFemaleMobileBrigadeReading(new Reading(femaleOutreach));
+    dto.setMaleHealthCenterReading(new Reading(maleHealthCenter));
+    dto.setMaleMobileBrigadeReading(new Reading(maleOutreach));
+
+    return dto;
   }
 }

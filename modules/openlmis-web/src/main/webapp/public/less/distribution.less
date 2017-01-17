@@ -41,6 +41,18 @@
   .facility-change-dropdown {
     position: relative;
   }
+  #synchronizationConflictModal {
+    width: 75%;
+    left: 25%;
+    .modal-body {
+      padding-right: 35px;
+      table {
+        th, td {
+          text-align: center;
+        }
+      }
+    }
+  }
 }
 
 .facility-info {
@@ -681,4 +693,27 @@
 
 #syncMessage {
   font-size: 15px;
+}
+
+.review-data {
+  #filter-section {
+    margin-top: 0px;
+    padding-top: 0px;
+    border-top: none;
+
+    .form-row {
+      select {
+        width: 100%;
+      }
+      .form-cell {
+        width: 250px;
+        padding: 0px;
+      }
+      .form-cell:last-child {
+        width: auto;
+        padding: 0px;
+        float: right;
+      }
+    }
+  }
 }

@@ -10,10 +10,10 @@
 
 <form auto-save="distribution" object-store="distributions"
       disable-form="{{isFormDisabled()}}">
-<div class="row-fluid" ng-class="refrigeratorReading.computeStatus()">
-    <div class="span1 status-cell">
-        <span class="status-icon"></span>
-    </div>
+<div class="row-fluid" ng-class="refrigeratorReading.computeStatus(distributionReview)">
+  <div class="span1 status-cell">
+    <span class="status-icon"></span>
+  </div>
   <div class="span3" ng-bind="refrigeratorReading.refrigerator.serialNumber"></div>
   <div class="span2" ng-bind="refrigeratorReading.refrigerator.brand"></div>
     <div class="span3" ng-bind="refrigeratorReading.refrigerator.model"></div>
@@ -39,7 +39,7 @@
                         <div class="form-cell">
                             <label openlmis-message="label.refrigerator.temperature"></label>
             <span class="position-relative">
-              <input type="number" min="-999.9" max="999.9" step="0.1" name="temperature{{$index}}"
+              <input type="number" min="-999.9" max="999.9" step="0.1" name="temperature{{$index}}" lang="en"
                      ng-model="refrigeratorReading.temperature.value" numeric-validator="numericValue,3,1"
                      error-holder="temperatureError{{$index}}" class="right-justified"  ng-trim="false"/>
               <span id="temperatureError{{$index}}" class="rnr-form-error" openlmis-message="error.number.only"
@@ -162,45 +162,46 @@
                                 </div>
                                 <div class="form-row clearfix">
                                     <input id="operatorError{{ $index }}" type="checkbox"
-                                           ng-model="refrigeratorReading.problems.operatorError"/>
+                                           ng-model="refrigeratorReading.problems.operatorError.value"/>
                                     <label class="checkbox-label" for="operatorError{{ $index }}"
                                            openlmis-message="label.operator.error"></label>
                                 </div>
                                 <div class="form-row clearfix">
                                     <input id="egpFault{{ $index }}" type="checkbox"
-                                           ng-model="refrigeratorReading.problems.egpFault"/>
+                                           ng-model="refrigeratorReading.problems.egpFault.value"/>
                                     <label class="checkbox-label" for="egpFault{{ $index }}"
                                            openlmis-message="label.egp.fault"></label>
                                 </div>
                                 <div class="form-row clearfix">
                                     <input id="burnerProblem{{ $index }}" type="checkbox"
-                                           ng-model="refrigeratorReading.problems.burnerProblem"/>
+                                           ng-model="refrigeratorReading.problems.burnerProblem.value"/>
                                     <label class="checkbox-label" for="burnerProblem{{ $index }}"
                                            openlmis-message="label.burner.problem"></label>
                                 </div>
                                 <div class="form-row clearfix">
                                     <input id="thermostatSetting{{ $index }}" type="checkbox"
-                                           ng-model="refrigeratorReading.problems.thermostatSetting"/>
+                                           ng-model="refrigeratorReading.problems.thermostatSetting.value"/>
                                     <label class="checkbox-label" for="thermostatSetting{{ $index }}"
                                            openlmis-message="label.thermostat.setting"></label>
                                 </div>
                                 <div class="form-row clearfix">
                                     <input id="gasLeakage{{ $index }}" type="checkbox"
-                                           ng-model="refrigeratorReading.problems.gasLeakage"/>
+                                           ng-model="refrigeratorReading.problems.gasLeakage.value"/>
                                     <label class="checkbox-label" for="gasLeakage{{ $index }}"
                                            openlmis-message="label.gas.problem"></label>
                                 </div>
                                 <div class="form-row clearfix">
                                     <input id="other{{ $index }}" type="checkbox"
-                                           ng-click="refrigeratorReading.problems.otherProblemExplanation = refrigeratorReading.problems.other ? refrigeratorReading.problems.otherProblemExplanation : undefined"
-                                           ng-model="refrigeratorReading.problems.other"/>
+                                           ng-click="refrigeratorReading.problems.otherProblemExplanation = refrigeratorReading.problems.other.value ? refrigeratorReading.problems.otherProblemExplanation : undefined"
+                                           ng-model="refrigeratorReading.problems.other.value"/>
                                     <label class="checkbox-label" for="other{{ $index }}"
                                            openlmis-message="label.other"></label>
                                 </div>
                                 <div class="form-row clearfix">
-                                    <textarea id="otherTextbox{{ $index }}" ng-show="refrigeratorReading.problems.other"
-                                              ng-model="refrigeratorReading.problems.otherProblemExplanation"
-                                              maxlength="255"></textarea>
+                  <textarea id="otherTextbox{{ $index }}" ng-show="refrigeratorReading.problems.other.value"
+                            ng-model="refrigeratorReading.problems.otherProblemExplanation.value"
+                            maxlength="255"
+                            ng-class="{'required-error': !refrigeratorReading.problems.otherProblemExplanation.value}"></textarea>
                                 </div>
                             </div>
                         </div>
@@ -208,7 +209,7 @@
                     <div class="form-row clearfix">
                         <div class="form-cell" id="notesCell">
                             <label openlmis-message="label.notes"></label>
-                            <textarea id="notes{{ $index }}" ng-model="refrigeratorReading.notes"
+                            <textarea id="notes{{ $index }}" ng-model="refrigeratorReading.notes.value"
                                       maxlength="255"></textarea>
                         </div>
                     </div>

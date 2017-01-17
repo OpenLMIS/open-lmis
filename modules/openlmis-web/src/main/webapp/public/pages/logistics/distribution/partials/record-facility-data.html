@@ -9,11 +9,13 @@
   -->
 
 <div class="record-facility-data" ng-controller="RecordFacilityDataController">
+    <div class="alert alert-success" id="syncSuccessMsgDiv" fade-out="3000" openlmis-message="message" ng-show="message"></div>
+    <div class="alert alert-danger" id="syncFailureMsgDiv" fade-out="3000" openlmis-message="errorMessage" ng-show="errorMessage"></div>
     <div class="row-fluid facility-heading">
         <div class="span5" ng-show="facilitySelected">
-            
+
           <span id="facilityStatus"
-                ng-class="distribution.facilityDistributions[facilitySelected.facilityId].computeStatus()">
+                ng-class="distribution.facilityDistributions[facilitySelected.facilityId].computeStatus(distributionReview)">
             <div id="facilityIndicator" class="status-icon pull-left position-fixing"></div>
           </span>
 
@@ -28,15 +30,15 @@
             <h2 id="noFacilitySelectedMessage" openlmis-message="message.no.facility.selected"></h2>
         </div>
         <div id="legend" class="pull-right distribution-legend">
-      <span class="is-empty">
+      <span class="is-empty" ng-if="!distributionReview">
         <span id="notStartedLegendIcon" class="status-icon"></span>
         <span id="notStartedLegendLabel" openlmis-message="label.distribution.legend.not.started"></span>
       </span>
-      <span class="is-incomplete">
+      <span class="is-incomplete" ng-if="!distributionReview">
         <span id="partialLegendIcon" class="status-icon"></span>
         <span id="partialLegendLabel" openlmis-message="label.distribution.legend.partial.complete"></span>
       </span>
-      <span class="is-complete">
+      <span class="is-complete" ng-if="!distributionReview">
         <span id="completedLegendIcon" class="status-icon"></span>
         <span id="completedLegendLabel" openlmis-message="label.distribution.legend.not.complete"></span>
       </span>
@@ -44,10 +46,17 @@
         <span id="syncedLegendIcon" class="status-icon"></span>
         <span id="syncedLegendLabel" openlmis-message="label.distribution.legend.synchronized"></span>
       </span>
-      <span class="is-duplicate">
+      <span class="is-duplicate" ng-if="!distributionReview">
         <span id="cannotSyncLegendIcon" class="status-icon"></span>
         <span id="cannotSyncLegendLabel" openlmis-message="label.distribution.legend.cannot.synchronize"></span>
       </span>
+      <button class="btn btn-primary" ng-if="hasPermission('EDIT_SYNCHRONIZED_DATA') && distributionReview.edit && facilitySelected" ng-click="toggleEditMode()">
+        <span ng-if="!distributionReview.editMode[facilitySelected.facilityId][distributionReview.currentScreen]" openlmis-message="button.edit"></span>
+        <span ng-if="distributionReview.editMode[facilitySelected.facilityId][distributionReview.currentScreen]" openlmis-message="button.cancel"></span>
+      </button>
+      <button class="btn btn-primary" ng-if="hasPermission('EDIT_SYNCHRONIZED_DATA') && distributionReview.edit && facilitySelected" ng-disabled="!distributionReview.editMode[facilitySelected.facilityId][distributionReview.currentScreen]" ng-click="sync()">
+        <span openlmis-message="button.sync"></span>
+      </button>
         </div>
     </div>
     <div class="info-box">
@@ -61,7 +70,7 @@
                     <optgroup ng-repeat="zone in geographicZones" label="{{ zone }}">
                         <option ng-repeat="facility in zoneFacilityMap[zone] | orderBy: 'facilityName'"
                                 value="{{ facility.facilityId }}"
-                                ng-class="distribution.facilityDistributions[facility.id].computeStatus()">
+                                ng-class="distribution.facilityDistributions[facility.id].computeStatus(distributionReview)">
                             {{ facility.facilityCode }} - {{ facility.facilityName }}
                         </option>
                     </optgroup>
@@ -87,6 +96,81 @@
                 <strong openlmis-message="label.period"> </strong> :&nbsp;<span
                     ng-bind="distribution.period.name"></span>
             </div>
+        </div>
+    </div>
+
+    <!-- sync conflict modal -->
+
+    <div id="synchronizationConflictModal" show="syncResults.length" modal="syncResults.length" options="{'backdrop':'static', 'escape':false}">
+        <div class="modal-header">
+            <h3>
+                <span openlmis-message="label.distribution.synchronization.conflict"></span>
+            </h3>
+        </div>
+
+        <div class="modal-body">
+            <div ng-repeat="(facility, conflicts) in syncResults.conflicts">
+                <div class="row-fluid info-box">
+                    <div class="info-box-labels">
+                        <strong openlmis-message="label.coverage.health.center"></strong>
+                        <span> :&nbsp;</span>
+                        <span openlmis-message="distribution.facilityDistributions[facility].facilityName"></span>
+                    </div>
+                </div>
+                <div ng-repeat="(dataScreenUI, details) in conflicts">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th colspan="5">
+                                    <strong openlmis-message="label.distribution.history.header.data.screen"></strong>
+                                    <span> :&nbsp;</span>
+                                    <span openlmis-message="dataScreenUI"></span>
+                                </th>
+                            </tr>
+                            <tr>
+                                <th openlmis-message="label.distribution.history.header.edited.item"></th>
+                                <th openlmis-message="label.distribution.history.header.current.value"></th>
+                                <th openlmis-message="label.distribution.history.header.old.value"></th>
+                                <th openlmis-message="label.distribution.history.header.new.value"></th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr ng-repeat="detail in details">
+                                <td class="span2">
+                                    <span ng-repeat="translate in detail.editedItemUI.translate">
+                                        <span ng-if="!$first">&nbsp;(</span>
+                                        <span openlmis-message="translate"></span>
+                                        <span ng-if="!$first">)</span>
+                                    </span>
+                                    <span ng-repeat="noTranslate in detail.editedItemUI.noTranslate">
+                                        &nbsp;(<span openlmis-message="noTranslate"></span>)
+                                    </span>
+                                </td>
+                                <td class="span2">{{detail.originalValue}}</td>
+                                <td class="span2">{{detail.previousValue}}</td>
+                                <td class="span2">{{detail.newValue}}</td>
+                                <td class="span2">
+                                    <a class="btn btn-primary" ng-click="abandon(facility, dataScreenUI, detail)">
+                                        <span openlmis-message="button.abandon"></span>
+                                    </a>
+                                    <a class="btn btn-primary" ng-click="forceSync(facility, dataScreenUI, detail)">
+                                        <span openlmis-message="button.force.edit"></span>
+                                    </a>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer" ng-if="syncResults.length > 1">
+            <a class="btn btn-primary" ng-click="abandonAll()">
+                <span openlmis-message="button.abandon.all"></span>
+            </a>
+            <a class="btn btn-primary" ng-click="forceSyncAll()">
+                <span openlmis-message="button.force.edit.all"></span>
+            </a>
         </div>
     </div>
 </div>

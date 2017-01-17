@@ -52,6 +52,10 @@ public class GeographicZoneRepository {
     return mapper.getAllGeographicZones();
   }
 
+  public List<GeographicZone> searchByLevelNumber(Integer levelNumber) {
+    return mapper.searchByLevelNumber(levelNumber);
+  }
+
   public void save(GeographicZone zone) {
     try {
       if (zone.getId() == null) {

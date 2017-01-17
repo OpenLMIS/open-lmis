@@ -48,4 +48,11 @@ public interface EpiUseLineItemMapper {
     @Result(property = "productGroup.name", column = "productGroupName")
   })
   List<EpiUseLineItem> getBy(Long facilityVisitId);
+
+  @Select({"SELECT * FROM epi_use_line_items WHERE id = #{id}"})
+  @Results(value = {
+          @Result(property = "productGroup.id", column = "productGroupId"),
+          @Result(property = "productGroup.name", column = "productGroupName")
+  })
+  EpiUseLineItem getLineById(Long id);
 }

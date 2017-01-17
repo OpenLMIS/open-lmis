@@ -396,3 +396,11 @@ services.factory('ProductCategories', function ($resource) {
 services.factory('Fridges', function ($resource) {
   return $resource('/fridges/:deliveryZoneId.json', {}, {});
 });
+
+services.factory('ReviewDataFilters', function ($resource) {
+  return $resource('/review-data/filters.json', {}, {});
+});
+
+services.factory('SynchronizedDistributions', function ($resource) {
+  return $resource('/review-data/list.json', {}, { get:{method: 'POST'} });
+});

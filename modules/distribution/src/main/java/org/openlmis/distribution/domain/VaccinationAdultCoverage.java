@@ -6,6 +6,9 @@ import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import org.openlmis.core.domain.Facility;
 import org.openlmis.core.domain.ProcessingPeriod;
+import org.openlmis.distribution.dto.AdultCoverageDTO;
+import org.openlmis.distribution.dto.AdultCoverageLineItemDTO;
+import org.openlmis.distribution.dto.OpenedVialLineItemDTO;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -46,5 +49,24 @@ public class VaccinationAdultCoverage extends VaccinationCoverage {
       this.adultCoverageLineItems.add(new AdultCoverageLineItem(facilityVisit, facility, targetGroupForLineItem,
         demographicGroup, period.getNumberOfMonths()));
     }
+  }
+
+  public AdultCoverageDTO transform() {
+    AdultCoverageDTO dto = new AdultCoverageDTO();
+
+    List<AdultCoverageLineItemDTO> adultCoverageLineItems = new ArrayList<>();
+    for (AdultCoverageLineItem adultCoverageLineItem : this.adultCoverageLineItems) {
+      adultCoverageLineItems.add(adultCoverageLineItem.transform());
+    }
+
+    List<OpenedVialLineItemDTO> openedVialLineItems = new ArrayList<>();
+    for (OpenedVialLineItem openedVialLineItem : this.openedVialLineItems) {
+      openedVialLineItems.add(openedVialLineItem.transform());
+    }
+
+    dto.setAdultCoverageLineItems(adultCoverageLineItems);
+    dto.setOpenedVialLineItems(openedVialLineItems);
+
+    return dto;
   }
 }

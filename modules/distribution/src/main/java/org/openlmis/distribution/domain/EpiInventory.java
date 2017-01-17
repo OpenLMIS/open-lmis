@@ -16,6 +16,8 @@ import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import org.openlmis.core.domain.Facility;
 import org.openlmis.core.domain.FacilityProgramProduct;
+import org.openlmis.distribution.dto.EpiInventoryDTO;
+import org.openlmis.distribution.dto.EpiInventoryLineItemDTO;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -41,5 +43,18 @@ public class EpiInventory {
       lineItem.setModifiedBy(facilityVisit.getModifiedBy());
       lineItems.add(lineItem);
     }
+  }
+
+  public EpiInventoryDTO transform() {
+      EpiInventoryDTO dto = new EpiInventoryDTO();
+
+    List<EpiInventoryLineItemDTO> lineItems = new ArrayList<>();
+    for (EpiInventoryLineItem lineItem : this.lineItems) {
+        lineItems.add(lineItem.transform());
+    }
+
+    dto.setLineItems(lineItems);
+
+    return dto;
   }
 }
