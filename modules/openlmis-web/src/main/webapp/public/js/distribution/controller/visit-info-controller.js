@@ -49,15 +49,27 @@ function VisitInfoController($scope, distributionService, $routeParams) {
     }
 
     if (visit.visited.value) {
-      visit.reasonForNotVisiting = {};
-      visit.otherReasonDescription = {};
+      visit.reasonForNotVisiting = setApplicableField(visit.reasonForNotVisiting);
+      visit.otherReasonDescription = setApplicableField(visit.otherReasonDescription);
       return;
     }
 
-    visit.observations = {};
-    visit.confirmedBy = {};
-    visit.verifiedBy = {};
-    visit.vehicleId = {};
-    visit.visitDate = {};
+    visit.observations = setApplicableField(visit.observations);
+    visit.confirmedBy = setApplicableField(visit.confirmedBy);
+    visit.verifiedBy = setApplicableField(visit.verifiedBy);
+    visit.vehicleId = setApplicableField(visit.vehicleId);
+    visit.visitDate = setApplicableField(visit.visitDate);
   };
+
+  function setApplicableField(field) {
+    if (isUndefined(field)) {
+        return {};
+    }
+
+    if (isUndefined(field.original)) {
+        return {};
+    }
+
+    return { original: field.original };
+  }
 }

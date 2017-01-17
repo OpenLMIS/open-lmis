@@ -105,6 +105,18 @@ public class FacilityVisit extends BaseModel {
     dto.setOtherReasonDescription(new Reading(otherReasonDescription));
     dto.setSynced(new Reading(synced));
 
+    dto.getConfirmedBy().getName().setNotRecorded(false);
+    dto.getConfirmedBy().getTitle().setNotRecorded(false);
+    dto.getVerifiedBy().getName().setNotRecorded(false);
+    dto.getVerifiedBy().getTitle().setNotRecorded(false);
+    dto.getObservations().setNotRecorded(false);
+    dto.getVisitDate().setNotRecorded(false);
+    dto.getVisited().setNotRecorded(false);
+    dto.getVehicleId().setNotRecorded(false);
+    dto.getReasonForNotVisiting().setNotRecorded(false);
+    dto.getOtherReasonDescription().setNotRecorded(false);
+    dto.getSynced().setNotRecorded(false);
+
     return dto;
   }
 }

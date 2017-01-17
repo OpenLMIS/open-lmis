@@ -20,8 +20,6 @@ import org.openlmis.web.util.FacilityDistributionEditDetail;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.lang.reflect.InvocationTargetException;
-
 @Service
 public class FacilityDistributionEditService {
 
@@ -45,7 +43,7 @@ public class FacilityDistributionEditService {
 
     try {
       PropertyUtils.setProperty(db, detail.getEditedItem(), detail.getNewValue());
-    } catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
+    } catch (Exception e) {
       throw new IllegalStateException(e);
     }
 
@@ -75,6 +73,10 @@ public class FacilityDistributionEditService {
               break;
             default:
               throw new IllegalStateException("Unknown property in FacilityVisit: " + detail.getParentProperty());
+          }
+
+          if (null == db) {
+            db = new Facilitator();
           }
         } else {
           throw new IllegalStateException("Can't find facility visit with id: " + detail.getParentDataScreenId());
