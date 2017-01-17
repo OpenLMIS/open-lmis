@@ -83,11 +83,11 @@ public class ReviewDataController extends BaseController {
     return response("results", results);
   }
 
-  @RequestMapping(value = "review-data/distribution/{id}/force-sync", method = POST, headers = ACCEPT_JSON)
+  @RequestMapping(value = "review-data/distribution/{id}/{facility}/force-sync", method = POST, headers = ACCEPT_JSON)
   @PreAuthorize("@permissionEvaluator.hasPermission(principal, 'VIEW_SYNCHRONIZED_DATA, EDIT_SYNCHRONIZED_DATA')")
   @ResponseStatus(OK)
-  public void forceSync(@RequestBody FacilityDistributionEditDetail detail) {
-    reviewDataService.update(detail);
+  public void forceSync(@PathVariable Long id, @PathVariable Long facility, @RequestBody FacilityDistributionEditDetail detail, HttpServletRequest request) {
+    reviewDataService.update(id, facility, detail, loggedInUserId(request));
   }
 
   @RequestMapping(value = "review-data/distribution/lastViewed", method = POST)

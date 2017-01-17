@@ -200,7 +200,7 @@ public class ReviewDataService {
 
         if (!detail.isConflict()) {
           facilityDistributionEditService.save(detail);
-          createHistory(userId, distribution, original, detail);
+          createHistory(userId, distribution, detail, original.getFacilityId());
 
           iterator.remove();
         }
@@ -212,8 +212,13 @@ public class ReviewDataService {
     }
   }
 
-  public void update(FacilityDistributionEditDetail detail) {
+  public void update(Long distributionId, Long facilityId, FacilityDistributionEditDetail detail, Long userId) {
+    Distribution distribution = distributionService.getBy(distributionId);
+    Map<Long, FacilityDistribution> facilityDistributions = facilityDistributionService.getData(distribution);
+    FacilityDistribution original = facilityDistributions.get(facilityId);
+
     facilityDistributionEditService.save(detail);
+    createHistory(userId, distribution, detail, original.getFacilityId());
   }
 
   public File getHistoryAsCSV(Long distributionId) throws IOException {
@@ -373,9 +378,9 @@ public class ReviewDataService {
     return cell;
   }
 
-  private void createHistory(Long userId, Distribution distribution, FacilityDistribution facilityDistribution,
-                 FacilityDistributionEditDetail detail) {
-    Facility facility = facilityService.getById(facilityDistribution.getFacilityId());
+  private void createHistory(Long userId, Distribution distribution,
+                             FacilityDistributionEditDetail detail, Long facilityId) {
+    Facility facility = facilityService.getById(facilityId);
 
     DistributionsEditHistory history = new DistributionsEditHistory();
     history.setDistribution(distribution);
