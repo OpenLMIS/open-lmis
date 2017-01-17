@@ -61,8 +61,6 @@ public class Reading {
     } else {
       this.notRecorded = ((null == value) && (!notRecorded)) ? true : notRecorded;
     }
-
-
   }
 
   public Reading(Date date, String format) {

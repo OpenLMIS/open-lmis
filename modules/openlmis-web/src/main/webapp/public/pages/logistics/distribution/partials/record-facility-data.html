@@ -9,6 +9,7 @@
   -->
 
 <div class="record-facility-data" ng-controller="RecordFacilityDataController">
+    <div class="alert alert-danger" id="syncFailureMsgDiv" fade-out="3000" openlmis-message="errorMessage" ng-show="errorMessage"></div>
     <div class="row-fluid facility-heading">
         <div class="span5" ng-show="facilitySelected">
 

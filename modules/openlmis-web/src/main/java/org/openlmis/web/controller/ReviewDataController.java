@@ -12,6 +12,7 @@ import org.openlmis.web.service.ReviewDataService;
 import org.openlmis.web.util.FacilityDistributionEditDetail;
 import org.openlmis.web.util.FacilityDistributionEditResults;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
@@ -29,6 +30,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 
 import static org.openlmis.web.response.OpenLmisResponse.SUCCESS;
+import static org.openlmis.web.response.OpenLmisResponse.error;
 import static org.openlmis.web.response.OpenLmisResponse.response;
 import static org.springframework.http.HttpStatus.OK;
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
@@ -80,15 +82,23 @@ public class ReviewDataController extends BaseController {
   @RequestMapping(value = "review-data/distribution/{id}/sync", method = POST, headers = ACCEPT_JSON)
   @PreAuthorize("@permissionEvaluator.hasPermission(principal, 'VIEW_SYNCHRONIZED_DATA, EDIT_SYNCHRONIZED_DATA')")
   public ResponseEntity<OpenLmisResponse> sync(@PathVariable Long id, @RequestBody FacilityDistributionDTO facilityDistribution, HttpServletRequest request) {
-    FacilityDistributionEditResults results = reviewDataService.update(id, facilityDistribution, loggedInUserId(request));
-    return response("results", results);
+    try {
+      FacilityDistributionEditResults results = reviewDataService.update(id, facilityDistribution, loggedInUserId(request));
+      return response("results", results);
+    } catch (Exception e) {
+      return error(UNEXPECTED_EXCEPTION, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
   }
 
   @RequestMapping(value = "review-data/distribution/{id}/{facility}/force-sync", method = POST, headers = ACCEPT_JSON)
   @PreAuthorize("@permissionEvaluator.hasPermission(principal, 'VIEW_SYNCHRONIZED_DATA, EDIT_SYNCHRONIZED_DATA')")
   public ResponseEntity<OpenLmisResponse> forceSync(@PathVariable Long id, @PathVariable Long facility, @RequestBody FacilityDistributionEditDetail detail, HttpServletRequest request) {
-    DistributionDTO distribution = reviewDataService.update(id, facility, detail, loggedInUserId(request));
-    return response("distribution", distribution);
+    try {
+      DistributionDTO distribution = reviewDataService.update(id, facility, detail, loggedInUserId(request));
+      return response("distribution", distribution);
+    } catch (Exception e) {
+      return error(UNEXPECTED_EXCEPTION, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
   }
 
   @RequestMapping(value = "review-data/distribution/lastViewed", method = POST)
