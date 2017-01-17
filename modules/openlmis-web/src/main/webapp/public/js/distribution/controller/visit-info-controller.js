@@ -63,13 +63,13 @@ function VisitInfoController($scope, distributionService, $routeParams) {
 
   function setApplicableField(field) {
     if (isUndefined(field)) {
-        return {};
+        return {type: 'reading'};
     }
 
     if (isUndefined(field.original)) {
-        return {};
+        return {type: 'reading'};
     }
 
-    return { original: field.original };
+    return { original: field.original, type: 'reading' };
   }
 }

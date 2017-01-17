@@ -54,7 +54,7 @@ function RecordFacilityDataController($scope, $location, $route, $routeParams, d
     }
 
     for (propertyName in bean) {
-      if (bean.hasOwnProperty(propertyName)) {
+      if (bean.hasOwnProperty(propertyName) && 'original' !== propertyName) {
         propertyValue = bean[propertyName];
 
         if (propertyValue) {
