@@ -1,5 +1,7 @@
 package org.openlmis.web.service;
 
+import com.google.common.base.Predicate;
+import com.google.common.collect.FluentIterable;
 import com.itextpdf.text.Chunk;
 import com.itextpdf.text.Document;
 import com.itextpdf.text.DocumentException;
@@ -50,6 +52,7 @@ import org.supercsv.io.CsvMapWriter;
 import org.supercsv.io.ICsvMapWriter;
 import org.supercsv.prefs.CsvPreference;
 
+import javax.annotation.Nullable;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.FileWriter;
@@ -120,7 +123,12 @@ public class ReviewDataService {
     List<ProcessingPeriod> periods = new ArrayList<>(distributions.size());
 
     for (Distribution distribution : distributions) {
-      periods.add(distribution.getPeriod());
+      ProcessingPeriod period = distribution.getPeriod();
+      boolean exist = FluentIterable.from(periods).anyMatch(new PeriodPredicate(period.getId()));
+
+      if (!exist) {
+        periods.add(period);
+      }
     }
 
     return new ReviewDataFilters(programs, geographicZones, deliveryZones, periods);
@@ -132,14 +140,18 @@ public class ReviewDataService {
 
     for (Distribution distribution : distributions) {
       Map<Long, FacilityDistribution> facilityDistributionMap = facilityDistributionService.getData(distribution);
+      Iterator<Map.Entry<Long, FacilityDistribution>> iterator = facilityDistributionMap.entrySet().iterator();
 
-      for (Map.Entry<Long, FacilityDistribution> entry : facilityDistributionMap.entrySet()) {
-        FacilityDistribution value = entry.getValue();
-        String geographicZone = value.getGeographicZone();
+      if (!iterator.hasNext()) {
+        continue;
+      }
 
-        if (!filter.isProvinceSelected() || geographicZone.equalsIgnoreCase(filter.getProvince().getName())) {
-          list.add(create(userId, distribution, geographicZone));
-        }
+      Map.Entry<Long, FacilityDistribution> entry = iterator.next();
+      FacilityDistribution value = entry.getValue();
+      String geographicZone = value.getGeographicZone();
+
+      if (!filter.isProvinceSelected() || geographicZone.equalsIgnoreCase(filter.getProvince().getName())) {
+        list.add(create(userId, distribution, geographicZone));
       }
     }
 
@@ -475,6 +487,20 @@ public class ReviewDataService {
   private boolean isEligibility(Date syncDate) {
     Days days = Days.daysBetween(new DateTime(syncDate), DateTime.now());
     return days.getDays() <= eligibilityEdit;
+  }
+
+  private static final class PeriodPredicate implements Predicate<ProcessingPeriod> {
+    private Long id;
+
+    public PeriodPredicate(Long id) {
+      this.id = id;
+    }
+
+    @Override
+    public boolean apply(@Nullable ProcessingPeriod input) {
+      return null != input && input.getId().equals(id);
+    }
+
   }
 
 }

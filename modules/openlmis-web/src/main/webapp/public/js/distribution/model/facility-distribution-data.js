@@ -66,4 +66,16 @@ function FacilityDistribution(facilityDistribution) {
     return ((this.facilityVisit.visited && this.facilityVisit.visited.value === false) && ["refrigerators", "epi-inventory", "epi-use"].indexOf(tabName) != -1);
   };
 
+  FacilityDistribution.prototype.getByScreen = function (screenName) {
+    switch(screenName) {
+      case 'visit-info':        return { property: 'facilityVisit', bean: this.facilityVisit };
+      case 'refrigerator-data': return { property: 'refrigerators', bean: this.refrigerators };
+      case 'epi-inventory':     return { property: 'epiInventory', bean: this.epiInventory };
+      case 'epi-use':           return { property: 'epiUse', bean: this.epiUse };
+      case 'full-coverage':     return { property: 'fullCoverage', bean: this.fullCoverage };
+      case 'child-coverage':    return { property: 'childCoverage', bean: this.childCoverage };
+      case 'adult-coverage':    return { property: 'adultCoverage', bean: this.adultCoverage };
+    }
+  };
+
 }

@@ -8,7 +8,7 @@
  * You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org. 
  */
 
-function ReviewDataController($scope, SynchronizedDistributions, ReviewDataFilters, distributionService, $http, $location, SharedDistributions, $rootScope, messageService, $dialog) {
+function ReviewDataController($scope, SynchronizedDistributions, ReviewDataFilters, distributionService, $http, $location, SharedDistributions, $rootScope, messageService, $dialog, $window) {
   var empty = {};
 
   $scope.message = '';
@@ -23,11 +23,11 @@ function ReviewDataController($scope, SynchronizedDistributions, ReviewDataFilte
 
   $scope.filters = ReviewDataFilters.get(empty, function () {
     $scope.filters.selected = {
-      program: $scope.filters && $scope.filters.filter && $scope.filters.filter.programs[0],
-      order: {}
+      order: {
+        column: 'synchronized',
+        descending: true
+      }
     };
-
-    $scope.sort('synchronized');
   });
 
   function getDistributions() {
@@ -143,34 +143,8 @@ function ReviewDataController($scope, SynchronizedDistributions, ReviewDataFilte
     $http.post('/review-data/distribution/check.json', distribution).success(onCheckSuccess);
   };
 
-  function closePrint() {
-    document.body.removeChild(this.__container__);
-  }
-
-  function setPrint() {
-    this.contentWindow.__container__ = this;
-    this.contentWindow.onbeforeunload = closePrint;
-    this.contentWindow.onafterprint = closePrint;
-    this.contentWindow.focus(); // Required for IE
-    this.contentWindow.print();
-  }
-
   $scope.getPDF = function (distributionId) {
-    $http.get('/review-data/distribution/' + distributionId + '/pdf', {responseType: 'arraybuffer'})
-    .success(function (data) {
-      var file = new Blob([data], {type: 'application/pdf'});
-      var fileURL = URL.createObjectURL(file);
-      var iframe = document.createElement("iframe");
-
-      iframe.onload = setPrint;
-      iframe.style.visibility = "hidden";
-      iframe.style.position = "fixed";
-      iframe.style.right = "0";
-      iframe.style.bottom = "0";
-      iframe.src = fileURL;
-
-      document.body.appendChild(iframe);
-    });
+    $window.open('/review-data/distribution/' + distributionId + '/pdf', '_blank');
   };
 
 }

@@ -8,7 +8,7 @@
  * You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org. 
  */
 
-function RecordFacilityDataController($scope, $location, $route, $routeParams, distributionService, AuthorizationService, $dialog, $http) {
+function RecordFacilityDataController($scope, $location, $route, $routeParams, distributionService, AuthorizationService, $dialog, $http, messageService, $timeout, IndexedDB) {
   $scope.label = $routeParams.facility ? 'label.change.facility' : "label.select.facility";
 
   $scope.distribution = distributionService.distribution;
@@ -44,12 +44,97 @@ function RecordFacilityDataController($scope, $location, $route, $routeParams, d
     }
   };
 
+  function restore(bean) {
+    var propertyName;
+    var propertyValue;
+
+    for (propertyName in bean) {
+      if (bean.hasOwnProperty(propertyName)) {
+        propertyValue = bean[propertyName];
+
+        if (propertyValue) {
+            if (propertyValue.type === 'reading') {
+              bean[propertyName].value = propertyValue.original.value;
+              bean[propertyName].notRecorded = propertyValue.original.notRecorded;
+            } else {
+              restore(propertyValue);
+            }
+        }
+      }
+    }
+  }
+
+  function syncCancelCallback(result) {
+    if (result) {
+      var screen = distributionService.distributionReview.currentScreen;
+      var handler = $scope.facilitySelected.getByScreen(screen);
+
+      restore(handler.bean);
+      $scope.facilitySelected[handler.property] = handler.bean;
+
+      $timeout(function () {
+        IndexedDB.put('distributions', $scope.distribution);
+        $route.reload();
+      });
+    } else {
+      $scope.toggleEditMode();
+    }
+  }
+
+  function same(a, b) {
+    return a.value === b.value && a.notRecorded === b.notRecorded;
+  }
+
+  function modified(bean) {
+    var propertyName;
+    var propertyValue;
+
+    for (propertyName in bean) {
+      if (bean.hasOwnProperty(propertyName)) {
+        propertyValue = bean[propertyName];
+
+        if (propertyValue) {
+            if (propertyValue.type === 'reading') {
+              if (!same(propertyValue, propertyValue.original)) {
+                return true;
+              }
+            } else {
+              var result = modified(propertyValue);
+
+              if (result) {
+                return true;
+              }
+            }
+        }
+      }
+    }
+
+    return false;
+  }
+
   $scope.toggleEditMode = function () {
     if (distributionService.distributionReview) {
       distributionService.distributionReview.editMode[$routeParams.facility][distributionService.distributionReview.currentScreen] ^= true;
     }
 
-    $route.reload();
+    if (!distributionService.distributionReview.editMode[$routeParams.facility][distributionService.distributionReview.currentScreen]) {
+      var screen = distributionService.distributionReview.currentScreen;
+      var handler = $scope.facilitySelected.getByScreen(screen);
+
+      if (modified(handler.bean)) {
+        var dialogOpts = {
+          id: 'distributionSyncCancel',
+          header: 'label.distribution.sync',
+          body: 'msg.sync.cancel'
+        };
+
+        OpenLmisDialog.newDialog(dialogOpts, syncCancelCallback, $dialog);
+      } else {
+        $route.reload();
+      }
+    } else {
+      $route.reload();
+    }
   };
 
   function onSuccess(data) {
@@ -68,6 +153,8 @@ function RecordFacilityDataController($scope, $location, $route, $routeParams, d
         $scope.syncResults.conflicts[results.facilityId][elem.dataScreenUI].push(elem);
         $scope.syncResults.length += 1;
       });
+    } else {
+        $scope.message = messageService.get('msg.sync.success', results.distribution.deliveryZone.name, results.distribution.period.name);
     }
 
     $scope.distribution = results.distribution;

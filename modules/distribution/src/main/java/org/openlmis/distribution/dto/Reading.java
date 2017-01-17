@@ -44,6 +44,7 @@ public class Reading {
     return Optional.fromNullable(reading).or(EMPTY);
   }
 
+  private String type = "reading";
   private Reading original;
   private Object value;
   private Boolean notRecorded;
