@@ -175,6 +175,23 @@ public class FacilityDistributionEditHandlerTest {
   }
 
   @Test
+  public void shouldReturnTrueIfDtoWasModified() throws Exception {
+    replacement.getFacilityVisit().getObservations().setValue("some very important observations");
+    assertThat(handler.modified(replacement), is(true));
+
+    replacement.getEpiUse().getLineItems().get(0).getExpirationDate().setValue("05/2016");
+    assertThat(handler.modified(replacement), is(true));
+
+    replacement.getFullCoverage().getFemaleMobileBrigadeReading().setValue("100");
+    assertThat(handler.modified(replacement), is(true));
+  }
+
+  @Test
+  public void shouldReturnFalseIfDtoWasNotModified() throws Exception {
+    assertThat(handler.modified(replacement), is(false));
+  }
+
+  @Test
   public void shouldNotFindConflicts() throws Exception {
     // without changes
     FacilityDistributionEditResults results = handler.check(original, replacement);
