@@ -48,7 +48,7 @@ function VisitInfoController($scope, distributionService, $routeParams) {
         return;
     }
 
-    if (visit.visited.value === 'true') {
+    if (visit.visited.value) {
       visit.reasonForNotVisiting = {};
       visit.otherReasonDescription = {};
       return;
