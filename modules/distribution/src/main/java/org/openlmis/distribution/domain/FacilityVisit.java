@@ -28,6 +28,7 @@ import org.openlmis.distribution.dto.Reading;
 import java.util.Date;
 
 import static org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion.NON_EMPTY;
+import static org.openlmis.distribution.dto.Reading.notRecorded;
 
 /**
  * FacilityVisit represents an entity which keeps track of whether facility was visited or not. If visited then
@@ -105,32 +106,19 @@ public class FacilityVisit extends BaseModel {
     dto.setOtherReasonDescription(new Reading(otherReasonDescription));
     dto.setSynced(new Reading(synced));
 
-    setNotRecorded(dto.getConfirmedBy().getName());
-    setNotRecorded(dto.getConfirmedBy().getTitle());
-    setNotRecorded(dto.getVerifiedBy().getName());
-    setNotRecorded(dto.getVerifiedBy().getTitle());
-    setNotRecorded(dto.getObservations());
-    setNotRecorded(dto.getVisitDate());
-    setNotRecorded(dto.getVisited());
-    setNotRecorded(dto.getVehicleId());
-    setNotRecorded(dto.getReasonForNotVisiting());
-    setNotRecorded(dto.getOtherReasonDescription());
-    setNotRecorded(dto.getSynced());
+    notRecorded(dto.getConfirmedBy().getName());
+    notRecorded(dto.getConfirmedBy().getTitle());
+    notRecorded(dto.getVerifiedBy().getName());
+    notRecorded(dto.getVerifiedBy().getTitle());
+    notRecorded(dto.getObservations());
+    notRecorded(dto.getVisitDate());
+    notRecorded(dto.getVisited());
+    notRecorded(dto.getVehicleId());
+    notRecorded(dto.getReasonForNotVisiting());
+    notRecorded(dto.getOtherReasonDescription());
+    notRecorded(dto.getSynced());
 
     return dto;
   }
 
-  private void setNotRecorded(Reading reading) {
-    if (null == reading) {
-      return;
-    }
-
-    reading.setNotRecorded(false);
-
-    if (null == reading.getOriginal()) {
-      return;
-    }
-
-    reading.getOriginal().setNotRecorded(false);
-  }
 }

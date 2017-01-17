@@ -24,6 +24,7 @@ import org.openlmis.distribution.dto.Reading;
 import org.openlmis.distribution.dto.RefrigeratorReadingDTO;
 
 import static org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion.NON_EMPTY;
+import static org.openlmis.distribution.dto.Reading.notRecorded;
 
 /**
  *  RefrigeratorReading represents an entity which keeps track of performance and operating issues of a refrigerator.
@@ -93,7 +94,7 @@ public class RefrigeratorReading extends BaseModel {
     dto.setProblems(problem.transform());
     dto.setNotes(new Reading(notes));
 
-    dto.getNotes().setNotRecorded(false);
+    notRecorded(dto.getNotes());
 
     return dto;
   }
