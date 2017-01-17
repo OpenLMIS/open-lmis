@@ -48,6 +48,12 @@ public interface FacilityVisitMapper {
 
 
   @Select({"SELECT * FROM facility_visits WHERE id = #{id}"})
+  @Results({
+          @Result(property = "verifiedBy.name", column = "verifiedByName"),
+          @Result(property = "verifiedBy.title", column = "verifiedByTitle"),
+          @Result(property = "confirmedBy.name", column = "confirmedByName"),
+          @Result(property = "confirmedBy.title", column = "confirmedByTitle")
+  })
   public FacilityVisit getById(Long id);
 
 
