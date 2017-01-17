@@ -25,6 +25,7 @@ import org.openlmis.core.domain.ProcessingPeriod;
 import org.openlmis.core.domain.Program;
 import org.openlmis.core.service.DeliveryZoneService;
 import org.openlmis.core.service.FacilityService;
+import org.openlmis.core.service.GeographicZoneService;
 import org.openlmis.core.service.MessageService;
 import org.openlmis.core.service.ProgramService;
 import org.openlmis.core.service.UserService;
@@ -97,6 +98,9 @@ public class ReviewDataService {
   private UserService userService;
 
   @Autowired
+  private GeographicZoneService geographicZoneService;
+
+  @Autowired
   private FacilityDistributionService facilityDistributionService;
 
   @Autowired
@@ -114,9 +118,12 @@ public class ReviewDataService {
   @Value("${distribution.edit.in.progress}")
   private Long distributionEditInProgress;
 
+  @Value("${distribution.edit.province.level}")
+  private Integer distributionEditProvinceLevel;
+
   public ReviewDataFilters getFilters() {
     List<Program> programs = programService.getAll();
-    List<GeographicZone> geographicZones = facilityService.getAllZones();
+    List<GeographicZone> geographicZones = facilityService.searchByLevelNumber(distributionEditProvinceLevel);
     List<DeliveryZone> deliveryZones = deliveryZoneService.getAll();
 
     List<Distribution> distributions = distributionService.getFullSyncedDistributions();
@@ -150,8 +157,26 @@ public class ReviewDataService {
       FacilityDistribution value = entry.getValue();
       String geographicZone = value.getGeographicZone();
 
-      if (!filter.isProvinceSelected() || geographicZone.equalsIgnoreCase(filter.getProvince().getName())) {
-        list.add(create(userId, distribution, geographicZone));
+      List<GeographicZone> facilityDistributionZones = geographicZoneService.getGeographicZonesByCodeOrName(geographicZone);
+
+      if (facilityDistributionZones.isEmpty()) {
+        continue;
+      }
+
+      GeographicZone zone = facilityDistributionZones.get(0);
+
+      while (null != zone) {
+        if (!filter.isProvinceSelected() && zone.getLevel().getLevelNumber().equals(distributionEditProvinceLevel)) {
+          list.add(create(userId, distribution, zone.getName()));
+          break;
+        }
+
+        if (filter.isProvinceSelected() && zone.getCode().equals(filter.getProvince().getCode())) {
+          list.add(create(userId, distribution, zone.getName()));
+          break;
+        }
+
+        zone = geographicZoneService.getById(zone.getParent().getId());
       }
     }
 
