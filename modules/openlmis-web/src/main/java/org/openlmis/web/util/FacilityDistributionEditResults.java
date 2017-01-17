@@ -7,7 +7,6 @@ import lombok.NoArgsConstructor;
 import org.codehaus.jackson.annotate.JsonIgnoreProperties;
 import org.codehaus.jackson.map.annotate.JsonSerialize;
 import org.openlmis.core.domain.BaseModel;
-import org.openlmis.distribution.dto.DistributionDTO;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
@@ -29,7 +28,6 @@ public class FacilityDistributionEditResults {
   private static final Predicate<FacilityDistributionEditDetail> NOT_VISITED_PREDICATE = not(VISITED_PREDICATE);
 
   private List<FacilityDistributionEditDetail> details;
-  private DistributionDTO distribution;
   private Long facilityId;
   private boolean conflict;
 

@@ -8,7 +8,7 @@
  * You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org. 
  */
 
-function RecordFacilityDataController($scope, $location, $route, $routeParams, distributionService, AuthorizationService, $dialog, $http, messageService, $timeout, IndexedDB) {
+function RecordFacilityDataController($scope, $location, $route, $routeParams, distributionService, AuthorizationService, $dialog, $http, messageService, $timeout, IndexedDB, $q) {
   $scope.label = $routeParams.facility ? 'label.change.facility' : "label.select.facility";
 
   $scope.distribution = distributionService.distribution;
@@ -162,14 +162,7 @@ function RecordFacilityDataController($scope, $location, $route, $routeParams, d
         $scope.syncResults.conflicts[results.facilityId][elem.dataScreenUI].push(elem);
         $scope.syncResults.length += 1;
       });
-    } else {
-        $scope.message = messageService.get('msg.sync.success', results.distribution.deliveryZone.name, results.distribution.period.name);
     }
-
-    $scope.distribution = results.distribution;
-    distributionService.save(results.distribution);
-    distributionService.distributionReview.editMode[$routeParams.facility][distributionService.distributionReview.currentScreen] ^= true;
-    $route.reload();
   }
 
   function onError(data) {
@@ -186,8 +179,47 @@ function RecordFacilityDataController($scope, $location, $route, $routeParams, d
     };
 
     if (result) {
+      var promises = [];
+
       $.each($scope.distribution.facilityDistributions, function (ignore, facilityDistribution) {
-        $http.post(url, facilityDistribution).success(onSuccess).error(onError);
+        var promise = $http.post(url, facilityDistribution).success(onSuccess).error(onError);
+        promises.push(promise);
+      });
+
+      $q.all(promises).then(function () {
+        var distribution = {
+              deliveryZone: $scope.distribution.deliveryZone,
+              program: $scope.distribution.program,
+              period: $scope.distribution.period
+            };
+
+        function onFailure(data) {
+          $scope.errorMessage = data.error;
+        }
+
+        function onSuccess(data, status) {
+          distribution = data.distribution;
+
+          if (!distribution.facilityDistributions) {
+            $scope.errorMessage = messageService.get("message.no.facility.available", distribution.program.name, distribution.deliveryZone.name);
+            return;
+          }
+
+          $scope.message = messageService.get('msg.sync.success', distribution.deliveryZone.name, distribution.period.name);
+
+          distributionService.save(distribution, true);
+          $scope.distribution = distribution;
+
+          distributionService.distributionReview.editMode = {};
+
+          $.each($scope.distribution.facilityDistributions, function (facilityId) {
+            distributionService.distributionReview.editMode[facilityId] = {};
+          });
+
+          $route.reload();
+        }
+
+        $http.post('/review-data/distribution/get.json', distribution).success(onSuccess).error(onFailure)
       });
     }
   }
