@@ -104,7 +104,7 @@ public class ReadingTest {
 
       assertThat(date.getValue(), is(notNullValue()));
       assertThat(date.getNotRecorded(), is(false));
-      assertThat(date.getValue(), is(formatter.format(time)));
+      assertThat(date.getEffectiveValue(), is(formatter.format(time)));
     }
   }
 
