@@ -66,7 +66,8 @@
                     <optgroup ng-repeat="zone in geographicZones" label="{{ zone }}">
                         <option ng-repeat="facility in zoneFacilityMap[zone] | orderBy: 'facilityName'"
                                 value="{{ facility.facilityId }}"
-                                ng-class="distribution.facilityDistributions[facility.id].computeStatus(distributionReview)">
+                                ng-class="distribution.facilityDistributions[facility.id].computeStatus(distributionReview)"
+                                ng-selected="{{facility.facilityId == facilitySelected.facilityId}}">
                             {{ facility.facilityCode }} - {{ facility.facilityName }}
                         </option>
                     </optgroup>
