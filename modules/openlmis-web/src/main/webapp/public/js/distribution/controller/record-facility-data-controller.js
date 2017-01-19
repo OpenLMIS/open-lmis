@@ -166,7 +166,11 @@ function RecordFacilityDataController($scope, $location, $route, $routeParams, d
   }
 
   function onError(data) {
-    $scope.errorMessage = data.error;
+    if (data.error) {
+      $scope.errorMessage = data.error;
+    } else {
+      $scope.errorMessage = messageService.get('msg.sync.error');
+    }
   }
 
   function syncCallback(result) {
