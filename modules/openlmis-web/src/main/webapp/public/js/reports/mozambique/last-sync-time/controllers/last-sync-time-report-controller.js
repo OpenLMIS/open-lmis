@@ -5,7 +5,7 @@ function LastSyncTimeReportController($scope, $http, GeographicZoneService, Cube
   $scope.tree_data = [];
   $scope.location = '';
   $scope.col_defs = [{
-    field: 'LastSyncTime',
+    field: 'lastSyncTime',
     cellTemplateScope: {
       checkLastSyncDate: function(date) {
         var syncInterval = (new Date() - new Date(date)) / 1000 / 3600;
