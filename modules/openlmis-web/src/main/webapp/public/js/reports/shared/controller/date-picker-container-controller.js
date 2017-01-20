@@ -21,25 +21,47 @@ function DatePickerContainerController($scope, $filter, DateFormatService, messa
 
     var defaultEndTime = new Date($scope.dateRange.endTime);
 
-
     $scope.timeTagSelected = "month";
     $scope.periodTagSelected = $scope.pickerType === "period-no-current" ? "3periods" : "period";
 
+    var threeMonthsAgo = new Date().setMonth(new Date().getMonth() - 2);
+    var aYearAgo = new Date().setMonth(new Date().getMonth() - 11);
+
+    var threePeriodsBeforeExcludingCurrent = new Date().setMonth(defaultPeriodStartDate.getMonth() - 3);
+    if (defaultPeriodStartDate.getMonth() - 3 > currentDate.getMonth()) {
+        threePeriodsBeforeExcludingCurrent = new Date(threePeriodsBeforeExcludingCurrent).setYear(currentDate.getFullYear() - 1);
+    }
+
+    var threePeriodsBeforeIncludingCurrent = new Date().setMonth(defaultPeriodStartDate.getMonth() - 2);
+    if (defaultPeriodStartDate.getMonth() - 2 > currentDate.getMonth()) {
+        threePeriodsBeforeIncludingCurrent = new Date(threePeriodsBeforeIncludingCurrent).setYear(currentDate.getFullYear() - 1);
+    }
+
+    var yearBeforeExcludingCurrent = new Date().setYear(defaultPeriodStartDate.getFullYear() - 1);
+    yearBeforeExcludingCurrent = new Date(yearBeforeExcludingCurrent).setMonth(defaultPeriodStartDate.getMonth());
+
+    var yearBeforeIncludingCurrent = new Date().setMonth(defaultPeriodStartDate.getMonth() - 11);
+    if (defaultPeriodStartDate.getMonth() - 11 > currentDate.getMonth()) {
+        yearBeforeIncludingCurrent = new Date(yearBeforeIncludingCurrent).setYear(currentDate.getFullYear() - 2);
+    } else {
+        yearBeforeIncludingCurrent = new Date(yearBeforeIncludingCurrent).setYear(currentDate.getFullYear() - 1);
+    }
+
     var timeOptions = {
         "month": new Date(),
-        "3month": new Date().setMonth(currentDate.getMonth() - 2),
-        "year": new Date().setMonth(currentDate.getMonth() - 11)
+        "3month": threeMonthsAgo,
+        "year": aYearAgo
     };
 
     var periodOptions = $scope.pickerType === "period-no-current" ?
     {
-        "3periods": new Date().setMonth(defaultPeriodStartDate.getMonth() - 3),
-        "year": new Date().setMonth(defaultPeriodStartDate.getMonth() - 12)
+        "3periods": threePeriodsBeforeExcludingCurrent,
+        "year": yearBeforeExcludingCurrent
     } :
     {
         "period": defaultPeriodStartDate,
-        "3periods": new Date().setMonth(defaultPeriodStartDate.getMonth() - 2),
-        "year": new Date().setMonth(defaultPeriodStartDate.getMonth() - 11)
+        "3periods": threePeriodsBeforeIncludingCurrent,
+        "year": yearBeforeIncludingCurrent
     };
 
     $scope.timeTags = Object.keys(timeOptions);
