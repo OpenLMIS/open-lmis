@@ -98,9 +98,15 @@ public class FacilityDistribution {
     dto.setEpiUse(epiUse.transform());
     dto.setEpiInventory(epiInventory.transform());
     dto.setRefrigerators(refrigerators.transform());
-    dto.setFullCoverage(fullCoverage.transform());
-    dto.setChildCoverage(childCoverage.transform());
-    dto.setAdultCoverage(adultCoverage.transform());
+    if (fullCoverage != null) {
+      dto.setFullCoverage(fullCoverage.transform());
+    }
+    if (childCoverage != null) {
+      dto.setChildCoverage(childCoverage.transform());
+    }
+    if (adultCoverage != null) {
+      dto.setAdultCoverage(adultCoverage.transform());
+    }
 
     return dto;
   }
