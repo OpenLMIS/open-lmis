@@ -45,9 +45,9 @@ public class ReadingTest {
   }
 
   @Test
-  public void shouldReturnNullIfNRisTrue() throws Exception {
+  public void shouldReturnValueIfNRisTrue() throws Exception {
     Reading reading = new Reading("", true);
-    assertThat(reading.getEffectiveValue(), is(nullValue()));
+    assertThat(reading.getEffectiveValue(), is(""));
   }
 
   @Test

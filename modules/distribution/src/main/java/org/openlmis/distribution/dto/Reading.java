@@ -101,12 +101,12 @@ public class Reading {
   }
 
   public String getEffectiveValue() {
-    return (notRecorded == null || !notRecorded) ? (null != value ? value.toString() : null) : null;
+    return null != value ? value.toString() : null;
   }
 
   public Integer parsePositiveInt() {
     String stringValue = getEffectiveValue();
-    if (stringValue == null) {
+    if (isBlank(stringValue)) {
       return null;
     }
 
