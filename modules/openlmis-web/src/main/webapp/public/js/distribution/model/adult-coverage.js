@@ -22,8 +22,8 @@ function AdultCoverage(facilityVisitId, adultCoverageJSON) {
   });
 }
 
-AdultCoverage.prototype.computeStatus = function (review) {
-  if (review) {
+AdultCoverage.prototype.computeStatus = function (visited, review, ignoreSyncStatus) {
+  if (review && !ignoreSyncStatus) {
     return DistributionStatus.SYNCED;
   }
 

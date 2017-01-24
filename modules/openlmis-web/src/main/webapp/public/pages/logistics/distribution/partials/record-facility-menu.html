@@ -11,7 +11,7 @@
 <div class="left-navigation" ng-controller="RecordFacilityMenuController">
   <ul>
     <li id="facilityVisitStatus"
-        ng-class="[distributionData.facilityVisit.computeStatus(distributionReview), isSelected('visit-info')]">
+        ng-class="[distributionData.facilityVisit.computeStatus(distributionData.facilityVisit.visited.value, distributionReview), isSelected('visit-info')]">
       <a id="facilityVisitTab" href="" ng-click="changeRoute('visit-info')">
         <span id="facilityVisitTabIcon" class="status-icon"></span>
         <span id="facilityVisitTabLabel" openlmis-message="label.visit.information"></span>
@@ -37,21 +37,21 @@
         <span id="epiUseTabLabel" openlmis-message="label.epi.use"></span>
       </a>
     </li>
-    <li id="coverageStatus" ng-class="[distributionData.fullCoverage.computeStatus(distributionReview), isSelected('full-coverage')]">
+    <li id="coverageStatus" ng-class="[distributionData.fullCoverage.computeStatus(distributionData.facilityVisit.visited.value, distributionReview), isSelected('full-coverage')]">
       <a id="coverageTab" href="" ng-click="changeRoute('full-coverage')">
         <span id="coverageTabIcon" class="status-icon"></span>
         <span id="coverageTabLabel" openlmis-message="label.coverage.full"></span>
       </a>
     </li>
     <li id="childCoverageStatus"
-        ng-class="[distributionData.childCoverage.computeStatus(distributionReview), isSelected('child-coverage')]">
+        ng-class="[distributionData.childCoverage.computeStatus(distributionData.facilityVisit.visited.value, distributionReview), isSelected('child-coverage')]">
       <a id="childCoverageTab" href="" ng-click="changeRoute('child-coverage')">
         <span id="childCoverageTabIcon" class="status-icon"></span>
         <span id="childCoverageTabLabel" openlmis-message="label.coverage.children"></span>
       </a>
     </li>
     <li id="adultCoverageStatus"
-        ng-class="[distributionData.adultCoverage.computeStatus(distributionReview), isSelected('adult-coverage')]">
+        ng-class="[distributionData.adultCoverage.computeStatus(distributionData.facilityVisit.visited.value, distributionReview), isSelected('adult-coverage')]">
       <a id="adultCoverageTab" href="" ng-click="changeRoute('adult-coverage')">
         <span id="adultCoverageTabIcon" class="status-icon"></span>
         <span id="adultCoverageTabLabel" openlmis-message="label.coverage.adult"></span>
