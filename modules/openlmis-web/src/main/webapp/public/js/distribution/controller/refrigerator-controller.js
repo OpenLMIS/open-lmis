@@ -51,7 +51,7 @@ function RefrigeratorController($scope, $dialog, IndexedDB, $routeParams, distri
 
   $scope.isFormDisabled = function () {
     return ($scope.distribution.facilityDistributions[$scope.selectedFacilityId].status === DistributionStatus.SYNCED) ||
-        ($scope.distribution.facilityDistributions[$scope.selectedFacilityId].facilityVisit.visited === false);
+        ($scope.distribution.facilityDistributions[$scope.selectedFacilityId].facilityVisit.visited.value === false);
   };
 
   $scope.showDeleteRefrigeratorConfirmationModel = function (serialNumberToDelete) {

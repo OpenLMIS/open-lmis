@@ -10,12 +10,19 @@
 
 package org.openlmis.distribution.dto;
 
+import com.google.common.base.Optional;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.codehaus.jackson.map.annotate.JsonDeserialize;
 import org.codehaus.jackson.map.annotate.JsonSerialize;
 import org.openlmis.core.exception.DataException;
+import org.openlmis.distribution.domain.ReasonForNotVisiting;
 import org.openlmis.distribution.serializer.DistributionReadingDeSerializer;
+
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.TimeZone;
 
 import static org.apache.commons.lang3.StringUtils.isBlank;
 import static org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion.NON_EMPTY;
@@ -35,6 +42,10 @@ public class Reading {
 
   private String value;
   private Boolean notRecorded;
+
+  public static Reading safeRead(Reading reading) {
+    return Optional.fromNullable(reading).or(EMPTY);
+  }
 
   public Reading(String value, Boolean notRecorded) {
     this.value = value;
@@ -74,5 +85,43 @@ public class Reading {
     }
 
     return Float.parseFloat(stringValue);
+  }
+
+  public Boolean parseBoolean() {
+    String stringValue = getEffectiveValue();
+    if (stringValue == null) {
+      return null;
+    }
+
+    return Boolean.parseBoolean(stringValue);
+  }
+
+  public Date parseDate() {
+    String stringValue = getEffectiveValue();
+    if (stringValue == null) {
+      return null;
+    }
+
+    try {
+      return new Date(Long.parseLong(stringValue));
+    } catch (NumberFormatException e) {
+      try {
+        String format = stringValue.contains("/") ? "dd/MM/yyyy" : "yyyy-MM-dd";
+        SimpleDateFormat dateFormat = new SimpleDateFormat(format);
+        dateFormat.setTimeZone(TimeZone.getDefault());
+        return dateFormat.parse(stringValue);
+      } catch (ParseException ex) {
+        throw new RuntimeException(ex);
+      }
+    }
+  }
+
+  public ReasonForNotVisiting parseReasonForNotVisiting() {
+    String stringValue = getEffectiveValue();
+    if (stringValue == null) {
+      return null;
+    }
+
+    return ReasonForNotVisiting.valueOf(stringValue);
   }
 }

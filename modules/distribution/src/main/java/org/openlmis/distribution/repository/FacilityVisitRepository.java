@@ -13,6 +13,7 @@
 package org.openlmis.distribution.repository;
 
 import org.openlmis.distribution.domain.FacilityVisit;
+import org.openlmis.distribution.domain.MotorbikeProblems;
 import org.openlmis.distribution.repository.mapper.FacilityVisitMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
@@ -30,23 +31,23 @@ public class FacilityVisitRepository {
   FacilityVisitMapper mapper;
 
   public FacilityVisit get(FacilityVisit facilityVisit) {
-    return mapper.getBy(facilityVisit.getFacilityId(), facilityVisit.getDistributionId());
+    return retrieveDetails(mapper.getBy(facilityVisit.getFacilityId(), facilityVisit.getDistributionId()));
   }
 
   public void update(FacilityVisit facilityVisit) {
-    mapper.update(facilityVisit);
+    updateWithDetails(facilityVisit);
   }
 
   public FacilityVisit getById(Long facilityVisitId) {
-    return mapper.getById(facilityVisitId);
+    return retrieveDetails(mapper.getById(facilityVisitId));
   }
 
   public FacilityVisit getBy(Long facilityId, Long distributionId) {
-    return mapper.getBy(facilityId, distributionId);
+    return retrieveDetails(mapper.getBy(facilityId, distributionId));
   }
 
   public List<FacilityVisit> getUnSyncedFacilities(Long distributionId) {
-    return mapper.getUnSyncedFacilities(distributionId);
+    return retrieveDetails(mapper.getUnSyncedFacilities(distributionId));
   }
 
   public Integer getUnsyncedFacilityCountForDistribution(Long distributionId) {
@@ -57,8 +58,51 @@ public class FacilityVisitRepository {
     if (facilityVisit.getId() == null) {
       mapper.insert(facilityVisit);
     } else {
-      mapper.update(facilityVisit);
+      updateWithDetails(facilityVisit);
     }
     return facilityVisit;
+  }
+
+  private List<FacilityVisit> retrieveDetails(List<FacilityVisit> visits) {
+    for (FacilityVisit visit : visits) {
+      retrieveDetails(visit);
+    }
+
+    return visits;
+  }
+
+  private FacilityVisit retrieveDetails(FacilityVisit visit) {
+    visit.setMotorbikeProblems(mapper.getMotorbikeProblemsByFacilityVisitId(visit.getId()));
+
+    return visit;
+  }
+
+  private void updateWithDetails(FacilityVisit visit) {
+    MotorbikeProblems motorbikeProblems = visit.getMotorbikeProblems();
+
+    if (motorbikeProblems != null) {
+      MotorbikeProblems motorbikeProblemsDB = mapper.getMotorbikeProblemsByFacilityVisitId(visit.getId());
+
+      if (motorbikeProblemsDB == null) {
+        motorbikeProblems.setFacilityVisitId(visit.getId());
+        motorbikeProblems.setCreatedBy(visit.getCreatedBy());
+        motorbikeProblems.setModifiedBy(visit.getModifiedBy());
+
+        mapper.insertMotorbikeProblems(motorbikeProblems);
+      } else {
+        motorbikeProblemsDB.setFacilityVisitId(motorbikeProblems.getFacilityVisitId());
+        motorbikeProblemsDB.setLackOfFundingForFuel(motorbikeProblems.getLackOfFundingForFuel());
+        motorbikeProblemsDB.setRepairsSchedulingProblem(motorbikeProblems.getRepairsSchedulingProblem());
+        motorbikeProblemsDB.setLackOfFundingForRepairs(motorbikeProblems.getLackOfFundingForRepairs());
+        motorbikeProblemsDB.setMissingParts(motorbikeProblems.getMissingParts());
+        motorbikeProblemsDB.setOther(motorbikeProblems.getOther());
+        motorbikeProblemsDB.setMotorbikeProblemOther(motorbikeProblems.getMotorbikeProblemOther());
+        motorbikeProblemsDB.setModifiedBy(visit.getModifiedBy());
+
+        mapper.updateMotorbikeProblems(motorbikeProblemsDB);
+      }
+    }
+
+    mapper.update(visit);
   }
 }

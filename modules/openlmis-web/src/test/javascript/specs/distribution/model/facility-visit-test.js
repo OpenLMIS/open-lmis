@@ -18,7 +18,7 @@ describe('Facility Visit', function () {
   });
 
   it('should return incomplete if visit details not present', function () {
-    var facilityVisit = new FacilityVisit({visited: true, verifiedBy: {name: 'something', title: 'title'}, confirmedBy: {name: 'something', title: 'title'}});
+    var facilityVisit = new FacilityVisit({visited: {value: true}, verifiedBy: {name: 'something', title: 'title'}, confirmedBy: {name: 'something', title: 'title'}});
 
     var status = facilityVisit.computeStatus();
 
@@ -26,7 +26,9 @@ describe('Facility Visit', function () {
   });
 
   it('should return incomplete if verified By Name not present', function () {
-    var facilityVisit = new FacilityVisit({visited: true, observations: "blah blah blah", verifiedBy: {name: '', title: 'title'}, confirmedBy: {name: 'something', title: 'title'}});
+    var facilityVisit = new FacilityVisit({visited: {value: true}, numberOfOutreachVisitsPlanned: {value: 1}, numberOfOutreachVisitsCompleted: {value: 1},
+                                           numberOfMotorbikesAtHU: {value: 10}, numberOfFunctioningMotorbikes: {value: 10}, numberOfMotorizedVehiclesWithProblems: {value: 0},
+                                           numberOfDaysWithLimitedTransport: {value: 0}, observations: "blah blah blah", verifiedBy: {name: '', title: 'title'}, confirmedBy: {name: 'something', title: 'title'}});
 
     var status = facilityVisit.computeStatus();
 
@@ -42,7 +44,10 @@ describe('Facility Visit', function () {
   });
 
   it('should return complete if visit details valid', function () {
-    var facilityVisit = new FacilityVisit({visited: true, visitDate: new Date(), observations: "blah blah blah", verifiedBy: {name: 'Pint', title: 'title'}, confirmedBy: {name: 'something', title: 'title'}});
+    var facilityVisit = new FacilityVisit({visited: {value: true}, visitDate: {value: new Date()}, numberOfOutreachVisitsPlanned: {value: 1}, numberOfOutreachVisitsCompleted: {value: 1},
+                                           numberOfMotorbikesAtHU: {value: 10}, numberOfFunctioningMotorbikes: {value: 10}, numberOfMotorizedVehiclesWithProblems: {value: 0},
+                                           numberOfDaysWithLimitedTransport: {value: 0}, motorbikeProblems: {lackOfFundingForFuel: {value: true}}, observations: {value:"blah blah blah"},
+                                           verifiedBy: {name: 'Pint', title: 'title'}, confirmedBy: {name: 'something', title: 'title'}});
 
     var status = facilityVisit.computeStatus();
 
@@ -50,8 +55,9 @@ describe('Facility Visit', function () {
   });
 
   it('should return complete if visit details valid and observations not filled', function () {
-    var facilityVisit = new FacilityVisit({visited: true, visitDate: new Date(),
-      verifiedBy: {name: 'Pint', title: 'title'}, confirmedBy: {name: 'something', title: 'title'}});
+    var facilityVisit = new FacilityVisit({visited: {value: true}, visitDate: {value: new Date()}, numberOfOutreachVisitsPlanned: {value: 1}, numberOfOutreachVisitsCompleted: {value: 1},
+                                           numberOfMotorbikesAtHU: {value: 10}, numberOfFunctioningMotorbikes: {value: 10}, numberOfMotorizedVehiclesWithProblems: {value: 0},
+                                           numberOfDaysWithLimitedTransport: {value: 0}, motorbikeProblems: {lackOfFundingForFuel: {value: true}}, verifiedBy: {name: 'Pint', title: 'title'}, confirmedBy: {name: 'something', title: 'title'}});
 
     var status = facilityVisit.computeStatus();
 
@@ -59,7 +65,9 @@ describe('Facility Visit', function () {
   });
 
   it('should retain its status', function () {
-    var facilityVisit = new FacilityVisit({visited: true, visitDate: new Date(), observations: "blah blah blah", verifiedBy: {name: 'Pint', title: 'title'}, confirmedBy: {name: 'something', title: 'title'}});
+    var facilityVisit = new FacilityVisit({visited: {value: true}, visitDate: {value: new Date()}, numberOfOutreachVisitsPlanned: {value: 1}, numberOfOutreachVisitsCompleted: {value: 1},
+                                           numberOfMotorbikesAtHU: {value: 10}, numberOfFunctioningMotorbikes: {value: 10}, numberOfMotorizedVehiclesWithProblems: {value: 0},
+                                           numberOfDaysWithLimitedTransport: {value: 0}, motorbikeProblems: {lackOfFundingForFuel: {value: true}}, observations: "blah blah blah", verifiedBy: {name: 'Pint', title: 'title'}, confirmedBy: {name: 'something', title: 'title'}});
 
     facilityVisit.computeStatus();
 
@@ -73,25 +81,27 @@ describe('Facility Visit', function () {
   });
 
   it('should return is-incomplete if facility visited partially filled', function () {
-    var facilityVisit = new FacilityVisit({visited: true});
+    var facilityVisit = new FacilityVisit({visited: {value: true}});
 
     expect(facilityVisit.computeStatus()).toEqual(DistributionStatus.INCOMPLETE);
   });
 
   it('should return is-complete if facility visited fully filled', function () {
-    var facilityVisit = new FacilityVisit({visited: true, visitDate: new Date(), observations: "blah blah blah", verifiedBy: {name: 'Pint', title: 'title'}, confirmedBy: {name: 'something', title: 'title'}});
+    var facilityVisit = new FacilityVisit({visited: {value: true}, visitDate: {value: new Date()}, numberOfOutreachVisitsPlanned: {value: 1}, numberOfOutreachVisitsCompleted: {value: 1},
+                                           numberOfMotorbikesAtHU: {value: 10}, numberOfFunctioningMotorbikes: {value: 10}, numberOfMotorizedVehiclesWithProblems: {value: 0},
+                                           numberOfDaysWithLimitedTransport: {value: 0}, motorbikeProblems: {lackOfFundingForFuel: {value: true}}, observations: "blah blah blah", verifiedBy: {name: 'Pint', title: 'title'}, confirmedBy: {name: 'something', title: 'title'}});
 
     expect(facilityVisit.computeStatus()).toEqual(DistributionStatus.COMPLETE);
   });
 
   it('should return is-incomplete if visit info filled but observation data not filled', function () {
-    var facilityVisit = new FacilityVisit({visited: true, visitDate: new Date()});
+    var facilityVisit = new FacilityVisit({visited: {value: true}, visitDate: {value: new Date()}});
 
     expect(facilityVisit.computeStatus()).toEqual(DistributionStatus.INCOMPLETE);
   });
 
   it('should return incomplete if not visited but no reason provided fields filled', function () {
-    var facilityVisit = new FacilityVisit({visited: false});
+    var facilityVisit = new FacilityVisit({visited: {value: false}});
 
     var status = facilityVisit.computeStatus();
 
@@ -99,7 +109,7 @@ describe('Facility Visit', function () {
   });
 
   it('should return complete if not visited and a reason provided', function () {
-    var facilityVisit = new FacilityVisit({visited: false, reasonForNotVisiting: "BAD WEATHER"});
+    var facilityVisit = new FacilityVisit({visited: {value: false}, reasonForNotVisiting: {value: "BAD WEATHER"}});
 
     var status = facilityVisit.computeStatus();
 
@@ -107,7 +117,7 @@ describe('Facility Visit', function () {
   });
 
   it('should return complete if not visited and a reason selected as other and described', function () {
-    var facilityVisit = new FacilityVisit({visited: false, reasonForNotVisiting: "OTHER", otherReasonDescription: "I was ill"});
+    var facilityVisit = new FacilityVisit({visited: {value: false}, reasonForNotVisiting: {value: "OTHER"}, otherReasonDescription: {value: "I was ill"}});
 
     var status = facilityVisit.computeStatus();
 
@@ -115,7 +125,7 @@ describe('Facility Visit', function () {
   });
 
   it('should return incomplete if not visited and a reason selected as other but not described', function () {
-    var facilityVisit = new FacilityVisit({visited: false, reasonForNotVisiting: "OTHER"});
+    var facilityVisit = new FacilityVisit({visited: {value: false}, reasonForNotVisiting: {value: "OTHER"}});
 
     var status = facilityVisit.computeStatus();
 

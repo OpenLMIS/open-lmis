@@ -16,7 +16,6 @@ import lombok.NoArgsConstructor;
 import org.codehaus.jackson.annotate.JsonIgnoreProperties;
 import org.codehaus.jackson.map.annotate.JsonSerialize;
 import org.openlmis.distribution.domain.FacilityDistribution;
-import org.openlmis.distribution.domain.FacilityVisit;
 
 import static org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion.NON_EMPTY;
 
@@ -33,7 +32,7 @@ import static org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion.NON_EMPT
 @JsonSerialize(include = NON_EMPTY)
 public class FacilityDistributionDTO {
 
-  private FacilityVisit facilityVisit;
+  private FacilityVisitDTO facilityVisit;
   private EpiUseDTO epiUse;
   private EpiInventoryDTO epiInventory;
   private DistributionRefrigeratorsDTO refrigerators;
@@ -42,7 +41,7 @@ public class FacilityDistributionDTO {
   private AdultCoverageDTO adultCoverage;
 
   public FacilityDistribution transform() {
-    return new FacilityDistribution(facilityVisit, epiUse.transform(), refrigerators.transform(),
+    return new FacilityDistribution(facilityVisit.transform(), epiUse.transform(), refrigerators.transform(),
       epiInventory.transform(), fullCoverage.transform(), childCoverage.transform(), adultCoverage.transform());
   }
 

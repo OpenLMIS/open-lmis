@@ -45,6 +45,15 @@ public class FacilityVisit extends BaseModel {
   private Facilitator verifiedBy;
   private String observations;
 
+  private Integer numberOfOutreachVisitsPlanned;
+  private Integer numberOfOutreachVisitsCompleted;
+  private Integer numberOfMotorbikesAtHU;
+  private Integer numberOfFunctioningMotorbikes;
+  private Integer numberOfMotorizedVehiclesWithProblems;
+  private Integer numberOfDaysWithLimitedTransport;
+
+  private MotorbikeProblems motorbikeProblems;
+
   @JsonDeserialize(using = DateDeserializer.class)
   private Date visitDate;
 
@@ -77,5 +86,12 @@ public class FacilityVisit extends BaseModel {
     this.verifiedBy = null;
     this.vehicleId = null;
     this.visitDate = null;
+    this.numberOfOutreachVisitsPlanned = null;
+    this.numberOfOutreachVisitsCompleted = null;
+    this.numberOfMotorbikesAtHU = null;
+    this.numberOfFunctioningMotorbikes = null;
+    this.numberOfMotorizedVehiclesWithProblems = null;
+    this.numberOfDaysWithLimitedTransport = null;
+    this.motorbikeProblems = null;
   }
 }
