@@ -61,7 +61,7 @@
                    name="numberOfOutreachVisitsPlanned{{$index}}" ng-trim=false
                    numeric-validator="positiveInteger,2" min="0" max="99" step="1"
                    error-holder="numberOfOutreachVisitsPlannedError{{$index}}"
-                   ng-class="{'required-error': !facilityData.facilityVisit.numberOfOutreachVisitsPlanned.value}"/>
+                   ng-class="{'required-error': !facilityData.facilityVisit.numberOfOutreachVisitsPlanned.value.hasValue()}"/>
             <span id="numberOfOutreachVisitsPlannedError{{$index}}"
                   class="rnr-form-error"
                   openlmis-message="error.number.only"
@@ -73,7 +73,7 @@
                    name="numberOfOutreachVisitsCompleted{{$index}}" ng-trim=false
                    numeric-validator="positiveInteger,2" min="0" max="99" step="1"
                    error-holder="numberOfOutreachVisitsCompletedError{{$index}}"
-                   ng-class="{'required-error': !facilityData.facilityVisit.numberOfOutreachVisitsCompleted.value}"/>
+                   ng-class="{'required-error': !facilityData.facilityVisit.numberOfOutreachVisitsCompleted.value.hasValue()}"/>
             <span id="numberOfOutreachVisitsCompletedError{{$index}}"
                   class="rnr-form-error"
                   openlmis-message="error.number.only"
@@ -85,7 +85,7 @@
                    name="numberOfMotorbikesAtHU{{$index}}" ng-trim=false
                    numeric-validator="positiveInteger,2" min="0" max="99" step="1"
                    error-holder="numberOfMotorbikesAtHUError{{$index}}"
-                   ng-class="{'required-error': !facilityData.facilityVisit.numberOfMotorbikesAtHU.value}"/>
+                   ng-class="{'required-error': !facilityData.facilityVisit.numberOfMotorbikesAtHU.value.hasValue()}"/>
             <span id="numberOfMotorbikesAtHUError{{$index}}"
                   class="rnr-form-error"
                   openlmis-message="error.number.only"
@@ -97,7 +97,7 @@
                    name="numberOfFunctioningMotorbikes{{$index}}" ng-trim=false
                    numeric-validator="positiveInteger,2" min="0" max="99" step="1"
                    error-holder="numberOfFunctioningMotorbikesError{{$index}}"
-                   ng-class="{'required-error': !facilityData.facilityVisit.numberOfFunctioningMotorbikes.value}"/>
+                   ng-class="{'required-error': !facilityData.facilityVisit.numberOfFunctioningMotorbikes.value.hasValue()}"/>
             <span id="numberOfFunctioningMotorbikesError{{$index}}"
                   class="rnr-form-error"
                   openlmis-message="error.number.only"
@@ -109,7 +109,7 @@
                    name="numberOfMotorizedVehiclesWithProblems{{$index}}" ng-trim=false
                    numeric-validator="positiveInteger,2" min="0" max="99" step="1"
                    error-holder="numberOfMotorizedVehiclesWithProblemsError{{$index}}"
-                   ng-class="{'required-error': !facilityData.facilityVisit.numberOfMotorizedVehiclesWithProblems.value}"/>
+                   ng-class="{'required-error': !facilityData.facilityVisit.numberOfMotorizedVehiclesWithProblems.value.hasValue()}"/>
             <span id="numberOfMotorizedVehiclesWithProblemsError{{$index}}"
                   class="rnr-form-error"
                   openlmis-message="error.number.only"
@@ -175,7 +175,7 @@
                    name="numberOfDaysWithLimitedTransport{{$index}}" ng-trim=false
                    numeric-validator="positiveInteger,2" min="0" max="99" step="1"
                    error-holder="numberOfDaysWithLimitedTransportError{{$index}}"
-                   ng-class="{'required-error': !facilityData.facilityVisit.numberOfDaysWithLimitedTransport.value}"/>
+                   ng-class="{'required-error': !facilityData.facilityVisit.numberOfDaysWithLimitedTransport.value.hasValue()}"/>
             <span id="numberOfDaysWithLimitedTransportError{{$index}}"
                   class="rnr-form-error"
                   openlmis-message="error.number.only"
