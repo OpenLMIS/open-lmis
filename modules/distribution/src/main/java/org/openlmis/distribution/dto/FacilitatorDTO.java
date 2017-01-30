@@ -22,14 +22,14 @@ import static org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion.NON_EMPT
 @EqualsAndHashCode(callSuper = false)
 public class FacilitatorDTO {
 
-    private Reading name;
-    private Reading title;
+  private Reading name;
+  private Reading title;
 
-    public Facilitator transform() {
-      String name = Reading.safeRead(this.name).getEffectiveValue();
-      String title = Reading.safeRead(this.title).getEffectiveValue();
+  public Facilitator transform() {
+    String name = Reading.safeRead(this.name).getEffectiveValue();
+    String title = Reading.safeRead(this.title).getEffectiveValue();
 
-      return new Facilitator(name, title);
-    }
+    return new Facilitator(name, title);
+  }
 
 }

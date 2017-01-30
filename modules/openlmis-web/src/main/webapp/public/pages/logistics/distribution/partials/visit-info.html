@@ -18,17 +18,17 @@
       </h3>
 
       <form class="form-group" auto-save="distribution" object-store="distributions"
-            disable-form="{{facilityData.isDisabled()}}">
+            disable-form="{{facilityData.isDisabled(null, distributionReview)}}">
         <div class="form-row clearfix">
           <label id="wasFacilityVisited"
                  openlmis-message="label.was.facility.visited|facilityData.facilityName|distribution.period.name"></label>
 
           <div>
             <input id="facilityVisitedYes" type="radio" ng-model="facilityData.facilityVisit.visited.value"
-                   ng-value="true">
+                   ng-value="true" ng-change="setApplicableVisitInfo()">
             <label for="facilityVisitedYes" class="radio-label" openlmis-message="label.yes"></label>
             <input id="facilityVisitedNo" type="radio" ng-model="facilityData.facilityVisit.visited.value"
-                   ng-value="false">
+                   ng-value="false" ng-change="setApplicableVisitInfo()">
             <label for="facilityVisitedNo" class="radio-label" openlmis-message="label.no"></label>
           </div>
         </div>
@@ -189,14 +189,14 @@
               <div>
                 <label openlmis-message="label.name" for="verifiedByName"></label>
                 <input type="text" maxlength="50"
-                       ng-model="facilityData.facilityVisit.verifiedBy.name"
+                       ng-model="facilityData.facilityVisit.verifiedBy.name.value"
                        id="verifiedByName"
-                       ng-class="{'required-error': !facilityData.facilityVisit.verifiedBy.name}"/>
+                       ng-class="{'required-error': !facilityData.facilityVisit.verifiedBy.name.value}"/>
                 <label openlmis-message="label.title" for="verifiedByTitle"></label>
                 <input type="text" maxlength="50"
-                       ng-model="facilityData.facilityVisit.verifiedBy.title"
+                       ng-model="facilityData.facilityVisit.verifiedBy.title.value"
                        id="verifiedByTitle"
-                       ng-class="{'required-error': !facilityData.facilityVisit.verifiedBy.title}"/>
+                       ng-class="{'required-error': !facilityData.facilityVisit.verifiedBy.title.value}"/>
               </div>
             </div>
 
@@ -207,14 +207,14 @@
               <div>
                 <label openlmis-message="label.name" for="confirmedByName"></label>
                 <input type="text" maxlength="50"
-                       ng-model="facilityData.facilityVisit.confirmedBy.name"
+                       ng-model="facilityData.facilityVisit.confirmedBy.name.value"
                        id="confirmedByName"
-                       ng-class="{'required-error': !facilityData.facilityVisit.confirmedBy.name}"/>
+                       ng-class="{'required-error': !facilityData.facilityVisit.confirmedBy.name.value}"/>
                 <label openlmis-message="label.title" for="confirmedByTitle"></label>
                 <input type="text" maxlength="50"
-                       ng-model="facilityData.facilityVisit.confirmedBy.title"
+                       ng-model="facilityData.facilityVisit.confirmedBy.title.value"
                        id="confirmedByTitle"
-                       ng-class="{'required-error': !facilityData.facilityVisit.confirmedBy.title}"/>
+                       ng-class="{'required-error': !facilityData.facilityVisit.confirmedBy.title.value}"/>
               </div>
             </div>
           </div>
@@ -262,10 +262,10 @@
                      openlmis-message="label.no.refrigerators"></label>
            </div>
             <div class="form-row clearfix">
-              <input id="unavailableFuelFunds{{ $index }}" type="radio"
+              <input id="unavailableFunds{{ $index }}" type="radio"
                      ng-model="facilityData.facilityVisit.reasonForNotVisiting.value"
                      value="{{reasons.unavailableFuelFunds}}"/>
-              <label class="radio-label" for="unavailableFuelFunds{{ $index }}"
+              <label class="radio-label" for="unavailableFunds{{ $index }}"
                      openlmis-message="label.unavailable.funds.fuel"></label>
             </div>
             <div class="form-row clearfix">

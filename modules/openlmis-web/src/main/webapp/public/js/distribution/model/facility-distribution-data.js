@@ -23,16 +23,20 @@ function FacilityDistribution(facilityDistribution) {
 
   this.status = facilityDistribution.status;
 
-  FacilityDistribution.prototype.computeStatus = function () {
+  FacilityDistribution.prototype.computeStatus = function (review, ignoreSyncStatus) {
+    if (review) {
+      this.status = DistributionStatus.SYNCED;
+      return this.status;
+    }
 
     var forms = [this.epiUse, this.refrigerators, this.facilityVisit, this.epiInventory, this.fullCoverage, this.childCoverage, this.adultCoverage];
     var overallStatus;
-    if (this.status === DistributionStatus.SYNCED || this.status === DistributionStatus.DUPLICATE) {
+    if (!ignoreSyncStatus && (this.status === DistributionStatus.SYNCED || this.status === DistributionStatus.DUPLICATE)) {
       return this.status;
     }
     var that = this;
     $.each(forms, function (index, form) {
-      var computedStatus = form.computeStatus(that.facilityVisit.visited && that.facilityVisit.visited.value);
+      var computedStatus = form.computeStatus(that.facilityVisit.visited && that.facilityVisit.visited.value, review, ignoreSyncStatus);
       if (computedStatus === DistributionStatus.COMPLETE && (overallStatus === DistributionStatus.COMPLETE || !overallStatus)) {
         overallStatus = DistributionStatus.COMPLETE;
       } else if (computedStatus === DistributionStatus.EMPTY && (!overallStatus || overallStatus == DistributionStatus.EMPTY)) {
@@ -50,11 +54,28 @@ function FacilityDistribution(facilityDistribution) {
 
   };
 
-  FacilityDistribution.prototype.isDisabled = function (tabName) {
+  FacilityDistribution.prototype.isDisabled = function (tabName, review) {
+    if (review) {
+      return !review.editMode[this.facilityId][tabName || review.currentScreen];
+    }
+
     if ([DistributionStatus.SYNCED, DistributionStatus.DUPLICATE].indexOf(this.status) != -1) {
       return true;
     }
-    return (this.facilityVisit.visited && this.facilityVisit.visited.value === false && ["refrigerators", "epi-inventory", "epi-use"].indexOf(tabName) != -1);
+
+    return ((this.facilityVisit.visited && this.facilityVisit.visited.value === false) && ["refrigerator-data", "epi-inventory", "epi-use"].indexOf(tabName) != -1);
+  };
+
+  FacilityDistribution.prototype.getByScreen = function (screenName) {
+    switch(screenName) {
+      case 'visit-info':        return { property: 'facilityVisit', bean: this.facilityVisit };
+      case 'refrigerator-data': return { property: 'refrigerators', bean: this.refrigerators };
+      case 'epi-inventory':     return { property: 'epiInventory', bean: this.epiInventory };
+      case 'epi-use':           return { property: 'epiUse', bean: this.epiUse };
+      case 'full-coverage':     return { property: 'fullCoverage', bean: this.fullCoverage };
+      case 'child-coverage':    return { property: 'childCoverage', bean: this.childCoverage };
+      case 'adult-coverage':    return { property: 'adultCoverage', bean: this.adultCoverage };
+    }
   };
 
 }

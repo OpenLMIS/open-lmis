@@ -61,4 +61,44 @@ public class VaccinationCoverageService {
   public VaccinationAdultCoverage getAdultCoverageBy(Long facilityVisitId) {
     return repository.getAdultCoverageBy(facilityVisitId);
   }
+
+  public VaccinationFullCoverage getFullCoverageById(Long id) {
+    return repository.getFullCoverageById(id);
+  }
+
+  public ChildCoverageLineItem getChildCoverageLineItem(Long id) {
+    return repository.getChildCoverageLineItem(id);
+  }
+
+  public AdultCoverageLineItem getAdultCoverageLineItem(Long id) {
+    return repository.getAdultCoverageLineItem(id);
+  }
+
+  public OpenedVialLineItem getChildCoverageOpenedVialLineItem(Long id) {
+    return repository.getChildCoverageOpenedVialLineItem(id);
+  }
+
+  public OpenedVialLineItem getAdultCoverageOpenedVialLineItem(Long id) {
+    return repository.getAdultCoverageOpenedVialLineItem(id);
+  }
+
+  public void updateFullCoverage(VaccinationFullCoverage fullCoverage) {
+    repository.updateFullCoverage(fullCoverage);
+  }
+
+  public void updateChildCoverageLineItem(ChildCoverageLineItem line) {
+    repository.updateChildCoverageLineItem(line);
+  }
+
+  public void updateChildCoverageOpenedVialLineItem(OpenedVialLineItem line) {
+    repository.updateChildCoverageOpenedVialLineItem(line);
+  }
+
+  public void updateAdultCoverageOpenedVialLineItem(OpenedVialLineItem line) {
+    repository.updateAdultCoverageOpenedVialLineItem(line);
+  }
+
+  public void updateAdultCoverageLineItem(AdultCoverageLineItem line) {
+    repository.updateAdultCoverageLineItem(line);
+  }
 }

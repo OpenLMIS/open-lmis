@@ -10,6 +10,7 @@
 
 package org.openlmis.distribution.repository;
 
+import com.google.common.base.Optional;
 import org.openlmis.distribution.domain.DistributionRefrigerators;
 import org.openlmis.distribution.domain.RefrigeratorProblem;
 import org.openlmis.distribution.domain.RefrigeratorReading;
@@ -28,17 +29,66 @@ public class DistributionRefrigeratorsRepository {
   private DistributionRefrigeratorsMapper mapper;
 
 
-  public void saveReading(RefrigeratorReading reading) {
-    mapper.insertReading(reading);
+  public void saveReading(RefrigeratorReading reading, boolean withProblem) {
+    if (null != reading.getId()) {
+      updateReading(reading, withProblem);
+    } else {
+      insertReading(reading, withProblem);
+    }
+  }
 
-    RefrigeratorProblem problem = reading.getProblem();
-    if (problem != null) {
-      problem.setReadingId(reading.getId());
+  public void saveProblem(RefrigeratorProblem problem) {
+    if (null != problem.getId()) {
+      mapper.updateProblem(problem);
+    } else {
       mapper.insertProblem(problem);
     }
   }
 
   public DistributionRefrigerators getBy(Long facilityVisitId) {
     return new DistributionRefrigerators(mapper.getBy(facilityVisitId));
+  }
+
+  public RefrigeratorReading getReading(Long id) {
+    RefrigeratorReading reading = mapper.getReading(id);
+
+    if (reading.getProblem() == null) {
+      reading.setProblem(new RefrigeratorProblem(reading.getId()));
+    }
+
+    return reading;
+  }
+
+  public RefrigeratorProblem getProblem(Long id) {
+    return mapper.getProblem(id);
+  }
+
+  private void insertReading(RefrigeratorReading reading, boolean withProblem) {
+    mapper.insertReading(reading);
+
+    if (withProblem) {
+      RefrigeratorProblem problem = Optional.fromNullable(reading.getProblem()).or(new RefrigeratorProblem());
+      problem.setReadingId(reading.getId());
+      mapper.insertProblem(problem);
+    }
+  }
+
+  private void updateReading(RefrigeratorReading reading, boolean withProblem) {
+    mapper.updateReading(reading);
+
+    if (withProblem) {
+      RefrigeratorProblem problem = reading.getProblem();
+
+      if (problem == null) {
+        problem = new RefrigeratorProblem(reading.getId());
+        mapper.insertProblem(problem);
+      } else {
+        mapper.updateProblem(problem);
+      }
+    }
+  }
+
+  public RefrigeratorReading getByRefrigeratorIdAndSerialNumber(Long refrigeratorId, String serialNumber, Long facilityVisitId) {
+    return mapper.getByRefrigeratorIdAndSerialNumber(refrigeratorId, serialNumber, facilityVisitId);
   }
 }

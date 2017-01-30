@@ -32,15 +32,23 @@ distributionModule.service('distributionService', function ($dialog, SharedDistr
   };
 
   this.isCached = function (distribution) {
-    return !!_.find(SharedDistributions.distributionList, function (cachedDistribution) {
+    return !!_this.get(distribution);
+  };
+
+  this.get = function (distribution) {
+    return _.find(SharedDistributions.distributionList, function (cachedDistribution) {
       return cachedDistribution.deliveryZone.id == distribution.deliveryZone.id &&
         cachedDistribution.program.id == distribution.program.id &&
         cachedDistribution.period.id == distribution.period.id;
     });
   };
 
-  this.save = function (distribution) {
+  this.save = function (distribution, review) {
     IndexedDB.put('distributions', distribution, null, null, SharedDistributions.update);
+
+    if (review) {
+      IndexedDB.put('reviews', { distributionId: distribution.id }, null, null, SharedDistributions.update);
+    }
   };
 
   this.deleteDistribution = function (id) {

@@ -105,6 +105,17 @@ public interface GeographicZoneMapper {
   })
   List<GeographicZone> searchByName(@Param(value = "searchParam") String searchParam, RowBounds rowBounds);
 
+  @Select({"SELECT GZ.id, GZ.name, GZ.code, GL.name AS levelName, GZP.name AS parentName",
+          "FROM geographic_zones GZ INNER JOIN geographic_zones GZP ON GZ.parentId = GZP.id",
+          "INNER JOIN geographic_levels GL ON GZ.levelId = GL.id",
+          "WHERE GL.levelNumber = #{levelNumber}",
+          "ORDER BY GL.levelNumber, LOWER(GZP.name), LOWER(GZ.name)"})
+  @Results(value = {
+          @Result(property = "level.name", column = "levelName"),
+          @Result(property = "parent.name", column = "parentName")
+  })
+  List<GeographicZone> searchByLevelNumber(@Param(value = "levelNumber") Integer levelNumber);
+
   @Select({"SELECT GZ.*, GL.levelNumber AS levelNumber, GL.name AS levelName FROM geographic_zones GZ",
     "INNER JOIN geographic_levels GL ON GZ.levelId = GL.id",
     "WHERE GL.levelNumber < (Select levelNumber FROM geographic_levels where code = #{code})",
@@ -125,12 +136,17 @@ public interface GeographicZoneMapper {
     "WHERE LOWER(GZ.name) LIKE '%' || LOWER(#{searchParam} || '%')"})
   Integer getTotalSearchResultCount(String param);
 
-  @Select({"SELECT GZ.*, GL.name AS levelName FROM geographic_zones GZ INNER JOIN geographic_levels GL ON GZ.levelId = GL.id ",
+  @Select({"SELECT GZ.id, GZ.name, GZ.code, GL.name AS levelName, GL.levelNumber AS levelNumber, GZP.name AS parentName, GZP.id AS parentId",
+    "FROM geographic_zones GZ LEFT OUTER JOIN geographic_zones GZP ON GZ.parentId = GZP.id",
+    "INNER JOIN geographic_levels GL ON GZ.levelId = GL.id",
     "where (LOWER(GZ.name) LIKE '%' || LOWER(#{searchParam}) || '%'",
     "OR LOWER(GZ.code) LIKE '%' || LOWER(#{searchParam}) || '%') ",
     "ORDER BY GL.levelNumber, GZ.code"})
   @Results({
-    @Result(column = "levelName", property = "level.name")
+    @Result(column = "levelName", property = "level.name"),
+    @Result(column = "levelNumber", property = "level.levelNumber"),
+    @Result(property = "parent.id", column = "parentId"),
+    @Result(property = "parent.name", column = "parentName")
   })
   List<GeographicZone> getGeographicZonesByCodeOrName(String searchParam);
 

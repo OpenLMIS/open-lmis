@@ -34,11 +34,22 @@ public interface DistributionRefrigeratorsMapper {
   @Options(useGeneratedKeys = true)
   void insertReading(RefrigeratorReading refrigeratorReading);
 
+  @Update({"UPDATE refrigerator_readings SET temperature = #{temperature}, functioningCorrectly = #{functioningCorrectly}, lowAlarmEvents = #{lowAlarmEvents},",
+    "highAlarmEvents = #{highAlarmEvents}, problemSinceLastTime = #{problemSinceLastTime}, notes = #{notes}, facilityVisitId = #{facilityVisitId},",
+    "refrigeratorId = #{refrigerator.id}, refrigeratorSerialNumber = #{refrigerator.serialNumber}, refrigeratorBrand = #{refrigerator.brand}, refrigeratorModel = #{refrigerator.model},",
+    "modifiedBy = #{modifiedBy}, modifiedDate=DEFAULT WHERE id = #{id}"})
+  void updateReading(RefrigeratorReading refrigeratorReading);
+
   @Insert({"INSERT INTO refrigerator_problems(readingId, operatorError, burnerProblem, gasLeakage, egpFault, thermostatSetting, other, otherProblemExplanation, createdBy, modifiedBy) ",
     "VALUES (#{readingId}, COALESCE(#{operatorError}, FALSE), COALESCE(#{burnerProblem}, FALSE), COALESCE(#{gasLeakage}, FALSE),",
     "COALESCE(#{egpFault}, FALSE), COALESCE(#{thermostatSetting}, FALSE), COALESCE(#{other}, FALSE), #{otherProblemExplanation}, #{createdBy}, #{modifiedBy})"})
   @Options(useGeneratedKeys = true)
   void insertProblem(RefrigeratorProblem problem);
+
+  @Update({"UPDATE refrigerator_problems SET readingId = #{readingId}, operatorError = COALESCE(#{operatorError}, FALSE), burnerProblem = COALESCE(#{burnerProblem}, FALSE),",
+    "gasLeakage = COALESCE(#{gasLeakage}, FALSE), egpFault = COALESCE(#{egpFault}, FALSE), thermostatSetting = COALESCE(#{thermostatSetting}, FALSE),",
+    "other = COALESCE(#{other}, FALSE), otherProblemExplanation = #{otherProblemExplanation}, modifiedBy = #{modifiedBy}, modifiedDate=DEFAULT WHERE id = #{id}"})
+  void updateProblem(RefrigeratorProblem problem);
 
   @Select({"SELECT * FROM refrigerator_readings where facilityVisitId = #{facilityVisitId} ORDER BY LOWER(refrigeratorSerialNumber)"})
   @Results(value = {
@@ -53,4 +64,29 @@ public interface DistributionRefrigeratorsMapper {
 
   @Select({"SELECT * FROM refrigerator_problems WHERE readingId = #{readingId}"})
   RefrigeratorProblem getProblemByReadingId(Long readingId);
+
+  @Select({"SELECT * FROM refrigerator_readings where id = #{id}"})
+  @Results(value = {
+    @Result(column = "refrigeratorId", property = "refrigerator.id"),
+    @Result(column = "refrigeratorSerialNumber", property = "refrigerator.serialNumber"),
+    @Result(column = "refrigeratorBrand", property = "refrigerator.brand"),
+    @Result(column = "refrigeratorModel", property = "refrigerator.model"),
+    @Result(column = "id", property = "id"),
+    @Result(column = "id", property = "problem", javaType = RefrigeratorProblem.class, one = @One(select = "getProblemByReadingId")),
+  })
+  RefrigeratorReading getReading(Long id);
+
+  @Select({"SELECT * FROM refrigerator_problems where id = #{id}"})
+  RefrigeratorProblem getProblem(Long id);
+
+  @Select({"SELECT RR.* FROM refrigerator_readings RR INNER JOIN refrigerators R ON RR.refrigeratorId = R.id WHERE RR.refrigeratorId = #{refrigeratorId} AND R.serialNumber = #{serialNumber} AND facilityVisitId = #{facilityVisitId}"})
+  @Results(value = {
+          @Result(column = "refrigeratorId", property = "refrigerator.id"),
+          @Result(column = "refrigeratorSerialNumber", property = "refrigerator.serialNumber"),
+          @Result(column = "refrigeratorBrand", property = "refrigerator.brand"),
+          @Result(column = "refrigeratorModel", property = "refrigerator.model"),
+          @Result(column = "id", property = "id"),
+          @Result(column = "id", property = "problem", javaType = RefrigeratorProblem.class, one = @One(select = "getProblemByReadingId")),
+  })
+  RefrigeratorReading getByRefrigeratorIdAndSerialNumber(@Param("refrigeratorId") Long refrigeratorId, @Param("serialNumber") String serialNumber, @Param("facilityVisitId") Long facilityVisitId);
 }

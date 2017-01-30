@@ -18,7 +18,7 @@ describe('Facility Visit', function () {
   });
 
   it('should return incomplete if visit details not present', function () {
-    var facilityVisit = new FacilityVisit({visited: {value: true}, verifiedBy: {name: 'something', title: 'title'}, confirmedBy: {name: 'something', title: 'title'}});
+    var facilityVisit = new FacilityVisit({visited: { value: true } });
 
     var status = facilityVisit.computeStatus();
 

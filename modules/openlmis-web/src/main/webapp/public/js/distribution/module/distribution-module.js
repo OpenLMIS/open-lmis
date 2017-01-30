@@ -44,12 +44,14 @@ distributionModule.config(['$routeProvider', function ($routeProvider) {
       {controller: AdultCoverageController, templateUrl: 'partials/adult-coverage.html', resolve: ResolveDistribution}).
       when('/record-facility-data/:distribution/:facility/visit-info',
       {controller: VisitInfoController, templateUrl: 'partials/visit-info.html', resolve: ResolveDistribution}).
+      when('/review-data',
+      {controller: ReviewDataController, templateUrl: 'partials/review-data.html'}).
       otherwise({redirectTo: '/manage'});
 
   }]).config(function (IndexedDBProvider) {
     IndexedDBProvider
       .setDbName("open_lmis")
-      .migration(5, migrationFunc);
+      .migration(6, migrationFunc);
   }).config(function ($httpProvider) {        //#1261
     var interceptor = function (loginConfig) {
       function responseHandler(response) {

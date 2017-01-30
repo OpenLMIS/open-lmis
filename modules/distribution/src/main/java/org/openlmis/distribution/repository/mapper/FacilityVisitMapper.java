@@ -64,6 +64,12 @@ public interface FacilityVisitMapper {
 
 
   @Select({"SELECT * FROM facility_visits WHERE id = #{id}"})
+  @Results({
+          @Result(property = "verifiedBy.name", column = "verifiedByName"),
+          @Result(property = "verifiedBy.title", column = "verifiedByTitle"),
+          @Result(property = "confirmedBy.name", column = "confirmedByName"),
+          @Result(property = "confirmedBy.title", column = "confirmedByTitle")
+  })
   public FacilityVisit getById(Long id);
 
 
@@ -75,4 +81,13 @@ public interface FacilityVisitMapper {
 
   @Select({"SELECT * FROM motorbike_problems WHERE facilityVisitId = #{facilityVisitId}"})
   MotorbikeProblems getMotorbikeProblemsByFacilityVisitId(Long facilityVisitId);
+
+  @Select("SELECT * FROM facility_visits WHERE distributionId = #{distributionId}")
+  @Results({
+          @Result(property = "verifiedBy.name", column = "verifiedByName"),
+          @Result(property = "verifiedBy.title", column = "verifiedByTitle"),
+          @Result(property = "confirmedBy.name", column = "confirmedByName"),
+          @Result(property = "confirmedBy.title", column = "confirmedByTitle")
+  })
+  List<FacilityVisit> getByDistributionId(Long distributionId);
 }

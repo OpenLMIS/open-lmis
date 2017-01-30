@@ -24,7 +24,11 @@ function FacilityVisit(facilityVisitJson) {
     return isUndefined(value) || value.length === 0;
   }
 
-  FacilityVisit.prototype.computeStatus = function () {
+  FacilityVisit.prototype.computeStatus = function (visited, review, ignoreSyncStatus) {
+    if (review && !ignoreSyncStatus) {
+      return DistributionStatus.SYNCED;
+    }
+
     if (isEmpty(this.visited)) {
       return DistributionStatus.EMPTY;
     }

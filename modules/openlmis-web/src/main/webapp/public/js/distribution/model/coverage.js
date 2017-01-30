@@ -29,7 +29,11 @@ function FullCoverage(facilityVisitId, fullCoverage) {
 
   init.call(this);
 
-  FullCoverage.prototype.computeStatus = function () {
+  FullCoverage.prototype.computeStatus = function (visited, review, ignoreSyncStatus) {
+    if (review && !ignoreSyncStatus) {
+      return DistributionStatus.SYNCED;
+    }
+
     var _this = this;
     var status;
 

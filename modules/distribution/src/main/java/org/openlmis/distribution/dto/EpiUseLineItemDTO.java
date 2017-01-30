@@ -24,8 +24,8 @@ import org.openlmis.distribution.domain.EpiUseLineItem;
 import static org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion.NON_EMPTY;
 
 /**
- *  DTO for EpiUseLineItem. It contains facilityVisitId and
- *  client side representation of EpiUseLineItem attributes.
+ * DTO for EpiUseLineItem. It contains facilityVisitId and
+ * client side representation of EpiUseLineItem attributes.
  */
 
 @Data
@@ -47,20 +47,23 @@ public class EpiUseLineItemDTO extends BaseModel {
   private Reading numberOfStockoutDays;
 
   public EpiUseLineItem transform() {
-    Integer stockoutDays = Optional
-            .fromNullable(numberOfStockoutDays)
-            .or(Reading.EMPTY)
-            .parsePositiveInt();
+    Integer stockoutDays = Reading.safeRead(numberOfStockoutDays).parsePositiveInt();
+    Integer stockAtFirstOfMonth = Reading.safeRead(this.stockAtFirstOfMonth).parsePositiveInt();
+    Integer stockAtEndOfMonth = Reading.safeRead(this.stockAtEndOfMonth).parsePositiveInt();
+    Integer received = Reading.safeRead(this.received).parsePositiveInt();
+    Integer loss = Reading.safeRead(this.loss).parsePositiveInt();
+    Integer distributed = Reading.safeRead(this.distributed).parsePositiveInt();
+    String effectiveValue = Reading.safeRead(this.expirationDate).getEffectiveValue();
 
     EpiUseLineItem epiUseLineItem = new EpiUseLineItem(
             this.facilityVisitId,
             this.productGroup,
-            this.stockAtFirstOfMonth.parsePositiveInt(),
-            this.stockAtEndOfMonth.parsePositiveInt(),
-            this.received.parsePositiveInt(),
-            this.loss.parsePositiveInt(),
-            this.distributed.parsePositiveInt(),
-            this.expirationDate.getEffectiveValue(),
+            stockAtFirstOfMonth,
+            stockAtEndOfMonth,
+            received,
+            loss,
+            distributed,
+            effectiveValue,
             stockoutDays
     );
 

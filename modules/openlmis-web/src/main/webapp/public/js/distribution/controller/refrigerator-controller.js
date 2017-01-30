@@ -10,6 +10,7 @@
 
 function RefrigeratorController($scope, $dialog, IndexedDB, $routeParams, distributionService) {
   $scope.distribution = distributionService.distribution;
+  $scope.distributionReview = distributionService.distributionReview;
   $scope.selectedFacilityId = $routeParams.facility;
 
   $scope.edit = {};
@@ -50,8 +51,15 @@ function RefrigeratorController($scope, $dialog, IndexedDB, $routeParams, distri
   };
 
   $scope.isFormDisabled = function () {
-    return ($scope.distribution.facilityDistributions[$scope.selectedFacilityId].status === DistributionStatus.SYNCED) ||
-        ($scope.distribution.facilityDistributions[$scope.selectedFacilityId].facilityVisit.visited.value === false);
+    if ($scope.distributionReview) {
+      return !$scope.distributionReview.editMode[$routeParams.facility][$scope.distributionReview.currentScreen];
+    }
+
+    var facilityDistribution = $scope.distribution.facilityDistributions[$scope.selectedFacilityId];
+    var status = facilityDistribution.status;
+    var facilityVisit = facilityDistribution.facilityVisit;
+
+    return (status === DistributionStatus.SYNCED) || (facilityVisit && facilityVisit.visited && facilityVisit.visited.value === false);
   };
 
   $scope.showDeleteRefrigeratorConfirmationModel = function (serialNumberToDelete) {

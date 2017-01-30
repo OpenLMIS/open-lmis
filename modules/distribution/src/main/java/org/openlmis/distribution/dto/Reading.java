@@ -38,27 +38,75 @@ import static org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion.NON_EMPT
 @JsonDeserialize(using = DistributionReadingDeSerializer.class)
 @JsonSerialize(include = NON_EMPTY)
 public class Reading {
-  public static final Reading EMPTY = new Reading();
-
-  private String value;
-  private Boolean notRecorded;
+  static final Reading EMPTY = new Reading();
 
   public static Reading safeRead(Reading reading) {
     return Optional.fromNullable(reading).or(EMPTY);
   }
 
-  public Reading(String value, Boolean notRecorded) {
+  public static void notRecorded(Reading reading) {
+    if (null == reading) {
+      return;
+    }
+
+    reading.setNotRecorded(false);
+
+    if (null == reading.getOriginal()) {
+      return;
+    }
+
+    reading.getOriginal().setNotRecorded(false);
+  }
+
+  private String type = "reading";
+  private Reading original;
+  private Object value;
+  private Boolean notRecorded;
+
+  public Reading(Object value, Boolean notRecorded) {
+    this(null, value, notRecorded);
+  }
+
+  public Reading(Reading original, Object value, Boolean notRecorded) {
+    this.original = original;
     this.value = value;
-    this.notRecorded = ((isBlank(value)) && (!notRecorded)) ? true : notRecorded;
+
+    if (value instanceof String) {
+      this.notRecorded = ((isBlank((String) value)) && (!notRecorded)) ? true : notRecorded;
+    } else {
+      this.notRecorded = ((null == value) && (!notRecorded)) ? true : notRecorded;
+    }
+  }
+
+  public Reading(Date date, String format) {
+    if (null == date) {
+      notRecorded = true;
+    } else {
+      value = new SimpleDateFormat(format).format(date);
+      notRecorded = false;
+    }
+
+    original = new Reading(value, notRecorded);
+  }
+
+  public Reading(Object obj) {
+    if (null == obj) {
+      notRecorded = true;
+    } else {
+      value = obj;
+      notRecorded = false;
+    }
+
+    original = new Reading(value, notRecorded);
   }
 
   public String getEffectiveValue() {
-    return (notRecorded == null || !notRecorded) ? value : null;
+    return null != value ? value.toString() : null;
   }
 
   public Integer parsePositiveInt() {
     String stringValue = getEffectiveValue();
-    if (stringValue == null) {
+    if (isBlank(stringValue)) {
       return null;
     }
 

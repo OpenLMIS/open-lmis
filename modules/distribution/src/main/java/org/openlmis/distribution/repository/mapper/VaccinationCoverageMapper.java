@@ -52,6 +52,9 @@ public interface VaccinationCoverageMapper {
   @Select({"SELECT * FROM full_coverages WHERE facilityVisitId = #{facilityVisitId}"})
   VaccinationFullCoverage getFullCoverageBy(Long facilityVisitId);
 
+  @Select({"SELECT * FROM full_coverages WHERE id = #{id}"})
+  VaccinationFullCoverage getFullCoverageById(Long id);
+
   @Select({"SELECT * FROM coverage_target_group_products"})
   List<TargetGroupProduct> getVaccinationProducts();
 
@@ -90,4 +93,20 @@ public interface VaccinationCoverageMapper {
     "outreachTetanus2To5=#{outreachTetanus2To5}, modifiedDate=DEFAULT, modifiedBy=#{modifiedBy}",
     "WHERE id=#{id}"})
   void updateAdultCoverageLineItem(AdultCoverageLineItem adultCoverageLineItem);
+
+  @Update({"UPDATE full_coverages SET facilityVisitId = #{facilityVisitId}, femaleHealthCenter = #{femaleHealthCenter}, femaleOutreach = #{femaleOutreach},",
+    "maleHealthCenter = #{maleHealthCenter}, maleOutreach = #{maleOutreach}, modifiedBy = #{modifiedBy}, modifiedDate=DEFAULT WHERE id = #{id}"})
+  void updateFullCoverage(VaccinationFullCoverage fullCoverage);
+
+  @Select("SELECT * FROM vaccination_child_coverage_line_items WHERE id = #{id}")
+  ChildCoverageLineItem getChildCoverageLineItem(Long id);
+
+  @Select("SELECT * FROM vaccination_adult_coverage_line_items WHERE id = #{id}")
+  AdultCoverageLineItem getAdultCoverageLineItem(Long id);
+
+  @Select({"SELECT * FROM child_coverage_opened_vial_line_items WHERE id = #{id}"})
+  OpenedVialLineItem getChildCoverageOpenedVialLineItem(Long id);
+
+  @Select({"SELECT * FROM adult_coverage_opened_vial_line_items WHERE id = #{id}"})
+  OpenedVialLineItem getAdultCoverageOpenedVialLineItem(Long id);
 }

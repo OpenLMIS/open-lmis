@@ -113,5 +113,4 @@ public class FacilityVisitDTO extends BaseModel {
 
       return facilityVisit;
     }
-
 }
