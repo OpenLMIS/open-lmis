@@ -16,12 +16,12 @@ function FacilityVisit(facilityVisitJson) {
     return !field || (isUndefined(field.value) && !field.notRecorded);
   }
 
-  function isUndefinedOrFalse(value) {
-    return isUndefined(value) || value === false;
+  function isEmptyOrFalse(field) {
+    return isEmpty(field) || field.value === false;
   }
 
-  function isBlank(value) {
-    return isUndefined(value) || value.length === 0;
+  function isBlank(field) {
+    return isEmpty(field) || (field.value && field.value.length === 0);
   }
 
   FacilityVisit.prototype.computeStatus = function (visited, review, ignoreSyncStatus) {
@@ -43,22 +43,22 @@ function FacilityVisit(facilityVisitJson) {
           return DistributionStatus.INCOMPLETE;
       }
 
-      if (isUndefinedOrFalse(this.motorbikeProblemsNotRecorded)) {
-        if (isUndefined(this.motorbikeProblems)) {
-          return DistributionStatus.INCOMPLETE;
-        }
+      if (isUndefined(this.motorbikeProblems)) {
+        return DistributionStatus.INCOMPLETE;
+      }
 
+      if (!this.motorbikeProblems.notRecorded) {
         // if no problem was selected
-        if (isUndefinedOrFalse(this.motorbikeProblems.lackOfFundingForFuel) &&
-          isUndefinedOrFalse(this.motorbikeProblems.repairsSchedulingProblem) &&
-          isUndefinedOrFalse(this.motorbikeProblems.lackOfFundingForRepairs) &&
-          isUndefinedOrFalse(this.motorbikeProblems.missingParts) &&
-          isUndefinedOrFalse(this.motorbikeProblems.other)) {
+        if (isEmptyOrFalse(this.motorbikeProblems.lackOfFundingForFuel) &&
+          isEmptyOrFalse(this.motorbikeProblems.repairsSchedulingProblem) &&
+          isEmptyOrFalse(this.motorbikeProblems.lackOfFundingForRepairs) &&
+          isEmptyOrFalse(this.motorbikeProblems.missingParts) &&
+          isEmptyOrFalse(this.motorbikeProblems.other)) {
             return DistributionStatus.INCOMPLETE;
         }
 
         // if selected other problem but description is empty
-        if (this.motorbikeProblems.other === true && isBlank(this.motorbikeProblems.motorbikeProblemOther)) {
+        if (!isEmptyOrFalse(this.motorbikeProblems.other) && isBlank(this.motorbikeProblems.motorbikeProblemOther)) {
           return DistributionStatus.INCOMPLETE;
         }
       }

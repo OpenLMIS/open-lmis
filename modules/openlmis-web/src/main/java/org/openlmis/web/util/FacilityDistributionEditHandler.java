@@ -13,6 +13,7 @@ import org.openlmis.distribution.domain.EpiUseLineItem;
 import org.openlmis.distribution.domain.Facilitator;
 import org.openlmis.distribution.domain.FacilityDistribution;
 import org.openlmis.distribution.domain.FacilityVisit;
+import org.openlmis.distribution.domain.MotorbikeProblems;
 import org.openlmis.distribution.domain.OpenedVialLineItem;
 import org.openlmis.distribution.domain.RefrigeratorProblem;
 import org.openlmis.distribution.domain.RefrigeratorReading;
@@ -241,6 +242,10 @@ public class FacilityDistributionEditHandler {
     if (null == propertyValue) {
       if (bean instanceof FacilityVisit && ("confirmedBy".equals(propertyName) || "verifiedBy".equals(propertyName))) {
         return new Facilitator();
+      }
+
+      if (bean instanceof FacilityVisit && ("motorbikeProblems").equals(propertyName)) {
+        return new MotorbikeProblems();
       }
 
       if (bean instanceof RefrigeratorReading && "problem".equals(propertyName)) {

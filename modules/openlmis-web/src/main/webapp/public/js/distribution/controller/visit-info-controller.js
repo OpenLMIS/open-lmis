@@ -41,6 +41,18 @@ function VisitInfoController($scope, distributionService, $routeParams) {
     return [true, ""];
   };
 
+  $scope.clearMotorbikeProblems = function () {
+    var visit = $scope.distribution.facilityDistributions[$scope.selectedFacility].facilityVisit;
+
+    if (!visit.motorbikeProblems) {
+      visit.motorbikeProblems = {};
+    }
+
+    $.each(['lackOfFundingForFuel','repairsSchedulingProblem','lackOfFundingForRepairs','missingParts','other'], function (i, elem) {
+      visit.motorbikeProblems[elem] = setApplicableField(visit.motorbikeProblems[elem]);
+    });
+  };
+
   $scope.setApplicableVisitInfo = function () {
     var visit = $scope.distribution.facilityDistributions[$scope.selectedFacility].facilityVisit;
 

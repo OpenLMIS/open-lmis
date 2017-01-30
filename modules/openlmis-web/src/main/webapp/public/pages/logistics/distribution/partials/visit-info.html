@@ -123,46 +123,46 @@
 
              <div class="form-row clearfix">
                <input id="lackOfFundingForFuel{{ $index }}" type="checkbox" name="motorbikeProblems{{ $index }}"
-                      ng-model="facilityData.facilityVisit.motorbikeProblems.lackOfFundingForFuel"/>
+                      ng-model="facilityData.facilityVisit.motorbikeProblems.lackOfFundingForFuel.value"/>
                <label class="checkbox-label" for="lackOfFundingForFuel{{ $index }}"
                       openlmis-message="label.motorbikes.select.lack.of.funding.for.fuel"></label>
              </div>
              <div class="form-row clearfix">
                <input id="repairsSchedulingProblem{{ $index }}" type="checkbox" name="motorbikeProblems{{ $index }}"
-                      ng-model="facilityData.facilityVisit.motorbikeProblems.repairsSchedulingProblem"/>
+                      ng-model="facilityData.facilityVisit.motorbikeProblems.repairsSchedulingProblem.value"/>
                <label class="checkbox-label" for="repairsSchedulingProblem{{ $index }}"
                       openlmis-message="label.motorbikes.select.repairs.scheduling.problem"></label>
              </div>
              <div class="form-row clearfix">
                <input id="lackOfFundingForRepairs{{ $index }}" type="checkbox" name="motorbikeProblems{{ $index }}"
-                      ng-model="facilityData.facilityVisit.motorbikeProblems.lackOfFundingForRepairs"/>
+                      ng-model="facilityData.facilityVisit.motorbikeProblems.lackOfFundingForRepairs.value"/>
                <label class="checkbox-label" for="lackOfFundingForRepairs{{ $index }}"
                       openlmis-message="label.motorbikes.select.lack.of.funding.for.repairs"></label>
              </div>
              <div class="form-row clearfix">
                <input id="missingParts{{ $index }}" type="checkbox" name="motorbikeProblems{{ $index }}"
-                      ng-model="facilityData.facilityVisit.motorbikeProblems.missingParts"/>
+                      ng-model="facilityData.facilityVisit.motorbikeProblems.missingParts.value"/>
                <label class="checkbox-label" for="missingParts{{ $index }}"
                       openlmis-message="label.motorbikes.select.missing.parts"></label>
              </div>
              <div class="form-row clearfix">
                <input id="otherProblem{{ $index }}" type="checkbox" name="motorbikeProblems{{ $index }}"
-                      ng-model="facilityData.facilityVisit.motorbikeProblems.other"/>
+                      ng-model="facilityData.facilityVisit.motorbikeProblems.other.value"/>
                <label class="checkbox-label" for="otherProblem{{ $index }}"
                       openlmis-message="label.motorbikes.select.other"></label>
              </div>
              <div class="form-row clearfix">
-               <input ng-model="facilityData.facilityVisit.motorbikeProblems.motorbikeProblemOther"
+               <input ng-model="facilityData.facilityVisit.motorbikeProblems.motorbikeProblemOther.value"
                       id="otherProblemInput"
-                      ng-show="facilityData.facilityVisit.motorbikeProblems.other === true"
+                      ng-show="facilityData.facilityVisit.motorbikeProblems.other.value === true"
                       maxlength="140"
-                      ng-class="{'required-error': !facilityData.facilityVisit.motorbikeProblems.motorbikeProblemOther}">
+                      ng-class="{'required-error': !facilityData.facilityVisit.motorbikeProblems.motorbikeProblemOther.value}">
                </input>
              </div>
              <div class="form-row clearfix">
                <input id="motorbikeProblems{{ $index }}" type="checkbox"
-                      ng-model="facilityData.facilityVisit.motorbikeProblemsNotRecorded"
-                      ng-click="facilityData.facilityVisit.motorbikeProblems = {}"
+                      ng-model="facilityData.facilityVisit.motorbikeProblems.notRecorded"
+                      ng-click="clearMotorbikeProblems()"
                       not-recorded/>
                <label class="checkbox-label" for="motorbikeProblems{{ $index }}"
                       openlmis-message="label.not.available"></label>

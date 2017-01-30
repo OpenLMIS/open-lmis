@@ -58,7 +58,7 @@ public class FacilityVisitDTO extends BaseModel {
     private Reading numberOfMotorizedVehiclesWithProblems;
     private Reading numberOfDaysWithLimitedTransport;
 
-    private MotorbikeProblems motorbikeProblems;
+    private MotorbikeProblemsDTO motorbikeProblems;
 
     public FacilityVisit transform() {
       FacilitatorDTO confirmedBy = Optional.fromNullable(this.confirmedBy).or(new FacilitatorDTO());
@@ -76,7 +76,7 @@ public class FacilityVisitDTO extends BaseModel {
       Integer numberOfFunctioningMotorbikes = Reading.safeRead(this.numberOfFunctioningMotorbikes).parsePositiveInt();
       Integer numberOfMotorizedVehiclesWithProblems = Reading.safeRead(this.numberOfMotorizedVehiclesWithProblems).parsePositiveInt();
       Integer numberOfDaysWithLimitedTransport = Reading.safeRead(this.numberOfDaysWithLimitedTransport).parsePositiveInt();
-      MotorbikeProblems motorbikeProblems = Optional.fromNullable(this.motorbikeProblems).or(new MotorbikeProblems());
+      MotorbikeProblemsDTO motorbikeProblems = Optional.fromNullable(this.motorbikeProblems).or(new MotorbikeProblemsDTO());
 
       FacilityVisit facilityVisit = new FacilityVisit();
 
@@ -109,7 +109,7 @@ public class FacilityVisitDTO extends BaseModel {
       facilityVisit.setNumberOfMotorizedVehiclesWithProblems(numberOfMotorizedVehiclesWithProblems);
       facilityVisit.setNumberOfDaysWithLimitedTransport(numberOfDaysWithLimitedTransport);
 
-      facilityVisit.setMotorbikeProblems(motorbikeProblems);
+      facilityVisit.setMotorbikeProblems(motorbikeProblems.transform());
 
       return facilityVisit;
     }
