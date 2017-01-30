@@ -9,7 +9,7 @@ import org.codehaus.jackson.annotate.JsonIgnoreProperties;
 import org.openlmis.core.domain.BaseModel;
 import org.openlmis.distribution.domain.MotorbikeProblems;
 
-import static org.apache.commons.lang.BooleanUtils.isFalse;
+import static org.apache.commons.lang.BooleanUtils.isNotTrue;
 import static org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion.NON_EMPTY;
 
 @Data
@@ -37,7 +37,7 @@ public class MotorbikeProblemsDTO extends BaseModel {
       motorbikeProblems.setModifiedDate(modifiedDate);
       motorbikeProblems.setFacilityVisitId(facilityVisitId);
 
-      if (isFalse(notRecorded)) {
+      if (isNotTrue(notRecorded)) {
         Boolean lackOfFundingForFuel = Reading.safeRead(this.lackOfFundingForFuel).parseBoolean();
         Boolean repairsSchedulingProblem = Reading.safeRead(this.repairsSchedulingProblem).parseBoolean();
         Boolean lackOfFundingForRepairs = Reading.safeRead((this.lackOfFundingForRepairs)).parseBoolean();

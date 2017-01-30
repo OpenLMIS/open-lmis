@@ -10,7 +10,7 @@ import org.openlmis.core.domain.BaseModel;
 import org.openlmis.distribution.dto.MotorbikeProblemsDTO;
 import org.openlmis.distribution.dto.Reading;
 
-import static org.apache.commons.lang.BooleanUtils.isFalse;
+import static org.apache.commons.lang.BooleanUtils.isNotTrue;
 import static org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion.NON_EMPTY;
 
 @Data
@@ -42,8 +42,8 @@ public class MotorbikeProblems extends BaseModel {
       dto.setMissingParts(new Reading(missingParts));
       dto.setOther(new Reading(other));
       dto.setMotorbikeProblemOther(new Reading(motorbikeProblemOther));
-      if (isFalse(lackOfFundingForFuel) && isFalse((repairsSchedulingProblem)) && isFalse(lackOfFundingForRepairs) &&
-        isFalse(missingParts) && isFalse(other)) {
+      if (isNotTrue(lackOfFundingForFuel) && isNotTrue((repairsSchedulingProblem)) && isNotTrue(lackOfFundingForRepairs) &&
+              isNotTrue(missingParts) && isNotTrue(other)) {
           dto.setNotRecorded(true);
       }
 
