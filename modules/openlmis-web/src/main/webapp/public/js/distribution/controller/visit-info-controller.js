@@ -59,6 +59,13 @@ function VisitInfoController($scope, distributionService, $routeParams) {
     visit.verifiedBy = setApplicableField(visit.verifiedBy);
     visit.vehicleId = setApplicableField(visit.vehicleId);
     visit.visitDate = setApplicableField(visit.visitDate);
+    visit.numberOfOutreachVisitsPlanned = setApplicableField(visit.numberOfOutreachVisitsPlanned);
+    visit.numberOfOutreachVisitsCompleted = setApplicableField(visit.numberOfOutreachVisitsCompleted);
+    visit.numberOfMotorbikesAtHU = setApplicableField(visit.numberOfMotorbikesAtHU);
+    visit.numberOfFunctioningMotorbikes = setApplicableField(visit.numberOfFunctioningMotorbikes);
+    visit.numberOfMotorizedVehiclesWithProblems = setApplicableField(visit.numberOfMotorizedVehiclesWithProblems);
+    visit.numberOfDaysWithLimitedTransport = setApplicableField(visit.numberOfDaysWithLimitedTransport);
+    visit.motorbikeProblems = setApplicableField(visit.motorbikeProblems);
   };
 
   function setApplicableField(field) {
