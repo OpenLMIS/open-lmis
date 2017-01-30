@@ -18,7 +18,11 @@ import org.openlmis.core.domain.BaseModel;
 import org.openlmis.core.domain.DeliveryZone;
 import org.openlmis.core.domain.ProcessingPeriod;
 import org.openlmis.core.domain.Program;
+import org.openlmis.distribution.dto.DistributionDTO;
+import org.openlmis.distribution.dto.FacilityDistributionDTO;
 
+import java.util.Date;
+import java.util.HashMap;
 import java.util.Map;
 
 import static org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion.NON_EMPTY;
@@ -39,9 +43,33 @@ public class Distribution extends BaseModel {
   ProcessingPeriod period;
   DistributionStatus status;
   Map<Long, FacilityDistribution> facilityDistributions;
+  Date syncDate;
+  Date lastViewed;
 
   @SuppressWarnings("unused")
   public String getZpp() {
     return deliveryZone.getId() + "_" + program.getId() + "_" + period.getId();
+  }
+
+  public DistributionDTO transform() {
+    DistributionDTO dto = new DistributionDTO();
+    dto.setId(id);
+    dto.setCreatedBy(createdBy);
+    dto.setCreatedDate(createdDate);
+    dto.setModifiedBy(modifiedBy);
+    dto.setModifiedDate(modifiedDate);
+    dto.setDeliveryZone(deliveryZone);
+    dto.setProgram(program);
+    dto.setPeriod(period);
+    dto.setStatus(status);
+
+    Map<Long, FacilityDistributionDTO> facilityDistributions = new HashMap<>();
+    for (Map.Entry<Long, FacilityDistribution> entry : this.facilityDistributions.entrySet()) {
+      facilityDistributions.put(entry.getKey(), entry.getValue().transform());
+    }
+
+    dto.setFacilityDistributions(facilityDistributions);
+
+    return dto;
   }
 }

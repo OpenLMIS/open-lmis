@@ -129,7 +129,7 @@ public class FacilityDistributionService {
                                               List<TargetGroupProduct> childrenTargetGroupProducts,
                                               List<TargetGroupProduct> adultTargetGroupProducts,
                                               List<ProductVial> childProductVials, List<ProductVial> adultProductVials) {
-    List<RefrigeratorReading> refrigeratorReadings = getRefrigeratorReadings(facility.getId(), refrigerators);
+    List<RefrigeratorReading> refrigeratorReadings = getRefrigeratorReadings(facility.getId(), refrigerators, null);
 
     FacilityVisit facilityVisit = new FacilityVisit(facility, distribution);
     facilityVisitService.save(facilityVisit);
@@ -158,7 +158,7 @@ public class FacilityDistributionService {
     return facilityDistribution;
   }
 
-  private List<RefrigeratorReading> getRefrigeratorReadings(final Long facilityId, List<Refrigerator> refrigerators) {
+  private List<RefrigeratorReading> getRefrigeratorReadings(final Long facilityId, List<Refrigerator> refrigerators, final Long facilityVisitId) {
     return (List<RefrigeratorReading>) collect(select(refrigerators, new Predicate() {
       @Override
       public boolean evaluate(Object o) {
@@ -167,18 +167,35 @@ public class FacilityDistributionService {
     }), new Transformer() {
       @Override
       public Object transform(Object o) {
-        return new RefrigeratorReading((Refrigerator) o);
+        Refrigerator refrigerator = (Refrigerator) o;
+
+        if (null == facilityVisitId) {
+          return new RefrigeratorReading(refrigerator);
+        }
+
+        RefrigeratorReading reading = distributionRefrigeratorsService.getByRefrigeratorIdAndSerialNumber(refrigerator.getId(), refrigerator.getSerialNumber(), facilityVisitId);
+        return null == reading ? new RefrigeratorReading(refrigerator) : reading;
       }
     });
   }
 
   public Map<Long, FacilityDistribution> get(Distribution distribution) {
+    List<FacilityVisit> unSyncedFacilities = facilityVisitService.getUnSyncedFacilities(distribution.getId());
+    return getFacilityDistributions(distribution, unSyncedFacilities);
+  }
+
+  public Map<Long, FacilityDistribution> getData(Distribution distribution) {
+    List<FacilityVisit> visits = facilityVisitService.getByDistributionId(distribution.getId());
+    return getFacilityDistributions(distribution, visits);
+  }
+
+  private Map<Long, FacilityDistribution> getFacilityDistributions(Distribution distribution, List<FacilityVisit> facilityVisits) {
     Map<Long, FacilityDistribution> facilityDistributions = new HashMap<>();
 
-    List<FacilityVisit> unSyncedFacilities = facilityVisitService.getUnSyncedFacilities(distribution.getId());
-    for (FacilityVisit facilityVisit : unSyncedFacilities) {
+    for (FacilityVisit facilityVisit : facilityVisits) {
       facilityDistributions.put(facilityVisit.getFacilityId(), getDistributionData(facilityVisit, distribution));
     }
+
     return facilityDistributions;
   }
 
@@ -186,7 +203,7 @@ public class FacilityDistributionService {
     EpiUse epiUse = epiUseService.getBy(facilityVisit.getId());
 
     List<Refrigerator> refrigerators = refrigeratorService.getRefrigeratorsForADeliveryZoneAndProgram(distribution.getDeliveryZone().getId(), distribution.getProgram().getId());
-    DistributionRefrigerators distributionRefrigerators = new DistributionRefrigerators(getRefrigeratorReadings(facilityVisit.getFacilityId(), refrigerators));
+    DistributionRefrigerators distributionRefrigerators = new DistributionRefrigerators(getRefrigeratorReadings(facilityVisit.getFacilityId(), refrigerators, facilityVisit.getId()));
 
     Facility facility = facilityService.getById(facilityVisit.getFacilityId());
 

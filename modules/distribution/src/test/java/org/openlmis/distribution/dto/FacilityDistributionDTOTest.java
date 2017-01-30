@@ -25,7 +25,7 @@ public class FacilityDistributionDTOTest {
 
   @Test
   public void shouldTransformDTOIntoRealObject() throws Exception {
-    FacilityVisit facilityVisit = new FacilityVisit();
+    FacilityVisitDTO facilityVisitDTO = mock(FacilityVisitDTO.class);
     EpiUseDTO epiUseDTO = mock(EpiUseDTO.class);
     DistributionRefrigeratorsDTO distributionRefrigeratorsDTO = mock(DistributionRefrigeratorsDTO.class);
     VaccinationFullCoverageDTO coverageDTO = mock(VaccinationFullCoverageDTO.class);
@@ -33,8 +33,11 @@ public class FacilityDistributionDTOTest {
     ChildCoverageDTO childCoverageDTO = mock(ChildCoverageDTO.class);
     AdultCoverageDTO adultCoverageDTO = mock(AdultCoverageDTO.class);
 
-    FacilityDistributionDTO facilityDistributionDTO = new FacilityDistributionDTO(facilityVisit, epiUseDTO,
+    FacilityDistributionDTO facilityDistributionDTO = new FacilityDistributionDTO(facilityVisitDTO, epiUseDTO,
       epiInventoryDTO, distributionRefrigeratorsDTO, coverageDTO, childCoverageDTO, adultCoverageDTO);
+
+    FacilityVisit facilityVisit = new FacilityVisit();
+    when(facilityVisitDTO.transform()).thenReturn(facilityVisit);
 
     EpiUse epiUse = new EpiUse();
     when(epiUseDTO.transform()).thenReturn(epiUse);
@@ -56,7 +59,7 @@ public class FacilityDistributionDTOTest {
 
     FacilityDistribution facilityDistribution = facilityDistributionDTO.transform();
 
-    assertThat(facilityDistribution.getFacilityVisit(), is(facilityDistributionDTO.getFacilityVisit()));
+    assertThat(facilityDistribution.getFacilityVisit(), is(facilityVisit));
     assertThat(facilityDistribution.getEpiUse(), is(epiUse));
     assertThat(facilityDistribution.getRefrigerators(), is(distributionRefrigerators));
     assertThat(facilityDistribution.getFullCoverage(), is(vaccinationFullCoverage));
@@ -67,7 +70,7 @@ public class FacilityDistributionDTOTest {
 
   @Test
   public void shouldSetModifiedByForAllDistributionForms() throws Exception {
-    FacilityDistributionDTO facilityDistributionDTO = new FacilityDistributionDTO(new FacilityVisit(), new EpiUseDTO(), new EpiInventoryDTO(),
+    FacilityDistributionDTO facilityDistributionDTO = new FacilityDistributionDTO(new FacilityVisitDTO(), new EpiUseDTO(), new EpiInventoryDTO(),
       new DistributionRefrigeratorsDTO(), new VaccinationFullCoverageDTO(), new ChildCoverageDTO(),
       new AdultCoverageDTO());
 

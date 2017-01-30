@@ -10,6 +10,7 @@
 
 package org.openlmis.distribution.dto;
 
+import com.google.common.base.Optional;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -44,27 +45,33 @@ public class RefrigeratorReadingDTO extends BaseModel {
   Reading lowAlarmEvents;
   Reading highAlarmEvents;
   Reading problemSinceLastTime;
-  RefrigeratorProblem problems;
-  String notes;
+  RefrigeratorProblemDTO problems;
+  Reading notes;
 
   public RefrigeratorReading transform() {
     refrigerator.setModifiedBy(this.modifiedBy);
     refrigerator.setCreatedBy(this.createdBy);
     refrigerator.validate();
-    if ("N".equalsIgnoreCase(functioningCorrectly.getEffectiveValue())) {
-      problems.validate();
+
+    Float temperature = Reading.safeRead(this.temperature).parseFloat();
+    String functioningCorrectly = Reading.safeRead(this.functioningCorrectly).getEffectiveValue();
+    Integer lowAlarmEvents = Reading.safeRead(this.lowAlarmEvents).parsePositiveInt();
+    Integer highAlarmEvents = Reading.safeRead(this.highAlarmEvents).parsePositiveInt();
+    String problemSinceLastTime = Reading.safeRead(this.problemSinceLastTime).getEffectiveValue();
+    RefrigeratorProblemDTO problems = Optional.fromNullable(this.problems).or(new RefrigeratorProblemDTO());
+    String notes = Reading.safeRead(this.notes).getEffectiveValue();
+
+    RefrigeratorProblem problem = problems.transform();
+
+    if ("N".equalsIgnoreCase(functioningCorrectly)) {
+      problem.validate();
     } else {
-      problems = null;
+      problem = new RefrigeratorProblem(id);
     }
 
     RefrigeratorReading reading = new RefrigeratorReading(this.refrigerator, this.facilityVisitId,
-      this.temperature.parseFloat(),
-      this.functioningCorrectly.getEffectiveValue(),
-      this.lowAlarmEvents.parsePositiveInt(),
-      this.highAlarmEvents.parsePositiveInt(),
-      this.problemSinceLastTime.getEffectiveValue(),
-      this.problems,
-      this.notes);
+            temperature, functioningCorrectly, lowAlarmEvents, highAlarmEvents, problemSinceLastTime,
+            problem, notes);
     reading.setCreatedBy(this.createdBy);
     reading.setModifiedBy(this.modifiedBy);
     return reading;

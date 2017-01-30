@@ -69,27 +69,27 @@ describe('Facility Distribution data', function () {
   });
 
   it("should disable refrigerator form if facility is not visited and tab is 'refrigerators'", function () {
-    facilityDistribution.facilityVisit.visited = false;
-    expect(facilityDistribution.isDisabled('refrigerators')).toEqual(true);
+    facilityDistribution.facilityVisit.visited = {value: false};
+    expect(facilityDistribution.isDisabled('refrigerator-data')).toEqual(true);
   });
 
   it("should disable epi-inventory form if facility is not visited and tab is 'epi-inventory'", function () {
-    facilityDistribution.facilityVisit.visited = false;
+    facilityDistribution.facilityVisit.visited = {value: false};
     expect(facilityDistribution.isDisabled('epi-inventory')).toEqual(true);
   });
 
   it("should not disable refrigerator form if facility is visited and tab is 'refrigerators'", function () {
-    facilityDistribution.facilityVisit.visited = true;
-    expect(facilityDistribution.isDisabled('refrigerators')).toEqual(false);
+    facilityDistribution.facilityVisit.visited = {value: true};
+    expect(facilityDistribution.isDisabled('refrigerator-data')).toEqual(false);
   });
 
   it("should not disable epi-inventory form if facility is visited and tab is 'epi-inventory'", function () {
-    facilityDistribution.facilityVisit.visited = true;
+    facilityDistribution.facilityVisit.visited = {value: true};
     expect(facilityDistribution.isDisabled('epi-inventory')).toEqual(false);
   });
 
   it("should not disable tabs other than refrigerator, epi-inventory and epi-use if facility is not visited", function () {
-    facilityDistribution.facilityVisit.visited = false;
+    facilityDistribution.facilityVisit.visited = {value: false};
     expect(facilityDistribution.isDisabled('child-coverage')).toEqual(false);
   });
 

@@ -25,12 +25,18 @@ function EpiInventory(epiInventory) {
   };
 
   function isValid(lineItem, field) {
-    if (isUndefined(lineItem[field]) || field === 'deliveredQuantity')
-      return !isUndefined(lineItem[field]);
+    if (isUndefined(lineItem[field]) || field === 'deliveredQuantity') {
+      return !isUndefined(lineItem[field]) && !isUndefined(lineItem[field].value);
+    }
+
     return (!isUndefined(lineItem[field].value) || lineItem[field].notRecorded);
   }
 
-  EpiInventory.prototype.computeStatus = function (visited) {
+  EpiInventory.prototype.computeStatus = function (visited, review, ignoreSyncStatus) {
+    if (review && !ignoreSyncStatus) {
+      return DistributionStatus.SYNCED;
+    }
+
     if (visited === false) {
       return DistributionStatus.COMPLETE;
     }

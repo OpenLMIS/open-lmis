@@ -11,6 +11,7 @@
 package org.openlmis.distribution.service;
 
 import org.openlmis.distribution.domain.EpiInventory;
+import org.openlmis.distribution.domain.EpiInventoryLineItem;
 import org.openlmis.distribution.repository.EpiInventoryRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -31,5 +32,13 @@ public class EpiInventoryService {
 
   public EpiInventory getBy(Long facilityVisitId) {
     return repository.getBy(facilityVisitId);
+  }
+
+  public EpiInventoryLineItem getById(Long id) {
+    return repository.getById(id);
+  }
+
+  public void save(EpiInventoryLineItem line) {
+    repository.save(line);
   }
 }

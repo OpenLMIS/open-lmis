@@ -8,7 +8,7 @@
  * You should have received a copy of the GNU Affero General Public License along with this program. If not, see http://www.gnu.org/licenses. For additional information contact info@OpenLMIS.org. 
  */
 
-function DistributionListController($scope, SharedDistributions, SyncFacilityDistributionData, $q, distributionService, $dialog, $window) {
+function DistributionListController($scope, SharedDistributions, SyncFacilityDistributionData, $q, distributionService, $dialog, $window, $location) {
   angular.extend($scope, DistributionStatus);
   var SYNC_STATUS = 'label.distribution.synchronization.status';
   var SYNC_IN_PROGRESS = 'label.distribution.synchronization.progress';
@@ -18,7 +18,16 @@ function DistributionListController($scope, SharedDistributions, SyncFacilityDis
 
   SharedDistributions.update();
 
-  $scope.sharedDistributions = SharedDistributions;
+  $scope.getDistributions = function () {
+    return _.filter(SharedDistributions.distributionList, function (elem) {
+      return !SharedDistributions.isReview(elem);
+    });
+  };
+
+  $scope.goTo = function (link) {
+    delete distributionService.distributionReview;
+    $location.path(link);
+  };
 
   $scope.syncDistribution = function (distributionId) {
     $scope.syncMessage = null;

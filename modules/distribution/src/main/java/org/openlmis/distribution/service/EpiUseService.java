@@ -37,4 +37,12 @@ public class EpiUseService {
   public EpiUse getBy(Long facilityVisitId) {
     return repository.getBy(facilityVisitId);
   }
+
+  public EpiUseLineItem getLineById(Long id) {
+    return repository.getLineById(id);
+  }
+
+  public void saveLine(EpiUseLineItem line) {
+    repository.saveLineItem(line);
+  }
 }

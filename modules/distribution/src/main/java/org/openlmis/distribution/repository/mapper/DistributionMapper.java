@@ -13,7 +13,9 @@ package org.openlmis.distribution.repository.mapper;
 
 import org.apache.ibatis.annotations.*;
 import org.openlmis.distribution.domain.Distribution;
+import org.openlmis.distribution.domain.DistributionEdit;
 import org.openlmis.distribution.domain.DistributionStatus;
+import org.openlmis.distribution.domain.DistributionsEditHistory;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -45,6 +47,12 @@ public interface DistributionMapper {
   @Update({"UPDATE distributions SET status =  #{status}, modifiedBy = #{modifiedBy}, modifiedDate = DEFAULT WHERE id = #{id}"})
   void updateDistributionStatus(@Param("id") Long id, @Param("status") DistributionStatus status, @Param("modifiedBy") Long modifiedBy);
 
+  @Update({"UPDATE distributions SET syncDate = CURRENT_TIMESTAMP WHERE id = #{id} AND syncDate IS NULL"})
+  void updateSyncDate(@Param("id") Long id);
+
+  @Update({"UPDATE distributions SET lastViewed = CURRENT_TIMESTAMP WHERE id = #{id}"})
+  void updateLastViewed(@Param("id") Long id);
+
   @Select({"SELECT periodId from distributions where deliveryZoneId = #{deliveryZoneId} AND programId = #{programId} and status = 'SYNCED'"})
   List<Long> getSyncedPeriodsForDeliveryZoneAndProgram(@Param("deliveryZoneId") Long deliveryZoneId, @Param("programId") Long programId);
 
@@ -56,4 +64,116 @@ public interface DistributionMapper {
     @Result(property = "program.id", column = "programId")
   })
   Distribution getBy(Long distributionId);
+
+  @Select({"SELECT * FROM distributions WHERE status = 'SYNCED' AND programId=#{program.id} AND periodId=#{period.id} AND deliveryZoneId=#{deliveryZone.id}"})
+  @Results(value = {
+          @Result(property = "deliveryZone", column = "deliveryZoneId", javaType = Long.class,
+                  one = @One(select = "org.openlmis.core.repository.mapper.DeliveryZoneMapper.getById")),
+          @Result(property = "period", column = "periodId", javaType = Long.class,
+                  one = @One(select = "org.openlmis.core.repository.mapper.ProcessingPeriodMapper.getById")),
+          @Result(property = "program", column = "programId", javaType = Long.class,
+                  one = @One(select = "org.openlmis.core.repository.mapper.ProgramMapper.getById"))
+  })
+  Distribution getFullSyncedDistribution(Distribution distribution);
+
+  @Select({"SELECT * FROM distributions WHERE status = 'SYNCED'"})
+  @Results(value = {
+          @Result(property = "deliveryZone", column = "deliveryZoneId", javaType = Long.class,
+                  one = @One(select = "org.openlmis.core.repository.mapper.DeliveryZoneMapper.getById")),
+          @Result(property = "period", column = "periodId", javaType = Long.class,
+                  one = @One(select = "org.openlmis.core.repository.mapper.ProcessingPeriodMapper.getById")),
+          @Result(property = "program", column = "programId", javaType = Long.class,
+                  one = @One(select = "org.openlmis.core.repository.mapper.ProgramMapper.getById"))
+  })
+  List<Distribution> getFullSyncedDistributions();
+
+  @Select({"SELECT * FROM distributions WHERE status = 'SYNCED' AND programId = #{programId}"})
+  @Results(value = {
+          @Result(property = "deliveryZone", column = "deliveryZoneId", javaType = Long.class,
+                  one = @One(select = "org.openlmis.core.repository.mapper.DeliveryZoneMapper.getById")),
+          @Result(property = "period", column = "periodId", javaType = Long.class,
+                  one = @One(select = "org.openlmis.core.repository.mapper.ProcessingPeriodMapper.getById")),
+          @Result(property = "program", column = "programId", javaType = Long.class,
+                  one = @One(select = "org.openlmis.core.repository.mapper.ProgramMapper.getById"))
+  })
+  List<Distribution> getFullSyncedDistributionsForProgram(@Param("programId") Long programId);
+
+  @Select({"SELECT * FROM distributions WHERE status = 'SYNCED' AND deliveryZoneId = #{deliveryZoneId} AND programId = #{programId}"})
+  @Results(value = {
+          @Result(property = "deliveryZone", column = "deliveryZoneId", javaType = Long.class,
+                  one = @One(select = "org.openlmis.core.repository.mapper.DeliveryZoneMapper.getById")),
+          @Result(property = "period", column = "periodId", javaType = Long.class,
+                  one = @One(select = "org.openlmis.core.repository.mapper.ProcessingPeriodMapper.getById")),
+          @Result(property = "program", column = "programId", javaType = Long.class,
+                  one = @One(select = "org.openlmis.core.repository.mapper.ProgramMapper.getById"))
+  })
+  List<Distribution> getFullSyncedDistributionsForProgramAndDeliveryZone(@Param("programId") Long programId, @Param("deliveryZoneId")Long deliveryZoneId);
+
+  @Select({"SELECT * FROM distributions WHERE status = 'SYNCED' AND programId = #{programId} AND periodId = #{periodId}"})
+  @Results(value = {
+          @Result(property = "deliveryZone", column = "deliveryZoneId", javaType = Long.class,
+                  one = @One(select = "org.openlmis.core.repository.mapper.DeliveryZoneMapper.getById")),
+          @Result(property = "period", column = "periodId", javaType = Long.class,
+                  one = @One(select = "org.openlmis.core.repository.mapper.ProcessingPeriodMapper.getById")),
+          @Result(property = "program", column = "programId", javaType = Long.class,
+                  one = @One(select = "org.openlmis.core.repository.mapper.ProgramMapper.getById"))
+  })
+  List<Distribution> getFullSyncedDistributionsForProgramAndPeriod(@Param("programId") Long programId, @Param("periodId") Long periodId);
+
+  @Select({"SELECT * FROM distributions WHERE status = 'SYNCED' AND deliveryZoneId = #{deliveryZoneId} AND programId = #{programId} AND periodId = #{periodId}"})
+  @Results(value = {
+          @Result(property = "deliveryZone", column = "deliveryZoneId", javaType = Long.class,
+                  one = @One(select = "org.openlmis.core.repository.mapper.DeliveryZoneMapper.getById")),
+          @Result(property = "period", column = "periodId", javaType = Long.class,
+                  one = @One(select = "org.openlmis.core.repository.mapper.ProcessingPeriodMapper.getById")),
+          @Result(property = "program", column = "programId", javaType = Long.class,
+                  one = @One(select = "org.openlmis.core.repository.mapper.ProgramMapper.getById"))
+  })
+  List<Distribution> getFullSyncedDistributionsForProgramAndDeliveryZoneAndPeriod(@Param("programId") Long programId, @Param("deliveryZoneId") Long deliveryZoneId, @Param("periodId") Long periodId);
+
+  @Insert({"INSERT INTO distribution_edits (userId, distributionId) VALUES (#{userId}, #{distributionId})"})
+  void insertEditInProgress(@Param("userId") Long userId, @Param("distributionId") Long distributionId);
+
+  @Select({"SELECT * FROM distribution_edits WHERE distributionId = #{distributionId} AND userId = #{userId}"})
+  @Results(value = {
+          @Result(property = "user.id", column = "userId"),
+          @Result(property = "distribution.id", column = "distributionId")
+  })
+  DistributionEdit getEditInProgressForUser(@Param("distributionId") Long distributionId, @Param("userId") Long userId);
+
+  @Select({"SELECT * FROM distribution_edits WHERE distributionId = #{distributionId} AND userId <> #{userId} AND EXTRACT(EPOCH FROM CURRENT_TIMESTAMP - startedAt) <= #{periodInSeconds}"})
+  @Results(value = {
+          @Result(property = "user.id", column = "userId"),
+          @Result(property = "distribution.id", column = "distributionId")
+  })
+  List<DistributionEdit> getEditInProgress(@Param("distributionId") Long distributionId, @Param("userId") Long userId, @Param("periodInSeconds") Long periodInSeconds);
+
+  @Delete("DELETE FROM distribution_edits WHERE distributionId = #{distributionId} AND userId = #{userId}")
+  void deleteDistributionEdit(@Param("distributionId") Long distributionId, @Param("userId") Long userId);
+
+  @Insert({"INSERT INTO distributions_edit_history (distributionId, district, facilityId, dataScreen, editedItem, originalValue, newValue, editedBy) VALUES",
+          "(#{distribution.id}, #{district}, #{facility.id}, #{dataScreen}, #{editedItem}, #{originalValue}, #{newValue}, #{editedBy.id})"})
+  void insertHistory(DistributionsEditHistory history);
+
+  @Select({"SELECT * FROM distributions_edit_history WHERE distributionId = #{distributionId} ORDER BY editedDatetime ASC"})
+  @Results(value = {
+          @Result(property = "distribution", column = "distributionId", javaType = Long.class,
+                  one = @One(select = "getBy")),
+          @Result(property = "facility", column = "facilityId", javaType = Long.class,
+                  one = @One(select = "org.openlmis.core.repository.mapper.FacilityMapper.getById")),
+          @Result(property = "editedBy", column = "editedBy", javaType = Long.class,
+                  one = @One(select = "org.openlmis.core.repository.mapper.UserMapper.getById"))
+  })
+  List<DistributionsEditHistory> getHistory(@Param("distributionId") Long distributionId);
+
+  @Select({"SELECT * FROM distributions_edit_history WHERE distributionId = #{distributionId} ORDER BY editedDatetime DESC LIMIT 1"})
+  @Results(value = {
+          @Result(property = "distribution", column = "distributionId", javaType = Long.class,
+                  one = @One(select = "getBy")),
+          @Result(property = "facility", column = "facilityId", javaType = Long.class,
+                  one = @One(select = "org.openlmis.core.repository.mapper.FacilityMapper.getById")),
+          @Result(property = "editedBy", column = "editedBy", javaType = Long.class,
+                  one = @One(select = "org.openlmis.core.repository.mapper.UserMapper.getById"))
+  })
+  DistributionsEditHistory getLastHistory(Long distributionId);
 }
