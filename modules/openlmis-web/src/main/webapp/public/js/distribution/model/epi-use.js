@@ -32,8 +32,8 @@ function EpiUse(epiUse) {
     });
   };
 
-  EpiUse.prototype.computeStatus = function (visited, review) {
-    if (review) {
+  EpiUse.prototype.computeStatus = function (visited, review, ignoreSyncStatus) {
+    if (review && !ignoreSyncStatus) {
       return DistributionStatus.SYNCED;
     }
 

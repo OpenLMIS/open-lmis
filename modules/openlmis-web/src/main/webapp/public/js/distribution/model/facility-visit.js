@@ -16,8 +16,8 @@ function FacilityVisit(facilityVisitJson) {
     return !field || (isUndefined(field.value) && !field.notRecorded);
   }
 
-  FacilityVisit.prototype.computeStatus = function (review) {
-    if (review) {
+  FacilityVisit.prototype.computeStatus = function (visited, review, ignoreSyncStatus) {
+    if (review && !ignoreSyncStatus) {
       return DistributionStatus.SYNCED;
     }
 

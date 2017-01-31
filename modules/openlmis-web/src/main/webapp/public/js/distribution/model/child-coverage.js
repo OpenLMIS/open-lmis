@@ -22,8 +22,8 @@ function ChildCoverage(facilityVisitId, childCoverageJSON) {
   });
 }
 
-ChildCoverage.prototype.computeStatus = function (review) {
-  if (review) {
+ChildCoverage.prototype.computeStatus = function (visited, review, ignoreSyncStatus) {
+  if (review && !ignoreSyncStatus) {
     return DistributionStatus.SYNCED;
   }
 

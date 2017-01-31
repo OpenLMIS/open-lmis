@@ -36,7 +36,7 @@ function FacilityDistribution(facilityDistribution) {
        : [this.epiUse, this.refrigerators, this.facilityVisit, this.epiInventory, this.fullCoverage, this.childCoverage, this.adultCoverage];
   }
 
-  FacilityDistribution.prototype.computeStatus = function (review) {
+  FacilityDistribution.prototype.computeStatus = function (review, ignoreSyncStatus) {
     if (review) {
       this.status = DistributionStatus.SYNCED;
       return this.status;
@@ -44,12 +44,12 @@ function FacilityDistribution(facilityDistribution) {
 
     var forms = addFormsForComputingStatus.call(this);
     var overallStatus;
-    if (this.status === DistributionStatus.SYNCED || this.status === DistributionStatus.DUPLICATE) {
+    if (!ignoreSyncStatus && (this.status === DistributionStatus.SYNCED || this.status === DistributionStatus.DUPLICATE)) {
       return this.status;
     }
     var that = this;
     $.each(forms, function (index, form) {
-      var computedStatus = form.computeStatus(that.facilityVisit.visited && that.facilityVisit.visited.value);
+      var computedStatus = form.computeStatus(that.facilityVisit.visited && that.facilityVisit.visited.value, review, ignoreSyncStatus);
       if (computedStatus === DistributionStatus.COMPLETE && (overallStatus === DistributionStatus.COMPLETE || !overallStatus)) {
         overallStatus = DistributionStatus.COMPLETE;
       } else if (computedStatus === DistributionStatus.EMPTY && (!overallStatus || overallStatus == DistributionStatus.EMPTY)) {
