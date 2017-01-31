@@ -63,7 +63,6 @@ function VisitInfoController($scope, distributionService, $routeParams) {
     if (visit.visited.value) {
       visit.reasonForNotVisiting = setApplicableField(visit.reasonForNotVisiting);
       visit.otherReasonDescription = setApplicableField(visit.otherReasonDescription);
-      return;
     }
 
     visit.observations = setApplicableField(visit.observations);
