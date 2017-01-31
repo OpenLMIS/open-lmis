@@ -72,13 +72,13 @@ function VisitInfoController($scope, distributionService, $routeParams) {
     if (!visit.confirmedBy) {
       visit.confirmedBy = {};
     }
-    visit.confirmedBy['name'] = setApplicableField(visit.confirmedBy['name']);
-    visit.confirmedBy['title'] = setApplicableField(visit.confirmedBy['title']);
+    visit.confirmedBy.name = setApplicableField(visit.confirmedBy.name);
+    visit.confirmedBy.title = setApplicableField(visit.confirmedBy.title);
     if (!visit.verifiedBy) {
       visit.confirmedBy = {};
     }
-    visit.verifiedBy['name'] = setApplicableField(visit.verifiedBy['name']);
-    visit.verifiedBy['title'] = setApplicableField(visit.verifiedBy['title']);
+    visit.verifiedBy.name = setApplicableField(visit.verifiedBy.name);
+    visit.verifiedBy.title = setApplicableField(visit.verifiedBy.title);
     visit.vehicleId = setApplicableField(visit.vehicleId);
     visit.visitDate = setApplicableField(visit.visitDate);
     visit.numberOfOutreachVisitsPlanned = setApplicableField(visit.numberOfOutreachVisitsPlanned);
