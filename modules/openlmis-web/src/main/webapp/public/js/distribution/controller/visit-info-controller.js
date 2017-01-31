@@ -45,9 +45,10 @@ function VisitInfoController($scope, distributionService, $routeParams) {
     var visit = $scope.distribution.facilityDistributions[$scope.selectedFacility].facilityVisit;
 
     if (!visit.motorbikeProblems) {
-      visit.motorbikeProblems = {};
+      visit.motorbikeProblems = { notRecorded: false };
     }
 
+    visit.motorbikeProblems.notRecorded = false;
     $.each(['lackOfFundingForFuel','repairsSchedulingProblem','lackOfFundingForRepairs','missingParts','other'], function (i, elem) {
       visit.motorbikeProblems[elem] = setApplicableField(visit.motorbikeProblems[elem]);
     });
@@ -60,14 +61,24 @@ function VisitInfoController($scope, distributionService, $routeParams) {
         return;
     }
 
+    $scope.clearMotorbikeProblems();
     if (visit.visited.value) {
       visit.reasonForNotVisiting = setApplicableField(visit.reasonForNotVisiting);
       visit.otherReasonDescription = setApplicableField(visit.otherReasonDescription);
+      return;
     }
 
     visit.observations = setApplicableField(visit.observations);
-    visit.confirmedBy = setApplicableField(visit.confirmedBy);
-    visit.verifiedBy = setApplicableField(visit.verifiedBy);
+    if (!visit.confirmedBy) {
+      visit.confirmedBy = {};
+    }
+    visit.confirmedBy['name'] = setApplicableField(visit.confirmedBy['name']);
+    visit.confirmedBy['title'] = setApplicableField(visit.confirmedBy['title']);
+    if (!visit.verifiedBy) {
+      visit.confirmedBy = {};
+    }
+    visit.verifiedBy['name'] = setApplicableField(visit.verifiedBy['name']);
+    visit.verifiedBy['title'] = setApplicableField(visit.verifiedBy['title']);
     visit.vehicleId = setApplicableField(visit.vehicleId);
     visit.visitDate = setApplicableField(visit.visitDate);
     visit.numberOfOutreachVisitsPlanned = setApplicableField(visit.numberOfOutreachVisitsPlanned);
@@ -76,7 +87,6 @@ function VisitInfoController($scope, distributionService, $routeParams) {
     visit.numberOfFunctioningMotorbikes = setApplicableField(visit.numberOfFunctioningMotorbikes);
     visit.numberOfMotorizedVehiclesWithProblems = setApplicableField(visit.numberOfMotorizedVehiclesWithProblems);
     visit.numberOfDaysWithLimitedTransport = setApplicableField(visit.numberOfDaysWithLimitedTransport);
-    visit.motorbikeProblems = setApplicableField(visit.motorbikeProblems);
   };
 
   function setApplicableField(field) {
