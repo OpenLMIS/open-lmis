@@ -207,17 +207,6 @@ public class ReviewDataService {
     distributionService.deleteDistributionEdit(distributionId, userId);
   }
 
-  public DistributionDTO getDistribution(Distribution arg, Long userId) {
-    Distribution distribution = distributionService.getFullSyncedDistribution(arg);
-    distributionService.insertEditInProgress(userId, distribution.getId());
-
-    Map<Long, FacilityDistribution> facilityDistributionMap = facilityDistributionService.getData(distribution);
-
-    distribution.setFacilityDistributions(facilityDistributionMap);
-
-    return distribution.transform();
-  }
-
   @Transactional
   public FacilityDistributionEditResults update(Long distributionId, FacilityDistributionDTO replacement, Long userId) {
     FacilityDistributionEditResults results;

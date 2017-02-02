@@ -18,19 +18,33 @@ import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
+import org.openlmis.core.domain.DeliveryZone;
+import org.openlmis.core.domain.ProcessingPeriod;
+import org.openlmis.core.domain.Program;
+import org.openlmis.core.repository.ProcessingPeriodRepository;
+import org.openlmis.core.service.DeliveryZoneService;
+import org.openlmis.core.service.ProcessingScheduleService;
+import org.openlmis.core.service.ProgramService;
 import org.openlmis.db.categories.UnitTests;
 import org.openlmis.distribution.domain.Distribution;
 import org.openlmis.distribution.domain.DistributionStatus;
 import org.openlmis.distribution.domain.FacilityDistribution;
 import org.openlmis.distribution.domain.FacilityVisit;
+import org.openlmis.distribution.dto.DistributionDTO;
 import org.openlmis.distribution.repository.DistributionRepository;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
+import static com.natpryce.makeiteasy.MakeItEasy.a;
+import static com.natpryce.makeiteasy.MakeItEasy.make;
+import static java.util.Arrays.asList;
 import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.*;
+import static org.openlmis.core.builder.ProcessingPeriodBuilder.defaultProcessingPeriod;
 import static org.openlmis.distribution.domain.DistributionStatus.INITIATED;
 import static org.openlmis.distribution.domain.DistributionStatus.SYNCED;
 
@@ -50,6 +64,15 @@ public class DistributionServiceTest {
   @Mock
   private FacilityVisitService facilityVisitService;
 
+  @Mock
+  ProcessingScheduleService processingScheduleService;
+
+  @Mock
+  DeliveryZoneService deliveryZoneService;
+
+  @Mock
+  ProgramService programService;
+
   @Test
   public void shouldCreateDistribution() {
     Distribution distribution = new Distribution();
@@ -63,6 +86,56 @@ public class DistributionServiceTest {
     verify(repository).create(distribution);
     assertThat(initiatedDistribution, is(expectedDistribution));
     assertThat(initiatedDistribution.getFacilityDistributions(), is(facilityDistributions));
+  }
+
+  @Test
+  public void shouldGetPreviousDistribution() {
+    Distribution previousDistribution = new Distribution();
+
+    ProcessingPeriod currentPeriod = new ProcessingPeriod();
+    List<ProcessingPeriod> previousPeriods = asList(make(a(defaultProcessingPeriod)));
+
+    DeliveryZone deliveryZone = new DeliveryZone();
+    deliveryZone.setId(1L);
+    deliveryZone.setCode("code");
+    deliveryZone.setName("name");
+    when(deliveryZoneService.getById(1L)).thenReturn(deliveryZone);
+
+    Program program = new Program();
+    program.setId(1L);
+    program.setCode("programCode");
+    program.setName("programName");
+    when(programService.getById(1L)).thenReturn(program);
+
+    previousDistribution.setDeliveryZone(deliveryZone);
+    previousDistribution.setProgram(program);
+    previousDistribution.setPeriod(previousPeriods.get(0));
+
+    Distribution expectedDistribution = new Distribution();
+    expectedDistribution.setDeliveryZone(deliveryZone);
+    expectedDistribution.setProgram(program);
+
+    Distribution currentDistribution = new Distribution();
+    currentDistribution.setDeliveryZone(deliveryZone);
+    currentDistribution.setProgram(program);
+    currentDistribution.setPeriod(currentPeriod);
+
+    when(processingScheduleService.getNPreviousPeriodsInDescOrder(currentPeriod, 1)).thenReturn(previousPeriods);
+    when(repository.create(previousDistribution)).thenReturn(expectedDistribution);
+    Map<Long, FacilityDistribution> facilityDistributions = new HashMap<>();
+    when(facilityDistributionService.createFor(expectedDistribution)).thenReturn(facilityDistributions);
+
+    Distribution initiatedPreviousDistribution = service.create(previousDistribution);
+
+    verify(repository).create(previousDistribution);
+    assertThat(initiatedPreviousDistribution, is(expectedDistribution));
+    assertNotNull(expectedDistribution.transform());
+
+    when(repository.getFullSyncedDistribution(previousDistribution)).thenReturn(expectedDistribution);
+    DistributionDTO returnedDistributionDTO = service.getPreviousDistribution(currentDistribution);
+
+    verify(repository).getFullSyncedDistribution(previousDistribution);
+    assertThat(returnedDistributionDTO, is(expectedDistribution.transform()));
   }
 
   @Test

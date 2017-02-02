@@ -114,6 +114,4 @@ public class DistributionRepository {
   public void insertHistory(DistributionsEditHistory history) {
     mapper.insertHistory(history);
   }
-
-
 }

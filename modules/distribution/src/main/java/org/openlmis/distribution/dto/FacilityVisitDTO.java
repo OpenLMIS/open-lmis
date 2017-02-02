@@ -40,6 +40,7 @@ public class FacilityVisitDTO extends BaseModel {
   private FacilitatorDTO confirmedBy;
   private FacilitatorDTO verifiedBy;
   private Reading observations;
+  private Reading priorObservations;
 
   private Reading visitDate;
 
@@ -54,6 +55,7 @@ public class FacilityVisitDTO extends BaseModel {
     FacilitatorDTO confirmedBy = Optional.fromNullable(this.confirmedBy).or(new FacilitatorDTO());
     FacilitatorDTO verifiedBy = Optional.fromNullable(this.verifiedBy).or(new FacilitatorDTO());
     String observations = Reading.safeRead(this.observations).getEffectiveValue();
+    String priorObservations = Reading.safeRead(this.priorObservations).getEffectiveValue();
     Date visitDate = Reading.safeRead(this.visitDate).parseDate();
     Boolean visited = Reading.safeRead(this.visited).parseBoolean();
     String vehicleId = Reading.safeRead(this.vehicleId).getEffectiveValue();
@@ -75,6 +77,7 @@ public class FacilityVisitDTO extends BaseModel {
     facilityVisit.setConfirmedBy(confirmedBy.transform());
     facilityVisit.setVerifiedBy(verifiedBy.transform());
     facilityVisit.setObservations(observations);
+    facilityVisit.setPriorObservations(priorObservations);
 
     facilityVisit.setVisitDate(visitDate);
 
