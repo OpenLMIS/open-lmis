@@ -207,7 +207,7 @@ function DatePickerContainerController($scope, $filter, DateFormatService, messa
     });
 
     $scope.checkCompletenessOfEndTime = function () {
-        $scope.showIncompleteWarning = $scope.dateRange.endTime != DateFormatService.formatDateWithLastDayOfMonth(new Date($scope.dateRange.endTime));
+      $scope.showIncompleteWarning = $scope.pickerType === "period-no-current" ? false : $scope.dateRange.endTime != DateFormatService.formatDateWithLastDayOfMonth(new Date($scope.dateRange.endTime));
     };
 
     var notHideCalendar = function () {
