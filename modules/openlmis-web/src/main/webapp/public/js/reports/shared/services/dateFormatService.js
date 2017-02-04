@@ -9,7 +9,7 @@ services.factory('DateFormatService', function ($filter, messageService) {
     };
 
     var formatDateWithStartDayOfPeriod = function (date) {
-        if (date.getDate() <= 21) {
+        if (date.getDate() < 21) {
             return $filter('date')(new Date(date.getFullYear(), date.getMonth() - 1, 21), "yyyy-MM-dd");
         } else {
             return $filter('date')(new Date(date.getFullYear(), date.getMonth(), 21), "yyyy-MM-dd");
@@ -17,7 +17,7 @@ services.factory('DateFormatService', function ($filter, messageService) {
     };
 
     var formatDateWithEndDayOfPeriod = function (date) {
-        if (date.getDate() >= 20) {
+        if (date.getDate() > 20) {
             return $filter('date')(new Date(date.getFullYear(), date.getMonth() + 1, 20), "yyyy-MM-dd");
         } else {
             return $filter('date')(new Date(date.getFullYear(), date.getMonth(), 20), "yyyy-MM-dd");

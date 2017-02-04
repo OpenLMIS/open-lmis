@@ -58,10 +58,12 @@ describe("Single facility Report Controller", function () {
         scope.loadReport();
         expect(scope.invalid).toBe(true);
         scope.reportParams.facilityId = 414;
+        scope.reportParams.endTime = '2017-02-04';
 
         spyOn(lotExpiryDateService, 'populateLotOnHandInformationForSoonestExpiryDate');
 
-        httpBackend.expectGET('/cubesreports/cube/vw_daily_full_soh/facts?cut=occurred:-').respond(200, facilityProductData);
+        httpBackend.expectGET('/cubesreports/cube/vw_daily_full_soh/facts?cut=occurred:-2017,02,04').respond(200, facilityProductData);
+        httpBackend.expectGET('/cubesreports/cube/cmm_entries/facts?cut=facility:|periodbegin:2017,01,21|periodend:2017,02,20').respond(200, []);
         scope.loadReport();
         httpBackend.flush();
 

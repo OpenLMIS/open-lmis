@@ -27,7 +27,7 @@ describe("date format service test", function () {
 
     it("should format start date of period", function () {
         var formattedDate = dateFormatService.formatDateWithStartDayOfPeriod(new Date("2011-11-11"));
-        expect(formattedDate).toEqual("2011-11-21");
+        expect(formattedDate).toEqual("2011-10-21");
     });
 
     it("should format end date of period", function () {

@@ -7,39 +7,46 @@ function DatePickerContainerController($scope, $filter, DateFormatService, messa
     $scope.timeTagSelected = "month";
     $scope.periodTagSelected = $scope.pickerType === "period-no-current" ? "3periods" : "period";
 
-    var defaultPeriodStartDate = currentDate.getDate() < 21 ?
+    var thisPeriodStartDate = currentDate.getDate() < 21 ?
         new Date(currentDate.getFullYear(), currentDate.getMonth() - 1, 21) :
         new Date(currentDate.getFullYear(), currentDate.getMonth(), 21);
+
+    var lastPeriodStartDate = currentDate.getDate() === 20 ?
+      thisPeriodStartDate : new Date(thisPeriodStartDate.getFullYear(), thisPeriodStartDate.getMonth() - 1, 21);
 
     var threeMonthsAgo = new Date().setMonth(new Date().getMonth() - 2);
     var aYearAgo = new Date().setMonth(new Date().getMonth() - 11);
 
-    var threePeriodsBeforeExcludingCurrent = new Date().setMonth(defaultPeriodStartDate.getMonth() - 3);
-    if (defaultPeriodStartDate.getMonth() - 3 > currentDate.getMonth()) {
+    var threePeriodsBeforeExcludingCurrent = new Date(lastPeriodStartDate.getFullYear(), lastPeriodStartDate.getMonth() - 2, 21);
+    if (lastPeriodStartDate.getMonth() - 2 > currentDate.getMonth()) {
         threePeriodsBeforeExcludingCurrent = new Date(threePeriodsBeforeExcludingCurrent).setYear(currentDate.getFullYear() - 1);
     }
 
-    var threePeriodsBeforeIncludingCurrent = new Date().setMonth(defaultPeriodStartDate.getMonth() - 2);
-    if (defaultPeriodStartDate.getMonth() - 2 > currentDate.getMonth()) {
+    var twelvePeriodsBeforeExcludingCurrent = new Date(lastPeriodStartDate.getFullYear(), lastPeriodStartDate.getMonth() - 11, 21);
+    if (lastPeriodStartDate.getMonth() - 11 > currentDate.getMonth()) {
+        twelvePeriodsBeforeExcludingCurrent = new Date(twelvePeriodsBeforeExcludingCurrent).setYear(currentDate.getFullYear() - 2);
+    } else {
+        twelvePeriodsBeforeExcludingCurrent = new Date(twelvePeriodsBeforeExcludingCurrent).setYear(currentDate.getFullYear() - 1);
+    }
+
+    var threePeriodsBeforeIncludingCurrent = new Date(thisPeriodStartDate.getFullYear(), thisPeriodStartDate.getMonth() - 2, 21);
+    if (thisPeriodStartDate.getMonth() - 2 > currentDate.getMonth()) {
         threePeriodsBeforeIncludingCurrent = new Date(threePeriodsBeforeIncludingCurrent).setYear(currentDate.getFullYear() - 1);
     }
 
-    var yearBeforeExcludingCurrent = new Date().setYear(defaultPeriodStartDate.getFullYear() - 1);
-    yearBeforeExcludingCurrent = new Date(yearBeforeExcludingCurrent).setMonth(defaultPeriodStartDate.getMonth());
-
-    var yearBeforeIncludingCurrent = new Date().setMonth(defaultPeriodStartDate.getMonth() - 11);
-    if (defaultPeriodStartDate.getMonth() - 11 > currentDate.getMonth()) {
-        yearBeforeIncludingCurrent = new Date(yearBeforeIncludingCurrent).setYear(currentDate.getFullYear() - 2);
+    var twelvePeriodsBeforeIncludingCurrent = new Date(thisPeriodStartDate.getFullYear(), thisPeriodStartDate.getMonth() - 11, 21);
+    if (thisPeriodStartDate.getMonth() - 11 > currentDate.getMonth()) {
+        twelvePeriodsBeforeIncludingCurrent = new Date(twelvePeriodsBeforeIncludingCurrent).setYear(currentDate.getFullYear() - 2);
     } else {
-        yearBeforeIncludingCurrent = new Date(yearBeforeIncludingCurrent).setYear(currentDate.getFullYear() - 1);
+        twelvePeriodsBeforeIncludingCurrent = new Date(twelvePeriodsBeforeIncludingCurrent).setYear(currentDate.getFullYear() - 1);
     }
 
     if ($scope.pickerType === "period") {
-        $scope.dateRange.startTime = DateFormatService.formatDateWithStartDayOfPeriod(defaultPeriodStartDate);
-        $scope.dateRange.endTime = DateFormatService.formatDateWithEndDayOfPeriod(new Date(new Date(defaultPeriodStartDate.getFullYear(), defaultPeriodStartDate.getMonth() + 1)));
+        $scope.dateRange.startTime = DateFormatService.formatDateWithStartDayOfPeriod(thisPeriodStartDate);
+        $scope.dateRange.endTime = DateFormatService.formatDateWithEndDayOfPeriod(new Date());
     } else if ($scope.pickerType === "period-no-current") {
         $scope.dateRange.startTime = DateFormatService.formatDateWithStartDayOfPeriod(new Date(threePeriodsBeforeExcludingCurrent));
-        $scope.dateRange.endTime = DateFormatService.formatDateWithEndDayOfPeriod(defaultPeriodStartDate);
+        $scope.dateRange.endTime = DateFormatService.formatDateWithEndDayOfPeriod(lastPeriodStartDate);
     } else {
         $scope.dateRange.startTime = DateFormatService.formatDateWithFirstDayOfMonth(new Date());
         $scope.dateRange.endTime = todayDateString;
@@ -56,12 +63,12 @@ function DatePickerContainerController($scope, $filter, DateFormatService, messa
     var periodOptions = $scope.pickerType === "period-no-current" ?
     {
         "3periods": threePeriodsBeforeExcludingCurrent,
-        "year": yearBeforeExcludingCurrent
+        "year": twelvePeriodsBeforeExcludingCurrent
     } :
     {
-        "period": defaultPeriodStartDate,
+        "period": thisPeriodStartDate,
         "3periods": threePeriodsBeforeIncludingCurrent,
-        "year": yearBeforeIncludingCurrent
+        "year": twelvePeriodsBeforeIncludingCurrent
     };
 
     $scope.timeTags = Object.keys(timeOptions);
@@ -95,7 +102,7 @@ function DatePickerContainerController($scope, $filter, DateFormatService, messa
 
 
     $scope.periodStartOptions = angular.extend(baseTimePickerOptions(), {
-        maxDate: defaultPeriodStartDate,
+        maxDate: thisPeriodStartDate,
         showMonthAfterYear: false,
         monthNamesShort: monthNamesForStartPeriod,
         onClose: function () {
