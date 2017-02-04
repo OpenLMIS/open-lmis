@@ -44,7 +44,6 @@ function SingleFacilityReportController($scope, $filter, $controller, $http, Cub
 
     //retrieve CMM values for soh data and populate entries based on report needs
     $http.get(CubesGenerateUrlService.generateFactsUrl(cubesPath, cutsParams)).success(function (sohEntries) {
-
       var periodBegin = DateFormatService.formatDateWithStartDayOfPeriod(new Date($scope.reportParams.endTime));
       var periodEnd = DateFormatService.formatDateWithEndDayOfPeriod(new Date($scope.reportParams.endTime));
       var cmmCutsParams = [
@@ -76,16 +75,18 @@ function SingleFacilityReportController($scope, $filter, $controller, $http, Cub
             })[0];
             if (matchedCMMEntry) {
               maxOccurredDateEntry.cmm = matchedCMMEntry.cmm;
+            } else {
+              maxOccurredDateEntry.cmm = -1.0;
             }
             maxOccurredDateEntry.estimated_months = (maxOccurredDateEntry.cmm === -1.0 || maxOccurredDateEntry.cmm === 0) ? undefined : Math.floor(10 * maxOccurredDateEntry.soh / maxOccurredDateEntry.cmm) / 10;
             maxOccurredDateEntry.stock_status = $scope.getEntryStockStatus(maxOccurredDateEntry);
             return maxOccurredDateEntry;
           })
           .value();
-      });
 
-      $scope.lotOnHandHash = {};
-      LotExpiryDateService.populateLotOnHandInformationForSoonestExpiryDate($scope.reportData, $scope.lotOnHandHash);
+        $scope.lotOnHandHash = {};
+        LotExpiryDateService.populateLotOnHandInformationForSoonestExpiryDate($scope.reportData, $scope.lotOnHandHash);
+      });
     });
   }
 

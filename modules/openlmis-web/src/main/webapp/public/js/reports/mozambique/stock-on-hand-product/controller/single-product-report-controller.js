@@ -16,30 +16,49 @@ function SingleProductReportController($scope, $filter, $controller, $http, Cube
     }
 
     $http.get(CubesGenerateUrlService.generateFactsUrl(cubesPath, cutsParams)).success(function (sohEntries) {
-      $scope.reportData = _.chain(sohEntries)
-        .groupBy(function (sohEntry) {
-          return sohEntry['drug.drug_code'] + sohEntry['facility.facility_code'];
-        })
-        .map(function (sameFacilitySameDrugEntries) {
-          var maxOccurredDateEntry = _.max(sameFacilitySameDrugEntries, function (entry) {
-            return new Date(entry.occurred_date);
-          });
-          maxOccurredDateEntry.soh = Number(maxOccurredDateEntry.soh);
-          maxOccurredDateEntry.facility_name = maxOccurredDateEntry['facility.facility_name'];
-          maxOccurredDateEntry.facility_code = maxOccurredDateEntry['facility.facility_code'];
-          maxOccurredDateEntry.estimated_months = (maxOccurredDateEntry.cmm === -1.0 || maxOccurredDateEntry.cmm === 0) ? undefined : Math.floor(10 * maxOccurredDateEntry.soh/maxOccurredDateEntry.cmm)/10;
+      var periodBegin = DateFormatService.formatDateWithStartDayOfPeriod(new Date($scope.reportParams.endTime));
+      var periodEnd = DateFormatService.formatDateWithEndDayOfPeriod(new Date($scope.reportParams.endTime));
+      var cmmCutsParams = [
+        {dimension: "product", values: [sohEntries[0]["drug.drug_code"]]},
+        {dimension: "periodbegin", values: [$filter('date')(periodBegin, "yyyy,MM,dd")], skipEscape: true},
+        {dimension: "periodend", values: [$filter('date')(periodEnd, "yyyy,MM,dd")], skipEscape: true}
+      ];
 
-          maxOccurredDateEntry.formatted_expiry_date = $scope.formatMonth(maxOccurredDateEntry.expiry_date) ;
-          var rawLastSyncDate = maxOccurredDateEntry.last_sync_date;
-          maxOccurredDateEntry.formatted_last_sync_date = $scope.formatDateWithTimeAndLocale(rawLastSyncDate);
-          maxOccurredDateEntry.stock_status = $scope.getEntryStockStatus(maxOccurredDateEntry);
+      $http.get(CubesGenerateUrlService.generateFactsUrl('cmm_entries', cmmCutsParams)).success(function (cmmEntries) {
 
-          return maxOccurredDateEntry;
-        })
-        .value();
+        $scope.reportData = _.chain(sohEntries)
+          .groupBy(function (sohEntry) {
+            return sohEntry['drug.drug_code'] + sohEntry['facility.facility_code'];
+          })
+          .map(function (sameFacilitySameDrugEntries) {
+            var maxOccurredDateEntry = _.max(sameFacilitySameDrugEntries, function (entry) {
+              return new Date(entry.occurred_date);
+            });
+            maxOccurredDateEntry.soh = Number(maxOccurredDateEntry.soh);
+            maxOccurredDateEntry.facility_name = maxOccurredDateEntry['facility.facility_name'];
+            maxOccurredDateEntry.facility_code = maxOccurredDateEntry['facility.facility_code'];
+            maxOccurredDateEntry.formatted_expiry_date = $scope.formatMonth(maxOccurredDateEntry.expiry_date);
+            var rawLastSyncDate = maxOccurredDateEntry.last_sync_date;
+            maxOccurredDateEntry.formatted_last_sync_date = $scope.formatDateWithTimeAndLocale(rawLastSyncDate);
 
-      $scope.lotOnHandHash = {};
-      LotExpiryDateService.populateLotOnHandInformationForSoonestExpiryDate($scope.reportData, $scope.lotOnHandHash);
+            var matchedCMMEntry = _.filter(cmmEntries, function (cmmEntry) {
+              return cmmEntry.product === maxOccurredDateEntry['drug.drug_code'] && cmmEntry.facility === maxOccurredDateEntry['facility.facility_id'];
+            })[0];
+            if (matchedCMMEntry) {
+              maxOccurredDateEntry.cmm = matchedCMMEntry.cmm;
+            } else {
+              maxOccurredDateEntry.cmm = -1.0;
+            }
+            maxOccurredDateEntry.estimated_months = (maxOccurredDateEntry.cmm === -1.0 || maxOccurredDateEntry.cmm === 0) ? undefined : Math.floor(10 * maxOccurredDateEntry.soh / maxOccurredDateEntry.cmm) / 10;
+            maxOccurredDateEntry.stock_status = $scope.getEntryStockStatus(maxOccurredDateEntry);
+
+            return maxOccurredDateEntry;
+          })
+          .value();
+
+        $scope.lotOnHandHash = {};
+        LotExpiryDateService.populateLotOnHandInformationForSoonestExpiryDate($scope.reportData, $scope.lotOnHandHash);
+      });
     });
   }
 
