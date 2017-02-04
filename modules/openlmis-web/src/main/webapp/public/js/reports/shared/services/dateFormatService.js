@@ -9,11 +9,19 @@ services.factory('DateFormatService', function ($filter, messageService) {
     };
 
     var formatDateWithStartDayOfPeriod = function (date) {
-        return $filter('date')(new Date(date.getFullYear(), date.getMonth(), 21), "yyyy-MM-dd");
+        if (date.getDate() <= 21) {
+            return $filter('date')(new Date(date.getFullYear(), date.getMonth() - 1, 21), "yyyy-MM-dd");
+        } else {
+            return $filter('date')(new Date(date.getFullYear(), date.getMonth(), 21), "yyyy-MM-dd");
+        }
     };
 
     var formatDateWithEndDayOfPeriod = function (date) {
-        return $filter('date')(new Date(date.getFullYear(), date.getMonth(), 20), "yyyy-MM-dd");
+        if (date.getDate() >= 20) {
+            return $filter('date')(new Date(date.getFullYear(), date.getMonth() + 1, 20), "yyyy-MM-dd");
+        } else {
+            return $filter('date')(new Date(date.getFullYear(), date.getMonth(), 20), "yyyy-MM-dd");
+        }
     };
 
     var formatDateWithLocale = function (dateString) {

@@ -42,28 +42,47 @@ function SingleFacilityReportController($scope, $filter, $controller, $http, Cub
       cubesPath = 'vw_lot_daily_full_soh';
     }
 
+    //retrieve CMM values for soh data and populate entries based on report needs
     $http.get(CubesGenerateUrlService.generateFactsUrl(cubesPath, cutsParams)).success(function (sohEntries) {
-      $scope.reportData = _.chain(sohEntries)
-        .groupBy(function (sohEntry) {
-          return sohEntry['drug.drug_code'];
-        })
-        .map(function (sameCodeEntries) {
-          var maxOccurredDateEntry = _.max(sameCodeEntries, function (entry) {
-            return new Date(entry.occurred_date);
-          });
-          maxOccurredDateEntry.soh = Number(maxOccurredDateEntry.soh);
 
-          maxOccurredDateEntry.drug_name = maxOccurredDateEntry['drug.drug_name'];
-          maxOccurredDateEntry.drug_code = maxOccurredDateEntry['drug.drug_code'];
+      var periodBegin = DateFormatService.formatDateWithStartDayOfPeriod(new Date($scope.reportParams.endTime));
+      var periodEnd = DateFormatService.formatDateWithEndDayOfPeriod(new Date($scope.reportParams.endTime));
+      var cmmCutsParams = [
+        {dimension: "facility", values: [sohEntries[0]["facility.facility_id"]]},
+        {dimension: "periodbegin", values: [$filter('date')(periodBegin, "yyyy,MM,dd")], skipEscape: true},
+        {dimension: "periodend", values: [$filter('date')(periodEnd, "yyyy,MM,dd")], skipEscape: true}];
 
-          maxOccurredDateEntry.formatted_expiry_date = $scope.formatMonth(maxOccurredDateEntry.expiry_date) ;
-          var rawLastSyncDate = maxOccurredDateEntry.last_sync_date;
-          maxOccurredDateEntry.formatted_last_sync_date = $scope.formatDateWithTimeAndLocale(rawLastSyncDate);
-          maxOccurredDateEntry.estimated_months = (maxOccurredDateEntry.cmm === -1.0 || maxOccurredDateEntry.cmm === 0) ? undefined : Math.floor(10 * maxOccurredDateEntry.soh/maxOccurredDateEntry.cmm)/10;
-          maxOccurredDateEntry.stock_status = $scope.getEntryStockStatus(maxOccurredDateEntry);
-          return maxOccurredDateEntry;
-        })
-        .value();
+      $http.get(CubesGenerateUrlService.generateFactsUrl('cmm_entries', cmmCutsParams)).success(function (cmmEntries) {
+
+        $scope.reportData = _.chain(sohEntries)
+          .groupBy(function (sohEntry) {
+            return sohEntry['drug.drug_code'];
+          })
+          .map(function (sameCodeEntries) {
+            var maxOccurredDateEntry = _.max(sameCodeEntries, function (entry) {
+              return new Date(entry.occurred_date);
+            });
+            maxOccurredDateEntry.soh = Number(maxOccurredDateEntry.soh);
+
+            maxOccurredDateEntry.drug_name = maxOccurredDateEntry['drug.drug_name'];
+            maxOccurredDateEntry.drug_code = maxOccurredDateEntry['drug.drug_code'];
+
+            maxOccurredDateEntry.formatted_expiry_date = $scope.formatMonth(maxOccurredDateEntry.expiry_date);
+            var rawLastSyncDate = maxOccurredDateEntry.last_sync_date;
+            maxOccurredDateEntry.formatted_last_sync_date = $scope.formatDateWithTimeAndLocale(rawLastSyncDate);
+
+            var matchedCMMEntry = _.filter(cmmEntries, function (cmmEntry) {
+              return cmmEntry.product === maxOccurredDateEntry['drug.drug_code'] && cmmEntry.facility === maxOccurredDateEntry['facility.facility_id'];
+            })[0];
+            if (matchedCMMEntry) {
+              maxOccurredDateEntry.cmm = matchedCMMEntry.cmm;
+            }
+            maxOccurredDateEntry.estimated_months = (maxOccurredDateEntry.cmm === -1.0 || maxOccurredDateEntry.cmm === 0) ? undefined : Math.floor(10 * maxOccurredDateEntry.soh / maxOccurredDateEntry.cmm) / 10;
+            maxOccurredDateEntry.stock_status = $scope.getEntryStockStatus(maxOccurredDateEntry);
+            return maxOccurredDateEntry;
+          })
+          .value();
+      });
 
       $scope.lotOnHandHash = {};
       LotExpiryDateService.populateLotOnHandInformationForSoonestExpiryDate($scope.reportData, $scope.lotOnHandHash);
