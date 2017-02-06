@@ -24,16 +24,20 @@ function FacilityDistribution(facilityDistribution) {
   var WAREHOUSE = "warehouse";
 
   function initCoverageScreens() {
-    this.fullCoverage = (this.typeCode !== WAREHOUSE && this.typeCode !== WRH) ? new FullCoverage(this.facilityVisitId, facilityDistribution.fullCoverage) : null;
-    this.childCoverage = (this.typeCode !== WAREHOUSE && this.typeCode !== WRH) ? new ChildCoverage(this.facilityVisitId, facilityDistribution.childCoverage) : null;
-    this.adultCoverage = (this.typeCode !== WAREHOUSE && this.typeCode !== WRH) ? new AdultCoverage(this.facilityVisitId, facilityDistribution.adultCoverage) : null;
+    this.fullCoverage = !isWarehouse(this.typeCode) ? new FullCoverage(this.facilityVisitId, facilityDistribution.fullCoverage) : null;
+    this.childCoverage = !isWarehouse(this.typeCode) ? new ChildCoverage(this.facilityVisitId, facilityDistribution.childCoverage) : null;
+    this.adultCoverage = !isWarehouse(this.typeCode) ? new AdultCoverage(this.facilityVisitId, facilityDistribution.adultCoverage) : null;
   }
 
   initCoverageScreens.call(this);
 
-  function addFormsForComputingStatus() {
-      return (this.typeCode === WAREHOUSE || this.typeCode === WRH) ? [this.epiUse, this.refrigerators, this.facilityVisit, this.epiInventory]
+  function getFormsForComputingStatus() {
+      return isWarehouse(this.typeCode) ? [this.epiUse, this.refrigerators, this.facilityVisit, this.epiInventory]
        : [this.epiUse, this.refrigerators, this.facilityVisit, this.epiInventory, this.fullCoverage, this.childCoverage, this.adultCoverage];
+  }
+
+  function isWarehouse(typeCode) {
+    return typeCode === WAREHOUSE || typeCode === WRH;
   }
 
   FacilityDistribution.prototype.computeStatus = function (review, ignoreSyncStatus) {
@@ -42,7 +46,7 @@ function FacilityDistribution(facilityDistribution) {
       return this.status;
     }
 
-    var forms = addFormsForComputingStatus.call(this);
+    var forms = getFormsForComputingStatus.call(this);
     var overallStatus;
     if (!ignoreSyncStatus && (this.status === DistributionStatus.SYNCED || this.status === DistributionStatus.DUPLICATE)) {
       return this.status;
@@ -91,8 +95,8 @@ function FacilityDistribution(facilityDistribution) {
     }
   };
 
-  FacilityDistribution.prototype.displayCoverageScreen = function () {
-    return (this.typeCode !== WAREHOUSE && this.typeCode !== WRH);
+  FacilityDistribution.prototype.shouldDisplayCoverageScreen = function () {
+    return !isWarehouse(this.typeCode);
   };
 
 }
