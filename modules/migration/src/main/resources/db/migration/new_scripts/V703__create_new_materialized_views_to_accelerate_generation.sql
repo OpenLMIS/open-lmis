@@ -66,7 +66,8 @@ CREATE MATERIALIZED VIEW vw_lot_daily_full_soh AS
      uuid_in(md5(random() :: TEXT || now() :: TEXT) :: cstring)                 AS uuid
 
    FROM vw_lot_expiry_dates
-     GROUP BY vw_lot_expiry_dates.facility_name, vw_lot_expiry_dates.facility_code,
+   WHERE vw_lot_expiry_dates.lot_on_hand > 0
+   GROUP BY vw_lot_expiry_dates.facility_name, vw_lot_expiry_dates.facility_code,
       vw_lot_expiry_dates.district_name, vw_lot_expiry_dates.district_code,
       vw_lot_expiry_dates.province_name, vw_lot_expiry_dates.province_code,
       vw_lot_expiry_dates.drug_name, vw_lot_expiry_dates.drug_code,
