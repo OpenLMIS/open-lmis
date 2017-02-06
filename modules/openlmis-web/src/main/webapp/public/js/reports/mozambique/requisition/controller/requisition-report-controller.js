@@ -32,7 +32,7 @@ function RequisitionReportController($scope, $controller, $filter, RequisitionRe
   $scope.loadReport = function () {
     $scope.locationIdToCode($scope.reportParams);
     $scope.requisitions = _.filter($scope.allRequisitions, function (requisition) {
-      return ($scope.reportParams.selectedFacility == undefined || requisition.facilityName == $scope.reportParams.selectedFacility.name) && new Date(requisition.clientSubmittedTime) <= new Date($scope.reportParams.endTime);
+      return ($scope.reportParams.selectedFacility === undefined || requisition.facilityName == $scope.reportParams.selectedFacility.name) && new Date(requisition.clientSubmittedTime) <= new Date($scope.reportParams.endTime);
     });
   };
 
