@@ -1,19 +1,49 @@
 <div>
+  <div id="control-bar">
     <h3 openlmis-message="title.requisitions.report"></h3>
 
-    <div class="report-subtitle">
-        <h4 class="report-total-entries" openlmis-message="label.report.requisitions.total|requisitions.length"></h4>
-        <div class="search-field">
-            <h4 openlmis-message="label.search"></h4>
-            <input type="text" ng-model="filterOptions.filterText" />
-        </div>
+    <div ng-include="'/public/pages/reports/mozambique/product-report-selection.html'"></div>
+
+    <div class="form-cell report-selection">
+      <label>
+        <span openlmis-message="label.date"></span>
+      </label>
+
+      <div class="form-field">
+        <input name="endTime" id="endTime" type="text"
+               ui-date="{ dateFormat: 'dd/mm/yy' }"
+               ui-date-format
+               ng-model="reportParams.endTime"
+               ng-required="true"
+               ng-change="checkDateBeforeToday()"/>
+
+        <span class="field-error" ng-show="createPeriodForm.startDate.$error.required && showErrorForCreate"
+              openlmis-message="missing.value"></span>
+      </div>
     </div>
 
-    <div id='viewReqList' ng-grid="rnrListGrid" class="gridStyleAutoFillHeight"
-         ng-show="requisitions.length"></div>
-
-    <div class="report-subtitle">
-        <div ng-include="'/public/pages/reports/mozambique/export-data-button.html'"></div>
+    <div class="report-selection">
+      <input type="submit" class="btn btn-primary" ng-click="loadReport()"
+             openlmis-message="button.generateReport"/>
     </div>
+
+    <div style="clear: both"></div>
+  </div>
+
+  <hr/>
+  <div class="report-subtitle">
+    <h4 class="report-total-entries" openlmis-message="label.report.requisitions.total|requisitions.length"></h4>
+    <div class="search-field">
+      <h4 openlmis-message="label.search"></h4>
+      <input type="text" ng-model="filterOptions.filterText"/>
+    </div>
+  </div>
+
+  <div id='viewReqList' ng-grid="rnrListGrid" class="gridStyleAutoFillHeight"
+       ng-show="requisitions.length"></div>
+
+  <div class="report-subtitle">
+    <div ng-include="'/public/pages/reports/mozambique/export-data-button.html'"></div>
+  </div>
 
 </div>
