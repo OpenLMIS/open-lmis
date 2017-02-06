@@ -38,9 +38,6 @@ function SingleFacilityReportController($scope, $filter, $controller, $http, Cub
 
   function populateDataEntry(cutsParams) {
     var cubesPath = 'vw_daily_full_soh';
-    if ($scope.isLotExpiryDatesToggleOn) {
-      cubesPath = 'vw_lot_daily_full_soh';
-    }
 
     //retrieve CMM values for soh data and populate entries based on report needs
     $http.get(CubesGenerateUrlService.generateFactsUrl(cubesPath, cutsParams)).success(function (sohEntries) {
@@ -66,7 +63,6 @@ function SingleFacilityReportController($scope, $filter, $controller, $http, Cub
             maxOccurredDateEntry.drug_name = maxOccurredDateEntry['drug.drug_name'];
             maxOccurredDateEntry.drug_code = maxOccurredDateEntry['drug.drug_code'];
 
-            maxOccurredDateEntry.formatted_expiry_date = $scope.formatMonth(maxOccurredDateEntry.expiry_date);
             var rawLastSyncDate = maxOccurredDateEntry.last_sync_date;
             maxOccurredDateEntry.formatted_last_sync_date = $scope.formatDateWithTimeAndLocale(rawLastSyncDate);
 

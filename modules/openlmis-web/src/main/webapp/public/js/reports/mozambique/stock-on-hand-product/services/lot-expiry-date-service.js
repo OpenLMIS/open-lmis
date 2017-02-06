@@ -1,11 +1,14 @@
-services.factory('LotExpiryDateService', function ($http, $q, CubesGenerateUrlService) {
+services.factory('LotExpiryDateService', function ($http, $q, CubesGenerateUrlService, DateFormatService) {
 
   function populateLotOnHandInformationForSoonestExpiryDate(dataEntries, lotOnHandHash) {
     var promises = requestExpiringLotOnHandInformation(dataEntries, lotOnHandHash);
 
     $q.all(promises).then(function () {
       _.forEach(dataEntries, function (dataEntry) {
-        dataEntry.soonest_expiring_loh = lotOnHandHash[dataEntry.stock_card_entry_id + " " + dataEntry.expiry_date];
+        if (lotOnHandHash[dataEntry.stock_card_entry_id]) {
+          dataEntry.formatted_expiry_date = DateFormatService.formatDateWithLocaleNoDay(lotOnHandHash[dataEntry.stock_card_entry_id].soonest_expiry_date);
+          dataEntry.soonest_expiring_loh = lotOnHandHash[dataEntry.stock_card_entry_id].soonest_expiring_loh;
+        }
       });
     });
   }
@@ -16,8 +19,14 @@ services.factory('LotExpiryDateService', function ($http, $q, CubesGenerateUrlSe
 
     var populateLotOnHandInfo = function (lotOnHandEntries) {
       _.forEach(lotOnHandEntries.cells, function (cell) {
-        var key = cell.stock_card_entry_id + " " + cell.expiry_date;
-        lotOnHandHash[key] = cell.total_lotonhand;
+        if (cell.total_lotonhand > 0) {
+          if ((lotOnHandHash[cell.stock_card_entry_id] && new Date(lotOnHandHash[cell.stock_card_entry_id]) < new Date(cell.expiry_date)) || !lotOnHandHash[cell.stock_card_entry_id]) {
+            lotOnHandHash[cell.stock_card_entry_id] = {
+              soonest_expiry_date: cell.expiry_date,
+              soonest_expiring_loh: cell.total_lotonhand
+            };
+          }
+        }
       });
     };
 

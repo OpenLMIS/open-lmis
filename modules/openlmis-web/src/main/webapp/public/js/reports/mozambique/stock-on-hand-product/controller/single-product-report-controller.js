@@ -11,9 +11,6 @@ function SingleProductReportController($scope, $filter, $controller, $http, Cube
 
   function populateDateEntry(cutsParams) {
     var cubesPath = 'vw_daily_full_soh';
-    if ($scope.isLotExpiryDatesToggleOn) {
-      cubesPath = 'vw_lot_daily_full_soh';
-    }
 
     $http.get(CubesGenerateUrlService.generateFactsUrl(cubesPath, cutsParams)).success(function (sohEntries) {
       var periodBegin = DateFormatService.formatDateWithStartDayOfPeriod(new Date($scope.reportParams.endTime));
@@ -37,7 +34,6 @@ function SingleProductReportController($scope, $filter, $controller, $http, Cube
             maxOccurredDateEntry.soh = Number(maxOccurredDateEntry.soh);
             maxOccurredDateEntry.facility_name = maxOccurredDateEntry['facility.facility_name'];
             maxOccurredDateEntry.facility_code = maxOccurredDateEntry['facility.facility_code'];
-            maxOccurredDateEntry.formatted_expiry_date = $scope.formatMonth(maxOccurredDateEntry.expiry_date);
             var rawLastSyncDate = maxOccurredDateEntry.last_sync_date;
             maxOccurredDateEntry.formatted_last_sync_date = $scope.formatDateWithTimeAndLocale(rawLastSyncDate);
 
