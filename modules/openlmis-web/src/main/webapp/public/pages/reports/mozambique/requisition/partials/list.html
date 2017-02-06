@@ -31,19 +31,23 @@
   </div>
 
   <hr/>
-  <div class="report-subtitle">
-    <h4 class="report-total-entries" openlmis-message="label.report.requisitions.total|requisitions.length"></h4>
-    <div class="search-field">
-      <h4 openlmis-message="label.search"></h4>
-      <input type="text" ng-model="filterOptions.filterText"/>
+  <div ng-show="requisitions.length>0">
+    <div class="report-subtitle">
+      <h4 class="report-total-entries" openlmis-message="label.report.requisitions.total|requisitions.length"></h4>
+      <div class="search-field">
+        <h4 openlmis-message="label.search"></h4>
+        <input type="text" ng-model="filterOptions.filterText"/>
+      </div>
+    </div>
+
+    <div id='viewReqList' ng-grid="rnrListGrid" class="gridStyleAutoFillHeight"
+         ng-show="requisitions.length"></div>
+
+    <div class="report-subtitle">
+      <div ng-include="'/public/pages/reports/mozambique/export-data-button.html'"></div>
     </div>
   </div>
-
-  <div id='viewReqList' ng-grid="rnrListGrid" class="gridStyleAutoFillHeight"
-       ng-show="requisitions.length"></div>
-
-  <div class="report-subtitle">
-    <div ng-include="'/public/pages/reports/mozambique/export-data-button.html'"></div>
+  <div class="report-subtitle" ng-hide="requisitions.length>0">
+    <h3 openlmis-message="label.report.empty"></h3>
   </div>
-
 </div>
