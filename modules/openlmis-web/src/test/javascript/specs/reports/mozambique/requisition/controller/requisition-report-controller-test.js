@@ -45,6 +45,7 @@ describe("requisition report controller", function () {
     ]};
 
     beforeEach(module('openlmis'));
+    beforeEach(module('ui.bootstrap.dialog'));
     beforeEach(inject(function (_$httpBackend_, $rootScope, $controller,_messageService_) {
         scope = $rootScope.$new();
         httpBackend = _$httpBackend_;

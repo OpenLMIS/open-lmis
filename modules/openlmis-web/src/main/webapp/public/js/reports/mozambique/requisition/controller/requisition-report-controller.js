@@ -1,5 +1,4 @@
 function RequisitionReportController($scope, $controller, $filter, RequisitionReportService, messageService, DateFormatService, FeatureToggleService, $window, $cacheFactory, ReportExportExcelService) {
-
   $controller("BaseProductReportController", {$scope: $scope});
 
   $scope.location = '';
