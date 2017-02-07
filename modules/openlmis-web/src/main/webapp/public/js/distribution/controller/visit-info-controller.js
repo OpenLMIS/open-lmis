@@ -63,6 +63,12 @@ function VisitInfoController($scope, distributionService, $routeParams) {
 
     $scope.clearMotorbikeProblems();
     if (visit.visited.value) {
+      if (typeof visit.priorObservations === 'string') {
+        visit.priorObservations = {
+          type: "reading",
+          value: visit.priorObservations
+        };
+      }
       visit.reasonForNotVisiting = setApplicableField(visit.reasonForNotVisiting);
       visit.otherReasonDescription = setApplicableField(visit.otherReasonDescription);
       return;

@@ -50,9 +50,17 @@
           </div>
 
           <div class="form-row clearfix">
-            <label openlmis-message="label.observations"></label>
-            <textarea id="observations" maxlength="1000"
-                      ng-model="facilityData.facilityVisit.observations.value"></textarea>
+            <span id="observationsContainer">
+              <label openlmis-message="label.observations"></label>
+              <textarea id="observations" maxlength="1000"
+                        ng-model="facilityData.facilityVisit.observations.value"></textarea>
+            </span>
+
+            <span id="priorObservationsContainer">
+              <label openlmis-message="label.prior.observations"></label>
+            <textarea id="priorObservations" maxlength="1000"
+                      readonly ng-model="facilityData.facilityVisit.priorObservations.value"></textarea>
+            </span>
           </div>
 
           <div class="form-row clearfix">

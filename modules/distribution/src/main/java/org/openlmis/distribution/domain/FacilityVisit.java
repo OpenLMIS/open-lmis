@@ -48,6 +48,7 @@ public class FacilityVisit extends BaseModel {
   private Facilitator confirmedBy;
   private Facilitator verifiedBy;
   private String observations;
+  private String priorObservations;
 
   private Integer numberOfOutreachVisitsPlanned;
   private Integer numberOfOutreachVisitsCompleted;
@@ -116,6 +117,7 @@ public class FacilityVisit extends BaseModel {
     dto.setConfirmedBy(confirmedBy.transform());
     dto.setVerifiedBy(verifiedBy.transform());
     dto.setObservations(new Reading(observations));
+    dto.setPriorObservations(new Reading(priorObservations));
     dto.setVisitDate(new Reading(visitDate, "yyyy-MM-dd"));
     dto.setVisited(new Reading(visited));
     dto.setVehicleId(new Reading(vehicleId));

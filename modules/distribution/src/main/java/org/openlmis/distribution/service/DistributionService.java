@@ -15,16 +15,19 @@ package org.openlmis.distribution.service;
 import org.openlmis.core.domain.DeliveryZone;
 import org.openlmis.core.domain.ProcessingPeriod;
 import org.openlmis.core.domain.Program;
+import org.openlmis.core.service.ProcessingScheduleService;
 import org.openlmis.distribution.domain.Distribution;
 import org.openlmis.distribution.domain.DistributionEdit;
 import org.openlmis.distribution.domain.DistributionStatus;
 import org.openlmis.distribution.domain.DistributionsEditHistory;
 import org.openlmis.distribution.domain.FacilityDistribution;
+import org.openlmis.distribution.dto.DistributionDTO;
 import org.openlmis.distribution.repository.DistributionRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -45,6 +48,9 @@ public class DistributionService {
   FacilityVisitService facilityVisitService;
 
   @Autowired
+  ProcessingScheduleService processingScheduleService;
+
+  @Autowired
   DistributionRepository repository;
 
   @Transactional
@@ -63,6 +69,24 @@ public class DistributionService {
 
   public Distribution get(Distribution distribution) {
     return repository.get(distribution);
+  }
+
+  public DistributionDTO getDistribution(Distribution arg, Long userId) {
+    Distribution distribution = getFullSyncedDistribution(arg);
+
+    if (distribution != null) {
+      if (userId != null) {
+        insertEditInProgress(userId, distribution.getId());
+      }
+
+      Map<Long, FacilityDistribution> facilityDistributionMap = facilityDistributionService.getData(distribution);
+
+      distribution.setFacilityDistributions(facilityDistributionMap);
+
+      return distribution.transform();
+    }
+
+    return null;
   }
 
   public DistributionStatus updateDistributionStatus(Long distributionId, Long modifiedBy) {
@@ -120,5 +144,36 @@ public class DistributionService {
 
   public void insertHistory(DistributionsEditHistory history) {
     repository.insertHistory(history);
+  }
+
+  public DistributionDTO getPreviousDistribution(Distribution currentDistribution) {
+    List<DistributionDTO> distributionList = getNPreviousDistributions(currentDistribution, 1);
+
+    if (distributionList != null && !distributionList.isEmpty()) {
+      return distributionList.get(0);
+    }
+
+    return null;
+  }
+
+  public List<DistributionDTO> getNPreviousDistributions(Distribution currentDistribution, Integer n) {
+    List<ProcessingPeriod> previousPeriods = processingScheduleService.getNPreviousPeriodsInDescOrder(currentDistribution.getPeriod(), n);
+    List<DistributionDTO> previousDistributions = new ArrayList<>();
+    Distribution distributionFilter = new Distribution();
+    distributionFilter.setDeliveryZone(currentDistribution.getDeliveryZone());
+    distributionFilter.setProgram(currentDistribution.getProgram());
+
+    if (previousPeriods != null && !previousPeriods.isEmpty()) {
+      for (int i = 0; i < previousPeriods.size(); i++) {
+        distributionFilter.setPeriod(previousPeriods.get(i));
+        DistributionDTO pastDistribution = getDistribution(distributionFilter, null);
+
+        if (pastDistribution != null) {
+          previousDistributions.add(pastDistribution);
+        }
+      }
+    }
+
+    return previousDistributions;
   }
 }

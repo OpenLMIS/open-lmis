@@ -34,83 +34,86 @@ import static org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion.NON_EMPT
 @EqualsAndHashCode(callSuper = false)
 public class FacilityVisitDTO extends BaseModel {
 
-    private Long distributionId;
-    private Long facilityId;
-    private Long facilityCatchmentPopulation;
+  private Long distributionId;
+  private Long facilityId;
+  private Long facilityCatchmentPopulation;
 
-    private FacilitatorDTO confirmedBy;
-    private FacilitatorDTO verifiedBy;
-    private Reading observations;
+  private FacilitatorDTO confirmedBy;
+  private FacilitatorDTO verifiedBy;
+  private Reading observations;
+  private Reading priorObservations;
 
-    private Reading visitDate;
+  private Reading visitDate;
 
-    private Reading visited;
-    private Reading vehicleId;
-    private Reading reasonForNotVisiting;
-    private Reading otherReasonDescription;
+  private Reading visited;
+  private Reading vehicleId;
+  private Reading reasonForNotVisiting;
+  private Reading otherReasonDescription;
 
-    private Reading synced;
+  private Reading synced;
 
-    private Reading numberOfOutreachVisitsPlanned;
-    private Reading numberOfOutreachVisitsCompleted;
-    private Reading numberOfMotorbikesAtHU;
-    private Reading numberOfFunctioningMotorbikes;
-    private Reading numberOfMotorizedVehiclesWithProblems;
-    private Reading numberOfDaysWithLimitedTransport;
+  private Reading numberOfOutreachVisitsPlanned;
+  private Reading numberOfOutreachVisitsCompleted;
+  private Reading numberOfMotorbikesAtHU;
+  private Reading numberOfFunctioningMotorbikes;
+  private Reading numberOfMotorizedVehiclesWithProblems;
+  private Reading numberOfDaysWithLimitedTransport;
 
-    private MotorbikeProblemsDTO motorbikeProblems;
+  private MotorbikeProblemsDTO motorbikeProblems;
 
-    public FacilityVisit transform() {
-      FacilitatorDTO confirmedBy = Optional.fromNullable(this.confirmedBy).or(new FacilitatorDTO());
-      FacilitatorDTO verifiedBy = Optional.fromNullable(this.verifiedBy).or(new FacilitatorDTO());
-      String observations = Reading.safeRead(this.observations).getEffectiveValue();
-      Date visitDate = Reading.safeRead(this.visitDate).parseDate();
-      Boolean visited = Reading.safeRead(this.visited).parseBoolean();
-      String vehicleId = Reading.safeRead(this.vehicleId).getEffectiveValue();
-      ReasonForNotVisiting reasonForNotVisiting = Reading.safeRead(this.reasonForNotVisiting).parseReasonForNotVisiting();
-      String otherReasonDescription = Reading.safeRead(this.otherReasonDescription).getEffectiveValue();
-      Boolean synced = Reading.safeRead(this.synced).parseBoolean();
-      Integer numberOfOutreachVisitsPlanned = Reading.safeRead(this.numberOfOutreachVisitsPlanned).parsePositiveInt();
-      Integer numberOfOutreachVisitsCompleted = Reading.safeRead(this.numberOfOutreachVisitsCompleted).parsePositiveInt();
-      Integer numberOfMotorbikesAtHU = Reading.safeRead(this.numberOfMotorbikesAtHU).parsePositiveInt();
-      Integer numberOfFunctioningMotorbikes = Reading.safeRead(this.numberOfFunctioningMotorbikes).parsePositiveInt();
-      Integer numberOfMotorizedVehiclesWithProblems = Reading.safeRead(this.numberOfMotorizedVehiclesWithProblems).parsePositiveInt();
-      Integer numberOfDaysWithLimitedTransport = Reading.safeRead(this.numberOfDaysWithLimitedTransport).parsePositiveInt();
-      MotorbikeProblemsDTO motorbikeProblems = Optional.fromNullable(this.motorbikeProblems).or(new MotorbikeProblemsDTO());
+  public FacilityVisit transform() {
+    FacilitatorDTO confirmedBy = Optional.fromNullable(this.confirmedBy).or(new FacilitatorDTO());
+    FacilitatorDTO verifiedBy = Optional.fromNullable(this.verifiedBy).or(new FacilitatorDTO());
+    String observations = Reading.safeRead(this.observations).getEffectiveValue();
+    String priorObservations = Reading.safeRead(this.priorObservations).getEffectiveValue();
+    Date visitDate = Reading.safeRead(this.visitDate).parseDate();
+    Boolean visited = Reading.safeRead(this.visited).parseBoolean();
+    String vehicleId = Reading.safeRead(this.vehicleId).getEffectiveValue();
+    ReasonForNotVisiting reasonForNotVisiting = Reading.safeRead(this.reasonForNotVisiting).parseReasonForNotVisiting();
+    String otherReasonDescription = Reading.safeRead(this.otherReasonDescription).getEffectiveValue();
+    Boolean synced = Reading.safeRead(this.synced).parseBoolean();
+    Integer numberOfOutreachVisitsPlanned = Reading.safeRead(this.numberOfOutreachVisitsPlanned).parsePositiveInt();
+    Integer numberOfOutreachVisitsCompleted = Reading.safeRead(this.numberOfOutreachVisitsCompleted).parsePositiveInt();
+    Integer numberOfMotorbikesAtHU = Reading.safeRead(this.numberOfMotorbikesAtHU).parsePositiveInt();
+    Integer numberOfFunctioningMotorbikes = Reading.safeRead(this.numberOfFunctioningMotorbikes).parsePositiveInt();
+    Integer numberOfMotorizedVehiclesWithProblems = Reading.safeRead(this.numberOfMotorizedVehiclesWithProblems).parsePositiveInt();
+    Integer numberOfDaysWithLimitedTransport = Reading.safeRead(this.numberOfDaysWithLimitedTransport).parsePositiveInt();
+    MotorbikeProblemsDTO motorbikeProblems = Optional.fromNullable(this.motorbikeProblems).or(new MotorbikeProblemsDTO());
 
-      FacilityVisit facilityVisit = new FacilityVisit();
+    FacilityVisit facilityVisit = new FacilityVisit();
 
-      facilityVisit.setId(this.id);
-      facilityVisit.setCreatedBy(this.createdBy);
-      facilityVisit.setModifiedBy(this.modifiedBy);
-      facilityVisit.setCreatedDate(this.createdDate);
-      facilityVisit.setModifiedDate(this.modifiedDate);
+    facilityVisit.setId(this.id);
+    facilityVisit.setCreatedBy(this.createdBy);
+    facilityVisit.setModifiedBy(this.modifiedBy);
+    facilityVisit.setCreatedDate(this.createdDate);
+    facilityVisit.setModifiedDate(this.modifiedDate);
 
-      facilityVisit.setDistributionId(distributionId);
-      facilityVisit.setFacilityId(facilityId);
+    facilityVisit.setDistributionId(distributionId);
+    facilityVisit.setFacilityId(facilityId);
 
-      facilityVisit.setConfirmedBy(confirmedBy.transform());
-      facilityVisit.setVerifiedBy(verifiedBy.transform());
-      facilityVisit.setObservations(observations);
+    facilityVisit.setConfirmedBy(confirmedBy.transform());
+    facilityVisit.setVerifiedBy(verifiedBy.transform());
+    facilityVisit.setObservations(observations);
+    facilityVisit.setPriorObservations(priorObservations);
 
-      facilityVisit.setVisitDate(visitDate);
+    facilityVisit.setVisitDate(visitDate);
 
-      facilityVisit.setVisited(visited);
-      facilityVisit.setVehicleId(vehicleId);
-      facilityVisit.setReasonForNotVisiting(reasonForNotVisiting);
-      facilityVisit.setOtherReasonDescription(otherReasonDescription);
+    facilityVisit.setVisited(visited);
+    facilityVisit.setVehicleId(vehicleId);
+    facilityVisit.setReasonForNotVisiting(reasonForNotVisiting);
+    facilityVisit.setOtherReasonDescription(otherReasonDescription);
 
-      facilityVisit.setSynced(synced);
+    facilityVisit.setSynced(synced);
 
-      facilityVisit.setNumberOfOutreachVisitsPlanned(numberOfOutreachVisitsPlanned);
-      facilityVisit.setNumberOfOutreachVisitsCompleted(numberOfOutreachVisitsCompleted);
-      facilityVisit.setNumberOfMotorbikesAtHU(numberOfMotorbikesAtHU);
-      facilityVisit.setNumberOfFunctioningMotorbikes(numberOfFunctioningMotorbikes);
-      facilityVisit.setNumberOfMotorizedVehiclesWithProblems(numberOfMotorizedVehiclesWithProblems);
-      facilityVisit.setNumberOfDaysWithLimitedTransport(numberOfDaysWithLimitedTransport);
+    facilityVisit.setNumberOfOutreachVisitsPlanned(numberOfOutreachVisitsPlanned);
+    facilityVisit.setNumberOfOutreachVisitsCompleted(numberOfOutreachVisitsCompleted);
+    facilityVisit.setNumberOfMotorbikesAtHU(numberOfMotorbikesAtHU);
+    facilityVisit.setNumberOfFunctioningMotorbikes(numberOfFunctioningMotorbikes);
+    facilityVisit.setNumberOfMotorizedVehiclesWithProblems(numberOfMotorizedVehiclesWithProblems);
+    facilityVisit.setNumberOfDaysWithLimitedTransport(numberOfDaysWithLimitedTransport);
 
-      facilityVisit.setMotorbikeProblems(motorbikeProblems.transform());
+    facilityVisit.setMotorbikeProblems(motorbikeProblems.transform());
 
-      return facilityVisit;
-    }
+    return facilityVisit;
+  }
 }
