@@ -38,7 +38,8 @@ describe('RefrigeratorController', function () {
         }, facilityVisit: {
           id: 1,
           visited: { value: true }
-        }
+        },
+        facilityTypeCode: 'lvl3_hospital'
         }
       }
     });

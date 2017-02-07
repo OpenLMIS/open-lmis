@@ -41,6 +41,7 @@ public class FacilityDistributionDTO {
   private Long facilityId;
   private String facilityCode;
   private String facilityName;
+  private String facilityTypeCode;
   private Long population;
   private String geographicZone;
 
@@ -61,12 +62,16 @@ public class FacilityDistributionDTO {
     this.epiInventory = epiInventory;
     this.fullCoverage = fullCoverage;
     this.childCoverage = childCoverage;
-    this.adultCoverage = adultCoverage;
+    this.adultCoverage= adultCoverage;
   }
 
   public FacilityDistribution transform() {
+    VaccinationFullCoverage fullCoverageTransformed = (fullCoverage== null) ? null : fullCoverage.transform();
+    VaccinationChildCoverage childCoverageTransformed = (childCoverage == null) ? null : childCoverage.transform();
+    VaccinationAdultCoverage adultCoverageTransformed = (adultCoverage == null) ? null : adultCoverage.transform();
+
     return new FacilityDistribution(facilityVisit.transform(), epiUse.transform(), refrigerators.transform(),
-      epiInventory.transform(), fullCoverage.transform(), childCoverage.transform(), adultCoverage.transform());
+      epiInventory.transform(), fullCoverageTransformed, childCoverageTransformed, adultCoverageTransformed);
   }
 
   public void setDistributionId(Long distributionId) {
@@ -79,9 +84,15 @@ public class FacilityDistributionDTO {
     epiInventory.setModifiedBy(modifiedBy);
     refrigerators.setCreatedBy(modifiedBy);
     refrigerators.setModifiedBy(modifiedBy);
-    fullCoverage.setModifiedBy(modifiedBy);
-    fullCoverage.setCreatedBy(modifiedBy);
-    childCoverage.setModifiedBy(modifiedBy);
-    adultCoverage.setModifiedBy(modifiedBy);
+    if (fullCoverage != null) {
+      fullCoverage.setModifiedBy(modifiedBy);
+      fullCoverage.setCreatedBy(modifiedBy);
+    }
+    if (childCoverage != null) {
+      childCoverage.setModifiedBy(modifiedBy);
+    }
+    if(adultCoverage != null) {
+      adultCoverage.setModifiedBy(modifiedBy);
+    }
   }
 }

@@ -17,11 +17,28 @@ function FacilityDistribution(facilityDistribution) {
   this.epiInventory = new EpiInventory(facilityDistribution.epiInventory);
   this.refrigerators = new Refrigerators(this.facilityVisitId, facilityDistribution.refrigerators);
   this.facilityVisit = new FacilityVisit(facilityDistribution.facilityVisit);
-  this.fullCoverage = new FullCoverage(this.facilityVisitId, facilityDistribution.fullCoverage);
-  this.childCoverage = new ChildCoverage(this.facilityVisitId, facilityDistribution.childCoverage);
-  this.adultCoverage = new AdultCoverage(this.facilityVisitId, facilityDistribution.adultCoverage);
 
   this.status = facilityDistribution.status;
+  this.typeCode = facilityDistribution.facilityTypeCode.toLowerCase();
+  var WRH = "wrh";
+  var WAREHOUSE = "warehouse";
+
+  function initCoverageScreens() {
+    this.fullCoverage = !isWarehouse(this.typeCode) ? new FullCoverage(this.facilityVisitId, facilityDistribution.fullCoverage) : null;
+    this.childCoverage = !isWarehouse(this.typeCode) ? new ChildCoverage(this.facilityVisitId, facilityDistribution.childCoverage) : null;
+    this.adultCoverage = !isWarehouse(this.typeCode) ? new AdultCoverage(this.facilityVisitId, facilityDistribution.adultCoverage) : null;
+  }
+
+  initCoverageScreens.call(this);
+
+  function getFormsForComputingStatus() {
+      return isWarehouse(this.typeCode) ? [this.epiUse, this.refrigerators, this.facilityVisit, this.epiInventory]
+       : [this.epiUse, this.refrigerators, this.facilityVisit, this.epiInventory, this.fullCoverage, this.childCoverage, this.adultCoverage];
+  }
+
+  function isWarehouse(typeCode) {
+    return typeCode === WAREHOUSE || typeCode === WRH;
+  }
 
   FacilityDistribution.prototype.computeStatus = function (review, ignoreSyncStatus) {
     if (review) {
@@ -29,7 +46,7 @@ function FacilityDistribution(facilityDistribution) {
       return this.status;
     }
 
-    var forms = [this.epiUse, this.refrigerators, this.facilityVisit, this.epiInventory, this.fullCoverage, this.childCoverage, this.adultCoverage];
+    var forms = getFormsForComputingStatus.call(this);
     var overallStatus;
     if (!ignoreSyncStatus && (this.status === DistributionStatus.SYNCED || this.status === DistributionStatus.DUPLICATE)) {
       return this.status;
@@ -76,6 +93,10 @@ function FacilityDistribution(facilityDistribution) {
       case 'child-coverage':    return { property: 'childCoverage', bean: this.childCoverage };
       case 'adult-coverage':    return { property: 'adultCoverage', bean: this.adultCoverage };
     }
+  };
+
+  FacilityDistribution.prototype.shouldDisplayCoverageScreen = function () {
+    return !isWarehouse(this.typeCode);
   };
 
 }

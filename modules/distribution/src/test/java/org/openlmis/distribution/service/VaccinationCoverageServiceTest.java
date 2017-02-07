@@ -23,6 +23,8 @@ import org.openlmis.distribution.domain.VaccinationChildCoverage;
 import org.openlmis.distribution.domain.VaccinationFullCoverage;
 import org.openlmis.distribution.repository.VaccinationCoverageRepository;
 
+import static org.mockito.Matchers.any;
+import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 
 @Category(UnitTests.class)
@@ -50,5 +52,19 @@ public class VaccinationCoverageServiceTest {
     verify(repository).saveFullCoverage(fullCoverage);
     verify(repository).saveChildCoverage(childCoverage);
     verify(repository).saveAdultCoverage(adultCoverage);
+  }
+
+  @Test
+  public void shouldNotSaveEmptyCoverageData() {
+    FacilityDistribution facilityDistribution = new FacilityDistribution();
+    facilityDistribution.setFullCoverage(null);
+    facilityDistribution.setChildCoverage(null);
+    facilityDistribution.setAdultCoverage(null);
+
+    service.save(facilityDistribution);
+
+    verify(repository, never()).saveFullCoverage(any(VaccinationFullCoverage.class));
+    verify(repository, never()).saveChildCoverage(any(VaccinationChildCoverage.class));
+    verify(repository, never()).saveAdultCoverage(any(VaccinationAdultCoverage.class));
   }
 }

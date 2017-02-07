@@ -9,15 +9,23 @@
  */
 describe('Facility Distribution data', function () {
   var facilityDistribution, epiUse, refrigerators, facilityVisit, epiInventory, fullCoverage, childCoverage;
+  var WAREHOUSE = "warehouse";
 
   beforeEach(function () {
-    facilityDistribution = new FacilityDistribution({facilityVisit: {id: 1}});
+    facilityDistribution = new FacilityDistribution({facilityVisit: {id: 1}, facilityTypeCode: "lvl3_hospital"});
     epiUse = facilityDistribution.epiUse;
     refrigerators = facilityDistribution.refrigerators;
     facilityVisit = facilityDistribution.facilityVisit;
     epiInventory = facilityDistribution.epiInventory;
     fullCoverage = facilityDistribution.fullCoverage;
     childCoverage = facilityDistribution.childCoverage;
+  });
+
+  it("should set coverage data to null if is warehouse facility", function () {
+    facilityDistribution = new FacilityDistribution({facilityVisit: {id: 1}, facilityTypeCode: WAREHOUSE});
+    expect(facilityDistribution.childCoverage).toBeNull();
+    expect(facilityDistribution.adultCoverage).toBeNull();
+    expect(facilityDistribution.fullCoverage).toBeNull();
   });
 
   it("should compute status as complete when all the forms for the facility are COMPLETE", function () {
@@ -27,6 +35,17 @@ describe('Facility Distribution data', function () {
     spyOn(epiInventory, "computeStatus").andReturn(DistributionStatus.COMPLETE);
     spyOn(fullCoverage, "computeStatus").andReturn(DistributionStatus.COMPLETE);
     spyOn(childCoverage, "computeStatus").andReturn(DistributionStatus.COMPLETE);
+
+    expect(facilityDistribution.computeStatus()).toEqual(DistributionStatus.COMPLETE);
+  });
+
+  it("should correctly compute status for warehouse facility", function () {
+    facilityDistribution.typeCode = WAREHOUSE;
+    spyOn(epiUse, "computeStatus").andReturn(DistributionStatus.COMPLETE);
+    spyOn(refrigerators, "computeStatus").andReturn(DistributionStatus.COMPLETE);
+    spyOn(facilityVisit, "computeStatus").andReturn(DistributionStatus.COMPLETE);
+    spyOn(epiInventory, "computeStatus").andReturn(DistributionStatus.COMPLETE);
+    spyOn(fullCoverage, "computeStatus").andReturn(DistributionStatus.INCOMPLETE);
 
     expect(facilityDistribution.computeStatus()).toEqual(DistributionStatus.COMPLETE);
   });

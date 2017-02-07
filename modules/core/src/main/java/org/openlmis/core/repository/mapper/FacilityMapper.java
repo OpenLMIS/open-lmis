@@ -149,7 +149,8 @@ public interface FacilityMapper {
   List<Facility> getAllInRequisitionGroups(@Param("requisitionGroupIds") String requisitionGroupIds);
 
   @Select(
-    {"SELECT DISTINCT F.geographicZoneId, F.name, F.code, F.id, F.catchmentPopulation FROM facilities F INNER JOIN delivery_zone_members DZM ON F.id = DZM.facilityId",
+    {"SELECT DISTINCT F.geographicZoneId, F.name, F.code, F.id, F.catchmentPopulation, F.typeid FROM facilities F" +
+        " INNER JOIN delivery_zone_members DZM ON F.id = DZM.facilityId",
       "INNER JOIN programs_supported PS ON PS.facilityId = F.id",
       "INNER JOIN delivery_zones DZ ON DZ.id = DZM.deliveryZoneId",
       "INNER JOIN delivery_zone_program_schedules DZPS ON DZPS.deliveryZoneId = DZM.deliveryZoneId",
@@ -158,7 +159,9 @@ public interface FacilityMapper {
   @Results(value = {
     @Result(property = "id", column = "id"),
     @Result(property = "geographicZone", column = "geographicZoneId", javaType = Long.class,
-      one = @One(select = "org.openlmis.core.repository.mapper.GeographicZoneMapper.getWithParentById"))
+      one = @One(select = "org.openlmis.core.repository.mapper.GeographicZoneMapper.getWithParentById")),
+    @Result(property = "facilityType", column = "typeId", javaType = Long.class,
+      one = @One(select = "org.openlmis.core.repository.mapper.FacilityTypeMapper.getById"))
   })
   List<Facility> getAllInDeliveryZoneFor(@Param("deliveryZoneId") Long deliveryZoneId,
                                          @Param("programId") Long programId);

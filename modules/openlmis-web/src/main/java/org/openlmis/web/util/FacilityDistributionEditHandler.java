@@ -58,61 +58,65 @@ public class FacilityDistributionEditHandler {
   }
 
   private boolean isPropertyModified(Object bean) throws IllegalAccessException, NoSuchMethodException, InvocationTargetException {
-    Class beanClass = bean.getClass();
-    PropertyDescriptor[] descriptors = getPropertyDescriptors(beanClass);
-    boolean modified = false;
+    if (bean != null) {
+      Class beanClass = bean.getClass();
+      PropertyDescriptor[] descriptors = getPropertyDescriptors(beanClass);
+      boolean modified = false;
 
-    for (PropertyDescriptor descriptor : descriptors) {
-      String name = descriptor.getName();
+      for (PropertyDescriptor descriptor : descriptors) {
+        String name = descriptor.getName();
 
-      if (omit(bean, name)) {
-        continue;
-      }
-
-      Object value = getProperty(bean, name);
-
-      if (value instanceof Reading) {
-        Reading reading = (Reading) value;
-        Reading original = reading.getOriginal();
-
-        if (null != original && Objects.equals(original.getValue(), reading.getValue()) && Objects.equals(original.getNotRecorded(), reading.getNotRecorded())) {
-          // no change
+        if (omit(bean, name)) {
           continue;
         }
 
-        modified = true;
-      }
+        Object value = getProperty(bean, name);
 
-      // if given bean is modified, we don't have to go deeper
-      if (modified) {
-        break;
-      }
+        if (value instanceof Reading) {
+          Reading reading = (Reading) value;
+          Reading original = reading.getOriginal();
 
-      if (isDTO(beanClass, name)) {
-        value = removeNullReference(bean, name, value);
-
-        if (value instanceof List) {
-          List list = (List) value;
-
-          for (Object element : list) {
-            modified = isPropertyModified(element);
-
-            // if one of the element in the list was modified, we don't have to check another
-            if (modified) {
-              break;
-            }
+          if (null != original && Objects.equals(original.getValue(), reading.getValue()) && Objects.equals(original.getNotRecorded(), reading.getNotRecorded())) {
+            // no change
+            continue;
           }
-        } else {
-          modified = isPropertyModified(value);
+
+          modified = true;
+        }
+
+        // if given bean is modified, we don't have to go deeper
+        if (modified) {
+          break;
+        }
+
+        if (isDTO(beanClass, name)) {
+          value = removeNullReference(bean, name, value);
+
+          if (value instanceof List) {
+            List list = (List) value;
+
+            for (Object element : list) {
+              modified = isPropertyModified(element);
+
+              // if one of the element in the list was modified, we don't have to check another
+              if (modified) {
+                break;
+              }
+            }
+          } else {
+            modified = isPropertyModified(value);
+          }
+        }
+
+        if (modified) {
+          break;
         }
       }
 
-      if (modified) {
-        break;
-      }
+      return modified;
     }
 
-    return modified;
+    return false;
   }
 
   public FacilityDistributionEditResults check(FacilityDistribution original, FacilityDistributionDTO replacement) {
@@ -127,66 +131,68 @@ public class FacilityDistributionEditHandler {
   }
 
   private void checkProperties(FacilityDistributionEditResults results, Object parent, String parentProperty, Object original, Object replacement) throws IllegalAccessException, NoSuchMethodException, InvocationTargetException {
-    Class originalClass = original.getClass();
-    Class replacementClass = replacement.getClass();
+    if (original != null && replacement != null) {
+      Class originalClass = original.getClass();
+      Class replacementClass = replacement.getClass();
 
-    PropertyDescriptor[] originalDescriptors = getPropertyDescriptors(originalClass);
+      PropertyDescriptor[] originalDescriptors = getPropertyDescriptors(originalClass);
 
-    for (PropertyDescriptor originalDescriptor : originalDescriptors) {
-      String originalPropertyName = originalDescriptor.getName();
-      String replacementPropertyName = fieldMapping(replacementClass, originalPropertyName);
+      for (PropertyDescriptor originalDescriptor : originalDescriptors) {
+        String originalPropertyName = originalDescriptor.getName();
+        String replacementPropertyName = fieldMapping(replacementClass, originalPropertyName);
 
-      if (omit(original, originalPropertyName)) {
-        continue;
-      }
-
-      Class originalPropertyType = originalDescriptor.getPropertyType();
-
-      Object originalProperty = getProperty(original, originalPropertyName);
-      Object replacementProperty = getProperty(replacement, replacementPropertyName);
-
-      if (replacementProperty instanceof Reading) {
-        Reading reading = (Reading) replacementProperty;
-        Reading previous = reading.getOriginal();
-
-        Object previousValue = parse(previous, originalClass, originalPropertyName, originalPropertyType);
-        Object newValue = null == previous ? null : parse(reading, originalClass, originalPropertyName, originalPropertyType);
-
-        if (Objects.equals(previousValue, newValue)) {
-          // no change
+        if (omit(original, originalPropertyName)) {
           continue;
         }
 
-        String addictional = getAddictional(parent, original);
+        Class originalPropertyType = originalDescriptor.getPropertyType();
 
-        if (Objects.equals(previousValue, originalProperty)) {
-          // a user works on current version of the given property
-          results.allow(parent, parentProperty, original, originalPropertyName, originalProperty, previousValue, newValue, addictional);
-          continue;
-        }
+        Object originalProperty = getProperty(original, originalPropertyName);
+        Object replacementProperty = getProperty(replacement, replacementPropertyName);
 
-        // a user works on different version of the given property
-        results.deny(parent, parentProperty, original, originalPropertyName, originalProperty, previousValue, newValue, addictional);
-        continue;
-      }
+        if (replacementProperty instanceof Reading) {
+          Reading reading = (Reading) replacementProperty;
+          Reading previous = reading.getOriginal();
 
-      if (isDTO(replacementClass, replacementPropertyName)) {
-        originalProperty = removeNullReference(original, originalPropertyName, originalProperty);
-        replacementProperty = removeNullReference(replacement, replacementPropertyName, replacementProperty);
+          Object previousValue = parse(previous, originalClass, originalPropertyName, originalPropertyType);
+          Object newValue = null == previous ? null : parse(reading, originalClass, originalPropertyName, originalPropertyType);
 
-        if (originalProperty instanceof List) {
-          if (parent instanceof FacilityDistribution && original instanceof DistributionRefrigerators && replacement instanceof DistributionRefrigeratorsDTO) {
-            checkRefrigerators(results, (FacilityDistribution) parent, (DistributionRefrigerators)original, (DistributionRefrigeratorsDTO) replacement);
-          } else {
-            List originalList = (List) originalProperty;
-            List replacementList = (List) replacementProperty;
-
-            for (int i = 0; i < originalList.size(); ++i) {
-              checkProperties(results, original, originalPropertyName, originalList.get(i), replacementList.get(i));
-            }
+          if (Objects.equals(previousValue, newValue)) {
+            // no change
+            continue;
           }
-        } else {
-          checkProperties(results, original, originalPropertyName, originalProperty, replacementProperty);
+
+          String addictional = getAddictional(parent, original);
+
+          if (Objects.equals(previousValue, originalProperty)) {
+            // a user works on current version of the given property
+            results.allow(parent, parentProperty, original, originalPropertyName, originalProperty, previousValue, newValue, addictional);
+            continue;
+          }
+
+          // a user works on different version of the given property
+          results.deny(parent, parentProperty, original, originalPropertyName, originalProperty, previousValue, newValue, addictional);
+          continue;
+        }
+
+        if (isDTO(replacementClass, replacementPropertyName)) {
+          originalProperty = removeNullReference(original, originalPropertyName, originalProperty);
+          replacementProperty = removeNullReference(replacement, replacementPropertyName, replacementProperty);
+
+          if (originalProperty instanceof List) {
+            if (parent instanceof FacilityDistribution && original instanceof DistributionRefrigerators && replacement instanceof DistributionRefrigeratorsDTO) {
+              checkRefrigerators(results, (FacilityDistribution) parent, (DistributionRefrigerators) original, (DistributionRefrigeratorsDTO) replacement);
+            } else {
+              List originalList = (List) originalProperty;
+              List replacementList = (List) replacementProperty;
+
+              for (int i = 0; i < originalList.size(); ++i) {
+                checkProperties(results, original, originalPropertyName, originalList.get(i), replacementList.get(i));
+              }
+            }
+          } else {
+            checkProperties(results, original, originalPropertyName, originalProperty, replacementProperty);
+          }
         }
       }
     }
