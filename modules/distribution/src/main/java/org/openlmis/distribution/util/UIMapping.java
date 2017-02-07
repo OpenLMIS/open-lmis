@@ -15,6 +15,7 @@ public final class UIMapping {
   static {
     DATA_SCREEN_MAPPING.put("FacilityVisit", "label.visit.information");
     DATA_SCREEN_MAPPING.put("Facilitator", "label.visit.information");
+    DATA_SCREEN_MAPPING.put("MotorbikeProblems", "label.visit.information");
 
     DATA_SCREEN_MAPPING.put("EpiInventoryLineItem", "label.epi.inventory");
 
@@ -43,6 +44,19 @@ public final class UIMapping {
     FIELD_MAPPING.put("FacilityVisit", "otherReasonDescription", "label.description");
     FIELD_MAPPING.put("FacilityVisit", "confirmedBy", "label.confirmed.by");
     FIELD_MAPPING.put("FacilityVisit", "verifiedBy", "label.verified.by");
+    FIELD_MAPPING.put("FacilityVisit", "numberOfOutreachVisitsPlanned", "label.visits.planned.number");
+    FIELD_MAPPING.put("FacilityVisit", "numberOfOutreachVisitsCompleted", "label.visits.completed.number");
+    FIELD_MAPPING.put("FacilityVisit", "numberOfMotorbikesAtHU", "label.motorbikes.number.at.hu");
+    FIELD_MAPPING.put("FacilityVisit", "numberOfFunctioningMotorbikes", "label.motorbikes.functioning.number");
+    FIELD_MAPPING.put("FacilityVisit", "numberOfMotorizedVehiclesWithProblems", "label.motorbikes.with.problems.number");
+    FIELD_MAPPING.put("FacilityVisit", "numberOfDaysWithLimitedTransport", "label.motorbikes.limited.transport.days.number");
+
+    FIELD_MAPPING.put("MotorbikeProblems", "lackOfFundingForFuel", "label.motorbikes.select.lack.of.funding.for.fuel");
+    FIELD_MAPPING.put("MotorbikeProblems", "repairsSchedulingProblem", "label.motorbikes.select.repairs.scheduling.problem");
+    FIELD_MAPPING.put("MotorbikeProblems", "lackOfFundingForRepairs", "label.motorbikes.select.lack.of.funding.for.repairs");
+    FIELD_MAPPING.put("MotorbikeProblems", "missingParts", "label.motorbikes.select.missing.parts");
+    FIELD_MAPPING.put("MotorbikeProblems", "other", "label.motorbikes.select.other");
+    FIELD_MAPPING.put("MotorbikeProblems", "motorbikeProblemOther", "label.motorbikes.select.other");
 
     FIELD_MAPPING.put("Facilitator", "name", "label.name");
     FIELD_MAPPING.put("Facilitator", "title", "label.title");

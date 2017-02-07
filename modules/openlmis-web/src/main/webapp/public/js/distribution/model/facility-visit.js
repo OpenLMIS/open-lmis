@@ -16,6 +16,14 @@ function FacilityVisit(facilityVisitJson) {
     return !field || (isUndefined(field.value) && !field.notRecorded);
   }
 
+  function isEmptyOrFalse(field) {
+    return isEmpty(field) || field.value === false;
+  }
+
+  function isBlank(field) {
+    return isEmpty(field) || (field.value && field.value.length === 0);
+  }
+
   FacilityVisit.prototype.computeStatus = function (visited, review, ignoreSyncStatus) {
     if (review && !ignoreSyncStatus) {
       return DistributionStatus.SYNCED;
@@ -26,6 +34,35 @@ function FacilityVisit(facilityVisitJson) {
     }
 
     if (this.visited && this.visited.value) {
+      if (isEmpty(this.numberOfOutreachVisitsPlanned) || isEmpty(this.numberOfOutreachVisitsCompleted)) {
+        return DistributionStatus.INCOMPLETE;
+      }
+
+      if (isEmpty(this.numberOfMotorbikesAtHU) || isEmpty(this.numberOfFunctioningMotorbikes) ||
+        isEmpty(this.numberOfMotorizedVehiclesWithProblems) || isEmpty(this.numberOfDaysWithLimitedTransport)) {
+          return DistributionStatus.INCOMPLETE;
+      }
+
+      if (isUndefined(this.motorbikeProblems)) {
+        return DistributionStatus.INCOMPLETE;
+      }
+
+      if (!this.motorbikeProblems.notRecorded) {
+        // if no problem was selected
+        if (isEmptyOrFalse(this.motorbikeProblems.lackOfFundingForFuel) &&
+          isEmptyOrFalse(this.motorbikeProblems.repairsSchedulingProblem) &&
+          isEmptyOrFalse(this.motorbikeProblems.lackOfFundingForRepairs) &&
+          isEmptyOrFalse(this.motorbikeProblems.missingParts) &&
+          isEmptyOrFalse(this.motorbikeProblems.other)) {
+            return DistributionStatus.INCOMPLETE;
+        }
+
+        // if selected other problem but description is empty
+        if (!isEmptyOrFalse(this.motorbikeProblems.other) && isBlank(this.motorbikeProblems.motorbikeProblemOther)) {
+          return DistributionStatus.INCOMPLETE;
+        }
+      }
+
       var visitedObservationStatus = computeStatusForObservation.call(this);
       return visitedObservationStatus === DistributionStatus.EMPTY ? DistributionStatus.INCOMPLETE : visitedObservationStatus;
     }
@@ -42,7 +79,7 @@ function FacilityVisit(facilityVisitJson) {
 
     function validateFields(fieldName) {
       if (['observations', 'visitDate'].indexOf(fieldName) != -1) return !isEmpty(_this[fieldName]);
-      return !(isEmpty(_this[fieldName].name) || isEmpty(_this[fieldName].title));
+      return !(isUndefined(_this[fieldName].name) || isUndefined(_this[fieldName].title));
     }
 
     function isValid(fieldName) {

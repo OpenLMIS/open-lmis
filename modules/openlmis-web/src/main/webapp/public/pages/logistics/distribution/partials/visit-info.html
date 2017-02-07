@@ -54,6 +54,134 @@
             <textarea id="observations" maxlength="1000"
                       ng-model="facilityData.facilityVisit.observations.value"></textarea>
           </div>
+
+          <div class="form-row clearfix">
+            <label openlmis-message="label.visits.planned.number"></label>
+            <input id="numberOfOutreachVisitsPlanned{{ $index }}" type="number" ng-model="facilityData.facilityVisit.numberOfOutreachVisitsPlanned.value"
+                   name="numberOfOutreachVisitsPlanned{{$index}}" ng-trim=false
+                   numeric-validator="positiveInteger,2" min="0" max="99" step="1"
+                   error-holder="numberOfOutreachVisitsPlannedError{{$index}}"
+                   ng-class="{'required-error': !facilityData.facilityVisit.numberOfOutreachVisitsPlanned.value.hasValue()}"/>
+            <span id="numberOfOutreachVisitsPlannedError{{$index}}"
+                  class="rnr-form-error"
+                  openlmis-message="error.number.only"
+                  style="display: none"></span>
+          </div>
+          <div class="form-row clearfix">
+            <label openlmis-message="label.visits.completed.number"></label>
+            <input id="numberOfOutreachVisitsCompleted{{ $index }}" type="number" ng-model="facilityData.facilityVisit.numberOfOutreachVisitsCompleted.value"
+                   name="numberOfOutreachVisitsCompleted{{$index}}" ng-trim=false
+                   numeric-validator="positiveInteger,2" min="0" max="99" step="1"
+                   error-holder="numberOfOutreachVisitsCompletedError{{$index}}"
+                   ng-class="{'required-error': !facilityData.facilityVisit.numberOfOutreachVisitsCompleted.value.hasValue()}"/>
+            <span id="numberOfOutreachVisitsCompletedError{{$index}}"
+                  class="rnr-form-error"
+                  openlmis-message="error.number.only"
+                  style="display: none"></span>
+          </div>
+          <div class="form-row clearfix">
+            <label openlmis-message="label.motorbikes.number.at.hu"></label>
+            <input id="numberOfMotorbikesAtHU{{ $index }}" type="number" ng-model="facilityData.facilityVisit.numberOfMotorbikesAtHU.value"
+                   name="numberOfMotorbikesAtHU{{$index}}" ng-trim=false
+                   numeric-validator="positiveInteger,2" min="0" max="99" step="1"
+                   error-holder="numberOfMotorbikesAtHUError{{$index}}"
+                   ng-class="{'required-error': !facilityData.facilityVisit.numberOfMotorbikesAtHU.value.hasValue()}"/>
+            <span id="numberOfMotorbikesAtHUError{{$index}}"
+                  class="rnr-form-error"
+                  openlmis-message="error.number.only"
+                  style="display: none"></span>
+          </div>
+          <div class="form-row clearfix">
+            <label openlmis-message="label.motorbikes.functioning.number"></label>
+            <input id="numberOfFunctioningMotorbikes{{ $index }}" type="number" ng-model="facilityData.facilityVisit.numberOfFunctioningMotorbikes.value"
+                   name="numberOfFunctioningMotorbikes{{$index}}" ng-trim=false
+                   numeric-validator="positiveInteger,2" min="0" max="99" step="1"
+                   error-holder="numberOfFunctioningMotorbikesError{{$index}}"
+                   ng-class="{'required-error': !facilityData.facilityVisit.numberOfFunctioningMotorbikes.value.hasValue()}"/>
+            <span id="numberOfFunctioningMotorbikesError{{$index}}"
+                  class="rnr-form-error"
+                  openlmis-message="error.number.only"
+                  style="display: none"></span>
+          </div>
+          <div class="form-row clearfix">
+            <label openlmis-message="label.motorbikes.with.problems.number"></label>
+            <input id="numberOfMotorizedVehiclesWithProblems{{ $index }}" type="number" ng-model="facilityData.facilityVisit.numberOfMotorizedVehiclesWithProblems.value"
+                   name="numberOfMotorizedVehiclesWithProblems{{$index}}" ng-trim=false
+                   numeric-validator="positiveInteger,2" min="0" max="99" step="1"
+                   error-holder="numberOfMotorizedVehiclesWithProblemsError{{$index}}"
+                   ng-class="{'required-error': !facilityData.facilityVisit.numberOfMotorizedVehiclesWithProblems.value.hasValue()}"/>
+            <span id="numberOfMotorizedVehiclesWithProblemsError{{$index}}"
+                  class="rnr-form-error"
+                  openlmis-message="error.number.only"
+                  style="display: none"></span>
+          </div>
+          <div class="form-row clearfix">
+            <div class="form-group motorbike-problems-form">
+              <div class="form-row clearfix">
+                <label openlmis-message="label.motorbikes.select"></label>
+              </div>
+
+             <div class="form-row clearfix">
+               <input id="lackOfFundingForFuel{{ $index }}" type="checkbox" name="motorbikeProblems{{ $index }}"
+                      ng-model="facilityData.facilityVisit.motorbikeProblems.lackOfFundingForFuel.value"/>
+               <label class="checkbox-label" for="lackOfFundingForFuel{{ $index }}"
+                      openlmis-message="label.motorbikes.select.lack.of.funding.for.fuel"></label>
+             </div>
+             <div class="form-row clearfix">
+               <input id="repairsSchedulingProblem{{ $index }}" type="checkbox" name="motorbikeProblems{{ $index }}"
+                      ng-model="facilityData.facilityVisit.motorbikeProblems.repairsSchedulingProblem.value"/>
+               <label class="checkbox-label" for="repairsSchedulingProblem{{ $index }}"
+                      openlmis-message="label.motorbikes.select.repairs.scheduling.problem"></label>
+             </div>
+             <div class="form-row clearfix">
+               <input id="lackOfFundingForRepairs{{ $index }}" type="checkbox" name="motorbikeProblems{{ $index }}"
+                      ng-model="facilityData.facilityVisit.motorbikeProblems.lackOfFundingForRepairs.value"/>
+               <label class="checkbox-label" for="lackOfFundingForRepairs{{ $index }}"
+                      openlmis-message="label.motorbikes.select.lack.of.funding.for.repairs"></label>
+             </div>
+             <div class="form-row clearfix">
+               <input id="missingParts{{ $index }}" type="checkbox" name="motorbikeProblems{{ $index }}"
+                      ng-model="facilityData.facilityVisit.motorbikeProblems.missingParts.value"/>
+               <label class="checkbox-label" for="missingParts{{ $index }}"
+                      openlmis-message="label.motorbikes.select.missing.parts"></label>
+             </div>
+             <div class="form-row clearfix">
+               <input id="otherProblem{{ $index }}" type="checkbox" name="motorbikeProblems{{ $index }}"
+                      ng-model="facilityData.facilityVisit.motorbikeProblems.other.value"/>
+               <label class="checkbox-label" for="otherProblem{{ $index }}"
+                      openlmis-message="label.motorbikes.select.other"></label>
+             </div>
+             <div class="form-row clearfix">
+               <input ng-model="facilityData.facilityVisit.motorbikeProblems.motorbikeProblemOther.value"
+                      id="otherProblemInput"
+                      ng-show="facilityData.facilityVisit.motorbikeProblems.other.value === true"
+                      maxlength="140"
+                      ng-class="{'required-error': !facilityData.facilityVisit.motorbikeProblems.motorbikeProblemOther.value}">
+               </input>
+             </div>
+             <div class="form-row clearfix">
+               <input id="motorbikeProblems{{ $index }}" type="checkbox"
+                      ng-model="facilityData.facilityVisit.motorbikeProblems.notRecorded"
+                      ng-click="clearMotorbikeProblems()"
+                      not-recorded/>
+               <label class="checkbox-label" for="motorbikeProblems{{ $index }}"
+                      openlmis-message="label.not.available"></label>
+             </div>
+           </div>
+          </div>
+          <div class="form-row clearfix">
+            <label openlmis-message="label.motorbikes.limited.transport.days.number"></label>
+            <input id="numberOfDaysWithLimitedTransport{{ $index }}" type="number" ng-model="facilityData.facilityVisit.numberOfDaysWithLimitedTransport.value"
+                   name="numberOfDaysWithLimitedTransport{{$index}}" ng-trim=false
+                   numeric-validator="positiveInteger,2" min="0" max="99" step="1"
+                   error-holder="numberOfDaysWithLimitedTransportError{{$index}}"
+                   ng-class="{'required-error': !facilityData.facilityVisit.numberOfDaysWithLimitedTransport.value.hasValue()}"/>
+            <span id="numberOfDaysWithLimitedTransportError{{$index}}"
+                  class="rnr-form-error"
+                  openlmis-message="error.number.only"
+                  style="display: none"></span>
+          </div>
+
           <div class="signatures clearfix">
             <div class="details-container">
               <span openlmis-message="label.verified.by" class="list-header-container list-header"></span>
@@ -134,11 +262,10 @@
                      openlmis-message="label.no.refrigerators"></label>
            </div>
             <div class="form-row clearfix">
-
               <input id="unavailableFunds{{ $index }}" type="radio"
                      ng-model="facilityData.facilityVisit.reasonForNotVisiting.value"
                      value="{{reasons.unavailableFuelFunds}}"/>
-              <label class="radio-label" for="unavailableFuelFunds{{ $index }}"
+              <label class="radio-label" for="unavailableFunds{{ $index }}"
                      openlmis-message="label.unavailable.funds.fuel"></label>
             </div>
             <div class="form-row clearfix">
