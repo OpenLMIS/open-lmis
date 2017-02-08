@@ -1,4 +1,4 @@
-services.factory('TracerDrugsChartService', function ($http, $filter, $q, $timeout, messageService, CubesGenerateUrlService, StockoutSingleProductZoneChartService, CubesGenerateCutParamsService, ReportLocationConfigService, ReportExportExcelService) {
+services.factory('TracerDrugsChartService', function ( $http, $filter, $q, $timeout, messageService, CubesGenerateUrlService, StockoutSingleProductZoneChartService, CubesGenerateCutParamsService, ReportLocationConfigService, ReportExportExcelService) {
 
     var drugCodekey = "drug.drug_code";
     var drugNameKey = "drug.drug_name";
@@ -144,7 +144,9 @@ services.factory('TracerDrugsChartService', function ($http, $filter, $q, $timeo
 
                 renderTracerDrugsChart(chartDivId, legendDivId, chartDataItems, tracerDrugs);
             });
+            return true;
         });
+        return false;
     }
 
     function generateGraphs(tracerDrugs) {
