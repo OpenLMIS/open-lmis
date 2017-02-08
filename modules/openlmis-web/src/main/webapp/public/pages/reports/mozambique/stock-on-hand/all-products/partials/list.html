@@ -61,11 +61,6 @@
                     <span ng-show="sortType != 'estimated_months'" class="icon-sort"></span>
                     <span ng-show="sortType == 'estimated_months' && !sortReverse" class="icon-sort-up"></span>
                     <span ng-show="sortType == 'estimated_months' && sortReverse" class="icon-sort-down"></span></th>
-                <th ng-click="sortType = 'last_sync_date'; sortReverse = !sortReverse" class="sortable sort-desc"
-                    openlmis-message="report.last.update.date">
-                    <span ng-show="sortType != 'last_sync_date'" class="icon-sort"></span>
-                    <span ng-show="sortType == 'last_sync_date' && !sortReverse" class="icon-sort-up"></span>
-                    <span ng-show="sortType == 'last_sync_date' && sortReverse" class="icon-sort-down"></span></th>
             </tr>
         </table>
         <div class="content-table">
@@ -92,9 +87,6 @@
                         <span>{{entry.soonest_expiring_loh}})</span>
                     </a></td>
                     <td class="align-right"><span ng-hide="angular.isUndefined(entry.estimated_months)"><img src="/public/images/exclamation.png" class="exclamation" ng-show="hasExpirationRisk(entry)"> {{entry.estimated_months}}</span></td>
-                    <td><span class="circle-icon" ng-style="checkLastSyncDate(entry.last_sync_date)"> </span>
-                        <span>{{entry.formatted_last_sync_date}}</span>
-                    </td>
                 </tr>
             </table>
         </div>
@@ -103,10 +95,11 @@
         </div>
 
         <div class="footer-wrapper">
+            <p class="report-title" openlmis-message="message.last.updated.date"><b>&nbsp&nbsp{{reportData[0].formatted_last_sync_date}}</b></p>
             <ng-include src="'/public/pages/reports/mozambique/product-report-footer.html'"/>
         </div>
 
     </div>
-    <label ng-show="reportData && reportData.length == 0">No Data</label>
+    <label ng-show="reportData && reportData.length == 0" openlmis-message="label.report.empty"></label>
 
 </div>

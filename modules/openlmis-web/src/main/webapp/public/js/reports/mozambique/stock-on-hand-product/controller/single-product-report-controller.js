@@ -9,6 +9,8 @@ function SingleProductReportController($scope, $filter, $controller, $http, Cube
     $scope.loadProducts();
   });
 
+  $scope.hasSyncTimeColumn = true;
+
   function populateDateEntry(cutsParams) {
     var cubesPath = 'vw_daily_full_soh';
 
@@ -69,17 +71,17 @@ function SingleProductReportController($scope, $filter, $controller, $http, Cube
     }
   };
 
-  $scope.generateRedirectToExpiryDateReportURL = function(facilityCode) {
+  $scope.generateRedirectToExpiryDateReportURL = function (facilityCode) {
     var date = $filter('date')($scope.reportParams.endTime, "yyyy-MM-dd");
 
     var redirectedURL = "/public/pages/reports/mozambique/index.html#/lot-expiry-dates" + "?" +
-        "facilityCode=" + facilityCode + "&" +
-        "date=" + date + "&" +
-        "drugCode=" + $scope.reportParams.productCode;
+      "facilityCode=" + facilityCode + "&" +
+      "date=" + date + "&" +
+      "drugCode=" + $scope.reportParams.productCode;
     return redirectedURL;
   };
 
-  $scope.redirectToLotExpiryDateReport = function(facilityCode) {
+  $scope.redirectToLotExpiryDateReport = function (facilityCode) {
     $window.location.href = $scope.generateRedirectToExpiryDateReportURL(facilityCode);
   };
 
@@ -88,23 +90,23 @@ function SingleProductReportController($scope, $filter, $controller, $http, Cube
     return !$scope.invalid;
   }
 
-  $scope.partialPropertiesFilter = function(searchValue) {
-    return function(entry) {
+  $scope.partialPropertiesFilter = function (searchValue) {
+    return function (entry) {
       var regex = new RegExp(searchValue, "gi");
 
       return regex.test(entry.cmm.toString()) ||
-          regex.test(entry.soh.toString()) ||
-          regex.test(entry.expiry_date)||
-          regex.test(entry.estimated_months) ||
-          regex.test(entry.facility_name) ||
-          regex.test(entry.formatted_expiry_date) ||
-          regex.test(entry.soonest_expiring_loh) ||
-          regex.test(entry.stock_status) ||
-          regex.test(entry.formatted_last_sync_date);
+        regex.test(entry.soh.toString()) ||
+        regex.test(entry.expiry_date) ||
+        regex.test(entry.estimated_months) ||
+        regex.test(entry.facility_name) ||
+        regex.test(entry.formatted_expiry_date) ||
+        regex.test(entry.soonest_expiring_loh) ||
+        regex.test(entry.stock_status) ||
+        regex.test(entry.formatted_last_sync_date);
     };
   };
 
-  $scope.exportXLSX = function() {
+  $scope.exportXLSX = function () {
     var params = $scope.reportParams;
     $scope.locationIdToCode(params);
     var data = {
@@ -124,7 +126,7 @@ function SingleProductReportController($scope, $filter, $controller, $http, Cube
       reportContent: []
     };
 
-    if($scope.reportData) {
+    if ($scope.reportData) {
       $scope.reportData.forEach(function (sohReportData) {
         var singleProductSOHReportContent = {};
         singleProductSOHReportContent.drugCode = $scope.reportParams.productCode;

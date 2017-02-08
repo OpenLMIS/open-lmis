@@ -21,6 +21,8 @@ function SingleFacilityReportController($scope, $filter, $controller, $http, Cub
     }
   }
 
+  $scope.hasSyncTimeColumn = false;
+
   $scope.$on('$viewContentLoaded', function () {
 
     FeatureToggleService.get({key: 'view.stock.movement'}, function (result) {
@@ -63,8 +65,7 @@ function SingleFacilityReportController($scope, $filter, $controller, $http, Cub
             maxOccurredDateEntry.drug_name = maxOccurredDateEntry['drug.drug_name'];
             maxOccurredDateEntry.drug_code = maxOccurredDateEntry['drug.drug_code'];
 
-            var rawLastSyncDate = maxOccurredDateEntry.last_sync_date;
-            maxOccurredDateEntry.formatted_last_sync_date = $scope.formatDateWithTimeAndLocale(rawLastSyncDate);
+            maxOccurredDateEntry.formatted_last_sync_date = DateFormatService.formatDateWithLocale(maxOccurredDateEntry.last_sync_date);
 
             var matchedCMMEntry = _.filter(cmmEntries, function (cmmEntry) {
               return cmmEntry.product === maxOccurredDateEntry['drug.drug_code'] && cmmEntry.facility === maxOccurredDateEntry['facility.facility_id'];
