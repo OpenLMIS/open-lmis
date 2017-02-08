@@ -1,4 +1,4 @@
-DROP INDEX idx_vw_lot_expiry_dates;
+DROP INDEX IF EXISTS idx_vw_lot_expiry_dates;
 CREATE UNIQUE INDEX idx_vw_lot_expiry_dates ON vw_lot_expiry_dates (stock_card_entry_id, uuid);
 
 DROP MATERIALIZED VIEW IF EXISTS vw_lot_daily_full_soh;
