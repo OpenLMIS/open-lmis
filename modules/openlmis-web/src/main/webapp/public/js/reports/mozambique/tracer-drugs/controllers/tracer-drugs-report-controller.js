@@ -1,20 +1,19 @@
 function TracerDrugsReportController($scope, $controller, DateFormatService, TracerDrugsChartService, $timeout, $q, $http) {
-  $controller('BaseProductReportController', {$scope: $scope});
-  $scope.reportLoaded = false;
+    $controller('BaseProductReportController', {$scope: $scope});
 
-  $scope.loadReport = function () {
-    $scope.reportLoaded = TracerDrugsChartService.makeTracerDrugsChart('tracer-report', 'legend-div', new Date($scope.reportParams.startTime), new Date($scope.reportParams.endTime), getSelectedProvince(), getSelectedDistrict());
-  };
+    $scope.loadReport = function () {
+        TracerDrugsChartService.makeTracerDrugsChart('tracer-report', 'legend-div', new Date($scope.reportParams.startTime), new Date($scope.reportParams.endTime), getSelectedProvince(), getSelectedDistrict());
+    };
 
-  $scope.exportXLSX = function () {
-    TracerDrugsChartService.exportXLSX($scope.reportParams.startTime, $scope.reportParams.endTime, getSelectedProvince(), getSelectedDistrict());
-  };
+    $scope.exportXLSX = function() {
+        TracerDrugsChartService.exportXLSX($scope.reportParams.startTime, $scope.reportParams.endTime,  getSelectedProvince(), getSelectedDistrict());
+    };
 
-  function getSelectedProvince() {
-    return $scope.getGeographicZoneById($scope.provinces, $scope.reportParams.provinceId);
-  }
+    function getSelectedProvince() {
+        return $scope.getGeographicZoneById($scope.provinces, $scope.reportParams.provinceId);
+    }
 
-  function getSelectedDistrict() {
-    return $scope.getGeographicZoneById($scope.districts, $scope.reportParams.districtId);
-  }
+    function getSelectedDistrict() {
+        return $scope.getGeographicZoneById($scope.districts, $scope.reportParams.districtId);
+    }
 }
