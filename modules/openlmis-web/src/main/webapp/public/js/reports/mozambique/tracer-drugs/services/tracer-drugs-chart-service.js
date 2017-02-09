@@ -131,7 +131,7 @@ services.factory('TracerDrugsChartService', function ( $http, $filter, $q, $time
             }).value();
     }
 
-    function makeTracerDrugsChart(chartDivId, legendDivId, userSelectedStartDate, userSelectedEndDate, province, district) {
+    function makeTracerDrugsChart($scope, chartDivId, legendDivId, userSelectedStartDate, userSelectedEndDate, province, district) {
         selectedDrugs = [];
         $http.get('/cubesreports/cube/products/facts?cut=is_tracer:true').success(function (tracerDrugs) {
             var stockOutPromise = getCubesRequestPromise(tracerDrugs, province, district, userSelectedStartDate, userSelectedEndDate, "vw_stockouts", "overlapped_date");
@@ -144,9 +144,8 @@ services.factory('TracerDrugsChartService', function ( $http, $filter, $q, $time
 
                 renderTracerDrugsChart(chartDivId, legendDivId, chartDataItems, tracerDrugs);
             });
-            return true;
+            $scope.reportLoaded = true;
         });
-        return false;
     }
 
     function generateGraphs(tracerDrugs) {

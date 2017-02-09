@@ -3,7 +3,7 @@ function TracerDrugsReportController($scope, $controller, DateFormatService, Tra
   $scope.reportLoaded = false;
 
   $scope.loadReport = function () {
-    $scope.reportLoaded = TracerDrugsChartService.makeTracerDrugsChart('tracer-report', 'legend-div', new Date($scope.reportParams.startTime), new Date($scope.reportParams.endTime), getSelectedProvince(), getSelectedDistrict());
+    TracerDrugsChartService.makeTracerDrugsChart('tracer-report', 'legend-div', new Date($scope.reportParams.startTime), new Date($scope.reportParams.endTime), getSelectedProvince(), getSelectedDistrict());
   };
 
   $scope.exportXLSX = function () {
