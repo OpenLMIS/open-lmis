@@ -1,8 +1,9 @@
 function TracerDrugsReportController($scope, $controller, DateFormatService, TracerDrugsChartService, $timeout, $q, $http) {
     $controller('BaseProductReportController', {$scope: $scope});
+    $scope.reportLoaded = false;
 
     $scope.loadReport = function () {
-        TracerDrugsChartService.makeTracerDrugsChart('tracer-report', 'legend-div', new Date($scope.reportParams.startTime), new Date($scope.reportParams.endTime), getSelectedProvince(), getSelectedDistrict());
+        $scope.reportLoaded = TracerDrugsChartService.makeTracerDrugsChart('tracer-report', 'legend-div', new Date($scope.reportParams.startTime), new Date($scope.reportParams.endTime), getSelectedProvince(), getSelectedDistrict());
     };
 
     $scope.exportXLSX = function() {

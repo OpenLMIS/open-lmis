@@ -145,6 +145,7 @@ services.factory('TracerDrugsChartService', function ($http, $filter, $q, $timeo
                 renderTracerDrugsChart(chartDivId, legendDivId, chartDataItems, tracerDrugs);
             });
         });
+        return true;
     }
 
     function generateGraphs(tracerDrugs) {
