@@ -5,9 +5,14 @@ describe('Date picker container controller test', function(){
 
     beforeEach(inject(function ($rootScope, $controller, $filter, DateFormatService) {
         scope = $rootScope;
+        scope.getTimeRange = function (a) {
+        };
+        scope.loadReport = function (a) {
+        };
         dateFormatService = DateFormatService;
         filter = $filter;
         $controller(DatePickerContainerController, {$scope: scope});
+
     }));
 
     it('should change time options correctly', function () {

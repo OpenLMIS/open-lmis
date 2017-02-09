@@ -182,6 +182,10 @@ function DatePickerContainerController($scope, $filter, DateFormatService, messa
         $scope.timeTagSelected = timeTag;
         $scope.dateRange.startTime = DateFormatService.formatDateWithFirstDayOfMonth(new Date(timeOptions[timeTag]));
         $scope.dateRange.endTime = todayDateString;
+      $scope.getTimeRange({
+        'dateRange': $scope.dateRange
+      });
+      $scope.loadReport();
     };
 
     $scope.changePeriodOption = function (periodTag) {
@@ -190,9 +194,13 @@ function DatePickerContainerController($scope, $filter, DateFormatService, messa
             $scope.dateRange.startTime = DateFormatService.formatDateWithStartDayOfPeriod(new Date(periodOptions[periodTag]));
             $scope.dateRange.endTime = DateFormatService.formatDateWithEndDayOfPeriod(defaultEndTime);
         } else {
-            $scope.dateRange.startTime = DateFormatService.formatDateWithStartDayOfPeriod(new Date(periodOptions[periodTag]));
-            $scope.dateRange.endTime = DateFormatService.formatDateWithEndDayOfPeriod(defaultEndTime);
+          $scope.dateRange.startTime = DateFormatService.formatDateWithStartDayOfPeriod(new Date(periodOptions[periodTag]));
+          $scope.dateRange.endTime = DateFormatService.formatDateWithEndDayOfPeriod(defaultEndTime);
         }
+      $scope.getTimeRange({
+        'dateRange': $scope.dateRange
+      });
+      $scope.loadReport();
     };
 
     $scope.$on("update-date-pickers", function (event, range) {

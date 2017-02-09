@@ -1,4 +1,4 @@
-function TracerDrugsReportController($scope, $controller, DateFormatService, TracerDrugsChartService, $timeout, $q, $http) {
+function TracerDrugsReportController($scope, $controller, TracerDrugsChartService) {
     $controller('BaseProductReportController', {$scope: $scope});
     $scope.reportLoaded = false;
 

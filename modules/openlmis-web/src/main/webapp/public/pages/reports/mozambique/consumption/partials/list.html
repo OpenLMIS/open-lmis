@@ -21,7 +21,7 @@
         <div ng-include="'/public/pages/reports/mozambique/product-report-selection.html'"></div>
 
         <div class="report-selection">
-            <input type="submit" class="btn btn-primary" ng-click="generateConsumptionReport()"
+            <input type="submit" class="btn btn-primary" ng-click="loadReport()"
                    openlmis-message="button.generateReport"/>
         </div>
 
@@ -29,7 +29,8 @@
     </div>
 
     <hr/>
-    <date-picker-container get-time-range="getTimeRange(dateRange)" picker-type="period-no-current"></date-picker-container>
+    <date-picker-container get-time-range="getTimeRange(dateRange)" picker-type="period-no-current"
+                           load-report="loadReport()"></date-picker-container>
     <hr/>
 
     <div class="over-flow-hidden">

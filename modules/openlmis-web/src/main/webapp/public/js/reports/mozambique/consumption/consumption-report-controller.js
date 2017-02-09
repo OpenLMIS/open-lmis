@@ -8,7 +8,7 @@ function ConsumptionReportController($scope, $controller, $filter, $http, $q, Cu
 
     $scope.consumptionInPeriods = undefined;
 
-    $scope.generateConsumptionReport = function () {
+    $scope.loadReport = function () {
         if ($scope.checkDateValidRange() && validateProduct()) {
             $scope.locationIdToCode($scope.reportParams);
             var promises = requestConsumptionDataForEachPeriod();

@@ -29,7 +29,7 @@ function AdjustmentOccurrencesReportController($scope, $controller, $filter, $ht
     $scope.loadHealthFacilities();
   });
 
-  $scope.generateAdjustmentReport = function () {
+  $scope.loadReport = function () {
     if ($scope.checkDateValidRange() && validateProduct() && validateAdjustmentType()) {
       $scope.locationIdToCode($scope.reportParams);
 
