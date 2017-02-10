@@ -101,7 +101,7 @@ function BaseProductReportController($scope, $filter, ProductReportService, $cac
     };
 
     $scope.fillGeographicZone = function () {
-        if (!$scope.reportParams.facilityId) {
+        if (!$scope.reportParams.facilityId || $scope.reportParams.facilityId === " ") {
             return;
         }
 
