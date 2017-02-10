@@ -34,7 +34,8 @@ public interface RnrMapperForSIMAM {
         "       (SELECT code FROM programs p WHERE p.id = r.programid) program_code," +
         "       date(r.clientSubmittedTime) date," +
         "       rli.name regimen_name," +
-        "       rli.patientsOnTreatment total" +
+        "       rli.patientsOnTreatment total," +
+        "       rli.regimencategory category" +
         "    FROM regimen_line_items rli" +
         "    LEFT JOIN requisitions r" +
         "    ON r.id = rli.rnrId" +

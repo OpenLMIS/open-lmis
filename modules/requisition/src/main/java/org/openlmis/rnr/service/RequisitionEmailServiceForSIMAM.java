@@ -155,6 +155,13 @@ public class RequisitionEmailServiceForSIMAM {
 	public String generateRegimenExcelForSIMAM(Rnr requisition) {
 		List<Map<String, String>> regimenItemsData = rnrMapperForSIMAM.getRegimenItemsForSIMAMImport(requisition);
 
+		//Requested by SIMAM support to specifically convert "ABC+3TC+LPV/r" to a different name to be able to import into SIMAM
+		for (Map<String, String> regimenItem : regimenItemsData) {
+			if ("ABC+3TC+LPV/r".equals(regimenItem.get("regimen_name")) && "Paediatrics".equals(regimenItem.get("category"))) {
+				regimenItem.put("regimen_name", "ABC+3TC+LPV/r (2FC+LPV/r)");
+			}
+		}
+
 		Workbook workbook;
 		if (regimenItemsData.isEmpty()) {
 			workbook = singleListSheetExcelHandler.readXssTemplateFile(TEMPLATE_IMPORT_REGIMEN_XLSX_EMPTY, ExcelHandler.PathType.FILE);

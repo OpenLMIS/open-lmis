@@ -1,12 +1,14 @@
 package org.openlmis.rnr.service;
 
 import org.apache.commons.collections.MapUtils;
+import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
+import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.openlmis.core.builder.ProgramBuilder;
@@ -31,7 +33,9 @@ import java.util.Map;
 
 import static com.natpryce.makeiteasy.MakeItEasy.*;
 import static java.util.Arrays.asList;
+import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertThat;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.*;
@@ -232,6 +236,45 @@ public class RequisitionEmailServiceForSIMAMTest {
 
     verify(singleListSheetExcelHandler).readXssTemplateFile(TEMPLATE_IMPORT_REGIMEN_XLSX, ExcelHandler.PathType.FILE);
   }
+
+  @Test
+  public void shouldConvertParticularRegimenNameForSIMAM() throws MalformedURLException {
+    rnr.setStatus(RnrStatus.AUTHORIZED);
+    initRnrItems("MMIA");
+    initRegimenItems("MMIA");
+
+    Map<String, String> item3 = MapUtils.putAll(new HashMap(), new String[][]{
+        {"program_code", "MMIA"},
+        {"regimen_name", "ABC+3TC+LPV/r"},
+        {"total", "300"},
+        {"date", "10-10-2012"},
+        {"category", "Paediatrics"}
+    });
+    List<Map<String, String>> newRegimenDataList = new ArrayList<>();
+    newRegimenDataList.addAll(regimenDataList);
+    newRegimenDataList.add(item3);
+
+    when(rnrMapperForSIMAM.getRnrItemsForSIMAMImport(rnr)).thenReturn(dataList);
+    when(rnrMapperForSIMAM.getRegimenItemsForSIMAMImport(rnr)).thenReturn(newRegimenDataList);
+
+    Workbook workBook = new XSSFWorkbook();
+    workBook.createSheet();
+    when(singleListSheetExcelHandler.readXssTemplateFile(TEMPLATE_IMPORT_RNR_XLSX, ExcelHandler.PathType.FILE)).thenReturn(workBook);
+    when(singleListSheetExcelHandler.readXssTemplateFile(TEMPLATE_IMPORT_REGIMEN_XLSX, ExcelHandler.PathType.FILE)).thenReturn(workBook);
+
+    when(singleListSheetExcelHandler.createXssFile(workBook, "Regimen_Requi" + getFileName() + ".xlsx")).thenReturn("expected file path");
+
+    requisitionEmailServiceForSIMAM.queueRequisitionEmailWithAttachment(rnr, users);
+
+    ArgumentCaptor<List> captor = ArgumentCaptor.forClass(List.class);
+    ArgumentCaptor<Sheet> captor2 = ArgumentCaptor.forClass(Sheet.class);
+
+    verify(singleListSheetExcelHandler, times(2)).createDataRows(captor2.capture(), captor.capture());
+    List<List> captorAllValues = captor.getAllValues();
+    List<Map<String, String>> argument = captorAllValues.get(1);
+    assertThat(argument.get(2).get("regimen_name"), is("ABC+3TC+LPV/r (2FC+LPV/r)"));
+  }
+
 
   private String getFileName() {
     return rnr.getId() + "_" + rnr.getFacility().getName() + "_" + rnr.getPeriod().getName() + "_" + rnr.getProgram().getName();
