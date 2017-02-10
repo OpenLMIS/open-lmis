@@ -93,7 +93,7 @@ public class SimpleTableController extends BaseController {
     }
 
     @RequestMapping(value = "/export", method = GET, headers = BaseController.ACCEPT_JSON)
-    public void export(HttpServletRequest request, HttpServletResponse response) {
+    public void export(HttpServletResponse response) {
 
         String zipDirectory = UUID.randomUUID().toString() + "/";
 

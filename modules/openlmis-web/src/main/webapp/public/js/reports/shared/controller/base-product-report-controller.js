@@ -95,9 +95,10 @@ function BaseProductReportController($scope, $filter, ProductReportService, $cac
         $scope.reportParams.districtId = "";
     };
 
-    $scope.fillProvince = function () {
+    $scope.changeDistrict = function () {
         var parent = $scope.getParent($scope.reportParams.districtId);
         $scope.reportParams.provinceId = !parent ? $scope.reportParams.provinceId : parent.id;
+        $scope.reportParams.facilityId = "";
     };
 
     $scope.fillGeographicZone = function () {
