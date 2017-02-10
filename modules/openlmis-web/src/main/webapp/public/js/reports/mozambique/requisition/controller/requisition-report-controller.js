@@ -1,11 +1,8 @@
-function RequisitionReportController($scope, $controller, $filter, RequisitionReportService, messageService, DateFormatService, FeatureToggleService, $window, $cacheFactory, ReportExportExcelService) {
-  $controller("BaseProductReportController", {$scope: $scope});
+function RequisitionReportController($scope, $filter, RequisitionReportService, messageService, DateFormatService, FeatureToggleService, $window, $cacheFactory, ReportExportExcelService) {
 
-  $scope.location = '';
-  $scope.$on('$viewContentLoaded', function () {
-    $scope.loadHealthFacilities();
-    $scope.loadRequisitions();
-  });
+    $scope.$on('$viewContentLoaded', function () {
+        $scope.loadRequisitions();
+    });
 
   $scope.$on('messagesPopulated', function () {
     setInventoryDateAndSubmittedStatus();
@@ -20,7 +17,6 @@ function RequisitionReportController($scope, $controller, $filter, RequisitionRe
     };
 
     RequisitionReportService.get(requisitionQueryParameters, function (data) {
-      $scope.allRequisitions = data.rnr_list;
       $scope.requisitions = data.rnr_list;
       setInventoryDateAndSubmittedStatus();
       renameRequisitionType();
@@ -28,15 +24,8 @@ function RequisitionReportController($scope, $controller, $filter, RequisitionRe
     });
   };
 
-  $scope.loadReport = function () {
-    $scope.locationIdToCode($scope.reportParams);
-    $scope.requisitions = _.filter($scope.allRequisitions, function (requisition) {
-      return ($scope.reportParams.selectedFacility === undefined || requisition.facilityName == $scope.reportParams.selectedFacility.name) && new Date(requisition.clientSubmittedTime) <= new Date($scope.reportParams.endTime);
-    });
-  };
-
   var setInventoryDateAndSubmittedStatus = function () {
-    _.each($scope.allRequisitions, function (rnr) {
+    _.each($scope.requisitions, function (rnr) {
       if (rnr.actualPeriodEnd === null) {
         rnr.actualPeriodEnd = rnr.schedulePeriodEnd;
       }
@@ -55,7 +44,7 @@ function RequisitionReportController($scope, $controller, $filter, RequisitionRe
   };
 
   var renameRequisitionType = function () {
-    _.each($scope.allRequisitions, function (rnr) {
+    _.each($scope.requisitions, function (rnr) {
       if (rnr.type === "Normal") {
         rnr.type = messageService.get("label.requisition.type.normal");
       }
