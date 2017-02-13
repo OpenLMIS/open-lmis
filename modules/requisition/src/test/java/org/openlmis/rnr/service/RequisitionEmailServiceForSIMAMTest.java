@@ -155,8 +155,8 @@ public class RequisitionEmailServiceForSIMAMTest {
     initRnrItems("MMIA");
 
     when(rnrMapperForSIMAM.getRnrItemsForSIMAMImport(rnr)).thenReturn(dataList);
-    when(rnrMapperForSIMAM.getProductProgramCode("P1", 12L)).thenReturn(asList("MMIA"));
-    when(rnrMapperForSIMAM.getProductProgramCode("P2", 12L)).thenReturn(asList("MMIA"));
+    when(rnrMapperForSIMAM.getProductProgramCode("P1", 12)).thenReturn(asList("MMIA"));
+    when(rnrMapperForSIMAM.getProductProgramCode("P2", 12)).thenReturn(asList("MMIA"));
 
     Workbook workBook = new XSSFWorkbook();
     workBook.createSheet();
@@ -175,8 +175,8 @@ public class RequisitionEmailServiceForSIMAMTest {
 
     initRnrItems("VIA");
     when(rnrMapperForSIMAM.getRnrItemsForSIMAMImport(rnr)).thenReturn(dataList);
-    when(rnrMapperForSIMAM.getProductProgramCode("P1", 12L)).thenReturn(asList("VIA", "ESS_MEDS"));
-    when(rnrMapperForSIMAM.getProductProgramCode("P2", 12L)).thenReturn(asList("VIA", "MALARIA"));
+    when(rnrMapperForSIMAM.getProductProgramCode("P1", 12)).thenReturn(asList("VIA", "ESS_MEDS"));
+    when(rnrMapperForSIMAM.getProductProgramCode("P2", 12)).thenReturn(asList("VIA", "MALARIA"));
 
     Workbook workBook = new XSSFWorkbook();
     workBook.createSheet();
@@ -186,6 +186,7 @@ public class RequisitionEmailServiceForSIMAMTest {
 
     assertEquals(SIMAM_PROGRAMS_MAP.get("ESS_MEDS"), dataList.get(0).get("program_code"));
     assertEquals(SIMAM_PROGRAMS_MAP.get("MALARIA"), dataList.get(1).get("program_code"));
+    assertEquals("aP1", dataList.get(0).get("product_code"));
   }
 
   @Test
@@ -194,8 +195,8 @@ public class RequisitionEmailServiceForSIMAMTest {
 
     initRnrItems("MMIA");
     when(rnrMapperForSIMAM.getRnrItemsForSIMAMImport(rnr)).thenReturn(dataList);
-    when(rnrMapperForSIMAM.getProductProgramCode("P1", 12L)).thenReturn(asList("MMIA"));
-    when(rnrMapperForSIMAM.getProductProgramCode("P2", 12L)).thenReturn(asList("MMIA"));
+    when(rnrMapperForSIMAM.getProductProgramCode("P1", 12)).thenReturn(asList("MMIA"));
+    when(rnrMapperForSIMAM.getProductProgramCode("P2", 12)).thenReturn(asList("MMIA"));
 
     Workbook workBook = new XSSFWorkbook();
     workBook.createSheet();
@@ -213,8 +214,8 @@ public class RequisitionEmailServiceForSIMAMTest {
     initRnrItems("MMIA");
     when(rnrMapperForSIMAM.getRnrItemsForSIMAMImport(rnr)).thenReturn(dataList);
     when(rnrMapperForSIMAM.getRegimenItemsForSIMAMImport(rnr)).thenReturn(new ArrayList<Map<String, String>>());
-    when(rnrMapperForSIMAM.getProductProgramCode("P1", 12L)).thenReturn(asList("MMIA"));
-    when(rnrMapperForSIMAM.getProductProgramCode("P2", 12L)).thenReturn(asList("MMIA"));
+    when(rnrMapperForSIMAM.getProductProgramCode("P1", 12)).thenReturn(asList("MMIA"));
+    when(rnrMapperForSIMAM.getProductProgramCode("P2", 12)).thenReturn(asList("MMIA"));
 
     Workbook workBook = new XSSFWorkbook();
     workBook.createSheet();
@@ -233,8 +234,8 @@ public class RequisitionEmailServiceForSIMAMTest {
     initRegimenItems("MMIA");
     when(rnrMapperForSIMAM.getRnrItemsForSIMAMImport(rnr)).thenReturn(dataList);
     when(rnrMapperForSIMAM.getRegimenItemsForSIMAMImport(rnr)).thenReturn(regimenDataList);
-    when(rnrMapperForSIMAM.getProductProgramCode("P1", 12L)).thenReturn(asList("MMIA"));
-    when(rnrMapperForSIMAM.getProductProgramCode("P2", 12L)).thenReturn(asList("MMIA"));
+    when(rnrMapperForSIMAM.getProductProgramCode("P1", 12)).thenReturn(asList("MMIA"));
+    when(rnrMapperForSIMAM.getProductProgramCode("P2", 12)).thenReturn(asList("MMIA"));
 
     Workbook workBook = new XSSFWorkbook();
     workBook.createSheet();
@@ -267,8 +268,8 @@ public class RequisitionEmailServiceForSIMAMTest {
 
     when(rnrMapperForSIMAM.getRnrItemsForSIMAMImport(rnr)).thenReturn(dataList);
     when(rnrMapperForSIMAM.getRegimenItemsForSIMAMImport(rnr)).thenReturn(newRegimenDataList);
-    when(rnrMapperForSIMAM.getProductProgramCode("P1", 12L)).thenReturn(asList("MMIA"));
-    when(rnrMapperForSIMAM.getProductProgramCode("P2", 12L)).thenReturn(asList("MMIA"));
+    when(rnrMapperForSIMAM.getProductProgramCode("P1", 12)).thenReturn(asList("MMIA"));
+    when(rnrMapperForSIMAM.getProductProgramCode("P2", 12)).thenReturn(asList("MMIA"));
 
     Workbook workBook = new XSSFWorkbook();
     workBook.createSheet();

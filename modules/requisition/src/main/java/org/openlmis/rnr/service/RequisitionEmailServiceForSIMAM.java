@@ -73,8 +73,8 @@ public class RequisitionEmailServiceForSIMAM {
 										new String[][]{
                         {"MMIA", "TARV"},
                         {"ESS_MEDS", "Medicamentos Essenciais"},
-                        {"VIA", "Medicamentos Essenciais"},
-                        {"TB", "Tuberculose"},
+												{"VIA", "Via Clássica"},
+												{"TB", "Tuberculose"},
                         {"MALARIA", "Malaria"},
                         {"TARV", "TARV"},
                         {"PTV", "PTV"},
@@ -120,8 +120,9 @@ public class RequisitionEmailServiceForSIMAM {
 		for (Map<String, String> itemMap : itemsMap) {
 			String programCodeForProduct;
 			List<String> programCodesForProduct = rnrMapperForSIMAM.getProductProgramCode(itemMap.get("product_code"),
-					Long.parseLong(itemMap.get("form_program_id")));
-			//If the programs associated with the product contain form codes (VIA/MMIA), filter them out and use the subprogram code
+					Integer.parseInt(itemMap.get("form_program_id")));
+			//If the programs associated with the product contain form codes (VIA/MMIA) and subprogram code,
+			//use subprogram code; if a product is with multiple active subprograms under a form, then the first will be selected
 			if (programCodesForProduct.size() > 1) {
 				programCodeForProduct = FluentIterable.from(programCodesForProduct).filter(new Predicate<String>() {
 					@Override
@@ -137,6 +138,8 @@ public class RequisitionEmailServiceForSIMAM {
 			} else {
 				itemMap.put("program_code", programCodeForProduct);
 			}
+			//SIMAM needs to prepend "a" to the product code
+			itemMap.put("product_code", "a" + itemMap.get("product_code"));
 		}
 	}
 

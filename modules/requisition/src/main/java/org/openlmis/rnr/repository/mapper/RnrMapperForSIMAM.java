@@ -10,10 +10,10 @@ import java.util.Map;
 
 @Repository
 public interface RnrMapperForSIMAM {
-    @Select("SELECT r.id, r.programid form_program_id," +
+    @Select("SELECT r.id, '' || r.programid form_program_id," +
         "       (SELECT name FROM facilities f WHERE f.id=r.facilityid) facility_name," +
         "       date(r.clientsubmittedtime) date," +
-        "       'a' || rl.productcode as product_code," +
+        "       rl.productcode as product_code," +
         "       rl.beginningbalance beginning_balance," +
         "       rl.quantitydispensed quantity_dispensed," +
         "       rl.quantityreceived quantity_received," +
@@ -48,6 +48,7 @@ public interface RnrMapperForSIMAM {
         "   LEFT JOIN products pr" +
         "   ON pr.id = pp.productid" +
         "   WHERE pr.code = #{productCode}" +
+        "   AND pp.active = TRUE" +
         "   AND (p.id = #{formProgramId} OR p.parentid = #{formProgramId})")
-    List<String> getProductProgramCode(@Param("productCode") String productCode, @Param("formProgramId") long formProgramId);
+    List<String> getProductProgramCode(@Param("productCode") String productCode, @Param("formProgramId") int formProgramId);
 }

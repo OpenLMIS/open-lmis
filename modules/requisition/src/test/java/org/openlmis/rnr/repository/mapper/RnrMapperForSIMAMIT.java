@@ -140,14 +140,14 @@ public class RnrMapperForSIMAMIT {
     assertEquals(2, itemsData.size());
     assertEquals(requisition.getId().intValue(), itemsData.get(0).get("id"));
     assertEquals(requisition.getId().intValue(), itemsData.get(1).get("id"));
-    assertEquals(program.getId().intValue(), itemsData.get(0).get("form_program_id"));
-    assertEquals(program.getId().intValue(), itemsData.get(1).get("form_program_id"));
+    assertEquals("" + program.getId(), itemsData.get(0).get("form_program_id"));
+    assertEquals("" + program.getId(), itemsData.get(1).get("form_program_id"));
     assertEquals(facility.getName(), itemsData.get(0).get("facility_name"));
     assertEquals(facility.getName(), itemsData.get(1).get("facility_name"));
     assertEquals("2015-11-11", new SimpleDateFormat("yyyy-MM-dd").format(itemsData.get(0).get("date")));
     assertEquals("2015-11-11", new SimpleDateFormat("yyyy-MM-dd").format(itemsData.get(1).get("date")));
-    assertEquals("a" + product2.getCode(), itemsData.get(0).get("product_code").toString());
-    assertEquals("a" + product1.getCode(), itemsData.get(1).get("product_code").toString());
+    assertEquals(product2.getCode(), itemsData.get(0).get("product_code").toString());
+    assertEquals(product1.getCode(), itemsData.get(1).get("product_code").toString());
     assertEquals(rnrLineItem2.getBeginningBalance(), itemsData.get(0).get("beginning_balance"));
     assertEquals(rnrLineItem1.getBeginningBalance(), itemsData.get(1).get("beginning_balance"));
     assertEquals(rnrLineItem2.getQuantityDispensed(), itemsData.get(0).get("quantity_dispensed"));
@@ -195,7 +195,7 @@ public class RnrMapperForSIMAMIT {
 
   @Test
   public void shouldGetProgramCodesForProducts() {
-    List<String> programCodes = rnrMapperForSIMAM.getProductProgramCode(product1.getCode(), program.getId());
+    List<String> programCodes = rnrMapperForSIMAM.getProductProgramCode(product1.getCode(), program.getId().intValue());
     assertThat(programCodes.size(), is(2));
     assertThat(programCodes.get(0), is(productProgram.getCode()));
     assertThat(programCodes.get(1), is(program.getCode()));
