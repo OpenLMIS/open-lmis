@@ -88,15 +88,15 @@ public class RequisitionEmailServiceForSIMAMTest {
     Map<String, String> item1 = MapUtils.putAll(new HashMap(), new String[][]{
         {"facilityid", "156"},
         {"client_submitted_time", "12:21"},
-        {"product_code", "31"},
-        {"program_code", programCode}
+        {"product_code", "P1"},
+        {"form_program_id", "12"}
     });
 
     Map<String, String> item2 = MapUtils.putAll(new HashMap(), new String[][]{
         {"facilityid", "157"},
         {"client_submitted_time", "18:21"},
-        {"product_code", "32"},
-        {"program_code", programCode}
+        {"product_code", "P2"},
+        {"form_program_id", "12"}
     });
 
     dataList = asList(item1, item2);
@@ -155,6 +155,8 @@ public class RequisitionEmailServiceForSIMAMTest {
     initRnrItems("MMIA");
 
     when(rnrMapperForSIMAM.getRnrItemsForSIMAMImport(rnr)).thenReturn(dataList);
+    when(rnrMapperForSIMAM.getProductProgramCode("P1", 12L)).thenReturn(asList("MMIA"));
+    when(rnrMapperForSIMAM.getProductProgramCode("P2", 12L)).thenReturn(asList("MMIA"));
 
     Workbook workBook = new XSSFWorkbook();
     workBook.createSheet();
@@ -171,8 +173,10 @@ public class RequisitionEmailServiceForSIMAMTest {
   public void shouldCreateExcelWithVIARnrItems() throws MalformedURLException {
     rnr.setStatus(RnrStatus.AUTHORIZED);
 
-    initRnrItems("ESS_MEDS");
+    initRnrItems("VIA");
     when(rnrMapperForSIMAM.getRnrItemsForSIMAMImport(rnr)).thenReturn(dataList);
+    when(rnrMapperForSIMAM.getProductProgramCode("P1", 12L)).thenReturn(asList("VIA", "ESS_MEDS"));
+    when(rnrMapperForSIMAM.getProductProgramCode("P2", 12L)).thenReturn(asList("VIA", "MALARIA"));
 
     Workbook workBook = new XSSFWorkbook();
     workBook.createSheet();
@@ -181,6 +185,7 @@ public class RequisitionEmailServiceForSIMAMTest {
     requisitionEmailServiceForSIMAM.queueRequisitionEmailWithAttachment(rnr, users);
 
     assertEquals(SIMAM_PROGRAMS_MAP.get("ESS_MEDS"), dataList.get(0).get("program_code"));
+    assertEquals(SIMAM_PROGRAMS_MAP.get("MALARIA"), dataList.get(1).get("program_code"));
   }
 
   @Test
@@ -189,6 +194,8 @@ public class RequisitionEmailServiceForSIMAMTest {
 
     initRnrItems("MMIA");
     when(rnrMapperForSIMAM.getRnrItemsForSIMAMImport(rnr)).thenReturn(dataList);
+    when(rnrMapperForSIMAM.getProductProgramCode("P1", 12L)).thenReturn(asList("MMIA"));
+    when(rnrMapperForSIMAM.getProductProgramCode("P2", 12L)).thenReturn(asList("MMIA"));
 
     Workbook workBook = new XSSFWorkbook();
     workBook.createSheet();
@@ -206,6 +213,8 @@ public class RequisitionEmailServiceForSIMAMTest {
     initRnrItems("MMIA");
     when(rnrMapperForSIMAM.getRnrItemsForSIMAMImport(rnr)).thenReturn(dataList);
     when(rnrMapperForSIMAM.getRegimenItemsForSIMAMImport(rnr)).thenReturn(new ArrayList<Map<String, String>>());
+    when(rnrMapperForSIMAM.getProductProgramCode("P1", 12L)).thenReturn(asList("MMIA"));
+    when(rnrMapperForSIMAM.getProductProgramCode("P2", 12L)).thenReturn(asList("MMIA"));
 
     Workbook workBook = new XSSFWorkbook();
     workBook.createSheet();
@@ -224,6 +233,8 @@ public class RequisitionEmailServiceForSIMAMTest {
     initRegimenItems("MMIA");
     when(rnrMapperForSIMAM.getRnrItemsForSIMAMImport(rnr)).thenReturn(dataList);
     when(rnrMapperForSIMAM.getRegimenItemsForSIMAMImport(rnr)).thenReturn(regimenDataList);
+    when(rnrMapperForSIMAM.getProductProgramCode("P1", 12L)).thenReturn(asList("MMIA"));
+    when(rnrMapperForSIMAM.getProductProgramCode("P2", 12L)).thenReturn(asList("MMIA"));
 
     Workbook workBook = new XSSFWorkbook();
     workBook.createSheet();
@@ -256,6 +267,8 @@ public class RequisitionEmailServiceForSIMAMTest {
 
     when(rnrMapperForSIMAM.getRnrItemsForSIMAMImport(rnr)).thenReturn(dataList);
     when(rnrMapperForSIMAM.getRegimenItemsForSIMAMImport(rnr)).thenReturn(newRegimenDataList);
+    when(rnrMapperForSIMAM.getProductProgramCode("P1", 12L)).thenReturn(asList("MMIA"));
+    when(rnrMapperForSIMAM.getProductProgramCode("P2", 12L)).thenReturn(asList("MMIA"));
 
     Workbook workBook = new XSSFWorkbook();
     workBook.createSheet();
@@ -274,7 +287,6 @@ public class RequisitionEmailServiceForSIMAMTest {
     List<Map<String, String>> argument = captorAllValues.get(1);
     assertThat(argument.get(2).get("regimen_name"), is("ABC+3TC+LPV/r (2FC+LPV/r)"));
   }
-
 
   private String getFileName() {
     return rnr.getId() + "_" + rnr.getFacility().getName() + "_" + rnr.getPeriod().getName() + "_" + rnr.getProgram().getName();

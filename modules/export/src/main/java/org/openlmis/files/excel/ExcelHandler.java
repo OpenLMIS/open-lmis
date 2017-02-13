@@ -96,7 +96,7 @@ public abstract class ExcelHandler {
 	}
 
 	public CellMeta parseCellMeta(Cell rowCell) {
-		CellMeta cellMeta = null;
+		CellMeta cellMeta;
 		String var = rowCell.getRichStringCellValue().getString();
 
 		if (var != null && var.startsWith(VARIABLE_PREFIX)) {

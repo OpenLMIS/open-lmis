@@ -16,13 +16,11 @@ import org.openlmis.rnr.domain.RegimenLineItem;
 import org.openlmis.rnr.domain.Rnr;
 import org.openlmis.rnr.domain.RnrLineItem;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.format.datetime.DateFormatter;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.transaction.TransactionConfiguration;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Collections;
 import java.util.Date;
@@ -30,7 +28,9 @@ import java.util.List;
 import java.util.Map;
 
 import static com.natpryce.makeiteasy.MakeItEasy.*;
+import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertThat;
 import static org.openlmis.core.builder.FacilityBuilder.defaultFacility;
 import static org.openlmis.core.builder.ProcessingPeriodBuilder.*;
 import static org.openlmis.core.builder.ProcessingScheduleBuilder.defaultProcessingSchedule;
@@ -74,14 +74,19 @@ public class RnrMapperForSIMAMIT {
   private Product product2;
   private RnrLineItem rnrLineItem1;
   private RnrLineItem rnrLineItem2;
+  private Program productProgram;
 
   @Before
   public void setUp() {
     facility = make(a(defaultFacility));
     facilityMapper.insert(facility);
 
-    program = make(a(ProgramBuilder.defaultProgram));
+    program = make(a(ProgramBuilder.defaultProgram, with(ProgramBuilder.programCode, "VIA")));
     programMapper.insert(program);
+
+    productProgram = make(a(ProgramBuilder.defaultProgram, with(ProgramBuilder.programCode, "NUTRITION")));
+    programMapper.insert(productProgram);
+    programMapper.associateProgramToParent(productProgram.getId(), program.getId());
 
     ProcessingSchedule processingSchedule = make(a(defaultProcessingSchedule));
     processingScheduleMapper.insert(processingSchedule);
@@ -104,12 +109,15 @@ public class RnrMapperForSIMAMIT {
     productMapper.insert(product1);
     productMapper.insert(product2);
 
-    ProgramProduct programProduct1 = new ProgramProduct(program, product1, 1, true);
-    ProgramProduct programProduct2 = new ProgramProduct(program, product2, 1, true);
+    ProgramProduct programProduct1 = new ProgramProduct(productProgram, product1, 1, true);
+    ProgramProduct programProduct2 = new ProgramProduct(productProgram, product2, 1, true);
+    ProgramProduct programProduct3 = new ProgramProduct(program, product1, 1, true);
     programProduct1.setProductCategory(productCategory);
     programProduct2.setProductCategory(productCategory);
+    programProduct3.setProductCategory(productCategory);
     programProductMapper.insert(programProduct1);
     programProductMapper.insert(programProduct2);
+    programProductMapper.insert(programProduct3);
 
     rnrLineItem1 = make(a(defaultRnrLineItem, with(fullSupply, true), with(productCode, product1.getCode())));
     rnrLineItem2 = make(a(defaultRnrLineItem, with(fullSupply, false), with(productCode, product2.getCode())));
@@ -132,8 +140,8 @@ public class RnrMapperForSIMAMIT {
     assertEquals(2, itemsData.size());
     assertEquals(requisition.getId().intValue(), itemsData.get(0).get("id"));
     assertEquals(requisition.getId().intValue(), itemsData.get(1).get("id"));
-    assertEquals(program.getCode(), itemsData.get(0).get("program_code"));
-    assertEquals(program.getCode(), itemsData.get(1).get("program_code"));
+    assertEquals(program.getId().intValue(), itemsData.get(0).get("form_program_id"));
+    assertEquals(program.getId().intValue(), itemsData.get(1).get("form_program_id"));
     assertEquals(facility.getName(), itemsData.get(0).get("facility_name"));
     assertEquals(facility.getName(), itemsData.get(1).get("facility_name"));
     assertEquals("2015-11-11", new SimpleDateFormat("yyyy-MM-dd").format(itemsData.get(0).get("date")));
@@ -185,4 +193,11 @@ public class RnrMapperForSIMAMIT {
     assertEquals(1000, regimenItemsForSIMAMImport.get(1).get("total"));
   }
 
+  @Test
+  public void shouldGetProgramCodesForProducts() {
+    List<String> programCodes = rnrMapperForSIMAM.getProductProgramCode(product1.getCode(), program.getId());
+    assertThat(programCodes.size(), is(2));
+    assertThat(programCodes.get(0), is(productProgram.getCode()));
+    assertThat(programCodes.get(1), is(program.getCode()));
+  }
 }

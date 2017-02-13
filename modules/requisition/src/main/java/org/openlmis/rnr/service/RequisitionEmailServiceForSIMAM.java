@@ -1,5 +1,7 @@
 package org.openlmis.rnr.service;
 
+import com.google.common.base.Predicate;
+import com.google.common.collect.FluentIterable;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 import org.apache.commons.collections.CollectionUtils;
@@ -115,14 +117,27 @@ public class RequisitionEmailServiceForSIMAM {
 	}
 
 	private void convertOpenLMISProgramCodeToSIMAMCode(final List<Map<String, String>> itemsMap) {
-		CollectionUtils.collect(itemsMap, new Transformer() {
-			@Override
-			public Map<String, String> transform(Object input) {
-				String programCode = ((Map<String, String>) input).get("program_code");
-				((Map<String, String>) input).put("program_code", SIMAM_PROGRAMS_MAP.get(programCode));
-				return (Map<String, String>) input;
+		for (Map<String, String> itemMap : itemsMap) {
+			String programCodeForProduct;
+			List<String> programCodesForProduct = rnrMapperForSIMAM.getProductProgramCode(itemMap.get("product_code"),
+					Long.parseLong(itemMap.get("form_program_id")));
+			//If the programs associated with the product contain form codes (VIA/MMIA), filter them out and use the subprogram code
+			if (programCodesForProduct.size() > 1) {
+				programCodeForProduct = FluentIterable.from(programCodesForProduct).filter(new Predicate<String>() {
+					@Override
+					public boolean apply(String input) {
+						return !"VIA".equals(input) && !"MMIA".equals(input);
+					}
+				}).toList().get(0);
+			} else {
+				programCodeForProduct = programCodesForProduct.get(0);
 			}
-		});
+			if (SIMAM_PROGRAMS_MAP.get(programCodeForProduct) != null) {
+				itemMap.put("program_code", SIMAM_PROGRAMS_MAP.get(programCodeForProduct));
+			} else {
+				itemMap.put("program_code", programCodeForProduct);
+			}
+		}
 	}
 
 	public EmailAttachment generateRequisitionAttachmentForSIMAM(Rnr requisition) {
@@ -170,12 +185,13 @@ public class RequisitionEmailServiceForSIMAM {
 			CollectionUtils.collect(regimenItemsData, new Transformer() {
 				@Override
 				public Map<String, String> transform(Object input) {
+					//OpenLMIS 2.0 does not assign program codes to regimens, use form code and map to SIMAM code
+					String programCode = ((Map<String, String>) input).get("program_code");
+					((Map<String, String>) input).put("program_code", SIMAM_PROGRAMS_MAP.get(programCode));
 					((Map<String, String>) input).put("movDescID", "0");
 					return (Map<String, String>) input;
 				}
 			});
-
-			convertOpenLMISProgramCodeToSIMAMCode(regimenItemsData);
 
 			workbook = singleListSheetExcelHandler.readXssTemplateFile(TEMPLATE_IMPORT_REGIMEN_XLSX, ExcelHandler.PathType.FILE);
 			singleListSheetExcelHandler.createDataRows(workbook.getSheetAt(0), regimenItemsData);

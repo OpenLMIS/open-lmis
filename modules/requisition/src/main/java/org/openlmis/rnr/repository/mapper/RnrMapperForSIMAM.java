@@ -10,8 +10,7 @@ import java.util.Map;
 
 @Repository
 public interface RnrMapperForSIMAM {
-    @Select("SELECT r.id, " +
-        "       (SELECT code FROM programs p WHERE p.id = r.programid) program_code," +
+    @Select("SELECT r.id, r.programid form_program_id," +
         "       (SELECT name FROM facilities f WHERE f.id=r.facilityid) facility_name," +
         "       date(r.clientsubmittedtime) date," +
         "       'a' || rl.productcode as product_code," +
@@ -42,4 +41,13 @@ public interface RnrMapperForSIMAM {
         "    WHERE r.id = #{rnr.id}"
     )
     List<Map<String, String>> getRegimenItemsForSIMAMImport(@Param("rnr") Rnr rnr);
+
+    @Select("SELECT p.code FROM programs p" +
+        "   LEFT JOIN program_products pp" +
+        "   ON pp.programid = p.id" +
+        "   LEFT JOIN products pr" +
+        "   ON pr.id = pp.productid" +
+        "   WHERE pr.code = #{productCode}" +
+        "   AND (p.id = #{formProgramId} OR p.parentid = #{formProgramId})")
+    List<String> getProductProgramCode(@Param("productCode") String productCode, @Param("formProgramId") long formProgramId);
 }
