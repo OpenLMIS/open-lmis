@@ -8,32 +8,17 @@ function RequisitionReportController($scope, $controller, $filter, RequisitionRe
 
   $scope.selectedItems = [];
 
-  $scope.loadRequisitions = function () {
-    var requisitionQueryParameters = {
-      startTime: $filter('date')($scope.reportParams.startTime, 'yyyy-MM-dd HH:mm:ss'),
-      endTime: $filter('date')($scope.reportParams.endTime, 'yyyy-MM-dd HH:mm:ss')
-    };
-
-    RequisitionReportService.get(requisitionQueryParameters, function (data) {
-      $scope.allRequisitions = data.rnr_list;
-      setInventoryDateAndSubmittedStatus();
-      renameRequisitionType();
-    });
-  };
-
-  $scope.loadReport = function () {
-    $scope.locationIdToCode($scope.reportParams);
-    $scope.loadRequisitions();
+  function filterRequisitionsBasedOnGeographicZones() {
     if ($scope.reportParams.selectedFacility) {
       $scope.requisitions = _.filter($scope.allRequisitions, function (requisition) {
-        return requisition.facilityName === $scope.reportParams.selectedFacility.name
-          && requisition.districtName === $scope.reportParams.selectedDistrict.name
-          && requisition.provinceName === $scope.reportParams.selectedProvince.name;
+        return requisition.facilityName === $scope.reportParams.selectedFacility.name &&
+          requisition.districtName === $scope.reportParams.selectedDistrict.name &&
+          requisition.provinceName === $scope.reportParams.selectedProvince.name;
       });
     } else if ($scope.reportParams.selectedDistrict) {
       $scope.requisitions = _.filter($scope.allRequisitions, function (requisition) {
-        return requisition.districtName === $scope.reportParams.selectedDistrict.name
-          && requisition.provinceName === $scope.reportParams.selectedProvince.name;
+        return requisition.districtName === $scope.reportParams.selectedDistrict.name &&
+          requisition.provinceName === $scope.reportParams.selectedProvince.name;
       });
     } else if ($scope.reportParams.selectedProvince) {
       $scope.requisitions = _.filter($scope.allRequisitions, function (requisition) {
@@ -42,6 +27,25 @@ function RequisitionReportController($scope, $controller, $filter, RequisitionRe
     } else {
       $scope.requisitions = $scope.allRequisitions;
     }
+  }
+
+  $scope.loadRequisitions = function () {
+    var requisitionQueryParameters = {
+      startTime: $scope.reportParams.startTime + " 00:00:00",
+      endTime: $scope.reportParams.endTime + " 11:59:59"
+    };
+
+    RequisitionReportService.get(requisitionQueryParameters, function (data) {
+      $scope.allRequisitions = data.rnr_list;
+      filterRequisitionsBasedOnGeographicZones();
+      setInventoryDateAndSubmittedStatus();
+      renameRequisitionType();
+    });
+  };
+
+  $scope.loadReport = function () {
+    $scope.locationIdToCode($scope.reportParams);
+    $scope.loadRequisitions();
   };
 
   var setInventoryDateAndSubmittedStatus = function () {

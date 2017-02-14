@@ -8,6 +8,8 @@ describe("requisition report controller", function () {
             "type":"Emergency",
             "emergency":true,
             "facilityName":"Matalane",
+            "districtName": "Marracuene",
+            "provinceName": "Maputo",
             "submittedUser":"mystique",
             "clientSubmittedTimeString":"2016-10-27 11:11:20",
             "actualPeriodEnd":null,
@@ -21,6 +23,8 @@ describe("requisition report controller", function () {
             "type":"Normal",
             "emergency":false,
             "facilityName":"Matalane",
+            "districtName": "Marracuene",
+            "provinceName": "Maputo",
             "submittedUser":"mystique",
             "clientSubmittedTimeString":"2016-05-20 23:59:59",
             "actualPeriodEnd":1456197080000,
@@ -34,6 +38,8 @@ describe("requisition report controller", function () {
             "type":"Normal",
             "emergency":false,
             "facilityName":"Matalane",
+            "districtName": "Marracuene",
+            "provinceName": "Maputo",
             "submittedUser":"mystique",
             "clientSubmittedTimeString":"",
             "actualPeriodEnd":1456197080000,
@@ -56,13 +62,14 @@ describe("requisition report controller", function () {
 
 
     it('should load facility and stock movements successfully', function () {
-        var now =  new Date();
-        var endTime =  [[now.getFullYear(), formatString(now.getMonth() + 1), formatString(now.getDate())].join('-'),
-                        [formatString(now.getHours()), formatString(now.getMinutes()), formatString(now.getSeconds())].join(':')].join('+') ;
+        scope.reportParams.startTime = '2017-01-01';
+        scope.reportParams.endTime = '2017-02-01';
+        scope.reportParams.selectedFacility = {"name": "Matalane"};
+        scope.reportParams.selectedDistrict = {"name": "Marracuene"};
+        scope.reportParams.selectedProvince = {"name": "Maputo"};
+        httpBackend.expectGET('/reports/requisition-report.json?endTime=2017-02-01+11:59:59&startTime=2017-01-01+00:00:00').respond(200, requisitions);
 
-        httpBackend.expectGET('/reports/requisition-report.json?endTime=' + endTime + '&startTime=2015-09-26+00:00:00').respond(200, requisitions);
-
-        scope.loadRequisitions();
+        scope.loadReport();
         httpBackend.flush();
 
         expect(scope.requisitions.length).toBe(3);
@@ -82,9 +89,4 @@ describe("requisition report controller", function () {
 
         expect(scope.getRedirectUrl()).toBe("/public/pages/logistics/rnr/index.html#/view-requisition-via/150?supplyType=fullSupply&page=1");
     });
-
-
-    var formatString = function(s) {
-        return ("0" + s).slice(-2);
-    };
 });
