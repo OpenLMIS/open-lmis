@@ -72,14 +72,15 @@ public class RequisitionEmailServiceForSIMAM {
 	public static final Map<String, String> SIMAM_PROGRAMS_MAP = MapUtils.putAll(new HashMap(),
 										new String[][]{
                         {"MMIA", "TARV"},
-                        {"ESS_MEDS", "Medicamentos Essenciais"},
+                        {"ESS_MEDS", "Via Clássica"},
 												{"VIA", "Via Clássica"},
 												{"TB", "Tuberculose"},
                         {"MALARIA", "Malaria"},
                         {"TARV", "TARV"},
                         {"PTV", "PTV"},
                         {"TEST_KIT", "Testes Rápidos Diag."},
-                        {"PME", "PME"}
+                        {"PME", "PME"},
+												{"NUTRITION", "Via Clássica"}
 										});
 
 	public void queueRequisitionEmailWithAttachment(Rnr requisition, List<User> users) {
