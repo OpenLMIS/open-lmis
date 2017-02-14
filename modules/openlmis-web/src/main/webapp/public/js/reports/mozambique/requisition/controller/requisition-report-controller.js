@@ -4,35 +4,44 @@ function RequisitionReportController($scope, $controller, $filter, RequisitionRe
   $scope.location = '';
   $scope.$on('$viewContentLoaded', function () {
     $scope.loadHealthFacilities();
-    $scope.loadRequisitions();
-  });
-
-  $scope.$on('messagesPopulated', function () {
-    setInventoryDateAndSubmittedStatus();
   });
 
   $scope.selectedItems = [];
 
   $scope.loadRequisitions = function () {
     var requisitionQueryParameters = {
-      startTime: '2015-09-26 00:00:00',
-      endTime: $filter('date')(new Date(), 'yyyy-MM-dd HH:mm:ss')
+      startTime: $filter('date')($scope.reportParams.startTime, 'yyyy-MM-dd HH:mm:ss'),
+      endTime: $filter('date')($scope.reportParams.endTime, 'yyyy-MM-dd HH:mm:ss')
     };
 
     RequisitionReportService.get(requisitionQueryParameters, function (data) {
       $scope.allRequisitions = data.rnr_list;
-      $scope.requisitions = data.rnr_list;
       setInventoryDateAndSubmittedStatus();
       renameRequisitionType();
-    }, function () {
     });
   };
 
   $scope.loadReport = function () {
     $scope.locationIdToCode($scope.reportParams);
-    $scope.requisitions = _.filter($scope.allRequisitions, function (requisition) {
-      return ($scope.reportParams.selectedFacility === undefined || requisition.facilityName == $scope.reportParams.selectedFacility.name) && new Date(requisition.clientSubmittedTime) <= new Date($scope.reportParams.endTime);
-    });
+    $scope.loadRequisitions();
+    if ($scope.reportParams.selectedFacility) {
+      $scope.requisitions = _.filter($scope.allRequisitions, function (requisition) {
+        return requisition.facilityName === $scope.reportParams.selectedFacility.name
+          && requisition.districtName === $scope.reportParams.selectedDistrict.name
+          && requisition.provinceName === $scope.reportParams.selectedProvince.name;
+      });
+    } else if ($scope.reportParams.selectedDistrict) {
+      $scope.requisitions = _.filter($scope.allRequisitions, function (requisition) {
+        return requisition.districtName === $scope.reportParams.selectedDistrict.name
+          && requisition.provinceName === $scope.reportParams.selectedProvince.name;
+      });
+    } else if ($scope.reportParams.selectedProvince) {
+      $scope.requisitions = _.filter($scope.allRequisitions, function (requisition) {
+        return requisition.provinceName === $scope.reportParams.selectedProvince.name;
+      });
+    } else {
+      $scope.requisitions = $scope.allRequisitions;
+    }
   };
 
   var setInventoryDateAndSubmittedStatus = function () {

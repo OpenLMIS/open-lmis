@@ -17,6 +17,8 @@ public class RequisitionDTO {
     private RequisitionType type;
     private boolean emergency;
     private String facilityName;
+    private String districtName;
+    private String provinceName;
     private String submittedUser;
     private String webSubmittedTimeString;
     private String clientSubmittedTimeString;

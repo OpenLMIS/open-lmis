@@ -1,35 +1,16 @@
 <div>
   <div id="control-bar">
-    <h3 openlmis-message="title.requisitions.report"></h3>
-
+    <h3 class="report-title" openlmis-message="title.requisitions.report"></h3>
     <div ng-include="'/public/pages/reports/mozambique/facility-selection.html'"></div>
-
-    <div class="form-cell report-selection">
-      <label>
-        <span openlmis-message="label.date"></span>
-      </label>
-
-      <div class="form-field">
-        <input name="endTime" id="endTime" type="text"
-               ui-date="{ dateFormat: 'dd/mm/yy' }"
-               ui-date-format
-               ng-model="reportParams.endTime"
-               ng-required="true"
-               ng-change="checkDateBeforeToday()"/>
-
-        <span class="field-error" ng-show="createPeriodForm.startDate.$error.required && showErrorForCreate"
-              openlmis-message="missing.value"></span>
-      </div>
-    </div>
-
     <div class="report-selection">
       <input type="submit" class="btn btn-primary" ng-click="loadReport()"
              openlmis-message="button.generateReport"/>
     </div>
-
     <div style="clear: both"></div>
   </div>
-
+  <hr/>
+  <date-picker-container get-time-range="getTimeRange(dateRange)" picker-type="period"
+                         load-report="loadReport()"></date-picker-container>
   <hr/>
   <div ng-show="requisitions.length>0">
     <div class="report-subtitle">

@@ -27,6 +27,8 @@ public interface RequisitionReportsMapper {
 
     @Select({"SELECT req.id id, " +
             "fac.name facilityName, " +
+        "zone.name districtName," +
+        "parent_zone.name provinceName," +
             "req.emergency emergency, " +
             "pro.name programName, " +
             "us.username submittedUser, " +
@@ -38,6 +40,10 @@ public interface RequisitionReportsMapper {
             "  FROM requisitions req" +
             "  left join facilities fac" +
             "      on req.facilityid = fac.id" +
+        "  left join geographic_zones as zone " +
+        "      on fac.geographiczoneid = zone.id" +
+        "  left join geographic_zones as parent_zone " +
+        "      on zone.parentid = parent_zone.id" +
             "  left join programs pro" +
             "      on req.programid = pro.id" +
             "  left join users us" +
