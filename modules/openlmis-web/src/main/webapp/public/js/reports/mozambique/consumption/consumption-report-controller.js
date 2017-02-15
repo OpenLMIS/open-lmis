@@ -66,7 +66,7 @@ function ConsumptionReportController($scope, $controller, $filter, $http, $q, Cu
                 }, {
                     "bullet": "round",
                     "valueField": "cmm",
-                    "balloonText": "CMM: [[value]]"
+                    "balloonText": "C.M.M.: [[value]]"
                 }, {
                     "bullet": "round",
                     "valueField": "total_quantity",
