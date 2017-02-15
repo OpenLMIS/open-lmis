@@ -53,8 +53,8 @@ public interface RequisitionReportsMapper {
             "  left join processing_periods pp " +
             "      on req.periodid = pp.id" +
             "  where ",
-            "(req.modifiedDate >= #{startDate} "
-                    + "AND req.modifiedDate <= #{endDate})"})
+            "(pp.startDate >= #{startDate} "
+                    + "AND pp.endDate <= #{endDate})"})
     List<RequisitionDTO> getRequisitionList(@Param("startDate") Date startTime,
                                             @Param("endDate") Date endTime);
 
