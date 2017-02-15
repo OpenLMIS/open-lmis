@@ -30,7 +30,8 @@ function AdjustmentOccurrencesReportController($scope, $controller, $filter, $ht
   });
 
   $scope.loadReport = function () {
-    if ($scope.checkDateValidRange() && validateProduct() && validateAdjustmentType()) {
+    if ($scope.checkDateValidRange() && validateProduct() &&
+      $scope.validateProvince() && $scope.validateDistrict() && $scope.validateFacility() && validateAdjustmentType()) {
       $scope.locationIdToCode($scope.reportParams);
 
       var promises = requestAdjustmentDataForEachPeriod();

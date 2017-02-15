@@ -286,6 +286,27 @@ function BaseProductReportController($scope, $filter, ProductReportService, $cac
         }, $dialog);
     }
 
+    $scope.validateProvince = function() {
+        $scope.invalidProvince = !$scope.reportParams.provinceId;
+        return !$scope.invalidProvince;
+    };
+
+    $scope.validateDistrict = function() {
+        $scope.invalidDistrict = !$scope.reportParams.districtId;
+        return !$scope.invalidDistrict;
+    };
+
+    $scope.validateFacility = function() {
+        $scope.invalidFacility = !$scope.reportParams.facilityId;
+        return !$scope.invalidFacility;
+    };
+
+    $scope.validateSingleFacility = function() {
+        var facilityId = $scope.reportParams.facilityId;
+        $scope.invalidFacility = !facilityId || facilityId === ' ';
+        return !$scope.invalidFacility;
+    };
+
     $scope.splitPeriods = function (start, end) {
         var previousMonth = -1, thisMonth = 0, nextMonth = 1, periodStartDay = 21, periodEndDay = 20;
 

@@ -68,6 +68,9 @@ describe('Single Product Report Controller',function () {
         expect(scope.invalid).toBe(true);
         scope.reportParams.productCode = '01A01';
         scope.reportParams.endTime = '2017-01-04';
+        scope.reportParams.facilityId = 1;
+        scope.reportParams.districtId = 1;
+        scope.reportParams.provinceId = 1;
 
         spyOn(lotExpiryDateService, 'populateLotOnHandInformationForSoonestExpiryDate');
 

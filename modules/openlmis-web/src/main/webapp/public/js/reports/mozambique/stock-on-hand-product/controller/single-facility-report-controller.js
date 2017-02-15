@@ -88,7 +88,7 @@ function SingleFacilityReportController($scope, $filter, $controller, $http, Cub
   }
 
   function loadReportAction() {
-    if (validateFacility()) {
+    if ($scope.validateSingleFacility()) {
       var params = $scope.reportParams;
       $scope.locationIdToCode(params);
       var cutsParams = CubesGenerateCutParamsService.generateCutsParams("occurred", undefined, $filter('date')(params.endTime, "yyyy,MM,dd"),
@@ -116,12 +116,6 @@ function SingleFacilityReportController($scope, $filter, $controller, $http, Cub
   $scope.redirectToLotExpiryDateReport = function(drugCode) {
     $window.location.href = $scope.generateRedirectToExpiryDateReportURL(drugCode);
   };
-
-  function validateFacility() {
-    var facilityId = $scope.reportParams.facilityId;
-    $scope.invalid = !facilityId || facilityId === ' ';
-    return !$scope.invalid;
-  }
 
   $scope.partialPropertiesFilter = function(searchValue) {
     return function(entry) {

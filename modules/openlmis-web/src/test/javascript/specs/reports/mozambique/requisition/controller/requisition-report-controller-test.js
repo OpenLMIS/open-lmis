@@ -64,6 +64,9 @@ describe("requisition report controller", function () {
     it('should load facility and stock movements successfully', function () {
         scope.reportParams.startTime = '2017-01-01';
         scope.reportParams.endTime = '2017-02-01';
+        scope.reportParams.facilityId = 1;
+        scope.reportParams.districtId = 1;
+        scope.reportParams.provinceId = 1;
         scope.reportParams.selectedFacility = {"name": "Matalane"};
         scope.reportParams.selectedDistrict = {"name": "Marracuene"};
         scope.reportParams.selectedProvince = {"name": "Maputo"};

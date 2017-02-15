@@ -9,7 +9,8 @@ function ConsumptionReportController($scope, $controller, $filter, $http, $q, Cu
     $scope.consumptionInPeriods = undefined;
 
     $scope.loadReport = function () {
-        if ($scope.checkDateValidRange() && validateProduct()) {
+        if ($scope.checkDateValidRange() && validateProduct() &&
+            $scope.validateProvince() && $scope.validateDistrict() && $scope.validateFacility()) {
             $scope.locationIdToCode($scope.reportParams);
             var promises = requestConsumptionDataForEachPeriod();
             $q.all(promises).then(function (consumptionsInPeriods) {
@@ -54,7 +55,7 @@ function ConsumptionReportController($scope, $controller, $filter, $http, $q, Cu
     };
 
     function renderConsumptionChart(consumptionInPeriods) {
-        if (validateFacility()) {
+        if (validateGeographicZones()) {
             AmCharts.makeChart("consumption-report", {
                 "type": "serial",
                 "theme": "light",
@@ -157,7 +158,7 @@ function ConsumptionReportController($scope, $controller, $filter, $http, $q, Cu
         return !$scope.noProductSelected;
     }
 
-    function validateFacility() {
+    function validateGeographicZones() {
         return !!parseInt($scope.reportParams.facilityId, 10);
     }
 }

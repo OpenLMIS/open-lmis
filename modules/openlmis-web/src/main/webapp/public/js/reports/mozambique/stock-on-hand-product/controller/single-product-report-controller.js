@@ -61,7 +61,7 @@ function SingleProductReportController($scope, $filter, $controller, $http, Cube
   }
 
   $scope.loadReport = function () {
-    if (validateProduct()) {
+    if (validateProduct() && $scope.validateProvince() && $scope.validateDistrict()) {
       var params = $scope.reportParams;
       $scope.locationIdToCode(params);
       var selectedProduct = [{'drug.drug_code': $scope.reportParams.productCode}];

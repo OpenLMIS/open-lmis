@@ -37,7 +37,8 @@ function StockOutAllProductsReportController($scope, $filter, $controller, $http
 
     $scope.loadReport = loadReportAction;
     function loadReportAction() {
-        if ($scope.checkDateValidRange()) {
+        if ($scope.validateProvince() && $scope.validateDistrict() && $scope.validateFacility() &&
+          $scope.checkDateValidRange()) {
             var params = $scope.reportParams;
             $scope.locationIdToCode(params);
             generateReportTitle();
@@ -94,7 +95,7 @@ function StockOutAllProductsReportController($scope, $filter, $controller, $http
     }
 
     function formatReportWhenSelectAllFacility() {
-        if (!$scope.reportParams.facilityId) {
+        if (!$scope.reportParams.facilityId || $scope.reportParams.facilityId === " ") {
             $scope.reportData.map(function (data) {
                 data.totalDuration = "-";
             });

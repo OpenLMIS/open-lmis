@@ -211,7 +211,7 @@ describe("Stock Out All Products Report Controller", function () {
         scope.reportParams = {
             provinceId: "1",
             districtId: "5",
-            facilityId: "",
+            facilityId: " ",
             startTime: "2015-02-15",
             endTime: "2016-03-15"
         };

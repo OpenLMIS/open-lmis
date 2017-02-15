@@ -44,8 +44,10 @@ function RequisitionReportController($scope, $controller, RequisitionReportServi
   };
 
   $scope.loadReport = function () {
-    $scope.locationIdToCode($scope.reportParams);
-    $scope.loadRequisitions();
+    if ($scope.validateProvince() && $scope.validateDistrict() && $scope.validateFacility()) {
+      $scope.locationIdToCode($scope.reportParams);
+      $scope.loadRequisitions();
+    }
   };
 
   var setInventoryDateAndSubmittedStatus = function () {

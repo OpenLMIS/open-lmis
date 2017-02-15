@@ -53,10 +53,12 @@ describe("Single facility Report Controller", function () {
     }));
 
     it('should load all product report successfully', function () {
-        scope.reportParams = {facilityId: undefined};
+        scope.reportParams.facilityId = undefined;
+        scope.reportParams.districtId = 1;
+        scope.reportParams.provinceId = 1;
 
         scope.loadReport();
-        expect(scope.invalid).toBe(true);
+        expect(scope.invalidFacility).toBe(true);
         scope.reportParams.facilityId = 414;
         scope.reportParams.endTime = '2017-02-04';
 
