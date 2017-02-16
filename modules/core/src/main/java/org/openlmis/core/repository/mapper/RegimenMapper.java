@@ -59,7 +59,7 @@ public interface RegimenMapper {
 
 
   @Select({"SELECT * FROM regimens R INNER JOIN regimen_categories RC ON R.categoryId = RC.id ",
-          "WHERE R.categoryId=#{categoryId} AND R.name=#{name}"})
+          "WHERE R.categoryId=#{categoryId} AND R.name=#{name} AND R.active = TRUE"})
   @Results(value = {
           @Result(property = "category", column = "categoryId", javaType = Long.class,
                   one = @One(select = "org.openlmis.core.repository.mapper.RegimenCategoryMapper.getById"))})
