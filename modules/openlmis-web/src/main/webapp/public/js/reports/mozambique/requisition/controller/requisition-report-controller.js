@@ -32,7 +32,7 @@ function RequisitionReportController($scope, $controller, RequisitionReportServi
   $scope.loadRequisitions = function () {
     var requisitionQueryParameters = {
       startTime: $scope.reportParams.startTime + " 00:00:00",
-      endTime: $scope.reportParams.endTime + " 11:59:59"
+      endTime: $scope.reportParams.endTime + " 23:59:59"
     };
 
     RequisitionReportService.get(requisitionQueryParameters, function (data) {

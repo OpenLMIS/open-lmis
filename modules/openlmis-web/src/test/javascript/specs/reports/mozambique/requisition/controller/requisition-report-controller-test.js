@@ -70,7 +70,7 @@ describe("requisition report controller", function () {
         scope.reportParams.selectedFacility = {"name": "Matalane"};
         scope.reportParams.selectedDistrict = {"name": "Marracuene"};
         scope.reportParams.selectedProvince = {"name": "Maputo"};
-        httpBackend.expectGET('/reports/requisition-report.json?endTime=2017-02-01+11:59:59&startTime=2017-01-01+00:00:00').respond(200, requisitions);
+        httpBackend.expectGET('/reports/requisition-report.json?endTime=2017-02-01+23:59:59&startTime=2017-01-01+00:00:00').respond(200, requisitions);
 
         scope.loadReport();
         httpBackend.flush();
