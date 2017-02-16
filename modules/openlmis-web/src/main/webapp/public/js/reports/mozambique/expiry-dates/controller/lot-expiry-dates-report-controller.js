@@ -136,10 +136,10 @@ function LotExpiryDatesReportController($scope, $controller, $http, CubesGenerat
       reportTitle = expiryDatesReportParams.selectedProvince.name;
     }
     if (expiryDatesReportParams.selectedDistrict) {
-      reportTitle += ("," + expiryDatesReportParams.selectedDistrict.name);
+      reportTitle = expiryDatesReportParams.selectedDistrict.name;
     }
     if (expiryDatesReportParams.selectedFacility) {
-      reportTitle += reportTitle === "" ? expiryDatesReportParams.selectedFacility.name : ("," + expiryDatesReportParams.selectedFacility.name);
+      reportTitle = expiryDatesReportParams.selectedFacility.name;
     }
     $scope.reportParams.reportTitle = reportTitle || messageService.get("label.all");
   }

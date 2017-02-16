@@ -21,7 +21,15 @@ function RapidTestReportController($scope, $controller, CubesGenerateCutParamsSe
     var cutsParams = CubesGenerateCutParamsService.generateCutsParams('startdate',
       selectedStartTime, undefined, $scope.reportParams.selectedFacility, undefined, $scope.reportParams.selectedProvince, $scope.reportParams.selectedDistrict);
 
-    $scope.location = $scope.reportParams.selectedProvince.name;
+    if ($scope.reportParams.selectedProvince) {
+      $scope.location = $scope.reportParams.selectedProvince.name;
+    }
+    if ($scope.reportParams.selectedDistrict) {
+      $scope.location = $scope.reportParams.selectedDistrict.name;
+    }
+    if ($scope.reportParams.selectedFacility) {
+      $scope.location = $scope.reportParams.selectedFacility.name;
+    }
 
     $http.get(CubesGenerateUrlService.generateFactsUrl('vw_rapid_test', cutsParams)).then(function (result) {
       if (result.data) {
