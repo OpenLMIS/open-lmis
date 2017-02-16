@@ -39,20 +39,16 @@ public interface RnrLineItemMapper {
     "#{lineItem.packRoundingThreshold}, #{lineItem.fullSupply}, #{lineItem.newPatientCount}, #{lineItem.stockOutDays},",
     "#{previousNormalizedConsumptions}, #{lineItem.reportingDays}, #{lineItem.skipped} , #{lineItem.modifiedBy}, #{lineItem.createdBy})"})
   @Options(useGeneratedKeys = true, keyProperty = "lineItem.id")
-  public Integer insert(@Param("lineItem") RnrLineItem rnrLineItem, @Param("previousNormalizedConsumptions") String previousNormalizedConsumptions);
+  Integer insert(@Param("lineItem") RnrLineItem rnrLineItem, @Param("previousNormalizedConsumptions") String previousNormalizedConsumptions);
 
-  @Select("SELECT requisition_line_items.*, products.strength, products.primaryname, products.isKit ,product_categories.name " +
-    "FROM requisition_line_items " +
-    "INNER JOIN products ON requisition_line_items.productcode = products.code " +
-    "INNER JOIN program_products on  products.id = program_products.productid " +
-    "INNER JOIN product_categories ON program_products.productcategoryid = product_categories.id " +
-    "INNER JOIN programs ON program_products.programid = programs.id " +
-    "INNER JOIN requisitions ON requisition_line_items.rnrid = requisitions.id " +
-    "WHERE rnrId = #{rnrId} and program_products.active = TRUE " +
-    "and requisition_line_items.fullSupply = true " +
-    "and requisition_line_items.productcode = products.code " +
-    "and (programs.id = requisitions.programid OR programs.parentid = requisitions.programid) " +
-    "order by productDisplayOrder;")
+  @Select("SELECT DISTINCT ON (requisition_line_items.productdisplayorder, requisition_line_items.id) " +
+      "requisition_line_items.*, products.strength, products.primaryname, products.isKit,product_categories.name " +
+      "FROM requisition_line_items, products " +
+      "INNER JOIN program_products ON products.id = program_products.productid " +
+      "INNER JOIN product_categories ON program_products.productcategoryid = product_categories.id " +
+      "WHERE rnrId = #{rnrId} and requisition_line_items.fullSupply = true " +
+      "AND requisition_line_items.productcode = products.code " +
+      "ORDER BY requisition_line_items.productdisplayorder, requisition_line_items.id")
   @Results(value = {
     @Result(property = "id", column = "id"),
     @Result(property = "isKit", column = "isKit"),
@@ -63,7 +59,7 @@ public interface RnrLineItemMapper {
     @Result(property = "lossesAndAdjustments", javaType = List.class, column = "id",
       many = @Many(select = "org.openlmis.rnr.repository.mapper.LossesAndAdjustmentsMapper.getByRnrLineItem"))
   })
-  public List<RnrLineItem> getRnrLineItemsByRnrId(Long rnrId);
+  List<RnrLineItem> getRnrLineItemsByRnrId(Long rnrId);
 
   @Update({"UPDATE requisition_line_items",
     "SET quantityReceived = #{quantityReceived},",
