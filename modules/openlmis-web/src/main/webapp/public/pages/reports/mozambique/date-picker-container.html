@@ -12,6 +12,8 @@
                         </li>
                     </ul>
                 </div>
+                <div ng-show="showIncompleteWarning" id="stock-out-incomplete-warning-period"
+                     openlmis-message="label.stock.out.incomplete.warning.period"></div>
             </div>
 
             <div ng-switch-when="period-no-current">
@@ -37,11 +39,10 @@
                         </li>
                     </ul>
                 </div>
+                <div ng-show="showIncompleteWarning" id="stock-out-incomplete-warning-time"
+                     openlmis-message="label.stock.out.incomplete.warning.time"></div>
             </div>
         </div>
-
-        <div ng-show="showIncompleteWarning" id="stock-out-incomplete-warning"
-             openlmis-message="label.stock.out.incomplete.warning"></div>
     </div>
 
     <div class="date-picker">
