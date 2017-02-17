@@ -9,7 +9,7 @@ function RapidTestReportController($scope, $controller, CubesGenerateCutParamsSe
   $scope.loadReport = loadReportAction;
 
   function loadReportAction() {
-    if ($scope.checkDateValidRange()) {
+    if ($scope.validateProvince() && $scope.validateDistrict() && $scope.validateFacility() && $scope.checkDateValidRange()) {
       var params = $scope.reportParams;
       $scope.locationIdToCode(params);
       getReportDataFromCubes();
