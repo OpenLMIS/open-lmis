@@ -112,7 +112,7 @@ function DatePickerContainerController($scope, $filter, DateFormatService, messa
             $scope.$apply(function () {
                 $scope.dateRange.startTime = selectedMonth === null ?
                     DateFormatService.formatDateWithStartDayOfPeriod(currentDate) :
-                    DateFormatService.formatDateWithStartDayOfPeriod(new Date(selectedYear, selectedMonth));
+                    DateFormatService.formatDateWithStartDayOfPeriod(new Date(selectedYear, selectedMonth, 21));
             });
         }
     });
@@ -128,7 +128,7 @@ function DatePickerContainerController($scope, $filter, DateFormatService, messa
             $scope.$apply(function () {
                 $scope.dateRange.startTime = selectedMonth === null ?
                     DateFormatService.formatDateWithStartDayOfPeriod(currentDate) :
-                    DateFormatService.formatDateWithStartDayOfPeriod(new Date(selectedYear, selectedMonth));
+                    DateFormatService.formatDateWithStartDayOfPeriod(new Date(selectedYear, selectedMonth, 21));
             });
         }
     });
@@ -155,7 +155,6 @@ function DatePickerContainerController($scope, $filter, DateFormatService, messa
     $scope.datePickerStartOptions = angular.extend(baseTimePickerOptions(), {
         maxDate: currentDate,
         onClose: function () {
-            notHideCalendar();
             $scope.timeTagSelected = "";
             var selectedYear = $("#ui-datepicker-div .ui-datepicker-year :selected").val();
             var selectedMonth = $("#ui-datepicker-div .ui-datepicker-month :selected").val();
@@ -168,7 +167,6 @@ function DatePickerContainerController($scope, $filter, DateFormatService, messa
     $scope.datePickerEndOptions = angular.extend(baseTimePickerOptions(), {
         maxDate: DateFormatService.formatDateWithLastDayOfMonth(currentDate),
         onClose: function () {
-            notHideCalendar();
             $scope.timeTagSelected = "";
             var selectedYear = $("#ui-datepicker-div .ui-datepicker-year :selected").val();
             var selectedMonth = $("#ui-datepicker-div .ui-datepicker-month :selected").val();
