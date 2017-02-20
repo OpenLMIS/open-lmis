@@ -17,7 +17,7 @@ function BaseProductReportController($scope, $filter, ProductReportService, $cac
         $cacheFactory.get('keepHistoryInStockOnHandPage').put('saveDataOfStockOnHand', "no");
     }
     if ($cacheFactory.get('BaseProductReportController') !== undefined && $location.path().indexOf("stock-out-all-products") < 0) {
-        $cacheFactory.get('BaseProductReportController').put('saveDataOfStockOutReport', "no");
+        $cacheFactory.get('BaseProductReportController').put('shouldLoadStockOutReportAllProductsFromCache', "no");
     }
     $scope.todayDateString = $filter('date')(new Date(), "yyyy-MM-dd");
 

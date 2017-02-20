@@ -53,7 +53,7 @@ function StockOutSingleProductReportController($scope, $filter, $q, $controller,
             getStockOutDataFromCubes();
         }
         $scope.cache.put('singleProductData', $scope.reportParams);
-        $scope.cache.put('saveDataOfStockOutReportForSingleProduct', "no");
+        $scope.cache.put('shouldLoadStockOutReportSingleProductFromCache', "no");
     }
 
     function getProductByCode(code) {
@@ -133,13 +133,13 @@ function StockOutSingleProductReportController($scope, $filter, $q, $controller,
         });
     };
 
-    if($cacheFactory.get('keepHistoryInStockOutReportPage') === undefined) {
-        $scope.cache = $cacheFactory('keepHistoryInStockOutReportPage',{capacity: 10});
+    if($cacheFactory.get('stockOutReportParams') === undefined) {
+        $scope.cache = $cacheFactory('stockOutReportParams',{capacity: 10});
     } else {
-        $scope.cache=$cacheFactory.get('keepHistoryInStockOutReportPage');
-        $scope.cache.put('saveDataOfStockOutReport', "yes");
-        if ($scope.cache.get('saveDataOfStockOutReportForSingleProduct') === "yes") {
-            $scope.cache.put('saveDataOfStockOutReport', "no");
+        $scope.cache=$cacheFactory.get('stockOutReportParams');
+        $scope.cache.put('shouldLoadStockOutReportAllProductsFromCache', "yes");
+        if ($scope.cache.get('shouldLoadStockOutReportSingleProductFromCache') === "yes") {
+            $scope.cache.put('shouldLoadStockOutReportAllProductsFromCache', "no");
             $timeout(function waitSelectIsShow() {
                 if ($('.select2-container .select2-choice .select2-chosen').html() !== undefined) {
                     $scope.reportParams.productCode = $scope.cache.get('singleProductData').productCode;

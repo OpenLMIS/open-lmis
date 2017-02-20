@@ -4,8 +4,8 @@ function StockMovementReportController($scope, $routeParams, Facility, $http, Cu
         if ($cacheFactory.get('keepHistoryInStockOnHandPage') !== undefined) {
             $cacheFactory.get('keepHistoryInStockOnHandPage').put('saveDataOfStockOnHand', "yes");
         }
-        if ($cacheFactory.get('keepHistoryInStockOutReportPage') !== undefined) {
-            $cacheFactory.get('keepHistoryInStockOutReportPage').put('saveDataOfStockOutReportForSingleProduct', "yes");
+        if ($cacheFactory.get('stockOutReportParams') !== undefined) {
+            $cacheFactory.get('stockOutReportParams').put('shouldLoadStockOutReportSingleProductFromCache', "yes");
         }
 
         loadStockMovements();

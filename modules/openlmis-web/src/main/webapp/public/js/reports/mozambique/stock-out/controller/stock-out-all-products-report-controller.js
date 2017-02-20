@@ -1,12 +1,12 @@
 function StockOutAllProductsReportController($scope, $filter, $controller, $http, CubesGenerateUrlService, messageService, StockOutReportCalculationService, CubesGenerateCutParamsService, $cacheFactory, $timeout, ReportExportExcelService) {
     $controller('BaseProductReportController', {$scope: $scope});
 
-    if ($cacheFactory.get('keepHistoryInStockOutReportPage') === undefined) {
-        $scope.cache = $cacheFactory('keepHistoryInStockOutReportPage', {capacity: 10});
+    if ($cacheFactory.get('stockOutReportParams') === undefined) {
+        $scope.cache = $cacheFactory('stockOutReportParams', {capacity: 10});
     }
     else {
-        $scope.cache = $cacheFactory.get('keepHistoryInStockOutReportPage');
-        if ($scope.cache.get('saveDataOfStockOutReport') === "yes") {
+        $scope.cache = $cacheFactory.get('stockOutReportParams');
+        if ($scope.cache.get('shouldLoadStockOutReportAllProductsFromCache') === "yes") {
             $timeout(function waitSelectIsShow() {
                 if ($('.facility-choose .select2-choice .select2-chosen').html() !== undefined) {
                     $scope.$broadcast("update-date-pickers", {
@@ -54,7 +54,7 @@ function StockOutAllProductsReportController($scope, $filter, $controller, $http
 
     function getStockOutDataFromCubes() {
         var params = putHistoryDataToParams();
-        $scope.cache.put('saveDataOfStockOutReport', "no");
+        $scope.cache.put('shouldLoadStockOutReportAllProductsFromCache', "no");
         var cutsParams = CubesGenerateCutParamsService.generateCutsParams("overlapped_date", params.startTime, params.endTime,
             params.selectedFacility, undefined, params.selectedProvince, params.selectedDistrict);
 
@@ -127,10 +127,10 @@ function StockOutAllProductsReportController($scope, $filter, $controller, $http
 
     function putHistoryDataToParams() {
         var stockReportParams = getStockReportRequestParam();
-        if ($cacheFactory.get('keepHistoryInStockOutReportPage') !== undefined) {
-            $scope.cache = $cacheFactory.get('keepHistoryInStockOutReportPage');
+        if ($cacheFactory.get('stockOutReportParams') !== undefined) {
+            $scope.cache = $cacheFactory.get('stockOutReportParams');
             var stockReportParamsBuff = $scope.cache.get('dataOfStockOutReport');
-            if ($scope.cache.get('saveDataOfStockOutReport') === "yes") {
+            if ($scope.cache.get('shouldLoadStockOutReportAllProductsFromCache') === "yes") {
                 stockReportParams = stockReportParamsBuff;
             } else if (stockReportParamsBuff !== undefined) {
                 stockReportParams = getStockReportRequestParam();
