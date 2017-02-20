@@ -20,7 +20,7 @@ function LotExpiryDatesReportController($scope, $controller, $http, CubesGenerat
   });
 
   $scope.loadReport = function () {
-    if ($scope.validateProvince() && $scope.validateDistrict() && $scope.validateFacility()) {
+    if ($scope.validateFacility()) {
       generateReportTitle();
       queryLotExpiryDatesReportDataFromCubes();
     }
