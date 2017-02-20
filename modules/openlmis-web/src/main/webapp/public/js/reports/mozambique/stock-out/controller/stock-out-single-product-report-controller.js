@@ -40,7 +40,10 @@ function StockOutSingleProductReportController($scope, $filter, $q, $controller,
     $scope.loadProducts = function () {
         ProductReportService.loadProductsWithStockCards().get({}, function (data) {
             $scope.products = data.productList;
-            $scope.reportParams.productCode = $routeParams.code;
+            if ($routeParams.code !== undefined) {
+                $scope.reportParams.productCode = $routeParams.code;
+                $scope.cache.put('shouldLoadStockOutReportAllProductsFromCache', "yes");
+            }
         });
     };
 
@@ -137,9 +140,7 @@ function StockOutSingleProductReportController($scope, $filter, $q, $controller,
         $scope.cache = $cacheFactory('stockOutReportParams',{capacity: 10});
     } else {
         $scope.cache=$cacheFactory.get('stockOutReportParams');
-        $scope.cache.put('shouldLoadStockOutReportAllProductsFromCache', "yes");
         if ($scope.cache.get('shouldLoadStockOutReportSingleProductFromCache') === "yes") {
-            $scope.cache.put('shouldLoadStockOutReportAllProductsFromCache', "no");
             $timeout(function waitSelectIsShow() {
                 if ($('.select2-container .select2-choice .select2-chosen').html() !== undefined) {
                     $scope.reportParams.productCode = $scope.cache.get('singleProductData').productCode;
