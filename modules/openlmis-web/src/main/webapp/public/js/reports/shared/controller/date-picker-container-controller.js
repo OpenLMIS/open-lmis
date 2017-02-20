@@ -155,7 +155,8 @@ function DatePickerContainerController($scope, $filter, DateFormatService, messa
     $scope.datePickerStartOptions = angular.extend(baseTimePickerOptions(), {
         maxDate: currentDate,
         onClose: function () {
-            $scope.timeTagSelected = "";
+          notHideCalendar();
+          $scope.timeTagSelected = "";
             var selectedYear = $("#ui-datepicker-div .ui-datepicker-year :selected").val();
             var selectedMonth = $("#ui-datepicker-div .ui-datepicker-month :selected").val();
             $scope.$apply(function () {
@@ -167,7 +168,8 @@ function DatePickerContainerController($scope, $filter, DateFormatService, messa
     $scope.datePickerEndOptions = angular.extend(baseTimePickerOptions(), {
         maxDate: DateFormatService.formatDateWithLastDayOfMonth(currentDate),
         onClose: function () {
-            $scope.timeTagSelected = "";
+          notHideCalendar();
+          $scope.timeTagSelected = "";
             var selectedYear = $("#ui-datepicker-div .ui-datepicker-year :selected").val();
             var selectedMonth = $("#ui-datepicker-div .ui-datepicker-month :selected").val();
             $scope.$apply(function () {
