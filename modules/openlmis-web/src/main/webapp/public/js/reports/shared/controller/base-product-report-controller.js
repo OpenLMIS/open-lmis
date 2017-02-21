@@ -27,7 +27,16 @@ function BaseProductReportController($scope, $filter, ProductReportService, $cac
         $scope.reportParams.endTime = $scope.todayDateString;
     });
 
-     function loadHomeFacility() {
+    $scope.endTimeOptions = {
+        dateFormat: 'dd/mm/yy',
+        beforeShow: function () {
+            $("#ui-datepicker-div").removeClass("hide-calendar");
+            $("#ui-datepicker-div").removeClass('MonthDatePicker');
+            $("#ui-datepicker-div").removeClass('HideTodayButton');
+        }
+    };
+
+    function loadHomeFacility() {
         HomeFacilityService.get({}, function (data) {
             setHomeFacility(data);
         });
@@ -116,7 +125,7 @@ function BaseProductReportController($scope, $filter, ProductReportService, $cac
 
     $scope.getParent = function (geoZoneId) {
         return geoZoneId && _.find($scope.fullGeoZoneList, function (zone) {
-                if($scope.getGeoZone(geoZoneId)) {
+                if ($scope.getGeoZone(geoZoneId)) {
                     return $scope.getGeoZone(geoZoneId).parentId == zone.id;
                 }
             });
@@ -168,7 +177,7 @@ function BaseProductReportController($scope, $filter, ProductReportService, $cac
             var estimatedDrugUseUpDate = new Date(selectedDate.getFullYear(), selectedDate.getMonth() + Math.floor(entry.estimated_months) + 1, 0);
             var expiryDate = new Date(entry.expiry_date);
             var expiryDateWithLastDate = new Date(expiryDate.getFullYear(), expiryDate.getMonth() + 1, 0);
-            if (entry.expiry_date!== null && expiryDateWithLastDate <= estimatedDrugUseUpDate) {
+            if (entry.expiry_date !== null && expiryDateWithLastDate <= estimatedDrugUseUpDate) {
                 return true;
             }
         }
@@ -195,7 +204,7 @@ function BaseProductReportController($scope, $filter, ProductReportService, $cac
         }
     };
 
-    $scope.getEntryStockStatus = function(entry) {
+    $scope.getEntryStockStatus = function (entry) {
         if ($scope.cmmStatus(entry) === CMM_STATUS.lowStock) {
             return messageService.get('stock.cmm.low.stock');
         }
@@ -286,22 +295,22 @@ function BaseProductReportController($scope, $filter, ProductReportService, $cac
         }, $dialog);
     }
 
-    $scope.validateProvince = function() {
+    $scope.validateProvince = function () {
         $scope.invalidProvince = !$scope.reportParams.provinceId;
         return !$scope.invalidProvince;
     };
 
-    $scope.validateDistrict = function() {
+    $scope.validateDistrict = function () {
         $scope.invalidDistrict = !$scope.reportParams.districtId;
         return !$scope.invalidDistrict;
     };
 
-    $scope.validateFacility = function() {
+    $scope.validateFacility = function () {
         $scope.invalidFacility = !$scope.reportParams.facilityId;
         return !$scope.invalidFacility;
     };
 
-    $scope.validateSingleFacility = function() {
+    $scope.validateSingleFacility = function () {
         var facilityId = $scope.reportParams.facilityId;
         $scope.invalidFacility = !facilityId || facilityId === ' ';
         return !$scope.invalidFacility;
