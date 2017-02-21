@@ -28,7 +28,25 @@ function BaseProductReportController($scope, $filter, ProductReportService, $cac
     });
 
     $scope.endTimeOptions = {
-        dateFormat: 'dd/mm/yy',
+        prevText: "<<",
+        nextText: ">>",
+        monthNames: [ "Janeiro","Fevereiro","Março","Abril","Maio","Junho",
+            "Julho","Agosto","Setembro","Outubro","Novembro","Dezembro" ],
+        monthNamesShort: [ "Jan","Fev","Mar","Abr","Mai","Jun",
+            "Jul","Ago","Set","Out","Nov","Dez" ],
+        dayNames: [
+            "Domingo",
+            "Segunda-feira",
+            "Terça-feira",
+            "Quarta-feira",
+            "Quinta-feira",
+            "Sexta-feira",
+            "Sábado"
+        ],
+        dayNamesShort: [ "Dom","Seg","Ter","Qua","Qui","Sex","Sáb" ],
+        dayNamesMin: [ "Dom","Seg","Ter","Qua","Qui","Sex","Sáb" ],
+        weekHeader: "Sem",
+        dateFormat: "dd/mm/yy",
         beforeShow: function () {
             $("#ui-datepicker-div").removeClass("hide-calendar");
             $("#ui-datepicker-div").removeClass('MonthDatePicker');
