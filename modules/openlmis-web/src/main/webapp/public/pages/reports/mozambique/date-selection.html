@@ -1,0 +1,12 @@
+<div class="report-selection">
+  <label class="labels" openlmis-message="label.date"></label>
+
+  <div class="form-field">
+    <input name="endTime" id="endTime" type="text"
+           ui-date="{ dateFormat: 'dd/mm/yy' }"
+           ui-date-format
+           ng-model="reportParams.endTime"
+           ng-required="true"
+           ng-change="checkDateBeforeToday()"/>
+  </div>
+</div>

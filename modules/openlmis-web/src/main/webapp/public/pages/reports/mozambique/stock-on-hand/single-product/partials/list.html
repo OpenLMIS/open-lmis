@@ -21,23 +21,7 @@
 
         <div ng-include="'/public/pages/reports/mozambique/district-selection.html'"></div>
 
-        <div class="form-cell report-selection">
-            <label>
-                <span openlmis-message="label.date"></span>
-            </label>
-
-            <div class="form-field">
-                <input name="endTime" id="endTime" type="text"
-                       ui-date="{ dateFormat: 'dd/mm/yy' }"
-                       ui-date-format
-                       ng-model="reportParams.endTime"
-                       ng-required="true"
-                       ng-change="checkDateBeforeToday()"/>
-
-              <span class="field-error" ng-show="createPeriodForm.startDate.$error.required && showErrorForCreate"
-                    openlmis-message="missing.value"></span>
-            </div>
-        </div>
+        <div ng-include="'/public/pages/reports/mozambique/date-selection.html'"></div>
 
         <div class="report-selection">
             <input type="submit" class="btn btn-primary" ng-click="loadReport()"
