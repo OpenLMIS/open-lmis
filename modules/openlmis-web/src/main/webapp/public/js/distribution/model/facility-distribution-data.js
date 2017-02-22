@@ -19,7 +19,7 @@ function FacilityDistribution(facilityDistribution) {
   this.facilityVisit = new FacilityVisit(facilityDistribution.facilityVisit);
 
   this.status = facilityDistribution.status;
-  this.typeCode = facilityDistribution.facilityTypeCode.toLowerCase();
+  this.typeCode = facilityDistribution.facilityTypeCode ? facilityDistribution.facilityTypeCode.toLowerCase() : "";
   var WRH = "wrh";
   var WAREHOUSE = "warehouse";
 
