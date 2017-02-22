@@ -29,13 +29,19 @@ import static org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion.NON_EMPT
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class OpenedVialLineItemDTO extends BaseModel {
 
+  private Long facilityVisitId;
+  private String productVialName;
   private Reading openedVial;
+  private Integer packSize;
 
   public OpenedVialLineItem transform() {
+    Integer openedVials = Reading.safeRead(openedVial).parsePositiveInt();
+
     OpenedVialLineItem lineItem = new OpenedVialLineItem();
     lineItem.setId(this.id);
     lineItem.setModifiedBy(this.modifiedBy);
-    lineItem.setOpenedVials(openedVial.parsePositiveInt());
+    lineItem.setOpenedVials(openedVials);
+
     return lineItem;
   }
 }

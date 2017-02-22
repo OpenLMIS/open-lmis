@@ -10,8 +10,13 @@
 
 package org.openlmis.distribution.repository;
 
+import org.openlmis.core.domain.DeliveryZone;
+import org.openlmis.core.domain.ProcessingPeriod;
+import org.openlmis.core.domain.Program;
 import org.openlmis.distribution.domain.Distribution;
+import org.openlmis.distribution.domain.DistributionEdit;
 import org.openlmis.distribution.domain.DistributionStatus;
+import org.openlmis.distribution.domain.DistributionsEditHistory;
 import org.openlmis.distribution.repository.mapper.DistributionMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
@@ -28,7 +33,6 @@ public class DistributionRepository {
   @Autowired
   DistributionMapper mapper;
 
-
   public Distribution create(Distribution distribution) {
     distribution.setStatus(DistributionStatus.INITIATED);
     mapper.insert(distribution);
@@ -41,8 +45,15 @@ public class DistributionRepository {
 
   public void updateDistributionStatus(Long distributionId, DistributionStatus status, Long modifiedBy) {
     mapper.updateDistributionStatus(distributionId, status, modifiedBy);
+
+    if (status == DistributionStatus.SYNCED) {
+      mapper.updateSyncDate(distributionId);
+    }
   }
 
+  public void updateLastViewed(Long distributionId) {
+    mapper.updateLastViewed(distributionId);
+  }
 
   public List<Long> getSyncedPeriodsForDeliveryZoneAndProgram(Long zoneId, Long programId) {
     return mapper.getSyncedPeriodsForDeliveryZoneAndProgram(zoneId, programId);
@@ -50,5 +61,57 @@ public class DistributionRepository {
 
   public Distribution getBy(Long distributionId) {
     return mapper.getBy(distributionId);
+  }
+
+  public Distribution getFullSyncedDistribution(Distribution distribution) {
+    return mapper.getFullSyncedDistribution(distribution);
+  }
+
+  public List<Distribution> getFullSyncedDistributions() {
+    return mapper.getFullSyncedDistributions();
+  }
+
+  public List<Distribution> getFullSyncedDistributions(Program program, DeliveryZone deliveryZone, ProcessingPeriod period) {
+    if (null != deliveryZone && null != period) {
+      return mapper.getFullSyncedDistributionsForProgramAndDeliveryZoneAndPeriod(program.getId(), deliveryZone.getId(), period.getId());
+    }
+
+    if (null != deliveryZone) {
+      return mapper.getFullSyncedDistributionsForProgramAndDeliveryZone(program.getId(), deliveryZone.getId());
+    }
+
+    if (null != period) {
+      return mapper.getFullSyncedDistributionsForProgramAndPeriod(program.getId(), period.getId());
+    }
+
+    return mapper.getFullSyncedDistributionsForProgram(program.getId());
+  }
+
+  public void insertEditInProgress(Long userId, Long distributionId) {
+    DistributionEdit edit = mapper.getEditInProgressForUser(distributionId, userId);
+
+    if (null == edit) {
+      mapper.insertEditInProgress(userId, distributionId);
+    }
+  }
+
+  public List<DistributionEdit> getEditInProgress(Long distributionId, Long userId, Long periodInSeconds) {
+    return mapper.getEditInProgress(distributionId, userId, periodInSeconds);
+  }
+
+  public void deleteDistributionEdit(Long distributionId, Long userId) {
+    mapper.deleteDistributionEdit(distributionId, userId);
+  }
+
+  public List<DistributionsEditHistory> getHistory(Long distributionId) {
+    return mapper.getHistory(distributionId);
+  }
+
+  public DistributionsEditHistory getLastHistory(Long distributionId) {
+    return mapper.getLastHistory(distributionId);
+  }
+
+  public void insertHistory(DistributionsEditHistory history) {
+    mapper.insertHistory(history);
   }
 }

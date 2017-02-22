@@ -10,6 +10,7 @@
 
 function VisitInfoController($scope, distributionService, $routeParams) {
   $scope.distribution = distributionService.distribution;
+  $scope.distributionReview = distributionService.distributionReview;
   $scope.selectedFacility = $routeParams.facility;
 
   $scope.convertToDateObject = function (dateText) {
@@ -39,4 +40,70 @@ function VisitInfoController($scope, distributionService, $routeParams) {
 
     return [true, ""];
   };
+
+  $scope.clearMotorbikeProblems = function () {
+    var visit = $scope.distribution.facilityDistributions[$scope.selectedFacility].facilityVisit;
+
+    if (!visit.motorbikeProblems) {
+      visit.motorbikeProblems = { notRecorded: false };
+    }
+
+    visit.motorbikeProblems.notRecorded = false;
+    $.each(['lackOfFundingForFuel','repairsSchedulingProblem','lackOfFundingForRepairs','missingParts','other'], function (i, elem) {
+      visit.motorbikeProblems[elem] = setApplicableField(visit.motorbikeProblems[elem]);
+    });
+  };
+
+  $scope.setApplicableVisitInfo = function () {
+    var visit = $scope.distribution.facilityDistributions[$scope.selectedFacility].facilityVisit;
+
+    if (isUndefined(visit.visited)) {
+        return;
+    }
+
+    $scope.clearMotorbikeProblems();
+    if (visit.visited.value) {
+      if (typeof visit.priorObservations === 'string') {
+        visit.priorObservations = {
+          type: "reading",
+          value: visit.priorObservations
+        };
+      }
+      visit.reasonForNotVisiting = setApplicableField(visit.reasonForNotVisiting);
+      visit.otherReasonDescription = setApplicableField(visit.otherReasonDescription);
+      return;
+    }
+
+    visit.observations = setApplicableField(visit.observations);
+    if (!visit.confirmedBy) {
+      visit.confirmedBy = {};
+    }
+    visit.confirmedBy.name = setApplicableField(visit.confirmedBy.name);
+    visit.confirmedBy.title = setApplicableField(visit.confirmedBy.title);
+    if (!visit.verifiedBy) {
+      visit.verifiedBy = {};
+    }
+    visit.verifiedBy.name = setApplicableField(visit.verifiedBy.name);
+    visit.verifiedBy.title = setApplicableField(visit.verifiedBy.title);
+    visit.vehicleId = setApplicableField(visit.vehicleId);
+    visit.visitDate = setApplicableField(visit.visitDate);
+    visit.numberOfOutreachVisitsPlanned = setApplicableField(visit.numberOfOutreachVisitsPlanned);
+    visit.numberOfOutreachVisitsCompleted = setApplicableField(visit.numberOfOutreachVisitsCompleted);
+    visit.numberOfMotorbikesAtHU = setApplicableField(visit.numberOfMotorbikesAtHU);
+    visit.numberOfFunctioningMotorbikes = setApplicableField(visit.numberOfFunctioningMotorbikes);
+    visit.numberOfMotorizedVehiclesWithProblems = setApplicableField(visit.numberOfMotorizedVehiclesWithProblems);
+    visit.numberOfDaysWithLimitedTransport = setApplicableField(visit.numberOfDaysWithLimitedTransport);
+  };
+
+  function setApplicableField(field) {
+    if (isUndefined(field)) {
+        return {type: 'reading'};
+    }
+
+    if (isUndefined(field.original)) {
+        return {type: 'reading'};
+    }
+
+    return { original: field.original, type: 'reading' };
+  }
 }

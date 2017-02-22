@@ -12,14 +12,22 @@
 
 package org.openlmis.distribution.service;
 
+import org.openlmis.core.domain.DeliveryZone;
+import org.openlmis.core.domain.ProcessingPeriod;
+import org.openlmis.core.domain.Program;
+import org.openlmis.core.service.ProcessingScheduleService;
 import org.openlmis.distribution.domain.Distribution;
+import org.openlmis.distribution.domain.DistributionEdit;
 import org.openlmis.distribution.domain.DistributionStatus;
+import org.openlmis.distribution.domain.DistributionsEditHistory;
 import org.openlmis.distribution.domain.FacilityDistribution;
+import org.openlmis.distribution.dto.DistributionDTO;
 import org.openlmis.distribution.repository.DistributionRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -38,6 +46,9 @@ public class DistributionService {
 
   @Autowired
   FacilityVisitService facilityVisitService;
+
+  @Autowired
+  ProcessingScheduleService processingScheduleService;
 
   @Autowired
   DistributionRepository repository;
@@ -60,6 +71,24 @@ public class DistributionService {
     return repository.get(distribution);
   }
 
+  public DistributionDTO getDistribution(Distribution arg, Long userId) {
+    Distribution distribution = getFullSyncedDistribution(arg);
+
+    if (distribution != null) {
+      if (userId != null) {
+        insertEditInProgress(userId, distribution.getId());
+      }
+
+      Map<Long, FacilityDistribution> facilityDistributionMap = facilityDistributionService.getData(distribution);
+
+      distribution.setFacilityDistributions(facilityDistributionMap);
+
+      return distribution.transform();
+    }
+
+    return null;
+  }
+
   public DistributionStatus updateDistributionStatus(Long distributionId, Long modifiedBy) {
     DistributionStatus distributionStatus = INITIATED;
     if (facilityVisitService.getUnsyncedFacilityCountForDistribution(distributionId) == 0) {
@@ -69,11 +98,82 @@ public class DistributionService {
     return distributionStatus;
   }
 
+  public void updateLastViewed(Long distributionId) {
+    repository.updateLastViewed(distributionId);
+  }
+
   public List<Long> getSyncedPeriodsForDeliveryZoneAndProgram(Long zoneId, Long programId) {
     return repository.getSyncedPeriodsForDeliveryZoneAndProgram(zoneId, programId);
   }
 
   public Distribution getBy(Long distributionId) {
     return repository.getBy(distributionId);
+  }
+
+  public Distribution getFullSyncedDistribution(Distribution distribution) {
+    return repository.getFullSyncedDistribution(distribution);
+  }
+
+  public List<Distribution> getFullSyncedDistributions() {
+    return repository.getFullSyncedDistributions();
+  }
+
+  public List<Distribution> getFullSyncedDistributions(Program program, DeliveryZone deliveryZone, ProcessingPeriod period) {
+    return repository.getFullSyncedDistributions(program, deliveryZone, period);
+  }
+
+  public void insertEditInProgress(Long userId, Long distributionId) {
+    repository.insertEditInProgress(userId, distributionId);
+  }
+
+  public List<DistributionEdit> getEditInProgress(Long distributionId, Long userId, Long periodInSeconds) {
+    return repository.getEditInProgress(distributionId, userId, periodInSeconds);
+  }
+
+  public void deleteDistributionEdit(Long distributionId, Long userId) {
+    repository.deleteDistributionEdit(distributionId, userId);
+  }
+
+  public List<DistributionsEditHistory> getHistory(Long distributionId) {
+    return repository.getHistory(distributionId);
+  }
+
+  public DistributionsEditHistory getLastHistory(Long distributionId) {
+    return repository.getLastHistory(distributionId);
+  }
+
+  public void insertHistory(DistributionsEditHistory history) {
+    repository.insertHistory(history);
+  }
+
+  public DistributionDTO getPreviousDistribution(Distribution currentDistribution) {
+    List<DistributionDTO> distributionList = getNPreviousDistributions(currentDistribution, 1);
+
+    if (distributionList != null && !distributionList.isEmpty()) {
+      return distributionList.get(0);
+    }
+
+    return null;
+  }
+
+  public List<DistributionDTO> getNPreviousDistributions(Distribution currentDistribution, Integer n) {
+    List<ProcessingPeriod> previousPeriods = processingScheduleService.getNPreviousPeriodsInDescOrder(currentDistribution.getPeriod(), n);
+    List<DistributionDTO> previousDistributions = new ArrayList<>();
+    Distribution distributionFilter = new Distribution();
+    distributionFilter.setDeliveryZone(currentDistribution.getDeliveryZone());
+    distributionFilter.setProgram(currentDistribution.getProgram());
+
+    if (previousPeriods != null && !previousPeriods.isEmpty()) {
+      for (int i = 0; i < previousPeriods.size(); i++) {
+        distributionFilter.setPeriod(previousPeriods.get(i));
+        DistributionDTO pastDistribution = getDistribution(distributionFilter, null);
+
+        if (pastDistribution != null) {
+          previousDistributions.add(pastDistribution);
+        }
+      }
+    }
+
+    return previousDistributions;
   }
 }

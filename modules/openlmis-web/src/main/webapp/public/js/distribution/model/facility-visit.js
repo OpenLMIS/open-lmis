@@ -12,20 +12,65 @@ function FacilityVisit(facilityVisitJson) {
   $.extend(true, this, facilityVisitJson);
   var mandatoryList = ['verifiedBy', 'confirmedBy', 'visitDate'];
 
-  FacilityVisit.prototype.computeStatus = function () {
-    if (isUndefined(this.visited)) {
+  function isEmpty(field) {
+    return !field || (isUndefined(field.value) && !field.notRecorded);
+  }
+
+  function isEmptyOrFalse(field) {
+    return isEmpty(field) || field.value === false;
+  }
+
+  function isBlank(field) {
+    return isEmpty(field) || (field.value && field.value.length === 0);
+  }
+
+  FacilityVisit.prototype.computeStatus = function (visited, review, ignoreSyncStatus) {
+    if (review && !ignoreSyncStatus) {
+      return DistributionStatus.SYNCED;
+    }
+
+    if (isEmpty(this.visited)) {
       return DistributionStatus.EMPTY;
     }
 
-    if (this.visited) {
+    if (this.visited && this.visited.value) {
+      if (isEmpty(this.numberOfOutreachVisitsPlanned) || isEmpty(this.numberOfOutreachVisitsCompleted)) {
+        return DistributionStatus.INCOMPLETE;
+      }
+
+      if (isEmpty(this.numberOfMotorbikesAtHU) || isEmpty(this.numberOfFunctioningMotorbikes) ||
+        isEmpty(this.numberOfMotorizedVehiclesWithProblems) || isEmpty(this.numberOfDaysWithLimitedTransport)) {
+          return DistributionStatus.INCOMPLETE;
+      }
+
+      if (isUndefined(this.motorbikeProblems)) {
+        return DistributionStatus.INCOMPLETE;
+      }
+
+      if (!this.motorbikeProblems.notRecorded) {
+        // if no problem was selected
+        if (isEmptyOrFalse(this.motorbikeProblems.lackOfFundingForFuel) &&
+          isEmptyOrFalse(this.motorbikeProblems.repairsSchedulingProblem) &&
+          isEmptyOrFalse(this.motorbikeProblems.lackOfFundingForRepairs) &&
+          isEmptyOrFalse(this.motorbikeProblems.missingParts) &&
+          isEmptyOrFalse(this.motorbikeProblems.other)) {
+            return DistributionStatus.INCOMPLETE;
+        }
+
+        // if selected other problem but description is empty
+        if (!isEmptyOrFalse(this.motorbikeProblems.other) && isBlank(this.motorbikeProblems.motorbikeProblemOther)) {
+          return DistributionStatus.INCOMPLETE;
+        }
+      }
+
       var visitedObservationStatus = computeStatusForObservation.call(this);
       return visitedObservationStatus === DistributionStatus.EMPTY ? DistributionStatus.INCOMPLETE : visitedObservationStatus;
     }
 
-    if (this.reasonForNotVisiting === 'OTHER') {
-      return (isUndefined(this.otherReasonDescription) ? DistributionStatus.INCOMPLETE : DistributionStatus.COMPLETE);
+    if (this.reasonForNotVisiting && this.reasonForNotVisiting.value === 'OTHER') {
+      return (isEmpty(this.otherReasonDescription) ? DistributionStatus.INCOMPLETE : DistributionStatus.COMPLETE);
     }
-    return isUndefined(this.reasonForNotVisiting) ? DistributionStatus.INCOMPLETE : DistributionStatus.COMPLETE;
+    return isEmpty(this.reasonForNotVisiting) ? DistributionStatus.INCOMPLETE : DistributionStatus.COMPLETE;
   };
 
   function computeStatusForObservation() {
@@ -33,7 +78,7 @@ function FacilityVisit(facilityVisitJson) {
     var _this = this;
 
     function validateFields(fieldName) {
-      if (['observations', 'visitDate'].indexOf(fieldName) != -1) return !isUndefined(_this[fieldName]);
+      if (['observations', 'visitDate'].indexOf(fieldName) != -1) return !isEmpty(_this[fieldName]);
       return !(isUndefined(_this[fieldName].name) || isUndefined(_this[fieldName].title));
     }
 
@@ -42,7 +87,7 @@ function FacilityVisit(facilityVisitJson) {
       return validateFields(fieldName);
     }
 
-    function isEmpty(fieldName) {
+    function _isEmpty(fieldName) {
       if (!_this[fieldName]) return true;
       return validateFields(fieldName);
     }
@@ -50,9 +95,9 @@ function FacilityVisit(facilityVisitJson) {
     $(mandatoryList).each(function (i, fieldName) {
       if (isValid(fieldName) && (status == DistributionStatus.COMPLETE || !status)) {
         status = DistributionStatus.COMPLETE;
-      } else if (!isValid(fieldName) && isEmpty(fieldName) && (!status || status == DistributionStatus.EMPTY)) {
+      } else if (!isValid(fieldName) && _isEmpty(fieldName) && (!status || status == DistributionStatus.EMPTY)) {
         status = DistributionStatus.EMPTY;
-      } else if ((!isValid(fieldName) && status === DistributionStatus.COMPLETE) || (isValid(fieldName) && status === DistributionStatus.EMPTY) || (!isEmpty(fieldName))) {
+      } else if ((!isValid(fieldName) && status === DistributionStatus.COMPLETE) || (isValid(fieldName) && status === DistributionStatus.EMPTY) || (!_isEmpty(fieldName))) {
         status = DistributionStatus.INCOMPLETE;
         return false;
       }

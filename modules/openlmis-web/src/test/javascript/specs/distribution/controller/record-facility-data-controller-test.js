@@ -43,7 +43,8 @@ describe("RecordFacilityDataController", function () {
           },
             facilityVisit: {
               id: 1
-            }
+            },
+            facilityTypeCode: 'lvl3_hospital'
           }
         }
       });

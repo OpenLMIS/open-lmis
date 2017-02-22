@@ -37,8 +37,9 @@ describe('RefrigeratorController', function () {
           ]
         }, facilityVisit: {
           id: 1,
-          visited: true
-        }
+          visited: { value: true }
+        },
+        facilityTypeCode: 'lvl3_hospital'
         }
       }
     });
@@ -88,7 +89,7 @@ describe('RefrigeratorController', function () {
     scope.selectedFacilityId = 1;
     scope.distribution.facilityDistributions[1].facilityVisit = {
       id: 1,
-      visited: false
+      visited: { value: false }
     };
     expect(scope.isFormDisabled()).toEqual(true);
   });

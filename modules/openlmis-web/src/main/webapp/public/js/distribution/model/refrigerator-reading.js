@@ -12,7 +12,10 @@ function RefrigeratorReading(facilityVisitId, refrigeratorReading) {
 
   var fieldList = ['temperature', 'functioningCorrectly', 'lowAlarmEvents', 'highAlarmEvents', 'problemSinceLastTime'];
 
-  RefrigeratorReading.prototype.computeStatus = function () {
+  RefrigeratorReading.prototype.computeStatus = function (review) {
+    if (review) {
+      return DistributionStatus.SYNCED;
+    }
 
     var statusClass = DistributionStatus.COMPLETE;
     var _this = this;
@@ -51,13 +54,14 @@ function RefrigeratorReading(facilityVisitId, refrigeratorReading) {
       else {
         var hasAtLeastOneProblem = _.find(_.values(_this.problems),
           function (problemValue) {
-            return problemValue === true;
+            return problemValue && problemValue.value === true;
           });
 
         if (!_this.problems || !hasAtLeastOneProblem)
           statusClass = DistributionStatus.INCOMPLETE;
 
-        if (hasAtLeastOneProblem && _this.problems.other && !_this.problems.otherProblemExplanation) {
+        if (hasAtLeastOneProblem && _this.problems.other && _this.problems.other.value &&
+              (!_this.problems.otherProblemExplanation || !_this.problems.otherProblemExplanation.value)) {
           statusClass = DistributionStatus.INCOMPLETE;
         }
       }
@@ -76,6 +80,10 @@ function RefrigeratorReading(facilityVisitId, refrigeratorReading) {
     $.extend(true, this, refrigeratorReading);
     $(fieldList).each(function (i, fieldName) {
       _this[fieldName] = _this[fieldName] || {};
+
+      if (!_this[fieldName].type) {
+        _this[fieldName].type = 'reading';
+      }
     });
     this.computeStatus();
   }

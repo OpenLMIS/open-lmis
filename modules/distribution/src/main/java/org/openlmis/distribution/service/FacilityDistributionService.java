@@ -20,7 +20,21 @@ import org.openlmis.core.exception.DataException;
 import org.openlmis.core.service.FacilityService;
 import org.openlmis.core.service.MessageService;
 import org.openlmis.core.service.RefrigeratorService;
-import org.openlmis.distribution.domain.*;
+import org.openlmis.distribution.domain.Distribution;
+import org.openlmis.distribution.domain.DistributionRefrigerators;
+import org.openlmis.distribution.domain.EpiInventory;
+import org.openlmis.distribution.domain.EpiUse;
+import org.openlmis.distribution.domain.FacilityDistribution;
+import org.openlmis.distribution.domain.FacilityVisit;
+import org.openlmis.distribution.domain.ProductVial;
+import org.openlmis.distribution.domain.RefrigeratorReading;
+import org.openlmis.distribution.domain.TargetGroupProduct;
+import org.openlmis.distribution.domain.VaccinationAdultCoverage;
+import org.openlmis.distribution.domain.VaccinationChildCoverage;
+import org.openlmis.distribution.domain.VaccinationFullCoverage;
+import org.openlmis.distribution.dto.DistributionDTO;
+import org.openlmis.distribution.dto.FacilityDistributionDTO;
+import org.openlmis.distribution.dto.Reading;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -64,6 +78,9 @@ public class FacilityDistributionService {
   @Autowired
   private VaccinationCoverageService vaccinationCoverageService;
 
+  @Autowired
+  private DistributionService distributionService;
+
   public Map<Long, FacilityDistribution> createFor(Distribution distribution) {
     Long deliveryZoneId = distribution.getDeliveryZone().getId();
     Long programId = distribution.getProgram().getId();
@@ -84,10 +101,11 @@ public class FacilityDistributionService {
     List<ProductVial> childProductVials = new ArrayList<>();
     List<ProductVial> adultProductVials = new ArrayList<>();
     filterProductVials(productVials, childProductVials, adultProductVials);
+    DistributionDTO previousDistribution = distributionService.getPreviousDistribution(distribution);
 
     for (Facility facility : facilities) {
       facilityDistributions.put(facility.getId(), createDistributionData(facility, distribution, distributionRefrigerators, childrenTargetGroupProducts,
-        adultTargetGroupProducts, childProductVials, adultProductVials));
+        adultTargetGroupProducts, childProductVials, adultProductVials, previousDistribution));
     }
 
     return facilityDistributions;
@@ -128,10 +146,11 @@ public class FacilityDistributionService {
                                               List<Refrigerator> refrigerators,
                                               List<TargetGroupProduct> childrenTargetGroupProducts,
                                               List<TargetGroupProduct> adultTargetGroupProducts,
-                                              List<ProductVial> childProductVials, List<ProductVial> adultProductVials) {
-    List<RefrigeratorReading> refrigeratorReadings = getRefrigeratorReadings(facility.getId(), refrigerators);
+                                              List<ProductVial> childProductVials, List<ProductVial> adultProductVials,
+                                              DistributionDTO previousDistribution) {
+    List<RefrigeratorReading> refrigeratorReadings = getRefrigeratorReadings(facility.getId(), refrigerators, null);
 
-    FacilityVisit facilityVisit = new FacilityVisit(facility, distribution);
+    FacilityVisit facilityVisit = createFacilityVisitData(facility, distribution, previousDistribution);
     facilityVisitService.save(facilityVisit);
     FacilityDistribution facilityDistribution = new FacilityDistribution(facilityVisit, facility, distribution, refrigeratorReadings,
       childrenTargetGroupProducts, adultTargetGroupProducts, childProductVials, adultProductVials);
@@ -158,7 +177,7 @@ public class FacilityDistributionService {
     return facilityDistribution;
   }
 
-  private List<RefrigeratorReading> getRefrigeratorReadings(final Long facilityId, List<Refrigerator> refrigerators) {
+  private List<RefrigeratorReading> getRefrigeratorReadings(final Long facilityId, List<Refrigerator> refrigerators, final Long facilityVisitId) {
     return (List<RefrigeratorReading>) collect(select(refrigerators, new Predicate() {
       @Override
       public boolean evaluate(Object o) {
@@ -167,18 +186,35 @@ public class FacilityDistributionService {
     }), new Transformer() {
       @Override
       public Object transform(Object o) {
-        return new RefrigeratorReading((Refrigerator) o);
+        Refrigerator refrigerator = (Refrigerator) o;
+
+        if (null == facilityVisitId) {
+          return new RefrigeratorReading(refrigerator);
+        }
+
+        RefrigeratorReading reading = distributionRefrigeratorsService.getByRefrigeratorIdAndSerialNumber(refrigerator.getId(), refrigerator.getSerialNumber(), facilityVisitId);
+        return null == reading ? new RefrigeratorReading(refrigerator) : reading;
       }
     });
   }
 
   public Map<Long, FacilityDistribution> get(Distribution distribution) {
+    List<FacilityVisit> unSyncedFacilities = facilityVisitService.getUnSyncedFacilities(distribution.getId());
+    return getFacilityDistributions(distribution, unSyncedFacilities);
+  }
+
+  public Map<Long, FacilityDistribution> getData(Distribution distribution) {
+    List<FacilityVisit> visits = facilityVisitService.getByDistributionId(distribution.getId());
+    return getFacilityDistributions(distribution, visits);
+  }
+
+  private Map<Long, FacilityDistribution> getFacilityDistributions(Distribution distribution, List<FacilityVisit> facilityVisits) {
     Map<Long, FacilityDistribution> facilityDistributions = new HashMap<>();
 
-    List<FacilityVisit> unSyncedFacilities = facilityVisitService.getUnSyncedFacilities(distribution.getId());
-    for (FacilityVisit facilityVisit : unSyncedFacilities) {
+    for (FacilityVisit facilityVisit : facilityVisits) {
       facilityDistributions.put(facilityVisit.getFacilityId(), getDistributionData(facilityVisit, distribution));
     }
+
     return facilityDistributions;
   }
 
@@ -186,7 +222,7 @@ public class FacilityDistributionService {
     EpiUse epiUse = epiUseService.getBy(facilityVisit.getId());
 
     List<Refrigerator> refrigerators = refrigeratorService.getRefrigeratorsForADeliveryZoneAndProgram(distribution.getDeliveryZone().getId(), distribution.getProgram().getId());
-    DistributionRefrigerators distributionRefrigerators = new DistributionRefrigerators(getRefrigeratorReadings(facilityVisit.getFacilityId(), refrigerators));
+    DistributionRefrigerators distributionRefrigerators = new DistributionRefrigerators(getRefrigeratorReadings(facilityVisit.getFacilityId(), refrigerators, facilityVisit.getId()));
 
     Facility facility = facilityService.getById(facilityVisit.getFacilityId());
 
@@ -199,5 +235,19 @@ public class FacilityDistributionService {
       childCoverage, adultCoverage);
     facilityDistribution.setFacility(facility);
     return facilityDistribution;
+  }
+
+  private FacilityVisit createFacilityVisitData(Facility facility, Distribution distribution, DistributionDTO previousDistribution) {
+    FacilityVisit facilityVisit = new FacilityVisit(facility, distribution);
+    if (previousDistribution != null) {
+      FacilityDistributionDTO previousFacilityDistribution = previousDistribution.getFacilityDistributions().get(facility.getId());
+
+      if (previousFacilityDistribution != null) {
+        Reading previousObservations = previousFacilityDistribution.getFacilityVisit().getObservations();
+        facilityVisit.setPriorObservations(Reading.safeRead(previousObservations).getEffectiveValue());
+      }
+    }
+
+    return facilityVisit;
   }
 }

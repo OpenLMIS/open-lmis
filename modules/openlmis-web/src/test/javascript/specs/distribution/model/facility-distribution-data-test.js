@@ -9,15 +9,23 @@
  */
 describe('Facility Distribution data', function () {
   var facilityDistribution, epiUse, refrigerators, facilityVisit, epiInventory, fullCoverage, childCoverage;
+  var WAREHOUSE = "warehouse";
 
   beforeEach(function () {
-    facilityDistribution = new FacilityDistribution({facilityVisit: {id: 1}});
+    facilityDistribution = new FacilityDistribution({facilityVisit: {id: 1}, facilityTypeCode: "lvl3_hospital"});
     epiUse = facilityDistribution.epiUse;
     refrigerators = facilityDistribution.refrigerators;
     facilityVisit = facilityDistribution.facilityVisit;
     epiInventory = facilityDistribution.epiInventory;
     fullCoverage = facilityDistribution.fullCoverage;
     childCoverage = facilityDistribution.childCoverage;
+  });
+
+  it("should set coverage data to null if is warehouse facility", function () {
+    facilityDistribution = new FacilityDistribution({facilityVisit: {id: 1}, facilityTypeCode: WAREHOUSE});
+    expect(facilityDistribution.childCoverage).toBeNull();
+    expect(facilityDistribution.adultCoverage).toBeNull();
+    expect(facilityDistribution.fullCoverage).toBeNull();
   });
 
   it("should compute status as complete when all the forms for the facility are COMPLETE", function () {
@@ -27,6 +35,17 @@ describe('Facility Distribution data', function () {
     spyOn(epiInventory, "computeStatus").andReturn(DistributionStatus.COMPLETE);
     spyOn(fullCoverage, "computeStatus").andReturn(DistributionStatus.COMPLETE);
     spyOn(childCoverage, "computeStatus").andReturn(DistributionStatus.COMPLETE);
+
+    expect(facilityDistribution.computeStatus()).toEqual(DistributionStatus.COMPLETE);
+  });
+
+  it("should correctly compute status for warehouse facility", function () {
+    facilityDistribution.typeCode = WAREHOUSE;
+    spyOn(epiUse, "computeStatus").andReturn(DistributionStatus.COMPLETE);
+    spyOn(refrigerators, "computeStatus").andReturn(DistributionStatus.COMPLETE);
+    spyOn(facilityVisit, "computeStatus").andReturn(DistributionStatus.COMPLETE);
+    spyOn(epiInventory, "computeStatus").andReturn(DistributionStatus.COMPLETE);
+    spyOn(fullCoverage, "computeStatus").andReturn(DistributionStatus.INCOMPLETE);
 
     expect(facilityDistribution.computeStatus()).toEqual(DistributionStatus.COMPLETE);
   });
@@ -69,27 +88,27 @@ describe('Facility Distribution data', function () {
   });
 
   it("should disable refrigerator form if facility is not visited and tab is 'refrigerators'", function () {
-    facilityDistribution.facilityVisit.visited = false;
-    expect(facilityDistribution.isDisabled('refrigerators')).toEqual(true);
+    facilityDistribution.facilityVisit.visited = {value: false};
+    expect(facilityDistribution.isDisabled('refrigerator-data')).toEqual(true);
   });
 
   it("should disable epi-inventory form if facility is not visited and tab is 'epi-inventory'", function () {
-    facilityDistribution.facilityVisit.visited = false;
+    facilityDistribution.facilityVisit.visited = {value: false};
     expect(facilityDistribution.isDisabled('epi-inventory')).toEqual(true);
   });
 
   it("should not disable refrigerator form if facility is visited and tab is 'refrigerators'", function () {
-    facilityDistribution.facilityVisit.visited = true;
-    expect(facilityDistribution.isDisabled('refrigerators')).toEqual(false);
+    facilityDistribution.facilityVisit.visited = {value: true};
+    expect(facilityDistribution.isDisabled('refrigerator-data')).toEqual(false);
   });
 
   it("should not disable epi-inventory form if facility is visited and tab is 'epi-inventory'", function () {
-    facilityDistribution.facilityVisit.visited = true;
+    facilityDistribution.facilityVisit.visited = {value: true};
     expect(facilityDistribution.isDisabled('epi-inventory')).toEqual(false);
   });
 
   it("should not disable tabs other than refrigerator, epi-inventory and epi-use if facility is not visited", function () {
-    facilityDistribution.facilityVisit.visited = false;
+    facilityDistribution.facilityVisit.visited = {value: false};
     expect(facilityDistribution.isDisabled('child-coverage')).toEqual(false);
   });
 

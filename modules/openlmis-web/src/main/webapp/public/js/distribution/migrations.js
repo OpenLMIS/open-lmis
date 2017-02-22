@@ -23,9 +23,18 @@ var migrationFunc = function (event) {
     createDistributionStore();
   }
 
+  if (!event.oldVersion || event.oldVersion < 5) {
+    createReviewStore();
+  }
+
   function createDistributionStore() {
     var distributionStore = connection.createObjectStore("distributions", {"keyPath": "id"});
     distributionStore.createIndex("index_zpp", "zpp", {"unique": true});
+  }
+
+  function createReviewStore() {
+    var reviewStore = connection.createObjectStore("reviews", {"keyPath": "id", "autoIncrement": true});
+    reviewStore.createIndex("index_zpp", "zpp", {"unique": true});
   }
 
 };

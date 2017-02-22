@@ -48,18 +48,20 @@ describe('DistributionListController', function () {
         location = $location;
         window = {};
 
-        sharedDistribution = {update: function () {
-        }};
+        sharedDistribution = {
+          update: function () { },
+          isReview: function () { return false; }
+        };
 
         var facilityDistribution1 = new FacilityDistribution(
-          {facilityId: 44, 'epiUse': {'productGroups': [
+          {facilityId: 44, facilityTypeCode: 'lvl3_hospital', 'epiUse': {'productGroups': [
             {'id': 3, 'code': 'penta', 'name': 'penta', 'reading': {'stockAtFirstOfMonth': {'notRecorded': true}, 'received': {'notRecorded': true}, 'distributed': {'notRecorded': false},
               'loss': {'notRecorded': true}, 'stockAtEndOfMonth': {'notRecorded': true}, 'expirationDate': {'notRecorded': true}}, '$$hashKey': '02A'}
           ], 'status': 'is-complete'}, 'refrigerators': {'refrigeratorReadings': []},
             'facilityVisit': {id: 1, 'status': 'is-complete', 'observations': '212', 'verifiedBy': {'name': '12', 'title': '12'}, 'confirmedBy': {'title': '1', 'name': '2'}}});
 
         var facilityDistribution2 = new FacilityDistribution(
-          {facilityId: 45, status: 'is-complete', 'epiUse': {'productGroups': [
+          {facilityId: 45, facilityTypeCode: 'lvl3_hospital', status: 'is-complete', 'epiUse': {'productGroups': [
             {'id': 3, 'code': 'penta', 'name': 'penta', 'reading': {'stockAtFirstOfMonth': {'notRecorded': true}, 'received': {'notRecorded': true}, 'distributed': {'notRecorded': true}, 'loss': {'notRecorded': true}, 'stockAtEndOfMonth': {'notRecorded': true}, 'expirationDate': {'notRecorded': true}}, '$$hashKey': '0B5'}
           ], 'status': 'is-complete'}, 'refrigerators': {'refrigeratorReadings': []},
             'facilityVisit': {id: 1, 'status': 'is-complete', 'observations': 'e', 'verifiedBy': {'name': 'e', 'title': 'e'}, 'confirmedBy': {'name': 'e', 'title': 'e'}}});
@@ -101,7 +103,7 @@ describe('DistributionListController', function () {
   }
 
   it('should set distributions in scope', function () {
-    expect(scope.sharedDistributions).toBe(sharedDistribution);
+    expect(scope.getDistributions()[0]).toBe(sharedDistribution.distributionList[0]);
   });
 
   it('should refresh shared distributions on load', function () {
@@ -200,10 +202,10 @@ describe('DistributionListController', function () {
       'program': {'id': 5, 'code': 'VACCINES', 'name': 'VACCINES', 'description': 'VACCINES', 'active': true, 'templateConfigured': false, 'regimenTemplateConfigured': false, 'push': true},
       'period': {'id': 9, 'scheduleId': 2, 'name': 'June2013', 'description': 'June2013', 'startDate': 1370025000000, 'endDate': 1372616999000, 'numberOfMonths': 1},
       'status': 'INITIATED', 'zpp': '8_5_9',
-      'facilityDistributions': {'44': new FacilityDistribution({status: DistributionStatus.SYNCED, facilityVisit: {id: 1}}),
-        '45': new FacilityDistribution({status: DistributionStatus.SYNCED, facilityVisit: {id: 1}})}};
+      'facilityDistributions': {'44': new FacilityDistribution({status: DistributionStatus.SYNCED, facilityVisit: {id: 1}, facilityTypeCode: 'lvl3_hospital'}),
+        '45': new FacilityDistribution({status: DistributionStatus.SYNCED, facilityVisit: {id: 1}, facilityTypeCode: 'lvl3_hospital'})}};
 
-    scope.sharedDistributions.distributionList = [distribution];
+    scope.getDistributions = function () { return [distribution]; };
 
     scope.showConfirmDistributionSync(1);
 

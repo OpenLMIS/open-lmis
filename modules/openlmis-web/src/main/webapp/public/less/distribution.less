@@ -41,6 +41,18 @@
   .facility-change-dropdown {
     position: relative;
   }
+  #synchronizationConflictModal {
+    width: 75%;
+    left: 25%;
+    .modal-body {
+      padding-right: 35px;
+      table {
+        th, td {
+          text-align: center;
+        }
+      }
+    }
+  }
 }
 
 .facility-info {
@@ -71,6 +83,11 @@
     input[type="text"] {
       width: 82%;
     }
+  }
+
+  #observationsContainer, #priorObservationsContainer {
+    display: inline-block;
+    width: 300px;
   }
 }
 
@@ -463,7 +480,7 @@
     margin: 12px 0;
   }
   textarea {
-    width: 550px;
+    width: 250px;
     height: 150px;
     margin-bottom: 0;
   }
@@ -518,6 +535,31 @@
     a {
       margin-top: 10px;
       font-weight: normal;
+    }
+  }
+  input[type="checkbox"] {
+    margin: 0 2px 0 10px;
+    vertical-align: middle;
+  }
+  label {
+    display: inline;
+    &:first-child {
+      display: block;
+      font-weight: bold;
+    }
+  }
+  .checkbox-label {
+    vertical-align: middle;
+    line-height: normal;
+  }
+  .motorbike-problems-form {
+    margin-top: 0;
+    margin-bottom: 0;
+    .form-row {
+      margin: 0 0 5px;
+    }
+    #otherProblemInput {
+      width: 550px;
     }
   }
 }
@@ -681,4 +723,27 @@
 
 #syncMessage {
   font-size: 15px;
+}
+
+.review-data {
+  #filter-section {
+    margin-top: 0px;
+    padding-top: 0px;
+    border-top: none;
+
+    .form-row {
+      select {
+        width: 100%;
+      }
+      .form-cell {
+        width: 250px;
+        padding: 0px;
+      }
+      .form-cell:last-child {
+        width: auto;
+        padding: 0px;
+        float: right;
+      }
+    }
+  }
 }

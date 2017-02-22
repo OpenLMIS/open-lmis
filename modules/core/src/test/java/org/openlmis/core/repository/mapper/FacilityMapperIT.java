@@ -739,16 +739,16 @@ public class FacilityMapperIT {
     deliveryZoneProgramScheduleMapper.insert(new DeliveryZoneProgramSchedule(deliveryZone.getId(),
       program.getId(), processingSchedule.getId()));
 
-    Facility facility1 = insertMemberFacility(deliveryZone, program, "F10A", "facility", 10l, true);
+    Facility facility1 = insertMemberFacility(deliveryZone, program, "F10A", "facility", 10l, true, 1L);
 
-    insertMemberFacility(deliveryZone, program, "F10011", "facility2", 9l, true);
-    insertMemberFacility(deliveryZone, program, "F10010", "facility3", 9L, true);
-    insertMemberFacility(deliveryZone, program, "F10012", "facility4", 9L, false);
+    insertMemberFacility(deliveryZone, program, "F10011", "facility2", 9l, true, 1L);
+    insertMemberFacility(deliveryZone, program, "F10010", "facility3", 9L, true, 1L);
+    insertMemberFacility(deliveryZone, program, "F10012", "facility4", 9L, false, 1L);
 
     Program unsupportedProgram = new Program();
     unsupportedProgram.setId(2l);
 
-    insertMemberFacility(deliveryZone, unsupportedProgram, "F10013", "facility5", 9L, true);
+    insertMemberFacility(deliveryZone, unsupportedProgram, "F10013", "facility5", 9L, true, 1L);
 
     List<Facility> memberFacilities = mapper.getAllInDeliveryZoneFor(deliveryZone.getId(), program.getId());
 
@@ -978,12 +978,13 @@ public class FacilityMapperIT {
   }
 
   private Facility insertMemberFacility(DeliveryZone zone, Program program, String facilityCode, String facilityName,
-                                        Long geoZoneId, Boolean facilityActive) {
+                                        Long geoZoneId, Boolean facilityActive, Long type) {
     Facility facility = make(a(FacilityBuilder.defaultFacility,
       with(code, facilityCode),
       with(name, facilityName),
       with(geographicZoneId, geoZoneId),
-      with(active, facilityActive)));
+      with(active, facilityActive),
+      with(typeId, type)));
     mapper.insert(facility);
 
     ProgramSupported programSupported = new ProgramSupported();

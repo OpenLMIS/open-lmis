@@ -29,6 +29,7 @@ public class FacilityVisitService {
       throw new DataException("error.facility.already.synced");
     }
     facilityVisit.setSynced(true);
+    facilityVisit.setFacilityCatchmentPopulation(existingVisit.getFacilityCatchmentPopulation());
     repository.update(facilityVisit);
     return facilityVisit;
   }
@@ -39,6 +40,10 @@ public class FacilityVisitService {
 
   public FacilityVisit getBy(Long facilityId, Long distributionId) {
     return repository.getBy(facilityId, distributionId);
+  }
+
+  public List<FacilityVisit> getByDistributionId(Long distributionId) {
+    return repository.getByDistributionId(distributionId);
   }
 
   public List<FacilityVisit> getUnSyncedFacilities(Long distributionId) {

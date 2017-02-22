@@ -16,6 +16,8 @@ import lombok.NoArgsConstructor;
 import org.codehaus.jackson.annotate.JsonIgnoreProperties;
 import org.codehaus.jackson.map.annotate.JsonSerialize;
 import org.openlmis.core.domain.Facility;
+import org.openlmis.distribution.dto.ChildCoverageLineItemDTO;
+import org.openlmis.distribution.dto.Reading;
 
 import static org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion.NON_EMPTY;
 
@@ -44,5 +46,24 @@ public class ChildCoverageLineItem extends CoverageLineItem {
     super(facilityVisit, facility, targetGroupProduct, processingPeriodMonths);
     this.vaccination = vaccination;
     this.displayOrder = displayOrder;
+  }
+
+  public ChildCoverageLineItemDTO transform() {
+    ChildCoverageLineItemDTO dto = new ChildCoverageLineItemDTO();
+    dto.setId(id);
+    dto.setCreatedBy(createdBy);
+    dto.setCreatedDate(createdDate);
+    dto.setModifiedBy(modifiedBy);
+    dto.setModifiedDate(modifiedDate);
+    dto.setVaccination(vaccination);
+    dto.setDisplayOrder(displayOrder);
+    dto.setHealthCenter11Months(new Reading(healthCenter11Months));
+    dto.setHealthCenter23Months(new Reading(healthCenter23Months));
+    dto.setOutreach11Months(new Reading(outreach11Months));
+    dto.setOutreach23Months(new Reading(outreach23Months));
+    dto.setFacilityVisitId(facilityVisitId);
+    dto.setTargetGroup(targetGroup);
+
+    return dto;
   }
 }

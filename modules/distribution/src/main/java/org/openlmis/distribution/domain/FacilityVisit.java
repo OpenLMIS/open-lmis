@@ -12,6 +12,7 @@
 
 package org.openlmis.distribution.domain;
 
+import com.google.common.base.Optional;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
@@ -21,14 +22,17 @@ import org.codehaus.jackson.map.annotate.JsonSerialize;
 import org.openlmis.core.domain.BaseModel;
 import org.openlmis.core.domain.Facility;
 import org.openlmis.core.serializer.DateDeserializer;
+import org.openlmis.distribution.dto.FacilityVisitDTO;
+import org.openlmis.distribution.dto.Reading;
 
 import java.util.Date;
 
 import static org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion.NON_EMPTY;
+import static org.openlmis.distribution.dto.Reading.notRecorded;
 
 /**
- *  FacilityVisit represents an entity which keeps track of whether facility was visited or not. If visited then
- *  records visit date, vehicle and facilitator's information. And if not visited then records reason for not visiting.
+ * FacilityVisit represents an entity which keeps track of whether facility was visited or not. If visited then
+ * records visit date, vehicle and facilitator's information. And if not visited then records reason for not visiting.
  */
 
 @Data
@@ -44,6 +48,16 @@ public class FacilityVisit extends BaseModel {
   private Facilitator confirmedBy;
   private Facilitator verifiedBy;
   private String observations;
+  private String priorObservations;
+
+  private Integer numberOfOutreachVisitsPlanned;
+  private Integer numberOfOutreachVisitsCompleted;
+  private Integer numberOfMotorbikesAtHU;
+  private Integer numberOfFunctioningMotorbikes;
+  private Integer numberOfMotorizedVehiclesWithProblems;
+  private Integer numberOfDaysWithLimitedTransport;
+
+  private MotorbikeProblems motorbikeProblems;
 
   @JsonDeserialize(using = DateDeserializer.class)
   private Date visitDate;
@@ -73,9 +87,64 @@ public class FacilityVisit extends BaseModel {
       return;
     }
     this.observations = null;
-    this.confirmedBy = null;
-    this.verifiedBy = null;
+    this.confirmedBy = new Facilitator();
+    this.verifiedBy = new Facilitator();
     this.vehicleId = null;
     this.visitDate = null;
+    this.numberOfOutreachVisitsPlanned = null;
+    this.numberOfOutreachVisitsCompleted = null;
+    this.numberOfMotorbikesAtHU = null;
+    this.numberOfFunctioningMotorbikes = null;
+    this.numberOfMotorizedVehiclesWithProblems = null;
+    this.numberOfDaysWithLimitedTransport = null;
+    this.motorbikeProblems = new MotorbikeProblems();
   }
+
+  public FacilityVisitDTO transform() {
+    Facilitator confirmedBy = Optional.fromNullable(this.confirmedBy).or(new Facilitator());
+    Facilitator verifiedBy = Optional.fromNullable(this.verifiedBy).or(new Facilitator());
+    MotorbikeProblems motorbikeProblems = Optional.fromNullable(this.motorbikeProblems).or(new MotorbikeProblems());
+
+    FacilityVisitDTO dto = new FacilityVisitDTO();
+    dto.setId(id);
+    dto.setCreatedBy(createdBy);
+    dto.setCreatedDate(createdDate);
+    dto.setModifiedBy(modifiedBy);
+    dto.setModifiedDate(modifiedDate);
+    dto.setDistributionId(distributionId);
+    dto.setFacilityId(facilityId);
+    dto.setFacilityCatchmentPopulation(facilityCatchmentPopulation);
+    dto.setConfirmedBy(confirmedBy.transform());
+    dto.setVerifiedBy(verifiedBy.transform());
+    dto.setObservations(new Reading(observations));
+    dto.setPriorObservations(new Reading(priorObservations));
+    dto.setVisitDate(new Reading(visitDate, "yyyy-MM-dd"));
+    dto.setVisited(new Reading(visited));
+    dto.setVehicleId(new Reading(vehicleId));
+    dto.setReasonForNotVisiting(new Reading(reasonForNotVisiting));
+    dto.setOtherReasonDescription(new Reading(otherReasonDescription));
+    dto.setSynced(new Reading(synced));
+    dto.setNumberOfOutreachVisitsPlanned(new Reading(numberOfOutreachVisitsPlanned));
+    dto.setNumberOfOutreachVisitsCompleted(new Reading(numberOfOutreachVisitsCompleted));
+    dto.setNumberOfMotorbikesAtHU(new Reading(numberOfMotorbikesAtHU));
+    dto.setNumberOfFunctioningMotorbikes(new Reading(numberOfFunctioningMotorbikes));
+    dto.setNumberOfMotorizedVehiclesWithProblems(new Reading(numberOfMotorizedVehiclesWithProblems));
+    dto.setNumberOfDaysWithLimitedTransport(new Reading(numberOfDaysWithLimitedTransport));
+    dto.setMotorbikeProblems(motorbikeProblems.transform());
+
+    notRecorded(dto.getConfirmedBy().getName());
+    notRecorded(dto.getConfirmedBy().getTitle());
+    notRecorded(dto.getVerifiedBy().getName());
+    notRecorded(dto.getVerifiedBy().getTitle());
+    notRecorded(dto.getObservations());
+    notRecorded(dto.getVisitDate());
+    notRecorded(dto.getVisited());
+    notRecorded(dto.getVehicleId());
+    notRecorded(dto.getReasonForNotVisiting());
+    notRecorded(dto.getOtherReasonDescription());
+    notRecorded(dto.getSynced());
+
+    return dto;
+  }
+
 }

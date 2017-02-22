@@ -16,8 +16,12 @@ import org.openlmis.db.categories.UnitTests;
 import org.openlmis.distribution.domain.*;
 
 import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertThat;
+import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @Category(UnitTests.class)
@@ -25,7 +29,7 @@ public class FacilityDistributionDTOTest {
 
   @Test
   public void shouldTransformDTOIntoRealObject() throws Exception {
-    FacilityVisit facilityVisit = new FacilityVisit();
+    FacilityVisitDTO facilityVisitDTO = mock(FacilityVisitDTO.class);
     EpiUseDTO epiUseDTO = mock(EpiUseDTO.class);
     DistributionRefrigeratorsDTO distributionRefrigeratorsDTO = mock(DistributionRefrigeratorsDTO.class);
     VaccinationFullCoverageDTO coverageDTO = mock(VaccinationFullCoverageDTO.class);
@@ -33,8 +37,11 @@ public class FacilityDistributionDTOTest {
     ChildCoverageDTO childCoverageDTO = mock(ChildCoverageDTO.class);
     AdultCoverageDTO adultCoverageDTO = mock(AdultCoverageDTO.class);
 
-    FacilityDistributionDTO facilityDistributionDTO = new FacilityDistributionDTO(facilityVisit, epiUseDTO,
+    FacilityDistributionDTO facilityDistributionDTO = new FacilityDistributionDTO(facilityVisitDTO, epiUseDTO,
       epiInventoryDTO, distributionRefrigeratorsDTO, coverageDTO, childCoverageDTO, adultCoverageDTO);
+
+    FacilityVisit facilityVisit = new FacilityVisit();
+    when(facilityVisitDTO.transform()).thenReturn(facilityVisit);
 
     EpiUse epiUse = new EpiUse();
     when(epiUseDTO.transform()).thenReturn(epiUse);
@@ -56,7 +63,7 @@ public class FacilityDistributionDTOTest {
 
     FacilityDistribution facilityDistribution = facilityDistributionDTO.transform();
 
-    assertThat(facilityDistribution.getFacilityVisit(), is(facilityDistributionDTO.getFacilityVisit()));
+    assertThat(facilityDistribution.getFacilityVisit(), is(facilityVisit));
     assertThat(facilityDistribution.getEpiUse(), is(epiUse));
     assertThat(facilityDistribution.getRefrigerators(), is(distributionRefrigerators));
     assertThat(facilityDistribution.getFullCoverage(), is(vaccinationFullCoverage));
@@ -66,8 +73,28 @@ public class FacilityDistributionDTOTest {
   }
 
   @Test
+  public void shouldNotTransformEmptyCoverageDTO() {
+    FacilityVisitDTO facilityVisitDto = new FacilityVisitDTO();
+    EpiUseDTO epiUseDTO = mock(EpiUseDTO.class);
+    DistributionRefrigeratorsDTO distributionRefrigeratorsDTO = mock(DistributionRefrigeratorsDTO.class);
+    EpiInventoryDTO epiInventoryDTO = mock(EpiInventoryDTO.class);
+    ChildCoverageDTO childCoverageDTO = null;
+    AdultCoverageDTO adultCoverageDTO = null;
+    VaccinationFullCoverageDTO coverageDTO = null;
+
+    FacilityDistributionDTO facilityDistributionDTO = new FacilityDistributionDTO(facilityVisitDto, epiUseDTO,
+        epiInventoryDTO, distributionRefrigeratorsDTO, coverageDTO, childCoverageDTO, adultCoverageDTO);
+
+    FacilityDistribution facilityDistribution = facilityDistributionDTO.transform();
+
+    assertNull(facilityDistribution.getAdultCoverage());
+    assertNull(facilityDistribution.getFullCoverage());
+    assertNull(facilityDistribution.getChildCoverage());
+  }
+
+  @Test
   public void shouldSetModifiedByForAllDistributionForms() throws Exception {
-    FacilityDistributionDTO facilityDistributionDTO = new FacilityDistributionDTO(new FacilityVisit(), new EpiUseDTO(), new EpiInventoryDTO(),
+    FacilityDistributionDTO facilityDistributionDTO = new FacilityDistributionDTO(new FacilityVisitDTO(), new EpiUseDTO(), new EpiInventoryDTO(),
       new DistributionRefrigeratorsDTO(), new VaccinationFullCoverageDTO(), new ChildCoverageDTO(),
       new AdultCoverageDTO());
 

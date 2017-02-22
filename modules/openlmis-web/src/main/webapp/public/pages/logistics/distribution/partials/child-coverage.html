@@ -13,13 +13,13 @@
     <ng-include
             src="'/public/pages/logistics/distribution/partials/record-facility-menu.html'"></ng-include>
 
-    <div class="facility-info" ng-init="facilityData = distribution.facilityDistributions[selectedFacilityId]">
-        <div id="coverageContainer" class="refrigerator-container" disable-form="{{facilityData.isDisabled()}}">
-            <h3>
-                <span id="coverageHeader" openlmis-message="label.coverage.children"></span>
-                <input id="childCoverageApplyNRAll" type="button" ng-click="applyNRAll()" class="pull-right btn"
-                       openlmis-message="button.apply.nr.all"/>
-            </h3>
+      <div class="facility-info" ng-init="facilityData = distribution.facilityDistributions[selectedFacilityId]">
+        <div id="coverageContainer" class="refrigerator-container" disable-form="{{facilityData.isDisabled(null, distributionReview)}}">
+          <h3>
+            <span id="coverageHeader" openlmis-message="label.coverage.children"></span>
+            <input id="childCoverageApplyNRAll" type="button" ng-click="applyNRAll()" class="pull-right btn"
+                   openlmis-message="button.apply.nr.all"/>
+          </h3>
 
       <div id="childCoverageTable" class="parent facility-distribution-form-table coverage-table">
                 <form auto-save="distribution" object-store="distributions">
