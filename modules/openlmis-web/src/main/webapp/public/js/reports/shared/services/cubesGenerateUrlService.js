@@ -4,9 +4,9 @@ services.factory('CubesGenerateUrlService', function () {
 
     var generateAggregateUrl = function (cubesName, drillDowns, cuts) {
         if (drillDowns.length > 0) {
-            return baseUrl + cubesName + "/aggregate" + "?drilldown=" + drillDowns.join("|") + "&cut=" + generateCuts(cuts);
+            return baseUrl + cubesName + "/aggregate" + "?drilldown=" + encodeURIComponent(drillDowns.join("|")) + "&cut=" + encodeURIComponent(generateCuts(cuts));
         } else {
-            return baseUrl + cubesName + "/aggregate" + "?cut=" + generateCuts(cuts);
+            return baseUrl + cubesName + "/aggregate" + "?cut=" + encodeURIComponent(generateCuts(cuts));
         }
     };
 
@@ -14,7 +14,7 @@ services.factory('CubesGenerateUrlService', function () {
         if(cuts.length === 0) {
             return baseUrl + cubesName  + "/facts";
         }
-        return baseUrl + cubesName + "/facts" + "?cut=" + generateCuts(cuts);
+        return baseUrl + cubesName + "/facts" + "?cut=" + encodeURIComponent(generateCuts(cuts));
     };
 
     var generateFactsUrlWithParams = function (cubesName, cuts, params) {
