@@ -2,7 +2,7 @@ This is the Moz implementation of OpenLMIS.
 
 License Terms
 ---------------------------
-This program is part of the OpenLMIS logistics management information system platform software. Copyright © 2013, 2014, 2015 VillageReach, JSI, and ThoughtWorks.
+This program is part of the OpenLMIS logistics management information system platform software. Copyright © 2013, 2014, 2015, 2016 VillageReach, JSI, and ThoughtWorks.
 
 This site contains code and related material necessary to implement a configuration of the OpenLMIS logistics management information system platform.  See https://github.com/OpenLMIS/open-lmis/ for details of OpenLMIS.
 
@@ -17,7 +17,7 @@ System Requirements
 - JDK 7
 - Postgresql 9
 - Git
-- Gradle 2.3
+- Gradle
   * **For Linux users**
     * Download the source binary directly from the gradle website.
     * Copy the downloaded folder to `/usr/bin`
@@ -51,12 +51,7 @@ System Requirements
 Source code
 ------------------
 1. Get the source code using `git clone https://github.com/openlmis/open-lmis.git`.
-2. For now, all work should be pushed to the 2.0 branch, not master. After cloning, you can do `git checkout 2.0` to get into the 2.0 branch.
-3. Set up dependencies on submodules using
-    ```bash
-    > git submodule init
-    > git submodule update
-    ```
+2. All work related to Mozambique should be pushed to the 2.0-moz branch, not master. After cloning, you can do `git checkout 2.0-moz` to get into the 2.0-moz branch.
 
 IntelliJ IDEA Setup
 -------------------
@@ -73,14 +68,13 @@ Running App on embedded Jetty server
 --------------------------------------------------
 1. Clone the project repository using git.
 2. Setup _postgres_ user with password as configured in `gradle.properties` file.
-3. You can use `gradle clean setupdb setupExtensions seed build testseed run` to start the app.
+3. You can use `gradle clean setupdb setupExtensions seed build run` to start the app.
 4. You can use `gradle clean setupdb setupExtensions seed build` to just run all of the tests.
 5. There are bunch of gradle tasks that you can see by running `gradle tasks`:
   - `build` is to build the app.
   - `setupdb` is to recreate the database and schema.
   - `setupExtensions` is to apply the database schema extensions added.
   - `seed` is to seed in the reference data.
-  - `testseed` puts in some test data which can be used to browse through basic functionality in the system.
   - `run` is to start the embedded jetty server.
 
 Once the system is running, you can access the home page at `http://localhost:9091/`. You can log into the default instance with: user: `Admin123`, pass: `Admin123`
