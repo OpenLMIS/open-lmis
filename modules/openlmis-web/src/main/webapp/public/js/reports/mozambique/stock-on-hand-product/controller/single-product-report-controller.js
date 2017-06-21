@@ -23,7 +23,7 @@ function SingleProductReportController($scope, $filter, $controller, $http, Cube
         {dimension: "periodend", values: [$filter('date')(periodEnd, "yyyy,MM,dd")], skipEscape: true}
       ];
 
-      $http.get(CubesGenerateUrlService.generateFactsUrl('cmm_entries', cmmCutsParams)).success(function (cmmEntries) {
+      $http.get(CubesGenerateUrlService.generateFactsUrl('vw_cmm_entries', cmmCutsParams)).success(function (cmmEntries) {
 
         $scope.reportData = _.chain(sohEntries)
           .groupBy(function (sohEntry) {
