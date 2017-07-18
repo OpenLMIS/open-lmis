@@ -21,7 +21,7 @@ describe("date format service test", function () {
     });
 
     it("should format date with local", function () {
-        var formattedDate = dateFormatService.formatDateWithLocale(new Date("2011-11-11"));
+        var formattedDate = dateFormatService.formatDateWithLocale(new Date("2011-11-11T00:00:00"));
         expect(formattedDate).toEqual("11 " + messageService.get("month.abbr.11") + " 2011");
     });
 
@@ -36,7 +36,7 @@ describe("date format service test", function () {
     });
 
     it('should format date with full time', function() {
-        var dateString = '2016-10-25T19:54:00.998865+08:00';
+        var dateString = '2016-10-25T19:54:00.998865';
         var formattedDate = dateFormatService.formatDateWith24HoursTime(dateString);
 
         expect(formattedDate).toEqual('25/10/2016 19:54');

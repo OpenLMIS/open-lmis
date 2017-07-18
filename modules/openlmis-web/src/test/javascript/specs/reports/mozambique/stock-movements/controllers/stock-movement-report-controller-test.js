@@ -92,7 +92,7 @@ describe("stock movement report controller", function () {
     }));
 
     it('should load facility and stock movements successfully', function () {
-        httpBackend.expectGET('/cubesreports/cube/vw_stock_movements/facts?cut=movement:productCode|facility:facilityCode').respond(200, stockMovements);
+        httpBackend.expectGET('/cubesreports/cube/vw_stock_movements/facts?cut=movement%3AproductCode%7Cfacility%3AfacilityCode').respond(200, stockMovements);
         scope.productCode = 'productCode';
         scope.facilityCode = 'facilityCode';
 

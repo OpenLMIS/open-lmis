@@ -16,7 +16,7 @@ describe('last sync time controller', function () {
 
   it('should load provinces and districts based on profile', function () {
     httpBackend
-        .when('GET', '/cubesreports/cube/vw_sync_time/facts?cut=location:MAPUTO_PROVINCIA')
+        .when('GET', '/cubesreports/cube/vw_sync_time/facts?cut=location%3AMAPUTO_PROVINCIA')
         .respond(200, { foo: 'bar' });
 
     httpBackend.expectGET('/rest-api/lookup/geographic-zones').respond(200, {

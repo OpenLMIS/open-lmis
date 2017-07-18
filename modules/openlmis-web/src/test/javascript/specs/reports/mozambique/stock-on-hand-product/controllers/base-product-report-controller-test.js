@@ -135,14 +135,14 @@ describe("Base Product Report Controller", function () {
     });
 
     it('should return true if drug has expiration risk', function () {
-        scope.reportParams.endTime = '2016-11-01';
+        scope.reportParams.endTime = '2016-11-01T05:00:00';
         var entry = {
-            expiry_date: '2017-02-28',
+            expiry_date: '2017-02-28T05:00:00',
             estimated_months: 3.2
         };
         expect(scope.hasExpirationRisk(entry)).toBeTruthy();
 
-        scope.reportParams.endTime = '2016-10-01';
+        scope.reportParams.endTime = '2016-10-01T05:00:00';
         expect(scope.hasExpirationRisk(entry)).toBeFalsy();
     });
 

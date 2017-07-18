@@ -26,12 +26,12 @@ describe('Date picker container controller test', function(){
     });
 
     it('should set showIncompleteWarning true when change endTime not the last day in current month', function () {
-        scope.dateRange.endTime = filter('date')(new Date("2016-03-12"), "yyyy-MM-dd");
+        scope.dateRange.endTime = filter('date')(new Date("2016-03-12T00:00:00"), "yyyy-MM-dd");
         scope.checkCompletenessOfEndTime();
 
         expect(scope.showIncompleteWarning).toEqual(true);
 
-        scope.dateRange.endTime = filter('date')(new Date("2016-03-31"), "yyyy-MM-dd");
+        scope.dateRange.endTime = filter('date')(new Date("2016-03-31T00:00:00"), "yyyy-MM-dd");
         scope.checkCompletenessOfEndTime();
 
         expect(scope.showIncompleteWarning).toEqual(false);

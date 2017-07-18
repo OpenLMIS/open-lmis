@@ -64,8 +64,8 @@ describe("Single facility Report Controller", function () {
 
         spyOn(lotExpiryDateService, 'populateLotOnHandInformationForSoonestExpiryDate');
 
-        httpBackend.expectGET('/cubesreports/cube/vw_daily_full_soh/facts?cut=occurred:-2017,02,04').respond(200, facilityProductData);
-        httpBackend.expectGET('/cubesreports/cube/vw_cmm_entries/facts?cut=facility:|periodbegin:2017,01,21|periodend:2017,02,20').respond(200, []);
+        httpBackend.expectGET('/cubesreports/cube/vw_daily_full_soh/facts?cut=occurred%3A-2017%2C02%2C04').respond(200, facilityProductData);
+        httpBackend.expectGET('/cubesreports/cube/vw_cmm_entries/facts?cut=facility%3A%7Cperiodbegin%3A2017%2C01%2C21%7Cperiodend%3A2017%2C02%2C20').respond(200, []);
         scope.loadReport();
         httpBackend.flush();
 

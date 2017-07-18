@@ -10,24 +10,24 @@ describe("consumption report controller", function () {
     }));
 
     it('should split for each period in selected range', function () {
-        var periods = scope.splitPeriods("2016-01-01", "2016-04-21");
+        var periods = scope.splitPeriods("2016-01-01T00:00:00", "2016-04-21T00:00:00");
 
         expect(periods.length).toBe(5);
         expect(periods).toEqual([
-            {periodStart: new Date("2015-12-21"), periodEnd: new Date("2016-01-20")},
-            {periodStart: new Date("2016-01-21"), periodEnd: new Date("2016-02-20")},
-            {periodStart: new Date("2016-02-21"), periodEnd: new Date("2016-03-20")},
-            {periodStart: new Date("2016-03-21"), periodEnd: new Date("2016-04-20")},
-            {periodStart: new Date("2016-04-21"), periodEnd: new Date("2016-05-20")}
+            {periodStart: new Date("2015-12-21T00:00:00"), periodEnd: new Date("2016-01-20T00:00:00")},
+            {periodStart: new Date("2016-01-21T00:00:00"), periodEnd: new Date("2016-02-20T00:00:00")},
+            {periodStart: new Date("2016-02-21T00:00:00"), periodEnd: new Date("2016-03-20T00:00:00")},
+            {periodStart: new Date("2016-03-21T00:00:00"), periodEnd: new Date("2016-04-20T00:00:00")},
+            {periodStart: new Date("2016-04-21T00:00:00"), periodEnd: new Date("2016-05-20T00:00:00")}
         ]);
     });
 
     it('should only split one period when selected range in one period', function () {
-        var periods = scope.splitPeriods("2016-01-01", "2016-01-19");
+        var periods = scope.splitPeriods("2016-01-01T00:00:00", "2016-01-19T00:00:00");
 
         expect(periods.length).toBe(1);
         expect(periods).toEqual([
-            {periodStart: new Date("2015-12-21"), periodEnd: new Date("2016-01-20")}
+            {periodStart: new Date("2015-12-21T00:00:00"), periodEnd: new Date("2016-01-20T00:00:00")}
         ]);
     });
 });

@@ -74,8 +74,8 @@ describe('Single Product Report Controller',function () {
 
         spyOn(lotExpiryDateService, 'populateLotOnHandInformationForSoonestExpiryDate');
 
-        httpBackend.expectGET('/cubesreports/cube/vw_daily_full_soh/facts?cut=occurred:-2017,01,04|drug:01A01').respond(200, productData);
-        httpBackend.expectGET('/cubesreports/cube/vw_cmm_entries/facts?cut=product:01A01|periodbegin:2016,12,21|periodend:2017,01,20').respond(200, productData);
+        httpBackend.expectGET('/cubesreports/cube/vw_daily_full_soh/facts?cut=occurred%3A-2017%2C01%2C04%7Cdrug%3A01A01').respond(200, productData);
+        httpBackend.expectGET('/cubesreports/cube/vw_cmm_entries/facts?cut=product%3A01A01%7Cperiodbegin%3A2016%2C12%2C21%7Cperiodend%3A2017%2C01%2C20').respond(200, productData);
 
         scope.loadReport();
         httpBackend.flush();
