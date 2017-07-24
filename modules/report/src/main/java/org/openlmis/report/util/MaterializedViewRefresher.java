@@ -10,15 +10,15 @@ public class MaterializedViewRefresher {
     @Autowired
     private MaterializedViewMapper materializedViewMapper;
 
-    public void refreshSOHViews() {
-        materializedViewMapper.refreshLotExpiryDate();
-        materializedViewMapper.refreshDailyFullSOH();
+    public void refreshDailyMaterializedViews() {
+        materializedViewMapper.refreshPeriodMovements();
     }
 
-    public void refreshMaterializedViews() {
+    public void refreshHourlyMaterializedViews() {
+        materializedViewMapper.refreshLotExpiryDate();
+        materializedViewMapper.refreshDailyFullSOH();
         materializedViewMapper.refreshStockouts();
         materializedViewMapper.refreshCarryStartDates();
         materializedViewMapper.refreshWeeklyTracerSOH();
-        materializedViewMapper.refreshPeriodMovements();
     }
 }

@@ -400,10 +400,10 @@
     </bean>
 
     <task:scheduled-tasks scheduler="viewRefreshScheduler">
-        <task:scheduled ref="materializedViewRefresher" fixed-delay="${soh.views.refresh.rate}"
-                        method="refreshSOHViews"/>
-        <task:scheduled ref="materializedViewRefresher" fixed-delay="${materialized.views.refresh.rate}"
-                        method="refreshMaterializedViews"/>
+        <task:scheduled ref="materializedViewRefresher" fixed-delay="${materialized.views.refresh.rate.daily}"
+                        method="refreshDailyMaterializedViews"/>
+        <task:scheduled ref="materializedViewRefresher" fixed-delay="${materialized.views.refresh.rate.hourly}"
+                        method="refreshHourlyMaterializedViews"/>
     </task:scheduled-tasks>
 
     <task:scheduler id="viewRefreshScheduler"/>
