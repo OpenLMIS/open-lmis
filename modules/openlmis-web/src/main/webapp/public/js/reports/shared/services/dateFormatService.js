@@ -43,16 +43,31 @@ services.factory('DateFormatService', function ($filter, messageService) {
         }
     }
 
-    function formatDateWithTimeAndLocale(dateString){
+    function formatDateWithTimeAndLocale(dateString) {
         var dateWithLocale = formatDateWithLocale(dateString);
         var date = new Date(dateString);
-        var time =  $filter('date')(date, "hh:mm a");
-        return time + ' ' +dateWithLocale;
+        var time = $filter('date')(date, "hh:mm a");
+        return time + ' ' + dateWithLocale;
     }
 
     function formatDateWith24HoursTime(dateString) {
         var date = Date.parse(dateString);
         return $filter('date')(date, 'dd/MM/yyyy HH:mm');
+    }
+
+
+    function formatDateWithUnderscore(date) {
+        return formatDateElementsTwoCharacters(date.getFullYear()) + '_' + formatDateElementsTwoCharacters((date.getMonth() + 1))
+            + '_' + formatDateElementsTwoCharacters(date.getDate()) + '_at_'
+            + formatDateElementsTwoCharacters(date.getHours()) + '.'
+            + formatDateElementsTwoCharacters(date.getMinutes()) + '.' + formatDateElementsTwoCharacters(date.getSeconds());
+    }
+
+    function formatDateElementsTwoCharacters(element) {
+        if (element < 10) {
+            return "0" + element;
+        }
+        return element;
     }
 
     return {
@@ -63,6 +78,8 @@ services.factory('DateFormatService', function ($filter, messageService) {
         formatDateWithStartDayOfPeriod: formatDateWithStartDayOfPeriod,
         formatDateWithEndDayOfPeriod: formatDateWithEndDayOfPeriod,
         formatDateWithTimeAndLocale: formatDateWithTimeAndLocale,
-        formatDateWith24HoursTime: formatDateWith24HoursTime
+        formatDateWith24HoursTime: formatDateWith24HoursTime,
+        formatDateWithUnderscore: formatDateWithUnderscore,
+        formatDateElementsTwoCharacters: formatDateElementsTwoCharacters
     };
 });

@@ -35,10 +35,29 @@ describe("date format service test", function () {
         expect(formattedDate).toEqual("2011-11-20");
     });
 
-    it('should format date with full time', function() {
+    it('should format date with full time', function () {
         var dateString = '2016-10-25T19:54:00.998865';
         var formattedDate = dateFormatService.formatDateWith24HoursTime(dateString);
 
         expect(formattedDate).toEqual('25/10/2016 19:54');
+    });
+
+    it("should format splited '_' ", function () {
+        var formattedDate = dateFormatService.formatDateWithUnderscore(new Date("2011-11-11T00:00:00"));
+        expect(formattedDate).toEqual("2011_11_11_at_00.00.00");
+    });
+
+    it("should add a character 0 when the value is less than 10", function () {
+        var value = Math.floor((Math.random() * 9));
+        var expectedValue = '0' + value;
+        var valueStringFormatted = dateFormatService.formatDateElementsTwoCharacters(value);
+        expect(expectedValue).toEqual(valueStringFormatted);
+    });
+
+    it("should not add a character 0 when the value is greater than 9", function () {
+        var value = Math.floor((Math.random() * 31) + 10);
+        var expectedValue = value;
+        var valueStringFormatted = dateFormatService.formatDateElementsTwoCharacters(value);
+        expect(expectedValue).toEqual(valueStringFormatted);
     });
 });
