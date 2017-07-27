@@ -57,10 +57,7 @@ services.factory('DateFormatService', function ($filter, messageService) {
 
 
     function formatDateWithUnderscore(date) {
-        return formatDateElementsTwoCharacters(date.getFullYear()) + '_' + formatDateElementsTwoCharacters((date.getMonth() + 1))
-            + '_' + formatDateElementsTwoCharacters(date.getDate()) + '_at_'
-            + formatDateElementsTwoCharacters(date.getHours()) + '.'
-            + formatDateElementsTwoCharacters(date.getMinutes()) + '.' + formatDateElementsTwoCharacters(date.getSeconds());
+        return formatDateElementsTwoCharacters(date.getFullYear()) + "_" + formatDateElementsTwoCharacters((date.getMonth() + 1)) + "_" + formatDateElementsTwoCharacters(date.getDate()) + "_at_" + formatDateElementsTwoCharacters(date.getHours()) + "." + formatDateElementsTwoCharacters(date.getMinutes()) + "." + formatDateElementsTwoCharacters(date.getSeconds());
     }
 
     function formatDateElementsTwoCharacters(element) {

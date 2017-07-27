@@ -28,7 +28,7 @@ services.factory('ReportExportExcelService', function ($http, DateFormatService)
 
     function formatFileNameWithDate (fileName) {
         return fileName + '_' + DateFormatService.formatDateWithUnderscore(new Date());
-    };
+    }
 
     return {
         exportAsXlsx: exportAsXlsx,
