@@ -1,5 +1,5 @@
-describe('Single Product Report Controller',function () {
-    var scope, httpBackend, dateFilter, window, productData, lotExpiryDateService;
+describe('Single Product Report Controller', function () {
+    var scope, httpBackend, dateFilter, window, productData, vw_daily_full_soh, lotExpiryDateService, reportExportExcelService, messageService_;
 
     productData = [
         {
@@ -8,7 +8,7 @@ describe('Single Product Report Controller',function () {
             "cmm": -1.0,
             "occurred.month": 12.0,
             "drug.drug_name": "Paracetamol500mgComprimidos",
-            "location.province_name": "Maputo Prov\u00edncia",
+            "location.province_name": "Maputo Provincia",
             "facility.facility_name": "Marracuene",
             "occurred.day": 8.0,
             "location.district_code": "MARRACUENE",
@@ -43,12 +43,14 @@ describe('Single Product Report Controller',function () {
 
     beforeEach(module('openlmis'));
     beforeEach(module('ui.bootstrap.dialog'));
-    beforeEach(inject(function (_$httpBackend_, $rootScope, $filter, $controller, LotExpiryDateService, $window) {
+    beforeEach(inject(function (_$httpBackend_, $rootScope, $filter, $controller, LotExpiryDateService, $window, ReportExportExcelService, messageService) {
         scope = $rootScope.$new();
         httpBackend = _$httpBackend_;
         dateFilter = $filter('date');
         window = $window;
         lotExpiryDateService = LotExpiryDateService;
+        reportExportExcelService = ReportExportExcelService;
+        messageService_ = messageService;
         $controller(SingleProductReportController, {$scope: scope});
     }));
 
@@ -82,5 +84,77 @@ describe('Single Product Report Controller',function () {
 
         expect(scope.reportData.length).toBe(1);
         expect(scope.reportData[0]['drug.drug_name']).toEqual("Paracetamol500mgComprimidos");
+    });
+
+    it('should export data with district province name successfully', function () {
+        scope.reportData = [
+            {
+                "cmm": 1,
+                "drug.drug_code": "01A01",
+                "drug.drug_name": "Digoxina 0,25mg Comp",
+                "estimated_months": 3,
+                "expiry_date": "Apr 2019",
+                "facility.facility_code": "F_CORE",
+                "facility.facility_id": 2,
+                "facility.facility_name": "Nhongonhane (Ed.Mondl.)",
+                "formatted_expiry_date": "Apr 2019",
+                "formatted_last_sync_date": "12:24 AM 18 July 2017",
+                "last_sync_date": "2017-07-18T07:24:44.516902+02:00",
+                "location.province_code": "MAPUTO_PROVINCIA",
+                "location.province_name": "Maputo Prov\u00edncia",
+                "location.district_code": "MARRACUENE",
+                "location.district_name": "Marracuene",
+                "occurred.month": 7.0,
+                "occurred.day": 26.0,
+                "occurred_date": "2017-07-26",
+                "occurred.year": 2017.0,
+                "soonest_expiring_loh": 40,
+                "stock_card_entry_id": 11,
+                "stock_status": "",
+                "soh": 46,
+                "vw_daily_full_soh_stock_card_entry_id": 11
+            }
+        ];
+
+        spyOn(reportExportExcelService, 'exportAsXlsx');
+        scope.exportXLSX();
+
+        var expectedHeader = {
+            drugCode: 'report.header.drug.code',
+            drugName: 'report.header.drug.name',
+            province: 'report.header.province',
+            district: 'report.header.district',
+            facility: 'report.header.facility',
+            quantity: 'report.header.drug.quantity',
+            status: 'report.header.status',
+            earliestDrugExpiryDate: 'report.header.earliest.drug.expiry.date',
+            lotStockOnHand: 'report.header.lot.stock.on.hand',
+            estimatedMonths: 'report.header.estimated.months',
+            lastUpdateFromTablet: 'report.header.last.update.from.tablet'
+        };
+
+        var date = Date.parse("2017-07-18T07:24:44.516902+02:00");
+        var expectedSyncDate = dateFilter(date, 'dd/MM/yyyy HH:mm');
+
+        var expectedContent = {
+            drugCode: "01A01",
+            drugName: "Digoxina 0,25mg Comp",
+            province: "Maputo Prov\u00edncia",
+            district: "Marracuene",
+            facility: "Nhongonhane (Ed.Mondl.)",
+            quantity: 46,
+            status: "",
+            earliestDrugExpiryDate: "Apr 2019",
+            lotStockOnHand: 40,
+            estimatedMonths: 3,
+            lastUpdateFromTablet: expectedSyncDate
+        };
+
+        var expectedExcel = {
+            reportHeaders: expectedHeader,
+            reportContent: [expectedContent]
+        };
+
+        expect(reportExportExcelService.exportAsXlsx).toHaveBeenCalledWith(expectedExcel, 'report.file.single.product.soh.report');
     });
 });

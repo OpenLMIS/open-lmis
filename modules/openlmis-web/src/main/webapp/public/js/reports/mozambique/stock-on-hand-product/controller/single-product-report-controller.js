@@ -107,8 +107,6 @@ function SingleProductReportController($scope, $filter, $controller, $http, Cube
   };
 
   $scope.exportXLSX = function () {
-    var params = $scope.reportParams;
-    $scope.locationIdToCode(params);
     var data = {
       reportHeaders: {
         drugCode: messageService.get('report.header.drug.code'),
@@ -129,11 +127,11 @@ function SingleProductReportController($scope, $filter, $controller, $http, Cube
     if ($scope.reportData) {
       $scope.reportData.forEach(function (sohReportData) {
         var singleProductSOHReportContent = {};
-        singleProductSOHReportContent.drugCode = $scope.reportParams.productCode;
-        singleProductSOHReportContent.drugName = $scope.getDrugByCode($scope.reportParams.productCode).primaryName;
-        singleProductSOHReportContent.province = $scope.reportParams.selectedProvince ? $scope.reportParams.selectedProvince.name : '[All]';
-        singleProductSOHReportContent.district = $scope.reportParams.selectedDistrict ? $scope.reportParams.selectedDistrict.name : '[All]';
-        singleProductSOHReportContent.facility = sohReportData.facility_name;
+        singleProductSOHReportContent.drugCode = sohReportData["drug.drug_code"];
+        singleProductSOHReportContent.drugName = sohReportData["drug.drug_name"];
+        singleProductSOHReportContent.province = sohReportData["location.province_name"];
+        singleProductSOHReportContent.district = sohReportData["location.district_name"];
+        singleProductSOHReportContent.facility = sohReportData["facility.facility_name"];
         singleProductSOHReportContent.quantity = sohReportData.soh;
         singleProductSOHReportContent.status = sohReportData.stock_status;
         singleProductSOHReportContent.earliestDrugExpiryDate = sohReportData.formatted_expiry_date;
