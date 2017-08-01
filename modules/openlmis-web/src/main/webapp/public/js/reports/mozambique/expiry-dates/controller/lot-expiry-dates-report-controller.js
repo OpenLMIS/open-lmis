@@ -1,8 +1,6 @@
 function LotExpiryDatesReportController($scope, $controller, $http, CubesGenerateUrlService, messageService, CubesGenerateCutParamsService, $routeParams, DateFormatService, ReportExportExcelService) {
   $controller('BaseProductReportController', {$scope: $scope});
 
-  var expiryDatesReportParams;
-
   $scope.populateOptions = function () {
     if(!_.isEmpty($routeParams)) {
       $scope.reportParams.endTime = $routeParams.date;
@@ -114,7 +112,10 @@ function LotExpiryDatesReportController($scope, $controller, $http, CubesGenerat
           createddate: createdDate,
           occurred_date: occurredDate,
           lot_expiry_dates: {},
-          facility_code: item['facility.facility_code']
+          facility_code: item['facility.facility_code'],
+          province_name: item['location.province_name'],
+          facility_name: item['facility.facility_name'],
+          district_name: item['location.district_name']
         };
         drugOccurredHash[drugCode].lot_expiry_dates[item.lot_number + " - " + item.expiry_date] = item.lotonhand;
       }
@@ -130,16 +131,16 @@ function LotExpiryDatesReportController($scope, $controller, $http, CubesGenerat
   }
 
   function generateReportTitle() {
-    expiryDatesReportParams = getExpiryDateReportsParams();
+    $scope.expiryDatesReportParams = getExpiryDateReportsParams();
     var reportTitle = "";
-    if (expiryDatesReportParams.selectedProvince) {
-      reportTitle = expiryDatesReportParams.selectedProvince.name;
+    if ($scope.expiryDatesReportParams.selectedProvince) {
+      reportTitle = $scope.expiryDatesReportParams.selectedProvince.name;
     }
-    if (expiryDatesReportParams.selectedDistrict) {
-      reportTitle = expiryDatesReportParams.selectedDistrict.name;
+    if ($scope.expiryDatesReportParams.selectedDistrict) {
+      reportTitle = $scope.expiryDatesReportParams.selectedDistrict.name;
     }
-    if (expiryDatesReportParams.selectedFacility) {
-      reportTitle = expiryDatesReportParams.selectedFacility.name;
+    if ($scope.expiryDatesReportParams.selectedFacility) {
+      reportTitle = $scope.expiryDatesReportParams.selectedFacility.name;
     }
     $scope.reportParams.reportTitle = reportTitle || messageService.get("label.all");
   }
@@ -162,7 +163,6 @@ function LotExpiryDatesReportController($scope, $controller, $http, CubesGenerat
         province: messageService.get('report.header.province'),
         district: messageService.get('report.header.district'),
         facility: messageService.get('report.header.facility'),
-
         lot: messageService.get('report.header.lot'),
         expiryDate: messageService.get('report.header.expiry.date'),
         soh: messageService.get('report.header.stock.on.hand'),
@@ -171,20 +171,19 @@ function LotExpiryDatesReportController($scope, $controller, $http, CubesGenerat
       reportContent: []
     };
 
-    if($scope.reportData) {
-
+      if($scope.reportData) {
       $scope.reportData.forEach(function (expiryDateReportData) {
         expiryDateReportData.lot_expiry_dates.forEach(function(lot) {
           var expiryDateReportContent = {};
           expiryDateReportContent.drugCode = expiryDateReportData.code;
           expiryDateReportContent.drugName = expiryDateReportData.name;
-          expiryDateReportContent.province = expiryDatesReportParams.selectedProvince ? expiryDatesReportParams.selectedProvince.name : '[All]';
-          expiryDateReportContent.district = expiryDatesReportParams.selectedDistrict ? expiryDatesReportParams.selectedDistrict.name : '[All]';
-          expiryDateReportContent.facility = expiryDatesReportParams.selectedFacility ? expiryDatesReportParams.selectedFacility.name : '[All]';
+          expiryDateReportContent.province = expiryDateReportData.province_name;
+          expiryDateReportContent.district = expiryDateReportData.district_name;
+          expiryDateReportContent.facility = expiryDateReportData.facility_name;
           expiryDateReportContent.lot = lot.lot_number;
           expiryDateReportContent.expiryDate = lot.formatted_expiry_date;
           expiryDateReportContent.soh = lot.lot_on_hand;
-          expiryDateReportContent.reportGenerateDate = DateFormatService.formatDateWithLocale(expiryDatesReportParams.endTime);
+          expiryDateReportContent.reportGenerateDate = DateFormatService.formatDateWithLocale($scope.expiryDatesReportParams.endTime);
           data.reportContent.push(expiryDateReportContent);
         });
       });
