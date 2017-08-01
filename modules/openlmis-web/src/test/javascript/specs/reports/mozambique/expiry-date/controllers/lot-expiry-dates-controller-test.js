@@ -11,7 +11,7 @@ describe("Lot Expiry Dates Report Controller", function () {
     $controller(LotExpiryDatesReportController, {$scope: scope});
   }));
 
-  iit('should export data with district province name successfully', function () {
+  it('should export data with district province name successfully', function () {
 
     var date = Date.parse("2017-02-28T00:00:00.00000+02:00");
     var expiryDate = dateFilter(date, 'dd/MM/yyyy HH:mm');
