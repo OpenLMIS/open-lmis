@@ -292,6 +292,19 @@ public class ProductMapperIT {
     assertNotEquals(DateUtil.formatDate(product.getModifiedDate()), is(DateUtil.formatDate(modifiedDate)));
   }
 
+  @Test
+  public void shouldUpdateNOSWhenUpdateProduct() {
+    Product product = make(a(defaultProduct,with(ProductBuilder.nos, true)));
+    productMapper.insert(product);
+
+    Product result = productMapper.getById(product.getId());
+    assertThat(result.getNos(), is(true));
+
+    result.setNos(false);
+    productMapper.update(result);
+    assertThat(result.getNos(), is(false));
+  }
+
   private void updateModifiedDateForProducts(Timestamp modifiedDate, Long productId) throws SQLException {
     queryExecutor.executeUpdate("UPDATE products SET modifieddate = ? WHERE id = ?", modifiedDate, productId);
   }

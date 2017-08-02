@@ -181,6 +181,9 @@ public class Product extends BaseModel implements Importable {
   @ImportField(type = "boolean", name = "Is a Kit")
   private Boolean isKit = false;
 
+  @ImportField(mandatory = true, type = "boolean", name = "Is An NOS Product")
+  private Boolean nos;
+
   private List<KitProduct> kitProductList = new ArrayList<>();
 
   private final static String DEFAULT_DISPENSING_UNIT = "1";
@@ -190,6 +193,7 @@ public class Product extends BaseModel implements Importable {
   private final static Boolean DEFAULT_TRACER = false;
   private final static Boolean DEFAULT_ROUND_TO_ZERO = false;
   private final static Integer DEFAULT_PACK_ROUNDING_THRESHOLD = 0;
+  private static final Boolean DEFAULT_NOS = false;
 
   public void validate() {
     if (this.packSize <= 0) {
@@ -212,6 +216,9 @@ public class Product extends BaseModel implements Importable {
     }
     if (tracer == null) {
       tracer = DEFAULT_TRACER;
+    }
+    if (nos == null) {
+      nos = DEFAULT_NOS;
     }
     if (roundToZero == null) {
       roundToZero = DEFAULT_ROUND_TO_ZERO;

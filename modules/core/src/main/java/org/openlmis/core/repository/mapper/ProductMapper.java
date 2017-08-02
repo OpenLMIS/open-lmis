@@ -43,7 +43,7 @@ public interface ProductMapper {
     "specialStorageInstructions," + "specialTransportInstructions," +
     "active," + "fullSupply," + "tracer," + "roundToZero," + "archived," +
     "packRoundingThreshold, productGroupId, isKit," +
-    "createdBy, modifiedBy, modifiedDate)" +
+    "createdBy, modifiedBy, modifiedDate, nos)" +
     "VALUES(" +
     "#{code}," +
     "#{alternateItemCode}," +
@@ -65,7 +65,7 @@ public interface ProductMapper {
     "#{specialStorageInstructions}," + "#{specialTransportInstructions}," +
     "#{active}," + "#{fullSupply}," + "#{tracer}," + "#{roundToZero}," + "#{archived}," +
     "#{packRoundingThreshold},  #{productGroup.id}, #{isKit}," +
-    "#{createdBy}, #{modifiedBy}, COALESCE(#{modifiedDate}, CURRENT_TIMESTAMP))")
+    "#{createdBy}, #{modifiedBy}, COALESCE(#{modifiedDate}, CURRENT_TIMESTAMP), #{nos})")
   @Options(useGeneratedKeys = true)
   Long insert(Product product);
 
