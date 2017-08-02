@@ -28,3 +28,4 @@ gradlew.bat
 modules/export/src/main/resources/generated/
 .ideaDataSources/
 dataSources/
+package-lock.json
