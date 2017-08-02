@@ -167,14 +167,17 @@ services.factory('TracerDrugsChartService', function ($http, $filter, $q, $timeo
                 var percentage = item.dataContext[tracerDrugcode];
                 var stockOutFacilities = item.dataContext[tracerDrugcode + "StockOutFacilities"];
                 var carryingFacilities = item.dataContext[tracerDrugcode + "CarryingFacilities"];
+                var carryingFacilitiesNames = carryingFacilities.join(', ');
                 var informationDrug = messageService.get('report.tracer.name') + ": " + tracerDrugName + "[" + tracerDrugcode + "]" + "<br>" +
                     messageService.get('report.tracer.percentage') + ": " + percentage + "% <br>" +
                     messageService.get('report.tracer.health.facility') + ": " + (carryingFacilities.length - stockOutFacilities.length) + "% <br>";
 
                 if (stockOutFacilities.length !== 0) {
                     var stockOutFacilitiesNames = stockOutFacilities.join(', ');
-                    informationDrug += messageService.get('report.tracer.health.facility.stockout') + ": <span style='color:red;'>" + stockOutFacilitiesNames + "</span>";
+                    informationDrug += "<span style='color:red;'>" + stockOutFacilitiesNames + "</span><br>";
                 }
+
+                informationDrug += carryingFacilitiesNames + "<br>";
 
                 return informationDrug;
             };
