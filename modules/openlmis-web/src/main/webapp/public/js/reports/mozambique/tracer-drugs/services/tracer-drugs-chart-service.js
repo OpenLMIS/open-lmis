@@ -1,4 +1,4 @@
-services.factory('TracerDrugsChartService', function ($http, $filter, $q, $timeout, messageService, CubesGenerateUrlService, StockoutSingleProductZoneChartService, CubesGenerateCutParamsService, ReportLocationConfigService, ReportExportExcelService) {
+services.factory('TracerDrugsChartService', function ($http, $filter, $q, $timeout, messageService, CubesGenerateUrlService, StockoutSingleProductZoneChartService, CubesGenerateCutParamsService, ReportLocationConfigService, ReportExportExcelService, DateFormatService) {
 
     var drugCodekey = "drug.drug_code";
     var drugNameKey = "drug.drug_name";
@@ -147,7 +147,7 @@ services.factory('TracerDrugsChartService', function ($http, $filter, $q, $timeo
         });
         return true;
     }
-
+    
     function generateGraphs(tracerDrugs) {
         function stringToRGB(str) {
             var hash = 0;
@@ -167,9 +167,11 @@ services.factory('TracerDrugsChartService', function ($http, $filter, $q, $timeo
                 var percentage = item.dataContext[tracerDrugcode];
                 var stockOutFacilities = item.dataContext[tracerDrugcode + "StockOutFacilities"];
                 var carryingFacilities = item.dataContext[tracerDrugcode + "CarryingFacilities"];
+                var stockOutFacilitiesNames = stockOutFacilities.join(', ');
                 return messageService.get('report.tracer.name') + ": " + tracerDrugName + "[" + tracerDrugcode + "]" + "<br>" +
                     messageService.get('report.tracer.percentage') + ": " + percentage + "% <br>" +
-                    messageService.get('report.tracer.health.facility') + ": " + (carryingFacilities.length - stockOutFacilities.length);
+                    messageService.get('report.tracer.health.facility') + ": " + (carryingFacilities.length - stockOutFacilities.length) + "% <br>" +
+                    messageService.get('report.tracer.health.facility.stockout') + ": " + stockOutFacilitiesNames;
             };
         }
 
