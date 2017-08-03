@@ -167,7 +167,9 @@ services.factory('TracerDrugsChartService', function ($http, $filter, $q, $timeo
         var percentage = item.dataContext[tracerDrugcode];
         var stockOutFacilities = item.dataContext[tracerDrugcode + "StockOutFacilities"];
         var carryingFacilities = item.dataContext[tracerDrugcode + "CarryingFacilities"];
-        var carryingFacilitiesNames = carryingFacilities.join(', ');
+        var facilitiesWithStock = carryingFacilities.filter(function(a){return !~this.indexOf(a);},stockOutFacilities);
+        var facilitiesWithStockNames = facilitiesWithStock.join(', ');
+
         var informationDrug = messageService.get('report.tracer.name') + ": " + tracerDrugName + "[" + tracerDrugcode + "]" + "<br>" +
           messageService.get('report.tracer.percentage') + ": " + percentage + "% <br>" +
           messageService.get('report.tracer.health.facility') + ": " + (carryingFacilities.length - stockOutFacilities.length) + "% <br>";
@@ -177,7 +179,7 @@ services.factory('TracerDrugsChartService', function ($http, $filter, $q, $timeo
           informationDrug += "<span style='color:red;'>" + stockOutFacilitiesNames + "</span><br>";
         }
 
-        informationDrug += carryingFacilitiesNames + "<br>";
+        informationDrug += facilitiesWithStockNames + "<br>";
 
         return informationDrug;
       };
