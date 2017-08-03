@@ -300,9 +300,11 @@ public class ProductMapperIT {
     Product result = productMapper.getById(product.getId());
     assertThat(result.getNos(), is(true));
 
-    result.setNos(false);
-    productMapper.update(result);
-    assertThat(result.getNos(), is(false));
+    product.setNos(false);
+    productMapper.update(product);
+
+    Product result2 = productMapper.getById(product.getId());
+    assertThat(result2.getNos(), is(false));
   }
 
   private void updateModifiedDateForProducts(Timestamp modifiedDate, Long productId) throws SQLException {
