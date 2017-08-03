@@ -1,20 +1,6 @@
-function getExpectedHeaders() {
-  var expectedHeader = {
-    drugCode: 'report.header.drug.code',
-    drugName: 'report.header.drug.name',
-    province: 'report.header.province',
-    district: 'report.header.district',
-    facility: 'report.header.facility',
-    avgDuration: 'report.header.avg.duration',
-    totalStockoutOccurrences: 'report.header.total.stockout.occurrences',
-    totalDaysStockedOut: 'report.header.total.days.stocked.out',
-    reportStartDate: 'report.header.report.start.date',
-    reportEndDate: 'report.header.report.end.date'
-  };
-  return expectedHeader;
-}
 describe("Stock Out All Products Report Controller", function () {
-  var scope, geoZoneData, levels, provinceData, httpBackend, dateFilter, stockOutReportData, facilityData, districtData,
+  var scope, geoZoneData, levels, provinceData, httpBackend, dateFilter, stockOutReportData, facilityData,
+    districtData,
     messageService, reportExportExcelService;
 
   levels = [{
@@ -156,6 +142,22 @@ describe("Stock Out All Products Report Controller", function () {
     "overlap_duration": 6
   }];
 
+  function getExpectedHeaders() {
+    var expectedHeader = {
+      drugCode: 'report.header.drug.code',
+      drugName: 'report.header.drug.name',
+      province: 'report.header.province',
+      district: 'report.header.district',
+      facility: 'report.header.facility',
+      avgDuration: 'report.header.avg.duration',
+      totalStockoutOccurrences: 'report.header.total.stockout.occurrences',
+      totalDaysStockedOut: 'report.header.total.days.stocked.out',
+      reportStartDate: 'report.header.report.start.date',
+      reportEndDate: 'report.header.report.end.date'
+    };
+    return expectedHeader;
+  }
+
   beforeEach(module('openlmis'));
   beforeEach(module('ui.bootstrap.dialog'));
   beforeEach(inject(function (_$httpBackend_, $rootScope, $http, $controller, $filter, _messageService_, ReportExportExcelService) {
@@ -285,6 +287,7 @@ describe("Stock Out All Products Report Controller", function () {
   });
 
 });
+
 function getExpectedHeaders() {
   var expectedHeader = {
     drugCode: 'report.header.drug.code',
@@ -300,8 +303,10 @@ function getExpectedHeaders() {
   };
   return expectedHeader;
 }
+
 describe("Stock Out All Products Report Controller", function () {
-  var scope, geoZoneData, levels, provinceData, httpBackend, dateFilter, stockOutReportData, facilityData, districtData,
+  var scope, geoZoneData, levels, provinceData, httpBackend, dateFilter, stockOutReportData, facilityData,
+    districtData,
     messageService, reportExportExcelService;
 
   levels = [{
