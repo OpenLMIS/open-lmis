@@ -297,14 +297,14 @@ public class ProductMapperIT {
     Product product = make(a(defaultProduct,with(ProductBuilder.nos, true)));
     productMapper.insert(product);
 
-    Product result = productMapper.getById(product.getId());
-    assertThat(result.getNos(), is(true));
+    Product savedProduct = productMapper.getById(product.getId());
+    assertThat(savedProduct.getNos(), is(true));
 
-    product.setNos(false);
-    productMapper.update(product);
+    savedProduct.setNos(false);
+    productMapper.update(savedProduct);
 
-    Product result2 = productMapper.getById(product.getId());
-    assertThat(result2.getNos(), is(false));
+    Product updatedProduct = productMapper.getById(product.getId());
+    assertThat(updatedProduct.getNos(), is(false));
   }
 
   private void updateModifiedDateForProducts(Timestamp modifiedDate, Long productId) throws SQLException {
