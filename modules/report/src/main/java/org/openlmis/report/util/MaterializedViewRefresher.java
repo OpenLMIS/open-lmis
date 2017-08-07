@@ -17,6 +17,7 @@ public class MaterializedViewRefresher {
     public void refreshHourlyMaterializedViews() {
         materializedViewMapper.refreshLotExpiryDate();
         materializedViewMapper.refreshDailyFullSOH();
+        materializedViewMapper.refreshCMMEntires();
         materializedViewMapper.refreshStockouts();
         materializedViewMapper.refreshCarryStartDates();
         materializedViewMapper.refreshWeeklyTracerSOH();

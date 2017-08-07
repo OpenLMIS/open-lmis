@@ -22,4 +22,7 @@ public interface MaterializedViewMapper {
 
     @Select("SELECT refresh_vw_lot_expiry_dates();")
     Integer refreshLotExpiryDate();
+
+    @Select("SELECT refresh_vw_cmm_entries();")
+    Integer refreshCMMEntires();
 }
