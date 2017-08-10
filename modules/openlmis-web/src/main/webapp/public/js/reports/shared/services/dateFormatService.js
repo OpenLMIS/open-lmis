@@ -67,6 +67,17 @@ services.factory('DateFormatService', function ($filter, messageService) {
         return element;
     }
 
+    function getFridaysBetween(start, end) {
+        var dates = [];
+        for (var day = new Date(start); day <= end; day.setDate(day.getDate() + 1)) {
+            var isFriday = day.getDay() == 5;
+            if (isFriday) {
+                dates.push(new Date(day));
+            }
+        }
+        return dates;
+    }
+
     return {
         formatDateWithFirstDayOfMonth: formatDateWithFirstDayOfMonth,
         formatDateWithLastDayOfMonth: formatDateWithLastDayOfMonth,
@@ -77,6 +88,7 @@ services.factory('DateFormatService', function ($filter, messageService) {
         formatDateWithTimeAndLocale: formatDateWithTimeAndLocale,
         formatDateWith24HoursTime: formatDateWith24HoursTime,
         formatDateWithUnderscore: formatDateWithUnderscore,
-        formatDateElementsTwoCharacters: formatDateElementsTwoCharacters
+        formatDateElementsTwoCharacters: formatDateElementsTwoCharacters,
+        getFridaysBetween: getFridaysBetween
     };
 });

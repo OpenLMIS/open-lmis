@@ -7,5 +7,28 @@ services.factory('ReportLocationConfigService', function () {
         return {isOneDistrict: isOneDistrict, isOneProvince: isOneProvince, isAllProvinces: isAllProvinces};
     };
 
-    return {getUserSelectedLocationConfig: getUserSelectedLocationConfig};
+    var getZone = function(province, district) {
+        var locationConfig = getUserSelectedLocationConfig(province, district);
+
+        if (locationConfig.isOneDistrict) {
+            return {
+                zoneCode: district.code,
+                zonePropertyName: "location.district_code"
+            };
+        }
+        else if (locationConfig.isOneProvince) {
+            return {
+                zoneCode: province.code,
+                zonePropertyName: "location.province_code"
+            };
+        }
+        else if (locationConfig.isAllProvinces) {
+            return undefined;
+        }
+    };
+
+    return {
+        getUserSelectedLocationConfig: getUserSelectedLocationConfig,
+        getZone: getZone
+    };
 });

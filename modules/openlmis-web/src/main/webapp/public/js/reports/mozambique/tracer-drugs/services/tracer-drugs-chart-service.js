@@ -26,37 +26,6 @@ services.factory('TracerDrugsChartService', function ($http, $filter, $q, $timeo
     return $http.get(requestUrl);
   }
 
-  function getFridaysBetween(start, end) {
-    var dates = [];
-    for (var day = new Date(start); day <= end; day.setDate(day.getDate() + 1)) {
-      var isFriday = day.getDay() == 5;
-      if (isFriday) {
-        dates.push(new Date(day));
-      }
-    }
-    return dates;
-  }
-
-  function getZone(province, district) {
-    var locationConfig = ReportLocationConfigService.getUserSelectedLocationConfig(province, district);
-
-    if (locationConfig.isOneDistrict) {
-      return {
-        zoneCode: district.code,
-        zonePropertyName: "location.district_code"
-      };
-    }
-    else if (locationConfig.isOneProvince) {
-      return {
-        zoneCode: province.code,
-        zonePropertyName: "location.province_code"
-      };
-    }
-    else if (locationConfig.isAllProvinces) {
-      return undefined;
-    }
-  }
-
   function generateTracerDurgDataItemForOneFriday(friday, tracerDrugs, province, district, stockOuts, carryStartDates) {
     var chartDataItem = {date: friday};
 
@@ -64,7 +33,7 @@ services.factory('TracerDrugsChartService', function ($http, $filter, $q, $timeo
     _.forEach(tracerDrugs, function (tracerDrug) {
       var tracerDrugCode = tracerDrug[drugCodekey];
 
-      var fridayStockOutRate = getTracerDrugStockRateOnFriday(getZone(province, district), friday, stockOuts, tracerDrugCode, carryStartDates);
+      var fridayStockOutRate = getTracerDrugStockRateOnFriday(ReportLocationConfigService.getZone(province, district), friday, stockOuts, tracerDrugCode, carryStartDates);
       chartDataItem[tracerDrugCode + "StockOutFacilities"] = fridayStockOutRate.stockOutFacilities;
       chartDataItem[tracerDrugCode + "CarryingFacilities"] = fridayStockOutRate.carryingFacilities;
       chartDataItem[tracerDrugCode] = 0;
@@ -124,7 +93,7 @@ services.factory('TracerDrugsChartService', function ($http, $filter, $q, $timeo
   }
 
   function generateTracerDrugsChartDataItems(tracerDrugs, stockOuts, carryStartDates, userSelectedStartDate, userSelectedEndDate, province, district) {
-    var fridays = getFridaysBetween(userSelectedStartDate, userSelectedEndDate);
+    var fridays = DateFormatService.getFridaysBetween(userSelectedStartDate, userSelectedEndDate);
     return _.chain(fridays)
       .map(function (friday) {
         return generateTracerDurgDataItemForOneFriday(friday, tracerDrugs, province, district, stockOuts, carryStartDates);
