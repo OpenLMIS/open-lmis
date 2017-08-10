@@ -283,7 +283,7 @@ services.factory('TracerDrugsChartService', function ($http, $filter, $q, $timeo
   function exportXLSX(startTime, endTime, province, district) {
     var params = [{
       name: 'fields',
-      value: ['facility.facility_name', 'drug.drug_name', 'drug.drug_code', 'date', 'soh']
+      value: ['location.province_name', 'location.district_name', 'facility.facility_name', 'drug.drug_name', 'drug.drug_code', 'date', 'soh']
     }];
 
     var everyDrugIsSolid = _.every(selectedDrugs, function (drug) {
@@ -313,8 +313,8 @@ services.factory('TracerDrugsChartService', function ($http, $filter, $q, $timeo
           var newTracerDrug = {};
           newTracerDrug.drugCode = tracerDrug['drug.drug_code'];
           newTracerDrug.drugName = tracerDrug['drug.drug_name'];
-          newTracerDrug.province = province ? province.name : '[All]';
-          newTracerDrug.district = district ? district.name : '[All]';
+          newTracerDrug.province = tracerDrug['location.province_name'];
+          newTracerDrug.district = tracerDrug['location.district_name'];
           newTracerDrug.facility = tracerDrug['facility.facility_name'];
           newTracerDrug.quantity = tracerDrug.soh;
           newTracerDrug.date = tracerDrug.date;
