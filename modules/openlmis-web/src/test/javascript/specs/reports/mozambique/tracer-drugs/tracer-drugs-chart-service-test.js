@@ -164,5 +164,6 @@ describe("tracer drugs chart service test", function () {
             joc({
                 id: "all"
             })]));
-    })
+    });
+
 });

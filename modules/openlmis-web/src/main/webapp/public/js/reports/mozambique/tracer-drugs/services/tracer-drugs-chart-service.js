@@ -136,7 +136,9 @@ services.factory('TracerDrugsChartService', function ($http, $filter, $q, $timeo
         var percentage = item.dataContext[tracerDrugcode];
         var stockOutFacilities = item.dataContext[tracerDrugcode + "StockOutFacilities"];
         var carryingFacilities = item.dataContext[tracerDrugcode + "CarryingFacilities"];
-        var facilitiesWithStock = carryingFacilities.filter(function(a){return !~this.indexOf(a);},stockOutFacilities);
+        var facilitiesWithStock = carryingFacilities.filter(function (a) {
+          return !~this.indexOf(a);
+        }, stockOutFacilities);
         var facilitiesWithStockNames = facilitiesWithStock.join(', ');
 
         var informationDrug = messageService.get('report.tracer.name') + ": " + tracerDrugName + "[" + tracerDrugcode + "]" + "<br>" +
@@ -280,10 +282,31 @@ services.factory('TracerDrugsChartService', function ($http, $filter, $q, $timeo
     }
   }
 
+  function getColumnsFromDates(tracerDrugs) {
+    var dates = _.map(tracerDrugs, function (tracerDrug) {
+      return tracerDrug.date;
+    });
+    return _.uniq(dates);
+  }
+
+  function addReportDateHeaders(dates) {
+    var header = {
+      drugCode: messageService.get('report.header.drug.code'),
+      drugName: messageService.get('report.header.drug.name'),
+      province: messageService.get('report.header.province'),
+      district: messageService.get('report.header.district'),
+      facility: messageService.get('report.header.facility')
+    };
+    _.each(dates, function (date) {
+      header[date] = date;
+    });
+    return header;
+  }
+
   function exportXLSX(startTime, endTime, province, district) {
     var params = [{
       name: 'fields',
-      value: ['location.province_name', 'location.district_name', 'facility.facility_name', 'drug.drug_name', 'drug.drug_code', 'date', 'soh']
+      value: ['location.province_name', 'location.district_name', 'facility.facility_code','facility.facility_name', 'drug.drug_name', 'drug.drug_code', 'date', 'soh']
     }];
 
     var everyDrugIsSolid = _.every(selectedDrugs, function (drug) {
@@ -296,28 +319,30 @@ services.factory('TracerDrugsChartService', function ($http, $filter, $q, $timeo
         $filter('date')(startTime, "yyyy,MM,dd"),
         $filter('date')(endTime, "yyyy,MM,dd"),
         undefined, drugParams, province, district), params)).success(function (tracerDrugs) {
+        var dates = getColumnsFromDates(tracerDrugs);
+        tracerDrugs = _.groupBy(tracerDrugs, function (tracerDrug) {
+          return tracerDrug["drug.drug_code"] + tracerDrug["facility.facility_code"];
+        });
         var data = {
-          reportHeaders: {
-            drugCode: messageService.get('report.header.drug.code'),
-            drugName: messageService.get('report.header.drug.name'),
-            province: messageService.get('report.header.province'),
-            district: messageService.get('report.header.district'),
-            facility: messageService.get('report.header.facility'),
-            quantity: messageService.get('report.header.drug.quantity'),
-            date: messageService.get('report.header.date')
-          },
+          reportHeaders: addReportDateHeaders(dates),
           reportContent: []
         };
 
-        tracerDrugs.forEach(function (tracerDrug) {
+        _.forEach(tracerDrugs, function (tracerDrugInFacility) {
           var newTracerDrug = {};
-          newTracerDrug.drugCode = tracerDrug['drug.drug_code'];
-          newTracerDrug.drugName = tracerDrug['drug.drug_name'];
-          newTracerDrug.province = tracerDrug['location.province_name'];
-          newTracerDrug.district = tracerDrug['location.district_name'];
-          newTracerDrug.facility = tracerDrug['facility.facility_name'];
-          newTracerDrug.quantity = tracerDrug.soh;
-          newTracerDrug.date = tracerDrug.date;
+          newTracerDrug.drugCode = tracerDrugInFacility[0]['drug.drug_code'];
+          newTracerDrug.drugName = tracerDrugInFacility[0]['drug.drug_name'];
+          newTracerDrug.province = tracerDrugInFacility[0]['location.province_name'];
+          newTracerDrug.district = tracerDrugInFacility[0]['location.district_name'];
+          newTracerDrug.facility = tracerDrugInFacility[0]['facility.facility_name'];
+          _.forEach(dates, function(date) {
+            var sohOnDate = _.findWhere(tracerDrugInFacility, {date: date});
+            if (sohOnDate) {
+              newTracerDrug[date] = sohOnDate.soh;
+            } else {
+              newTracerDrug[date] = "N/A";
+            }
+          });
           data.reportContent.push(newTracerDrug);
         });
 
