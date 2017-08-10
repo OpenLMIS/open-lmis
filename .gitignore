@@ -22,9 +22,6 @@ local-ftp-data/
 modules/openlmis-web/src/main/webapp/public/odk-collect-submissions/*
 .gitignore.swp
 git
-gradle/
-gradlew
-gradlew.bat
 modules/export/src/main/resources/generated/
 .ideaDataSources/
 dataSources/
