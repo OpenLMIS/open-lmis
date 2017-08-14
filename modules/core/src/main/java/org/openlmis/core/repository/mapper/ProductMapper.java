@@ -43,7 +43,7 @@ public interface ProductMapper {
     "specialStorageInstructions," + "specialTransportInstructions," +
     "active," + "fullSupply," + "tracer," + "roundToZero," + "archived," +
     "packRoundingThreshold, productGroupId, isKit," +
-    "createdBy, modifiedBy, modifiedDate, nos)" +
+    "createdBy, modifiedBy, modifiedDate, nos, isBasic)" +
     "VALUES(" +
     "#{code}," +
     "#{alternateItemCode}," +
@@ -65,7 +65,7 @@ public interface ProductMapper {
     "#{specialStorageInstructions}," + "#{specialTransportInstructions}," +
     "#{active}," + "#{fullSupply}," + "#{tracer}," + "#{roundToZero}," + "#{archived}," +
     "#{packRoundingThreshold},  #{productGroup.id}, #{isKit}," +
-    "#{createdBy}, #{modifiedBy}, COALESCE(#{modifiedDate}, CURRENT_TIMESTAMP), #{nos})")
+    "#{createdBy}, #{modifiedBy}, COALESCE(#{modifiedDate}, CURRENT_TIMESTAMP), #{nos}, #{isBasic})")
   @Options(useGeneratedKeys = true)
   Long insert(Product product);
 
@@ -96,7 +96,7 @@ public interface ProductMapper {
     "flammable=#{flammable},controlledSubstance=#{controlledSubstance},lightSensitive=#{lightSensitive},approvedByWHO=#{approvedByWHO}, ", "contraceptiveCYP=#{contraceptiveCYP},", "packLength=#{packLength},packWidth=#{packWidth},packHeight=#{packHeight},",
     "packWeight=#{packWeight},packsPerCarton=#{packsPerCarton},", "cartonLength=#{cartonLength},cartonWidth=#{cartonWidth},cartonHeight=#{cartonHeight},cartonsPerPallet=#{cartonsPerPallet},", "expectedShelfLife=#{expectedShelfLife},",
     "specialStorageInstructions=#{specialStorageInstructions},specialTransportInstructions=#{specialTransportInstructions},", "active=#{active},fullSupply=#{fullSupply},tracer=#{tracer},roundToZero=#{roundToZero},archived=#{archived},",
-    "packRoundingThreshold=#{packRoundingThreshold}, productGroupId = #{productGroup.id},", "modifiedBy=#{modifiedBy}, modifiedDate=COALESCE(#{modifiedDate}, CURRENT_TIMESTAMP), nos=#{nos} WHERE id=#{id}"})
+    "packRoundingThreshold=#{packRoundingThreshold}, productGroupId = #{productGroup.id},", "modifiedBy=#{modifiedBy}, modifiedDate=COALESCE(#{modifiedDate}, CURRENT_TIMESTAMP), nos=#{nos}, isBasic=#{isBasic} WHERE id=#{id}"})
   void update(Product product);
 
   @Select("SELECT * FROM products WHERE id=#{id}")

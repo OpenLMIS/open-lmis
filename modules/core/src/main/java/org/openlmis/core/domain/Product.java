@@ -184,6 +184,9 @@ public class Product extends BaseModel implements Importable {
   @ImportField(mandatory = true, type = "boolean", name = "Is An NOS Product")
   private Boolean nos;
 
+  @ImportField(mandatory = true, type = "boolean", name = "Is A Basic Product")
+  private Boolean isBasic;
+
   private List<KitProduct> kitProductList = new ArrayList<>();
 
   private final static String DEFAULT_DISPENSING_UNIT = "1";
@@ -194,6 +197,7 @@ public class Product extends BaseModel implements Importable {
   private final static Boolean DEFAULT_ROUND_TO_ZERO = false;
   private final static Integer DEFAULT_PACK_ROUNDING_THRESHOLD = 0;
   private static final Boolean DEFAULT_NOS = false;
+  private static final Boolean DEFAULT_BASIC = false;
 
   public void validate() {
     if (this.packSize <= 0) {
@@ -219,6 +223,9 @@ public class Product extends BaseModel implements Importable {
     }
     if (nos == null) {
       nos = DEFAULT_NOS;
+    }
+    if (isBasic == null) {
+      isBasic = DEFAULT_BASIC;
     }
     if (roundToZero == null) {
       roundToZero = DEFAULT_ROUND_TO_ZERO;

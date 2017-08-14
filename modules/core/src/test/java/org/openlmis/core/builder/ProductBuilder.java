@@ -32,6 +32,7 @@ public class ProductBuilder {
   public static final Property<Product, Boolean> fullSupply = newProperty();
   public static final Property<Product, Boolean> active = newProperty();
   public static final Property<Product, Boolean> nos = newProperty();
+  public static final Property<Product, Boolean> isBasic = newProperty();
 
   public static final Instantiator<Product> defaultProduct = new Instantiator<Product>() {
     @Override
@@ -65,6 +66,7 @@ public class ProductBuilder {
       product.setRoundToZero(true);
       product.setDosesPerDispensingUnit(10);
       product.setNos(lookup.valueOf(nos, true));
+      product.setIsBasic(lookup.valueOf(isBasic, false));
       ProductForm form = new ProductForm();
       form.setDisplayOrder(1);
       form.setCode("Tablet");

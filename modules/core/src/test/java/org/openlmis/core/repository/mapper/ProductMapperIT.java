@@ -307,6 +307,19 @@ public class ProductMapperIT {
     assertThat(updatedProduct.getNos(), is(false));
   }
 
+  @Test
+  public void shouldInsertAndUpdateIsBasicWhenInsertAndUpdateProduct() {
+    Product product = make(a(defaultProduct,with(ProductBuilder.isBasic, true)));
+    productMapper.insert(product);
+
+    Product productSaved = productMapper.getById(product.getId());
+    productSaved.setIsBasic(false);
+    productMapper.update(productSaved);
+
+    Product productUpdated = productMapper.getById(product.getId());
+    assertThat(productUpdated.getIsBasic(), is(false));
+  }
+
   private void updateModifiedDateForProducts(Timestamp modifiedDate, Long productId) throws SQLException {
     queryExecutor.executeUpdate("UPDATE products SET modifieddate = ? WHERE id = ?", modifiedDate, productId);
   }
