@@ -1,4 +1,4 @@
-services.factory('TracerDrugsChartService', function ($http, $filter, $q, $timeout, messageService, CubesGenerateUrlService, StockoutSingleProductZoneChartService, CubesGenerateCutParamsService, ReportLocationConfigService, ReportExportExcelService, DateFormatService) {
+services.factory('TracerDrugsChartService', function ($http, $filter, $q, $timeout, messageService, CubesGenerateUrlService, StockoutSingleProductZoneChartService, CubesGenerateCutParamsService, ReportLocationConfigService, ReportExportExcelService, DateFormatService, WeeklyDrugExportService) {
 
   var drugCodekey = "drug.drug_code";
   var drugNameKey = "drug.drug_name";
@@ -269,7 +269,6 @@ services.factory('TracerDrugsChartService', function ($http, $filter, $q, $timeo
     });
   }
 
-
   function handleLegendClick(evt) {
     if (evt.type === "hideItem") {
       _.uniq(selectedDrugs);
@@ -282,74 +281,82 @@ services.factory('TracerDrugsChartService', function ($http, $filter, $q, $timeo
     }
   }
 
-  function getColumnsFromDates(tracerDrugs) {
-    var dates = _.map(tracerDrugs, function (tracerDrug) {
-      return tracerDrug.date;
-    });
-    return _.uniq(dates);
-  }
-
-  function addReportDateHeaders(dates) {
-    var header = {
-      drugCode: messageService.get('report.header.drug.code'),
-      drugName: messageService.get('report.header.drug.name'),
-      province: messageService.get('report.header.province'),
-      district: messageService.get('report.header.district'),
-      facility: messageService.get('report.header.facility')
-    };
-    _.each(dates, function (date) {
-      header[date] = date;
-    });
-    return header;
-  }
-
   function exportXLSX(startTime, endTime, province, district) {
-    var params = [{
-      name: 'fields',
-      value: ['location.province_name', 'location.district_name', 'facility.facility_code','facility.facility_name', 'drug.drug_name', 'drug.drug_code', 'date', 'soh']
-    }];
-
-    var everyDrugIsSolid = _.every(selectedDrugs, function (drug) {
-      return drug;
-    });
-    var drugParams = (!_.isEmpty(selectedDrugs) && everyDrugIsSolid) ? selectedDrugs : undefined;
-
-    if (chartDataItems) {
-      $http.get(CubesGenerateUrlService.generateFactsUrlWithParams('vw_weekly_tracer_soh', CubesGenerateCutParamsService.generateCutsParams('cutDate',
-        $filter('date')(startTime, "yyyy,MM,dd"),
-        $filter('date')(endTime, "yyyy,MM,dd"),
-        undefined, drugParams, province, district), params)).success(function (tracerDrugs) {
-        var dates = getColumnsFromDates(tracerDrugs);
-        tracerDrugs = _.groupBy(tracerDrugs, function (tracerDrug) {
-          return tracerDrug["drug.drug_code"] + tracerDrug["facility.facility_code"];
-        });
-        var data = {
-          reportHeaders: addReportDateHeaders(dates),
-          reportContent: []
-        };
-
-        _.forEach(tracerDrugs, function (tracerDrugInFacility) {
-          var newTracerDrug = {};
-          newTracerDrug.drugCode = tracerDrugInFacility[0]['drug.drug_code'];
-          newTracerDrug.drugName = tracerDrugInFacility[0]['drug.drug_name'];
-          newTracerDrug.province = tracerDrugInFacility[0]['location.province_name'];
-          newTracerDrug.district = tracerDrugInFacility[0]['location.district_name'];
-          newTracerDrug.facility = tracerDrugInFacility[0]['facility.facility_name'];
-          _.forEach(dates, function(date) {
-            var sohOnDate = _.findWhere(tracerDrugInFacility, {date: date});
-            if (sohOnDate) {
-              newTracerDrug[date] = sohOnDate.soh;
-            } else {
-              newTracerDrug[date] = "N/A";
-            }
-          });
-          data.reportContent.push(newTracerDrug);
-        });
-
-        ReportExportExcelService.exportAsXlsx(data, messageService.get('report.file.tracer.drugs.report'));
-      });
-    }
+    WeeklyDrugExportService.getDataForExport(selectedDrugs, province, district, startTime, endTime);
   }
+
+  // function exportXLSX(startTime, endTime, province, district) {
+  //   var fillTracerDrugReportDataPromise = fillTracerDrugReportData(startTime, endTime, province, district);
+  //
+  //   $q.all([fillTracerDrugReportDataPromise]).then(function (data) {
+  //     ReportExportExcelService.exportAsXlsx(data, messageService.get('report.file.tracer.drugs.report'));
+  //   });
+  // }
+
+  // function assignTracerDrugData(endTime, tracerDrugInFacility, dates) {
+  //   var endDateParam = new Date($filter('date')(endTime, "yyyy,MM,dd"));
+  //   var startDatePeriod = DateFormatService.formatDateWithStartDayOfPeriod(endDateParam);
+  //   var endDatePeriod = DateFormatService.formatDateWithEndDayOfPeriod(endDateParam);
+  //
+  //   var newTracerDrug = {};
+  //   newTracerDrug.drugCode = tracerDrugInFacility[0]['drug.drug_code'];
+  //   newTracerDrug.drugName = tracerDrugInFacility[0]['drug.drug_name'];
+  //   newTracerDrug.province = tracerDrugInFacility[0]['location.province_name'];
+  //   newTracerDrug.district = tracerDrugInFacility[0]['location.district_name'];
+  //   newTracerDrug.facility = tracerDrugInFacility[0]['facility.facility_name'];
+  //
+  //   getSohOnDate(dates, newTracerDrug, tracerDrugInFacility);
+  //
+  //   newTracerDrug.cmm_value = getCMMForTracerDrugInPeriod(tracerDrugInFacility, startDatePeriod, endDatePeriod);
+  //   return newTracerDrug;
+  // }
+  //
+  // function fillTracerDrugReportData(startTime, endTime, province, district) {
+  //     var params = [{
+  //       name: 'fields',
+  //       value: ['location.province_name', 'location.district_name', 'facility.facility_code', 'facility.facility_name', 'drug.drug_name', 'drug.drug_code', 'date', 'soh']
+  //     }];
+  //
+  //     var drugParams = validateDrugs(selectedDrugs);
+  //
+  //     if (chartDataItems) {
+  //       var cutParamsWeekly = CubesGenerateCutParamsService.generateCutsParams('cutDate',
+  //         $filter('date')(startTime, "yyyy,MM,dd"),
+  //         $filter('date')(endTime, "yyyy,MM,dd"),
+  //         undefined, drugParams, province, district);
+  //
+  //       $http.get(CubesGenerateUrlService.generateFactsUrlWithParams('vw_weekly_tracer_soh', cutParamsWeekly , params)).success(function (tracerDrugs) {
+  //         var dates = getColumnsFromDates(tracerDrugs);
+  //         tracerDrugs = _.groupBy(tracerDrugs, function (tracerDrug) {
+  //           return tracerDrug["drug.drug_code"] + tracerDrug["facility.facility_code"];
+  //         });
+  //         var data = {
+  //           reportHeaders: addReportDateHeaders(dates),
+  //           reportContent: []
+  //         };
+  //
+  //         _.forEach(tracerDrugs, function (tracerDrugInFacility) {
+  //           var newTracerDrug = assignTracerDrugData(endTime, tracerDrugInFacility, dates);
+  //
+  //           data.reportContent.push(newTracerDrug);
+  //         });
+  //         return data;
+  //       });
+  //     }
+  // }
+  //
+  // function getCMMForTracerDrugInPeriod(tracerDrugInFacility, startDatePeriod, endDatePeriod) {
+  //   var cutsParams = [
+  //     {dimension: "facilityCode", values: [tracerDrugInFacility[0]["facility.facility_code"]]},
+  //     {dimension: "product", values: [tracerDrugInFacility[0]['drug.drug_code']]},
+  //     {dimension: "periodbegin", values: [$filter('date')(startDatePeriod, "yyyy,MM,dd")], skipEscape: true},
+  //     {dimension: "periodend", values: [$filter('date')(endDatePeriod, "yyyy,MM,dd")], skipEscape: true}
+  //   ];
+  //   var requestUrl = CubesGenerateUrlService.generateFactsUrl('vw_cmm_entries', cutsParams);
+  //   $q.when($http.get(requestUrl)).then(function (cmmEntries) {
+  //     return _.isEmpty(cmmEntries) ? cmmEntries[0].cmm : "N/A";
+  //   });
+  // }
 
   return {
     generateGraphs: generateGraphs,
