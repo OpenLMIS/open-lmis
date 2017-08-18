@@ -16,7 +16,8 @@ services.factory('WeeklyDrugExportService', function ($http, $filter, $q, $timeo
       province: messageService.get('report.header.province'),
       district: messageService.get('report.header.district'),
       facility: messageService.get('report.header.facility'),
-      cmm_value:messageService.get('report.header.cmm')
+      cmm_value:messageService.get('report.header.cmm'),
+      reportGeneratedFor: messageService.get('report.header.generated.for')
     };
     _.each(dates, function (date) {
       header[date] = date;
@@ -93,7 +94,7 @@ services.factory('WeeklyDrugExportService', function ($http, $filter, $q, $timeo
     return _.uniq(dates);
   }
 
-  function populateWeeklyTracerDrugData(tracerDrugs, tracerDrugHash) {
+  function populateWeeklyTracerDrugData(tracerDrugs, tracerDrugHash, startTime, endTime) {
     var dates = getColumnsFromDates(tracerDrugs);
     data.reportHeaders = addReportDateHeaders(dates);
 
@@ -108,6 +109,7 @@ services.factory('WeeklyDrugExportService', function ($http, $filter, $q, $timeo
       newTracerDrug.province = tracerDrugInFacility[0]['location.province_name'];
       newTracerDrug.district = tracerDrugInFacility[0]['location.district_name'];
       newTracerDrug.facility = tracerDrugInFacility[0]['facility.facility_name'];
+      newTracerDrug.reportGeneratedFor = DateFormatService.formatDateWithDateMonthYearForString(startTime) + ' - ' + DateFormatService.formatDateWithDateMonthYearForString(endTime);
       getSohOnDate(dates, newTracerDrug, tracerDrugInFacility);
 
       tracerDrugHash[tracerDrugInFacility[0]['drug.drug_code'] + '@' + tracerDrugInFacility[0]['facility.facility_code']] = newTracerDrug;
@@ -131,7 +133,7 @@ services.factory('WeeklyDrugExportService', function ($http, $filter, $q, $timeo
       var cmmEntries = result[1].data;
 
       var tracerDrugHash = {};
-      populateWeeklyTracerDrugData(tracerDrugs, tracerDrugHash);
+      populateWeeklyTracerDrugData(tracerDrugs, tracerDrugHash, startTime, endTime);
       populateLastPeriodCMMData(cmmEntries, tracerDrugHash);
 
       data.reportContent = _.values(tracerDrugHash);
