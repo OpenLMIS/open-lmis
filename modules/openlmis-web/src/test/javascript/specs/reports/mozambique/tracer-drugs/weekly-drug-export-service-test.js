@@ -1,0 +1,229 @@
+describe("Weekly drugs excel export test", function () {
+
+  var weeklyDrugExportService, httpBackend, reportExportExcelService, messageService;
+
+  var tracerDrugs = ['08K04', '05A01'];
+
+  var weeklyTracerDrugSOH = [
+    {
+      "drug.drug_code": "08K04",
+      "drug.drug_name": "drug name1",
+      "location.province_name": "Maputo Prov\u00edncia",
+      "facility.facility_name": "Mumemo",
+      "soh": "50",
+      "facility.facility_code": "HF1",
+      "date": "2017-08-04",
+      "location.district_name": "Marracuene"
+    },
+    {
+      "drug.drug_code": "08K04",
+      "drug.drug_name": "drug name1",
+      "location.province_name": "Maputo Prov\u00edncia",
+      "facility.facility_name": "Mumemo",
+      "soh": "30",
+      "facility.facility_code": "HF1",
+      "date": "2017-08-11",
+      "location.district_name": "Marracuene"
+    },
+    {
+      "drug.drug_code": "08K04",
+      "drug.drug_name": "drug name1",
+      "location.province_name": "Maputo Prov\u00edncia",
+      "facility.facility_name": "Mumemo",
+      "soh": "10",
+      "facility.facility_code": "HF1",
+      "date": "2017-08-18",
+      "location.district_name": "Marracuene"
+    },
+    {
+      "drug.drug_code": "05A01",
+      "drug.drug_name": "drug name2",
+      "location.province_name": "Maputo Prov\u00edncia",
+      "facility.facility_name": "Mumemo",
+      "soh": "150",
+      "facility.facility_code": "HF1",
+      "date": "2017-08-11",
+      "location.district_name": "Marracuene"
+    },
+    {
+      "drug.drug_code": "05A01",
+      "drug.drug_name": "drug name2",
+      "location.province_name": "Maputo Prov\u00edncia",
+      "facility.facility_name": "Mumemo",
+      "soh": "130",
+      "facility.facility_code": "HF1",
+      "date": "2017-08-18",
+      "location.district_name": "Marracuene"
+    },
+    {
+      "drug.drug_code": "08K04",
+      "drug.drug_name": "drug name1",
+      "location.province_name": "Maputo Prov\u00edncia",
+      "facility.facility_name": "Mumemo2",
+      "soh": "300",
+      "facility.facility_code": "HF2",
+      "date": "2017-08-11",
+      "location.district_name": "Marracuene"
+    },
+    {
+      "drug.drug_code": "08K04",
+      "drug.drug_name": "drug name1",
+      "location.province_name": "Maputo Prov\u00edncia",
+      "facility.facility_name": "Mumemo2",
+      "soh": "100",
+      "facility.facility_code": "HF2",
+      "date": "2017-08-18",
+      "location.district_name": "Marracuene"
+    },
+    {
+      "drug.drug_code": "05A01",
+      "drug.drug_name": "drug name2",
+      "location.province_name": "Maputo Prov\u00edncia",
+      "facility.facility_name": "Mumemo2",
+      "soh": "150",
+      "facility.facility_code": "HF2",
+      "date": "2017-08-11",
+      "location.district_name": "Marracuene"
+    },
+    {
+      "drug.drug_code": "05A01",
+      "drug.drug_name": "drug name2",
+      "location.province_name": "Maputo Prov\u00edncia",
+      "facility.facility_name": "Mumemo2",
+      "soh": "30",
+      "facility.facility_code": "HF2",
+      "date": "2017-08-18",
+      "location.district_name": "Marracuene"
+    }
+  ];
+
+  var lastCMMEntriesForTracerDrugs = [
+    {
+      "location.province_code": "MAPUTO_PROVINCIA",
+      "product": "08K04",
+      "periodend.day": 20.0,
+      "periodend.year": 2017.0,
+      "facilityCode": "HF1",
+      "periodbegin.day": 21.0,
+      "location.district_code": "MARRACUENE",
+      "cmm": 50,
+      "periodend.month": 8.0,
+      "periodbegin.month": 7.0,
+      "periodbegin.year": 2017.0,
+    },
+    {
+      "location.province_code": "MAPUTO_PROVINCIA",
+      "product": "08K04",
+      "periodend.day": 20.0,
+      "periodend.year": 2017.0,
+      "facilityCode": "HF2",
+      "periodbegin.day": 21.0,
+      "location.district_code": "MARRACUENE",
+      "cmm": 30,
+      "periodend.month": 8.0,
+      "periodbegin.month": 7.0,
+      "periodbegin.year": 2017.0,
+    },
+    {
+      "location.province_code": "MAPUTO_PROVINCIA",
+      "product": "05A01",
+      "periodend.day": 20.0,
+      "periodend.year": 2017.0,
+      "facilityCode": "HF2",
+      "periodbegin.day": 21.0,
+      "location.district_code": "MARRACUENE",
+      "cmm": 0,
+      "periodend.month": 8.0,
+      "periodbegin.month": 7.0,
+      "periodbegin.year": 2017.0,
+    }
+  ];
+
+  beforeEach(module('openlmis'));
+
+  beforeEach(function () {
+    inject(function (WeeklyDrugExportService, _$httpBackend_, ReportExportExcelService, messageService) {
+      weeklyDrugExportService = WeeklyDrugExportService;
+      httpBackend = _$httpBackend_;
+      reportExportExcelService = ReportExportExcelService;
+      messageService_ = messageService;
+    });
+  });
+
+  it("should match cmm and soh data for all facilities under selected district", function() {
+    httpBackend.expectGET('/cubesreports/cube/vw_weekly_tracer_soh/facts?cut=cutDate%3A2017%2C07%2C21-2017%2C08%2C20%7Clocation%3AMAPUTO_PROVINCIA%2CMARRACUENE&fields=location.province_name%2Clocation.district_name%2Cfacility.facility_code%2Cfacility.facility_name%2Cdrug.drug_name%2Cdrug.drug_code%2Cdate%2Csoh').respond(200, weeklyTracerDrugSOH);
+    httpBackend.expectGET('/cubesreports/cube/vw_cmm_entries/facts?cut=product%3A08K04%3B05A01%7Cperiodbegin%3A2017%2C07%2C21%7Cperiodend%3A2017%2C08%2C20%7Clocation%3AMAPUTO_PROVINCIA%2CMARRACUENE').respond(200, lastCMMEntriesForTracerDrugs);
+    spyOn(reportExportExcelService, 'exportAsXlsx');
+
+    weeklyDrugExportService.getDataForExport(undefined, {'code' : 'MAPUTO_PROVINCIA'},{'code': 'MARRACUENE'}, '2017-07-21', '2017-08-20', tracerDrugs);
+
+    httpBackend.flush();
+
+    var expectedHeader = {
+      drugCode: 'report.header.drug.code',
+      drugName: 'report.header.drug.name',
+      province: 'report.header.province',
+      district: 'report.header.district',
+      facility: 'report.header.facility',
+      cmm_value:'report.header.cmm',
+      '2017-08-04': '2017-08-04',
+      '2017-08-11': '2017-08-11',
+      '2017-08-18': '2017-08-18'
+    };
+
+    var expectedContent = [
+      {
+        drugCode: '08K04',
+        drugName: 'drug name1',
+        province: 'Maputo Prov\u00edncia',
+        district: 'Marracuene',
+        facility: 'Mumemo',
+        '2017-08-04': '50',
+        '2017-08-11': '30',
+        '2017-08-18': '10',
+        cmm_value:50
+      },
+      {
+        drugCode: '05A01',
+        drugName: 'drug name2',
+        province: 'Maputo Prov\u00edncia',
+        district: 'Marracuene',
+        facility: 'Mumemo',
+        '2017-08-04': 'N/A',
+        '2017-08-11': '150',
+        '2017-08-18': '130'
+      },
+      {
+        drugCode: '08K04',
+        drugName: 'drug name1',
+        province: 'Maputo Prov\u00edncia',
+        district: 'Marracuene',
+        facility: 'Mumemo2',
+        '2017-08-04': 'N/A',
+        '2017-08-11': '300',
+        '2017-08-18': '100',
+        cmm_value:30
+      },
+      {
+        drugCode: '05A01',
+        drugName: 'drug name2',
+        province: 'Maputo Prov\u00edncia',
+        district: 'Marracuene',
+        facility: 'Mumemo2',
+        '2017-08-04': 'N/A',
+        '2017-08-11': '150',
+        '2017-08-18': '30',
+        cmm_value:0
+      }
+    ];
+
+    var expectedExcel = {
+      reportHeaders: expectedHeader,
+      reportContent: expectedContent
+    };
+
+    expect(reportExportExcelService.exportAsXlsx).toHaveBeenCalledWith(expectedExcel, 'report.file.tracer.drugs.report');
+
+  });
+
+});

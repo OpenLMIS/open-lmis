@@ -4,6 +4,7 @@ services.factory('TracerDrugsChartService', function ($http, $filter, $q, $timeo
   var drugNameKey = "drug.drug_name";
   var selectedDrugs = [];
   var chartDataItems;
+  var allTracerDrugs = [];
 
   function getTracerDrugStockRateOnFriday(zone, friday, stockOuts, tracerDrugCode, carryStartDates) {
     var stockOutsOfTracerDrug = _.filter(stockOuts, function (stockOut) {
@@ -103,6 +104,7 @@ services.factory('TracerDrugsChartService', function ($http, $filter, $q, $timeo
   function makeTracerDrugsChart(chartDivId, legendDivId, userSelectedStartDate, userSelectedEndDate, province, district) {
     selectedDrugs = [];
     $http.get('/cubesreports/cube/products/facts?cut=is_tracer:true').success(function (tracerDrugs) {
+      allTracerDrugs = tracerDrugs;
       var stockOutPromise = getCubesRequestPromise(tracerDrugs, province, district, userSelectedStartDate, userSelectedEndDate, "vw_stockouts", "overlapped_date");
       var carryStartDatesPromise = getCubesRequestPromise(tracerDrugs, province, district, "", userSelectedEndDate, "vw_carry_start_dates", "carry_start");
 
@@ -282,7 +284,11 @@ services.factory('TracerDrugsChartService', function ($http, $filter, $q, $timeo
   }
 
   function exportXLSX(startTime, endTime, province, district) {
-    WeeklyDrugExportService.getDataForExport(selectedDrugs, province, district, startTime, endTime);
+    var allTracerCodes = _.map(allTracerDrugs, function (drug) {
+      return drug['drug.drug_code'];
+    });
+
+    WeeklyDrugExportService.getDataForExport(selectedDrugs, province, district, startTime, endTime, allTracerCodes);
   }
 
   return {

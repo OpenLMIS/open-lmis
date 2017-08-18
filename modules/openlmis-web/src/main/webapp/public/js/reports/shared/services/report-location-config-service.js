@@ -7,6 +7,17 @@ services.factory('ReportLocationConfigService', function () {
         return {isOneDistrict: isOneDistrict, isOneProvince: isOneProvince, isAllProvinces: isAllProvinces};
     };
 
+    var getLocationHierarchy = function (province, district) {
+      var config = getUserSelectedLocationConfig(province, district);
+      if (config.isOneDistrict) {
+          return province.code + ',' + district.code;
+      } else if (config.isOneProvince) {
+          return province.code;
+      } else {
+          return null;
+      }
+    };
+
     var getZone = function(province, district) {
         var locationConfig = getUserSelectedLocationConfig(province, district);
 
@@ -29,6 +40,7 @@ services.factory('ReportLocationConfigService', function () {
 
     return {
         getUserSelectedLocationConfig: getUserSelectedLocationConfig,
-        getZone: getZone
+        getZone: getZone,
+        getLocationHierarchy: getLocationHierarchy
     };
 });
