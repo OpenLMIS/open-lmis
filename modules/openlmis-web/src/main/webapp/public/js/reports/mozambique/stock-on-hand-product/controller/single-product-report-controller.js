@@ -119,7 +119,8 @@ function SingleProductReportController($scope, $filter, $controller, $http, Cube
         earliestDrugExpiryDate: messageService.get('report.header.earliest.drug.expiry.date'),
         lotStockOnHand: messageService.get('report.header.lot.stock.on.hand'),
         estimatedMonths: messageService.get('report.header.estimated.months'),
-        lastUpdateFromTablet: messageService.get('report.header.last.update.from.tablet')
+        lastUpdateFromTablet: messageService.get('report.header.last.update.from.tablet'),
+        generatedFor: messageService.get('report.header.generated.for')
       },
       reportContent: []
     };
@@ -138,6 +139,7 @@ function SingleProductReportController($scope, $filter, $controller, $http, Cube
         singleProductSOHReportContent.lotStockOnHand = sohReportData.soonest_expiring_loh;
         singleProductSOHReportContent.estimatedMonths = sohReportData.estimated_months;
         singleProductSOHReportContent.lastUpdateFromTablet = DateFormatService.formatDateWith24HoursTime(sohReportData.last_sync_date);
+        singleProductSOHReportContent.generatedFor = DateFormatService.formatDateWithDateMonthYearForString($scope.reportParams.endTime);
         data.reportContent.push(singleProductSOHReportContent);
       });
       ReportExportExcelService.exportAsXlsx(data, messageService.get('report.file.single.product.soh.report'));

@@ -166,7 +166,7 @@ function LotExpiryDatesReportController($scope, $controller, $http, CubesGenerat
         lot: messageService.get('report.header.lot'),
         expiryDate: messageService.get('report.header.expiry.date'),
         soh: messageService.get('report.header.stock.on.hand'),
-        reportGenerateDate: messageService.get('report.header.report.generate.date')
+        reportGenerateDate: messageService.get('report.header.generated.for')
       },
       reportContent: []
     };
@@ -183,7 +183,7 @@ function LotExpiryDatesReportController($scope, $controller, $http, CubesGenerat
           expiryDateReportContent.lot = lot.lot_number;
           expiryDateReportContent.expiryDate = lot.formatted_expiry_date;
           expiryDateReportContent.soh = lot.lot_on_hand;
-          expiryDateReportContent.reportGenerateDate = DateFormatService.formatDateWithLocale($scope.expiryDatesReportParams.endTime);
+          expiryDateReportContent.reportGenerateDate = DateFormatService.formatDateWithDateMonthYear($scope.expiryDatesReportParams.endTime);
           data.reportContent.push(expiryDateReportContent);
         });
       });

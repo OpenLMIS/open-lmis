@@ -126,7 +126,8 @@ function AdjustmentOccurrencesReportController($scope, $controller, $filter, $ht
         adjustmentType: messageService.get('report.header.adjustment.type'),
         adjustmentReason: messageService.get('report.header.adjustment.reason'),
         occurrencesPeriod: messageService.get('report.header.occurrences.period'),
-        occurrencesTimes: messageService.get('report.header.occurrences.times')
+        occurrencesTimes: messageService.get('report.header.occurrences.times'),
+        reportGeneratedFor:messageService.get('report.header.generated.for')
       },
       reportContent: []
     };
@@ -147,6 +148,7 @@ function AdjustmentOccurrencesReportController($scope, $controller, $filter, $ht
         adjustmentReportContent.adjustmentReason = messageService.get(reasonDescriptionKey);
         adjustmentReportContent.occurrencesPeriod = adjustment.period;
         adjustmentReportContent.occurrencesTimes = adjustment[selectedReasonKey];
+        adjustmentReportContent.reportGeneratedFor = DateFormatService.formatDateWithDateMonthYearForString($scope.reportParams.startTime) + ' - ' + DateFormatService.formatDateWithDateMonthYearForString($scope.reportParams.endTime);
 
         data.reportContent.push(adjustmentReportContent);
       });

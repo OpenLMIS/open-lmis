@@ -33,7 +33,7 @@ describe("Lot Expiry Dates Report Controller", function () {
     };
 
     scope.expiryDatesReportParams = {
-      endTime: '2017-08-01'
+      endTime: 1502945999999
     };
 
 
@@ -87,7 +87,7 @@ describe("Lot Expiry Dates Report Controller", function () {
       lot: 'report.header.lot',
       expiryDate: 'report.header.expiry.date',
       soh: 'report.header.stock.on.hand',
-      reportGenerateDate: 'report.header.report.generate.date'
+      reportGenerateDate: 'report.header.generated.for'
     };
 
     var expectedContent = [
@@ -100,7 +100,7 @@ describe("Lot Expiry Dates Report Controller", function () {
         lot: 'ZZZ',
         expiryDate: 'Feb 2017',
         soh: '123',
-        reportGenerateDate: '31 month.abbr.7 2017'
+        reportGenerateDate: '16-08-2017'
       },
       {
         drugCode: '08S32Z',
@@ -111,7 +111,7 @@ describe("Lot Expiry Dates Report Controller", function () {
         lot: 'EEE',
         expiryDate: 'Feb 2017',
         soh: '150',
-        reportGenerateDate: '31 month.abbr.7 2017'
+        reportGenerateDate: '16-08-2017'
       }
     ];
     var expectedExcel = {
