@@ -12,11 +12,13 @@ services.factory('WeeklyDrugExportService', function ($http, $filter, $q, $timeo
   function addReportDateHeaders(dates) {
     var header = {
       drugCode: messageService.get('report.header.drug.code'),
+      area: messageService.get('report.header.area'),
+      subArea: messageService.get('report.header.subarea'),
       drugName: messageService.get('report.header.drug.name'),
       province: messageService.get('report.header.province'),
       district: messageService.get('report.header.district'),
       facility: messageService.get('report.header.facility'),
-      cmm_value:messageService.get('report.header.cmm'),
+      cmmValue:messageService.get('report.header.cmm'),
       reportGeneratedFor: messageService.get('report.header.generated.for')
     };
     _.each(dates, function (date) {
@@ -40,7 +42,7 @@ services.factory('WeeklyDrugExportService', function ($http, $filter, $q, $timeo
 
     var params = [{
       name: 'fields',
-      value: ['location.province_name', 'location.district_name', 'facility.facility_code', 'facility.facility_name', 'drug.drug_name', 'drug.drug_code', 'date', 'soh']
+      value: ['location.province_name', 'location.district_name', 'facility.facility_code', 'facility.facility_name', 'drug.drug_name', 'drug.drug_code', 'date', 'soh', 'area.area_name', 'area.sub_area_name']
     }];
 
     return CubesGenerateUrlService.generateFactsUrlWithParams(WEEKLY_TRACER_SOH_CUBE, cuts, params);
@@ -105,6 +107,8 @@ services.factory('WeeklyDrugExportService', function ($http, $filter, $q, $timeo
     _.forEach(tracerDrugsGroup, function (tracerDrugInFacility) {
       var newTracerDrug = {};
       newTracerDrug.drugCode = tracerDrugInFacility[0]['drug.drug_code'];
+      newTracerDrug.area = tracerDrugInFacility[0]['area.area_name'];
+      newTracerDrug.subArea = tracerDrugInFacility[0]['area.sub_area_name'];
       newTracerDrug.drugName = tracerDrugInFacility[0]['drug.drug_name'];
       newTracerDrug.province = tracerDrugInFacility[0]['location.province_name'];
       newTracerDrug.district = tracerDrugInFacility[0]['location.district_name'];
@@ -119,7 +123,7 @@ services.factory('WeeklyDrugExportService', function ($http, $filter, $q, $timeo
   function populateLastPeriodCMMData(cmmEntries, tracerDrugHash) {
     _.forEach(cmmEntries, function (cmmEntry) {
       if (cmmEntry.cmm !== undefined && cmmEntry.cmm !== null) {
-        tracerDrugHash[cmmEntry.product + '@' + cmmEntry.facilityCode].cmm_value = cmmEntry.cmm;
+        tracerDrugHash[cmmEntry.product + '@' + cmmEntry.facilityCode].cmmValue = cmmEntry.cmm;
       }
     });
   }
