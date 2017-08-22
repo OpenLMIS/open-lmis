@@ -1,25 +1,25 @@
-DROP TYPE IF EXISTS stock_history CASCADE;
+DROP TYPE IF EXISTS nos_stock_history CASCADE;
 
-CREATE TYPE stock_history AS ( facility_name TEXT, drug_name TEXT, date DATE, soh TEXT,
+CREATE TYPE nos_stock_history AS ( facility_name TEXT, drug_name TEXT, date DATE, soh TEXT,
                                facility_code TEXT, drug_code TEXT, province_name TEXT, province_code TEXT, district_name TEXT, district_code TEXT, area TEXT, sub_area TEXT);
 
 
-CREATE OR REPLACE FUNCTION tracer_drugs_weekly_stock_history()
-  RETURNS SETOF stock_history AS
+CREATE OR REPLACE FUNCTION nos_weekly_stock_history()
+  RETURNS SETOF nos_stock_history AS
 $BODY$
 DECLARE
   first_movement_date       DATE;
   last_movement_date        DATE;
   one_friday                DATE;
-  one_line                  stock_history;
-  tracer_drug_stockcard_ids INTEGER ARRAY;
+  one_line                  nos_stock_history;
+  nos_stockcard_ids INTEGER ARRAY;
 BEGIN
 
-  tracer_drug_stockcard_ids=array(SELECT id AS stockcardid
+  nos_stockcard_ids=array(SELECT id AS stockcardid
                                   FROM stock_cards
                                   WHERE productid IN (SELECT id
                                                       FROM products
-                                                      WHERE tracer = TRUE));
+                                                      WHERE nos = TRUE));
 
   SELECT occurred
   FROM stock_card_entries
@@ -54,7 +54,7 @@ BEGIN
 
                          FROM (SELECT DISTINCT ON (stockcardid) stockcardid
                                FROM stock_card_entries
-                               WHERE stockcardid = ANY (tracer_drug_stockcard_ids) AND occurred <= one_friday) entries
+                               WHERE stockcardid = ANY (nos_stockcard_ids) AND occurred <= one_friday) entries
                            JOIN stock_cards ON entries.stockcardid = stock_cards.id
                            JOIN facilities ON stock_cards.facilityid = facilities.id
                            JOIN products ON stock_cards.productid = products.id
@@ -72,17 +72,17 @@ END
 $BODY$
 LANGUAGE 'plpgsql';
 
-CREATE MATERIALIZED VIEW vw_weekly_tracer_soh AS
+CREATE MATERIALIZED VIEW vw_weekly_nos_soh AS
 (SELECT
  uuid_in(md5(random() :: TEXT || now() :: TEXT) :: cstring) AS uuid,
  *
- FROM tracer_drugs_weekly_stock_history());
+ FROM nos_weekly_stock_history());
 
 
-CREATE OR REPLACE FUNCTION refresh_weekly_tracer_soh()
+CREATE OR REPLACE FUNCTION refresh_weekly_nos_soh()
   RETURNS INT LANGUAGE plpgsql
 AS $$
 BEGIN
-  REFRESH MATERIALIZED VIEW vw_weekly_tracer_soh;
+  REFRESH MATERIALIZED VIEW vw_weekly_nos_soh;
   RETURN 1;
 END $$;
