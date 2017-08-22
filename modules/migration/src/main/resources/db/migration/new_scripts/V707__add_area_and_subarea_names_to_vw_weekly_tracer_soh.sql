@@ -1,5 +1,7 @@
 DROP TYPE stock_history CASCADE;
 
+DROP MATERIALIZED VIEW IF EXISTS vw_weekly_tracer_soh;
+
 CREATE TYPE stock_history AS ( facility_name TEXT, drug_name TEXT, date DATE, soh TEXT,
                                facility_code TEXT, drug_code TEXT, province_name TEXT, province_code TEXT, district_name TEXT, district_code TEXT, area TEXT, sub_area TEXT);
 
@@ -71,8 +73,6 @@ BEGIN
 END
 $BODY$
 LANGUAGE 'plpgsql';
-
-DROP MATERIALIZED VIEW vw_weekly_tracer_soh;
 
 CREATE MATERIALIZED VIEW vw_weekly_tracer_soh AS
 (SELECT
