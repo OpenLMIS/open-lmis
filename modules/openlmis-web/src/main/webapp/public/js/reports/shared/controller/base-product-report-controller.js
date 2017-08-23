@@ -98,7 +98,9 @@ function BaseProductReportController($scope, $filter, ProductReportService, $cac
                 });
             });
             $scope.facilities = healthFacilities;
-            addAllOption($scope.facilities, "facility");
+            if ($location.$$path !== '/stock-out-all-products' && $location.$$path !== '/stock-on-hand-all-products') {
+                addAllOption($scope.facilities, "facility");
+            }
             $scope.populateOptions ? $scope.populateOptions() : undefined;
         });
     };
