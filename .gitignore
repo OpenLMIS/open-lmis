@@ -26,3 +26,4 @@ modules/export/src/main/resources/generated/
 dataSources/
 package-lock.json
 .java-version
+*.swp
