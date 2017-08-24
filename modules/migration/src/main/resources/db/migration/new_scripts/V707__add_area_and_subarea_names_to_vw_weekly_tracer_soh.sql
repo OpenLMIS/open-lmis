@@ -50,7 +50,7 @@ BEGIN
                            ZONE.code                                   AS district_code,
                            (CASE WHEN programs_parent.code IS NULL THEN programs.name
                                 ELSE programs_parent.code END)         AS area,
-                           (CASE WHEN programs.name.parentid IS NULL THEN ''
+                           (CASE WHEN programs.parentid IS NULL THEN ''
                                 ELSE programs.name END)                AS sub_area
 
                          FROM (SELECT DISTINCT ON (stockcardid) stockcardid
