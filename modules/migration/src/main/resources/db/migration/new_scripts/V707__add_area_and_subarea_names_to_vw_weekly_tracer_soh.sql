@@ -50,7 +50,8 @@ BEGIN
                            ZONE.code                                   AS district_code,
                            (CASE WHEN programs_parent.code IS NULL THEN programs.name
                                 ELSE programs_parent.code END)         AS area,
-                           programs.name                               AS sub_area
+                           (CASE WHEN programs.name.parentid IS NULL THEN ''
+                                ELSE programs.name END)                AS sub_area
 
                          FROM (SELECT DISTINCT ON (stockcardid) stockcardid
                                FROM stock_card_entries
@@ -78,6 +79,7 @@ CREATE MATERIALIZED VIEW vw_weekly_tracer_soh AS
  *
  FROM tracer_drugs_weekly_stock_history());
 
+CREATE UNIQUE INDEX idx_vw_weekly_tracer_soh ON vw_weekly_tracer_soh (uuid);
 
 CREATE OR REPLACE FUNCTION refresh_weekly_tracer_soh()
   RETURNS INT LANGUAGE plpgsql
