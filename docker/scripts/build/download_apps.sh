@@ -1,9 +1,8 @@
 #!/usr/bin/env bash
 #use openlmis web app as root war
 rm -fr /usr/local/tomcat/webapps/ROOT
-wget -O /usr/local/tomcat/webapps/ROOT.war http://10.71.21.139:8000/ROOT.war
-# wget -O /usr/local/tomcat/webapps/ROOT.war --auth-no-challenge --http-user=user_ansible --no-check-certificate --http-password=b5c5990592a49e0df211b0e704d3bdd0 \
-# https://52.69.16.156:8080/job/Lmis-cubes/lastSuccessfulBuild/artifact/open-lmis/modules/openlmis-web/build/libs/openlmis-web.war
+wget -O /usr/local/tomcat/webapps/ROOT.war --auth-no-challenge --http-user=user_ansible --no-check-certificate --http-password=b5c5990592a49e0df211b0e704d3bdd0 \
+https://52.69.16.156:8080/job/Lmis-cubes/lastSuccessfulBuild/artifact/open-lmis/modules/openlmis-web/build/libs/openlmis-web.war
 
 #download migration jars
 mkdir -p /usr/local/tomcat/webapps/db/
