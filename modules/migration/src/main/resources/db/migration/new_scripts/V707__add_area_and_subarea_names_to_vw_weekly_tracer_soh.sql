@@ -79,8 +79,6 @@ CREATE MATERIALIZED VIEW vw_weekly_tracer_soh AS
  *
  FROM tracer_drugs_weekly_stock_history());
 
-CREATE UNIQUE INDEX idx_vw_weekly_tracer_soh ON vw_weekly_tracer_soh (uuid);
-
 CREATE OR REPLACE FUNCTION refresh_weekly_tracer_soh()
   RETURNS INT LANGUAGE plpgsql
 AS $$
