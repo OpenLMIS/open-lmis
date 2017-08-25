@@ -43,6 +43,11 @@
      openlmis-message="menu.report.tracer.drugs"></a>
 </li>
 
+<li ng-show="hasPermission('VIEW_NOS_DRUGS_REPORT') && isNosDrugsReportToggleOn">
+  <a href="/public/pages/reports/mozambique/index.html#/-drugs"
+     openlmis-message="menu.report.tracer.drugs"></a>
+</li>
+
 <li ng-show="hasPermission('VIEW_CONSUMPTION_MOVEMENTS_REPORT') && isConsumptionMovementsReportOn">
   <a href="/public/pages/reports/mozambique/index.html#/consumption"
      openlmis-message="menu.report.consumption.movements"></a>
