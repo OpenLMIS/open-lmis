@@ -122,10 +122,14 @@ services.factory('WeeklyDrugExportService', function ($http, $filter, $q, $timeo
 
   function populateLastPeriodCMMData(cmmEntries, tracerDrugHash) {
     _.forEach(cmmEntries, function (cmmEntry) {
-      if (cmmEntry.cmm !== undefined && cmmEntry.cmm !== null) {
+      if (validateTracerDrugEntryInHash(cmmEntry, tracerDrugHash)) {
         tracerDrugHash[cmmEntry.product + '@' + cmmEntry.facilityCode].cmmValue = cmmEntry.cmm;
       }
     });
+  }
+
+  function validateTracerDrugEntryInHash(cmmEntry, tracerDrugHash) {
+    return cmmEntry.cmm !== undefined && cmmEntry.cmm !== null && angular.isDefined(tracerDrugHash[cmmEntry.product + '@' + cmmEntry.facilityCode]);
   }
 
   function getDataForExport(selectedDrugs, province, district, startTime, endTime, allTracerDrugs) {
