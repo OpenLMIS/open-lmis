@@ -2,7 +2,7 @@ services.factory('WeeklyNosDrugExportService', function ($http, $filter, $q, $ti
 
   var DATE_FORMAT = 'yyyy,MM,dd';
   var CMM_ENTRIES_CUBE = 'vw_cmm_entries';
-  var WEEKLY_TRACER_SOH_CUBE = 'vw_weekly_nos_soh';
+  var WEEKLY_NOS_SOH_CUBE = 'vw_weekly_nos_soh';
   
   var data = {
     reportHeaders: [],
@@ -45,15 +45,15 @@ services.factory('WeeklyNosDrugExportService', function ($http, $filter, $q, $ti
       value: ['location.province_name', 'location.district_name', 'facility.facility_code', 'facility.facility_name', 'drug.drug_name', 'drug.drug_code', 'date', 'soh', 'area.area_name', 'area.sub_area_name']
     }];
 
-    return CubesGenerateUrlService.generateFactsUrlWithParams(WEEKLY_TRACER_SOH_CUBE, cuts, params);
+    return CubesGenerateUrlService.generateFactsUrlWithParams(WEEKLY_NOS_SOH_CUBE, cuts, params);
   }
 
-  function prepareCMMRequestUrl(selectedDrugs, province, district, endTime, allTracerDrugs) {
+  function prepareCMMRequestUrl(selectedDrugs, province, district, endTime, allNosDrugs) {
     var endDateParam = new Date($filter('date')(endTime, DATE_FORMAT));
     var startDatePeriod = DateFormatService.formatDateWithStartDayOfPeriod(endDateParam);
     var endDatePeriod = DateFormatService.formatDateWithEndDayOfPeriod(endDateParam);
 
-    var drugParams = validateDrugs(selectedDrugs) ? selectedDrugs : allTracerDrugs;
+    var drugParams = validateDrugs(selectedDrugs) ? selectedDrugs : allNosDrugs;
     var cutsParams = [
       {dimension: 'product', values: drugParams},
       {dimension: 'periodbegin', values: [$filter('date')(startDatePeriod, DATE_FORMAT)], skipEscape: true},
@@ -73,79 +73,79 @@ services.factory('WeeklyNosDrugExportService', function ($http, $filter, $q, $ti
     return $http.get(requestUrl);
   }
 
-  function getCMMForTracerDrugInPeriod(selectedDrugs, province, district, endTime, allTracerDrugs) {
-    var requestUrl = prepareCMMRequestUrl(selectedDrugs, province, district, endTime, allTracerDrugs);
+  function getCMMForNosDrugInPeriod(selectedDrugs, province, district, endTime, allNosDrugs) {
+    var requestUrl = prepareCMMRequestUrl(selectedDrugs, province, district, endTime, allNosDrugs);
     return $http.get(requestUrl);
   }
 
-  function getSohOnDate(dates, newTracerDrug, tracerDrugInFacility) {
+  function getSohOnDate(dates, newNosDrug, nosDrugInFacility) {
     _.forEach(dates, function (date) {
-      var sohOnDate = _.findWhere(tracerDrugInFacility, {date: date});
+      var sohOnDate = _.findWhere(nosDrugInFacility, {date: date});
       if (sohOnDate) {
-        newTracerDrug[date] = sohOnDate.soh;
+        newNosDrug[date] = sohOnDate.soh;
       } else {
-        newTracerDrug[date] = 'N/A';
+        newNosDrug[date] = 'N/A';
       }
     });
   }
 
-  function getColumnsFromDates(tracerDrugs) {
-    var dates = _.map(tracerDrugs, function (tracerDrug) {
-      return tracerDrug.date;
+  function getColumnsFromDates(nosDrugs) {
+    var dates = _.map(nosDrugs, function (nosDrug) {
+      return nosDrug.date;
     });
     return _.uniq(dates);
   }
 
-  function populateWeeklyTracerDrugData(tracerDrugs, tracerDrugHash, startTime, endTime) {
-    var dates = getColumnsFromDates(tracerDrugs);
+  function populateWeeklyNosDrugData(nosDrugs, nosDrugHash, startTime, endTime) {
+    var dates = getColumnsFromDates(nosDrugs);
     data.reportHeaders = addReportDateHeaders(dates);
 
-    var tracerDrugsGroup = _.groupBy(tracerDrugs, function(tracerDrug) {
-      return tracerDrug['drug.drug_code'] + tracerDrug['facility.facility_code'];
+    var nosDrugsGroup = _.groupBy(nosDrugs, function(nosDrug) {
+      return nosDrug['drug.drug_code'] + nosDrug['facility.facility_code'];
     });
 
-    _.forEach(tracerDrugsGroup, function (tracerDrugInFacility) {
-      var newTracerDrug = {};
-      newTracerDrug.drugCode = tracerDrugInFacility[0]['drug.drug_code'];
-      newTracerDrug.area = tracerDrugInFacility[0]['area.area_name'];
-      newTracerDrug.subArea = tracerDrugInFacility[0]['area.sub_area_name'];
-      newTracerDrug.drugName = tracerDrugInFacility[0]['drug.drug_name'];
-      newTracerDrug.province = tracerDrugInFacility[0]['location.province_name'];
-      newTracerDrug.district = tracerDrugInFacility[0]['location.district_name'];
-      newTracerDrug.facility = tracerDrugInFacility[0]['facility.facility_name'];
-      newTracerDrug.reportGeneratedFor = DateFormatService.formatDateWithDateMonthYearForString(startTime) + ' - ' + DateFormatService.formatDateWithDateMonthYearForString(endTime);
-      getSohOnDate(dates, newTracerDrug, tracerDrugInFacility);
+    _.forEach(nosDrugsGroup, function (nosDrugInFacility) {
+      var newNosDrug = {};
+      newNosDrug.drugCode = nosDrugInFacility[0]['drug.drug_code'];
+      newNosDrug.area = nosDrugInFacility[0]['area.area_name'];
+      newNosDrug.subArea = nosDrugInFacility[0]['area.sub_area_name'];
+      newNosDrug.drugName = nosDrugInFacility[0]['drug.drug_name'];
+      newNosDrug.province = nosDrugInFacility[0]['location.province_name'];
+      newNosDrug.district = nosDrugInFacility[0]['location.district_name'];
+      newNosDrug.facility = nosDrugInFacility[0]['facility.facility_name'];
+      newNosDrug.reportGeneratedFor = DateFormatService.formatDateWithDateMonthYearForString(startTime) + ' - ' + DateFormatService.formatDateWithDateMonthYearForString(endTime);
+      getSohOnDate(dates, newNosDrug, nosDrugInFacility);
 
-      tracerDrugHash[tracerDrugInFacility[0]['drug.drug_code'] + '@' + tracerDrugInFacility[0]['facility.facility_code']] = newTracerDrug;
+      nosDrugHash[nosDrugInFacility[0]['drug.drug_code'] + '@' + nosDrugInFacility[0]['facility.facility_code']] = newNosDrug;
     });
   }
 
-  function populateLastPeriodCMMData(cmmEntries, tracerDrugHash) {
+  function populateLastPeriodCMMData(cmmEntries, nosDrugHash) {
     _.forEach(cmmEntries, function (cmmEntry) {
-      if (validateTracerDrugEntryInHash(cmmEntry, tracerDrugHash)) {
-        tracerDrugHash[cmmEntry.product + '@' + cmmEntry.facilityCode].cmmValue = cmmEntry.cmm;
+      if (validateNosDrugEntryInHash(cmmEntry, nosDrugHash)) {
+        nosDrugHash[cmmEntry.product + '@' + cmmEntry.facilityCode].cmmValue = cmmEntry.cmm;
       }
     });
   }
 
-  function validateTracerDrugEntryInHash(cmmEntry, tracerDrugHash) {
-    return cmmEntry.cmm !== undefined && cmmEntry.cmm !== null && angular.isDefined(tracerDrugHash[cmmEntry.product + '@' + cmmEntry.facilityCode]);
+  function validateNosDrugEntryInHash(cmmEntry, nosDrugHash) {
+    return cmmEntry.cmm !== undefined && cmmEntry.cmm !== null && angular.isDefined(nosDrugHash[cmmEntry.product + '@' + cmmEntry.facilityCode]);
   }
 
-  function getDataForExport(selectedDrugs, province, district, startTime, endTime, allTracerDrugs) {
+  function getDataForExport(selectedDrugs, province, district, startTime, endTime, allNosDrugs) {
 
     var weeklyDrugsDataPromise = getWeeklyDrugsData(selectedDrugs, province, district, startTime, endTime);
-    var lastPeriodCMMDataPromise = getCMMForTracerDrugInPeriod(selectedDrugs, province, district, endTime, allTracerDrugs);
+    var lastPeriodCMMDataPromise = getCMMForNosDrugInPeriod(selectedDrugs, province, district, endTime, allNosDrugs);
     $q.all([weeklyDrugsDataPromise, lastPeriodCMMDataPromise]).then(function (result) {
-      var tracerDrugs = result[0].data;
+      var nosDrugs = result[0].data;
       var cmmEntries = result[1].data;
 
-      var tracerDrugHash = {};
-      populateWeeklyTracerDrugData(tracerDrugs, tracerDrugHash, startTime, endTime);
-      populateLastPeriodCMMData(cmmEntries, tracerDrugHash);
+      var nosDrugHash = {};
+      populateWeeklyNosDrugData(nosDrugs, nosDrugHash, startTime, endTime);
+      populateLastPeriodCMMData(cmmEntries, nosDrugHash);
 
-      data.reportContent = _.values(tracerDrugHash);
-      ReportExportExcelService.exportAsXlsx(data, messageService.get('report.file.tracer.drugs.report'));
+      data.reportContent = _.values(nosDrugHash);
+      ReportExportExcelService.exportAsXlsx(data, messageService.get('report.file.nos.drugs.report'));
     });
   }
 

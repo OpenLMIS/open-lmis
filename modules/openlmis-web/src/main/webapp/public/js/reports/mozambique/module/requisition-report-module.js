@@ -56,6 +56,11 @@ angular.module('requisition-report', ['openlmis', 'angularCombine', 'ngTable', '
                     templateUrl: 'tracer-drugs/partials/list.html',
                     reloadOnSearch: false
                 }).
+                when('/nos-drugs', {
+                  controller: NosDrugsReportController,
+                  templateUrl: 'nos/partials/list.html',
+                  reloadOnSearch: false
+                }).
                 when('/consumption', {
                     controller: ConsumptionReportController,
                     templateUrl: 'consumption/partials/list.html',
