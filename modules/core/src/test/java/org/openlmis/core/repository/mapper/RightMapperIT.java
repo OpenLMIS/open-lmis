@@ -27,6 +27,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
+import java.util.Random;
 
 import static junit.framework.Assert.assertNotNull;
 import static org.hamcrest.CoreMatchers.is;
@@ -93,10 +94,15 @@ public class RightMapperIT {
 
     @Test
     public void shouldGetAllRights() {
+        int actual = rightMapper.getAll().size();
+        int delta = new Random().nextInt(10);
+        for (int i = 0; i < delta; i++) {
+            rightMapper.insertRight(new Right(String.valueOf(i), RightType.REPORTING));
+        }
 
         List<Right> rights = rightMapper.getAll();
 
-        assertThat(rights.size(), is(107));
+        assertThat(rights.size(), is(actual + delta));
         assertThat(rights.get(0).getDisplayOrder(), is(1));
     }
 }
