@@ -15,30 +15,44 @@ describe("nos drugs chart service test", function () {
       startTime: '01/01/2017',
       endTime: '01/08/2017'
     }
-  }));
-
-
-  it('should call nos drugs chart service exportXLSX', function () {
     spyOn(scope, 'getGeographicZoneById').andCallFake(function (param1, param2) {
       return param1[0].name;
     });
+  }));
+
+  it('should call exportXLSX for nosDrugsChartService', function () {
     spyOn(nosDrugsChartService, 'exportXLSX');
     scope.exportXLSX();
     expect(nosDrugsChartService.exportXLSX).toHaveBeenCalledWith(scope.reportParams.startTime, scope.reportParams.endTime,
       scope.provinces[0].name, scope.districts[0].name);
   });
 
-  it('should call load report method', function () {
-    spyOn(scope, 'validateProvince').andReturn(true);
-    spyOn(scope, 'validateDistrict').andReturn(true);
-    spyOn(scope, 'getGeographicZoneById').andCallFake(function (param1, param2) {
-      return param1[0].name;
+  describe('#loadReport', function() {
+    beforeEach(function() {
+      spyOn(nosDrugsChartService, 'makeNosDrugsChart');
     });
-    spyOn(nosDrugsChartService, 'makeNosDrugsChart');
-    scope.loadReport();
-    expect(nosDrugsChartService.makeNosDrugsChart).toHaveBeenCalledWith('tracer-report', 'legend-div',
-      new Date(scope.reportParams.startTime), new Date(scope.reportParams.endTime),
-      scope.provinces[0].name, scope.districts[0].name);
-  });
 
+    it('should call makeNosDrugsChart when province and districts are valid', function () {
+      spyOn(scope, 'validateProvince').andReturn(true);
+      spyOn(scope, 'validateDistrict').andReturn(true);
+      scope.loadReport();
+      expect(nosDrugsChartService.makeNosDrugsChart)
+        .toHaveBeenCalledWith('tracer-report', 'legend-div',
+                              new Date(scope.reportParams.startTime),
+                              new Date(scope.reportParams.endTime),
+                              scope.provinces[0].name, scope.districts[0].name);
+    });
+
+    it('should not call makeNosDrugsChart when province is invalid', function () {
+      spyOn(scope, 'validateDistrict').andReturn(true);
+      spyOn(scope, 'validateProvince').andReturn(false);
+      expect(nosDrugsChartService.makeNosDrugsChart).not.toHaveBeenCalled();
+    });
+
+    it('should not call makeNosDrugsChart when district is invalid', function () {
+      spyOn(scope, 'validateDistrict').andReturn(false);
+      spyOn(scope, 'validateProvince').andReturn(true);
+      expect(nosDrugsChartService.makeNosDrugsChart).not.toHaveBeenCalled();
+    });
+  });
 });
