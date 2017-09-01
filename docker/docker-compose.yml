@@ -1,0 +1,28 @@
+version: '3.3'
+services:
+  postgres:
+    image: "postgres:9.4"
+    container_name: open-lmis-db
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=p@ssw0rd
+      - POSTGRES_DB=open_lmis
+    ports:
+      - 5432:5432
+
+  test-runner-portal:
+    image: test-runner-portal
+    container_name: test-runner-portal
+    command: ['tail', '-f', '/dev/null']
+    volumes:
+      - type: volume
+        source: ../
+        target: /portal
+    working_dir: /portal
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=p@ssw0rd
+      - POSTGRES_HOST=open-lmis-db
+      - POSTGRES_DB=open_lmis
+      - APP_URL=http://localhost:8080
+

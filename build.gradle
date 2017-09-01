@@ -154,3 +154,19 @@ configure(subprojects.findAll { it.name != 'db' }) {
     testCompile project(path: ':modules:db', configuration: 'testFixtures')
   }
 }
+
+allprojects {
+ task downloadDependencies {
+   description "Pre-downloads *most* dependencies"
+   doLast {
+     configurations.getAsMap().each { name, config ->
+       println "Retrieving dependencies for $name"
+       try {
+         config.files
+       } catch (e) {
+         project.logger.info e.message // some cannot be resolved, silentlyish skip them
+       }
+     }
+   }
+ }
+}

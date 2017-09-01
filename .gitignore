@@ -27,3 +27,4 @@ dataSources/
 package-lock.json
 .java-version
 *.swp
+*.swo
