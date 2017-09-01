@@ -4,7 +4,7 @@ services.factory('NosDrugsChartService', function ($http, $filter, $q, $timeout,
                                                    ReportExportExcelService, DateFormatService,
                                                    WeeklyNosDrugExportService) {
 
-  var drugCodekey = "drug.drug_code";
+  var drugCodeKey = "drug.drug_code";
   var drugNameKey = "drug.drug_name";
   var selectedDrugs = [];
   var chartDataItems;
@@ -12,10 +12,10 @@ services.factory('NosDrugsChartService', function ($http, $filter, $q, $timeout,
 
   function getNosDrugStockRateOnFriday(zone, friday, stockOuts, nosDrugCode, carryStartDates) {
     var stockOutsOfNosDrug = _.filter(stockOuts, function (stockOut) {
-      return stockOut[drugCodekey] === nosDrugCode;
+      return stockOut[drugCodeKey] === nosDrugCode;
     });
     var carryStartDatesOfNosDrug = _.filter(carryStartDates, function (carry) {
-      return carry[drugCodekey] === nosDrugCode;
+      return carry[drugCodeKey] === nosDrugCode;
     });
 
     return StockoutSingleProductZoneChartService.generateChartDataItemsForZone(zone, friday, friday, stockOutsOfNosDrug, carryStartDatesOfNosDrug)[0];
@@ -31,12 +31,12 @@ services.factory('NosDrugsChartService', function ($http, $filter, $q, $timeout,
     return $http.get(requestUrl);
   }
 
-  function generateNosDurgDataItemForOneFriday(friday, nosDrugs, province, district, stockOuts, carryStartDates) {
+  function generateNosDrugDataItemForOneFriday(friday, nosDrugs, province, district, stockOuts, carryStartDates) {
     var chartDataItem = {date: friday};
 
     var totalPercentage = 0;
     _.forEach(nosDrugs, function (nosDrug) {
-      var nosDrugCode = nosDrug[drugCodekey];
+      var nosDrugCode = nosDrug[drugCodeKey];
 
       var fridayStockOutRate = getNosDrugStockRateOnFriday(ReportLocationConfigService.getZone(province, district), friday, stockOuts, nosDrugCode, carryStartDates);
       chartDataItem[nosDrugCode + "StockOutFacilities"] = fridayStockOutRate.stockOutFacilities;
@@ -101,7 +101,7 @@ services.factory('NosDrugsChartService', function ($http, $filter, $q, $timeout,
     var fridays = DateFormatService.getFridaysBetween(userSelectedStartDate, userSelectedEndDate);
     return _.chain(fridays)
       .map(function (friday) {
-        return generateNosDurgDataItemForOneFriday(friday, nosDrugs, province, district, stockOuts, carryStartDates);
+        return generateNosDrugDataItemForOneFriday(friday, nosDrugs, province, district, stockOuts, carryStartDates);
       }).value();
   }
 
@@ -167,7 +167,7 @@ services.factory('NosDrugsChartService', function ($http, $filter, $q, $timeout,
         return nosDrug[drugNameKey];
       })
       .map(function (nosDrug) {
-        var nosDrugcode = nosDrug[drugCodekey];
+        var nosDrugcode = nosDrug[drugCodeKey];
         var nosDrugName = nosDrug[drugNameKey];
 
         return {
