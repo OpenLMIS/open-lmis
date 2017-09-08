@@ -24,5 +24,8 @@ public interface MaterializedViewMapper {
     Integer refreshLotExpiryDate();
 
     @Select("SELECT refresh_vw_cmm_entries();")
-    Integer refreshCMMEntires();
+    Integer refreshCMMEntries();
+
+    @Select("SELECT refresh_weekly_nos_soh();")
+    Integer refreshWeeklyNOSSOH();
 }

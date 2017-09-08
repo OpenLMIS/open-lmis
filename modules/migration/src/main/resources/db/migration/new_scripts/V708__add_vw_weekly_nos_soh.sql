@@ -78,6 +78,7 @@ CREATE MATERIALIZED VIEW vw_weekly_nos_soh AS
  *
  FROM nos_weekly_stock_history());
 
+CREATE UNIQUE INDEX idx_vw_weekly_nos_soh ON vw_weekly_nos_soh (uuid, facility_code, drug_code);
 
 CREATE OR REPLACE FUNCTION refresh_weekly_nos_soh()
   RETURNS INT LANGUAGE plpgsql
