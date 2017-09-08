@@ -78,6 +78,7 @@ CREATE MATERIALIZED VIEW vw_weekly_nos_soh AS
  *
  FROM nos_weekly_stock_history());
 
+
 CREATE OR REPLACE FUNCTION refresh_weekly_nos_soh()
   RETURNS INT LANGUAGE plpgsql
 AS $$
