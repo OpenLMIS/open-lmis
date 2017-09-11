@@ -175,7 +175,8 @@ function RequisitionReportController($scope, $controller, RequisitionReportServi
       reportHeaders: {
         programName: messageService.get('report.header.program.name'),
         type: messageService.get('report.header.type'),
-        //get parent Node in later story
+        provinceName: messageService.get('report.header.province'),
+        districtName: messageService.get('report.header.district'),
         facilityName: messageService.get('report.header.facility.name'),
         submittedUser: messageService.get('report.header.submitted.user'),
         inventoryDate: messageService.get('report.header.inventory.date'),
@@ -192,7 +193,8 @@ function RequisitionReportController($scope, $controller, RequisitionReportServi
         var requisitionContent = {};
         requisitionContent.programName = requisition.programName;
         requisitionContent.type = requisition.type;
-        //get Parent Node in later story: get info in backend service: approverService.getNextApprovers(requisition.getId())
+        requisitionContent.provinceName = requisition.provinceName;
+        requisitionContent.districtName = requisition.districtName;
         requisitionContent.facilityName = requisition.facilityName;
         requisitionContent.submittedUser = requisition.submittedUser;
         requisitionContent.inventoryDate = requisition.inventoryDate;
