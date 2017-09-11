@@ -2,7 +2,7 @@ FROM siglus/open-lmis-portal:latest
 MAINTAINER ThoughtWorks
 
 #update system and install git
-RUN apt-get update && apt-get install -y git
+RUN apt-get update && apt-get install -y git npm
 #uninstall openjdk7
 RUN apt-get purge openjdk* -y
 #install oracle jdk
@@ -17,5 +17,5 @@ RUN cd /installers && \
 ENV JAVA_HOME=/opt/jdk/jdk1.7.0_80
 
 RUN git clone https://github.com/SIGLUS/open-lmis.git open-lmis
-RUN cd open-lmis && git checkout  2.0-moz && ./gradlew downloaddependencies
+RUN cd open-lmis && git checkout 2.0-moz && ./gradlew downloadDependencies
 
