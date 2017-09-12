@@ -32,6 +32,8 @@ function VersionReportController($scope, VersionReportService, $cacheFactory, Re
     var data = {
       reportHeaders: {
         user: messageService.get('label.app.version.user'),
+        provinceName: messageService.get('label.app.version.province.name'),
+        districtName: messageService.get('label.app.version.district.name'),
         facilityName: messageService.get('label.app.version.facilityname'),
         appVersion: messageService.get('label.app.version.appversion')
       },
@@ -41,6 +43,8 @@ function VersionReportController($scope, VersionReportService, $cacheFactory, Re
     $scope.appVersions.forEach(function (appVersion) {
       var appVersionReportEntry = {};
       appVersionReportEntry.user = appVersion.userName;
+      appVersionReportEntry.provinceName = appVersion.provinceName;
+      appVersionReportEntry.districtName = appVersion.districtName;
       appVersionReportEntry.facilityName = appVersion.facilityName;
       appVersionReportEntry.appVersion = appVersion.appVersion;
 

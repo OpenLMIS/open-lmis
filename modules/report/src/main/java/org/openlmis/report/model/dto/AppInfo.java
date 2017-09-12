@@ -16,6 +16,8 @@ import org.openlmis.core.domain.BaseModel;
 public class AppInfo extends BaseModel {
     private Long facilityId;
     private String facilityCode;
+    private String provinceName;
+    private String districtName;
     private String facilityName;
     private String userName;
     private String appVersion;

@@ -31,6 +31,10 @@ public interface AppInfoMapper {
     @Select("SELECT * FROM moz_app_info, facilities WHERE facilities.code = #{facilityCode} AND facilities.id = moz_app_info.facilityId")
     AppInfo queryByFacilityCode(String facilityCode);
 
-    @Select("SELECT moz_app_info.*, facilities.name facilityName FROM moz_app_info, facilities WHERE moz_app_info.facilityId = facilities.id")
+    @Select({"SELECT info.*, facilities.name AS facilityName, zone.name AS districtName, parent_zone.name AS provinceName " +
+            "FROM moz_app_info AS info " +
+            "JOIN facilities as facilities ON info.facilityid = facilities.id " +
+            "LEFT JOIN geographic_zones as zone ON facilities.geographiczoneid = zone.id " +
+            "LEFT JOIN geographic_zones as parent_zone ON zone.parentid = parent_zone.id"})
     List<AppInfo> queryAll();
 }
