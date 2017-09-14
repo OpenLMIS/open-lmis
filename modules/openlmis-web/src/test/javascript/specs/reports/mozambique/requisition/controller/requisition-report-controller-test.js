@@ -114,58 +114,7 @@ describe('requisition report controller', function () {
     };
     return expectedHeader;
   }
-
-  it('should export information with including the range of dates', function () {
-    var expectedHeader = getExpectedHeaders();
-    scope.requisitions = [{
-      actualPeriodEnd: 1500028406115,
-      clientSubmittedTime: 1500029935097,
-      clientSubmittedTimeString: '2017-07-14 05:58:55',
-      districtName: 'Moamba',
-      emergency: false,
-      facilityName: 'Sabie',
-      id: 727,
-      inventoryDate: '14 July 2017',
-      programName: 'VIA Classica',
-      provinceName: 'Maputo Província',
-      requisitionStatus: 'AUTHORIZED',
-      schedulePeriodEnd: 1500526800000,
-      submittedStatus: 'On time',
-      submittedUser: 'Sabie',
-      type: 'Normal',
-      webSubmittedTime: 1500029942231,
-      webSubmittedTimeString: '2017-07-14 05:59:02'
-    }];
-
-    scope.reportParams = {
-      startTime: '21-07-2017',
-      endTime: '21-10-2017'
-    };
-
-    spyOn(dateFormatService,'formatDateWithDateMonthYearForString').andCallFake(function(arg) {return arg;});
-    spyOn(reportExportExcelService, 'exportAsXlsx');
-    scope.exportXLSX();
-
-    var expectedContent = {
-      programName: 'VIA Classica',
-      type: 'Normal',
-      facilityName: 'Sabie',
-      submittedUser: 'Sabie',
-      inventoryDate: '14 July 2017',
-      submittedStatus: 'On time',
-      submittedTime: '2017-07-14 05:58:55',
-      syncTime: '2017-07-14 05:59:02',
-      reportGeneratedFor: scope.reportParams.startTime + ' - ' + scope.reportParams.endTime
-    };
-
-    var expectedExcel = {
-      reportHeaders: expectedHeader,
-      reportContent: [expectedContent]
-    };
-
-    expect(reportExportExcelService.exportAsXlsx).toHaveBeenCalledWith(expectedExcel, 'report.file.requisition.report');
-  });
-
+  
   it('should export data with district province name successfully', function () {
     var expectedHeader = getExpectedHeaders();
     scope.requisitions = [{

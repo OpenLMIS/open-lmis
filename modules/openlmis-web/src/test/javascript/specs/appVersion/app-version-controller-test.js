@@ -21,7 +21,7 @@ describe('app version report controller', function () {
   }
 
 
-  iit('should export data with district province name successfully', function () {
+  it('should export data with district province name successfully', function () {
     var expectedHeader = getExpectedHeaders();
     scope.appVersions = [{
       userName: "Boane",
