@@ -98,7 +98,7 @@ function BaseProductReportController($scope, $filter, ProductReportService, $cac
                 });
             });
             $scope.facilities = healthFacilities;
-            if ($location.$$path !== '/stock-out-all-products' && $location.$$path !== '/stock-on-hand-all-products') {
+            if ($location.$$path !== '/stock-on-hand-all-products') {
                 addAllOption($scope.facilities, "facility");
             }
             $scope.populateOptions ? $scope.populateOptions() : undefined;
@@ -117,7 +117,9 @@ function BaseProductReportController($scope, $filter, ProductReportService, $cac
         });
         $scope.fullGeoZoneList = _.union($scope.fullGeoZoneList, $scope.provinces, $scope.districts);
         addAllOption($scope.provinces, "province");
+      if ($location.$$path !== '/stock-on-hand-all-products') {
         addAllOption($scope.districts, "district");
+      }
     };
 
     $scope.selectedProvince = function () {
