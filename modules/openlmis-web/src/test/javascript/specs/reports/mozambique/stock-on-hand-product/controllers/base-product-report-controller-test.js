@@ -87,12 +87,13 @@ describe("Base Product Report Controller", function () {
     }];
 
     beforeEach(module('openlmis'));
-    beforeEach(inject(function (_$httpBackend_, $rootScope, $http, $filter, ProductReportService, $cacheFactory, $timeout) {
+    beforeEach(inject(function (_$httpBackend_, $rootScope, $http, $filter, ProductReportService, $cacheFactory, $timeout, $location) {
         scope = $rootScope.$new();
+        $location.$$path = 'some-report';
         httpBackend = _$httpBackend_;
         dateFilter = $filter('date');
         cacheFactory = $cacheFactory;
-        BaseProductReportController(scope, $filter, ProductReportService, cacheFactory, $timeout);
+        BaseProductReportController(scope, $filter, ProductReportService, cacheFactory, $timeout, undefined, undefined, undefined, undefined,$location, undefined, undefined);
     }));
 
     it('should get provinces and districts', function () {
