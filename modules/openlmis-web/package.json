@@ -14,7 +14,9 @@
     "karma-coverage": "^0.2.7",
     "karma-firefox-launcher": "^0.1.4",
     "karma-jasmine": "~0.1.0",
-    "matchdep": "~0.1.2"
+    "karma-phantomjs-launcher": "^1.0.4",
+    "matchdep": "~0.1.2",
+    "phantomjs": "^2.1.7"
   },
   "scripts": {
     "lint": "grunt jshint",
