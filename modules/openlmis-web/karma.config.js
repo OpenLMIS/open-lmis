@@ -32,6 +32,7 @@ module.exports = function (config) {
       'lib/easypiechart/angular.easypiechart.min.js',
       'lib/angular-ui/ui-jqplot/ui-jqplot-chart.js',
       'lib/angular-ui/ng-table/ng-table.js',
+      'lib/moment/moment.js',
 
       //Mocking library
       '../../../test/javascript/lib/angular-mocks.js',

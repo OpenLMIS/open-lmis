@@ -21,5 +21,8 @@
   "scripts": {
     "lint": "grunt jshint",
     "unit-test": "karma start karma.config.js "
+  },
+  "dependencies": {
+    "moment": "^2.18.1"
   }
 }
