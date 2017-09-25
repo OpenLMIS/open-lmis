@@ -37,7 +37,7 @@ describe("date format service test", function () {
 
   it('should format date with full time', function () {
     var formattedDate = dateFormatService.formatDateWithDateMonthYear(1502945999999);
-    expect(formattedDate).toEqual('16-08-2017');
+    expect(formattedDate).toEqual('17-08-2017');
   });
 
   it('should format date with dd-MM-yyyy', function () {

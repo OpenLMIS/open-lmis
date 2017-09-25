@@ -74,7 +74,7 @@ describe("Expiry Dates Report Controller", function () {
             endTime: 1451520000000
         };
 
-        httpBackend.expectGET('/cubesreports/cube/vw_expiry_dates/aggregate?drilldown=facility.facility_code%7Cdrug.drug_code%7Cexpiry_dates&cut=occurred%3A-1451537999999').respond(200, expiryDatesReportData);
+        httpBackend.expectGET('/cubesreports/cube/vw_expiry_dates/aggregate?drilldown=facility.facility_code%7Cdrug.drug_code%7Cexpiry_dates&cut=occurred%3A-1451606399999').respond(200, expiryDatesReportData);
         scope.loadReport();
         httpBackend.flush();
 

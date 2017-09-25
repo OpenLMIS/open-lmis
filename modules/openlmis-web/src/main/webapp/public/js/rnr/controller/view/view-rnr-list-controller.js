@@ -164,7 +164,8 @@ function ViewRnrListController($scope, facilities, RequisitionsForViewing, Progr
         if ($scope.endDate < $scope.startDate) {
             $scope.endDate = undefined;
         }
-        $scope.endDateOffset = Math.ceil((new Date($scope.startDate.split('-')).getTime() + oneDay - Date.now()) / oneDay);
+        var startDateValue = moment($scope.startDate, 'DD-MM-YYYY').valueOf();
+        $scope.endDateOffset = Math.ceil((startDateValue + oneDay - Date.now()) / oneDay);
     };
 }
 
