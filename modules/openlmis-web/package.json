@@ -19,8 +19,9 @@
     "phantomjs": "^2.1.7"
   },
   "scripts": {
-    "lint": "grunt jshint",
-    "unit-test": "karma start karma.config.js "
+    "css_lint": "grunt lesslint --force",
+    "javascript_lint": "grunt jshint",
+    "unit_test": "karma start karma.config.js "
   },
   "dependencies": {
     "moment": "^2.18.1"
