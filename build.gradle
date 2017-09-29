@@ -132,6 +132,9 @@ subprojects {
       includeCategories 'org.openlmis.db.categories.UnitTests'
       //includeCategories 'org.openlmis.db.categories.IntegrationTests'  //TODO: execute IntegrationTest in pipeline
     }
+    testLogging {
+      events "passed", "skipped", "failed"
+    }
   }
 
   task showMeCache << {
@@ -145,8 +148,10 @@ subprojects {
     useJUnit {
       includeCategories 'org.openlmis.db.categories.IntegrationTests'
     }
+    testLogging {
+      events "passed", "skipped", "failed"
+    }
   }
-
 }
 
 configure(subprojects.findAll { it.name != 'db' }) {
