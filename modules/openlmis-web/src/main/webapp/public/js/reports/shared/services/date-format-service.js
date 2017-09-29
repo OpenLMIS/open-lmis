@@ -56,13 +56,11 @@ services.factory('DateFormatService', function ($filter, messageService) {
   }
 
   function formatDateWithDateMonthYear(timestamp) {
-    var date = new Date(timestamp);
-    return $filter('date')(date, 'dd-MM-yyyy');
+    return moment(timestamp).format('DD-MM-YYYY');
   }
 
   function formatDateWithDateMonthYearForString(stringDate) {
-    var date = new Date(stringDate);
-    return $filter('date')(date, 'dd-MM-yyyy');
+    return moment(stringDate,'YYYY-MM-DD').format('DD-MM-YYYY');
   }
 
   function formatDateWithUnderscore(date) {

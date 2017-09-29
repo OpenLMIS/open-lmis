@@ -49,7 +49,7 @@ services.factory('WeeklyDrugExportService', function ($http, $filter, $q, $timeo
   }
 
   function prepareCMMRequestUrl(selectedDrugs, province, district, endTime, allTracerDrugs) {
-    var endDateParam = new Date($filter('date')(endTime, DATE_FORMAT));
+    var endDateParam = new Date(moment(endTime, 'YYYY-MM-DD').valueOf());
     var startDatePeriod = DateFormatService.formatDateWithStartDayOfPeriod(endDateParam);
     var endDatePeriod = DateFormatService.formatDateWithEndDayOfPeriod(endDateParam);
 

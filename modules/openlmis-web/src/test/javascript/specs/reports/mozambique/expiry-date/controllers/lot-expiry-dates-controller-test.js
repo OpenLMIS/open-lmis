@@ -100,7 +100,7 @@ describe("Lot Expiry Dates Report Controller", function () {
         lot: 'ZZZ',
         expiryDate: 'Feb 2017',
         soh: '123',
-        reportGenerateDate: '16-08-2017'
+        reportGenerateDate: '17-08-2017'
       },
       {
         drugCode: '08S32Z',
@@ -111,7 +111,7 @@ describe("Lot Expiry Dates Report Controller", function () {
         lot: 'EEE',
         expiryDate: 'Feb 2017',
         soh: '150',
-        reportGenerateDate: '16-08-2017'
+        reportGenerateDate: '17-08-2017'
       }
     ];
     var expectedExcel = {

@@ -130,7 +130,7 @@ subprojects {
     systemProperties System.properties
     useJUnit {
       includeCategories 'org.openlmis.db.categories.UnitTests'
-      includeCategories 'org.openlmis.db.categories.IntegrationTests'
+      //includeCategories 'org.openlmis.db.categories.IntegrationTests'  //TODO: execute IntegrationTest in pipeline
     }
   }
 

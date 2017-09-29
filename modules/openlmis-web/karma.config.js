@@ -32,6 +32,7 @@ module.exports = function (config) {
       'lib/easypiechart/angular.easypiechart.min.js',
       'lib/angular-ui/ui-jqplot/ui-jqplot-chart.js',
       'lib/angular-ui/ng-table/ng-table.js',
+      'lib/moment/moment.js',
 
       //Mocking library
       '../../../test/javascript/lib/angular-mocks.js',
@@ -56,7 +57,7 @@ module.exports = function (config) {
     plugins: [
       'karma-jasmine',
       'karma-coverage',
-      'karma-firefox-launcher'
+      'karma-phantomjs-launcher'
     ],
 
     // test results reporter to use
@@ -93,7 +94,7 @@ module.exports = function (config) {
     // - Safari (only Mac; has to be installed with `npm install karma-safari-launcher`)
     // - PhantomJS
     // - IE (only Windows; has to be installed with `npm install karma-ie-launcher`)
-    browsers: ['Firefox'],
+    browsers: ['PhantomJS'],
 
     // If browser does not capture in given timeout [ms], kill it
     captureTimeout: 30000,
