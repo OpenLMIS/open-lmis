@@ -229,6 +229,12 @@ task deployOpenLmis(type: GradleBuild) {
     tasks = ['cargoRedeployRemote']
 }
 
+task removePropertiesFiles(type: Delete) {
+    delete fileTree('src/main/resources/') {
+        include 'atomfeed.properties', 'default.properties', 'local/app.properties', 'app.properties', 'uat/app.properties'
+    }
+}
+
 compileJava.dependsOn less
 
 cobertura {
