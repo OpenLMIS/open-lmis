@@ -104,6 +104,10 @@ war {
     exclude "public/js/"
     exclude "public/lib/"
 
+    if (project.hasProperty('warName')) {
+      archiveName = project.property('warName')
+    }
+
     doFirst {
         prepareVersionedDirectory.execute();
     }

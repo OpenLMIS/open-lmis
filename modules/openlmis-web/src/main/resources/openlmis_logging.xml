@@ -4,15 +4,15 @@
   ~ Copyright © 2013 VillageReach
   ~
   ~ This program is free software: you can redistribute it and/or modify it under the terms of the GNU Affero General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
-  ~  
+  ~
   ~ This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Affero General Public License for more details.
-  ~ You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org. 
+  ~ You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org.
   -->
 
 <!DOCTYPE log4j:configuration SYSTEM "log4j.dtd">
 <log4j:configuration xmlns:log4j="http://jakarta.apache.org/log4j/">
   <appender name="logFileAppender" class="org.apache.log4j.DailyRollingFileAppender">
-    <param name="File" value="openlmis-web.log"/>
+    <param name="File" value="${logHome}/openlmis-web.log"/>
     <param name="MaxFileSize" value="1MB"/>
     <param name="MaxBackupIndex" value="5"/>
     <param name="Append" value="true"/>
@@ -31,42 +31,64 @@
   </appender>
 
   <!--<logger name="java.sql" additivity="false">-->
-    <!--<level value="DEBUG"/>-->
-    <!--<appender-ref ref="consoleAppender"/>-->
+  <!--<level value="DEBUG"/>-->
+  <!--<appender-ref ref="consoleAppender"/>-->
   <!--</logger>-->
 
   <!--<logger name="org.openlmis.rnr.repository.mapper">-->
-    <!--<level value="DEBUG"/>-->
-    <!--<appender-ref ref="consoleAppender"/>-->
+  <!--<level value="DEBUG"/>-->
+  <!--<appender-ref ref="consoleAppender"/>-->
   <!--</logger>-->
 
   <!--<logger name="org.openlmis.db.repository.mapper">-->
-    <!--<level value="DEBUG"/>-->
-    <!--<appender-ref ref="consoleAppender"/>-->
+  <!--<level value="DEBUG"/>-->
+  <!--<appender-ref ref="consoleAppender"/>-->
   <!--</logger>-->
 
   <!--<logger name="org.openlmis.core.repository.mapper">-->
-    <!--<level value="DEBUG"/>-->
-    <!--<appender-ref ref="consoleAppender"/>-->
+  <!--<level value="DEBUG"/>-->
+  <!--<appender-ref ref="consoleAppender"/>-->
   <!--</logger>-->
 
   <!--<logger name="org.openlmis.shipment.repository.mapper">-->
-    <!--<level value="DEBUG"/>-->
-    <!--<appender-ref ref="consoleAppender"/>-->
+  <!--<level value="DEBUG"/>-->
+  <!--<appender-ref ref="consoleAppender"/>-->
   <!--</logger>-->
 
-  <logger name="org.openlmis.web">
+  <logger name="org.springframework.mail">
+    <level value="DEBUG"/>
+    <appender-ref ref="logFileAppender"/>
+  </logger>
+
+
+  <logger name="org.openlmis">
+    <level value="ERROR"/>
+    <appender-ref ref="logFileAppender"/>
+  </logger>
+
+  <logger name="org.openlmis.web.interceptor">
+    <level value="INFO"/>
+    <appender-ref ref="syncActivityLogFileAppender"/>
+  </logger>
+
+  <logger name="org.springframework.integration">
     <level value="INFO"/>
     <appender-ref ref="logFileAppender"/>
   </logger>
 
-  <!--<logger name="org.springframework.integration">-->
-    <!--<level value="INFO"/>-->
-    <!--<appender-ref ref="consoleAppender"/>-->
-  <!--</logger>-->
+<appender name="syncActivityLogFileAppender" class="org.apache.log4j.DailyRollingFileAppender">
+    <param name="File" value="${logHome}/sync-activity.log"/>
+    <param name="MaxFileSize" value="10MB"/>
+    <param name="MaxBackupIndex" value="5"/>
+    <param name="Append" value="true"/>
+    <param name="Encoding" value="UTF-8"/>
+    <layout class="org.apache.log4j.EnhancedPatternLayout">
+      <param name="ConversionPattern" value="%d{ISO8601} [%-5p][%-16.16t][%40.40c] - %m%n"/>
+    </layout>
+  </appender>
 
   <root>
-    <level value="ERROR"/>
+    <level value="INFO"/>
     <appender-ref ref="logFileAppender"/>
   </root>
 </log4j:configuration>

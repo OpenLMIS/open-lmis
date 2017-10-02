@@ -11,10 +11,9 @@
 DROP TABLE IF EXISTS product_forms;
 CREATE TABLE product_forms (
     id SERIAL PRIMARY KEY,
-    code varchar(20),
+    code varchar(80),
     displayOrder INTEGER,
     createdDate TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
 CREATE UNIQUE INDEX uc_product_forms_lower_code ON product_forms(LOWER(code));
-
