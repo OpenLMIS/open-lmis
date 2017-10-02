@@ -21,7 +21,9 @@
   "scripts": {
     "css_lint": "grunt lesslint --force",
     "javascript_lint": "grunt jshint",
-    "unit_test": "karma start karma.config.js "
+    "unit_test": "karma start karma.config.js ",
+    "uglify": "grunt uglify",
+    "less": "grunt less"
   },
   "dependencies": {
     "moment": "^2.18.1"
