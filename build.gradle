@@ -157,7 +157,7 @@ subprojects {
 
 configure(subprojects.findAll { it.name != 'db' }) {
   dependencies {
-    testCompile project(path: ':modules:db', configuration: 'testFixtures')
+    testCompile project (path: ':modules:db', configuration: 'testFixtures')
   }
 }
 

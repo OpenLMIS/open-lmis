@@ -68,7 +68,6 @@ public class StockCardMapperIT {
   private Product defaultProduct;
   private StockCard stockCard1;
   private StockCard stockCard2;
-
   @Autowired
   private LotMapper lotMapper;
 

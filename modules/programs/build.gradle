@@ -1,0 +1,33 @@
+version 'unspecified'
+
+apply plugin: 'java'
+
+sourceCompatibility = 1.8
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    compile 'com.wordnik:swagger-annotations:1.3.12',
+            project(':modules:db'),
+            project(':modules:core')
+
+    testCompile project(path: ':modules:core', configuration: 'testFixtures'),
+            project(path: ':modules:db')
+
+    configurations {
+        testFixtures {
+            extendsFrom testRuntime
+        }
+    }
+
+    task testJar(type: Jar) {
+        from sourceSets.test.output
+        classifier = 'test'
+    }
+
+    artifacts {
+        testFixtures testJar
+    }
+}
