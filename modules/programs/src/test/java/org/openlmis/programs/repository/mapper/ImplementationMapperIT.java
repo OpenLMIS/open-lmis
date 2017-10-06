@@ -15,13 +15,12 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.transaction.TransactionConfiguration;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
 import java.util.List;
 
-import static org.apache.commons.lang.math.RandomUtils.nextInt;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.not;
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.openlmis.programs.helpers.ImplementationBuilder.createRandomImplementations;
 
 @Category(IntegrationTests.class)
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -48,8 +47,8 @@ public class ImplementationMapperIT {
 
     @Test
     public void shouldBulkInsert() {
-        malariaProgramMapper.insert(malariaProgram);
-        List<Implementation> implementations = createRandomPrograms();
+        List<Implementation> implementations = createRandomImplementations();
+        malariaProgramMapper.insert(implementations.get(0).getMalariaProgram());
         int count = mapper.bulkInsert(implementations);
         assertThat(count, is(implementations.size()));
         for (Implementation implementation : implementations) {
@@ -62,14 +61,5 @@ public class ImplementationMapperIT {
         MalariaProgram malariaProgram = MalariaProgramBuilder.fresh().build();
         Implementation implementation = ImplementationBuilder.fresh().setMalariaProgram(malariaProgram).build();
         mapper.insert(implementation);
-    }
-
-    private List<Implementation> createRandomPrograms() {
-        List<Implementation> result = new ArrayList<>();
-        int randomQuantity = nextInt(10) + 1;
-        for (int i = 0; i < randomQuantity; i++) {
-            result.add(ImplementationBuilder.fresh().setMalariaProgram(malariaProgram).build());
-        }
-        return result;
     }
 }

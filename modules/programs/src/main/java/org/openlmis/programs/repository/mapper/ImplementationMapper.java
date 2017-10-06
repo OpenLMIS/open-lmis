@@ -16,9 +16,10 @@ public interface ImplementationMapper {
 
     @Insert("<script>" +
             "INSERT INTO implementations (executor, malariaprogramid) VALUES " +
-            "<foreach item='implementation' collection='implementations' separator=','>" +
+            "<foreach item='implementation' collection='list' separator=','>" +
             "(#{implementation.executor}, #{implementation.malariaProgram.id})" +
             "</foreach>" +
             "</script>")
-    int bulkInsert(@Param("implementations") List<Implementation> implementations);
+    @Options(useGeneratedKeys = true)
+    int bulkInsert(@Param("list") List<Implementation> implementations);
 }

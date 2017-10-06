@@ -28,4 +28,9 @@ public class TreatmentBuilder {
         this.implementation = implementation;
         return this;
     }
+
+    public TreatmentBuilder setProduct(Product product) {
+        this.product = product;
+        return this;
+    }
 }

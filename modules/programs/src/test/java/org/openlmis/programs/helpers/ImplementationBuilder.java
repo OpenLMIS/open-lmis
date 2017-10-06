@@ -5,6 +5,7 @@ import org.openlmis.programs.domain.malaria.Implementation;
 import org.openlmis.programs.domain.malaria.MalariaProgram;
 import org.openlmis.programs.domain.malaria.Treatment;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import static com.google.common.collect.Lists.newArrayList;
@@ -13,7 +14,7 @@ import static org.apache.commons.lang3.RandomStringUtils.randomAlphanumeric;
 
 @Data
 public class ImplementationBuilder {
-    private int id = nextInt();
+    private int id = 0;
     private String executor = randomAlphanumeric(10);
     private List<Treatment> treatments = newArrayList(TreatmentBuilder.fresh().build(),
             TreatmentBuilder.fresh().build());
@@ -35,5 +36,15 @@ public class ImplementationBuilder {
     public ImplementationBuilder setMalariaProgram(MalariaProgram malariaProgram) {
         this.malariaProgram = malariaProgram;
         return this;
+    }
+
+    public static List<Implementation> createRandomImplementations() {
+        MalariaProgram malariaProgram = MalariaProgramBuilder.fresh().build();
+        List<Implementation> result = new ArrayList<>();
+        int randomQuantity = nextInt(10) + 1;
+        for (int i = 0; i < randomQuantity; i++) {
+            result.add(ImplementationBuilder.fresh().setMalariaProgram(malariaProgram).build());
+        }
+        return result;
     }
 }

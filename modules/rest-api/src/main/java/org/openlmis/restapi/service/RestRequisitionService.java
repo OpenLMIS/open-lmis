@@ -29,7 +29,6 @@ import org.openlmis.restapi.domain.Report;
 import org.openlmis.rnr.domain.*;
 import org.openlmis.rnr.repository.mapper.RegimenLineItemMapper;
 import org.openlmis.rnr.search.criteria.RequisitionSearchCriteria;
-import org.openlmis.rnr.service.RegimenColumnService;
 import org.openlmis.rnr.service.RequisitionService;
 import org.openlmis.rnr.service.RnrTemplateService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -81,8 +80,6 @@ public class RestRequisitionService {
   private SyncUpHashRepository syncUpHashRepository;
   @Autowired
   private RegimenService regimenService;
-  @Autowired
-  private RegimenColumnService regimenColumnService;
   @Autowired
   private RegimenLineItemMapper regimenLineItemMapper;
 
