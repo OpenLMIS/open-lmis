@@ -20,7 +20,6 @@ import org.apache.ibatis.session.RowBounds;
 import org.openlmis.report.builder.RnRFeedbackReportQueryBuilder;
 import org.openlmis.report.model.ReportParameter;
 import org.openlmis.report.model.report.RnRFeedbackReport;
-import org.openlmis.report.model.ReportData;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -29,7 +28,7 @@ import java.util.Map;
 @Repository
 public interface RnRFeedbackReportMapper {
   @SelectProvider(type = RnRFeedbackReportQueryBuilder.class, method = "SelectFilteredSortedPagedRecords")
-  @Options(resultSetType = ResultSetType.SCROLL_SENSITIVE, fetchSize = 10, timeout = 0, useCache = true, flushCache = true)
+  @Options(resultSetType = ResultSetType.SCROLL_SENSITIVE, fetchSize = 10, timeout = 0, useCache = true, flushCache = Options.FlushCachePolicy.TRUE)
   public List<RnRFeedbackReport> getRnRFeedbackReport(
     @Param("filterCriteria") ReportParameter filterCriteria,
     @Param("sortCriteria") Map params,

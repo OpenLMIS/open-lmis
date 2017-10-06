@@ -12,13 +12,14 @@
 
 package org.openlmis.report.model.params;
 
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.openlmis.report.annotations.RequiredParam;
 import org.openlmis.report.model.ReportParameter;
 
 
-@Getter
-@Setter
+@Data
 @NoArgsConstructor
 @AllArgsConstructor
 public class RegimenSummaryReportParam

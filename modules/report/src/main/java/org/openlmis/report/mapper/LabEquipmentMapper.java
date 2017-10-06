@@ -29,7 +29,7 @@ import java.util.Map;
 public interface LabEquipmentMapper {
 
     @SelectProvider(type = LabEquipmentListQueryBuilder.class, method = "getData")
-    @Options(resultSetType = ResultSetType.SCROLL_SENSITIVE, fetchSize = -1, timeout = 0, useCache = false, flushCache = false)
+    @Options(resultSetType = ResultSetType.SCROLL_SENSITIVE, fetchSize = -1, timeout = 0, useCache = false, flushCache = Options.FlushCachePolicy.FALSE)
     public List<LabEquipmentStatusReport> getFilteredSortedLabEquipmentStatusReport(
             @Param("filterCriteria") LabEquipmentListReportParam labEquipmentReportParam,
             @Param("rowBounds") RowBounds rowBounds,
@@ -37,7 +37,7 @@ public interface LabEquipmentMapper {
     );
 
     @SelectProvider(type = LabEquipmentListQueryBuilder.class, method = "getNonFunctioningEquipmentWithContract")
-    @Options(resultSetType = ResultSetType.SCROLL_SENSITIVE, fetchSize = -1, timeout = 0, useCache = false, flushCache = false)
+    @Options(resultSetType = ResultSetType.SCROLL_SENSITIVE, fetchSize = -1, timeout = 0, useCache = false, flushCache = Options.FlushCachePolicy.FALSE)
     public List<LabEquipmentStatusReport> getNonFunctioningEquipmentWithContractReport(
             @Param("filterCriteria") LabEquipmentListReportParam labEquipmentReportParam,
             @Param("rowBounds") RowBounds rowBounds,
@@ -45,7 +45,7 @@ public interface LabEquipmentMapper {
     );
 
     @SelectProvider(type = LabEquipmentListQueryBuilder.class, method = "getFunctioningEquipmentWithContract")
-    @Options(resultSetType = ResultSetType.SCROLL_SENSITIVE, fetchSize = -1, timeout = 0, useCache = false, flushCache = false)
+    @Options(resultSetType = ResultSetType.SCROLL_SENSITIVE, fetchSize = -1, timeout = 0, useCache = false, flushCache = Options.FlushCachePolicy.FALSE)
     public List<LabEquipmentStatusReport> getFunctioningEquipmentWithContractReport(
             @Param("filterCriteria") LabEquipmentListReportParam labEquipmentReportParam,
             @Param("rowBounds") RowBounds rowBounds,

@@ -19,7 +19,6 @@ import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
 import org.apache.ibatis.annotations.SelectProvider;
 import org.apache.ibatis.mapping.ResultSetType;
-import org.openlmis.core.domain.Product;
 import org.openlmis.vaccine.domain.reports.DropoutProduct;
 import org.openlmis.vaccine.domain.reports.PerformanceByDropoutRateByDistrict;
 import org.openlmis.vaccine.domain.reports.params.PerformanceByDropoutRateParam;
@@ -30,17 +29,17 @@ import java.util.List;
 @Repository
 public interface PerformanceByDropoutRateByDistrictMapper {
     @SelectProvider(type=PerformanceByDropoutRateQueryBuilder.class, method="getByDistrictQuery")
-    @Options(resultSetType = ResultSetType.SCROLL_SENSITIVE, fetchSize=10,timeout=0,useCache=true,flushCache=true)
+    @Options(resultSetType = ResultSetType.SCROLL_SENSITIVE, fetchSize=10,timeout=0,useCache=true,flushCache = Options.FlushCachePolicy.TRUE)
     public List<PerformanceByDropoutRateByDistrict> loadPerformanceByDropoutRateDistrictReports(
             @Param("filterCriteria") PerformanceByDropoutRateParam filterCriteria
     );
     @SelectProvider(type=PerformanceByDropoutRateQueryBuilder.class, method="getByFacilityQuery")
-    @Options(resultSetType = ResultSetType.SCROLL_SENSITIVE, fetchSize=10,timeout=0,useCache=true,flushCache=true)
+    @Options(resultSetType = ResultSetType.SCROLL_SENSITIVE, fetchSize=10,timeout=0,useCache=true,flushCache = Options.FlushCachePolicy.TRUE)
     public List<PerformanceByDropoutRateByDistrict> loadPerformanceByDropoutRateFacilityReports(
             @Param("filterCriteria") PerformanceByDropoutRateParam filterCriteria
     );
     @SelectProvider(type=PerformanceByDropoutRateQueryBuilder.class, method="getByRegionQuery")
-    @Options(resultSetType = ResultSetType.SCROLL_SENSITIVE, fetchSize=10,timeout=0,useCache=true,flushCache=true)
+    @Options(resultSetType = ResultSetType.SCROLL_SENSITIVE, fetchSize=10,timeout=0,useCache=true,flushCache = Options.FlushCachePolicy.TRUE)
     public List<PerformanceByDropoutRateByDistrict> loadPerformanceByDropoutRateRegionReports(
             @Param("filterCriteria") PerformanceByDropoutRateParam filterCriteria
     );

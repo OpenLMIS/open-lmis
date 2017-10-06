@@ -5,7 +5,6 @@ import org.openlmis.programs.domain.malaria.MalariaProgram;
 
 import java.util.Date;
 import java.util.List;
-import java.util.function.Consumer;
 
 import static com.google.common.collect.Lists.newArrayList;
 import static org.apache.commons.lang.math.RandomUtils.nextInt;
@@ -24,11 +23,6 @@ public class MalariaProgramBuilder {
 
     public static MalariaProgramBuilder fresh() {
         malariaProgramBuilder = new MalariaProgramBuilder();
-        return malariaProgramBuilder;
-    }
-
-    public MalariaProgramBuilder with(Consumer<MalariaProgramBuilder> consumer) {
-        consumer.accept(malariaProgramBuilder);
         return malariaProgramBuilder;
     }
 

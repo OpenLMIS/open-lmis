@@ -14,34 +14,29 @@ package org.openlmis.report.mapper;
 
 import org.apache.ibatis.annotations.Options;
 import org.apache.ibatis.annotations.Param;
-import org.apache.ibatis.annotations.Select;
 import org.apache.ibatis.annotations.SelectProvider;
 import org.apache.ibatis.mapping.ResultSetType;
 import org.apache.ibatis.session.RowBounds;
-import org.openlmis.core.domain.ProcessingPeriod;
-
 import org.openlmis.report.builder.OrderFillRateQueryBuilder;
-import org.openlmis.core.domain.RequisitionGroup;
-import org.openlmis.report.builder.PushedProductsQueryBuilder;
 import org.openlmis.report.model.params.OrderFillRateReportParam;
 import org.openlmis.report.model.report.OrderFillRateReport;
 import org.springframework.stereotype.Repository;
+
 import java.util.List;
-import java.util.Map;
 
 
 @Repository
 public interface OrderFillRateReportMapper {
 
     @SelectProvider(type=OrderFillRateQueryBuilder.class, method="getQuery")
-    @Options(resultSetType = ResultSetType.SCROLL_SENSITIVE, fetchSize=10,timeout=0,useCache=true,flushCache=true)
+    @Options(resultSetType = ResultSetType.SCROLL_SENSITIVE, fetchSize=10,timeout=0,useCache=true,flushCache= Options.FlushCachePolicy.TRUE)
     public List<OrderFillRateReport> getReport(@Param("filterCriteria") OrderFillRateReportParam params,
                                                       @Param("RowBounds") RowBounds rowBounds,
                                                       @Param("userId") Long userId
     );
 
     @SelectProvider(type = OrderFillRateQueryBuilder.class, method = "getSummaryQuery")
-    @Options(resultSetType = ResultSetType.SCROLL_SENSITIVE, fetchSize = 10, timeout = 0, useCache = true, flushCache = true)
+    @Options(resultSetType = ResultSetType.SCROLL_SENSITIVE, fetchSize = 10, timeout = 0, useCache = true, flushCache = Options.FlushCachePolicy.TRUE)
     public List<OrderFillRateReport> getReportSummary(
             @Param("filterCriteria") OrderFillRateReportParam params,
             @Param("userId") Long userId
@@ -49,7 +44,7 @@ public interface OrderFillRateReportMapper {
 
     // Gets the count of the total facility count under the selection criteria
     @SelectProvider(type = OrderFillRateQueryBuilder.class, method = "getTotalProductsReceived")
-    @Options(resultSetType = ResultSetType.SCROLL_SENSITIVE, fetchSize = 10, timeout = 0, useCache = true, flushCache = true)
+    @Options(resultSetType = ResultSetType.SCROLL_SENSITIVE, fetchSize = 10, timeout = 0, useCache = true, flushCache = Options.FlushCachePolicy.TRUE)
     public List<Integer> getTotalProductsReceived(
             @Param("filterCriteria") OrderFillRateReportParam params,
             @Param("userId") Long userId
@@ -57,7 +52,7 @@ public interface OrderFillRateReportMapper {
 
     // Gets the count of the total facility count that did not report under the selection criteria
     @SelectProvider(type = OrderFillRateQueryBuilder.class, method = "getTotalProductsOrdered")
-    @Options(resultSetType = ResultSetType.SCROLL_SENSITIVE, fetchSize = 10, timeout = 0, useCache = true, flushCache = true)
+    @Options(resultSetType = ResultSetType.SCROLL_SENSITIVE, fetchSize = 10, timeout = 0, useCache = true, flushCache = Options.FlushCachePolicy.TRUE)
     public List<Integer> getTotalProductsOrdered(@Param("filterCriteria") OrderFillRateReportParam params,
                                                  @Param("userId")
                                                  Long userId

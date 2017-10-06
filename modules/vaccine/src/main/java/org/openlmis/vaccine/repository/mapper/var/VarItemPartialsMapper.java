@@ -27,7 +27,7 @@ public interface VarItemPartialsMapper {
 
     @Insert("insert into var_item_partials (vardetailsid, productid, boxnumber,lotnumber,expectednumber,availablenumber,gtinlookupid,createdby) values " +
             "(#{vardetailsid}, #{productid}, #{boxnumber}, #{lotnumber}, #{expectednumber}, #{availablenumber}, #{gtinlookupid},  #{createdBy})")
-    @Options(flushCache = true, useGeneratedKeys = true)
+    @Options(flushCache = Options.FlushCachePolicy.TRUE, useGeneratedKeys = true)
     Integer insert(VarItemPartials var_item_partials);
 
     @Update("update var_item_partials " +

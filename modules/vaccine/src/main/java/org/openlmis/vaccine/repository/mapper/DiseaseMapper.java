@@ -26,7 +26,7 @@ public interface DiseaseMapper {
 
   @Insert("insert into vaccine_diseases (name, description, displayOrder, modifiedBy, createdBy) values " +
     "(#{name}, #{description}, #{displayOrder}, #{modifiedBy}, #{createdBy})")
-  @Options(flushCache = true, useGeneratedKeys = true)
+  @Options(flushCache = Options.FlushCachePolicy.TRUE, useGeneratedKeys = true)
   Integer insert(VaccineDisease disease);
 
   @Update("update vaccine_diseases " +

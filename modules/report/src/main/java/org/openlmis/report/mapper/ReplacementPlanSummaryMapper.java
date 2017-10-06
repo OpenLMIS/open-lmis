@@ -30,7 +30,7 @@ import java.util.Map;
 public interface ReplacementPlanSummaryMapper {
 
     @SelectProvider(type = ReplacementPlanSummaryQueryBuilder.class, method = "getQuery")
-    @Options(resultSetType = ResultSetType.SCROLL_SENSITIVE, fetchSize = 10, timeout = 0, useCache = true, flushCache = true)
+    @Options(resultSetType = ResultSetType.SCROLL_SENSITIVE, fetchSize = 10, timeout = 0, useCache = true, flushCache = Options.FlushCachePolicy.TRUE)
     public List<ReplacementPlanSummary> getReport(
             @Param("filterCriteria")ReplacementPlanReportParam param,
             @Param("RowBounds") RowBounds rowBounds,
@@ -39,7 +39,7 @@ public interface ReplacementPlanSummaryMapper {
 
 
     @SelectProvider(type = ReplacementPlanSummaryQueryBuilder.class, method = "getEquipmentListData")
-    @Options(resultSetType = ResultSetType.SCROLL_SENSITIVE, fetchSize = 10, timeout = 0, useCache = true, flushCache = true)
+    @Options(resultSetType = ResultSetType.SCROLL_SENSITIVE, fetchSize = 10, timeout = 0, useCache = true, flushCache = Options.FlushCachePolicy.TRUE)
     public List<ReplacementPlanSummary> getEquipmentListData(
               @Param("filterCriteria")ReplacementPlanReportParam param
             , @Param("RowBounds") RowBounds rowBounds

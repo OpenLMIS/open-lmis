@@ -28,7 +28,7 @@ import java.util.List;
 public interface SummaryReportMapper {
 
   @SelectProvider(type = SummaryQueryBuilder.class, method = "getQuery")
-  @Options(resultSetType = ResultSetType.SCROLL_SENSITIVE, fetchSize = 10, timeout = 0, useCache = true, flushCache = true)
+  @Options(resultSetType = ResultSetType.SCROLL_SENSITIVE, fetchSize = 10, timeout = 0, useCache = true, flushCache = Options.FlushCachePolicy.TRUE)
   public List<SummaryReport> getReport(@Param("filterCriteria") SummaryReportParam params, @Param("RowBounds") RowBounds rowBounds);
 
 }

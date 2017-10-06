@@ -4,8 +4,6 @@ import org.openlmis.core.domain.Product;
 import org.openlmis.programs.domain.malaria.Implementation;
 import org.openlmis.programs.domain.malaria.Treatment;
 
-import java.util.function.Consumer;
-
 import static org.apache.commons.lang.math.RandomUtils.nextInt;
 
 public class TreatmentBuilder {

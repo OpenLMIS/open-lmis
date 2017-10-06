@@ -26,7 +26,7 @@ public interface FacilityReportMapper {
 
 
     @SelectProvider(type=FacilityReportQueryBuilder.class, method="getQuery")
-    @Options(resultSetType = ResultSetType.SCROLL_SENSITIVE, fetchSize=10,timeout=0,useCache=true,flushCache=true)
+    @Options(resultSetType = ResultSetType.SCROLL_SENSITIVE, fetchSize=10,timeout=0,useCache=true,flushCache = Options.FlushCachePolicy.TRUE)
     @Results(value = {
             @Result(column="code", property="code"),
             @Result(column="name", property="facilityName"),

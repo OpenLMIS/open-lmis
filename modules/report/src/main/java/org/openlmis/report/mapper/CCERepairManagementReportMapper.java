@@ -29,7 +29,7 @@ public interface CCERepairManagementReportMapper {
 
 
     @SelectProvider(type=CCERepairManagementReportQueryBuilder.class, method="SelectEquipmentCountByStatusEnergySql")
-    @Options(resultSetType = ResultSetType.SCROLL_SENSITIVE, fetchSize=-1,timeout=0,useCache=true,flushCache=true)
+    @Options(resultSetType = ResultSetType.SCROLL_SENSITIVE, fetchSize=-1,timeout=0,useCache=true,flushCache = Options.FlushCachePolicy.TRUE)
     List<CCERepairManagementReport> SelectEquipmentCountByStatusEnergy(
             @Param("filterCriteria") CCERepairManagementReportParam filterCriteria,
             @Param("rowBounds") RowBounds rowBounds,
@@ -37,7 +37,7 @@ public interface CCERepairManagementReportMapper {
     );
 
     @SelectProvider(type=CCERepairManagementReportQueryBuilder.class, method="EquipmentListSql")
-    @Options(resultSetType = ResultSetType.SCROLL_SENSITIVE, fetchSize=-1,timeout=0,useCache=true,flushCache=true)
+    @Options(resultSetType = ResultSetType.SCROLL_SENSITIVE, fetchSize=-1,timeout=0,useCache=true,flushCache = Options.FlushCachePolicy.TRUE)
     List<CCERepairManagementEquipmentList> getEquipmentList(
             @Param("filterCriteria") CCERepairManagementEquipmentListParam filterCriteria,
             @Param("userId") Long userId

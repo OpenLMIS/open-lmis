@@ -18,7 +18,6 @@ import org.apache.ibatis.session.RowBounds;
 import org.openlmis.report.builder.MailingLabelReportQueryBuilder;
 import org.openlmis.report.model.ReportParameter;
 import org.openlmis.report.model.report.MailingLabelReport;
-import org.openlmis.report.model.ReportData;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -27,7 +26,7 @@ import java.util.List;
 public interface MailingLabelReportMapper {
 
   @SelectProvider(type = MailingLabelReportQueryBuilder.class, method = "getQuery")
-  @Options(resultSetType = ResultSetType.SCROLL_SENSITIVE, fetchSize = 10, timeout = 0, useCache = true, flushCache = true)
+  @Options(resultSetType = ResultSetType.SCROLL_SENSITIVE, fetchSize = 10, timeout = 0, useCache = true, flushCache = Options.FlushCachePolicy.TRUE)
 
   @Results(value = {
     @Result(column = "code", property = "code"),

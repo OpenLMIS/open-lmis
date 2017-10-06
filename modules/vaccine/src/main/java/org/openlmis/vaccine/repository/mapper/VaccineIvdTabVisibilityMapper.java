@@ -29,7 +29,7 @@ public interface VaccineIvdTabVisibilityMapper {
 
   @Insert("INSERT INTO vaccine_ivd_tab_visibilities (tab, programId, name, visible)" +
     "values (#{tab}, #{programId}, #{name}, #{visible})")
-  @Options(flushCache = true, useGeneratedKeys = true)
+  @Options(flushCache = Options.FlushCachePolicy.TRUE, useGeneratedKeys = true)
   Integer insert(VaccineIvdTabVisibility visibility);
 
   @Update("UPDATE vaccine_ivd_tab_visibilities " +

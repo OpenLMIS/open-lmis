@@ -29,7 +29,7 @@ import java.util.Map;
 @Repository
 public interface AdjustmentSummaryReportMapper {
     @SelectProvider(type=AdjustmentSummaryQueryBuilder.class, method="getQuery")
-    @Options(resultSetType = ResultSetType.SCROLL_SENSITIVE, fetchSize=10,timeout=0,useCache=true,flushCache=true)
+    @Options(resultSetType = ResultSetType.SCROLL_SENSITIVE, fetchSize=10,timeout=0,useCache=true,flushCache = Options.FlushCachePolicy.TRUE)
     public List<AdjustmentSummaryReport> getFilteredSortedPagedAdjustmentSummaryReport(
             @Param("filterCriteria") AdjustmentSummaryReportParam filterCriteria,
             @Param("SortCriteria") Map<String, String[]> sortCriteria ,

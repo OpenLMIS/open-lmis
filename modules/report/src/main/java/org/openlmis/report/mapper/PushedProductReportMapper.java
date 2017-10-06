@@ -17,21 +17,19 @@ import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.SelectProvider;
 import org.apache.ibatis.mapping.ResultSetType;
 import org.apache.ibatis.session.RowBounds;
-import org.openlmis.report.builder.OrderFillRateQueryBuilder;
 import org.openlmis.report.builder.PushedProductsQueryBuilder;
 import org.openlmis.report.model.params.OrderFillRateReportParam;
 import org.openlmis.report.model.report.OrderFillRateReport;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
-import java.util.Map;
 
 
 @Repository
 public interface PushedProductReportMapper {
 
     @SelectProvider(type = PushedProductsQueryBuilder.class, method = "getQueryForPushedItems")
-    @Options(resultSetType = ResultSetType.SCROLL_SENSITIVE, fetchSize = -1, timeout = 0, useCache = false, flushCache = false)
+    @Options(resultSetType = ResultSetType.SCROLL_SENSITIVE, fetchSize = -1, timeout = 0, useCache = false, flushCache = Options.FlushCachePolicy.FALSE)
     public List<OrderFillRateReport> getPushedProducts(
         @Param("filterCriteria") OrderFillRateReportParam params,
         @Param("rowBounds") RowBounds rowBounds,

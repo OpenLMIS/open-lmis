@@ -26,7 +26,7 @@ public interface AnnualFacilityEstimateMapper {
     " (year, facilityId, demographicEstimateId, conversionFactor, programId , value)" +
     " values " +
     " (#{year}, #{facilityId}, #{demographicEstimateId}, #{conversionFactor}, #{programId}, #{value}) ")
-  @Options(flushCache = true, useGeneratedKeys = true)
+  @Options(flushCache = Options.FlushCachePolicy.TRUE, useGeneratedKeys = true)
   Integer insert(AnnualFacilityEstimateEntry estimate);
 
   @Update("update facility_demographic_estimates " +

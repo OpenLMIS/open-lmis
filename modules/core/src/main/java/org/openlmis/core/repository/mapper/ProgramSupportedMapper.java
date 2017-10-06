@@ -28,7 +28,7 @@ public interface ProgramSupportedMapper {
   @Insert("INSERT INTO programs_supported" +
     "(facilityId, programId, active, startDate, createdBy, modifiedBy, modifiedDate) VALUES (" +
     "#{facilityId}, #{program.id}, #{active}, #{startDate}, #{createdBy}, #{modifiedBy}, #{modifiedDate})")
-  @Options(flushCache = true, useGeneratedKeys = true)
+  @Options(flushCache = Options.FlushCachePolicy.TRUE, useGeneratedKeys = true)
   void insert(ProgramSupported programSupported);
 
   @Select("SELECT * FROM programs_supported WHERE facilityId = #{facilityId} AND programId = #{programId}")

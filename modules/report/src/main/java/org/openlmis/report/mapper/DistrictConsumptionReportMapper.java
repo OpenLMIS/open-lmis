@@ -30,7 +30,7 @@ import java.util.Map;
 public interface DistrictConsumptionReportMapper {
 
   @SelectProvider(type = DistrictConsumptionQueryBuilder.class, method = "getQuery")
-  @Options(resultSetType = ResultSetType.SCROLL_SENSITIVE, fetchSize = 10, timeout = 0, useCache = true, flushCache = true)
+  @Options(resultSetType = ResultSetType.SCROLL_SENSITIVE, fetchSize = 10, timeout = 0, useCache = true, flushCache = Options.FlushCachePolicy.TRUE)
   public List<DistrictConsumptionReport> getFilteredSortedPagedAdjustmentSummaryReport(
     @Param("filterCriteria") ReportParameter filterCriteria,
     @Param("SortCriteria") Map<String, String[]> sortCriteria,

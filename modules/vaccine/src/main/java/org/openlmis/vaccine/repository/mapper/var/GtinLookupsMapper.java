@@ -27,7 +27,7 @@ public interface GtinLookupsMapper {
 
     @Insert("insert into gtin_lookups (gtin, productid,manufacturename, dosespervial,vialsperbox,boxesperbox,createdby) values " +
             "(#{gtin}, #{productid},#{manufacturename}, #{dosespervial}, #{vialsperbox}, #{boxesperbox}, #{createdBy})")
-    @Options(flushCache = true, useGeneratedKeys = true)
+    @Options(flushCache = Options.FlushCachePolicy.TRUE, useGeneratedKeys = true)
     Integer insert(GtinLookups gtin_lookups);
 
     @Update("update gtin_lookups " +

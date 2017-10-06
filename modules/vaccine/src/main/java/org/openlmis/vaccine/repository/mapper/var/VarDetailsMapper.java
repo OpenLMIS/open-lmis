@@ -27,7 +27,7 @@ public interface VarDetailsMapper {
 
     @Insert("insert into var_details (awbnumber, flightnumber,destnationairport, estimatetimeofarrival,actualtimeofarrival,numberofitemsinspected,coolanttype,tempraturemonitor, purchaseordernumber,clearingagent,labels,comments,invoice,packinglist,releasecerificate,airwaybill,deliverystatus, createdby) values " +
             "(#{awbnumber}, #{flightnumber},#{destnationairport}, #{estimatetimeofarrival}, #{actualtimeofarrival}, #{numberofitemsinspected},#{coolanttype},#{tempraturemonitor}, #{purchaseordernumber}, #{clearingagent}, #{labels}, #{comments}, #{invoice}, #{packinglist}, #{releasecerificate},#{airwaybill},#{deliverystatus}, #{createdBy})")
-    @Options(flushCache = true, useGeneratedKeys = true)
+    @Options(flushCache = Options.FlushCachePolicy.TRUE, useGeneratedKeys = true)
     Integer insert(VarDetails var_details);
 
     @Update("update var_details " +

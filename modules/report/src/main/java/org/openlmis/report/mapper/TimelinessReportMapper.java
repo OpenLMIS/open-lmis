@@ -30,7 +30,7 @@ import java.util.Map;
 public interface TimelinessReportMapper {
 
     @SelectProvider(type=TimelinessReportQueryBuilder.class, method="getTimelinessData")
-    @Options(resultSetType = ResultSetType.SCROLL_SENSITIVE, fetchSize=10,timeout=0,useCache=true,flushCache=true)
+    @Options(resultSetType = ResultSetType.SCROLL_SENSITIVE, fetchSize=10,timeout=0,useCache=true,flushCache = Options.FlushCachePolicy.TRUE)
     public List<TimelinessReport> getTimelinessData(@Param("filterCriteria") Map params
             , @Param("RowBounds") RowBounds rowBounds
             , @Param("userId") Long userId);

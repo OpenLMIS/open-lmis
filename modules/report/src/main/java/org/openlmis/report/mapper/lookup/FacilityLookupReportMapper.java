@@ -29,7 +29,7 @@ public interface FacilityLookupReportMapper {
     @Select("SELECT *" +
             "   FROM " +
             "       facilities order by name")
-    @Options(resultSetType = ResultSetType.SCROLL_SENSITIVE, fetchSize=10,timeout=0,useCache=true,flushCache=true)
+    @Options(resultSetType = ResultSetType.SCROLL_SENSITIVE, fetchSize=10,timeout=0,useCache=true,flushCache = Options.FlushCachePolicy.TRUE)
     List<Facility> getAll(@Param("RowBounds") RowBounds rowBounds);
 
     @Select("SELECT * " +

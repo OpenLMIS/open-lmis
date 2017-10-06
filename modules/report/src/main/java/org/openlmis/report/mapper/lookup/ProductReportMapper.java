@@ -38,7 +38,7 @@ public interface ProductReportMapper {
     @Select("SELECT * " +
             "   FROM " +
             "       products order by primaryname")
-    @Options(resultSetType = ResultSetType.SCROLL_SENSITIVE, fetchSize=10,timeout=0,useCache=true,flushCache=true)
+    @Options(resultSetType = ResultSetType.SCROLL_SENSITIVE, fetchSize=10,timeout=0,useCache=true,flushCache = Options.FlushCachePolicy.TRUE)
     List<org.openlmis.core.domain.Product> getFullProductList(@Param("RowBounds")RowBounds rowBounds);
 
   @Select("SELECT p.id, (p.primaryname || ' ' || form.code || ' ' || p.strength || ' ' || du.code) as name, p.code, pp.productcategoryid as categoryid, " +

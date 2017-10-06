@@ -28,7 +28,7 @@ import java.util.List;
 public interface CCEStorageCapacityReportMapper {
 
     @SelectProvider(type = CCEStorageCapacityQueryBuilder.class, method = "getData")
-    @Options(resultSetType = ResultSetType.SCROLL_SENSITIVE, fetchSize = -1, timeout = 0, useCache = false, flushCache = false)
+    @Options(resultSetType = ResultSetType.SCROLL_SENSITIVE, fetchSize = -1, timeout = 0, useCache = false, flushCache = Options.FlushCachePolicy.FALSE)
     List<CCEStorageCapacityReport> getFilteredSortedCCEStorageCapacityReport(
         @Param("filterCriteria") CCEStorageCapacityReportParam param,
         @Param("rowBounds") RowBounds rowBounds,

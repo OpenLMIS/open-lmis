@@ -26,7 +26,7 @@ import java.util.Map;
 public interface OrderFillRateReportSummaryMapper {
 
     @SelectProvider(type = OrderFillRateReportSummaryQueryBuilder.class, method = "getOrderFillRateReportSummaryPagedData")
-    @Options(resultSetType = ResultSetType.SCROLL_SENSITIVE, fetchSize = -1, timeout = 0, useCache = false, flushCache = false)
+    @Options(resultSetType = ResultSetType.SCROLL_SENSITIVE, fetchSize = -1, timeout = 0, useCache = false, flushCache = Options.FlushCachePolicy.FALSE)
     public List<OrderFillRateSummaryReport> getFilteredSortedOrderFillRateSummaryReport(
             @Param("filterCriteria") Map<String, String[]> params,
             @Param("rowBounds") RowBounds rowBounds,

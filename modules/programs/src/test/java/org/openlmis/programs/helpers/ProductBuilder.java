@@ -2,8 +2,6 @@ package org.openlmis.programs.helpers;
 
 import org.openlmis.core.domain.Product;
 
-import java.util.function.Consumer;
-
 import static org.apache.commons.lang3.RandomStringUtils.randomAlphanumeric;
 
 public class ProductBuilder {
@@ -13,11 +11,6 @@ public class ProductBuilder {
 
     public static ProductBuilder fresh() {
         productBuilder = new ProductBuilder();
-        return productBuilder;
-    }
-
-    public ProductBuilder with(Consumer<ProductBuilder> consumer){
-        consumer.accept(productBuilder);
         return productBuilder;
     }
 

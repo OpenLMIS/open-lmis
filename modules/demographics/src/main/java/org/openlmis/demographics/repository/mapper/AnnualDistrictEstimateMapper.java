@@ -27,7 +27,7 @@ public interface AnnualDistrictEstimateMapper {
     " (year, districtId, demographicEstimateId, programId , conversionFactor, value)" +
     " values " +
     " (#{year}, #{districtId}, #{demographicEstimateId}, #{programId}, #{conversionFactor}, #{value}) ")
-  @Options(flushCache = true, useGeneratedKeys = true)
+  @Options(flushCache = Options.FlushCachePolicy.TRUE, useGeneratedKeys = true)
   Integer insert(AnnualDistrictEstimateEntry estimate);
 
   @Select("select * from district_demographic_estimates where id = #{id}")

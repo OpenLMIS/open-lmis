@@ -29,7 +29,7 @@ import java.util.Map;
 public interface OrderSummaryReportMapper {
 
   @SelectProvider(type = OrderSummaryQueryBuilder.class, method = "getQuery")
-  @Options(resultSetType = ResultSetType.SCROLL_SENSITIVE, fetchSize = 10, timeout = 0, useCache = true, flushCache = true)
+  @Options(resultSetType = ResultSetType.SCROLL_SENSITIVE, fetchSize = 10, timeout = 0, useCache = true, flushCache = Options.FlushCachePolicy.TRUE)
   public List<OrderSummaryReport> getOrderSummaryReport(
       @Param("filterCriteria") OrderReportParam filterCriteria,
       @Param("sortCriteria") Map params,

@@ -12,11 +12,9 @@
 
 package org.openlmis.vaccine.repository.mapper.var;
 
-import org.openlmis.vaccine.domain.var.VarDetails;
+import org.apache.ibatis.annotations.*;
 import org.openlmis.vaccine.domain.var.VarItems;
 import org.springframework.stereotype.Repository;
-
-import org.apache.ibatis.annotations.*;
 
 import java.util.List;
 
@@ -28,7 +26,7 @@ public interface VarItemsMapper {
 
     @Insert("insert into var_items (vardetailsid, shipmentnumber, productid,manufacturedate,expiredate,lotnumber,numberofdoses, derliverystatus,numberreceived,physicaldamage,damagedamount,vvmstatus,problems,createdby,modifiedby, gtinlookupid) values " +
             "(#{vardetailsid}, #{shipmentnumber}, #{productid}, #{manufacturedate},#{expiredate},#{lotnumber}, #{numberofdoses}, #{derliverystatus}, #{numberreceived}, #{physicaldamage}, #{damagedamount}, #{vvmstatus}, #{problems},#{createdby}, #{modifiedby}, #{gtinlookupid})")
-    @Options(flushCache = true, useGeneratedKeys = true)
+    @Options(flushCache = Options.FlushCachePolicy.TRUE, useGeneratedKeys = true)
     Integer insert(VarItems var_items);
 
     @Update("update var_items " +

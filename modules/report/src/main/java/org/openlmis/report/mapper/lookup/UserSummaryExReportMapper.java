@@ -31,6 +31,6 @@ public interface UserSummaryExReportMapper {
   List<UserRoleAssignmentsReport> getUserRoleAssignments(@Param("roleId") Long roleId, @Param("programId") Long programId, @Param("supervisoryNodeId") Long supervisoryNodeId);
 
   @SelectProvider(type = UserSummaryExQueryBuilder.class, method = "getQuery")
-  @Options(resultSetType = ResultSetType.SCROLL_SENSITIVE, fetchSize = 10, timeout = 0, useCache = true, flushCache = true)
+  @Options(resultSetType = ResultSetType.SCROLL_SENSITIVE, fetchSize = 10, timeout = 0, useCache = true, flushCache = Options.FlushCachePolicy.TRUE)
   List<UserRoleAssignmentsReport> getUserRoleAssignment(@Param("filterCriteria") ReportParameter filterCriteria);
 }

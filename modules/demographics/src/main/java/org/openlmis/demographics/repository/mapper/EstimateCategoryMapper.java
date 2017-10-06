@@ -34,7 +34,7 @@ public interface EstimateCategoryMapper {
     "(name, description, isPrimaryEstimate, defaultConversionFactor, createdBy, createdDate)" +
     "values " +
     "(#{name}, #{description}, #{isPrimaryEstimate}, #{defaultConversionFactor}, #{createdBy}, NOW())")
-  @Options(flushCache = true, useGeneratedKeys = true)
+  @Options(flushCache = Options.FlushCachePolicy.TRUE, useGeneratedKeys = true)
   Integer insert(EstimateCategory category);
 
   @Update("update demographic_estimate_categories " +

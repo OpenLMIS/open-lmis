@@ -29,7 +29,7 @@ public interface SupplyStatusReportMapper {
 
 
     @SelectProvider(type=SupplyStatusQueryBuilder.class, method="getSupplyStatus")
-    @Options(resultSetType = ResultSetType.SCROLL_SENSITIVE, fetchSize=10,timeout=0,useCache=true,flushCache=true)
+    @Options(resultSetType = ResultSetType.SCROLL_SENSITIVE, fetchSize=10,timeout=0,useCache=true,flushCache = Options.FlushCachePolicy.TRUE)
     public List<SupplyStatusReport> getSupplyStatus(@Param("filterCriteria")SupplyStatusReportParam params
                                                     , @Param("RowBounds") RowBounds rowBounds
                                                     , @Param("userId") Long userId  );

@@ -27,7 +27,7 @@ public interface VarItemAlarmsMapper {
 
     @Insert("insert into var_item_alarms (vardetailsid, productid, boxnumber,lotnumber,alarmtemprature,coldchainmonitor,gtinlookupid,timeofinspection,createdby) values " +
             "(#{vardetailsid}, #{productid}, #{boxnumber}, #{lotnumber}, #{alarmtemprature}, #{coldchainmonitor}, #{gtinlookupid}, #{timeofinspection}, #{createdBy})")
-    @Options(flushCache = true, useGeneratedKeys = true)
+    @Options(flushCache = Options.FlushCachePolicy.TRUE, useGeneratedKeys = true)
     Integer insert(VarItemAlarms var_item_alarms);
 
     @Update("update var_item_alarms " +
