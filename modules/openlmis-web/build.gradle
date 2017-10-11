@@ -233,3 +233,17 @@ cobertura {
     coverageFormats << 'xml'
     coverageIgnoreTrivial = true
 }
+
+def gitRevision() {
+  'git rev-parse HEAD'.execute().text.trim()
+}
+
+ext {
+  gitRevision = this.&gitRevision
+}
+
+processResources {
+  filesMatching('**app.properties') {
+    expand( 'revision': gitRevision() )
+  }
+}

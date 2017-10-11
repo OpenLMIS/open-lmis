@@ -33,11 +33,6 @@ buildscript {
     classpath "net.saliman:gradle-properties-plugin:1.4.2"
   }
 
-  processResources {
-    filesMatching('**app.properties') {
-      expand( 'revision': gitRevision() )
-    }
-  }
 }
 sonarRunner {
     sonarProperties {
@@ -180,12 +175,4 @@ allprojects {
      }
    }
  }
-}
-
-def gitRevision() {
-  'git rev-parse HEAD'.execute().text.trim()
-}
-
-ext {
-  gitRevision = this.&gitRevision
 }
