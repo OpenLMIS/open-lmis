@@ -1,0 +1,401 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ~ Electronic Logistics Management Information System (eLMIS) is a supply chain management system for health commodities in a developing country setting.
+  ~
+  ~ Copyright (C) 2015  John Snow, Inc (JSI). This program was produced for the U.S. Agency for International Development (USAID). It was prepared under the USAID | DELIVER PROJECT, Task Order 4.
+  ~
+  ~ This program is free software: you can redistribute it and/or modify it under the terms of the GNU Affero General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
+  ~
+  ~ This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Affero General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU Affero General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
+  -->
+
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:task="http://www.springframework.org/schema/task"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.1.xsd
+                           http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.1.xsd
+                           http://www.springframework.org/schema/context http://www.springframework.org/schema/integration   http://www.springframework.org/schema/task http://www.springframework.org/schema/task/spring-task.xsd"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+
+    <context:annotation-config/>
+    <context:spring-configured/>
+
+    <import resource="classpath:applicationContext-db.xml"/>
+    <import resource="classpath:applicationContext-core.xml"/>
+    <import resource="classpath:applicationContext-requisition.xml"/>
+
+    <context:component-scan base-package="org.openlmis.report"/>
+
+    <bean id="reportsProperties" class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+
+        <property name="ignoreResourceNotFound" value="true"/>
+        <property name="locations">
+            <list>
+                <value>classpath:/reports-configs.properties</value>
+            </list>
+        </property>
+    </bean>
+
+    <!-- Integrates with report module -->
+    <bean id="reportManager" class="org.openlmis.report.ReportManager">
+        <constructor-arg index="0">
+            <ref bean="reportAccessAuthorizer"/>
+        </constructor-arg>
+        <constructor-arg index="1">
+            <ref bean="jasperReportExporter"/>
+        </constructor-arg>
+        <constructor-arg index="2">
+            <list><!-- list of open-lmis reports -->
+                <bean class="org.openlmis.report.Report">
+                    <property name="reportKey" value="facilities"/>
+                    <property name="template" value="facilities-listings.jasper"/>
+                    <property name="reportDataProvider" ref="facilityReportDataProvider"/>
+                    <property name="id" value="RP-FAL-ALL"/>
+                    <property name="name" value="Facility list report"/>
+                    <property name="title" value="report.title.facility.list"/>
+                    <property name="version" value="1.0"/>
+                </bean>
+                <bean class="org.openlmis.report.Report">
+                    <property name="reportKey" value="facility-list"/>
+                    <property name="template" value="facilities-listings.jasper"/>
+                    <property name="reportDataProvider" ref="facilityReportDataProvider"/>
+                    <property name="id" value="RP-MAL-LAB"/>
+                    <property name="name" value="List of facilities with contact addresses"/>
+                    <property name="title" value="report.title.facility.list"/>
+                    <property name="version" value="1.0"/>
+                </bean>
+                <bean class="org.openlmis.report.Report">
+                    <property name="reportKey" value="facility_mailing_list"/>
+                    <property name="template" value="facility-mailing-list.jasper"/>
+                    <property name="reportDataProvider" ref="mailingLabelReportDataProvider"/>
+                    <property name="id" value="RP-MAL-LAB"/>
+                    <property name="name" value="Mailing Labels: Lists facilities with contact addresses"/>
+                    <property name="title" value="report.title.facility.list"/>
+                    <property name="version" value="1.0"/>
+                </bean>
+                <bean class="org.openlmis.report.Report">
+                    <property name="reportKey" value="summary"/>
+                    <property name="template" value="summary-report.jasper"/>
+                    <property name="reportDataProvider" ref="summaryReportDataProvider"/>
+                    <property name="id" value="RP-Summary"/>
+                    <property name="name" value="Summary Report"/>
+                    <property name="title" value="Summary Report"/>
+                    <property name="version" value="1.0"/>
+                </bean>
+                <bean class="org.openlmis.report.Report">
+                    <property name="reportKey" value="summary_disaggregated"/>
+                    <property name="template" value="summary-report-disaggregated.jasper"/>
+                    <property name="reportDataProvider" ref="summaryReportDataProvider"/>
+                    <property name="id" value="RP-Summary"/>
+                    <property name="name" value="Disaggregated Summary Report"/>
+                    <property name="title" value="Disaggregated Summary Report"/>
+                    <property name="version" value="1.0"/>
+                </bean>
+                <bean class="org.openlmis.report.Report">
+                    <property name="reportKey" value="non_reporting"/>
+                    <property name="template" value="non-reporting-facilities.jasper"/>
+                    <property name="reportDataProvider" ref="nonReportingFacilityReportDataProvider"/>
+                    <property name="id" value="RP-Non-Reporting"/>
+                    <property name="name" value="Non Reporting Facilities"/>
+                    <property name="title" value="report.title.non.reporting.facility"/>
+                    <property name="version" value="1.0"/>
+                </bean>
+                <bean class="org.openlmis.report.Report">
+                    <property name="reportKey" value="adjustment_summary"/>
+                    <property name="template" value="adjustment-summary.jasper"/>
+                    <property name="reportDataProvider" ref="adjustmentSummaryReportDataProvider"/>
+                    <property name="id" value="RP-Adjustment-Summary-Reporting"/>
+                    <property name="name" value="Adjustment Summary Reporting"/>
+                    <property name="title" value="report.title.adjustment.summary.report"/>
+                    <property name="version" value="1.0"/>
+                </bean>
+                <bean class="org.openlmis.report.Report">
+                    <property name="reportKey" value="stocked_out"/>
+                    <property name="template" value="stocked-out-facilities.jasper"/>
+                    <property name="reportDataProvider" ref="stockedOutReportDataProvider"/>
+                    <property name="id" value="RP-Stocked_Out_Facilities"/>
+                    <property name="name" value="Stocked Out Facilities"/>
+                    <property name="title" value="report.title.stocked.out.facility"/>
+                    <property name="version" value="1.0"/>
+                </bean>
+                <bean class="org.openlmis.report.Report">
+                    <property name="reportKey" value="district_consumption"/>
+                    <property name="template" value="district-consumption.jasper"/>
+                    <property name="reportDataProvider" ref="districtConsumptionReportDataProvider"/>
+                    <property name="id" value="RP-District_Consumption_Comparison"/>
+                    <property name="name" value="District Consumption Comparison"/>
+                    <property name="title" value="report.title.summary.district.consumption"/>
+                    <property name="version" value="1.0"/>
+                </bean>
+                <bean class="org.openlmis.report.Report">
+                    <property name="reportKey" value="aggregate_consumption"/>
+                    <property name="template" value="aggregate-consumption.jasper"/>
+                    <property name="reportDataProvider" ref="aggregateConsumptionReportDataProvider"/>
+                    <property name="id" value="RP-Aggregate_Consumption"/>
+                    <property name="name" value="Aggregate Consumption Report"/>
+                    <property name="title" value="report.title.aggregate.consumption.report"/>
+                    <property name="version" value="1.0"/>
+                </bean>
+
+                <bean class="org.openlmis.report.Report">
+                    <property name="reportKey" value="order_summary"/>
+                    <property name="template" value="order-summary-report.jasper"/>
+                    <property name="reportDataProvider" ref="orderSummaryReportDataProvider"/>
+                    <property name="id" value="RP-View_Orders"/>
+                    <property name="name" value="View Orders"/>
+                    <property name="title" value="report.title.issue.voucher.medical.supply"/>
+                    <property name="version" value="1.0"/>
+                </bean>
+                <bean class="org.openlmis.report.Report">
+                    <property name="reportKey" value="supply_status"/>
+                    <property name="template" value="supply-status-report.jasper"/>
+                    <property name="reportDataProvider" ref="supplyStatusReportDataProvider"/>
+                    <property name="id" value="RP-Supply-Status"/>
+                    <property name="name" value="Supply Status Report"/>
+                    <property name="title" value="report.title.supply.status.by.facility"/>
+                    <property name="version" value="1.0"/>
+                </bean>
+                <bean class="org.openlmis.report.Report">
+                    <property name="reportKey" value="stock_imbalance"/>
+                    <property name="template" value="stock_imbalance_report.jasper"/>
+                    <property name="reportDataProvider" ref="stockImbalanceReportDataProvider"/>
+                    <property name="id" value="RP-Stock-Imbalance"/>
+                    <property name="name" value="Stock Imbalances by Facility Report"/>
+                    <property name="title" value="report.title.stock.imbalance.by.facility"/>
+                    <property name="version" value="1.0"/>
+                </bean>
+                <bean class="org.openlmis.report.Report">
+                    <property name="reportKey" value="rnr_feedback"/>
+                    <property name="template" value="rnr-feedback-report.jasper"/>
+                    <property name="reportDataProvider" ref="rnRFeedbackReportDataProvider"/>
+                    <property name="id" value="RP-RnR-Feedback"/>
+                    <property name="name" value="Report and Requisition Feedback Report"/>
+                    <property name="title" value="report.title.rnr.feedback"/>
+                    <property name="version" value="1.0"/>
+                </bean>
+
+                <bean class="org.openlmis.report.Report">
+                    <property name="reportKey" value="order_fill_rate"/>
+                    <property name="template" value="order-fill-rate.jasper"/>
+                    <property name="reportDataProvider" ref="orderFillRateReportDataProvider"/>
+                    <property name="id" value="RP-Order-Fill-Rate"/>
+                    <property name="name" value="Order Fill Rate by Facility Report"/>
+                    <property name="title" value="report.title.order.fill.rate"/>
+                    <property name="version" value="1.0"/>
+                </bean>
+
+                <bean class="org.openlmis.report.Report">
+                    <property name="reportKey" value="regimen_summary"/>
+                    <property name="template" value="regimen-summary-list.jasper"/>
+                    <property name="reportDataProvider" ref="regimenSummaryReportDataProvider"/>
+                    <property name="id" value="RP-Regimen-Summary-report"/>
+                    <property name="name" value="Regimen Distribution by District"/>
+                    <property name="title" value="report.title.regimen.distribution.summary"/>
+                    <property name="version" value="1.0"/>
+                </bean>
+
+                <bean class="org.openlmis.report.Report">
+                    <property name="reportKey" value="aggregate_regimen_summary"/>
+                    <property name="template" value="aggregate-regimen.jasper"/>
+                    <property name="reportDataProvider" ref="aggregateRegimenSummaryReportDataProvider"/>
+                    <property name="id" value="RP-Aggregate-Regimen-Summary-report"/>
+                    <property name="name" value="Aggregate Regimen Summary"/>
+                    <property name="title" value="Aggregate Regimen Distributions"/>
+                    <property name="version" value="1.0"/>
+                </bean>
+
+
+                <bean class="org.openlmis.report.Report">
+                    <property name="reportKey" value="regimen_distribution"/>
+                    <property name="template" value="regimen-distribution.jasper"/>
+                    <property name="reportDataProvider" ref="regimenDistributionReportDataProvider"/>
+                    <property name="id" value="RP-Regimen-Distribution-report"/>
+                    <property name="name" value="Regimen Distribution by District"/>
+                    <property name="title" value="report.title.regimen.distribution.by.district"/>
+                    <property name="version" value="1.0"/>
+                </bean>
+
+                <bean class="org.openlmis.report.Report">
+                    <property name="reportKey" value="district_financial_summary"/>
+                    <property name="template" value="district-financial-summary.jasper"/>
+                    <property name="reportDataProvider" ref="districtFinancialSummaryDataProvider"/>
+                    <property name="id" value="RP-District-Order-Compilation-Report"/>
+                    <property name="name" value="District Order Compilation Report"/>
+                    <property name="title" value="report.title.district.order.compilation"/>
+                    <property name="version" value="1.0"/>
+                </bean>
+                <bean class="org.openlmis.report.Report">
+                    <property name="reportKey" value="user_summary"/>
+                    <property name="template" value="user-summary.jasper"/>
+                    <property name="reportDataProvider" ref="userSummaryReportProvider"/>
+                    <property name="id" value="RP-User-Summary-Report"/>
+                    <property name="name" value="User Summary Report"/>
+                    <property name="title" value="report.title.user.summary"/>
+                    <property name="version" value="1.0"/>
+                </bean>
+                <bean class="org.openlmis.report.Report">
+                    <property name="reportKey" value="pipeline_export"/>
+                    <property name="template" value="pipeline-export.jasper"/>
+                    <property name="reportDataProvider" ref="pipelineExportReportProvider"/>
+                    <property name="id" value="RP-Pipeline-Export-Report"/>
+                    <property name="name" value="Pipeline Export"/>
+                    <property name="title" value="Pipeline Export"/>
+                    <property name="version" value="1.0"/>
+                </bean>
+                <bean class="org.openlmis.report.Report">
+                    <property name="reportKey" value="lab_equipment_list"/>
+                    <property name="template" value="lab-equipment-list.jasper"/>
+                    <property name="reportDataProvider" ref="labEquipmentStatusReportDataProvider"/>
+                    <property name="id" value="RP-Lab-equipment-list-Report"/>
+                    <property name="name" value="List of Lab Equipment by Operational Status"/>
+                    <property name="title" value="report.title.lab.equipment.by.status"/>
+                    <property name="version" value="1.0"/>
+                </bean>
+                <bean class="org.openlmis.report.Report">
+                    <property name="reportKey" value="cce_storage_capacity"/>
+                    <property name="template" value="cce-storage-capacity.jasper"/>
+                    <property name="reportDataProvider" ref="CCEStorageCapacityReportDataProvider"/>
+                    <property name="id" value="RP-CCE-Storage-Capacity-Report"/>
+                    <property name="name" value="CCE Equipment Storage Capacity"/>
+                    <property name="title" value="report.title.cce.storage.capacity"/>
+                    <property name="version" value="1.0"/>
+                </bean>
+                <bean class="org.openlmis.report.Report">
+                    <property name="reportKey" value="lab_equipments_by_donor"/>
+                    <property name="template" value="lab-equipments-by-donor.jasper"/>
+                    <property name="reportDataProvider" ref="labEquipmentsByDonorReportDataProvider"/>
+                    <property name="id" value="RP-Lab-equipment-list-by-donor"/>
+                    <property name="name" value="List of Equipment by Funding Source"/>
+                    <property name="title" value="report.title.lab.equipment.by.funding"/>
+                    <property name="version" value="1.0"/>
+                </bean>
+                <bean class="org.openlmis.report.Report">
+                    <property name="reportKey" value="pushed_product_list"/>
+                    <property name="template" value="pushed-product-list.jasper"/>
+                    <property name="reportDataProvider" ref="pushedProductReportDataProvider"/>
+                    <property name="id" value="RP-pushed-product-list"/>
+                    <property name="name" value="Pushed Product List by Facility Report"/>
+                    <property name="title" value="Pushed Product List by Facility Report"/>
+                    <property name="version" value="1.0"/>
+                </bean>
+                <bean class="org.openlmis.report.Report">
+                    <property name="reportKey" value="order_fill_rate_summary"/>
+                    <property name="template" value="order_fill_rate.jasper"/>
+                    <property name="reportDataProvider" ref="orderFillRateReportSummaryDataProvider"/>
+                    <property name="id" value="RP-Order-Fill-Rate-Summary"/>
+                    <property name="name" value="Order Fill Rate Summary"/>
+                    <property name="title" value="report.title.order.fill.rate.summary"/>
+                    <property name="version" value="1.0"/>
+                </bean>
+                <bean class="org.openlmis.report.Report">
+                    <property name="reportKey" value="lab_equipments_functioning"/>
+                    <property name="template" value="lab-equipment-functioning-list.jasper"/>
+                    <property name="reportDataProvider" ref="equipmentsFunctioningDataProvider"/>
+                    <property name="id" value="RP-lab-equipments-functioning-Report"/>
+                    <property name="name" value="Functioning equipment with service contract status"/>
+                    <property name="title" value="report.title.functioning.equipment"/>
+                    <property name="version" value="1.0"/>
+                </bean>
+                <bean class="org.openlmis.report.Report">
+                    <property name="reportKey" value="lab_equipments_non_functioning"/>
+                    <property name="template" value="lab-equipment-non-functioning-list.jasper"/>
+                    <property name="reportDataProvider" ref="equipmentsNonFunctioningDataProvider"/>
+                    <property name="id" value="RP-lab-equipments-functioning-Report"/>
+                    <property name="name" value="Non Functioning equipment with service contract status"/>
+                    <property name="title" value="report.title.non.functioning.equipment"/>
+                    <property name="version" value="1.0"/>
+                </bean>
+                <bean class="org.openlmis.report.Report">
+                    <property name="reportKey" value="seasonality_rationing"/>
+                    <property name="template" value="seasonality-rationing.jasper"/>
+                    <property name="reportDataProvider" ref="seasonalRationingReportDataProvider"/>
+                    <property name="id" value="RP-seasonality-rationing-Report"/>
+                    <property name="name" value="Seasonality/Rationing report"/>
+                    <property name="title" value="Seasonality/Rationing Adjustments Applied"/>
+                    <property name="version" value="1.0"/>
+                </bean>
+
+                <bean class="org.openlmis.report.Report">
+                    <property name="reportKey" value="timeliness"/>
+                    <property name="template" value="timeliness-report.jasper"/>
+                    <property name="reportDataProvider" ref="timelinessReportDataProvider"/>
+                    <property name="id" value="RP-Timeliness-Report"/>
+                    <property name="name" value="Timeliness Reporting"/>
+                    <property name="title" value="report.title.timeliness.reporting"/>
+                    <property name="version" value="1.0"/>
+                </bean>
+                <bean class="org.openlmis.report.Report">
+                    <property name="reportKey" value="unscheduled_reporting"/>
+                    <property name="template" value="unscheduled-reporting-list.jasper"/>
+                    <property name="reportDataProvider" ref="unscheduledReportingReportDataProvider"/>
+                    <property name="id" value="RP-Unscheduled-reporting"/>
+                    <property name="name" value="Unscheduled Reporting Facilities"/>
+                    <property name="title" value="report.title.unscheduled.reporting"/>
+                    <property name="version" value="1.0"/>
+                </bean>
+                <bean class="org.openlmis.report.Report">
+                    <property name="reportKey" value="cce_repair_management"/>
+                    <property name="template" value="cce-repair-management.jasper"/>
+                    <property name="reportDataProvider" ref="CCERepairManagementReportDataProvider"/>
+                    <property name="id" value="REPAIR"/>
+                    <property name="name" value="Cold Chain Repair Management"/>
+                    <property name="title" value="report.title.repair.management"/>
+                    <property name="version" value="1.0"/>
+                </bean>
+
+                <bean class="org.openlmis.report.Report">
+                    <property name="reportKey" value="cce_repair_management_equipment_list"/>
+                    <property name="template" value="cce-repair-management-equipment-list.jasper"/>
+                    <property name="reportDataProvider" ref="CCERepairManagementEquipmentListDataProvider"/>
+                    <property name="id" value="REPAIR"/>
+                    <property name="name" value="Cold Chain Equipment List"/>
+                    <property name="title" value="report.title.repair.management.equipment.list"/>
+                    <property name="version" value="1.0"/>
+                </bean>
+                <bean class="org.openlmis.report.Report">
+                    <property name="reportKey" value="cold_chain_equipment"/>
+                    <property name="template" value="cold-chain-equipment.jasper"/>
+                    <property name="reportDataProvider" ref="coldChainEquipmentReportDataProvider"/>
+                    <property name="id" value="RP-Cold-Chain-Equipment-Report"/>
+                    <property name="name" value="Cold Chain Equipment Inventory"/>
+                    <property name="title" value="report.title.cold.chain.equipment.inventory"/>
+                    <property name="version" value="1.0"/>
+                </bean>
+
+
+                <bean class="org.openlmis.report.Report">
+                    <property name="reportKey" value="equipment_replacement_list"/>
+                    <property name="template" value="replacement-equipment-list.jasper"/>
+                    <property name="reportDataProvider" ref="equipmentReplacementListDataProvider"/>
+                    <property name="id" value="RP-replacement-plan"/>
+                    <property name="name" value="Equipment To Be Replaced"/>
+                    <property name="title" value="report.title.equipment.in.need.of.replacement"/>
+                    <property name="version" value="1.0"/>
+                </bean>
+
+                <bean class="org.openlmis.report.Report">
+                    <property name="reportKey" value="replacement_plan_summary"/>
+                    <property name="template" value="replacement-plan-summary.jasper"/>
+                    <property name="reportDataProvider" ref="replacementPlanSummaryReportDataProvider"/>
+                    <property name="id" value="RP-replacement-plan"/>
+                    <property name="name" value="Replacement Plan Summary"/>
+                    <property name="title" value="report.title.replacement.plan.summary"/>
+                    <property name="version" value="1.0"/>
+                </bean>
+
+                <bean class="org.openlmis.report.Report">
+                    <property name="reportKey" value="replacement_plan_summary_annual"/>
+                    <property name="template" value="annual-replacement.jasper"/>
+                    <property name="reportDataProvider" ref="replacementPlanSummaryReportDataProvider"/>
+                    <property name="id" value="RP-replacement-plan"/>
+                    <property name="name" value="Annual Replacement Plan Summary"/>
+                    <property name="title" value="report.title.annual.replacement.plan.summary"/>
+                    <property name="version" value="1.0"/>
+                </bean>
+
+            </list>
+        </constructor-arg>
+    </bean>
+</beans>

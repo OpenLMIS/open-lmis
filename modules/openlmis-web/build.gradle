@@ -3,9 +3,9 @@
  * Copyright © 2013 VillageReach
  *
  * This program is free software: you can redistribute it and/or modify it under the terms of the GNU Affero General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
- *  
+ *
  * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Affero General Public License for more details.
- * You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org. 
+ * You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org.
  */
 
 
@@ -88,11 +88,6 @@ task lesswatch(type: GruntTask) {
 buildscript {
     repositories {
         mavenCentral();
-//        add(new org.apache.ivy.plugins.resolver.URLResolver()) {
-//            name = 'GitHub'
-//            addArtifactPattern 'http://cloud.github.com/downloads/[organisation]/[module]/[module]-[revision].[ext]'
-//        };
-
     }
 }
 
@@ -103,6 +98,13 @@ war {
     exclude "public/images/"
     exclude "public/js/"
     exclude "public/lib/"
+
+    if (project.hasProperty('warName')) { //TODO: Change warName to slave
+      archiveName = 'openlmis-web-slave.war'
+      webXml = file('src/main/resources/config/web-slave.xml')
+    } else {
+      webXml = file('src/main/resources/config/web.xml')
+    }
 
     doFirst {
         prepareVersionedDirectory.execute();
@@ -142,12 +144,6 @@ tasks.withType(War) {
 
 task cleanWorkspace(type: Delete) {
     delete 'src/main/webapp/public/v' + prepareVersionedDirectory.currentTime + '/';
-}
-
-build.doLast {
-//    karmaRun.execute()
-    jsHint.execute()
-    cleanWorkspace.execute()
 }
 
 dependencies {
@@ -223,6 +219,12 @@ task explodedWar(type: Copy) {
 task deployOpenLmis(type: GradleBuild) {
     tasks = ['build']
     tasks = ['cargoRedeployRemote']
+}
+
+task removePropertiesFiles(type: Delete) {
+    delete fileTree('src/main/resources/') {
+        include 'atomfeed.properties', 'default.properties', 'local/app.properties', 'app.properties', 'uat/app.properties'
+    }
 }
 
 compileJava.dependsOn less

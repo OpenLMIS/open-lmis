@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ~ This program is part of the OpenLMIS logistics management information system platform software.
+  ~ Copyright © 2013 VillageReach
+  ~
+  ~ This program is free software: you can redistribute it and/or modify it under the terms of the GNU Affero General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
+  ~  
+  ~ This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Affero General Public License for more details.
+  ~ You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org. 
+  -->
+
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:util="http://www.springframework.org/schema/util"
+       xmlns:int-jdbc="http://www.springframework.org/schema/integration/jdbc"
+       xmlns:int="http://www.springframework.org/schema/integration"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.1.xsd
+                           http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.1.xsd
+                           http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-4.1.xsd
+                           http://www.springframework.org/schema/integration http://www.springframework.org/schema/integration/spring-integration.xsd
+                           http://www.springframework.org/schema/integration/jdbc http://www.springframework.org/schema/integration/jdbc/spring-integration-jdbc.xsd">
+
+  <context:annotation-config/>
+  <context:spring-configured/>
+
+  <context:component-scan base-package="org.openlmis.email"/>
+  <import resource="classpath*:applicationContext-db.xml"/>
+
+  <bean id="mailSender" class="org.springframework.mail.javamail.JavaMailSenderImpl">
+    <property name="host" value="${mail.sender.host}"/>
+    <property name="port" value="${mail.sender.port}"/>
+    <property name="username" value="${mail.sender.username}"/>
+    <property name="password" value="${mail.sender.password}"/>
+    <property name="protocol" value="${mail.sender.protocol}"/>
+    <property name="javaMailProperties" ref="mailProperties"/>
+  </bean>
+
+  <bean id="emailMessageDispatcher" class="org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor">
+    <property name="corePoolSize" value="1"/>
+    <property name="maxPoolSize" value="1"/>
+    <property name="queueCapacity" value="-1"/>
+  </bean>
+
+  <util:properties id="mailProperties">
+    <prop key="mail.smtp.from">${mail.sender.from}</prop>
+    <prop key="mail.smtp.auth">${mail.smtp.auth}</prop>
+    <prop key="mail.smtp.debug">${mail.smtp.debug}</prop>
+    <prop key="mail.smtp.starttls.enable">${mail.smtp.starttls.enable}</prop>
+    <prop key="mail.smtp.quitwait">${mail.smtp.quitwait}</prop>
+  </util:properties>
+
+</beans>
