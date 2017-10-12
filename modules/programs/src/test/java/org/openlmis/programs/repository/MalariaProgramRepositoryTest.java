@@ -5,17 +5,19 @@ import org.junit.Test;
 import org.mockito.*;
 import org.openlmis.programs.domain.malaria.Implementation;
 import org.openlmis.programs.domain.malaria.MalariaProgram;
-import org.openlmis.programs.helpers.MalariaProgramBuilder;
 import org.openlmis.programs.repository.mapper.MalariaProgramMapper;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.natpryce.makeiteasy.MakeItEasy.a;
+import static com.natpryce.makeiteasy.MakeItEasy.make;
 import static org.apache.commons.lang.math.RandomUtils.nextInt;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
 import static org.mockito.Mockito.inOrder;
 import static org.openlmis.programs.helpers.ImplementationBuilder.createRandomImplementations;
+import static org.openlmis.programs.helpers.MalariaProgramBuilder.randomMalariaProgram;
 
 public class MalariaProgramRepositoryTest {
 
@@ -37,7 +39,7 @@ public class MalariaProgramRepositoryTest {
     public void setUp() throws Exception {
         MockitoAnnotations.initMocks(this);
         implementations = createRandomImplementations();
-        malariaProgram = MalariaProgramBuilder.fresh().build();
+        malariaProgram = make(a(randomMalariaProgram));
         malariaProgram.setImplementations(implementations);
     }
 

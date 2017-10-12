@@ -11,9 +11,6 @@ import org.openlmis.db.categories.IntegrationTests;
 import org.openlmis.programs.domain.malaria.Implementation;
 import org.openlmis.programs.domain.malaria.MalariaProgram;
 import org.openlmis.programs.domain.malaria.Treatment;
-import org.openlmis.programs.helpers.ImplementationBuilder;
-import org.openlmis.programs.helpers.MalariaProgramBuilder;
-import org.openlmis.programs.helpers.ProductBuilder;
 import org.openlmis.programs.helpers.TreatmentBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -25,10 +22,16 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.natpryce.makeiteasy.MakeItEasy.*;
 import static org.apache.commons.lang.math.RandomUtils.nextInt;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.not;
 import static org.junit.Assert.assertThat;
+import static org.openlmis.core.builder.ProductBuilder.randomProduct;
+import static org.openlmis.programs.helpers.ImplementationBuilder.malariaProgram;
+import static org.openlmis.programs.helpers.ImplementationBuilder.randomImplementation;
+import static org.openlmis.programs.helpers.MalariaProgramBuilder.randomMalariaProgram;
+import static org.openlmis.programs.helpers.TreatmentBuilder.randomTreatment;
 
 @Category(IntegrationTests.class)
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -52,14 +55,13 @@ public class TreatmentMapperIT {
 
     @Before
     public void setUp() throws Exception {
-        MalariaProgram malariaProgram = MalariaProgramBuilder.fresh().build();
-        malariaProgramMapper.insert(malariaProgram);
-        implementation = ImplementationBuilder.fresh().setMalariaProgram(malariaProgram).build();
-        product = ProductBuilder.fresh().build();
-        treatment = TreatmentBuilder.fresh()
-                .setImplementation(implementation)
-                .setProduct(product)
-                .build();
+        MalariaProgram program = make(a(randomMalariaProgram));
+        malariaProgramMapper.insert(program);
+        implementation = make(a(randomImplementation, with(malariaProgram, program)));
+        product = make(a(randomProduct));
+        treatment = make(a(randomTreatment,
+                with(TreatmentBuilder.implementation, implementation),
+                with(TreatmentBuilder.product, product)));
     }
 
     @Test
@@ -99,7 +101,9 @@ public class TreatmentMapperIT {
         List<Treatment> result = new ArrayList<>();
         int randomQuantity = nextInt(10) + 1;
         for (int i = 0; i < randomQuantity; i++) {
-            result.add(TreatmentBuilder.fresh().setImplementation(implementation).setProduct(product).build());
+            result.add(make(a(randomTreatment,
+                    with(TreatmentBuilder.implementation, implementation),
+                    with(TreatmentBuilder.product, product))));
         }
         return result;
     }

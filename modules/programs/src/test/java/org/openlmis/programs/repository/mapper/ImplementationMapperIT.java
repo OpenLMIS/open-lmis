@@ -6,8 +6,6 @@ import org.junit.runner.RunWith;
 import org.openlmis.db.categories.IntegrationTests;
 import org.openlmis.programs.domain.malaria.Implementation;
 import org.openlmis.programs.domain.malaria.MalariaProgram;
-import org.openlmis.programs.helpers.ImplementationBuilder;
-import org.openlmis.programs.helpers.MalariaProgramBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.test.context.ContextConfiguration;
@@ -17,10 +15,12 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
+import static com.natpryce.makeiteasy.MakeItEasy.*;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.not;
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.openlmis.programs.helpers.ImplementationBuilder.createRandomImplementations;
+import static org.openlmis.programs.helpers.ImplementationBuilder.*;
+import static org.openlmis.programs.helpers.MalariaProgramBuilder.randomMalariaProgram;
 
 @Category(IntegrationTests.class)
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -34,12 +34,12 @@ public class ImplementationMapperIT {
     @Autowired
     private MalariaProgramMapper malariaProgramMapper;
 
-    private MalariaProgram malariaProgram = MalariaProgramBuilder.fresh().build();
+    private MalariaProgram program = make(a(randomMalariaProgram));
 
     @Test
     public void shouldInsert() {
-        malariaProgramMapper.insert(malariaProgram);
-        Implementation implementation = ImplementationBuilder.fresh().setMalariaProgram(malariaProgram).build();
+        malariaProgramMapper.insert(program);
+        Implementation implementation = make(a(randomImplementation, with(malariaProgram, program)));
         int count = mapper.insert(implementation);
         assertThat(count, is(not(0)));
         assertThat(implementation.getId(), is(not(0)));
@@ -58,8 +58,7 @@ public class ImplementationMapperIT {
 
     @Test(expected = DataIntegrityViolationException.class)
     public void shouldNotInsertWhenMalariaProgramDoesNotExist() {
-        MalariaProgram malariaProgram = MalariaProgramBuilder.fresh().build();
-        Implementation implementation = ImplementationBuilder.fresh().setMalariaProgram(malariaProgram).build();
+        Implementation implementation = make(a(randomImplementation, with(malariaProgram, program)));
         mapper.insert(implementation);
     }
 }

@@ -19,12 +19,16 @@ import org.openlmis.core.domain.ProductForm;
 import org.openlmis.core.domain.ProductGroup;
 
 import static com.natpryce.makeiteasy.Property.newProperty;
+import static org.apache.commons.lang3.RandomStringUtils.randomAlphabetic;
 
 public class ProductBuilder {
 
   public static final Long PRODUCT_ID = null;
   public static final String PRODUCT_CODE = "P999";
+  public static final String RANDOM_PRODUCT_CODE = randomAlphabetic(5);
+  public static final String RANDOM_PRIMARY_NAME = randomAlphabetic(10);
   public static final String PRIMARY_NAME = "Primary Name";
+
 
   public static final Property<Product, Long> productId = newProperty();
   public static final Property<Product, String> code = newProperty();
@@ -77,6 +81,40 @@ public class ProductBuilder {
       productGroup.setName("Product Group 1");
       productGroup.setId(1L);
       product.setProductGroup(productGroup);
+      return product;
+    }
+  };
+
+  public static final Instantiator<Product> randomProduct = new Instantiator<Product>() {
+    @Override
+    public Product instantiate(PropertyLookup<Product> lookup) {
+      Product product = new Product();
+
+      product.setId(lookup.valueOf(productId, PRODUCT_ID));
+      product.setCode(lookup.valueOf(code, RANDOM_PRODUCT_CODE));
+      product.setFullSupply(lookup.valueOf(fullSupply, true));
+      product.setActive(lookup.valueOf(active, true));
+      product.setPrimaryName(lookup.valueOf(primaryName, RANDOM_PRIMARY_NAME));
+      product.setAlternateItemCode("alternateItemCode");
+      product.setManufacturer("Glaxo and Smith");
+      product.setManufacturerCode("manufacturerCode");
+      product.setManufacturerBarCode("manufacturerBarCode");
+      product.setMohBarCode("mohBarCode");
+      product.setGtin("gtin");
+      product.setType("antibiotic");
+      product.setFullName("TDF/FTC/EFV");
+      product.setGenericName("Generic - TDF/FTC/EFV");
+      product.setAlternateName("Alt - TDF/FTC/EFV");
+      product.setDescription("is a med");
+      product.setStrength("strength");
+      product.setDispensingUnit("Strip");
+      product.setPackSize(10);
+      product.setTracer(true);
+      product.setPackRoundingThreshold(1);
+      product.setRoundToZero(true);
+      product.setDosesPerDispensingUnit(10);
+      product.setNos(lookup.valueOf(nos, true));
+      product.setIsBasic(lookup.valueOf(isBasic, false));
       return product;
     }
   };
