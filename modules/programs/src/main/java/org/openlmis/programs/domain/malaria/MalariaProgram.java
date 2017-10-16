@@ -1,6 +1,7 @@
 package org.openlmis.programs.domain.malaria;
 
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.hibernate.validator.constraints.NotEmpty;
 import org.openlmis.programs.domain.malaria.validators.annotations.ValidateMalariaPeriodDates;
 import org.openlmis.programs.domain.malaria.validators.annotations.ValidateUsernameExists;
@@ -11,6 +12,7 @@ import java.util.List;
 
 @Data
 @ValidateMalariaPeriodDates
+@NoArgsConstructor
 public class MalariaProgram {
     private int id;
 

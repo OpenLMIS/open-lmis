@@ -21,6 +21,7 @@ public class UsernameExistsValidator implements ConstraintValidator<ValidateUser
     @Override
     public boolean isValid(String username, ConstraintValidatorContext context) {
         User user = userRepository.getByUserName(username);
-        return user != null;
+        boolean b = user != null;
+        return b;
     }
 }

@@ -4,7 +4,9 @@ import org.openlmis.programs.domain.malaria.Implementation;
 import org.openlmis.programs.domain.malaria.MalariaProgram;
 import org.openlmis.programs.repository.mapper.MalariaProgramMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
 
+@Repository
 public class MalariaProgramRepository {
     @Autowired
     private MalariaProgramMapper malariaProgramMapper;
@@ -13,6 +15,7 @@ public class MalariaProgramRepository {
 
     public MalariaProgram save(MalariaProgram malariaProgram) {
         malariaProgramMapper.insert(malariaProgram);
+
         saveImplementations(malariaProgram);
         return malariaProgram;
     }
