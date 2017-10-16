@@ -2,7 +2,9 @@ package org.openlmis.programs.repository;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.experimental.categories.Category;
 import org.mockito.*;
+import org.openlmis.db.categories.UnitTests;
 import org.openlmis.programs.domain.malaria.Implementation;
 import org.openlmis.programs.domain.malaria.Treatment;
 import org.openlmis.programs.repository.mapper.ImplementationMapper;
@@ -18,6 +20,7 @@ import static org.mockito.Matchers.*;
 import static org.mockito.Mockito.inOrder;
 import static org.openlmis.programs.helpers.ImplementationBuilder.createRandomImplementations;
 
+@Category(UnitTests.class)
 public class ImplementationRepositoryTest {
     @Spy
     private TreatmentMapper treatmentMapper = new TreatmentDummyMapper();

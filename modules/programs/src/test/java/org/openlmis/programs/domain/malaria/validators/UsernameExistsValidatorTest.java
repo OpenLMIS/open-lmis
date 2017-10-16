@@ -2,11 +2,13 @@ package org.openlmis.programs.domain.malaria.validators;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.openlmis.core.repository.UserRepository;
+import org.openlmis.db.categories.UnitTests;
 
 import javax.validation.ConstraintValidator;
 
@@ -19,6 +21,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.mockito.Mockito.when;
 import static org.openlmis.core.builder.UserBuilder.defaultUser;
 
+@Category(UnitTests.class)
 @RunWith(MockitoJUnitRunner.class)
 public class UsernameExistsValidatorTest {
 

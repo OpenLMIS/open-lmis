@@ -3,6 +3,8 @@ package org.openlmis.programs.domain.malaria.json;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.junit.Test;
+import org.junit.experimental.categories.Category;
+import org.openlmis.db.categories.UnitTests;
 import org.openlmis.programs.domain.malaria.Implementation;
 import org.openlmis.programs.domain.malaria.Treatment;
 
@@ -12,6 +14,7 @@ import static com.natpryce.makeiteasy.MakeItEasy.make;
 import static org.junit.Assert.assertTrue;
 import static org.openlmis.programs.helpers.ImplementationBuilder.randomImplementation;
 
+@Category(UnitTests.class)
 public class ImplementationJsonTest {
     @Test
     public void shouldSerializeAndDeserializeImplementation() throws Exception {

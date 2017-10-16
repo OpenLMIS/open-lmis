@@ -3,9 +3,11 @@ package org.openlmis.restapi.controller;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.experimental.categories.Category;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.openlmis.db.categories.UnitTests;
 import org.openlmis.programs.domain.malaria.MalariaProgram;
 import org.openlmis.programs.repository.MalariaProgramRepository;
 import org.springframework.http.ResponseEntity;
@@ -27,6 +29,7 @@ import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+@Category(UnitTests.class)
 public class RestMalariaProgramControllerTest {
 
     public static final String CREATE_MALARIA_PROGRAM_URL = "/rest-api/malaria-programs";

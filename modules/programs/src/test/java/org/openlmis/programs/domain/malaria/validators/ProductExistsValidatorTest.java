@@ -1,12 +1,14 @@
 package org.openlmis.programs.domain.malaria.validators;
 
 import org.junit.Test;
+import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.openlmis.core.domain.Product;
 import org.openlmis.core.repository.ProductRepository;
+import org.openlmis.db.categories.UnitTests;
 
 import static com.natpryce.makeiteasy.MakeItEasy.a;
 import static com.natpryce.makeiteasy.MakeItEasy.make;
@@ -15,6 +17,7 @@ import static org.hamcrest.core.Is.is;
 import static org.mockito.Mockito.when;
 import static org.openlmis.core.builder.ProductBuilder.randomProduct;
 
+@Category(UnitTests.class)
 @RunWith(MockitoJUnitRunner.class)
 public class ProductExistsValidatorTest {
     @Mock

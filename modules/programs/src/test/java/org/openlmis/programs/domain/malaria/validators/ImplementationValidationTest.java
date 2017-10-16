@@ -1,11 +1,19 @@
-package org.openlmis.programs.domain.malaria;
+package org.openlmis.programs.domain.malaria.validators;
 
 import com.natpryce.makeiteasy.Maker;
+import org.junit.Before;
 import org.junit.Test;
+import org.junit.experimental.categories.Category;
+import org.mockito.Matchers;
+import org.mockito.MockitoAnnotations;
+import org.openlmis.core.domain.Product;
+import org.openlmis.db.categories.UnitTests;
+import org.openlmis.programs.domain.malaria.Implementation;
+import org.openlmis.programs.domain.malaria.Treatment;
 
+import javax.validation.ConstraintValidatorContext;
 import javax.validation.ConstraintViolation;
 import javax.validation.Validation;
-import javax.validation.Validator;
 import java.util.Set;
 
 import static com.google.common.collect.Lists.newArrayList;
@@ -13,21 +21,29 @@ import static com.natpryce.makeiteasy.MakeItEasy.*;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.empty;
+import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.anyString;
+import static org.mockito.Mockito.when;
 import static org.openlmis.programs.domain.malaria.validators.helpers.ValidationHelper.assertValidationHasPropertyWithError;
-import static org.openlmis.programs.helpers.ImplementationBuilder.executor;
-import static org.openlmis.programs.helpers.ImplementationBuilder.randomImplementation;
-import static org.openlmis.programs.helpers.ImplementationBuilder.treatments;
+import static org.openlmis.programs.helpers.ImplementationBuilder.*;
 import static org.openlmis.programs.helpers.TreatmentBuilder.amount;
 import static org.openlmis.programs.helpers.TreatmentBuilder.randomTreatment;
 
-public class ImplementationValidationTest {
-    private static final String MAY_NOT_BE_EMPTY = "may not be empty";
-    private static final String EXECUTOR = "executor";
-    private static final String FIRST_TREATMENT = "treatments[0].amount";
-    private static final String SHOULD_BE_POSITIVE = "must be greater than or equal to 0";
+@Category(UnitTests.class)
+public class ImplementationValidationTest extends ValidationBaseTest {
     private Maker<Implementation> implementation = a(randomImplementation);
-    private Validator validator = Validation.buildDefaultValidatorFactory().getValidator();
     private Set<ConstraintViolation<Implementation>> validationResults;
+
+    @Before
+    public void setUp() throws Exception {
+        MockitoAnnotations.initMocks(this);
+        config = Validation.byDefaultProvider().configure();
+        config.constraintValidatorFactory(this);
+        factory = config.buildValidatorFactory();
+        validator = factory.getValidator();
+        when(usernameExistsValidator.isValid(anyString(), Matchers.<ConstraintValidatorContext>any())).thenReturn(true);
+        when(productExistsValidator.isValid(any(Product.class), Matchers.<ConstraintValidatorContext>any())).thenReturn(true);
+    }
 
     @Test
     public void shouldBeValidWhenHasNoErrors() throws Exception {
