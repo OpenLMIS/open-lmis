@@ -1,4 +1,9 @@
 #!/bin/bash
+display_error_message () {
+  printf "Usage: %s: [-d] [-e value]\n\t-d\t\trun test within docker containers\n\t-e(REQUIRED)\tenvironment: local or ci\n"
+  exit 2;
+}
+
 taskrunner="${TASKRUNNER:-siglus/taskrunner:0.0.2}"
 pipelinename="${PIPELINE_NAME:-openlmis_portal}"
 declare -A envvalues=(
@@ -11,18 +16,17 @@ do
   case $name in
     d)    dockerflag=1;;
     e)    envflag=1
-      enval="$OPTARG";;
-    ?)    printf "Usage: %s: [-d] [-e value]\n\t-d\trun test within docker containers\n\t-e\tenvironment: local or ci\n" $0
-      exit 2;;
+          enval="$OPTARG";;
+    ?)    display_error_message
   esac
 done
 
 if [[ ! -z "$envflag" ]]; then
-  [[ ! -n "${envvalues[$enval]}"  ]] && printf '%s\n' "ERROR: Invalid Option." && exit 2;
+  [[ ! -n "${envvalues[$enval]}"  ]] && display_error_message
 fi
 
 if [[ -z "$dockerflag" && "$enval" == "ci" || -z "$envflag"  ]]; then
-  printf '%s\n' "ERROR: Operation not allowed." && exit 2;
+  display_error_message
 fi
 
 if [[ ! -z "$dockerflag" && "$enval" == "local"  ]]; then
