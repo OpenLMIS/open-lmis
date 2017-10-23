@@ -1,4 +1,4 @@
-This is the Moz implementation of OpenLMIS.
+This is the Mozambique implementation of OpenLMIS.
 
 License Terms
 ---------------------------
@@ -15,17 +15,8 @@ You should have received a copy of the GNU Affero General Public License along w
 System Requirements
 ---------------------------
 - JDK 7
-- Postgresql 9
+- Docker
 - Git
-- Gradle
-  * **For Linux users**
-    * Download the source binary directly from the gradle website.
-    * Copy the downloaded folder to `/usr/bin`
-    * Add the path to gradle bin folder to your `/etc/profile` file
-    `export PATH="$PATH:/usr/bin/gradle-2.3/bin"`
-  * **For Mac users**
-    * Install HomeBrew
-    * Run `brew install gradle`
 - Node.js
   * **For Linux users**
     * Install Node.js as described [here](https://github.com/joyent/node/wiki/Installing-Node.js-via-package-manager#rhelcentosscientific-linux-6) based on your Linux flavour.
@@ -48,52 +39,43 @@ System Requirements
     `> npm install` (one-time activity)
   * Grunt tasks available can be found in `modules/openlmis-web/Gruntfile.js`
 
+Getting portal containers
+--------------------------
+
+Run functional tests for lmis-moz-mobile repository. This will give you all needed containers for the portal:
+    *  Go to mobile repository and run:
+      `> scripts/run_functional_tests.rb`
+
 Source code
 ------------------
-1. Get the source code using `git clone https://github.com/openlmis/open-lmis.git`.
+1. Get the source code using `git clone https://github.com/siglus/open-lmis.git`.
 2. All work related to Mozambique should be pushed to the 2.0-moz branch, not master. After cloning, you can do `git checkout 2.0-moz` to get into the 2.0-moz branch.
 
 IntelliJ IDEA Setup
 -------------------
-1. Run `gradle idea` to create the IntelliJ project files (may take some time downloading dependencies).
+1. Run `./gradlew idea` to create the IntelliJ project files (may take some time downloading dependencies).
 2. Open the open-lmis.ipr file (may take some time indexing files, first time only).
 3. Install Lombok plugin according to the IntelliJ version.
 4. To run individual tests in IntelliJ, configure your IntelliJ preferences to enable "annotation processing"
 
 Jasmine Tests
 -------------------
-1. To run jasmine tests headlessly: gradle karmaRun
+1. To run jasmine tests headlessly: just run the script `js_unit_test.sh`
 
 Running App on embedded Jetty server
 --------------------------------------------------
 1. Clone the project repository using git.
 2. Setup _postgres_ user with password as configured in `gradle.properties` file.
-3. You can use `gradle clean setupdb setupExtensions seed build run` to start the app.
-4. You can use `gradle clean setupdb setupExtensions seed build` to just run all of the tests.
-5. There are bunch of gradle tasks that you can see by running `gradle tasks`:
+3. You can use `./gradlew clean setupdb setupExtensions seed build run` to start the app.
+4. You can use `./java_unit_test.sh` to just run all of the tests.
+5. There are bunch of gradle tasks that you can see by running `./gradlew tasks`:
   - `build` is to build the app.
   - `setupdb` is to recreate the database and schema.
   - `setupExtensions` is to apply the database schema extensions added.
   - `seed` is to seed in the reference data.
   - `run` is to start the embedded jetty server.
 
-Once the system is running, you can access the home page at `http://localhost:9091/`. You can log into the default instance with: user: `Admin123`, pass: `Admin123`
-
-## Code analysis
-Analysis of Java and Javascript sources can be reported on and visualized using a SonarQube server and the included
-`sonarRunner` task.
-
-1. Install and run the SonarQube server.
-2. Configure the Sonar properties in `gradle.properties` to point to your Sonar server and database.
-3. Build the project and run the analysis:
-  * Basic analysis:  `gradle build sonarRunner`
-  * With coverage reports install the Sonar Cobertura plugin and run cobertura report before sonar analysis.
-     e.g. `gradle build cobertura sonarRunner`
-
-### Server setup
-See [SonarQube.org](http://www.sonarqube.org/) for official documentation.  For more information on how the OpenLMIS
-  project configures SonarQube see the
-  [OpenLMIS sonar-configuration](https://github.com/OpenLMIS/sonar-configuration) repository.
+Once the system is running, you can access the home page at `http://localhost:8081/`. You can log into the default instance with: user: `Admin123`, pass: `Admin123`
 
 ## Issues
 1. You may encounter a `java.lang.OutOfMemoryError: PermGen space`. This is a result of not enough memory for the Jetty JVM. One way to fix this is to export the following (or include in `$HOME/.bash_profile` or `$HOME/.profile` or `$HOME/.bashrc` or `$HOME/.zshrc`, depending on your shell).
@@ -102,14 +84,10 @@ See [SonarQube.org](http://www.sonarqube.org/) for official documentation.  For 
     export JAVA_OPTS="-XX:MaxPermSize=512m"
     export JAVA_TOOL_OPTIONS="-Xmx1024m -XX:MaxPermSize=512m -Xms512m"
     ```
-2. If a few integration tests fail, like this:
-`org.openlmis.core.repository.mapper.FacilityMapperIT > shouldUpdateFacilityWithSuppliedModifiedTime FAILED java.lang.AssertionError at FacilityMapperIT.java:292`
-This can be caused by the timezone in `postgresql.conf` being different than your operating system timezone. To fix, stop the postgresql server, and edit the following line: `timezone = 'US/Pacific'` to match your current operating system timezone, then restart the postgresql server.
-
 Tech Stack
 ---------------------------------
  - Java 1.7
- - Gradle 2.3
+ - Gradle 2.4
  - Postgres 9
  - Spring
  - Mybatis
@@ -117,3 +95,4 @@ Tech Stack
  - Jasmine
  - Node.js
  - Grunt.js
+ - Moment.js
