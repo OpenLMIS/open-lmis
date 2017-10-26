@@ -10,11 +10,13 @@ RUN /scripts/build/install_packages.sh
 #break cache to force docker build to redownload apps every time
 #but keep the packages if cached
 #ARG CACHE_DATE=not_a_date
+COPY libs/ /tmp/libs/
+COPY configuration /tmp/configuration/
 
 RUN /scripts/build/download_apps.sh
 
 # remove after built, they are not needed for run time
-RUN rm -rf /scripts/build
+RUN rm -rf /scripts/build /tmp/libs /tmp/configuration
 #
 # #add the run time scripts, they will run by default when you do 'docker run'
 RUN chmod -R +x /scripts/run
