@@ -243,7 +243,7 @@ ext {
 }
 
 processResources {
-  filesMatching('**app.properties') {
+  filesMatching('**version.properties') {
     expand( 'revision': gitRevision() )
   }
 }

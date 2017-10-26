@@ -20,7 +20,7 @@ import org.springframework.stereotype.Service;
  */
 
 @Service
-@PropertySource({"classpath:/default.properties", "classpath:/app.properties"})
+@PropertySource({"classpath:/default.properties", "classpath:/app.properties", "classpath:/version.properties"})
 public class StaticReferenceDataService {
 
   @Autowired
