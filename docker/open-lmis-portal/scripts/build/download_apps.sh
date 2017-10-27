@@ -1,13 +1,15 @@
 #!/usr/bin/env bash
 
+set -e
+
 #use openlmis web app as root war
 rm -fr /usr/local/tomcat/webapps/ROOT
-cp /builds/openlmis-web.war /usr/local/tomcat/webapps/ROOT.war
+cp /libs/openlmis-web.war /usr/local/tomcat/webapps/ROOT.war
 
 #download migration jars
 mkdir -p /usr/local/tomcat/webapps/db/
-cp /builds/db.jar /usr/local/tomcat/webapps/db/
-cp /builds/migration.jar /usr/local/tomcat/webapps/db/
+cp /libs/db.jar /usr/local/tomcat/webapps/db/
+cp /libs/migration.jar /usr/local/tomcat/webapps/db/
 
 #unzip migration jars and add one extra migration file that creates atomfeed schema
 unzip /usr/local/tomcat/webapps/db/db.jar -d /opt/flyway/sql/db
