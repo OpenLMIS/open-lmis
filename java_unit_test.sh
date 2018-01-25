@@ -1,4 +1,6 @@
 #!/bin/bash
+set -e
+
 taskrunner="${TASKRUNNER:-siglus/taskrunner:0.0.2}"
 pipelinename="${PIPELINE_NAME:-openlmis_portal}"
 dockernet="${DOCKER_NET:-gocd_default}"

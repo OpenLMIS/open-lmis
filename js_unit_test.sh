@@ -1,4 +1,6 @@
 #!/bin/bash
+set -e
+
 taskrunner="${TASKRUNNER:-siglus/taskrunner:0.0.2}"
 pipelinename="${PIPELINE_NAME:-openlmis_portal}"
 LOCAL_DOCKER_SCRIPT="docker run --rm -v $(pwd)/modules/openlmis-web:/openlmis-web -w /openlmis-web $taskrunner sh -c \"npm install && TZ=UTC npm run unit_test\""
