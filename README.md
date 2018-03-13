@@ -50,6 +50,15 @@ Source code
 ------------------
 1. Get the source code using `git clone https://github.com/siglus/open-lmis.git`.
 2. All work related to Mozambique should be pushed to the 2.0-moz branch, not master. After cloning, you can do `git checkout 2.0-moz` to get into the 2.0-moz branch.
+3. Set up dependencies on submodules & Grunt using:  
+  
+    ```shell  
+    > cd open-lmis
+    > git submodule init
+    > git submodule update
+    > cd modules/openlmis-web
+    > npm install
+    ```
 
 IntelliJ IDEA Setup
 -------------------
@@ -67,7 +76,7 @@ Running App on embedded Jetty server
 1. Clone the project repository using git.
 2. Setup _postgres_ user with password as configured in `gradle.properties` file.
 3. You can use `./gradlew clean setupdb setupExtensions seed build run` to start the app.
-4. You can use `./java_unit_test.sh` to just run all of the tests.
+4. You can use `./java_unit_test.sh -e local` to just run all of the tests.
 5. There are bunch of gradle tasks that you can see by running `./gradlew tasks`:
   - `build` is to build the app.
   - `setupdb` is to recreate the database and schema.
@@ -76,6 +85,10 @@ Running App on embedded Jetty server
   - `run` is to start the embedded jetty server.
 
 Once the system is running, you can access the home page at `http://localhost:8081/`. You can log into the default instance with: user: `Admin123`, pass: `Admin123`
+
+Running Unit tests on Docker
+--------------------------------------------------
+1. You can use `./java_unit_test.sh -d -e local` to just run all of the tests.
 
 ## Issues
 1. You may encounter a `java.lang.OutOfMemoryError: PermGen space`. This is a result of not enough memory for the Jetty JVM. One way to fix this is to export the following (or include in `$HOME/.bash_profile` or `$HOME/.profile` or `$HOME/.bashrc` or `$HOME/.zshrc`, depending on your shell).
