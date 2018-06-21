@@ -98,7 +98,7 @@ jar.doFirst {
 }
 
 task migrateDB() << {
-    println("Migrating database..")
+    println("Migrating database.. db url:" + connectionString)
     ext.flyway_classpath = files(sourceSets.main.resources.srcDirs) + files(configurations.flyway)
     ant.taskdef(name: 'flywayMigrate', classname: 'com.googlecode.flyway.ant.MigrateTask', classpath: ext.flyway_classpath.asPath)
     ant.flywayMigrate(driver: dbDriver, url: connectionString, user: dbUser, password: dbPassword)
