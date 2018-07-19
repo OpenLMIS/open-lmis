@@ -85,6 +85,11 @@ services.factory('DateFormatService', function ($filter, messageService) {
     return dates;
   }
 
+  function formatDateWithDayMonthYearBySlash(dateString) {
+    var date = Date.parse(dateString);
+    return $filter('date')(date, 'dd/MM/yyyy');
+  }
+
   return {
     formatDateWithFirstDayOfMonth: formatDateWithFirstDayOfMonth,
     formatDateWithLastDayOfMonth: formatDateWithLastDayOfMonth,
@@ -98,6 +103,7 @@ services.factory('DateFormatService', function ($filter, messageService) {
     formatDateWithDateMonthYearForString: formatDateWithDateMonthYearForString,
     formatDateWithUnderscore: formatDateWithUnderscore,
     formatDateElementsTwoCharacters: formatDateElementsTwoCharacters,
+      formatDateWithDayMonthYearBySlash:formatDateWithDayMonthYearBySlash,
     getFridaysBetween: getFridaysBetween
   };
 });
