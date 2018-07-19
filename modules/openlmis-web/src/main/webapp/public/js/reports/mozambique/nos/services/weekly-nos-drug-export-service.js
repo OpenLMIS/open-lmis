@@ -22,7 +22,7 @@ services.factory('WeeklyNosDrugExportService', function ($http, $filter, $q, $ti
       reportGeneratedFor: messageService.get('report.header.generated.for')
     };
     _.each(dates, function (date) {
-      header[date] = DateFormatService.formatDateWithDayMonthYearBySlash(date);
+      header[date] = date;
     });
     return header;
   }
@@ -145,6 +145,7 @@ services.factory('WeeklyNosDrugExportService', function ($http, $filter, $q, $ti
       populateLastPeriodCMMData(cmmEntries, nosDrugHash);
 
       data.reportContent = _.values(nosDrugHash);
+      data.reportHeaders = data.reportHeaders.map(DateFormatService.formatDateWithDayMonthYearBySlash)
       ReportExportExcelService.exportAsXlsx(data, messageService.get('report.file.nos.drugs.report'));
     });
   }

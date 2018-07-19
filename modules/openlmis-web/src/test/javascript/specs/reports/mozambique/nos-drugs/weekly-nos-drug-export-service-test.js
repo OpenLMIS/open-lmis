@@ -187,9 +187,9 @@ describe("Weekly NOS drugs excel export test", function () {
       facility: 'report.header.facility',
       cmmValue:'report.header.cmm',
       reportGeneratedFor: 'report.header.generated.for',
-      '2017-08-04': '2017-08-04',
-      '2017-08-11': '2017-08-11',
-      '2017-08-18': '2017-08-18'
+      '2017-08-04': '04/08/2017',
+      '2017-08-11': '11/08/2017',
+      '2017-08-18': '18/08/2017'
     };
 
     var expectedContent = [
