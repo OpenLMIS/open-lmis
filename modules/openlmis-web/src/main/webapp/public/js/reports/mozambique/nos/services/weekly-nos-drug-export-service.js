@@ -22,7 +22,7 @@ services.factory('WeeklyNosDrugExportService', function ($http, $filter, $q, $ti
       reportGeneratedFor: messageService.get('report.header.generated.for')
     };
     _.each(dates, function (date) {
-      header[date] = date;
+      header[date] = DateFormatService.formatDateWithDayMonthYearBySlash(date);
     });
     return header;
   }
@@ -93,7 +93,7 @@ services.factory('WeeklyNosDrugExportService', function ($http, $filter, $q, $ti
     var dates = _.map(nosDrugs, function (nosDrug) {
       return nosDrug.date;
     });
-    return _.uniq(dates);
+    return _.uniq(dates).sort();
   }
 
   function populateWeeklyNosDrugData(nosDrugs, nosDrugHash, startTime, endTime) {

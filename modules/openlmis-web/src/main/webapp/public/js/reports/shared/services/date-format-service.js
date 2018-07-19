@@ -55,6 +55,11 @@ services.factory('DateFormatService', function ($filter, messageService) {
     return $filter('date')(date, 'dd/MM/yyyy HH:mm');
   }
 
+  function formatDateWithDayMonthYearBySlash(dateString) {
+      var date = Date.parse(dateString);
+      return $filter('date')(date, 'dd/MM/yyyy');
+  }
+
   function formatDateWithDateMonthYear(timestamp) {
     return moment(timestamp).format('DD-MM-YYYY');
   }
@@ -98,6 +103,7 @@ services.factory('DateFormatService', function ($filter, messageService) {
     formatDateWithDateMonthYearForString: formatDateWithDateMonthYearForString,
     formatDateWithUnderscore: formatDateWithUnderscore,
     formatDateElementsTwoCharacters: formatDateElementsTwoCharacters,
-    getFridaysBetween: getFridaysBetween
+    getFridaysBetween: getFridaysBetween,
+      formatDateWithDayMonthYearBySlash : formatDateWithDayMonthYearBySlash
   };
 });
