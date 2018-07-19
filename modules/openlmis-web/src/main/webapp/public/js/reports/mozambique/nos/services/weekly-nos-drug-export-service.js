@@ -93,7 +93,7 @@ services.factory('WeeklyNosDrugExportService', function ($http, $filter, $q, $ti
     var dates = _.map(nosDrugs, function (nosDrug) {
       return nosDrug.date;
     });
-    return _.uniq(dates).sort();
+    return _.uniq(dates);
   }
 
   function populateWeeklyNosDrugData(nosDrugs, nosDrugHash, startTime, endTime) {

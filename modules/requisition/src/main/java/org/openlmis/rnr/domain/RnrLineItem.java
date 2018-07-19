@@ -214,7 +214,10 @@ public class RnrLineItem extends LineItem {
     }
     boolean valid = quantityDispensed >= 0 && stockInHand >= 0 && validQuantityDispensed;
 
-    if (!valid) throw new DataException(RNR_VALIDATION_ERROR);
+    if (!valid) {
+      LOGGER.error("The product code is: %s", productCode);
+      throw new DataException(RNR_VALIDATION_ERROR);
+    }
   }
 
   public void calculateForFullSupply(ProgramRnrTemplate template,
