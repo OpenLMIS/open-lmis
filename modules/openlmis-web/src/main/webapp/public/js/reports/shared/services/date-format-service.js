@@ -103,7 +103,7 @@ services.factory('DateFormatService', function ($filter, messageService) {
     formatDateWithDateMonthYearForString: formatDateWithDateMonthYearForString,
     formatDateWithUnderscore: formatDateWithUnderscore,
     formatDateElementsTwoCharacters: formatDateElementsTwoCharacters,
-      formatDateWithDayMonthYearBySlash:formatDateWithDayMonthYearBySlash,
-    getFridaysBetween: getFridaysBetween
+    getFridaysBetween: getFridaysBetween,
+      formatDateWithDayMonthYearBySlash:formatDateWithDayMonthYearBySlash
   };
 });
