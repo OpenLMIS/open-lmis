@@ -1,4 +1,4 @@
-function StockOutAllProductsReportController($scope, $filter, $controller, $http, CubesGenerateUrlService, messageService, StockOutReportCalculationService, CubesGenerateCutParamsService, $cacheFactory, $timeout, ReportExportExcelService) {
+function StockOutAllProductsReportController($scope, $filter, $q, $controller, $http, CubesGenerateUrlService, messageService, StockOutReportCalculationService, CubesGenerateCutParamsService, $cacheFactory, $timeout, ReportExportExcelService) {
   $controller('BaseProductReportController', {$scope: $scope});
 
   if ($cacheFactory.get('stockOutReportParams') === undefined) {
@@ -55,16 +55,51 @@ function StockOutAllProductsReportController($scope, $filter, $controller, $http
   function getStockOutDataFromCubes() {
     var params = putHistoryDataToParams();
     $scope.cache.put('shouldLoadStockOutReportAllProductsFromCache', "no");
-    var cutsParams = CubesGenerateCutParamsService.generateCutsParams("overlapped_date", params.startTime, params.endTime,
-      params.selectedFacility, undefined, params.selectedProvince, params.selectedDistrict);
+    var cutsParams1 =
+        CubesGenerateCutParamsService.addCutsParams(
+            CubesGenerateCutParamsService.generateCutsParams(
+            "stockout_date", undefined, params.endTime, params.selectedFacility,
+            undefined, params.selectedProvince, params.selectedDistrict),
+            params.startTime, true);
 
-    $http.get(CubesGenerateUrlService.generateFactsUrl('vw_stockouts', cutsParams)).success(function (data) {
-      $scope.reportData = [];
+    var data1 = $http.get(CubesGenerateUrlService.generateFactsUrl('vw_stockouts', cutsParams1));
 
-      generateStockOutAverageReportData(data);
-      formatReportWhenSelectAllFacility();
+    var cutsParams2 =
+        CubesGenerateCutParamsService.addCutsParams(
+            CubesGenerateCutParamsService.generateCutsParams(
+                "stockout_date", undefined, params.endTime, params.selectedFacility,
+                undefined, params.selectedProvince, params.selectedDistrict),
+            undefined, false);
+    var data2 = $http.get(CubesGenerateUrlService.generateFactsUrl('vw_stockouts', cutsParams2));
+
+    $q.all([data1, data2]).then(function (arrayOfResults){
+        $scope.reportData = [];
+        var ddd = arrayOfResults[0].data.concat(arrayOfResults[1].data);
+        newGenerateStockOutAverageReportData(ddd, params);
+        formatReportWhenSelectAllFacility();
+        //console.log($scope.reportData)
     });
   }
+
+  function newGenerateStockOutAverageReportData(data, params) {
+        var drugCodeKey = "drug.drug_code";
+        var facilityCodeKey = "facility.facility_code";
+
+        _.chain(data)
+            .groupBy(drugCodeKey)
+            .forEach(function (drug) {
+                var occurrences = _.chain(drug)
+                    .groupBy(facilityCodeKey)
+                    .reduce(function (memo, stockOutsInFacility) {
+                        memo += StockOutReportCalculationService.generateIncidents(stockOutsInFacility).length;
+                        return memo;
+                    }, 0).value();
+
+                var calculationData = StockOutReportCalculationService.newCalculateStockoutResult(drug,
+                    params.startTime, params.endTime, occurrences);
+                generateReportItem(drug, calculationData);
+            });
+    }
 
   function generateStockOutAverageReportData(data) {
     var drugCodeKey = "drug.drug_code";
