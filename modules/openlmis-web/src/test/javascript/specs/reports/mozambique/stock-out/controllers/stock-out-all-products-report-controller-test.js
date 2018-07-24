@@ -204,7 +204,8 @@ describe("Stock Out All Products Report Controller", function () {
       endTime: "2016-03-15"
     };
 
-    httpBackend.expectGET('/cubesreports/cube/vw_stockouts/facts?cut=overlapped_date%3A2015%2C02%2C15-2016%2C03%2C15%7Cfacility%3AHF8%7Clocation%3AMAPUTO_PROVINCIA%2CMARRACUENE').respond(200, stockOutReportData);
+    httpBackend.expectGET('/cubesreports/cube/vw_stockouts/facts?cut=stockout_date%3A-2016%2C03%2C15%7Cfacility%3AHF8%7Clocation%3AMAPUTO_PROVINCIA%2CMARRACUENE%7Cis_resolved%3Atrue%7Cstockout_resolved_date%3A2015%2C02%2C15-').respond(200, stockOutReportData);
+    httpBackend.expectGET('/cubesreports/cube/vw_stockouts/facts?cut=stockout_date%3A-2016%2C03%2C15%7Cfacility%3AHF8%7Clocation%3AMAPUTO_PROVINCIA%2CMARRACUENE%7Cis_resolved%3Afalse').respond(200, stockOutReportData)
     scope.loadReport();
     httpBackend.flush();
 
@@ -229,7 +230,8 @@ describe("Stock Out All Products Report Controller", function () {
       endTime: "2016-03-15"
     };
 
-    httpBackend.expectGET('/cubesreports/cube/vw_stockouts/facts?cut=overlapped_date%3A2015%2C02%2C15-2016%2C03%2C15%7Clocation%3AMAPUTO_PROVINCIA%2CMARRACUENE').respond(200, stockOutReportData);
+    httpBackend.expectGET('/cubesreports/cube/vw_stockouts/facts?cut=stockout_date%3A-2016%2C03%2C15%7Clocation%3AMAPUTO_PROVINCIA%2CMARRACUENE%7Cis_resolved%3Atrue%7Cstockout_resolved_date%3A2015%2C02%2C15-').respond(200, stockOutReportData);
+    httpBackend.expectGET('/cubesreports/cube/vw_stockouts/facts?cut=stockout_date%3A-2016%2C03%2C15%7Clocation%3AMAPUTO_PROVINCIA%2CMARRACUENE%7Cis_resolved%3Afalse').respond(200, stockOutReportData)
     scope.loadReport();
     httpBackend.flush();
 
@@ -494,7 +496,8 @@ describe("Stock Out All Products Report Controller", function () {
       endTime: "2016-03-15"
     };
 
-    httpBackend.expectGET('/cubesreports/cube/vw_stockouts/facts?cut=overlapped_date%3A2015%2C02%2C15-2016%2C03%2C15%7Cfacility%3AHF8%7Clocation%3AMAPUTO_PROVINCIA%2CMARRACUENE').respond(200, stockOutReportData);
+    httpBackend.expectGET('/cubesreports/cube/vw_stockouts/facts?cut=stockout_date%3A-2016%2C03%2C15%7Cfacility%3AHF8%7Clocation%3AMAPUTO_PROVINCIA%2CMARRACUENE%7Cis_resolved%3Atrue%7Cstockout_resolved_date%3A2015%2C02%2C15-').respond(200, stockOutReportData);
+    httpBackend.expectGET('/cubesreports/cube/vw_stockouts/facts?cut=stockout_date%3A-2016%2C03%2C15%7Cfacility%3AHF8%7Clocation%3AMAPUTO_PROVINCIA%2CMARRACUENE%7Cis_resolved%3Afalse').respond(200, stockOutReportData)
     scope.loadReport();
     httpBackend.flush();
 
@@ -519,7 +522,8 @@ describe("Stock Out All Products Report Controller", function () {
       endTime: "2016-03-15"
     };
 
-    httpBackend.expectGET('/cubesreports/cube/vw_stockouts/facts?cut=overlapped_date%3A2015%2C02%2C15-2016%2C03%2C15%7Clocation%3AMAPUTO_PROVINCIA%2CMARRACUENE').respond(200, stockOutReportData);
+    httpBackend.expectGET('/cubesreports/cube/vw_stockouts/facts?cut=stockout_date%3A-2016%2C03%2C15%7Clocation%3AMAPUTO_PROVINCIA%2CMARRACUENE%7Cis_resolved%3Atrue%7Cstockout_resolved_date%3A2015%2C02%2C15-').respond(200, stockOutReportData);
+    httpBackend.expectGET('/cubesreports/cube/vw_stockouts/facts?cut=stockout_date%3A-2016%2C03%2C15%7Clocation%3AMAPUTO_PROVINCIA%2CMARRACUENE%7Cis_resolved%3Afalse').respond(200, stockOutReportData)
     scope.loadReport();
     httpBackend.flush();
 
