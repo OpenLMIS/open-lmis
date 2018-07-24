@@ -2,7 +2,7 @@ services.factory('StockOutReportCalculationService', function () {
     var overlapMonthKey = "overlapped_month";
     var stockoutStartDateKey = "stockout.date";
     var stockoutEndDateKey = "stockout.resolved_date";
-    var isResolvedKey = "is_resolved"
+    var isResolvedKey = "is_resolved";
 
     function calculateStockoutResult(stockOuts, occurrences) {
         var numberOfMonths = _.uniq(_.pluck(stockOuts, overlapMonthKey)).length;
@@ -47,10 +47,10 @@ services.factory('StockOutReportCalculationService', function () {
 
         var sumsDuration = _.chain(stockOuts)
             .groupBy(stockoutStartDateKey, stockoutEndDateKey)
-            .map(function(takeFirst){return takeFirst[0]})
-            .map(function(stock){return calcDuration(stock, startTime, endTime)})
-            .reduce(function(total, x){return total + x})
-            .value()
+            .map(function(takeFirst){return takeFirst[0];})
+            .map(function(stock){return calcDuration(stock, startTime, endTime);})
+            .reduce(function(total, x){return total + x;})
+            .value();
 
         return {
             avgDuration: (sumsDuration / occurrences).toFixed(1),
@@ -60,21 +60,21 @@ services.factory('StockOutReportCalculationService', function () {
     }
 
     function calcDuration(stock, startTime, endTime) {
-        var isResolved = stock[isResolvedKey]
-        var start = stock[stockoutStartDateKey]
-        var end = stock[stockoutEndDateKey]
-        startTime = startTime.replace(/,/,"-").replace(/,/,"-")
-        endTime = endTime.replace(/,/,"-").replace(/,/,"-")
+        var isResolved = stock[isResolvedKey];
+        var start = stock[stockoutStartDateKey];
+        var end = stock[stockoutEndDateKey];
+        startTime = startTime.replace(/,/,"-").replace(/,/,"-");
+        endTime = endTime.replace(/,/,"-").replace(/,/,"-");
 
         if(isResolved === false || moment(end,"YYYY-MM-DD").diff(moment(endTime,"YYYY-MM-DD"), "days") > 0){
-            end = endTime
+            end = endTime;
         }
         if(moment(start,"YYYY-MM-DD").diff(moment(startTime,"YYYY-MM-DD"), "days") < 0){
-            start = startTime
+            start = startTime;
         }
-        var startMomentDate = moment(start,"YYYY-MM-DD")
-        var endMomentDate = moment(end,"YYYY-MM-DD")
-        var duration =  endMomentDate.diff(startMomentDate, "days") + 1
+        var startMomentDate = moment(start,"YYYY-MM-DD");
+        var endMomentDate = moment(end,"YYYY-MM-DD");
+        var duration =  endMomentDate.diff(startMomentDate, "days") + 1;
         return duration > 0 ? duration:0;
     }
 

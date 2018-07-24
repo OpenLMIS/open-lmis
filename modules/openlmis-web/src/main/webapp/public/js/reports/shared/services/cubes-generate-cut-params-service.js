@@ -44,12 +44,12 @@ services.factory('CubesGenerateCutParamsService', function (ReportLocationConfig
 
     var addCutsParams = function (cutsParams, startTime, isResolved) {
         if (isResolved !== undefined){
-            cutsParams.push({dimension: "is_resolved", values:[isResolved.toString()]})
+            cutsParams.push({dimension: "is_resolved", values:[isResolved.toString()]});
         }
         if (startTime !== undefined){
-            cutsParams.push({dimension: "stockout_resolved_date", values: [startTime + "-"], skipEscape: true})
+            cutsParams.push({dimension: "stockout_resolved_date", values: [startTime + "-"], skipEscape: true});
         }
-        return cutsParams
+        return cutsParams;
     };
 
     return {
