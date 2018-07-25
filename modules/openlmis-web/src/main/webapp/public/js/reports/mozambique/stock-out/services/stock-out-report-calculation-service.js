@@ -63,8 +63,12 @@ services.factory('StockOutReportCalculationService', function () {
         var isResolved = stock[isResolvedKey];
         var start = stock[stockoutStartDateKey];
         var end = stock[stockoutEndDateKey];
-        startTime = startTime.replace(/,/,"-").replace(/,/,"-");
-        endTime = endTime.replace(/,/,"-").replace(/,/,"-");
+        startTime = startTime.replace(/,/g,"-");
+        endTime = endTime.replace(/,/g,"-");
+
+        if (!startTime || !endTime){
+            return 0;
+        }
 
         if(isResolved === false || moment(end,"YYYY-MM-DD").diff(moment(endTime,"YYYY-MM-DD"), "days") > 0){
             end = endTime;

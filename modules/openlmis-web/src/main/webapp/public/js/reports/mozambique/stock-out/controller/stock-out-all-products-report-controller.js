@@ -77,7 +77,6 @@ function StockOutAllProductsReportController($scope, $filter, $q, $controller, $
         var dataAll = arrayOfResults[0].data.concat(arrayOfResults[1].data);
         newGenerateStockOutAverageReportData(dataAll, params);
         formatReportWhenSelectAllFacility();
-        //console.log($scope.reportData)
     });
   }
 

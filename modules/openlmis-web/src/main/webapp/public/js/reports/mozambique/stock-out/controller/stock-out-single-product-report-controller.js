@@ -71,19 +71,33 @@ function StockOutSingleProductReportController($scope, $filter, $q, $controller,
         }
 
         var selectedProduct = [{'drug.drug_code': $scope.reportParams.productCode}];
+        var selectedStartTime = $filter('date')($scope.reportParams.startTime, "yyyy,MM,dd");
         var selectedEndTime = $filter('date')($scope.reportParams.endTime, "yyyy,MM,dd");
 
-        var requestStockOuts = $http.get(CubesGenerateUrlService.generateFactsUrl('vw_stockouts', CubesGenerateCutParamsService.generateCutsParams('overlapped_date',
-            $filter('date')($scope.reportParams.startTime, "yyyy,MM,dd"), selectedEndTime, undefined, selectedProduct, undefined, undefined)));
+        var cutsParams1 =
+            CubesGenerateCutParamsService.addCutsParams(
+                CubesGenerateCutParamsService.generateCutsParams(
+                    "stockout_date", undefined, selectedEndTime, undefined, selectedProduct, undefined, undefined),
+                selectedStartTime, true);
+
+        var requestStockOuts1 = $http.get(CubesGenerateUrlService.generateFactsUrl('vw_stockouts', cutsParams1));
+
+        var cutsParams2 =
+            CubesGenerateCutParamsService.addCutsParams(
+                CubesGenerateCutParamsService.generateCutsParams(
+                    "stockout_date", undefined, selectedEndTime, undefined, selectedProduct, undefined, undefined),
+                undefined, false);
+
+        var requestStockOuts2 = $http.get(CubesGenerateUrlService.generateFactsUrl('vw_stockouts', cutsParams2));
 
         var requestCarryStartDates = $http.get(CubesGenerateUrlService.generateFactsUrl('vw_carry_start_dates', CubesGenerateCutParamsService.generateCutsParams('carry_start',
             undefined, selectedEndTime, undefined, selectedProduct, undefined, undefined)));
 
-        $q.all([requestStockOuts, requestCarryStartDates]).then(function (arrayOfResults) {
-            stockOuts = arrayOfResults[0].data;
-            carryStartDates = arrayOfResults[1].data;
+        $q.all([requestStockOuts1, requestStockOuts2, requestCarryStartDates]).then(function (arrayOfResults) {
+            stockOuts = arrayOfResults[0].data.concat(arrayOfResults[1].data);
+            carryStartDates = arrayOfResults[2].data;
 
-            $scope.tree_data = StockoutSingleProductTreeDataBuilder.buildTreeData(stockOuts, carryStartDates);
+            $scope.tree_data = StockoutSingleProductTreeDataBuilder.buildTreeData(stockOuts, carryStartDates, selectedStartTime, selectedEndTime);
         });
     }
 

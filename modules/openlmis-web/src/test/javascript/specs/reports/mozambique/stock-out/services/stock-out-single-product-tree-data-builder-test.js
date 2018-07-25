@@ -133,7 +133,7 @@ describe("stock out single product tree data builder test", function () {
             }
         ];
 
-        var treeData = stockoutSingleProductTreeDataBuilder.buildTreeData(stockoutEvents, carryStartDates);
+        var treeData = stockoutSingleProductTreeDataBuilder.buildTreeData(stockoutEvents, carryStartDates, '2016-02-01', '2016-03-04');
 
         expect(treeData).toEqual([{
             name: "PA name",
@@ -144,6 +144,7 @@ describe("stock out single product tree data builder test", function () {
                 {
                     name: "DA name",
                     avgDuration: '15.5',
+                    totalDuration : 31,
                     totalOccurrences: 2,
                     districtCode: "DA",
                     children: [{
@@ -165,6 +166,7 @@ describe("stock out single product tree data builder test", function () {
                 {
                     name: "DA2 name",
                     avgDuration: 0,
+                    totalDuration : 0,
                     totalOccurrences: 0,
                     districtCode: "DA2",
                     children: [{
@@ -186,6 +188,7 @@ describe("stock out single product tree data builder test", function () {
                 {
                     name: "DB name",
                     avgDuration: '6.0',
+                    totalDuration : 6,
                     totalOccurrences: 1,
                     districtCode: "DB",
                     children: [{

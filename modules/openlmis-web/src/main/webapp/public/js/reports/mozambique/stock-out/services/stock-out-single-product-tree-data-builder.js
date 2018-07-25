@@ -8,14 +8,14 @@ services.factory('StockoutSingleProductTreeDataBuilder', function (StockOutRepor
     var provinceCodeKey = "location.province_code";
     var provinceNameKey = "location.province_name";
 
-    function createFacilityTreeItem(stockOuts, carryingFacility) {
+    function createFacilityTreeItem(stockOuts, carryingFacility, startTime, endTime) {
         var facilityCode = carryingFacility[facilityCodeKey];
 
         var stockOutsInFacility = _.filter(stockOuts, function (stockOut) {
             return stockOut[facilityCodeKey] == facilityCode;
         });
         var occurrences = StockOutReportCalculationService.generateIncidents(stockOutsInFacility).length;
-        var facilityResult = StockOutReportCalculationService.calculateStockoutResult(stockOutsInFacility, occurrences);
+        var facilityResult = StockOutReportCalculationService.newCalculateStockoutResult(stockOutsInFacility, startTime, endTime, occurrences);
 
         return {
             name: carryingFacility[facilityNameKey],
@@ -38,11 +38,16 @@ services.factory('StockoutSingleProductTreeDataBuilder', function (StockOutRepor
             return facilityCodes.indexOf(facilityChild.facilityCode) != -1;
         });
 
-        var districtResult = StockOutReportCalculationService.calculateStockoutResult(stockOutsInDistrict, calculateZoneOccurrences(facilityTreeData));
+        var districtResult = {};
+        districtResult.totalOccurrences = calculateZoneOccurrences(facilityTreeData);
+        districtResult.totalDuration = calculateZoneDuration(facilityTreeData);
+        districtResult.avgDuration = (districtResult.totalDuration / districtResult.totalOccurrences).toFixed(1);
+        districtResult.avgDuration = isNaN(districtResult.avgDuration) ? 0 : districtResult.avgDuration;
 
         return {
             name: carryingFacilitiesInDistrict[0][districtNameKey],
             avgDuration: districtResult.avgDuration,
+            totalDuration : districtResult.totalDuration,
             totalOccurrences: districtResult.totalOccurrences,
             districtCode: districtCode,
             children: facilityTreeData
@@ -60,7 +65,11 @@ services.factory('StockoutSingleProductTreeDataBuilder', function (StockOutRepor
             return districtCodes.indexOf(districtChild.districtCode) != -1;
         });
 
-        var provinceResult = StockOutReportCalculationService.calculateStockoutResult(stockOutsInProvince, calculateZoneOccurrences(districtTreeData));
+        var provinceResult = {};
+        provinceResult.totalOccurrences = calculateZoneOccurrences(districtTreeData);
+        provinceResult.totalDuration = calculateZoneDuration(districtTreeData);
+        provinceResult.avgDuration = (provinceResult.totalDuration / provinceResult.totalOccurrences).toFixed(1);
+        provinceResult.avgDuration = isNaN(provinceResult.avgDuration ) ? 0 : provinceResult.avgDuration;
 
         return {
             name: carryingFacilitiesInProvince[0][provinceNameKey],
@@ -78,10 +87,17 @@ services.factory('StockoutSingleProductTreeDataBuilder', function (StockOutRepor
         }, 0);
     }
 
-    function buildTreeData(stockOuts, carryStartDates) {
+    function calculateZoneDuration(treeData) {
+        return _.reduce(treeData, function (memo, data) {
+            memo += data.totalDuration;
+            return memo;
+        }, 0);
+    }
+
+    function buildTreeData(stockOuts, carryStartDates, startTime, endTime) {
         var facilityChildren = _.chain(carryStartDates)
             .map(function (carryingFacility) {
-                return createFacilityTreeItem(stockOuts, carryingFacility);
+                return createFacilityTreeItem(stockOuts, carryingFacility, startTime, endTime);
             })
             .value();
 
