@@ -9,9 +9,14 @@ import java.util.Date;
 @Repository
 public interface CMMMapper {
 
-    @Insert("INSERT INTO cmm_entries (productCode, facilityId, periodBegin, periodEnd, cmmValue, createdBy, createdDate, modifiedBy, modifiedDate) " +
+    @Insert("INSERT INTO cmm_entries (productCode, facilityId, periodBegin, periodEnd, cmmValue, createdBy, createdDate, modifiedBy, modifiedDate, stockcardid) " +
             "VALUES " +
-            "(#{productCode}, #{facilityId}, #{periodBegin}, #{periodEnd}, #{cmmValue}, #{createdBy}, NOW(), #{modifiedBy}, NOW())")
+            "(#{productCode}, #{facilityId}, #{periodBegin}, #{periodEnd}, #{cmmValue}, #{createdBy}, NOW(), #{modifiedBy}, NOW()," +
+            "(SELECT DISTINCT(cards.id) FROM cmm_entries cmm" +
+            "  LEFT JOIN stock_cards cards" +
+            "    ON cmm.facilityid = cards.facilityid" +
+            "       AND (SELECT id FROM products WHERE code = cmm.productcode) = cards.productid" +
+            "   WHERE cards.facilityid = #{facilityId} AND cmm.productcode = #{productCode}))")
     @Options(useGeneratedKeys = true)
     void insert(CMMEntry entry);
 

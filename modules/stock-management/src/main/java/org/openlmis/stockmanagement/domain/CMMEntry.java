@@ -29,4 +29,6 @@ public class CMMEntry extends BaseModel {
 
   private Float cmmValue;
 
+  private long stockCardId;
+
 }
