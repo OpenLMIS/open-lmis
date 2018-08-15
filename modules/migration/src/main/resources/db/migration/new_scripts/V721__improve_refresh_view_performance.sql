@@ -13,6 +13,14 @@ END$$;
 
 BEGIN TRANSACTION;
 
+DO $$
+BEGIN
+  IF to_regclass('cmm_entries_bak') IS NOT NULL THEN
+    DROP TABLE IF EXISTS cmm_entries;
+    ALTER TABLE cmm_entries_bak RENAME TO cmm_entries;
+  END IF;
+END$$;
+
 DROP TABLE IF EXISTS cmm_entries_tmp;
 CREATE TABLE IF NOT EXISTS cmm_entries_tmp (LIKE cmm_entries INCLUDING DEFAULTS);
 ALTER TABLE cmm_entries_tmp ADD stockcardid INTEGER;
@@ -31,6 +39,7 @@ ALTER TABLE cmm_entries_tmp ADD PRIMARY KEY (id);
 
 ALTER TABLE cmm_entries RENAME TO cmm_entries_bak;
 ALTER TABLE cmm_entries_tmp RENAME TO cmm_entries;
+
 
 CREATE OR REPLACE FUNCTION cmm_of(cardid INTEGER, periodStart TIMESTAMP, periodEnd_P TIMESTAMP)
   RETURNS DOUBLE PRECISION AS $$
