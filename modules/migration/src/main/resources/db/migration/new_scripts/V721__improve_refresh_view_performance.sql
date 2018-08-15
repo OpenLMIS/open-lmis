@@ -1,5 +1,15 @@
-CREATE INDEX occurred_idx ON stock_card_entries(occurred);
-CREATE INDEX stock_card_entries_stockcardid_idx ON stock_card_entries(stockcardid);
+DO $$
+BEGIN
+
+  IF to_regclass('occurred') IS NULL THEN
+    CREATE INDEX occurred_idx ON stock_card_entries(occurred);
+  END IF;
+
+  IF to_regclass('stockcardid') IS NULL THEN
+    CREATE INDEX stock_card_entries_stockcardid_idx ON stock_card_entries(stockcardid);
+  END IF;
+
+END$$;
 
 BEGIN TRANSACTION;
 
