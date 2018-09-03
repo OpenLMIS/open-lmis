@@ -15,6 +15,7 @@ import org.openlmis.core.builder.FacilityBuilder;
 import org.openlmis.core.builder.ProductBuilder;
 import org.openlmis.core.domain.Facility;
 import org.openlmis.core.domain.Product;
+import org.openlmis.core.domain.StockAdjustmentReason;
 import org.openlmis.core.repository.ProductRepository;
 import org.openlmis.core.service.FacilityService;
 import org.openlmis.db.categories.UnitTests;
@@ -224,7 +225,10 @@ public class StockCardServiceTest {
     stockCard.setFacility(defaultFacility);
     stockCard.setProduct(defaultProduct);
     stockCard.setTotalQuantityOnHand(100L);
-    StockCardEntry stockCardEntry = new StockCardEntry(stockCard, StockCardEntryType.CREDIT, 100L, new Date(), "", 0L);
+    StockCardEntry stockCardEntry = new StockCardEntry(stockCard, StockCardEntryType.ADJUSTMENT, 100L, new Date(), "", 0L);
+    StockAdjustmentReason stockAdjustmentReason = new StockAdjustmentReason();
+    stockAdjustmentReason.setName("INVENTORY");
+    stockCardEntry.setAdjustmentReason(stockAdjustmentReason);
 
     Lot lot = new Lot();
     lot.setProduct(defaultProduct);

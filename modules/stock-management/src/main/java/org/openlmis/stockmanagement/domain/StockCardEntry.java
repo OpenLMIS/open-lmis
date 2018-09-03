@@ -7,6 +7,7 @@ import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import org.openlmis.core.domain.BaseModel;
 import org.openlmis.core.domain.StockAdjustmentReason;
+import org.openlmis.core.exception.DataException;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -72,6 +73,44 @@ public class StockCardEntry extends BaseModel {
   public void addKeyValue(String key, String value) {
     String newKey = key.trim().toLowerCase();
     extensions.add(new StockCardEntryKV(newKey, value, new Date()));
+  }
+
+  public void validStockCardEntry() {
+    if((this.getStockCard().getEntries() == null || this.getStockCard().getEntries().size() == 0)) {
+      this.validFirstInventory();
+    } else {
+      this.validOccurredDate();
+      this.validStockOnHand();
+    }
+  }
+
+  private void validStockOnHand() {
+    if(stockCard.getTotalQuantityOnHand() + this.getQuantity() != this.getStockOnHand()) {
+      throw new DataException("error.stockmovementqutity.validation");
+    }
+  }
+
+  private void validOccurredDate() {
+    List<StockCardEntry> stockCardEntries = stockCard.getEntries();
+    StockCardEntry latestStockCardEntry = stockCardEntries.get(stockCardEntries.size() - 1);
+    if(latestStockCardEntry.getOccurred().after(this.getOccurred())) {
+      throw new DataException("error.stockmovementdate.validation");
+    }
+  }
+
+  private void validFirstInventory() {
+    if(!(this.getAdjustmentReason().getName().equals("INVENTORY") && this.getQuantity() > 0)) {
+      throw new DataException("error.firstinventory.validation");
+    }
+  }
+
+  private Integer getStockOnHand() {
+    for(StockCardEntryKV stockCardEntryKV : extensions) {
+      if(stockCardEntryKV.getKey().equals("soh")) {
+        return Integer.valueOf(stockCardEntryKV.getValue());
+      }
+    }
+    throw new DataException("error.stockonhand.not.found");
   }
 
 }

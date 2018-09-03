@@ -125,8 +125,9 @@ public class StockCardService {
 
   @Transactional
   public void addStockCardEntry(StockCardEntry entry) {
+    entry.validStockCardEntry();
     StockCard card = entry.getStockCard();
-
+    List<StockCardEntry> stockCardEntries = card.getEntries();
     card.addToTotalQuantityOnHand(entry.getQuantity());
     repository.updateStockCard(card);
     repository.persistStockCardEntry(entry);
