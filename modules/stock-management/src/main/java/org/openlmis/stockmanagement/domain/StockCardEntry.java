@@ -86,7 +86,7 @@ public class StockCardEntry extends BaseModel {
 
   private void validStockOnHand() {
     if(stockCard.getTotalQuantityOnHand() + this.getQuantity() != this.getStockOnHand()) {
-      throw new DataException("error.stockmovementqutity.validation");
+      throw new DataException("error.stockmovementquantity.validation");
     }
   }
 
