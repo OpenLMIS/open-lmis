@@ -110,7 +110,7 @@ public class StockCardEntry extends BaseModel {
         return Integer.valueOf(stockCardEntryKV.getValue());
       }
     }
-    throw new DataException("error.stockonhand.not.found");
+    throw new DataException("error.stockonhand.notfound");
   }
 
 }
