@@ -8,6 +8,8 @@ import lombok.NoArgsConstructor;
 import org.openlmis.core.domain.BaseModel;
 import org.openlmis.core.domain.StockAdjustmentReason;
 import org.openlmis.core.exception.DataException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -43,6 +45,8 @@ public class StockCardEntry extends BaseModel {
   private List<StockCardEntryKV> extensions;
 
   private List<StockCardEntryLotItem> stockCardEntryLotItems = new ArrayList<>();
+
+  private static final Logger logger = LoggerFactory.getLogger(StockCardEntry.class);
 
   public StockCardEntry(StockCard card, StockCardEntryType type, long quantity, Date occurred, String referenceNumber, Long requestedQuantity) {
     this.stockCard = Objects.requireNonNull(card);
@@ -86,6 +90,7 @@ public class StockCardEntry extends BaseModel {
 
   private void validStockOnHand() {
     if(stockCard.getTotalQuantityOnHand() + this.getQuantity() != this.getStockOnHand()) {
+      logger.error("stock movement quantity error");
       throw new DataException("error.stockmovementquantity.validation");
     }
   }
@@ -94,12 +99,14 @@ public class StockCardEntry extends BaseModel {
     List<StockCardEntry> stockCardEntries = stockCard.getEntries();
     StockCardEntry latestStockCardEntry = stockCardEntries.get(stockCardEntries.size() - 1);
     if(latestStockCardEntry.getOccurred().after(this.getOccurred())) {
+      logger.error("stock movement date error");
       throw new DataException("error.stockmovementdate.validation");
     }
   }
 
   private void validFirstInventory() {
     if(!(this.getAdjustmentReason().getName().equals("INVENTORY") && this.getQuantity() > 0)) {
+      logger.error("first inventory error");
       throw new DataException("error.firstinventory.validation");
     }
   }

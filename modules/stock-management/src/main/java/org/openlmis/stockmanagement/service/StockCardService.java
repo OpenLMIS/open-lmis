@@ -18,6 +18,8 @@ import org.openlmis.core.service.FacilityService;
 import org.openlmis.stockmanagement.domain.*;
 import org.openlmis.stockmanagement.repository.LotRepository;
 import org.openlmis.stockmanagement.repository.StockCardRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -32,6 +34,7 @@ import java.util.*;
 @Service
 @NoArgsConstructor
 public class StockCardService {
+  private static final Logger logger = LoggerFactory.getLogger(StockCardService.class);
 
   @Autowired
   FacilityService facilityService;
@@ -125,9 +128,9 @@ public class StockCardService {
 
   @Transactional
   public void addStockCardEntry(StockCardEntry entry) {
+    logger.info("start to valid stock card entry");
     entry.validStockCardEntry();
     StockCard card = entry.getStockCard();
-    List<StockCardEntry> stockCardEntries = card.getEntries();
     card.addToTotalQuantityOnHand(entry.getQuantity());
     repository.updateStockCard(card);
     repository.persistStockCardEntry(entry);
