@@ -97,7 +97,7 @@ public class StockCardEntry extends BaseModel {
 
   private void validOccurredDate() {
     List<StockCardEntry> stockCardEntries = stockCard.getEntries();
-    StockCardEntry latestStockCardEntry = stockCardEntries.get(0);
+    StockCardEntry latestStockCardEntry = stockCardEntries.get(stockCardEntries.size() - 1);
     if(latestStockCardEntry.getOccurred().after(this.getOccurred())) {
       logger.error("stock movement date error");
       throw new DataException("error.stockmovementdate.validation");
