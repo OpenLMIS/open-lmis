@@ -41,7 +41,7 @@ function RequisitionReportController($scope, $controller, RequisitionReportServi
     };
 
     RequisitionReportService.get(_.pick(requisitionQueryParameters, function(parameter) {
-      return !_.isEmpty(parameter);
+      return !_.isEmpty(parameter.trim());
     }), function (data) {
       $scope.allRequisitions = data.rnr_list;
       filterRequisitionsBasedOnGeographicZones();
