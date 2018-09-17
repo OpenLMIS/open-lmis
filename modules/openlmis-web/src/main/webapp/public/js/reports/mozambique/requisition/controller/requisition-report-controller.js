@@ -57,20 +57,27 @@ function RequisitionReportController($scope, $controller, RequisitionReportServi
     }
   };
 
+  var setSubmittedStatus = function (rnr) {
+    if (rnr.clientSubmittedTime !== null) {
+      var FIVE_DAYS = 5 * 24 * 60 * 60 * 1000;
+      if (rnr.clientSubmittedTime <= rnr.schedulePeriodEnd + FIVE_DAYS) {
+        rnr.submittedStatus = messageService.get("rnr.report.submitted.status.ontime");
+      } else {
+        rnr.submittedStatus = messageService.get("rnr.report.submitted.status.late");
+      }
+    }
+
+    if (!rnr.clientSubmittedTime) {
+      rnr.submittedStatus = messageService.get("rnr.report.submitted.status.notsubmitted");
+    }
+  };
+
   var setInventoryDateAndSubmittedStatus = function () {
     _.each($scope.allRequisitions, function (rnr) {
       if (rnr.actualPeriodEnd === null) {
         rnr.actualPeriodEnd = rnr.schedulePeriodEnd;
       }
-
-      if (rnr.clientSubmittedTime !== null) {
-        var FIVE_DAYS = 5 * 24 * 60 * 60 * 1000;
-        if (rnr.clientSubmittedTime <= rnr.schedulePeriodEnd + FIVE_DAYS) {
-          rnr.submittedStatus = messageService.get("rnr.report.submitted.status.ontime");
-        } else {
-          rnr.submittedStatus = messageService.get("rnr.report.submitted.status.late");
-        }
-      }
+      setSubmittedStatus(rnr);
 
       rnr.inventoryDate = formatDate(rnr.actualPeriodEnd);
     });
