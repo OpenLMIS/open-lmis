@@ -30,12 +30,19 @@ function RequisitionReportController($scope, $controller, RequisitionReportServi
   }
 
   $scope.loadRequisitions = function () {
+    var reportParams = $scope.reportParams;
+
     var requisitionQueryParameters = {
-      startTime: $scope.reportParams.startTime + " 00:00:00",
-      endTime: $scope.reportParams.endTime + " 23:59:59"
+      startTime: reportParams.startTime + " 00:00:00",
+      endTime: reportParams.endTime + " 23:59:59",
+      provinceId: reportParams.provinceId.toString(),
+      districtId: reportParams.districtId.toString(),
+      facilityId: reportParams.facilityId.toString()
     };
 
-    RequisitionReportService.get(requisitionQueryParameters, function (data) {
+    RequisitionReportService.get(_.pick(requisitionQueryParameters, function(parameter) {
+      return !_.isEmpty(parameter);
+    }), function (data) {
       $scope.allRequisitions = data.rnr_list;
       filterRequisitionsBasedOnGeographicZones();
       setInventoryDateAndSubmittedStatus();
@@ -110,15 +117,27 @@ function RequisitionReportController($scope, $controller, RequisitionReportServi
         cellTemplate: '<div class="customCell">{{$parent.$index + 1}}</div>',
         sortable: false
       },
-      {field: 'programName', displayName: messageService.get("label.report.requisitions.programname")},
-      {field: 'type', displayName: messageService.get("label.report.requisitions.type")},
+      {
+        field: 'programName',
+        displayName: messageService.get("label.report.requisitions.programname")
+      },
+      {
+        field: 'type',
+        displayName: messageService.get("label.report.requisitions.type")
+      },
       {
         field: 'facilityName',
         displayName: messageService.get("label.report.requisitions.facilityname"),
         width: 200
       },
-      {field: 'submittedUser', displayName: messageService.get("label.report.requisitions.submitteduser")},
-      {field: 'inventoryDate', displayName: messageService.get("label.report.requisitions.inventorydate")},
+      {
+        field: 'submittedUser',
+        displayName: messageService.get("label.report.requisitions.submitteduser")
+      },
+      {
+        field: 'inventoryDate',
+        displayName: messageService.get("label.report.requisitions.inventorydate")
+      },
       {
         field: 'submittedStatus',
         displayName: messageService.get("label.report.requisitions.submittedstatus"),
@@ -128,7 +147,10 @@ function RequisitionReportController($scope, $controller, RequisitionReportServi
         field: 'clientSubmittedTimeString',
         displayName: messageService.get("label.report.requisitions.submittedtime")
       },
-      {field: 'webSubmittedTimeString', displayName: messageService.get("label.report.requisitions.syncedtime")}
+      {
+        field: 'webSubmittedTimeString',
+        displayName: messageService.get("label.report.requisitions.syncedtime")
+      }
     ]
   };
 

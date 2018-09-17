@@ -24,19 +24,19 @@ services.factory('messageService', function (Messages, localStorageService, $roo
 
   var get = function () {
     var keyWithArgs = Array.prototype.slice.call(arguments);
-    var displayMessage =  localStorageService.get('message.' + keyWithArgs[0]);
-    if(keyWithArgs.length > 1 && displayMessage) {
+    var displayMessage = localStorageService.get('message.' + keyWithArgs[0]);
+    if (keyWithArgs.length > 1 && displayMessage) {
       $.each(keyWithArgs, function (index, arg) {
         if (index > 0) {
-          displayMessage = displayMessage.replace("{" + (index-1) + "}", arg);
+          displayMessage = displayMessage.replace("{" + (index - 1) + "}", arg);
         }
       });
     }
     return displayMessage || keyWithArgs[0];
   };
 
-  return{
-    populate:populate,
-    get:get
+  return {
+    populate: populate,
+    get: get
   };
 });
