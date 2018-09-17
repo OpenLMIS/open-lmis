@@ -75,7 +75,7 @@ describe('requisition report controller', function () {
     scope.reportParams.selectedFacility = {'name': 'Matalane'};
     scope.reportParams.selectedDistrict = {'name': 'Marracuene'};
     scope.reportParams.selectedProvince = {'name': 'Maputo'};
-    httpBackend.expectGET('/reports/requisition-report.json?endTime=2017-02-01+23:59:59&startTime=2017-01-01+00:00:00').respond(200, requisitions);
+    httpBackend.expectGET('/reports/requisition-report.json?districtId=1&endTime=2017-02-01+23:59:59&facilityId=1&provinceId=1&startTime=2017-01-01+00:00:00').respond(200, requisitions);
 
     scope.loadReport();
     httpBackend.flush();
@@ -86,7 +86,7 @@ describe('requisition report controller', function () {
     expect(scope.requisitions[0].submittedStatus).toBe(messageService.get('rnr.report.submitted.status.late'));
     expect(scope.requisitions[1].actualPeriodEnd).toBe(1456197080000);
     expect(scope.requisitions[1].submittedStatus).toBe(messageService.get('rnr.report.submitted.status.ontime'));
-    expect(scope.requisitions[2].submittedStatus).toBe(undefined);
+    expect(scope.requisitions[2].submittedStatus).toBe(messageService.get('rnr.report.submitted.status.notsubmitted'));
   });
 
   it('should get redirect url of rnr detail page', function () {

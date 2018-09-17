@@ -53,7 +53,10 @@ describe("date format service test", function () {
   });
 
   it("should format splited '_' ", function () {
-    var formattedDate = dateFormatService.formatDateWithUnderscore(new Date("2011-11-11T00:00:00"));
+    var initDate = new Date("2011-11-11T00:00:00");
+    initDate.setTime(initDate.getTime() + initDate.getTimezoneOffset()*60*1000);
+
+    var formattedDate = dateFormatService.formatDateWithUnderscore(initDate);
     expect(formattedDate).toEqual("2011_11_11_at_00.00.00");
   });
 
