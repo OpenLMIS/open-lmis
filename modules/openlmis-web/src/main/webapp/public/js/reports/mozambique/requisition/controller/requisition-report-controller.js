@@ -94,6 +94,14 @@ function RequisitionReportController($scope, $controller, RequisitionReportServi
     });
   };
 
+  $scope.formatProgramName = function (programName) {
+    if (programName === "VIA Classica") {
+      return messageService.get("label.report.requisitions.programname.balancerequisition");
+    }
+
+    return programName;
+  };
+
   $scope.isSubmitLate = function (status) {
     return messageService.get("rnr.report.submitted.status.late") === status;
   };
@@ -126,7 +134,8 @@ function RequisitionReportController($scope, $controller, RequisitionReportServi
       },
       {
         field: 'programName',
-        displayName: messageService.get("label.report.requisitions.programname")
+        displayName: messageService.get("label.report.requisitions.programname"),
+        cellTemplate: '<div class="customCell">{{formatProgramName(row.entity.programName)}}</div>',
       },
       {
         field: 'type',
@@ -135,7 +144,7 @@ function RequisitionReportController($scope, $controller, RequisitionReportServi
       {
         field: 'facilityName',
         displayName: messageService.get("label.report.requisitions.facilityname"),
-        width: 200
+        width: 150
       },
       {
         field: 'submittedUser',
@@ -149,6 +158,12 @@ function RequisitionReportController($scope, $controller, RequisitionReportServi
         field: 'submittedStatus',
         displayName: messageService.get("label.report.requisitions.submittedstatus"),
         cellTemplate: '<div class="customCell" ng-class="{submitStatusLate: isSubmitLate(row.getProperty(col.field))}">{{row.getProperty(col.field)}}</div>'
+      },
+      {
+        field: 'schedulePeriodEnd',
+        displayName: messageService.get("label.report.requisitions.originalperiod"),
+        cellTemplate: '<div class="customCell">{{row.entity.schedulePeriodEnd}}-{{row.entity.actualPeriodEnd}}</div>',
+        width: 200
       },
       {
         field: 'clientSubmittedTimeString',
