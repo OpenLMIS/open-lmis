@@ -32,6 +32,7 @@ import org.openlmis.core.web.controller.BaseController;
 import org.openlmis.report.mapper.AppInfoMapper;
 import org.openlmis.report.mapper.RequisitionReportsMapper;
 import org.openlmis.report.model.dto.RequisitionDTO;
+import org.openlmis.report.model.params.RequisitionReportsParam;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -47,7 +48,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.client.RestTemplate;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.*;
 import java.net.URI;
@@ -77,9 +77,13 @@ public class SimpleTableController extends BaseController {
 
     @RequestMapping(value = "/requisition-report", method = GET, headers = BaseController.ACCEPT_JSON)
     public ResponseEntity<OpenLmisResponse> requisitionReport(
-            @RequestParam(value = "startTime", required = true) Date startTime,
-            @RequestParam(value = "endTime", required = true) Date endTime) {
-        List<RequisitionDTO> requisitions = requisitionReportsMapper.getRequisitionList(startTime, endTime);
+            @RequestParam(value = "startTime") Date startTime,
+            @RequestParam(value = "endTime") Date endTime,
+            @RequestParam(value = "provinceId", required = false) Integer provinceId,
+            @RequestParam(value = "districtId", required = false) Integer districtId,
+            @RequestParam(value = "facilityId", required = false) Integer facilityId) {
+        RequisitionReportsParam filterCriteria = new RequisitionReportsParam(startTime, endTime, provinceId, districtId, facilityId);
+        List<RequisitionDTO> requisitions = requisitionReportsMapper.getRequisitionList(filterCriteria);
 
         for (RequisitionDTO requisitionDTO : requisitions) {
             requisitionDTO.assignType();

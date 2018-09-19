@@ -11,11 +11,12 @@
 package org.openlmis.report.mapper;
 
 import org.apache.ibatis.annotations.Param;
-import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.SelectProvider;
+import org.openlmis.report.builder.RequisitionReportsQueryBuilder;
 import org.openlmis.report.model.dto.RequisitionDTO;
+import org.openlmis.report.model.params.RequisitionReportsParam;
 import org.springframework.stereotype.Repository;
 
-import java.util.Date;
 import java.util.List;
 
 /**
@@ -25,38 +26,7 @@ import java.util.List;
 @Repository
 public interface RequisitionReportsMapper {
 
-    @Select({"SELECT req.id id, " +
-            "fac.name facilityName, " +
-        "zone.name districtName," +
-        "parent_zone.name provinceName," +
-            "req.emergency emergency, " +
-            "pro.name programName, " +
-            "us.username submittedUser, " +
-            "req.clientsubmittedtime clientSubmittedTime, " +
-            "req.status requisitionStatus, " +
-            "req.modifieddate webSubmittedTime, " +
-            "rp.periodenddate actualPeriodEnd, " +
-            "pp.enddate schedulePeriodEnd " +
-            "  FROM requisitions req" +
-            "  left join facilities fac" +
-            "      on req.facilityid = fac.id" +
-        "  left join geographic_zones as zone " +
-        "      on fac.geographiczoneid = zone.id" +
-        "  left join geographic_zones as parent_zone " +
-        "      on zone.parentid = parent_zone.id" +
-            "  left join programs pro" +
-            "      on req.programid = pro.id" +
-            "  left join users us" +
-            "      on req.modifiedby=us.id" +
-            "  left join requisition_periods rp" +
-            "      on req.id = rp.rnrid " +
-            "  left join processing_periods pp " +
-            "      on req.periodid = pp.id" +
-            "  where ",
-            "(pp.startDate >= #{startDate} "
-                    + "AND pp.endDate <= #{endDate})"})
-    List<RequisitionDTO> getRequisitionList(@Param("startDate") Date startTime,
-                                            @Param("endDate") Date endTime);
+    @SelectProvider(type = RequisitionReportsQueryBuilder.class, method = "getQuery")
+    List<RequisitionDTO> getRequisitionList(@Param("filterCriteria") RequisitionReportsParam filterCriteria);
 
 }
-

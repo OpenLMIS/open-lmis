@@ -8,8 +8,10 @@ import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.openlmis.core.web.OpenLmisResponse;
 import org.openlmis.db.categories.UnitTests;
+import org.openlmis.report.builder.RequisitionReportsQueryBuilder;
 import org.openlmis.report.mapper.RequisitionReportsMapper;
 import org.openlmis.report.model.dto.RequisitionDTO;
+import org.openlmis.report.model.params.RequisitionReportsParam;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
 import org.springframework.http.HttpStatus;
@@ -23,6 +25,7 @@ import java.util.List;
 
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
+import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -33,6 +36,9 @@ public class SimpleTableControllerTest {
     @Mock
     private RequisitionReportsMapper requisitionReportsMapper;
 
+    @Mock
+    private RequisitionReportsQueryBuilder requisitionReportsQueryBuilder;
+
     @InjectMocks
     private SimpleTableController controller;
 
@@ -40,17 +46,17 @@ public class SimpleTableControllerTest {
     public void shouldReturnRequisitionListGivenStartAndEnd() throws Exception {
         Date startTime = new Date();
         Date endTime = new Date();
-
+        Integer facilityId = 99;
         List<RequisitionDTO> requisitionDTOs = new ArrayList<RequisitionDTO>();
         RequisitionDTO requisitionDTO = new RequisitionDTO();
         requisitionDTO.setId(2L);
         requisitionDTOs.add(requisitionDTO);
 
-        when(requisitionReportsMapper.getRequisitionList(startTime, endTime))
+        when(requisitionReportsMapper.getRequisitionList(any(RequisitionReportsParam.class)))
                 .thenReturn(requisitionDTOs);
 
         ResponseEntity<OpenLmisResponse> response =
-                controller.requisitionReport(startTime, endTime);
+                controller.requisitionReport(startTime, endTime, null, null, facilityId);
 
         assertThat(response.getStatusCode(), is(HttpStatus.OK));
 
