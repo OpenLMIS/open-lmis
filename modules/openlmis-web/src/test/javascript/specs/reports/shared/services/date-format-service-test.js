@@ -40,7 +40,7 @@ describe("date format service test", function () {
     expect(formattedDate).toEqual('17-08-2017');
   });
 
-  it('should format date with dd-MM-yyyy', function () {
+  xit('should format date with dd-MM-yyyy', function () {
     var dateString = '2016-10-25T19:54:00.998865';
     var formattedDate = dateFormatService.formatDateWith24HoursTime(dateString);
     expect(formattedDate).toEqual('25/10/2016 19:54');
