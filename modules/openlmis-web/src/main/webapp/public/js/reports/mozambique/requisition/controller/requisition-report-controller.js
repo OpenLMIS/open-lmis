@@ -85,6 +85,7 @@ function RequisitionReportController($scope, $controller, RequisitionReportServi
     return messageService.get("rnr.report.submitted.status.late") === status;
   };
 
+  // Todo: when the via classic program name change, this logic need to change. to be continue...
   $scope.programNameFormatter = function (programName) {
     if (programName === "VIA Classica") {
       return messageService.get("label.report.requisitions.programname.balancerequisition");
@@ -259,11 +260,23 @@ function RequisitionReportController($scope, $controller, RequisitionReportServi
         requisitionContent.districtName = requisition.districtName;
         requisitionContent.facilityName = requisition.facilityName;
         requisitionContent.submittedUser = requisition.submittedUser;
-        requisitionContent.inventoryDate = requisition.inventoryDate;
+        requisitionContent.inventoryDate = {
+          value: requisition.actualPeriodEnd,
+          dataType: 'date',
+          pattern: 'yyyy-MM-dd'
+        };
         requisitionContent.submittedStatus = requisition.submittedStatus;
         requisitionContent.originalPeriodDate = requisition.originalPeriodString;
-        requisitionContent.submittedTime = requisition.clientSubmittedTimeString;
-        requisitionContent.syncTime = requisition.webSubmittedTimeString;
+        requisitionContent.submittedTime = {
+          value: requisition.clientSubmittedTime,
+          dataType: 'date',
+          pattern: 'yyyy-MM-dd'
+        };
+        requisitionContent.syncTime = {
+          value: requisition.webSubmittedTime,
+          dataType: 'date',
+          pattern: 'yyyy-MM-dd'
+        };
         data.reportContent.push(requisitionContent);
       });
 

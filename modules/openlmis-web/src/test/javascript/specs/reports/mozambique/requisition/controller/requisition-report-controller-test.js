@@ -114,7 +114,7 @@ describe('requisition report controller', function () {
     };
     return expectedHeader;
   }
-  
+
   it('should export data with district province name successfully', function () {
     var expectedHeader = getExpectedHeaders();
     scope.requisitions = [{
@@ -154,11 +154,11 @@ describe('requisition report controller', function () {
       districtName: 'Moamba',
       facilityName: 'Sabie',
       submittedUser: 'Sabie',
-      inventoryDate: '14 July 2017',
+      inventoryDate: { value : 1500028406115, dataType : 'date', pattern : 'yyyy-MM-dd' },
       submittedStatus: 'On time',
       originalPeriodDate : '21 Jan 2018 - 20 Feb 2018',
-      submittedTime: '2017-07-14 05:58:55',
-      syncTime: '2017-07-14 05:59:02'
+      submittedTime: { value : 1500029935097, dataType : 'date', pattern : 'yyyy-MM-dd' },
+      syncTime: { value : 1500029942231, dataType : 'date', pattern : 'yyyy-MM-dd' }
     };
 
     var expectedExcel = {
