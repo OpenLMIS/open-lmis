@@ -8,27 +8,6 @@ function RequisitionReportController($scope, $controller, RequisitionReportServi
 
   $scope.selectedItems = [];
 
-  function filterRequisitionsBasedOnGeographicZones() {
-    if ($scope.reportParams.selectedFacility) {
-      $scope.requisitions = _.filter($scope.allRequisitions, function (requisition) {
-        return requisition.facilityName === $scope.reportParams.selectedFacility.name &&
-          requisition.districtName === $scope.reportParams.selectedDistrict.name &&
-          requisition.provinceName === $scope.reportParams.selectedProvince.name;
-      });
-    } else if ($scope.reportParams.selectedDistrict) {
-      $scope.requisitions = _.filter($scope.allRequisitions, function (requisition) {
-        return requisition.districtName === $scope.reportParams.selectedDistrict.name &&
-          requisition.provinceName === $scope.reportParams.selectedProvince.name;
-      });
-    } else if ($scope.reportParams.selectedProvince) {
-      $scope.requisitions = _.filter($scope.allRequisitions, function (requisition) {
-        return requisition.provinceName === $scope.reportParams.selectedProvince.name;
-      });
-    } else {
-      $scope.requisitions = $scope.allRequisitions;
-    }
-  }
-
   $scope.loadRequisitions = function () {
     var reportParams = $scope.reportParams;
 
@@ -43,8 +22,7 @@ function RequisitionReportController($scope, $controller, RequisitionReportServi
     RequisitionReportService.get(_.pick(requisitionQueryParameters, function (parameter) {
       return !_.isEmpty(parameter.trim());
     }), function (data) {
-      $scope.allRequisitions = data.rnr_list;
-      filterRequisitionsBasedOnGeographicZones();
+      $scope.requisitions = data.rnr_list;
       formatRequisitionList();
     });
   };
@@ -72,7 +50,7 @@ function RequisitionReportController($scope, $controller, RequisitionReportServi
   };
 
   var formatRequisitionList = function () {
-    _.each($scope.allRequisitions, function (rnr) {
+    _.each($scope.requisitions, function (rnr) {
       if (rnr.actualPeriodEnd === null) {
         rnr.actualPeriodEnd = rnr.schedulePeriodEnd;
       }
