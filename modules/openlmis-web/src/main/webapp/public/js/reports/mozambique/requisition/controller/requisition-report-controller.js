@@ -243,9 +243,9 @@ function RequisitionReportController($scope, $controller, RequisitionReportServi
         submittedUser: messageService.get('report.header.submitted.user'),
         inventoryDate: messageService.get('report.header.inventory.date'),
         submittedStatus: messageService.get('report.header.submitted.status'),
+        originalPeriodDate: messageService.get('report.header.originalperiod.date'),
         submittedTime: messageService.get('report.header.submitted.time'),
-        syncTime: messageService.get('report.header.sync.time'),
-        reportGeneratedFor: messageService.get('report.header.generated.for')
+        syncTime: messageService.get('report.header.sync.time')
       },
       reportContent: []
     };
@@ -261,9 +261,9 @@ function RequisitionReportController($scope, $controller, RequisitionReportServi
         requisitionContent.submittedUser = requisition.submittedUser;
         requisitionContent.inventoryDate = requisition.inventoryDate;
         requisitionContent.submittedStatus = requisition.submittedStatus;
+        requisitionContent.originalPeriodDate = requisition.originalPeriodString;
         requisitionContent.submittedTime = requisition.clientSubmittedTimeString;
         requisitionContent.syncTime = requisition.webSubmittedTimeString;
-        requisitionContent.reportGeneratedFor = DateFormatService.formatDateWithDateMonthYearForString($scope.reportParams.startTime) + ' - ' + DateFormatService.formatDateWithDateMonthYearForString($scope.reportParams.endTime);
         data.reportContent.push(requisitionContent);
       });
 

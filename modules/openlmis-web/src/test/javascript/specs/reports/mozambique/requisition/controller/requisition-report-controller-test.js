@@ -108,9 +108,9 @@ describe('requisition report controller', function () {
       submittedUser: 'report.header.submitted.user',
       inventoryDate: 'report.header.inventory.date',
       submittedStatus: 'report.header.submitted.status',
+      originalPeriodDate : 'report.header.originalperiod.date',
       submittedTime: 'report.header.submitted.time',
-      syncTime: 'report.header.sync.time',
-      reportGeneratedFor: 'report.header.generated.for'
+      syncTime: 'report.header.sync.time'
     };
     return expectedHeader;
   }
@@ -134,7 +134,8 @@ describe('requisition report controller', function () {
       submittedUser: 'Sabie',
       type: 'Normal',
       webSubmittedTime: 1500029942231,
-      webSubmittedTimeString: '2017-07-14 05:59:02'
+      webSubmittedTimeString: '2017-07-14 05:59:02',
+      originalPeriodString: '21 Jan 2018 - 20 Feb 2018'
     }];
 
     scope.reportParams = {
@@ -155,9 +156,9 @@ describe('requisition report controller', function () {
       submittedUser: 'Sabie',
       inventoryDate: '14 July 2017',
       submittedStatus: 'On time',
+      originalPeriodDate : '21 Jan 2018 - 20 Feb 2018',
       submittedTime: '2017-07-14 05:58:55',
-      syncTime: '2017-07-14 05:59:02',
-      reportGeneratedFor: scope.reportParams.startTime + ' - ' + scope.reportParams.endTime
+      syncTime: '2017-07-14 05:59:02'
     };
 
     var expectedExcel = {
