@@ -40,13 +40,12 @@ function RequisitionReportController($scope, $controller, RequisitionReportServi
       facilityId: reportParams.facilityId.toString()
     };
 
-    RequisitionReportService.get(_.pick(requisitionQueryParameters, function(parameter) {
+    RequisitionReportService.get(_.pick(requisitionQueryParameters, function (parameter) {
       return !_.isEmpty(parameter.trim());
     }), function (data) {
       $scope.allRequisitions = data.rnr_list;
       filterRequisitionsBasedOnGeographicZones();
-      setInventoryDateAndSubmittedStatus();
-      renameRequisitionType();
+      formatRequisitionList();
     });
   };
 
@@ -72,34 +71,36 @@ function RequisitionReportController($scope, $controller, RequisitionReportServi
     }
   };
 
-  var setInventoryDateAndSubmittedStatus = function () {
+  var formatRequisitionList = function () {
     _.each($scope.allRequisitions, function (rnr) {
       if (rnr.actualPeriodEnd === null) {
         rnr.actualPeriodEnd = rnr.schedulePeriodEnd;
       }
       setSubmittedStatus(rnr);
-      setSchedulePeriodStartAndEndDate(rnr);
+      setOriginalPeriodString(rnr);
+      renameRequisitionType(rnr);
 
       rnr.inventoryDate = formatDate(rnr.actualPeriodEnd);
     });
   };
 
-  var setSchedulePeriodStartAndEndDate = function (rnr) {
-    if (rnr.schedulePeriodEnd && rnr.schedulePeriodEnd) {
-      rnr.schedulePeriodStartString = formatDate(rnr.schedulePeriodEnd);
-      rnr.schedulePeriodEndString = formatDate(rnr.schedulePeriodEnd);
+  var setOriginalPeriodString = function (rnr) {
+    if (rnr.schedulePeriodStart && rnr.schedulePeriodEnd) {
+      var schedulePeriodStartString = formatDate(rnr.schedulePeriodStart);
+      var schedulePeriodEndString = formatDate(rnr.schedulePeriodEnd);
+      rnr.originalPeriodString = schedulePeriodStartString + ' - ' + schedulePeriodEndString;
+    } else {
+      rnr.originalPeriodString = "";
     }
   };
 
-  var renameRequisitionType = function () {
-    _.each($scope.allRequisitions, function (rnr) {
-      if (rnr.type === "Normal") {
-        rnr.type = messageService.get("label.requisition.type.normal");
-      }
-      if (rnr.type === "Emergency") {
-        rnr.type = messageService.get("label.requisition.type.emergency");
-      }
-    });
+  var renameRequisitionType = function (rnr) {
+    if (rnr.type === "Normal") {
+      rnr.type = messageService.get("label.requisition.type.normal");
+    }
+    if (rnr.type === "Emergency") {
+      rnr.type = messageService.get("label.requisition.type.emergency");
+    }
   };
 
   $scope.isSubmitLate = function (status) {
@@ -174,7 +175,15 @@ function RequisitionReportController($scope, $controller, RequisitionReportServi
       },
       {
         field: 'inventoryDate',
-        displayName: messageService.get("label.report.requisitions.inventorydate")
+        displayName: messageService.get("label.report.requisitions.inventorydate"),
+        sortFn: function (currentDateString, previousDateString) {
+          var currentDate = new Date(currentDateString);
+          var previousDate = new Date(previousDateString);
+
+          if (currentDate === previousDate) return 0;
+          if (currentDate < previousDate) return -1;
+          return 1;
+        }
       },
       {
         field: 'submittedStatus',
@@ -182,10 +191,17 @@ function RequisitionReportController($scope, $controller, RequisitionReportServi
         cellTemplate: '<div class="customCell" ng-class="{submitStatusLate: isSubmitLate(row.getProperty(col.field))}">{{row.getProperty(col.field)}}</div>'
       },
       {
-        field: 'schedulePeriodEnd',
+        field: 'originalPeriodString',
         displayName: messageService.get("label.report.requisitions.originalperiod"),
-        cellTemplate: '<div class="customCell">{{originalPeriodFormatter(row.entity.schedulePeriodStartString, row.entity.schedulePeriodEndString)}}</div>',
-        width: 180
+        width: 180,
+        sortFn: function (currentOriginalPeriodString, previousOriginalPeriodString) {
+          var currentDate = new Date(currentOriginalPeriodString.split("-")[0]);
+          var previousDate = new Date(previousOriginalPeriodString.split("-")[0]);
+
+          if (currentDate === previousDate) return 0;
+          if (currentDate < previousDate) return -1;
+          return 1;
+        }
       },
       {
         field: 'clientSubmittedTimeString',
