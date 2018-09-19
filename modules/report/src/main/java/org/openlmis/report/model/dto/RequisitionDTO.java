@@ -23,6 +23,7 @@ public class RequisitionDTO {
     private String webSubmittedTimeString;
     private String clientSubmittedTimeString;
     private Date actualPeriodEnd;
+    private Date schedulePeriodStart;
     private Date schedulePeriodEnd;
 
     private Date webSubmittedTime;

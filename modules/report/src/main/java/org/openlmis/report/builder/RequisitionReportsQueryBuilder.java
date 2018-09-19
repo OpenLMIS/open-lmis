@@ -19,6 +19,7 @@ public class RequisitionReportsQueryBuilder {
         SELECT("us.username submittedUser");
         SELECT("req.clientsubmittedtime clientSubmittedTime, req.status requisitionStatus, req.modifieddate webSubmittedTime");
         SELECT("rp.periodenddate actualPeriodEnd");
+        SELECT("pp.startdate schedulePeriodStart");
         SELECT("pp.enddate schedulePeriodEnd");
         FROM("requisitions req");
         LEFT_OUTER_JOIN("facilities as fac on req.facilityid = fac.id");
