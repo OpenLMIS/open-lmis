@@ -168,4 +168,20 @@ describe('requisition report controller', function () {
     expect(reportExportExcelService.exportAsXlsx).toHaveBeenCalledWith(expectedExcel, 'report.file.requisition.report');
 
   });
+
+  it('should format program name', function () {
+    expect(scope.programNameFormatter('VIA Classica')).toBe(messageService.get('label.report.requisitions.programname.balancerequisition'));
+    expect(scope.programNameFormatter('MMIA')).toBe('MMIA');
+  });
+
+  it('should format submitted time', function () {
+    expect(scope.submittedTimeFormatter(null, '')).toBe('');
+    expect(scope.submittedTimeFormatter(1537325189267, '2018-09-19')).toBe('2018-09-19');
+  });
+
+  it('should format original period', function () {
+    expect(scope.originalPeriodFormatter('2018-08-19', '2018-09-19')).toBe('2018-08-19 - 2018-09-19');
+    expect(scope.originalPeriodFormatter('', '2018-09-19')).toBe('');
+    expect(scope.originalPeriodFormatter('2018-09-19', '')).toBe('');
+  })
 });

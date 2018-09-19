@@ -78,9 +78,17 @@ function RequisitionReportController($scope, $controller, RequisitionReportServi
         rnr.actualPeriodEnd = rnr.schedulePeriodEnd;
       }
       setSubmittedStatus(rnr);
+      setSchedulePeriodStartAndEndDate(rnr);
 
       rnr.inventoryDate = formatDate(rnr.actualPeriodEnd);
     });
+  };
+
+  var setSchedulePeriodStartAndEndDate = function (rnr) {
+    if (rnr.schedulePeriodEnd && rnr.schedulePeriodEnd) {
+      rnr.schedulePeriodStartString = formatDate(rnr.schedulePeriodEnd);
+      rnr.schedulePeriodEndString = formatDate(rnr.schedulePeriodEnd);
+    }
   };
 
   var renameRequisitionType = function () {
@@ -94,7 +102,11 @@ function RequisitionReportController($scope, $controller, RequisitionReportServi
     });
   };
 
-  $scope.formatProgramName = function (programName) {
+  $scope.isSubmitLate = function (status) {
+    return messageService.get("rnr.report.submitted.status.late") === status;
+  };
+
+  $scope.programNameFormatter = function (programName) {
     if (programName === "VIA Classica") {
       return messageService.get("label.report.requisitions.programname.balancerequisition");
     }
@@ -102,8 +114,16 @@ function RequisitionReportController($scope, $controller, RequisitionReportServi
     return programName;
   };
 
-  $scope.isSubmitLate = function (status) {
-    return messageService.get("rnr.report.submitted.status.late") === status;
+  $scope.submittedTimeFormatter = function (submittedTime, submittedTimeString) {
+    return submittedTime ? submittedTimeString : "";
+  };
+
+  $scope.originalPeriodFormatter = function (originalPeriodStartDate, originalPeriodEndDate) {
+    if (originalPeriodStartDate && originalPeriodEndDate) {
+      return originalPeriodStartDate + " - " + originalPeriodEndDate;
+    }
+
+    return "";
   };
 
   $scope.filterOptions = {
@@ -130,16 +150,18 @@ function RequisitionReportController($scope, $controller, RequisitionReportServi
       {
         displayName: messageService.get("label.report.requisitions.number"),
         cellTemplate: '<div class="customCell">{{$parent.$index + 1}}</div>',
-        sortable: false
+        sortable: false,
+        width: 100
       },
       {
         field: 'programName',
         displayName: messageService.get("label.report.requisitions.programname"),
-        cellTemplate: '<div class="customCell">{{formatProgramName(row.entity.programName)}}</div>',
+        cellTemplate: '<div class="customCell">{{programNameFormatter(row.entity.programName)}}</div>',
       },
       {
         field: 'type',
-        displayName: messageService.get("label.report.requisitions.type")
+        displayName: messageService.get("label.report.requisitions.type"),
+        width: 100
       },
       {
         field: 'facilityName',
@@ -162,16 +184,18 @@ function RequisitionReportController($scope, $controller, RequisitionReportServi
       {
         field: 'schedulePeriodEnd',
         displayName: messageService.get("label.report.requisitions.originalperiod"),
-        cellTemplate: '<div class="customCell">{{row.entity.schedulePeriodEnd}}-{{row.entity.actualPeriodEnd}}</div>',
-        width: 200
+        cellTemplate: '<div class="customCell">{{originalPeriodFormatter(row.entity.schedulePeriodStartString, row.entity.schedulePeriodEndString)}}</div>',
+        width: 180
       },
       {
         field: 'clientSubmittedTimeString',
-        displayName: messageService.get("label.report.requisitions.submittedtime")
+        displayName: messageService.get("label.report.requisitions.submittedtime"),
+        cellTemplate: '<div class="customCell">{{submittedTimeFormatter(row.entity.clientSubmittedTime, row.entity.clientSubmittedTimeString)}}</div>'
       },
       {
         field: 'webSubmittedTimeString',
-        displayName: messageService.get("label.report.requisitions.syncedtime")
+        displayName: messageService.get("label.report.requisitions.syncedtime"),
+        cellTemplate: '<div class="customCell">{{submittedTimeFormatter(row.entity.webSubmittedTime, row.entity.webSubmittedTimeString)}}</div>'
       }
     ]
   };
