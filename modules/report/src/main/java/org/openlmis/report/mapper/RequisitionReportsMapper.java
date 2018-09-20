@@ -11,9 +11,11 @@
 package org.openlmis.report.mapper;
 
 import org.apache.ibatis.annotations.Param;
+import org.apache.ibatis.annotations.Select;
 import org.apache.ibatis.annotations.SelectProvider;
 import org.openlmis.report.builder.RequisitionReportsQueryBuilder;
 import org.openlmis.report.model.dto.RequisitionDTO;
+import org.openlmis.report.model.params.NonSubmittedRequisitionReportsParam;
 import org.openlmis.report.model.params.RequisitionReportsParam;
 import org.springframework.stereotype.Repository;
 
@@ -26,7 +28,20 @@ import java.util.List;
 @Repository
 public interface RequisitionReportsMapper {
 
-    @SelectProvider(type = RequisitionReportsQueryBuilder.class, method = "getQuery")
-    List<RequisitionDTO> getRequisitionList(@Param("filterCriteria") RequisitionReportsParam filterCriteria);
+    @SelectProvider(type = RequisitionReportsQueryBuilder.class, method = "getSubmittedResult")
+    List<RequisitionDTO> getSubmittedRequisitionList(@Param("filterCriteria") RequisitionReportsParam filterCriteria);
 
+    @Select("select NULL as id, fc.name facilityName, zone.name districtName, parent_zone.name provinceName, FALSE as emergency, p.name programName, NULL as submittedUser, NULL as clientSubmittedTime, NULL as requisitionStatus, NULL as webSubmittedTime, NULL as actualPeriodEnd, pp.startdate as schedulePeriodStart, pp.enddate schedulePeriodEnd\n" +
+            " FROM facilities fc" +
+            "  LEFT OUTER JOIN programs_supported ps on fc.id = ps.facilityid" +
+            "  LEFT OUTER JOIN geographic_zones as zone on fc.geographiczoneid = zone.id" +
+            "  LEFT OUTER JOIN geographic_zones as parent_zone on zone.parentid = parent_zone.id" +
+            "  LEFT OUTER JOIN programs p on ps.programid = p.id" +
+            "  CROSS JOIN processing_periods pp" +
+            " WHERE (pp.startdate >= #{filterCriteria.startTime} AND pp.enddate <= #{filterCriteria.endTime})" +
+            "  AND pp.id NOT in (SELECT periodid from requisitions WHERE facilityid = #{filterCriteria.facilityId} AND programid = #{filterCriteria.programId})" +
+            "  AND (pp.startdate >= ps.startdate)" +
+            "  AND p.id = #{filterCriteria.programId}" +
+            "  AND facilityid = #{filterCriteria.facilityId};")
+    List<RequisitionDTO> getUnSubmittedRequisitionList(@Param("filterCriteria")NonSubmittedRequisitionReportsParam filterCriteria);
 }

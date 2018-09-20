@@ -30,9 +30,9 @@ import org.openlmis.core.utils.DateUtil;
 import org.openlmis.core.web.OpenLmisResponse;
 import org.openlmis.core.web.controller.BaseController;
 import org.openlmis.report.mapper.AppInfoMapper;
-import org.openlmis.report.mapper.RequisitionReportsMapper;
 import org.openlmis.report.model.dto.RequisitionDTO;
 import org.openlmis.report.model.params.RequisitionReportsParam;
+import org.openlmis.report.service.SimpleTableService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -65,7 +65,7 @@ import static org.springframework.web.bind.annotation.RequestMethod.GET;
 public class SimpleTableController extends BaseController {
 
     @Autowired
-    private RequisitionReportsMapper requisitionReportsMapper;
+    private SimpleTableService simpleTableService;
 
     @Autowired
     private AppInfoMapper appInfoMapper;
@@ -83,8 +83,7 @@ public class SimpleTableController extends BaseController {
             @RequestParam(value = "districtId", required = false) Integer districtId,
             @RequestParam(value = "facilityId", required = false) Integer facilityId) {
         RequisitionReportsParam filterCriteria = new RequisitionReportsParam(startTime, endTime, provinceId, districtId, facilityId);
-        List<RequisitionDTO> requisitions = requisitionReportsMapper.getRequisitionList(filterCriteria);
-
+        List<RequisitionDTO> requisitions = simpleTableService.getRequisitions(filterCriteria);
         for (RequisitionDTO requisitionDTO : requisitions) {
             requisitionDTO.assignType();
         }

@@ -55,6 +55,18 @@ public interface FacilityMapper {
     @Select("SELECT id, code, name FROM facilities")
     List<Facility> getAll();
 
+    @Select(("SELECT fc.id FROM facilities fc" +
+            " WHERE fc.geographiczoneid IN" +
+            " (SELECT id FROM geographic_zones WHERE parentid = #{provinceId}) AND fc.typeid IN(1, 2);"))
+    List<Integer> getFacilityIdByProvinceId(Integer provinceId);
+
+    @Select(("SELECT fc.id FROM facilities fc" +
+            " WHERE fc.geographiczoneid = #{districtId} AND fc.typeid IN(1, 2);"))
+    List<Integer> getFacilityIdByDistrictId(Integer districtId);
+
+    @Select("SELECT id FROM facilities WHERE typeid IN(1, 2);")
+    List<Integer> getAllFacilityIds();
+
     @Select("SELECT * FROM users U, facilities F " +
             "WHERE U.facilityId = F.id AND U.id = #{userId} AND f.active = TRUE AND f.virtualFacility = FALSE")
     @Results(value = {@Result(property = "id", column = "facilityId")})

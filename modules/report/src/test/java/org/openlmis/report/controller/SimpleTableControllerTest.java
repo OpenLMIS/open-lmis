@@ -8,10 +8,9 @@ import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.openlmis.core.web.OpenLmisResponse;
 import org.openlmis.db.categories.UnitTests;
-import org.openlmis.report.builder.RequisitionReportsQueryBuilder;
-import org.openlmis.report.mapper.RequisitionReportsMapper;
 import org.openlmis.report.model.dto.RequisitionDTO;
 import org.openlmis.report.model.params.RequisitionReportsParam;
+import org.openlmis.report.service.SimpleTableService;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
 import org.springframework.http.HttpStatus;
@@ -34,10 +33,7 @@ import static org.mockito.Mockito.when;
 public class SimpleTableControllerTest {
 
     @Mock
-    private RequisitionReportsMapper requisitionReportsMapper;
-
-    @Mock
-    private RequisitionReportsQueryBuilder requisitionReportsQueryBuilder;
+    private SimpleTableService simpleTableService;
 
     @InjectMocks
     private SimpleTableController controller;
@@ -52,7 +48,7 @@ public class SimpleTableControllerTest {
         requisitionDTO.setId(2L);
         requisitionDTOs.add(requisitionDTO);
 
-        when(requisitionReportsMapper.getRequisitionList(any(RequisitionReportsParam.class)))
+        when(simpleTableService.getRequisitions(any(RequisitionReportsParam.class)))
                 .thenReturn(requisitionDTOs);
 
         ResponseEntity<OpenLmisResponse> response =

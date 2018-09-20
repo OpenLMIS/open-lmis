@@ -3,11 +3,10 @@ package org.openlmis.report.builder;
 import org.openlmis.report.model.params.RequisitionReportsParam;
 import static org.apache.ibatis.jdbc.SqlBuilder.*;
 
-import java.util.Date;
 import java.util.Map;
 
 public class RequisitionReportsQueryBuilder {
-    public static String getQuery(Map params) {
+    public static String getSubmittedResult(Map params) {
         RequisitionReportsParam filter = (RequisitionReportsParam) params.get("filterCriteria");
         BEGIN();
         SELECT("req.id id");
