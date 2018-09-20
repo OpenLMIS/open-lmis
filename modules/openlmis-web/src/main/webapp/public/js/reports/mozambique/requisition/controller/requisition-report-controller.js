@@ -235,6 +235,11 @@ function RequisitionReportController($scope, $controller, RequisitionReportServi
 
   $scope.exportXLSX = function () {
     var data = {
+      reportTitle: [
+        messageService.get('report.header.generated.for'),
+        DateFormatService.formatDateWithDateMonthYearForString($scope.reportParams.startTime) + ' - ' +
+        DateFormatService.formatDateWithDateMonthYearForString($scope.reportParams.endTime)
+      ],
       reportHeaders: {
         programName: messageService.get('report.header.program.name'),
         type: messageService.get('report.header.type'),
