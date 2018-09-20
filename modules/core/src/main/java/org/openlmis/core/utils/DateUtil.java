@@ -4,26 +4,26 @@ import org.apache.commons.lang3.time.DateFormatUtils;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 
 
-public class DateUtil
-{
+public class DateUtil {
     public static final String FORMAT_DATE_TIME = "yyyy-MM-dd HH:mm:ss";
     public static final String FORMAT_DATE = "yyyy-MM-dd";
     public static final String FORMAT_YEAR_MONTH = "yyyy-MM";
     public static final String EMPTY_STRING = "";
     public static final String FORMAT_DATE_TIME_DAY_MONTH_YEAR = "dd/MM/yyyy";
+    public static final String FORMAT_DATE_TIME_CUBE = "yyyy,MM,dd";
+    public static final String FORMAT_DATE_DD_MM_YYYY = "dd-MM-yyyy";
 
-    public static String getFormattedDate(Date date, String format)
-    {
-        if(date == null)
+    public static String getFormattedDate(Date date, String format) {
+        if (date == null)
             return null;
 
         try {
-            return  DateFormatUtils.format(date, format);
-        }
-        catch (Exception e) {
+            return DateFormatUtils.format(date, format);
+        } catch (Exception e) {
             return null;
         }
     }
@@ -50,4 +50,34 @@ public class DateUtil
             throw new RuntimeException(e);
         }
     }
+
+    public static String formatDateWithStartDayOfPeriod(String date) {
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(parseDate(date, FORMAT_DATE_TIME_CUBE));
+        if (cal.get(Calendar.DAY_OF_MONTH) < 21) {
+            cal.add(Calendar.MONTH, -1);
+            cal.set(Calendar.DAY_OF_MONTH, 21);
+        } else {
+            cal.set(Calendar.DAY_OF_MONTH, 21);
+        }
+        return getFormattedDate(cal.getTime(), FORMAT_DATE_TIME_CUBE);
+    }
+
+    public static String formatDateWithEndDayOfPeriod(String date) {
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(parseDate(date, FORMAT_DATE_TIME_CUBE));
+        if (cal.get(Calendar.DAY_OF_MONTH) > 20) {
+            cal.add(Calendar.MONTH, 1);
+            cal.set(Calendar.DAY_OF_MONTH, 20);
+        } else {
+            cal.set(Calendar.DAY_OF_MONTH, 20);
+        }
+        return getFormattedDate(cal.getTime(), FORMAT_DATE_TIME_CUBE);
+    }
+
+    public static String transform(String src, String srcPattern, String dstPattern) {
+        Date dateSrc = parseDate(src, srcPattern);
+        return getFormattedDate(dateSrc, dstPattern);
+    }
+
 }

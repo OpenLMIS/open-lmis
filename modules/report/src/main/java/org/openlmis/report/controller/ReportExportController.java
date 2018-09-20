@@ -16,6 +16,7 @@ import lombok.NoArgsConstructor;
 import org.openlmis.core.web.controller.BaseController;
 import org.openlmis.report.ReportManager;
 import org.openlmis.report.ReportOutputOption;
+import org.openlmis.report.generator.ReportModelGeneratorService;
 import org.openlmis.report.model.ExportRequest;
 import org.openlmis.report.service.lookup.ReportLookupService;
 import org.openlmis.report.view.CustomExcelTemplate;
@@ -29,6 +30,7 @@ import org.springframework.web.servlet.ModelAndView;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.Map;
 
 import static org.springframework.web.bind.annotation.RequestMethod.POST;
 
@@ -51,6 +53,9 @@ public class ReportExportController extends BaseController {
 
   @Autowired
   public ReportLookupService reportService;
+
+  @Autowired
+  private ReportModelGeneratorService reportModelGeneratorStrategy;
 
 
   @RequestMapping(value = "/download/{reportKey}/{outputOption}")
@@ -104,4 +109,9 @@ public class ReportExportController extends BaseController {
         return CustomExcelTemplate.newModelAndView(exportRequest.getReportContent(), exportRequest.getReportHeaders());
     }
 
+    @RequestMapping(value = "/download/excel/backend", method = POST, headers = ACCEPT_JSON)
+    public ModelAndView generateReport(@RequestBody Map<Object,Object> paraMap) {
+        if (paraMap.size() == 0 ) return null;
+        return CustomExcelTemplate.newModelAndView(reportModelGeneratorStrategy.generateModel(paraMap));
+    }
 }
