@@ -217,7 +217,12 @@ function RequisitionReportController($scope, $controller, RequisitionReportServi
     return url;
   };
 
-  function redirectPage() {
+  function redirectPage(row) {
+    var requisition = row.entity;
+    if (requisition && !requisition.webSubmittedTime) {
+      return;
+    }
+
     FeatureToggleService.get({key: "redirect.view.rnr.page"}, function (result) {
       if (result.key) {
         $window.location.href = $scope.getRedirectUrl();
