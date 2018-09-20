@@ -162,6 +162,7 @@ describe('requisition report controller', function () {
     };
 
     var expectedExcel = {
+      reportTitle: ['report.header.generated.for', '21-07-2017 - 21-10-2017'],
       reportHeaders: expectedHeader,
       reportContent: [expectedContent]
     };
