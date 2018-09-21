@@ -409,7 +409,7 @@ public class NosDrugReportGenerator extends AbstractReportModelGenerator {
      */
 
     private long getCmmValue(Map<String, String> row) {
-        return NumberUtils.toLong(row.getOrDefault("cmmValue", "-1"));
+        return StringUtils.isNotEmpty(row.get("cmmValue")) ? NumberUtils.toLong(row.get("cmmValue")): -1;
     }
 
     private StockOnHandStatus stockOnHandStatus(long cmm, long soh) {
