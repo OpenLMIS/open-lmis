@@ -52,7 +52,7 @@ public class SimpleTableControllerTest {
                 .thenReturn(requisitionDTOs);
 
         ResponseEntity<OpenLmisResponse> response =
-                controller.requisitionReport(startTime, endTime, null, null, facilityId);
+                controller.requisitionReport(startTime, endTime, any(ArrayList.class), null, null, facilityId);
 
         assertThat(response.getStatusCode(), is(HttpStatus.OK));
 
