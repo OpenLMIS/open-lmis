@@ -31,7 +31,7 @@ public interface RequisitionReportsMapper {
     @SelectProvider(type = RequisitionReportsQueryBuilder.class, method = "getSubmittedResult")
     List<RequisitionDTO> getSubmittedRequisitionList(@Param("filterCriteria") RequisitionReportsParam filterCriteria);
 
-    @Select("select NULL as id, fc.name facilityName, zone.name districtName, parent_zone.name provinceName, FALSE as emergency, p.name programName, NULL as submittedUser, NULL as clientSubmittedTime, NULL as requisitionStatus, NULL as webSubmittedTime, NULL as actualPeriodEnd, pp.startdate as schedulePeriodStart, pp.enddate schedulePeriodEnd\n" +
+    @Select("select -1 as id, fc.name facilityName, zone.name districtName, parent_zone.name provinceName, FALSE as emergency, p.name programName, '' as submittedUser, NULL as clientSubmittedTime, '' as requisitionStatus, NULL as webSubmittedTime, NULL as actualPeriodEnd, pp.startdate as schedulePeriodStart, pp.enddate schedulePeriodEnd\n" +
             " FROM facilities fc" +
             "  LEFT OUTER JOIN programs_supported ps on fc.id = ps.facilityid" +
             "  LEFT OUTER JOIN geographic_zones as zone on fc.geographiczoneid = zone.id" +
