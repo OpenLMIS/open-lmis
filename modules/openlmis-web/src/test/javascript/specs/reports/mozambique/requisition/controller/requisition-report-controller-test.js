@@ -154,15 +154,15 @@ describe('requisition report controller', function () {
       districtName: 'Moamba',
       facilityName: 'Sabie',
       submittedUser: 'Sabie',
-      inventoryDate: { value : 1500028406115, dataType : 'date', pattern : 'yyyy-MM-dd' },
+      inventoryDate: { value : 1500028406115, dataType : 'date', style: { dataPattern : 'yyyy-MM-dd' } },
       submittedStatus: 'On time',
       originalPeriodDate : '21 Jan 2018 - 20 Feb 2018',
-      submittedTime: { value : 1500029935097, dataType : 'date', pattern : 'yyyy-MM-dd' },
-      syncTime: { value : 1500029942231, dataType : 'date', pattern : 'yyyy-MM-dd' }
+      submittedTime: { value : 1500029935097, dataType : 'date', style: { dataPattern : 'yyyy-MM-dd' } },
+      syncTime: { value : 1500029942231, dataType : 'date', style: { dataPattern : 'yyyy-MM-dd' } }
     };
 
     var expectedExcel = {
-      reportTitle: ['report.header.generated.for', '21-07-2017 - 21-10-2017'],
+      reportTitles: ['report.header.generated.for', '21-07-2017 - 21-10-2017'],
       reportHeaders: expectedHeader,
       reportContent: [expectedContent]
     };

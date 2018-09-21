@@ -240,7 +240,7 @@ function RequisitionReportController($scope, $controller, RequisitionReportServi
 
   $scope.exportXLSX = function () {
     var data = {
-      reportTitle: [
+      reportTitles: [
         messageService.get('report.header.generated.for'),
         DateFormatService.formatDateWithDateMonthYearForString($scope.reportParams.startTime) + ' - ' +
         DateFormatService.formatDateWithDateMonthYearForString($scope.reportParams.endTime)
@@ -273,19 +273,25 @@ function RequisitionReportController($scope, $controller, RequisitionReportServi
         requisitionContent.inventoryDate = {
           value: requisition.actualPeriodEnd,
           dataType: 'date',
-          pattern: 'yyyy-MM-dd'
+          style: {
+            dataPattern: 'yyyy-MM-dd'
+          }
         };
         requisitionContent.submittedStatus = requisition.submittedStatus;
         requisitionContent.originalPeriodDate = requisition.originalPeriodString;
         requisitionContent.submittedTime = {
           value: requisition.clientSubmittedTime,
           dataType: 'date',
-          pattern: 'yyyy-MM-dd'
+          style: {
+            dataPattern: 'yyyy-MM-dd'
+          }
         };
         requisitionContent.syncTime = {
           value: requisition.webSubmittedTime,
           dataType: 'date',
-          pattern: 'yyyy-MM-dd'
+          style: {
+            dataPattern: 'yyyy-MM-dd'
+          }
         };
         data.reportContent.push(requisitionContent);
       });
