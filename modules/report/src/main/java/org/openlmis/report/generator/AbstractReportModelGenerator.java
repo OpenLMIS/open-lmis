@@ -56,7 +56,7 @@ public abstract class AbstractReportModelGenerator {
     }
 
     protected String getMessage(String key) {
-        return messageService.message(key);
+        return messageService.allMessages().get(key);
     }
 
     protected List<Map<String, String>> jsonToListMap(String json) {
