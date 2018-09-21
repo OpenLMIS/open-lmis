@@ -308,6 +308,10 @@ public class ReportLookupService {
         return programMapper.getAll();
     }
 
+    public List<Program> getRequisitionPrograms() {
+        return programMapper.getRequisitionPrograms();
+    }
+
     public List<Program> getAllPrograms(Long userId) {
         return programMapper.getAllForUser(userId);
     }

@@ -21,17 +21,23 @@ import java.util.List;
 
 @Repository
 public interface ProgramReportMapper {
+    //TODO need to be refactor about program id
+    @Select("SELECT id, name, description, code" +
+            " FROM programs" +
+            " WHERE id in (1, 3, 5, 6, 10);")
+    List<Program> getRequisitionPrograms();
 
     @Select("SELECT id, name, description, code " +
             "   FROM " +
             "       programs order by name")
     List<Program> getAll();
 
-  @Select("SELECT id, name, description, code " +
-      "   FROM " +
-      "       programs where id in (select program_id from vw_user_facilities where user_id = #{userId}) " +
-      " order by name")
-  List<Program> getAllForUser(@Param("userId") Long userId);
+
+    @Select("SELECT id, name, description, code " +
+            "   FROM " +
+            "       programs where id in (select program_id from vw_user_facilities where user_id = #{userId}) " +
+            " order by name")
+    List<Program> getAllForUser(@Param("userId") Long userId);
 
     @Select("SELECT * FROM Programs where code = #{code}")
     Program getProgramByCode(@Param("code") String code);
@@ -40,10 +46,10 @@ public interface ProgramReportMapper {
             "             FROM programs p\n" +
             "   INNER JOIN regimens rg on rg.programid = p.id \n" +
             "   GROUP BY p.name,p.id,p.description,p.code\n" +
-            "        ORDER BY name\n" )
-    List<Program>getAllRegimenPrograms();
+            "        ORDER BY name\n")
+    List<Program> getAllRegimenPrograms();
 
-    @Select( "SELECT DISTINCT p.* \n" +
+    @Select("SELECT DISTINCT p.* \n" +
             "FROM programs p \n" +
             "INNER JOIN role_assignments ra ON p.id = ra.programId \n" +
             "INNER JOIN role_rights rr ON ra.roleId = rr.roleId \n" +
@@ -51,7 +57,7 @@ public interface ProgramReportMapper {
             "AND ra.supervisoryNodeId IS NOT NULL \n" +
             "AND p.active = TRUE \n" +
             "AND p.push = FALSE \n" +
-             " UNION\n" +
+            " UNION\n" +
             "SELECT DISTINCT p.* \n" +
             "FROM programs p\n" +
             "INNER JOIN programs_supported ps ON p.id = ps.programId\n" +
@@ -64,6 +70,7 @@ public interface ProgramReportMapper {
             "AND ra.userId = #{userId}\n" +
             "ORDER BY name")
     List<Program> getUserSupervisedActivePrograms(@Param("userId") Long userId);
+
     @Select("   SELECT DISTINCT p.* \n" +
             "            FROM programs p\n" +
             "            INNER JOIN role_assignments ra ON p.id = ra.programId \n" +
@@ -75,6 +82,6 @@ public interface ProgramReportMapper {
     List<Program> getUserSupervisedActiveProgramsBySupervisoryNode(@Param("userId") Long userId, @Param("nodeId") Long supervisoryNodeId);
 
     @Select("select * from programs where budgetingapplies = true")
-    List<Program>getAllProgramsWithBudgeting();
+    List<Program> getAllProgramsWithBudgeting();
 
 }
