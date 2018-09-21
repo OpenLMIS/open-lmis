@@ -31,7 +31,7 @@ services.factory('ReportExportExcelService', function ($http, DateFormatService)
         }).error(function (error, status) {
             console.log(error);
         });
-    };
+    }
     function formatFileNameWithDate(fileName) {
         return fileName + '_' + DateFormatService.formatDateWithUnderscore(new Date());
     }
