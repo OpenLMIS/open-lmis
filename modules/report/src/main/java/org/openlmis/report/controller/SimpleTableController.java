@@ -79,10 +79,11 @@ public class SimpleTableController extends BaseController {
     public ResponseEntity<OpenLmisResponse> requisitionReport(
             @RequestParam(value = "startTime") Date startTime,
             @RequestParam(value = "endTime") Date endTime,
+            @RequestParam(value = "programIds") List<Integer> programIds,
             @RequestParam(value = "provinceId", required = false) Integer provinceId,
             @RequestParam(value = "districtId", required = false) Integer districtId,
             @RequestParam(value = "facilityId", required = false) Integer facilityId) {
-        RequisitionReportsParam filterCriteria = new RequisitionReportsParam(startTime, endTime, provinceId, districtId, facilityId);
+        RequisitionReportsParam filterCriteria = new RequisitionReportsParam(startTime, endTime, programIds, provinceId, districtId, facilityId);
         List<RequisitionDTO> requisitions = simpleTableService.getRequisitions(filterCriteria);
         for (RequisitionDTO requisitionDTO : requisitions) {
             requisitionDTO.assignType();

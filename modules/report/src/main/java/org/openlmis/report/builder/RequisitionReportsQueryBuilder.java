@@ -47,6 +47,20 @@ public class RequisitionReportsQueryBuilder {
             if(filter.getFacilityId() != null && !filter.getFacilityId().equals("")) {
                 WHERE("fac.id = #{filterCriteria.facilityId}");
             }
+            if(filter.getProgramIds() != null) {
+                WHERE(getProgramSqlConditions(filter));
+            }
         }
+    }
+
+    private static String getProgramSqlConditions(RequisitionReportsParam filter) {
+        StringBuilder conditions = new StringBuilder("pro.id in (");
+        for(Integer programId : filter.getProgramIds()) {
+            conditions.append(programId + ",");
+        }
+        conditions.deleteCharAt(conditions.length() - 1);
+        conditions.append(")");
+
+        return conditions.toString();
     }
 }

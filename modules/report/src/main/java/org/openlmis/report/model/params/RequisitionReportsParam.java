@@ -7,6 +7,7 @@ import lombok.Setter;
 import org.openlmis.report.annotations.RequiredParam;
 
 import java.util.Date;
+import java.util.List;
 
 @Getter
 @Setter
@@ -17,6 +18,8 @@ public class RequisitionReportsParam {
     private Date startTime;
     @RequiredParam
     private Date endTime;
+    @RequiredParam
+    private List<Integer> programIds;
 
     private Integer provinceId;
     private Integer districtId;

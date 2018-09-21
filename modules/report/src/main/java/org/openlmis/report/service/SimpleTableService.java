@@ -43,13 +43,16 @@ public class SimpleTableService {
         for(Integer facilityId : facilityIds) {
             for(MonthlyReortProgramType programType : MonthlyReortProgramType.values()) {
                 Integer programId = programType.getProgramId();
-                nonSubmittedRequisitionReportsParam = NonSubmittedRequisitionReportsParam.builder()
-                        .startTime(filterCriteria.getStartTime())
-                        .endTime(filterCriteria.getEndTime())
-                        .facilityId(facilityId)
-                        .programId(programId)
-                        .build();
-                requisitions.addAll(requisitionReportsMapper.getUnSubmittedRequisitionList(nonSubmittedRequisitionReportsParam));
+
+                if(filterCriteria.getProgramIds().contains(programId)) {
+                    nonSubmittedRequisitionReportsParam = NonSubmittedRequisitionReportsParam.builder()
+                            .startTime(filterCriteria.getStartTime())
+                            .endTime(filterCriteria.getEndTime())
+                            .facilityId(facilityId)
+                            .programId(programId)
+                            .build();
+                    requisitions.addAll(requisitionReportsMapper.getUnSubmittedRequisitionList(nonSubmittedRequisitionReportsParam));
+                }
             }
         }
 
