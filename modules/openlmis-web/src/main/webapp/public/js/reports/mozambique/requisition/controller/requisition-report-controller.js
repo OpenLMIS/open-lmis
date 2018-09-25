@@ -4,6 +4,7 @@ function RequisitionReportController($scope, $controller, RequisitionReportServi
   $controller("BaseProductReportController", {$scope: $scope});
 
   $scope.location = '';
+
   $scope.$on('$viewContentLoaded', function () {
     loadRequisitionPrograms();
     $scope.loadHealthFacilities();
@@ -11,8 +12,9 @@ function RequisitionReportController($scope, $controller, RequisitionReportServi
     $scope.selectedProgramIds = [];
     $scope.showProgramList = false;
     $scope.selectedAll = false;
+    $scope.allProgramIds = [];
     $scope.selectedProgramClass = 'selection-checkbox__not-select';
-    $scope.selectedProgramAllClass = 'selection-checkbox__not-select'
+    $scope.selectedProgramAllClass = 'selection-checkbox__not-select';
   });
 
   $scope.clickProgramSelection = function () {
@@ -32,7 +34,7 @@ function RequisitionReportController($scope, $controller, RequisitionReportServi
         return program.id;
       });
 
-      $scope.selectedProgramNames = ['All']
+      $scope.selectedProgramNames = ['All'];
 
     } else {
       $scope.selectedProgramClass = _.map($scope.requisitionPrograms, function (program) {
@@ -54,15 +56,12 @@ function RequisitionReportController($scope, $controller, RequisitionReportServi
       }
       return program;
     });
-    $scope.allProgramIds = _.map($scope.requisitionPrograms, function (program) {
-      return program.id;
-    })
   };
 
   var updateSelectedProgramIdsAndNames = function (program) {
     if (program.isSelected) {
       $scope.selectedProgramIds.push(program.id);
-      $scope.selectedProgramNames.push(program.name)
+      $scope.selectedProgramNames.push(program.name);
     } else {
       $scope.selectedProgramIds = _.filter($scope.selectedProgramIds, function (programId) {
         return programId !== program.id;
@@ -81,8 +80,11 @@ function RequisitionReportController($scope, $controller, RequisitionReportServi
           id: program.id,
           name: program.name,
           isSelected: false
-        }
+        };
       });
+      $scope.allProgramIds = _.sortBy(_.map($scope.requisitionPrograms, function (program) {
+        return program.id;
+      }));
     });
   };
 
@@ -105,7 +107,7 @@ function RequisitionReportController($scope, $controller, RequisitionReportServi
         return !_.isEmpty(parameter.trim());
       }
       if (_.isArray(parameter) ) {
-        return !_.isEmpty(parameter)
+        return !_.isEmpty(parameter);
       }
       return parameter;
     }), function (data) {

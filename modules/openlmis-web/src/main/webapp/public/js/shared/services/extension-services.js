@@ -1363,5 +1363,5 @@ services.factory('ProgramService', function ($resource) {
     loadRequisitionPrograms: function () {
       return $resource('/rest-api/lookup/requisition-programs', {}, {});
     }
-  }
+  };
 });
