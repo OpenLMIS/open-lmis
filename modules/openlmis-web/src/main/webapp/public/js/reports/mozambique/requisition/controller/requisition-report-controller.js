@@ -1,10 +1,90 @@
-function RequisitionReportController($scope, $controller, RequisitionReportService, messageService, DateFormatService, FeatureToggleService, $window, $cacheFactory, ReportExportExcelService) {
+function RequisitionReportController($scope, $controller, RequisitionReportService,
+     messageService, DateFormatService, FeatureToggleService, $window, $cacheFactory,
+     ReportExportExcelService, ProgramService) {
   $controller("BaseProductReportController", {$scope: $scope});
 
   $scope.location = '';
   $scope.$on('$viewContentLoaded', function () {
+    loadRequisitionPrograms();
     $scope.loadHealthFacilities();
+    $scope.selectedProgramNames = [];
+    $scope.selectedProgramIds = [];
+    $scope.showProgramList = false;
+    $scope.selectedAll = false;
+    $scope.selectedProgramClass = 'selection-checkbox__not-select';
+    $scope.selectedProgramAllClass = 'selection-checkbox__not-select'
   });
+
+  $scope.clickProgramSelection = function () {
+    $scope.showProgramList = !$scope.showProgramList;
+  };
+
+  $scope.selectALl = function () {
+    $scope.selectedAll = !$scope.selectedAll;
+
+    if ($scope.selectedAll) {
+      $scope.selectedProgramAllClass = 'selection-checkbox__all';
+      $scope.selectedProgramClass = _.map($scope.requisitionPrograms, function (program) {
+        program.isSelected = true;
+        return program;
+      });
+      $scope.selectedProgramIds = _.map($scope.requisitionPrograms, function (program) {
+        return program.id;
+      });
+
+      $scope.selectedProgramNames = ['All']
+
+    } else {
+      $scope.selectedProgramClass = _.map($scope.requisitionPrograms, function (program) {
+        program.isSelected = false;
+        return program;
+      });
+      $scope.selectedProgramAllClass = 'selection-checkbox__not-select';
+      $scope.selectedProgramIds = [];
+
+      $scope.selectedProgramNames = [];
+    }
+  };
+
+  $scope.selectProgram = function (programId) {
+    $scope.requisitionPrograms = _.map($scope.requisitionPrograms, function (program) {
+      if (programId === program.id) {
+        program.isSelected = !program.isSelected;
+        updateSelectedProgramIdsAndNames(program);
+      }
+      return program;
+    });
+    $scope.allProgramIds = _.map($scope.requisitionPrograms, function (program) {
+      return program.id;
+    })
+  };
+
+  var updateSelectedProgramIdsAndNames = function (program) {
+    if (program.isSelected) {
+      $scope.selectedProgramIds.push(program.id);
+      $scope.selectedProgramNames.push(program.name)
+    } else {
+      $scope.selectedProgramIds = _.filter($scope.selectedProgramIds, function (programId) {
+        return programId !== program.id;
+      });
+
+      $scope.selectedProgramNames = _.filter($scope.selectedProgramNames, function (programName) {
+        return programName !== program.name;
+      });
+    }
+  };
+
+  var loadRequisitionPrograms = function () {
+    ProgramService.loadRequisitionPrograms().get({}, function (data) {
+      $scope.requisitionPrograms = _.map(data['requisiton-programs'], function (program) {
+        return {
+          id: program.id,
+          name: program.name,
+          isSelected: false
+        }
+      });
+    });
+  };
 
   $scope.selectedItems = [];
 
@@ -16,19 +96,32 @@ function RequisitionReportController($scope, $controller, RequisitionReportServi
       endTime: reportParams.endTime + " 23:59:59",
       provinceId: reportParams.provinceId.toString(),
       districtId: reportParams.districtId.toString(),
-      facilityId: reportParams.facilityId.toString()
+      facilityId: reportParams.facilityId.toString(),
+      programIds: $scope.selectedProgramIds
     };
 
     RequisitionReportService.get(_.pick(requisitionQueryParameters, function (parameter) {
-      return !_.isEmpty(parameter.trim());
+      if (typeof parameter === "string") {
+        return !_.isEmpty(parameter.trim());
+      }
+      return parameter;
     }), function (data) {
       $scope.requisitions = data.rnr_list;
       formatRequisitionList();
     });
   };
 
+  $scope.validateProgram = function () {
+    $scope.invalidProgram = _.isEmpty($scope.selectedProgramIds);
+    return !$scope.invalidProgram;
+  };
+
   $scope.loadReport = function () {
-    if ($scope.validateProvince() && $scope.validateDistrict() && $scope.validateFacility()) {
+    if ($scope.validateProvince() &&
+      $scope.validateDistrict() &&
+      $scope.validateFacility() &&
+      $scope.validateProgram()
+    ) {
       $scope.locationIdToCode($scope.reportParams);
       $scope.loadRequisitions();
     }
@@ -57,7 +150,7 @@ function RequisitionReportController($scope, $controller, RequisitionReportServi
       setSubmittedStatus(rnr);
       setOriginalPeriodString(rnr);
       renameRequisitionType(rnr);
-      programNameFormatter(rnr);
+      rnr.programName = programNameFormatter(rnr.programName);
 
       rnr.inventoryDate = formatDate(rnr.actualPeriodEnd);
     });
@@ -87,10 +180,11 @@ function RequisitionReportController($scope, $controller, RequisitionReportServi
   };
 
   // Todo: when the via classic program name change, this logic need to change. to be continue...
-  var programNameFormatter = function (rnr) {
-    if (rnr.programName === "VIA Classica") {
-      rnr.programName = messageService.get("label.report.requisitions.programname.balancerequisition");
+  var programNameFormatter = function (programName) {
+    if (programName === "VIA Classica") {
+      return messageService.get("label.report.requisitions.programname.balancerequisition");
     }
+    return programName;
  };
 
   $scope.submittedTimeFormatter = function (submittedTime, submittedTimeString) {
