@@ -73,10 +73,11 @@ describe('requisition report controller', function () {
     scope.reportParams.facilityId = 1;
     scope.reportParams.districtId = 1;
     scope.reportParams.provinceId = 1;
+    scope.selectedProgramIds = [1, 2]
     scope.reportParams.selectedFacility = {'name': 'Matalane'};
     scope.reportParams.selectedDistrict = {'name': 'Marracuene'};
     scope.reportParams.selectedProvince = {'name': 'Maputo'};
-    httpBackend.expectGET('/reports/requisition-report.json?districtId=1&endTime=2017-02-01+23:59:59&facilityId=1&provinceId=1&startTime=2017-01-01+00:00:00').respond(200, requisitions);
+    httpBackend.expectGET('/reports/requisition-report.json?districtId=1&endTime=2017-02-01+23:59:59&facilityId=1&programIds=1&programIds=2&provinceId=1&startTime=2017-01-01+00:00:00').respond(200, requisitions);
 
     scope.loadReport();
     httpBackend.flush();

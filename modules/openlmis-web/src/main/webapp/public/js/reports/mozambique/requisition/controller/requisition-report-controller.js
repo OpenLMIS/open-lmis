@@ -104,6 +104,9 @@ function RequisitionReportController($scope, $controller, RequisitionReportServi
       if (typeof parameter === "string") {
         return !_.isEmpty(parameter.trim());
       }
+      if (_.isArray(parameter) ) {
+        return !_.isEmpty(parameter)
+      }
       return parameter;
     }), function (data) {
       $scope.requisitions = data.rnr_list;
