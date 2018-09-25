@@ -1,11 +1,10 @@
 package org.openlmis.report.view;
 
 import lombok.Getter;
-import org.apache.poi.ss.usermodel.Cell;
-import org.apache.poi.ss.usermodel.CellStyle;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
+import org.openlmis.report.view.type.ExcelCellValueSetterService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.servlet.ModelAndView;
@@ -18,6 +17,7 @@ import java.text.SimpleDateFormat;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -28,20 +28,28 @@ public class CustomExcelTemplate  extends AbstractXlsxView {
     private static final String KEY_EXCEL_CONTENT = "KEY_EXCEL_CONTENT";
     @Getter
     private static final String KEY_EXCEL_HEADERS = "KEY_EXCEL_HEADERS";
+    @Getter
+    private static final String KEY_EXCEL_TITLES = "KEY_EXCEL_TITLES";
+    private static final String KEY_EXCEL_VALUE_SETTER_SERVICE = "KEY_EXCEL_VALUE_SETTER_SERVICE";
     private static final DateFormat DATE_FORMAT_DD_MM_YYYY = new SimpleDateFormat("dd/MM/yyyy");
     private static final DateFormat DATE_FORMAT_YYYY_MM_DD = new SimpleDateFormat("yyyy-MM-dd");
     private static final String REPORT_HEADER_KEY_DATE = "date";
 
 
-    public static ModelAndView newModelAndView(Object reportContent, Object reportHeaders) {
+
+    public static ModelAndView newModelAndView(Object reportContent, Object reportHeaders, Object reportTitles,
+                                               ExcelCellValueSetterService excelCellValueSetterService) {
         ModelAndView modelAndView = new ModelAndView(INSTANCE);
         modelAndView.addObject(KEY_EXCEL_CONTENT, reportContent);
         modelAndView.addObject(KEY_EXCEL_HEADERS, reportHeaders);
+        modelAndView.addObject(KEY_EXCEL_TITLES, reportTitles);
+        modelAndView.addObject(KEY_EXCEL_VALUE_SETTER_SERVICE, excelCellValueSetterService);
         return modelAndView;
     }
 
-    public static ModelAndView newModelAndView(Map<String, Object> model) {
-        return newModelAndView(model.get(KEY_EXCEL_CONTENT), model.get(KEY_EXCEL_HEADERS));
+    public static ModelAndView newModelAndView(Map<String, Object> model, ExcelCellValueSetterService excelCellValueSetterService) {
+        return newModelAndView(model.get(KEY_EXCEL_CONTENT), model.get(KEY_EXCEL_HEADERS),
+                model.get(KEY_EXCEL_TITLES), excelCellValueSetterService);
     }
 
     private static CustomExcelTemplate INSTANCE = new CustomExcelTemplate();
@@ -51,6 +59,8 @@ public class CustomExcelTemplate  extends AbstractXlsxView {
 
         Object reportContent = model.get(KEY_EXCEL_CONTENT);
         Object reportHeaders = model.get(KEY_EXCEL_HEADERS);
+        Object reportTitles = model.get(KEY_EXCEL_TITLES);
+        ExcelCellValueSetterService excelCellValueSetterService = (ExcelCellValueSetterService)model.get(KEY_EXCEL_VALUE_SETTER_SERVICE);
 
         if (!(reportContent instanceof Collection)) {
             throw new IllegalArgumentException("Type is not correct");
@@ -60,12 +70,29 @@ public class CustomExcelTemplate  extends AbstractXlsxView {
             throw new IllegalArgumentException("Type is not correct");
         }
 
+        if (null != reportTitles) {
+            if (!(reportTitles instanceof Collection)) {
+                throw new IllegalArgumentException("Type is not correct");
+            }
+        }
+
         Collection<?> reportContentList = (Collection<?>) reportContent;
 
         int rowIndex = 0;
         int headerCellIndex = 0;
 
         Sheet sheet = workbook.createSheet();
+
+        if (null != reportTitles) {
+            int titleIndex = 0;
+            Row titles = sheet.createRow(rowIndex++);
+            Collection<String> reportTitleCollection = (List<String>)reportTitles;
+            for (String title : reportTitleCollection) {
+                titles.createCell(titleIndex++).setCellValue(title);
+            }
+        }
+
+
         Row header = sheet.createRow(rowIndex++);
 
         Collection reportHeaderValues = ((LinkedHashMap) reportHeaders).values();
@@ -84,41 +111,19 @@ public class CustomExcelTemplate  extends AbstractXlsxView {
 
             for (int cellIndex = 0; cellIndex < headerKeys.length; cellIndex++) {
                 Object cellWrapper = ((HashMap) reportContentMap).get(headerKeys[cellIndex]);
-                String cellValue = null;
-                Map<String, Object> styleMap = null;
-                if (cellWrapper instanceof Map) {
-                    Map<String, Object> tmp = (Map<String, Object>)cellWrapper;
-                    cellValue = (String)tmp.get("value");
-                    styleMap = (Map<String, Object>)tmp.get("style");
-                } else {
-                    cellValue = (String)cellWrapper;
-                }
-                if (headerKeys[cellIndex].equals(REPORT_HEADER_KEY_DATE)) {
+                if (cellWrapper instanceof String && headerKeys[cellIndex].equals(REPORT_HEADER_KEY_DATE)) {
                     String formattedDateString = "";
                     try {
-                        formattedDateString = DATE_FORMAT_DD_MM_YYYY.format(DATE_FORMAT_YYYY_MM_DD.parse(cellValue));
+                        formattedDateString = DATE_FORMAT_DD_MM_YYYY.format(DATE_FORMAT_YYYY_MM_DD.parse((String)cellWrapper));
                     } catch (ParseException e) {
                         e.printStackTrace();
                         LOGGER.error("Date parse error: ", e);
                     }
                     itemRow.createCell(cellIndex).setCellValue(formattedDateString);
                 } else {
-                    itemRow.createCell(cellIndex).setCellValue(cellValue);
-                }
-
-                if (null != styleMap) {
-                    Cell cell = itemRow.getCell(itemRow.getLastCellNum() - 1);
-                    cell.setCellStyle(fillCellStyle(styleMap, workbook.createCellStyle()));
+                    excelCellValueSetterService.setCellValue(cellWrapper, workbook, itemRow.createCell(cellIndex));
                 }
             }
         }
-    }
-
-    private CellStyle fillCellStyle(Map<String, Object> styleMap, CellStyle cellStyle) {
-        if (styleMap.containsKey("color")) {
-            cellStyle.setFillForegroundColor((short) styleMap.get("color"));
-            cellStyle.setFillPattern(CellStyle.SOLID_FOREGROUND);
-        }
-        return cellStyle;
     }
 }

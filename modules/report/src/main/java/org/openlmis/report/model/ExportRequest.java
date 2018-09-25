@@ -17,5 +17,7 @@ public class ExportRequest {
 
     private LinkedHashMap<String,String> reportHeaders;
 
-    private List<Map<String, String>> reportContent;
+    private List<Map<String, Object>> reportContent;
+
+    private List<String> reportTitles;
 }

@@ -285,7 +285,7 @@ public class NosDrugReportGenerator extends AbstractReportModelGenerator {
 
             return set;
         }
-        return null;
+        return new HashSet<>();
     }
 
     protected Map<String, List<Map<String, String>>> groupByKey(List<Map<String, String>> listMap, String... keyList) {

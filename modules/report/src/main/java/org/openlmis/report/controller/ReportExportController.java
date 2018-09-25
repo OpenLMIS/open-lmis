@@ -20,6 +20,7 @@ import org.openlmis.report.generator.ReportModelGeneratorService;
 import org.openlmis.report.model.ExportRequest;
 import org.openlmis.report.service.lookup.ReportLookupService;
 import org.openlmis.report.view.CustomExcelTemplate;
+import org.openlmis.report.view.type.ExcelCellValueSetterService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -48,44 +49,47 @@ public class ReportExportController extends BaseController {
     private static final String HTML = "HTML";
     private static final String CSV = "CSV";
 
-  @Autowired
-  public ReportManager reportManager;
+    @Autowired
+    public ReportManager reportManager;
 
-  @Autowired
-  public ReportLookupService reportService;
+    @Autowired
+    public ReportLookupService reportService;
 
-  @Autowired
-  private ReportModelGeneratorService reportModelGeneratorStrategy;
+    @Autowired
+    private ReportModelGeneratorService reportModelGeneratorStrategy;
+
+    @Autowired
+    private ExcelCellValueSetterService excelCellValueSetterService;
 
 
-  @RequestMapping(value = "/download/{reportKey}/{outputOption}")
-  public void showReport(
-    @PathVariable(value = "reportKey") String reportKey
-    , @PathVariable(value = "outputOption") String outputOption
-    , HttpServletRequest request
-    , HttpServletResponse response
-  ) {
-    Integer userId = Integer.parseInt(request.getSession().getAttribute(USER_ID).toString());
+    @RequestMapping(value = "/download/{reportKey}/{outputOption}")
+    public void showReport(
+            @PathVariable(value = "reportKey") String reportKey
+            , @PathVariable(value = "outputOption") String outputOption
+            , HttpServletRequest request
+            , HttpServletResponse response
+    ) {
+        Integer userId = Integer.parseInt(request.getSession().getAttribute(USER_ID).toString());
 
-    switch (outputOption.toUpperCase()) {
-        case PDF:
-        reportManager.showReport(userId, reportKey, request.getParameterMap(), ReportOutputOption.PDF, response);
-        break;
-        case XLS:
-        reportManager.showReport(userId, reportKey, request.getParameterMap(), ReportOutputOption.XLS, response);
-        break;
-        case HTML:
-        reportManager.showReport(userId, reportKey, request.getParameterMap(), ReportOutputOption.HTML, response);
-        break;
-        case CSV:
-        reportManager.showReport(userId, reportKey, request.getParameterMap(), ReportOutputOption.CSV, response);
-        break;
-        default:
+        switch (outputOption.toUpperCase()) {
+            case PDF:
+                reportManager.showReport(userId, reportKey, request.getParameterMap(), ReportOutputOption.PDF, response);
+                break;
+            case XLS:
+                reportManager.showReport(userId, reportKey, request.getParameterMap(), ReportOutputOption.XLS, response);
+                break;
+            case HTML:
+                reportManager.showReport(userId, reportKey, request.getParameterMap(), ReportOutputOption.HTML, response);
+                break;
+            case CSV:
+                reportManager.showReport(userId, reportKey, request.getParameterMap(), ReportOutputOption.CSV, response);
+                break;
+            default:
+        }
     }
-  }
 
 
-   @RequestMapping(value = "/download/unscheduled_reporting/list/{outputOption}")
+    @RequestMapping(value = "/download/unscheduled_reporting/list/{outputOption}")
     public void showUnscheduledReportingReport(
             @PathVariable(value = "outputOption") String outputOption
             , HttpServletRequest request
@@ -105,13 +109,14 @@ public class ReportExportController extends BaseController {
 
     @RequestMapping(value = "/download/excel", method = POST, headers = ACCEPT_JSON)
     public ModelAndView generateReport(@RequestBody ExportRequest exportRequest) throws IOException {
-        if (exportRequest.getReportContent().size() == 0 ) return null;
-        return CustomExcelTemplate.newModelAndView(exportRequest.getReportContent(), exportRequest.getReportHeaders());
+        if (exportRequest.getReportContent().size() == 0) return null;
+        return CustomExcelTemplate.newModelAndView(exportRequest.getReportContent(), exportRequest.getReportHeaders(),
+                exportRequest.getReportTitles(), excelCellValueSetterService);
     }
 
     @RequestMapping(value = "/download/excel/backend", method = POST, headers = ACCEPT_JSON)
-    public ModelAndView generateReport(@RequestBody Map<Object,Object> paraMap) {
-        if (paraMap.size() == 0 ) return null;
-        return CustomExcelTemplate.newModelAndView(reportModelGeneratorStrategy.generateModel(paraMap));
+    public ModelAndView generateReport(@RequestBody Map<Object, Object> paraMap) {
+        if (paraMap.size() == 0) return null;
+        return CustomExcelTemplate.newModelAndView(reportModelGeneratorStrategy.generateModel(paraMap), excelCellValueSetterService);
     }
 }
