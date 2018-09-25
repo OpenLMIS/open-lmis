@@ -46,6 +46,8 @@ function RequisitionReportController($scope, $controller, RequisitionReportServi
 
       $scope.selectedProgramNames = [];
     }
+
+    $scope.showProgramList = !$scope.showProgramList;
   };
 
   $scope.selectProgram = function (programId) {
@@ -56,6 +58,8 @@ function RequisitionReportController($scope, $controller, RequisitionReportServi
       }
       return program;
     });
+
+    $scope.showProgramList = !$scope.showProgramList;
   };
 
   var updateSelectedProgramIdsAndNames = function (program) {
@@ -71,6 +75,36 @@ function RequisitionReportController($scope, $controller, RequisitionReportServi
         return programName !== program.name;
       });
     }
+    updateSelectAllOptionStyle();
+  };
+
+  var updateSelectAllOptionStyle = function () {
+    var selectedProgramIds = $scope.selectedProgramIds;
+    var allProgramIds = $scope.allProgramIds;
+    var intersectionIds = _.intersection(allProgramIds, selectedProgramIds);
+
+    if (intersectionIds.length === allProgramIds.length) {
+      $scope.selectedProgramAllClass = 'selection-checkbox__all';
+      $scope.selectedAll = true;
+      $scope.selectedProgramNames = ['All'];
+    }
+
+
+    if (intersectionIds.length > 0 && intersectionIds.length < allProgramIds.length) {
+      $scope.selectedProgramAllClass = 'selection-checkbox__half';
+      $scope.selectedAll = false;
+      $scope.selectedProgramNames = _.filter(_.map($scope.requisitionPrograms, function (program) {
+        if (_.include(selectedProgramIds, program.id)) {
+          return program.name;
+        }
+      }));
+    }
+
+    if (intersectionIds.length === 0) {
+      $scope.selectedProgramAllClass = 'selection-checkbox__not-select';
+      $scope.selectedAll = false;
+      $scope.selectedProgramNames = [];
+    }
   };
 
   var loadRequisitionPrograms = function () {
@@ -78,13 +112,13 @@ function RequisitionReportController($scope, $controller, RequisitionReportServi
       $scope.requisitionPrograms = _.map(data['requisiton-programs'], function (program) {
         return {
           id: program.id,
-          name: program.name,
+          name: programNameFormatter(program.name),
           isSelected: false
         };
       });
-      $scope.allProgramIds = _.sortBy(_.map($scope.requisitionPrograms, function (program) {
+      $scope.allProgramIds = _.map($scope.requisitionPrograms, function (program) {
         return program.id;
-      }));
+      });
     });
   };
 

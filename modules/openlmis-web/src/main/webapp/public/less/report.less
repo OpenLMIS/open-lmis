@@ -617,6 +617,7 @@ div.pagination div.btn-group {
 
 .program-selection {
   display: block;
+  font-size: 13px;
   height: 26px;
   width: 150px;
   padding: 0 0 0 8px;
@@ -654,11 +655,28 @@ div.pagination div.btn-group {
 
     > b {
       display: block;
-      background: url(../images/select-icon.png) no-repeat;
       width: 100%;
       height: 100%;
+    }
+
+    .selection-up-icon {
+      background: url(../images/select-icon.png) no-repeat;
       background-size: 60px 40px;
     }
+
+    .selection-down-icon {
+      background: url(../images/select-icon.png) no-repeat -18px 0;
+      background-size: 60px 40px;
+    }
+  }
+}
+
+.program-selection-down {
+  border: 1px solid #17888f;
+  border-bottom: none;
+  border-radius: 4px 4px 0 0;
+  >span {
+    border-radius: 0 4px 0 0;
   }
 }
 
