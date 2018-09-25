@@ -280,14 +280,16 @@ function RequisitionReportController($scope, $controller, RequisitionReportServi
         requisitionContent.submittedStatus = requisition.submittedStatus;
         requisitionContent.originalPeriodDate = requisition.originalPeriodString;
         requisitionContent.submittedTime = {
-          value: DateFormatService.formatDateWithDateMonthYear(requisition.clientSubmittedTime),
+          value: !!requisition.clientSubmittedTime ?
+            DateFormatService.formatDateWithDateMonthYear(requisition.clientSubmittedTime) : '',
           dataType: 'date',
           style: {
             dataPattern: 'dd-MM-yyyy'
           }
         };
         requisitionContent.syncTime = {
-          value: DateFormatService.formatDateWithDateMonthYear(requisition.webSubmittedTime),
+          value: !!requisition.webSubmittedTime ?
+            DateFormatService.formatDateWithDateMonthYear(requisition.webSubmittedTime) : '',
           dataType: 'date',
           style: {
             dataPattern: 'dd-MM-yyyy'
