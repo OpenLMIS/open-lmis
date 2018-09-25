@@ -24,7 +24,7 @@ function RequisitionReportController($scope, $controller, RequisitionReportServi
     $scope.showProgramList = !$scope.showProgramList;
   };
 
-  $scope.selectALl = function () {
+  $scope.selectALL = function () {
     $scope.selectedAll = !$scope.selectedAll;
 
     if ($scope.selectedAll) {
