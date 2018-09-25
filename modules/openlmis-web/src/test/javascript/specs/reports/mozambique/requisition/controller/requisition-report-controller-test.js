@@ -56,12 +56,13 @@ describe('requisition report controller', function () {
 
   beforeEach(module('openlmis'));
   beforeEach(module('ui.bootstrap.dialog'));
-  beforeEach(inject(function (_$httpBackend_, $rootScope, $controller, _messageService_, ReportExportExcelService, DateFormatService) {
+  beforeEach(inject(function (_$httpBackend_, $rootScope, $controller, _messageService_, ReportExportExcelService, DateFormatService, DateFormatService) {
     scope = $rootScope.$new();
     httpBackend = _$httpBackend_;
     messageService = _messageService_;
     reportExportExcelService = ReportExportExcelService;
     dateFormatService = DateFormatService;
+    dateFormatService = DateFormatService
     $controller(RequisitionReportController, {$scope: scope});
   }));
 
@@ -154,11 +155,23 @@ describe('requisition report controller', function () {
       districtName: 'Moamba',
       facilityName: 'Sabie',
       submittedUser: 'Sabie',
-      inventoryDate: { value : 1500028406115, dataType : 'date', style: { dataPattern : 'yyyy-MM-dd' } },
+      inventoryDate: {
+        value : dateFormatService.formatDateWithDateMonthYear(1500028406115),
+        dataType : 'date',
+        style: { dataPattern : 'dd-MM-yyyy' }
+      },
       submittedStatus: 'On time',
       originalPeriodDate : '21 Jan 2018 - 20 Feb 2018',
-      submittedTime: { value : 1500029935097, dataType : 'date', style: { dataPattern : 'yyyy-MM-dd' } },
-      syncTime: { value : 1500029942231, dataType : 'date', style: { dataPattern : 'yyyy-MM-dd' } }
+      submittedTime: {
+        value : dateFormatService.formatDateWithDateMonthYear(1500029935097),
+        dataType : 'date',
+        style: { dataPattern : 'dd-MM-yyyy' }
+      },
+      syncTime: {
+        value : dateFormatService.formatDateWithDateMonthYear(1500029942231),
+        dataType : 'date',
+        style: { dataPattern : 'dd-MM-yyyy' }
+      }
     };
 
     var expectedExcel = {
