@@ -57,6 +57,7 @@ function RequisitionReportController($scope, $controller, RequisitionReportServi
       setSubmittedStatus(rnr);
       setOriginalPeriodString(rnr);
       renameRequisitionType(rnr);
+      programNameFormatter(rnr);
 
       rnr.inventoryDate = formatDate(rnr.actualPeriodEnd);
     });
@@ -86,13 +87,11 @@ function RequisitionReportController($scope, $controller, RequisitionReportServi
   };
 
   // Todo: when the via classic program name change, this logic need to change. to be continue...
-  $scope.programNameFormatter = function (programName) {
-    if (programName === "VIA Classica") {
-      return messageService.get("label.report.requisitions.programname.balancerequisition");
+  var programNameFormatter = function (rnr) {
+    if (rnr.programName === "VIA Classica") {
+      rnr.programName = messageService.get("label.report.requisitions.programname.balancerequisition");
     }
-
-    return programName;
-  };
+ };
 
   $scope.submittedTimeFormatter = function (submittedTime, submittedTimeString) {
     return submittedTime ? submittedTimeString : "";
@@ -135,8 +134,7 @@ function RequisitionReportController($scope, $controller, RequisitionReportServi
       },
       {
         field: 'programName',
-        displayName: messageService.get("label.report.requisitions.programname"),
-        cellTemplate: '<div class="customCell">{{programNameFormatter(row.entity.programName)}}</div>',
+        displayName: messageService.get("label.report.requisitions.programname")
       },
       {
         field: 'type',

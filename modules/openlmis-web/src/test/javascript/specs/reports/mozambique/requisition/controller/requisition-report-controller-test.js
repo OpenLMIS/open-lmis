@@ -184,11 +184,6 @@ describe('requisition report controller', function () {
 
   });
 
-  it('should format program name', function () {
-    expect(scope.programNameFormatter('VIA Classica')).toBe(messageService.get('label.report.requisitions.programname.balancerequisition'));
-    expect(scope.programNameFormatter('MMIA')).toBe('MMIA');
-  });
-
   it('should format submitted time', function () {
     expect(scope.submittedTimeFormatter(null, '')).toBe('');
     expect(scope.submittedTimeFormatter(1537325189267, '2018-09-19')).toBe('2018-09-19');
