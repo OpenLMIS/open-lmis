@@ -1,0 +1,33 @@
+<div class="report-selection program-choose">
+    <label class="labels" openlmis-message="label.programname"></label>
+
+    <div class="form-fields">
+        <a ng-click="clickProgramSelection()" class="program-selection" ng-class="showProgramList && 'program-selection-down'">
+            {{selectedProgramNames.join(',')}}
+            <span><b ng-class="showProgramList ? 'selection-down-icon' : 'selection-up-icon'"></b></span>
+        </a>
+        <div ng-show="showProgramList" class="program-list">
+            <ul>
+                <li ng-click="selectALL()">
+                    <div>
+                        <span class="selection-checkbox"
+                              ng-class="selectedProgramAllClass"
+                        ></span>
+                        <span openlmis-message="report.tracer.all"></span>
+                    </div>
+                </li>
+                <li ng-repeat="program in requisitionPrograms"
+                    value="{{program.id}}"
+                    ng-click="selectProgram(program.id)">
+                    <div>
+                        <span class="selection-checkbox"
+                              ng-class="program.isSelected ? 'selection-checkbox__all' : 'selection-checkbox__not-select'"></span>
+                        {{program.name}}
+                    </div>
+                </li>
+            </ul>
+        </div>
+    </div>
+
+    <span class="field-error" ng-show="invalidProgram" openlmis-message="report.missing.program"></span>
+</div>
