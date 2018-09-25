@@ -4,6 +4,9 @@ function RequisitionReportController($scope, $controller, RequisitionReportServi
   $controller("BaseProductReportController", {$scope: $scope});
 
   $scope.location = '';
+  var SELECTION_CHECKBOX_NOT_SELECT_STYLES = 'selection-checkbox__not-select';
+  var SELECTION_CHECKBOX_ALL_STYLES = 'selection-checkbox__all';
+  var SELECTION_CHECKBOX_HALF_STYLES = 'selection-checkbox__half';
 
   $scope.$on('$viewContentLoaded', function () {
     loadRequisitionPrograms();
@@ -13,8 +16,8 @@ function RequisitionReportController($scope, $controller, RequisitionReportServi
     $scope.showProgramList = false;
     $scope.selectedAll = false;
     $scope.allProgramIds = [];
-    $scope.selectedProgramClass = 'selection-checkbox__not-select';
-    $scope.selectedProgramAllClass = 'selection-checkbox__not-select';
+    $scope.selectedProgramClass = SELECTION_CHECKBOX_NOT_SELECT_STYLES;
+    $scope.selectedProgramAllClass = SELECTION_CHECKBOX_NOT_SELECT_STYLES;
   });
 
   $scope.clickProgramSelection = function () {
@@ -25,7 +28,7 @@ function RequisitionReportController($scope, $controller, RequisitionReportServi
     $scope.selectedAll = !$scope.selectedAll;
 
     if ($scope.selectedAll) {
-      $scope.selectedProgramAllClass = 'selection-checkbox__all';
+      $scope.selectedProgramAllClass = SELECTION_CHECKBOX_ALL_STYLES;
       $scope.selectedProgramClass = _.map($scope.requisitionPrograms, function (program) {
         program.isSelected = true;
         return program;
@@ -34,14 +37,14 @@ function RequisitionReportController($scope, $controller, RequisitionReportServi
         return program.id;
       });
 
-      $scope.selectedProgramNames = ['All'];
+      $scope.selectedProgramNames = [messageService.get("report.tracer.all")];
 
     } else {
       $scope.selectedProgramClass = _.map($scope.requisitionPrograms, function (program) {
         program.isSelected = false;
         return program;
       });
-      $scope.selectedProgramAllClass = 'selection-checkbox__not-select';
+      $scope.selectedProgramAllClass = SELECTION_CHECKBOX_NOT_SELECT_STYLES;
       $scope.selectedProgramIds = [];
 
       $scope.selectedProgramNames = [];
@@ -84,14 +87,14 @@ function RequisitionReportController($scope, $controller, RequisitionReportServi
     var intersectionIds = _.intersection(allProgramIds, selectedProgramIds);
 
     if (intersectionIds.length === allProgramIds.length) {
-      $scope.selectedProgramAllClass = 'selection-checkbox__all';
+      $scope.selectedProgramAllClass = SELECTION_CHECKBOX_ALL_STYLES;
       $scope.selectedAll = true;
-      $scope.selectedProgramNames = ['All'];
+      $scope.selectedProgramNames = [messageService.get("report.tracer.all")];
     }
 
 
     if (intersectionIds.length > 0 && intersectionIds.length < allProgramIds.length) {
-      $scope.selectedProgramAllClass = 'selection-checkbox__half';
+      $scope.selectedProgramAllClass = SELECTION_CHECKBOX_HALF_STYLES;
       $scope.selectedAll = false;
       $scope.selectedProgramNames = _.filter(_.map($scope.requisitionPrograms, function (program) {
         if (_.include(selectedProgramIds, program.id)) {
@@ -101,7 +104,7 @@ function RequisitionReportController($scope, $controller, RequisitionReportServi
     }
 
     if (intersectionIds.length === 0) {
-      $scope.selectedProgramAllClass = 'selection-checkbox__not-select';
+      $scope.selectedProgramAllClass = SELECTION_CHECKBOX_NOT_SELECT_STYLES;
       $scope.selectedAll = false;
       $scope.selectedProgramNames = [];
     }
