@@ -57,6 +57,9 @@ public class ProductController extends BaseController {
   @Autowired
   private ProductService service;
 
+  @Autowired
+  private KitProductService kitProductService;
+
   @RequestMapping(value = "/groups", method = RequestMethod.GET, headers = ACCEPT_JSON)
   @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_PRODUCT')")
   public List<ProductGroup> getAllGroups() {
@@ -85,8 +88,14 @@ public class ProductController extends BaseController {
     List<ProgramProduct> programProducts = programProductService.getByProductCode(product.getCode());
 
     List<ProductPriceSchedule> productPriceSchedules = priceScheduleService.getByProductId(product.getId());
+    
+    Boolean isKitProduct = false;
+    List<KitProduct> kitProducts = kitProductService.getByProductCode(product.getCode());
+    if(null!= kitProducts && !kitProducts.isEmpty()){
+        isKitProduct = true;
+    }
 
-    return new ProductDTO(product, product.getModifiedDate(), programProducts, productPriceSchedules);
+    return new ProductDTO(product, product.getModifiedDate(), programProducts, productPriceSchedules, isKitProduct, kitProducts);
   }
 
   @RequestMapping(method = POST, headers = ACCEPT_JSON)

@@ -18,12 +18,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.openlmis.authentication.web.UserAuthenticationSuccessHandler;
-import org.openlmis.core.domain.DosageUnit;
-import org.openlmis.core.domain.Product;
-import org.openlmis.core.domain.ProductCategory;
-import org.openlmis.core.domain.ProductForm;
-import org.openlmis.core.domain.ProductGroup;
-import org.openlmis.core.domain.ProgramProduct;
+import org.openlmis.core.domain.*;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.core.service.*;
 import org.openlmis.db.categories.UnitTests;
@@ -56,6 +51,9 @@ public class ProductControllerTest {
 
   @Mock
   private ProductService service;
+
+  @Mock
+  private KitProductService kitProductService;
 
   @Mock
   private ProgramProductService programProductService;
@@ -122,12 +120,14 @@ public class ProductControllerTest {
     when(service.getById(1L)).thenReturn(product);
     when(programProductService.getByProductCode("p10")).thenReturn(programProducts);
     when(priceScheduleService.getByProductId(1L)).thenReturn(null);
+    when(kitProductService.getByProductCode(product.getCode())).thenReturn(null);
 
     ProductDTO productDTO = controller.getById(1L);
 
     assertThat(productDTO.getProduct(), is(product));
     assertThat(productDTO.getProgramProducts(), is(programProducts));
     assertThat(productDTO.getProductLastUpdated(), is(modifiedDate));
+    assertThat(productDTO.getIsKitProduct(), is(Boolean.FALSE));
     verify(service).getById(1L);
     verify(programProductService).getByProductCode("p10");
   }

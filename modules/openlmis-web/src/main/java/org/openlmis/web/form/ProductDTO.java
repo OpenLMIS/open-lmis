@@ -11,6 +11,7 @@
 package org.openlmis.web.form;
 
 import lombok.*;
+import org.openlmis.core.domain.KitProduct;
 import org.openlmis.core.domain.ProductPriceSchedule;
 import org.openlmis.core.domain.Product;
 import org.openlmis.core.domain.ProgramProduct;
@@ -35,4 +36,8 @@ public class ProductDTO {
   private List<ProgramProduct> programProducts;
 
   private List<ProductPriceSchedule> productPriceSchedules;
+
+  private Boolean isKitProduct = false;
+
+  private List<KitProduct> kitProducts;
 }
