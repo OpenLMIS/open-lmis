@@ -50,9 +50,9 @@ public class ExcelCellValueSetterService {
                 cellStyle.setFillPattern(CellStyle.SOLID_FOREGROUND);
             }
 
-            if (styleMap.containsKey("dataPattern")) {
-                if (-1 != HSSFDataFormat.getBuiltinFormat(styleMap.get("dataPattern").toString())) {
-                    cellStyle.setDataFormat(HSSFDataFormat.getBuiltinFormat(styleMap.get("dataPattern").toString()));
+            if (styleMap.containsKey("excelDataPattern")) {
+                if (-1 != HSSFDataFormat.getBuiltinFormat(styleMap.get("excelDataPattern").toString())) {
+                    cellStyle.setDataFormat(HSSFDataFormat.getBuiltinFormat(styleMap.get("excelDataPattern").toString()));
                 } else {
                     cellStyle.setDataFormat(HSSFDataFormat.getBuiltinFormat("m/d/yy"));
                 }
