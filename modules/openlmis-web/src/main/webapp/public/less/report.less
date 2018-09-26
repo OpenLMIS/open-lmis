@@ -620,8 +620,8 @@ div.pagination div.btn-group {
   z-index: 9999;
   font-size: 13px;
   height: 26px;
-  width: 150px;
-  padding: 0 8px;
+  width: 136px;
+  padding: 0 18px 0 4px;
   overflow: hidden;
   position: relative;
   border: 1px solid #aaa;
@@ -687,7 +687,7 @@ div.pagination div.btn-group {
 
 .report-selection {
   .program-list {
-    width: 166px;
+    width: 158px;
     position: absolute;
     z-index: 9999;
     background-color: white;
@@ -710,10 +710,15 @@ div.pagination div.btn-group {
         &:hover {
           cursor: pointer;
           background: #eaf4f4;
+          >div {
+            >span {
+              border-color: #359399;
+            }
+          }
         }
 
         .selection-checkbox {
-          padding: 0 4px;
+          margin: 0 4px;
           display: inline-block;
           vertical-align: middle;
           width: 15px;
@@ -721,8 +726,10 @@ div.pagination div.btn-group {
         }
 
         .selection-checkbox__not-select {
-          background: url(../images/selection-checkbox.png) no-repeat;
-          background-size: 15px;
+          border: 1px solid #B1B1B1;
+          border-radius: 3px;
+          height: 13px;
+          width: 13px;
         }
 
         .selection-checkbox__half {
