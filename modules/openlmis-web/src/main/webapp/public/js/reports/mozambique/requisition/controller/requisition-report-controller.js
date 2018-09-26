@@ -408,7 +408,8 @@ function RequisitionReportController($scope, $controller, RequisitionReportServi
           value: DateFormatService.formatDateWithDateMonthYear(requisition.actualPeriodEnd),
           dataType: 'date',
           style: {
-            dataPattern: 'dd-MM-yyyy'
+            dataPattern: 'dd-MM-yyyy',
+            excelDataPattern: 'm/d/yy'
           }
         };
         requisitionContent.submittedStatus = requisition.submittedStatus;
@@ -418,7 +419,8 @@ function RequisitionReportController($scope, $controller, RequisitionReportServi
             DateFormatService.formatDateWithDateMonthYear(requisition.clientSubmittedTime) : '',
           dataType: 'date',
           style: {
-            dataPattern: 'dd-MM-yyyy'
+            dataPattern: 'dd-MM-yyyy',
+            excelDataPattern: 'm/d/yy'
           }
         };
         requisitionContent.syncTime = {
@@ -426,7 +428,8 @@ function RequisitionReportController($scope, $controller, RequisitionReportServi
             DateFormatService.formatDateWithDateMonthYear(requisition.webSubmittedTime) : '',
           dataType: 'date',
           style: {
-            dataPattern: 'dd-MM-yyyy'
+            dataPattern: 'dd-MM-yyyy',
+            excelDataPattern: 'm/d/yy'
           }
         };
         data.reportContent.push(requisitionContent);
