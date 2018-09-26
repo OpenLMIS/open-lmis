@@ -23,7 +23,8 @@
     "javascript_lint": "grunt jshint",
     "unit_test": "karma start karma.config.js ",
     "uglify": "grunt uglify",
-    "less": "grunt less"
+    "less": "grunt less",
+    "prepush": "npm run javascript_lint && npm run unit_test"
   },
   "dependencies": {
     "moment": "^2.18.1"
