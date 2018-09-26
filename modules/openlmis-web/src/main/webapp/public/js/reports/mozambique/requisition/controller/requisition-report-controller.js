@@ -1,6 +1,6 @@
 function RequisitionReportController($scope, $controller, RequisitionReportService,
      messageService, DateFormatService, FeatureToggleService, $window, $cacheFactory,
-     ReportExportExcelService, ProgramService) {
+     ReportExportExcelService, ProgramService, UnitService) {
   $controller("BaseProductReportController", {$scope: $scope});
 
   $scope.location = '';
@@ -37,7 +37,7 @@ function RequisitionReportController($scope, $controller, RequisitionReportServi
         return program.id;
       });
 
-      $scope.selectedProgramNames = [messageService.get("report.tracer.all")];
+      $scope.selectedProgramNames = ['ALL'];
 
     } else {
       $scope.selectedProgramClass = _.map($scope.requisitionPrograms, function (program) {
@@ -49,8 +49,6 @@ function RequisitionReportController($scope, $controller, RequisitionReportServi
 
       $scope.selectedProgramNames = [];
     }
-
-    $scope.showProgramList = !$scope.showProgramList;
   };
 
   $scope.selectProgram = function (programId) {
@@ -61,8 +59,6 @@ function RequisitionReportController($scope, $controller, RequisitionReportServi
       }
       return program;
     });
-
-    $scope.showProgramList = !$scope.showProgramList;
   };
 
   var updateSelectedProgramIdsAndNames = function (program) {
@@ -89,9 +85,8 @@ function RequisitionReportController($scope, $controller, RequisitionReportServi
     if (intersectionIds.length === allProgramIds.length) {
       $scope.selectedProgramAllClass = SELECTION_CHECKBOX_ALL_STYLES;
       $scope.selectedAll = true;
-      $scope.selectedProgramNames = [messageService.get("report.tracer.all")];
+      $scope.selectedProgramNames = ['ALL'];
     }
-
 
     if (intersectionIds.length > 0 && intersectionIds.length < allProgramIds.length) {
       $scope.selectedProgramAllClass = SELECTION_CHECKBOX_HALF_STYLES;
@@ -115,7 +110,7 @@ function RequisitionReportController($scope, $controller, RequisitionReportServi
       $scope.requisitionPrograms = _.map(data['requisition-programs'], function (program) {
         return {
           id: program.id,
-          name: programNameFormatter(program.name),
+          name: UnitService.programNameFormatter(program.name),
           isSelected: false
         };
       });
@@ -192,7 +187,7 @@ function RequisitionReportController($scope, $controller, RequisitionReportServi
       setSubmittedStatus(rnr);
       setOriginalPeriodString(rnr);
       renameRequisitionType(rnr);
-      rnr.programName = programNameFormatter(rnr.programName);
+      rnr.programName = UnitService.programNameFormatter(rnr.programName);
 
       rnr.inventoryDate = formatDate(rnr.actualPeriodEnd);
     });
@@ -220,14 +215,6 @@ function RequisitionReportController($scope, $controller, RequisitionReportServi
   $scope.isSubmitLate = function (status) {
     return messageService.get("rnr.report.submitted.status.late") === status;
   };
-
-  // Todo: when the via classic program name change, this logic need to change. to be continue...
-  var programNameFormatter = function (programName) {
-    if (programName === "VIA Classica") {
-      return messageService.get("label.report.requisitions.programname.balancerequisition");
-    }
-    return programName;
- };
 
   $scope.submittedTimeFormatter = function (submittedTime, submittedTimeString) {
     return submittedTime ? submittedTimeString : "";
