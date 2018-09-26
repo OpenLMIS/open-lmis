@@ -29,6 +29,10 @@ public abstract class AbstractReportModelGenerator {
 
     protected abstract Object getReportContent(Map<Object, Object> paraMap, Map<String, Object> cubeQueryResult);
 
+    protected Object getReportLegenda(Map<Object, Object> paraMap, Map<String, Object> cubeQueryResult, Map<String, Object> model) {
+        return null;
+    }
+
     protected Map<String, Object> getCubeQueryResult(Map<Object, Object> paraMap) {
         return null;
     }
@@ -48,6 +52,10 @@ public abstract class AbstractReportModelGenerator {
         Map<String, Object> model = new HashMap<>();
         model.put(CustomExcelTemplate.getKEY_EXCEL_HEADERS(), reportHeaders);
         model.put(CustomExcelTemplate.getKEY_EXCEL_CONTENT(), reportContent);
+        Object reportLegenda = getReportLegenda(paraMap, cubeQueryResult, model);
+        if (null != reportLegenda) {
+            model.put(CustomExcelTemplate.getKEY_EXCEL_LEGENDA(), reportLegenda);
+        }
         return model;
     }
 

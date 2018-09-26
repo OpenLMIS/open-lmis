@@ -30,6 +30,8 @@ public class CustomExcelTemplate  extends AbstractXlsxView {
     private static final String KEY_EXCEL_HEADERS = "KEY_EXCEL_HEADERS";
     @Getter
     private static final String KEY_EXCEL_TITLES = "KEY_EXCEL_TITLES";
+    @Getter
+    private static final String KEY_EXCEL_LEGENDA = "KEY_EXCEL_LEGENDA";
     private static final String KEY_EXCEL_VALUE_SETTER_SERVICE = "KEY_EXCEL_VALUE_SETTER_SERVICE";
     private static final DateFormat DATE_FORMAT_DD_MM_YYYY = new SimpleDateFormat("dd/MM/yyyy");
     private static final DateFormat DATE_FORMAT_YYYY_MM_DD = new SimpleDateFormat("yyyy-MM-dd");
@@ -37,19 +39,20 @@ public class CustomExcelTemplate  extends AbstractXlsxView {
 
 
 
-    public static ModelAndView newModelAndView(Object reportContent, Object reportHeaders, Object reportTitles,
+    public static ModelAndView newModelAndView(Object reportContent, Object reportHeaders, Object reportTitles, Object legenda,
                                                ExcelCellValueSetterService excelCellValueSetterService) {
         ModelAndView modelAndView = new ModelAndView(INSTANCE);
         modelAndView.addObject(KEY_EXCEL_CONTENT, reportContent);
         modelAndView.addObject(KEY_EXCEL_HEADERS, reportHeaders);
         modelAndView.addObject(KEY_EXCEL_TITLES, reportTitles);
         modelAndView.addObject(KEY_EXCEL_VALUE_SETTER_SERVICE, excelCellValueSetterService);
+        modelAndView.addObject(KEY_EXCEL_LEGENDA, legenda);
         return modelAndView;
     }
 
     public static ModelAndView newModelAndView(Map<String, Object> model, ExcelCellValueSetterService excelCellValueSetterService) {
         return newModelAndView(model.get(KEY_EXCEL_CONTENT), model.get(KEY_EXCEL_HEADERS),
-                model.get(KEY_EXCEL_TITLES), excelCellValueSetterService);
+                model.get(KEY_EXCEL_TITLES), model.get(KEY_EXCEL_LEGENDA),excelCellValueSetterService);
     }
 
     private static CustomExcelTemplate INSTANCE = new CustomExcelTemplate();
@@ -60,6 +63,7 @@ public class CustomExcelTemplate  extends AbstractXlsxView {
         Object reportContent = model.get(KEY_EXCEL_CONTENT);
         Object reportHeaders = model.get(KEY_EXCEL_HEADERS);
         Object reportTitles = model.get(KEY_EXCEL_TITLES);
+        Object reportLegenda = model.get(KEY_EXCEL_LEGENDA);
         ExcelCellValueSetterService excelCellValueSetterService = (ExcelCellValueSetterService)model.get(KEY_EXCEL_VALUE_SETTER_SERVICE);
 
         if (!(reportContent instanceof Collection)) {
@@ -72,6 +76,12 @@ public class CustomExcelTemplate  extends AbstractXlsxView {
 
         if (null != reportTitles) {
             if (!(reportTitles instanceof Collection)) {
+                throw new IllegalArgumentException("Type is not correct");
+            }
+        }
+
+        if (null != reportLegenda) {
+            if (!(reportLegenda instanceof Collection)) {
                 throw new IllegalArgumentException("Type is not correct");
             }
         }
@@ -122,6 +132,16 @@ public class CustomExcelTemplate  extends AbstractXlsxView {
                     itemRow.createCell(cellIndex).setCellValue(formattedDateString);
                 } else {
                     excelCellValueSetterService.setCellValue(cellWrapper, workbook, itemRow.createCell(cellIndex));
+                }
+            }
+        }
+
+        if (null != reportLegenda) {
+            List<List<Map<String, Object>>> list = (List<List<Map<String, Object>>>)reportLegenda;
+            for (List<Map<String, Object>> listMap : list) {
+                Row row = sheet.createRow(rowIndex++);
+                for (Map<String, Object> map : listMap) {
+                    excelCellValueSetterService.setLegendaCellValue(map, workbook, row);
                 }
             }
         }

@@ -111,7 +111,7 @@ public class ReportExportController extends BaseController {
     public ModelAndView generateReport(@RequestBody ExportRequest exportRequest) throws IOException {
         if (exportRequest.getReportContent().size() == 0) return null;
         return CustomExcelTemplate.newModelAndView(exportRequest.getReportContent(), exportRequest.getReportHeaders(),
-                exportRequest.getReportTitles(), excelCellValueSetterService);
+                exportRequest.getReportTitles(),null, excelCellValueSetterService);
     }
 
     @RequestMapping(value = "/download/excel/backend", method = POST, headers = ACCEPT_JSON)

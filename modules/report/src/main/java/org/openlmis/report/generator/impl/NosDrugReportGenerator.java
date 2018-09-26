@@ -6,6 +6,7 @@ import org.apache.commons.lang3.math.NumberUtils;
 import org.openlmis.core.utils.DateUtil;
 import org.openlmis.report.generator.AbstractReportModelGenerator;
 import org.openlmis.report.generator.StockOnHandStatus;
+import org.openlmis.report.view.CustomExcelTemplate;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 
@@ -88,6 +89,45 @@ public class NosDrugReportGenerator extends AbstractReportModelGenerator {
     @Override
     protected Object getReportContent(Map<Object, Object> paraMap, Map<String, Object> cubeQueryResult) {
         return getNosDrugHash(cubeQueryResult);
+    }
+
+    @Override
+    protected Object getReportLegenda(Map<Object, Object> paraMap, Map<String, Object> cubeQueryResult,
+                                      Map<String, Object> model) {
+        Map<String,String> content = (Map<String,String>)model.get(CustomExcelTemplate.getKEY_EXCEL_HEADERS());
+        List<List<Map<String, Object>>> legenda = new ArrayList<>();
+        int count = content.size();
+
+        //legenda text
+        List<Map<String, Object>> legendaText = new ArrayList<>();
+        legendaText.add(createCellWithIndex("legenda", count));
+        legenda.add(legendaText);
+
+        legenda.add(createStockRowList(StockOnHandStatus.STOCK_OUT, count));
+        legenda.add(createStockRowList(StockOnHandStatus.REGULAR_STOCK, count));
+        legenda.add(createStockRowList(StockOnHandStatus.LOW_STOCK, count));
+        legenda.add(createStockRowList(StockOnHandStatus.OVER_STOCK, count));
+
+        return legenda;
+    }
+
+    private List<Map<String, Object>> createStockRowList(StockOnHandStatus stockOnHandStatus, int count) {
+        List<Map<String, Object>> row = new ArrayList<>();
+        Map<String, Object> map = createCellWithIndex("", count);
+        Map<String, Object> styleMap = new HashMap<>();
+        styleMap.put("color", stockOnHandStatus.getColorIndex());
+        map.put("style", styleMap);
+        row.add(map);
+
+        row.add(createCellWithIndex(getMessage(stockOnHandStatus.getMessageKey()), count + 1));
+        return row;
+    }
+
+    private Map<String, Object> createCellWithIndex(String value, int cellIndex) {
+        Map<String, Object> map = new HashMap<>();
+        map.put("value", value);
+        map.put("cellIndex", cellIndex);
+        return map;
     }
 
     private String getQueryStringCmmEntries(Map<Object, Object> paraMap) {
