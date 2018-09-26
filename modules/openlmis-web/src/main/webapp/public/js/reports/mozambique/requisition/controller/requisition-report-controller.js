@@ -20,6 +20,10 @@ function RequisitionReportController($scope, $controller, RequisitionReportServi
     $scope.selectedProgramAllClass = SELECTION_CHECKBOX_NOT_SELECT_STYLES;
   });
 
+  $scope.closeProgramListDialog = function () {
+    $scope.showProgramList = false;
+  };
+
   $scope.clickProgramSelection = function () {
     $scope.showProgramList = !$scope.showProgramList;
   };

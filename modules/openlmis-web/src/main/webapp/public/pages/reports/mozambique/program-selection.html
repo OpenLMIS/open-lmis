@@ -1,6 +1,17 @@
 <div class="report-selection program-choose">
     <label class="labels" openlmis-message="label.programname"></label>
 
+    <div style="
+        z-index: 9998;
+        position: fixed;
+        left: 0;
+        top: 0;
+        min-height: 100%;
+        min-width: 100%;"
+         ng-style="{display: showProgramList ? 'block' : 'none'}"
+         ng-click="closeProgramListDialog()"
+    ></div>
+
     <div class="form-fields">
         <a ng-click="clickProgramSelection()" class="program-selection" ng-class="showProgramList && 'program-selection-down'">
             {{selectedProgramNames.join(',')}}
