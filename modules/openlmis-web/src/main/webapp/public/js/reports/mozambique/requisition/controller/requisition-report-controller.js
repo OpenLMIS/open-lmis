@@ -112,7 +112,7 @@ function RequisitionReportController($scope, $controller, RequisitionReportServi
 
   var loadRequisitionPrograms = function () {
     ProgramService.loadRequisitionPrograms().get({}, function (data) {
-      $scope.requisitionPrograms = _.map(data['requisiton-programs'], function (program) {
+      $scope.requisitionPrograms = _.map(data['requisition-programs'], function (program) {
         return {
           id: program.id,
           name: programNameFormatter(program.name),

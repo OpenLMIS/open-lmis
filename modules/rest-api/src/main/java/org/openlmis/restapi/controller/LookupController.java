@@ -52,7 +52,7 @@ public class LookupController {
     public static final String FACILITIES = "facilities";
     public static final String FACILITY = "facility";
     public static final String PROGRAMS = "programs";
-    public static final String REQUISITON_PROGRAMS = "requisiton-programs";
+    public static final String REQUISITION_PROGRAMS = "requisition-programs";
     public static final String PROGRAM_PRODUCTS = "program-products";
     public static final String FACILITY_APPROVED_PRODUCTS = "facility-approved-products";
     public static final String PROGRAM = "program";
@@ -178,7 +178,7 @@ public class LookupController {
     )
     @RequestMapping(value = "/rest-api/lookup/requisition-programs", method = RequestMethod.GET, headers = ACCEPT_JSON)
     public ResponseEntity getRequisitionPrograms() {
-        return RestResponse.response(REQUISITON_PROGRAMS, lookupService.getRequisitionPrograms());
+        return RestResponse.response(REQUISITION_PROGRAMS, lookupService.getRequisitionPrograms());
     }
 
     @ApiOperation(value = "Program Products", notes = "Returns a complete list of Products supported by Program.", response = ProgramProduct.class)
