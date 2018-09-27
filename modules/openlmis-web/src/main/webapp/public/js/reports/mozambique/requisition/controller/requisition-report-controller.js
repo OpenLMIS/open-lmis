@@ -118,9 +118,14 @@ function RequisitionReportController($scope, $controller, RequisitionReportServi
           isSelected: false
         };
       });
-      $scope.allProgramIds = _.map($scope.requisitionPrograms, function (program) {
-        return program.id;
-      });
+
+      setAllProgramIds();
+    });
+  };
+
+  var setAllProgramIds = function () {
+    $scope.allProgramIds = _.map($scope.requisitionPrograms, function (program) {
+      return program.id;
     });
   };
 
@@ -149,7 +154,34 @@ function RequisitionReportController($scope, $controller, RequisitionReportServi
     }), function (data) {
       $scope.requisitions = data.rnr_list;
       formatRequisitionList();
+      calculatorProgramsExpectedAndSubmittedQuantity();
     });
+  };
+
+  var calculatorProgramsExpectedAndSubmittedQuantity = function () {
+    var selectedProgram = _.filter($scope.requisitionPrograms, function (program) {
+      return _.include($scope.selectedProgramIds, program.id);
+    });
+
+    $scope.programsExpectedAndSubmittedQuantity =_.map(selectedProgram, function (selectedProgram) {
+      return expectedAndSubmittedQuantityByProgramName(selectedProgram.name);
+    });
+  };
+
+  var expectedAndSubmittedQuantityByProgramName = function (selectedProgramName) {
+    var requisitions = _.filter($scope.requisitions, function (requisition) {
+      return requisition.programName === selectedProgramName;
+    });
+
+    var submittedRequisitions = _.filter(requisitions, function (balanceRequisition) {
+      return balanceRequisition.clientSubmittedTime;
+    });
+
+    return {
+      programName: selectedProgramName,
+      expectedQuantity: requisitions.length,
+      submittedQuantity: submittedRequisitions.length
+    };
   };
 
   $scope.validateProgram = function () {

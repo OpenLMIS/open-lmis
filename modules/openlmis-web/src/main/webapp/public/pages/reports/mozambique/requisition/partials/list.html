@@ -1,35 +1,41 @@
 <div>
-  <div id="control-bar">
-    <h3 class="report-title" openlmis-message="title.requisitions.report"></h3>
-    <div ng-include="'/public/pages/reports/mozambique/facility-selection.html'"></div>
-    <div ng-include="'/public/pages/reports/mozambique/program-selection.html'"></div>
-    <div class="report-selection">
-      <input type="submit" class="btn btn-primary" ng-click="loadReport()"
-             openlmis-message="button.generateReport"/>
+    <div id="control-bar">
+        <h3 class="report-title" openlmis-message="title.requisitions.report"></h3>
+        <div ng-include="'/public/pages/reports/mozambique/facility-selection.html'"></div>
+        <div ng-include="'/public/pages/reports/mozambique/program-selection.html'"></div>
+        <div class="report-selection">
+            <input type="submit" class="btn btn-primary" ng-click="loadReport()"
+                   openlmis-message="button.generateReport"/>
+        </div>
+        <div style="clear: both"></div>
     </div>
-    <div style="clear: both"></div>
-  </div>
-  <hr/>
-  <date-picker-container get-time-range="getTimeRange(dateRange)" picker-type="period"
-                         load-report="loadReport()"></date-picker-container>
-  <hr/>
-  <div ng-show="requisitions.length>0">
-    <div class="report-subtitle">
-      <h4 class="report-total-entries" openlmis-message="label.report.requisitions.total|requisitions.length"></h4>
-      <div class="search-field">
-        <h4 openlmis-message="label.search"></h4>
-        <input type="text" ng-model="filterOptions.filterText"/>
-      </div>
+    <hr/>
+    <date-picker-container get-time-range="getTimeRange(dateRange)" picker-type="period"
+                           load-report="loadReport()"></date-picker-container>
+    <hr/>
+    <div ng-show="requisitions.length>0" class="expected-submitted-total">
+        <div class="expected-submitted-text" openlmis-message="label.report.requisitions.submittedandexpected"></div>
+        <div class="program-item-selection">
+            <div class="program-item"
+                 ng-repeat="programExpectedAndSubmittedQuantity in programsExpectedAndSubmittedQuantity">
+                <span class="program-name">{{programExpectedAndSubmittedQuantity.programName}}-</span>
+                <span class="program-quantity">
+                    <span ng-class="(programExpectedAndSubmittedQuantity.submittedQuantity !== programExpectedAndSubmittedQuantity.expectedQuantity) && 'not-all-submitted'"
+                    >{{programExpectedAndSubmittedQuantity.submittedQuantity}}</span>/<span>{{programExpectedAndSubmittedQuantity.expectedQuantity}}</span>
+                </span>
+            </div>
+        </div>
     </div>
 
-    <div id='viewReqList' ng-grid="rnrListGrid" class="gridStyleAutoFillHeight"
-         ng-show="requisitions.length"></div>
+    <div ng-show="requisitions.length>0">
+        <div id='viewReqList' ng-grid="rnrListGrid" class="gridStyleAutoFillHeight"
+             ng-show="requisitions.length"></div>
 
-    <div class="report-subtitle">
-      <div ng-include="'/public/pages/reports/mozambique/export-data-button.html'"></div>
+        <div class="report-subtitle">
+            <div ng-include="'/public/pages/reports/mozambique/export-data-button.html'"></div>
+        </div>
     </div>
-  </div>
-  <div class="report-subtitle" ng-hide="requisitions.length>0">
-    <h3 openlmis-message="label.report.empty"></h3>
-  </div>
+    <div class="report-subtitle" ng-hide="requisitions.length>0">
+        <h3 openlmis-message="label.report.empty"></h3>
+    </div>
 </div>

@@ -287,6 +287,10 @@ div.pagination div.btn-group {
 
 .time-container div {
   display: inline-block;
+
+  .datetime-warning {
+    color: #bfbfbf;
+  }
 }
 
 .date-picker {
@@ -617,7 +621,7 @@ div.pagination div.btn-group {
 
 .program-selection {
   display: block;
-  z-index: 9999;
+  z-index: 200;
   font-size: 13px;
   height: 26px;
   width: 136px;
@@ -744,4 +748,38 @@ div.pagination div.btn-group {
       }
     }
   }
+}
+
+.expected-submitted-total {
+  color: #888787;
+
+  .expected-submitted-text {
+    padding: 16px 0 10px 0;
+  }
+
+  .program-item-selection {
+    padding-bottom: 16px;
+    line-height: 1;
+
+    .program-item {
+      display: inline;
+      padding-right: 20px;
+
+      .program-name {
+        font-size: 12px;
+      }
+
+      .program-quantity {
+        display: inline;
+        padding-left: 5px;
+        font-size: 20px;
+        color: #333333;
+
+        .not-all-submitted {
+          color: #f5212d;
+        }
+      }
+    }
+  }
+
 }
