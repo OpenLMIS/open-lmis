@@ -58,7 +58,7 @@ public class RestProgramDataService {
   public ProgramDataForm convertRequestBodyDataToProgramDataForm(ProgramDataFormDTO requestBodyData, long userId, Facility facility) {
     SupplementalProgram supplementalProgram = supplementalProgramMapper.getSupplementalProgramByCode(requestBodyData.getProgramCode());
     ProgramDataForm programDataForm = new ProgramDataForm(facility, supplementalProgram, requestBodyData.getPeriodBegin(),
-        requestBodyData.getPeriodEnd(), requestBodyData.getSubmittedTime());
+        requestBodyData.getPeriodEnd(), requestBodyData.getSubmittedTime(), requestBodyData.getObservation());
     programDataForm.setCreatedBy(userId);
     programDataForm.setModifiedBy(userId);
 

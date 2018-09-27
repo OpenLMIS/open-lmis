@@ -11,8 +11,8 @@ import java.util.List;
 
 @Repository
 public interface ProgramDataMapper {
-  @Insert("INSERT INTO program_data_forms (facilityId, supplementalProgramId, startDate, endDate, submittedTime, createdBy, modifiedBy, createdDate, modifiedDate) " +
-      "VALUES (#{facility.id}, #{supplementalProgram.id}, #{startDate}, #{endDate}, #{submittedTime}, #{createdBy}, #{modifiedBy}, NOW(), NOW())")
+  @Insert("INSERT INTO program_data_forms (facilityId, supplementalProgramId, startDate, endDate, submittedTime, createdBy, modifiedBy, createdDate, modifiedDate, observation) " +
+      "VALUES (#{facility.id}, #{supplementalProgram.id}, #{startDate}, #{endDate}, #{submittedTime}, #{createdBy}, #{modifiedBy}, NOW(), NOW(), #(observation))")
   @Options(useGeneratedKeys = true)
   void insert(ProgramDataForm programDataForm);
 

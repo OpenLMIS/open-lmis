@@ -6,6 +6,7 @@ import com.google.common.base.Function;
 import com.google.common.collect.FluentIterable;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.apache.commons.lang3.StringUtils;
 import org.openlmis.core.domain.Signature;
 import org.openlmis.core.domain.moz.ProgramDataForm;
 import org.openlmis.core.domain.moz.ProgramDataItem;
@@ -31,13 +32,15 @@ public class ProgramDataFormDTO {
   private Date submittedTime;
   private List<ProgramDataFormItemDTO> programDataFormItems;
   private List<Signature> programDataFormSignatures;
+  private String observation;
 
-  public ProgramDataFormDTO(Long facilityId, String programCode, Date startDate, Date endDate, Date submittedTime) {
+  public ProgramDataFormDTO(Long facilityId, String programCode, Date startDate, Date endDate, Date submittedTime, String observation) {
     this.facilityId = facilityId;
     this.programCode = programCode;
     this.periodBegin = startDate;
     this.periodEnd = endDate;
     this.submittedTime = submittedTime;
+    this.observation = StringUtils.isNotEmpty(observation) ? observation : "";
   }
 
   @JsonIgnore
@@ -50,7 +53,7 @@ public class ProgramDataFormDTO {
   public static ProgramDataFormDTO prepareForRest(ProgramDataForm programDataForm) {
     ProgramDataFormDTO programDataFormDTO = new ProgramDataFormDTO(programDataForm.getFacility().getId(),
         programDataForm.getSupplementalProgram().getCode(), programDataForm.getStartDate(),
-        programDataForm.getEndDate(), programDataForm.getSubmittedTime());
+        programDataForm.getEndDate(), programDataForm.getSubmittedTime(), programDataForm.getObservation());
     programDataFormDTO.setProgramDataFormItems(FluentIterable.from(programDataForm.getProgramDataItems()).transform(new Function<ProgramDataItem, ProgramDataFormItemDTO>() {
       @Override
       public ProgramDataFormItemDTO apply(ProgramDataItem input) {

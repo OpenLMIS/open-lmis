@@ -198,7 +198,7 @@ public class RestProgramDataServiceTest {
     Date submittedTime = new Date();
 
     ProgramDataForm programDataForm = new ProgramDataForm(facility, supplementalProgram,
-        startDate, endDate, submittedTime);
+        startDate, endDate, submittedTime, "");
     ProgramDataColumn programDataColumn1 = new ProgramDataColumn("A1", "", "", supplementalProgram);
     ProgramDataColumn programDataColumn2 = new ProgramDataColumn("A2", "", "", supplementalProgram);
     ProgramDataItem programDataItem1 = new ProgramDataItem(programDataForm, "category 1", programDataColumn1, 10L);
@@ -211,7 +211,7 @@ public class RestProgramDataServiceTest {
     Date startDate2 = DateUtil.parseDate("2016-11-21", DateUtil.FORMAT_DATE);
     Date endDate2 = DateUtil.parseDate("2016-12-20", DateUtil.FORMAT_DATE);
     ProgramDataForm programDataForm2 = new ProgramDataForm(facility, supplementalProgram,
-        startDate2, endDate2, submittedTime);
+        startDate2, endDate2, submittedTime, "");
     ProgramDataItem programDataItem4 = new ProgramDataItem(programDataForm2, "category 1", programDataColumn1, 20L);
     ProgramDataItem programDataItem5 = new ProgramDataItem(programDataForm2, "category 2", programDataColumn2, 25L);
     programDataForm2.setProgramDataItems(asList(programDataItem4, programDataItem5));

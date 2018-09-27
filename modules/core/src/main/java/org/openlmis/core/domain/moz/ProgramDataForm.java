@@ -29,11 +29,14 @@ public class ProgramDataForm extends BaseModel {
 
   private List<Signature> programDataFormSignatures;
 
-  public ProgramDataForm(Facility facility, SupplementalProgram supplementalProgram, Date startDate, Date endDate, Date submittedTime) {
+  private String observation;
+
+  public ProgramDataForm(Facility facility, SupplementalProgram supplementalProgram, Date startDate, Date endDate, Date submittedTime, String observation) {
     this.facility = facility;
     this.supplementalProgram = supplementalProgram;
     this.startDate = startDate;
     this.endDate = endDate;
     this.submittedTime = submittedTime;
+    this.observation = observation;
   }
 }
