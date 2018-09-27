@@ -20,6 +20,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -141,11 +142,7 @@ public class ProductService {
     repository.updateProductStatus(active, id);
   }
 
-  public KitProduct getByProductCode(String productCode){
-    List<KitProduct> KitProducts = repository.getByProductCode(productCode);
-    if(CollectionUtils.isEmpty(KitProducts)){
-      return null;
-    }
-    return KitProducts.get(0);
+  public List<KitProduct> getByProductCode(String productCode){
+    return repository.getByProductCode(productCode);
   }
 }

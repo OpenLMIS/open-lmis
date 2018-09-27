@@ -36,6 +36,4 @@ public class ProductDTO {
   private List<ProgramProduct> programProducts;
 
   private List<ProductPriceSchedule> productPriceSchedules;
-
-  private KitProduct kitProduct;
 }

@@ -233,7 +233,7 @@ public class Product extends BaseModel implements Importable {
     if (packRoundingThreshold == null) {
       packRoundingThreshold = DEFAULT_PACK_ROUNDING_THRESHOLD;
     }
-    isKit = !kitProductList.isEmpty();
+
     active = true;
   }
 

@@ -82,13 +82,13 @@ public class ProductController extends BaseController {
 
     if(product == null) return null;
 
+    product.setKitProductList(service.getByProductCode(product.getCode()));
+
     List<ProgramProduct> programProducts = programProductService.getByProductCode(product.getCode());
 
     List<ProductPriceSchedule> productPriceSchedules = priceScheduleService.getByProductId(product.getId());
 
-    KitProduct kitProduct = service.getByProductCode(product.getCode());
-
-    return new ProductDTO(product, product.getModifiedDate(), programProducts, productPriceSchedules, kitProduct);
+    return new ProductDTO(product, product.getModifiedDate(), programProducts, productPriceSchedules);
   }
 
   @RequestMapping(method = POST, headers = ACCEPT_JSON)
