@@ -11,6 +11,7 @@
 package org.openlmis.core.service;
 
 import lombok.NoArgsConstructor;
+import org.apache.commons.collections.CollectionUtils;
 import org.openlmis.core.domain.*;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.core.repository.ProductGroupRepository;
@@ -138,5 +139,13 @@ public class ProductService {
 
   public void updateProductStatus(boolean active, long id){
     repository.updateProductStatus(active, id);
+  }
+
+  public KitProduct getByProductCode(String productCode){
+    List<KitProduct> KitProducts = repository.getByProductCode(productCode);
+    if(CollectionUtils.isEmpty(KitProducts)){
+      return null;
+    }
+    return KitProducts.get(0);
   }
 }

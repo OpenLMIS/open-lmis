@@ -53,9 +53,6 @@ public class ProductControllerTest {
   private ProductService service;
 
   @Mock
-  private KitProductService kitProductService;
-
-  @Mock
   private ProgramProductService programProductService;
 
   @Mock
@@ -120,7 +117,7 @@ public class ProductControllerTest {
     when(service.getById(1L)).thenReturn(product);
     when(programProductService.getByProductCode("p10")).thenReturn(programProducts);
     when(priceScheduleService.getByProductId(1L)).thenReturn(null);
-    when(kitProductService.getByProductCode(product.getCode())).thenReturn(null);
+    when(service.getByProductCode(product.getCode())).thenReturn(null);
 
     ProductDTO productDTO = controller.getById(1L);
 

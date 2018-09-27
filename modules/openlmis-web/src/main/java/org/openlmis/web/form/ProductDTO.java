@@ -37,5 +37,5 @@ public class ProductDTO {
 
   private List<ProductPriceSchedule> productPriceSchedules;
 
-  private List<KitProduct> kitProducts;
+  private KitProduct kitProduct;
 }

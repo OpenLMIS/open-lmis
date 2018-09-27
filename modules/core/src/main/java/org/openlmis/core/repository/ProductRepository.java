@@ -147,4 +147,8 @@ public class ProductRepository {
   public void updateProductStatus(boolean active, long id) {
     mapper.updateProductActiveStatus(active, id);
   }
+
+  public List<KitProduct> getByProductCode(String productCode){
+    return mapper.getByProductCode(productCode);
+  }
 }
