@@ -75,7 +75,7 @@ public class CustomExcelTemplate  extends AbstractXlsxView {
         }
 
         if (null != reportTitles) {
-            if (!(reportTitles instanceof Collection)) {
+            if (!(reportTitles instanceof List)) {
                 throw new IllegalArgumentException("Type is not correct");
             }
         }
@@ -94,11 +94,14 @@ public class CustomExcelTemplate  extends AbstractXlsxView {
         Sheet sheet = workbook.createSheet();
 
         if (null != reportTitles) {
-            int titleIndex = 0;
-            Row titles = sheet.createRow(rowIndex++);
-            Collection<String> reportTitleCollection = (List<String>)reportTitles;
-            for (String title : reportTitleCollection) {
-                titles.createCell(titleIndex++).setCellValue(title);
+            List<Object> reportTitleList = (List<Object>)reportTitles;
+            for (Object obj : reportTitleList) {
+                int titleIndex = 0;
+                Row row = sheet.createRow(rowIndex++);
+                List<String> list = (List<String>)obj;
+                for (String title : list) {
+                    row.createCell(titleIndex++).setCellValue(title);
+                }
             }
         }
 

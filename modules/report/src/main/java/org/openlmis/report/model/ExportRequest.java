@@ -19,5 +19,5 @@ public class ExportRequest {
 
     private List<Map<String, Object>> reportContent;
 
-    private List<String> reportTitles;
+    private List<List<String>> reportTitles;
 }
