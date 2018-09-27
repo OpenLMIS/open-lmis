@@ -395,12 +395,27 @@ function RequisitionReportController($scope, $controller, RequisitionReportServi
     $cacheFactory.get('stockOutReportParams').put('shouldLoadStockOutReportSingleProductFromCache', "no");
   }
 
+  var generateSubmittedAndExceptedQuantity = function() {
+    var submittedAndExceptedQuantityArray = _.map($scope.programsExpectedAndSubmittedQuantity, function (programExpectedAndSubmittedQuantity) {
+      return programExpectedAndSubmittedQuantity.programName + '-' +
+        programExpectedAndSubmittedQuantity.submittedQuantity + '/' +
+        programExpectedAndSubmittedQuantity.expectedQuantity;
+    });
+
+    return submittedAndExceptedQuantityArray.join(', ');
+  };
+
   $scope.exportXLSX = function () {
     var data = {
       reportTitles: [
-        messageService.get('report.header.generated.for'),
-        DateFormatService.formatDateWithDateMonthYearForString($scope.reportParams.startTime) + ' - ' +
-        DateFormatService.formatDateWithDateMonthYearForString($scope.reportParams.endTime)
+        [
+          messageService.get('report.header.generated.for'),
+          DateFormatService.formatDateWithDateMonthYearForString($scope.reportParams.startTime) + ' - ' +
+          DateFormatService.formatDateWithDateMonthYearForString($scope.reportParams.endTime)
+        ], [
+          messageService.get('label.report.requisitions.submittedandexpected'),
+          generateSubmittedAndExceptedQuantity()
+        ]
       ],
       reportHeaders: {
         programName: messageService.get('report.header.program.name'),

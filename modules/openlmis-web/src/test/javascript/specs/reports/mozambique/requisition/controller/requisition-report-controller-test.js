@@ -176,7 +176,10 @@ describe('requisition report controller', function () {
     };
 
     var expectedExcel = {
-      reportTitles: ['report.header.generated.for', '21-07-2017 - 21-10-2017'],
+      reportTitles: [
+        ['report.header.generated.for', '21-07-2017 - 21-10-2017'],
+        ['label.report.requisitions.submittedandexpected', '']
+      ],
       reportHeaders: expectedHeader,
       reportContent: [expectedContent]
     };
