@@ -20,7 +20,6 @@ public class KitProductRepository {
    private KitProductMapper kitProductMapper;
 
     public List<KitProduct> getByProductCode(String productCode){
-        //return new KitProduct("SCOD10-AL","08O05",60);
         return kitProductMapper.getByProductCode(productCode);
     }
 }

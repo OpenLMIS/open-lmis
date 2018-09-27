@@ -37,7 +37,5 @@ public class ProductDTO {
 
   private List<ProductPriceSchedule> productPriceSchedules;
 
-  private Boolean isKitProduct = false;
-
   private List<KitProduct> kitProducts;
 }

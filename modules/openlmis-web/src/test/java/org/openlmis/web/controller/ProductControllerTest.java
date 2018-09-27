@@ -127,7 +127,6 @@ public class ProductControllerTest {
     assertThat(productDTO.getProduct(), is(product));
     assertThat(productDTO.getProgramProducts(), is(programProducts));
     assertThat(productDTO.getProductLastUpdated(), is(modifiedDate));
-    assertThat(productDTO.getIsKitProduct(), is(Boolean.FALSE));
     verify(service).getById(1L);
     verify(programProductService).getByProductCode("p10");
   }
