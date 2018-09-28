@@ -202,7 +202,7 @@ public class ProductRepositoryTest {
         with(KitProductBuilder.kitCode, product.getCode()),
         with(KitProductBuilder.productCode, "P2")));
     List<KitProduct> oldKitProductList = asList(kitProduct1, kitProduct2);
-    when(mockedMapper.getKitProductsByKitCode("KIT1")).thenReturn(oldKitProductList);
+    when(mockedMapper.getKitProductsByProductCode(product.getCode())).thenReturn(oldKitProductList);
 
     KitProduct kitProduct3 = make(a(KitProductBuilder.defaultKit,
         with(KitProductBuilder.kitCode, product.getCode()),
@@ -215,8 +215,7 @@ public class ProductRepositoryTest {
 
     repository.update(product, true);
 
-    verify(mockedMapper).deleteKitProduct(kitProduct1);
-    verify(mockedMapper).deleteKitProduct(kitProduct2);
+    verify(mockedMapper).clearKitProductsByProductCode(product.getCode());
     verify(mockedMapper).insertKitProduct(kitProduct3);
     verify(mockedMapper).insertKitProduct(kitProduct4);
   }

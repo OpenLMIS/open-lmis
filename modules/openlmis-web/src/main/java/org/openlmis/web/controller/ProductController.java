@@ -82,7 +82,7 @@ public class ProductController extends BaseController {
 
     if(product == null) return null;
 
-    product.setKitProductList(service.getByProductCode(product.getCode()));
+    product.setKitProductList(service.getKitProductsByProductCode(product.getCode()));
 
     List<ProgramProduct> programProducts = programProductService.getByProductCode(product.getCode());
 
@@ -102,7 +102,7 @@ public class ProductController extends BaseController {
       Long userId = loggedInUserId(request);
       product.setCreatedBy(userId);
       product.setModifiedBy(userId);
-      service.save(product, false);
+      service.save(product, true);
       programProductService.saveAll(programProducts, product);
     } catch (DataException e) {
       response = OpenLmisResponse.error(e, BAD_REQUEST);
@@ -125,7 +125,7 @@ public class ProductController extends BaseController {
       Long userId = loggedInUserId(request);
       product.setId(id);
       product.setModifiedBy(userId);
-      service.save(product, false);
+      service.save(product, true);
       programProductService.saveAll(programProducts, product);
       priceScheduleService.saveAll(productPriceSchedules, product);
     } catch (DataException e) {

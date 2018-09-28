@@ -11,6 +11,7 @@
 package org.openlmis.core.repository;
 
 import lombok.NoArgsConstructor;
+import org.apache.commons.collections.CollectionUtils;
 import org.openlmis.core.domain.DosageUnit;
 import org.openlmis.core.domain.KitProduct;
 import org.openlmis.core.domain.Product;
@@ -84,21 +85,19 @@ public class ProductRepository {
   }
 
   private void updateKitProductList(Product product) {
-    List<KitProduct> oldKitProductList = mapper.getKitProductsByKitCode(product.getCode());
-    List<KitProduct> newKitProductList = product.getKitProductList();
-
-    if (!oldKitProductList.isEmpty()) {
-      for (KitProduct kitProduct : oldKitProductList) {
-        mapper.deleteKitProduct(kitProduct);
-      }
+    List<KitProduct> oldKitProductList = mapper.getKitProductsByProductCode(product.getCode());
+    if (CollectionUtils.isNotEmpty(oldKitProductList)) {
+      mapper.clearKitProductsByProductCode(product.getCode());
     }
 
-    if (!newKitProductList.isEmpty()) {
+    List<KitProduct> newKitProductList = product.getKitProductList();
+    if (CollectionUtils.isNotEmpty(newKitProductList)) {
       for (KitProduct kitProduct : product.getKitProductList()) {
         mapper.insertKitProduct(kitProduct);
       }
     }
   }
+
 
   public Long getIdByCode(String code) {
     Long productId = mapper.getIdByCode(code);
@@ -148,7 +147,7 @@ public class ProductRepository {
     mapper.updateProductActiveStatus(active, id);
   }
 
-  public List<KitProduct> getByProductCode(String productCode){
-    return mapper.getByProductCode(productCode);
+  public List<KitProduct> getKitProductsByProductCode(String productCode){
+    return mapper.getKitProductsByProductCode(productCode);
   }
 }

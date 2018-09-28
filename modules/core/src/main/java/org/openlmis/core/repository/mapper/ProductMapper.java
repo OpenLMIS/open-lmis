@@ -146,7 +146,10 @@ public interface ProductMapper {
   Long insertKitProduct(KitProduct kitProduct);
 
   @Select("SELECT * FROM kit_products_relation WHERE productcode = #{productCode}")
-  List<KitProduct> getByProductCode(String productCode);
+  List<KitProduct> getKitProductsByProductCode(String productCode);
+
+  @Delete("DELETE FROM kit_products_relation WHERE productCode = #{productCode}")
+  void clearKitProductsByProductCode(String productCode);
 
   @Select("SELECT * FROM products WHERE modifieddate > #{date}")
   @Results({

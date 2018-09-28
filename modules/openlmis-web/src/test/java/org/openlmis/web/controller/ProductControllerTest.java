@@ -117,7 +117,7 @@ public class ProductControllerTest {
     when(service.getById(1L)).thenReturn(product);
     when(programProductService.getByProductCode("p10")).thenReturn(programProducts);
     when(priceScheduleService.getByProductId(1L)).thenReturn(null);
-    when(service.getByProductCode(product.getCode())).thenReturn(null);
+    when(service.getKitProductsByProductCode(product.getCode())).thenReturn(null);
 
     ProductDTO productDTO = controller.getById(1L);
 
@@ -155,7 +155,7 @@ public class ProductControllerTest {
     assertThat(product.getModifiedBy(), is(11L));
     assertThat(response.getBody().getSuccessMsg(), is("save success"));
     assertThat((Long) response.getBody().getData().get("productId"), is(product.getId()));
-    verify(service).save(product, false);
+    verify(service).save(product, true);
   }
 
   @Test
@@ -163,12 +163,12 @@ public class ProductControllerTest {
     ProductDTO productDTO = new ProductDTO();
     Product product = new Product();
     productDTO.setProduct(product);
-    doThrow(new DataException("error message")).when(service).save(product, false);
+    doThrow(new DataException("error message")).when(service).save(product, true);
 
     ResponseEntity<OpenLmisResponse> response = controller.save(productDTO, request);
 
     assertThat(response.getBody().getErrorMsg(), is("error message"));
-    verify(service).save(product, false);
+    verify(service).save(product, true);
   }
 
   @Test
@@ -176,7 +176,7 @@ public class ProductControllerTest {
     ProductDTO productDTO = new ProductDTO();
     Product product = new Product();
     productDTO.setProduct(product);
-    doThrow(new DataException("error")).when(service).save(product, false);
+    doThrow(new DataException("error")).when(service).save(product, true);
 
     ResponseEntity<OpenLmisResponse> errorResponse = controller.update(productDTO, 9L, request);
 
@@ -192,7 +192,7 @@ public class ProductControllerTest {
     List<ProgramProduct> programProducts = asList(new ProgramProduct());
     productDTO.setProgramProducts(programProducts);
 
-    doNothing().when(service).save(product, false);
+    doNothing().when(service).save(product, true);
     doNothing().when(programProductService).saveAll(programProducts, product);
     doNothing().when(priceScheduleService).saveAll(productDTO.getProductPriceSchedules(), product);
 
@@ -204,7 +204,7 @@ public class ProductControllerTest {
     assertThat(productDTO.getProduct().getId(), is(1L));
     assertThat(productDTO.getProduct().getModifiedBy(), is(11L));
     assertThat(response.getBody().getSuccessMsg(), is("updated"));
-    verify(service).save(product, false);
+    verify(service).save(product, true);
   }
 
   @Test

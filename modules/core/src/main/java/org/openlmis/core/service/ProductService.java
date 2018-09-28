@@ -11,7 +11,6 @@
 package org.openlmis.core.service;
 
 import lombok.NoArgsConstructor;
-import org.apache.commons.collections.CollectionUtils;
 import org.openlmis.core.domain.*;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.core.repository.ProductGroupRepository;
@@ -20,7 +19,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -142,7 +140,7 @@ public class ProductService {
     repository.updateProductStatus(active, id);
   }
 
-  public List<KitProduct> getByProductCode(String productCode){
-    return repository.getByProductCode(productCode);
+  public List<KitProduct> getKitProductsByProductCode(String productCode){
+    return repository.getKitProductsByProductCode(productCode);
   }
 }
