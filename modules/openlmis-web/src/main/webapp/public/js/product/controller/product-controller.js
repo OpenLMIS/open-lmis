@@ -37,52 +37,6 @@ function ProductController($scope, productGroups, productForms, dosageUnits, pro
     $scope.productLastUpdated = productDTO.productLastUpdated;
   }
 
-  function transformProductKit() {
-    var kitProductList = $scope.product.kitProductList;
-
-    if (!isUndefined(kitProductList)) {
-      var kitProduct = kitProductList[0];
-
-      $scope.kitOfProduct = {
-        isProductKit: true,
-        kitCode: kitProduct.kitCode,
-        quantity: kitProduct.quantity
-      };
-    } else {
-      $scope.kitOfProduct = {
-        isProductKit: false,
-        kitCode: '',
-        quantity: 0
-      };
-    }
-  }
-
-  var success = function (data) {
-    $scope.error = "";
-    $scope.$parent.message = data.success;
-    $scope.$parent.productId = data.productId;
-    $scope.showError = false;
-    $location.path('');
-  };
-
-  var error = function (data) {
-    $scope.$parent.message = "";
-    $scope.error = data.data.error;
-    $scope.showError = true;
-  };
-
-  var findProgramProductsUnderEdit = function () {
-    return _.find($scope.programProducts, function (programProduct) {
-      return programProduct.underEdit === true;
-    });
-  };
-
-  var setProductReferenceData = function () {
-    $scope.product.productGroup = _.where($scope.productGroups, {code: $scope.selectedProductGroupCode})[0];
-    $scope.product.form = _.where($scope.productForms, {code: $scope.selectedProductFormCode})[0];
-    $scope.product.dosageUnit = _.where($scope.dosageUnits, {code: $scope.selectedProductDosageUnitCode})[0];
-  };
-
   $scope.isArchiveFieldHidden = function () {
     var toggleKey = {key: 'product.archive.hidden'};
     FeatureToggleService.get(toggleKey, function (result) {
@@ -101,31 +55,9 @@ function ProductController($scope, productGroups, productForms, dosageUnits, pro
       return;
     }
 
-    if ($scope.kitOfProduct.isProductKit) {
-      $scope.product.kitProductList = [];
-      $scope.product.kitProductList.push({
-        kitCode: $scope.kitOfProduct.kitCode,
-        productCode: $scope.product.code,
-        quantity: $scope.kitOfProduct.quantity
-      });
-    }
-
+    setProductKitData();
     setProductReferenceData();
-
-    if ($scope.product.id) {
-      Products.update({id: $scope.product.id}, {
-        product: $scope.product,
-        programProducts: $scope.programProducts,
-        productPriceSchedules: $scope.priceSchedules
-      }, success, error);
-    } else {
-
-      Products.save({}, {
-        product: $scope.product,
-        programProducts: $scope.programProducts,
-        productPriceSchedules: $scope.priceSchedules
-      }, success, error);
-    }
+    updateAndSaveProduct();
   };
 
   $scope.cancel = function () {
@@ -152,7 +84,6 @@ function ProductController($scope, productGroups, productForms, dosageUnits, pro
   };
 
   $scope.addPriceSchedule = function () {
-
     if (validateDuplicatePriceScheduleCategory($scope.newPriceSchedule)) {
       $scope.error = "";
       $scope.newPriceSchedule.priceSchedule = $filter('filter')($scope.priceScheduleCategories, {id: $scope.newPriceSchedule.priceSchedule.id})[0];
@@ -164,6 +95,100 @@ function ProductController($scope, productGroups, productForms, dosageUnits, pro
       $scope.error = "Duplicate Price schedule category";
     }
   };
+
+  $scope.addNewProgramProduct = function () {
+    $scope.programProducts.push($scope.newProgramProduct);
+    refreshAndSortPrograms();
+    $scope.newProgramProduct = {active: false};
+  };
+
+  $scope.mandatoryFieldsNotFilled = function (programProduct) {
+    return !(programProduct && programProduct.program && programProduct.productCategory && programProduct.dosesPerMonth);
+  };
+
+  $scope.$watch('kitOfProduct.isProductKit', function () {
+    if (!_.isEmpty($scope.product) && !$scope.kitOfProduct.isProductKit) {
+      $scope.kitOfProduct = {
+        isProductKit: false,
+        kitCode: '',
+        quantity: null
+      };
+    }
+  });
+
+  function transformProductKit() {
+    var kitProductList = $scope.product.kitProductList;
+
+    if (!isUndefined(kitProductList)) {
+      var kitProduct = kitProductList[0];
+
+      $scope.kitOfProduct = {
+        isProductKit: true,
+        kitCode: kitProduct.kitCode,
+        quantity: kitProduct.quantity
+      };
+    } else {
+      $scope.kitOfProduct = {
+        isProductKit: false,
+        kitCode: '',
+        quantity: 0
+      };
+    }
+  }
+
+  function success(data) {
+    $scope.error = "";
+    $scope.$parent.message = data.success;
+    $scope.$parent.productId = data.productId;
+    $scope.showError = false;
+    $location.path('');
+  }
+
+  function error(data) {
+    $scope.$parent.message = "";
+    $scope.error = data.data.error;
+    $scope.showError = true;
+  }
+
+  function findProgramProductsUnderEdit() {
+    return _.find($scope.programProducts, function (programProduct) {
+      return programProduct.underEdit === true;
+    });
+  }
+
+  function setProductReferenceData() {
+    $scope.product.productGroup = _.where($scope.productGroups, {code: $scope.selectedProductGroupCode})[0];
+    $scope.product.form = _.where($scope.productForms, {code: $scope.selectedProductFormCode})[0];
+    $scope.product.dosageUnit = _.where($scope.dosageUnits, {code: $scope.selectedProductDosageUnitCode})[0];
+  }
+
+  function setProductKitData() {
+    $scope.product.kitProductList = [];
+    if ($scope.kitOfProduct.isProductKit) {
+      $scope.product.kitProductList.push({
+        kitCode: $scope.kitOfProduct.kitCode,
+        productCode: $scope.product.code,
+        quantity: $scope.kitOfProduct.quantity
+      });
+    }
+  }
+
+  function updateAndSaveProduct() {
+    if ($scope.product.id) {
+      Products.update({id: $scope.product.id}, {
+        product: $scope.product,
+        programProducts: $scope.programProducts,
+        productPriceSchedules: $scope.priceSchedules
+      }, success, error);
+    } else {
+
+      Products.save({}, {
+        product: $scope.product,
+        programProducts: $scope.programProducts,
+        productPriceSchedules: $scope.priceSchedules
+      }, success, error);
+    }
+  }
 
   function validateDuplicatePriceScheduleCategory(priceSchedule) {
     for (i = 0; i < $scope.priceSchedules.length; i++) {
@@ -185,26 +210,6 @@ function ProductController($scope, productGroups, productForms, dosageUnits, pro
 
     setProgramMessage();
   }
-
-  $scope.addNewProgramProduct = function () {
-    $scope.programProducts.push($scope.newProgramProduct);
-    refreshAndSortPrograms();
-    $scope.newProgramProduct = {active: false};
-  };
-
-  $scope.mandatoryFieldsNotFilled = function (programProduct) {
-    return !(programProduct && programProduct.program && programProduct.productCategory && programProduct.dosesPerMonth);
-  };
-
-  $scope.$watch('kitOfProduct.isProductKit', function () {
-    if (!$scope.kitOfProduct.isProductKit) {
-      $scope.kitOfProduct = {
-        isProductKit: false,
-        kitCode: '',
-        quantity: null
-      };
-    }
-  });
 }
 
 ProductController.resolve = {
