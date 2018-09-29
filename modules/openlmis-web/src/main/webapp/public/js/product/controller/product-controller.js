@@ -11,6 +11,9 @@ function ProductController($scope, productGroups, productForms, dosageUnits, pro
   $scope.product = {};
   $scope.$parent.message = "";
   $scope.priceScheduleCategories = PriceSchCategories;
+  $scope.isKitProduct = false;
+  $scope.kitProduct = {};
+
   setProgramMessage();
 
   if (!isUndefined(productDTO)) {
@@ -22,11 +25,30 @@ function ProductController($scope, productGroups, productForms, dosageUnits, pro
       $scope.selectedProductFormCode = isUndefined($scope.product.form) ? undefined : $scope.product.form.code;
       $scope.selectedProductDosageUnitCode = isUndefined($scope.product.dosageUnit) ? undefined : $scope.product.dosageUnit.code;
       refreshAndSortPrograms();
-    }
-    else {
+      transformProductKit();
+
+    } else {
       $scope.product = {};
     }
+
     $scope.productLastUpdated = productDTO.productLastUpdated;
+  }
+
+  function transformProductKit() {
+    var kitProductList = $scope.product.kitProductList;
+
+    if (!isUndefined(kitProductList)) {
+      var kitProduct = kitProductList[0];
+      $scope.isKitProduct = true;
+
+      $scope.kitProduct = {
+        kitCode: kitProduct.kitCode,
+        quantity: kitProduct.quantity
+      };
+    } else {
+      $scope.isKitProduct = false;
+      $scope.kitProduct = {};
+    }
   }
 
   var success = function (data) {
@@ -76,10 +98,18 @@ function ProductController($scope, productGroups, productForms, dosageUnits, pro
     setProductReferenceData();
 
     if ($scope.product.id) {
-      Products.update({id: $scope.product.id}, {product: $scope.product, programProducts: $scope.programProducts, productPriceSchedules : $scope.priceSchedules}, success, error);
-    }
-    else {
-      Products.save({}, {product: $scope.product, programProducts: $scope.programProducts,  productPriceSchedules : $scope.priceSchedules}, success, error);
+      Products.update({id: $scope.product.id}, {
+        product: $scope.product,
+        programProducts: $scope.programProducts,
+        productPriceSchedules: $scope.priceSchedules
+      }, success, error);
+    } else {
+
+      Products.save({}, {
+        product: $scope.product,
+        programProducts: $scope.programProducts,
+        productPriceSchedules: $scope.priceSchedules
+      }, success, error);
     }
   };
 
@@ -106,28 +136,27 @@ function ProductController($scope, productGroups, productForms, dosageUnits, pro
     });
   };
 
-    $scope.addPriceSchedule = function(){
+  $scope.addPriceSchedule = function () {
 
-      if(validateDuplicatePriceScheduleCategory($scope.newPriceSchedule)) {
-          $scope.error  = "";
-          $scope.newPriceSchedule.priceSchedule = $filter('filter')($scope.priceScheduleCategories, {id: $scope.newPriceSchedule.priceSchedule.id})[0];
-          $scope.priceSchedules.push($scope.newPriceSchedule);
-          $scope.newPriceSchedule = {};
-     }
-      else
-      {
+    if (validateDuplicatePriceScheduleCategory($scope.newPriceSchedule)) {
+      $scope.error = "";
+      $scope.newPriceSchedule.priceSchedule = $filter('filter')($scope.priceScheduleCategories, {id: $scope.newPriceSchedule.priceSchedule.id})[0];
+      $scope.priceSchedules.push($scope.newPriceSchedule);
+      $scope.newPriceSchedule = {};
+    }
+    else {
 
-          $scope.error = "Duplicate Price schedule category";
-      }
+      $scope.error = "Duplicate Price schedule category";
+    }
   };
 
-    function validateDuplicatePriceScheduleCategory(priceSchedule){
-        for(i=0; i<$scope.priceSchedules.length; i++){
-            if($scope.priceSchedules[i].priceSchedule.id == priceSchedule.priceSchedule.id)
-                return false;
-        }
-        return true;
+  function validateDuplicatePriceScheduleCategory(priceSchedule) {
+    for (i = 0; i < $scope.priceSchedules.length; i++) {
+      if ($scope.priceSchedules[i].priceSchedule.id == priceSchedule.priceSchedule.id)
+        return false;
     }
+    return true;
+  }
 
   function setProgramMessage() {
     $scope.programMessage = $scope.programs.length ? "label.select.program" : "label.noProgramLeft";
@@ -223,17 +252,17 @@ ProductController.resolve = {
     return deferred.promise;
   },
 
-   PriceSchCategories: function ($q, $route, $timeout, PriceScheduleCategories) {
-        if ($route.current.params.id === undefined) return undefined;
+  PriceSchCategories: function ($q, $route, $timeout, PriceScheduleCategories) {
+    if ($route.current.params.id === undefined) return undefined;
 
-        var deferred = $q.defer();
+    var deferred = $q.defer();
 
-        $timeout(function () {
-            PriceScheduleCategories.get({}, function (data) {
-                deferred.resolve(data.priceScheduleCategories);
-            }, {});
-        }, 100);
-        return deferred.promise;
-    }
+    $timeout(function () {
+      PriceScheduleCategories.get({}, function (data) {
+        deferred.resolve(data.priceScheduleCategories);
+      }, {});
+    }, 100);
+    return deferred.promise;
+  }
 
 };
