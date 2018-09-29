@@ -11,6 +11,8 @@
 package org.openlmis.core.service;
 
 import lombok.NoArgsConstructor;
+import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang.StringUtils;
 import org.openlmis.core.domain.*;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.core.repository.ProductGroupRepository;
@@ -69,6 +71,7 @@ public class ProductService {
 
     List<ProgramProduct> existingProgramProducts = programProductService.getByProductCode(product.getCode());
 
+    validateKitProductParam(product);
     repository.update(product, updateKitProductList);
 
     notifyProgramCatalogChange(product, existingProgramProducts);
@@ -91,6 +94,24 @@ public class ProductService {
     for (ProgramProduct existingProgramProduct : existingProgramProducts) {
       if (existingProgramProduct.getActive() && (existingProgramProduct.getProduct().getActive() != product.getActive())) {
         programService.setFeedSendFlag(existingProgramProduct.getProgram(), true);
+      }
+    }
+  }
+
+  private void validateKitProductParam(Product product){
+    List<KitProduct> kitProductList =  product.getKitProductList();
+    if(CollectionUtils.isEmpty(kitProductList)){
+      return;
+    }
+
+    for (KitProduct kitProduct : kitProductList) {
+      if(StringUtils.isBlank(kitProduct.getKitCode()) || StringUtils.isBlank(kitProduct.getProductCode())
+              || !product.getCode().equals(kitProduct.getProductCode())){
+        throw new DataException("error.reference.data.invalid.kitProduct.code");
+      }
+
+      if(!(null != kitProduct.getQuantity() && kitProduct.getQuantity().intValue() > 0)){
+        throw new DataException("error.reference.data.invalid.kitProduct.quantity");
       }
     }
   }
