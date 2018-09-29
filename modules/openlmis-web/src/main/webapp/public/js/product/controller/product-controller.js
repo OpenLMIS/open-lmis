@@ -13,7 +13,7 @@ function ProductController($scope, productGroups, productForms, dosageUnits, pro
   $scope.priceScheduleCategories = PriceSchCategories;
   $scope.kitOfProduct = {
     isProductKit: null,
-    kitCode: '',
+    kitCode: null,
     quantity: null
   };
 
@@ -110,7 +110,7 @@ function ProductController($scope, productGroups, productForms, dosageUnits, pro
     if (!_.isEmpty($scope.product) && !$scope.kitOfProduct.isProductKit) {
       $scope.kitOfProduct = {
         isProductKit: false,
-        kitCode: '',
+        kitCode: null,
         quantity: null
       };
     }
@@ -130,7 +130,7 @@ function ProductController($scope, productGroups, productForms, dosageUnits, pro
     } else {
       $scope.kitOfProduct = {
         isProductKit: false,
-        kitCode: '',
+        kitCode: null,
         quantity: 0
       };
     }

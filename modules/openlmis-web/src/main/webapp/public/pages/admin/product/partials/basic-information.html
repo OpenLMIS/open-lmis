@@ -337,14 +337,14 @@
                  ng-value="false"/>
           <strong openlmis-message="button.no"></strong>
           <span class="field-error"
-                ng-show="(kitProduct.isProductKit === undefined || kitProduct.isProductKit === null) && showError"
+                ng-show="(kitOfProduct.isProductKit === undefined || kitOfProduct.isProductKit === null) && showError"
                 openlmis-message="select.value"></span>
         </div>
       </div>
 
       <div class="form-cell" ng-show="kitOfProduct.isProductKit">
         <label>
-          <span openlmis-message="lable.product.is.kitcode"></span>
+          <span openlmis-message="lable.product.kitcode"></span>
           <span class="label-required">*</span>
         </label>
 
@@ -360,7 +360,7 @@
 
       <div class="form-cell" ng-show="kitOfProduct.isProductKit">
         <label>
-          <span openlmis-message="label.product.kitquantity"></span>
+          <span openlmis-message="lable.product.kitquantity"></span>
           <span class="label-required">*</span>
         </label>
 
