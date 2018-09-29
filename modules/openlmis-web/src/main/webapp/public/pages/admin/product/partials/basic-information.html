@@ -349,7 +349,7 @@
         </label>
 
         <div class="form-field">
-          <input ng-model="kitOfProduct.kitCode" type="radio" name="kitCode" ng-value="'SCOD10-AL'" ng-required="kitProduct.isProductKit"/>
+          <input ng-model="kitOfProduct.kitCode" type="radio" name="kitCode" ng-value="'SCOD10-AL'" ng-required="kitOfProduct.isProductKit"/>
           <span>SCOD10-AL</span> &nbsp; &nbsp; &nbsp;
           <input ng-model="kitOfProduct.kitCode" type="radio" name="kitCode" ng-value="'SCOD10'"/>
           <span>SCOD10</span>
@@ -366,9 +366,9 @@
 
         <div class="form-field">
           <div class="position-relative">
-            <input id="kitOfQuantity" ng-model="kitOfProduct.quantity" name="packSize" type="text" maxlength="5"
-                   numeric-validator="positiveInteger" ng-required="kitProduct.isProductKit"/>
-            <span class="rnr-form-error" style="display:none;" openlmis-message="error.number.only"></span>
+            <input ng-model="kitOfProduct.quantity" name="kitOfQuantity" type="text" maxlength="5"
+                   numeric-validator="positiveInteger" ng-required="kitOfProduct.isProductKit"/>
+            <span id="kitOfQuantity" class="rnr-form-error" style="display:none;" openlmis-message="error.number.only"></span>
           </div>
           <span class="field-error" ng-show="!kitOfProduct.quantity && showError"
                 openlmis-message="missing.value"></span>
