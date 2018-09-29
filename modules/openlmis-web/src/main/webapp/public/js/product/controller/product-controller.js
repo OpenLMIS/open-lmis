@@ -195,6 +195,16 @@ function ProductController($scope, productGroups, productForms, dosageUnits, pro
   $scope.mandatoryFieldsNotFilled = function (programProduct) {
     return !(programProduct && programProduct.program && programProduct.productCategory && programProduct.dosesPerMonth);
   };
+
+  $scope.$watch('kitOfProduct.isProductKit', function () {
+    if (!$scope.kitOfProduct.isProductKit) {
+      $scope.kitOfProduct = {
+        isProductKit: false,
+        kitCode: '',
+        quantity: null
+      };
+    }
+  });
 }
 
 ProductController.resolve = {
