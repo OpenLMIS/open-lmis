@@ -11,8 +11,11 @@ function ProductController($scope, productGroups, productForms, dosageUnits, pro
   $scope.product = {};
   $scope.$parent.message = "";
   $scope.priceScheduleCategories = PriceSchCategories;
-  $scope.isKitProduct = false;
-  $scope.kitProduct = {};
+  $scope.kitOfProduct = {
+    isProductKit: null,
+    kitCode: '',
+    quantity: null
+  };
 
   setProgramMessage();
 
@@ -39,15 +42,18 @@ function ProductController($scope, productGroups, productForms, dosageUnits, pro
 
     if (!isUndefined(kitProductList)) {
       var kitProduct = kitProductList[0];
-      $scope.isKitProduct = true;
 
-      $scope.kitProduct = {
+      $scope.kitOfProduct = {
+        isProductKit: true,
         kitCode: kitProduct.kitCode,
         quantity: kitProduct.quantity
       };
     } else {
-      $scope.isKitProduct = false;
-      $scope.kitProduct = {};
+      $scope.kitOfProduct = {
+        isProductKit: false,
+        kitCode: '',
+        quantity: 0
+      };
     }
   }
 
@@ -93,6 +99,15 @@ function ProductController($scope, productGroups, productForms, dosageUnits, pro
     if (findProgramProductsUnderEdit()) {
       $scope.error = 'error.program.products.not.done';
       return;
+    }
+
+    if ($scope.kitOfProduct.isProductKit) {
+      $scope.product.kitProductList = [];
+      $scope.product.kitProductList.push({
+        kitCode: $scope.kitOfProduct.kitCode,
+        productCode: $scope.product.code,
+        quantity: $scope.kitOfProduct.quantity
+      });
     }
 
     setProductReferenceData();
