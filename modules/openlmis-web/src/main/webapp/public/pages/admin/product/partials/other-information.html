@@ -51,7 +51,7 @@
         <div class="form-field">
           <div class="position-relative short">
             <input ng-model="product.alternatePackSize" name="alternatePackSize" id="product.alternatePackSize"
-                   type="text" maxlength="5" class="full-width right-justified" numeric-validator="positiveInteger"
+                   type="text" maxlength="5" class="full-width" numeric-validator="positiveInteger"
                    ng-trim="false"/>
             <span class="rnr-form-error" style="display:none;" id="alternatePackSize"
                   openlmis-message="error.number.only"></span>
@@ -111,7 +111,7 @@
         <div class="form-field">
           <div class="position-relative short">
             <input ng-model="product.expectedShelfLife" name="expectedShelfLife" id="product.expectedShelfLife"
-                   type="text" maxlength="5" class="full-width right-justified" numeric-validator="positiveInteger"
+                   type="text" maxlength="5" class="full-width" numeric-validator="positiveInteger"
                    ng-trim="false"/>
             <span class="rnr-form-error" style="display:none;" id="expectedShelfLife"
                   openlmis-message="error.number.only"></span>
@@ -150,7 +150,7 @@
         <div class="form-field">
           <div class="position-relative half-width">
             <input ng-model="product.contraceptiveCYP" name="contraceptiveCYP" id="product.contraceptiveCYP"
-                   type="text" maxlength="9" numeric-validator="positiveNumericValue,4,4" class="right-justified full-width"
+                   type="text" maxlength="9" numeric-validator="positiveNumericValue,4,4" class="full-width"
                    ng-trim="false"/>
             <span class="rnr-form-error" style="display:none;" id="contraceptiveCYP"
                   openlmis-message="error.number.only"></span>
@@ -282,7 +282,7 @@
 
           <div class="form-field">
             <input ng-model="product.packLength" name="packLength" id="product.packLength" type="text"
-                   maxlength="9" numeric-validator="positiveNumericValue,4,4" class="right-justified"
+                   maxlength="9" numeric-validator="positiveNumericValue,4,4"
                    ng-trim="false"/>
                 <span class="rnr-form-error" style="display:none;" id="packLength"
                       openlmis-message="error.number.only"></span>
@@ -295,7 +295,7 @@
 
           <div class="form-field">
             <input ng-model="product.packWidth" name="packWidth" id="product.packWidth" type="text"
-                   maxlength="9" numeric-validator="positiveNumericValue,4,4" class="right-justified"
+                   maxlength="9" numeric-validator="positiveNumericValue,4,4"
                    ng-trim="false"/>
                 <span class="rnr-form-error" style="display:none;" id="packWidth"
                       openlmis-message="error.number.only"></span>
@@ -311,7 +311,7 @@
 
           <div class="form-field">
             <input ng-model="product.packHeight" name="packHeight" id="product.packHeight" type="text"
-                   maxlength="9" numeric-validator="positiveNumericValue,4,4" class="right-justified"
+                   maxlength="9" numeric-validator="positiveNumericValue,4,4"
                    ng-trim="false"/>
                 <span class="rnr-form-error" style="display:none;" id="packHeight"
                       openlmis-message="error.number.only"></span>
@@ -324,7 +324,7 @@
 
           <div class="form-field">
             <input ng-model="product.packWeight" name="packWeight" id="product.packWeight" type="text"
-                   maxlength="9" numeric-validator="positiveNumericValue,4,4" class="right-justified"
+                   maxlength="9" numeric-validator="positiveNumericValue,4,4"
                    ng-trim="false"/>
                 <span class="rnr-form-error" style="display:none;" id="packWeight"
                       openlmis-message="error.number.only"></span>
@@ -340,7 +340,7 @@
 
           <div class="form-field">
             <input ng-model="product.packsPerCarton" name="packsPerCarton" id="product.packsPerCarton" type="text"
-                   maxlength="5" numeric-validator="positiveInteger" class="right-justified" ng-trim="false"/>
+                   maxlength="5" numeric-validator="positiveInteger" ng-trim="false"/>
                 <span class="rnr-form-error" style="display:none;" id="packsPerCarton"
                       openlmis-message="error.number.only"></span>
           </div>
@@ -352,7 +352,7 @@
 
           <div class="form-field">
             <input ng-model="product.cartonLength" name="cartonLength" id="product.cartonLength" type="text"
-                   maxlength="9" numeric-validator="positiveNumericValue,4,4" class="right-justified" ng-trim="false"/>
+                   maxlength="9" numeric-validator="positiveNumericValue,4,4" ng-trim="false"/>
                 <span class="rnr-form-error" style="display:none;" id="cartonLength"
                       openlmis-message="error.number.only"></span>
           </div>
@@ -367,7 +367,7 @@
 
           <div class="form-field">
             <input ng-model="product.cartonWidth" name="cartonWidth" id="product.cartonWidth" type="text"
-                   maxlength="9" numeric-validator="positiveNumericValue,4,4" class="right-justified" ng-trim="false"/>
+                   maxlength="9" numeric-validator="positiveNumericValue,4,4" ng-trim="false"/>
                 <span class="rnr-form-error" style="display:none;" id="cartonWidth"
                       openlmis-message="error.number.only"></span>
           </div>
@@ -379,7 +379,7 @@
 
           <div class="form-field">
             <input ng-model="product.cartonHeight" name="cartonHeight" id="product.cartonHeight" type="text"
-                   maxlength="9" numeric-validator="positiveNumericValue,4,4" class="right-justified" ng-trim="false"/>
+                   maxlength="9" numeric-validator="positiveNumericValue,4,4" ng-trim="false"/>
                 <span class="rnr-form-error" style="display:none;" id="cartonHeight"
                       openlmis-message="error.number.only"></span>
           </div>
@@ -394,7 +394,7 @@
 
           <div class="form-field">
             <input ng-model="product.cartonsPerPallet" name="cartonsPerPallet" id="product.cartonsPerPallet" type="text"
-                   maxlength="5" numeric-validator="positiveInteger" class="right-justified" ng-trim="false"/>
+                   maxlength="5" numeric-validator="positiveInteger" ng-trim="false"/>
                 <span class="rnr-form-error" style="display:none;" id="cartonsPerPallet"
                       openlmis-message="error.number.only"></span>
           </div>

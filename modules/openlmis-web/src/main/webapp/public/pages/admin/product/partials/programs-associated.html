@@ -93,7 +93,7 @@
                         <div class="position-relative">
                             <input id="displayOrderInput{{$index}}" type="text" ng-model="programProduct.displayOrder"
                                    name="displayOrder{{$index}}" numeric-validator="positiveInteger" maxlength="10"
-                                   class="right-justified" ng-show="programProduct.underEdit"/>
+                                   ng-show="programProduct.underEdit"/>
                 <span class="rnr-form-error" style="display:none;" id="displayOrder{{$index}}"
                       openlmis-message="error.number.only"></span>
                         </div>
@@ -102,13 +102,13 @@
 
                 <div class="span4">
                     <div class="fluid-grid-cell">
-                        <div id="dosesPerMonthLabel{{$index}}" ng-bind="programProduct.dosesPerMonth" class="right-justified"
+                        <div id="dosesPerMonthLabel{{$index}}" ng-bind="programProduct.dosesPerMonth"
                              ng-show="!programProduct.underEdit"></div>
 
                         <div class="position-relative">
                             <input id="dosesPerMonthInput{{$index}}" type="text" ng-model="programProduct.dosesPerMonth"
                                    numeric-validator="positiveInteger" maxlength="10" name="dosesPerMonth{{$index}}"
-                                   class="right-justified" ng-show="programProduct.underEdit"/>
+                                   ng-show="programProduct.underEdit"/>
                 <span class="rnr-form-error" style="display:none;" id="dosesPerMonth{{$index}}"
                       openlmis-message="error.number.only"></span>
                         </div>
@@ -117,13 +117,13 @@
 
                 <div class="span4">
                     <div class="fluid-grid-cell">
-                        <div id="currentPriceLabel{{$index}}" ng-bind="programProduct.currentPrice" class="right-justified"
+                        <div id="currentPriceLabel{{$index}}" ng-bind="programProduct.currentPrice"
                              ng-show="!programProduct.underEdit"></div>
 
                         <div class="position-relative">
                             <input id="currentPriceInput{{$index}}" type="text" ng-model="programProduct.currentPrice"
                                      maxlength="10" name="currentPrice{{$index}}"
-                                   class="right-justified" ng-show="programProduct.underEdit"/>
+                                   ng-show="programProduct.underEdit"/>
                 <span class="rnr-form-error" style="display:none;" id="currentPrice{{$index}}"
                       openlmis-message="error.number.only"></span>
                         </div>
@@ -188,7 +188,6 @@
           <div class="span4 fluid-grid-cell">
             <div class="position-relative">
               <input type="text" id="displayOrderAdd" ng-model="newProgramProduct.displayOrder"
-                     class="right-justified"
                      name="addDisplayOrder" numeric-validator="positiveInteger" maxlength="10"/>
               <span class="rnr-form-error" style="display:none;" id="addDisplayOrder"
                     openlmis-message="error.number.only"></span>
@@ -198,7 +197,6 @@
           <div class="span4 fluid-grid-cell">
             <div class="position-relative">
               <input type="text" id="dosesPerMonthAdd" ng-model="newProgramProduct.dosesPerMonth"
-                     class="right-justified"
                      numeric-validator="positiveInteger" maxlength="10" name="addDosesPerMonth"/>
               <span class="rnr-form-error" style="display:none;" id="addDosesPerMonth"
                     openlmis-message="error.number.only"></span>
@@ -208,7 +206,6 @@
             <div class="span4 fluid-grid-cell">
                 <div class="position-relative">
                     <input type="text" id="currentPriceAdd" ng-model="newProgramProduct.currentPrice"
-                           class="right-justified"
                              maxlength="10" name="addCurrentPrice"/>
               <span class="rnr-form-error" style="display:none;" id="addCurrentPrice"
                     openlmis-message="error.number.only"></span>
