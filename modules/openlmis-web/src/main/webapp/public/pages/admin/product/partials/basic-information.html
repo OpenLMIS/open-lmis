@@ -189,7 +189,7 @@
           <div class="span6">
             <label id="productRoundToZeroLabel">
               <span openlmis-message="label.product.roundToZero"></span>
-              <span class="label-required"> *</span>
+              <span class="label-required">*</span>
             </label>
 
             <div class="form-field">
@@ -197,11 +197,11 @@
                      name="roundToZero"
                      ng-value="true"
                      ng-required="true"/>
-              <strong openlmis-message="button.yes"></strong> &nbsp; &nbsp; &nbsp;
+              <span openlmis-message="button.yes"></span> &nbsp; &nbsp; &nbsp;
               <input id="roundToZeroFalse" ng-model="product.roundToZero" type="radio"
                      name="roundToZero"
                      ng-value="false"/>
-              <strong openlmis-message="button.no"></strong>
+              <span openlmis-message="button.no"></span>
               <span class="field-error"
                     ng-show="(product.roundToZero === undefined || product.roundToZero === null) && showError"
                     openlmis-message="select.value"></span>
@@ -222,10 +222,10 @@
           <input id="activeTrue" ng-model="product.active" type="radio" name="active"
                  ng-value="true"
                  ng-required="true"/>
-          <strong openlmis-message="button.yes"></strong> &nbsp; &nbsp; &nbsp;
+          <span openlmis-message="button.yes"></span> &nbsp; &nbsp; &nbsp;
           <input id="activeFalse" ng-model="product.active" type="radio" name="active"
                  ng-value="false"/>
-          <strong openlmis-message="button.no"></strong>
+          <span openlmis-message="button.no"></span>
           <span class="field-error"
                 ng-show="(product.active === undefined || product.active === null) && showError"
                 openlmis-message="select.value"></span>
@@ -242,10 +242,10 @@
           <input id="fullSupplyTrue" ng-model="product.fullSupply" type="radio" name="fullSupply"
                  ng-value="true"
                  ng-required="true"/>
-          <strong openlmis-message="button.yes"></strong> &nbsp; &nbsp; &nbsp;
+          <span openlmis-message="button.yes"></span> &nbsp; &nbsp; &nbsp;
           <input id="fullSupplyFalse" ng-model="product.fullSupply" type="radio" name="fullSupply"
                  ng-value="false"/>
-          <strong openlmis-message="button.no"></strong>
+          <span openlmis-message="button.no"></span>
           <span class="field-error"
                 ng-show="(product.fullSupply === undefined || product.fullSupply === null) && showError"
                 openlmis-message="select.value"></span>
@@ -262,10 +262,10 @@
           <input id="tracerTrue" ng-model="product.tracer" type="radio" name="tracer"
                  ng-value="true"
                  ng-required="true"/>
-          <strong openlmis-message="button.yes"></strong> &nbsp; &nbsp; &nbsp;
+          <span openlmis-message="button.yes"></span> &nbsp; &nbsp; &nbsp;
           <input id="tracerFalse" ng-model="product.tracer" type="radio" name="tracer"
                  ng-value="false"/>
-          <strong openlmis-message="button.no"></strong>
+          <span openlmis-message="button.no"></span>
           <span class="field-error"
                 ng-show="(product.tracer === undefined || product.tracer === null) && showError"
                 openlmis-message="select.value"></span>
@@ -281,9 +281,9 @@
         <div class="form-field">
           <input id="nosTrue" ng-model="product.nos" type="radio" name="nos" ng-value="true"
                  ng-required="true"/>
-          <strong openlmis-message="button.yes"></strong> &nbsp; &nbsp; &nbsp;
+          <span openlmis-message="button.yes"></span> &nbsp; &nbsp; &nbsp;
           <input id="nosFalse" ng-model="product.nos" type="radio" name="nos" ng-value="false"/>
-          <strong openlmis-message="button.no"></strong>
+          <span openlmis-message="button.no"></span>
           <span class="field-error"
                 ng-show="(product.nos === undefined || product.nos === null) && showError"
                 openlmis-message="select.value"></span>
@@ -300,10 +300,10 @@
           <input id="isBasicTrue" ng-model="product.isBasic" type="radio" name="isBasic"
                  ng-value="true"
                  ng-required="true"/>
-          <strong openlmis-message="button.yes"></strong> &nbsp; &nbsp; &nbsp;
+          <span openlmis-message="button.yes"></span> &nbsp; &nbsp; &nbsp;
           <input id="isBasicFalse" ng-model="product.isBasic" type="radio" name="isBasic"
                  ng-value="false"/>
-          <strong openlmis-message="button.no"></strong>
+          <span openlmis-message="button.no"></span>
           <span class="field-error"
                 ng-show="(product.isBasic === undefined || product.isBasic === null) && showError"
                 openlmis-message="select.value"></span>
@@ -316,10 +316,10 @@
         <div class="form-field">
           <input id="archivedTrue" ng-model="product.archived" type="radio" name="archived"
                  ng-value="true"/>
-          <strong openlmis-message="button.yes"></strong> &nbsp; &nbsp; &nbsp;
+          <span openlmis-message="button.yes"></span> &nbsp; &nbsp; &nbsp;
           <input id="archivedFalse" ng-model="product.archived" type="radio" name="archived"
                  ng-value="false"/>
-          <strong openlmis-message="button.no"></strong>
+          <span openlmis-message="button.no"></span>
         </div>
       </div>
 
@@ -332,10 +332,10 @@
         <div class="form-field">
           <input id="isProductKitTrue" ng-model="kitOfProduct.isProductKit" type="radio" name="isProductKit"
                  ng-value="true" ng-required="true"/>
-          <strong openlmis-message="button.yes"></strong> &nbsp; &nbsp; &nbsp;
+          <span openlmis-message="button.yes"></span> &nbsp; &nbsp; &nbsp;
           <input id="isProductKitFalse" ng-model="kitOfProduct.isProductKit" type="radio" name="isProductKit"
                  ng-value="false"/>
-          <strong openlmis-message="button.no"></strong>
+          <span openlmis-message="button.no"></span>
           <span class="field-error"
                 ng-show="(kitOfProduct.isProductKit === undefined || kitOfProduct.isProductKit === null) && showError"
                 openlmis-message="select.value"></span>
