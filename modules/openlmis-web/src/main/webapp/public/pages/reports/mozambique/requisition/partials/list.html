@@ -15,11 +15,7 @@
   <hr/>
   <div ng-show="requisitions.length>0" class="expected-submitted-total">
     <div class="expected-submitted-text" openlmis-message="label.report.requisitions.submittedandexpected"></div>
-    <div>
-      <div class="search-field">
-        <h4 openlmis-message="label.search"></h4>
-        <input type="text" ng-model="filterOptions.filterText"/>
-      </div>
+    <div class="sub-title">
       <div class="program-item-selection">
         <div class="program-item"
              ng-repeat="programExpectedAndSubmittedQuantity in programsExpectedAndSubmittedQuantity">
@@ -30,6 +26,11 @@
                     >{{programExpectedAndSubmittedQuantity.submittedQuantity}}</span>/<span>{{programExpectedAndSubmittedQuantity.expectedQuantity}}</span>
                 </span>
         </div>
+      </div>
+
+      <div class="search-field">
+        <h4 openlmis-message="label.search"></h4>
+        <input type="text" ng-model="filterOptions.filterText"/>
       </div>
     </div>
   </div>

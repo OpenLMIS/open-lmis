@@ -296,6 +296,7 @@ div.pagination div.btn-group {
 .date-picker {
   width: 60%;
   text-align: right;
+  float: right;
 }
 
 .date-picker .form-cell {
@@ -753,12 +754,24 @@ div.pagination div.btn-group {
 .expected-submitted-total {
   color: #888787;
 
+  .search-field {
+    h4 {
+      margin: 0;
+      padding: 0;
+      line-height: 1;
+    }
+  }
+
+  .sub-title {
+    margin-bottom: 15px;
+  }
+
   .expected-submitted-text {
     padding: 16px 0 10px 0;
   }
 
   .program-item-selection {
-    padding-bottom: 16px;
+    display: inline-block;
     line-height: 1;
 
     .program-item {
