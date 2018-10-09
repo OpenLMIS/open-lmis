@@ -4,7 +4,7 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.NoArgsConstructor;
 import org.openlmis.core.service.MessageService;
-import org.openlmis.report.view.CustomExcelTemplate;
+import org.openlmis.report.view.WorkbookCreator;
 import org.openlmis.web.controller.cubesreports.CubesReportProxy;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -20,7 +20,7 @@ import java.util.Map;
 public abstract class AbstractReportModelGenerator {
 
     @Autowired
-    private MessageService messageService;// = MessageService.getRequestInstance();
+    private MessageService messageService;
 
     @Autowired
     protected CubesReportProxy cubesReportProxy;
@@ -50,11 +50,11 @@ public abstract class AbstractReportModelGenerator {
             throw new RuntimeException("report content return null!");
         }
         Map<String, Object> model = new HashMap<>();
-        model.put(CustomExcelTemplate.getKEY_EXCEL_HEADERS(), reportHeaders);
-        model.put(CustomExcelTemplate.getKEY_EXCEL_CONTENT(), reportContent);
+        model.put(WorkbookCreator.getKEY_EXCEL_HEADERS(), reportHeaders);
+        model.put(WorkbookCreator.getKEY_EXCEL_CONTENT(), reportContent);
         Object reportLegenda = getReportLegenda(paraMap, cubeQueryResult, model);
         if (null != reportLegenda) {
-            model.put(CustomExcelTemplate.getKEY_EXCEL_LEGENDA(), reportLegenda);
+            model.put(WorkbookCreator.getKEY_EXCEL_LEGENDA(), reportLegenda);
         }
         return model;
     }

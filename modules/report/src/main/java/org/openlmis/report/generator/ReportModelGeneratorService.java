@@ -1,5 +1,6 @@
 package org.openlmis.report.generator;
 
+import org.apache.poi.ss.usermodel.Workbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -32,5 +33,9 @@ public class ReportModelGeneratorService {
             return getReportGenerator(paraMap.get(REPORT_TYPE).toString()).generate(paraMap);
         }
         throw new RuntimeException("report type not found in generator map.");
+    }
+
+    public void createWorkbook(Map<String, Object> model, Workbook workbook) {
+        
     }
 }

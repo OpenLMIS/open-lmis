@@ -6,7 +6,7 @@ import org.apache.commons.lang3.math.NumberUtils;
 import org.openlmis.core.utils.DateUtil;
 import org.openlmis.report.generator.AbstractReportModelGenerator;
 import org.openlmis.report.generator.StockOnHandStatus;
-import org.openlmis.report.view.CustomExcelTemplate;
+import org.openlmis.report.view.WorkbookCreator;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 
@@ -94,7 +94,7 @@ public class NosDrugReportGenerator extends AbstractReportModelGenerator {
     @Override
     protected Object getReportLegenda(Map<Object, Object> paraMap, Map<String, Object> cubeQueryResult,
                                       Map<String, Object> model) {
-        Map<String,String> content = (Map<String,String>)model.get(CustomExcelTemplate.getKEY_EXCEL_HEADERS());
+        Map<String,String> content = (Map<String,String>)model.get(WorkbookCreator.getKEY_EXCEL_HEADERS());
         List<List<Map<String, Object>>> legenda = new ArrayList<>();
         int count = content.size();
 
