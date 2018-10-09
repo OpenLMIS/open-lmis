@@ -50,7 +50,7 @@ public class WorkbookCreator {
         this.model = model;
     }
 
-    protected int createReportTitles(int rowIndex) {
+    private int createReportTitles(int rowIndex) {
         Object reportTitles = model.get(KEY_EXCEL_TITLES);
         if (null == reportTitles) {
             return rowIndex;
@@ -72,7 +72,7 @@ public class WorkbookCreator {
         return rowIndex;
     }
 
-    protected int createReportContent(int rowIndex) {
+    private int createReportContent(int rowIndex) {
         Object reportContent = model.get(KEY_EXCEL_CONTENT);
         Object reportHeaders = model.get(KEY_EXCEL_HEADERS);
         if (!(reportContent instanceof Collection)) {
@@ -118,7 +118,7 @@ public class WorkbookCreator {
         return rowIndex;
     }
 
-    protected int createLegend(int rowIndex) {
+    private int createLegend(int rowIndex) {
         Object reportLegenda = model.get(KEY_EXCEL_LEGENDA);
         if (null != reportLegenda) {
             if (!(reportLegenda instanceof Collection)) {
@@ -138,7 +138,7 @@ public class WorkbookCreator {
         return rowIndex;
     }
 
-    protected void mergeCells() {
+    private void mergeCells() {
         if (null != model.get(KEY_EXCEL_MERGE)) {
             Sheet sheet = getSheet();
             List<Map<String, Integer>> list = (List<Map<String, Integer>>)model.get(KEY_EXCEL_MERGE);

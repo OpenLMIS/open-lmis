@@ -3,6 +3,7 @@ package org.openlmis.report.generator;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.NoArgsConstructor;
+import org.apache.commons.lang3.StringUtils;
 import org.openlmis.core.service.MessageService;
 import org.openlmis.report.view.WorkbookCreator;
 import org.openlmis.web.controller.cubesreports.CubesReportProxy;
@@ -76,4 +77,63 @@ public abstract class AbstractReportModelGenerator {
         }
     }
 
+    protected String mapToQueryString(Map<String, Object> cutsParams) {
+        StringBuilder sb = new StringBuilder();
+        for (Map.Entry<String, Object> entry : cutsParams.entrySet()) {
+            sb.append(entry.getKey()).append(":");
+            if (entry.getValue() instanceof String) {
+                sb.append(entry.getValue());
+            } else if (entry.getValue() instanceof List) {
+                for (String value : (List<String>) entry.getValue()) {
+                    sb.append(value).append(";");
+                }
+                if (sb.toString().endsWith(";")) {
+                    sb.deleteCharAt(sb.length() - 1);
+                }
+            }
+            sb.append("|");
+        }
+        if (sb.toString().endsWith("|")) {
+            sb.deleteCharAt(sb.length() - 1);
+        }
+
+        return sb.toString();
+    }
+
+    protected boolean isOneDistrict(String province, String district) {
+        return StringUtils.isNotEmpty(province) && StringUtils.isNotEmpty(district);
+    }
+
+    protected boolean isOneProvince(String province, String district) {
+        return StringUtils.isNotEmpty(province) && StringUtils.isEmpty(district);
+    }
+
+    protected boolean isAllProvinces(String province, String district) {
+        return StringUtils.isEmpty(province) && StringUtils.isEmpty(district);
+    }
+
+    protected String getLocationHierarchy(String province, String district) {
+        if (isOneDistrict(province, district)) {
+            return province + "," + district;
+        } else if (isOneProvince(province, district)) {
+            return province;
+        }
+        return null;
+    }
+
+    protected String getDistrict(Map<Object, Object> paraMap) {
+        return get(paraMap, "district", "code");
+    }
+
+    protected String getProvince(Map<Object, Object> paraMap) {
+        return get(paraMap, "province", "code");
+    }
+
+    protected String get(Map<Object, Object> paraMap, String key1, String key2) {
+        if (!paraMap.containsKey(key1)) {
+            return null;
+        }
+        Map<String, String> map = (Map<String, String>) paraMap.get(key1);
+        return map.get(key2);
+    }
 }

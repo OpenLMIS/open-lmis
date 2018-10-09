@@ -34,8 +34,4 @@ public class ReportModelGeneratorService {
         }
         throw new RuntimeException("report type not found in generator map.");
     }
-
-    public void createWorkbook(Map<String, Object> model, Workbook workbook) {
-        
-    }
 }
