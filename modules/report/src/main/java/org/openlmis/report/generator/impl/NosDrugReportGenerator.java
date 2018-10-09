@@ -6,6 +6,7 @@ import org.apache.commons.lang3.math.NumberUtils;
 import org.openlmis.core.utils.DateUtil;
 import org.openlmis.report.generator.AbstractReportModelGenerator;
 import org.openlmis.report.generator.StockOnHandStatus;
+import org.openlmis.report.util.StockOnHandStatusCalculation;
 import org.openlmis.report.view.WorkbookCreator;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
@@ -328,14 +329,15 @@ public class NosDrugReportGenerator extends AbstractReportModelGenerator {
         Set<String> checkSet = new HashSet<>(set);
         for (Map.Entry<String, Map<String, String>> entry : nosDrugHash.entrySet()) {
             long cmm = getCmmValue(entry.getValue());
+            String productCode = entry.getKey().substring(0, entry.getKey().indexOf("@"));
             Map<String, Object> obj = new HashMap<>();
             for (Map.Entry<String, String> kv : entry.getValue().entrySet()) {
                 if (checkSet.contains(kv.getKey())) {
                     Map<String, Object> tmpValue = new HashMap<>();
                     tmpValue.put("value", kv.getValue());
                     Map<String, Object> styleMap = new HashMap<>();
-                    styleMap.put("color", stockOnHandStatus(cmm,
-                            NumberUtils.toLong(kv.getValue())).getColorIndex());
+                    styleMap.put("color", StockOnHandStatusCalculation.getStockOnHandStatus(cmm,
+                            NumberUtils.toLong(kv.getValue()), productCode).getColorIndex());
                     tmpValue.put("style", styleMap);
                     obj.put(kv.getKey(), tmpValue);
                 } else {
@@ -343,8 +345,8 @@ public class NosDrugReportGenerator extends AbstractReportModelGenerator {
                 }
             }
             String latestDate = set.toArray()[set.size() - 1].toString();
-            obj.put("LatestStockStatus", getMessage(stockOnHandStatus(cmm,
-                    NumberUtils.toLong(entry.getValue().get(latestDate))).getMessageKey()));
+            obj.put("LatestStockStatus", getMessage(StockOnHandStatusCalculation.getStockOnHandStatus(cmm,
+                    NumberUtils.toLong(entry.getValue().get(latestDate)), productCode).getMessageKey()));
 
             result.add(obj);
         }
@@ -352,47 +354,7 @@ public class NosDrugReportGenerator extends AbstractReportModelGenerator {
         return result;
     }
 
-
-
-    /*
-        $scope.cmmStatus = function (entry) {
-        var cmm = entry.cmm;
-        var soh = entry.soh;
-        if (soh === 0) {
-            return CMM_STATUS.stockOut;
-        }
-        if (cmm == -1) {
-            return CMM_STATUS.regularStock;
-        }
-
-        if (soh < 0.05 * cmm) {//low stock
-            return CMM_STATUS.lowStock;
-        }
-        else if (soh > 2 * cmm) {//over stock
-            return CMM_STATUS.overStock;
-        } else {
-            return CMM_STATUS.regularStock;
-        }
-    };
-     */
-
     private long getCmmValue(Map<String, String> row) {
         return StringUtils.isNotEmpty(row.get("cmmValue")) ? NumberUtils.toLong(row.get("cmmValue")): -1;
-    }
-
-    private StockOnHandStatus stockOnHandStatus(long cmm, long soh) {
-        if (0 == soh) {
-            return StockOnHandStatus.STOCK_OUT;
-        }
-        if (cmm == -1) {
-            return StockOnHandStatus.REGULAR_STOCK;
-        }
-
-        if (soh < 0.05 * cmm) {
-            return StockOnHandStatus.LOW_STOCK;
-        } else if (soh > 2 * cmm) {
-            return StockOnHandStatus.OVER_STOCK;
-        }
-        return StockOnHandStatus.REGULAR_STOCK;
     }
 }
