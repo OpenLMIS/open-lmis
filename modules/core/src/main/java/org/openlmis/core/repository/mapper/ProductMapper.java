@@ -151,6 +151,9 @@ public interface ProductMapper {
   @Delete("DELETE FROM kit_products_relation WHERE productCode = #{productCode}")
   void clearKitProductsByProductCode(String productCode);
 
+  @Update("UPDATE products SET modifieddate = now()::timestamp(6)without time zone WHERE code = #{code}")
+  void updateModifieddateByCode(String code);
+
   @Select("SELECT * FROM products WHERE modifieddate > #{date}")
   @Results({
       @Result(property = "code", column = "code"),

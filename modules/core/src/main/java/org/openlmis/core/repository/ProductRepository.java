@@ -12,6 +12,7 @@ package org.openlmis.core.repository;
 
 import lombok.NoArgsConstructor;
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.collections.ListUtils;
 import org.openlmis.core.domain.DosageUnit;
 import org.openlmis.core.domain.KitProduct;
 import org.openlmis.core.domain.Product;
@@ -24,8 +25,7 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Component;
 
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 /**
  * ProductRepository is Repository class for Product related database operations.
@@ -90,14 +90,28 @@ public class ProductRepository {
       mapper.clearKitProductsByProductCode(product.getCode());
     }
 
+
     List<KitProduct> newKitProductList = product.getKitProductList();
     if (CollectionUtils.isNotEmpty(newKitProductList)) {
       for (KitProduct kitProduct : product.getKitProductList()) {
         mapper.insertKitProduct(kitProduct);
       }
     }
+
+    updateLastModifieddate(oldKitProductList,newKitProductList);
   }
 
+  private void updateLastModifieddate(List<KitProduct> oldKitProductList,List<KitProduct> newKitProductList){
+    List<KitProduct> subKitList  = ListUtils.union(ListUtils.subtract(oldKitProductList,newKitProductList),ListUtils.subtract(newKitProductList,oldKitProductList));
+    Set<String> kitCodes  = new HashSet<>();
+    for(KitProduct kitProduct:subKitList){
+      kitCodes.add(kitProduct.getKitCode());
+    }
+
+    for(String kitCode : kitCodes){
+      mapper.updateModifieddateByCode(kitCode);
+    }
+  }
 
   public Long getIdByCode(String code) {
     Long productId = mapper.getIdByCode(code);
