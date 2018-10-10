@@ -19,6 +19,22 @@
 
     <hr/>
 
+    <div class="form-fields">
+        <select ui-select2
+                ng-click="onChangeSelectedDrug()"
+                ng-model="selectedDrugCode"
+
+                style="width:160px;"
+                class="large-input"
+                name="drug"
+                id="drugDropDown">
+            <option></option>
+            <option ng-repeat="option in nosDrugList" value="{{option['drug.drug_code']}}">
+                {{option['drug.drug_name']}}
+            </option>
+        </select>
+    </div>
+
     <div class="over-flow-hidden" ng-if="reportLoaded">
         <div id="tracer-report"></div>
         <div id="legend-div"></div>

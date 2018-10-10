@@ -1,9 +1,10 @@
 services.factory('NosDrugsChartService', function ($http, $filter, $q, $timeout, messageService,
                                                    CubesGenerateUrlService, StockoutSingleProductZoneChartService,
                                                    CubesGenerateCutParamsService, ReportLocationConfigService,
-                                                   ReportExportExcelService, DateFormatService,
+                                                   ReportExportExcelService, DateFormatService, NosDrugStatusService,
                                                    WeeklyNosDrugExportService) {
 
+  var DATE_FORMAT = 'yyyy,MM,dd';
   var drugCodeKey = "drug.drug_code";
   var drugNameKey = "drug.drug_name";
   var selectedDrugs = [];
@@ -123,6 +124,37 @@ services.factory('NosDrugsChartService', function ($http, $filter, $q, $timeout,
     return true;
   }
 
+  function makeNosDrugHistogram(chartDivId, province, district, userSelectedStartDate, userSelectedEndDate, selectedDrugCode) {
+    var nosDrugItems = getNosDrugItems(province, district, userSelectedStartDate, userSelectedEndDate, selectedDrugCode);
+
+    renderNosDrugHistogram(chartDivId, nosDrugItems);
+  }
+
+  function getNosDrugItems(province, district, startTime, endTime, selectedDrugCode) {
+    selectedDrugs = [];
+    selectedDrugs.push(selectedDrugCode);
+    var data = {
+      province: province,
+      district: district,
+      startTime: $filter('date')(startTime, DATE_FORMAT),
+      endTime: $filter('date')(endTime, DATE_FORMAT),
+      selectedDrugs: selectedDrugs
+    };
+
+    NosDrugStatusService.get(data, function (result) {
+
+    });
+
+  }
+
+  function getNosDrugList() {
+    return $http.get('/cubesreports/cube/products/facts?cut=is_nos:true').success(function (nosDrugs) {
+      return nosDrugs;
+    }).error(function () {
+      return [];
+    });
+  }
+
   function generateGraphs(nosDrugs) {
     function stringToRGB(str) {
       var hash = 0;
@@ -201,6 +233,10 @@ services.factory('NosDrugsChartService', function ($http, $filter, $q, $timeout,
     });
 
     return nosDrugGraphs;
+  }
+
+  function renderNosDrugHistogram() {
+
   }
 
   function renderNosDrugsChart(chartDivId, legendDivId, chartDataItems, nosDrugs) {
@@ -299,6 +335,8 @@ services.factory('NosDrugsChartService', function ($http, $filter, $q, $timeout,
     generateGraphs: generateGraphs,
     generateNosDrugsChartDataItems: generateNosDrugsChartDataItems,
     makeNosDrugsChart: makeNosDrugsChart,
-    exportXLSX: exportXLSX
+    exportXLSX: exportXLSX,
+    getNosDrugList: getNosDrugList,
+    makeNosDrugHistogram: makeNosDrugHistogram
   };
 });

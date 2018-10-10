@@ -1321,6 +1321,10 @@ services.factory('VersionReportService', function ($resource) {
   return $resource('/reports/app-version-report.json', {}, {});
 });
 
+services.factory('NosDrugStatusService', function ($resource) {
+  return $resource('/nos/drug', {}, {});
+});
+
 services.factory('ProductReportService', function ($resource) {
   return {
     loadAllProducts: function () {
