@@ -141,10 +141,10 @@ public class WorkbookCreator {
     private void mergeCells() {
         if (null != model.get(KEY_EXCEL_MERGE)) {
             Sheet sheet = getSheet();
-            List<Map<String, Integer>> list = (List<Map<String, Integer>>)model.get(KEY_EXCEL_MERGE);
-            for (Map<String, Integer> map : list) {
-                sheet.addMergedRegion(new CellRangeAddress(map.get("firstRow"), map.get("lastRow"),
-                        map.get("firstCol"), map.get("lastCol")));
+            List<Map<String, String>> list = (List<Map<String, String>>)model.get(KEY_EXCEL_MERGE);
+            for (Map<String, String> map : list) {
+                sheet.addMergedRegion(new CellRangeAddress(Integer.parseInt(map.get("firstRow")), Integer.parseInt(map.get("lastRow")),
+                        Integer.parseInt(map.get("firstCol")), Integer.parseInt(map.get("lastCol"))));
             }
         }
     }

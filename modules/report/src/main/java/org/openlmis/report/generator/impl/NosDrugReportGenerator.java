@@ -93,6 +93,11 @@ public class NosDrugReportGenerator extends AbstractReportModelGenerator {
     }
 
     @Override
+    protected List<Map<String, String>> getReportMergedRegions() {
+        return null;
+    }
+
+    @Override
     protected Object getReportLegenda(Map<Object, Object> paraMap, Map<String, Object> cubeQueryResult,
                                       Map<String, Object> model) {
         Map<String,String> content = (Map<String,String>)model.get(WorkbookCreator.getKEY_EXCEL_HEADERS());

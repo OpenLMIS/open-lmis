@@ -30,6 +30,8 @@ public abstract class AbstractReportModelGenerator {
 
     protected abstract Object getReportContent(Map<Object, Object> paraMap, Map<String, Object> cubeQueryResult);
 
+    protected abstract List<Map<String, String>> getReportMergedRegions();
+
     protected Object getReportLegenda(Map<Object, Object> paraMap, Map<String, Object> cubeQueryResult, Map<String, Object> model) {
         return null;
     }
@@ -57,6 +59,12 @@ public abstract class AbstractReportModelGenerator {
         if (null != reportLegenda) {
             model.put(WorkbookCreator.getKEY_EXCEL_LEGENDA(), reportLegenda);
         }
+
+        List<Map<String, String>> reportMergedRegion = getReportMergedRegions();
+        if(null != reportMergedRegion){
+            model.put(WorkbookCreator.getKEY_EXCEL_MERGE(),reportMergedRegion);
+        }
+
         return model;
     }
 
