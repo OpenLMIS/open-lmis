@@ -8,12 +8,8 @@ function NosDrugsReportController($scope, $controller, NosDrugsChartService) {
   $scope.loadReport = function () {
     if ($scope.validateProvince() && $scope.validateDistrict()) {
       // $scope.reportLoaded = true;
-      // NosDrugsChartService.makeNosDrugHistogram({
-      //   chartDivId: 'tracer-report', province: getSelectedProvince(), district: getSelectedDistrict(),
-      //   userSelectedStartDate: $scope.reportParams.startTime,
-      //   userSelectedEndDate: $scope.reportParams.endTime,
-      //   selectedDrugCode: $scope.selectedDrugCode
-      // });
+      // NosDrugsChartService.makeNosDrugHistogram('tracer-report', $scope.reportParams.startTime,
+      //   $scope.reportParams.endTime, getSelectedProvince(), getSelectedDistrict(), $scope.selectedDrugCode)
       $scope.reportLoaded = NosDrugsChartService.makeNosDrugsChart('tracer-report', 'legend-div', new Date($scope.reportParams.startTime), new Date($scope.reportParams.endTime), getSelectedProvince(), getSelectedDistrict());
     }
   };

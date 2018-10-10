@@ -126,25 +126,82 @@ services.factory('NosDrugsChartService', function ($http, $filter, $q, $timeout,
 
   function makeNosDrugHistogram(chartDivId, province, district, userSelectedStartDate, userSelectedEndDate, selectedDrugCode) {
     var nosDrugItems = getNosDrugItems(province, district, userSelectedStartDate, userSelectedEndDate, selectedDrugCode);
+    
+    var formattedNosDrugItems = formatNosDrugItems(nosDrugItems);
 
-    renderNosDrugHistogram(chartDivId, nosDrugItems);
+    renderNosDrugHistogram(chartDivId, formattedNosDrugItems);
+  }
+  
+  function formatNosDrugItems(nosDrugItems) {
+    return _.map(nosDrugItems, function (nosDrugItem) {
+      var dateKey = Object.keys(nosDrugItem)[0];
+      return {
+        nosData: nosDrugItem,
+        date: dateKey,
+        lowStockPercentage: nosDrugItem[dateKey].lowStock.percentage,
+        overStockPercentage: nosDrugItem[dateKey].overStock.percentage,
+        regularStockPercentage: nosDrugItem[dateKey].regularStock.percentage,
+        stockOutPercentage: nosDrugItem[dateKey].stockOut.percentage
+      };
+    });
   }
 
   function getNosDrugItems(province, district, startTime, endTime, selectedDrugCode) {
     selectedDrugs = [];
     selectedDrugs.push(selectedDrugCode);
-    var data = {
-      province: province,
-      district: district,
-      startTime: $filter('date')(startTime, DATE_FORMAT),
-      endTime: $filter('date')(endTime, DATE_FORMAT),
-      selectedDrugs: selectedDrugs
-    };
+    // var data = {
+    //   province: province,
+    //   district: district,
+    //   startTime: $filter('date')(startTime, DATE_FORMAT),
+    //   endTime: $filter('date')(endTime, DATE_FORMAT),
+    //   selectedDrugs: selectedDrugs
+    // };
 
-    NosDrugStatusService.get(data, function (result) {
-
-    });
-
+    // NosDrugStatusService.get(data, function (result) {
+    //
+    // });
+    return [
+      {
+        "2018-10-7": {
+          "overStock": {
+            "percentage": 52,
+            "facilities": ["test one", "test two"]
+          },
+          "regularStock": {
+            "percentage": 28,
+            "facilities": ["test one", "test two"]
+          },
+          "stockOut": {
+            "percentage": 5,
+            "facilities": ["test one"]
+          },
+          "lowStock": {
+            "percentage": 15,
+            "facilities": ["test one", "test two"]
+          }
+        }
+      },
+      {
+        "2018-10-15": {
+          "overStock": {
+            "percentage": 45,
+            "facilities": ["test one", "test two"]
+          },
+          "regularStock": {
+            "percentage": 35,
+            "facilities": ["test one", "test two"]
+          },
+          "stockOut": {
+            "percentage": 5,
+            "facilities": ["test one"]
+          },
+          "lowStock": {
+            "percentage": 15,
+            "facilities": ["test one", "test two"]
+          }
+        }
+      }
+    ];
   }
 
   function getNosDrugList() {
@@ -235,8 +292,96 @@ services.factory('NosDrugsChartService', function ($http, $filter, $q, $timeout,
     return nosDrugGraphs;
   }
 
-  function renderNosDrugHistogram() {
+  function renderNosDrugHistogram(chartDivId, nosDrugItems) {
 
+    AmCharts.makeChart(chartDivId, {
+        type: "serial",
+        categoryField: "date",
+        startDuration: 1,
+        categoryAxis: {
+          gridPosition: "start"
+        },
+        chartScrollbar: {
+          enabled: true,
+          dragIconHeight: 46,
+          graphType: "line",
+          offset: 30,
+          oppositeAxis: false,
+          scrollDuration: 0
+        },
+        graphs: [
+          {
+            balloonFunction: generateBalloonInfo,
+            fillAlphas: 1,
+            title: "stockOut",
+            type: "column",
+            valueField: "stockOutPercentage",
+            fillColors: "#f5212d",
+          },
+          {
+            balloonFunction: generateBalloonInfo,
+            fillAlphas: 1,
+            id: "AmGraph-3",
+            title: "lowStock",
+            type: "column",
+            valueField: "lowStockPercentage",
+            fillColors: "#fad74d",
+          },
+          {
+            balloonFunction: generateBalloonInfo,
+            fillAlphas: 1,
+            id: "AmGraph-4",
+            title: "regularStock",
+            type: "column",
+            valueField: "regularStockPercentage",
+            fillColors: "#4bba14",
+          },
+          {
+            balloonFunction: generateBalloonInfo,
+            fillAlphas: 1,
+            title: "overStock",
+            type: "column",
+            valueField: "overStockPercentage",
+            fillColors: "#6610c7",
+          }
+        ],
+        valueAxes: [
+          {
+            axisFrequency: 4,
+            baseValue: 2,
+            id: "ValueAxis-1",
+            maximum: 0,
+            minMaxMultiplier: 0,
+            stackType: "100%",
+            unit: "%",
+            offset: 1,
+            titleColor: "#0000FF",
+            titleFontSize: 0
+          }
+        ],
+        legend: {
+          textClickEnabled: true
+        },
+        dataProvider: nosDrugItems
+      }
+    );
+  }
+
+  function generateBalloonInfo (e) {
+    var drugContext = e.dataContext;
+    var graph = e.graph;
+    var originalNosDrugData = drugContext.nosData[drugContext.date];
+
+    function generateFacilitiesName(facilities) {
+      var names = '';
+      return _.each(facilities, function (facility) {
+        names += facility;
+      });
+    }
+
+    return "Number Of Health Facility" + ": " + originalNosDrugData[graph.title].facilities.length + "<br>" +
+      "Percentage: " + originalNosDrugData[graph.title].percentage +
+      "<hr style='margin: 0'>" + generateFacilitiesName(originalNosDrugData[graph.title].facilities);
   }
 
   function renderNosDrugsChart(chartDivId, legendDivId, chartDataItems, nosDrugs) {
