@@ -126,12 +126,14 @@ services.factory('NosDrugsChartService', function ($http, $filter, $q, $timeout,
 
   function makeNosDrugHistogram(chartDivId, province, district, userSelectedStartDate, userSelectedEndDate, selectedDrugCode) {
     var nosDrugItems = getNosDrugItems(province, district, userSelectedStartDate, userSelectedEndDate, selectedDrugCode);
-    
+
     var formattedNosDrugItems = formatNosDrugItems(nosDrugItems);
 
     renderNosDrugHistogram(chartDivId, formattedNosDrugItems);
+
+    return true;
   }
-  
+
   function formatNosDrugItems(nosDrugItems) {
     return _.map(nosDrugItems, function (nosDrugItem) {
       var dateKey = Object.keys(nosDrugItem)[0];
@@ -298,16 +300,22 @@ services.factory('NosDrugsChartService', function ($http, $filter, $q, $timeout,
         type: "serial",
         categoryField: "date",
         startDuration: 1,
+        columnWidth: 0.5,
         categoryAxis: {
           gridPosition: "start"
         },
+        zoomOutText: '',
         chartScrollbar: {
           enabled: true,
-          dragIconHeight: 46,
           graphType: "line",
           offset: 30,
           oppositeAxis: false,
+          scrollbarHeight: 5,
           scrollDuration: 0
+        },
+        balloon: {
+          textAlign: "left",
+          "fixedPosition": false,
         },
         graphs: [
           {
@@ -317,6 +325,7 @@ services.factory('NosDrugsChartService', function ($http, $filter, $q, $timeout,
             type: "column",
             valueField: "stockOutPercentage",
             fillColors: "#f5212d",
+            legendColor: "#f5212d",
           },
           {
             balloonFunction: generateBalloonInfo,
@@ -326,6 +335,7 @@ services.factory('NosDrugsChartService', function ($http, $filter, $q, $timeout,
             type: "column",
             valueField: "lowStockPercentage",
             fillColors: "#fad74d",
+            legendColor: "#fad74d",
           },
           {
             balloonFunction: generateBalloonInfo,
@@ -335,6 +345,7 @@ services.factory('NosDrugsChartService', function ($http, $filter, $q, $timeout,
             type: "column",
             valueField: "regularStockPercentage",
             fillColors: "#4bba14",
+            legendColor: "#4bba14",
           },
           {
             balloonFunction: generateBalloonInfo,
@@ -343,6 +354,7 @@ services.factory('NosDrugsChartService', function ($http, $filter, $q, $timeout,
             type: "column",
             valueField: "overStockPercentage",
             fillColors: "#6610c7",
+            legendColor: "#6610c7",
           }
         ],
         valueAxes: [
@@ -356,18 +368,20 @@ services.factory('NosDrugsChartService', function ($http, $filter, $q, $timeout,
             unit: "%",
             offset: 1,
             titleColor: "#0000FF",
+            color: "#999999",
             titleFontSize: 0
           }
         ],
         legend: {
-          textClickEnabled: true
+          align: "center",
+          textClickEnabled: true,
         },
         dataProvider: nosDrugItems
       }
     );
   }
 
-  function generateBalloonInfo (e) {
+  function generateBalloonInfo(e) {
     var drugContext = e.dataContext;
     var graph = e.graph;
     var originalNosDrugData = drugContext.nosData[drugContext.date];

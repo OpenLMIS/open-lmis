@@ -7,7 +7,8 @@
         <div ng-include="'/public/pages/reports/mozambique/district-selection.html'"></div>
 
         <div class="report-selection">
-            <input type="submit" class="btn btn-primary" ng-click="loadReport()" openlmis-message="button.generateReport"/>
+            <input type="submit" class="btn btn-primary" ng-click="loadReport()"
+                   openlmis-message="button.generateReport"/>
         </div>
 
         <div style="clear: both"></div>
@@ -19,25 +20,24 @@
 
     <hr/>
 
-    <div class="form-fields">
-        <select ui-select2
-                ng-click="onChangeSelectedDrug()"
-                ng-model="selectedDrugCode"
+    <div class="over-flow-hidden" ng-show="reportLoaded">
+        <div class="form-fields">
+            <span style="margin-left: 6%">Drug:</span>
+            <select ui-select2
+                    ng-click="onChangeSelectedDrug()"
+                    ng-model="selectedDrugCode"
 
-                style="width:160px;"
-                class="large-input"
-                name="drug"
-                id="drugDropDown">
-            <option></option>
-            <option ng-repeat="option in nosDrugList" value="{{option['drug.drug_code']}}">
-                {{option['drug.drug_name']}}
-            </option>
-        </select>
-    </div>
-
-    <div class="over-flow-hidden" ng-if="reportLoaded">
+                    style="width:160px;"
+                    class="large-input"
+                    name="drug"
+                    id="drugDropDown">
+                <option ng-repeat="option in nosDrugList" value="{{option['drug.drug_code']}}">
+                    {{option['drug.drug_name']}}
+                </option>
+            </select>
+        </div>
         <div id="tracer-report"></div>
-        <div id="legend-div"></div>
+        <!--<div id="legend-div"></div>-->
         <div ng-include="'/public/pages/reports/mozambique/export-data-button.html'"></div>
     </div>
 
