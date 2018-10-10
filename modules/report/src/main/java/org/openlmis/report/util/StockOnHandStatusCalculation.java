@@ -22,7 +22,7 @@ public class StockOnHandStatusCalculation {
             return StockOnHandStatus.REGULAR_STOCK;
         }
 
-        if (soh < 0.05 * cmm) {
+        if (soh < 1 * cmm) {
             return StockOnHandStatus.LOW_STOCK;
         } else if ((!isHivProject(productCode) && soh > 2 * cmm) || (isHivProject(productCode) && soh > 3 * cmm)) {
             return StockOnHandStatus.OVER_STOCK;
@@ -34,9 +34,9 @@ public class StockOnHandStatusCalculation {
         List<ProgramProduct> programProducts = programProductRepository.getByProductCode(productCode);
         for(ProgramProduct programProduct : programProducts) {
             if(null != programProduct.getProgram().getParent()) {
-                return programProduct.getProgram().getParent().getCode() == hivProgramCode;
+                return programProduct.getProgram().getParent().getCode().equals(hivProgramCode);
             }
-            return programProduct.getProgram().getCode() == hivProgramCode;
+            return programProduct.getProgram().getCode().equals(hivProgramCode);
         }
         return false;
     }
