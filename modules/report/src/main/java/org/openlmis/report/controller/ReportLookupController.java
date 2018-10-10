@@ -23,6 +23,7 @@ import org.openlmis.core.web.OpenLmisResponse;
 import org.openlmis.core.web.controller.BaseController;
 import org.openlmis.equipment.domain.Donor;
 import org.openlmis.equipment.domain.Equipment;
+import org.openlmis.report.generator.ReportModelGeneratorService;
 import org.openlmis.report.model.dto.*;
 import org.openlmis.report.model.report.OrderFillRateSummaryReport;
 import org.openlmis.report.service.lookup.ReportLookupService;
@@ -33,6 +34,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
@@ -43,6 +45,7 @@ import java.util.List;
 import java.util.Map;
 
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
+import static org.springframework.web.bind.annotation.RequestMethod.POST;
 
 
 @Controller
@@ -93,6 +96,9 @@ public class ReportLookupController extends BaseController {
 
   @Autowired
   private SupervisoryNodeService supervisoryNodeService;
+
+  @Autowired
+  private ReportModelGeneratorService reportModelGeneratorService;
 
   @RequestMapping(value="/programs", method = GET, headers = BaseController.ACCEPT_JSON)
   public ResponseEntity<OpenLmisResponse> getPrograms(){
@@ -576,6 +582,12 @@ public class ReportLookupController extends BaseController {
         List<FacilityLevelTree> facilityLevelTrees = reportLookupService.getFacilityByLevel(programId, loggedInUserId(request));
         return OpenLmisResponse.response(FACILITY_LEVELS, facilityLevelTrees);
 
+    }
+
+    @RequestMapping(value = "/data", method = POST, headers = BaseController.ACCEPT_JSON)
+    public ResponseEntity<OpenLmisResponse> getReportData(@RequestBody Map<Object, Object> paraMap) {
+        List<Map<String, Object>> model = reportModelGeneratorService.reportDataForFrontend(paraMap);
+        return OpenLmisResponse.response("data", model);
     }
 
 }

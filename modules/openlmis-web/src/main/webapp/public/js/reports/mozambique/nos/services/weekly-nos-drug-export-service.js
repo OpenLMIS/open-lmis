@@ -13,7 +13,7 @@ services.factory('WeeklyNosDrugExportService', function ($http, $filter, $q, $ti
       data.startTime = $filter('date')(startTime, DATE_FORMAT);
       data.endTime = $filter('date')(endTime, DATE_FORMAT);
       data.allNosDrugs = allNosDrugs;
-      data.reportType = "nosDrugReportGenerator";
+      data.reportType = "nosDrug";
 
       ReportExportExcelService.exportAsXlsxBackend(data, messageService.get('report.file.nos.drugs.report'));
   }

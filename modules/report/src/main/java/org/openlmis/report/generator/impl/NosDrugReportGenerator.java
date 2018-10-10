@@ -21,7 +21,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
 
-@Component
+@Component(value = "nosDrug")
 public class NosDrugReportGenerator extends AbstractReportModelGenerator {
 
     private final static String CMM_ENTRIES_CUBE = "vw_cmm_entries";
@@ -56,7 +56,7 @@ public class NosDrugReportGenerator extends AbstractReportModelGenerator {
         cubeQueryResult.put(STARTTIME_TO_ENDTIME,
                 DateUtil.transform(startTime, DateUtil.FORMAT_DATE_TIME_CUBE, DateUtil.FORMAT_DATE_DD_MM_YYYY)
                         + " - " + DateUtil.transform(endTime, DateUtil.FORMAT_DATE_TIME_CUBE, DateUtil.FORMAT_DATE_DD_MM_YYYY)
-                );
+        );
 
         return cubeQueryResult;
     }
@@ -100,7 +100,7 @@ public class NosDrugReportGenerator extends AbstractReportModelGenerator {
     @Override
     protected Object getReportLegenda(Map<Object, Object> paraMap, Map<String, Object> cubeQueryResult,
                                       Map<String, Object> model) {
-        Map<String,String> content = (Map<String,String>)model.get(WorkbookCreator.getKEY_EXCEL_HEADERS());
+        Map<String, String> content = (Map<String, String>) model.get(WorkbookCreator.getKEY_EXCEL_HEADERS());
         List<List<Map<String, Object>>> legenda = new ArrayList<>();
         int count = content.size();
 
@@ -341,9 +341,11 @@ public class NosDrugReportGenerator extends AbstractReportModelGenerator {
                     Map<String, Object> tmpValue = new HashMap<>();
                     tmpValue.put("value", kv.getValue());
                     Map<String, Object> styleMap = new HashMap<>();
-                    styleMap.put("color", StockOnHandStatusCalculation.getStockOnHandStatus(cmm,
-                            NumberUtils.toLong(kv.getValue()), productCode).getColorIndex());
+                    StockOnHandStatus stockOnHandStatus = StockOnHandStatusCalculation.getStockOnHandStatus(cmm,
+                            NumberUtils.toLong(kv.getValue()), productCode);
+                    styleMap.put("color", stockOnHandStatus.getColorIndex());
                     tmpValue.put("style", styleMap);
+                    tmpValue.put("status", stockOnHandStatus);
                     obj.put(kv.getKey(), tmpValue);
                 } else {
                     obj.put(kv.getKey(), kv.getValue());
@@ -360,6 +362,109 @@ public class NosDrugReportGenerator extends AbstractReportModelGenerator {
     }
 
     private long getCmmValue(Map<String, String> row) {
-        return StringUtils.isNotEmpty(row.get("cmmValue")) ? NumberUtils.toLong(row.get("cmmValue")): -1;
+        return StringUtils.isNotEmpty(row.get("cmmValue")) ? NumberUtils.toLong(row.get("cmmValue")) : -1;
+    }
+
+    @Override
+    protected List<Map<String, Object>> reportDataForFrontEnd(Map<Object, Object> paraMap) {
+        Map<String, Object> data = generate(paraMap);
+        List<Map<String, Object>> reportData = new ArrayList<>();
+
+        Map<String, String> headers = (Map<String, String>) data.get(WorkbookCreator.getKEY_EXCEL_HEADERS());
+        List<String> dates = new ArrayList<>();
+        boolean flag = true;
+        for (Map.Entry<String, String> entry : headers.entrySet()) {
+            if (!StringUtils.equalsIgnoreCase("reportGeneratedFor", entry.getKey()) && flag) {
+                continue;
+            }
+            flag = false;
+            if (!StringUtils.equalsIgnoreCase("reportGeneratedFor", entry.getKey())
+                    && !StringUtils.equalsIgnoreCase("LatestStockStatus", entry.getKey())) {
+                dates.add(entry.getKey());
+            }
+        }
+
+        List<Map<String, Object>> content = (List<Map<String, Object>>) data.get(WorkbookCreator.getKEY_EXCEL_CONTENT());
+        for (String date : dates) {
+            StockStatusContainer stockStatusContainer = new StockStatusContainer(date);
+            for (Map<String, Object> map : content) {
+                stockStatusContainer.update(map);
+            }
+
+            Map<String, Object> map = new HashMap<>();
+            map.put(date, stockStatusContainer.result());
+            reportData.add(map);
+        }
+        return reportData;
+    }
+
+    public static class StockStatusContainer {
+
+        String date;
+        StockStatusStat overStock = new StockStatusStat(StockOnHandStatus.OVER_STOCK.getDescription());
+        StockStatusStat lowStock = new StockStatusStat(StockOnHandStatus.LOW_STOCK.getDescription());
+        StockStatusStat regularStock = new StockStatusStat(StockOnHandStatus.REGULAR_STOCK.getDescription());
+        StockStatusStat stockOut = new StockStatusStat(StockOnHandStatus.STOCK_OUT.getDescription());
+
+        public StockStatusContainer(String date) {
+            this.date = date;
+        }
+
+        public void update(Map<String, Object> map) {
+            String facility = map.get("facility").toString();
+            Map<String, Object> info = (Map<String, Object>) map.get(date);
+            StockOnHandStatus status = (StockOnHandStatus)info.get("status");
+            switch (status) {
+                case LOW_STOCK:
+                    update(lowStock, facility);
+                    break;
+                case OVER_STOCK:
+                    update(overStock, facility);
+                    break;
+                case REGULAR_STOCK:
+                    update(regularStock, facility);
+                    break;
+                case STOCK_OUT:
+                    update(stockOut, facility);
+                    break;
+                    default:
+            }
+        }
+
+        private void update(StockStatusStat stockStatusStat, String facility) {
+            stockStatusStat.facilities.add(facility);
+            stockStatusStat.count++;
+        }
+
+        public Map<String, Object> result() {
+            Map<String, Object> map = new HashMap<>();
+            map.put(StockOnHandStatus.OVER_STOCK.getDescription(), subMap(overStock));
+            map.put(StockOnHandStatus.LOW_STOCK.getDescription(), subMap(lowStock));
+            map.put(StockOnHandStatus.REGULAR_STOCK.getDescription(), subMap(regularStock));
+            map.put(StockOnHandStatus.STOCK_OUT.getDescription(), subMap(stockOut));
+            return map;
+        }
+
+        private Map<String, Object> subMap(StockStatusStat stockStatusStat) {
+            Map<String, Object> subMap = new HashMap<>();
+
+            int percentage = (int)Math.round(stockStatusStat.count * 100.0 / total());
+            subMap.put("percentage", percentage);
+            subMap.put("facilities", stockStatusStat.facilities);
+            return subMap;
+        }
+
+        private int total() {
+            return overStock.count + lowStock.count + regularStock.count + stockOut.count;
+        }
+    }
+
+    public static class StockStatusStat{
+        private List<String> facilities = new ArrayList<>();
+        private int count;
+        private String description;
+        public StockStatusStat(String desc) {
+            description = desc;
+        }
     }
 }
