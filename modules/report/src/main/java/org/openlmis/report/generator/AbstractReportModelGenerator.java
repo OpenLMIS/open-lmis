@@ -145,7 +145,7 @@ public abstract class AbstractReportModelGenerator {
         return map.get(key2);
     }
 
-    protected List<Map<String, Object>> reportDataForFrontEnd(Map<Object, Object> paraMap) {
+    protected Object reportDataForFrontEnd(Map<Object, Object> paraMap) {
         return null;
     }
 }

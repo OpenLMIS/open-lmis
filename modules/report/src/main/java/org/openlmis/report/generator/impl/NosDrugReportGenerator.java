@@ -366,7 +366,7 @@ public class NosDrugReportGenerator extends AbstractReportModelGenerator {
     }
 
     @Override
-    protected List<Map<String, Object>> reportDataForFrontEnd(Map<Object, Object> paraMap) {
+    protected Object reportDataForFrontEnd(Map<Object, Object> paraMap) {
         Map<String, Object> data = generate(paraMap);
         List<Map<String, Object>> reportData = new ArrayList<>();
 

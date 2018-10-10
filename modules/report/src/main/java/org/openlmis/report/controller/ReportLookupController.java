@@ -586,7 +586,7 @@ public class ReportLookupController extends BaseController {
 
     @RequestMapping(value = "/data", method = POST, headers = BaseController.ACCEPT_JSON)
     public ResponseEntity<OpenLmisResponse> getReportData(@RequestBody Map<Object, Object> paraMap) {
-        List<Map<String, Object>> model = reportModelGeneratorService.reportDataForFrontend(paraMap);
+        Object model = reportModelGeneratorService.reportDataForFrontend(paraMap);
         return OpenLmisResponse.response("data", model);
     }
 
