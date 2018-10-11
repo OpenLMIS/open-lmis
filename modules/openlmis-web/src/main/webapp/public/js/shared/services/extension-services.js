@@ -1322,7 +1322,7 @@ services.factory('VersionReportService', function ($resource) {
 });
 
 services.factory('NosDrugStatusService', function ($resource) {
-  return $resource('/report/data', {}, {});
+  return $resource('/reports/data', {}, {get: {method: 'POST'}});
 });
 
 services.factory('ProductReportService', function ($resource) {

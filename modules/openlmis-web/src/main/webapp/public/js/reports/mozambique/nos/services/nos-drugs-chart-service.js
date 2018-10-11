@@ -125,11 +125,13 @@ services.factory('NosDrugsChartService', function ($http, $filter, $q, $timeout,
   }
 
   function makeNosDrugHistogram(chartDivId, province, district, userSelectedStartDate, userSelectedEndDate, selectedDrugCode) {
-    var nosDrugItems = getNosDrugItems(province, district, userSelectedStartDate, userSelectedEndDate, selectedDrugCode);
+    var nosDrugItemsPromise = getNosDrugItemsPromise(province, district, userSelectedStartDate, userSelectedEndDate, selectedDrugCode);
 
-    var formattedNosDrugItems = formatNosDrugItems(nosDrugItems);
+    nosDrugItemsPromise.$promise.then(function (nosDrugItemsResponse) {
+      var formattedNosDrugItems = formatNosDrugItems(nosDrugItemsResponse.data);
 
-    renderNosDrugHistogram(chartDivId, formattedNosDrugItems);
+      renderNosDrugHistogram(chartDivId, formattedNosDrugItems);
+    });
 
     return true;
   }
@@ -140,70 +142,27 @@ services.factory('NosDrugsChartService', function ($http, $filter, $q, $timeout,
       return {
         nosData: nosDrugItem,
         date: dateKey,
-        lowStockPercentage: nosDrugItem[dateKey].lowStock.percentage,
-        overStockPercentage: nosDrugItem[dateKey].overStock.percentage,
-        regularStockPercentage: nosDrugItem[dateKey].regularStock.percentage,
-        stockOutPercentage: nosDrugItem[dateKey].stockOut.percentage
+        lowStockPercentage: nosDrugItem[dateKey].lowStock.percentage === 0 ? null : nosDrugItem[dateKey].lowStock.percentage,
+        overStockPercentage: nosDrugItem[dateKey].overStock.percentage === 0 ? null : nosDrugItem[dateKey].overStock.percentage,
+        regularStockPercentage: nosDrugItem[dateKey].regularStock.percentage === 0 ? null : nosDrugItem[dateKey].regularStock.percentage,
+        stockOutPercentage: nosDrugItem[dateKey].stockOut.percentage === 0 ? null : nosDrugItem[dateKey].stockOut.percentage
       };
     });
   }
 
-  function getNosDrugItems(province, district, startTime, endTime, selectedDrugCode) {
+  function getNosDrugItemsPromise(province, district, startTime, endTime, selectedDrugCode) {
     selectedDrugs = [];
     selectedDrugs.push(selectedDrugCode);
-    // var data = {
-    //   province: province,
-    //   district: district,
-    //   startTime: $filter('date')(startTime, DATE_FORMAT),
-    //   endTime: $filter('date')(endTime, DATE_FORMAT),
-    //   selectedDrugs: selectedDrugs
-    // };
+    var params = {
+      province: province,
+      district: district,
+      startTime: $filter('date')(startTime, DATE_FORMAT),
+      endTime: $filter('date')(endTime, DATE_FORMAT),
+      selectedDrugs: selectedDrugs,
+      reportType: "nosDrug"
+    };
 
-    // NosDrugStatusService.get(data, function (result) {
-    //
-    // });
-    return [
-      {
-        "2018-10-7": {
-          "overStock": {
-            "percentage": 52,
-            "facilities": ["test one", "test two"]
-          },
-          "regularStock": {
-            "percentage": 28,
-            "facilities": ["test one", "test two"]
-          },
-          "stockOut": {
-            "percentage": 5,
-            "facilities": ["test one"]
-          },
-          "lowStock": {
-            "percentage": 15,
-            "facilities": ["test one", "test two"]
-          }
-        }
-      },
-      {
-        "2018-10-15": {
-          "overStock": {
-            "percentage": 45,
-            "facilities": ["test one", "test two"]
-          },
-          "regularStock": {
-            "percentage": 35,
-            "facilities": ["test one", "test two"]
-          },
-          "stockOut": {
-            "percentage": 5,
-            "facilities": ["test one"]
-          },
-          "lowStock": {
-            "percentage": 15,
-            "facilities": ["test one", "test two"]
-          }
-        }
-      }
-    ];
+    return NosDrugStatusService.get(params);
   }
 
   function getNosDrugList() {
