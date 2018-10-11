@@ -106,24 +106,6 @@ services.factory('NosDrugsChartService', function ($http, $filter, $q, $timeout,
       }).value();
   }
 
-  function makeNosDrugsChart(chartDivId, legendDivId, userSelectedStartDate, userSelectedEndDate, province, district) {
-    selectedDrugs = [];
-    $http.get('/cubesreports/cube/products/facts?cut=is_nos:true').success(function (nosDrugs) {
-      allNosDrugs = nosDrugs;
-      var stockOutPromise = getCubesRequestPromise(nosDrugs, province, district, userSelectedStartDate, userSelectedEndDate, "vw_stockouts", "overlapped_date");
-      var carryStartDatesPromise = getCubesRequestPromise(nosDrugs, province, district, "", userSelectedEndDate, "vw_carry_start_dates", "carry_start");
-
-      $q.all([stockOutPromise, carryStartDatesPromise]).then(function (arrayOfResults) {
-        var stockOuts = arrayOfResults[0].data;
-        var carryStartDates = arrayOfResults[1].data;
-        chartDataItems = generateNosDrugsChartDataItems(nosDrugs, stockOuts, carryStartDates, userSelectedStartDate, userSelectedEndDate, province, district);
-
-        renderNosDrugsChart(chartDivId, legendDivId, chartDataItems, nosDrugs);
-      });
-    });
-    return true;
-  }
-
   function makeNosDrugHistogram(chartDivId, province, district, userSelectedStartDate, userSelectedEndDate, selectedDrugCode) {
     var nosDrugItemsPromise = getNosDrugItemsPromise(province, district, userSelectedStartDate, userSelectedEndDate, selectedDrugCode);
 
@@ -382,78 +364,6 @@ services.factory('NosDrugsChartService', function ($http, $filter, $q, $timeout,
       "<hr style='margin: 0'>" + generateFacilitiesName(originalNosDrugData[graph.title].facilities);
   }
 
-  function renderNosDrugsChart(chartDivId, legendDivId, chartDataItems, nosDrugs) {
-    var dateWeeklyString = messageService.get('report.tracer.week') + ' ' + 'W';
-
-    function onInit(initEvent) {
-      function legendHandler(toggleEvent) {
-        if (toggleEvent.dataItem.id == 'all') {
-          toggleGraphsExclude(toggleEvent, toggleEvent.dataItem.hidden, ['all', 'average']);
-        }
-      }
-
-      initEvent.chart.legend.addListener('hideItem', legendHandler);
-      initEvent.chart.legend.addListener('showItem', legendHandler);
-    }
-
-    AmCharts.makeChart(chartDivId, {
-      "listeners": [{
-        "event": "init",
-        "method": onInit
-      }],
-      "type": "serial",
-      "theme": "light",
-      "legend": {
-        divId: legendDivId,
-        "listeners": [{
-          "event": "hideItem",
-          "method": handleLegendClick
-        }, {
-          "event": "showItem",
-          "method": handleLegendClick
-        }]
-      },
-      "dataProvider": chartDataItems,
-      "valueAxes": [{
-        "axisThickness": 2,
-        "gridAlpha": 0,
-        "axisAlpha": 1,
-        "position": "left",
-        maximum: 100,
-        minimum: 0
-      }],
-      "graphs": generateGraphs(nosDrugs),
-      balloon: {textAlign: "left", maxWidth: 300},
-      "chartScrollbar": {
-        "oppositeAxis": false,
-        "offset": 30
-      },
-      "chartCursor": {
-        "cursorPosition": "mouse",
-        categoryBalloonDateFormat: dateWeeklyString + "(DD.MM.YYYY)"
-      },
-      "categoryField": "date",
-      "categoryAxis": {
-        "parseDates": true,
-        "axisColor": "#DADADA",
-        "minorGridEnabled": true,
-        "dateFormats": [{
-          period: 'DD',
-          format: 'YYYY' + ' ' + dateWeeklyString
-        }, {
-          period: 'WW',
-          format: 'YYYY' + ' ' + dateWeeklyString
-        }, {
-          period: 'MM',
-          format: 'MM.YYYY'
-        }, {
-          period: 'YYYY',
-          format: 'YYYY'
-        }]
-      }
-    });
-  }
-
   function handleLegendClick(evt) {
     if (evt.type === "hideItem") {
       _.uniq(selectedDrugs);
@@ -477,7 +387,6 @@ services.factory('NosDrugsChartService', function ($http, $filter, $q, $timeout,
   return {
     generateGraphs: generateGraphs,
     generateNosDrugsChartDataItems: generateNosDrugsChartDataItems,
-    makeNosDrugsChart: makeNosDrugsChart,
     exportXLSX: exportXLSX,
     getNosDrugList: getNosDrugList,
     makeNosDrugHistogram: makeNosDrugHistogram

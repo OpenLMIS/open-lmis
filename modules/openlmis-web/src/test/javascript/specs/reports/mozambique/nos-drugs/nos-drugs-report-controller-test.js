@@ -30,7 +30,6 @@ describe("nos drugs chart service test", function () {
 
   describe('#loadReport', function() {
     beforeEach(function() {
-      spyOn(nosDrugsChartService, 'makeNosDrugsChart');
       spyOn(nosDrugsChartService, 'makeNosDrugHistogram');
     });
 
