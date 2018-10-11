@@ -1,0 +1,29 @@
+<div>
+  <div id="control-bar">
+
+    <h3 class="report-title" openlmis-message="title.tracer.drugs.report"></h3>
+
+    <div ng-include="'/public/pages/reports/mozambique/province-selection.html'"></div>
+    <div ng-include="'/public/pages/reports/mozambique/district-selection.html'"></div>
+
+    <div class="report-selection">
+      <input type="submit" class="btn btn-primary" ng-click="loadReport()" openlmis-message="button.generateReport"/>
+    </div>
+
+    <div style="clear: both"></div>
+  </div>
+
+  <hr/>
+
+  <date-picker-container get-time-range="getTimeRange(dateRange)" load-report="loadReport()"></date-picker-container>
+
+  <hr/>
+
+  <div>this is over stock product list</div>
+
+  <div class="over-flow-hidden" ng-if="reportLoaded">
+    <div ng-include="'/public/pages/reports/mozambique/export-data-button.html'"></div>
+  </div>
+
+
+</div>
