@@ -352,8 +352,8 @@ services.factory('NosDrugsChartService', function ($http, $filter, $q, $timeout,
       });
     }
 
-    return "Number Of Health Facility" + ": " + originalNosDrugData[graph.title].facilities.length + "<br>" +
-      "Percentage: " + originalNosDrugData[graph.title].percentage +
+    return messageService.get('report.tracer.health.facility.number') + ": " + originalNosDrugData[graph.title].facilities.length + "<br>" +
+      messageService.get('report.tracer.percentage')  + ": " + originalNosDrugData[graph.title].percentage +
       "<hr style='margin: 0'>" + generateFacilitiesName(originalNosDrugData[graph.title].facilities);
   }
 
