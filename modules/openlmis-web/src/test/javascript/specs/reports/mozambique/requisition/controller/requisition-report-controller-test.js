@@ -84,7 +84,7 @@ describe('requisition report controller', function () {
 
     expect(scope.requisitions.length).toBe(3);
 
-    expect(scope.requisitions[0].actualPeriodEnd).toBe(1463759999000);
+    expect(scope.requisitions[0].actualPeriodEnd).toBe(null);
     expect(scope.requisitions[0].submittedStatus).toBe(messageService.get('rnr.report.submitted.status.late'));
     expect(scope.requisitions[1].actualPeriodEnd).toBe(1456197080000);
     expect(scope.requisitions[1].submittedStatus).toBe(messageService.get('rnr.report.submitted.status.ontime'));

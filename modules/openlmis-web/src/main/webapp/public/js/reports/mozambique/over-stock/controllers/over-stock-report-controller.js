@@ -7,8 +7,13 @@ function OverStockReportController($scope, $controller, TracerDrugsChartService)
   });
 
   $scope.loadReport = function () {
-    if ($scope.validateProvince() && $scope.validateDistrict()) {
-      $scope.reportLoaded = TracerDrugsChartService.makeTracerDrugsChart('tracer-report', 'legend-div', new Date($scope.reportParams.startTime), new Date($scope.reportParams.endTime), getSelectedProvince(), getSelectedDistrict());
+    if ($scope.validateProvince() &&
+      $scope.validateDistrict() &&
+      $scope.validateFacility()) {
+      $scope.reportLoaded =
+        TracerDrugsChartService.makeTracerDrugsChart('tracer-report', 'legend-div',
+          new Date($scope.reportParams.startTime), new Date($scope.reportParams.endTime),
+          getSelectedProvince(), getSelectedDistrict());
     }
   };
 
