@@ -5,7 +5,7 @@
     "grunt": "^1.0.3",
     "grunt-cli": "^1.2.0",
     "grunt-contrib-clean": "~0.5.0",
-    "grunt-contrib-jshint": "^1.1.0",
+    "grunt-contrib-jshint": "^2.0.0",
     "grunt-contrib-less": "^2.0.0",
     "grunt-contrib-uglify": "^4.0.0",
     "grunt-contrib-watch": "^1.1.0",
@@ -20,11 +20,11 @@
   },
   "scripts": {
     "css_lint": "grunt lesslint --force",
-    "javascript_lint": "grunt jshint",
+    "jslint": "grunt jshint",
     "unit_test": "karma start karma.config.js ",
     "uglify": "grunt uglify",
     "less": "grunt less",
-    "prepush": "npm run javascript_lint && npm run unit_test"
+    "prepush": "npm run jslint && npm run unit_test"
   },
   "dependencies": {
     "moment": "^2.18.1"
