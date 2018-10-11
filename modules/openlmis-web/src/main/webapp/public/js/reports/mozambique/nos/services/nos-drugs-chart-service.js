@@ -137,6 +137,17 @@ services.factory('NosDrugsChartService', function ($http, $filter, $q, $timeout,
   }
 
   function formatNosDrugItems(nosDrugItems) {
+    if (nosDrugItems.length === 0) {
+      return [{
+        nosData: null,
+        date: '',
+        lowStockPercentage: 0,
+        overStockPercentage: 0,
+        regularStockPercentage: 0,
+        stockOutPercentage: 0
+      }];
+    }
+
     return _.map(nosDrugItems, function (nosDrugItem) {
       var dateKey = Object.keys(nosDrugItem)[0];
       return {
@@ -255,89 +266,103 @@ services.factory('NosDrugsChartService', function ($http, $filter, $q, $timeout,
 
   function renderNosDrugHistogram(chartDivId, nosDrugItems) {
 
-    AmCharts.makeChart(chartDivId, {
-        type: "serial",
-        categoryField: "date",
-        startDuration: 1,
-        columnWidth: 0.5,
-        categoryAxis: {
-          gridPosition: "start"
+    var chart = AmCharts.makeChart(chartDivId, {
+      type: "serial",
+      categoryField: "date",
+      startDuration: 1,
+      columnWidth: 0.5,
+      trendLines: [],
+      guides: [],
+      allLabels: [],
+      categoryAxis: {
+        gridPosition: "start"
+      },
+      zoomOutText: '',
+      chartScrollbar: {
+        enabled: true,
+        graphType: "line",
+        offset: 30,
+        oppositeAxis: false,
+        scrollbarHeight: 5,
+        scrollDuration: 0
+      },
+      balloon: {
+        textAlign: "left",
+        fixedPosition: false,
+      },
+      graphs: [
+        {
+          balloonFunction: generateBalloonInfo,
+          fillAlphas: 1,
+          title: "stockOut",
+          type: "column",
+          valueField: "stockOutPercentage",
+          fillColors: "#f5212d",
+          legendColor: "#f5212d",
         },
-        zoomOutText: '',
-        chartScrollbar: {
-          enabled: true,
-          graphType: "line",
-          offset: 30,
-          oppositeAxis: false,
-          scrollbarHeight: 5,
-          scrollDuration: 0
+        {
+          balloonFunction: generateBalloonInfo,
+          fillAlphas: 1,
+          id: "AmGraph-3",
+          title: "lowStock",
+          type: "column",
+          valueField: "lowStockPercentage",
+          fillColors: "#fad74d",
+          legendColor: "#fad74d",
         },
-        balloon: {
-          textAlign: "left",
-          "fixedPosition": false,
+        {
+          balloonFunction: generateBalloonInfo,
+          fillAlphas: 1,
+          id: "AmGraph-4",
+          title: "regularStock",
+          type: "column",
+          valueField: "regularStockPercentage",
+          fillColors: "#4bba14",
+          legendColor: "#4bba14",
         },
-        graphs: [
-          {
-            balloonFunction: generateBalloonInfo,
-            fillAlphas: 1,
-            title: "stockOut",
-            type: "column",
-            valueField: "stockOutPercentage",
-            fillColors: "#f5212d",
-            legendColor: "#f5212d",
-          },
-          {
-            balloonFunction: generateBalloonInfo,
-            fillAlphas: 1,
-            id: "AmGraph-3",
-            title: "lowStock",
-            type: "column",
-            valueField: "lowStockPercentage",
-            fillColors: "#fad74d",
-            legendColor: "#fad74d",
-          },
-          {
-            balloonFunction: generateBalloonInfo,
-            fillAlphas: 1,
-            id: "AmGraph-4",
-            title: "regularStock",
-            type: "column",
-            valueField: "regularStockPercentage",
-            fillColors: "#4bba14",
-            legendColor: "#4bba14",
-          },
-          {
-            balloonFunction: generateBalloonInfo,
-            fillAlphas: 1,
-            title: "overStock",
-            type: "column",
-            valueField: "overStockPercentage",
-            fillColors: "#6610c7",
-            legendColor: "#6610c7",
-          }
-        ],
-        valueAxes: [
-          {
-            axisFrequency: 4,
-            baseValue: 2,
-            id: "ValueAxis-1",
-            maximum: 0,
-            minMaxMultiplier: 0,
-            stackType: "100%",
-            unit: "%",
-            offset: 1,
-            titleColor: "#0000FF",
-            color: "#999999",
-            titleFontSize: 0
-          }
-        ],
-        legend: {
-          align: "center",
-          textClickEnabled: true,
-        },
-        dataProvider: nosDrugItems
+        {
+          balloonFunction: generateBalloonInfo,
+          fillAlphas: 1,
+          title: "overStock",
+          type: "column",
+          valueField: "overStockPercentage",
+          fillColors: "#6610c7",
+          legendColor: "#6610c7",
+        }
+      ],
+      valueAxes: [
+        {
+          axisFrequency: 4,
+          baseValue: 2,
+          maximum: 0,
+          minMaxMultiplier: 0,
+          stackType: "100%",
+          unit: "%",
+          offset: 1,
+          titleColor: "#0000FF",
+          color: "#999999",
+          titleFontSize: 0
+        }
+      ],
+      legend: {
+        enabled: true,
+        align: "center",
+        textClickEnabled: true,
+      },
+      dataProvider: nosDrugItems
+    });
+
+    AmCharts.checkEmptyData = function (chart) {
+      if (!chart.dataProvider[0].nosData) {
+        chart.addLabel(0, '50%', 'The chart contains no data', 'center');
+
+        chart.chartDiv.style.opacity = 0.5;
+
+        chart.validateNow();
       }
-    );
+    };
+
+    AmCharts.checkEmptyData(chart);
   }
 
   function generateBalloonInfo(e) {
@@ -353,7 +378,7 @@ services.factory('NosDrugsChartService', function ($http, $filter, $q, $timeout,
     }
 
     return messageService.get('report.tracer.health.facility.number') + ": " + originalNosDrugData[graph.title].facilities.length + "<br>" +
-      messageService.get('report.tracer.percentage')  + ": " + originalNosDrugData[graph.title].percentage +
+      messageService.get('report.tracer.percentage') + ": " + originalNosDrugData[graph.title].percentage +
       "<hr style='margin: 0'>" + generateFacilitiesName(originalNosDrugData[graph.title].facilities);
   }
 
