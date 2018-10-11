@@ -217,9 +217,6 @@ function RequisitionReportController($scope, $controller, RequisitionReportServi
 
   var formatRequisitionList = function () {
     _.each($scope.requisitions, function (rnr) {
-      if (rnr.actualPeriodEnd === null) {
-        rnr.actualPeriodEnd = rnr.schedulePeriodEnd;
-      }
       setSubmittedStatus(rnr);
       setOriginalPeriodString(rnr);
       renameRequisitionType(rnr);
@@ -353,7 +350,7 @@ function RequisitionReportController($scope, $controller, RequisitionReportServi
   };
 
   function formatDate(date) {
-    return DateFormatService.formatDateWithLocale(date);
+    return !!date ? DateFormatService.formatDateWithLocale(date) : '';
   }
 
   $scope.getRedirectUrl = function () {
@@ -443,7 +440,8 @@ function RequisitionReportController($scope, $controller, RequisitionReportServi
         requisitionContent.facilityName = requisition.facilityName;
         requisitionContent.submittedUser = requisition.submittedUser;
         requisitionContent.inventoryDate = {
-          value: DateFormatService.formatDateWithDateMonthYear(requisition.actualPeriodEnd),
+          value: !!requisition.clientSubmittedTime ?
+            DateFormatService.formatDateWithDateMonthYear(requisition.actualPeriodEnd) : null,
           dataType: 'date',
           style: {
             dataPattern: 'dd-MM-yyyy',
