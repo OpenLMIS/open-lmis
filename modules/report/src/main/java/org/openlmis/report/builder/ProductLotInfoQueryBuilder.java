@@ -11,10 +11,10 @@ public class ProductLotInfoQueryBuilder {
     public static String getProductLotInfo(Map params) {
         OverStockReportParam filter = (OverStockReportParam) params.get("filterCriteria");
         BEGIN();
-        SELECT("parent_zone.name provinceName");
-        SELECT("zone.name distirctName");
-        SELECT("facilities.name facilityName");
-        SELECT("products.code productCode");
+        SELECT("parent_zone.id as provinceId,parent_zone.name as provinceName");
+        SELECT("zone.id as districtId,zone.name as districtName");
+        SELECT("facilities.id as facilityId,facilities.name facilityName");
+        SELECT("products.id as productId,products.code productCode");
         SELECT("products.primaryname productName");
         SELECT("lots.lotnumber as lotNumber");
         SELECT("lots.expirationdate as expiryDate");
