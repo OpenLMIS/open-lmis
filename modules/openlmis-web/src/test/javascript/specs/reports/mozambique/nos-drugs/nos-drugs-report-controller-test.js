@@ -9,6 +9,7 @@ describe("nos drugs chart service test", function () {
     $controller(NosDrugsReportController, {$scope: scope});
     scope.provinces = [{provinceId: 1, name: 'province1'}, {provinceId: 2, name: 'province2'}];
     scope.districts = [{districtId: 1, name: 'district1'}, {districtId: 2, name: 'district2'}];
+    scope.selectedDrugCode = ['08A06'];
     scope.reportParams = {
       provinceId: 1,
       districtId: 2,
@@ -30,29 +31,31 @@ describe("nos drugs chart service test", function () {
   describe('#loadReport', function() {
     beforeEach(function() {
       spyOn(nosDrugsChartService, 'makeNosDrugsChart');
+      spyOn(nosDrugsChartService, 'makeNosDrugHistogram');
     });
 
-    it('should call makeNosDrugsChart when province and districts are valid', function () {
+    it('should call makeNosDrugHistogram when province and districts are valid', function () {
       spyOn(scope, 'validateProvince').andReturn(true);
       spyOn(scope, 'validateDistrict').andReturn(true);
       scope.loadReport();
-      expect(nosDrugsChartService.makeNosDrugsChart)
-        .toHaveBeenCalledWith('tracer-report', 'legend-div',
-                              new Date(scope.reportParams.startTime),
-                              new Date(scope.reportParams.endTime),
-                              scope.provinces[0].name, scope.districts[0].name);
+      expect(nosDrugsChartService.makeNosDrugHistogram)
+        .toHaveBeenCalledWith('tracer-report',
+                              scope.provinces[0].name, scope.districts[0].name,
+                              scope.reportParams.startTime,
+                              scope.reportParams.endTime,
+                              scope.selectedDrugCode);
     });
 
-    it('should not call makeNosDrugsChart when province is invalid', function () {
+    it('should not call makeNosDrugHistogram when province is invalid', function () {
       spyOn(scope, 'validateDistrict').andReturn(true);
       spyOn(scope, 'validateProvince').andReturn(false);
-      expect(nosDrugsChartService.makeNosDrugsChart).not.toHaveBeenCalled();
+      expect(nosDrugsChartService.makeNosDrugHistogram).not.toHaveBeenCalled();
     });
 
-    it('should not call makeNosDrugsChart when district is invalid', function () {
+    it('should not call makeNosDrugHistogram when district is invalid', function () {
       spyOn(scope, 'validateDistrict').andReturn(false);
       spyOn(scope, 'validateProvince').andReturn(true);
-      expect(nosDrugsChartService.makeNosDrugsChart).not.toHaveBeenCalled();
+      expect(nosDrugsChartService.makeNosDrugHistogram).not.toHaveBeenCalled();
     });
   });
 });

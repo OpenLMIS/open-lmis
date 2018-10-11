@@ -8,7 +8,7 @@ function NosDrugsReportController($scope, $controller, NosDrugsChartService) {
   $scope.loadReport = function () {
     if ($scope.validateProvince() && $scope.validateDistrict()) {
       $scope.reportLoaded = NosDrugsChartService.makeNosDrugHistogram('tracer-report', getSelectedProvince(), getSelectedDistrict(),
-        $scope.reportParams.startTime, $scope.reportParams.endTime, $scope.selectedDrugCode)
+        $scope.reportParams.startTime, $scope.reportParams.endTime, $scope.selectedDrugCode);
       // $scope.reportLoaded = NosDrugsChartService.makeNosDrugsChart('tracer-report', 'legend-div', new Date($scope.reportParams.startTime), new Date($scope.reportParams.endTime), getSelectedProvince(), getSelectedDistrict());
     }
   };
