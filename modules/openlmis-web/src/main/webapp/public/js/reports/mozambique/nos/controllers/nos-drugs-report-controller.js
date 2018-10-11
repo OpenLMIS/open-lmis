@@ -2,13 +2,26 @@ function NosDrugsReportController($scope, $controller, NosDrugsChartService) {
   $controller('BaseProductReportController', {$scope: $scope});
   $scope.reportLoaded = false;
   $scope.selectedDrugCode = '';
+  $scope.buttonDisplay = false;
 
   init();
 
+  function getReportLoaded() {
+    return NosDrugsChartService.makeNosDrugHistogram('tracer-report', getSelectedProvince(), getSelectedDistrict(),
+      $scope.reportParams.startTime, $scope.reportParams.endTime, $scope.selectedDrugCode);
+  }
+
+  function isButtonDisplay() {
+    NosDrugsChartService.getNosDrugItemsPromise(getSelectedProvince(), getSelectedDistrict(),
+      $scope.reportParams.startTime, $scope.reportParams.endTime, $scope.selectedDrugCode).$promise.then(function (result) {
+      $scope.buttonDisplay = result.data.length > 0;
+    });
+  }
+
   $scope.loadReport = function () {
+    isButtonDisplay();
     if ($scope.validateProvince() && $scope.validateDistrict()) {
-      $scope.reportLoaded = NosDrugsChartService.makeNosDrugHistogram('tracer-report', getSelectedProvince(), getSelectedDistrict(),
-        $scope.reportParams.startTime, $scope.reportParams.endTime, $scope.selectedDrugCode);
+      $scope.reportLoaded = getReportLoaded();
     }
   };
 
@@ -17,12 +30,7 @@ function NosDrugsReportController($scope, $controller, NosDrugsChartService) {
   };
 
   $scope.onChangeSelectedDrug = function () {
-    if ($scope.validateProvince() && $scope.validateDistrict()) {
-
-      NosDrugsChartService.makeNosDrugHistogram('tracer-report', getSelectedProvince(), getSelectedDistrict(),
-        $scope.reportParams.startTime, $scope.reportParams.endTime, $scope.selectedDrugCode
-      );
-    }
+    $scope.loadReport();
   };
 
   function init() {

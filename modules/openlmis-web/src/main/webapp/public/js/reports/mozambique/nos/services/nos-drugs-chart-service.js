@@ -113,6 +113,7 @@ services.factory('NosDrugsChartService', function ($http, $filter, $q, $timeout,
       var formattedNosDrugItems = formatNosDrugItems(nosDrugItemsResponse.data);
 
       renderNosDrugHistogram(chartDivId, formattedNosDrugItems);
+
     });
 
     return true;
@@ -389,6 +390,7 @@ services.factory('NosDrugsChartService', function ($http, $filter, $q, $timeout,
     generateNosDrugsChartDataItems: generateNosDrugsChartDataItems,
     exportXLSX: exportXLSX,
     getNosDrugList: getNosDrugList,
-    makeNosDrugHistogram: makeNosDrugHistogram
+    makeNosDrugHistogram: makeNosDrugHistogram,
+    getNosDrugItemsPromise: getNosDrugItemsPromise
   };
 });
