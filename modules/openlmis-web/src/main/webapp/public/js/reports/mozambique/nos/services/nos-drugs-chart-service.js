@@ -270,9 +270,15 @@ services.factory('NosDrugsChartService', function ($http, $filter, $q, $timeout,
         scrollbarHeight: 5,
         scrollDuration: 0
       },
+      chartCursor: {
+        enabled: true,
+        categoryBalloonEnabled: false,
+        cursorAlpha: 0,
+        oneBalloonOnly: true,
+      },
       balloon: {
         textAlign: "left",
-        fixedPosition: false,
+        maxWidth: 500,
       },
       graphs: [
         {
