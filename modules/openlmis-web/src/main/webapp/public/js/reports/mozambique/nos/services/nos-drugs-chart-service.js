@@ -258,13 +258,14 @@ services.factory('NosDrugsChartService', function ($http, $filter, $q, $timeout,
       guides: [],
       allLabels: [],
       categoryAxis: {
-        gridPosition: "start"
+        gridPosition: "start",
+        autoWrap: true,
       },
       zoomOutText: '',
       chartScrollbar: {
         enabled: true,
         graphType: "line",
-        offset: 30,
+        offset: 40,
         oppositeAxis: false,
         scrollbarHeight: 5,
         scrollDuration: 0
