@@ -116,8 +116,12 @@ function BaseProductReportController($scope, $filter, ProductReportService, $cac
       }
     });
     $scope.fullGeoZoneList = _.union($scope.fullGeoZoneList, $scope.provinces, $scope.districts);
-    addAllOption($scope.provinces, "province");
-    if ($location.$$path !== '/stock-on-hand-all-products') {
+
+    if (!_.includes(['/over-stock'], $location.$$path)) {
+      addAllOption($scope.provinces, "province");
+    }
+
+    if (!_.includes(['/stock-on-hand-all-products', '/over-stock'], $location.$$path)) {
       addAllOption($scope.districts, "district");
     }
   };
