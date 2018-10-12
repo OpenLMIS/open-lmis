@@ -46,6 +46,7 @@ public class SimpleTableControllerTest {
         List<RequisitionDTO> requisitionDTOs = new ArrayList<RequisitionDTO>();
         RequisitionDTO requisitionDTO = new RequisitionDTO();
         requisitionDTO.setId(2L);
+        requisitionDTO.assignType();
         requisitionDTOs.add(requisitionDTO);
 
         when(simpleTableService.getRequisitions(any(RequisitionReportsParam.class)))
