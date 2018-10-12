@@ -361,8 +361,8 @@ services.factory('NosDrugsChartService', function ($http, $filter, $q, $timeout,
       });
     }
 
-    return messageService.get('report.tracer.health.facility.number') + ": " + originalNosDrugData[graph.title].facilities.length + "<br>" +
-      messageService.get('report.tracer.percentage') + ": " + originalNosDrugData[graph.title].percentage +
+    return messageService.get('report.tracer.health.facility.number') + ": <span style='font-weight: bold'>" + originalNosDrugData[graph.title].facilities.length + "</span><br>" +
+      messageService.get('report.tracer.percentage') + ": <span style='font-weight: bold'>" + originalNosDrugData[graph.title].percentage + "%</span>" +
       "<hr style='margin: 0'>" + generateFacilitiesName(originalNosDrugData[graph.title].facilities);
   }
 
