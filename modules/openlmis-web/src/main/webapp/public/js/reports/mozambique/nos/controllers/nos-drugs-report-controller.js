@@ -7,6 +7,7 @@ function NosDrugsReportController($scope, $controller, NosDrugsChartService) {
   init();
 
   function getReportLoaded() {
+    isButtonDisplay();
     return NosDrugsChartService.makeNosDrugHistogram('tracer-report', getSelectedProvince(), getSelectedDistrict(),
       $scope.reportParams.startTime, $scope.reportParams.endTime, $scope.selectedDrugCode);
   }
@@ -19,7 +20,6 @@ function NosDrugsReportController($scope, $controller, NosDrugsChartService) {
   }
 
   $scope.loadReport = function () {
-    isButtonDisplay();
     if ($scope.validateProvince() && $scope.validateDistrict()) {
       $scope.reportLoaded = getReportLoaded();
     }

@@ -10,6 +10,8 @@ services.factory('NosDrugsChartService', function ($http, $filter, $q, $timeout,
   var selectedDrugs = [];
   var chartDataItems;
   var allNosDrugs = [];
+  var provinceGloble;
+  var districtGloble;
 
   function getNosDrugStockRateOnFriday(zone, friday, stockOuts, nosDrugCode, carryStartDates) {
     var stockOutsOfNosDrug = _.filter(stockOuts, function (stockOut) {
@@ -107,7 +109,9 @@ services.factory('NosDrugsChartService', function ($http, $filter, $q, $timeout,
   }
 
   function makeNosDrugHistogram(chartDivId, province, district, userSelectedStartDate, userSelectedEndDate, selectedDrugCode) {
-    var nosDrugItemsPromise = getNosDrugItemsPromise(province, district, userSelectedStartDate, userSelectedEndDate, selectedDrugCode);
+    provinceGloble = province;
+    districtGloble = district;
+    var nosDrugItemsPromise = getNosDrugItemsPromise(userSelectedStartDate, userSelectedEndDate, selectedDrugCode);
 
     nosDrugItemsPromise.$promise.then(function (nosDrugItemsResponse) {
       var formattedNosDrugItems = formatNosDrugItems(nosDrugItemsResponse.data);
@@ -124,10 +128,10 @@ services.factory('NosDrugsChartService', function ($http, $filter, $q, $timeout,
       return [{
         nosData: null,
         date: '',
-        lowStockPercentage: 0,
-        overStockPercentage: 0,
-        regularStockPercentage: 0,
-        stockOutPercentage: 0
+        lowStockValue: 0,
+        overStockValue: 0,
+        regularStockValue: 0,
+        stockOutValue: 0
       }];
     }
 
@@ -136,20 +140,75 @@ services.factory('NosDrugsChartService', function ($http, $filter, $q, $timeout,
       return {
         nosData: nosDrugItem,
         date: dateKey,
-        lowStockPercentage: nosDrugItem[dateKey].lowStock.percentage === 0 ? null : nosDrugItem[dateKey].lowStock.percentage,
-        overStockPercentage: nosDrugItem[dateKey].overStock.percentage === 0 ? null : nosDrugItem[dateKey].overStock.percentage,
-        regularStockPercentage: nosDrugItem[dateKey].regularStock.percentage === 0 ? null : nosDrugItem[dateKey].regularStock.percentage,
-        stockOutPercentage: nosDrugItem[dateKey].stockOut.percentage === 0 ? null : nosDrugItem[dateKey].stockOut.percentage
+        lowStockValue: generateValue(nosDrugItem, dateKey, "lowStock"),
+        overStockValue: generateValue(nosDrugItem, dateKey, "overStock"),
+        regularStockValue: generateValue(nosDrugItem, dateKey, "regularStock"),
+        stockOutValue: generateValue(nosDrugItem, dateKey, "stockOut"),
       };
     });
   }
 
-  function getNosDrugItemsPromise(province, district, startTime, endTime, selectedDrugCode) {
+  function generateValue(nosDrugItem, dateKey, type) {
+    if (!provinceGloble) {
+      return getValueWithAllProvinces(nosDrugItem, dateKey, type);
+    } else if (!districtGloble) {
+      return getValueWithAllDistricts(nosDrugItem, dateKey, type);
+    } else {
+      return getValueWithAllFacilities(nosDrugItem, dateKey, type);
+    }
+  }
+
+  function getValueWithAllProvinces(nosDrugItem, dateKey, type) {
+    switch (type) {
+      case "lowStock":
+        return nosDrugItem[dateKey].lowStock.province.length === 0 ? null : nosDrugItem[dateKey].lowStock.province.length;
+      case "overStock":
+        return nosDrugItem[dateKey].overStock.province.length === 0 ? null : nosDrugItem[dateKey].overStock.province.length;
+      case "regularStock":
+        return nosDrugItem[dateKey].regularStock.province.length === 0 ? null : nosDrugItem[dateKey].regularStock.province.length;
+      case "stockOut":
+        return nosDrugItem[dateKey].stockOut.province.length === 0 ? null : nosDrugItem[dateKey].stockOut.province.length;
+      default :
+        return null;
+    }
+  }
+
+  function getValueWithAllDistricts(nosDrugItem, dateKey, type) {
+    switch (type) {
+      case "lowStock":
+        return nosDrugItem[dateKey].lowStock.district.length === 0 ? null : nosDrugItem[dateKey].lowStock.district.length;
+      case "overStock":
+        return nosDrugItem[dateKey].overStock.district.length === 0 ? null : nosDrugItem[dateKey].overStock.district.length;
+      case "regularStock":
+        return nosDrugItem[dateKey].regularStock.district.length === 0 ? null : nosDrugItem[dateKey].regularStock.district.length;
+      case "stockOut":
+        return nosDrugItem[dateKey].stockOut.district.length === 0 ? null : nosDrugItem[dateKey].stockOut.district.length;
+      default :
+        return null;
+    }
+  }
+
+  function getValueWithAllFacilities(nosDrugItem, dateKey, type) {
+    switch (type) {
+      case "lowStock":
+        return nosDrugItem[dateKey].lowStock.percentage === 0 ? null : nosDrugItem[dateKey].lowStock.percentage;
+      case "overStock":
+        return nosDrugItem[dateKey].overStock.percentage === 0 ? null : nosDrugItem[dateKey].overStock.percentage;
+      case "regularStock":
+        return nosDrugItem[dateKey].regularStock.percentage === 0 ? null : nosDrugItem[dateKey].regularStock.percentage;
+      case "stockOut":
+        return nosDrugItem[dateKey].stockOut.percentage === 0 ? null : nosDrugItem[dateKey].stockOut.percentage;
+      default :
+        return null;
+    }
+  }
+
+  function getNosDrugItemsPromise(startTime, endTime, selectedDrugCode) {
     selectedDrugs = [];
     selectedDrugs.push(selectedDrugCode);
     var params = {
-      province: province,
-      district: district,
+      province: provinceGloble,
+      district: districtGloble,
       startTime: $filter('date')(startTime, DATE_FORMAT),
       endTime: $filter('date')(endTime, DATE_FORMAT),
       selectedDrugs: selectedDrugs,
@@ -254,9 +313,6 @@ services.factory('NosDrugsChartService', function ($http, $filter, $q, $timeout,
       categoryField: "date",
       startDuration: 1,
       columnWidth: 0.5,
-      trendLines: [],
-      guides: [],
-      allLabels: [],
       categoryAxis: {
         gridPosition: "start",
         autoWrap: true,
@@ -286,27 +342,25 @@ services.factory('NosDrugsChartService', function ($http, $filter, $q, $timeout,
           fillAlphas: 1,
           title: "stockOut",
           type: "column",
-          valueField: "stockOutPercentage",
+          valueField: "stockOutValue",
           fillColors: "#f5212d",
           legendColor: "#f5212d",
         },
         {
           balloonFunction: generateBalloonInfo,
           fillAlphas: 1,
-          id: "AmGraph-3",
           title: "lowStock",
           type: "column",
-          valueField: "lowStockPercentage",
+          valueField: "lowStockValue",
           fillColors: "#fad74d",
           legendColor: "#fad74d",
         },
         {
           balloonFunction: generateBalloonInfo,
           fillAlphas: 1,
-          id: "AmGraph-4",
           title: "regularStock",
           type: "column",
-          valueField: "regularStockPercentage",
+          valueField: "regularStockValue",
           fillColors: "#4bba14",
           legendColor: "#4bba14",
         },
@@ -315,23 +369,9 @@ services.factory('NosDrugsChartService', function ($http, $filter, $q, $timeout,
           fillAlphas: 1,
           title: "overStock",
           type: "column",
-          valueField: "overStockPercentage",
+          valueField: "overStockValue",
           fillColors: "#6610c7",
           legendColor: "#6610c7",
-        }
-      ],
-      valueAxes: [
-        {
-          axisFrequency: 4,
-          baseValue: 2,
-          maximum: 0,
-          minMaxMultiplier: 0,
-          stackType: "100%",
-          unit: "%",
-          offset: 1,
-          titleColor: "#0000FF",
-          color: "#999999",
-          titleFontSize: 0
         }
       ],
       legend: {
@@ -342,34 +382,64 @@ services.factory('NosDrugsChartService', function ($http, $filter, $q, $timeout,
       dataProvider: nosDrugItems
     });
 
-    AmCharts.checkEmptyData = function (chart) {
+    AmCharts.checkData = function (chart) {
       if (!chart.dataProvider[0].nosData) {
         chart.addLabel(0, '50%', 'The chart contains no data', 'center');
 
         chart.chartDiv.style.opacity = 0.5;
-
-        chart.validateNow();
       }
+
+      if (provinceGloble && districtGloble) {
+        chart.valueAxes[0].stackType = "100%";
+        chart.valueAxes[0].unit = "%";
+        chart.valueAxes[0].color = "#999999";
+      }
+
+      chart.validateNow();
     };
 
-    AmCharts.checkEmptyData(chart);
+    AmCharts.checkData(chart);
   }
 
   function generateBalloonInfo(e) {
     var drugContext = e.dataContext;
     var graph = e.graph;
-    var originalNosDrugData = drugContext.nosData[drugContext.date];
 
-    function generateFacilitiesName(facilities) {
-      var names = '';
-      return _.each(facilities, function (facility) {
-        names += facility;
-      });
+    if (!drugContext.nosData) {
+      return null;
     }
 
-    return messageService.get('report.tracer.health.facility.number') + ": <span style='font-weight: bold'>" + originalNosDrugData[graph.title].facilities.length + "</span><br>" +
-      messageService.get('report.tracer.percentage') + ": <span style='font-weight: bold'>" + originalNosDrugData[graph.title].percentage + "%</span>" +
-      "<hr style='margin: 0'>" + generateFacilitiesName(originalNosDrugData[graph.title].facilities);
+    var originalNosDrugData = drugContext.nosData[drugContext.date];
+
+    if (!provinceGloble) {
+      return getBalloonInfo(originalNosDrugData, graph, "province");
+    } else if (!districtGloble) {
+      return getBalloonInfo(originalNosDrugData, graph, "district");
+    } else {
+      return getBalloonInfo(originalNosDrugData, graph, "facility");
+    }
+  }
+
+  function getBalloonInfo(originalNosDrugData, graph, type) {
+    switch (type) {
+      case "facility":
+        return messageService.get('report.tracer.health.facility.number') + ": <span style='font-weight: bold'>" + originalNosDrugData[graph.title].facilities.length + "</span><br>" +
+          messageService.get('report.tracer.percentage') + ": <span style='font-weight: bold'>" + originalNosDrugData[graph.title].percentage + "%</span>" +
+          "<hr style='margin: 0'>" + generateContent(originalNosDrugData[graph.title].facilities);
+      case "district":
+        return messageService.get('report.tracer.health.facility.number') + ": <span style='font-weight: bold'>" + originalNosDrugData[graph.title].district.length + "</span><br>" +
+          "<hr style='margin: 0'>" + generateContent(originalNosDrugData[graph.title].district);
+      case "province":
+        return messageService.get('report.tracer.health.facility.number') + ": <span style='font-weight: bold'>" + originalNosDrugData[graph.title].province.length + "</span><br>" +
+          "<hr style='margin: 0'>" + generateContent(originalNosDrugData[graph.title].province);
+    }
+  }
+
+  function generateContent(level) {
+    var names = '';
+    return _.each(level, function (item) {
+      names += item;
+    });
   }
 
   function handleLegendClick(evt) {
