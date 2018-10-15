@@ -336,7 +336,7 @@ services.factory('NosDrugsChartService', function ($http, $filter, $q, $timeout,
         {
           balloonFunction: generateBalloonInfo,
           fillAlphas: 1,
-          title: "stockOut",
+          title: "Stock Out",
           type: "column",
           valueField: "stockOutValue",
           fillColors: "#f5212d",
@@ -345,7 +345,7 @@ services.factory('NosDrugsChartService', function ($http, $filter, $q, $timeout,
         {
           balloonFunction: generateBalloonInfo,
           fillAlphas: 1,
-          title: "lowStock",
+          title: "Low Stock",
           type: "column",
           valueField: "lowStockValue",
           fillColors: "#fad74d",
@@ -354,7 +354,7 @@ services.factory('NosDrugsChartService', function ($http, $filter, $q, $timeout,
         {
           balloonFunction: generateBalloonInfo,
           fillAlphas: 1,
-          title: "regularStock",
+          title: "Regular Stock",
           type: "column",
           valueField: "regularStockValue",
           fillColors: "#4bba14",
@@ -363,7 +363,7 @@ services.factory('NosDrugsChartService', function ($http, $filter, $q, $timeout,
         {
           balloonFunction: generateBalloonInfo,
           fillAlphas: 1,
-          title: "overStock",
+          title: "Over Stock",
           type: "column",
           valueField: "overStockValue",
           fillColors: "#6610c7",
@@ -418,17 +418,33 @@ services.factory('NosDrugsChartService', function ($http, $filter, $q, $timeout,
   }
 
   function getBalloonInfo(originalNosDrugData, graph, type) {
+    var tag = getTitle(graph.title);
     switch (type) {
       case "facility":
-        return messageService.get('report.tracer.health.facility.number') + ": <span style='font-weight: bold'>" + originalNosDrugData[graph.title].facility.length + "</span><br>" +
-          messageService.get('report.tracer.percentage') + ": <span style='font-weight: bold'>" + originalNosDrugData[graph.title].percentage + "%</span>" +
-          "<hr style='margin: 0'>" + generateContent(originalNosDrugData[graph.title].facility);
+        return messageService.get('report.tracer.health.facility.number') + ": <span style='font-weight: bold'>" + originalNosDrugData[tag].facility.length + "</span><br>" +
+          messageService.get('report.tracer.percentage') + ": <span style='font-weight: bold'>" + originalNosDrugData[tag].percentage + "%</span>" +
+          "<hr style='margin: 0'>" + generateContent(originalNosDrugData[tag].facility);
       case "district":
-        return messageService.get('report.tracer.health.district.number') + ": <span style='font-weight: bold'>" + originalNosDrugData[graph.title].district.length + "</span><br>" +
-          "<hr style='margin: 0'>" + generateContent(originalNosDrugData[graph.title].district);
+        return messageService.get('report.tracer.health.district.number') + ": <span style='font-weight: bold'>" + originalNosDrugData[tag].district.length + "</span><br>" +
+          "<hr style='margin: 0'>" + generateContent(originalNosDrugData[tag].district);
       case "province":
-        return messageService.get('report.tracer.health.province.number') + ": <span style='font-weight: bold'>" + originalNosDrugData[graph.title].province.length + "</span><br>" +
-          "<hr style='margin: 0'>" + generateContent(originalNosDrugData[graph.title].province);
+        return messageService.get('report.tracer.health.province.number') + ": <span style='font-weight: bold'>" + originalNosDrugData[tag].province.length + "</span><br>" +
+          "<hr style='margin: 0'>" + generateContent(originalNosDrugData[tag].province);
+    }
+  }
+
+  function getTitle(title) {
+    switch (title) {
+      case "Stock Out":
+        return "stockOut";
+      case "Low Stock":
+        return "lowStock";
+      case "Regular Stock":
+        return "regularStock";
+      case "Over Stock":
+        return "overStock";
+      default:
+        return null;
     }
   }
 
