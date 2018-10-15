@@ -17,7 +17,6 @@ function OverStockReportController($scope, $controller, $filter, OverStockProduc
       }
 
       var overStockParams = {
-        startTime: "2017-10-18 00:00:00",
         endTime: $filter('date')(reportParams.endTime, "yyyy-MM-dd") + " 23:59:59",
         provinceId: reportParams.provinceId.toString(),
         districtId: reportParams.districtId.toString(),
