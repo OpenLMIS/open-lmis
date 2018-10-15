@@ -1,5 +1,6 @@
 function OverStockReportController($scope, $controller, OverStockProductsService) {
   $controller('BaseProductReportController', {$scope: $scope});
+  $scope.showOverStockProductsTable = false;
   $scope.overStockItems = [];
 
   $scope.$on('$viewContentLoaded', function () {
@@ -22,6 +23,7 @@ function OverStockReportController($scope, $controller, OverStockProductsService
 
       OverStockProductsService.get(overStockParams, {}, function (overStockResponse) {
         $scope.overStockItems = overStockResponse.rnr_list;
+        $scope.showOverStockProductsTable = true;
         console.log($scope.overStockItems);
       });
     }
