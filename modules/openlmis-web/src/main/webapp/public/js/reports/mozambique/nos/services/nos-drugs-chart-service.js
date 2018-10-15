@@ -108,19 +108,12 @@ services.factory('NosDrugsChartService', function ($http, $filter, $q, $timeout,
       }).value();
   }
 
-  function makeNosDrugHistogram(chartDivId, province, district, userSelectedStartDate, userSelectedEndDate, selectedDrugCode) {
-    provinceGloble = province;
-    districtGloble = district;
-    var nosDrugItemsPromise = getNosDrugItemsPromise(userSelectedStartDate, userSelectedEndDate, selectedDrugCode);
+  function makeNosDrugHistogram(chartDivId, nosDrugItem) {
 
-    nosDrugItemsPromise.$promise.then(function (nosDrugItemsResponse) {
-      var formattedNosDrugItems = formatNosDrugItems(nosDrugItemsResponse.data);
+    var formattedNosDrugItems = formatNosDrugItems(nosDrugItem);
 
-      renderNosDrugHistogram(chartDivId, formattedNosDrugItems);
+    renderNosDrugHistogram(chartDivId, formattedNosDrugItems);
 
-    });
-
-    return true;
   }
 
   function formatNosDrugItems(nosDrugItems) {
@@ -203,9 +196,13 @@ services.factory('NosDrugsChartService', function ($http, $filter, $q, $timeout,
     }
   }
 
-  function getNosDrugItemsPromise(startTime, endTime, selectedDrugCode) {
+  function getNosDrugItemsPromise(province, district, startTime, endTime, selectedDrugCode) {
+    provinceGloble = province;
+    districtGloble = district;
+
     selectedDrugs = [];
     selectedDrugs.push(selectedDrugCode);
+
     var params = {
       province: provinceGloble,
       district: districtGloble,

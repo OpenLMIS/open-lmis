@@ -7,21 +7,18 @@ function NosDrugsReportController($scope, $controller, NosDrugsChartService) {
   init();
 
   function getReportLoaded() {
-    isButtonDisplay();
-    return NosDrugsChartService.makeNosDrugHistogram('tracer-report', getSelectedProvince(), getSelectedDistrict(),
-      $scope.reportParams.startTime, $scope.reportParams.endTime, $scope.selectedDrugCode);
-  }
-
-  function isButtonDisplay() {
-    NosDrugsChartService.getNosDrugItemsPromise($scope.reportParams.startTime,
-      $scope.reportParams.endTime, $scope.selectedDrugCode).$promise.then(function (result) {
+    NosDrugsChartService.getNosDrugItemsPromise(getSelectedProvince(), getSelectedDistrict(),
+      $scope.reportParams.startTime, $scope.reportParams.endTime, $scope.selectedDrugCode)
+      .$promise.then(function (result) {
       $scope.buttonDisplay = result.data.length > 0;
+      NosDrugsChartService.makeNosDrugHistogram('tracer-report', result.data);
     });
   }
 
   $scope.loadReport = function () {
+    $scope.reportLoaded = true;
     if ($scope.validateProvince() && $scope.validateDistrict()) {
-      $scope.reportLoaded = getReportLoaded();
+      getReportLoaded();
     }
   };
 
