@@ -6,8 +6,33 @@
   }
 
   .table-header {
-    >div {
+    > div {
       display: inline;
+    }
+  }
+
+  .table--body {
+    td:nth-last-child(-n+2) {
+      background-color: #ffffff;
+    }
+
+    &:hover {
+      td {
+        background-color: #bdd0cb;
+        cursor: pointer;
+      }
+
+      td:nth-last-child(-n+2) {
+        background-color: #ffffff;
+      }
+    }
+
+    .table--body-180 {
+      min-width: 180px;
+    }
+
+    .table--body-250 {
+      min-width: 250px;
     }
   }
 }

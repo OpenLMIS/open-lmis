@@ -1,7 +1,6 @@
-function OverStockReportController($scope, $controller, OverStockProductsService) {
+function OverStockReportController($scope, $controller, OverStockProductsService, DateFormatService) {
   $controller('BaseProductReportController', {$scope: $scope});
-  $scope.showOverStockProductsTable = false;
-  $scope.overStockItems = [];
+  $scope.formattedOverStockList = [];
 
   $scope.$on('$viewContentLoaded', function () {
     $scope.loadHealthFacilities();
@@ -13,6 +12,10 @@ function OverStockReportController($scope, $controller, OverStockProductsService
       $scope.validateFacility()) {
       var reportParams = $scope.reportParams;
 
+      if (!reportParams.provinceId) {
+        return;
+      }
+
       var overStockParams = {
         startTime: reportParams.startTime + " 00:00:00",
         endTime: reportParams.endTime + " 23:59:59",
@@ -22,9 +25,7 @@ function OverStockReportController($scope, $controller, OverStockProductsService
       };
 
       OverStockProductsService.get(overStockParams, {}, function (overStockResponse) {
-        $scope.overStockItems = overStockResponse.rnr_list;
-        $scope.showOverStockProductsTable = true;
-        console.log($scope.overStockItems);
+        $scope.formattedOverStockList = formatOverStockList(overStockResponse.rnr_list);
       });
     }
   };
@@ -32,8 +33,32 @@ function OverStockReportController($scope, $controller, OverStockProductsService
   $scope.exportXLSX = function () {
 
   };
+
+  function formatOverStockList(overStockList) {
+    var formattedOverStockList = [];
+    _.forEach(overStockList, function (overStock) {
+      _.forEach(overStock.lotList, function (lot, index) {
+        formattedOverStockList.push({
+          provinceName: overStock.provinceName,
+          districtName: overStock.districtName,
+          facilityName: overStock.facilityName,
+          productCode: overStock.productCode,
+          productName: overStock.productName,
+          lotNumber: lot.lotNumber,
+          expiryDate: DateFormatService.formatDateWithLocale(lot.expiryDate),
+          stockOnHandOfLot: lot.stockOnHandOfLot,
+          cmm: overStock.cmm || 0,
+          mos: overStock.mos || 0,
+          rowSpan: overStock.lotList.length,
+          isFirst: index === 0
+        });
+      });
+    });
+
+    return formattedOverStockList;
+  }
 }
 
 services.factory('OverStockProductsService', function ($resource) {
-  return $resource('/reports/overStockProduct-report', {}, {});
+  return $resource('/reports/overstock-report', {}, {});
 });
