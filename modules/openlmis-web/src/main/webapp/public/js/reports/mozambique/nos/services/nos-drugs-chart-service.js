@@ -374,6 +374,7 @@ services.factory('NosDrugsChartService', function ($http, $filter, $q, $timeout,
         enabled: true,
         align: "center",
         textClickEnabled: true,
+        reversedOrder: true,
       },
       dataProvider: nosDrugItems
     });
