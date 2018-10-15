@@ -4,6 +4,7 @@
     <div ng-include="'/public/pages/reports/mozambique/province-selection.html'"></div>
     <div ng-include="'/public/pages/reports/mozambique/district-selection.html'"></div>
     <div ng-include="'/public/pages/reports/mozambique/facility-selection.html'"></div>
+    <div ng-include="'/public/pages/reports/mozambique/date-selection.html'"></div>
 
     <div class="report-selection">
       <input type="submit" class="btn btn-primary" ng-click="loadReport()" openlmis-message="button.generateReport"/>
@@ -11,78 +12,78 @@
 
     <div style="clear: both"></div>
   </div>
-  <hr/>
-  <date-picker-container get-time-range="getTimeRange(dateRange)" picker-type="period"
-                         load-report="loadReport()"></date-picker-container>
+
   <hr/>
 
   <div ng-if="formattedOverStockList.length > 0" class="over-stock-product--table">
     <table class="table table-condensed table-bordered table-striped fixed-header-table header-table">
-      <tr class="gradient-header">
-        <th openlmis-message="report.header.province">
+      <tr class="table--body">
+        <th class="table--body-150" openlmis-message="report.header.province">
           <span ng-show="sortType != 'drug_name'" class="icon-sort"></span>
           <span ng-show="sortType == 'drug_name' && !sortReverse" class="icon-sort-up"></span>
           <span ng-show="sortType == 'drug_name' && sortReverse" class="icon-sort-down"></span>
         </th>
-        <th openlmis-message="report.header.district">
+        <th class="table--body-150" openlmis-message="report.header.district">
           <span ng-show="sortType != 'soh'" class="icon-sort"></span>
           <span ng-show="sortType == 'soh' && !sortReverse" class="icon-sort-up"></span>
           <span ng-show="sortType == 'soh' && sortReverse" class="icon-sort-down"></span>
         </th>
-        <th openlmis-message="report.header.facility">
+        <th class="table--body-150" class="table--body-150" openlmis-message="report.header.facility">
           <span ng-show="sortType != 'expiry_date'" class="icon-sort"></span>
           <span ng-show="sortType == 'expiry_date' && !sortReverse" class="icon-sort-up"></span>
           <span ng-show="sortType == 'expiry_date' && sortReverse" class="icon-sort-down"></span>
         </th>
-        <th openlmis-message="report.header.productcode">
+        <th class="table--body-150" openlmis-message="report.header.productcode">
           <span ng-show="sortType != 'soh'" class="icon-sort"></span>
           <span ng-show="sortType == 'soh' && !sortReverse" class="icon-sort-up"></span>
           <span ng-show="sortType == 'soh' && sortReverse" class="icon-sort-down"></span>
         </th>
-        <th openlmis-message="report.header.productname">
+        <th class="table--body-350" openlmis-message="report.header.productname">
           <span ng-show="sortType != 'soh'" class="icon-sort"></span>
           <span ng-show="sortType == 'soh' && !sortReverse" class="icon-sort-up"></span>
           <span ng-show="sortType == 'soh' && sortReverse" class="icon-sort-down"></span>
         </th>
-        <th openlmis-message="report.header.lotnumber">
+        <th class="table--body-150" openlmis-message="report.header.lotnumber">
           <span ng-show="sortType != 'soh'" class="icon-sort"></span>
           <span ng-show="sortType == 'soh' && !sortReverse" class="icon-sort-up"></span>
           <span ng-show="sortType == 'soh' && sortReverse" class="icon-sort-down"></span>
         </th>
-        <th openlmis-message="report.header.expirydate">
+        <th class="table--body-150" openlmis-message="report.header.expirydate">
           <span ng-show="sortType != 'soh'" class="icon-sort"></span>
           <span ng-show="sortType == 'soh' && !sortReverse" class="icon-sort-up"></span>
           <span ng-show="sortType == 'soh' && sortReverse" class="icon-sort-down"></span>
         </th>
-        <th class="sortable sort-desc" openlmis-message="report.header.sohoflot">
+        <th class="table--body-150" openlmis-message="report.header.sohoflot">
           <span ng-show="sortType != 'soh'" class="icon-sort"></span>
           <span ng-show="sortType == 'soh' && !sortReverse" class="icon-sort-up"></span>
           <span ng-show="sortType == 'soh' && sortReverse" class="icon-sort-down"></span>
         </th>
-        <th class="sortable sort-desc" openlmis-message="report.header.cmm">
+        <th class="table--body-150" openlmis-message="report.header.cmm">
           <span ng-show="sortType != 'soh'" class="icon-sort"></span>
           <span ng-show="sortType == 'soh' && !sortReverse" class="icon-sort-up"></span>
           <span ng-show="sortType == 'soh' && sortReverse" class="icon-sort-down"></span>
         </th>
-        <th class="sortable sort-desc" openlmis-message="report.header.mos">
+        <th class="table--body-150" openlmis-message="report.header.mos">
           <span ng-show="sortType != 'soh'" class="icon-sort"></span>
           <span ng-show="sortType == 'soh' && !sortReverse" class="icon-sort-up"></span>
           <span ng-show="sortType == 'soh' && sortReverse" class="icon-sort-down"></span>
         </th>
       </tr>
+
       <tr class="table--body" ng-repeat="overStockItem in formattedOverStockList">
-        <td class="table--body-180">{{overStockItem.provinceName}}</td>
-        <td class="table--body-180">{{overStockItem.districtName}}</td>
-        <td class="table--body-180">{{overStockItem.facilityName}}</td>
-        <td class="table--body-180">{{overStockItem.productCode}}</td>
-        <td class="table--body-250">{{overStockItem.productName}}</td>
-        <td class="table--body-180">{{overStockItem.lotNumber}}</td>
-        <td class="table--body-180">{{overStockItem.expiryDate}}</td>
-        <td>{{overStockItem.stockOnHandOfLot}}</td>
-        <td ng-show="overStockItem.isFirst" rowspan="{{overStockItem.rowSpan}}">{{overStockItem.cmm}}</td>
-        <td ng-show="overStockItem.isFirst" rowspan="{{overStockItem.rowSpan}}">{{overStockItem.mos}}</td>
+        <td class="table--body-150">{{overStockItem.provinceName}}</td>
+        <td class="table--body-150">{{overStockItem.districtName}}</td>
+        <td class="table--body-150">{{overStockItem.facilityName}}</td>
+        <td class="table--body-150">{{overStockItem.productCode}}</td>
+        <td class="table--body-350">{{overStockItem.productName}}</td>
+        <td class="table--body-150">{{overStockItem.lotNumber}}</td>
+        <td class="table--body-150">{{overStockItem.expiryDate}}</td>
+        <td class="table--body-150">{{overStockItem.stockOnHandOfLot}}</td>
+        <td class="table--body-150" ng-show="overStockItem.isFirst" rowspan="{{overStockItem.rowSpan}}">{{overStockItem.cmm}}</td>
+        <td class="table--body-150" ng-show="overStockItem.isFirst" rowspan="{{overStockItem.rowSpan}}">{{overStockItem.mos}}</td>
       </tr>
     </table>
+
   </div>
 
   <div class="over-flow-hidden" ng-if="showOverStockProductsTable">

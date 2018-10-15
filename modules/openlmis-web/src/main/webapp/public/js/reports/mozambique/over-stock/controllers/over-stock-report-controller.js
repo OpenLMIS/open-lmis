@@ -1,4 +1,4 @@
-function OverStockReportController($scope, $controller, OverStockProductsService, DateFormatService) {
+function OverStockReportController($scope, $controller, $filter, OverStockProductsService, DateFormatService) {
   $controller('BaseProductReportController', {$scope: $scope});
   $scope.formattedOverStockList = [];
 
@@ -17,8 +17,8 @@ function OverStockReportController($scope, $controller, OverStockProductsService
       }
 
       var overStockParams = {
-        startTime: reportParams.startTime + " 00:00:00",
-        endTime: reportParams.endTime + " 23:59:59",
+        startTime: "2017-10-18 00:00:00",
+        endTime: $filter('date')(reportParams.endTime, "yyyy-MM-dd") + " 23:59:59",
         provinceId: reportParams.provinceId.toString(),
         districtId: reportParams.districtId.toString(),
         facilityId: reportParams.facilityId.toString()
