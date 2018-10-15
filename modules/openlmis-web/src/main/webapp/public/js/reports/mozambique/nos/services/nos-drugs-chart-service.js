@@ -315,9 +315,8 @@ services.factory('NosDrugsChartService', function ($http, $filter, $q, $timeout,
       columnWidth: 0.5,
       categoryAxis: {
         gridPosition: "start",
-        autoWrap: true,
+        minHorizontalGap: 140
       },
-      zoomOutText: '',
       chartScrollbar: {
         enabled: true,
         graphType: "line",
@@ -330,7 +329,7 @@ services.factory('NosDrugsChartService', function ($http, $filter, $q, $timeout,
         enabled: true,
         categoryBalloonEnabled: false,
         cursorAlpha: 0,
-        oneBalloonOnly: true,
+        oneBalloonOnly: false
       },
       balloon: {
         textAlign: "left",
@@ -393,6 +392,7 @@ services.factory('NosDrugsChartService', function ($http, $filter, $q, $timeout,
         chart.valueAxes[0].stackType = "100%";
         chart.valueAxes[0].unit = "%";
         chart.valueAxes[0].color = "#999999";
+        chart.chartCursor.oneBalloonOnly = true;
       }
 
       chart.validateNow();
@@ -423,14 +423,14 @@ services.factory('NosDrugsChartService', function ($http, $filter, $q, $timeout,
   function getBalloonInfo(originalNosDrugData, graph, type) {
     switch (type) {
       case "facility":
-        return messageService.get('report.tracer.health.facility.number') + ": <span style='font-weight: bold'>" + originalNosDrugData[graph.title].facilities.length + "</span><br>" +
+        return messageService.get('report.tracer.health.facility.number') + ": <span style='font-weight: bold'>" + originalNosDrugData[graph.title].facility.length + "</span><br>" +
           messageService.get('report.tracer.percentage') + ": <span style='font-weight: bold'>" + originalNosDrugData[graph.title].percentage + "%</span>" +
-          "<hr style='margin: 0'>" + generateContent(originalNosDrugData[graph.title].facilities);
+          "<hr style='margin: 0'>" + generateContent(originalNosDrugData[graph.title].facility);
       case "district":
-        return messageService.get('report.tracer.health.facility.number') + ": <span style='font-weight: bold'>" + originalNosDrugData[graph.title].district.length + "</span><br>" +
+        return messageService.get('report.tracer.health.district.number') + ": <span style='font-weight: bold'>" + originalNosDrugData[graph.title].district.length + "</span><br>" +
           "<hr style='margin: 0'>" + generateContent(originalNosDrugData[graph.title].district);
       case "province":
-        return messageService.get('report.tracer.health.facility.number') + ": <span style='font-weight: bold'>" + originalNosDrugData[graph.title].province.length + "</span><br>" +
+        return messageService.get('report.tracer.health.province.number') + ": <span style='font-weight: bold'>" + originalNosDrugData[graph.title].province.length + "</span><br>" +
           "<hr style='margin: 0'>" + generateContent(originalNosDrugData[graph.title].province);
     }
   }
