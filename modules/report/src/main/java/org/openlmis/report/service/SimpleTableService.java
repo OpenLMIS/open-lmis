@@ -59,40 +59,40 @@ public class SimpleTableService {
         Map<String,OverStockProductDto> overStockProductDtoMap = overStockProductGroupBy(productLotInfos);
         List<OverStockProductDto> overStockProducts = new ArrayList<>();
         OverStockProductDto overStockProduct;
-        Integer sumSoH;
-        Double cmm;
         for (Map.Entry<String,OverStockProductDto> entry : overStockProductDtoMap.entrySet()) {
             overStockProduct = entry.getValue();
-            if(CollectionUtils.isEmpty(overStockProduct.getLotList())){
-                continue;
-            }
-
-            CMMEntry cmmEntry = cmmMapper.getCMMEntryByFacilityAndDayAndProductCode(overStockProduct.getFacilityId().longValue(),overStockProduct.getProductCode(),filterCriteria.getEndTime());
-            if(null==cmmEntry || null == cmmEntry.getCmmValue()){
-                continue;
-            }
-
-            if(0 == cmmEntry.getCmmValue()){
-                overStockProduct.setCmm(0.0);
+            overStockProduct = calcCmmAndSoh(overStockProduct,filterCriteria.getEndTime());
+            if(null!=overStockProduct){
                 overStockProducts.add(overStockProduct);
-                continue;
             }
-
-            sumSoH = OverStockProductDto.calcSoH(overStockProduct.getLotList());
-            StockOnHandStatus status = stockStatusService.getStockOnHandStatus(cmmEntry.getCmmValue().longValue(),sumSoH,overStockProduct.getProductCode());
-            if(!status.equals(StockOnHandStatus.OVER_STOCK)){
-                continue;
-            }
-
-            cmm = cmmEntry.getCmmValue().doubleValue();
-            overStockProduct.setCmm(cmm);
-            overStockProduct.setMos(sumSoH/cmm);
-            overStockProducts.add(overStockProduct);
         }
 
         return overStockProducts;
     }
 
+    private OverStockProductDto calcCmmAndSoh(OverStockProductDto overStockProduct,Date endTime) {
+        if (CollectionUtils.isEmpty(overStockProduct.getLotList())) {
+            return null;
+        }
+        CMMEntry cmmEntry = cmmMapper.getCMMEntryByFacilityAndDayAndProductCode(overStockProduct.getFacilityId().longValue(), overStockProduct.getProductCode(), endTime);
+        if (null == cmmEntry || null == cmmEntry.getCmmValue()) {
+            return null;
+        }
+        if (0 == cmmEntry.getCmmValue()) {
+            overStockProduct.setCmm(0.0);
+            return overStockProduct;
+        }
+        Integer sumSoH = OverStockProductDto.calcSoH(overStockProduct.getLotList());
+        StockOnHandStatus status = stockStatusService.getStockOnHandStatus(cmmEntry.getCmmValue().longValue(), sumSoH, overStockProduct.getProductCode());
+        if (!status.equals(StockOnHandStatus.OVER_STOCK)) {
+            return null;
+        }
+        Double cmm = cmmEntry.getCmmValue().doubleValue();
+        overStockProduct.setCmm(cmm);
+        overStockProduct.setMos(sumSoH / cmm);
+
+        return overStockProduct;
+    }
 
     private Map<String,OverStockProductDto> overStockProductGroupBy(List<ProductLotInfo> productLotInfos){
         Map<String,OverStockProductDto> overStockProductDtoMap = new HashMap<>();
