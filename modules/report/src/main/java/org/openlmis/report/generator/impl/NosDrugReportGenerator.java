@@ -125,7 +125,7 @@ public class NosDrugReportGenerator extends AbstractReportModelGenerator {
         List<Map<String, Object>> row = new ArrayList<>();
         Map<String, Object> map = createCellWithIndex("", count);
         Map<String, Object> styleMap = new HashMap<>();
-        styleMap.put("color", stockOnHandStatus.getColorIndex());
+        styleMap.put("color", stockOnHandStatus.getColor());
         map.put("style", styleMap);
         row.add(map);
 
@@ -347,7 +347,7 @@ public class NosDrugReportGenerator extends AbstractReportModelGenerator {
                     Map<String, Object> styleMap = new HashMap<>();
                     StockOnHandStatus stockOnHandStatus = stockStatusService.getStockOnHandStatus(cmm,
                             NumberUtils.toLong(kv.getValue()), productCode);
-                    styleMap.put("color", stockOnHandStatus.getColorIndex());
+                    styleMap.put("color", stockOnHandStatus.getColor());
                     tmpValue.put("style", styleMap);
                     tmpValue.put("status", stockOnHandStatus);
                     obj.put(kv.getKey(), tmpValue);

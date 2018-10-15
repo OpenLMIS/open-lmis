@@ -6,6 +6,8 @@ import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellStyle;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.xssf.usermodel.XSSFCellStyle;
+import org.apache.poi.xssf.usermodel.XSSFColor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -55,9 +57,9 @@ public class ExcelCellValueSetterService {
     private CellStyle createCellStyle(Map<String, Object> map, Workbook workbook) {
         if (map.containsKey("style")) {
             Map<String, Object> styleMap =  (Map<String,Object>)map.get("style");
-            CellStyle cellStyle =  workbook.createCellStyle();
+            XSSFCellStyle cellStyle =  (XSSFCellStyle)workbook.createCellStyle();
             if (styleMap.containsKey("color")) {
-                cellStyle.setFillForegroundColor((short) styleMap.get("color"));
+                cellStyle.setFillForegroundColor((XSSFColor) styleMap.get("color"));
                 cellStyle.setFillPattern(CellStyle.SOLID_FOREGROUND);
             }
 
