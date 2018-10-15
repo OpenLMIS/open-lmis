@@ -357,7 +357,8 @@ function RequisitionReportController($scope, $controller, RequisitionReportServi
     var url = "/public/pages/logistics/rnr/index.html#/";
     var urlMapping = {
       "VIA": "view-requisition-via/",
-      [messageService.get("label.programname.balancerequisition")]: "view-requisition-via/",
+      "Balance Requisition": "view-requisition-via/",
+      "Requisição Balancete": "view-requisition-via/",
       "ESS_MEDS": "view-requisition-via/",
       "MMIA": "view-requisition-mmia/"
     };
