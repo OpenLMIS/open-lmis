@@ -385,8 +385,9 @@ public class NosDrugReportGenerator extends AbstractReportModelGenerator {
         }
 
         List<Map<String, Object>> content = (List<Map<String, Object>>) data.get(WorkbookCreator.getKEY_EXCEL_CONTENT());
+        String regionName = getRegionName(paraMap);
         for (String date : dates) {
-            StockStatusContainer stockStatusContainer = new StockStatusContainer(date);
+            StockStatusContainer stockStatusContainer = new StockStatusContainer(date, regionName);
             for (Map<String, Object> map : content) {
                 stockStatusContainer.update(map);
             }
@@ -398,45 +399,65 @@ public class NosDrugReportGenerator extends AbstractReportModelGenerator {
         return reportData;
     }
 
+    private String getRegionName(Map<Object, Object> paraMap) {
+
+        String district = getDistrict(paraMap);
+        String province = getProvince(paraMap);
+        if (isOneDistrict(province, district)) {
+            return "facility";
+        }
+        if (isOneProvince(province, district)) {
+            return "district";
+        }
+        return "province";
+    }
+
     public static class StockStatusContainer {
 
         String date;
+        String regionName;
         StockStatusStat overStock = new StockStatusStat(StockOnHandStatus.OVER_STOCK.getDescription());
         StockStatusStat lowStock = new StockStatusStat(StockOnHandStatus.LOW_STOCK.getDescription());
         StockStatusStat regularStock = new StockStatusStat(StockOnHandStatus.REGULAR_STOCK.getDescription());
         StockStatusStat stockOut = new StockStatusStat(StockOnHandStatus.STOCK_OUT.getDescription());
 
-        public StockStatusContainer(String date) {
+        public StockStatusContainer(String date, String regionName) {
             this.date = date;
+            this.regionName = regionName;
         }
 
         public void update(Map<String, Object> map) {
-            String facility = map.get("facility").toString();
+            String region = map.get(regionName).toString();
             Map<String, Object> info = (Map<String, Object>) map.get(date);
             StockOnHandStatus status = (StockOnHandStatus)info.get("status");
             switch (status) {
                 case LOW_STOCK:
-                    update(lowStock, facility);
+                    update(lowStock, region);
                     break;
                 case OVER_STOCK:
-                    update(overStock, facility);
+                    update(overStock, region);
                     break;
                 case REGULAR_STOCK:
-                    update(regularStock, facility);
+                    update(regularStock, region);
                     break;
                 case STOCK_OUT:
-                    update(stockOut, facility);
+                    update(stockOut, region);
                     break;
                     default:
             }
         }
 
-        private void update(StockStatusStat stockStatusStat, String facility) {
-            stockStatusStat.facilities.add(facility);
-            stockStatusStat.count++;
+        private void update(StockStatusStat stockStatusStat, String region) {
+            stockStatusStat.regions.add(region);
         }
 
         public Map<String, Object> result() {
+            for (String region : overStock.regions) {
+                lowStock.remove(region);
+                regularStock.remove(region);
+                stockOut.remove(region);
+            }
+
             Map<String, Object> map = new HashMap<>();
             map.put(StockOnHandStatus.OVER_STOCK.getDescription(), subMap(overStock));
             map.put(StockOnHandStatus.LOW_STOCK.getDescription(), subMap(lowStock));
@@ -448,23 +469,35 @@ public class NosDrugReportGenerator extends AbstractReportModelGenerator {
         private Map<String, Object> subMap(StockStatusStat stockStatusStat) {
             Map<String, Object> subMap = new HashMap<>();
 
-            int percentage = (int)Math.round(stockStatusStat.count * 100.0 / total());
+            int percentage = (int)Math.round(stockStatusStat.size() * 100.0 / total());
             subMap.put("percentage", percentage);
-            subMap.put("facilities", stockStatusStat.facilities);
+            subMap.put(regionName, stockStatusStat.regions);
             return subMap;
         }
 
         private int total() {
-            return overStock.count + lowStock.count + regularStock.count + stockOut.count;
+            Set<String> total = new HashSet<>();
+            total.addAll(overStock.regions);
+            total.addAll(lowStock.regions);
+            total.addAll(regularStock.regions);
+            total.addAll(stockOut.regions);
+            return total.size();
         }
     }
 
     public static class StockStatusStat{
-        private List<String> facilities = new ArrayList<>();
-        private int count;
+        private Set<String> regions = new HashSet<>();
         private String description;
         public StockStatusStat(String desc) {
             description = desc;
+        }
+        public int size() {
+            return regions.size();
+        }
+        public void remove(String region) {
+            if (regions.contains(region)) {
+                regions.remove(region);
+            }
         }
     }
 }
