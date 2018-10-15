@@ -13,8 +13,8 @@ function NosDrugsReportController($scope, $controller, NosDrugsChartService) {
   }
 
   function isButtonDisplay() {
-    NosDrugsChartService.getNosDrugItemsPromise(getSelectedProvince(), getSelectedDistrict(),
-      $scope.reportParams.startTime, $scope.reportParams.endTime, $scope.selectedDrugCode).$promise.then(function (result) {
+    NosDrugsChartService.getNosDrugItemsPromise($scope.reportParams.startTime,
+      $scope.reportParams.endTime, $scope.selectedDrugCode).$promise.then(function (result) {
       $scope.buttonDisplay = result.data.length > 0;
     });
   }
