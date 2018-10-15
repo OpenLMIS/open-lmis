@@ -8,7 +8,6 @@ import org.openlmis.report.model.dto.*;
 import org.openlmis.report.model.params.NonSubmittedRequisitionReportsParam;
 import org.openlmis.report.model.params.OverStockReportParam;
 import org.openlmis.report.model.params.RequisitionReportsParam;
-import org.openlmis.report.util.StockOnHandStatusCalculation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;

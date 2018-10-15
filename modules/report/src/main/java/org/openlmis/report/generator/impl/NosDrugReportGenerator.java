@@ -6,8 +6,9 @@ import org.apache.commons.lang3.math.NumberUtils;
 import org.openlmis.core.utils.DateUtil;
 import org.openlmis.report.generator.AbstractReportModelGenerator;
 import org.openlmis.report.generator.StockOnHandStatus;
-import org.openlmis.report.util.StockOnHandStatusCalculation;
+import org.openlmis.report.service.StockStatusService;
 import org.openlmis.report.view.WorkbookCreator;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 
@@ -31,6 +32,9 @@ public class NosDrugReportGenerator extends AbstractReportModelGenerator {
     private final static String UNIQUE_SORTED_DATES = "unique_sorted_dates";
 
     private final static String STARTTIME_TO_ENDTIME = "starttime_to_endtime";
+
+    @Autowired
+    private StockStatusService stockStatusService;
 
     @Override
     protected Map<String, Object> getCubeQueryResult(Map<Object, Object> paraMap) {
@@ -341,7 +345,7 @@ public class NosDrugReportGenerator extends AbstractReportModelGenerator {
                     Map<String, Object> tmpValue = new HashMap<>();
                     tmpValue.put("value", kv.getValue());
                     Map<String, Object> styleMap = new HashMap<>();
-                    StockOnHandStatus stockOnHandStatus = StockOnHandStatusCalculation.getStockOnHandStatus(cmm,
+                    StockOnHandStatus stockOnHandStatus = stockStatusService.getStockOnHandStatus(cmm,
                             NumberUtils.toLong(kv.getValue()), productCode);
                     styleMap.put("color", stockOnHandStatus.getColorIndex());
                     tmpValue.put("style", styleMap);
@@ -352,7 +356,7 @@ public class NosDrugReportGenerator extends AbstractReportModelGenerator {
                 }
             }
             String latestDate = set.toArray()[set.size() - 1].toString();
-            obj.put("LatestStockStatus", getMessage(StockOnHandStatusCalculation.getStockOnHandStatus(cmm,
+            obj.put("LatestStockStatus", getMessage(stockStatusService.getStockOnHandStatus(cmm,
                     NumberUtils.toLong(entry.getValue().get(latestDate)), productCode).getMessageKey()));
 
             result.add(obj);
