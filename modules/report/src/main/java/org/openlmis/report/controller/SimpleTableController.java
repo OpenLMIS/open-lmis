@@ -90,7 +90,7 @@ public class SimpleTableController extends BaseController {
         return OpenLmisResponse.response("rnr_list", requisitions);
     }
 
-    @RequestMapping(value = "/overStockProduct-report", method = GET, headers = BaseController.ACCEPT_JSON)
+    @RequestMapping(value = "/overstock-report", method = GET, headers = BaseController.ACCEPT_JSON)
     public ResponseEntity<OpenLmisResponse> overStockProductReport(
             @RequestParam(value = "startTime") Date startTime,
             @RequestParam(value = "endTime") Date endTime,

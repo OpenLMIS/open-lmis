@@ -20,7 +20,7 @@ public class OverStockProductDto {
     private Integer productId;
     private String productCode;
     private String productName;
-    List<LotInfo> LotInfo = new ArrayList<>();
+    List<LotInfo> lotList = new ArrayList<>();
     private Double cmm;
     private Double mos;
 
@@ -37,5 +37,13 @@ public class OverStockProductDto {
         dto.setProductCode(lotInfo.getProductCode());
         dto.setProductName(lotInfo.getProductName());
         return dto;
+    }
+
+    public static Integer calcSoH(List<LotInfo> lotList){
+        Integer sumSoH = 0;
+        for(LotInfo lot : lotList){
+            sumSoH = sumSoH + lot.getStockOnHandOfLot();
+        }
+        return sumSoH;
     }
 }

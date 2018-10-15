@@ -1,12 +1,18 @@
 package org.openlmis.report.generator.impl;
 
 import org.openlmis.report.generator.AbstractReportModelGenerator;
+import org.openlmis.report.service.SimpleTableService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.*;
 
 @Component(value = "overStockProductReport")
 public class OverStockProductReportGenerator extends AbstractReportModelGenerator {
+
+    @Autowired
+  private SimpleTableService simpleTableService;
+
     @Override
     protected Object getReportHeaders(Map<Object, Object> paraMap, Map<String, Object> cubeQueryResult) {
         Map<String, String> headers = new LinkedHashMap<>();
