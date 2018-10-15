@@ -92,13 +92,12 @@ public class SimpleTableController extends BaseController {
 
     @RequestMapping(value = "/overstock-report", method = GET, headers = BaseController.ACCEPT_JSON)
     public ResponseEntity<OpenLmisResponse> overStockProductReport(
-            @RequestParam(value = "startTime") Date startTime,
             @RequestParam(value = "endTime") Date endTime,
             @RequestParam(value = "provinceId") Integer provinceId,
             @RequestParam(value = "districtId", required = false) Integer districtId,
             @RequestParam(value = "facilityId", required = false) Integer facilityId) {
 
-        OverStockReportParam filterCriteria = new OverStockReportParam(startTime, endTime, provinceId, districtId, facilityId);
+        OverStockReportParam filterCriteria = new OverStockReportParam(endTime, provinceId, districtId, facilityId);
         List<OverStockProductDto> overStockProducts = simpleTableService.getOverStockProductReport(filterCriteria);
         return OpenLmisResponse.response("rnr_list", overStockProducts);
     }

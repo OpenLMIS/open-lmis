@@ -26,41 +26,41 @@ public abstract class AbstractReportModelGenerator {
     @Autowired
     protected CubesReportProxy cubesReportProxy;
 
-    protected abstract Object getReportHeaders(Map<Object, Object> paraMap, Map<String, Object> cubeQueryResult);
+    protected abstract Object getReportHeaders(Map<Object, Object> paraMap, Map<String, Object> queryResult);
 
-    protected abstract Object getReportContent(Map<Object, Object> paraMap, Map<String, Object> cubeQueryResult);
+    protected abstract Object getReportContent(Map<Object, Object> paraMap, Map<String, Object> queryResult);
 
-    protected abstract List<Map<String, String>> getReportMergedRegions();
+    protected abstract List<Map<String, String>> getReportMergedRegions(Map<Object, Object> paraMap, Map<String, Object> queryResult);
 
     protected Object getReportLegenda(Map<Object, Object> paraMap, Map<String, Object> cubeQueryResult, Map<String, Object> model) {
         return null;
     }
 
-    protected Map<String, Object> getCubeQueryResult(Map<Object, Object> paraMap) {
+    protected Map<String, Object> getQueryResult(Map<Object, Object> paraMap) {
         return null;
     }
 
     public Map<String, Object> generate(Map<Object, Object> paraMap) {
 
-        Map<String, Object> cubeQueryResult = getCubeQueryResult(paraMap);
+        Map<String, Object> queryResult = getQueryResult(paraMap);
 
-        Object reportHeaders = getReportHeaders(paraMap, cubeQueryResult);
+        Object reportHeaders = getReportHeaders(paraMap, queryResult);
         if (null == reportHeaders) {
             throw new RuntimeException("report headers return null!");
         }
-        Object reportContent = getReportContent(paraMap, cubeQueryResult);
+        Object reportContent = getReportContent(paraMap, queryResult);
         if (null == reportContent) {
             throw new RuntimeException("report content return null!");
         }
         Map<String, Object> model = new HashMap<>();
         model.put(WorkbookCreator.getKEY_EXCEL_HEADERS(), reportHeaders);
         model.put(WorkbookCreator.getKEY_EXCEL_CONTENT(), reportContent);
-        Object reportLegenda = getReportLegenda(paraMap, cubeQueryResult, model);
+        Object reportLegenda = getReportLegenda(paraMap, queryResult, model);
         if (null != reportLegenda) {
             model.put(WorkbookCreator.getKEY_EXCEL_LEGENDA(), reportLegenda);
         }
 
-        List<Map<String, String>> reportMergedRegion = getReportMergedRegions();
+        List<Map<String, String>> reportMergedRegion = getReportMergedRegions(paraMap, queryResult);
         if(null != reportMergedRegion){
             model.put(WorkbookCreator.getKEY_EXCEL_MERGE(),reportMergedRegion);
         }

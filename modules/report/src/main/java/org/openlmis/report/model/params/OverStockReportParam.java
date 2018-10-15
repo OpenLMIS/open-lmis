@@ -13,9 +13,6 @@ import java.util.Date;
 @NoArgsConstructor
 @AllArgsConstructor
 public class OverStockReportParam {
-
-    @RequiredParam
-    private Date startTime;
     @RequiredParam
     private Date endTime;
 

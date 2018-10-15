@@ -37,7 +37,7 @@ public class NosDrugReportGenerator extends AbstractReportModelGenerator {
     private StockStatusService stockStatusService;
 
     @Override
-    protected Map<String, Object> getCubeQueryResult(Map<Object, Object> paraMap) {
+    protected Map<String, Object> getQueryResult(Map<Object, Object> paraMap) {
         String queryUriDrugs = getBaseFactUri(WEEKLY_NOS_SOH_CUBE);
         String queryStringDrugs = getQueryStringDrugs(paraMap);
         ResponseEntity responseEntityDrugs = super.cubesReportProxy.redirect(queryUriDrugs, queryStringDrugs);
@@ -97,7 +97,7 @@ public class NosDrugReportGenerator extends AbstractReportModelGenerator {
     }
 
     @Override
-    protected List<Map<String, String>> getReportMergedRegions() {
+    protected List<Map<String, String>> getReportMergedRegions(Map<Object, Object> paraMap, Map<String, Object> queryResult) {
         return null;
     }
 
