@@ -1,6 +1,7 @@
 function OverStockReportController($scope, $controller, $filter, OverStockProductsService, DateFormatService) {
   $controller('BaseProductReportController', {$scope: $scope});
   $scope.formattedOverStockList = [];
+  $scope.showOverStockProductsTable = false;
 
   $scope.$on('$viewContentLoaded', function () {
     $scope.loadHealthFacilities();
@@ -23,14 +24,22 @@ function OverStockReportController($scope, $controller, $filter, OverStockProduc
         facilityId: reportParams.facilityId.toString()
       };
 
-      OverStockProductsService.get(overStockParams, {}, function (overStockResponse) {
+      OverStockProductsService.getOverStockProductList().get(overStockParams, {}, function (overStockResponse) {
+        $scope.showOverStockProductsTable = true;
         $scope.formattedOverStockList = formatOverStockList(overStockResponse.rnr_list);
       });
     }
   };
 
   $scope.exportXLSX = function () {
+    var reportParams = $scope.reportParams;
 
+    OverStockProductsService.getDataForExport(
+      reportParams.provinceId.toString(),
+      reportParams.districtId.toString(),
+      reportParams.facilityId.toString(),
+      $filter('date')(reportParams.endTime, "yyyy-MM-dd") + " 23:59:59",
+    );
   };
 
   function formatOverStockList(overStockList) {
@@ -58,6 +67,26 @@ function OverStockReportController($scope, $controller, $filter, OverStockProduc
   }
 }
 
-services.factory('OverStockProductsService', function ($resource) {
-  return $resource('/reports/overstock-report', {}, {});
+services.factory('OverStockProductsService', function ($resource, $filter, ReportExportExcelService, messageService) {
+  function getOverStockProductList() {
+    return $resource('/reports/overstock-report', {}, {});
+  }
+
+  function getDataForExport(provinceId, districtId, facilityId, endTime) {
+    var data = {
+      provinceId: provinceId,
+      districtId: districtId,
+      facilityId: facilityId,
+      endTime: endTime,
+      reportType: 'overStockProductReport'
+    };
+
+    ReportExportExcelService.exportAsXlsxBackend(data, messageService.get('report.file.nos.drugs.report'));
+  }
+
+
+  return {
+    getOverStockProductList: getOverStockProductList,
+    getDataForExport: getDataForExport
+  }
 });
