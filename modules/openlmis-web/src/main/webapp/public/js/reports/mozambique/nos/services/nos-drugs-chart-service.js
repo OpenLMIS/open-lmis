@@ -130,9 +130,10 @@ services.factory('NosDrugsChartService', function ($http, $filter, $q, $timeout,
 
     return _.map(nosDrugItems, function (nosDrugItem) {
       var dateKey = Object.keys(nosDrugItem)[0];
+
       return {
         nosData: nosDrugItem,
-        date: dateKey,
+        date: dateKey + " " +messageService.get('report.tracer.week') + moment(dateKey, "YYYY-MM-DD").isoWeek(),
         lowStockValue: generateValue(nosDrugItem, dateKey, "lowStock"),
         overStockValue: generateValue(nosDrugItem, dateKey, "overStock"),
         regularStockValue: generateValue(nosDrugItem, dateKey, "regularStock"),
@@ -304,7 +305,6 @@ services.factory('NosDrugsChartService', function ($http, $filter, $q, $timeout,
   }
 
   function renderNosDrugHistogram(chartDivId, nosDrugItems) {
-
     var chart = AmCharts.makeChart(chartDivId, {
       type: "serial",
       categoryField: "date",
@@ -409,7 +409,7 @@ services.factory('NosDrugsChartService', function ($http, $filter, $q, $timeout,
       return null;
     }
 
-    var originalNosDrugData = drugContext.nosData[drugContext.date];
+    var originalNosDrugData = drugContext.nosData[drugContext.date.split(" ")[0]];
 
     if (!provinceGloble) {
       return getBalloonInfo(originalNosDrugData, graph, "province");
