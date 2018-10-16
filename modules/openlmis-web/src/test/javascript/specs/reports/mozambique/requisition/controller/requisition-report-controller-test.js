@@ -190,7 +190,7 @@ describe('requisition report controller', function () {
 
   it('should format submitted time', function () {
     expect(scope.submittedTimeFormatter(null, '')).toBe('');
-    expect(scope.submittedTimeFormatter(1537325189267, '2018-09-19')).toBe('2018-09-19');
+    expect(scope.submittedTimeFormatter(1537325189267, '2018-09-19')).toBe('08:00 AM 19 month.abbr.9 2018');
   });
 
   it('should format original period', function () {

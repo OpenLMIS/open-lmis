@@ -223,6 +223,10 @@ function RequisitionReportController($scope, $controller, RequisitionReportServi
       rnr.programName = UnitService.programNameFormatter(rnr.programName);
 
       rnr.inventoryDate = formatDate(rnr.actualPeriodEnd);
+
+      rnr.clientSubmittedTimeString = $scope.submittedTimeFormatter(rnr.webSubmittedTime, rnr.webSubmittedTimeString);
+
+      rnr.webSubmittedTimeString = $scope.submittedTimeFormatter(rnr.clientSubmittedTime, rnr.clientSubmittedTimeString);
     });
   };
 
@@ -250,7 +254,7 @@ function RequisitionReportController($scope, $controller, RequisitionReportServi
   };
 
   $scope.submittedTimeFormatter = function (submittedTime, submittedTimeString) {
-    return submittedTime ? submittedTimeString : "";
+    return submittedTime ? DateFormatService.formatDateWithTimeAndLocale(submittedTimeString) : "";
   };
 
   $scope.originalPeriodFormatter = function (originalPeriodStartDate, originalPeriodEndDate) {
