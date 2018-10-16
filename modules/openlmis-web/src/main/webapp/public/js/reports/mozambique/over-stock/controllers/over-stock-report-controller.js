@@ -38,7 +38,7 @@ function OverStockReportController($scope, $controller, $filter, OverStockProduc
       reportParams.provinceId.toString(),
       reportParams.districtId.toString(),
       reportParams.facilityId.toString(),
-      $filter('date')(reportParams.endTime, "yyyy-MM-dd") + " 23:59:59",
+      $filter('date')(reportParams.endTime, "yyyy-MM-dd") + " 23:59:59"
     );
   };
 
@@ -55,8 +55,8 @@ function OverStockReportController($scope, $controller, $filter, OverStockProduc
           lotNumber: lot.lotNumber,
           expiryDate: DateFormatService.formatDateWithLocale(lot.expiryDate),
           stockOnHandOfLot: lot.stockOnHandOfLot,
-          cmm: overStock.cmm || 0,
-          mos: overStock.mos || 0,
+          cmm: toFixedNumber(overStock.cmm),
+          mos: toFixedNumber(overStock.mos),
           rowSpan: overStock.lotList.length,
           isFirst: index === 0
         });
@@ -64,6 +64,14 @@ function OverStockReportController($scope, $controller, $filter, OverStockProduc
     });
 
     return formattedOverStockList;
+  }
+
+  function toFixedNumber(originNumber) {
+    if (_.isNull(originNumber) || originNumber === 0) {
+      return 0;
+    }
+
+    return originNumber.toFixed(2);
   }
 }
 
@@ -84,9 +92,8 @@ services.factory('OverStockProductsService', function ($resource, $filter, Repor
     ReportExportExcelService.exportAsXlsxBackend(data, messageService.get('report.file.nos.drugs.report'));
   }
 
-
   return {
     getOverStockProductList: getOverStockProductList,
     getDataForExport: getDataForExport
-  }
+  };
 });
