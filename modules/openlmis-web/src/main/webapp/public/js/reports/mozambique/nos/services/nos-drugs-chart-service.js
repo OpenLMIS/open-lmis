@@ -13,6 +13,13 @@ services.factory('NosDrugsChartService', function ($http, $filter, $q, $timeout,
   var provinceGloble;
   var districtGloble;
 
+  var status = {
+    "Stock Out": "stockOut",
+    "Low Stock": "lowStock",
+    "Regular Stock": "regularStock",
+    "Over Stock": "overStock",
+  };
+
   function getNosDrugStockRateOnFriday(zone, friday, stockOuts, nosDrugCode, carryStartDates) {
     var stockOutsOfNosDrug = _.filter(stockOuts, function (stockOut) {
       return stockOut[drugCodeKey] === nosDrugCode;
@@ -134,67 +141,44 @@ services.factory('NosDrugsChartService', function ($http, $filter, $q, $timeout,
       return {
         nosData: nosDrugItem,
         date: dateKey + " " +messageService.get('report.tracer.week') + moment(dateKey, "YYYY-MM-DD").isoWeek(),
-        lowStockValue: generateValue(nosDrugItem, dateKey, "lowStock"),
-        overStockValue: generateValue(nosDrugItem, dateKey, "overStock"),
-        regularStockValue: generateValue(nosDrugItem, dateKey, "regularStock"),
-        stockOutValue: generateValue(nosDrugItem, dateKey, "stockOut"),
+        lowStockValue: generateValue(nosDrugItem[dateKey], "lowStock"),
+        overStockValue: generateValue(nosDrugItem[dateKey], "overStock"),
+        regularStockValue: generateValue(nosDrugItem[dateKey], "regularStock"),
+        stockOutValue: generateValue(nosDrugItem[dateKey], "stockOut"),
       };
     });
   }
 
-  function generateValue(nosDrugItem, dateKey, type) {
+  function generateValue(drugItem, type) {
     if (!provinceGloble) {
-      return getValueWithAllProvinces(nosDrugItem, dateKey, type);
+      return getValueWithPlaceLevel(drugItem, type, "province", false);
     } else if (!districtGloble) {
-      return getValueWithAllDistricts(nosDrugItem, dateKey, type);
+      return getValueWithPlaceLevel(drugItem, type, "district", false);
     } else {
-      return getValueWithAllFacilities(nosDrugItem, dateKey, type);
+      return getValueWithPlaceLevel(drugItem, type, "", true);
     }
   }
 
-  function getValueWithAllProvinces(nosDrugItem, dateKey, type) {
+  function getValueWithPlaceLevel(drugItem, type, placeLevel, isFacility) {
     switch (type) {
       case "lowStock":
-        return nosDrugItem[dateKey].lowStock.province.length === 0 ? null : nosDrugItem[dateKey].lowStock.province.length;
+        return getNosDrugStatusValue(drugItem["lowStock"], placeLevel, isFacility);
       case "overStock":
-        return nosDrugItem[dateKey].overStock.province.length === 0 ? null : nosDrugItem[dateKey].overStock.province.length;
+        return getNosDrugStatusValue(drugItem["overStock"], placeLevel, isFacility);
       case "regularStock":
-        return nosDrugItem[dateKey].regularStock.province.length === 0 ? null : nosDrugItem[dateKey].regularStock.province.length;
+        return getNosDrugStatusValue(drugItem["regularStock"], placeLevel, isFacility);
       case "stockOut":
-        return nosDrugItem[dateKey].stockOut.province.length === 0 ? null : nosDrugItem[dateKey].stockOut.province.length;
+        return getNosDrugStatusValue(drugItem["stockOut"], placeLevel, isFacility);
       default :
         return null;
     }
   }
 
-  function getValueWithAllDistricts(nosDrugItem, dateKey, type) {
-    switch (type) {
-      case "lowStock":
-        return nosDrugItem[dateKey].lowStock.district.length === 0 ? null : nosDrugItem[dateKey].lowStock.district.length;
-      case "overStock":
-        return nosDrugItem[dateKey].overStock.district.length === 0 ? null : nosDrugItem[dateKey].overStock.district.length;
-      case "regularStock":
-        return nosDrugItem[dateKey].regularStock.district.length === 0 ? null : nosDrugItem[dateKey].regularStock.district.length;
-      case "stockOut":
-        return nosDrugItem[dateKey].stockOut.district.length === 0 ? null : nosDrugItem[dateKey].stockOut.district.length;
-      default :
-        return null;
+  function getNosDrugStatusValue(item, placeLevel, isFacility) {
+    if (isFacility) {
+      return item.percentage === 0 ? null : item.percentage;
     }
-  }
-
-  function getValueWithAllFacilities(nosDrugItem, dateKey, type) {
-    switch (type) {
-      case "lowStock":
-        return nosDrugItem[dateKey].lowStock.percentage === 0 ? null : nosDrugItem[dateKey].lowStock.percentage;
-      case "overStock":
-        return nosDrugItem[dateKey].overStock.percentage === 0 ? null : nosDrugItem[dateKey].overStock.percentage;
-      case "regularStock":
-        return nosDrugItem[dateKey].regularStock.percentage === 0 ? null : nosDrugItem[dateKey].regularStock.percentage;
-      case "stockOut":
-        return nosDrugItem[dateKey].stockOut.percentage === 0 ? null : nosDrugItem[dateKey].stockOut.percentage;
-      default :
-        return null;
-    }
+    return item[placeLevel].length === 0 ? null : item[placeLevel].length;
   }
 
   function getNosDrugItemsPromise(province, district, startTime, endTime, selectedDrugCode) {
@@ -437,18 +421,7 @@ services.factory('NosDrugsChartService', function ($http, $filter, $q, $timeout,
   }
 
   function getTitle(title) {
-    switch (title) {
-      case "Stock Out":
-        return "stockOut";
-      case "Low Stock":
-        return "lowStock";
-      case "Regular Stock":
-        return "regularStock";
-      case "Over Stock":
-        return "overStock";
-      default:
-        return null;
-    }
+    return status[title];
   }
 
   function generateContent(level) {
