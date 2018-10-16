@@ -71,7 +71,7 @@ function OverStockReportController($scope, $controller, $filter, OverStockProduc
       return 0;
     }
 
-    return originNumber.toFixed(2);
+    return parseFloat(originNumber.toFixed(2));
   }
 }
 
