@@ -101,7 +101,7 @@ public class ProductRepository {
     updateLastModifieddate(oldKitProductList,newKitProductList);
   }
 
-  private void updateLastModifieddate(List<KitProduct> oldKitProductList,List<KitProduct> newKitProductList){
+  public void updateLastModifieddate(List<KitProduct> oldKitProductList,List<KitProduct> newKitProductList){
     List<KitProduct> subKitList  = ListUtils.union(ListUtils.subtract(oldKitProductList,newKitProductList),ListUtils.subtract(newKitProductList,oldKitProductList));
     Set<String> kitCodes  = new HashSet<>();
     for(KitProduct kitProduct:subKitList){

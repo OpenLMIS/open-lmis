@@ -17,10 +17,13 @@ import org.openlmis.core.domain.*;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.core.repository.ProductGroupRepository;
 import org.openlmis.core.repository.ProductRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -50,6 +53,9 @@ public class ProductService {
   @Autowired
   private ProductFormService productFormService;
 
+
+  protected static Logger logger = LoggerFactory.getLogger(ProductService.class);
+
   @Transactional
   public void save(Product product, boolean updateKitProductList) {
 
@@ -64,16 +70,16 @@ public class ProductService {
     DosageUnit dosageUnit = validateAndReturnDosageUnit(product.getDosageUnit());
     product.setDosageUnit(dosageUnit);
 
+
     if (product.getId() == null) {
       repository.insert(product);
+      repository.updateLastModifieddate(new ArrayList<>(),product.getKitProductList());
       return;
     }
 
-    List<ProgramProduct> existingProgramProducts = programProductService.getByProductCode(product.getCode());
-
     validateKitProductParam(product);
     repository.update(product, updateKitProductList);
-
+    List<ProgramProduct> existingProgramProducts = programProductService.getByProductCode(product.getCode());
     notifyProgramCatalogChange(product, existingProgramProducts);
   }
 
