@@ -42,6 +42,10 @@ public class SimpleTableService {
         requisitions.addAll(getSubmittedRequisitions(filterCriteria));
         requisitions.addAll(getUnSubmittedRequisitions(filterCriteria));
 
+        for(RequisitionDTO requisitionDTO : requisitions) {
+            requisitionDTO.assignType();
+        }
+
         return requisitions;
     }
 
