@@ -73,7 +73,8 @@ public class ProductService {
 
     if (product.getId() == null) {
       repository.insert(product);
-      repository.updateLastModifieddate(new ArrayList<>(),product.getKitProductList());
+      List<KitProduct> oldKitProductList = new ArrayList<>();
+      repository.updateLastModifieddate(oldKitProductList,product.getKitProductList());
       return;
     }
 
