@@ -6,7 +6,6 @@ import org.openlmis.report.model.dto.LotInfo;
 import org.openlmis.report.model.dto.OverStockProductDto;
 import org.openlmis.report.model.params.OverStockReportParam;
 import org.openlmis.report.service.SimpleTableService;
-import org.openlmis.report.view.WorkbookCreator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -85,28 +84,24 @@ public class OverStockProductReportGenerator extends AbstractReportModelGenerato
         List<OverStockProductDto> overStockProductDtoList = (List<OverStockProductDto>) queryResult.get(KEY_QUERY_RESULT);
         List<Map<String, String>> mergedRegions = new ArrayList<>();
         int cmmIndex = 0;
-        int mosIndex = 0;
         for (int i = 0; i < overStockProductDtoList.size(); i++) {
             Map<String, String> cmmMergedRegion = new HashMap<>();
-            cmmIndex = cmmIndex + 1;
-            cmmMergedRegion.put("firstRow", String.valueOf(cmmIndex));
-            int cmmSpan = overStockProductDtoList.get(i).getLotList().size();
-            cmmIndex = cmmIndex + cmmSpan;
-            cmmMergedRegion.put("lastRow", String.valueOf(cmmIndex));
             cmmMergedRegion.put("firstCol", CMM_COLUMN);
             cmmMergedRegion.put("lastCol", CMM_COLUMN);
             cmmMergedRegion.put("mergedValue", overStockProductDtoList.get(i).getCmm().toString());
-            mergedRegions.add(cmmMergedRegion);
-
             Map<String, String> mosMergedRegion = new HashMap<>();
-            mosIndex = mosIndex + 1;
-            mosMergedRegion.put("firstRow", String.valueOf(mosIndex));
-            int mosSpan = overStockProductDtoList.get(i).getLotList().size();
-            mosIndex = mosIndex + mosSpan;
-            mosMergedRegion.put("lastRow", String.valueOf(mosIndex));
             mosMergedRegion.put("firstCol", MOS_COLUMN);
             mosMergedRegion.put("lastCol", MOS_COLUMN);
             mosMergedRegion.put("mergedValue", overStockProductDtoList.get(i).getMos().toString());
+
+            int cmmSpan = overStockProductDtoList.get(i).getLotList().size();
+            cmmMergedRegion.put("lastRow", String.valueOf(cmmIndex + cmmSpan));
+            cmmMergedRegion.put("firstRow", String.valueOf(cmmIndex + 1));
+            mosMergedRegion.put("lastRow", String.valueOf(cmmIndex + cmmSpan));
+            mosMergedRegion.put("firstRow", String.valueOf(cmmIndex + 1));
+            cmmIndex = cmmIndex + cmmSpan;
+
+            mergedRegions.add(cmmMergedRegion);
             mergedRegions.add(mosMergedRegion);
         }
 
