@@ -2,6 +2,9 @@ function OverStockReportController($scope, $controller, $filter, OverStockProduc
   $controller('BaseProductReportController', {$scope: $scope});
   $scope.formattedOverStockList = [];
   $scope.showOverStockProductsTable = false;
+  $scope.overStockList = null;
+  $scope.filterList = [];
+  $scope.filterText = "";
 
   $scope.$on('$viewContentLoaded', function () {
     $scope.loadHealthFacilities();
@@ -26,8 +29,9 @@ function OverStockReportController($scope, $controller, $filter, OverStockProduc
       };
 
       OverStockProductsService.getOverStockProductList().get(overStockParams, {}, function (overStockResponse) {
-        $scope.showOverStockProductsTable = true;
         $scope.formattedOverStockList = formatOverStockList(overStockResponse.rnr_list);
+        $scope.showOverStockProductsTable = overStockResponse.rnr_list.length;
+        $scope.overStockList = overStockResponse.rnr_list;
       });
     }
   };
@@ -50,6 +54,33 @@ function OverStockReportController($scope, $controller, $filter, OverStockProduc
       document.getElementById("fixed-header").scrollLeft = fixedBodyDomLeft;
     };
   }
+
+  $scope.search = function () {
+    $scope.filterList = _.filter($scope.overStockList, function (item) {
+      return checkField(item);
+    });
+    $scope.formattedOverStockList = formatOverStockList($scope.filterList);
+  };
+
+  function checkField(item) {
+    var flag = false;
+    _.forEach(item, function (value, key) {
+      if (key !== "lotList" && (value + "").toLowerCase().indexOf($scope.filterText.toLowerCase()) > -1) {
+        flag = true;
+      }
+      if (key === "lotList" && checkLotNumberInclude(value)) {
+        flag = true;
+      }
+    });
+    return flag;
+  }
+
+  function checkLotNumberInclude(lotLists) {
+    return _.find(lotLists, function (lotItem) {
+      return lotItem.lotNumber.indexOf($scope.filterText) !== -1;
+    });
+  }
+
 
   function formatOverStockList(overStockList) {
     var formattedOverStockList = [];
