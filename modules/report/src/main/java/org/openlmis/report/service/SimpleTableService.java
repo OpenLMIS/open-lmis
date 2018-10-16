@@ -1,6 +1,7 @@
 package org.openlmis.report.service;
 
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang.StringUtils;
 import org.openlmis.core.repository.mapper.FacilityMapper;
 import org.openlmis.report.generator.StockOnHandStatus;
 import org.openlmis.report.mapper.ProductLotInfoMapper;
@@ -60,31 +61,31 @@ public class SimpleTableService {
         if(CollectionUtils.isEmpty(productLotInfos)){
             return null;
         }
-        Map<String,OverStockProductDto> overStockProductDtoMap = overStockProductGroupBy(productLotInfos);
+
         List<OverStockProductDto> overStockProducts = new ArrayList<>();
-        OverStockProductDto overStockProduct;
-        for (Map.Entry<String,OverStockProductDto> entry : overStockProductDtoMap.entrySet()) {
-            overStockProduct = entry.getValue();
-            overStockProduct = calcCmmAndSoh(overStockProduct,filterCriteria.getEndTime());
-            if(null!=overStockProduct){
-                overStockProducts.add(overStockProduct);
+        if(null != filterCriteria.getFacilityId()){
+            Map<String,CMMEntry> cmmEntryMap =  getProductCmmMap(filterCriteria);
+            Map<String,OverStockProductDto> overStockProductDtoMap = overStockProductGroupBy(productLotInfos);
+            OverStockProductDto overStockProduct;
+            for (Map.Entry<String,OverStockProductDto> entry : overStockProductDtoMap.entrySet()) {
+                overStockProduct = entry.getValue();
+                overStockProduct = calcCmmAndSoh(overStockProduct,cmmEntryMap,filterCriteria.getEndTime());
+                if(null!=overStockProduct){
+                    overStockProducts.add(overStockProduct);
+                }
             }
         }
 
         return overStockProducts;
     }
 
-    private OverStockProductDto calcCmmAndSoh(OverStockProductDto overStockProduct,Date endTime) {
+    private OverStockProductDto calcCmmAndSoh(OverStockProductDto overStockProduct,Map<String,CMMEntry> cmmEntryMap,Date endTime) {
         if (CollectionUtils.isEmpty(overStockProduct.getLotList())) {
             return null;
         }
-        CMMEntry cmmEntry = cmmMapper.getCMMEntryByFacilityAndDayAndProductCode(overStockProduct.getFacilityId().longValue(), overStockProduct.getProductCode(), endTime);
+        CMMEntry cmmEntry = cmmEntryMap.get(overStockProduct.getProductCode());
         if (null == cmmEntry || null == cmmEntry.getCmmValue()) {
             return null;
-        }
-        if (0 == cmmEntry.getCmmValue()) {
-            overStockProduct.setCmm(0.0);
-            return overStockProduct;
         }
         Integer sumSoH = OverStockProductDto.calcSoH(overStockProduct.getLotList());
         StockOnHandStatus status = stockStatusService.getStockOnHandStatus(cmmEntry.getCmmValue().longValue(), sumSoH, overStockProduct.getProductCode());
@@ -92,11 +93,22 @@ public class SimpleTableService {
             return null;
         }
         Double cmm = cmmEntry.getCmmValue().doubleValue();
-        overStockProduct.setCmm(cmm);
-        overStockProduct.setMos(sumSoH / cmm);
-
+        overStockProduct.setCmm(Double.valueOf(cmm.doubleValue()));
+        if (0 != cmm) {
+            overStockProduct.setMos(sumSoH / cmm);
+        }
         return overStockProduct;
     }
+
+    private Map<String,CMMEntry> getProductCmmMap(OverStockReportParam filterCriteria){
+        List<CMMEntry> CMMEntryList = cmmMapper.getCMMEntryByFacilityAndDay(filterCriteria.getFacilityId().longValue(),filterCriteria.getEndTime());
+        Map<String,CMMEntry> cmmEntryMap = new HashMap<>();
+        for(CMMEntry cmmEntry : CMMEntryList){
+            cmmEntryMap.put(cmmEntry.getProductCode(),cmmEntry);
+        }
+        return cmmEntryMap;
+    }
+
 
     private Map<String,OverStockProductDto> overStockProductGroupBy(List<ProductLotInfo> productLotInfos){
         Map<String,OverStockProductDto> overStockProductDtoMap = new HashMap<>();

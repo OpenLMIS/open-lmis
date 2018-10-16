@@ -5,6 +5,7 @@ import org.openlmis.stockmanagement.domain.CMMEntry;
 import org.springframework.stereotype.Repository;
 
 import java.util.Date;
+import java.util.List;
 
 @Repository
 public interface CMMMapper {
@@ -25,6 +26,9 @@ public interface CMMMapper {
 
     @Select("SELECT * FROM cmm_entries WHERE facilityId = #{facilityId} and productCode = #{productCode} and periodBegin <= #{day} and periodEnd >= #{day}")
     CMMEntry getCMMEntryByFacilityAndDayAndProductCode(@Param("facilityId") Long facilityId, @Param("productCode") String productCode, @Param("day") Date day);
+
+    @Select("SELECT * FROM cmm_entries WHERE facilityId = #{facilityId} and periodBegin <= #{day} and periodEnd >= #{day}")
+    List<CMMEntry> getCMMEntryByFacilityAndDay(@Param("facilityId") Long facilityId, @Param("day") Date day);
 
     @Update("UPDATE cmm_entries SET cmmValue = #{cmmValue}, modifieddate= NOW() WHERE id = #{id}")
     void update(CMMEntry entry);
