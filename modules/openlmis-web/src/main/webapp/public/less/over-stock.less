@@ -1,10 +1,4 @@
 .over-stock-product {
-  .over-stock-product--table {
-    width: 100%;
-    height: 500px;
-    overflow: overlay;
-  }
-
   .table-header {
     > div {
       display: inline;
@@ -36,5 +30,26 @@
       min-width: 350px;
       max-width: 350px;
     }
+  }
+
+  .table-condensed {
+    th {
+      padding: 4px 6px;
+    }
+  }
+}
+
+.fixed-header {
+  width: 100%;
+  overflow: hidden;
+}
+
+.fixed-body {
+  width: 100%;
+  height: 400px;
+  overflow: auto;
+
+  .table-bordered {
+    border-top: none;
   }
 }

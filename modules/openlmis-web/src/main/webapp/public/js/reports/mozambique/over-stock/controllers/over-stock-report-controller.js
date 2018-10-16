@@ -5,6 +5,7 @@ function OverStockReportController($scope, $controller, $filter, OverStockProduc
 
   $scope.$on('$viewContentLoaded', function () {
     $scope.loadHealthFacilities();
+    onLoadScrollEvent();
   });
 
   $scope.loadReport = function () {
@@ -41,6 +42,14 @@ function OverStockReportController($scope, $controller, $filter, OverStockProduc
       $filter('date')(reportParams.endTime, "yyyy-MM-dd") + " 23:59:59"
     );
   };
+
+  function onLoadScrollEvent() {
+    var fixedBodyDom = document.getElementById("fixed-body");
+    fixedBodyDom.onscroll = function(){
+      var fixedBodyDomLeft = this.scrollLeft;
+      document.getElementById("fixed-header").scrollLeft = fixedBodyDomLeft;
+    };
+  }
 
   function formatOverStockList(overStockList) {
     var formattedOverStockList = [];
