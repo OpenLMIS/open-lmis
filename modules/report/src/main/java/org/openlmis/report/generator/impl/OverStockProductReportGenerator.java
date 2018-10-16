@@ -9,6 +9,7 @@ import org.openlmis.report.service.SimpleTableService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.text.DecimalFormat;
 import java.util.*;
 
 @Component(value = "overStockProductReport")
@@ -70,8 +71,8 @@ public class OverStockProductReportGenerator extends AbstractReportModelGenerato
                 rowMap.put("lot", lotinfo.getLotNumber());
                 rowMap.put("expiryDate", DateUtil.formatDate(lotinfo.getExpiryDate()));
                 rowMap.put("soh", lotinfo.getStockOnHandOfLot().toString());
-                rowMap.put("cmm", dto.getCmm().toString());
-                rowMap.put("MoS", dto.getMos().toString());
+                rowMap.put("cmm", getFormatDoubleValue(dto.getCmm()));
+                rowMap.put("MoS", getFormatDoubleValue(dto.getMos()));
                 content.add(rowMap);
             }
         }
@@ -88,11 +89,11 @@ public class OverStockProductReportGenerator extends AbstractReportModelGenerato
             Map<String, String> cmmMergedRegion = new HashMap<>();
             cmmMergedRegion.put("firstCol", CMM_COLUMN);
             cmmMergedRegion.put("lastCol", CMM_COLUMN);
-            cmmMergedRegion.put("mergedValue", overStockProductDtoList.get(i).getCmm().toString());
+            cmmMergedRegion.put("mergedValue", getFormatDoubleValue(overStockProductDtoList.get(i).getCmm()));
             Map<String, String> mosMergedRegion = new HashMap<>();
             mosMergedRegion.put("firstCol", MOS_COLUMN);
             mosMergedRegion.put("lastCol", MOS_COLUMN);
-            mosMergedRegion.put("mergedValue", overStockProductDtoList.get(i).getMos().toString());
+            mosMergedRegion.put("mergedValue", getFormatDoubleValue(overStockProductDtoList.get(i).getMos()));
 
             int cmmSpan = overStockProductDtoList.get(i).getLotList().size();
             cmmMergedRegion.put("lastRow", String.valueOf(cmmIndex + cmmSpan));
@@ -106,6 +107,11 @@ public class OverStockProductReportGenerator extends AbstractReportModelGenerato
         }
 
         return mergedRegions;
+    }
+
+    private String getFormatDoubleValue(Double d) {
+        DecimalFormat formatter = new DecimalFormat("0.00");
+        return null != d ? formatter.format(d) : "";
     }
 
 
