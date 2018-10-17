@@ -162,13 +162,13 @@ services.factory('NosDrugsChartService', function ($http, $filter, $q, $timeout,
   function getValueWithPlaceLevel(drugItem, type, placeLevel, isFacility) {
     switch (type) {
       case "lowStock":
-        return getNosDrugStatusValue(drugItem["lowStock"], placeLevel, isFacility);
+        return getNosDrugStatusValue(drugItem.lowStock, placeLevel, isFacility);
       case "overStock":
-        return getNosDrugStatusValue(drugItem["overStock"], placeLevel, isFacility);
+        return getNosDrugStatusValue(drugItem.overStock, placeLevel, isFacility);
       case "regularStock":
-        return getNosDrugStatusValue(drugItem["regularStock"], placeLevel, isFacility);
+        return getNosDrugStatusValue(drugItem.regularStock, placeLevel, isFacility);
       case "stockOut":
-        return getNosDrugStatusValue(drugItem["stockOut"], placeLevel, isFacility);
+        return getNosDrugStatusValue(drugItem.stockOut, placeLevel, isFacility);
       default :
         return null;
     }

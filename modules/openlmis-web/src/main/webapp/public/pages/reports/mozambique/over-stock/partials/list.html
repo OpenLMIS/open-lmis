@@ -18,57 +18,57 @@
   <div ng-show="overStockList.length > 0">
     <div class="search-field">
       <h4 openlmis-message="label.search"></h4>
-      <input type="text" ng-change="search()" ng-model="filterText"/>
+      <input type="text" ng-change="filterAndSort()" ng-model="filterText"/>
     </div>
     <div id="fixed-header" class="fixed-header">
         <table class="table table-condensed table-bordered table-striped header-table">
           <tr class="table--body">
-            <th class="table--body-150" ng-click="sortType = 'provinceName'; sortReverse = !sortReverse" openlmis-message="report.header.province">
+            <th class="table--body-150" ng-click="sortType = 'provinceName'; sortReverse = !sortReverse; filterAndSort();" openlmis-message="report.header.province">
               <span ng-show="sortType != 'provinceName'" class="icon-sort"></span>
               <span ng-show="sortType == 'provinceName' && !sortReverse" class="icon-sort-up"></span>
               <span ng-show="sortType == 'provinceName' && sortReverse" class="icon-sort-down"></span>
             </th>
-            <th class="table--body-150" ng-click="sortType = 'districtName'; sortReverse = !sortReverse" openlmis-message="report.header.district">
+            <th class="table--body-150" ng-click="sortType = 'districtName'; sortReverse = !sortReverse; filterAndSort();" openlmis-message="report.header.district">
               <span ng-show="sortType != 'districtName'" class="icon-sort"></span>
               <span ng-show="sortType == 'districtName' && !sortReverse" class="icon-sort-up"></span>
               <span ng-show="sortType == 'districtName' && sortReverse" class="icon-sort-down"></span>
             </th>
-            <th class="table--body-150" ng-click="sortType = 'facilityName'; sortReverse = !sortReverse" class="table--body-150" openlmis-message="report.header.facility">
+            <th class="table--body-150" ng-click="sortType = 'facilityName'; sortReverse = !sortReverse; filterAndSort();" class="table--body-150" openlmis-message="report.header.facility">
               <span ng-show="sortType != 'facilityName'" class="icon-sort"></span>
               <span ng-show="sortType == 'facilityName' && !sortReverse" class="icon-sort-up"></span>
               <span ng-show="sortType == 'facilityName' && sortReverse" class="icon-sort-down"></span>
             </th>
-            <th class="table--body-150" ng-click="sortType = 'productCode'; sortReverse = !sortReverse" openlmis-message="report.header.productcode">
+            <th class="table--body-150" ng-click="sortType = 'productCode'; sortReverse = !sortReverse; filterAndSort();" openlmis-message="report.header.productcode">
               <span ng-show="sortType != 'productCode'" class="icon-sort"></span>
               <span ng-show="sortType == 'productCode' && !sortReverse" class="icon-sort-up"></span>
               <span ng-show="sortType == 'productCode' && sortReverse" class="icon-sort-down"></span>
             </th>
-            <th class="table--body-350" ng-click="sortType = 'productName'; sortReverse = !sortReverse" openlmis-message="report.header.productname">
+            <th class="table--body-350" ng-click="sortType = 'productName'; sortReverse = !sortReverse; filterAndSort();" openlmis-message="report.header.productname">
               <span ng-show="sortType != 'productName'" class="icon-sort"></span>
               <span ng-show="sortType == 'productName' && !sortReverse" class="icon-sort-up"></span>
               <span ng-show="sortType == 'productName' && sortReverse" class="icon-sort-down"></span>
             </th>
-            <th class="table--body-150" ng-click="sortType = 'lotNumber'; sortReverse = !sortReverse" openlmis-message="report.header.lotnumber">
+            <th class="table--body-150" ng-click="sortType = 'lotNumber'; sortReverse = !sortReverse; filterAndSort();" openlmis-message="report.header.lotnumber">
               <span ng-show="sortType != 'lotNumber'" class="icon-sort"></span>
               <span ng-show="sortType == 'lotNumber' && !sortReverse" class="icon-sort-up"></span>
               <span ng-show="sortType == 'lotNumber' && sortReverse" class="icon-sort-down"></span>
             </th>
-            <th class="table--body-150" ng-click="sortType = 'expiryDate'; sortReverse = !sortReverse" openlmis-message="report.header.expirydate">
+            <th class="table--body-150" ng-click="sortType = 'expiryDate'; sortReverse = !sortReverse;  filterAndSort();" openlmis-message="report.header.expirydate">
               <span ng-show="sortType != 'expiryDate'" class="icon-sort"></span>
               <span ng-show="sortType == 'expiryDate' && !sortReverse" class="icon-sort-up"></span>
               <span ng-show="sortType == 'expiryDate' && sortReverse" class="icon-sort-down"></span>
             </th>
-            <th class="table--body-150" ng-click="sortType = 'stockOnHandOfLot'; sortReverse = !sortReverse" openlmis-message="report.header.sohoflot">
+            <th class="table--body-150" ng-click="sortType = 'stockOnHandOfLot'; sortReverse = !sortReverse;  filterAndSort();" openlmis-message="report.header.sohoflot">
               <span ng-show="sortType != 'stockOnHandOfLot'" class="icon-sort"></span>
               <span ng-show="sortType == 'stockOnHandOfLot' && !sortReverse" class="icon-sort-up"></span>
               <span ng-show="sortType == 'stockOnHandOfLot' && sortReverse" class="icon-sort-down"></span>
             </th>
-            <th class="table--body-150" ng-click="sortType = 'cmm'; sortReverse = !sortReverse" openlmis-message="report.header.cmm">
+            <th class="table--body-150" ng-click="sortType = 'cmm'; sortReverse = !sortReverse; filterAndSort();" openlmis-message="report.header.cmm">
               <span ng-show="sortType != 'cmm'" class="icon-sort"></span>
               <span ng-show="sortType == 'cmm' && !sortReverse" class="icon-sort-up"></span>
               <span ng-show="sortType == 'cmm' && sortReverse" class="icon-sort-down"></span>
             </th>
-            <th class="table--body-150" ng-click="sortType = 'mos'; sortReverse = !sortReverse" openlmis-message="report.header.mos">
+            <th class="table--body-150" ng-click="sortType = 'mos'; sortReverse = !sortReverse; filterAndSort();" openlmis-message="report.header.mos">
               <span ng-show="sortType != 'mos'" class="icon-sort"></span>
               <span ng-show="sortType == 'mos' && !sortReverse" class="icon-sort-up"></span>
               <span ng-show="sortType == 'mos' && sortReverse" class="icon-sort-down"></span>
@@ -79,7 +79,7 @@
 
     <div id="fixed-body" class="fixed-body">
       <table class="table table-bordered table-striped">
-        <tr class="table--body" ng-repeat="overStockItem in formattedOverStockList | orderBy:sortType:sortReverse">
+        <tr class="table--body" ng-repeat="overStockItem in formattedOverStockList">
           <td class="table--body-150">{{overStockItem.provinceName}}</td>
           <td class="table--body-150">{{overStockItem.districtName}}</td>
           <td class="table--body-150">{{overStockItem.facilityName}}</td>
