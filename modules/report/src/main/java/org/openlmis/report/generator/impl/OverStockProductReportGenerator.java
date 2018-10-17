@@ -1,5 +1,6 @@
 package org.openlmis.report.generator.impl;
 
+import org.apache.commons.lang.StringUtils;
 import org.openlmis.core.utils.DateUtil;
 import org.openlmis.report.generator.AbstractReportModelGenerator;
 import org.openlmis.report.model.dto.LotInfo;
@@ -43,15 +44,18 @@ public class OverStockProductReportGenerator extends AbstractReportModelGenerato
         Map<String, String> headers = new LinkedHashMap<>();
         headers.put("province", getMessage("report.header.province"));
         headers.put("district", getMessage("report.header.district"));
-        headers.put("facility", getMessage("report.header.facility"));
+        if(null != paraMap.get("districtId")){
+            headers.put("facility", getMessage("report.header.facility"));
+        }
         headers.put("drugCode", getMessage("report.header.drug.code"));
         headers.put("drugName", getMessage("report.header.drug.name"));
         headers.put("lot", getMessage("report.header.lot"));
         headers.put("expiryDate", getMessage("report.header.expiry.date"));
         headers.put("soh", getMessage("report.header.stock.on.hand"));
-        headers.put("cmm", getMessage("report.header.cmm"));
-        headers.put("MoS", getMessage("report.header.MoS"));
-
+        if(null != paraMap.get("districtId")){
+            headers.put("cmm", getMessage("report.header.cmm"));
+            headers.put("MoS", getMessage("report.header.MoS"));
+        }
         return headers;
     }
 
@@ -65,14 +69,16 @@ public class OverStockProductReportGenerator extends AbstractReportModelGenerato
                 Map<String, String> rowMap = new HashMap<>();
                 rowMap.put("province", dto.getProvinceName());
                 rowMap.put("district", dto.getDistrictName());
-                rowMap.put("facility", dto.getFacilityName());
                 rowMap.put("drugCode", dto.getProductCode());
                 rowMap.put("drugName", dto.getProductName());
                 rowMap.put("lot", lotinfo.getLotNumber());
                 rowMap.put("expiryDate", DateUtil.formatDate(lotinfo.getExpiryDate()));
                 rowMap.put("soh", lotinfo.getStockOnHandOfLot().toString());
-                rowMap.put("cmm", getFormatDoubleValue(dto.getCmm()));
-                rowMap.put("MoS", getFormatDoubleValue(dto.getMos()));
+                if(null != paraMap.get("districtId")){
+                    rowMap.put("facility", dto.getFacilityName());
+                    rowMap.put("cmm", getFormatDoubleValue(dto.getCmm()));
+                    rowMap.put("MoS", getFormatDoubleValue(dto.getMos()));
+                }
                 content.add(rowMap);
             }
         }
@@ -82,6 +88,11 @@ public class OverStockProductReportGenerator extends AbstractReportModelGenerato
 
     @Override
     protected List<Map<String, String>> getReportMergedRegions(Map<Object, Object> paraMap, Map<String, Object> queryResult) {
+
+        if(null == paraMap.get("districtId") || StringUtils.isBlank(paraMap.get("districtId").toString())){
+            return null;
+        }
+
         List<OverStockProductDto> overStockProductDtoList = (List<OverStockProductDto>) queryResult.get(KEY_QUERY_RESULT);
         List<Map<String, String>> mergedRegions = new ArrayList<>();
         int index = 0;
