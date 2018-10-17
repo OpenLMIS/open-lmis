@@ -5,6 +5,7 @@ function OverStockReportController($scope, $controller, $filter, OverStockProduc
   $scope.overStockList = null;
   $scope.filterList = [];
   $scope.filterText = "";
+  $scope.isDistrictOverStock = false;
 
   $scope.$on('$viewContentLoaded', function () {
     $scope.loadHealthFacilities();
@@ -23,6 +24,8 @@ function OverStockReportController($scope, $controller, $filter, OverStockProduc
         districtId: reportParams.districtId.toString(),
         facilityId: reportParams.facilityId.toString()
       };
+
+      $scope.isDistrictOverStock = utils.isEmpty(reportParams.districtId);
 
       OverStockProductsService
         .getOverStockProductList()
