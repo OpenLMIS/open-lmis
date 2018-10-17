@@ -38,6 +38,8 @@ function OverStockReportController($scope, $controller, $filter, OverStockProduc
 
   function formatOverStockProductListTime(overStockList) {
     return _.map(overStockList, function (overStockItem) {
+      overStockItem.cmm = toFixedNumber(overStockItem.cmm);
+      overStockItem.mos = toFixedNumber(overStockItem.mos);
       overStockItem.lotList = _.map(overStockItem.lotList, function (lotItem) {
         lotItem.expiryDate = DateFormatService.formatDateWithLocale(lotItem.expiryDate);
         return lotItem;
