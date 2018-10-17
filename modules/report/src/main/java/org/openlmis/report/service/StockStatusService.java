@@ -44,20 +44,23 @@ public class StockStatusService {
   }
 
   public StockOnHandStatus getStockOnHandStatus(long cmm, long soh, String productCode) {
+    return getStockOnHandStatus(cmm, soh, isHivProject(productCode));
+  }
 
-    if (0 == soh) {
-      return StockOnHandStatus.STOCK_OUT;
-    }
-    if (cmm == -1) {
+  public StockOnHandStatus getStockOnHandStatus(long cmm, long soh, boolean isHiv) {
+      if (0 == soh) {
+          return StockOnHandStatus.STOCK_OUT;
+      }
+      if (cmm == -1) {
+          return StockOnHandStatus.REGULAR_STOCK;
+      }
+
+      if (soh < 1 * cmm) {
+          return StockOnHandStatus.LOW_STOCK;
+      } else if ((!isHiv && soh > 2 * cmm) || (isHiv && soh > 3 * cmm)) {
+          return StockOnHandStatus.OVER_STOCK;
+      }
       return StockOnHandStatus.REGULAR_STOCK;
-    }
-
-    if (soh < 1 * cmm) {
-      return StockOnHandStatus.LOW_STOCK;
-    } else if ((!isHivProject(productCode) && soh > 2 * cmm) || (isHivProject(productCode) && soh > 3 * cmm)) {
-      return StockOnHandStatus.OVER_STOCK;
-    }
-    return StockOnHandStatus.REGULAR_STOCK;
   }
 
   private Boolean isHivProject(String productCode) {

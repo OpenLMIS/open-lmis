@@ -11,10 +11,13 @@
 package org.openlmis.web.form;
 
 import lombok.*;
+import org.apache.commons.lang3.StringUtils;
 import org.openlmis.core.domain.KitProduct;
 import org.openlmis.core.domain.ProductPriceSchedule;
 import org.openlmis.core.domain.Product;
+import org.openlmis.core.domain.Program;
 import org.openlmis.core.domain.ProgramProduct;
+import org.openlmis.core.service.ProgramService;
 
 import java.util.Date;
 import java.util.List;
@@ -36,4 +39,15 @@ public class ProductDTO {
   private List<ProgramProduct> programProducts;
 
   private List<ProductPriceSchedule> productPriceSchedules;
+
+  public Product getProduct(ProgramService programService) {
+    for (ProgramProduct programProduct : programProducts) {
+      Program program = programService.getById(programProduct.getProgram().getId());
+      if (StringUtils.equalsIgnoreCase(programProduct.getProgram().getCode(),"MMIA")
+              || (null != program && null != program.getParentId() && program.getParentId() == 1L)) {
+        product.setIsHiv(true);
+      }
+    }
+    return product;
+  }
 }

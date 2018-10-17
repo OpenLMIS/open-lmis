@@ -57,6 +57,9 @@ public class ProductController extends BaseController {
   @Autowired
   private ProductService service;
 
+  @Autowired
+  private ProgramService programService;
+
   @RequestMapping(value = "/groups", method = RequestMethod.GET, headers = ACCEPT_JSON)
   @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_PRODUCT')")
   public List<ProductGroup> getAllGroups() {
@@ -95,7 +98,7 @@ public class ProductController extends BaseController {
   @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_PRODUCT')")
   public ResponseEntity<OpenLmisResponse> save(@RequestBody ProductDTO productDTO, HttpServletRequest request) {
     ResponseEntity<OpenLmisResponse> response;
-    Product product = productDTO.getProduct();
+    Product product = productDTO.getProduct(programService);
     List<ProgramProduct> programProducts = productDTO.getProgramProducts();
 
     try {
@@ -117,7 +120,7 @@ public class ProductController extends BaseController {
   @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_PRODUCT')")
   public ResponseEntity<OpenLmisResponse> update(@RequestBody ProductDTO productDTO, @PathVariable(value = "id") Long id,
                                                  HttpServletRequest request) {
-    Product product = productDTO.getProduct();
+    Product product = productDTO.getProduct(programService);
     List<ProgramProduct> programProducts = productDTO.getProgramProducts();
     List<ProductPriceSchedule> productPriceSchedules = productDTO.getProductPriceSchedules();
 

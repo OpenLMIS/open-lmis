@@ -23,6 +23,7 @@ public class OverStockProductDto {
     List<LotInfo> lotList = new ArrayList<>();
     private Double cmm;
     private Double mos;
+    private Boolean isHiv;
 
     public static OverStockProductDto of(ProductLotInfo lotInfo){
         OverStockProductDto dto = new OverStockProductDto();
@@ -36,6 +37,7 @@ public class OverStockProductDto {
         dto.setProductId(lotInfo.getProductId());
         dto.setProductCode(lotInfo.getProductCode());
         dto.setProductName(lotInfo.getProductName());
+        dto.setIsHiv(lotInfo.getIsHiv());
         return dto;
     }
 

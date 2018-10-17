@@ -187,6 +187,9 @@ public class Product extends BaseModel implements Importable {
   @ImportField(mandatory = true, type = "boolean", name = "Is A Basic Product")
   private Boolean isBasic;
 
+  @ImportField(mandatory = true, type = "boolean", name = "Is A Hiv Product")
+  private Boolean isHiv;
+
   private List<KitProduct> kitProductList = new ArrayList<>();
 
   private final static String DEFAULT_DISPENSING_UNIT = "1";

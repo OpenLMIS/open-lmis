@@ -118,8 +118,8 @@ public class OverStockProductReportGenerator extends AbstractReportModelGenerato
     }
 
     private String getFormatDoubleValue(Double d) {
-        DecimalFormat formatter = new DecimalFormat("0.00");
-        return null != d ? formatter.format(d) : "";
+        DecimalFormat formatter = new DecimalFormat("0.##");
+        return null != d ? formatter.format(d) : "0";
     }
 
 

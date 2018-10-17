@@ -85,7 +85,7 @@ public class SimpleTableService {
             return null;
         }
         Integer sumSoH = OverStockProductDto.calcSoH(overStockProduct.getLotList());
-        StockOnHandStatus status = stockStatusService.getStockOnHandStatus(cmmEntry.getCmmValue().longValue(), sumSoH, overStockProduct.getProductCode());
+        StockOnHandStatus status = stockStatusService.getStockOnHandStatus(cmmEntry.getCmmValue().longValue(), sumSoH, overStockProduct.getIsHiv());
         if (!status.equals(StockOnHandStatus.OVER_STOCK)) {
             return null;
         }

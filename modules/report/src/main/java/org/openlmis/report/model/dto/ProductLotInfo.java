@@ -22,6 +22,6 @@ public class ProductLotInfo {
     private String lotNumber;
     private Date expiryDate;
     private Integer stockOnHandOfLot;
-
+    private Boolean isHiv;
 
 }
