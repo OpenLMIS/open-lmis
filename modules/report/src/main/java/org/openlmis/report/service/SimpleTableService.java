@@ -103,12 +103,12 @@ public class SimpleTableService {
     }
 
     private Map<String, CMMEntry> getProductCmmMap(OverStockReportParam filterCriteria) {
-        List<CMMEntry> CMMEntryList;
-        if(null != filterCriteria.getDistrictId()){
-            CMMEntryList = cmmMapper.getCMMEntryByDistrictAndDay(filterCriteria.getDistrictId().longValue(), filterCriteria.getEndTime());
-        }else{
-            CMMEntryList = cmmMapper.getCMMEntryByProvinceAndDay(filterCriteria.getProvinceId().longValue(), filterCriteria.getEndTime());
-        }
+        List<CMMEntry> CMMEntryList = new ArrayList<>();
+//        if(null != filterCriteria.getDistrictId()){
+//            CMMEntryList = cmmMapper.getCMMEntryByDistrictAndDay(filterCriteria.getDistrictId().longValue(), filterCriteria.getEndTime());
+//        }else{
+//            CMMEntryList = cmmMapper.getCMMEntryByProvinceAndDay(filterCriteria.getProvinceId().longValue(), filterCriteria.getEndTime());
+//        }
 
         Map<String, CMMEntry> cmmEntryMap = new HashMap<>();
         for (CMMEntry cmmEntry : CMMEntryList) {
