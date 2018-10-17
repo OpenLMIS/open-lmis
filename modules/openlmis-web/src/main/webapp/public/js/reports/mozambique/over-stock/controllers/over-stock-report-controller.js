@@ -76,7 +76,7 @@ function OverStockReportController($scope, $controller, $filter, OverStockProduc
   }
 
   function toFixedNumber(originNumber) {
-    if (_.isNull(originNumber) || originNumber === 0) {
+    if (_.isNull(originNumber)) {
       return 0;
     }
 
@@ -98,7 +98,7 @@ services.factory('OverStockProductsService', function ($resource, $filter, Repor
       reportType: 'overStockProductReport'
     };
 
-    ReportExportExcelService.exportAsXlsxBackend(data, messageService.get('report.file.nos.drugs.report'));
+    ReportExportExcelService.exportAsXlsxBackend(data, messageService.get('report.file.over.stock.products.report'));
   }
 
   return {
