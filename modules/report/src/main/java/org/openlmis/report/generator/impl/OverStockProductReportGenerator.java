@@ -84,29 +84,26 @@ public class OverStockProductReportGenerator extends AbstractReportModelGenerato
     protected List<Map<String, String>> getReportMergedRegions(Map<Object, Object> paraMap, Map<String, Object> queryResult) {
         List<OverStockProductDto> overStockProductDtoList = (List<OverStockProductDto>) queryResult.get(KEY_QUERY_RESULT);
         List<Map<String, String>> mergedRegions = new ArrayList<>();
-        int cmmIndex = 0;
-        for (int i = 0; i < overStockProductDtoList.size(); i++) {
-            Map<String, String> cmmMergedRegion = new HashMap<>();
-            cmmMergedRegion.put("firstCol", CMM_COLUMN);
-            cmmMergedRegion.put("lastCol", CMM_COLUMN);
-            cmmMergedRegion.put("mergedValue", getFormatDoubleValue(overStockProductDtoList.get(i).getCmm()));
-            Map<String, String> mosMergedRegion = new HashMap<>();
-            mosMergedRegion.put("firstCol", MOS_COLUMN);
-            mosMergedRegion.put("lastCol", MOS_COLUMN);
-            mosMergedRegion.put("mergedValue", getFormatDoubleValue(overStockProductDtoList.get(i).getMos()));
-
-            int cmmSpan = overStockProductDtoList.get(i).getLotList().size();
-            cmmMergedRegion.put("lastRow", String.valueOf(cmmIndex + cmmSpan));
-            cmmMergedRegion.put("firstRow", String.valueOf(cmmIndex + 1));
-            mosMergedRegion.put("lastRow", String.valueOf(cmmIndex + cmmSpan));
-            mosMergedRegion.put("firstRow", String.valueOf(cmmIndex + 1));
-            cmmIndex = cmmIndex + cmmSpan;
-
-            mergedRegions.add(cmmMergedRegion);
-            mergedRegions.add(mosMergedRegion);
+        int index = 0;
+        for (OverStockProductDto dto : overStockProductDtoList) {
+            int cmmSpan = dto.getLotList().size();
+            mergedRegions.add(createMergedRegion(String.valueOf(index + 1), String.valueOf(index + cmmSpan), CMM_COLUMN, CMM_COLUMN, getFormatDoubleValue(dto.getCmm())));
+            mergedRegions.add(createMergedRegion(String.valueOf(index + 1), String.valueOf(index + cmmSpan), MOS_COLUMN, MOS_COLUMN, getFormatDoubleValue(dto.getMos())));
+            index = index + cmmSpan;
         }
 
         return mergedRegions;
+    }
+
+
+    private Map<String, String> createMergedRegion(String firstRow, String lastRow, String firstCol, String lastCol, String value) {
+        Map<String, String> regionMap = new HashMap<>();
+        regionMap.put("firstRow", firstRow);
+        regionMap.put("lastRow", lastRow);
+        regionMap.put("firstCol", firstCol);
+        regionMap.put("lastCol", lastCol);
+        regionMap.put("mergedValue", value);
+        return regionMap;
     }
 
     private String getFormatDoubleValue(Double d) {
