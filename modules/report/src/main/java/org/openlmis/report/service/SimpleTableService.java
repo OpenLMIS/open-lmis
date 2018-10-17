@@ -43,7 +43,7 @@ public class SimpleTableService {
         requisitions.addAll(getSubmittedRequisitions(filterCriteria));
         requisitions.addAll(getUnSubmittedRequisitions(filterCriteria));
 
-        for(RequisitionDTO requisitionDTO : requisitions) {
+        for (RequisitionDTO requisitionDTO : requisitions) {
             requisitionDTO.assignType();
         }
 
@@ -58,28 +58,25 @@ public class SimpleTableService {
 
     public List<OverStockProductDto> getOverStockProductReport(OverStockReportParam filterCriteria) {
         List<ProductLotInfo> productLotInfos = productLotInfoMapper.getProductLotInfoList(filterCriteria);
-        if(CollectionUtils.isEmpty(productLotInfos)){
+        if (CollectionUtils.isEmpty(productLotInfos)) {
             return null;
         }
 
         List<OverStockProductDto> overStockProducts = new ArrayList<>();
-        if(null != filterCriteria.getFacilityId()){
-            Map<String,CMMEntry> cmmEntryMap =  getProductCmmMap(filterCriteria);
-            Map<String,OverStockProductDto> overStockProductDtoMap = overStockProductGroupBy(productLotInfos);
-            OverStockProductDto overStockProduct;
-            for (Map.Entry<String,OverStockProductDto> entry : overStockProductDtoMap.entrySet()) {
-                overStockProduct = entry.getValue();
-                overStockProduct = calcCmmAndSoh(overStockProduct,cmmEntryMap,filterCriteria.getEndTime());
-                if(null!=overStockProduct){
-                    overStockProducts.add(overStockProduct);
-                }
+        Map<String, OverStockProductDto> overStockProductDtoMap = overStockProductGroupBy(productLotInfos, filterCriteria);
+        Map<String, CMMEntry> cmmEntryMap = getProductCmmMap(filterCriteria);
+        OverStockProductDto overStockProduct;
+        for (Map.Entry<String, OverStockProductDto> entry : overStockProductDtoMap.entrySet()) {
+            overStockProduct = entry.getValue();
+            overStockProduct = calcCmmAndSoh(overStockProduct, cmmEntryMap, filterCriteria);
+            if (null != overStockProduct) {
+                overStockProducts.add(overStockProduct);
             }
         }
-
         return overStockProducts;
     }
 
-    private OverStockProductDto calcCmmAndSoh(OverStockProductDto overStockProduct,Map<String,CMMEntry> cmmEntryMap,Date endTime) {
+    private OverStockProductDto calcCmmAndSoh(OverStockProductDto overStockProduct, Map<String, CMMEntry> cmmEntryMap, OverStockReportParam filterCriteria) {
         if (CollectionUtils.isEmpty(overStockProduct.getLotList())) {
             return null;
         }
@@ -92,6 +89,11 @@ public class SimpleTableService {
         if (!status.equals(StockOnHandStatus.OVER_STOCK)) {
             return null;
         }
+
+        if(null == filterCriteria.getDistrictId()){
+            return overStockProduct;
+        }
+
         Double cmm = cmmEntry.getCmmValue().doubleValue();
         overStockProduct.setCmm(Double.valueOf(cmm.doubleValue()));
         if (0 != cmm) {
@@ -100,29 +102,35 @@ public class SimpleTableService {
         return overStockProduct;
     }
 
-    private Map<String,CMMEntry> getProductCmmMap(OverStockReportParam filterCriteria){
-        List<CMMEntry> CMMEntryList = cmmMapper.getCMMEntryByFacilityAndDay(filterCriteria.getFacilityId().longValue(),filterCriteria.getEndTime());
-        Map<String,CMMEntry> cmmEntryMap = new HashMap<>();
-        for(CMMEntry cmmEntry : CMMEntryList){
-            cmmEntryMap.put(cmmEntry.getProductCode(),cmmEntry);
+    private Map<String, CMMEntry> getProductCmmMap(OverStockReportParam filterCriteria) {
+        List<CMMEntry> CMMEntryList;
+        if(null != filterCriteria.getDistrictId()){
+            CMMEntryList = cmmMapper.getCMMEntryByDistrictAndDay(filterCriteria.getDistrictId().longValue(), filterCriteria.getEndTime());
+        }else{
+            CMMEntryList = cmmMapper.getCMMEntryByProvinceAndDay(filterCriteria.getProvinceId().longValue(), filterCriteria.getEndTime());
+        }
+
+        Map<String, CMMEntry> cmmEntryMap = new HashMap<>();
+        for (CMMEntry cmmEntry : CMMEntryList) {
+            cmmEntryMap.put(cmmEntry.getProductCode(), cmmEntry);
         }
         return cmmEntryMap;
     }
 
 
-    private Map<String,OverStockProductDto> overStockProductGroupBy(List<ProductLotInfo> productLotInfos){
-        Map<String,OverStockProductDto> overStockProductDtoMap = new HashMap<>();
+    private Map<String, OverStockProductDto> overStockProductGroupBy(List<ProductLotInfo> productLotInfos, OverStockReportParam filterCriteria) {
+        Map<String, OverStockProductDto> overStockProductDtoMap = new HashMap<>();
         String key;
         LotInfo lotinfo;
-        for (ProductLotInfo lotInfo : productLotInfos){
-            key = lotInfo.getProvinceId()+"-"+lotInfo.getDistrictId()+"-"+lotInfo.getFacilityId()+"-"+lotInfo.getProductCode();
-            lotinfo = new LotInfo(lotInfo.getLotNumber(),lotInfo.getExpiryDate(),lotInfo.getStockOnHandOfLot());
-            if(overStockProductDtoMap.containsKey(key)){
+        for (ProductLotInfo lotInfo : productLotInfos) {
+            key = lotInfo.getProvinceId() + "-" + lotInfo.getDistrictId() + "-" + lotInfo.getFacilityId() + "-" + lotInfo.getProductCode();
+            lotinfo = new LotInfo(lotInfo.getLotNumber(), lotInfo.getExpiryDate(), lotInfo.getStockOnHandOfLot());
+            if (overStockProductDtoMap.containsKey(key)) {
                 overStockProductDtoMap.get(key).getLotList().add(lotinfo);
-            }else{
+            } else {
                 OverStockProductDto dto = OverStockProductDto.of(lotInfo);
                 dto.getLotList().add(lotinfo);
-                overStockProductDtoMap.put(key,dto);
+                overStockProductDtoMap.put(key, dto);
             }
         }
         return overStockProductDtoMap;
@@ -132,11 +140,11 @@ public class SimpleTableService {
         List<RequisitionDTO> requisitions = new ArrayList<>();
         List<Integer> facilityIds = getFacilityIds(filterCriteria);
         NonSubmittedRequisitionReportsParam nonSubmittedRequisitionReportsParam;
-        for(Integer facilityId : facilityIds) {
-            for(MonthlyReortProgramType programType : MonthlyReortProgramType.values()) {
+        for (Integer facilityId : facilityIds) {
+            for (MonthlyReortProgramType programType : MonthlyReortProgramType.values()) {
                 Integer programId = programType.getProgramId();
 
-                if(filterCriteria.getProgramIds().contains(programId)) {
+                if (filterCriteria.getProgramIds().contains(programId)) {
                     nonSubmittedRequisitionReportsParam = NonSubmittedRequisitionReportsParam.builder()
                             .startTime(filterCriteria.getStartTime())
                             .endTime(filterCriteria.getEndTime())
@@ -154,17 +162,17 @@ public class SimpleTableService {
     private List<Integer> getFacilityIds(RequisitionReportsParam filterCriteria) {
         List<Integer> facilityIds = new ArrayList<>();
 
-        if(null != filterCriteria.getFacilityId()) {
+        if (null != filterCriteria.getFacilityId()) {
             facilityIds.add(filterCriteria.getFacilityId());
             return facilityIds;
         }
 
-        if(null != filterCriteria.getDistrictId()) {
+        if (null != filterCriteria.getDistrictId()) {
             facilityIds = facilityMapper.getFacilityIdByDistrictId(filterCriteria.getDistrictId());
             return facilityIds;
         }
 
-        if(null != filterCriteria.getProvinceId()) {
+        if (null != filterCriteria.getProvinceId()) {
             facilityIds = facilityMapper.getFacilityIdByProvinceId(filterCriteria.getProvinceId());
             return facilityIds;
         }
