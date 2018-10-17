@@ -27,18 +27,18 @@ public interface CMMMapper {
     @Select("SELECT * FROM cmm_entries WHERE facilityId = #{facilityId} and productCode = #{productCode} and periodBegin <= #{day} and periodEnd >= #{day}")
     CMMEntry getCMMEntryByFacilityAndDayAndProductCode(@Param("facilityId") Long facilityId, @Param("productCode") String productCode, @Param("day") Date day);
 
-//    @Select("SELECT * FROM cmm_entries " +
-//            "JOIN facilities on cmm_entries.facilityid = facilities.id " +
-//            "JOIN geographic_zones zone on facilities.geographiczoneid = zone.id " +
-//            "WHERE zone.id = #{districtId} and cmm_entries.periodBegin <= #{day} and cmm_entries.periodEnd >= #{day}")
-//    List<CMMEntry> getCMMEntryByDistrictAndDay(@Param("districtId") Long districtId, @Param("day") Date day);
-//
-//    @Select("SELECT * FROM cmm_entries " +
-//            "JOIN facilities on cmm_entries.facilityid = facilities.id " +
-//            "JOIN geographic_zones zone on facilities.geographiczoneid = zone.id " +
-//            "JOIN geographic_zones parent_zone on zone.parentid = parent_zone.id " +
-//            "WHERE parent_zone.id = #{provinceId} and cmm_entries.periodBegin <= #{day} and cmm_entries.periodEnd >= #{day}")
-//    List<CMMEntry> getCMMEntryByProvinceAndDay(@Param("provinceId") Long provinceId, @Param("day") Date day);
+    @Select("SELECT * FROM cmm_entries " +
+            "JOIN facilities on cmm_entries.facilityid = facilities.id " +
+            "JOIN geographic_zones zone on facilities.geographiczoneid = zone.id " +
+            "WHERE zone.id = #{districtId} and cmm_entries.periodBegin <= #{day} and cmm_entries.periodEnd >= #{day}")
+    List<CMMEntry> getCMMEntryByDistrictAndDay(@Param("districtId") Long districtId, @Param("day") Date day);
+
+    @Select("SELECT * FROM cmm_entries " +
+            "JOIN facilities on cmm_entries.facilityid = facilities.id " +
+            "JOIN geographic_zones zone on facilities.geographiczoneid = zone.id " +
+            "JOIN geographic_zones parent_zone on zone.parentid = parent_zone.id " +
+            "WHERE parent_zone.id = #{provinceId} and cmm_entries.periodBegin <= #{day} and cmm_entries.periodEnd >= #{day}")
+    List<CMMEntry> getCMMEntryByProvinceAndDay(@Param("provinceId") Long provinceId, @Param("day") Date day);
 
     @Update("UPDATE cmm_entries SET cmmValue = #{cmmValue}, modifieddate= NOW() WHERE id = #{id}")
     void update(CMMEntry entry);
