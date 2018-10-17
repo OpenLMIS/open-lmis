@@ -31,7 +31,7 @@ public interface CMMMapper {
             "JOIN facilities on cmm_entries.facilityid = facilities.id " +
             "JOIN geographic_zones zone on facilities.geographiczoneid = zone.id " +
             "WHERE zone.id = #{districtId} and cmm_entries.periodBegin <= #{day} and cmm_entries.periodEnd >= #{day}")
-    List<CMMEntry> getCMMEntryByDistrictAndDay(@Param("districtId") Long facilityId, @Param("day") Date day);
+    List<CMMEntry> getCMMEntryByDistrictAndDay(@Param("districtId") Long districtId, @Param("day") Date day);
 
     @Select("SELECT * FROM cmm_entries " +
             "JOIN facilities on cmm_entries.facilityid = facilities.id " +
