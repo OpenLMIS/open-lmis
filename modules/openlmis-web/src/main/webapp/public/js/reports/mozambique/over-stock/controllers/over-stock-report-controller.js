@@ -17,10 +17,6 @@ function OverStockReportController($scope, $controller, $filter, OverStockProduc
       $scope.validateFacility()) {
       var reportParams = $scope.reportParams;
 
-      if (!reportParams.provinceId) {
-        return;
-      }
-
       var overStockParams = {
         endTime: $filter('date')(reportParams.endTime, "yyyy-MM-dd") + " 23:59:59",
         provinceId: reportParams.provinceId.toString(),
@@ -28,7 +24,14 @@ function OverStockReportController($scope, $controller, $filter, OverStockProduc
         facilityId: reportParams.facilityId.toString()
       };
 
-      OverStockProductsService.getOverStockProductList().get(overStockParams, {}, function (overStockResponse) {
+      OverStockProductsService
+        .getOverStockProductList()
+        .get(_.pick(overStockParams, function (param) {
+          if (!utils.isEmpty(param)) {
+            return param;
+          }
+        }), {}, function (overStockResponse) {
+        $scope.showOverStockProductsTable = true;
         $scope.formattedOverStockList = formatOverStockList(overStockResponse.rnr_list);
         $scope.showOverStockProductsTable = overStockResponse.rnr_list.length;
         $scope.overStockList = formatOverStockProductListTime(overStockResponse.rnr_list);
@@ -163,7 +166,7 @@ function OverStockReportController($scope, $controller, $filter, OverStockProduc
 
   function toFixedNumber(originNumber) {
     if (_.isNull(originNumber)) {
-      return 0;
+      return null;
     }
 
     return parseFloat(originNumber.toFixed(2));

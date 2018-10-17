@@ -121,7 +121,7 @@ function BaseProductReportController($scope, $filter, ProductReportService, $cac
       addAllOption($scope.provinces, "province");
     }
 
-    if (!_.includes(['/stock-on-hand-all-products', '/over-stock'], $location.$$path)) {
+    if (!_.includes(['/stock-on-hand-all-products'], $location.$$path)) {
       addAllOption($scope.districts, "district");
     }
   };
