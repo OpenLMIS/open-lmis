@@ -38,9 +38,13 @@ public class OverStockProductReportGenerator extends AbstractReportModelGenerato
         OverStockReportParam filterCriteria = new OverStockReportParam();
         filterCriteria.setEndTime(DateUtil.parseDate(paraMap.get("endTime").toString()));
         filterCriteria.setProvinceId(Integer.parseInt(paraMap.get("provinceId").toString()));
-        filterCriteria.setDistrictId(Integer.parseInt(paraMap.get("districtId").toString()));
         try {
-            filterCriteria.setFacilityId(Integer.parseInt(paraMap.get("facilityId").toString()));
+            if (null != paraMap.get("districtId")) {
+                filterCriteria.setDistrictId(Integer.parseInt(paraMap.get("districtId").toString()));
+            }
+            if (null != paraMap.get("facilityId")) {
+                filterCriteria.setFacilityId(Integer.parseInt(paraMap.get("facilityId").toString()));
+            }
         }
         catch (Throwable e) {
             logger.error(ExceptionUtils.getStackTrace(e));
@@ -141,7 +145,7 @@ public class OverStockProductReportGenerator extends AbstractReportModelGenerato
 
     private String getFormatDoubleValue(Double d) {
         DecimalFormat formatter = new DecimalFormat("0.##");
-        return null != d ? formatter.format(d) : "0";
+        return null != d ? formatter.format(d) : "";
     }
 
 
