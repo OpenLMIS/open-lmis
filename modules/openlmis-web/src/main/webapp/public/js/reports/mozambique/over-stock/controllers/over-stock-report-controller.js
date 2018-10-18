@@ -38,6 +38,7 @@ function OverStockReportController($scope, $controller, $filter, OverStockProduc
         $scope.formattedOverStockList = formatOverStockList(overStockResponse.rnr_list);
         $scope.showOverStockProductsTable = overStockResponse.rnr_list.length;
         $scope.overStockList = formatOverStockProductListTime(overStockResponse.rnr_list);
+        $scope.filterAndSort();
       });
     }
   };
