@@ -1,5 +1,6 @@
 package org.openlmis.report.builder;
 
+import org.apache.ibatis.jdbc.SQL;
 import org.openlmis.report.model.params.OverStockReportParam;
 
 import java.util.Map;
@@ -8,9 +9,16 @@ import static org.apache.ibatis.jdbc.SqlBuilder.*;
 
 public class ProductLotInfoQueryBuilder {
 
+    public static String get(Map params) {
+        BEGIN();
+        return new SQL()
+                .SELECT("*")
+                .FROM("(" + getProductLotInfo(params) + ") as tmp")
+                .WHERE("stockcardFacilityId is not null").toString();
+    }
+
     public static String getProductLotInfo(Map params) {
         OverStockReportParam filter = (OverStockReportParam) params.get("filterCriteria");
-        BEGIN();
         SELECT("parent_zone.id as provinceId,parent_zone.name as provinceName");
         SELECT("zone.id as districtId,zone.name as districtName");
         SELECT("facilities.id as facilityId,facilities.name facilityName");
@@ -20,6 +28,7 @@ public class ProductLotInfoQueryBuilder {
         SELECT("lots.expirationdate as expiryDate");
         SELECT("lots_on_hand.quantityonhand as stockOnHandOfLot");
         SELECT("products.ishiv as isHiv");
+        SELECT("stock_cards.facilityid as stockcardFacilityId");
         FROM("facilities");
         LEFT_OUTER_JOIN("geographic_zones zone on facilities.geographiczoneid = zone.id");
         LEFT_OUTER_JOIN("geographic_zones parent_zone on zone.parentid = parent_zone.id");

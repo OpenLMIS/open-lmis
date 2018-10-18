@@ -1,6 +1,8 @@
 package org.openlmis.report.generator.impl;
 
 import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.exception.ExceptionUtils;
+import org.apache.log4j.Logger;
 import org.openlmis.core.utils.DateUtil;
 import org.openlmis.report.generator.AbstractReportModelGenerator;
 import org.openlmis.report.model.dto.LotInfo;
@@ -11,10 +13,16 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.text.DecimalFormat;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 
 @Component(value = "overStockProductReport")
 public class OverStockProductReportGenerator extends AbstractReportModelGenerator {
+
+    private static Logger logger = Logger.getLogger(OverStockProductReportGenerator.class);
 
     @Autowired
     private SimpleTableService simpleTableService;
@@ -31,7 +39,12 @@ public class OverStockProductReportGenerator extends AbstractReportModelGenerato
         filterCriteria.setEndTime(DateUtil.parseDate(paraMap.get("endTime").toString()));
         filterCriteria.setProvinceId(Integer.parseInt(paraMap.get("provinceId").toString()));
         filterCriteria.setDistrictId(Integer.parseInt(paraMap.get("districtId").toString()));
-        filterCriteria.setFacilityId(Integer.parseInt(paraMap.get("facilityId").toString()));
+        try {
+            filterCriteria.setFacilityId(Integer.parseInt(paraMap.get("facilityId").toString()));
+        }
+        catch (Throwable e) {
+            logger.error(ExceptionUtils.getStackTrace(e));
+        }
         List<OverStockProductDto> overStockProductDtoList = simpleTableService.getOverStockProductReport(filterCriteria);
 
         Map<String, Object> result = new HashMap<>();

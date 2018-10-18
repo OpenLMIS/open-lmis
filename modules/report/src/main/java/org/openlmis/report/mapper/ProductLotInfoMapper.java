@@ -11,6 +11,6 @@ import java.util.List;
 @Repository
 public interface ProductLotInfoMapper {
 
-    @SelectProvider(type = ProductLotInfoQueryBuilder.class, method = "getProductLotInfo")
+    @SelectProvider(type = ProductLotInfoQueryBuilder.class, method = "get")
     List<ProductLotInfo> getProductLotInfoList(@Param("filterCriteria") OverStockReportParam filterCriteria);
 }
