@@ -254,7 +254,7 @@ function RequisitionReportController($scope, $controller, RequisitionReportServi
   };
 
   $scope.submittedTimeFormatter = function (submittedTime, submittedTimeString) {
-    return submittedTime ? DateFormatService.formatDateWithTimeAndLocale(submittedTimeString) : "";
+    return submittedTime ? DateFormatService.formatDateWithTimeAndLocale(submittedTime) : "";
   };
 
   $scope.originalPeriodFormatter = function (originalPeriodStartDate, originalPeriodEndDate) {
