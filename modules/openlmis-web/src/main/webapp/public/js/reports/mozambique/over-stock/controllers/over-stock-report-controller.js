@@ -46,10 +46,6 @@ function OverStockReportController($scope, $controller, $filter, OverStockProduc
     return _.map(overStockList, function (overStockItem) {
       overStockItem.cmm = toFixedNumber(overStockItem.cmm);
       overStockItem.mos = toFixedNumber(overStockItem.mos);
-      overStockItem.lotList = _.map(overStockItem.lotList, function (lotItem) {
-        lotItem.expiryDate = DateFormatService.formatDateWithLocale(lotItem.expiryDate);
-        return lotItem;
-      });
       return overStockItem;
     });
   }
@@ -91,14 +87,14 @@ function OverStockReportController($scope, $controller, $filter, OverStockProduc
   };
 
   function getSortByNestedObject() {
-    $scope.filterList = _.sortBy(sortLotNumber($scope.filterList, $scope.sortType), function (o) {
+    $scope.filterList = _.sortBy(sortLotItem($scope.filterList, $scope.sortType), function (o) {
       return o.lotList[0][$scope.sortType];
     });
     return $scope.sortReverse ? $scope.filterList.reverse() :
       $scope.filterList;
   }
 
-  function sortLotNumber(data, sortType) {
+  function sortLotItem(data, sortType) {
     return _.map(data, function (item) {
       item.lotList = _.sortBy(item.lotList, function (n) {
         return n[sortType];
@@ -120,17 +116,20 @@ function OverStockReportController($scope, $controller, $filter, OverStockProduc
       if (key !== "lotList" && checkValueContains(value)) {
         flag = true;
       }
-      if (key === "lotList" && checkLotNumberInclude(value)) {
+      if (key === "lotList" && checkLotItemInclude(value)) {
         flag = true;
       }
     });
     return flag;
   }
 
-  function checkLotNumberInclude(lotLists) {
+  function checkLotItemInclude(lotLists) {
     return _.find(lotLists, function (lotItem) {
       var flag = false;
       _.forEach(lotItem, function (value, key) {
+        if (key === "expiryDate") {
+          value = DateFormatService.formatDateWithLocale(value);
+        }
         if (checkValueContains(value)) {
           flag = true;
         }
@@ -141,6 +140,13 @@ function OverStockReportController($scope, $controller, $filter, OverStockProduc
 
   function checkValueContains(value) {
     return (value + "").toLowerCase().indexOf($scope.filterText.toLowerCase()) > -1;
+  }
+
+  function isTimestampValid(dateString) {
+    var minDate = new Date('1970-01-01 00:00:01');
+    var maxDate = new Date('2038-01-19 03:14:07');
+    var date = new Date(dateString);
+    return date > minDate && date < maxDate;
   }
 
   function formatOverStockList(overStockList) {
