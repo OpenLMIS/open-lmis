@@ -42,14 +42,6 @@ function OverStockReportController($scope, $controller, $filter, OverStockProduc
     }
   };
 
-  function formatOverStockProductListTime(overStockList) {
-    return _.map(overStockList, function (overStockItem) {
-      overStockItem.cmm = toFixedNumber(overStockItem.cmm);
-      overStockItem.mos = toFixedNumber(overStockItem.mos);
-      return overStockItem;
-    });
-  }
-
   $scope.exportXLSX = function () {
     var reportParams = $scope.reportParams;
 
@@ -61,6 +53,35 @@ function OverStockReportController($scope, $controller, $filter, OverStockProduc
     );
   };
 
+  $scope.groupSort = function() {
+    if ($scope.sortType) {
+      return _.includes(sortList, $scope.sortType) ?
+        getSortByNestedObject() :
+        $scope.filterList = $filter('orderBy')($scope.filterList, $scope.sortType, $scope.sortReverse);
+    }
+    return $scope.filterList;
+  };
+
+  $scope.filterAndSort = function () {
+    $scope.search();
+    $scope.groupSort();
+    $scope.formattedOverStockList = formatOverStockList($scope.filterList);
+  };
+
+  $scope.search = function () {
+    $scope.filterList = _.filter($scope.overStockList, function (item) {
+      return checkField(item);
+    });
+  };
+
+  function formatOverStockProductListTime(overStockList) {
+    return _.map(overStockList, function (overStockItem) {
+      overStockItem.cmm = toFixedNumber(overStockItem.cmm);
+      overStockItem.mos = toFixedNumber(overStockItem.mos);
+      return overStockItem;
+    });
+  }
+
   function onLoadScrollEvent() {
     var fixedBodyDom = document.getElementById("fixed-body");
     fixedBodyDom.onscroll = function () {
@@ -70,21 +91,6 @@ function OverStockReportController($scope, $controller, $filter, OverStockProduc
   }
 
   var sortList = ['lotNumber', 'expiryDate', 'stockOnHandOfLot'];
-
-  $scope.filterAndSort = function () {
-    $scope.search();
-    $scope.groupSort();
-    $scope.formattedOverStockList = formatOverStockList($scope.filterList);
-  };
-
-  $scope.groupSort = function() {
-    if ($scope.sortType) {
-      return _.includes(sortList, $scope.sortType) ?
-        getSortByNestedObject() :
-        $scope.filterList = $filter('orderBy')($scope.filterList, $scope.sortType, $scope.sortReverse);
-    }
-    return $scope.filterList;
-  };
 
   function getSortByNestedObject() {
     $scope.filterList = _.sortBy(sortLotItem($scope.filterList, $scope.sortType), function (o) {
@@ -103,12 +109,6 @@ function OverStockReportController($scope, $controller, $filter, OverStockProduc
       return item;
     });
   }
-
-  $scope.search = function () {
-    $scope.filterList = _.filter($scope.overStockList, function (item) {
-      return checkField(item);
-    });
-  };
 
   function checkField(item) {
     var flag = false;
@@ -153,7 +153,7 @@ function OverStockReportController($scope, $controller, $filter, OverStockProduc
     var formattedOverStockList = [];
     _.forEach(overStockList, function (overStock) {
       _.forEach(overStock.lotList, function (lot, index) {
-        formattedOverStockList.push({
+        var formatItem = {
           provinceName: overStock.provinceName,
           districtName: overStock.districtName,
           facilityName: overStock.facilityName,
@@ -161,12 +161,19 @@ function OverStockReportController($scope, $controller, $filter, OverStockProduc
           productName: overStock.productName,
           lotNumber: lot.lotNumber,
           expiryDate: DateFormatService.formatDateWithLocale(lot.expiryDate),
-          stockOnHandOfLot: lot.stockOnHandOfLot,
-          cmm: toFixedNumber(overStock.cmm),
-          mos: toFixedNumber(overStock.mos),
-          rowSpan: overStock.lotList.length,
-          isFirst: index === 0
-        });
+          stockOnHandOfLot: lot.stockOnHandOfLot
+        };
+
+        if (!$scope.isDistrictOverStock) {
+          Object.assign(formatItem, {
+            cmm: toFixedNumber(overStock.cmm),
+            mos: toFixedNumber(overStock.mos),
+            rowSpan: overStock.lotList.length,
+            isFirst: index === 0
+          });
+        }
+
+        formattedOverStockList.push(formatItem);
       });
     });
 
@@ -196,7 +203,12 @@ services.factory('OverStockProductsService', function ($resource, $filter, Repor
       reportType: 'overStockProductReport'
     };
 
-    ReportExportExcelService.exportAsXlsxBackend(data, messageService.get('report.file.over.stock.products.report'));
+    ReportExportExcelService.exportAsXlsxBackend(
+      _.pick(data, function (param) {
+        if (!utils.isEmpty(param)) {
+          return param;
+        }
+      }), messageService.get('report.file.over.stock.products.report'));
   }
 
   return {
