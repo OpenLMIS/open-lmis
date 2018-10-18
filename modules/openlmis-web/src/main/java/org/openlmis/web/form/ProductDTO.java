@@ -41,11 +41,15 @@ public class ProductDTO {
   private List<ProductPriceSchedule> productPriceSchedules;
 
   public Product getProduct(ProgramService programService) {
-    for (ProgramProduct programProduct : programProducts) {
-      Program program = programService.getById(programProduct.getProgram().getId());
-      if (StringUtils.equalsIgnoreCase(programProduct.getProgram().getCode(),"MMIA")
-              || (null != program && null != program.getParentId() && program.getParentId() == 1L)) {
-        product.setIsHiv(true);
+    if (null != programProducts) {
+      for (ProgramProduct programProduct : programProducts) {
+        if (null != programProduct.getProgram()) {
+          Program program = programService.getById(programProduct.getProgram().getId());
+          if (StringUtils.equalsIgnoreCase(programProduct.getProgram().getCode(),"MMIA")
+                  || (null != program && null != program.getParentId() && program.getParentId() == 1L)) {
+            product.setIsHiv(true);
+          }
+        }
       }
     }
     return product;
