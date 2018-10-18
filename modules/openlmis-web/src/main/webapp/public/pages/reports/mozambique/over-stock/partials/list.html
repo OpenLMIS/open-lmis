@@ -16,7 +16,7 @@
   <hr/>
 
   <div ng-show="overStockList.length > 0">
-    <div class="search-field">
+    <div class="search-field" style="margin-bottom: 5px">
       <h4 openlmis-message="label.search"></h4>
       <input type="text" ng-change="filterAndSort()" ng-model="filterText"/>
     </div>
@@ -88,10 +88,10 @@
           <td class="table--body-150">{{overStockItem.lotNumber}}</td>
           <td class="table--body-150">{{overStockItem.expiryDate}}</td>
           <td class="table--body-150">{{overStockItem.stockOnHandOfLot}}</td>
-          <td ng-show="!isDistrictOverStock" class="table--body-150" ng-show="overStockItem.isFirst" rowspan="{{overStockItem.rowSpan}}">
+          <td class="table--body-150" ng-show="overStockItem.isFirst" rowspan="{{overStockItem.rowSpan}}">
             {{overStockItem.cmm}}
           </td>
-          <td ng-show="!isDistrictOverStock" class="table--body-150" ng-show="overStockItem.isFirst" rowspan="{{overStockItem.rowSpan}}">
+          <td class="table--body-150" ng-show="overStockItem.isFirst" rowspan="{{overStockItem.rowSpan}}">
             {{overStockItem.mos}}
           </td>
         </tr>
