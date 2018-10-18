@@ -26,6 +26,7 @@ function OverStockReportController($scope, $controller, $filter, OverStockProduc
       };
 
       $scope.isDistrictOverStock = utils.isEmpty(reportParams.districtId);
+      $scope.formattedOverStockList = [];
 
       OverStockProductsService
         .getOverStockProductList()
