@@ -76,16 +76,25 @@ public class OverStockProductReportGenerator extends AbstractReportModelGenerato
     protected Object getReportContent(Map<Object, Object> paraMap, Map<String, Object> queryResult) {
 
         List<OverStockProductDto> overStockProductDtoList = (List<OverStockProductDto>) queryResult.get(KEY_QUERY_RESULT);
-        List<Map<String, String>> content = new ArrayList<>();
+        List<Map<String, Object>> content = new ArrayList<>();
         for (OverStockProductDto dto : overStockProductDtoList) {
             for (LotInfo lotinfo : dto.getLotList()) {
-                Map<String, String> rowMap = new HashMap<>();
+                Map<String, Object> rowMap = new HashMap<>();
                 rowMap.put("province", dto.getProvinceName());
                 rowMap.put("district", dto.getDistrictName());
                 rowMap.put("drugCode", dto.getProductCode());
                 rowMap.put("drugName", dto.getProductName());
                 rowMap.put("lot", lotinfo.getLotNumber());
-                rowMap.put("expiryDate", DateUtil.formatDate(lotinfo.getExpiryDate()));
+
+                Map<String, Object> tmpValue = new HashMap<>();
+                tmpValue.put("value", DateUtil.formatDate(lotinfo.getExpiryDate()));
+                Map<String, Object> styleMap = new HashMap<>();
+                styleMap.put("dataPattern", DateUtil.FORMAT_DATE_TIME);
+                styleMap.put("excelDataPattern", "m/d/yy");
+                tmpValue.put("style", styleMap);
+                tmpValue.put("dataType", "date");
+                rowMap.put("expiryDate", tmpValue);
+
                 rowMap.put("soh", lotinfo.getStockOnHandOfLot().toString());
                 if(null != paraMap.get("districtId")){
                     rowMap.put("facility", dto.getFacilityName());

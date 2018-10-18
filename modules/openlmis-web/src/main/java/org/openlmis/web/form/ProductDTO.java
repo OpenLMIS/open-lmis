@@ -41,6 +41,9 @@ public class ProductDTO {
   private List<ProductPriceSchedule> productPriceSchedules;
 
   public Product getProduct(ProgramService programService) {
+    if (null != product) {
+      product.setIsHiv(false);
+    }
     if (null != programProducts) {
       for (ProgramProduct programProduct : programProducts) {
         if (null != programProduct.getProgram()) {
