@@ -167,7 +167,7 @@ function OverStockReportController($scope, $controller, $filter, OverStockProduc
         };
 
         if (!$scope.isDistrictOverStock) {
-          Object.assign(formatItem, {
+          _.assign(formatItem, {
             cmm: toFixedNumber(overStock.cmm),
             mos: toFixedNumber(overStock.mos),
             rowSpan: overStock.lotList.length,
