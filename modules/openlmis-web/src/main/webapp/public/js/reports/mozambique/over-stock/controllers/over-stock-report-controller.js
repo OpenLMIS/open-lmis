@@ -1,4 +1,4 @@
-function OverStockReportController($scope, $controller, $filter, OverStockProductsService, DateFormatService) {
+function OverStockReportController($scope, $controller, $filter, OverStockProductsService, DateFormatService, ReportGroupSortAndFilterService) {
   $controller('BaseProductReportController', {$scope: $scope});
   $scope.formattedOverStockList = [];
   $scope.showOverStockProductsTable = false;
@@ -55,28 +55,14 @@ function OverStockReportController($scope, $controller, $filter, OverStockProduc
     );
   };
 
-  $scope.groupSort = function(filterList, sortType, sortReverse, sortList) {
-    if (sortType) {
-      return _.includes(sortList, sortType) ?
-        getSortByNestedObject(filterList, sortType, sortReverse) :
-        $filter('orderBy')($scope.filterList, sortType, sortReverse);
-    }
-    return filterList;
-  };
-
   var sortList = ['lotNumber', 'expiryDate', 'stockOnHandOfLot'];
   $scope.filterAndSort = function () {
-    $scope.filterList = $scope.search($scope.overStockList, $scope.filterText, "lotList", "expiryDate");
-    $scope.filterList = $scope.groupSort($scope.filterList, $scope.sortType, $scope.sortReverse, sortList);
+    $scope.filterList = ReportGroupSortAndFilterService.search($scope.overStockList, $scope.filterText, "lotList", "expiryDate");
+    $scope.filterList = ReportGroupSortAndFilterService.groupSort($scope.filterList, $scope.sortType, $scope.sortReverse, sortList);
     $scope.formattedOverStockList = formatOverStockList($scope.filterList);
 
   };
-  $scope.search = function (overStockList, filterText, specialType, timeType) {
-    return _.filter(overStockList, function (item) {
-      return checkField(item, filterText, specialType, timeType);
-    });
 
-  };
   function formatOverStockProductListTime(overStockList) {
     return _.map(overStockList, function (overStockItem) {
       overStockItem.cmm = toFixedNumber(overStockItem.cmm);
@@ -92,63 +78,6 @@ function OverStockReportController($scope, $controller, $filter, OverStockProduc
       document.getElementById("fixed-header").scrollLeft = fixedBodyDomLeft;
     };
 
-  }
-
-  function getSortByNestedObject(filterList, sortType, sortReverse) {
-    filterList = _.sortBy(sortLotItem(filterList, sortType), function (o) {
-      return o.lotList[0][sortType];
-    });
-    return sortReverse ? filterList.reverse() :
-      filterList;
-  }
-
-  function sortLotItem(data, sortType) {
-    return _.map(data, function (item) {
-      item.lotList = _.sortBy(item.lotList, function (n) {
-        return n[sortType];
-      });
-      $scope.sortReverse ? item.lotList.reverse() : item.lotList;
-      return item;
-    });
-  }
-
-  function checkField(item, filterText, specialType, timeType) {
-    var flag = false;
-    _.forEach(item, function (value, key) {
-      if (key !== specialType && checkValueContains(value, filterText)) {
-        flag = true;
-      }
-      if (key === specialType && checkLotItemInclude(value, timeType, filterText)) {
-        flag = true;
-      }
-    });
-    return flag;
-  }
-
-  function checkLotItemInclude(field, timeField, filterText) {
-    return _.find(field, function (lotItem) {
-      var flag = false;
-      _.forEach(lotItem, function (value, key) {
-        if (key === timeField) {
-          value = DateFormatService.formatDateWithLocale(value);
-        }
-        if (checkValueContains(value, filterText)) {
-          flag = true;
-        }
-      });
-      return flag;
-    });
-  }
-
-  function checkValueContains(value, filterText) {
-    return (value + "").toLowerCase().indexOf(filterText.toLowerCase()) > -1;
-  }
-
-  function isTimestampValid(dateString) {
-    var minDate = new Date('1970-01-01 00:00:01');
-    var maxDate = new Date('2038-01-19 03:14:07');
-    var date = new Date(dateString);
-    return date > minDate && date < maxDate;
   }
 
   function formatOverStockList(overStockList) {
