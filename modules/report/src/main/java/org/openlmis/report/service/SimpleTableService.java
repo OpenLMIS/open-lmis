@@ -80,7 +80,7 @@ public class SimpleTableService {
         if (CollectionUtils.isEmpty(overStockProduct.getLotList())) {
             return null;
         }
-        CMMEntry cmmEntry = cmmEntryMap.get(overStockProduct.getProductCode());
+        CMMEntry cmmEntry = cmmEntryMap.get(getCmmEntryMapKey(overStockProduct.getProductCode(), overStockProduct.getFacilityId().toString()));
         if (null == cmmEntry || null == cmmEntry.getCmmValue()) {
             return null;
         }
@@ -112,9 +112,13 @@ public class SimpleTableService {
 
         Map<String, CMMEntry> cmmEntryMap = new HashMap<>();
         for (CMMEntry cmmEntry : CMMEntryList) {
-            cmmEntryMap.put(cmmEntry.getProductCode(), cmmEntry);
+            cmmEntryMap.put(getCmmEntryMapKey(cmmEntry.getProductCode(), cmmEntry.getFacilityId().toString()), cmmEntry);
         }
         return cmmEntryMap;
+    }
+
+    private String getCmmEntryMapKey(String productCode, String facilityId) {
+        return String.format("%s-%s", productCode, facilityId);
     }
 
 
