@@ -215,10 +215,17 @@ label.short {
   }
 }
 
-body::-webkit-scrollbar {
-  display: none;
+::-webkit-scrollbar {
+  width:10px;
 }
-
-body {
-  -ms-overflow-style: none;
+::-webkit-scrollbar-track {
+  -webkit-box-shadow:inset006pxrgba(0,0,0,0.3);
+  border-radius:10px;
+}
+::-webkit-scrollbar-thumb {
+  background:rgba(0,0,0,0.1);
+  -webkit-box-shadow:inset006pxrgba(0,0,0,0.5);
+}
+::-webkit-scrollbar-thumb:window-inactive {
+  background:rgba(255,0,0,0.4);
 }
