@@ -55,51 +55,51 @@ function OverStockReportController($scope, $controller, $filter, OverStockProduc
     );
   };
 
-  $scope.groupSort = function() {
-    if ($scope.sortType) {
-      return _.includes(sortList, $scope.sortType) ?
-        getSortByNestedObject() :
-        $scope.filterList = $filter('orderBy')($scope.filterList, $scope.sortType, $scope.sortReverse);
+  $scope.groupSort = function(filterList, sortType, sortReverse, sortList) {
+    if (sortType) {
+      return _.includes(sortList, sortType) ?
+        getSortByNestedObject(filterList, sortType, sortReverse) :
+        $filter('orderBy')($scope.filterList, sortType, sortReverse);
     }
-    return $scope.filterList;
+    return filterList;
   };
 
+  var sortList = ['lotNumber', 'expiryDate', 'stockOnHandOfLot'];
   $scope.filterAndSort = function () {
-    $scope.search();
-    $scope.groupSort();
+    $scope.filterList = $scope.search($scope.overStockList, $scope.filterText, "lotList", "expiryDate");
+    $scope.filterList = $scope.groupSort($scope.filterList, $scope.sortType, $scope.sortReverse, sortList);
     $scope.formattedOverStockList = formatOverStockList($scope.filterList);
-  };
 
-  $scope.search = function () {
-    $scope.filterList = _.filter($scope.overStockList, function (item) {
-      return checkField(item);
+  };
+  $scope.search = function (overStockList, filterText, specialType, timeType) {
+    return _.filter(overStockList, function (item) {
+      return checkField(item, filterText, specialType, timeType);
     });
-  };
 
+  };
   function formatOverStockProductListTime(overStockList) {
     return _.map(overStockList, function (overStockItem) {
       overStockItem.cmm = toFixedNumber(overStockItem.cmm);
       overStockItem.mos = toFixedNumber(overStockItem.mos);
       return overStockItem;
     });
-  }
 
+  }
   function onLoadScrollEvent() {
     var fixedBodyDom = document.getElementById("fixed-body");
     fixedBodyDom.onscroll = function () {
       var fixedBodyDomLeft = this.scrollLeft;
       document.getElementById("fixed-header").scrollLeft = fixedBodyDomLeft;
     };
+
   }
 
-  var sortList = ['lotNumber', 'expiryDate', 'stockOnHandOfLot'];
-
-  function getSortByNestedObject() {
-    $scope.filterList = _.sortBy(sortLotItem($scope.filterList, $scope.sortType), function (o) {
-      return o.lotList[0][$scope.sortType];
+  function getSortByNestedObject(filterList, sortType, sortReverse) {
+    filterList = _.sortBy(sortLotItem(filterList, sortType), function (o) {
+      return o.lotList[0][sortType];
     });
-    return $scope.sortReverse ? $scope.filterList.reverse() :
-      $scope.filterList;
+    return sortReverse ? filterList.reverse() :
+      filterList;
   }
 
   function sortLotItem(data, sortType) {
@@ -112,27 +112,27 @@ function OverStockReportController($scope, $controller, $filter, OverStockProduc
     });
   }
 
-  function checkField(item) {
+  function checkField(item, filterText, specialType, timeType) {
     var flag = false;
     _.forEach(item, function (value, key) {
-      if (key !== "lotList" && checkValueContains(value)) {
+      if (key !== specialType && checkValueContains(value, filterText)) {
         flag = true;
       }
-      if (key === "lotList" && checkLotItemInclude(value)) {
+      if (key === specialType && checkLotItemInclude(value, timeType, filterText)) {
         flag = true;
       }
     });
     return flag;
   }
 
-  function checkLotItemInclude(lotLists) {
-    return _.find(lotLists, function (lotItem) {
+  function checkLotItemInclude(field, timeField, filterText) {
+    return _.find(field, function (lotItem) {
       var flag = false;
       _.forEach(lotItem, function (value, key) {
-        if (key === "expiryDate") {
+        if (key === timeField) {
           value = DateFormatService.formatDateWithLocale(value);
         }
-        if (checkValueContains(value)) {
+        if (checkValueContains(value, filterText)) {
           flag = true;
         }
       });
@@ -140,8 +140,8 @@ function OverStockReportController($scope, $controller, $filter, OverStockProduc
     });
   }
 
-  function checkValueContains(value) {
-    return (value + "").toLowerCase().indexOf($scope.filterText.toLowerCase()) > -1;
+  function checkValueContains(value, filterText) {
+    return (value + "").toLowerCase().indexOf(filterText.toLowerCase()) > -1;
   }
 
   function isTimestampValid(dateString) {
