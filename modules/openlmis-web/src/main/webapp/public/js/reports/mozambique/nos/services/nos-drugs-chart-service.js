@@ -416,15 +416,15 @@ services.factory('NosDrugsChartService', function ($http, $filter, $q, $timeout,
     var number = 0;
     if (isFacility) {
       _.each(level, function (item) {
-        content += item + ",";
+        content += item + ", ";
       });
     } else {
       _.each(level, function (value, key) {
-        content += key + "-" + value.length + ",";
+        content += key + ":" + value.length + ", ";
         number += value.length;
       });
     }
-    result = getStatusNumber(level, number) + getReportPercentage(percentage) + content.slice(0, -1);
+    result = getStatusNumber(level, number) + getReportPercentage(percentage) + content.slice(0, -2);
     return result;
   }
 
