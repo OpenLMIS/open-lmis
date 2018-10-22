@@ -416,7 +416,7 @@ services.factory('NosDrugsChartService', function ($http, $filter, $q, $timeout,
     var number = 0;
     if (isFacility) {
       _.each(level, function (item) {
-        content += item;
+        content += item + ",";
       });
     } else {
       _.each(level, function (value, key) {
