@@ -66,22 +66,30 @@ function RapidTestReportController($scope, $controller, CubesGenerateCutParamsSe
       formatted_name: messageService.get('report.header.total'),
       CONSUME_HIVDETERMINE: 0,
       POSITIVE_HIVDETERMINE: 0,
+      UNJUSTIFIED_HIVDETERMINE: 0,
       CONSUME_HIVUNIGOLD: 0,
       POSITIVE_HIVUNIGOLD: 0,
+      UNJUSTIFIED_HIVUNIGOLD: 0,
       CONSUME_SYPHILLIS: 0,
       POSITIVE_SYPHILLIS: 0,
+      UNJUSTIFIED_SYPHILLIS: 0,
       CONSUME_MALARIA: 0,
-      POSITIVE_MALARIA: 0
+      POSITIVE_MALARIA: 0,
+      UNJUSTIFIED_MALARIA: 0
     };
     $scope.totalValues = $scope.rapidTestReportData.reduce(function (a, b) {
       total.CONSUME_HIVDETERMINE = parse(a.CONSUME_HIVDETERMINE) + parse(b.CONSUME_HIVDETERMINE);
       total.POSITIVE_HIVDETERMINE = parse(a.POSITIVE_HIVDETERMINE) + parse(b.POSITIVE_HIVDETERMINE);
+      total.UNJUSTIFIED_HIVDETERMINE = parse(a.UNJUSTIFIED_HIVDETERMINE) + parse(b.UNJUSTIFIED_HIVDETERMINE);
       total.CONSUME_HIVUNIGOLD = parse(a.CONSUME_HIVUNIGOLD) + parse(b.CONSUME_HIVUNIGOLD);
       total.POSITIVE_HIVUNIGOLD = parse(a.POSITIVE_HIVUNIGOLD) + parse(b.POSITIVE_HIVUNIGOLD);
+      total.UNJUSTIFIED_HIVUNIGOLD = parse(a.UNJUSTIFIED_HIVUNIGOLD) + parse(b.UNJUSTIFIED_HIVUNIGOLD);
       total.CONSUME_SYPHILLIS = parse(a.CONSUME_SYPHILLIS) + parse(b.CONSUME_SYPHILLIS);
       total.POSITIVE_SYPHILLIS = parse(a.POSITIVE_SYPHILLIS) + parse(b.POSITIVE_SYPHILLIS);
+      total.UNJUSTIFIED_SYPHILLIS = parse(a.UNJUSTIFIED_SYPHILLIS) + parse(b.UNJUSTIFIED_SYPHILLIS);
       total.CONSUME_MALARIA = parse(a.CONSUME_MALARIA) + parse(b.CONSUME_MALARIA);
       total.POSITIVE_MALARIA = parse(a.POSITIVE_MALARIA) + parse(b.POSITIVE_MALARIA);
+      total.UNJUSTIFIED_MALARIA = parse(a.UNJUSTIFIED_MALARIA) + parse(b.UNJUSTIFIED_MALARIA);
       return total;
     }, total);
   };
@@ -101,12 +109,16 @@ function RapidTestReportController($scope, $controller, CubesGenerateCutParamsSe
       return regex.test(entry.formatted_name) ||
         regex.test(entry.CONSUME_HIVDETERMINE) ||
         regex.test(entry.POSITIVE_HIVDETERMINE) ||
+        regex.test(entry.UNJUSTIFIED_HIVDETERMINE) ||
         regex.test(entry.CONSUME_HIVUNIGOLD) ||
         regex.test(entry.POSITIVE_HIVUNIGOLD) ||
+        regex.test(entry.UNJUSTIFIED_HIVUNIGOLD) ||
         regex.test(entry.CONSUME_SYPHILLIS) ||
         regex.test(entry.POSITIVE_SYPHILLIS) ||
+        regex.test(entry.UNJUSTIFIED_SYPHILLIS) ||
         regex.test(entry.CONSUME_MALARIA) ||
-        regex.test(entry.POSITIVE_MALARIA);
+        regex.test(entry.POSITIVE_MALARIA) ||
+        regex.test(entry.UNJUSTIFIED_MALARIA);
     };
   };
 
