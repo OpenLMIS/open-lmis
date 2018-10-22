@@ -218,22 +218,23 @@ app.run(function ($rootScope, messageService) {
     $rootScope.$apply();
   };
 
-  window.applicationCache.addEventListener('progress', function () {
-    setState("progress");
-  });
+  if (window.applicationCache) {
+    window.applicationCache.addEventListener('progress', function () {
+      setState("progress");
+    });
 
-  window.applicationCache.addEventListener('error', function () {
-    setState("error");
-  });
+    window.applicationCache.addEventListener('error', function () {
+      setState("error");
+    });
 
-  window.applicationCache.addEventListener('cached', function () {
-    setState("cached");
-  });
+    window.applicationCache.addEventListener('cached', function () {
+      setState("cached");
+    });
 
-  window.applicationCache.addEventListener('updateready', function () {
-    setState("cached");
-  });
-
+    window.applicationCache.addEventListener('updateready', function () {
+      setState("cached");
+    });
+  }
 });
 
 function isUndefined(value) {
