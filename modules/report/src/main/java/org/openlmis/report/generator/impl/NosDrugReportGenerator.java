@@ -418,90 +418,110 @@ public class NosDrugReportGenerator extends AbstractReportModelGenerator {
 
     public static class StockStatusContainer {
 
+        private static Map<String, String> map = new HashMap<>();
+
         String date;
         String regionName;
+        String highLevelRegionName;
         StockStatusStat overStock = new StockStatusStat(StockOnHandStatus.OVER_STOCK.getDescription());
         StockStatusStat lowStock = new StockStatusStat(StockOnHandStatus.LOW_STOCK.getDescription());
         StockStatusStat regularStock = new StockStatusStat(StockOnHandStatus.REGULAR_STOCK.getDescription());
         StockStatusStat stockOut = new StockStatusStat(StockOnHandStatus.STOCK_OUT.getDescription());
 
+        static {
+            map.put("district", "province");
+            map.put("facility", "district");
+        }
+
         public StockStatusContainer(String date, String regionName) {
             this.date = date;
             this.regionName = regionName;
+            this.highLevelRegionName = map.get(regionName);
         }
 
         public void update(Map<String, Object> map) {
-            String region = map.get(regionName).toString();
+            String facility = map.get("facility").toString();
+            String highLevelRegion = null != highLevelRegionName ?
+                    map.get(highLevelRegionName).toString() : "lowLevelRegion";
             Map<String, Object> info = (Map<String, Object>) map.get(date);
             StockOnHandStatus status = (StockOnHandStatus)info.get("status");
             switch (status) {
                 case LOW_STOCK:
-                    update(lowStock, region);
+                    update(lowStock, highLevelRegion, facility);
                     break;
                 case OVER_STOCK:
-                    update(overStock, region);
+                    update(overStock, highLevelRegion, facility);
                     break;
                 case REGULAR_STOCK:
-                    update(regularStock, region);
+                    update(regularStock, highLevelRegion, facility);
                     break;
                 case STOCK_OUT:
-                    update(stockOut, region);
+                    update(stockOut, highLevelRegion, facility);
                     break;
                     default:
             }
         }
 
-        private void update(StockStatusStat stockStatusStat, String region) {
-            stockStatusStat.regions.add(region);
+        private void update(StockStatusStat stockStatusStat, String highLevelRegion, String facility) {
+            if (stockStatusStat.subRegionMap.containsKey(highLevelRegion)) {
+                stockStatusStat.subRegionMap.get(highLevelRegion).add(facility);
+            } else {
+                Set<String> facilities = new HashSet<>();
+                facilities.add(facility);
+                stockStatusStat.subRegionMap.put(highLevelRegion, facilities);
+            }
         }
 
         public Map<String, Object> result() {
-            for (String region : overStock.regions) {
-                lowStock.remove(region);
-                regularStock.remove(region);
-                stockOut.remove(region);
-            }
-
             Map<String, Object> map = new HashMap<>();
-            map.put(StockOnHandStatus.OVER_STOCK.getDescription(), subMap(overStock));
-            map.put(StockOnHandStatus.LOW_STOCK.getDescription(), subMap(lowStock));
-            map.put(StockOnHandStatus.REGULAR_STOCK.getDescription(), subMap(regularStock));
-            map.put(StockOnHandStatus.STOCK_OUT.getDescription(), subMap(stockOut));
+            map.put(StockOnHandStatus.OVER_STOCK.getDescription(), subRegions(overStock));
+            map.put(StockOnHandStatus.LOW_STOCK.getDescription(), subRegions(lowStock));
+            map.put(StockOnHandStatus.REGULAR_STOCK.getDescription(), subRegions(regularStock));
+            map.put(StockOnHandStatus.STOCK_OUT.getDescription(), subRegions(stockOut));
             return map;
         }
 
-        private Map<String, Object> subMap(StockStatusStat stockStatusStat) {
+        private Object subRegions(StockStatusStat stockStatusStat) {
             Map<String, Object> subMap = new HashMap<>();
-
             int percentage = (int)Math.round(stockStatusStat.size() * 100.0 / total());
             subMap.put("percentage", percentage);
-            subMap.put(regionName, stockStatusStat.regions);
+            if (null == highLevelRegionName) {
+                subMap.put(regionName, stockStatusStat.allFacilities());
+            } else {
+                subMap.put(regionName, stockStatusStat.result());
+            }
             return subMap;
         }
 
         private int total() {
-            Set<String> total = new HashSet<>();
-            total.addAll(overStock.regions);
-            total.addAll(lowStock.regions);
-            total.addAll(regularStock.regions);
-            total.addAll(stockOut.regions);
-            return total.size();
+            return overStock.size() + lowStock.size() + regularStock.size() + stockOut.size();
         }
     }
 
     public static class StockStatusStat{
-        private Set<String> regions = new HashSet<>();
+        private Map<String, Set<String>> subRegionMap = new HashMap<>();
         private String description;
         public StockStatusStat(String desc) {
             description = desc;
         }
         public int size() {
-            return regions.size();
+            return allFacilities().size();
         }
-        public void remove(String region) {
-            if (regions.contains(region)) {
-                regions.remove(region);
+
+        public List<String> allFacilities() {
+            List<String> list = new ArrayList<>();
+            for (Map.Entry<String, Set<String>> entry : subRegionMap.entrySet()) {
+                list.addAll(entry.getValue());
             }
+            return list;
+        }
+
+        public Map<String, List<String>> result() {
+            Map<String, List<String>> map = new HashMap<>();
+            for (Map.Entry<String, Set<String>> entry : subRegionMap.entrySet()) {
+                map.put(entry.getKey(), new ArrayList<>(entry.getValue()));
+            }
+            return map;
         }
     }
 }
