@@ -140,45 +140,32 @@ services.factory('NosDrugsChartService', function ($http, $filter, $q, $timeout,
 
       return {
         nosData: nosDrugItem,
-        date: dateKey + " " +messageService.get('report.tracer.week') + moment(dateKey, "YYYY-MM-DD").isoWeek(),
+        date: dateKey + " " + messageService.get('report.tracer.week') + moment(dateKey, "YYYY-MM-DD").isoWeek(),
         lowStockValue: generateValue(nosDrugItem[dateKey], "lowStock"),
         overStockValue: generateValue(nosDrugItem[dateKey], "overStock"),
         regularStockValue: generateValue(nosDrugItem[dateKey], "regularStock"),
-        stockOutValue: generateValue(nosDrugItem[dateKey], "stockOut"),
+        stockOutValue: generateValue(nosDrugItem[dateKey], "stockOut")
       };
     });
   }
 
   function generateValue(drugItem, type) {
-    if (!provinceGloble) {
-      return getValueWithPlaceLevel(drugItem, type, "province", false);
-    } else if (!districtGloble) {
-      return getValueWithPlaceLevel(drugItem, type, "district", false);
-    } else {
-      return getValueWithPlaceLevel(drugItem, type, "", true);
-    }
-  }
-
-  function getValueWithPlaceLevel(drugItem, type, placeLevel, isFacility) {
     switch (type) {
       case "lowStock":
-        return getNosDrugStatusValue(drugItem.lowStock, placeLevel, isFacility);
+        return getNosDrugStatusValue(drugItem.lowStock);
       case "overStock":
-        return getNosDrugStatusValue(drugItem.overStock, placeLevel, isFacility);
+        return getNosDrugStatusValue(drugItem.overStock);
       case "regularStock":
-        return getNosDrugStatusValue(drugItem.regularStock, placeLevel, isFacility);
+        return getNosDrugStatusValue(drugItem.regularStock);
       case "stockOut":
-        return getNosDrugStatusValue(drugItem.stockOut, placeLevel, isFacility);
+        return getNosDrugStatusValue(drugItem.stockOut);
       default :
         return null;
     }
   }
 
-  function getNosDrugStatusValue(item, placeLevel, isFacility) {
-    if (isFacility) {
-      return item.percentage === 0 ? null : item.percentage;
-    }
-    return item[placeLevel].length === 0 ? null : item[placeLevel].length;
+  function getNosDrugStatusValue(item) {
+    return item.percentage === 0 ? null : item.percentage;
   }
 
   function getNosDrugItemsPromise(province, district, startTime, endTime, selectedDrugCode) {
@@ -310,7 +297,7 @@ services.factory('NosDrugsChartService', function ($http, $filter, $q, $timeout,
         enabled: true,
         categoryBalloonEnabled: false,
         cursorAlpha: 0,
-        oneBalloonOnly: false
+        oneBalloonOnly: true
       },
       balloon: {
         textAlign: "left",
@@ -354,6 +341,13 @@ services.factory('NosDrugsChartService', function ($http, $filter, $q, $timeout,
           legendColor: "#6610c7",
         }
       ],
+      valueAxes: [
+        {
+          stackType: "100%",
+          unit: "%",
+          color: "#999999"
+        }
+      ],
       legend: {
         enabled: true,
         align: "center",
@@ -371,18 +365,14 @@ services.factory('NosDrugsChartService', function ($http, $filter, $q, $timeout,
 
         chart.chartDiv.style.opacity = 0.5;
       }
-
-      if (provinceGloble && districtGloble) {
-        chart.valueAxes[0].stackType = "100%";
-        chart.valueAxes[0].unit = "%";
-        chart.valueAxes[0].color = "#999999";
-        chart.chartCursor.oneBalloonOnly = true;
-      }
-
       chart.validateNow();
     };
 
     AmCharts.checkData(chart);
+  }
+
+  function removeWeekFormData(drugContext) {
+    return drugContext.nosData[drugContext.date.split(" ")[0]];
   }
 
   function generateBalloonInfo(e) {
@@ -393,7 +383,7 @@ services.factory('NosDrugsChartService', function ($http, $filter, $q, $timeout,
       return null;
     }
 
-    var originalNosDrugData = drugContext.nosData[drugContext.date.split(" ")[0]];
+    var originalNosDrugData = removeWeekFormData(drugContext);
 
     if (!provinceGloble) {
       return getBalloonInfo(originalNosDrugData, graph, "province");
@@ -404,31 +394,52 @@ services.factory('NosDrugsChartService', function ($http, $filter, $q, $timeout,
     }
   }
 
-  function getBalloonInfo(originalNosDrugData, graph, type) {
-    var tag = getTitle(graph.title);
-    switch (type) {
-      case "facility":
-        return messageService.get('report.tracer.health.facility.number') + ": <span style='font-weight: bold'>" + originalNosDrugData[tag].facility.length + "</span><br>" +
-          messageService.get('report.tracer.percentage') + ": <span style='font-weight: bold'>" + originalNosDrugData[tag].percentage + "%</span>" +
-          "<hr style='margin: 0'>" + generateContent(originalNosDrugData[tag].facility);
-      case "district":
-        return messageService.get('report.tracer.health.district.number') + ": <span style='font-weight: bold'>" + originalNosDrugData[tag].district.length + "</span><br>" +
-          "<hr style='margin: 0'>" + generateContent(originalNosDrugData[tag].district);
-      case "province":
-        return messageService.get('report.tracer.health.province.number') + ": <span style='font-weight: bold'>" + originalNosDrugData[tag].province.length + "</span><br>" +
-          "<hr style='margin: 0'>" + generateContent(originalNosDrugData[tag].province);
-    }
-  }
-
-  function getTitle(title) {
+  function getTitleFromDictionary(title) {
     return status[title];
   }
 
-  function generateContent(level) {
-    var names = '';
-    return _.each(level, function (item) {
-      names += item;
-    });
+  function getReportPercentage(percentage) {
+    return messageService.get('report.tracer.percentage') + ": <span style='font-weight: bold'>" + percentage + "%</span>";
+  }
+
+  function getStatusNumber(nosDrugItem, number) {
+    var result = messageService.get('report.tracer.health.facility.number');
+    if (number) {
+      return result + ": <span style='font-weight: bold'>" + number + "</span><br>";
+    }
+    return result + ": <span style='font-weight: bold'>" + nosDrugItem.length + "</span><br>";
+  }
+
+  function generateContent(level, percentage, isFacility) {
+    var result;
+    var content = "<hr style=\'margin: 0\'>";
+    var number;
+    if (isFacility) {
+      _.each(level, function (item) {
+        content += item;
+      });
+    } else {
+      _.each(level, function (value, key) {
+        content += key + "-" + value.length + " ";
+        number = 0;
+        number += value.length;
+      });
+    }
+    result = getStatusNumber(level, number) + getReportPercentage(percentage) + content;
+    return result;
+  }
+
+  function getBalloonInfo(originalNosDrugData, graph, type) {
+    var tag = getTitleFromDictionary(graph.title);
+    var nosDrugItem = originalNosDrugData[tag];
+    switch (type) {
+      case "facility":
+        return generateContent(nosDrugItem.facility, nosDrugItem.percentage, true);
+      case "district":
+        return generateContent(nosDrugItem.district, nosDrugItem.percentage, false);
+      case "province":
+        return generateContent(nosDrugItem.province, nosDrugItem.percentage, false);
+    }
   }
 
   function handleLegendClick(evt) {
