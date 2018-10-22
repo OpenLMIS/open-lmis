@@ -418,31 +418,21 @@ public class NosDrugReportGenerator extends AbstractReportModelGenerator {
 
     public static class StockStatusContainer {
 
-        private static Map<String, String> map = new HashMap<>();
-
         String date;
         String regionName;
-        String highLevelRegionName;
         StockStatusStat overStock = new StockStatusStat(StockOnHandStatus.OVER_STOCK.getDescription());
         StockStatusStat lowStock = new StockStatusStat(StockOnHandStatus.LOW_STOCK.getDescription());
         StockStatusStat regularStock = new StockStatusStat(StockOnHandStatus.REGULAR_STOCK.getDescription());
         StockStatusStat stockOut = new StockStatusStat(StockOnHandStatus.STOCK_OUT.getDescription());
 
-        static {
-            map.put("district", "province");
-            map.put("facility", "district");
-        }
-
         public StockStatusContainer(String date, String regionName) {
             this.date = date;
             this.regionName = regionName;
-            this.highLevelRegionName = map.get(regionName);
         }
 
         public void update(Map<String, Object> map) {
             String facility = map.get("facility").toString();
-            String highLevelRegion = null != highLevelRegionName ?
-                    map.get(highLevelRegionName).toString() : "lowLevelRegion";
+            String highLevelRegion = map.get(regionName).toString();
             Map<String, Object> info = (Map<String, Object>) map.get(date);
             StockOnHandStatus status = (StockOnHandStatus)info.get("status");
             switch (status) {
@@ -485,7 +475,7 @@ public class NosDrugReportGenerator extends AbstractReportModelGenerator {
             Map<String, Object> subMap = new HashMap<>();
             int percentage = (int)Math.round(stockStatusStat.size() * 100.0 / total());
             subMap.put("percentage", percentage);
-            if (null == highLevelRegionName) {
+            if (StringUtils.equalsIgnoreCase("facility", regionName)) {
                 subMap.put(regionName, stockStatusStat.allFacilities());
             } else {
                 subMap.put(regionName, stockStatusStat.result());
