@@ -404,7 +404,7 @@ services.factory('NosDrugsChartService', function ($http, $filter, $q, $timeout,
 
   function getStatusNumber(nosDrugItem, number) {
     var result = messageService.get('report.tracer.health.facility.number');
-    if (number) {
+    if (number !== 0) {
       return result + ": <span style='font-weight: bold'>" + number + "</span><br>";
     }
     return result + ": <span style='font-weight: bold'>" + nosDrugItem.length + "</span><br>";
@@ -413,19 +413,18 @@ services.factory('NosDrugsChartService', function ($http, $filter, $q, $timeout,
   function generateContent(level, percentage, isFacility) {
     var result;
     var content = "<hr style=\'margin: 0\'>";
-    var number;
+    var number = 0;
     if (isFacility) {
       _.each(level, function (item) {
         content += item;
       });
     } else {
       _.each(level, function (value, key) {
-        content += key + "-" + value.length + " ";
-        number = 0;
+        content += key + "-" + value.length + ",";
         number += value.length;
       });
     }
-    result = getStatusNumber(level, number) + getReportPercentage(percentage) + content;
+    result = getStatusNumber(level, number) + getReportPercentage(percentage) + content.slice(0, -1);
     return result;
   }
 
