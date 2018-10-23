@@ -82,7 +82,8 @@ function StockMovementReportController($scope, $routeParams, Facility, $http, Cu
       {dimension: "facility", values: [$scope.facilityCode]}
     ];
     
-    if ($scope.selectedPeriodTag) {
+    if ($scope.selectedPeriodTag ||
+      ($scope.dateRange.startTime && $scope.dateRange.endTime)) {
       cuts.push({
         dimension: "movementdate",
         values: [$filter('date')($scope.dateRange.startTime, DATE_FORMAT) + '-' +
