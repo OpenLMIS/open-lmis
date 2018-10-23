@@ -345,11 +345,15 @@ public class NosDrugReportGenerator extends AbstractReportModelGenerator {
                     Map<String, Object> tmpValue = new HashMap<>();
                     tmpValue.put("value", kv.getValue());
                     Map<String, Object> styleMap = new HashMap<>();
-                    StockOnHandStatus stockOnHandStatus = stockStatusService.getStockOnHandStatus(cmm,
-                            NumberUtils.toLong(kv.getValue()), productCode);
-                    styleMap.put("color", stockOnHandStatus.getColor());
-                    tmpValue.put("style", styleMap);
-                    tmpValue.put("status", stockOnHandStatus);
+                    if (!StringUtils.equalsIgnoreCase(kv.getValue(), "N/A")) {
+                        StockOnHandStatus stockOnHandStatus = stockStatusService.getStockOnHandStatus(cmm,
+                                NumberUtils.toLong(kv.getValue()), productCode);
+                        styleMap.put("color", stockOnHandStatus.getColor());
+                        tmpValue.put("style", styleMap);
+                        tmpValue.put("status", stockOnHandStatus);
+                    } else {
+                        tmpValue.put("status", StockOnHandStatus.NOT_EXIST);
+                    }
                     obj.put(kv.getKey(), tmpValue);
                 } else {
                     obj.put(kv.getKey(), kv.getValue());

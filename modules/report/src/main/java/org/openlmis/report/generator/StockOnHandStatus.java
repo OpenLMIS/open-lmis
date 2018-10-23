@@ -15,7 +15,9 @@ public enum StockOnHandStatus {
             new XSSFColor(new java.awt.Color(245,33,45))),
 
     OVER_STOCK(IndexedColors.VIOLET.getIndex(), "stock.cmm.over.stock", "overStock",
-            new XSSFColor(new java.awt.Color(187,149,227)));
+            new XSSFColor(new java.awt.Color(187,149,227))),
+
+    NOT_EXIST((short)-1, null, null, null);
 
     private short colorIndex;
 
