@@ -1,6 +1,6 @@
 package org.openlmis.report.generator.impl;
 
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.apache.log4j.Logger;
 import org.openlmis.core.utils.DateUtil;
@@ -12,26 +12,26 @@ import org.openlmis.report.service.SimpleTableService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.text.DecimalFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-@Component(value = "overStockProductReport")
-public class OverStockProductReportGenerator extends AbstractReportModelGenerator {
+@Component(value="singleStockOnHand")
+public class StockOnHandForSingleProductReportGenerator extends AbstractReportModelGenerator {
 
     private static Logger logger = Logger.getLogger(OverStockProductReportGenerator.class);
 
-    @Autowired
-    private SimpleTableService simpleTableService;
-
     private final static String KEY_QUERY_RESULT = "KEY_QUERY_RESULT";
 
-    private final static String CMM_COLUMN = "8";
+    private final static String MOS_COLUMN = "6";
 
-    private final static String MOS_COLUMN = "9";
+    private final static String CMM_COLUMN = "7";
+
+    @Autowired
+    private SimpleTableService simpleTableService;
 
     @Override
     protected Map<String, Object> getQueryResult(Map<Object, Object> paraMap) {
@@ -39,17 +39,23 @@ public class OverStockProductReportGenerator extends AbstractReportModelGenerato
         filterCriteria.setEndTime(DateUtil.parseDate(paraMap.get("endTime").toString()));
         filterCriteria.setProvinceId(Integer.parseInt(paraMap.get("provinceId").toString()));
         try {
-            if (null != paraMap.get("districtId")) {
+            if (null != paraMap.get("districtId")
+                    && StringUtils.isNotEmpty(paraMap.get("districtId").toString())) {
                 filterCriteria.setDistrictId(Integer.parseInt(paraMap.get("districtId").toString()));
             }
-            if (null != paraMap.get("facilityId")) {
+            if (null != paraMap.get("facilityId")
+                    && StringUtils.isNotEmpty(paraMap.get("facilityId").toString())) {
                 filterCriteria.setFacilityId(Integer.parseInt(paraMap.get("facilityId").toString()));
+            }
+            if (null != paraMap.get("productCode")
+                    && StringUtils.isNotEmpty(paraMap.get("productCode").toString())) {
+                filterCriteria.setProductCode(paraMap.get("productCode").toString());
             }
         }
         catch (Throwable e) {
             logger.error(ExceptionUtils.getStackTrace(e));
         }
-        List<StockProductDto> stockProductDtoList = simpleTableService.getOverStockProductReport(filterCriteria);
+        List<StockProductDto> stockProductDtoList = simpleTableService.getStockProductData(filterCriteria);
 
         Map<String, Object> result = new HashMap<>();
         result.put(KEY_QUERY_RESULT, stockProductDtoList);
@@ -57,41 +63,35 @@ public class OverStockProductReportGenerator extends AbstractReportModelGenerato
     }
 
     @Override
-    protected Object getReportHeaders(Map<Object, Object> paraMap, Map<String, Object> cubeQueryResult) {
+    protected Object getReportHeaders(Map<Object, Object> paraMap, Map<String, Object> queryResult) {
         Map<String, String> headers = new LinkedHashMap<>();
-        headers.put("province", getMessage("report.header.province"));
-        headers.put("district", getMessage("report.header.district"));
-        if(null != paraMap.get("districtId")){
-            headers.put("facility", getMessage("report.header.facility"));
-        }
-        headers.put("drugCode", getMessage("report.header.drug.code"));
+        headers.put("facility", getMessage("report.header.facility"));
         headers.put("drugName", getMessage("report.header.drug.name"));
         headers.put("lot", getMessage("report.header.lot"));
+        headers.put("sohOfLot", getMessage("report.header.sohoflot"));
+        headers.put("totalSoh", getMessage("report.header.sohoflot.total"));
         headers.put("expiryDate", getMessage("report.header.expiry.date"));
-        headers.put("soh", getMessage("report.header.stock.on.hand"));
-        if(null != paraMap.get("districtId")){
-            headers.put("cmm", getMessage("report.header.cmm"));
-            headers.put("MoS", getMessage("report.header.MoS"));
-        }
+        headers.put("MoS", getMessage("report.estimated.consumption.month"));
+        headers.put("cmm", getMessage("report.header.cmm"));
         return headers;
     }
 
     @Override
     protected Object getReportContent(Map<Object, Object> paraMap, Map<String, Object> queryResult) {
-
         List<StockProductDto> stockProductDtoList = (List<StockProductDto>) queryResult.get(KEY_QUERY_RESULT);
         List<Map<String, Object>> content = new ArrayList<>();
         for (StockProductDto dto : stockProductDtoList) {
+            Date date = earliestExpiryDate(dto.getLotList());
             for (LotInfo lotinfo : dto.getLotList()) {
                 Map<String, Object> rowMap = new HashMap<>();
-                rowMap.put("province", dto.getProvinceName());
-                rowMap.put("district", dto.getDistrictName());
-                rowMap.put("drugCode", dto.getProductCode());
+                rowMap.put("facility", dto.getFacilityName());
                 rowMap.put("drugName", dto.getProductName());
                 rowMap.put("lot", lotinfo.getLotNumber());
+                rowMap.put("sohOfLot", lotinfo.getStockOnHandOfLot());
+                rowMap.put("totalSoh", dto.getSumStockOnHand());
 
                 Map<String, Object> tmpValue = new HashMap<>();
-                tmpValue.put("value", DateUtil.formatDate(lotinfo.getExpiryDate()));
+                tmpValue.put("value", DateUtil.formatDate(date));
                 Map<String, Object> styleMap = new HashMap<>();
                 styleMap.put("dataPattern", DateUtil.FORMAT_DATE_TIME);
                 styleMap.put("excelDataPattern", "m/d/yy");
@@ -99,12 +99,8 @@ public class OverStockProductReportGenerator extends AbstractReportModelGenerato
                 tmpValue.put("dataType", "date");
                 rowMap.put("expiryDate", tmpValue);
 
-                rowMap.put("soh", lotinfo.getStockOnHandOfLot().toString());
-                if(null != paraMap.get("districtId")){
-                    rowMap.put("facility", dto.getFacilityName());
-                    rowMap.put("cmm", getFormatDoubleValue(dto.getCmm()));
-                    rowMap.put("MoS", getFormatDoubleValue(dto.getMos()));
-                }
+                rowMap.put("MoS", getFormatDoubleValue(dto.getMos()));
+                rowMap.put("cmm", getFormatDoubleValue(dto.getCmm()));
                 content.add(rowMap);
             }
         }
@@ -112,29 +108,37 @@ public class OverStockProductReportGenerator extends AbstractReportModelGenerato
         return content;
     }
 
-    @Override
-    protected List<Map<String, String>> getReportMergedRegions(Map<Object, Object> paraMap, Map<String, Object> queryResult) {
-
-        if(null == paraMap.get("districtId") || StringUtils.isBlank(paraMap.get("districtId").toString())){
-            return null;
+    private Date earliestExpiryDate(List<LotInfo> lotInfos) {
+        Date max = null;
+        for (LotInfo lotInfo : lotInfos) {
+            if (null == max) {
+                max = lotInfo.getExpiryDate();
+            }
+            if (max.getTime() < lotInfo.getExpiryDate().getTime()) {
+                max = lotInfo.getExpiryDate();
+            }
         }
+        return max;
+    }
 
+    @Override
+    protected List<Map<String, String>> getReportMergedRegions(Map<Object, Object> paraMap,
+                                                               Map<String, Object> queryResult) {
         List<StockProductDto> stockProductDtoList = (List<StockProductDto>) queryResult.get(KEY_QUERY_RESULT);
         List<Map<String, String>> mergedRegions = new ArrayList<>();
         int index = 0;
         for (StockProductDto dto : stockProductDtoList) {
             int cmmSpan = dto.getLotList().size();
-            mergedRegions.add(createMergedRegion(String.valueOf(index + 1), String.valueOf(index + cmmSpan), CMM_COLUMN, CMM_COLUMN, getFormatDoubleValue(dto.getCmm())));
-            mergedRegions.add(createMergedRegion(String.valueOf(index + 1), String.valueOf(index + cmmSpan), MOS_COLUMN, MOS_COLUMN, getFormatDoubleValue(dto.getMos())));
+            mergedRegions.add(createMergedRegion(String.valueOf(index + 1), String.valueOf(index + cmmSpan),
+                    "4", "4", dto.getSumStockOnHand().toString()));
+            mergedRegions.add(createMergedRegion(String.valueOf(index + 1), String.valueOf(index + cmmSpan),
+                    "5", "5", earliestExpiryDate(dto.getLotList()).toString()));
+            mergedRegions.add(createMergedRegion(String.valueOf(index + 1), String.valueOf(index + cmmSpan),
+                    "6", "6", getFormatDoubleValue(dto.getMos())));
+            mergedRegions.add(createMergedRegion(String.valueOf(index + 1), String.valueOf(index + cmmSpan),
+                    "7", "7", getFormatDoubleValue(dto.getCmm())));
             index = index + cmmSpan;
         }
-
         return mergedRegions;
-    }
-
-
-    @Override
-    protected Object reportDataForFrontEnd(Map<Object, Object> paraMap) {
-        return null;
     }
 }

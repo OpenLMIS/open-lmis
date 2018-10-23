@@ -12,11 +12,12 @@ import java.util.Date;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class OverStockReportParam {
+public class StockReportParam {
     @RequiredParam
     private Date endTime;
 
     private Integer provinceId;
     private Integer districtId;
     private Integer facilityId;
+    private String productCode;
 }

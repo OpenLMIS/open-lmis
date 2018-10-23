@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -143,6 +144,21 @@ public abstract class AbstractReportModelGenerator {
         }
         Map<String, String> map = (Map<String, String>) paraMap.get(key1);
         return map.get(key2);
+    }
+
+    protected String getFormatDoubleValue(Double d) {
+        DecimalFormat formatter = new DecimalFormat("0.##");
+        return null != d ? formatter.format(d) : "";
+    }
+
+    protected Map<String, String> createMergedRegion(String firstRow, String lastRow, String firstCol, String lastCol, String value) {
+        Map<String, String> regionMap = new HashMap<>();
+        regionMap.put("firstRow", firstRow);
+        regionMap.put("lastRow", lastRow);
+        regionMap.put("firstCol", firstCol);
+        regionMap.put("lastCol", lastCol);
+        regionMap.put("mergedValue", value);
+        return regionMap;
     }
 
     protected Object reportDataForFrontEnd(Map<Object, Object> paraMap) {

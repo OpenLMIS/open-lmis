@@ -1,16 +1,16 @@
 package org.openlmis.report.model.dto;
 
 import lombok.*;
+import org.openlmis.report.generator.StockOnHandStatus;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class OverStockProductDto {
+public class StockProductDto {
     private Integer provinceId;
     private String provinceName;
     private Integer districtId;
@@ -24,9 +24,11 @@ public class OverStockProductDto {
     private Double cmm;
     private Double mos;
     private Boolean isHiv;
+    private Integer sumStockOnHand;
+    private StockOnHandStatus stockOnHandStatus;
 
-    public static OverStockProductDto of(ProductLotInfo lotInfo){
-        OverStockProductDto dto = new OverStockProductDto();
+    public static StockProductDto of(ProductLotInfo lotInfo){
+        StockProductDto dto = new StockProductDto();
 
         dto.setProvinceId(lotInfo.getProvinceId());
         dto.setProvinceName(lotInfo.getProvinceName());
@@ -41,7 +43,7 @@ public class OverStockProductDto {
         return dto;
     }
 
-    public static Integer calcSoH(List<LotInfo> lotList){
+    public Integer calcSoH(){
         Integer sumSoH = 0;
         for(LotInfo lot : lotList){
             sumSoH = sumSoH + lot.getStockOnHandOfLot();

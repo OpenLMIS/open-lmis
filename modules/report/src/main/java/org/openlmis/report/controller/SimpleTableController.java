@@ -30,9 +30,9 @@ import org.openlmis.core.utils.DateUtil;
 import org.openlmis.core.web.OpenLmisResponse;
 import org.openlmis.core.web.controller.BaseController;
 import org.openlmis.report.mapper.AppInfoMapper;
-import org.openlmis.report.model.dto.OverStockProductDto;
+import org.openlmis.report.model.dto.StockProductDto;
 import org.openlmis.report.model.dto.RequisitionDTO;
-import org.openlmis.report.model.params.OverStockReportParam;
+import org.openlmis.report.model.params.StockReportParam;
 import org.openlmis.report.model.params.RequisitionReportsParam;
 import org.openlmis.report.service.SimpleTableService;
 import org.slf4j.Logger;
@@ -97,8 +97,8 @@ public class SimpleTableController extends BaseController {
             @RequestParam(value = "districtId", required = false) Integer districtId,
             @RequestParam(value = "facilityId", required = false) Integer facilityId) {
 
-        OverStockReportParam filterCriteria = new OverStockReportParam(endTime, provinceId, districtId, facilityId);
-        List<OverStockProductDto> overStockProducts = simpleTableService.getOverStockProductReport(filterCriteria);
+        StockReportParam filterCriteria = new StockReportParam(endTime, provinceId, districtId, facilityId, null);
+        List<StockProductDto> overStockProducts = simpleTableService.getOverStockProductReport(filterCriteria);
         return OpenLmisResponse.response("rnr_list", overStockProducts);
     }
 

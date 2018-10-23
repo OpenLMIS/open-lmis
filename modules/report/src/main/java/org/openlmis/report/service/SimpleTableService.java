@@ -1,14 +1,13 @@
 package org.openlmis.report.service;
 
 import org.apache.commons.collections.CollectionUtils;
-import org.apache.commons.lang.StringUtils;
 import org.openlmis.core.repository.mapper.FacilityMapper;
 import org.openlmis.report.generator.StockOnHandStatus;
 import org.openlmis.report.mapper.ProductLotInfoMapper;
 import org.openlmis.report.mapper.RequisitionReportsMapper;
 import org.openlmis.report.model.dto.*;
 import org.openlmis.report.model.params.NonSubmittedRequisitionReportsParam;
-import org.openlmis.report.model.params.OverStockReportParam;
+import org.openlmis.report.model.params.StockReportParam;
 import org.openlmis.report.model.params.RequisitionReportsParam;
 import org.openlmis.stockmanagement.domain.CMMEntry;
 import org.openlmis.stockmanagement.repository.mapper.CMMMapper;
@@ -55,54 +54,66 @@ public class SimpleTableService {
         return requisitions;
     }
 
-
-    public List<OverStockProductDto> getOverStockProductReport(OverStockReportParam filterCriteria) {
-        List<OverStockProductDto> overStockProducts = new ArrayList<>();
+    public List<StockProductDto> getStockProductData(StockReportParam filterCriteria) {
+        List<StockProductDto> stockProducts = new ArrayList<>();
         List<ProductLotInfo> productLotInfos = productLotInfoMapper.getProductLotInfoList(filterCriteria);
         if (CollectionUtils.isEmpty(productLotInfos)) {
-            return overStockProducts;
+            return stockProducts;
         }
 
-        Map<String, OverStockProductDto> overStockProductDtoMap = overStockProductGroupBy(productLotInfos, filterCriteria);
+        Map<String, StockProductDto> stockProductDtoMap = stockProductGroupBy(productLotInfos);
         Map<String, CMMEntry> cmmEntryMap = getProductCmmMap(filterCriteria);
-        OverStockProductDto overStockProduct;
-        for (Map.Entry<String, OverStockProductDto> entry : overStockProductDtoMap.entrySet()) {
-            overStockProduct = entry.getValue();
-            overStockProduct = calcCmmAndSoh(overStockProduct, cmmEntryMap, filterCriteria);
-            if (null != overStockProduct) {
-                overStockProducts.add(overStockProduct);
+
+        StockProductDto stockProduct;
+        for (Map.Entry<String, StockProductDto> entry : stockProductDtoMap.entrySet()) {
+            stockProduct = entry.getValue();
+            stockProduct = calcCmmAndSoh(stockProduct, cmmEntryMap, filterCriteria);
+            if (null != stockProduct) {
+                stockProducts.add(stockProduct);
             }
         }
-        return overStockProducts;
+
+        return stockProducts;
     }
 
-    private OverStockProductDto calcCmmAndSoh(OverStockProductDto overStockProduct, Map<String, CMMEntry> cmmEntryMap, OverStockReportParam filterCriteria) {
-        if (CollectionUtils.isEmpty(overStockProduct.getLotList())) {
+    public List<StockProductDto> getOverStockProductReport(StockReportParam filterCriteria) {
+        return getStockProductsByStatus(filterCriteria, StockOnHandStatus.OVER_STOCK);
+    }
+
+    public List<StockProductDto> getStockProductsByStatus(StockReportParam filterCriteria,
+                                                          StockOnHandStatus stockOnHandStatus) {
+        List<StockProductDto> result = new ArrayList<>();
+        List<StockProductDto> stockProducts = getStockProductData(filterCriteria);
+        for (StockProductDto stockProductDto : stockProducts) {
+            if (stockProductDto.getStockOnHandStatus() == stockOnHandStatus) {
+                result.add(stockProductDto);
+            }
+        }
+        return result;
+    }
+
+    private StockProductDto calcCmmAndSoh(StockProductDto stockProduct, Map<String, CMMEntry> cmmEntryMap, StockReportParam filterCriteria) {
+        if (CollectionUtils.isEmpty(stockProduct.getLotList())) {
             return null;
         }
-        CMMEntry cmmEntry = cmmEntryMap.get(getCmmEntryMapKey(overStockProduct.getProductCode(), overStockProduct.getFacilityId().toString()));
+        CMMEntry cmmEntry = cmmEntryMap.get(getCmmEntryMapKey(stockProduct.getProductCode(), stockProduct.getFacilityId().toString()));
         if (null == cmmEntry || null == cmmEntry.getCmmValue()) {
             return null;
         }
-        Integer sumSoH = OverStockProductDto.calcSoH(overStockProduct.getLotList());
-        StockOnHandStatus status = stockStatusService.getStockOnHandStatus(cmmEntry.getCmmValue().longValue(), sumSoH, overStockProduct.getIsHiv());
-        if (!status.equals(StockOnHandStatus.OVER_STOCK)) {
-            return null;
-        }
-
-        if(null == filterCriteria.getDistrictId()){
-            return overStockProduct;
-        }
+        Integer sumSoH = stockProduct.calcSoH();
+        StockOnHandStatus status = stockStatusService.getStockOnHandStatus(cmmEntry.getCmmValue().longValue(), sumSoH, stockProduct.getIsHiv());
+        stockProduct.setStockOnHandStatus(status);
+        stockProduct.setSumStockOnHand(sumSoH);
 
         Double cmm = cmmEntry.getCmmValue().doubleValue();
-        overStockProduct.setCmm(Double.valueOf(cmm.doubleValue()));
+        stockProduct.setCmm(Double.valueOf(cmm.doubleValue()));
         if (0 != cmm) {
-            overStockProduct.setMos(sumSoH / cmm);
+            stockProduct.setMos(sumSoH / cmm);
         }
-        return overStockProduct;
+        return stockProduct;
     }
 
-    private Map<String, CMMEntry> getProductCmmMap(OverStockReportParam filterCriteria) {
+    private Map<String, CMMEntry> getProductCmmMap(StockReportParam filterCriteria) {
         List<CMMEntry> CMMEntryList = new ArrayList<>();
         if(null != filterCriteria.getDistrictId()){
             CMMEntryList = cmmMapper.getCMMEntryByDistrictAndDay(filterCriteria.getDistrictId().longValue(), filterCriteria.getEndTime());
@@ -122,22 +133,22 @@ public class SimpleTableService {
     }
 
 
-    private Map<String, OverStockProductDto> overStockProductGroupBy(List<ProductLotInfo> productLotInfos, OverStockReportParam filterCriteria) {
-        Map<String, OverStockProductDto> overStockProductDtoMap = new HashMap<>();
+    private Map<String, StockProductDto> stockProductGroupBy(List<ProductLotInfo> productLotInfos) {
+        Map<String, StockProductDto> stockProductDtoMap = new HashMap<>();
         String key;
         LotInfo lotinfo;
         for (ProductLotInfo lotInfo : productLotInfos) {
             key = lotInfo.getProvinceId() + "-" + lotInfo.getDistrictId() + "-" + lotInfo.getFacilityId() + "-" + lotInfo.getProductCode();
             lotinfo = new LotInfo(lotInfo.getLotNumber(), lotInfo.getExpiryDate(), lotInfo.getStockOnHandOfLot());
-            if (overStockProductDtoMap.containsKey(key)) {
-                overStockProductDtoMap.get(key).getLotList().add(lotinfo);
+            if (stockProductDtoMap.containsKey(key)) {
+                stockProductDtoMap.get(key).getLotList().add(lotinfo);
             } else {
-                OverStockProductDto dto = OverStockProductDto.of(lotInfo);
+                StockProductDto dto = StockProductDto.of(lotInfo);
                 dto.getLotList().add(lotinfo);
-                overStockProductDtoMap.put(key, dto);
+                stockProductDtoMap.put(key, dto);
             }
         }
-        return overStockProductDtoMap;
+        return stockProductDtoMap;
     }
 
     private List<RequisitionDTO> getUnSubmittedRequisitions(RequisitionReportsParam filterCriteria) {
