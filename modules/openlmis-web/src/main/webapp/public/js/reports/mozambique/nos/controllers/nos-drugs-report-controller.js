@@ -7,6 +7,7 @@ function NosDrugsReportController($scope, $controller, NosDrugsChartService) {
   init();
 
   function getReportLoaded() {
+    $scope.reportLoaded = true;
     NosDrugsChartService.getNosDrugItemsPromise(getSelectedProvince(), getSelectedDistrict(),
       $scope.reportParams.startTime, $scope.reportParams.endTime, $scope.selectedDrugCode)
       .$promise.then(function (result) {
@@ -16,7 +17,6 @@ function NosDrugsReportController($scope, $controller, NosDrugsChartService) {
   }
 
   $scope.loadReport = function () {
-    $scope.reportLoaded = true;
     if ($scope.validateProvince() && $scope.validateDistrict()) {
       getReportLoaded();
     }

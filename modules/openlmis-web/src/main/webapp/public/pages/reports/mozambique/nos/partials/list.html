@@ -32,7 +32,7 @@
                     name="drug"
                     id="drugDropDown">
                 <option ng-repeat="option in nosDrugList" value="{{option['drug.drug_code']}}">
-                    {{option['drug.drug_name']}}
+                    {{option['drug.drug_name'] + '[' + option['drug.drug_code'] + ']'}}
                 </option>
             </select>
         </div>
