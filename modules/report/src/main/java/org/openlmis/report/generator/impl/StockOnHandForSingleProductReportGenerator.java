@@ -73,6 +73,7 @@ public class StockOnHandForSingleProductReportGenerator extends AbstractReportMo
         headers.put("expiryDate", getMessage("report.header.expiry.date"));
         headers.put("MoS", getMessage("report.estimated.consumption.month"));
         headers.put("cmm", getMessage("report.header.cmm"));
+        headers.put("lastSyncDate", getMessage("report.header.last.sync.date"));
         return headers;
     }
 
@@ -101,6 +102,17 @@ public class StockOnHandForSingleProductReportGenerator extends AbstractReportMo
 
                 rowMap.put("MoS", getFormatDoubleValue(dto.getMos()));
                 rowMap.put("cmm", getFormatDoubleValue(dto.getCmm()));
+
+
+                Map<String, Object> tmpValue2 = new HashMap<>();
+                tmpValue2.put("value", DateUtil.formatDate(dto.getSyncDate()));
+                Map<String, Object> styleMap2 = new HashMap<>();
+                styleMap2.put("dataPattern", DateUtil.FORMAT_DATE_TIME);
+                styleMap2.put("excelDataPattern", "m/d/yy");
+                tmpValue2.put("style", styleMap2);
+                tmpValue2.put("dataType", "date");
+                rowMap.put("lastSyncDate", tmpValue2);
+
                 content.add(rowMap);
             }
         }
@@ -140,5 +152,10 @@ public class StockOnHandForSingleProductReportGenerator extends AbstractReportMo
             index = index + cmmSpan;
         }
         return mergedRegions;
+    }
+
+    @Override
+    protected Object reportDataForFrontEnd(Map<Object, Object> paraMap) {
+        return getQueryResult(paraMap).get(KEY_QUERY_RESULT);
     }
 }

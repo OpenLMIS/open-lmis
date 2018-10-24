@@ -4,6 +4,7 @@ import lombok.*;
 import org.openlmis.report.generator.StockOnHandStatus;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 @Getter
@@ -26,6 +27,8 @@ public class StockProductDto {
     private Boolean isHiv;
     private Integer sumStockOnHand;
     private StockOnHandStatus stockOnHandStatus;
+    private String lastSyncUpDate;
+    private Date syncDate;
 
     public static StockProductDto of(ProductLotInfo lotInfo){
         StockProductDto dto = new StockProductDto();
@@ -40,6 +43,8 @@ public class StockProductDto {
         dto.setProductCode(lotInfo.getProductCode());
         dto.setProductName(lotInfo.getProductName());
         dto.setIsHiv(lotInfo.getIsHiv());
+        dto.setLastSyncUpDate(lotInfo.getLastSyncDateString());
+        dto.setSyncDate(lotInfo.getLastSyncDate());
         return dto;
     }
 

@@ -1,6 +1,7 @@
 package org.openlmis.report.model.dto;
 
 import lombok.*;
+import org.openlmis.core.utils.DateUtil;
 
 import java.util.Date;
 
@@ -23,5 +24,12 @@ public class ProductLotInfo {
     private Date expiryDate;
     private Integer stockOnHandOfLot;
     private Boolean isHiv;
+    private Date lastSyncDate;
 
+    public String getLastSyncDateString() {
+        if (null != lastSyncDate) {
+            return DateUtil.formatDate(lastSyncDate);
+        }
+        return  "";
+    }
 }

@@ -28,6 +28,7 @@ public class ProductLotInfoQueryBuilder {
         SELECT("lots.expirationdate as expiryDate");
         SELECT("lots_on_hand.quantityonhand as stockOnHandOfLot");
         SELECT("products.ishiv as isHiv");
+        SELECT("stock_cards.modifieddate AS lastSyncDate");
         SELECT("stock_cards.facilityid as stockcardFacilityId");
         FROM("facilities");
         LEFT_OUTER_JOIN("geographic_zones zone on facilities.geographiczoneid = zone.id");
