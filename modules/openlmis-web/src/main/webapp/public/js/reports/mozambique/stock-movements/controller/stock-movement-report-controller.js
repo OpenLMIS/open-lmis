@@ -137,10 +137,7 @@ function StockMovementReportController($scope, $routeParams, Facility, $http, Cu
             value: stockMovement['movement.requestedquantity'],
             dataType: 'integer'
           },
-          signature: {
-            value: stockMovement['movement.signature'],
-            dataType: 'integer'
-          }
+          signature: stockMovement['movement.signature']
         };
     
         data.reportContent.push(requisitionContent);
