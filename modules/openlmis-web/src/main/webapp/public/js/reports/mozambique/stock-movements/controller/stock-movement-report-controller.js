@@ -113,13 +113,34 @@ function StockMovementReportController($scope, $routeParams, Facility, $http, Cu
           },
           reason: messageService.get('stock.movement.' + stockMovement['movement.reason']),
           documentNumber: stockMovement['movement.documentnumber'],
-          entries: stockMovement.entries,
-          negativeAdjustment: stockMovement.negativeAdjustment,
-          positiveAdjustment: stockMovement.positiveAdjustment,
-          issues: stockMovement.issues,
-          soh: stockMovement['movement.soh'],
-          requestedQuantity: stockMovement['movement.requestedquantity'],
-          signature: stockMovement['movement.signature']
+          entries: {
+            value: stockMovement.entries,
+            dataType: 'integer'
+          },
+          negativeAdjustment:{
+            value: stockMovement.negativeAdjustment,
+            dataType: 'integer'
+          },
+          positiveAdjustment: {
+            value: stockMovement.positiveAdjustment,
+            dataType: 'integer'
+          },
+          issues: {
+            value: stockMovement.issues,
+            dataType: 'integer'
+          },
+          soh: {
+            value: stockMovement['movement.soh'],
+            dataType: 'integer'
+          },
+          requestedQuantity: {
+            value: stockMovement['movement.requestedquantity'],
+            dataType: 'integer'
+          },
+          signature: {
+            value: stockMovement['movement.signature'],
+            dataType: 'integer'
+          }
         };
     
         data.reportContent.push(requisitionContent);
