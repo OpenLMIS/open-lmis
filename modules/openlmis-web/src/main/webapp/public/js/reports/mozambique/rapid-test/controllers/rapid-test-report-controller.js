@@ -54,7 +54,9 @@ function RapidTestReportController($scope, $controller, CubesGenerateCutParamsSe
             var code = itemInGroup.column_code;
             item[code] = itemInGroup.item_total_value;
           });
-          return item;
+          if (item.item_name !== "APES") {
+            return item;
+          }
         });
         $scope.calculateTotalValues();
       }
