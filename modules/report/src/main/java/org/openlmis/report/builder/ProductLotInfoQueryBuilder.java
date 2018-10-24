@@ -43,7 +43,7 @@ public class ProductLotInfoQueryBuilder {
 
     private static void writePredicates(StockReportParam filter) {
         if(null != filter) {
-            WHERE("lots_on_hand.createddate <= #{filterCriteria.endTime}");
+            WHERE("lots_on_hand.modifieddate <= #{filterCriteria.endTime}");
 
             if(null != filter.getProvinceId()) {
                 WHERE("parent_zone.id = #{filterCriteria.provinceId}");
