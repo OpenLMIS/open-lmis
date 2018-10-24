@@ -1,6 +1,6 @@
 <h3 openlmis-message="view.rnr.via.product.stockMovements"></h3>
 <div class="stock-movement-header">
-  <span class="product-info">{{productCode}} {{stockMovements[0]["movement.productname"]}}</span>
+  <span class="product-info">{{productCode}} {{productName}}</span>
   <div class="facility">
     <span openlmis-message="report.health.facility"></span>
     <span class="info">: {{facilityName}}</span>
@@ -10,8 +10,8 @@
     <span class="info">: {{province}}</span>
   </div>
 </div>
-<hr/>
 
+<hr/>
 <div class="time-container">
   <div id="time-tag-div">
     <div class="time-tag">
@@ -54,6 +54,8 @@
   </div>
 </div>
 
+<hr/>
+
 <div id="stockMovements" ng-if="stockMovements">
   <table class="table table-condensed table-bordered table-striped">
     <tr class="gradient-header">
@@ -82,6 +84,10 @@
       <td>{{entry["movement.signature"]}}</td>
     </tr>
   </table>
+
+  <div class="report-subtitle">
+    <div ng-include="'/public/pages/reports/mozambique/export-data-button.html'"></div>
+  </div>
 </div>
 <label ng-show="stockMovements && stockMovements.length == 0">
   <h3 openlmis-message="label.report.empty"></h3>

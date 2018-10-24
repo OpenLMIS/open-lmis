@@ -1,5 +1,5 @@
-function StockMovementReportController($scope, $routeParams, Facility, $http, CubesGenerateUrlService,
-                                       DateFormatService, $cacheFactory, $filter) {
+function StockMovementReportController($scope, $routeParams, Facility, $http, CubesGenerateUrlService, DateFormatService,
+                                       $cacheFactory, $filter, ReportExportExcelService, messageService) {
   var currentDate = new Date(),
     DATE_FORMAT = 'yyyy,MM,dd';
   
@@ -76,6 +76,58 @@ function StockMovementReportController($scope, $routeParams, Facility, $http, Cu
     $scope.loadFacilityAndStockMovements();
   });
   
+  $scope.exportXLSX = function () {
+    var data = {
+      reportTitles: [
+        [
+          messageService.get('report.header.generated.for'),
+          DateFormatService.formatDateWithDateMonthYearForString($scope.dateRange.startTime) + ' - ' +
+          DateFormatService.formatDateWithDateMonthYearForString($scope.dateRange.endTime)
+        ]
+      ],
+      reportHeaders: {
+        date: messageService.get('stock.movement.date'),
+        reason: messageService.get('stock.movement.reason'),
+        documentNumber: messageService.get('stock.movement.document.number'),
+        entries: messageService.get('stock.movement.entries'),
+        negativeAdjustment: messageService.get('stock.movement.negative.adjustment'),
+        positiveAdjustment: messageService.get('stock.movement.positive.adjustment'),
+        issues: messageService.get('stock.movement.issues'),
+        soh: messageService.get('stock.movement.soh'),
+        requestedQuantity: messageService.get('stock.movement.requestedquantity'),
+        signature: messageService.get('stock.movement.signature')
+      },
+      reportContent: []
+    };
+  
+    if ($scope.stockMovements) {
+      $scope.stockMovements.forEach(function (stockMovement) {
+        var requisitionContent = {
+          date: {
+            value: stockMovement['movement.date'],
+            dataType: 'date',
+            style: {
+              dataPattern: 'dd-MM-yyyy',
+              excelDataPattern: 'm/d/yy'
+            }
+          },
+          reason: messageService.get('stock.movement.' + stockMovement['movement.reason']),
+          documentNumber: stockMovement['movement.documentnumber'],
+          entries: stockMovement.entries,
+          negativeAdjustment: stockMovement.negativeAdjustment,
+          positiveAdjustment: stockMovement.positiveAdjustment,
+          issues: stockMovement.issues,
+          soh: stockMovement['movement.soh'],
+          requestedQuantity: stockMovement['movement.requestedquantity'],
+          signature: stockMovement['movement.signature']
+        };
+    
+        data.reportContent.push(requisitionContent);
+      });
+      ReportExportExcelService.exportAsXlsx(data, messageService.get('report.file.stock.movements.report'));
+    }
+  };
+  
   function loadStockMovements() {
     var cuts = [
       {dimension: "movement", values: [$scope.productCode]},
@@ -103,9 +155,10 @@ function StockMovementReportController($scope, $routeParams, Facility, $http, Cu
       }
       
       var firstEntry = data[0];
-      $scope.facilityName = firstEntry["facility.facility_name"];
-      $scope.district = firstEntry["location.district_name"];
-      $scope.province = firstEntry["location.province_name"];
+      $scope.facilityName = firstEntry['facility.facility_name'];
+      $scope.district = firstEntry['location.district_name'];
+      $scope.province = firstEntry['location.province_name'];
+      $scope.productName = firstEntry['movement.productname'];
       
       $scope.stockMovements = [];
       _.each(data, function (item) {
