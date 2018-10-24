@@ -107,7 +107,7 @@ function StockMovementReportController($scope, $routeParams, Facility, $http, Cu
             value: stockMovement['movement.date'],
             dataType: 'date',
             style: {
-              dataPattern: 'dd-MM-yyyy',
+              dataPattern: 'yyyy-MM-dd',
               excelDataPattern: 'm/d/yy'
             }
           },
