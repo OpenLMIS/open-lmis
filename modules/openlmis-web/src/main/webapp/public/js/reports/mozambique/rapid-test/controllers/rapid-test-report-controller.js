@@ -128,12 +128,16 @@ function RapidTestReportController($scope, $controller, CubesGenerateCutParamsSe
         item_name: '',
         consume_hiv_determine: messageService.get('report.consume') + ': ' + messageService.get('report.hiv.determine'),
         positive_hiv_determine: messageService.get('report.positive') + ': ' + messageService.get('report.hiv.determine'),
+        unjustified_hiv_determine: messageService.get('report.unjustified') + ': ' + messageService.get('report.hiv.determine'),
         consume_hiv_unigold: messageService.get('report.consume') + ': ' + messageService.get('report.hiv.unigold'),
         positive_hiv_unigold: messageService.get('report.positive') + ': ' + messageService.get('report.hiv.unigold'),
+        unjustified_hiv_unigold: messageService.get('report.unjustified') + ': ' + messageService.get('report.hiv.unigold'),
         consume_syphillis: messageService.get('report.consume') + ': ' + messageService.get('report.syphillis'),
         positive_syphillis: messageService.get('report.positive') + ': ' + messageService.get('report.syphillis'),
+        unjustified_syphillis: messageService.get('report.unjustified') + ': ' + messageService.get('report.syphillis'),
         consume_malaria: messageService.get('report.consume') + ': ' + messageService.get('report.malaria'),
         positive_malaria: messageService.get('report.positive') + ': ' + messageService.get('report.malaria'),
+        unjustified_malaria: messageService.get('report.unjustified') + ': ' + messageService.get('report.malaria'),
         province: messageService.get('report.header.province'),
         district: messageService.get('report.header.district'),
         facility: messageService.get('report.header.facility'),
@@ -147,12 +151,16 @@ function RapidTestReportController($scope, $controller, CubesGenerateCutParamsSe
       rapidTestReportContent.item_name = reportContent.formatted_name;
       rapidTestReportContent.consume_hiv_determine = reportContent.CONSUME_HIVDETERMINE;
       rapidTestReportContent.positive_hiv_determine = reportContent.POSITIVE_HIVDETERMINE;
+      rapidTestReportContent.unjustified_hiv_determine = reportContent.UNJUSTIFIED_HIVDETERMINE;
       rapidTestReportContent.consume_hiv_unigold = reportContent.CONSUME_HIVUNIGOLD;
       rapidTestReportContent.positive_hiv_unigold = reportContent.POSITIVE_HIVUNIGOLD;
+      rapidTestReportContent.unjustified_hiv_unigold = reportContent.UNJUSTIFIED_HIVUNIGOLD;
       rapidTestReportContent.consume_syphillis = reportContent.CONSUME_SYPHILLIS;
       rapidTestReportContent.positive_syphillis = reportContent.POSITIVE_SYPHILLIS;
+      rapidTestReportContent.unjustified_syphillis = reportContent.UNJUSTIFIED_SYPHILLIS;
       rapidTestReportContent.consume_malaria = reportContent.CONSUME_MALARIA;
       rapidTestReportContent.positive_malaria = reportContent.POSITIVE_MALARIA;
+      rapidTestReportContent.unjustified_malaria = reportContent.UNJUSTIFIED_MALARIA;
     }
 
     if ($scope.rapidTestReportData) {
