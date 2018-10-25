@@ -343,12 +343,12 @@ function RequisitionReportController($scope, $controller, RequisitionReportServi
       {
         field: 'clientSubmittedTimeString',
         displayName: messageService.get("label.report.requisitions.submittedtime"),
-        cellTemplate: '<div class="customCell">{{submittedTimeFormatter(row.entity.clientSubmittedTime, row.entity.clientSubmittedTimeString)}}</div>'
+        cellTemplate: '<div class="customCell ngCellText">{{submittedTimeFormatter(row.entity.clientSubmittedTime, row.entity.clientSubmittedTimeString)}}</div>'
       },
       {
         field: 'webSubmittedTimeString',
         displayName: messageService.get("label.report.requisitions.syncedtime"),
-        cellTemplate: '<div class="customCell">{{submittedTimeFormatter(row.entity.webSubmittedTime, row.entity.webSubmittedTimeString)}}</div>'
+        cellTemplate: '<div class="customCell ngCellText">{{submittedTimeFormatter(row.entity.webSubmittedTime, row.entity.webSubmittedTimeString)}}</div>'
       }
     ]
   };
