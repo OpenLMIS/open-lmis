@@ -52,6 +52,10 @@ angular.module('requisition-report', ['openlmis', 'angularCombine', 'ngTable', '
       controller: OverStockReportController,
       templateUrl: 'over-stock/partials/list.html',
       reloadOnSearch: false
+    }).when('/expired-products', {
+      controller: ExpiredProductsReportController,
+      templateUrl: 'expired-products/partials/list.html',
+      reloadOnSearch: false
     }).when('/consumption', {
         controller: ConsumptionReportController,
         templateUrl: 'consumption/partials/list.html',
