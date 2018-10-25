@@ -20,7 +20,7 @@ public class IntegerCellValueSetter implements IExcelCellValueSetter {
         }
         XSSFDataFormat format = (XSSFDataFormat)workbook.createDataFormat();
         XSSFCellStyle style = (XSSFCellStyle)workbook.createCellStyle();
-        style.setDataFormat(format.getFormat("0.0"));
+        style.setDataFormat(format.getFormat("0"));
         cell.setCellStyle(style);
     }
 }
