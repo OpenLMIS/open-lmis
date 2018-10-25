@@ -46,7 +46,7 @@ function RapidTestReportController($scope, $controller, CubesGenerateCutParamsSe
           };
         });
         var dataGroupedByName = _(dataAggregatedByNameAndCode).groupBy('item_name');
-        $scope.rapidTestReportData = _(dataGroupedByName).map(function (group, key) {
+        $scope.rapidTestReportData = _(_.omit(dataGroupedByName, "APES")).map(function (group, key) {
           var item = {};
           item.item_name = key;
           item.formatted_name = messageService.get('report.rapid.test.' + key);
