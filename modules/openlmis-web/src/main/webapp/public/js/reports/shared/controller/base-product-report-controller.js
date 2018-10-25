@@ -98,9 +98,11 @@ function BaseProductReportController($scope, $filter, ProductReportService, $cac
         });
       });
       $scope.facilities = healthFacilities;
-      if ($location.$$path !== '/stock-on-hand-all-products') {
+
+      if (!_.includes(['/stock-on-hand-all-products'], $location.$$path)) {
         addAllOption($scope.facilities, "facility");
       }
+
       $scope.populateOptions ? $scope.populateOptions() : undefined;
     });
   };
@@ -117,7 +119,7 @@ function BaseProductReportController($scope, $filter, ProductReportService, $cac
     });
     $scope.fullGeoZoneList = _.union($scope.fullGeoZoneList, $scope.provinces, $scope.districts);
 
-    if (!_.includes(['/over-stock'], $location.$$path)) {
+    if (!_.includes(['/over-stock', '/stock-on-hand-all-products'], $location.$$path)) {
       addAllOption($scope.provinces, "province");
     }
 

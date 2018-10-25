@@ -78,28 +78,54 @@ function StockMovementReportController($scope, $routeParams, Facility, $http, Cu
   
   $scope.exportXLSX = function () {
     var data = {
-      reportTitles: [
-        [
-          messageService.get('report.header.generated.for'),
-          DateFormatService.formatDateWithDateMonthYearForString($scope.dateRange.startTime) + ' - ' +
-          DateFormatService.formatDateWithDateMonthYearForString($scope.dateRange.endTime)
-        ]
-      ],
-      reportHeaders: {
-        date: messageService.get('stock.movement.date'),
-        reason: messageService.get('stock.movement.reason'),
-        documentNumber: messageService.get('stock.movement.document.number'),
-        entries: messageService.get('stock.movement.entries'),
-        negativeAdjustment: messageService.get('stock.movement.negative.adjustment'),
-        positiveAdjustment: messageService.get('stock.movement.positive.adjustment'),
-        issues: messageService.get('stock.movement.issues'),
-        soh: messageService.get('stock.movement.soh'),
-        requestedQuantity: messageService.get('stock.movement.requestedquantity'),
-        signature: messageService.get('stock.movement.signature')
-      },
-      reportContent: []
+      reportTitles: generateReportTitle(),
+      reportHeaders: generateReportHeader(),
+      reportContent: generateReportContent()
     };
+    
+    if ($scope.stockMovements) {
+      ReportExportExcelService.exportAsXlsx(data, messageService.get('report.file.stock.movements.report'));
+    }
+  };
   
+  function generateReportTitle() {
+    var dateString = '';
+    var dateRange = $scope.dateRange;
+    if (dateRange.startTime && dateRange.endTime) {
+      dateString = DateFormatService.formatDateWithDateMonthYear(dateString.startTime) + ' - ' +
+        DateFormatService.formatDateWithDateMonthYear(dateString.endTime);
+    } else {
+      var firstItem = $scope.stockMovements[0];
+      var lastItem = $scope.stockMovements.pop();
+      dateString = DateFormatService.formatDateWithDateMonthYearForString(lastItem['movement.date']) + ' - ' +
+        DateFormatService.formatDateWithDateMonthYearForString(firstItem['movement.date']);
+    }
+    
+    return [
+      [
+        messageService.get('report.header.generated.for'),
+        dateString
+      ]
+    ];
+  }
+  
+  function generateReportHeader() {
+    return {
+      date: messageService.get('stock.movement.date'),
+      reason: messageService.get('stock.movement.reason'),
+      documentNumber: messageService.get('stock.movement.document.number'),
+      entries: messageService.get('stock.movement.entries'),
+      negativeAdjustment: messageService.get('stock.movement.negative.adjustment'),
+      positiveAdjustment: messageService.get('stock.movement.positive.adjustment'),
+      issues: messageService.get('stock.movement.issues'),
+      soh: messageService.get('stock.movement.soh'),
+      requestedQuantity: messageService.get('stock.movement.requestedquantity'),
+      signature: messageService.get('stock.movement.signature')
+    };
+  }
+  
+  function generateReportContent() {
+    var reportContent = [];
     if ($scope.stockMovements) {
       $scope.stockMovements.forEach(function (stockMovement) {
         var requisitionContent = {
@@ -113,38 +139,21 @@ function StockMovementReportController($scope, $routeParams, Facility, $http, Cu
           },
           reason: messageService.get('stock.movement.' + stockMovement['movement.reason']),
           documentNumber: stockMovement['movement.documentnumber'],
-          entries: {
-            value: stockMovement.entries,
-            dataType: 'integer'
-          },
-          negativeAdjustment:{
-            value: stockMovement.negativeAdjustment,
-            dataType: 'integer'
-          },
-          positiveAdjustment: {
-            value: stockMovement.positiveAdjustment,
-            dataType: 'integer'
-          },
-          issues: {
-            value: stockMovement.issues,
-            dataType: 'integer'
-          },
-          soh: {
-            value: stockMovement['movement.soh'],
-            dataType: 'integer'
-          },
-          requestedQuantity: {
-            value: stockMovement['movement.requestedquantity'],
-            dataType: 'integer'
-          },
+          entries: {value: stockMovement.entries, dataType: 'integer'},
+          negativeAdjustment: {value: stockMovement.negativeAdjustment, dataType: 'integer'},
+          positiveAdjustment: {value: stockMovement.positiveAdjustment, dataType: 'integer'},
+          issues: {value: stockMovement.issues, dataType: 'integer'},
+          soh: {value: stockMovement['movement.soh'], dataType: 'integer'},
+          requestedQuantity: {value: stockMovement['movement.requestedquantity'], dataType: 'integer'},
           signature: stockMovement['movement.signature']
         };
-    
-        data.reportContent.push(requisitionContent);
+        
+        reportContent.push(requisitionContent);
       });
-      ReportExportExcelService.exportAsXlsx(data, messageService.get('report.file.stock.movements.report'));
     }
-  };
+    
+    return reportContent;
+  }
   
   function loadStockMovements() {
     var cuts = [
