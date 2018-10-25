@@ -92,8 +92,8 @@ function StockMovementReportController($scope, $routeParams, Facility, $http, Cu
     var dateString = '';
     var dateRange = $scope.dateRange;
     if (dateRange.startTime && dateRange.endTime) {
-      dateString = DateFormatService.formatDateWithDateMonthYear(dateString.startTime) + ' - ' +
-        DateFormatService.formatDateWithDateMonthYear(dateString.endTime);
+      dateString = DateFormatService.formatDateWithDateMonthYear(dateRange.startTime) + ' - ' +
+        DateFormatService.formatDateWithDateMonthYear(dateRange.endTime);
     } else {
       var firstItem = $scope.stockMovements[0];
       var lastItem = $scope.stockMovements.pop();
@@ -102,10 +102,8 @@ function StockMovementReportController($scope, $routeParams, Facility, $http, Cu
     }
     
     return [
-      [
-        messageService.get('report.header.generated.for'),
-        dateString
-      ]
+      [$scope.productCode, $scope.productName, $scope.facilityName, $scope.district, $scope.province],
+      [messageService.get('report.header.generated.for'), dateString]
     ];
   }
   
