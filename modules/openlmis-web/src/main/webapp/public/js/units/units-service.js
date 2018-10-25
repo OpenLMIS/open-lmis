@@ -16,7 +16,7 @@ services.factory('UnitService', function (messageService) {
   };
   
   var onLoadScrollEvent = function(elementBodyId, elementHeaderId) {
-    var fixedBodyDom = document.getElementById(elementId);
+    var fixedBodyDom = document.getElementById(elementBodyId);
     fixedBodyDom.onscroll = function () {
       var fixedBodyDomLeft = this.scrollLeft;
       document.getElementById(elementHeaderId).scrollLeft = fixedBodyDomLeft;

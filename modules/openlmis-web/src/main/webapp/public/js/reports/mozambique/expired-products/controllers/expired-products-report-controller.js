@@ -19,27 +19,27 @@ function ExpiredProductsReportController($scope, $controller, $filter, ExpiredPr
       $scope.validateFacility()) {
       var reportParams = $scope.reportParams;
       
-      var overStockParams = {
+      var expiredProductParams = {
         endTime: $filter('date')(reportParams.endTime, "yyyy-MM-dd") + " 23:59:59",
         provinceId: reportParams.provinceId.toString(),
         districtId: reportParams.districtId.toString(),
         facilityId: reportParams.facilityId.toString()
       };
       
-      $scope.isDistrictOverStock = utils.isEmpty(reportParams.districtId);
-      $scope.formattedOverStockList = [];
+      $scope.isDistrictExpiredProduct = utils.isEmpty(reportParams.districtId);
+      $scope.formattedExpiredProductList = [];
       
       ExpiredProductsService
         .getExpiredProductList()
-        .get(_.pick(overStockParams, function (param) {
+        .get(_.pick(expiredProductParams, function (param) {
           if (!utils.isEmpty(param)) {
             return param;
           }
-        }), {}, function (overStockResponse) {
-          $scope.showOverStockProductsTable = true;
-          $scope.formattedOverStockList = formatOverStockList(overStockResponse.rnr_list);
-          $scope.showOverStockProductsTable = overStockResponse.rnr_list.length;
-          $scope.overStockList = formatOverStockProductListTime(overStockResponse.rnr_list);
+        }), {}, function (expiredProductResponse) {
+          $scope.showExpiredProductsTable = true;
+          $scope.formattedExpiredProductList = formatExpiredProductList(expiredProductResponse.rnr_list);
+          $scope.showExpiredProductsTable = expiredProductResponse.rnr_list.length;
+          $scope.expiredProductList = formatExpiredProductListTime(expiredProductResponse.rnr_list);
           $scope.filterAndSort();
         });
     }
@@ -60,29 +60,29 @@ function ExpiredProductsReportController($scope, $controller, $filter, ExpiredPr
   $scope.filterAndSort = function () {
     $scope.filterList = ReportGroupSortAndFilterService.search($scope.expiredProductList, $scope.filterText, "lotList", "expiryDate");
     $scope.filterList = ReportGroupSortAndFilterService.groupSort($scope.filterList, $scope.sortType, $scope.sortReverse, sortList);
-    $scope.formattedOverStockList = formatOverStockList($scope.filterList);
+    $scope.formattedExpiredProductList = formatExpiredProductList($scope.filterList);
     
   };
   
-  function formatOverStockProductListTime(overStockList) {
-    return _.map(overStockList, function (overStockItem) {
-      overStockItem.cmm = toFixedNumber(overStockItem.cmm);
-      overStockItem.mos = toFixedNumber(overStockItem.mos);
-      return overStockItem;
+  function formatExpiredProductListTime(expiredProductList) {
+    return _.map(expiredProductList, function (expiredProduct) {
+      expiredProduct.cmm = toFixedNumber(expiredProduct.cmm);
+      expiredProduct.mos = toFixedNumber(expiredProduct.mos);
+      return expiredProduct;
     });
     
   }
   
-  function formatOverStockList(overStockList) {
-    var formattedOverStockList = [];
-    _.forEach(overStockList, function (overStock) {
-      _.forEach(overStock.lotList, function (lot, index) {
+  function formatExpiredProductList(expiredProductList) {
+    var formattedExpiredProductList = [];
+    _.forEach(expiredProductList, function (expiredProduct) {
+      _.forEach(expiredProduct.lotList, function (lot, index) {
         var formatItem = {
-          provinceName: overStock.provinceName,
-          districtName: overStock.districtName,
-          facilityName: overStock.facilityName,
-          productCode: overStock.productCode,
-          productName: overStock.productName,
+          provinceName: expiredProduct.provinceName,
+          districtName: expiredProduct.districtName,
+          facilityName: expiredProduct.facilityName,
+          productCode: expiredProduct.productCode,
+          productName: expiredProduct.productName,
           lotNumber: lot.lotNumber,
           expiryDate: DateFormatService.formatDateWithLocale(lot.expiryDate),
           stockOnHandOfLot: lot.stockOnHandOfLot
@@ -90,18 +90,18 @@ function ExpiredProductsReportController($scope, $controller, $filter, ExpiredPr
         
         if (!$scope.isDistrictExpiredProduct) {
           _.assign(formatItem, {
-            cmm: toFixedNumber(overStock.cmm),
-            mos: toFixedNumber(overStock.mos),
-            rowSpan: overStock.lotList.length,
+            cmm: toFixedNumber(expiredProduct.cmm),
+            mos: toFixedNumber(expiredProduct.mos),
+            rowSpan: expiredProduct.lotList.length,
             isFirst: index === 0
           });
         }
-        
-        formattedOverStockList.push(formatItem);
+  
+        formattedExpiredProductList.push(formatItem);
       });
     });
     
-    return formattedOverStockList;
+    return formattedExpiredProductList;
   }
   
   function toFixedNumber(originNumber) {
