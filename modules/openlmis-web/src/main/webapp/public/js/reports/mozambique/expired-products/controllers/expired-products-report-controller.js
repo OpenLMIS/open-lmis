@@ -1,5 +1,5 @@
 function ExpiredProductsReportController($scope, $controller, $filter, ExpiredProductsService, DateFormatService,
-                                         ReportGroupSortAndFilterService) {
+                                         ReportGroupSortAndFilterService, UnitService) {
   $controller('BaseProductReportController', {$scope: $scope});
   $scope.formattedExpiredProductList = [];
   $scope.showExpiredProductsTable = false;
@@ -10,7 +10,7 @@ function ExpiredProductsReportController($scope, $controller, $filter, ExpiredPr
   
   $scope.$on('$viewContentLoaded', function () {
     $scope.loadHealthFacilities();
-    onLoadScrollEvent();
+    UnitService.onLoadScrollEvent('fixed-body', 'fixed-header');
   });
   
   $scope.loadReport = function () {
@@ -71,14 +71,6 @@ function ExpiredProductsReportController($scope, $controller, $filter, ExpiredPr
       return overStockItem;
     });
     
-  }
-  
-  function onLoadScrollEvent() {
-    var fixedBodyDom = document.getElementById("fixed-body");
-    fixedBodyDom.onscroll = function () {
-      var fixedBodyDomLeft = this.scrollLeft;
-      document.getElementById("fixed-header").scrollLeft = fixedBodyDomLeft;
-    };
   }
   
   function formatOverStockList(overStockList) {

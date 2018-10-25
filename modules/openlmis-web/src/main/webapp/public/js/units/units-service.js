@@ -14,8 +14,17 @@ services.factory('UnitService', function (messageService) {
     }
     return programName;
   };
+  
+  var onLoadScrollEvent = function(elementBodyId, elementHeaderId) {
+    var fixedBodyDom = document.getElementById(elementId);
+    fixedBodyDom.onscroll = function () {
+      var fixedBodyDomLeft = this.scrollLeft;
+      document.getElementById(elementHeaderId).scrollLeft = fixedBodyDomLeft;
+    };
+  };
 
   return {
-    programNameFormatter: programNameFormatter
+    programNameFormatter: programNameFormatter,
+    onLoadScrollEvent: onLoadScrollEvent
   };
 });
