@@ -285,11 +285,16 @@ div.pagination div.btn-group {
   width: 30%;
 }
 
-.time-container div {
-  display: inline-block;
+.time-container {
+  display: flex;
+  justify-content: space-between;
 
-  .datetime-warning {
-    color: #bfbfbf;
+  div {
+    display: inline-block;
+
+    .datetime-warning {
+      color: #bfbfbf;
+    }
   }
 }
 
@@ -696,7 +701,7 @@ div.pagination div.btn-group {
   border-bottom: none;
   border-radius: 4px 4px 0 0;
   background-image: -webkit-gradient(linear, left top, left bottom, color-stop(0, #eee), color-stop(0.5, #fff));
-  >span {
+  > span {
     border-radius: 0 4px 0 0;
     background: none;
     border: none;
@@ -728,8 +733,8 @@ div.pagination div.btn-group {
         &:hover {
           cursor: pointer;
           background: #eaf4f4;
-          >div {
-            >span {
+          > div {
+            > span {
               border-color: #359399;
             }
           }
