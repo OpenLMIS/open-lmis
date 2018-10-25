@@ -10,14 +10,12 @@ import java.util.Map;
 public class IntegerCellValueSetter implements IExcelCellValueSetter {
     @Override
     public void setCellValue(Map<String, Object> params, Cell cell) {
-        if (null != params.get("value")) {
-            try {
-                cell.setCellValue(Integer.parseInt(params.get("value").toString()));
-            } catch (RuntimeException ex) {
-                cell.setCellValue("");
-            }
-            return;
+        try {
+            cell.setCellValue((double)Integer.parseInt(params.get("value").toString()));
+        } catch (RuntimeException ex) {
+
+        } finally {
+            cell.setCellType(Cell.CELL_TYPE_NUMERIC);
         }
-        cell.setCellValue("");
     }
 }
