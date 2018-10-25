@@ -1,5 +1,14 @@
-function SingleProductReportController($scope, $filter, $controller, $http, CubesGenerateCutParamsService, CubesGenerateUrlService, FeatureToggleService, LotExpiryDateService, $window, ReportExportExcelService, messageService, DateFormatService) {
+function SingleProductReportController($scope, $filter, $controller, $http, CubesGenerateCutParamsService, CubesGenerateUrlService, FeatureToggleService, LotExpiryDateService, $window, ReportExportExcelService, messageService, DateFormatService, SingleProductReportService, ReportGroupSortAndFilterService) {
   $controller('BaseProductReportController', {$scope: $scope});
+
+  $scope.filterList = [];
+
+  var CMM_STATUS = {
+    'STOCK_OUT': 'stock-out',
+    'REGULAR_STOCK': 'regular-stock',
+    'OVER_STOCK': 'over-stock',
+    'LOW_STOCK': 'low-stock'
+  };
 
   $scope.$on('$viewContentLoaded', function () {
     FeatureToggleService.get({key: 'lot.expiry.dates.report'}, function (result) {
@@ -11,66 +20,261 @@ function SingleProductReportController($scope, $filter, $controller, $http, Cube
 
   $scope.hasSyncTimeColumn = true;
 
-  function populateDateEntry(cutsParams) {
-    var cubesPath = 'vw_daily_full_soh';
+  function formatSingleProductListForSearch(data) {
+    var formattedSingleProductList = [];
+    _.forEach(data, function (item) {
+      var formatItem = {
+        facilityName: item.facilityName,
+        facilityCode: item.facilityCode,
+        productName: item.productName,
+        stockOnHandStatus: item.stockOnHandStatus,
+        sumStockOnHand: item.sumStockOnHand,
+        mos: item.mos,
+        cmm: item.cmm,
+        astSyncDate: item.astSyncDate
+      };
 
-    $http.get(CubesGenerateUrlService.generateFactsUrl(cubesPath, cutsParams)).success(function (sohEntries) {
-      if(sohEntries.length === 0) {
-        $scope.reportData = sohEntries;
-      } else {
-        var periodBegin = DateFormatService.formatDateWithStartDayOfPeriod(new Date($scope.reportParams.endTime));
-        var periodEnd = DateFormatService.formatDateWithEndDayOfPeriod(new Date($scope.reportParams.endTime));
-        var cmmCutsParams = [
-          {dimension: "product", values: [sohEntries[0]["drug.drug_code"]]},
-          {dimension: "periodbegin", values: [$filter('date')(periodBegin, "yyyy,MM,dd")], skipEscape: true},
-          {dimension: "periodend", values: [$filter('date')(periodEnd, "yyyy,MM,dd")], skipEscape: true}
-        ];
+      var lotList = _.sortBy(item.lotList, function (o) {
+        return o.expiryDate;
+      });
 
-        $http.get(CubesGenerateUrlService.generateFactsUrl('vw_cmm_entries', cmmCutsParams)).success(function (cmmEntries) {
-
-          $scope.reportData = _.chain(sohEntries)
-              .groupBy(function (sohEntry) {
-                return sohEntry['drug.drug_code'] + sohEntry['facility.facility_code'];
-              })
-              .map(function (sameFacilitySameDrugEntries) {
-                var maxOccurredDateEntry = _.max(sameFacilitySameDrugEntries, function (entry) {
-                  return new Date(entry.occurred_date);
-                });
-                maxOccurredDateEntry.soh = Number(maxOccurredDateEntry.soh);
-                maxOccurredDateEntry.facility_name = maxOccurredDateEntry['facility.facility_name'];
-                maxOccurredDateEntry.facility_code = maxOccurredDateEntry['facility.facility_code'];
-                var rawLastSyncDate = maxOccurredDateEntry.last_sync_date;
-                maxOccurredDateEntry.formatted_last_sync_date = $scope.formatDateWithTimeAndLocale(rawLastSyncDate);
-
-                var matchedCMMEntry = _.filter(cmmEntries, function (cmmEntry) {
-                  return cmmEntry.product === maxOccurredDateEntry['drug.drug_code'] && cmmEntry.facility === maxOccurredDateEntry['facility.facility_id'];
-                })[0];
-                if (matchedCMMEntry) {
-                  maxOccurredDateEntry.cmm = matchedCMMEntry.cmm;
-                } else {
-                  maxOccurredDateEntry.cmm = -1.0;
-                }
-                maxOccurredDateEntry.estimated_months = (maxOccurredDateEntry.cmm === -1.0 || maxOccurredDateEntry.cmm === 0) ? undefined : Math.floor(10 * maxOccurredDateEntry.soh / maxOccurredDateEntry.cmm) / 10;
-                maxOccurredDateEntry.stock_status = $scope.getEntryStockStatus(maxOccurredDateEntry);
-
-                return maxOccurredDateEntry;
-              })
-              .value();
-        });
-      }
-      $scope.lotOnHandHash = {};
-      LotExpiryDateService.populateLotOnHandInformationForSoonestExpiryDate($scope.reportData, $scope.lotOnHandHash);
+      formatItem.earliestExpiryDate = lotList[0].expiryDate;
+      formatItem.lotList = lotList;
+      formattedSingleProductList.push(formatItem);
     });
+
+
+    return formattedSingleProductList;
   }
 
+  function formatSingleProductList(data) {
+    var formattedSingleProductList = [];
+    _.forEach(data, function (item) {
+        _.forEach(item.lotList, function (lot, index) {
+          var formatItem = {
+            facilityName: item.facilityName,
+            productName: item.productName,
+            stockOnHandStatus: item.stockOnHandStatus,
+            facilityCode: item.facilityCode,
+            earliestExpiryDate: DateFormatService.formatDateWithLocale(item.earliestExpiryDate),
+            lotNumber: lot.lotNumber,
+            stockOnHandOfLot: lot.stockOnHandOfLot,
+            sumStockOnHand: item.sumStockOnHand,
+            cmm: toFixedNumber(item.cmm),
+            estimated_months: toFixedNumber(item.mos),
+            astSyncDate: DateFormatService.formatDateWithLocale(item.astSyncDate),
+            rowSpan: item.lotList.length,
+            isFirst: index === 0
+          };
+
+          formattedSingleProductList.push(formatItem);
+        });
+    });
+
+    return formattedSingleProductList;
+  }
+
+  function toFixedNumber(originNumber) {
+    if (_.isNull(originNumber)) {
+      return null;
+    }
+
+    return parseFloat(originNumber.toFixed(2));
+  }
+
+  var sortList = ['lotNumber', 'stockOnHandOfLot'];
+  var ignoreSearchList = ['expiryDate'];
+  var timeFieldList = ['earliestExpiryDate', 'astSyncDate'];
+  $scope.filterAndSort = function () {
+    $scope.filterList = ReportGroupSortAndFilterService.search($scope.originData, $scope.filterText, "lotList", timeFieldList, ignoreSearchList);
+    $scope.filterList = ReportGroupSortAndFilterService.groupSort($scope.filterList, $scope.sortType, $scope.sortReverse, sortList);
+    $scope.reportData = formatSingleProductList($scope.filterList);
+  };
+
   $scope.loadReport = function () {
-    if (validateProduct() && $scope.validateProvince() && $scope.validateDistrict()) {
-      var params = $scope.reportParams;
-      $scope.locationIdToCode(params);
-      var selectedProduct = [{'drug.drug_code': $scope.reportParams.productCode}];
-      var cutsParams = CubesGenerateCutParamsService.generateCutsParams("occurred", undefined, $filter('date')(params.endTime, "yyyy,MM,dd"),
-        params.selectedFacility, selectedProduct, params.selectedProvince, params.selectedDistrict);
-      populateDateEntry(cutsParams);
+    if ($scope.validateProvince() && $scope.validateDistrict() && $scope.validateProduct()) {
+      var reportParams = $scope.reportParams;
+
+      var singleProductParams = {
+        endTime: $filter('date')(reportParams.endTime, "yyyy-MM-dd") + " 23:59:59",
+        provinceId: reportParams.provinceId.toString(),
+        districtId: reportParams.districtId.toString(),
+        facilityId: reportParams.facilityId.toString(),
+        productCode: reportParams.productCode.toString(),
+        reportType: "singleStockOnHand"
+      };
+
+      $scope.formattedOverStockList = [];
+
+      SingleProductReportService
+        .getSingleProductList()
+        .get(_.pick(singleProductParams, function (param) {
+          if (!utils.isEmpty(param)) {
+            return param;
+          }
+        }), {}, function (singleProductResponse) {
+          $scope.originData = [
+            {
+              "provinceId": 16,
+              "provinceName": "Província de Zambezia",
+              "districtId": 18,
+              "districtName": "Distrito de Mocuba",
+              "facilityId": 108,
+              "facilityCode": "HF79",
+              "facilityName": "CS Intome 1",
+              "productId": 620,
+              "productCode": "08S23",
+              "productName": "Nevirapina(NVP)50mg/5mL 240mlSuspensão",
+              "lotList": [
+                {
+                  "lotNumber": "NR0515028-A",
+                  "expiryDate": 1543528800000,
+                  "stockOnHandOfLot": 4
+                }
+              ],
+              "cmm": 0.0,
+              "mos": null,
+              "isHiv": true,
+              "sumStockOnHand": 4,
+              "stockOnHandStatus": "OVER_STOCK",
+              "astSyncDate": 1543528800000
+            },
+            {
+              "provinceId": 16,
+              "provinceName": "Província de Zambezia",
+              "districtId": 18,
+              "districtName": "Distrito de Mocuba",
+              "facilityId": 108,
+              "facilityCode": "HF79",
+              "facilityName": "CS Intome 2",
+              "productId": 487,
+              "productCode": "08L03",
+              "productName": "Isoniazida(H)300mgComprimidos",
+              "lotList": [
+                {
+                  "lotNumber": "15TIB007A",
+                  "expiryDate": 1567202400000,
+                  "stockOnHandOfLot": 0
+                },
+                {
+                  "lotNumber": "17TIB065A",
+                  "expiryDate": 1612044000000,
+                  "stockOnHandOfLot": 1344
+                },
+                {
+                  "lotNumber": "16TIBO47A",
+                  "expiryDate": 1588197600000,
+                  "stockOnHandOfLot": 0
+                }
+              ],
+              "cmm": 0.0,
+              "mos": null,
+              "isHiv": false,
+              "sumStockOnHand": 1344,
+              "stockOnHandStatus": "OVER_STOCK",
+              "astSyncDate": 1612044000000
+            },
+            {
+              "provinceId": 16,
+              "provinceName": "Província de Zambezia",
+              "districtId": 18,
+              "districtName": "Distrito de Mocuba",
+              "facilityId": 108,
+              "facilityCode": "HF79",
+              "facilityName": "CS Intome 3",
+              "productId": 816,
+              "productCode": "12D09Z",
+              "productName": "Axeroftol+Alfa tocoferol200 000UI+40UICápsulas",
+              "lotList": [
+                {
+                  "lotNumber": "SEM-LOTE-12D09Z-032018",
+                  "expiryDate": 1602447200000,
+                  "stockOnHandOfLot": 100
+                },
+                {
+                  "lotNumber": "S172064",
+                  "expiryDate": 1580421600000,
+                  "stockOnHandOfLot": 0
+                },
+                {
+                  "lotNumber": "S162169",
+                  "expiryDate": 1556575200000,
+                  "stockOnHandOfLot": 1
+                }
+              ],
+              "cmm": 0.0,
+              "mos": null,
+              "isHiv": false,
+              "sumStockOnHand": 100,
+              "stockOnHandStatus": "OVER_STOCK",
+              "astSyncDate": 1556575200000
+            },
+            {
+              "provinceId": 16,
+              "provinceName": "Província de Zambezia",
+              "districtId": 18,
+              "districtName": "Distrito de Mocuba",
+              "facilityId": 108,
+              "facilityCode": "HF79",
+              "facilityName": "CS Intome 4",
+              "productId": 1543,
+              "productCode": "11A23A",
+              "productName": "Sais de Rehidratacao Oral 27.9g, WHO mod. Saquetas",
+              "lotList": [
+                {
+                  "lotNumber": "160411",
+                  "expiryDate": 1553983200000,
+                  "stockOnHandOfLot": 0
+                },
+                {
+                  "lotNumber": "NO7084",
+                  "expiryDate": 1582927200000,
+                  "stockOnHandOfLot": 0
+                },
+                {
+                  "lotNumber": "NO7085",
+                  "expiryDate": 1582927200000,
+                  "stockOnHandOfLot": 0
+                },
+                {
+                  "lotNumber": "NO7086",
+                  "expiryDate": 1582927200000,
+                  "stockOnHandOfLot": 0
+                },
+                {
+                  "lotNumber": "NO7292",
+                  "expiryDate": 1635631200000,
+                  "stockOnHandOfLot": 0
+                },
+                {
+                  "lotNumber": "NO7291",
+                  "expiryDate": 1601416800000,
+                  "stockOnHandOfLot": 0
+                },
+                {
+                  "lotNumber": "NO7289",
+                  "expiryDate": 1601416800000,
+                  "stockOnHandOfLot": 50
+                },
+                {
+                  "lotNumber": "NO7290",
+                  "expiryDate": 1538258400000,
+                  "stockOnHandOfLot": 250
+                }
+              ],
+              "cmm": 0.0,
+              "mos": null,
+              "isHiv": false,
+              "sumStockOnHand": 300,
+              "stockOnHandStatus": "OVER_STOCK",
+              "astSyncDate": 1538258400000
+            }
+          ];
+          $scope.originData = formatSingleProductListForSearch($scope.originData);
+          $scope.reportData = formatSingleProductList($scope.originData);
+          $scope.filterAndSort();
+          // $scope.reportData = formatSingleProductList(singleProductResponse.rnr_list);
+        });
     }
   };
 
@@ -88,25 +292,8 @@ function SingleProductReportController($scope, $filter, $controller, $http, Cube
     $window.location.href = $scope.generateRedirectToExpiryDateReportURL(facilityCode);
   };
 
-  function validateProduct() {
-    $scope.invalid = !$scope.reportParams.productCode;
-    return !$scope.invalid;
-  }
-
-  $scope.partialPropertiesFilter = function (searchValue) {
-    return function (entry) {
-      var regex = new RegExp(searchValue, "gi");
-
-      return regex.test(entry.cmm.toString()) ||
-        regex.test(entry.soh.toString()) ||
-        regex.test(entry.expiry_date) ||
-        regex.test(entry.estimated_months) ||
-        regex.test(entry.facility_name) ||
-        regex.test(entry.formatted_expiry_date) ||
-        regex.test(entry.soonest_expiring_loh) ||
-        regex.test(entry.stock_status) ||
-        regex.test(entry.formatted_last_sync_date);
-    };
+  $scope.cmmStatusStyle = function (status) {
+    return CMM_STATUS[status];
   };
 
   $scope.exportXLSX = function () {
@@ -149,3 +336,13 @@ function SingleProductReportController($scope, $filter, $controller, $http, Cube
     }
   };
 }
+
+services.factory('SingleProductReportService', function ($resource, $filter, ReportExportExcelService, messageService) {
+  function getSingleProductList() {
+    return $resource('/reports/overstock-report', {}, {});
+  }
+
+  return {
+    getSingleProductList: getSingleProductList
+  };
+});

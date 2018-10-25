@@ -338,6 +338,11 @@ function BaseProductReportController($scope, $filter, ProductReportService, $cac
     return !$scope.invalidFacility;
   };
 
+  $scope.validateProduct = function () {
+    $scope.invalidProductCode = !$scope.reportParams.productCode;
+    return !$scope.invalidProductCode;
+  };
+
   $scope.validateSingleFacility = function () {
     var facilityId = $scope.reportParams.facilityId;
     $scope.invalidFacility = !facilityId || facilityId === ' ';
