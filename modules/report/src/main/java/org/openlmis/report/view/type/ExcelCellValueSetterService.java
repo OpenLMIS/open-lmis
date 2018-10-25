@@ -37,7 +37,7 @@ public class ExcelCellValueSetterService {
         if (params instanceof Map) {
             Map<String, Object> map = (Map<String, Object>)params;
             if (map.containsKey("dataType")) {
-                setterMap.get(map.get("dataType").toString()).setCellValue(map, cell);
+                setterMap.get(map.get("dataType").toString()).setCellValue(map, workbook, cell);
             } else {
                 cell.setCellValue((String)map.get("value"));
             }
