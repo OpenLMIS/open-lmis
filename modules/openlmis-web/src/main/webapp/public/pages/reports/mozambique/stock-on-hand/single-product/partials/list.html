@@ -102,7 +102,7 @@
           </td>
           <td ng-show="entry.isFirst" rowspan="{{entry.rowSpan}}">
             <a ng-click="redirectToLotExpiryDateReport(entry.facilityCode)" style="cursor:pointer;">
-            <span>{{entry.earliestExpiryDate}}</span>
+            <span>{{entry.expiry_date}}</span>
           </a></td>
           <td ng-show="entry.isFirst" rowspan="{{entry.rowSpan}}"
               class="align-right"><span ng-hide="angular.isUndefined(entry.estimated_months)"><img

@@ -42,7 +42,7 @@ function SingleProductReportController($scope, $filter, $controller, $http, Cube
         return o.expiryDate;
       });
 
-      formatItem.earliestExpiryDate = lotList[0].expiryDate;
+      formatItem.expiry_date = lotList[0].expiryDate;
       formatItem.lotList = lotList;
       formattedSingleProductList.push(formatItem);
     });
@@ -60,7 +60,7 @@ function SingleProductReportController($scope, $filter, $controller, $http, Cube
             productName: item.productName,
             stockOnHandStatus: item.stockOnHandStatus,
             facilityCode: item.facilityCode,
-            earliestExpiryDate: DateFormatService.formatDateWithLocale(item.earliestExpiryDate),
+            expiry_date: DateFormatService.formatDateWithLocale(item.expiry_date),
             lotNumber: lot.lotNumber,
             stockOnHandOfLot: lot.stockOnHandOfLot,
             sumStockOnHand: item.sumStockOnHand,
@@ -88,7 +88,7 @@ function SingleProductReportController($scope, $filter, $controller, $http, Cube
 
   var sortList = ['lotNumber', 'stockOnHandOfLot'];
   var ignoreSearchList = ['expiryDate'];
-  var timeFieldList = ['earliestExpiryDate', 'syncDate'];
+  var timeFieldList = ['expiry_date', 'syncDate'];
   $scope.filterAndSort = function () {
     $scope.filterList = ReportGroupSortAndFilterService.search($scope.originData, $scope.filterText, "lotList", timeFieldList, ignoreSearchList);
     $scope.filterList = ReportGroupSortAndFilterService.groupSort($scope.filterList, $scope.sortType, $scope.sortReverse, sortList);
