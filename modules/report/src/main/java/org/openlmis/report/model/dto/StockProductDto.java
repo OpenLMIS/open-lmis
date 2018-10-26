@@ -49,12 +49,4 @@ public class StockProductDto {
         dto.setSyncDate(lotInfo.getLastSyncDate());
         return dto;
     }
-
-    public Integer calcSoH(){
-        Integer sumSoH = 0;
-        for(LotInfo lot : lotList){
-            sumSoH = sumSoH + lot.getStockOnHandOfLot();
-        }
-        return sumSoH;
-    }
 }

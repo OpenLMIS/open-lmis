@@ -36,29 +36,7 @@ public class StockOnHandForSingleProductReportGenerator extends AbstractReportMo
     @Override
     protected Map<String, Object> getQueryResult(Map<Object, Object> paraMap) {
         StockReportParam filterCriteria = new StockReportParam();
-        try {
-            filterCriteria.setEndTime(DateUtil.parseDate(paraMap.get("endTime").toString()));
-            if (null != paraMap.get("provinceId")
-                    && StringUtils.isNotEmpty(paraMap.get("provinceId").toString().trim()))
-            {
-                filterCriteria.setProvinceId(Integer.parseInt(paraMap.get("provinceId").toString()));
-            }
-            if (null != paraMap.get("districtId")
-                    && StringUtils.isNotEmpty(paraMap.get("districtId").toString().trim())) {
-                filterCriteria.setDistrictId(Integer.parseInt(paraMap.get("districtId").toString()));
-            }
-            if (null != paraMap.get("facilityId")
-                    && StringUtils.isNotEmpty(paraMap.get("facilityId").toString().trim())) {
-                filterCriteria.setFacilityId(Integer.parseInt(paraMap.get("facilityId").toString().trim()));
-            }
-            if (null != paraMap.get("productCode")
-                    && StringUtils.isNotEmpty(paraMap.get("productCode").toString().trim())) {
-                filterCriteria.setProductCode(paraMap.get("productCode").toString().trim());
-            }
-        }
-        catch (Throwable e) {
-            logger.error(ExceptionUtils.getStackTrace(e));
-        }
+        filterCriteria.setValue(paraMap);
         List<StockProductDto> stockProductDtoList = simpleTableService.getStockProductData(filterCriteria);
 
         Map<String, Object> result = new HashMap<>();

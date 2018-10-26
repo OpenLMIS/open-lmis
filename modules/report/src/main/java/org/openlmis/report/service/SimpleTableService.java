@@ -5,6 +5,7 @@ import org.openlmis.core.repository.mapper.FacilityMapper;
 import org.openlmis.report.generator.StockOnHandStatus;
 import org.openlmis.report.mapper.ProductLotInfoMapper;
 import org.openlmis.report.mapper.RequisitionReportsMapper;
+import org.openlmis.report.mapper.StockOnHandInfoMapper;
 import org.openlmis.report.model.dto.*;
 import org.openlmis.report.model.params.NonSubmittedRequisitionReportsParam;
 import org.openlmis.report.model.params.StockReportParam;
@@ -25,6 +26,9 @@ public class SimpleTableService {
 
     @Autowired
     private ProductLotInfoMapper productLotInfoMapper;
+
+    @Autowired
+    private StockOnHandInfoMapper stockOnHandInfoMapper;
 
     @Autowired
     private FacilityMapper facilityMapper;
@@ -64,16 +68,25 @@ public class SimpleTableService {
         Map<String, StockProductDto> stockProductDtoMap = stockProductGroupBy(productLotInfos);
         Map<String, CMMEntry> cmmEntryMap = getProductCmmMap(filterCriteria);
 
+        Map<String, Integer> sohMap = sohMap(stockOnHandInfoMapper.getStockOnHandInfoList(filterCriteria));
         StockProductDto stockProduct;
         for (Map.Entry<String, StockProductDto> entry : stockProductDtoMap.entrySet()) {
             stockProduct = entry.getValue();
+            stockProduct.setSumStockOnHand(sohMap.get(getEntryMapKey(stockProduct.getProductCode(), stockProduct.getFacilityId().toString())));
             stockProduct = calcCmmAndSoh(stockProduct, cmmEntryMap, filterCriteria);
             if (null != stockProduct) {
                 stockProducts.add(stockProduct);
             }
         }
-
         return stockProducts;
+    }
+
+    private Map<String, Integer> sohMap(List<StockOnHandDto> stockOnHandDtos) {
+        Map<String, Integer> sohMap = new HashMap<>();
+        for (StockOnHandDto stockOnHandDto : stockOnHandDtos) {
+            sohMap.put(getEntryMapKey(stockOnHandDto.getProductCode(),stockOnHandDto.getFacilityId().toString()), stockOnHandDto.getSoh());
+        }
+        return sohMap;
     }
 
     public List<StockProductDto> getOverStockProductReport(StockReportParam filterCriteria) {
@@ -97,21 +110,19 @@ public class SimpleTableService {
             return null;
         }
         double cmm = -1.0f;
-        CMMEntry cmmEntry = cmmEntryMap.get(getCmmEntryMapKey(stockProduct.getProductCode(), stockProduct.getFacilityId().toString()));
+        CMMEntry cmmEntry = cmmEntryMap.get(getEntryMapKey(stockProduct.getProductCode(), stockProduct.getFacilityId().toString()));
         if (null != cmmEntry && null != cmmEntry.getCmmValue()) {
             cmm = cmmEntry.getCmmValue();
         }
-        Integer sumSoH = stockProduct.calcSoH();
-        StockOnHandStatus status = stockStatusService.getStockOnHandStatus((long)cmm, sumSoH, stockProduct.getIsHiv());
+        StockOnHandStatus status = stockStatusService.getStockOnHandStatus((long)cmm, stockProduct.getSumStockOnHand(), stockProduct.getIsHiv());
         stockProduct.setStockOnHandStatus(status);
-        stockProduct.setSumStockOnHand(sumSoH);
 
         if (cmm < 0) {
             stockProduct.setCmm(null);
         } else {
             stockProduct.setCmm(cmm);
         }
-        stockProduct.setMos(stockStatusService.calcMos(cmm, sumSoH));
+        stockProduct.setMos(stockStatusService.calcMos(cmm, stockProduct.getSumStockOnHand()));
         return stockProduct;
     }
 
@@ -125,12 +136,12 @@ public class SimpleTableService {
 
         Map<String, CMMEntry> cmmEntryMap = new HashMap<>();
         for (CMMEntry cmmEntry : CMMEntryList) {
-            cmmEntryMap.put(getCmmEntryMapKey(cmmEntry.getProductCode(), cmmEntry.getFacilityId().toString()), cmmEntry);
+            cmmEntryMap.put(getEntryMapKey(cmmEntry.getProductCode(), cmmEntry.getFacilityId().toString()), cmmEntry);
         }
         return cmmEntryMap;
     }
 
-    private String getCmmEntryMapKey(String productCode, String facilityId) {
+    private String getEntryMapKey(String productCode, String facilityId) {
         return String.format("%s-%s", productCode, facilityId);
     }
 
