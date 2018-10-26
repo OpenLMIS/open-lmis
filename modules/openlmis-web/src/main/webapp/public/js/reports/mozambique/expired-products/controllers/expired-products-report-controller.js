@@ -23,7 +23,8 @@ function ExpiredProductsReportController($scope, $controller, $filter, ExpiredPr
         endTime: $filter('date')(reportParams.endTime, "yyyy-MM-dd") + " 23:59:59",
         provinceId: reportParams.provinceId.toString(),
         districtId: reportParams.districtId.toString(),
-        facilityId: reportParams.facilityId.toString()
+        facilityId: reportParams.facilityId.toString(),
+        reportType: 'expiredProductsReport'
       };
       
       $scope.isDistrictExpiredProduct = utils.isEmpty(reportParams.districtId);
@@ -79,7 +80,8 @@ function ExpiredProductsReportController($scope, $controller, $filter, ExpiredPr
           productName: expiredProduct.productName,
           lotNumber: lot.lotNumber,
           expiryDate: DateFormatService.formatDateWithLocale(lot.expiryDate),
-          stockOnHandOfLot: lot.stockOnHandOfLot
+          stockOnHandOfLot: lot.stockOnHandOfLot,
+          price: lot.price
         };
         
         if (!$scope.isDistrictExpiredProduct) {
