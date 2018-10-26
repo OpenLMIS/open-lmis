@@ -13,48 +13,63 @@ var utils = {
     return ('0' + date.getDate()).slice(-2) + '/' + ('0' + (date.getMonth() + 1)).slice(-2) +
       '/' + date.getFullYear();
   },
-
+  
   isNullOrUndefined: function (obj) {
     return obj === undefined || obj === null;
   },
-
+  
   isNumber: function (numberValue) {
     if (this.isNullOrUndefined(numberValue)) return false;
     var number = numberValue.toString();
-
+    
     if (number.trim() === '') return false;
     return !isNaN(number);
   },
-
+  
   parseIntWithBaseTen: function (number) {
     return parseInt(number, 10);
   },
-
+  
   getValueFor: function (number, defaultValue) {
     if (!utils.isNumber(number)) return defaultValue ? defaultValue : null;
     return utils.parseIntWithBaseTen(number);
   },
-
+  
   isValidPage: function (pageNumber, totalPages) {
     pageNumber = parseInt(pageNumber, 10);
     return !!pageNumber && pageNumber > 0 && pageNumber <= totalPages;
   },
-
+  
   isEmpty: function (value) {
     return (value === null || value === undefined || value.toString().trim().length === 0);
   },
-
+  
   sum: function () {
     var values = Array.prototype.slice.call(arguments), sum = 0;
-
+    
     values.forEach(function (value) {
       if (!isUndefined(value)) {
         sum += utils.parseIntWithBaseTen(value);
       }
     });
     return sum;
-  }
+  },
+  
+  toFixedNumber: function (originNumber, needNullValue) {
+    if (_.isNull(originNumber) && needNullValue) {
+      return null;
+    }
 
+    return parseFloat(originNumber.toFixed(2));
+  },
+  
+  pickEmptyObject: function (originObject) {
+    return _.pick(originObject, function (item) {
+      if (!utils.isEmpty(item)) {
+        return item;
+      }
+    });
+  }
 };
 
 String.prototype.format = function () {

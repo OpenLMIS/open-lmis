@@ -143,15 +143,7 @@ function RequisitionReportController($scope, $controller, RequisitionReportServi
       programIds: $scope.selectedProgramIds
     };
 
-    RequisitionReportService.get(_.pick(requisitionQueryParameters, function (parameter) {
-      if (typeof parameter === "string") {
-        return !_.isEmpty(parameter.trim());
-      }
-      if (_.isArray(parameter) ) {
-        return !_.isEmpty(parameter);
-      }
-      return parameter;
-    }), function (data) {
+    RequisitionReportService.get(utils.pickEmptyObject(requisitionQueryParameters), function (data) {
       $scope.requisitions = data.rnr_list;
       formatRequisitionList();
       calculatorProgramsExpectedAndSubmittedQuantity();

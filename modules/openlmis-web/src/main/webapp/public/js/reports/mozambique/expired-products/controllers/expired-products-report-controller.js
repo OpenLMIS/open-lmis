@@ -31,11 +31,7 @@ function ExpiredProductsReportController($scope, $controller, $filter, ExpiredPr
       
       ExpiredProductsService
         .getExpiredProductList()
-        .get(_.pick(expiredProductParams, function (param) {
-          if (!utils.isEmpty(param)) {
-            return param;
-          }
-        }), {}, function (expiredProductResponse) {
+        .get(utils.pickEmptyObject(expiredProductParams), {}, function (expiredProductResponse) {
           $scope.showExpiredProductsTable = true;
           $scope.formattedExpiredProductList = formatExpiredProductList(expiredProductResponse.rnr_list);
           $scope.showExpiredProductsTable = expiredProductResponse.rnr_list.length;
@@ -61,16 +57,14 @@ function ExpiredProductsReportController($scope, $controller, $filter, ExpiredPr
     $scope.filterList = ReportGroupSortAndFilterService.search($scope.expiredProductList, $scope.filterText, "lotList", "expiryDate");
     $scope.filterList = ReportGroupSortAndFilterService.groupSort($scope.filterList, $scope.sortType, $scope.sortReverse, sortList);
     $scope.formattedExpiredProductList = formatExpiredProductList($scope.filterList);
-    
   };
   
   function formatExpiredProductListTime(expiredProductList) {
     return _.map(expiredProductList, function (expiredProduct) {
-      expiredProduct.cmm = toFixedNumber(expiredProduct.cmm);
-      expiredProduct.mos = toFixedNumber(expiredProduct.mos);
+      expiredProduct.cmm = utils.toFixedNumber(expiredProduct.cmm, true);
+      expiredProduct.mos = utils.toFixedNumber(expiredProduct.mos, true);
       return expiredProduct;
     });
-    
   }
   
   function formatExpiredProductList(expiredProductList) {
@@ -90,8 +84,8 @@ function ExpiredProductsReportController($scope, $controller, $filter, ExpiredPr
         
         if (!$scope.isDistrictExpiredProduct) {
           _.assign(formatItem, {
-            cmm: toFixedNumber(expiredProduct.cmm),
-            mos: toFixedNumber(expiredProduct.mos),
+            cmm: utils.toFixedNumber(expiredProduct.cmm, true),
+            mos: utils.toFixedNumber(expiredProduct.mos, true),
             rowSpan: expiredProduct.lotList.length,
             isFirst: index === 0
           });
@@ -102,14 +96,6 @@ function ExpiredProductsReportController($scope, $controller, $filter, ExpiredPr
     });
     
     return formattedExpiredProductList;
-  }
-  
-  function toFixedNumber(originNumber) {
-    if (_.isNull(originNumber)) {
-      return null;
-    }
-    
-    return parseFloat(originNumber.toFixed(2));
   }
 }
 
@@ -128,11 +114,7 @@ services.factory('ExpiredProductsService', function ($resource, $filter, ReportE
     };
     
     ReportExportExcelService.exportAsXlsxBackend(
-      _.pick(data, function (param) {
-        if (!utils.isEmpty(param)) {
-          return param;
-        }
-      }), messageService.get('report.file.over.stock.products.report'));
+      utils.pickEmptyObject(data), messageService.get('report.file.over.stock.products.report'));
   }
   
   return {

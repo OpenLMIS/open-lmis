@@ -31,11 +31,7 @@ function OverStockReportController($scope, $controller, $filter, OverStockProduc
       
       OverStockProductsService
         .getOverStockProductList()
-        .get(_.pick(overStockParams, function (param) {
-          if (!utils.isEmpty(param)) {
-            return param;
-          }
-        }), {}, function (overStockResponse) {
+        .get(utils.pickEmptyObject(overStockParams), {}, function (overStockResponse) {
           $scope.showOverStockProductsTable = true;
           $scope.formattedOverStockList = formatOverStockList(overStockResponse.rnr_list);
           $scope.showOverStockProductsTable = overStockResponse.rnr_list.length;
@@ -65,8 +61,8 @@ function OverStockReportController($scope, $controller, $filter, OverStockProduc
 
   function formatOverStockProductListTime(overStockList) {
     return _.map(overStockList, function (overStockItem) {
-      overStockItem.cmm = toFixedNumber(overStockItem.cmm);
-      overStockItem.mos = toFixedNumber(overStockItem.mos);
+      overStockItem.cmm = utils.toFixedNumber(overStockItem.cmm, true);
+      overStockItem.mos = utils.toFixedNumber(overStockItem.mos, true);
       return overStockItem;
     });
   }
@@ -88,8 +84,8 @@ function OverStockReportController($scope, $controller, $filter, OverStockProduc
         
         if (!$scope.isDistrictOverStock) {
           _.assign(formatItem, {
-            cmm: toFixedNumber(overStock.cmm),
-            mos: toFixedNumber(overStock.mos),
+            cmm: utils.toFixedNumber(overStock.cmm, true),
+            mos: utils.toFixedNumber(overStock.mos, true),
             rowSpan: overStock.lotList.length,
             isFirst: index === 0
           });
@@ -100,14 +96,6 @@ function OverStockReportController($scope, $controller, $filter, OverStockProduc
     });
     
     return formattedOverStockList;
-  }
-  
-  function toFixedNumber(originNumber) {
-    if (_.isNull(originNumber)) {
-      return null;
-    }
-    
-    return parseFloat(originNumber.toFixed(2));
   }
 }
 
@@ -126,11 +114,7 @@ services.factory('OverStockProductsService', function ($resource, $filter, Repor
     };
     
     ReportExportExcelService.exportAsXlsxBackend(
-      _.pick(data, function (param) {
-        if (!utils.isEmpty(param)) {
-          return param;
-        }
-      }), messageService.get('report.file.over.stock.products.report'));
+      utils.pickEmptyObject(data), messageService.get('report.file.over.stock.products.report'));
   }
   
   return {
