@@ -22,6 +22,7 @@ public class ProductLotInfoQueryBuilder {
         SELECT("parent_zone.id as provinceId,parent_zone.name as provinceName");
         SELECT("zone.id as districtId,zone.name as districtName");
         SELECT("facilities.id as facilityId,facilities.name facilityName");
+        SELECT("facilities.code as facilityCode");
         SELECT("products.id as productId,products.code productCode");
         SELECT("products.primaryname productName");
         SELECT("lots.lotnumber as lotNumber");
@@ -58,6 +59,6 @@ public class ProductLotInfoQueryBuilder {
             if (null != filter.getProductCode()) {
                 WHERE("products.code = #{filterCriteria.productCode}");
             }
-        }
+         }
     }
 }

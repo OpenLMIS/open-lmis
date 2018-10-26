@@ -17,6 +17,7 @@ public class ProductLotInfo {
     private String districtName;
     private Integer facilityId;
     private String facilityName;
+    private String facilityCode;
     private Integer productId;
     private String productCode;
     private String productName;

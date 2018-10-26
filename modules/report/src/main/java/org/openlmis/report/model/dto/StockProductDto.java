@@ -18,6 +18,7 @@ public class StockProductDto {
     private String districtName;
     private Integer facilityId;
     private String facilityName;
+    private String facilityCode;
     private Integer productId;
     private String productCode;
     private String productName;
@@ -39,6 +40,7 @@ public class StockProductDto {
         dto.setDistrictName(lotInfo.getDistrictName());
         dto.setFacilityId(lotInfo.getFacilityId());
         dto.setFacilityName(lotInfo.getFacilityName());
+        dto.setFacilityCode(lotInfo.getFacilityCode());
         dto.setProductId(lotInfo.getProductId());
         dto.setProductCode(lotInfo.getProductCode());
         dto.setProductName(lotInfo.getProductName());
