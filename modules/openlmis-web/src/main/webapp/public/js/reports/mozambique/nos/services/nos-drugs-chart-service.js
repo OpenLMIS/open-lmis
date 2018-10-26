@@ -1,7 +1,7 @@
 services.factory('NosDrugsChartService', function ($http, $filter, $q, $timeout, messageService,
                                                    CubesGenerateUrlService, StockoutSingleProductZoneChartService,
                                                    CubesGenerateCutParamsService, ReportLocationConfigService,
-                                                   ReportExportExcelService, DateFormatService, NosDrugStatusService,
+                                                   ReportExportExcelService, DateFormatService, NewReportService,
                                                    WeeklyNosDrugExportService) {
 
   var DATE_FORMAT = 'yyyy,MM,dd';
@@ -184,7 +184,7 @@ services.factory('NosDrugsChartService', function ($http, $filter, $q, $timeout,
       reportType: "nosDrug"
     };
 
-    return NosDrugStatusService.get(params);
+    return NewReportService.get(params);
   }
 
   function getNosDrugList() {

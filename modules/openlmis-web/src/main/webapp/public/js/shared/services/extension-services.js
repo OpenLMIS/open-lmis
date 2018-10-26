@@ -1321,7 +1321,7 @@ services.factory('VersionReportService', function ($resource) {
   return $resource('/reports/app-version-report.json', {}, {});
 });
 
-services.factory('NosDrugStatusService', function ($resource) {
+services.factory('NewReportService', function ($resource) {
   return $resource('/reports/data', {}, {get: {method: 'POST'}});
 });
 

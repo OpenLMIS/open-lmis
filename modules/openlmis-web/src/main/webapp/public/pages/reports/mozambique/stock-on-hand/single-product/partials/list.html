@@ -79,11 +79,11 @@
           <span ng-show="sortType != 'cmm'" class="icon-sort"></span>
           <span ng-show="sortType == 'cmm' && !sortReverse" class="icon-sort-up"></span>
           <span ng-show="sortType == 'cmm' && sortReverse" class="icon-sort-down"></span></th>
-        <th ng-click="sortType = 'astSyncDate'; sortReverse = !sortReverse; filterAndSort();" class="sortable sort-desc"
+        <th ng-click="sortType = 'syncDate'; sortReverse = !sortReverse; filterAndSort();" class="sortable sort-desc"
             openlmis-message="report.last.update.date">
-          <span ng-show="sortType != 'astSyncDate'" class="icon-sort"></span>
-          <span ng-show="sortType == 'astSyncDate' && !sortReverse" class="icon-sort-up"></span>
-          <span ng-show="sortType == 'astSyncDate' && sortReverse" class="icon-sort-down"></span></th>
+          <span ng-show="sortType != 'syncDate'" class="icon-sort"></span>
+          <span ng-show="sortType == 'syncDate' && !sortReverse" class="icon-sort-up"></span>
+          <span ng-show="sortType == 'syncDate' && sortReverse" class="icon-sort-down"></span></th>
       </tr>
     </table>
     <div class="content-table">
@@ -111,8 +111,8 @@
           <td ng-show="entry.isFirst" rowspan="{{entry.rowSpan}}">
             {{entry.cmm}}
           </td>
-          <td ng-show="entry.isFirst" rowspan="{{entry.rowSpan}}"><span class="circle-icon" ng-style="checkLastSyncDate(entry.astSyncDate)"></span>
-            <span>{{entry.astSyncDate}}</span>
+          <td ng-show="entry.isFirst" rowspan="{{entry.rowSpan}}"><span class="circle-icon" ng-style="checkLastSyncDate(entry.syncDate)"></span>
+            <span>{{entry.syncDate}}</span>
           </td>
         </tr>
       </table>
