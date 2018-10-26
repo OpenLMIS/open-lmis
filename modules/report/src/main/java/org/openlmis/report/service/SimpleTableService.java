@@ -96,20 +96,22 @@ public class SimpleTableService {
         if (CollectionUtils.isEmpty(stockProduct.getLotList())) {
             return null;
         }
+        double cmm = -1.0f;
         CMMEntry cmmEntry = cmmEntryMap.get(getCmmEntryMapKey(stockProduct.getProductCode(), stockProduct.getFacilityId().toString()));
-        if (null == cmmEntry || null == cmmEntry.getCmmValue()) {
-            return null;
+        if (null != cmmEntry && null != cmmEntry.getCmmValue()) {
+            cmm = cmmEntry.getCmmValue();
         }
         Integer sumSoH = stockProduct.calcSoH();
-        StockOnHandStatus status = stockStatusService.getStockOnHandStatus(cmmEntry.getCmmValue().longValue(), sumSoH, stockProduct.getIsHiv());
+        StockOnHandStatus status = stockStatusService.getStockOnHandStatus((long)cmm, sumSoH, stockProduct.getIsHiv());
         stockProduct.setStockOnHandStatus(status);
         stockProduct.setSumStockOnHand(sumSoH);
 
-        Double cmm = cmmEntry.getCmmValue().doubleValue();
-        stockProduct.setCmm(Double.valueOf(cmm.doubleValue()));
-        if (0 != cmm) {
-            stockProduct.setMos(sumSoH / cmm);
+        if (cmm < 0) {
+            stockProduct.setCmm(null);
+        } else {
+            stockProduct.setCmm(cmm);
         }
+        stockProduct.setMos(stockStatusService.calcMos(cmm, sumSoH));
         return stockProduct;
     }
 
@@ -117,7 +119,7 @@ public class SimpleTableService {
         List<CMMEntry> CMMEntryList = new ArrayList<>();
         if(null != filterCriteria.getDistrictId()){
             CMMEntryList = cmmMapper.getCMMEntryByDistrictAndDay(filterCriteria.getDistrictId().longValue(), filterCriteria.getEndTime());
-        }else{
+        }else if (null != filterCriteria.getFacilityId()){
             CMMEntryList = cmmMapper.getCMMEntryByProvinceAndDay(filterCriteria.getProvinceId().longValue(), filterCriteria.getEndTime());
         }
 

@@ -73,4 +73,15 @@ public class StockStatusService {
     }
     return false;
   }
+
+  //maxOccurredDateEntry.estimated_months
+    // = (maxOccurredDateEntry.cmm === -1.0 || maxOccurredDateEntry.cmm === 0) ?
+    // undefined : Math.floor(10 * maxOccurredDateEntry.soh / maxOccurredDateEntry.cmm) / 10;
+
+  public Double calcMos(double cmm, int soh) {
+      if (-1.0 == cmm || 0 == cmm) {
+          return null;
+      }
+      return Math.floor(10 * soh / cmm) / 10;
+  }
 }
