@@ -119,7 +119,6 @@ function SingleProductReportController($scope, $filter, $controller, $http, Cube
           $scope.originData = formatSingleProductListForSearch($scope.originData);
           $scope.reportData = formatSingleProductList($scope.originData);
           $scope.filterAndSort();
-          // $scope.reportData = formatSingleProductList(singleProductResponse.rnr_list);
         });
     }
   };

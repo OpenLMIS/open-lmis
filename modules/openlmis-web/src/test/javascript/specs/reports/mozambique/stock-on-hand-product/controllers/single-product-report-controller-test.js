@@ -66,28 +66,6 @@ describe('Single Product Report Controller', function () {
     expect(scope.generateRedirectToExpiryDateReportURL(facilityCode)).toBe('/public/pages/reports/mozambique/index.html#/lot-expiry-dates?facilityCode=HF1&date=2016-11-01&drugCode=01A03');
   });
 
-  it('should load single product report successfully', function () {
-    scope.reportParams = {};
-    scope.loadReport();
-    expect(scope.invalid).toBe(true);
-    scope.reportParams.productCode = '01A01';
-    scope.reportParams.endTime = '2017-01-04';
-    scope.reportParams.facilityId = 1;
-    scope.reportParams.districtId = 1;
-    scope.reportParams.provinceId = 1;
-
-    spyOn(lotExpiryDateService, 'populateLotOnHandInformationForSoonestExpiryDate');
-
-    httpBackend.expectGET('/cubesreports/cube/vw_daily_full_soh/facts?cut=occurred%3A-2017%2C01%2C04%7Cdrug%3A01A01').respond(200, productData);
-    httpBackend.expectGET('/cubesreports/cube/vw_cmm_entries/facts?cut=product%3A01A01%7Cperiodbegin%3A2016%2C12%2C21%7Cperiodend%3A2017%2C01%2C20').respond(200, productData);
-
-    scope.loadReport();
-    httpBackend.flush();
-
-    expect(scope.reportData.length).toBe(1);
-    expect(scope.reportData[0]['drug.drug_name']).toEqual("Paracetamol500mgComprimidos");
-  });
-
   it('should export data with district province name successfully', function () {
     scope.reportData = [
       {
