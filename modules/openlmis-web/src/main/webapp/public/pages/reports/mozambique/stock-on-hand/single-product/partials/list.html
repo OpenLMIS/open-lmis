@@ -94,10 +94,10 @@
           <td>{{entry.stockOnHandOfLot}}</td>
           <td style="text-align: right" ng-class="cmmStatusStyle(entry.stockOnHandStatus)"
               ng-show="entry.isFirst" rowspan="{{entry.rowSpan}}">
-            <span class="label label-warning low-stock-tag" openlmis-message="stock.cmm.low.stock"></span>
-            <span class="label label-info over-stock-tag" openlmis-message="stock.cmm.over.stock"></span>
-            <span class="label label-success regular-stock-tag" openlmis-message="stock.cmm.regular.stock"></span>
-            <span class="label label-important stock-out-tag" openlmis-message="stock.cmm.stock.out"></span>
+            <span class="label low-stock-color low-stock-tag" openlmis-message="stock.cmm.low.stock"></span>
+            <span class="label over-stock-color over-stock-tag" openlmis-message="stock.cmm.over.stock"></span>
+            <span class="label regular-stock-color regular-stock-tag" openlmis-message="stock.cmm.regular.stock"></span>
+            <span class="label stock-out-color stock-out-tag" openlmis-message="stock.cmm.stock.out"></span>
             <span>{{entry.sumStockOnHand | number:0}}</span>
           </td>
           <td ng-show="entry.isFirst" rowspan="{{entry.rowSpan}}">
