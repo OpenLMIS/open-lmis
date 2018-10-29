@@ -97,7 +97,7 @@ public class SimpleTableController extends BaseController {
             @RequestParam(value = "districtId", required = false) Integer districtId,
             @RequestParam(value = "facilityId", required = false) Integer facilityId) {
 
-        StockReportParam filterCriteria = new StockReportParam(endTime, provinceId, districtId, facilityId, null, null, null);
+        StockReportParam filterCriteria = new StockReportParam(endTime, provinceId, districtId, facilityId, null, null, null, null);
         List<StockProductDto> overStockProducts = simpleTableService.getOverStockProductReport(filterCriteria);
         return OpenLmisResponse.response("rnr_list", overStockProducts);
     }

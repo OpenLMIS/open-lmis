@@ -30,6 +30,8 @@ public class StockReportParam {
     private String provinceCode;
     private String districtCode;
 
+    private FilterCondition filterCondition;
+
     public void setValue(Map<Object, Object> paraMap) {
         try {
             setEndTime(DateUtil.parseDate(paraMap.get("endTime").toString()));
@@ -56,5 +58,9 @@ public class StockReportParam {
     private boolean isValidParam(Map<Object, Object> paraMap, String key) {
         return null != paraMap.get(key)
                 && StringUtils.isNotEmpty(paraMap.get(key).toString().trim());
+    }
+
+    public interface FilterCondition {
+        public String getCondition();
     }
 }

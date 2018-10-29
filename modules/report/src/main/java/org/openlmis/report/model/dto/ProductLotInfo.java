@@ -26,6 +26,7 @@ public class ProductLotInfo {
     private Integer stockOnHandOfLot;
     private Boolean isHiv;
     private Date lastSyncDate;
+    private Double price;
 
     public String getLastSyncDateString() {
         if (null != lastSyncDate) {

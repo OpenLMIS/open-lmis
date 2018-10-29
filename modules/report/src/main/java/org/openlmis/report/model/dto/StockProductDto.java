@@ -30,6 +30,7 @@ public class StockProductDto {
     private StockOnHandStatus stockOnHandStatus;
     private String lastSyncUpDate;
     private Date syncDate;
+    private Double price;
 
     public static StockProductDto of(ProductLotInfo lotInfo){
         StockProductDto dto = new StockProductDto();
@@ -47,6 +48,7 @@ public class StockProductDto {
         dto.setIsHiv(lotInfo.getIsHiv());
         dto.setLastSyncUpDate(lotInfo.getLastSyncDateString());
         dto.setSyncDate(lotInfo.getLastSyncDate());
+        dto.setPrice(lotInfo.getPrice());
         return dto;
     }
 }

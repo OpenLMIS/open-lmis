@@ -31,6 +31,7 @@ public class ProductLotInfoQueryBuilder {
         SELECT("products.ishiv as isHiv");
         SELECT("stock_cards.modifieddate AS lastSyncDate");
         SELECT("stock_cards.facilityid as stockcardFacilityId");
+        SELECT("NULL as price");
         FROM("facilities");
         LEFT_OUTER_JOIN("geographic_zones zone on facilities.geographiczoneid = zone.id");
         LEFT_OUTER_JOIN("geographic_zones parent_zone on zone.parentid = parent_zone.id");
@@ -58,6 +59,9 @@ public class ProductLotInfoQueryBuilder {
             }
             if (null != filter.getProductCode()) {
                 WHERE("products.code = #{filterCriteria.productCode}");
+            }
+            if (null != filter.getFilterCondition()) {
+                WHERE(filter.getFilterCondition().getCondition());
             }
          }
     }
