@@ -96,7 +96,7 @@ function SingleProductReportController($scope, $filter, $controller, $http, Cube
   };
 
   $scope.loadReport = function () {
-    if ($scope.validateProvince() && $scope.validateDistrict() && $scope.validateProduct()) {
+    if ($scope.validateProduct() && $scope.validateProvince() && $scope.validateDistrict()) {
       var reportParams = $scope.reportParams;
 
       var singleProductParams = {
@@ -139,6 +139,26 @@ function SingleProductReportController($scope, $filter, $controller, $http, Cube
 
   $scope.cmmStatusStyle = function (status) {
     return CMM_STATUS[status];
+  };
+
+  $scope.exportXLSX = function () {
+
+    if ($scope.validateProduct() && $scope.validateProvince() && $scope.validateDistrict()) {
+      var reportParams = $scope.reportParams;
+
+      var data = {
+        endTime: $filter('date')(reportParams.endTime, "yyyy-MM-dd") + " 23:59:59",
+        provinceId: reportParams.provinceId.toString(),
+        districtId: reportParams.districtId.toString(),
+        facilityId: reportParams.facilityId.toString(),
+        productCode: reportParams.productCode.toString(),
+        reportType: "singleStockOnHand"
+      };
+
+      ReportExportExcelService.exportAsXlsxBackend(
+        utils.pickEmptyObject(data), messageService.get('report.file.single.product.soh.report'));
+    }
+
   };
 
   $scope.exportXLSX = function () {
