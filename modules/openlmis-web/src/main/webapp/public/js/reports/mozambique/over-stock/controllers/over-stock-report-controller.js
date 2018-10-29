@@ -56,8 +56,9 @@ function OverStockReportController($scope, $controller, $filter, OverStockProduc
   };
   
   var sortList = ['lotNumber', 'expiryDate', 'stockOnHandOfLot'];
+  var timeList = ['expiryDate'];
   $scope.filterAndSort = function () {
-    $scope.filterList = ReportGroupSortAndFilterService.search($scope.overStockList, $scope.filterText, "lotList", "expiryDate");
+    $scope.filterList = ReportGroupSortAndFilterService.search($scope.overStockList, $scope.filterText, "lotList", timeList);
     $scope.filterList = ReportGroupSortAndFilterService.groupSort($scope.filterList, $scope.sortType, $scope.sortReverse, sortList);
     $scope.formattedOverStockList = formatOverStockList($scope.filterList);
   };
