@@ -2,7 +2,7 @@ describe('OvrerStockReportController', function () {
   var scope, httpBackend, messageService, overStockProductsService;
 
   var overStockList = {
-    'rnr_list': [
+    'data': [
       {
 
         provinceId: 61,
@@ -48,7 +48,16 @@ describe('OvrerStockReportController', function () {
     scope.reportParams.facilityId = 1;
     scope.reportParams.districtId = 1;
     scope.reportParams.provinceId = 1;
-    httpBackend.expectGET('/reports/overstock-report?districtId=1&endTime=2017-02-01+23:59:59&facilityId=1&provinceId=1').respond(200, overStockList);
+    
+    var params = {
+      provinceId: '1',
+      districtId: '1',
+      facilityId: '1',
+      endTime: '2017-02-01 23:59:59',
+      reportType: 'overStockProductsReport'
+    };
+    
+    httpBackend.expectPOST('/reports/data', params).respond(200, overStockList);
 
     scope.loadReport();
     httpBackend.flush();

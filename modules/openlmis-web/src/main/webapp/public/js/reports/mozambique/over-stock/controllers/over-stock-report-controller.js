@@ -23,7 +23,8 @@ function OverStockReportController($scope, $controller, $filter, OverStockProduc
         endTime: $filter('date')(reportParams.endTime, "yyyy-MM-dd") + " 23:59:59",
         provinceId: reportParams.provinceId.toString(),
         districtId: reportParams.districtId.toString(),
-        facilityId: reportParams.facilityId.toString()
+        facilityId: reportParams.facilityId.toString(),
+        reportType: 'overStockProductsReport'
       };
       
       $scope.isDistrictOverStock = utils.isEmpty(reportParams.districtId);
@@ -31,11 +32,11 @@ function OverStockReportController($scope, $controller, $filter, OverStockProduc
       
       OverStockProductsService
         .getOverStockProductList()
-        .get(utils.pickEmptyObject(overStockParams), {}, function (overStockResponse) {
+        .post(utils.pickEmptyObject(overStockParams), function (overStockResponse) {
           $scope.showOverStockProductsTable = true;
-          $scope.formattedOverStockList = formatOverStockList(overStockResponse.rnr_list);
-          $scope.showOverStockProductsTable = overStockResponse.rnr_list.length;
-          $scope.overStockList = formatOverStockProductListTime(overStockResponse.rnr_list);
+          $scope.formattedOverStockList = formatOverStockList(overStockResponse.data);
+          $scope.showOverStockProductsTable = overStockResponse.data.length;
+          $scope.overStockList = formatOverStockProductListTime(overStockResponse.data);
           $scope.filterAndSort();
           
           UnitService.fixedScrollBorHeaderStyles('fixed-header', 'fixed-body');
@@ -103,7 +104,7 @@ function OverStockReportController($scope, $controller, $filter, OverStockProduc
 
 services.factory('OverStockProductsService', function ($resource, $filter, ReportExportExcelService, messageService) {
   function getOverStockProductList() {
-    return $resource('/reports/overstock-report', {}, {});
+    return $resource('/reports/data', {}, {post: {method: 'POST'}});
   }
   
   function getDataForExport(provinceId, districtId, facilityId, endTime) {
@@ -112,7 +113,7 @@ services.factory('OverStockProductsService', function ($resource, $filter, Repor
       districtId: districtId,
       facilityId: facilityId,
       endTime: endTime,
-      reportType: 'overStockProductReport'
+      reportType: 'overStockProductsReport'
     };
     
     ReportExportExcelService.exportAsXlsxBackend(
