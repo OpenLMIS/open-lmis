@@ -22,9 +22,23 @@ services.factory('UnitService', function (messageService) {
       document.getElementById(elementHeaderId).scrollLeft = fixedBodyDomLeft;
     };
   };
+  
+  var fixedScrollBorHeaderStyles = function (elementHeaderId, elementBodyId) {
+    setTimeout(function () {
+      var bodyElement = document.getElementById(elementBodyId);
+      var headerElement = document.getElementById(elementHeaderId);
+
+      if (bodyElement.offsetHeight < bodyElement.children[0].offsetHeight) {
+        headerElement.setAttribute('style', 'width: calc(100% - 10px)')
+      } else {
+        headerElement.setAttribute('style', '')
+      }
+    }, 200)
+  };
 
   return {
     programNameFormatter: programNameFormatter,
-    onLoadScrollEvent: onLoadScrollEvent
+    onLoadScrollEvent: onLoadScrollEvent,
+    fixedScrollBorHeaderStyles: fixedScrollBorHeaderStyles
   };
 });

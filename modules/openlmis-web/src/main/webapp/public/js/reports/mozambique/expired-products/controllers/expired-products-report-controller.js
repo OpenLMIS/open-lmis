@@ -38,6 +38,8 @@ function ExpiredProductsReportController($scope, $controller, $filter, ExpiredPr
           $scope.showExpiredProductsTable = expiredProductResponse.data.length;
           $scope.expiredProductList = formatExpiredProductListTime(expiredProductResponse.data);
           $scope.filterAndSort();
+  
+          UnitService.fixedScrollBorHeaderStyles('fixed-header', 'fixed-body');
         });
     }
   };

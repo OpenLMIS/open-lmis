@@ -37,6 +37,8 @@ function OverStockReportController($scope, $controller, $filter, OverStockProduc
           $scope.showOverStockProductsTable = overStockResponse.rnr_list.length;
           $scope.overStockList = formatOverStockProductListTime(overStockResponse.rnr_list);
           $scope.filterAndSort();
+          
+          UnitService.fixedScrollBorHeaderStyles('fixed-header', 'fixed-body');
         });
     }
   };
@@ -58,7 +60,7 @@ function OverStockReportController($scope, $controller, $filter, OverStockProduc
     $scope.filterList = ReportGroupSortAndFilterService.groupSort($scope.filterList, $scope.sortType, $scope.sortReverse, sortList);
     $scope.formattedOverStockList = formatOverStockList($scope.filterList);
   };
-
+  
   function formatOverStockProductListTime(overStockList) {
     return _.map(overStockList, function (overStockItem) {
       overStockItem.cmm = utils.toFixedNumber(overStockItem.cmm, true);
