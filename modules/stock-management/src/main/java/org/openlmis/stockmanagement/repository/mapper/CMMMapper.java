@@ -40,6 +40,13 @@ public interface CMMMapper {
             "WHERE parent_zone.id = #{provinceId} and cmm_entries.periodBegin <= #{day} and cmm_entries.periodEnd >= #{day}")
     List<CMMEntry> getCMMEntryByProvinceAndDay(@Param("provinceId") Long provinceId, @Param("day") Date day);
 
+    @Select("SELECT * FROM cmm_entries " +
+            "JOIN facilities on cmm_entries.facilityid = facilities.id " +
+            "JOIN geographic_zones zone on facilities.geographiczoneid = zone.id " +
+            "JOIN geographic_zones parent_zone on zone.parentid = parent_zone.id " +
+            "WHERE cmm_entries.periodBegin <= #{day} and cmm_entries.periodEnd >= #{day}")
+    List<CMMEntry> getCMMEntryByDay(@Param("day") Date day);
+
     @Update("UPDATE cmm_entries SET cmmValue = #{cmmValue}, modifieddate= NOW() WHERE id = #{id}")
     void update(CMMEntry entry);
 }

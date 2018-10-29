@@ -130,8 +130,10 @@ public class SimpleTableService {
         List<CMMEntry> CMMEntryList = new ArrayList<>();
         if(null != filterCriteria.getDistrictId()){
             CMMEntryList = cmmMapper.getCMMEntryByDistrictAndDay(filterCriteria.getDistrictId().longValue(), filterCriteria.getEndTime());
-        }else if (null != filterCriteria.getFacilityId()){
+        }else if (null != filterCriteria.getProvinceId()){
             CMMEntryList = cmmMapper.getCMMEntryByProvinceAndDay(filterCriteria.getProvinceId().longValue(), filterCriteria.getEndTime());
+        } else {
+            CMMEntryList = cmmMapper.getCMMEntryByDay(filterCriteria.getEndTime());
         }
 
         Map<String, CMMEntry> cmmEntryMap = new HashMap<>();
