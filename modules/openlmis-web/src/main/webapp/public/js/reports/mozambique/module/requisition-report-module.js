@@ -57,10 +57,10 @@ angular.module('requisition-report', ['openlmis', 'angularCombine', 'ngTable', '
       templateUrl: 'expired-products/partials/list.html',
       reloadOnSearch: false
     }).when('/consumption', {
-        controller: ConsumptionReportController,
-        templateUrl: 'consumption/partials/list.html',
-        reloadOnSearch: false
-      }).when('/adjustment', {
+      controller: ConsumptionReportController,
+      templateUrl: 'consumption/partials/list.html',
+      reloadOnSearch: false
+    }).when('/adjustment', {
       controller: AdjustmentOccurrencesReportController,
       templateUrl: 'adjustment/partials/list.html',
       reloadOnSearch: false
@@ -75,7 +75,7 @@ angular.module('requisition-report', ['openlmis', 'angularCombine', 'ngTable', '
     }).otherwise({redirectTo: '/'});
   }]).run(
   function ($rootScope, AuthorizationService) {
-
+  
   }
 ).config(function (angularCombineConfigProvider) {
   angularCombineConfigProvider.addConf(/filter-/, '/public/pages/reports/shared/filters.html');

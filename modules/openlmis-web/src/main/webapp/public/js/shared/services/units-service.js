@@ -27,13 +27,17 @@ services.factory('UnitService', function (messageService) {
     setTimeout(function () {
       var bodyElement = document.getElementById(elementBodyId);
       var headerElement = document.getElementById(elementHeaderId);
+      
+      if (!bodyElement && !headerElement) {
+        return;
+      }
 
       if (bodyElement.offsetHeight < bodyElement.children[0].offsetHeight) {
-        headerElement.setAttribute('style', 'width: calc(100% - 10px)')
+        headerElement.setAttribute('style', 'width: calc(100% - 10px)');
       } else {
-        headerElement.setAttribute('style', '')
+        headerElement.setAttribute('style', '');
       }
-    }, 200)
+    }, 200);
   };
 
   return {
