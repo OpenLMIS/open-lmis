@@ -19,10 +19,10 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-@Component(value = "overStockProductReport")
-public class OverStockProductReportGenerator extends AbstractReportModelGenerator {
+@Component(value = "overStockProductsReport")
+public class OverStockProductsReportGenerator extends AbstractReportModelGenerator {
 
-    private static Logger logger = Logger.getLogger(OverStockProductReportGenerator.class);
+    private static Logger logger = Logger.getLogger(OverStockProductsReportGenerator.class);
 
     @Autowired
     private SimpleTableService simpleTableService;
