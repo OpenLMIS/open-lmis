@@ -32,11 +32,11 @@ function ExpiredProductsReportController($scope, $controller, $filter, ExpiredPr
       
       ExpiredProductsService
         .getExpiredProductList()
-        .get(utils.pickEmptyObject(expiredProductParams), {}, function (expiredProductResponse) {
+        .post(utils.pickEmptyObject(expiredProductParams), function (expiredProductResponse) {
           $scope.showExpiredProductsTable = true;
-          $scope.formattedExpiredProductList = formatExpiredProductList(expiredProductResponse.rnr_list);
-          $scope.showExpiredProductsTable = expiredProductResponse.rnr_list.length;
-          $scope.expiredProductList = formatExpiredProductListTime(expiredProductResponse.rnr_list);
+          $scope.formattedExpiredProductList = formatExpiredProductList(expiredProductResponse.data);
+          $scope.showExpiredProductsTable = expiredProductResponse.data.length;
+          $scope.expiredProductList = formatExpiredProductListTime(expiredProductResponse.data);
           $scope.filterAndSort();
         });
     }
@@ -103,7 +103,7 @@ function ExpiredProductsReportController($scope, $controller, $filter, ExpiredPr
 
 services.factory('ExpiredProductsService', function ($resource, $filter, ReportExportExcelService, messageService) {
   function getExpiredProductList() {
-    return $resource('/reports/expired-products-report', {}, {});
+    return $resource('/reports/data', {}, {post: {method: 'POST'}});
   }
   
   function getDataForExport(provinceId, districtId, facilityId, endTime) {
