@@ -103,7 +103,7 @@ function ExpiredProductsReportController($scope, $controller, $filter, ExpiredPr
 
 services.factory('ExpiredProductsService', function ($resource, $filter, ReportExportExcelService, messageService) {
   function getExpiredProductList() {
-    return $resource('/reports/overstock-report', {}, {});
+    return $resource('/reports/expired-products-report', {}, {});
   }
   
   function getDataForExport(provinceId, districtId, facilityId, endTime) {
@@ -112,7 +112,7 @@ services.factory('ExpiredProductsService', function ($resource, $filter, ReportE
       districtId: districtId,
       facilityId: facilityId,
       endTime: endTime,
-      reportType: 'overStockProductReport'
+      reportType: 'expiredProductsReport'
     };
     
     ReportExportExcelService.exportAsXlsxBackend(
