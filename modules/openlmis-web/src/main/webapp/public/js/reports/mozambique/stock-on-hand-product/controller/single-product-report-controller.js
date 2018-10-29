@@ -87,7 +87,7 @@ function SingleProductReportController($scope, $filter, $controller, $http, Cube
   }
 
   var sortList = ['lotNumber', 'stockOnHandOfLot'];
-  var ignoreSearchList = ['expiryDate'];
+  var ignoreSearchList = ['expiryDate', 'productName', 'stockOnHandStatus', 'facilityCode'];
   var timeFieldList = ['expiry_date', 'syncDate'];
   $scope.filterAndSort = function () {
     $scope.filterList = ReportGroupSortAndFilterService.search($scope.originData, $scope.filterText, "lotList", timeFieldList, ignoreSearchList);
