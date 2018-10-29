@@ -23,7 +23,7 @@
     <div id="report" ng-if="reportData.length > 0">
         <h3 class="report-title" openlmis-message="subtitle.expiry.dates.report|reportParams.reportTitle"></h3>
         <h4 openlmis-message="label.report.data.total|reportData.length"></h4>
-        <table class="table table-condensed table-bordered table-striped fixed-header-table header-table fixed-header">
+        <table class="table table-condensed table-bordered table-striped fixed-header-table header-table">
             <tr class="gradient-header">
                 <th ng-click="sortType = 'code'; sortReverse = !sortReverse" class="sortable sort-desc"
                     openlmis-message="report.drug.code">
