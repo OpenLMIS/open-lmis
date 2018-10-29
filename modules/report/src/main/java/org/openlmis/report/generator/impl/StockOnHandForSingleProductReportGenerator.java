@@ -1,8 +1,5 @@
 package org.openlmis.report.generator.impl;
 
-import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.lang3.exception.ExceptionUtils;
-import org.apache.log4j.Logger;
 import org.openlmis.core.utils.DateUtil;
 import org.openlmis.report.generator.AbstractReportModelGenerator;
 import org.openlmis.report.model.dto.LotInfo;
@@ -21,8 +18,6 @@ import java.util.Map;
 
 @Component(value="singleStockOnHand")
 public class StockOnHandForSingleProductReportGenerator extends AbstractReportModelGenerator {
-
-    private static Logger logger = Logger.getLogger(OverStockProductReportGenerator.class);
 
     private final static String KEY_QUERY_RESULT = "KEY_QUERY_RESULT";
 
