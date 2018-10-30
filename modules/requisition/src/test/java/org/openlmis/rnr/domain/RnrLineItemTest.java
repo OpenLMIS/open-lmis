@@ -252,6 +252,9 @@ public class RnrLineItemTest {
     lineItem.setLossesAndAdjustments(list);
     lineItem.setStockInHand(4);
     lineItem.setQuantityDispensed(9);
+    Program program = new Program();
+    program.setId(999L);
+    lineItem.setProgram(program);
     expectedException.expect(DataException.class);
     expectedException.expectMessage(RNR_VALIDATION_ERROR);
     lineItem.validateCalculatedFields(template);

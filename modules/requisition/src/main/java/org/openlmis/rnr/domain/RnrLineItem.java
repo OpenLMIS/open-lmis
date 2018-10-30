@@ -99,6 +99,7 @@ public class RnrLineItem extends LineItem {
   private Integer total;
   @SuppressWarnings("unused")
   private Boolean skipped = false;
+  private Program program;
 
   public RnrLineItem(Long rnrId,
                      FacilityTypeApprovedProduct facilityTypeApprovedProduct,
@@ -209,14 +210,16 @@ public class RnrLineItem extends LineItem {
 
     RnrColumn rnrColumn = (RnrColumn) template.getColumns().get(0);
 
-    if (rnrColumn.isFormulaValidationRequired()) {
-      validQuantityDispensed = (quantityDispensed == (beginningBalance + quantityReceived + totalLossesAndAdjustments - stockInHand));
-    }
-    boolean valid = quantityDispensed >= 0 && stockInHand >= 0 && validQuantityDispensed;
+    if (null != program && !program.isMmiaRequisition()) {
+      if (rnrColumn.isFormulaValidationRequired()) {
+        validQuantityDispensed = (quantityDispensed == (beginningBalance + quantityReceived + totalLossesAndAdjustments - stockInHand));
+      }
+      boolean valid = quantityDispensed >= 0 && stockInHand >= 0 && validQuantityDispensed;
 
-    if (!valid) {
-      LOGGER.error("The product code is: %s", productCode);
-      throw new DataException(RNR_VALIDATION_ERROR);
+      if (!valid) {
+        LOGGER.error("The product code is: %s", productCode);
+        throw new DataException(RNR_VALIDATION_ERROR);
+      }
     }
   }
 

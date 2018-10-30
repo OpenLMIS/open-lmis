@@ -74,4 +74,14 @@ public class Program extends BaseModel {
     program.setBudgetingApplies(budgetingApplies);
     return program;
   }
+
+  public boolean isMmiaRequisition() {
+    if (1 == this.getId()) {
+      return true;
+    }
+    if (null != parent && 1 == parent.getParentId()) {
+      return true;
+    }
+    return false;
+  }
 }
