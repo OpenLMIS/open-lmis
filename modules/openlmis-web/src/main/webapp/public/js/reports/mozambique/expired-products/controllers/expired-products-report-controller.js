@@ -59,17 +59,29 @@ function ExpiredProductsReportController($scope, $controller, $filter, DateForma
   };
   
   var sortList = ['lotNumber', 'expiryDate', 'stockOnHandOfLot'];
+  var timeFieldList = ['expiryDate'];
+  var ignoreSearchList = ['expiryDateLocalTime'];
   $scope.filterAndSort = function () {
-    $scope.filterList = ReportGroupSortAndFilterService.search($scope.expiredProductList, $scope.filterText, "lotList", "expiryDate");
+    $scope.filterList = ReportGroupSortAndFilterService.search($scope.expiredProductList, $scope.filterText, "lotList", timeFieldList, ignoreSearchList);
     $scope.filterList = ReportGroupSortAndFilterService.groupSort($scope.filterList, $scope.sortType, $scope.sortReverse, sortList);
     $scope.formattedExpiredProductList = formatExpiredProductList($scope.filterList);
   };
   
   function formatExpiredProductListTime(expiredProductList) {
     return _.map(expiredProductList, function (expiredProduct) {
-      expiredProduct.cmm = utils.toFixedNumber(expiredProduct.cmm, true);
-      expiredProduct.mos = utils.toFixedNumber(expiredProduct.mos, true);
-      return expiredProduct;
+      var item = {};
+      item.provinceName = expiredProduct.provinceName;
+      item.districtName = expiredProduct.districtName;
+      item.facilityName = expiredProduct.facilityName;
+      item.productCode = expiredProduct.productCode;
+      item.productName = expiredProduct.productName;
+      item.lotList = expiredProduct.lotList;
+      if (!$scope.isDistrictExpiredProduct) {
+        item.cmm = utils.toFixedNumber(expiredProduct.cmm, true);
+        item.mos = utils.toFixedNumber(expiredProduct.mos, true);
+      }
+      item.price = expiredProduct.price;
+      return item;
     });
   }
   
