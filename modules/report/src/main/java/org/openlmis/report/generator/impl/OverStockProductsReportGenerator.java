@@ -12,7 +12,10 @@ import org.openlmis.report.service.SimpleTableService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.text.ParsePosition;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -38,13 +41,16 @@ public class OverStockProductsReportGenerator extends AbstractReportModelGenerat
         if(null != paraMap.get("endTime")) {
             List<String> generationDate = new ArrayList<>();
             generationDate.add(getMessage("report.header.generated.for"));
-
-            String endTime = paraMap.get("endTime").toString();
-            generationDate.add(endTime.substring(0, endTime.indexOf(" ")));
-
+            generationDate.add(formatDate(paraMap.get("endTime").toString()));
             title.add(generationDate);
         }
         return title;
+    }
+
+   private String formatDate(String endTime) {
+        Date date = new SimpleDateFormat("yyyy-mm-dd").parse(endTime, new ParsePosition(0));
+        String result = new SimpleDateFormat("dd/mm/yyyy").format(date.getTime());
+        return result;
     }
 
     @Override
