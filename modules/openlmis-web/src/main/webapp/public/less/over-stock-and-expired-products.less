@@ -32,6 +32,36 @@
     }
   }
 
+  .expired-products-table {
+    td {
+      border-right: 1px solid #ddd;
+      border-left: none;
+
+      &:last-child {
+        border-right: none;
+      }
+
+      &:first-child {
+        border-left: 1px solid #ddd;
+      }
+    }
+
+    td:nth-last-child(-n+3) {
+      background-color: #ffffff;
+    }
+
+    &:hover {
+      td {
+        background-color: #bdd0cb;
+        cursor: pointer;
+      }
+
+      td:nth-last-child(-n+3) {
+        background-color: #ffffff;
+      }
+    }
+  }
+
   .table-condensed {
     th {
       padding: 4px 6px;

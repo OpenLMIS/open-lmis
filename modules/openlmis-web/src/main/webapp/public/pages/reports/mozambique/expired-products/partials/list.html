@@ -101,7 +101,7 @@
 
     <div id="fixed-body" class="fixed-body">
       <table class="table table-bordered table-striped">
-        <tr class="table--body" ng-repeat="overStockItem in formattedExpiredProductList">
+        <tr class="table--body expired-products-table" ng-repeat="overStockItem in formattedExpiredProductList">
           <td class="table--body-150">{{overStockItem.provinceName}}</td>
           <td class="table--body-150">{{overStockItem.districtName}}</td>
           <td ng-show="!isDistrictExpiredProduct" class="table--body-150">{{overStockItem.facilityName}}</td>
@@ -110,11 +110,13 @@
           <td class="table--body-150">{{overStockItem.lotNumber}}</td>
           <td class="table--body-150">{{overStockItem.expiryDate}}</td>
           <td class="table--body-150">{{overStockItem.stockOnHandOfLot}}</td>
-          <td class="table--body-150">{{overStockItem.price}}</td>
           <td class="table--body-150" ng-show="overStockItem.isFirst" rowspan="{{overStockItem.rowSpan}}">
+            {{overStockItem.price}}
+          </td>
+          <td class="table--body-150" ng-show="overStockItem.isFirst && !isDistrictExpiredProduct" rowspan="{{overStockItem.rowSpan}}">
             {{overStockItem.cmm}}
           </td>
-          <td class="table--body-150" ng-show="overStockItem.isFirst" rowspan="{{overStockItem.rowSpan}}">
+          <td class="table--body-150" ng-show="overStockItem.isFirst && !isDistrictExpiredProduct" rowspan="{{overStockItem.rowSpan}}">
             {{overStockItem.mos}}
           </td>
         </tr>

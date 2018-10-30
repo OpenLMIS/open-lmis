@@ -83,15 +83,15 @@ function ExpiredProductsReportController($scope, $controller, $filter, ExpiredPr
           lotNumber: lot.lotNumber,
           expiryDate: DateFormatService.formatDateWithLocale(lot.expiryDate),
           stockOnHandOfLot: lot.stockOnHandOfLot,
-          price: lot.price
+          price: lot.price,
+          isFirst: index === 0
         };
         
         if (!$scope.isDistrictExpiredProduct) {
           _.assign(formatItem, {
             cmm: utils.toFixedNumber(expiredProduct.cmm, true),
             mos: utils.toFixedNumber(expiredProduct.mos, true),
-            rowSpan: expiredProduct.lotList.length,
-            isFirst: index === 0
+            rowSpan: expiredProduct.lotList.length
           });
         }
   
