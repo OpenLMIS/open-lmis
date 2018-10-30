@@ -8,10 +8,10 @@ function SingleProductReportController($scope, $filter, $controller, $http, Cube
   $scope.filterText = "";
 
   var CMM_STATUS = {
-    'STOCK_OUT': 'stock-out',
-    'REGULAR_STOCK': 'regular-stock',
-    'OVER_STOCK': 'over-stock',
-    'LOW_STOCK': 'low-stock'
+    'STOCK OUT': 'stock-out',
+    'REGULAR STOCK': 'regular-stock',
+    'OVER STOCK': 'over-stock',
+    'LOW STOCK': 'low-stock'
   };
 
   $scope.$on('$viewContentLoaded', function () {
@@ -31,7 +31,7 @@ function SingleProductReportController($scope, $filter, $controller, $http, Cube
         facilityName: item.facilityName,
         facilityCode: item.facilityCode,
         productName: item.productName,
-        stockOnHandStatus: item.stockOnHandStatus,
+        stockOnHandStatus: item.stockOnHandStatus.replace('_', ' '),
         sumStockOnHand: item.sumStockOnHand,
         mos: item.mos,
         cmm: item.cmm,
@@ -87,7 +87,7 @@ function SingleProductReportController($scope, $filter, $controller, $http, Cube
   }
 
   var sortList = ['lotNumber', 'stockOnHandOfLot'];
-  var ignoreSearchList = ['expiryDate', 'productName', 'stockOnHandStatus', 'facilityCode'];
+  var ignoreSearchList = ['expiryDate', 'productName', 'facilityCode'];
   var timeFieldList = ['expiry_date', 'syncDate'];
   $scope.filterAndSort = function () {
     $scope.filterList = ReportGroupSortAndFilterService.search($scope.originData, $scope.filterText, "lotList", timeFieldList, ignoreSearchList);
