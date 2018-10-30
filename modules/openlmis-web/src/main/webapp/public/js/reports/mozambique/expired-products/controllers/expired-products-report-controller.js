@@ -1,5 +1,5 @@
-function ExpiredProductsReportController($scope, $controller, $filter, ExpiredProductsService, DateFormatService,
-                                         ReportGroupSortAndFilterService, UnitService) {
+function ExpiredProductsReportController($scope, $controller, $filter, DateFormatService, ReportGroupSortAndFilterService,
+                                         UnitService, ReportDataServices, messageService) {
   $controller('BaseProductReportController', {$scope: $scope});
   $scope.formattedExpiredProductList = [];
   $scope.showExpiredProductsTable = false;
@@ -29,9 +29,9 @@ function ExpiredProductsReportController($scope, $controller, $filter, ExpiredPr
       
       $scope.isDistrictExpiredProduct = utils.isEmpty(reportParams.districtId);
       $scope.formattedExpiredProductList = [];
-      
-      ExpiredProductsService
-        .getExpiredProductList()
+  
+      ReportDataServices
+        .getProductList()
         .post(utils.pickEmptyObject(expiredProductParams), function (expiredProductResponse) {
           $scope.showExpiredProductsTable = true;
           $scope.formattedExpiredProductList = formatExpiredProductList(expiredProductResponse.data);
@@ -46,13 +46,16 @@ function ExpiredProductsReportController($scope, $controller, $filter, ExpiredPr
   
   $scope.exportXLSX = function () {
     var reportParams = $scope.reportParams;
+    var reportParamsObject = {
+      provinceId: reportParams.provinceId.toString(),
+      districtId: reportParams.districtId.toString(),
+      facilityId: reportParams.facilityId.toString(),
+      endTime: $filter('date')(reportParams.endTime, "yyyy-MM-dd") + " 23:59:59",
+      reportType: 'expiredProductsReport'
+    };
     
-    ExpiredProductsService.getDataForExport(
-      reportParams.provinceId.toString(),
-      reportParams.districtId.toString(),
-      reportParams.facilityId.toString(),
-      $filter('date')(reportParams.endTime, "yyyy-MM-dd") + " 23:59:59"
-    );
+    ReportDataServices.getDataForExport(reportParamsObject,
+      messageService.get('report.file.expired.products.report'));
   };
   
   var sortList = ['lotNumber', 'expiryDate', 'stockOnHandOfLot'];
@@ -102,27 +105,3 @@ function ExpiredProductsReportController($scope, $controller, $filter, ExpiredPr
     return formattedExpiredProductList;
   }
 }
-
-services.factory('ExpiredProductsService', function ($resource, $filter, ReportExportExcelService, messageService) {
-  function getExpiredProductList() {
-    return $resource('/reports/data', {}, {post: {method: 'POST'}});
-  }
-  
-  function getDataForExport(provinceId, districtId, facilityId, endTime) {
-    var data = {
-      provinceId: provinceId,
-      districtId: districtId,
-      facilityId: facilityId,
-      endTime: endTime,
-      reportType: 'expiredProductsReport'
-    };
-    
-    ReportExportExcelService.exportAsXlsxBackend(
-      utils.pickEmptyObject(data), messageService.get('report.file.over.stock.products.report'));
-  }
-  
-  return {
-    getExpiredProductList: getExpiredProductList,
-    getDataForExport: getDataForExport
-  };
-});

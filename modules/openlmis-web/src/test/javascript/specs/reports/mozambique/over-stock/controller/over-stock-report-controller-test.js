@@ -1,5 +1,5 @@
 describe('OvrerStockReportController', function () {
-  var scope, httpBackend, messageService, overStockProductsService;
+  var scope, httpBackend, messageService, reportDataServices;
 
   var overStockList = {
     'data': [
@@ -35,11 +35,11 @@ describe('OvrerStockReportController', function () {
 
   beforeEach(module('openlmis'));
   beforeEach(module('ui.bootstrap.dialog'));
-  beforeEach(inject(function (_$httpBackend_, $rootScope, $controller, _messageService_, ReportExportExcelService, OverStockProductsService) {
+  beforeEach(inject(function (_$httpBackend_, $rootScope, $controller, _messageService_, ReportExportExcelService, ReportDataServices) {
     scope = $rootScope.$new();
     httpBackend = _$httpBackend_;
     messageService = _messageService_;
-    overStockProductsService = OverStockProductsService;
+    reportDataServices = ReportDataServices;
     $controller(OverStockReportController, {$scope: scope});
   }));
 
@@ -83,13 +83,13 @@ describe('OvrerStockReportController', function () {
   });
 
   it('should call exportXLSX for OverStockProductsService', function () {
-    spyOn(overStockProductsService, 'getDataForExport');
+    spyOn(reportDataServices, 'getDataForExport');
     scope.reportParams.endTime = '2017-02-01';
     scope.reportParams.facilityId = 1;
     scope.reportParams.districtId = 1;
     scope.reportParams.provinceId = 1;
     scope.exportXLSX();
 
-    expect(overStockProductsService.getDataForExport).toHaveBeenCalled();
+    expect(reportDataServices.getDataForExport).toHaveBeenCalled();
   });
 });

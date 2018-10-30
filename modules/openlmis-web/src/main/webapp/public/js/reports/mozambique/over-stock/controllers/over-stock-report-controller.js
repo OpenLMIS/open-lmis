@@ -1,5 +1,5 @@
-function OverStockReportController($scope, $controller, $filter, OverStockProductsService, DateFormatService,
-                                   ReportGroupSortAndFilterService, UnitService) {
+function OverStockReportController($scope, $controller, $filter, DateFormatService, ReportGroupSortAndFilterService,
+                                   UnitService, ReportDataServices, messageService) {
   $controller('BaseProductReportController', {$scope: $scope});
   $scope.formattedOverStockList = [];
   $scope.showOverStockProductsTable = false;
@@ -29,9 +29,9 @@ function OverStockReportController($scope, $controller, $filter, OverStockProduc
       
       $scope.isDistrictOverStock = utils.isEmpty(reportParams.districtId);
       $scope.formattedOverStockList = [];
-      
-      OverStockProductsService
-        .getOverStockProductList()
+  
+      ReportDataServices
+        .getProductList()
         .post(utils.pickEmptyObject(overStockParams), function (overStockResponse) {
           $scope.showOverStockProductsTable = true;
           $scope.formattedOverStockList = formatOverStockList(overStockResponse.data);
@@ -46,13 +46,16 @@ function OverStockReportController($scope, $controller, $filter, OverStockProduc
   
   $scope.exportXLSX = function () {
     var reportParams = $scope.reportParams;
-    
-    OverStockProductsService.getDataForExport(
-      reportParams.provinceId.toString(),
-      reportParams.districtId.toString(),
-      reportParams.facilityId.toString(),
-      $filter('date')(reportParams.endTime, "yyyy-MM-dd") + " 23:59:59"
-    );
+    var reportParamsObject = {
+      provinceId: reportParams.provinceId.toString(),
+      districtId: reportParams.districtId.toString(),
+      facilityId: reportParams.facilityId.toString(),
+      endTime: $filter('date')(reportParams.endTime, "yyyy-MM-dd") + " 23:59:59",
+      reportType: 'overStockProductsReport'
+    };
+  
+    ReportDataServices.getDataForExport(reportParamsObject,
+      messageService.get('report.file.over.stock.products.report'));
   };
   
   var sortList = ['lotNumber', 'expiryDate', 'stockOnHandOfLot'];
@@ -102,27 +105,3 @@ function OverStockReportController($scope, $controller, $filter, OverStockProduc
     return formattedOverStockList;
   }
 }
-
-services.factory('OverStockProductsService', function ($resource, $filter, ReportExportExcelService, messageService) {
-  function getOverStockProductList() {
-    return $resource('/reports/data', {}, {post: {method: 'POST'}});
-  }
-  
-  function getDataForExport(provinceId, districtId, facilityId, endTime) {
-    var data = {
-      provinceId: provinceId,
-      districtId: districtId,
-      facilityId: facilityId,
-      endTime: endTime,
-      reportType: 'overStockProductsReport'
-    };
-    
-    ReportExportExcelService.exportAsXlsxBackend(
-      utils.pickEmptyObject(data), messageService.get('report.file.over.stock.products.report'));
-  }
-  
-  return {
-    getOverStockProductList: getOverStockProductList,
-    getDataForExport: getDataForExport
-  };
-});
