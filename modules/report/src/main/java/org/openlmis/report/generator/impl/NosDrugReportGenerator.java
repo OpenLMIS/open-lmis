@@ -337,7 +337,7 @@ public class NosDrugReportGenerator extends AbstractReportModelGenerator {
         List<Map<String, Object>> result = new ArrayList<>();
         Set<String> checkSet = new HashSet<>(set);
         for (Map.Entry<String, Map<String, String>> entry : nosDrugHash.entrySet()) {
-            long cmm = getCmmValue(entry.getValue());
+            double cmm = getCmmValue(entry.getValue());
             String productCode = entry.getKey().substring(0, entry.getKey().indexOf("@"));
             Map<String, Object> obj = new HashMap<>();
             for (Map.Entry<String, String> kv : entry.getValue().entrySet()) {
@@ -369,8 +369,8 @@ public class NosDrugReportGenerator extends AbstractReportModelGenerator {
         return result;
     }
 
-    private long getCmmValue(Map<String, String> row) {
-        return StringUtils.isNotEmpty(row.get("cmmValue")) ? NumberUtils.toLong(row.get("cmmValue")) : -1;
+    private double getCmmValue(Map<String, String> row) {
+        return StringUtils.isNotEmpty(row.get("cmmValue")) ? NumberUtils.toDouble(row.get("cmmValue")) : -1;
     }
 
     @Override

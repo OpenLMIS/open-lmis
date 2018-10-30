@@ -43,11 +43,11 @@ public class StockStatusService {
     return mapper.getStockStatusByMonth(programCode, year, quarter, userId);
   }
 
-  public StockOnHandStatus getStockOnHandStatus(long cmm, long soh, String productCode) {
+  public StockOnHandStatus getStockOnHandStatus(double cmm, long soh, String productCode) {
     return getStockOnHandStatus(cmm, soh, isHivProject(productCode));
   }
 
-  public StockOnHandStatus getStockOnHandStatus(long cmm, long soh, boolean isHiv) {
+  public StockOnHandStatus getStockOnHandStatus(double cmm, long soh, boolean isHiv) {
       if (0 == soh) {
           return StockOnHandStatus.STOCK_OUT;
       }

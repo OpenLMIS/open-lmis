@@ -114,7 +114,7 @@ public class SimpleTableService {
         if (null != cmmEntry && null != cmmEntry.getCmmValue()) {
             cmm = cmmEntry.getCmmValue();
         }
-        StockOnHandStatus status = stockStatusService.getStockOnHandStatus((long)cmm, stockProduct.getSumStockOnHand(), stockProduct.getIsHiv());
+        StockOnHandStatus status = stockStatusService.getStockOnHandStatus(cmm, stockProduct.getSumStockOnHand(), stockProduct.getIsHiv());
         stockProduct.setStockOnHandStatus(status);
 
         if (cmm < 0) {
