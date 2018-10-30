@@ -85,6 +85,28 @@ services.factory('DateFormatService', function ($filter, messageService) {
     return dates;
   }
   
+  
+  function convertPortugueseDateToNormalDate(inputValue) {
+    var portugueseDateMap = {
+      Jan: 'Jan',
+      Fev: 'Feb',
+      Mar: 'Mar',
+      Abr: 'Apr',
+      Mai: 'May',
+      Jun: 'June',
+      Jul: 'July',
+      Ago: 'Aug',
+      Set: 'Sep',
+      Out: 'Oct',
+      Nov: 'Nov',
+      Dez: 'Dec'
+    };
+    
+    var matchValue = inputValue.match(/[a-zA-Z]{3}/g)[0];
+    var convertedNormalDate = inputValue.replace(matchValue, portugueseDateMap[matchValue]);
+    return new Date(convertedNormalDate);
+  }
+  
   return {
     formatDateWithFirstDayOfMonth: formatDateWithFirstDayOfMonth,
     formatDateWithLastDayOfMonth: formatDateWithLastDayOfMonth,
@@ -98,6 +120,7 @@ services.factory('DateFormatService', function ($filter, messageService) {
     formatDateWithDateMonthYearForString: formatDateWithDateMonthYearForString,
     formatDateWithUnderscore: formatDateWithUnderscore,
     formatDateElementsTwoCharacters: formatDateElementsTwoCharacters,
-    getFridaysBetween: getFridaysBetween
+    getFridaysBetween: getFridaysBetween,
+    convertPortugueseDateToNormalDate: convertPortugueseDateToNormalDate
   };
 });

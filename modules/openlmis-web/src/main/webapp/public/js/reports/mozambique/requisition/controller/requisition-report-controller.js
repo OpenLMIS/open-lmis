@@ -216,9 +216,9 @@ function RequisitionReportController($scope, $controller, RequisitionReportServi
 
       rnr.inventoryDate = formatDate(rnr.actualPeriodEnd);
 
-      rnr.clientSubmittedTimeString = $scope.submittedTimeFormatter(rnr.webSubmittedTime, rnr.webSubmittedTimeString);
+      rnr.clientSubmittedTimeString = $scope.submittedTimeFormatter(rnr.webSubmittedTime);
 
-      rnr.webSubmittedTimeString = $scope.submittedTimeFormatter(rnr.clientSubmittedTime, rnr.clientSubmittedTimeString);
+      rnr.webSubmittedTimeString = $scope.submittedTimeFormatter(rnr.clientSubmittedTime);
     });
   };
 
@@ -245,7 +245,7 @@ function RequisitionReportController($scope, $controller, RequisitionReportServi
     return messageService.get("rnr.report.submitted.status.late") === status;
   };
 
-  $scope.submittedTimeFormatter = function (submittedTime, submittedTimeString) {
+  $scope.submittedTimeFormatter = function (submittedTime) {
     return submittedTime ? DateFormatService.formatDateWithTimeAndLocale(submittedTime) : "";
   };
 
@@ -306,8 +306,8 @@ function RequisitionReportController($scope, $controller, RequisitionReportServi
         field: 'inventoryDate',
         displayName: messageService.get("label.report.requisitions.inventorydate"),
         sortFn: function (currentDateString, previousDateString) {
-          var currentDate = new Date(currentDateString);
-          var previousDate = new Date(previousDateString);
+          var currentDate = DateFormatService.convertPortugueseDateToNormalDate(currentDateString);
+          var previousDate = DateFormatService.convertPortugueseDateToNormalDate(previousDateString);
 
           if (currentDate === previousDate) return 0;
           if (currentDate < previousDate) return -1;
@@ -335,12 +335,12 @@ function RequisitionReportController($scope, $controller, RequisitionReportServi
       {
         field: 'clientSubmittedTimeString',
         displayName: messageService.get("label.report.requisitions.submittedtime"),
-        cellTemplate: '<div class="customCell ngCellText">{{submittedTimeFormatter(row.entity.clientSubmittedTime, row.entity.clientSubmittedTimeString)}}</div>'
+        cellTemplate: '<div class="customCell ngCellText">{{submittedTimeFormatter(row.entity.clientSubmittedTime)}}</div>'
       },
       {
         field: 'webSubmittedTimeString',
         displayName: messageService.get("label.report.requisitions.syncedtime"),
-        cellTemplate: '<div class="customCell ngCellText">{{submittedTimeFormatter(row.entity.webSubmittedTime, row.entity.webSubmittedTimeString)}}</div>'
+        cellTemplate: '<div class="customCell ngCellText">{{submittedTimeFormatter(row.entity.webSubmittedTime)}}</div>'
       }
     ]
   };
