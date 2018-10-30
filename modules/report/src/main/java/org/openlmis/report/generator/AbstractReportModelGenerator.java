@@ -36,6 +36,9 @@ public abstract class AbstractReportModelGenerator {
     protected Object getReportLegenda(Map<Object, Object> paraMap, Map<String, Object> cubeQueryResult, Map<String, Object> model) {
         return null;
     }
+    protected Object getReportTitle(Map<Object, Object> paraMap) {
+        return null;
+    }
 
     protected Map<String, Object> getQueryResult(Map<Object, Object> paraMap) {
         return null;
@@ -54,6 +57,10 @@ public abstract class AbstractReportModelGenerator {
             throw new RuntimeException("report content return null!");
         }
         Map<String, Object> model = new HashMap<>();
+        Object reportTitle = getReportTitle(paraMap);
+        if(null != reportTitle) {
+            model.put(WorkbookCreator.getKEY_EXCEL_TITLES(), reportTitle);
+        }
         model.put(WorkbookCreator.getKEY_EXCEL_HEADERS(), reportHeaders);
         model.put(WorkbookCreator.getKEY_EXCEL_CONTENT(), reportContent);
         Object reportLegenda = getReportLegenda(paraMap, queryResult, model);

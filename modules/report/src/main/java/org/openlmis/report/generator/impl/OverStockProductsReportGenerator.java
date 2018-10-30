@@ -12,7 +12,6 @@ import org.openlmis.report.service.SimpleTableService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
@@ -32,6 +31,21 @@ public class OverStockProductsReportGenerator extends AbstractReportModelGenerat
     private final static String CMM_COLUMN = "8";
 
     private final static String MOS_COLUMN = "9";
+
+    @Override
+    protected Object getReportTitle(Map<Object, Object> paraMap) {
+        List<List<String>> title = new ArrayList<>();
+        if(null != paraMap.get("endTime")) {
+            List<String> generationDate = new ArrayList<>();
+            generationDate.add(getMessage("report.header.generated.for"));
+
+            String endTime = paraMap.get("endTime").toString();
+            generationDate.add(endTime.substring(0, endTime.indexOf(" ")));
+
+            title.add(generationDate);
+        }
+        return title;
+    }
 
     @Override
     protected Map<String, Object> getQueryResult(Map<Object, Object> paraMap) {

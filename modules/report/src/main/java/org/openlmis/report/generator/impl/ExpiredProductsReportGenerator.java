@@ -33,6 +33,21 @@ public class ExpiredProductsReportGenerator extends AbstractReportModelGenerator
     private SimpleTableService simpleTableService;
 
     @Override
+    protected Object getReportTitle(Map<Object, Object> paraMap) {
+        List<List<String>> title = new ArrayList<>();
+        if(null != paraMap.get("endTime")) {
+            List<String> generationDate = new ArrayList<>();
+            generationDate.add(getMessage("report.header.generated.for"));
+
+            String endTime = paraMap.get("endTime").toString();
+            generationDate.add(endTime.substring(0, endTime.indexOf(" ")));
+
+            title.add(generationDate);
+        }
+        return title;
+    }
+
+    @Override
     protected Object getReportHeaders(Map<Object, Object> paraMap, Map<String, Object> queryResult) {
         Map<String, String> headers = new LinkedHashMap<>();
         headers.put("province", getMessage("report.header.province"));
