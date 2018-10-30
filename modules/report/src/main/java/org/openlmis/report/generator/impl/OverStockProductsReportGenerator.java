@@ -135,6 +135,6 @@ public class OverStockProductsReportGenerator extends AbstractReportModelGenerat
 
     @Override
     protected Object reportDataForFrontEnd(Map<Object, Object> paraMap) {
-        return null;
+        return getQueryResult(paraMap).get(KEY_QUERY_RESULT);
     }
 }

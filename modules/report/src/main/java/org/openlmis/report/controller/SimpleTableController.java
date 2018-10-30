@@ -30,9 +30,7 @@ import org.openlmis.core.utils.DateUtil;
 import org.openlmis.core.web.OpenLmisResponse;
 import org.openlmis.core.web.controller.BaseController;
 import org.openlmis.report.mapper.AppInfoMapper;
-import org.openlmis.report.model.dto.StockProductDto;
 import org.openlmis.report.model.dto.RequisitionDTO;
-import org.openlmis.report.model.params.StockReportParam;
 import org.openlmis.report.model.params.RequisitionReportsParam;
 import org.openlmis.report.service.SimpleTableService;
 import org.slf4j.Logger;
@@ -88,18 +86,6 @@ public class SimpleTableController extends BaseController {
         RequisitionReportsParam filterCriteria = new RequisitionReportsParam(startTime, endTime, programIds, provinceId, districtId, facilityId);
         List<RequisitionDTO> requisitions = simpleTableService.getRequisitions(filterCriteria);
         return OpenLmisResponse.response("rnr_list", requisitions);
-    }
-
-    @RequestMapping(value = "/overstock-report", method = GET, headers = BaseController.ACCEPT_JSON)
-    public ResponseEntity<OpenLmisResponse> overStockProductReport(
-            @RequestParam(value = "endTime") Date endTime,
-            @RequestParam(value = "provinceId") Integer provinceId,
-            @RequestParam(value = "districtId", required = false) Integer districtId,
-            @RequestParam(value = "facilityId", required = false) Integer facilityId) {
-
-        StockReportParam filterCriteria = new StockReportParam(endTime, provinceId, districtId, facilityId, null, null, null, null);
-        List<StockProductDto> overStockProducts = simpleTableService.getOverStockProductReport(filterCriteria);
-        return OpenLmisResponse.response("rnr_list", overStockProducts);
     }
 
     @RequestMapping(value = "/app-version-report", method = GET, headers = BaseController.ACCEPT_JSON)
