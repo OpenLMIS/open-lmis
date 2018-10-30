@@ -35,7 +35,7 @@ function SingleProductReportController($scope, $filter, $controller, $http, Cube
         sumStockOnHand: item.sumStockOnHand,
         mos: item.mos,
         cmm: item.cmm,
-        syncDate: item.syncDate
+        syncDate: item.lastSyncUpDate
       };
 
       var lotList = _.sortBy(item.lotList, function (o) {
@@ -66,7 +66,7 @@ function SingleProductReportController($scope, $filter, $controller, $http, Cube
             sumStockOnHand: item.sumStockOnHand,
             cmm: toFixedNumber(item.cmm),
             estimated_months: toFixedNumber(item.mos),
-            syncDate: DateFormatService.formatDateWithLocale(item.syncDate),
+            syncDate: DateFormatService.formatDateWithTimeAndLocale(item.syncDate),
             rowSpan: item.lotList.length,
             isFirst: index === 0
           };
