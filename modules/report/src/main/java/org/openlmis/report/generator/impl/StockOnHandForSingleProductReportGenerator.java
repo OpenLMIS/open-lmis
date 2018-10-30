@@ -50,7 +50,7 @@ public class StockOnHandForSingleProductReportGenerator extends AbstractReportMo
         headers.put("expiryDate", getMessage("report.header.expiry.date"));
         headers.put("MoS", getMessage("report.estimated.consumption.month"));
         headers.put("cmm", getMessage("report.header.cmm"));
-        headers.put("lastSyncDate", getMessage("report.header.last.sync.date"));
+        headers.put("lastSyncDate", getMessage("report.header.last.update.from.tablet"));
         return headers;
     }
 

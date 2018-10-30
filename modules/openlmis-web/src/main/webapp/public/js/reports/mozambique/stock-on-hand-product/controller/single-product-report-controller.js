@@ -160,44 +160,4 @@ function SingleProductReportController($scope, $filter, $controller, $http, Cube
     }
 
   };
-
-  $scope.exportXLSX = function () {
-    var data = {
-      reportHeaders: {
-        drugCode: messageService.get('report.header.drug.code'),
-        drugName: messageService.get('report.header.drug.name'),
-        province: messageService.get('report.header.province'),
-        district: messageService.get('report.header.district'),
-        facility: messageService.get('report.header.facility'),
-        quantity: messageService.get('report.header.drug.quantity'),
-        status: messageService.get('report.header.status'),
-        earliestDrugExpiryDate: messageService.get('report.header.earliest.drug.expiry.date'),
-        lotStockOnHand: messageService.get('report.header.lot.stock.on.hand'),
-        estimatedMonths: messageService.get('report.header.estimated.months'),
-        lastUpdateFromTablet: messageService.get('report.header.last.update.from.tablet'),
-        generatedFor: messageService.get('report.header.generated.for')
-      },
-      reportContent: []
-    };
-
-    if ($scope.reportData) {
-      $scope.reportData.forEach(function (sohReportData) {
-        var singleProductSOHReportContent = {};
-        singleProductSOHReportContent.drugCode = sohReportData["drug.drug_code"];
-        singleProductSOHReportContent.drugName = sohReportData["drug.drug_name"];
-        singleProductSOHReportContent.province = sohReportData["location.province_name"];
-        singleProductSOHReportContent.district = sohReportData["location.district_name"];
-        singleProductSOHReportContent.facility = sohReportData["facility.facility_name"];
-        singleProductSOHReportContent.quantity = sohReportData.soh;
-        singleProductSOHReportContent.status = sohReportData.stock_status;
-        singleProductSOHReportContent.earliestDrugExpiryDate = sohReportData.formatted_expiry_date;
-        singleProductSOHReportContent.lotStockOnHand = sohReportData.soonest_expiring_loh;
-        singleProductSOHReportContent.estimatedMonths = sohReportData.estimated_months;
-        singleProductSOHReportContent.lastUpdateFromTablet = DateFormatService.formatDateWith24HoursTime(sohReportData.last_sync_date);
-        singleProductSOHReportContent.generatedFor = DateFormatService.formatDateWithDateMonthYearForString($scope.reportParams.endTime);
-        data.reportContent.push(singleProductSOHReportContent);
-      });
-      ReportExportExcelService.exportAsXlsx(data, messageService.get('report.file.single.product.soh.report'));
-    }
-  };
 }
