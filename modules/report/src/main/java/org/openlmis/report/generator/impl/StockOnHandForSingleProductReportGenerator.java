@@ -19,7 +19,7 @@ import java.util.Map;
 @Component(value="singleStockOnHand")
 public class StockOnHandForSingleProductReportGenerator extends AbstractReportModelGenerator {
 
-    private final static String KEY_QUERY_RESULT = "KEY_QUERY_RESULT";
+    protected final static String KEY_QUERY_RESULT = "KEY_QUERY_RESULT";
 
     private final static String MOS_COLUMN = "6";
 
@@ -97,17 +97,17 @@ public class StockOnHandForSingleProductReportGenerator extends AbstractReportMo
         return content;
     }
 
-    private Date earliestExpiryDate(List<LotInfo> lotInfos) {
-        Date max = null;
+    protected Date earliestExpiryDate(List<LotInfo> lotInfos) {
+        Date min = null;
         for (LotInfo lotInfo : lotInfos) {
-            if (null == max) {
-                max = lotInfo.getExpiryDate();
+            if (null == min) {
+                min = lotInfo.getExpiryDate();
             }
-            if (max.getTime() < lotInfo.getExpiryDate().getTime()) {
-                max = lotInfo.getExpiryDate();
+            if (min.getTime() > lotInfo.getExpiryDate().getTime()) {
+                min = lotInfo.getExpiryDate();
             }
         }
-        return max;
+        return min;
     }
 
     @Override
