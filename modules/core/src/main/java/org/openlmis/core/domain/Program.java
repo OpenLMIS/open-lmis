@@ -10,6 +10,7 @@
 
 package org.openlmis.core.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -75,6 +76,7 @@ public class Program extends BaseModel {
     return program;
   }
 
+  @JsonIgnore
   public boolean isMmiaRequisition() {
     if (1 == this.getId()) {
       return true;
