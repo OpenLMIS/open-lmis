@@ -335,12 +335,28 @@ function RequisitionReportController($scope, $controller, RequisitionReportServi
       {
         field: 'clientSubmittedTimeString',
         displayName: messageService.get("label.report.requisitions.submittedtime"),
-        cellTemplate: '<div class="customCell ngCellText">{{submittedTimeFormatter(row.entity.clientSubmittedTime)}}</div>'
+        cellTemplate: '<div class="customCell ngCellText">{{submittedTimeFormatter(row.entity.clientSubmittedTime)}}</div>',
+        sortFn: function (currentDateString, previousDateString) {
+          var currentDate = new Date(DateFormatService.convertPortugueseDateStringToNormalDateString(currentDateString));
+          var previousDate = new Date(DateFormatService.convertPortugueseDateStringToNormalDateString(previousDateString));
+    
+          if (currentDate === previousDate) return 0;
+          if (currentDate < previousDate) return -1;
+          return 1;
+        }
       },
       {
         field: 'webSubmittedTimeString',
         displayName: messageService.get("label.report.requisitions.syncedtime"),
-        cellTemplate: '<div class="customCell ngCellText">{{submittedTimeFormatter(row.entity.webSubmittedTime)}}</div>'
+        cellTemplate: '<div class="customCell ngCellText">{{submittedTimeFormatter(row.entity.webSubmittedTime)}}</div>',
+        sortFn: function (currentDateString, previousDateString) {
+          var currentDate = new Date(DateFormatService.convertPortugueseDateStringToNormalDateString(currentDateString));
+          var previousDate = new Date(DateFormatService.convertPortugueseDateStringToNormalDateString(previousDateString));
+    
+          if (currentDate === previousDate) return 0;
+          if (currentDate < previousDate) return -1;
+          return 1;
+        }
       }
     ]
   };
