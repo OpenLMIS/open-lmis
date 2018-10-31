@@ -29,6 +29,21 @@ public class StockOnHandForSingleProductReportGenerator extends AbstractReportMo
     private SimpleTableService simpleTableService;
 
     @Override
+    protected Object getReportTitle(Map<Object, Object> paraMap) {
+        List<List<String>> title = new ArrayList<>();
+        if(null != paraMap.get("endTime")) {
+            List<String> generationDate = new ArrayList<>();
+            generationDate.add(getMessage("report.header.generated.for"));
+
+            generationDate.add(DateUtil.transform(paraMap.get("endTime").toString(),
+                    DateUtil.FORMAT_DATE_TIME, "dd/mm/yyyy"));
+
+            title.add(generationDate);
+        }
+        return title;
+    }
+
+    @Override
     protected Map<String, Object> getQueryResult(Map<Object, Object> paraMap) {
         StockReportParam filterCriteria = new StockReportParam();
         filterCriteria.setValue(paraMap);
@@ -47,7 +62,7 @@ public class StockOnHandForSingleProductReportGenerator extends AbstractReportMo
         headers.put("lot", getMessage("report.header.lot"));
         headers.put("sohOfLot", getMessage("report.header.sohoflot"));
         headers.put("totalSoh", getMessage("report.header.sohoflot.total"));
-        headers.put("expiryDate", getMessage("report.header.expiry.date"));
+        headers.put("expiryDate", getMessage("report.soonest.expiry.date"));
         headers.put("MoS", getMessage("report.estimated.consumption.month"));
         headers.put("cmm", getMessage("report.header.cmm"));
         headers.put("lastSyncDate", getMessage("report.header.last.update.from.tablet"));
@@ -115,7 +130,7 @@ public class StockOnHandForSingleProductReportGenerator extends AbstractReportMo
                                                                Map<String, Object> queryResult) {
         List<StockProductDto> stockProductDtoList = (List<StockProductDto>) queryResult.get(KEY_QUERY_RESULT);
         List<Map<String, String>> mergedRegions = new ArrayList<>();
-        int index = 0;
+        int index = 1;
         for (StockProductDto dto : stockProductDtoList) {
             int cmmSpan = dto.getLotList().size();
             mergedRegions.add(createMergedRegion(String.valueOf(index + 1), String.valueOf(index + cmmSpan),
