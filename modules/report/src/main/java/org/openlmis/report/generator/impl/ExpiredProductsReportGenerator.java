@@ -135,7 +135,7 @@ public class ExpiredProductsReportGenerator extends AbstractReportModelGenerator
 
     private List<Map<String, String>> getMergedRegions(List<StockProductDto> stockProductDtoList, Map<String, String> mergedColumns) {
         List<Map<String, String>> mergedRegions = new ArrayList<>();
-        int index = 0;
+        int index = 1;
 
         for (StockProductDto dto : stockProductDtoList) {
             int cmmSpan = dto.getLotList().size();

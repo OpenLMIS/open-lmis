@@ -141,7 +141,7 @@ public class OverStockProductsReportGenerator extends AbstractReportModelGenerat
 
         List<StockProductDto> stockProductDtoList = (List<StockProductDto>) queryResult.get(KEY_QUERY_RESULT);
         List<Map<String, String>> mergedRegions = new ArrayList<>();
-        int index = 0;
+        int index = 1;
         for (StockProductDto dto : stockProductDtoList) {
             int cmmSpan = dto.getLotList().size();
             mergedRegions.add(createMergedRegion(String.valueOf(index + 1), String.valueOf(index + cmmSpan), CMM_COLUMN, CMM_COLUMN, getFormatDoubleValue(dto.getCmm())));
