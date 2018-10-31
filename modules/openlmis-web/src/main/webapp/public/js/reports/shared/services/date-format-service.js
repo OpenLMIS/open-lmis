@@ -86,7 +86,7 @@ services.factory('DateFormatService', function ($filter, messageService) {
   }
   
   
-  function convertPortugueseDateToNormalDate(inputValue) {
+  function convertPortugueseDateStringToNormalDateString(inputValue) {
     var portugueseDateMap = {
       Jan: 'Jan',
       Fev: 'Feb',
@@ -103,8 +103,12 @@ services.factory('DateFormatService', function ($filter, messageService) {
     };
     
     var matchValue = inputValue.match(/[a-zA-Z]{3}/g)[0];
-    var convertedNormalDate = inputValue.replace(matchValue, portugueseDateMap[matchValue]);
-    return new Date(convertedNormalDate);
+    
+    if (_.isUndefined(portugueseDateMap[matchValue])) {
+      return inputValue;
+    }
+  
+    return inputValue.replace(matchValue, portugueseDateMap[matchValue]);
   }
   
   return {
@@ -121,6 +125,6 @@ services.factory('DateFormatService', function ($filter, messageService) {
     formatDateWithUnderscore: formatDateWithUnderscore,
     formatDateElementsTwoCharacters: formatDateElementsTwoCharacters,
     getFridaysBetween: getFridaysBetween,
-    convertPortugueseDateToNormalDate: convertPortugueseDateToNormalDate
+    convertPortugueseDateStringToNormalDateString: convertPortugueseDateStringToNormalDateString
   };
 });

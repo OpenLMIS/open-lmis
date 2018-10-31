@@ -306,8 +306,8 @@ function RequisitionReportController($scope, $controller, RequisitionReportServi
         field: 'inventoryDate',
         displayName: messageService.get("label.report.requisitions.inventorydate"),
         sortFn: function (currentDateString, previousDateString) {
-          var currentDate = DateFormatService.convertPortugueseDateToNormalDate(currentDateString);
-          var previousDate = DateFormatService.convertPortugueseDateToNormalDate(previousDateString);
+          var currentDate = new Date(DateFormatService.convertPortugueseDateStringToNormalDateString(currentDateString));
+          var previousDate = new Date(DateFormatService.convertPortugueseDateStringToNormalDateString(previousDateString));
 
           if (currentDate === previousDate) return 0;
           if (currentDate < previousDate) return -1;
@@ -324,8 +324,8 @@ function RequisitionReportController($scope, $controller, RequisitionReportServi
         displayName: messageService.get("label.report.requisitions.originalperiod"),
         width: 180,
         sortFn: function (currentOriginalPeriodString, previousOriginalPeriodString) {
-          var currentDate = new Date(currentOriginalPeriodString.split("-")[0]);
-          var previousDate = new Date(previousOriginalPeriodString.split("-")[0]);
+          var currentDate = new Date(DateFormatService.convertPortugueseDateStringToNormalDateString(currentOriginalPeriodString.split("-")[0]));
+          var previousDate = new Date(DateFormatService.convertPortugueseDateStringToNormalDateString(previousOriginalPeriodString.split("-")[0]));
 
           if (currentDate === previousDate) return 0;
           if (currentDate < previousDate) return -1;
