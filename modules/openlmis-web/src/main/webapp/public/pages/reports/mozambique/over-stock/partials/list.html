@@ -79,7 +79,7 @@
 
     <div id="fixed-body" class="fixed-body">
       <table class="table table-bordered table-striped">
-        <tr class="table--body" ng-repeat="overStockItem in formattedOverStockList">
+        <tr class="table--body" ng-repeat="overStockItem in formattedOverStockList | filter: (isDistrictOverStock || '') && filterText">
           <td class="table--body-150">{{overStockItem.provinceName}}</td>
           <td class="table--body-150">{{overStockItem.districtName}}</td>
           <td ng-show="!isDistrictOverStock" class="table--body-150">{{overStockItem.facilityName}}</td>
