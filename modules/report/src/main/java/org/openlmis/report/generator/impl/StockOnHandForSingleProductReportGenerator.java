@@ -83,7 +83,7 @@ public class StockOnHandForSingleProductReportGenerator extends AbstractReportMo
                 rowMap.put("lot", lotinfo.getLotNumber());
                 rowMap.put("sohOfLot", lotinfo.getStockOnHandOfLot());
                 rowMap.put("totalSoh", dto.getSumStockOnHand());
-                rowMap.put("status", dto.getStockOnHandStatus().getDescription());
+                rowMap.put("status", getMessage(dto.getStockOnHandStatus().getMessageKey()));
 
                 Map<String, Object> tmpValue = new HashMap<>();
                 tmpValue.put("value", DateUtil.formatDate(date));
