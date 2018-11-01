@@ -14,6 +14,13 @@ function SingleProductReportController($scope, $filter, $controller, $http, Cube
     'LOW STOCK': 'low-stock'
   };
 
+  var STATUS = {
+    'STOCK_OUT': messageService.get("Ruptura de Stock"),
+    'REGULAR_STOCK': messageService.get("Stock Normal"),
+    'OVER_STOCK': messageService.get("Estoque acumulado"),
+    'LOW_STOCK': messageService.get("Eminência de estoque")
+  };
+
   $scope.$on('$viewContentLoaded', function () {
     FeatureToggleService.get({key: 'lot.expiry.dates.report'}, function (result) {
       $scope.isLotExpiryDatesToggleOn = result.key;
@@ -31,6 +38,7 @@ function SingleProductReportController($scope, $filter, $controller, $http, Cube
         facilityName: item.facilityName,
         facilityCode: item.facilityCode,
         productName: item.productName,
+        stockOnHandStatusPT: STATUS[item.stockOnHandStatus],
         stockOnHandStatus: item.stockOnHandStatus.replace('_', ' '),
         sumStockOnHand: item.sumStockOnHand,
         mos: item.mos,
