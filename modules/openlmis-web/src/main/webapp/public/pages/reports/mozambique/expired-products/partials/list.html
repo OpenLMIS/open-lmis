@@ -74,9 +74,8 @@
             <span ng-show="sortType == 'stockOnHandOfLot' && sortReverse" class="icon-sort-down"></span>
           </th>
           <th class="table--body-150"
-              ng-click="sortType = 'price'; sortReverse = !sortReverse;  filterAndSort();">
-            <span openlmis-message="report.header.price"></span>
-            <span class="price-unit">(MZN)</span>
+              ng-click="sortType = 'price'; sortReverse = !sortReverse;  filterAndSort();"
+              openlmis-message="report.header.price">
             <span ng-show="sortType != 'price'" class="icon-sort"></span>
             <span ng-show="sortType == 'price' && !sortReverse" class="icon-sort-up"></span>
             <span ng-show="sortType == 'price' && sortReverse" class="icon-sort-down"></span>
