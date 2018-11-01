@@ -43,6 +43,7 @@ function SingleProductReportController($scope, $filter, $controller, $http, Cube
       });
 
       formatItem.expiry_date = lotList[0].expiryDate;
+      formatItem.soonest_expiring_loh = DateFormatService.formatDateWithLocale(lotList[0].expiryDate) + "(" + messageService.get("report.stock.on.hand.amount") + lotList[0].stockOnHandOfLot + ")";
       formatItem.lotList = lotList;
       formattedSingleProductList.push(formatItem);
     });
@@ -61,6 +62,7 @@ function SingleProductReportController($scope, $filter, $controller, $http, Cube
             stockOnHandStatus: item.stockOnHandStatus,
             facilityCode: item.facilityCode,
             expiry_date: DateFormatService.formatDateWithLocale(item.expiry_date),
+            soonest_expiring_loh: item.soonest_expiring_loh,
             lotNumber: lot.lotNumber,
             stockOnHandOfLot: lot.stockOnHandOfLot,
             sumStockOnHand: item.sumStockOnHand,
