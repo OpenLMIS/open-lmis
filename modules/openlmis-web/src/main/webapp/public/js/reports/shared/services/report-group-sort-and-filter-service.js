@@ -12,17 +12,34 @@ services.factory('ReportGroupSortAndFilterService', function ($http, $filter, Da
     _.forEach(item, function (value, key) {
       if (!_.includes(ignoreSearchList, key)) {
         if (_.includes(timeFieldList, key)) {
-          value = DateFormatService.formatDateWithLocale(value);
+          value = DateFormatService.formatDateWithTimeAndLocale(value);
         }
         if (key !== specialType && checkValueContains(value, filterText)) {
           flag = true;
         }
-        if (key === specialType && checkField(value, filterText, specialType, timeFieldList, ignoreSearchList)) {
+        if (key === specialType && checkLotItemInclude(value, timeFieldList, filterText, ignoreSearchList)) {
           flag = true;
         }
       }
     });
     return flag;
+  }
+
+  function checkLotItemInclude(field, timeFieldList, filterText, ignoreSearchList) {
+    return _.find(field, function (lotItem) {
+      var flag = false;
+      _.forEach(lotItem, function (value, key) {
+        if (!_.includes(ignoreSearchList, key)) {
+          if (_.includes(timeFieldList, key)) {
+            value = DateFormatService.formatDateWithTimeAndLocale(value);
+          }
+          if (checkValueContains(value, filterText)) {
+            flag = true;
+          }
+        }
+      });
+      return flag;
+    });
   }
 
   function checkValueContains(value, filterText) {
