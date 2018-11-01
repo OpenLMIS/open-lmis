@@ -36,7 +36,7 @@ public class StockOnHandForSingleProductReportGenerator extends AbstractReportMo
             generationDate.add(getMessage("report.header.generated.for"));
 
             generationDate.add(DateUtil.transform(paraMap.get("endTime").toString(),
-                    DateUtil.FORMAT_DATE_TIME, "dd/mm/yyyy"));
+                    DateUtil.FORMAT_DATE_TIME, "dd/MM/yyyy"));
 
             title.add(generationDate);
         }

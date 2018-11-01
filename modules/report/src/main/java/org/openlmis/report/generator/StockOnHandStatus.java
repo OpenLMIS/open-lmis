@@ -1,6 +1,5 @@
 package org.openlmis.report.generator;
 
-import org.apache.poi.ss.usermodel.IndexedColors;
 import org.apache.poi.xssf.usermodel.XSSFColor;
 
 public enum StockOnHandStatus {
