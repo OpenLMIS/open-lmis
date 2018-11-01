@@ -35,12 +35,14 @@ import static junit.framework.Assert.assertEquals;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.nullValue;
 import static org.junit.Assert.assertThat;
+import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.openlmis.core.builder.ProductBuilder.code;
 import static org.openlmis.core.builder.ProductBuilder.defaultProduct;
 import static org.openlmis.core.builder.ProgramBuilder.defaultProgram;
+import static org.openlmis.rnr.builder.RequisitionBuilder.defaultRequisition;
 import static org.openlmis.rnr.builder.RnrColumnBuilder.*;
 import static org.openlmis.rnr.builder.RnrLineItemBuilder.*;
 import static org.openlmis.rnr.domain.ProgramRnrTemplate.*;
@@ -58,6 +60,8 @@ import static org.powermock.api.mockito.PowerMockito.spy;
 @PowerMockRunnerDelegate(BlockJUnit4ClassRunner.class)
 @PrepareForTest(RnrLineItem.class)
 public class RnrLineItemTest {
+
+  private Rnr rnr;
 
   @Rule
   public ExpectedException expectedException = ExpectedException.none();
@@ -83,6 +87,7 @@ public class RnrLineItemTest {
     LossesAndAdjustmentsType subtractive2 = new LossesAndAdjustmentsType("subtractive2", "Subtractive 2", false, 4);
     lossesAndAdjustmentsList = asList(additive1, additive2, subtractive1, subtractive2);
     numberOfMonths = 3;
+    rnr = make(a(defaultRequisition));
   }
 
   @Test
@@ -257,7 +262,7 @@ public class RnrLineItemTest {
     lineItem.setProgram(program);
     expectedException.expect(DataException.class);
     expectedException.expectMessage(RNR_VALIDATION_ERROR);
-    lineItem.validateCalculatedFields(template);
+    lineItem.validateCalculatedFields(template, rnr);
   }
 
   @Test
