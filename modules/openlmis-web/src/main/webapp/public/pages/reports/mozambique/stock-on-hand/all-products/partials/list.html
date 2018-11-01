@@ -1,91 +1,123 @@
 <div>
-    <div id="control-bar">
+  <div id="control-bar">
 
-        <h3 class="report-title" openlmis-message="title.all.products.report"></h3>
+    <h3 class="report-title" openlmis-message="title.all.products.report"></h3>
 
-        <div ng-include="'/public/pages/reports/mozambique/province-selection.html'"></div>
-        <div ng-include="'/public/pages/reports/mozambique/district-selection.html'"></div>
-        <div ng-include="'/public/pages/reports/mozambique/facility-selection.html'"></div>
+    <div ng-include="'/public/pages/reports/mozambique/province-selection.html'"></div>
+    <div ng-include="'/public/pages/reports/mozambique/district-selection.html'"></div>
+    <div ng-include="'/public/pages/reports/mozambique/facility-selection.html'"></div>
 
-        <div ng-include="'/public/pages/reports/mozambique/date-selection.html'"></div>
+    <div ng-include="'/public/pages/reports/mozambique/date-selection.html'"></div>
 
-        <div class="report-selection">
-            <input type="submit" class="btn btn-primary" ng-click="loadReport()"
-                   openlmis-message="button.generateReport"/>
-        </div>
-
-        <div style="clear: both"></div>
+    <div class="report-selection">
+      <input type="submit" class="btn btn-primary" ng-click="loadReport()"
+             openlmis-message="button.generateReport"/>
     </div>
 
-    <hr/>
+    <div style="clear: both"></div>
+  </div>
 
-    <div id="report" ng-if="reportData" class="stock-on-hand-all">
-        <h3 class="report-title" openlmis-message="subtitle.all.product.report|reportData[0]['facility.facility_name']"></h3>
-        <div class="report-subtitle">
-            <h4 class="report-total-entries"  openlmis-message="label.report.data.total|reportData.length"></h4>
-            <div ng-include="'/public/pages/reports/mozambique/search-field.html'"></div>
-        </div>
-        <table class="table table-condensed table-bordered table-striped fixed-header-table header-table">
-            <tr class="gradient-header">
-                <th ng-click="sortType = 'drug_name'; sortReverse = !sortReverse" class="sortable sort-desc"
-                    openlmis-message="report.drug.name">
-                    <span ng-show="sortType != 'drug_name'" class="icon-sort"></span>
-                    <span ng-show="sortType == 'drug_name' && !sortReverse" class="icon-sort-up"></span>
-                    <span ng-show="sortType == 'drug_name' && sortReverse" class="icon-sort-down"></span></th>
-                <th ng-click="sortType = 'soh'; sortReverse = !sortReverse" class="sortable sort-desc"
-                    openlmis-message="report.drug.quantity">
-                    <span ng-show="sortType != 'soh'" class="icon-sort"></span>
-                    <span ng-show="sortType == 'soh' && !sortReverse" class="icon-sort-up"></span>
-                    <span ng-show="sortType == 'soh' && sortReverse" class="icon-sort-down"></span></th>
-                <th ng-click="sortType = 'expiry_date'; sortReverse = !sortReverse" class="sortable sort-desc"
-                    openlmis-message="report.soonest.expiry.date">
-                    <span ng-show="sortType != 'expiry_date'" class="icon-sort"></span>
-                    <span ng-show="sortType == 'expiry_date' && !sortReverse" class="icon-sort-up"></span>
-                    <span ng-show="sortType == 'expiry_date' && sortReverse" class="icon-sort-down"></span></th>
-                <th ng-click="sortType = 'estimated_months'; sortReverse = !sortReverse" class="sortable sort-desc"
-                    openlmis-message="report.estimated.consumption.month">
-                    <span ng-show="sortType != 'estimated_months'" class="icon-sort"></span>
-                    <span ng-show="sortType == 'estimated_months' && !sortReverse" class="icon-sort-up"></span>
-                    <span ng-show="sortType == 'estimated_months' && sortReverse" class="icon-sort-down"></span></th>
-            </tr>
-        </table>
-        <div class="content-table">
-            <table class="table table-condensed table-bordered table-striped fixed-header-table" enableVerticalScrollbar="2">
-                <tr ng-repeat="entry in reportData | orderBy:sortType:sortReverse | filter: partialPropertiesFilter(searchValue)">
-                    <td ng-show="viewStockMovementToggle">
-                        <a href="#/stock-movements/product/{{entry.drug_code}}/facility/{{entry['facility.facility_code']}}"
-                            ng-click="saveHistory()">{{entry.drug_name}} [{{entry.drug_code}}]</a>
-                    </td>
-                    <td ng-show="!viewStockMovementToggle">{{entry.drug_name}} [{{entry.drug_code}}]
-                    </td>
-                    <td style="text-align: right" ng-class="cmmStatus(entry)">
-                        <span class="label label-warning low-stock-tag" openlmis-message="stock.cmm.low.stock">
-                        </span>
-                        <span class="label label-info over-stock-tag" openlmis-message="stock.cmm.over.stock">
-                        </span>
-                        <span>
-                            {{entry.soh | number:0}}
-                        </span>
-                    </td>
-                    <td><a ng-click="redirectToLotExpiryDateReport(entry.drug_code)" style="cursor:pointer;" ng-show="entry.soonest_expiring_loh">
-                        <span>{{entry.formatted_expiry_date}} (</span>
-                        <span openlmis-message="report.stock.on.hand.amount"></span>
-                        <span>{{entry.soonest_expiring_loh}})</span>
-                    </a></td>
-                    <td class="align-right"><span ng-hide="angular.isUndefined(entry.estimated_months)"><img src="/public/images/exclamation.png" class="exclamation" ng-show="hasExpirationRisk(entry)"> {{entry.estimated_months}}</span></td>
-                </tr>
-            </table>
-        </div>
-        <div>
-            <div ng-include="'/public/pages/reports/mozambique/export-data-button.html'"></div>
-        </div>
+  <hr/>
 
-        <div class="footer-wrapper">
-            <p class="report-title" openlmis-message="message.last.updated.date"><b>&nbsp&nbsp{{reportData[0].formatted_last_sync_date}}</b></p>
-            <ng-include src="'/public/pages/reports/mozambique/product-report-footer.html'"/>
-        </div>
-
+  <div id="report" ng-if="reportData" class="stock-on-hand-all">
+    <h3 class="report-title"
+        openlmis-message="subtitle.all.product.report|reportData[0]['facilityName']"></h3>
+    <div class="report-subtitle">
+      <h4 class="report-total-entries" openlmis-message="label.report.data.total|reportData.length"></h4>
+      <div ng-include="'/public/pages/reports/mozambique/search-field.html'"></div>
     </div>
-    <label ng-show="reportData && reportData.length == 0" openlmis-message="label.report.empty"></label>
+    <table class="table table-condensed table-bordered table-striped fixed-header-table header-table">
+      <tr class="gradient-header">
+        <th ng-click="sortType = 'productName'; sortReverse = !sortReverse; filterAndSort();" class="sortable sort-desc"
+            openlmis-message="report.drug.name">
+          <span ng-show="sortType != 'productName'" class="icon-sort"></span>
+          <span ng-show="sortType == 'productName' && !sortReverse" class="icon-sort-up"></span>
+          <span ng-show="sortType == 'productName' && sortReverse" class="icon-sort-down"></span>
+        </th>
+        <th ng-click="sortType = 'lotNumber'; sortReverse = !sortReverse; filterAndSort();" class="sortable sort-desc"
+            openlmis-message="report.header.lotnumber">
+          <span ng-show="sortType != 'lotNumber'" class="icon-sort"></span>
+          <span ng-show="sortType == 'lotNumber' && !sortReverse" class="icon-sort-up"></span>
+          <span ng-show="sortType == 'lotNumber' && sortReverse" class="icon-sort-down"></span>
+        </th>
+        <th ng-click="sortType = 'stockOnHandOfLot'; sortReverse = !sortReverse; filterAndSort();"
+            class="sortable sort-desc"
+            openlmis-message="report.header.sohoflot">
+          <span ng-show="sortType != 'stockOnHandOfLot'" class="icon-sort"></span>
+          <span ng-show="sortType == 'stockOnHandOfLot' && !sortReverse" class="icon-sort-up"></span>
+          <span ng-show="sortType == 'stockOnHandOfLot' && sortReverse" class="icon-sort-down"></span>
+        </th>
+        <th ng-click="sortType = 'sumStockOnHand'; sortReverse = !sortReverse; filterAndSort();"
+            class="sortable sort-desc"
+            openlmis-message="report.header.total.soh">
+          <span ng-show="sortType != 'sumStockOnHand'" class="icon-sort"></span>
+          <span ng-show="sortType == 'sumStockOnHand' && !sortReverse" class="icon-sort-up"></span>
+          <span ng-show="sortType == 'sumStockOnHand' && sortReverse" class="icon-sort-down"></span>
+        </th>
+        <th ng-click="sortType = 'expiryDate'; sortReverse = !sortReverse; filterAndSort();" class="sortable sort-desc"
+            openlmis-message="report.soonest.expiry.date">
+          <span ng-show="sortType != 'expiryDate'" class="icon-sort"></span>
+          <span ng-show="sortType == 'expiryDate' && !sortReverse" class="icon-sort-up"></span>
+          <span ng-show="sortType == 'expiryDate' && sortReverse" class="icon-sort-down"></span>
+        </th>
+        <th ng-click="sortType = 'mos'; sortReverse = !sortReverse; filterAndSort();" class="sortable sort-desc"
+            openlmis-message="report.estimated.consumption.month">
+          <span ng-show="sortType != 'mos'" class="icon-sort"></span>
+          <span ng-show="sortType == 'mos' && !sortReverse" class="icon-sort-up"></span>
+          <span ng-show="sortType == 'mos' && sortReverse" class="icon-sort-down"></span>
+        </th>
+        <th ng-click="sortType = 'cmm'; sortReverse = !sortReverse; filterAndSort();" class="sortable sort-desc"
+            openlmis-message="report.header.cmm">
+          <span ng-show="sortType != 'cmm'" class="icon-sort"></span>
+          <span ng-show="sortType == 'cmm' && !sortReverse" class="icon-sort-up"></span>
+          <span ng-show="sortType == 'cmm' && sortReverse" class="icon-sort-down"></span>
+        </th>
+      </tr>
+    </table>
+    <div class="content-table">
+      <table class="table table-condensed table-bordered table-striped fixed-header-table">
+        <tr ng-repeat="entry in reportData">
+          <td ng-show="viewStockMovementToggle">
+            <a href="#/stock-movements/product/{{entry.productCode}}/facility/{{entry.facilityCode}}"
+               ng-click="saveHistory()">{{entry.productName}} [{{entry.productCode}}]</a>
+          </td>
+          <td>{{entry.lotNumber}}</td>
+          <td>{{entry.stockOnHandOfLot}}</td>
+          <td style="text-align: right" ng-class="cmmStatusStyle(entry.stockOnHandStatus)"
+              ng-show="entry.isFirst" rowspan="{{entry.rowSpan}}">
+            <span class="label low-stock-color low-stock-tag" openlmis-message="stock.cmm.low.stock"></span>
+            <span class="label over-stock-color over-stock-tag" openlmis-message="stock.cmm.over.stock"></span>
+            <span class="label regular-stock-color regular-stock-tag" openlmis-message="stock.cmm.regular.stock"></span>
+            <span class="label stock-out-color stock-out-tag" openlmis-message="stock.cmm.stock.out"></span>
+            <span>{{entry.sumStockOnHand | number:0}}</span>
+          </td>
+          <td ng-show="entry.isFirst" rowspan="{{entry.rowSpan}}">
+            <a ng-click="redirectToLotExpiryDateReport(entry.productCode, entry.facilityCode)" style="cursor:pointer;">
+              <span>{{entry.expiry_date}}</span>
+            </a>
+          </td>
+          <td ng-show="entry.isFirst" rowspan="{{entry.rowSpan}}">
+            {{entry.estimated_months}}
+          </td>
+          <td ng-show="entry.isFirst" rowspan="{{entry.rowSpan}}" class="align-right">
+            <span ng-hide="angular.isUndefined(entry.cmm)"><img
+              src="/public/images/exclamation.png" class="exclamation" ng-show="hasExpirationRisk(entry)">
+            {{entry.cmm}}</span>
+          </td>
+        </tr>
+      </table>
+    </div>
+    <div>
+      <div ng-include="'/public/pages/reports/mozambique/export-data-button.html'"></div>
+    </div>
+
+    <div class="footer-wrapper">
+      <p class="report-title" openlmis-message="message.last.updated.date"><b>&nbsp&nbsp{{reportData[0].formatted_last_sync_date}}</b>
+      </p>
+      <ng-include src="'/public/pages/reports/mozambique/product-report-footer.html'"/>
+    </div>
+
+  </div>
+  <label ng-show="reportData && reportData.length == 0" openlmis-message="label.report.empty"></label>
 
 </div>

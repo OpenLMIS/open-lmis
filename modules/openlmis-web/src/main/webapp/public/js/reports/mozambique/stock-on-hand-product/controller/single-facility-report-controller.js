@@ -1,5 +1,20 @@
-function SingleFacilityReportController($scope, $filter, $controller, $http, CubesGenerateCutParamsService, CubesGenerateUrlService, FeatureToggleService, $cacheFactory, $timeout, LotExpiryDateService, $window, messageService, DateFormatService, ReportExportExcelService) {
+function SingleFacilityReportController($scope, $filter, $controller, $http, NewReportService,
+                                        CubesGenerateCutParamsService, CubesGenerateUrlService,
+                                        FeatureToggleService, $cacheFactory, $timeout,
+                                        LotExpiryDateService, $window, messageService,
+                                        DateFormatService, ReportExportExcelService,
+                                        ReportGroupSortAndFilterService) {
   $controller('BaseProductReportController', {$scope: $scope});
+  
+  $scope.filterList = [];
+  $scope.filterText = "";
+  
+  var CMM_STATUS = {
+    'STOCK OUT': 'stock-out',
+    'REGULAR STOCK': 'regular-stock',
+    'OVER STOCK': 'over-stock',
+    'LOW STOCK': 'low-stock'
+  };
 
   if ($cacheFactory.get('keepHistoryInStockOnHandPage') === undefined) {
     $scope.cache = $cacheFactory('keepHistoryInStockOnHandPage', {capacity: 10});
@@ -35,142 +50,128 @@ function SingleFacilityReportController($scope, $filter, $controller, $http, Cub
 
     $scope.loadHealthFacilities();
   });
-
+  
+  var sortList = ['lotNumber', 'stockOnHandOfLot'];
+  var ignoreSearchList = ['expiryDate', 'productName', 'facilityCode'];
+  var timeFieldList = ['expiry_date', 'syncDate'];
+  $scope.filterAndSort = function () {
+    $scope.filterList = ReportGroupSortAndFilterService.search($scope.originData, $scope.filterText, "lotList", timeFieldList, ignoreSearchList);
+    $scope.filterList = ReportGroupSortAndFilterService.groupSort($scope.filterList, $scope.sortType, $scope.sortReverse, sortList);
+    $scope.reportData = formatAllProductList($scope.filterList);
+  };
+  
   $scope.loadReport = loadReportAction;
-
-  function populateDataEntry(cutsParams) {
-    var cubesPath = 'vw_daily_full_soh';
-
-    //retrieve CMM values for soh data and populate entries based on report needs
-    $http.get(CubesGenerateUrlService.generateFactsUrl(cubesPath, cutsParams)).success(function (sohEntries) {
-      var periodBegin = DateFormatService.formatDateWithStartDayOfPeriod(new Date($scope.reportParams.endTime));
-      var periodEnd = DateFormatService.formatDateWithEndDayOfPeriod(new Date($scope.reportParams.endTime));
-      var cmmCutsParams = [
-        {dimension: "facility", values: [sohEntries[0]["facility.facility_id"]]},
-        {dimension: "periodbegin", values: [$filter('date')(periodBegin, "yyyy,MM,dd")], skipEscape: true},
-        {dimension: "periodend", values: [$filter('date')(periodEnd, "yyyy,MM,dd")], skipEscape: true}];
-
-      $http.get(CubesGenerateUrlService.generateFactsUrl('vw_cmm_entries', cmmCutsParams)).success(function (cmmEntries) {
-
-        $scope.reportData = _.chain(sohEntries)
-          .groupBy(function (sohEntry) {
-            return sohEntry['drug.drug_code'];
-          })
-          .map(function (sameCodeEntries) {
-            var maxOccurredDateEntry = _.max(sameCodeEntries, function (entry) {
-              return new Date(entry.occurred_date);
-            });
-            maxOccurredDateEntry.soh = Number(maxOccurredDateEntry.soh);
-
-            maxOccurredDateEntry.drug_name = maxOccurredDateEntry['drug.drug_name'];
-            maxOccurredDateEntry.drug_code = maxOccurredDateEntry['drug.drug_code'];
-
-            maxOccurredDateEntry.formatted_last_sync_date = DateFormatService.formatDateWithLocale(maxOccurredDateEntry.last_sync_date);
-
-            var matchedCMMEntry = _.filter(cmmEntries, function (cmmEntry) {
-              return cmmEntry.product === maxOccurredDateEntry['drug.drug_code'] && cmmEntry.facility === maxOccurredDateEntry['facility.facility_id'];
-            })[0];
-            if (matchedCMMEntry) {
-              maxOccurredDateEntry.cmm = matchedCMMEntry.cmm;
-            } else {
-              maxOccurredDateEntry.cmm = -1.0;
-            }
-            maxOccurredDateEntry.estimated_months = (maxOccurredDateEntry.cmm === -1.0 || maxOccurredDateEntry.cmm === 0) ? undefined : Math.floor(10 * maxOccurredDateEntry.soh / maxOccurredDateEntry.cmm) / 10;
-            maxOccurredDateEntry.stock_status = $scope.getEntryStockStatus(maxOccurredDateEntry);
-            return maxOccurredDateEntry;
-          })
-          .value();
-
-        $scope.lotOnHandHash = {};
-        LotExpiryDateService.populateLotOnHandInformationForSoonestExpiryDate($scope.reportData, $scope.lotOnHandHash);
-      });
-    });
-  }
-
+  
+  $scope.cmmStatusStyle = function (status) {
+    return CMM_STATUS[status];
+  };
+  
   function loadReportAction() {
     if ($scope.validateSingleFacility()) {
-      var params = $scope.reportParams;
-      $scope.locationIdToCode(params);
-      var cutsParams = CubesGenerateCutParamsService.generateCutsParams("occurred", undefined, $filter('date')(params.endTime, "yyyy,MM,dd"),
-        params.selectedFacility, undefined, params.selectedProvince, params.selectedDistrict);
-      populateDataEntry(cutsParams);
+      var reportParams = $scope.reportParams;
+    
+      var allProductParams = {
+        endTime: $filter('date')(reportParams.endTime, "yyyy-MM-dd") + " 23:59:59",
+        provinceId: reportParams.provinceId.toString(),
+        districtId: reportParams.districtId.toString(),
+        facilityId: reportParams.facilityId.toString(),
+        reportType: "stockOnHandAll"
+      };
+    
+      $scope.formattedOverStockList = [];
+    
+      NewReportService.get(utils.pickEmptyObject(allProductParams))
+        .$promise.then(function (allProductResponse) {
+        $scope.originData = allProductResponse.data;
+        $scope.originData = formatAllProductListForSearch($scope.originData);
+        $scope.reportData = formatAllProductList($scope.originData);
+        $scope.filterAndSort();
+      });
     }
   }
-
+  
+  function formatAllProductListForSearch(data) {
+    var formattedSingleProductList = [];
+    _.forEach(data, function (item) {
+      var formatItem = {
+        facilityCode: item.facilityCode,
+        facilityName: item.facilityName,
+        productCode: item.productCode,
+        productName: item.productName,
+        stockOnHandStatus: item.stockOnHandStatus.replace('_', ' '),
+        sumStockOnHand: item.sumStockOnHand,
+        mos: item.mos,
+        cmm: item.cmm
+      };
+      
+      var lotList = _.sortBy(item.lotList, function (o) {
+        return o.expiryDate;
+      });
+      
+      formatItem.expiry_date = lotList[0].expiryDate;
+      formatItem.lotList = lotList;
+      formattedSingleProductList.push(formatItem);
+    });
+    
+    
+    return formattedSingleProductList;
+  }
+  
+  function formatAllProductList(data) {
+    var formattedSingleProductList = [];
+    _.forEach(data, function (item) {
+      _.forEach(item.lotList, function (lot, index) {
+        var formatItem = {
+          facilityCode: item.facilityCode,
+          facilityName: item.facilityName,
+          productCode: item.productCode,
+          productName: item.productName,
+          stockOnHandStatus: item.stockOnHandStatus,
+          expiry_date: DateFormatService.formatDateWithLocale(item.expiry_date),
+          lotNumber: lot.lotNumber,
+          stockOnHandOfLot: lot.stockOnHandOfLot,
+          sumStockOnHand: item.sumStockOnHand,
+          cmm: toFixedNumber(item.cmm),
+          estimated_months: toFixedNumber(item.mos),
+          rowSpan: item.lotList.length,
+          isFirst: index === 0
+        };
+        
+        formattedSingleProductList.push(formatItem);
+      });
+    });
+    
+    return formattedSingleProductList;
+  }
+  
+  function toFixedNumber(originNumber) {
+    if (_.isNull(originNumber)) {
+      return null;
+    }
+    
+    return parseFloat(originNumber.toFixed(2));
+  }
+  
+  
   $scope.saveHistory = function () {
     $scope.cache.put('dataOfStockOnHandReport', $scope.reportParams);
     console.log($scope.reportParams);
   };
 
-  $scope.generateRedirectToExpiryDateReportURL = function (drugCode) {
+  $scope.generateRedirectToExpiryDateReportURL = function (productCode, facilityCode) {
     var date = $filter('date')($scope.reportParams.endTime, "yyyy-MM-dd");
 
     var redirectedURL = "/public/pages/reports/mozambique/index.html#/lot-expiry-dates" + "?" +
-        "facilityCode=" + $scope.reportParams.selectedFacility.code + "&" +
+        "facilityCode=" + facilityCode + "&" +
         "date=" + date + "&" +
-        "drugCode=" + drugCode;
+        "drugCode=" + productCode;
 
     return redirectedURL;
   };
 
-  $scope.redirectToLotExpiryDateReport = function(drugCode) {
-    $window.location.href = $scope.generateRedirectToExpiryDateReportURL(drugCode);
+  $scope.redirectToLotExpiryDateReport = function(productCode, facilityCode) {
+    $window.location.href = $scope.generateRedirectToExpiryDateReportURL(productCode, facilityCode);
   };
 
-  $scope.partialPropertiesFilter = function(searchValue) {
-    return function(entry) {
-      var regex = new RegExp(searchValue, "gi");
-
-      return regex.test(entry.cmm.toString()) ||
-          regex.test(entry.soh.toString()) ||
-          regex.test(entry.expiry_date)||
-          regex.test(entry.estimated_months) ||
-          regex.test(entry.formatted_expiry_date) ||
-          regex.test(entry.soonest_expiring_loh) ||
-          regex.test(entry.stock_status) ||
-          regex.test(entry.drug_code) ||
-          regex.test(entry.drug_name) ||
-          regex.test(entry.formatted_last_sync_date);
-    };
-  };
-
-  $scope.exportXLSX = function() {
-    var data = {
-      reportHeaders: {
-        drugCode: messageService.get('report.header.drug.code'),
-        drugName: messageService.get('report.header.drug.name'),
-        province: messageService.get('report.header.province'),
-        district: messageService.get('report.header.district'),
-        facility: messageService.get('report.header.facility'),
-        quantity: messageService.get('report.header.drug.quantity'),
-        status: messageService.get('report.header.status'),
-        earliestDrugExpiryDate: messageService.get('report.header.earliest.drug.expiry.date'),
-        lotStockOnHand: messageService.get('report.header.lot.stock.on.hand'),
-        estimatedMonths: messageService.get('report.header.estimated.months'),
-        lastUpdateFromTablet: messageService.get('report.header.last.update.from.tablet'),
-        generatedFor: messageService.get('report.header.generated.for')
-      },
-      reportContent: []
-    };
-
-    if($scope.reportData) {
-      $scope.reportData.forEach(function (sohReportData) {
-        var singleFacilitySOHReportContent = {};
-        singleFacilitySOHReportContent.drugCode = sohReportData.drug_code;
-        singleFacilitySOHReportContent.drugName = sohReportData.drug_name;
-        singleFacilitySOHReportContent.province = $scope.reportParams.selectedProvince ? $scope.reportParams.selectedProvince.name : '[All]';
-        singleFacilitySOHReportContent.district = $scope.reportParams.selectedDistrict ? $scope.reportParams.selectedDistrict.name : '[All]';
-        singleFacilitySOHReportContent.facility = $scope.reportParams.selectedFacility ? $scope.reportParams.selectedFacility.name : '[All]';
-        singleFacilitySOHReportContent.quantity = sohReportData.soh;
-        singleFacilitySOHReportContent.status = sohReportData.stock_status;
-        singleFacilitySOHReportContent.earliestDrugExpiryDate = sohReportData.formatted_expiry_date;
-        singleFacilitySOHReportContent.lotStockOnHand = sohReportData.soonest_expiring_loh;
-        singleFacilitySOHReportContent.estimatedMonths = sohReportData.estimated_months;
-        singleFacilitySOHReportContent.lastUpdateFromTablet = DateFormatService.formatDateWith24HoursTime(sohReportData.last_sync_date);
-        singleFacilitySOHReportContent.generatedFor = DateFormatService.formatDateWithDateMonthYearForString($scope.reportParams.endTime);
-        data.reportContent.push(singleFacilitySOHReportContent);
-      });
-      ReportExportExcelService.exportAsXlsx(data, messageService.get('report.file.single.facility.soh.report'));
-    }
-  };
+  $scope.exportXLSX = function() {};
 }

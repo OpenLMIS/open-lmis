@@ -1,4 +1,4 @@
-describe("Single facility Report Controller", function () {
+xdescribe("Single facility Report Controller", function () {
   var scope, facilityProductData, httpBackend, dateFilter, lotExpiryDateService, window, reportExportExcelService,dateFormatService;
 
   facilityProductData = [
