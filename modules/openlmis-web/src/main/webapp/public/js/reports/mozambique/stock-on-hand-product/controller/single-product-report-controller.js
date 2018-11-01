@@ -74,8 +74,8 @@ function SingleProductReportController($scope, $filter, $controller, $http, Cube
             lotNumber: lot.lotNumber,
             stockOnHandOfLot: lot.stockOnHandOfLot,
             sumStockOnHand: item.sumStockOnHand,
-            cmm: toFixedNumber(item.cmm),
-            estimated_months: toFixedNumber(item.mos),
+            cmm: utils.toFixedNumber(item.cmm, true),
+            estimated_months: utils.toFixedNumber(item.mos, true),
             syncDate: DateFormatService.formatDateWithTimeAndLocale(item.syncDate),
             rowSpan: item.lotList.length,
             isFirst: index === 0
@@ -86,14 +86,6 @@ function SingleProductReportController($scope, $filter, $controller, $http, Cube
     });
 
     return formattedSingleProductList;
-  }
-
-  function toFixedNumber(originNumber) {
-    if (_.isNull(originNumber)) {
-      return null;
-    }
-
-    return parseFloat(originNumber.toFixed(2));
   }
 
   var sortList = ['lotNumber', 'stockOnHandOfLot'];
@@ -120,11 +112,8 @@ function SingleProductReportController($scope, $filter, $controller, $http, Cube
 
       $scope.formattedOverStockList = [];
 
-      NewReportService.get(_.pick(singleProductParams, function (param) {
-          if (!utils.isEmpty(param)) {
-            return param;
-          }
-        })).$promise.then(function (singleProductResponse) {
+      NewReportService.get(utils.pickEmptyObject(singleProductParams))
+        .$promise.then(function (singleProductResponse) {
           $scope.originData = singleProductResponse.data;
           $scope.originData = formatSingleProductListForSearch($scope.originData);
           $scope.reportData = formatSingleProductList($scope.originData);

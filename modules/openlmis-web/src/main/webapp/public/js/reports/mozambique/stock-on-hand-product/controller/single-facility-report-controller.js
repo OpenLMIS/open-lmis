@@ -1,5 +1,4 @@
-function SingleFacilityReportController($scope, $filter, $controller, $http, NewReportService,
-                                        CubesGenerateCutParamsService, CubesGenerateUrlService,
+function SingleFacilityReportController($scope, $filter, $controller, NewReportService,
                                         FeatureToggleService, $cacheFactory, $timeout,
                                         LotExpiryDateService, $window, messageService,
                                         DateFormatService, ReportExportExcelService,
@@ -14,6 +13,13 @@ function SingleFacilityReportController($scope, $filter, $controller, $http, New
     'REGULAR STOCK': 'regular-stock',
     'OVER STOCK': 'over-stock',
     'LOW STOCK': 'low-stock'
+  };
+  
+  var STATUS = {
+    'STOCK_OUT': messageService.get("Ruptura de Stock"),
+    'REGULAR_STOCK': messageService.get("Stock Normal"),
+    'OVER_STOCK': messageService.get("Estoque acumulado"),
+    'LOW_STOCK': messageService.get("Eminência de estoque")
   };
 
   if ($cacheFactory.get('keepHistoryInStockOnHandPage') === undefined) {
@@ -98,6 +104,7 @@ function SingleFacilityReportController($scope, $filter, $controller, $http, New
         facilityName: item.facilityName,
         productCode: item.productCode,
         productName: item.productName,
+        stockOnHandStatusPT: STATUS[item.stockOnHandStatus],
         stockOnHandStatus: item.stockOnHandStatus.replace('_', ' '),
         sumStockOnHand: item.sumStockOnHand,
         mos: item.mos,
@@ -109,6 +116,7 @@ function SingleFacilityReportController($scope, $filter, $controller, $http, New
       });
       
       formatItem.expiry_date = lotList[0].expiryDate;
+      formatItem.soonest_expiring_loh = DateFormatService.formatDateWithLocale(lotList[0].expiryDate) + "(" + messageService.get("report.stock.on.hand.amount") + lotList[0].stockOnHandOfLot + ")";
       formatItem.lotList = lotList;
       formattedSingleProductList.push(formatItem);
     });
@@ -128,11 +136,12 @@ function SingleFacilityReportController($scope, $filter, $controller, $http, New
           productName: item.productName,
           stockOnHandStatus: item.stockOnHandStatus,
           expiry_date: DateFormatService.formatDateWithLocale(item.expiry_date),
+          soonest_expiring_loh: item.soonest_expiring_loh,
           lotNumber: lot.lotNumber,
           stockOnHandOfLot: lot.stockOnHandOfLot,
           sumStockOnHand: item.sumStockOnHand,
-          cmm: toFixedNumber(item.cmm),
-          estimated_months: toFixedNumber(item.mos),
+          cmm: utils.toFixedNumber(item.cmm, true),
+          estimated_months: utils.toFixedNumber(item.mos, true),
           rowSpan: item.lotList.length,
           isFirst: index === 0
         };
@@ -143,15 +152,6 @@ function SingleFacilityReportController($scope, $filter, $controller, $http, New
     
     return formattedSingleProductList;
   }
-  
-  function toFixedNumber(originNumber) {
-    if (_.isNull(originNumber)) {
-      return null;
-    }
-    
-    return parseFloat(originNumber.toFixed(2));
-  }
-  
   
   $scope.saveHistory = function () {
     $scope.cache.put('dataOfStockOnHandReport', $scope.reportParams);

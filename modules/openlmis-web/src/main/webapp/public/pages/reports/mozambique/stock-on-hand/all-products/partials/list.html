@@ -19,14 +19,18 @@
 
   <hr/>
 
-  <div id="report" ng-if="reportData" class="stock-on-hand-all">
+  <div id="report" ng-show="originData" class="stock-on-hand-all">
     <h3 class="report-title"
-        openlmis-message="subtitle.all.product.report|reportData[0]['facilityName']"></h3>
+        openlmis-message="subtitle.all.product.report|originData[0]['facilityName']"></h3>
     <div class="report-subtitle">
-      <h4 class="report-total-entries" openlmis-message="label.report.data.total|reportData.length"></h4>
-      <div ng-include="'/public/pages/reports/mozambique/search-field.html'"></div>
+      <h4 class="report-total-entries" openlmis-message="label.report.data.total|originData.length"></h4>
+      <div class="search-field">
+        <h4 openlmis-message="label.search"/>
+        <input type="text" ng-change="filterAndSort()" ng-model="filterText"/>
+      </div>
     </div>
-    <table class="table table-condensed table-bordered table-striped fixed-header-table header-table">
+    <table class="table table-condensed table-bordered table-striped fixed-header-table header-table"
+           enableVerticalScrollbar="2">
       <tr class="gradient-header">
         <th ng-click="sortType = 'productName'; sortReverse = !sortReverse; filterAndSort();" class="sortable sort-desc"
             openlmis-message="report.drug.name">
@@ -93,7 +97,7 @@
           </td>
           <td ng-show="entry.isFirst" rowspan="{{entry.rowSpan}}">
             <a ng-click="redirectToLotExpiryDateReport(entry.productCode, entry.facilityCode)" style="cursor:pointer;">
-              <span>{{entry.expiry_date}}</span>
+              <span>{{entry.soonest_expiring_loh}}</span>
             </a>
           </td>
           <td ng-show="entry.isFirst" rowspan="{{entry.rowSpan}}">
