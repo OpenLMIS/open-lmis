@@ -138,11 +138,15 @@ public class StockOnHandForSingleProductReportGenerator extends AbstractReportMo
             mergedRegions.add(createMergedRegion(String.valueOf(index + 1), String.valueOf(index + cmmSpan),
                     "4", "4", dto.getSumStockOnHand().toString()));
             mergedRegions.add(createMergedRegion(String.valueOf(index + 1), String.valueOf(index + cmmSpan),
-                    "5", "5", earliestExpiryDate(dto.getLotList()).toString()));
+                    "5", "5", getMessage(dto.getStockOnHandStatus().getMessageKey())));
             mergedRegions.add(createMergedRegion(String.valueOf(index + 1), String.valueOf(index + cmmSpan),
-                    "6", "6", getFormatDoubleValue(dto.getMos())));
+                    "6", "6", earliestExpiryDate(dto.getLotList()).toString()));
             mergedRegions.add(createMergedRegion(String.valueOf(index + 1), String.valueOf(index + cmmSpan),
-                    "7", "7", getFormatDoubleValue(dto.getCmm())));
+                    "7", "7", getFormatDoubleValue(dto.getMos())));
+            mergedRegions.add(createMergedRegion(String.valueOf(index + 1), String.valueOf(index + cmmSpan),
+                    "8", "8", getFormatDoubleValue(dto.getCmm())));
+            mergedRegions.add(createMergedRegion(String.valueOf(index + 1), String.valueOf(index + cmmSpan),
+                    "9", "9", dto.getLastSyncUpDate()));
             index = index + cmmSpan;
         }
         return mergedRegions;
