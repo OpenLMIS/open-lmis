@@ -62,6 +62,7 @@ public class StockOnHandForSingleProductReportGenerator extends AbstractReportMo
         headers.put("lot", getMessage("report.header.lot"));
         headers.put("sohOfLot", getMessage("report.header.sohoflot"));
         headers.put("totalSoh", getMessage("report.header.sohoflot.total"));
+        headers.put("status", getMessage("report.header.status"));
         headers.put("expiryDate", getMessage("report.soonest.expiry.date"));
         headers.put("MoS", getMessage("report.estimated.consumption.month"));
         headers.put("cmm", getMessage("report.header.cmm"));
@@ -82,6 +83,7 @@ public class StockOnHandForSingleProductReportGenerator extends AbstractReportMo
                 rowMap.put("lot", lotinfo.getLotNumber());
                 rowMap.put("sohOfLot", lotinfo.getStockOnHandOfLot());
                 rowMap.put("totalSoh", dto.getSumStockOnHand());
+                rowMap.put("status", dto.getStockOnHandStatus().getDescription());
 
                 Map<String, Object> tmpValue = new HashMap<>();
                 tmpValue.put("value", DateUtil.formatDate(date));
