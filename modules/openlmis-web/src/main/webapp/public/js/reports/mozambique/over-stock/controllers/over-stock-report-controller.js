@@ -60,17 +60,25 @@ function OverStockReportController($scope, $controller, $filter, DateFormatServi
   
   var sortList = ['lotNumber', 'expiryDate', 'stockOnHandOfLot'];
   var timeList = ['expiryDate'];
+  var ignoreSearchList = ['expiryDateLocalTime'];
   $scope.filterAndSort = function () {
-    $scope.filterList = ReportGroupSortAndFilterService.search($scope.overStockList, $scope.filterText, "lotList", timeList);
+    $scope.filterList = ReportGroupSortAndFilterService.search($scope.overStockList, $scope.filterText, "lotList", timeList, ignoreSearchList);
     $scope.filterList = ReportGroupSortAndFilterService.groupSort($scope.filterList, $scope.sortType, $scope.sortReverse, sortList);
     $scope.formattedOverStockList = formatOverStockList($scope.filterList);
   };
   
   function formatOverStockProductListTime(overStockList) {
     return _.map(overStockList, function (overStockItem) {
-      overStockItem.cmm = utils.toFixedNumber(overStockItem.cmm, true);
-      overStockItem.mos = utils.toFixedNumber(overStockItem.mos, true);
-      return overStockItem;
+      var item = {};
+      item.provinceName = overStockItem.provinceName;
+      item.districtName = overStockItem.districtName;
+      item.facilityName = overStockItem.facilityName;
+      item.productCode = overStockItem.productCode;
+      item.productName = overStockItem.productName;
+      item.lotList = overStockItem.lotList;
+      item.cmm = utils.toFixedNumber(overStockItem.cmm, true);
+      item.mos = utils.toFixedNumber(overStockItem.mos, true);
+      return item;
     });
   }
   
