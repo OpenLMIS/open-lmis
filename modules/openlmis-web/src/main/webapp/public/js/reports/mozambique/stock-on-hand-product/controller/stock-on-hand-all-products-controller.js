@@ -1,7 +1,7 @@
 function StockOnHandAllProductsController($scope, $filter, $controller, NewReportService,
                                           FeatureToggleService, $cacheFactory, $timeout,
                                           $window, messageService, DateFormatService,
-                                          ReportGroupSortAndFilterService) {
+                                          ReportGroupSortAndFilterService, ReportExportExcelService) {
   $controller('BaseProductReportController', {$scope: $scope});
   
   $scope.filterList = [];
@@ -43,7 +43,6 @@ function StockOnHandAllProductsController($scope, $filter, $controller, NewRepor
   }
   
   $scope.$on('$viewContentLoaded', function () {
-    
     FeatureToggleService.get({key: 'view.stock.movement'}, function (result) {
       $scope.viewStockMovementToggle = result.key;
     });
@@ -86,6 +85,18 @@ function StockOnHandAllProductsController($scope, $filter, $controller, NewRepor
   };
   
   $scope.exportXLSX = function () {
+    var reportParams = $scope.reportParams;
+  
+    var data = {
+      endTime: $filter('date')(reportParams.endTime, "yyyy-MM-dd") + " 23:59:59",
+      provinceId: reportParams.provinceId.toString(),
+      districtId: reportParams.districtId.toString(),
+      facilityId: reportParams.facilityId.toString(),
+      reportType: 'stockOnHandAll'
+    };
+  
+    ReportExportExcelService.exportAsXlsxBackend(
+      utils.pickEmptyObject(data), messageService.get('report.file.single.facility.soh.report'));
   };
   
   function loadReportAction() {
