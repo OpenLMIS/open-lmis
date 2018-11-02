@@ -1,12 +1,12 @@
 function StockOnHandAllProductsController($scope, $filter, $controller, NewReportService,
                                           FeatureToggleService, $cacheFactory, $timeout,
-                                          LotExpiryDateService, $window, messageService,
-                                          DateFormatService, ReportExportExcelService,
+                                          $window, messageService, DateFormatService,
                                           ReportGroupSortAndFilterService) {
   $controller('BaseProductReportController', {$scope: $scope});
   
   $scope.filterList = [];
-  $scope.filterText = "";
+  $scope.filterText = '';
+  $scope.hasSyncTimeColumn = false;
   
   var CMM_STATUS = {
     'STOCK OUT': 'stock-out',
@@ -16,10 +16,10 @@ function StockOnHandAllProductsController($scope, $filter, $controller, NewRepor
   };
   
   var STATUS = {
-    'STOCK_OUT': messageService.get("Ruptura de Stock"),
-    'REGULAR_STOCK': messageService.get("Stock Normal"),
-    'OVER_STOCK': messageService.get("Estoque acumulado"),
-    'LOW_STOCK': messageService.get("Eminência de estoque")
+    'STOCK_OUT': messageService.get('Ruptura de Stock'),
+    'REGULAR_STOCK': messageService.get('Stock Normal'),
+    'OVER_STOCK': messageService.get('Estoque acumulado'),
+    'LOW_STOCK': messageService.get('Eminência de estoque')
   };
   
   if ($cacheFactory.get('keepHistoryInStockOnHandPage') === undefined) {
@@ -27,13 +27,13 @@ function StockOnHandAllProductsController($scope, $filter, $controller, NewRepor
   }
   else {
     $scope.cache = $cacheFactory.get('keepHistoryInStockOnHandPage');
-    if ($scope.cache.get('saveDataOfStockOnHand') === "yes") {
+    if ($scope.cache.get('saveDataOfStockOnHand') === 'yes') {
       $timeout(function waitHistorySelectShow() {
         if ($('.select2-container .select2-choice .select2-chosen').html() !== undefined) {
           $scope.reportParams.facilityId = $scope.cache.get('dataOfStockOnHandReport').facilityId;
           $scope.reportParams.provinceId = $scope.cache.get('dataOfStockOnHandReport').provinceId;
           $scope.reportParams.districtId = $scope.cache.get('dataOfStockOnHandReport').districtId;
-          $scope.reportParams.endTime = $filter('date')($scope.cache.get('dataOfStockOnHandReport').endTime, "yyyy-MM-dd");
+          $scope.reportParams.endTime = $filter('date')($scope.cache.get('dataOfStockOnHandReport').endTime, 'yyyy-MM-dd');
           loadReportAction();
         } else {
           $timeout(waitHistorySelectShow, 1000);
@@ -41,8 +41,6 @@ function StockOnHandAllProductsController($scope, $filter, $controller, NewRepor
       }, 1000);
     }
   }
-  
-  $scope.hasSyncTimeColumn = false;
   
   $scope.$on('$viewContentLoaded', function () {
     
@@ -61,7 +59,7 @@ function StockOnHandAllProductsController($scope, $filter, $controller, NewRepor
   var ignoreSearchList = ['expiryDate', 'facilityName', 'facilityCode', 'expiryDateLocalTime'];
   var timeFieldList = ['expiry_date', 'syncDate'];
   $scope.filterAndSort = function () {
-    $scope.filterList = ReportGroupSortAndFilterService.search($scope.originData, $scope.filterText, "lotList", timeFieldList, ignoreSearchList);
+    $scope.filterList = ReportGroupSortAndFilterService.search($scope.originData, $scope.filterText, 'lotList', timeFieldList, ignoreSearchList);
     $scope.filterList = ReportGroupSortAndFilterService.groupSort($scope.filterList, $scope.sortType, $scope.sortReverse, sortList);
     $scope.reportData = formatAllProductList($scope.filterList);
   };
@@ -72,16 +70,34 @@ function StockOnHandAllProductsController($scope, $filter, $controller, NewRepor
     return CMM_STATUS[status];
   };
   
+  $scope.saveHistory = function () {
+    $scope.cache.put('dataOfStockOnHandReport', $scope.reportParams);
+  };
+  
+  $scope.generateRedirectToExpiryDateReportURL = function (productCode, facilityCode) {
+    var date = $filter('date')($scope.reportParams.endTime, 'yyyy-MM-dd');
+    
+    return '/public/pages/reports/mozambique/index.html#/lot-expiry-dates' + '?' +
+      'facilityCode=' + facilityCode + '&' + 'date=' + date + '&' + 'drugCode=' + productCode;
+  };
+  
+  $scope.redirectToLotExpiryDateReport = function (productCode, facilityCode) {
+    $window.location.href = $scope.generateRedirectToExpiryDateReportURL(productCode, facilityCode);
+  };
+  
+  $scope.exportXLSX = function () {
+  };
+  
   function loadReportAction() {
     if ($scope.validateSingleFacility()) {
       var reportParams = $scope.reportParams;
       
       var allProductParams = {
-        endTime: $filter('date')(reportParams.endTime, "yyyy-MM-dd") + " 23:59:59",
+        endTime: $filter('date')(reportParams.endTime, 'yyyy-MM-dd') + ' 23:59:59',
         provinceId: reportParams.provinceId.toString(),
         districtId: reportParams.districtId.toString(),
         facilityId: reportParams.facilityId.toString(),
-        reportType: "stockOnHandAll"
+        reportType: 'stockOnHandAll'
       };
       
       $scope.formattedOverStockList = [];
@@ -117,7 +133,7 @@ function StockOnHandAllProductsController($scope, $filter, $controller, NewRepor
       });
       
       formatItem.expiry_date = lotList[0].expiryDate;
-      formatItem.soonest_expiring_loh = DateFormatService.formatDateWithLocale(lotList[0].expiryDate) + "(" + messageService.get("report.stock.on.hand.amount") + lotList[0].stockOnHandOfLot + ")";
+      formatItem.soonest_expiring_loh = DateFormatService.formatDateWithLocale(lotList[0].expiryDate) + '(' + messageService.get('report.stock.on.hand.amount') + lotList[0].stockOnHandOfLot + ')';
       formatItem.lotList = lotList;
       formattedSingleProductList.push(formatItem);
     });
@@ -152,27 +168,4 @@ function StockOnHandAllProductsController($scope, $filter, $controller, NewRepor
     
     return formattedSingleProductList;
   }
-  
-  $scope.saveHistory = function () {
-    $scope.cache.put('dataOfStockOnHandReport', $scope.reportParams);
-    console.log($scope.reportParams);
-  };
-  
-  $scope.generateRedirectToExpiryDateReportURL = function (productCode, facilityCode) {
-    var date = $filter('date')($scope.reportParams.endTime, "yyyy-MM-dd");
-    
-    var redirectedURL = "/public/pages/reports/mozambique/index.html#/lot-expiry-dates" + "?" +
-      "facilityCode=" + facilityCode + "&" +
-      "date=" + date + "&" +
-      "drugCode=" + productCode;
-    
-    return redirectedURL;
-  };
-  
-  $scope.redirectToLotExpiryDateReport = function (productCode, facilityCode) {
-    $window.location.href = $scope.generateRedirectToExpiryDateReportURL(productCode, facilityCode);
-  };
-  
-  $scope.exportXLSX = function () {
-  };
 }
