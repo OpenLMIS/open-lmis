@@ -58,7 +58,7 @@ function StockOnHandAllProductsController($scope, $filter, $controller, NewRepor
   });
   
   var sortList = ['lotNumber', 'stockOnHandOfLot'];
-  var ignoreSearchList = ['expiryDate', 'productName', 'facilityCode'];
+  var ignoreSearchList = ['expiryDate', 'facilityName', 'facilityCode', 'expiryDateLocalTime'];
   var timeFieldList = ['expiry_date', 'syncDate'];
   $scope.filterAndSort = function () {
     $scope.filterList = ReportGroupSortAndFilterService.search($scope.originData, $scope.filterText, "lotList", timeFieldList, ignoreSearchList);
