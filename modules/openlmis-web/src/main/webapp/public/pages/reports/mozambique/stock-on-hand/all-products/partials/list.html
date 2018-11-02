@@ -101,12 +101,12 @@
             </a>
           </td>
           <td ng-show="entry.isFirst" rowspan="{{entry.rowSpan}}">
-            {{entry.estimated_months}}
+            <span ng-hide="angular.isUndefined(entry.cmm)"><img
+                src="/public/images/exclamation.png" class="exclamation" ng-show="hasExpirationRisk(entry)">
+            {{entry.estimated_months}}</span>
           </td>
           <td ng-show="entry.isFirst" rowspan="{{entry.rowSpan}}" class="align-right">
-            <span ng-hide="angular.isUndefined(entry.cmm)"><img
-              src="/public/images/exclamation.png" class="exclamation" ng-show="hasExpirationRisk(entry)">
-            {{entry.cmm}}</span>
+            {{entry.cmm}}
           </td>
         </tr>
       </table>
