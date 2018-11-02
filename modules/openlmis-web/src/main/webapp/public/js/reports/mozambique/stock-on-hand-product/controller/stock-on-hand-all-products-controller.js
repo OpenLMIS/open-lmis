@@ -104,6 +104,7 @@ function StockOnHandAllProductsController($scope, $filter, $controller, NewRepor
         facilityName: item.facilityName,
         productCode: item.productCode,
         productName: item.productName,
+        name: item.productName + ' [' + item.productCode + ']',
         stockOnHandStatusPT: STATUS[item.stockOnHandStatus],
         stockOnHandStatus: item.stockOnHandStatus.replace('_', ' '),
         sumStockOnHand: item.sumStockOnHand,
