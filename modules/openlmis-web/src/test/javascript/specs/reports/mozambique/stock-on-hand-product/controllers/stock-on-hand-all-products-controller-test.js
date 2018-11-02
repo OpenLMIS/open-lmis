@@ -51,7 +51,7 @@ xdescribe("Single facility Report Controller", function () {
     window = $window;
     reportExportExcelService = ReportExportExcelService;
     dateFormatService = DateFormatService;
-    $controller(SingleFacilityReportController, {$scope: scope});
+    $controller(StockOnHandAllProductsController, {$scope: scope});
   }));
 
   it('should load all product report successfully', function () {

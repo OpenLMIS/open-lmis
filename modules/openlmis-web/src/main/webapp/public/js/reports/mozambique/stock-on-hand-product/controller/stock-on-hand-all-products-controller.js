@@ -1,8 +1,8 @@
-function SingleFacilityReportController($scope, $filter, $controller, NewReportService,
-                                        FeatureToggleService, $cacheFactory, $timeout,
-                                        LotExpiryDateService, $window, messageService,
-                                        DateFormatService, ReportExportExcelService,
-                                        ReportGroupSortAndFilterService) {
+function StockOnHandAllProductsController($scope, $filter, $controller, NewReportService,
+                                          FeatureToggleService, $cacheFactory, $timeout,
+                                          LotExpiryDateService, $window, messageService,
+                                          DateFormatService, ReportExportExcelService,
+                                          ReportGroupSortAndFilterService) {
   $controller('BaseProductReportController', {$scope: $scope});
   
   $scope.filterList = [];
@@ -21,7 +21,7 @@ function SingleFacilityReportController($scope, $filter, $controller, NewReportS
     'OVER_STOCK': messageService.get("Estoque acumulado"),
     'LOW_STOCK': messageService.get("Eminência de estoque")
   };
-
+  
   if ($cacheFactory.get('keepHistoryInStockOnHandPage') === undefined) {
     $scope.cache = $cacheFactory('keepHistoryInStockOnHandPage', {capacity: 10});
   }
@@ -41,19 +41,19 @@ function SingleFacilityReportController($scope, $filter, $controller, NewReportS
       }, 1000);
     }
   }
-
+  
   $scope.hasSyncTimeColumn = false;
-
+  
   $scope.$on('$viewContentLoaded', function () {
-
+    
     FeatureToggleService.get({key: 'view.stock.movement'}, function (result) {
       $scope.viewStockMovementToggle = result.key;
     });
-
+    
     FeatureToggleService.get({key: 'lot.expiry.dates.report'}, function (result) {
       $scope.isLotExpiryDatesToggleOn = result.key;
     });
-
+    
     $scope.loadHealthFacilities();
   });
   
@@ -75,7 +75,7 @@ function SingleFacilityReportController($scope, $filter, $controller, NewReportS
   function loadReportAction() {
     if ($scope.validateSingleFacility()) {
       var reportParams = $scope.reportParams;
-    
+      
       var allProductParams = {
         endTime: $filter('date')(reportParams.endTime, "yyyy-MM-dd") + " 23:59:59",
         provinceId: reportParams.provinceId.toString(),
@@ -83,9 +83,9 @@ function SingleFacilityReportController($scope, $filter, $controller, NewReportS
         facilityId: reportParams.facilityId.toString(),
         reportType: "stockOnHandAll"
       };
-    
+      
       $scope.formattedOverStockList = [];
-    
+      
       NewReportService.get(utils.pickEmptyObject(allProductParams))
         .$promise.then(function (allProductResponse) {
         $scope.originData = allProductResponse.data;
@@ -120,7 +120,6 @@ function SingleFacilityReportController($scope, $filter, $controller, NewReportS
       formatItem.lotList = lotList;
       formattedSingleProductList.push(formatItem);
     });
-    
     
     return formattedSingleProductList;
   }
@@ -157,21 +156,22 @@ function SingleFacilityReportController($scope, $filter, $controller, NewReportS
     $scope.cache.put('dataOfStockOnHandReport', $scope.reportParams);
     console.log($scope.reportParams);
   };
-
+  
   $scope.generateRedirectToExpiryDateReportURL = function (productCode, facilityCode) {
     var date = $filter('date')($scope.reportParams.endTime, "yyyy-MM-dd");
-
+    
     var redirectedURL = "/public/pages/reports/mozambique/index.html#/lot-expiry-dates" + "?" +
-        "facilityCode=" + facilityCode + "&" +
-        "date=" + date + "&" +
-        "drugCode=" + productCode;
-
+      "facilityCode=" + facilityCode + "&" +
+      "date=" + date + "&" +
+      "drugCode=" + productCode;
+    
     return redirectedURL;
   };
-
-  $scope.redirectToLotExpiryDateReport = function(productCode, facilityCode) {
+  
+  $scope.redirectToLotExpiryDateReport = function (productCode, facilityCode) {
     $window.location.href = $scope.generateRedirectToExpiryDateReportURL(productCode, facilityCode);
   };
-
-  $scope.exportXLSX = function() {};
+  
+  $scope.exportXLSX = function () {
+  };
 }

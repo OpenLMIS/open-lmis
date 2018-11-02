@@ -9,7 +9,7 @@ angular.module('requisition-report', ['openlmis', 'angularCombine', 'ngTable', '
       templateUrl: 'stock-on-hand/single-product/partials/list.html',
       reloadOnSearch: false
     }).when('/stock-on-hand-all-products', {
-      controller: SingleFacilityReportController,
+      controller: StockOnHandAllProductsController,
       templateUrl: 'stock-on-hand/all-products/partials/list.html',
       reloadOnSearch: false
     }).when('/app-version', {
