@@ -59,7 +59,7 @@ public class RnrLineItem extends LineItem {
   public static final String DISPENSED_X_2 = "DISPENSED_X_2";
   public static final String CONSUMPTION_X_2 = "CONSUMPTION_X_2";
   private static final Logger LOGGER = LoggerFactory.getLogger(RnrLineItem.class);
-  private static final Date NON_FOMULAR_CHECK_END_DATE = new SimpleDateFormat("yyyy-mm-dd").parse("2018-11-30", new ParsePosition(1));
+  private static final Date NON_FOMULAR_CHECK_END_DATE = new SimpleDateFormat("yyyy-MM-dd").parse("2018-11-30", new ParsePosition(0));
   //TODO : hack to display it on UI. This is concatenated string of Product properties like name, strength, form and dosage unit
   private String product;
   private Integer productDisplayOrder;
@@ -214,7 +214,7 @@ public class RnrLineItem extends LineItem {
 
     RnrColumn rnrColumn = (RnrColumn) template.getColumns().get(0);
 
-    if (null != program && !program.isMmiaRequisition()) {
+    if (null != program && !program.isMmiaRequisition() && requisition.getPeriod().getEndDate().after(NON_FOMULAR_CHECK_END_DATE)) {
       if (rnrColumn.isFormulaValidationRequired()) {
         validQuantityDispensed = (quantityDispensed == (beginningBalance + quantityReceived + totalLossesAndAdjustments - stockInHand));
       }

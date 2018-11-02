@@ -8,6 +8,7 @@
 
 package org.openlmis.rnr.domain;
 
+import org.apache.commons.lang.time.DateUtils;
 import org.hamcrest.core.Is;
 import org.junit.Before;
 import org.junit.Rule;
@@ -251,6 +252,7 @@ public class RnrLineItemTest {
   public void shouldThrowExceptionIfCalculationForQuantityDispensedAndStockInHandNotValidAndFormulaValidatedTrue() throws Exception {
     lineItem.setBeginningBalance(10);
     lineItem.setQuantityReceived(3);
+    rnr.getPeriod().setEndDate(DateUtils.parseDate("21-12-18", new String[]{"dd-MM-yy"}));
 
     List<LossesAndAdjustments> list = Arrays.asList(createLossAndAdjustment("CLINIC_RETURN", true, 1));
 
