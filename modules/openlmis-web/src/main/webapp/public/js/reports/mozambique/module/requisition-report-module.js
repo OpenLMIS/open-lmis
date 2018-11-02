@@ -5,7 +5,7 @@ angular.module('requisition-report', ['openlmis', 'angularCombine', 'ngTable', '
       templateUrl: 'requisition/partials/list.html',
       reloadOnSearch: false
     }).when('/stock-on-hand-single-product', {
-      controller: SingleProductReportController,
+      controller: StockOnHandSingleProductController,
       templateUrl: 'stock-on-hand/single-product/partials/list.html',
       reloadOnSearch: false
     }).when('/stock-on-hand-all-products', {

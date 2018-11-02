@@ -1,7 +1,7 @@
-function SingleProductReportController($scope, $filter, $controller, $http, CubesGenerateCutParamsService,
-                                       CubesGenerateUrlService, FeatureToggleService, LotExpiryDateService,
-                                       $window, ReportExportExcelService, messageService, DateFormatService,
-                                       ReportGroupSortAndFilterService, NewReportService) {
+function StockOnHandSingleProductController($scope, $filter, $controller, $http, CubesGenerateCutParamsService,
+                                            CubesGenerateUrlService, FeatureToggleService, LotExpiryDateService,
+                                            $window, ReportExportExcelService, messageService, DateFormatService,
+                                            ReportGroupSortAndFilterService, NewReportService) {
   $controller('BaseProductReportController', {$scope: $scope});
 
   $scope.filterList = [];

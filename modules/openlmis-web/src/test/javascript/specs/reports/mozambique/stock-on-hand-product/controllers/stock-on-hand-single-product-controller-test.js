@@ -53,7 +53,7 @@ describe('Single Product Report Controller', function () {
     reportExportExcelService = ReportExportExcelService;
     messageService_ = messageService;
     dateFormatService = DateFormatService;
-    $controller(SingleProductReportController, {$scope: scope});
+    $controller(StockOnHandSingleProductController, {$scope: scope});
   }));
 
   it('should redirect to lot expiry date report', function () {
