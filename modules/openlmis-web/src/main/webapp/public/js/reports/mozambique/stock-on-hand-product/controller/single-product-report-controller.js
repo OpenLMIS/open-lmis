@@ -41,8 +41,8 @@ function SingleProductReportController($scope, $filter, $controller, $http, Cube
         stockOnHandStatusPT: STATUS[item.stockOnHandStatus],
         stockOnHandStatus: item.stockOnHandStatus.replace('_', ' '),
         sumStockOnHand: item.sumStockOnHand,
-        mos: item.mos,
-        cmm: item.cmm,
+        mos: utils.toFixedNumber(item.mos, true),
+        cmm: utils.toFixedNumber(item.cmm, true),
         syncDate: new Date(item.lastSyncUpDate)
       };
 

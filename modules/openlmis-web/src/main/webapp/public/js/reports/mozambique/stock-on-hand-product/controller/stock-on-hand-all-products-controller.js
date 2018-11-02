@@ -107,8 +107,8 @@ function StockOnHandAllProductsController($scope, $filter, $controller, NewRepor
         stockOnHandStatusPT: STATUS[item.stockOnHandStatus],
         stockOnHandStatus: item.stockOnHandStatus.replace('_', ' '),
         sumStockOnHand: item.sumStockOnHand,
-        mos: item.mos,
-        cmm: item.cmm
+        mos: utils.toFixedNumber(item.mos, true),
+        cmm: utils.toFixedNumber(item.cmm, true)
       };
       
       var lotList = _.sortBy(item.lotList, function (o) {
