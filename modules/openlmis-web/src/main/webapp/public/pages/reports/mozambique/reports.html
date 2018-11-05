@@ -23,6 +23,16 @@
      openlmis-message="menu.report.adjustment.occurrences"></a>
 </li>
 
+<li ng-show="hasPermission('VIEW_OVER_STOCK_PRODUCTS_REPORT')">
+  <a href="/public/pages/reports/mozambique/index.html#/over-stock"
+     openlmis-message="menu.report.over.stock.products"></a>
+</li>
+
+<li ng-show="hasPermission('VIEW_EXPIRED_PRODUCTS_REPORT')">
+  <a href="/public/pages/reports/mozambique/index.html#/expired-products"
+     openlmis-message="menu.report.expired.products"></a>
+</li>
+
 <li ng-show="hasPermission('VIEW_REQUISITION_REPORT')">
   <a href="/public/pages/reports/mozambique/index.html#/requisition"
      openlmis-message="menu.report.requisition.reports"></a>
@@ -46,16 +56,6 @@
 <li ng-show="hasPermission('VIEW_NOS_DRUGS_REPORT') && isNosDrugsReportToggleOn">
   <a href="/public/pages/reports/mozambique/index.html#/nos-drugs"
      openlmis-message="menu.report.nos.drugs"></a>
-</li>
-
-<li>
-  <a href="/public/pages/reports/mozambique/index.html#/over-stock"
-     openlmis-message="menu.report.over.stock.products"></a>
-</li>
-
-<li>
-  <a href="/public/pages/reports/mozambique/index.html#/expired-products"
-     openlmis-message="menu.report.expired.products"></a>
 </li>
 
 <li ng-show="hasPermission('VIEW_CONSUMPTION_MOVEMENTS_REPORT') && isConsumptionMovementsReportOn">
