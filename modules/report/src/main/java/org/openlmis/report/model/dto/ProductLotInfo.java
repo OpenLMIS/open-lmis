@@ -34,4 +34,8 @@ public class ProductLotInfo {
         }
         return  "";
     }
+
+    public String getKey() {
+        return this.getProvinceId() + "-" + this.getDistrictId() + "-" + this.getFacilityId() + "-" + this.getProductCode();
+    }
 }

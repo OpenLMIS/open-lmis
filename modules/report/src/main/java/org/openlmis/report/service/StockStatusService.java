@@ -17,6 +17,7 @@ import org.openlmis.core.domain.ProgramProduct;
 import org.openlmis.core.repository.ProgramProductRepository;
 import org.openlmis.report.generator.StockOnHandStatus;
 import org.openlmis.report.mapper.StockStatusMapper;
+import org.openlmis.report.model.dto.StockProductDto;
 import org.openlmis.report.model.dto.StockStatusDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -63,6 +64,13 @@ public class StockStatusService {
       return StockOnHandStatus.REGULAR_STOCK;
   }
 
+  public StockOnHandStatus getStockOnHandStatus(double cmm, StockProductDto stockProductDto) {
+      if (null == stockProductDto.getSumStockOnHand()) {
+          return StockOnHandStatus.NOT_EXIST;
+      }
+      return getStockOnHandStatus(cmm, stockProductDto.getSumStockOnHand(), stockProductDto.getIsHiv());
+  }
+
   private Boolean isHivProject(String productCode) {
     List<ProgramProduct> programProducts = programProductRepository.getByProductCode(productCode);
     for(ProgramProduct programProduct : programProducts) {
@@ -83,5 +91,12 @@ public class StockStatusService {
           return null;
       }
       return Math.floor(10 * soh / cmm) / 10;
+  }
+
+  public Double calcMos(double cmm, StockProductDto stockProductDto) {
+      if (null == stockProductDto.getSumStockOnHand()) {
+          return null;
+      }
+      return calcMos(cmm, stockProductDto.getSumStockOnHand());
   }
 }

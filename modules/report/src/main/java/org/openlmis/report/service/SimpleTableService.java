@@ -1,6 +1,7 @@
 package org.openlmis.report.service;
 
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.openlmis.core.repository.mapper.FacilityMapper;
 import org.openlmis.report.generator.StockOnHandStatus;
 import org.openlmis.report.mapper.ProductLotInfoMapper;
@@ -114,7 +115,10 @@ public class SimpleTableService {
         if (null != cmmEntry && null != cmmEntry.getCmmValue()) {
             cmm = cmmEntry.getCmmValue();
         }
-        StockOnHandStatus status = stockStatusService.getStockOnHandStatus(cmm, stockProduct.getSumStockOnHand(), stockProduct.getIsHiv());
+        StockOnHandStatus status = stockStatusService.getStockOnHandStatus(cmm, stockProduct);
+        if (status == StockOnHandStatus.NOT_EXIST) {
+            return null;
+        }
         stockProduct.setStockOnHandStatus(status);
 
         if (cmm < 0) {
@@ -122,7 +126,7 @@ public class SimpleTableService {
         } else {
             stockProduct.setCmm(cmm);
         }
-        stockProduct.setMos(stockStatusService.calcMos(cmm, stockProduct.getSumStockOnHand()));
+        stockProduct.setMos(stockStatusService.calcMos(cmm, stockProduct));
         return stockProduct;
     }
 
@@ -153,7 +157,7 @@ public class SimpleTableService {
         String key;
         LotInfo lotinfo;
         for (ProductLotInfo lotInfo : productLotInfos) {
-            key = lotInfo.getProvinceId() + "-" + lotInfo.getDistrictId() + "-" + lotInfo.getFacilityId() + "-" + lotInfo.getProductCode();
+            key = lotInfo.getKey();
             lotinfo = new LotInfo(lotInfo.getLotNumber(), lotInfo.getExpiryDate(), lotInfo.getStockOnHandOfLot());
             if (stockProductDtoMap.containsKey(key)) {
                 stockProductDtoMap.get(key).getLotList().add(lotinfo);
