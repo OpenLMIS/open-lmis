@@ -102,8 +102,12 @@ services.factory('DateFormatService', function ($filter, messageService) {
       Dez: 'Dec'
     };
     
-    var matchValue = inputValue.match(/[a-zA-Z]{3}/g)[0];
+    var matchArray = inputValue.match(/[a-zA-Z]{3}/g);
+    if (!matchArray) {
+      return inputValue;
+    }
     
+    var matchValue = matchArray[0];
     if (_.isUndefined(portugueseDateMap[matchValue])) {
       return inputValue;
     }
