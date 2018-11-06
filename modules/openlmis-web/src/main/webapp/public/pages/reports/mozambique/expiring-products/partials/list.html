@@ -1,6 +1,6 @@
 <div class="over-stock-and-expired-products">
   <div id="control-bar">
-    <h3 class="report-title" openlmis-message="title.expired.products.report"></h3>
+    <h3 class="report-title" openlmis-message="title.expiring.products.report"></h3>
     <div ng-include="'/public/pages/reports/mozambique/province-selection.html'"></div>
     <div ng-include="'/public/pages/reports/mozambique/district-selection.html'"></div>
     <div ng-include="'/public/pages/reports/mozambique/facility-selection.html'"></div>
@@ -15,7 +15,7 @@
 
   <hr/>
 
-  <div ng-show="expiredProductList.length > 0">
+  <div ng-show="expiringProductList.length > 0">
     <div class="search-field" style="margin-bottom: 5px">
       <h4 openlmis-message="label.search"></h4>
       <input type="text" ng-change="filterAndSort()" ng-model="filterText"/>
@@ -35,7 +35,7 @@
             <span ng-show="sortType == 'districtName' && !sortReverse" class="icon-sort-up"></span>
             <span ng-show="sortType == 'districtName' && sortReverse" class="icon-sort-down"></span>
           </th>
-          <th ng-show="!isDistrictExpiredProduct" class="table--body-150"
+          <th ng-show="!isDistrictExpiringProduct" class="table--body-150"
               ng-click="sortType = 'facilityName'; sortReverse = !sortReverse; filterAndSort();" class="table--body-150"
               openlmis-message="report.header.facility">
             <span ng-show="sortType != 'facilityName'" class="icon-sort"></span>
@@ -80,14 +80,14 @@
             <span ng-show="sortType == 'price' && !sortReverse" class="icon-sort-up"></span>
             <span ng-show="sortType == 'price' && sortReverse" class="icon-sort-down"></span>
           </th>
-          <th ng-show="!isDistrictExpiredProduct" class="table--body-150"
+          <th ng-show="!isDistrictExpiringProduct" class="table--body-150"
               ng-click="sortType = 'cmm'; sortReverse = !sortReverse; filterAndSort();"
               openlmis-message="report.header.cmm">
             <span ng-show="sortType != 'cmm'" class="icon-sort"></span>
             <span ng-show="sortType == 'cmm' && !sortReverse" class="icon-sort-up"></span>
             <span ng-show="sortType == 'cmm' && sortReverse" class="icon-sort-down"></span>
           </th>
-          <th ng-show="!isDistrictExpiredProduct" class="table--body-150"
+          <th ng-show="!isDistrictExpiringProduct" class="table--body-150"
               ng-click="sortType = 'mos'; sortReverse = !sortReverse; filterAndSort();"
               openlmis-message="report.header.mos">
             <span ng-show="sortType != 'mos'" class="icon-sort"></span>
@@ -100,10 +100,10 @@
 
     <div id="fixed-body" class="fixed-body">
       <table class="table table-bordered table-striped">
-        <tr class="table--body expired-products-table" ng-repeat="overStockItem in formattedExpiredProductList">
+        <tr class="table--body expired-products-table" ng-repeat="overStockItem in formattedExpiringProductList">
           <td class="table--body-150">{{overStockItem.provinceName}}</td>
           <td class="table--body-150">{{overStockItem.districtName}}</td>
-          <td ng-show="!isDistrictExpiredProduct" class="table--body-150">{{overStockItem.facilityName}}</td>
+          <td ng-show="!isDistrictExpiringProduct" class="table--body-150">{{overStockItem.facilityName}}</td>
           <td class="table--body-150">{{overStockItem.productCode}}</td>
           <td class="table--body-350">{{overStockItem.productName}}</td>
           <td class="table--body-150">{{overStockItem.lotNumber}}</td>
@@ -112,10 +112,10 @@
           <td class="table--body-150" ng-show="overStockItem.isFirst" rowspan="{{overStockItem.rowSpan}}">
             {{overStockItem.price}}
           </td>
-          <td class="table--body-150" ng-show="overStockItem.isFirst && !isDistrictExpiredProduct" rowspan="{{overStockItem.rowSpan}}">
+          <td class="table--body-150" ng-show="overStockItem.isFirst && !isDistrictExpiringProduct" rowspan="{{overStockItem.rowSpan}}">
             {{overStockItem.cmm}}
           </td>
-          <td class="table--body-150" ng-show="overStockItem.isFirst && !isDistrictExpiredProduct" rowspan="{{overStockItem.rowSpan}}">
+          <td class="table--body-150" ng-show="overStockItem.isFirst && !isDistrictExpiringProduct" rowspan="{{overStockItem.rowSpan}}">
             {{overStockItem.mos}}
           </td>
         </tr>
@@ -124,11 +124,11 @@
 
   </div>
 
-  <div class="over-flow-hidden" ng-if="expiredProductList.length > 0">
+  <div class="over-flow-hidden" ng-if="expiringProductList.length > 0">
     <div ng-include="'/public/pages/reports/mozambique/export-data-button.html'"></div>
   </div>
 
-  <div class="report-subtitle" ng-show="expiredProductList && expiredProductList.length == 0">
+  <div class="report-subtitle" ng-show="expiringProductList && expiringProductList.length == 0">
     <h3 openlmis-message="label.report.empty"></h3>
   </div>
 </div>
