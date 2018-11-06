@@ -75,6 +75,10 @@ function ConsumptionReportController($scope, $controller, $filter, $http, $q, Cu
           "bullet": "round",
           "valueField": "total_quantity",
           "balloonText": messageService.get("consumption.chart.balloon.text") + ": [[value]]"
+        }, {
+          "bullet": "round",
+          "valueField": "entries",
+          "balloonText": messageService.get("entries.chart.balloon.text") + ": [[value]]"
         }],
         "chartScrollbar": {
           "oppositeAxis": false,
@@ -100,6 +104,10 @@ function ConsumptionReportController($scope, $controller, $filter, $http, $q, Cu
           "bullet": "round",
           "valueField": "total_quantity",
           "balloonText": messageService.get("consumption.chart.balloon.text") + ": [[value]]"
+        }, {
+          "bullet": "round",
+          "valueField": "entries",
+          "balloonText": messageService.get("entries.chart.balloon.text") + ": [[value]]"
         }],
         "chartScrollbar": {
           "oppositeAxis": false,
@@ -126,7 +134,7 @@ function ConsumptionReportController($scope, $controller, $filter, $http, $q, Cu
         $scope.reportParams.selectedProvince,
         $scope.reportParams.selectedDistrict
       );
-      cutParams.push({
+      var consumpParams = cutParams.concat({
         dimension: 'reason_code', values: [
           'UNPACK_KIT',
           'DEFAULT_ISSUE',
@@ -144,14 +152,27 @@ function ConsumptionReportController($scope, $controller, $filter, $http, $q, Cu
           'NO_MOVEMENT_IN_PERIOD'
         ]
       });
+      var entryParams = cutParams.concat({
+        dimension: 'reason_code', values: [
+          'DISTRICT_DDM',
+          'PROVINCE_DPM'
+        ]
+      });
       return $http
-        .get(CubesGenerateUrlService.generateAggregateUrl("vw_period_movements", [], cutParams))
+        .get(CubesGenerateUrlService.generateAggregateUrl("vw_period_movements", [], consumpParams))
         .then(function (consumptionData) {
-          consumptionData.data.summary.period =
-            DateFormatService.formatDateWithLocaleNoDay(period.periodStart) +
-            "-" +
-            DateFormatService.formatDateWithLocaleNoDay(period.periodEnd);
-          return consumptionData;
+          return $http
+            .get(CubesGenerateUrlService.generateAggregateUrl("vw_period_movements", [], entryParams))
+            .then(function (entryData) {
+              consumptionData.data.summary.period =
+                DateFormatService.formatDateWithLocaleNoDay(period.periodStart) +
+                "-" +
+                DateFormatService.formatDateWithLocaleNoDay(period.periodEnd);
+
+              consumptionData.data.summary.entries = entryData.data.summary.total_quantity;
+
+              return consumptionData;
+            });
         });
     });
   }
