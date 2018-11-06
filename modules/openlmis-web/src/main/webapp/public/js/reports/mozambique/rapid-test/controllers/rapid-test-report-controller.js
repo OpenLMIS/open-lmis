@@ -124,6 +124,24 @@ function RapidTestReportController($scope, $controller, CubesGenerateCutParamsSe
 
   $scope.exportXLSX = function () {
     var data = {
+      reportTitles: [
+        [
+          messageService.get('report.header.province'),
+          $scope.reportParams.selectedProvince ?
+            $scope.reportParams.selectedProvince.name : messageService.get('label.all'),
+          messageService.get('report.header.district'),
+          $scope.reportParams.selectedDistrict ?
+            $scope.reportParams.selectedDistrict.name : messageService.get('label.all'),
+          messageService.get('report.header.facility'),
+          $scope.reportParams.selectedFacility ?
+            $scope.reportParams.selectedFacility.name : messageService.get('label.all'),
+        ],
+        [
+          messageService.get('report.header.generated.for'),
+          $filter('date')($scope.reportParams.startTime, 'dd/MM/yyyy') +
+          $filter('date')($scope.reportParams.endTime, 'dd/MM/yyyy')
+        ]
+      ],
       reportHeaders: {
         item_name: '',
         consume_hiv_determine: messageService.get('report.consume') + ': ' + messageService.get('report.hiv.determine'),
@@ -137,12 +155,7 @@ function RapidTestReportController($scope, $controller, CubesGenerateCutParamsSe
         unjustified_syphillis: messageService.get('report.unjustified') + ': ' + messageService.get('report.syphillis'),
         consume_malaria: messageService.get('report.consume') + ': ' + messageService.get('report.malaria'),
         positive_malaria: messageService.get('report.positive') + ': ' + messageService.get('report.malaria'),
-        unjustified_malaria: messageService.get('report.unjustified') + ': ' + messageService.get('report.malaria'),
-        province: messageService.get('report.header.province'),
-        district: messageService.get('report.header.district'),
-        facility: messageService.get('report.header.facility'),
-        reportStartDate: messageService.get('report.header.report.start.date'),
-        reportEndDate: messageService.get('report.header.report.end.date')
+        unjustified_malaria: messageService.get('report.unjustified') + ': ' + messageService.get('report.malaria')
       },
       reportContent: []
     };
@@ -167,11 +180,6 @@ function RapidTestReportController($scope, $controller, CubesGenerateCutParamsSe
       $scope.rapidTestReportData.forEach(function (reportContent) {
         var rapidTestReportContent = {};
         setColumnValues(rapidTestReportContent, reportContent);
-        rapidTestReportContent.province = $scope.reportParams.selectedProvince ? $scope.reportParams.selectedProvince.name : '[All]';
-        rapidTestReportContent.district = $scope.reportParams.selectedDistrict ? $scope.reportParams.selectedDistrict.name : '[All]';
-        rapidTestReportContent.facility = $scope.reportParams.selectedFacility ? $scope.reportParams.selectedFacility.name : '[All]';
-        rapidTestReportContent.reportStartDate = $filter('date')($scope.reportParams.startTime, 'dd/MM/yyyy');
-        rapidTestReportContent.reportEndDate = $filter('date')($scope.reportParams.endTime, 'dd/MM/yyyy');
         data.reportContent.push(rapidTestReportContent);
       });
       var total = {};
