@@ -26,7 +26,6 @@ public class StockOnHandAllProductsReportGenerator extends StockOnHandForSingleP
         headers.put("expiryDate", getMessage("report.soonest.expiry.date"));
         headers.put("MoS", getMessage("report.estimated.consumption.month"));
         headers.put("cmm", getMessage("report.header.cmm"));
-        headers.put("lastSyncDate", getMessage("report.header.last.update.from.tablet"));
         return headers;
     }
 
@@ -56,16 +55,6 @@ public class StockOnHandAllProductsReportGenerator extends StockOnHandForSingleP
                 rowMap.put("MoS", getFormatDoubleValue(dto.getMos()));
                 rowMap.put("cmm", getFormatDoubleValue(dto.getCmm()));
 
-
-                Map<String, Object> tmpValue2 = new HashMap<>();
-                tmpValue2.put("value", DateUtil.formatDate(dto.getSyncDate()));
-                Map<String, Object> styleMap2 = new HashMap<>();
-                styleMap2.put("dataPattern", DateUtil.FORMAT_DATE_TIME);
-                styleMap2.put("excelDataPattern", "d/m/yy");
-                tmpValue2.put("style", styleMap2);
-                tmpValue2.put("dataType", "date");
-                rowMap.put("lastSyncDate", tmpValue2);
-
                 content.add(rowMap);
             }
         }
@@ -91,8 +80,6 @@ public class StockOnHandAllProductsReportGenerator extends StockOnHandForSingleP
                     "6", "6", getFormatDoubleValue(dto.getMos())));
             mergedRegions.add(createMergedRegion(String.valueOf(index + 1), String.valueOf(index + cmmSpan),
                     "7", "7", getFormatDoubleValue(dto.getCmm())));
-            mergedRegions.add(createMergedRegion(String.valueOf(index + 1), String.valueOf(index + cmmSpan),
-                    "8", "8", dto.getLastSyncUpDate()));
             index = index + cmmSpan;
         }
         return mergedRegions;
