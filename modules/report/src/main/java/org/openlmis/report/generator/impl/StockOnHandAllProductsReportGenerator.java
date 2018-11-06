@@ -48,7 +48,7 @@ public class StockOnHandAllProductsReportGenerator extends StockOnHandForSingleP
                 tmpValue.put("value", DateUtil.formatDate(date));
                 Map<String, Object> styleMap = new HashMap<>();
                 styleMap.put("dataPattern", DateUtil.FORMAT_DATE_TIME);
-                styleMap.put("excelDataPattern", "m/d/yy");
+                styleMap.put("excelDataPattern", "d/m/yy");
                 tmpValue.put("style", styleMap);
                 tmpValue.put("dataType", "date");
                 rowMap.put("expiryDate", tmpValue);
@@ -61,7 +61,7 @@ public class StockOnHandAllProductsReportGenerator extends StockOnHandForSingleP
                 tmpValue2.put("value", DateUtil.formatDate(dto.getSyncDate()));
                 Map<String, Object> styleMap2 = new HashMap<>();
                 styleMap2.put("dataPattern", DateUtil.FORMAT_DATE_TIME);
-                styleMap2.put("excelDataPattern", "m/d/yy");
+                styleMap2.put("excelDataPattern", "d/m/yy");
                 tmpValue2.put("style", styleMap2);
                 tmpValue2.put("dataType", "date");
                 rowMap.put("lastSyncDate", tmpValue2);

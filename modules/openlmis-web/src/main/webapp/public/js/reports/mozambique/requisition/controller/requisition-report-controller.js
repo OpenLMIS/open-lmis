@@ -458,7 +458,7 @@ function RequisitionReportController($scope, $controller, RequisitionReportServi
           dataType: 'date',
           style: {
             dataPattern: 'dd-MM-yyyy',
-            excelDataPattern: 'm/d/yy'
+            excelDataPattern: 'd/m/yy'
           }
         };
         requisitionContent.submittedStatus = requisition.submittedStatus;
@@ -469,7 +469,7 @@ function RequisitionReportController($scope, $controller, RequisitionReportServi
           dataType: 'date',
           style: {
             dataPattern: 'dd-MM-yyyy',
-            excelDataPattern: 'm/d/yy'
+            excelDataPattern: 'd/m/yy'
           }
         };
         requisitionContent.syncTime = {
@@ -478,7 +478,7 @@ function RequisitionReportController($scope, $controller, RequisitionReportServi
           dataType: 'date',
           style: {
             dataPattern: 'dd-MM-yyyy',
-            excelDataPattern: 'm/d/yy'
+            excelDataPattern: 'd/m/yy'
           }
         };
         data.reportContent.push(requisitionContent);

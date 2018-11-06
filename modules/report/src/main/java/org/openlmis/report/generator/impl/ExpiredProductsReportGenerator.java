@@ -93,7 +93,7 @@ public class ExpiredProductsReportGenerator extends AbstractReportModelGenerator
                 tmpValue.put("value", DateUtil.formatDate(lotinfo.getExpiryDate()));
                 Map<String, Object> styleMap = new HashMap<>();
                 styleMap.put("dataPattern", DateUtil.FORMAT_DATE_TIME);
-                styleMap.put("excelDataPattern", "m/d/yy");
+                styleMap.put("excelDataPattern", "d/m/yy");
                 tmpValue.put("style", styleMap);
                 tmpValue.put("dataType", "date");
                 rowMap.put("expiryDate", tmpValue);
