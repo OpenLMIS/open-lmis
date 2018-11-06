@@ -159,19 +159,19 @@ describe('requisition report controller', function () {
       inventoryDate: {
         value : dateFormatService.formatDateWithDateMonthYear(1500028406115),
         dataType : 'date',
-        style: { dataPattern : 'dd-MM-yyyy', excelDataPattern: 'm/d/yy' }
+        style: { dataPattern : 'dd-MM-yyyy', excelDataPattern: 'd/m/yy' }
       },
       submittedStatus: 'On time',
       originalPeriodDate : '21 Jan 2018 - 20 Feb 2018',
       submittedTime: {
         value : dateFormatService.formatDateWithDateMonthYear(1500029935097),
         dataType : 'date',
-        style: { dataPattern : 'dd-MM-yyyy', excelDataPattern: 'm/d/yy' }
+        style: { dataPattern : 'dd-MM-yyyy', excelDataPattern: 'd/m/yy' }
       },
       syncTime: {
         value : dateFormatService.formatDateWithDateMonthYear(1500029942231),
         dataType : 'date',
-        style: { dataPattern : 'dd-MM-yyyy', excelDataPattern: 'm/d/yy' }
+        style: { dataPattern : 'dd-MM-yyyy', excelDataPattern: 'd/m/yy' }
       }
     };
 
