@@ -36,7 +36,7 @@ function OverStockReportController($scope, $controller, $filter, DateFormatServi
           $scope.showOverStockProductsTable = true;
           $scope.formattedOverStockList = formatOverStockList(overStockResponse.data);
           $scope.showOverStockProductsTable = overStockResponse.data.length;
-          $scope.overStockList = formatOverStockProductListTime(overStockResponse.data);
+          $scope.overStockList = formatOverStockListNumber(overStockResponse.data);
           $scope.filterAndSort();
           
           UnitService.fixedScrollBorHeaderStyles('fixed-header', 'fixed-body');
@@ -67,7 +67,7 @@ function OverStockReportController($scope, $controller, $filter, DateFormatServi
     $scope.formattedOverStockList = formatOverStockList($scope.filterList);
   };
   
-  function formatOverStockProductListTime(overStockList) {
+  function formatOverStockListNumber(overStockList) {
     return _.map(overStockList, function (overStockItem) {
       var item = {};
       item.provinceName = overStockItem.provinceName;
@@ -93,7 +93,7 @@ function OverStockReportController($scope, $controller, $filter, DateFormatServi
           productCode: overStock.productCode,
           productName: overStock.productName,
           lotNumber: lot.lotNumber,
-          expiryDate: DateFormatService.formatDateWithLocale(lot.expiryDate),
+          expiryDate: lot.expiryDate,
           stockOnHandOfLot: lot.stockOnHandOfLot
         };
         

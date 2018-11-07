@@ -79,14 +79,14 @@
 
     <div id="fixed-body" class="fixed-body">
       <table class="table table-bordered table-striped">
-        <tr class="table--body" ng-repeat="overStockItem in formattedOverStockList | filter: (isDistrictOverStock || '') && filterText">
+        <tr class="table--body" ng-repeat="overStockItem in formattedOverStockList | filter: (isDistrictOverStock || '') && filterText | orderBy: ((isDistrictOverStock || '') && sortType) : sortReverse">
           <td class="table--body-150">{{overStockItem.provinceName}}</td>
           <td class="table--body-150">{{overStockItem.districtName}}</td>
           <td ng-show="!isDistrictOverStock" class="table--body-150">{{overStockItem.facilityName}}</td>
           <td class="table--body-150">{{overStockItem.productCode}}</td>
           <td class="table--body-350">{{overStockItem.productName}}</td>
           <td class="table--body-150">{{overStockItem.lotNumber}}</td>
-          <td class="table--body-150">{{overStockItem.expiryDate}}</td>
+          <td class="table--body-150">{{dateAndTimeFilter(overStockItem.expiryDate)}}</td>
           <td class="table--body-150">{{overStockItem.stockOnHandOfLot}}</td>
           <td class="table--body-150" ng-show="overStockItem.isFirst" rowspan="{{overStockItem.rowSpan}}">
             {{overStockItem.cmm}}
