@@ -1,7 +1,6 @@
 package org.openlmis.report.service;
 
 import org.apache.commons.collections.CollectionUtils;
-import org.apache.commons.lang3.StringUtils;
 import org.openlmis.core.repository.mapper.FacilityMapper;
 import org.openlmis.report.generator.StockOnHandStatus;
 import org.openlmis.report.mapper.ProductLotInfoMapper;
@@ -66,7 +65,8 @@ public class SimpleTableService {
             return stockProducts;
         }
 
-        Map<String, StockProductDto> stockProductDtoMap = stockProductGroupBy(productLotInfos);
+        Map<String, StockProductDto> stockProductDtoMap = filterCriteria.getDistrictId() == null ? stockProductGroupByDistrict(productLotInfos) :
+                stockProductGroupByFacility(productLotInfos);
         Map<String, CMMEntry> cmmEntryMap = getProductCmmMap(filterCriteria);
 
         Map<String, Integer> sohMap = sohMap(stockOnHandInfoMapper.getStockOnHandInfoList(filterCriteria));
@@ -152,22 +152,54 @@ public class SimpleTableService {
     }
 
 
-    private Map<String, StockProductDto> stockProductGroupBy(List<ProductLotInfo> productLotInfos) {
+    private Map<String, StockProductDto> stockProductGroupByFacility(List<ProductLotInfo> productLotInfos) {
         Map<String, StockProductDto> stockProductDtoMap = new HashMap<>();
         String key;
         LotInfo lotinfo;
-        for (ProductLotInfo lotInfo : productLotInfos) {
-            key = lotInfo.getKey();
-            lotinfo = new LotInfo(lotInfo.getLotNumber(), lotInfo.getExpiryDate(), lotInfo.getStockOnHandOfLot());
+        for (ProductLotInfo productLotInfo : productLotInfos) {
+            key = productLotInfo.getFacilityKey();
+            lotinfo = new LotInfo(productLotInfo.getLotNumber(), productLotInfo.getExpiryDate(), productLotInfo.getStockOnHandOfLot());
             if (stockProductDtoMap.containsKey(key)) {
                 stockProductDtoMap.get(key).getLotList().add(lotinfo);
             } else {
-                StockProductDto dto = StockProductDto.of(lotInfo);
+                StockProductDto dto = StockProductDto.of(productLotInfo);
                 dto.getLotList().add(lotinfo);
                 stockProductDtoMap.put(key, dto);
             }
         }
         return stockProductDtoMap;
+    }
+
+    private Map<String, StockProductDto> stockProductGroupByDistrict(List<ProductLotInfo> productLotInfos) {
+        Map<String, StockProductDto> stockProductDtoMap = new HashMap<>();
+        String key;
+        LotInfo lotinfo;
+        for (ProductLotInfo productLotInfo : productLotInfos) {
+            key = productLotInfo.getDistirctKey();
+            lotinfo = new LotInfo(productLotInfo.getLotNumber(), productLotInfo.getExpiryDate(), productLotInfo.getStockOnHandOfLot());
+            if (stockProductDtoMap.containsKey(key)) {
+                List<LotInfo> lotInfoList = stockProductDtoMap.get(key).getLotList();
+                stockProductDtoMap.get(key).setLotList(addLotInfo(lotInfoList, lotinfo));
+            } else {
+                StockProductDto dto = StockProductDto.of(productLotInfo);
+                dto.getLotList().add(lotinfo);
+                stockProductDtoMap.put(key, dto);
+            }
+        }
+        return stockProductDtoMap;
+    }
+
+    private List<LotInfo> addLotInfo(List<LotInfo> lotList, LotInfo lotInfo) {
+        for(int index = 0; index < lotList.size(); index++) {
+            LotInfo currentLotInfo = lotList.get(index);
+            if(currentLotInfo.getLotNumber().equals(lotInfo.getLotNumber())) {
+                currentLotInfo.setStockOnHandOfLot(currentLotInfo.getStockOnHandOfLot() + lotInfo.getStockOnHandOfLot());
+                lotList.set(index, currentLotInfo);
+                return lotList;
+            }
+        }
+        lotList.add(lotInfo);
+        return lotList;
     }
 
     private List<RequisitionDTO> getUnSubmittedRequisitions(RequisitionReportsParam filterCriteria) {
