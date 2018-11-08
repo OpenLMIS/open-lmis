@@ -394,8 +394,4 @@ function BaseProductReportController($scope, $filter, ProductReportService, $cac
     return periodsInBetween(periodOf(start), periodOf(end));
   };
 
-  $scope.dateAndTimeFilter = function (date) {
-    return DateFormatService.formatDateWithLocale(date);
-  };
-
 }

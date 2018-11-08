@@ -86,7 +86,7 @@
           <td class="table--body-150">{{overStockItem.productCode}}</td>
           <td class="table--body-350">{{overStockItem.productName}}</td>
           <td class="table--body-150">{{overStockItem.lotNumber}}</td>
-          <td class="table--body-150">{{dateAndTimeFilter(overStockItem.expiryDate)}}</td>
+          <td class="table--body-150">{{overStockItem.expiryDate | dateAndTimeFilter}}</td>
           <td class="table--body-150">{{overStockItem.stockOnHandOfLot}}</td>
           <td class="table--body-150" ng-show="overStockItem.isFirst" rowspan="{{overStockItem.rowSpan}}">
             {{overStockItem.cmm}}

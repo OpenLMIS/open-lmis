@@ -28,10 +28,15 @@ function FacilityFilter(){
             return facilities;
         }
     };
-
     function getAllFacilityInDistrict(facilities, districtId) {
         return _.filter(facilities, function(facility){
             return facility.geographicZoneId == districtId;
         });
     }
+}
+
+function DateAndTimeFilter(DateFormatService) {
+    return function (date) {
+      return DateFormatService.formatDateWithLocale(date);
+    };
 }

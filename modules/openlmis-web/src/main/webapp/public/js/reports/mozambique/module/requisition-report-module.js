@@ -83,7 +83,8 @@ angular.module('requisition-report', ['openlmis', 'angularCombine', 'ngTable', '
   }
 ).config(function (angularCombineConfigProvider) {
   angularCombineConfigProvider.addConf(/filter-/, '/public/pages/reports/shared/filters.html');
-}).filter("districtFilter", DistrictFilter)
+}).filter("dateAndTimeFilter", DateAndTimeFilter)
+  .filter("districtFilter", DistrictFilter)
   .filter("provinceFilter", ProvinceFilter)
   .filter("facilityFilter", FacilityFilter)
   .directive('datePickerContainer', datePickerContainer)
