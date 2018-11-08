@@ -31,6 +31,7 @@ function ConsumptionReportController($scope, $controller, $filter, $http, $q, Cu
         period: messageService.get('report.header.period'),
         cmm: messageService.get('report.header.cmm'),
         consumption: messageService.get('report.header.consumption.during.period'),
+        entries: messageService.get('report.header.entries.during.period'),
         soh: messageService.get('report.header.soh.at.period.end'),
         reportGeneratedFor: messageService.get('report.header.generated.for')
 
@@ -48,6 +49,7 @@ function ConsumptionReportController($scope, $controller, $filter, $http, $q, Cu
       consumptionReportContent.period = consumptionInPeriod.period;
       consumptionReportContent.cmm = $scope.reportParams.selectedFacility ? consumptionInPeriod.cmm : '';
       consumptionReportContent.consumption = consumptionInPeriod.total_quantity;
+      consumptionReportContent.entries = consumptionInPeriod.entries;
       consumptionReportContent.soh = consumptionInPeriod.soh;
       consumptionReportContent.reportGeneratedFor = DateFormatService.formatDateWithDateMonthYearForString($scope.reportParams.startTime) + ' - ' + DateFormatService.formatDateWithDateMonthYearForString($scope.reportParams.endTime);
 

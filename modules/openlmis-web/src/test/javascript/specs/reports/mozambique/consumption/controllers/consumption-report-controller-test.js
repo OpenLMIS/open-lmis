@@ -11,6 +11,7 @@ describe("consumption report controller", function () {
       period: 'report.header.period',
       cmm: 'report.header.cmm',
       consumption: 'report.header.consumption.during.period',
+      entries: 'report.header.entries.during.period',
       soh: 'report.header.soh.at.period.end',
       reportGeneratedFor: 'report.header.generated.for'
     };
