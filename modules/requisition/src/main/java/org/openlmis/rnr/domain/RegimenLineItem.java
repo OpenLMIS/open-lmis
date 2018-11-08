@@ -54,6 +54,9 @@ public class RegimenLineItem extends LineItem {
   private Integer patientsToInitiateTreatmentChildren;
   private Integer patientsStoppedTreatmentChildren;
 
+  private Integer hf;
+  private Integer chw;
+
   private String remarks;
   private RegimenCategory category;
   private Integer regimenDisplayOrder;
@@ -150,5 +153,7 @@ public class RegimenLineItem extends LineItem {
     this.patientsOnTreatment = regimenLineItem.patientsOnTreatment;
     this.patientsToInitiateTreatment = regimenLineItem.patientsToInitiateTreatment;
     this.patientsStoppedTreatment = regimenLineItem.patientsStoppedTreatment;
+    this.hf = regimenLineItem.hf;
+    this.chw = regimenLineItem.chw;
   }
 }

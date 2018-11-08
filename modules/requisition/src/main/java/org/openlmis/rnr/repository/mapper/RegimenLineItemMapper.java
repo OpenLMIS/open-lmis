@@ -23,8 +23,8 @@ import java.util.List;
 @Repository
 public interface RegimenLineItemMapper {
 
-  @Insert({"INSERT INTO regimen_line_items(code, name, regimenDisplayOrder, regimenCategory, regimenCategoryDisplayOrder, rnrId, skipped, modifiedBy, createdBy, patientsontreatment) values " +
-    "(#{code}, #{name}, #{regimenDisplayOrder}, #{category.name}, #{category.displayOrder}, #{rnrId}, #{skipped}, #{modifiedBy}, #{createdBy}, #{patientsOnTreatment})"})
+  @Insert({"INSERT INTO regimen_line_items(code, name, regimenDisplayOrder, regimenCategory, regimenCategoryDisplayOrder, rnrId, skipped, modifiedBy, createdBy, patientsontreatment, hf, chw) values " +
+    "(#{code}, #{name}, #{regimenDisplayOrder}, #{category.name}, #{category.displayOrder}, #{rnrId}, #{skipped}, #{modifiedBy}, #{createdBy}, #{patientsOnTreatment},#{hf},#{chw})"})
   @Options(useGeneratedKeys = true)
    void insert(RegimenLineItem regimenLineItem);
 
@@ -50,6 +50,8 @@ public interface RegimenLineItemMapper {
     @Result(property = "regimenDisplayOrder", column = "regimenDisplayOrder"),
     @Result(property = "category.name", column = "regimenCategory"),
     @Result(property = "category.displayOrder", column = "regimenCategoryDisplayOrder"),
+    @Result(property = "hf", column = "hf"),
+    @Result(property = "chw", column = "chw")
   })
    List<RegimenLineItem> getRegimenLineItemsByRnrId(Long rnrId);
 
