@@ -68,18 +68,22 @@ function ConsumptionReportController($scope, $controller, $filter, $http, $q, Cu
         "graphs": [{
           "bullet": "round",
           "valueField": "soh",
+          "lineColor": "#dada11",
           "balloonText": messageService.get("stock.movement.soh") + ": [[value]]"
         }, {
           "bullet": "round",
           "valueField": "cmm",
+          "lineColor": "#20b4f6",
           "balloonText": "C.M.M.: [[value]]"
         }, {
           "bullet": "round",
           "valueField": "total_quantity",
+          "lineColor": "#ff8000",
           "balloonText": messageService.get("consumption.chart.balloon.text") + ": [[value]]"
         }, {
           "bullet": "round",
           "valueField": "entries",
+          "lineColor": "#008000",
           "balloonText": messageService.get("entries.chart.balloon.text") + ": [[value]]"
         }],
         "chartScrollbar": {
@@ -101,14 +105,17 @@ function ConsumptionReportController($scope, $controller, $filter, $http, $q, Cu
         "graphs": [{
           "bullet": "round",
           "valueField": "soh",
+          "lineColor": "#dada11",
           "balloonText": messageService.get("stock.movement.soh") + ": [[value]]"
         }, {
           "bullet": "round",
           "valueField": "total_quantity",
+          "lineColor": "#ff8000",
           "balloonText": messageService.get("consumption.chart.balloon.text") + ": [[value]]"
         }, {
           "bullet": "round",
           "valueField": "entries",
+          "lineColor": "#008000",
           "balloonText": messageService.get("entries.chart.balloon.text") + ": [[value]]"
         }],
         "chartScrollbar": {
