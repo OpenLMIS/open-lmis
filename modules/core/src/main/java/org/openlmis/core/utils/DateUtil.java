@@ -51,33 +51,54 @@ public class DateUtil {
         }
     }
 
-    public static String formatDateWithStartDayOfPeriod(String date) {
+    public static String formatDateWithStartDayOfPeriodMonthOffset(String date, int n) {
         Calendar cal = Calendar.getInstance();
         cal.setTime(parseDate(date, FORMAT_DATE_TIME_CUBE));
         if (cal.get(Calendar.DAY_OF_MONTH) < 21) {
-            cal.add(Calendar.MONTH, -1);
+            cal.add(Calendar.MONTH, n);
             cal.set(Calendar.DAY_OF_MONTH, 21);
         } else {
             cal.set(Calendar.DAY_OF_MONTH, 21);
+        }
+        return getFormattedDate(cal.getTime(), FORMAT_DATE_TIME_CUBE);
+    }
+
+    public static String formatDateWithStartDayOfPeriod(String date) {
+        return formatDateWithStartDayOfPeriodMonthOffset(date, -1);
+    }
+
+    public static String formatDateWithEndDayOfPeriodMonthOffset(String date, int n) {
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(parseDate(date, FORMAT_DATE_TIME_CUBE));
+        if (cal.get(Calendar.DAY_OF_MONTH) > 20) {
+            cal.add(Calendar.MONTH, n);
+            cal.set(Calendar.DAY_OF_MONTH, 20);
+        } else {
+            cal.set(Calendar.DAY_OF_MONTH, 20);
         }
         return getFormattedDate(cal.getTime(), FORMAT_DATE_TIME_CUBE);
     }
 
     public static String formatDateWithEndDayOfPeriod(String date) {
-        Calendar cal = Calendar.getInstance();
-        cal.setTime(parseDate(date, FORMAT_DATE_TIME_CUBE));
-        if (cal.get(Calendar.DAY_OF_MONTH) > 20) {
-            cal.add(Calendar.MONTH, 1);
-            cal.set(Calendar.DAY_OF_MONTH, 20);
-        } else {
-            cal.set(Calendar.DAY_OF_MONTH, 20);
-        }
-        return getFormattedDate(cal.getTime(), FORMAT_DATE_TIME_CUBE);
+        return formatDateWithEndDayOfPeriodMonthOffset(date, 1);
     }
 
     public static String transform(String src, String srcPattern, String dstPattern) {
         Date dateSrc = parseDate(src, srcPattern);
         return getFormattedDate(dateSrc, dstPattern);
+    }
+
+    public static Date getNMonthsDate(String date, String pattern, int n) {
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(parseDate(date, pattern));
+        calendar.add(Calendar.MONTH, n);
+        calendar.set(Calendar.DAY_OF_MONTH, 1);
+        return calendar.getTime();
+    }
+
+    public static String getCubeFormatNMonthsDate(String date, String pattern, int n) {
+        Date d = getNMonthsDate(date, pattern, n);
+        return getFormattedDate(d, FORMAT_DATE_TIME_CUBE);
     }
 
 }

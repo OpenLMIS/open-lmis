@@ -9,7 +9,17 @@ import org.openlmis.report.view.WorkbookCreator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.TreeSet;
 
 public abstract class AbstractDrugReportGenerator extends AbstractReportModelGenerator {
     private final static String CMM_ENTRIES_CUBE = "vw_cmm_entries";
@@ -125,16 +135,12 @@ public abstract class AbstractDrugReportGenerator extends AbstractReportModelGen
         return map;
     }
 
-    private String getQueryStringCmmEntries(Map<Object, Object> paraMap) {
-        String endTime = paraMap.get("endTime").toString();
-        String startDatePeriod = DateUtil.formatDateWithStartDayOfPeriod(endTime);
-        String endDatePeriod = DateUtil.formatDateWithEndDayOfPeriod(endTime);
+    private String getQueryStringCmmEntries(Map<Object, Object> paraMap) { ;
         List<String> drugs = validateDrugs(paraMap) ? (List<String>) paraMap.get("selectedDrugs")
                 : (List<String>) paraMap.get("allNosDrugs");
         Map<String, Object> cutsParams = new HashMap<>();
         cutsParams.put("product", drugs);
-        cutsParams.put("periodbegin", startDatePeriod);
-        cutsParams.put("periodend", endDatePeriod);
+        cutsParams.put("periodend", getTimeFilter(paraMap));
 
         String location = getLocationHierarchy(getProvince(paraMap), getDistrict(paraMap));
         if (StringUtils.isNotEmpty(location)) {
@@ -142,6 +148,16 @@ public abstract class AbstractDrugReportGenerator extends AbstractReportModelGen
         }
         String cutStr = "?cut=" + mapToQueryString(cutsParams);
         return cutStr;
+    }
+
+    private String getTimeFilter(Map<Object, Object> paraMap) {
+        String startTime = paraMap.get("startTime").toString();
+        String endTime = paraMap.get("endTime").toString();
+        String startDate = DateUtil.getCubeFormatNMonthsDate(startTime,
+                DateUtil.FORMAT_DATE_TIME_CUBE, -1);
+        String endDate = DateUtil.getCubeFormatNMonthsDate(endTime,
+                DateUtil.FORMAT_DATE_TIME_CUBE, 1);
+        return String.format("%s-%s", startDate, endDate);
     }
 
     private boolean validateDrugs(Map<Object, Object> paraMap) {
@@ -295,6 +311,7 @@ public abstract class AbstractDrugReportGenerator extends AbstractReportModelGen
             newNosDrug.put("province", first.get("location.province_name"));
             newNosDrug.put("district", first.get("location.district_name"));
             newNosDrug.put("facility", first.get("facility.facility_name"));
+            newNosDrug.put("facilityCode", first.get("facility.facility_code"));
             newNosDrug.put("reportGeneratedFor", cubeQueryResult.get(STARTTIME_TO_ENDTIME).toString());
 
             for (String date : set) {
@@ -311,21 +328,20 @@ public abstract class AbstractDrugReportGenerator extends AbstractReportModelGen
 
         List<Map<String, String>> cmmEntries = (List<Map<String, String>>) cubeQueryResult.get(CMM_ENTRIES_CUBE);
 
-        for (Map<String, String> cmmEntry : cmmEntries) {
-            if (StringUtils.isNotEmpty(cmmEntry.get("cmm"))
-                    && nosDrugHash.containsKey(cmmEntry.get("product") + "@" + cmmEntry.get("facilityCode"))) {
-                nosDrugHash.get(cmmEntry.get("product") + "@" + cmmEntry.get("facilityCode")).put("cmmValue", cmmEntry.get("cmm"));
-            }
-        }
+        Map<String, Double> cmmValueMap = cmmValueMap(cmmEntries);
 
         List<Map<String, Object>> result = new ArrayList<>();
-        Set<String> checkSet = new HashSet<>(set);
+        Set<String> checkSet = new LinkedHashSet<>(set);
         for (Map.Entry<String, Map<String, String>> entry : nosDrugHash.entrySet()) {
-            double cmm = getCmmValue(entry.getValue());
             String productCode = entry.getKey().substring(0, entry.getKey().indexOf("@"));
             Map<String, Object> obj = new HashMap<>();
+            StockOnHandStatus latestStockStatus = StockOnHandStatus.NOT_EXIST;
+            String latestDate = set.toArray()[set.size() - 1].toString();
             for (Map.Entry<String, String> kv : entry.getValue().entrySet()) {
                 if (checkSet.contains(kv.getKey())) {
+                    double cmm = queryCmmValue(cmmValueMap, entry.getValue().get("drugCode"),
+                            entry.getValue().get("facilityCode"),
+                            DateUtil.transform(kv.getKey(), DateUtil.FORMAT_DATE, DateUtil.FORMAT_DATE_TIME_CUBE));
                     Map<String, Object> tmpValue = new HashMap<>();
                     tmpValue.put("value", kv.getValue());
                     Map<String, Object> styleMap = new HashMap<>();
@@ -338,14 +354,16 @@ public abstract class AbstractDrugReportGenerator extends AbstractReportModelGen
                     } else {
                         tmpValue.put("status", StockOnHandStatus.NOT_EXIST);
                     }
+                    if (StringUtils.equalsIgnoreCase(latestDate, kv.getKey())) {
+                        latestStockStatus = (StockOnHandStatus)tmpValue.get("status");
+                        obj.put("cmmValue", cmm > 0 ? String.valueOf(cmm) : "");
+                    }
                     obj.put(kv.getKey(), tmpValue);
                 } else {
                     obj.put(kv.getKey(), kv.getValue());
                 }
             }
-            String latestDate = set.toArray()[set.size() - 1].toString();
-            obj.put("LatestStockStatus", getMessage(stockStatusService.getStockOnHandStatus(cmm,
-                    NumberUtils.toLong(entry.getValue().get(latestDate)), productCode).getMessageKey()));
+            obj.put("LatestStockStatus", getMessage(latestStockStatus.getMessageKey()));
 
             result.add(obj);
         }
@@ -353,8 +371,61 @@ public abstract class AbstractDrugReportGenerator extends AbstractReportModelGen
         return result;
     }
 
-    private double getCmmValue(Map<String, String> row) {
-        return StringUtils.isNotEmpty(row.get("cmmValue")) ? NumberUtils.toDouble(row.get("cmmValue")) : -1;
+    private String createPeriod(Map<String, String> cmmEntry, String prefix) {
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(Calendar.YEAR, (int)NumberUtils.toDouble(cmmEntry.get(prefix + ".year")));
+        calendar.set(Calendar.MONTH, (int)NumberUtils.toDouble(cmmEntry.get(prefix + ".month")) - 1);
+        calendar.set(Calendar.DAY_OF_MONTH, (int)NumberUtils.toDouble(cmmEntry.get(prefix + ".day")));
+        return DateUtil.getFormattedDate(calendar.getTime(),DateUtil.FORMAT_DATE_TIME_CUBE);
+    }
+
+    private String createPeriodBegin(Map<String, String> cmmEntry) {
+        return createPeriod(cmmEntry, "periodbegin");
+    }
+
+    private String createPeriodEnd(Map<String, String> cmmEntry) {
+        return createPeriod(cmmEntry, "periodend");
+    }
+
+    private String getCmmKey(Map<String, String> cmmEntry) {
+        return getCmmKey (cmmEntry.get("product"), cmmEntry.get("facilityCode"),
+                createPeriodBegin(cmmEntry), createPeriodEnd(cmmEntry));
+    }
+
+    private String getCmmKey(String productCode, String facilityCode, String periodBegin, String periodEnd) {
+        return productCode + "@" + facilityCode + "@" + periodBegin + "-" + periodEnd;
+    }
+
+    private double queryCmmValue(Map<String, Double> cmmValueMap, String productCode, String facilityCode, String time) {
+        String key =  getCmmKey(productCode, facilityCode, getLeftBound(time), getRightBound(time));
+        return null == cmmValueMap.get(key) ? -1 : cmmValueMap.get(key);
+    }
+
+    private String getLeftBound(String time) {
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(DateUtil.parseDate(time, DateUtil.FORMAT_DATE_TIME_CUBE));
+        calendar.add(Calendar.MONTH, -1);
+        calendar.set(Calendar.DAY_OF_MONTH, 21);
+        return DateUtil.getFormattedDate(calendar.getTime(), DateUtil.FORMAT_DATE_TIME_CUBE);
+    }
+
+    private String getRightBound(String time) {
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(DateUtil.parseDate(time, DateUtil.FORMAT_DATE_TIME_CUBE));
+        calendar.set(Calendar.DAY_OF_MONTH, 20);
+        return DateUtil.getFormattedDate(calendar.getTime(), DateUtil.FORMAT_DATE_TIME_CUBE);
+    }
+
+    private Map<String, Double> cmmValueMap(List<Map<String, String>> cmmEntries) {
+        Map<String,Double> cmmValueMap = new HashMap<>();
+        for (Map<String, String> cmmEntry : cmmEntries) {
+            cmmValueMap.put(getCmmKey(cmmEntry), cmmValue(cmmEntry.get("cmm")));
+        }
+        return cmmValueMap;
+    }
+
+    private double cmmValue(String cmmValue) {
+        return StringUtils.isNotEmpty(cmmValue) ? NumberUtils.toDouble(cmmValue) : -1;
     }
 
     @Override
