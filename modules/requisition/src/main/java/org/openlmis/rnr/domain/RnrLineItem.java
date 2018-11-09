@@ -367,6 +367,9 @@ public class RnrLineItem extends LineItem {
 
   public Money calculateCost() {
     if (packsToShip != null) {
+      if (null == price) {
+        price = new Money("0");
+      }
       return price.multiply(valueOf(packsToShip));
     }
     return new Money("0");
