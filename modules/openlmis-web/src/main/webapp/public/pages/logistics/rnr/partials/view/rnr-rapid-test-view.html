@@ -2,18 +2,16 @@
   <table cellpadding="0" cellspacing="0">
     <tr>
       <td rowspan="3" class="background-black banner-text black-width">
-        <div class="width-28 banner-text">
-          <div class="text-nowrap">CMAM - TDR</div>
-        </div>
+        <div class="banner-text text-nowrap">CMAM - TDR</div>
       </td>
       <td><span style="float: left" class="view-table-logo"></span></td>
-      <td>
+      <td class="text__left">
         <h6 openlmis-message="view.rnr.republic.of.mozambique"></h6>
         <h6 openlmis-message="view.rnr.ministry.of.health"></h6>
         <h6 openlmis-message="view.rnr.central.medicines.and.medical.arricles"></h6>
       </td>
-      <td class="align-center">
-        <h5 openlmis-message="view.rnr.rapid.test.title"></h5>
+      <td class="report--title width-700">
+        <span class="report--title-font" openlmis-message="view.rnr.rapid.test.title"></span>
       </td>
       <td>
         <span openlmis-message="view.rnr.month"></span>
@@ -22,7 +20,7 @@
     </tr>
 
     <tr>
-      <td colspan="3">
+      <td colspan="3" class="text__left">
         <span openlmis-message="view.rnr.healthFacility"></span>:
         <span>{{rnr.facility.name}}</span>
       </td>
@@ -32,7 +30,7 @@
       </td>
     </tr>
 
-    <tr>
+    <tr class="text__left">
       <td><span openlmis-message="view.rnr.district"></span>:</td>
       <td>{{rnr.facility.geographicZone.name}}</td>
       <td><span openlmis-message="view.rnr.province"></span>:{{rnr.facility.geographicZone.parent.name}}</td>
@@ -42,63 +40,71 @@
   <table cellpadding="0" cellspacing="0">
     <tr>
       <td class="background-black black-width"></td>
-      <td colspan="9">this is title</td>
+      <td colspan="9" class="report--title height-50">
+        <span class="report--title-font" openlmis-message="view.rnr.rapid.test.secondTitle"></span>
+        <span class="report--subtitle" openlmis-message="view.rnr.rapid.test.attentionkits"></span>
+      </td>
     </tr>
+    <tr class="table--title">
+      <td class="background-black black-width"></td>
+      <td colspan="2" openlmis-message="view.rnr.rapid.test.codeandproduct"></td>
+      <td openlmis-message="view.rnr.rapid.test.unit"></td>
+      <td openlmis-message="view.rnr.rapid.test.initialstork"></td>
+      <td openlmis-message="view.rnr.rapid.test.entries"></td>
+      <td openlmis-message="view.rnr.rapid.test.issues"></td>
+      <td openlmis-message="view.rnr.rapid.test.lossandadjustment"></td>
+      <td openlmis-message="view.rnr.rapid.test.expirydate"></td>
+      <td openlmis-message="view.rnr.rapid.test.inverntory"></td>
+    </tr>
+
+    <!--Todo: waiting the android release, then should change the code.-->
     <tr>
       <td class="background-black black-width"></td>
-      <td colspan="2">code and product</td>
-      <td>unidade</td>
-      <td>solda incical</td>
-      <td>entradas</td>
-      <td>sairds</td>
-      <td>perdas e ajustes</td>
-      <td>invetario</td>
-      <td>validada</td>
-    </tr>
-    <tr>
-      <td class="background-black black-width"></td>
-      <td>code</td>
-      <td>product name</td>
-      <td>unidade</td>
-      <td>solda incical</td>
-      <td>entradas</td>
-      <td>sairds</td>
-      <td>perdas e ajustes</td>
-      <td>invetario</td>
-      <td>validada</td>
+      <td class="font-bold"></td>
+      <td class="font-bold"></td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
     </tr>
   </table>
 
   <table cellpadding="0" cellspacing="0">
     <tr>
       <td class="background-black black-width"></td>
-      <td colspan="13">this is title</td>
+      <td colspan="13" class="report--title height-50">
+        <span class="report--title-font" openlmis-message="view.rnr.rapid.test.thirdTitle"></span>
+        <span class="report--subtitle" openlmis-message="view.rnr.rapid.test.attentiontests"></span>
+      </td>
     </tr>
-    <tr>
-      <td class="background-black black-width">1</td>
-      <td rowspan="2">code and product</td>
-      <td colspan="3">determine test</td>
-      <td colspan="3">unigold test</td>
-      <td colspan="3">sifilis test</td>
-      <td colspan="3">malaria test</td>
+    <tr class="table--title">
+      <td class="background-black black-width"></td>
+      <td rowspan="2" openlmis-message="view.rnr.rapid.test.service"></td>
+      <td colspan="3" openlmis-message="view.rnr.rapid.test.hivdetermine"></td>
+      <td colspan="3" openlmis-message="view.rnr.rapid.test.hivunigold"></td>
+      <td colspan="3" openlmis-message="view.rnr.rapid.test.syphillis"></td>
+      <td colspan="3" openlmis-message="view.rnr.rapid.test.malaria"></td>
     </tr>
     <tr>
       <td class="background-black black-width"></td>
-      <td>consumo</td>
-      <td>prositivos</td>
-      <td>injustificados</td>
+      <td class="table--subtitle-light-gray" openlmis-message="view.rnr.rapid.test.consumption"></td>
+      <td class="table--subtitle-middle-gray" openlmis-message="view.rnr.rapid.test.positive"></td>
+      <td class="table--subtitle-dark-gray" openlmis-message="view.rnr.rapid.test.unjustifiled"></td>
 
-      <td>consumo</td>
-      <td>prositivos</td>
-      <td>injustificados</td>
+      <td class="table--subtitle-light-gray" openlmis-message="view.rnr.rapid.test.consumption"></td>
+      <td class="table--subtitle-middle-gray" openlmis-message="view.rnr.rapid.test.positive"></td>
+      <td class="table--subtitle-dark-gray" openlmis-message="view.rnr.rapid.test.unjustifiled"></td>
 
-      <td>consumo</td>
-      <td>prositivos</td>
-      <td>injustificados</td>
+      <td class="table--subtitle-light-gray" openlmis-message="view.rnr.rapid.test.consumption"></td>
+      <td class="table--subtitle-middle-gray" openlmis-message="view.rnr.rapid.test.positive"></td>
+      <td class="table--subtitle-dark-gray" openlmis-message="view.rnr.rapid.test.unjustifiled"></td>
 
-      <td>consumo</td>
-      <td>prositivos</td>
-      <td>injustificados</td>
+      <td class="table--subtitle-light-gray" openlmis-message="view.rnr.rapid.test.consumption"></td>
+      <td class="table--subtitle-middle-gray" openlmis-message="view.rnr.rapid.test.positive"></td>
+      <td class="table--subtitle-dark-gray" openlmis-message="view.rnr.rapid.test.unjustifiled"></td>
     </tr>
 
     <tr>
@@ -140,29 +146,77 @@
       <td>prositivos</td>
       <td>injustificados</td>
     </tr>
-  </table>
 
-  <table cellpadding="0" cellspacing="0">
+    <tr class="table--title height-30">
+      <td class="background-black black-width"></td>
+      <td openlmis-message="label.total"></td>
+      <td></td>
+      <td></td>
+      <td></td>
+
+      <td></td>
+      <td></td>
+      <td></td>
+
+      <td></td>
+      <td></td>
+      <td></td>
+
+      <td></td>
+      <td></td>
+      <td></td>
+    </tr>
+
+    <tr class="black-tr"></tr>
+
     <tr>
       <td class="background-black black-width">a</td>
-      <td>APEs</td>
-      <td>consumo</td>
-      <td>prositivos</td>
-      <td>injustificados</td>
+      <td class="table--subtitle-dark-gray">APEs</td>
+      <td></td>
+      <td></td>
+      <td></td>
 
-      <td>consumo</td>
-      <td>prositivos</td>
-      <td>injustificados</td>
+      <td></td>
+      <td></td>
+      <td></td>
 
-      <td>consumo</td>
-      <td>prositivos</td>
-      <td>injustificados</td>
+      <td></td>
+      <td></td>
+      <td></td>
 
-      <td>consumo</td>
-      <td>prositivos</td>
-      <td>injustificados</td>
+      <td></td>
+      <td></td>
+      <td></td>
     </tr>
   </table>
 
+  <div class="report--footer-section">
+    <table>
+      <tr class="height-50">
+        <td class="font-bold text__left">
+          <span openlmis-message="view.rnr.mmia.comments"></span>:
+        </td>
+      </tr>
+      <tr class="height-20"><td></td></tr>
+      <tr class="height-20"><td></td></tr>
+      <tr class="height-20"><td></td></tr>
+    </table>
+  </div>
+
+  <div class="report--footer-section">
+    <table>
+      <tr class="height-50">
+        <td style="vertical-align: baseline" class="font-bold text__left">
+          <span openlmis-message="view.rnr.mmia.createBy"></span>:
+        </td>
+        <td style="vertical-align: baseline" class="font-bold text__left">
+          <span openlmis-message="view.rnr.mmia.vistor"></span>:
+        </td>
+        <td style="vertical-align: baseline" class="font-bold text__left">
+          <span openlmis-message="view.rnr.mmia.dateOfCreate"></span>:
+        </td>
+      </tr>
+    </table>
+  </div>
 </div>
 
