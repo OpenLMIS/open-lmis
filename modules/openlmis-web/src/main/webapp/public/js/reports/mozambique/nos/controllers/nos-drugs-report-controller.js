@@ -9,7 +9,7 @@ function NosDrugsReportController($scope, $controller, NosDrugsChartService) {
   function getReportLoaded() {
     $scope.reportLoaded = true;
     NosDrugsChartService.getNosDrugItemsPromise(getSelectedProvince(), getSelectedDistrict(),
-      $scope.reportParams.startTime, $scope.reportParams.endTime, $scope.selectedDrugCode)
+      $scope.reportParams.startTime, $scope.reportParams.endTime, $scope.selectedDrugCode, "nosDrug")
       .$promise.then(function (result) {
       $scope.buttonDisplay = result.data.length > 0;
       NosDrugsChartService.makeNosDrugHistogram('tracer-report', result.data);

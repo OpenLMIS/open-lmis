@@ -20,9 +20,24 @@
     <hr/>
 
     <div class="over-flow-hidden" ng-if="reportLoaded">
+        <div class="form-fields">
+            <span style="margin-left: 6%">Drug:</span>
+            <select ui-select2
+                    ng-click="onChangeSelectedDrug()"
+                    ng-model="selectedDrugCode"
+
+                    style="width:350px;"
+                    class="large-input"
+                    name="drug"
+                    id="drugDropDown">
+                <option ng-repeat="option in tracerDrugList" value="{{option['drug.drug_code']}}">
+                    {{option['drug.drug_name'] + '[' + option['drug.drug_code'] + ']'}}
+                </option>
+            </select>
+        </div>
         <div id="tracer-report"></div>
         <div id="legend-div"></div>
-        <div ng-include="'/public/pages/reports/mozambique/export-data-button.html'"></div>
+        <div ng-show="buttonDisplay" ng-include="'/public/pages/reports/mozambique/export-data-button.html'"></div>
     </div>
 
 

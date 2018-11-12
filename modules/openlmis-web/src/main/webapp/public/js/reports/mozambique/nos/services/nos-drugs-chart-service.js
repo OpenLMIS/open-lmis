@@ -168,7 +168,7 @@ services.factory('NosDrugsChartService', function ($http, $filter, $q, $timeout,
     return item.percentage === 0 ? null : item.percentage;
   }
 
-  function getNosDrugItemsPromise(province, district, startTime, endTime, selectedDrugCode) {
+  function getNosDrugItemsPromise(province, district, startTime, endTime, selectedDrugCode, reportType) {
     provinceGloble = province;
     districtGloble = district;
 
@@ -181,7 +181,7 @@ services.factory('NosDrugsChartService', function ($http, $filter, $q, $timeout,
       startTime: $filter('date')(startTime, DATE_FORMAT),
       endTime: $filter('date')(endTime, DATE_FORMAT),
       selectedDrugs: selectedDrugs,
-      reportType: "nosDrug"
+      reportType: reportType
     };
 
     return NewReportService.get(params);
@@ -283,12 +283,13 @@ services.factory('NosDrugsChartService', function ($http, $filter, $q, $timeout,
       columnWidth: 0.5,
       categoryAxis: {
         gridPosition: "start",
-        minHorizontalGap: 140
+        autoRotateCount: 5,
+        autoRotateAngle: 45,
       },
       chartScrollbar: {
         enabled: true,
         graphType: "line",
-        offset: 40,
+        offset: 100,
         oppositeAxis: false,
         scrollbarHeight: 5,
         scrollDuration: 0
@@ -351,7 +352,8 @@ services.factory('NosDrugsChartService', function ($http, $filter, $q, $timeout,
       legend: {
         enabled: true,
         align: "center",
-        textClickEnabled: true,
+        switchable: false,
+        textClickEnabled: false,
         reversedOrder: true,
         useGraphSettings: true,
         valueText: ""

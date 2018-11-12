@@ -6,6 +6,14 @@ services.factory('TracerDrugsChartService', function ($http, $filter, $q, $timeo
   var chartDataItems;
   var allTracerDrugs = [];
 
+  function getTracerDrugList() {
+    return $http.get('/cubesreports/cube/products/facts?cut=is_tracer:true').success(function (tracerDrugs) {
+      return tracerDrugs;
+    }).error(function () {
+      return [];
+    });
+  }
+
   function getTracerDrugStockRateOnFriday(zone, friday, stockOuts, tracerDrugCode, carryStartDates) {
     var stockOutsOfTracerDrug = _.filter(stockOuts, function (stockOut) {
       return stockOut[drugCodekey] === tracerDrugCode;
@@ -292,6 +300,7 @@ services.factory('TracerDrugsChartService', function ($http, $filter, $q, $timeo
   }
 
   return {
+    getTracerDrugList: getTracerDrugList,
     generateGraphs: generateGraphs,
     generateTracerDrugsChartDataItems: generateTracerDrugsChartDataItems,
     makeTracerDrugsChart: makeTracerDrugsChart,
