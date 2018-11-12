@@ -127,26 +127,6 @@
       <td>injustificados</td>
     </tr>
 
-    <tr>
-      <td class="background-black black-width"></td>
-      <td>total</td>
-      <td>consumo</td>
-      <td>prositivos</td>
-      <td>injustificados</td>
-
-      <td>consumo</td>
-      <td>prositivos</td>
-      <td>injustificados</td>
-
-      <td>consumo</td>
-      <td>prositivos</td>
-      <td>injustificados</td>
-
-      <td>consumo</td>
-      <td>prositivos</td>
-      <td>injustificados</td>
-    </tr>
-
     <tr class="table--title height-30">
       <td class="background-black black-width"></td>
       <td openlmis-message="label.total"></td>
@@ -217,6 +197,14 @@
         </td>
       </tr>
     </table>
+  </div>
+
+  <div class="align-right">
+    <button class="btn btn-primary btn-download btn-download-pdf" ng-click="downloadPdf()" openlmis-message="view.rnr.mmia.download.button"></button>
+  </div>
+
+  <div class="align-right">
+    <button class="btn btn-primary btn-download btn-download-simam" ng-click="downloadSimam()" openlmis-message="view.rnr.download.simam.button"></button>
   </div>
 </div>
 
