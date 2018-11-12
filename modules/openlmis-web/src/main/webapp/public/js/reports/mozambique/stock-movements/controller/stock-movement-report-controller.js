@@ -132,7 +132,7 @@ function StockMovementReportController($scope, $routeParams, Facility, $http, Cu
             dataType: 'date',
             style: {
               dataPattern: 'yyyy-MM-dd',
-              excelDataPattern: 'm/d/yy'
+              excelDataPattern: 'd/m/yy'
             }
           },
           reason: messageService.get('stock.movement.' + stockMovement['movement.reason']),

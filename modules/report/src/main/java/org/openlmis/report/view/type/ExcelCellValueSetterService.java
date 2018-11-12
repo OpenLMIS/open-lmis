@@ -4,6 +4,7 @@ import org.apache.commons.lang3.math.NumberUtils;
 import org.apache.poi.hssf.usermodel.HSSFDataFormat;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellStyle;
+import org.apache.poi.ss.usermodel.DataFormat;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFCellStyle;
@@ -64,11 +65,8 @@ public class ExcelCellValueSetterService {
             }
 
             if (styleMap.containsKey("excelDataPattern")) {
-                if (-1 != HSSFDataFormat.getBuiltinFormat(styleMap.get("excelDataPattern").toString())) {
-                    cellStyle.setDataFormat(HSSFDataFormat.getBuiltinFormat(styleMap.get("excelDataPattern").toString()));
-                } else {
-                    cellStyle.setDataFormat(HSSFDataFormat.getBuiltinFormat("m/d/yy"));
-                }
+                DataFormat format = workbook.createDataFormat();
+                cellStyle.setDataFormat(format.getFormat(styleMap.get("excelDataPattern").toString()));
             }
 
             return cellStyle;
