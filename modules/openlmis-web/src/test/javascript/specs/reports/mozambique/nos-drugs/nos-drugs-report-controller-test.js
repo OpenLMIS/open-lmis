@@ -25,7 +25,7 @@ describe("nos drugs chart service test", function () {
     spyOn(nosDrugsChartService, 'exportXLSX');
     scope.exportXLSX();
     expect(nosDrugsChartService.exportXLSX).toHaveBeenCalledWith(scope.reportParams.startTime, scope.reportParams.endTime,
-      scope.provinces[0].name, scope.districts[0].name);
+      scope.provinces[0].name, scope.districts[0].name, "nosDrug");
   });
 
   describe('#loadReport', function() {

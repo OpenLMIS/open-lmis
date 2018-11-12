@@ -15,9 +15,9 @@ services.factory('WeeklyNosDrugExportService', function ($http, $filter, $q, $ti
       data.allNosDrugs = allNosDrugs;
       data.reportType = reportType;
 
-      ReportExportExcelService.exportAsXlsxBackend(data, reportType === "nosDrug"
-        ? messageService.get('report.file.nos.drugs.report')
-        : messageService.get('report.file.tracer.drugs.report'));
+      ReportExportExcelService.exportAsXlsxBackend(data, reportType === "nosDrug" ?
+        messageService.get('report.file.nos.drugs.report') :
+        messageService.get('report.file.tracer.drugs.report'));
   }
 
   return {

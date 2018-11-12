@@ -13,13 +13,6 @@ services.factory('NosDrugsChartService', function ($http, $filter, $q, $timeout,
   var provinceGloble;
   var districtGloble;
 
-  var status = {
-    "Stock Out": "stockOut",
-    "Low Stock": "lowStock",
-    "Regular Stock": "regularStock",
-    "Over Stock": "overStock",
-  };
-
   function getNosDrugStockRateOnFriday(zone, friday, stockOuts, nosDrugCode, carryStartDates) {
     var stockOutsOfNosDrug = _.filter(stockOuts, function (stockOut) {
       return stockOut[drugCodeKey] === nosDrugCode;
@@ -289,7 +282,7 @@ services.factory('NosDrugsChartService', function ($http, $filter, $q, $timeout,
       chartScrollbar: {
         enabled: true,
         graphType: "line",
-        offset: 100,
+        offset: 110,
         oppositeAxis: false,
         scrollbarHeight: 5,
         scrollDuration: 0
@@ -308,7 +301,8 @@ services.factory('NosDrugsChartService', function ($http, $filter, $q, $timeout,
         {
           balloonFunction: generateBalloonInfo,
           fillAlphas: 1,
-          title: "Stock Out",
+          id: "stockOut",
+          title: messageService.get('stock.chart.stock.out'),
           type: "column",
           valueField: "stockOutValue",
           fillColors: "#f5212d",
@@ -317,7 +311,8 @@ services.factory('NosDrugsChartService', function ($http, $filter, $q, $timeout,
         {
           balloonFunction: generateBalloonInfo,
           fillAlphas: 1,
-          title: "Low Stock",
+          id: "lowStock",
+          title: messageService.get('stock.chart.low.stock'),
           type: "column",
           valueField: "lowStockValue",
           fillColors: "#fad74d",
@@ -326,7 +321,8 @@ services.factory('NosDrugsChartService', function ($http, $filter, $q, $timeout,
         {
           balloonFunction: generateBalloonInfo,
           fillAlphas: 1,
-          title: "Regular Stock",
+          id: "regularStock",
+          title: messageService.get('stock.chart.regular.stock'),
           type: "column",
           valueField: "regularStockValue",
           fillColors: "#4bba14",
@@ -335,7 +331,8 @@ services.factory('NosDrugsChartService', function ($http, $filter, $q, $timeout,
         {
           balloonFunction: generateBalloonInfo,
           fillAlphas: 1,
-          title: "Over Stock",
+          id: "overStock",
+          title: messageService.get('stock.chart.over.stock'),
           type: "column",
           valueField: "overStockValue",
           fillColors: "#6610c7",
@@ -396,10 +393,6 @@ services.factory('NosDrugsChartService', function ($http, $filter, $q, $timeout,
     }
   }
 
-  function getTitleFromDictionary(title) {
-    return status[title];
-  }
-
   function getReportPercentage(percentage) {
     return messageService.get('report.tracer.percentage') + ": <span style='font-weight: bold'>" + percentage + "%</span>";
   }
@@ -431,7 +424,7 @@ services.factory('NosDrugsChartService', function ($http, $filter, $q, $timeout,
   }
 
   function getBalloonInfo(originalNosDrugData, graph, type) {
-    var tag = getTitleFromDictionary(graph.title);
+    var tag = graph.id;
     var nosDrugItem = originalNosDrugData[tag];
     switch (type) {
       case "facility":
@@ -440,18 +433,6 @@ services.factory('NosDrugsChartService', function ($http, $filter, $q, $timeout,
         return generateContent(nosDrugItem.district, nosDrugItem.percentage, false);
       case "province":
         return generateContent(nosDrugItem.province, nosDrugItem.percentage, false);
-    }
-  }
-
-  function handleLegendClick(evt) {
-    if (evt.type === "hideItem") {
-      _.uniq(selectedDrugs);
-      var index = selectedDrugs.indexOf(evt.dataItem.valueField);
-      if (index > -1) {
-        selectedDrugs.splice(index, 1);
-      }
-    } else {
-      selectedDrugs.push(evt.dataItem.valueField);
     }
   }
 
