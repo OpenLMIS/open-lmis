@@ -363,7 +363,7 @@ services.factory('NosDrugsChartService', function ($http, $filter, $q, $timeout,
 
     AmCharts.checkData = function (chart) {
       if (!chart.dataProvider[0].nosData) {
-        chart.addLabel(0, '50%', 'The chart contains no data', 'center');
+        chart.addLabel(0, '50%', messageService.get('label.histogram.drug.no.data'), 'center');
 
         chart.chartDiv.style.opacity = 0.5;
       }
