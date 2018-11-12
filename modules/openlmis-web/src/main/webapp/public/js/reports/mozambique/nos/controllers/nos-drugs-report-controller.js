@@ -23,7 +23,7 @@ function NosDrugsReportController($scope, $controller, NosDrugsChartService) {
   };
 
   $scope.exportXLSX = function () {
-    NosDrugsChartService.exportXLSX($scope.reportParams.startTime, $scope.reportParams.endTime, getSelectedProvince(), getSelectedDistrict());
+    NosDrugsChartService.exportXLSX($scope.reportParams.startTime, $scope.reportParams.endTime, getSelectedProvince(), getSelectedDistrict(), "nosDrug");
   };
 
   $scope.onChangeSelectedDrug = function () {

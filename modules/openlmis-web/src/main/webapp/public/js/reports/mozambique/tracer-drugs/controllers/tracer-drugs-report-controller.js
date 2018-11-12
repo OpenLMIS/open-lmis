@@ -13,7 +13,7 @@ function TracerDrugsReportController($scope, $controller, TracerDrugsChartServic
   };
 
   $scope.exportXLSX = function () {
-    TracerDrugsChartService.exportXLSX($scope.reportParams.startTime, $scope.reportParams.endTime, getSelectedProvince(), getSelectedDistrict());
+    NosDrugsChartService.exportXLSX($scope.reportParams.startTime, $scope.reportParams.endTime, getSelectedProvince(), getSelectedDistrict(), "tracerDrug");
   };
 
   $scope.onChangeSelectedDrug = function () {

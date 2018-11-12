@@ -455,12 +455,12 @@ services.factory('NosDrugsChartService', function ($http, $filter, $q, $timeout,
     }
   }
 
-  function exportXLSX(startTime, endTime, province, district) {
+  function exportXLSX(startTime, endTime, province, district, reportType) {
     var allNosCodes = _.map(allNosDrugs, function (drug) {
       return drug['drug.drug_code'];
     });
 
-    WeeklyNosDrugExportService.getDataForExport(selectedDrugs, province, district, startTime, endTime, allNosCodes);
+    WeeklyNosDrugExportService.getDataForExport(selectedDrugs, province, district, startTime, endTime, allNosCodes, reportType);
   }
 
   return {

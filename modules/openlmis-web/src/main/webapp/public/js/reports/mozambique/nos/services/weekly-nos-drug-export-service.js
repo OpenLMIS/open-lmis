@@ -4,7 +4,7 @@ services.factory('WeeklyNosDrugExportService', function ($http, $filter, $q, $ti
   
   var data = {};
 
-  function getDataForExport(selectedDrugs, province, district, startTime, endTime, allNosDrugs) {
+  function getDataForExport(selectedDrugs, province, district, startTime, endTime, allNosDrugs, reportType) {
 
       //TODO use object
       data.selectedDrugs = selectedDrugs;
@@ -13,9 +13,11 @@ services.factory('WeeklyNosDrugExportService', function ($http, $filter, $q, $ti
       data.startTime = $filter('date')(startTime, DATE_FORMAT);
       data.endTime = $filter('date')(endTime, DATE_FORMAT);
       data.allNosDrugs = allNosDrugs;
-      data.reportType = "nosDrug";
+      data.reportType = reportType;
 
-      ReportExportExcelService.exportAsXlsxBackend(data, messageService.get('report.file.nos.drugs.report'));
+      ReportExportExcelService.exportAsXlsxBackend(data, reportType === "nosDrug"
+        ? messageService.get('report.file.nos.drugs.report')
+        : messageService.get('report.file.tracer.drugs.report'));
   }
 
   return {
