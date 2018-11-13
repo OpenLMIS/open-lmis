@@ -1,6 +1,7 @@
 package org.openlmis.report.service;
 
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.openlmis.core.repository.mapper.FacilityMapper;
 import org.openlmis.report.generator.StockOnHandStatus;
 import org.openlmis.report.mapper.ProductLotInfoMapper;
@@ -206,13 +207,17 @@ public class SimpleTableService {
     private List<LotInfo> addLotInfo(List<LotInfo> lotList, LotInfo lotInfo) {
         for(int index = 0; index < lotList.size(); index++) {
             LotInfo currentLotInfo = lotList.get(index);
-            if(currentLotInfo.getLotNumber().equals(lotInfo.getLotNumber())) {
+            if(null != currentLotInfo.getLotNumber()
+                    && null != lotInfo.getLotNumber()
+                    && StringUtils.equalsIgnoreCase(currentLotInfo.getLotNumber(),lotInfo.getLotNumber())) {
                 currentLotInfo.setStockOnHandOfLot(currentLotInfo.getStockOnHandOfLot() + lotInfo.getStockOnHandOfLot());
                 lotList.set(index, currentLotInfo);
                 return lotList;
             }
         }
-        lotList.add(lotInfo);
+        if (null != lotInfo.getLotNumber()) {
+            lotList.add(lotInfo);
+        }
         return lotList;
     }
 
