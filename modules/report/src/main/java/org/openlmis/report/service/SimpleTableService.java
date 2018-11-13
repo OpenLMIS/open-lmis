@@ -67,6 +67,7 @@ public class SimpleTableService {
 
         Map<String, StockProductDto> stockProductDtoMap = filterCriteria.getDistrictId() == null ? stockProductGroupByDistrict(productLotInfos) :
                 stockProductGroupByFacility(productLotInfos);
+        filterZeroSohLot(stockProductDtoMap);
         Map<String, CMMEntry> cmmEntryMap = getProductCmmMap(filterCriteria);
 
         Map<String, Integer> sohMap = sohMap(stockOnHandInfoMapper.getStockOnHandInfoList(filterCriteria));
@@ -80,6 +81,22 @@ public class SimpleTableService {
             }
         }
         return stockProducts;
+    }
+
+    private void filterZeroSohLot(Map<String, StockProductDto> stockProductDtoMap) {
+        for (Map.Entry<String, StockProductDto> entry : stockProductDtoMap.entrySet()) {
+            StockProductDto stockProductDto = entry.getValue();
+            List<LotInfo> lotList = new ArrayList<>();
+            for (LotInfo lotInfo : entry.getValue().getLotList()) {
+                if (null != lotInfo.getStockOnHandOfLot() && lotInfo.getStockOnHandOfLot() > 0) {
+                    lotList.add(lotInfo);
+                }
+            }
+            if (0 == lotList.size()) {
+                lotList.add(new LotInfo("-", Calendar.getInstance().getTime(), null));
+            }
+            stockProductDto.setLotList(lotList);
+        }
     }
 
     private Map<String, Integer> sohMap(List<StockOnHandDto> stockOnHandDtos) {
@@ -107,9 +124,6 @@ public class SimpleTableService {
     }
 
     private StockProductDto calcCmmAndSoh(StockProductDto stockProduct, Map<String, CMMEntry> cmmEntryMap, StockReportParam filterCriteria) {
-        if (CollectionUtils.isEmpty(stockProduct.getLotList())) {
-            return null;
-        }
         double cmm = -1.0f;
         CMMEntry cmmEntry = cmmEntryMap.get(getEntryMapKey(stockProduct.getProductCode(), stockProduct.getFacilityId().toString()));
         if (null != cmmEntry && null != cmmEntry.getCmmValue()) {

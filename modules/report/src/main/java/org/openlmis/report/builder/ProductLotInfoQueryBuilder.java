@@ -14,7 +14,7 @@ public class ProductLotInfoQueryBuilder {
         return new SQL()
                 .SELECT("*")
                 .FROM("(" + subQuery(params) + ") as tmp")
-                .WHERE("stockcardFacilityId is not null and rn = 1 and stockOnHandOfLot !=0").toString();
+                .WHERE("stockcardFacilityId is not null and rn = 1").toString();
     }
 
     private static String getProductLotInfo(Map params) {
