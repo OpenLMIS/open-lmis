@@ -93,7 +93,7 @@ public class SimpleTableService {
                 }
             }
             if (0 == lotList.size()) {
-                lotList.add(new LotInfo("-", Calendar.getInstance().getTime(), null));
+                lotList.add(new LotInfo("-", Calendar.getInstance().getTime(), 0));
             }
             stockProductDto.setLotList(lotList);
         }
