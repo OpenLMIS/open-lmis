@@ -138,7 +138,7 @@ function RapidTestReportController($scope, $controller, CubesGenerateCutParamsSe
         ],
         [
           messageService.get('report.header.generated.for'),
-          $filter('date')($scope.reportParams.startTime, 'dd/MM/yyyy') +
+          $filter('date')($scope.reportParams.startTime, 'dd/MM/yyyy') + '-' +
           $filter('date')($scope.reportParams.endTime, 'dd/MM/yyyy')
         ]
       ],
