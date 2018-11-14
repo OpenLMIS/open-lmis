@@ -152,6 +152,7 @@ public class ExpringProductsReportGenerator extends AbstractReportModelGenerator
     protected Map<String, Object> getQueryResult(Map<Object, Object> paraMap) {
         StockReportParam filterCriteria = new StockReportParam();
         filterCriteria.setValue(paraMap);
+        filterCriteria.setRegionLevel(getRegionLevel(paraMap));
         filterCriteria.setFilterCondition(new StockReportParam.FilterCondition() {
             @Override
             public String getCondition() {

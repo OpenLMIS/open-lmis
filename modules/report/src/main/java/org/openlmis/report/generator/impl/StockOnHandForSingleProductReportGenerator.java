@@ -2,6 +2,7 @@ package org.openlmis.report.generator.impl;
 
 import org.openlmis.core.utils.DateUtil;
 import org.openlmis.report.generator.AbstractReportModelGenerator;
+import org.openlmis.report.generator.RegionLevel;
 import org.openlmis.report.model.dto.LotInfo;
 import org.openlmis.report.model.dto.StockProductDto;
 import org.openlmis.report.model.params.StockReportParam;
@@ -47,6 +48,7 @@ public class StockOnHandForSingleProductReportGenerator extends AbstractReportMo
     protected Map<String, Object> getQueryResult(Map<Object, Object> paraMap) {
         StockReportParam filterCriteria = new StockReportParam();
         filterCriteria.setValue(paraMap);
+        filterCriteria.setRegionLevel(RegionLevel.FACILITY);
         List<StockProductDto> stockProductDtoList = simpleTableService.getStockProductData(filterCriteria);
 
         Map<String, Object> result = new HashMap<>();

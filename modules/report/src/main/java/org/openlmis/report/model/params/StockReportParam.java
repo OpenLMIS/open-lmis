@@ -9,6 +9,7 @@ import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.apache.log4j.Logger;
 import org.openlmis.core.utils.DateUtil;
 import org.openlmis.report.annotations.RequiredParam;
+import org.openlmis.report.generator.RegionLevel;
 
 import java.util.Date;
 import java.util.Map;
@@ -31,6 +32,7 @@ public class StockReportParam {
     private String districtCode;
 
     private FilterCondition filterCondition;
+    private RegionLevel regionLevel;
 
     public void setValue(Map<Object, Object> paraMap) {
         try {
@@ -47,6 +49,9 @@ public class StockReportParam {
             }
             if (isValidParam(paraMap, "productCode")) {
                 setProductCode(paraMap.get("productCode").toString().trim());
+            }
+            if (isValidParam(paraMap, "regionLevel")) {
+                setRegionLevel((RegionLevel)paraMap.get("regionLevel"));
             }
         }
         catch (Throwable e) {
