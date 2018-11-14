@@ -171,11 +171,4 @@ public abstract class AbstractReportModelGenerator {
     protected Object reportDataForFrontEnd(Map<Object, Object> paraMap) {
         return null;
     }
-
-    protected RegionLevel getRegionLevel(Map<Object, Object> paraMap) {
-        if(null != paraMap.get("districtId")) {
-            return RegionLevel.DISTRICT;
-        }
-        return RegionLevel.FACILITY;
-    }
 }

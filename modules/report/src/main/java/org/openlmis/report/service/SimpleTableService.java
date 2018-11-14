@@ -3,6 +3,7 @@ package org.openlmis.report.service;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.openlmis.core.repository.mapper.FacilityMapper;
+import org.openlmis.report.generator.RegionLevel;
 import org.openlmis.report.generator.StockOnHandStatus;
 import org.openlmis.report.mapper.ProductLotInfoMapper;
 import org.openlmis.report.mapper.RequisitionReportsMapper;
@@ -66,8 +67,9 @@ public class SimpleTableService {
             return stockProducts;
         }
 
-        Map<String, StockProductDto> stockProductDtoMap = filterCriteria.getDistrictId() == null ? stockProductGroupByDistrict(productLotInfos) :
-                stockProductGroupByFacility(productLotInfos);
+        Map<String, StockProductDto> stockProductDtoMap
+                = filterCriteria.getRegion() == RegionLevel.DISTRICT
+                ? stockProductGroupByDistrict(productLotInfos) : stockProductGroupByFacility(productLotInfos);
         filterZeroSohLot(stockProductDtoMap);
         Map<String, CMMEntry> cmmEntryMap = getProductCmmMap(filterCriteria);
 

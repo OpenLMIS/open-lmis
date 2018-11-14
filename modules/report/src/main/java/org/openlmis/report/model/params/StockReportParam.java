@@ -32,6 +32,7 @@ public class StockReportParam {
     private String districtCode;
 
     private FilterCondition filterCondition;
+    @Setter
     private RegionLevel regionLevel;
 
     public void setValue(Map<Object, Object> paraMap) {
@@ -66,6 +67,16 @@ public class StockReportParam {
     }
 
     public interface FilterCondition {
-        public String getCondition();
+        String getCondition();
+    }
+
+    public RegionLevel getRegion() {
+        if (null != regionLevel) {
+            return regionLevel;
+        }
+        if (null == districtId) {
+            return RegionLevel.DISTRICT;
+        }
+        return RegionLevel.FACILITY;
     }
 }

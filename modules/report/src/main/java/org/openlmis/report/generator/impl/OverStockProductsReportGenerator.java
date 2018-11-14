@@ -5,7 +5,6 @@ import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.apache.log4j.Logger;
 import org.openlmis.core.utils.DateUtil;
 import org.openlmis.report.generator.AbstractReportModelGenerator;
-import org.openlmis.report.generator.RegionLevel;
 import org.openlmis.report.model.dto.LotInfo;
 import org.openlmis.report.model.dto.StockProductDto;
 import org.openlmis.report.model.params.StockReportParam;
@@ -59,7 +58,6 @@ public class OverStockProductsReportGenerator extends AbstractReportModelGenerat
         StockReportParam filterCriteria = new StockReportParam();
         filterCriteria.setEndTime(DateUtil.parseDate(paraMap.get("endTime").toString()));
         filterCriteria.setProvinceId(Integer.parseInt(paraMap.get("provinceId").toString()));
-        filterCriteria.setRegionLevel(getRegionLevel(paraMap));
         try {
             if (null != paraMap.get("districtId")) {
                 filterCriteria.setDistrictId(Integer.parseInt(paraMap.get("districtId").toString()));
