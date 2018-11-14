@@ -404,7 +404,9 @@ public abstract class AbstractDrugReportGenerator extends AbstractReportModelGen
     private String getLeftBound(String time) {
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(DateUtil.parseDate(time, DateUtil.FORMAT_DATE_TIME_CUBE));
-        calendar.add(Calendar.MONTH, -1);
+        if (calendar.get(Calendar.DAY_OF_MONTH) <= 20) {
+            calendar.add(Calendar.MONTH, -1);
+        }
         calendar.set(Calendar.DAY_OF_MONTH, 21);
         return DateUtil.getFormattedDate(calendar.getTime(), DateUtil.FORMAT_DATE_TIME_CUBE);
     }
@@ -412,6 +414,9 @@ public abstract class AbstractDrugReportGenerator extends AbstractReportModelGen
     private String getRightBound(String time) {
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(DateUtil.parseDate(time, DateUtil.FORMAT_DATE_TIME_CUBE));
+        if (calendar.get(Calendar.DAY_OF_MONTH) > 20) {
+            calendar.add(Calendar.MONTH, 1);
+        }
         calendar.set(Calendar.DAY_OF_MONTH, 20);
         return DateUtil.getFormattedDate(calendar.getTime(), DateUtil.FORMAT_DATE_TIME_CUBE);
     }
