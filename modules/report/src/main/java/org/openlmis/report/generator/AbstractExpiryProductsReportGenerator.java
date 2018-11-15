@@ -4,6 +4,7 @@ import org.apache.commons.lang.StringUtils;
 import org.openlmis.core.utils.DateUtil;
 import org.openlmis.report.model.dto.LotInfo;
 import org.openlmis.report.model.dto.StockProductDto;
+import org.openlmis.report.model.params.StockReportParam;
 import org.openlmis.report.service.SimpleTableService;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -148,4 +149,18 @@ public abstract class AbstractExpiryProductsReportGenerator extends AbstractRepo
     protected Object reportDataForFrontEnd(Map<Object, Object> paraMap) {
         return getQueryResult(paraMap).get(KEY_QUERY_RESULT);
     }
+
+    @Override
+    protected Map<String, Object> getQueryResult(Map<Object, Object> paraMap) {
+        StockReportParam filterCriteria = new StockReportParam();
+        filterCriteria.setValue(paraMap);
+        setFilterCondition(filterCriteria);
+        List<StockProductDto> stockProductDtoList = simpleTableService.getStockProductData(filterCriteria);
+
+        Map<String, Object> result = new HashMap<>();
+        result.put(KEY_QUERY_RESULT, stockProductDtoList);
+        return result;
+    }
+
+    protected abstract void setFilterCondition(StockReportParam filterCriteria);
 }
