@@ -13,7 +13,7 @@ public class ExpringProductsReportGenerator extends AbstractExpiryProductsReport
             @Override
             public String getCondition() {
                 String timeDifference = "date_part('day', lots.expirationdate::timestamp - #{filterCriteria.endTime})";
-                String result = timeDifference + " < 90 and " + timeDifference + " > 0 and v.valuecolumn is not null and  v.valuecolumn != '0'";
+                String result = timeDifference + " < 90 and " + timeDifference + " > 0";
                 return result;
             }
         });

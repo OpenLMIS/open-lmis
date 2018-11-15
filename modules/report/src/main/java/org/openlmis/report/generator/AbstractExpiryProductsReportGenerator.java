@@ -13,6 +13,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -158,8 +159,18 @@ public abstract class AbstractExpiryProductsReportGenerator extends AbstractRepo
         List<StockProductDto> stockProductDtoList = simpleTableService.getStockProductData(filterCriteria);
 
         Map<String, Object> result = new HashMap<>();
+        deleteZeroLot(stockProductDtoList);
         result.put(KEY_QUERY_RESULT, stockProductDtoList);
         return result;
+    }
+
+    private void deleteZeroLot(List<StockProductDto> stockProductDtoList) {
+        Iterator<StockProductDto> iterator = stockProductDtoList.iterator();
+        while (iterator.hasNext()) {
+            if (StringUtils.equalsIgnoreCase(iterator.next().getLotList().get(0).getLotNumber(), "-")) {
+                iterator.remove();
+            }
+        }
     }
 
     protected abstract void setFilterCondition(StockReportParam filterCriteria);

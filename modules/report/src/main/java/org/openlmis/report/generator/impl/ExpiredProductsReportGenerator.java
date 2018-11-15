@@ -12,7 +12,7 @@ public class ExpiredProductsReportGenerator extends AbstractExpiryProductsReport
         filterCriteria.setFilterCondition(new StockReportParam.FilterCondition() {
             @Override
             public String getCondition() {
-                return "lots.expirationdate <= #{filterCriteria.endTime} and v.valuecolumn is not null and  v.valuecolumn != '0'";
+                return "lots.expirationdate <= #{filterCriteria.endTime}";
             }
         });
     }
