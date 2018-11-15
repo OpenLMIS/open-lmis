@@ -156,7 +156,7 @@ public abstract class AbstractDrugReportGenerator extends AbstractReportModelGen
         String startDate = DateUtil.getCubeFormatNMonthsDate(startTime,
                 DateUtil.FORMAT_DATE_TIME_CUBE, -1);
         String endDate = DateUtil.getCubeFormatNMonthsDate(endTime,
-                DateUtil.FORMAT_DATE_TIME_CUBE, 1);
+                DateUtil.FORMAT_DATE_TIME_CUBE, 2);
         return String.format("%s-%s", startDate, endDate);
     }
 
