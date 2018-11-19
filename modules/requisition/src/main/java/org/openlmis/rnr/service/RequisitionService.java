@@ -1,15 +1,48 @@
 package org.openlmis.rnr.service;
 
-import com.google.common.base.Function;
 import com.google.common.collect.FluentIterable;
-import org.openlmis.core.domain.*;
+import org.apache.commons.collections.CollectionUtils;
+import org.openlmis.core.domain.BudgetLineItem;
+import org.openlmis.core.domain.Facility;
+import org.openlmis.core.domain.FacilityTypeApprovedProduct;
+import org.openlmis.core.domain.Money;
+import org.openlmis.core.domain.ProcessingPeriod;
+import org.openlmis.core.domain.ProductPriceSchedule;
+import org.openlmis.core.domain.Program;
+import org.openlmis.core.domain.ProgramProduct;
+import org.openlmis.core.domain.Regimen;
+import org.openlmis.core.domain.RoleAssignment;
+import org.openlmis.core.domain.SupervisoryNode;
+import org.openlmis.core.domain.SupplyLine;
+import org.openlmis.core.domain.User;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.core.message.OpenLmisMessage;
-import org.openlmis.core.service.*;
+import org.openlmis.core.service.BudgetLineItemService;
+import org.openlmis.core.service.ConfigurationSettingService;
+import org.openlmis.core.service.FacilityApprovedProductService;
+import org.openlmis.core.service.FacilityService;
+import org.openlmis.core.service.ProcessingScheduleService;
+import org.openlmis.core.service.ProductPriceScheduleService;
+import org.openlmis.core.service.ProgramProductService;
+import org.openlmis.core.service.ProgramService;
+import org.openlmis.core.service.RegimenService;
+import org.openlmis.core.service.RoleAssignmentService;
+import org.openlmis.core.service.StaticReferenceDataService;
+import org.openlmis.core.service.StatusChangeEventService;
+import org.openlmis.core.service.SupervisoryNodeService;
+import org.openlmis.core.service.SupplyLineService;
+import org.openlmis.core.service.UserService;
 import org.openlmis.db.repository.mapper.DbMapper;
 import org.openlmis.equipment.domain.EquipmentInventory;
 import org.openlmis.equipment.service.EquipmentInventoryService;
-import org.openlmis.rnr.domain.*;
+import org.openlmis.rnr.domain.Comment;
+import org.openlmis.rnr.domain.EquipmentLineItem;
+import org.openlmis.rnr.domain.LossesAndAdjustmentsType;
+import org.openlmis.rnr.domain.ProgramRnrTemplate;
+import org.openlmis.rnr.domain.RegimenTemplate;
+import org.openlmis.rnr.domain.Rnr;
+import org.openlmis.rnr.domain.RnrLineItem;
+import org.openlmis.rnr.domain.RnrStatus;
 import org.openlmis.rnr.dto.RnrDTO;
 import org.openlmis.rnr.repository.RequisitionRepository;
 import org.openlmis.rnr.search.criteria.RequisitionSearchCriteria;
@@ -20,12 +53,27 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
-import static org.openlmis.core.domain.RightName.*;
-import static org.openlmis.rnr.domain.RnrStatus.*;
+import static org.openlmis.core.domain.RightName.APPROVE_REQUISITION;
+import static org.openlmis.core.domain.RightName.AUTHORIZE_REQUISITION;
+import static org.openlmis.core.domain.RightName.CONVERT_TO_ORDER;
+import static org.openlmis.core.domain.RightName.CREATE_REQUISITION;
+import static org.openlmis.rnr.domain.RnrStatus.APPROVED;
+import static org.openlmis.rnr.domain.RnrStatus.AUTHORIZED;
+import static org.openlmis.rnr.domain.RnrStatus.INITIATED;
+import static org.openlmis.rnr.domain.RnrStatus.IN_APPROVAL;
+import static org.openlmis.rnr.domain.RnrStatus.SUBMITTED;
 import static org.springframework.util.CollectionUtils.isEmpty;
 
 /**
@@ -725,6 +773,52 @@ public class RequisitionService {
 
   public List<Rnr> getNormalRnrsByPeriodAndProgram(Date periodBeginDate, Date periodEndDate, Long programId, Long facilityId) {
     return requisitionRepository.findNormalRnrByPeriodAndProgram(periodBeginDate, periodEndDate, programId, facilityId);
+  }
+
+  public List<Rnr> getAllRequsitionsByProgramId(int programId) {
+    return requisitionRepository.getRequisitionsDetailsByProgramID(programId);
+  }
+
+  public List<Rnr> alReportRequisitionsByStartAndEndDate(Date start, Date end) {
+    List<Rnr> rnrs = getAllRequsitionsByProgramId(5);
+    List<Rnr> result = new ArrayList<>();
+    for (Rnr rnr : rnrs) {
+      if (rnr.getActualPeriodStartDate().getTime() >= start.getTime()
+              && rnr.getActualPeriodStartDate().getTime() <= end.getTime()) {
+        result.add(rnr);
+      }
+    }
+    return result;
+  }
+
+  public List<Rnr> alReportRequisitionsByZoneIdAndDate(int zoneId, Date start, Date end) {
+    List<Facility> facilities = facilityService.getFacilitiesByGeographicZoneId(zoneId);
+    if (CollectionUtils.isEmpty(facilities)) {
+      throw new DataException("no facilties is specified!");
+    }
+    List<Rnr> rnrs = alReportRequisitionsByStartAndEndDate(start, end);
+    List<Rnr> result = new ArrayList<>();
+
+    for (Rnr rnr : rnrs) {
+      if (zoneId == rnr.getFacility().getGeographicZone().getId()
+              || zoneId == rnr.getFacility().getGeographicZone().getParent().getId()) {
+        result.add(rnr);
+      }
+    }
+    return result;
+  }
+
+  public List<Rnr> alReportRequisitionsByFacilityId(int facilityId, Date start, Date end) {
+    List<Rnr> rnrs = alReportRequisitionsByStartAndEndDate(start, end);
+    List<Rnr> result = new ArrayList<>();
+
+    for (Rnr rnr : rnrs) {
+      if (facilityId == rnr.getFacility().getId()) {
+        result.add(rnr);
+      }
+    }
+
+    return result;
   }
 }
 

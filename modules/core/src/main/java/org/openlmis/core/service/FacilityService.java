@@ -17,8 +17,19 @@ import org.apache.log4j.Logger;
 import org.ict4h.atomfeed.server.service.Event;
 import org.ict4h.atomfeed.server.service.EventService;
 import org.joda.time.DateTime;
-import org.openlmis.core.domain.*;
-import org.openlmis.core.dto.*;
+import org.openlmis.core.domain.Facility;
+import org.openlmis.core.domain.FacilityOperator;
+import org.openlmis.core.domain.FacilityType;
+import org.openlmis.core.domain.GeographicZone;
+import org.openlmis.core.domain.Pagination;
+import org.openlmis.core.domain.ProgramSupported;
+import org.openlmis.core.domain.RequisitionGroup;
+import org.openlmis.core.domain.SupervisoryNode;
+import org.openlmis.core.dto.FacilityContact;
+import org.openlmis.core.dto.FacilityFeedDTO;
+import org.openlmis.core.dto.FacilityGeoTreeDto;
+import org.openlmis.core.dto.FacilityImages;
+import org.openlmis.core.dto.FacilitySupervisor;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.core.repository.FacilityRepository;
 import org.openlmis.core.repository.GeographicZoneRepository;
@@ -27,7 +38,12 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.net.URISyntaxException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+import java.util.UUID;
 
 import static java.util.Arrays.asList;
 import static org.apache.commons.collections.CollectionUtils.select;
@@ -310,5 +326,17 @@ public class FacilityService {
     Facility facility = facilityRepository.getById(id);
     facility.setSupportedPrograms(programSupportedService.getAllByFacilityId(id));
     return facility;
+  }
+
+  public List<Facility> getFacilitiesByGeographicZoneId (int zoneId) {
+    List<Facility> facilities = facilityRepository.getAllFacilitiesDetail();
+    List<Facility> result = new ArrayList<>();
+    for (Facility facility : facilities) {
+      if (zoneId == facility.getGeographicZone().getId()
+              || zoneId == facility.getGeographicZone().getParent().getId()) {
+        result.add(facility);
+      }
+    }
+    return result;
   }
 }

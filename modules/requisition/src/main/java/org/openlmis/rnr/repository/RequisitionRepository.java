@@ -313,6 +313,10 @@ public class RequisitionRepository {
     return requisitionMapper.getRequisitionsWithLineItemsByFacility(facility);
   }
 
+  public List<Rnr> getRequisitionsDetailsByProgramID(int programId) {
+    return requisitionMapper.getRequisitionsWithLineItemsByProgramId(programId);
+  }
+
   public void insertRnrSignatures(Rnr rnr) {
     for (Signature signature: rnr.getRnrSignatures()) {
       signatureMapper.insertSignature(signature);

@@ -10,11 +10,25 @@
 
 package org.openlmis.rnr.repository.mapper;
 
-import org.apache.ibatis.annotations.*;
-import org.openlmis.core.domain.*;
+import org.apache.ibatis.annotations.Insert;
+import org.apache.ibatis.annotations.Many;
+import org.apache.ibatis.annotations.One;
+import org.apache.ibatis.annotations.Options;
+import org.apache.ibatis.annotations.Param;
+import org.apache.ibatis.annotations.Result;
+import org.apache.ibatis.annotations.Results;
+import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.SelectProvider;
+import org.apache.ibatis.annotations.Update;
+import org.openlmis.core.domain.Facility;
+import org.openlmis.core.domain.ProcessingPeriod;
+import org.openlmis.core.domain.Program;
+import org.openlmis.core.domain.RoleAssignment;
+import org.openlmis.core.domain.Signature;
 import org.openlmis.rnr.domain.Rnr;
 import org.openlmis.rnr.dto.RnrDTO;
 import org.openlmis.rnr.service.RequisitionService;
+import org.springframework.security.access.method.P;
 import org.springframework.stereotype.Repository;
 
 import java.util.Date;
@@ -140,6 +154,37 @@ public interface RequisitionMapper {
       one = @One(select = "org.openlmis.rnr.repository.mapper.RequisitionMapper.getRnrPeriodEndDateByRnrId"))
   })
   List<Rnr> getRequisitionsWithLineItemsByFacility(@Param("facility") Facility facility);
+
+  @Select({"SELECT * FROM requisitions r",
+          "WHERE programid = #{programid}"}
+  )
+  @Results(value = {
+          @Result(property = "facility.id", column = "facilityId"),
+          @Result(property = "program", javaType = Program.class, column = "programId",
+                  one = @One(select = "org.openlmis.core.repository.mapper.ProgramMapper.getById")),
+          @Result(property = "period.id", column = "periodId"),
+          @Result(property = "fullSupplyLineItems", javaType = List.class, column = "id",
+                  many = @Many(select = "org.openlmis.rnr.repository.mapper.RnrLineItemMapper.getNonSkippedRnrLineItemsByRnrId")),
+          @Result(property = "nonFullSupplyLineItems", javaType = List.class, column = "id",
+                  many = @Many(select = "org.openlmis.rnr.repository.mapper.RnrLineItemMapper.getNonSkippedNonFullSupplyRnrLineItemsByRnrId")),
+          @Result(property = "regimenLineItems", javaType = List.class, column = "id",
+                  many = @Many(select = "org.openlmis.rnr.repository.mapper.RegimenLineItemMapper.getRegimenLineItemsByRnrId")),
+          @Result(property = "equipmentLineItems", javaType = List.class, column = "id",
+                  many = @Many(select = "org.openlmis.rnr.repository.mapper.EquipmentLineItemMapper.getEquipmentLineItemsByRnrId")),
+          @Result(property = "patientQuantifications", javaType = List.class, column = "id",
+                  many = @Many(select = "org.openlmis.rnr.repository.mapper.PatientQuantificationLineItemMapper.getPatientQuantificationLineItemsByRnrId")),
+          @Result(property = "period", column = "periodId", javaType = ProcessingPeriod.class,
+                  one = @One(select = "org.openlmis.core.repository.mapper.ProcessingPeriodMapper.getById")),
+          @Result(property = "clientSubmittedTime", column = "clientSubmittedTime"),
+          @Result(property = "clientSubmittedNotes", column = "clientSubmittedNotes"),
+          @Result(property = "rnrSignatures", column = "id", javaType = List.class,
+                  many = @Many(select = "org.openlmis.rnr.repository.mapper.RequisitionMapper.getRnrSignaturesByRnrId")),
+          @Result(property = "actualPeriodStartDate", column = "id", javaType = Date.class,
+                  one = @One(select = "org.openlmis.rnr.repository.mapper.RequisitionMapper.getRnrPeriodStartDateByRnrId")),
+          @Result(property = "actualPeriodEndDate", column = "id", javaType = Date.class,
+                  one = @One(select = "org.openlmis.rnr.repository.mapper.RequisitionMapper.getRnrPeriodEndDateByRnrId"))
+  })
+  List<Rnr> getRequisitionsWithLineItemsByProgramId(@Param("programid") Integer programid);
 
   @Select({"SELECT * FROM requisitions R",
       "WHERE facilityId = #{facilityId}",

@@ -49,11 +49,11 @@ public class FacilityRepository {
 
   @Autowired
   private PriceScheduleService priceScheduleService;
-  
+
   public List<Facility> getMailingLabels(){
     return mapper.getMailingLabels();
   }
-  
+
   public void save(Facility facility) {
     try {
       validateAndSetFacilityOperatedBy(facility);
@@ -270,4 +270,8 @@ public class FacilityRepository {
     }
 
     public List<FacilityGeoTreeDto> getGeoFlatFacilityTree(Long userId) {   return mapper.getGeoTreeFlatFacilities(userId);  }
+
+    public List<Facility> getAllFacilitiesDetail() {
+        return mapper.getAllFacilitiesDetail();
+    }
 }

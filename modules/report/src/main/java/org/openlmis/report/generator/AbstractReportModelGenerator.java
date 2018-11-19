@@ -33,14 +33,12 @@ public abstract class AbstractReportModelGenerator {
 
     protected abstract List<Map<String, String>> getReportMergedRegions(Map<Object, Object> paraMap, Map<String, Object> queryResult);
 
+    protected abstract Map<String, Object> getQueryResult(Map<Object, Object> paraMap);
+
     protected Object getReportLegenda(Map<Object, Object> paraMap, Map<String, Object> cubeQueryResult, Map<String, Object> model) {
         return null;
     }
     protected Object getReportTitle(Map<Object, Object> paraMap) {
-        return null;
-    }
-
-    protected Map<String, Object> getQueryResult(Map<Object, Object> paraMap) {
         return null;
     }
 

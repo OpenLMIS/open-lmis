@@ -400,7 +400,7 @@ public interface FacilityMapper {
             "ORDER BY facility_types.name, facilities.name")
     @Results(value = {
             @Result(property = "geographicZone", column = "geographicZoneId", javaType = Integer.class,
-                    one = @One(select = "org.openlmis.core.repository.mapper.GeographicZoneMapper.getById")),
+                    one = @One(select = "org.openlmis.core.repository.mapper.GeographicZoneMapper.getWithParentById")),
             @Result(property = "facilityType", column = "typeId", javaType = Integer.class, one = @One(select = "getFacilityTypeById")),
             @Result(property = "operatedBy", column = "operatedById", javaType = Integer.class, one = @One(select = "getFacilityOperatorById"))
     })
