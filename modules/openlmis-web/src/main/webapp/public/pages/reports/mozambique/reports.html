@@ -18,6 +18,11 @@
      openlmis-message="menu.report.stockout.all.reports"></a>
 </li>
 
+<li ng-show="hasPermission('VIEW_REQUISITION_REPORT')">
+  <a href="/public/pages/reports/mozambique/index.html#/requisition"
+     openlmis-message="menu.report.requisition.reports"></a>
+</li>
+
 <li ng-show="hasPermission('VIEW_ADJUSTMENT_OCCURRENCES_REPORT') && isAdjustmentOccurrencesReportOn">
   <a href="/public/pages/reports/mozambique/index.html#/adjustment"
      openlmis-message="menu.report.adjustment.occurrences"></a>
@@ -28,14 +33,9 @@
      openlmis-message="menu.report.over.stock.products"></a>
 </li>
 
-<li ng-show="hasPermission('VIEW_EXPIRED_PRODUCTS_REPORT')">
-  <a href="/public/pages/reports/mozambique/index.html#/expired-products"
-     openlmis-message="menu.report.expired.products"></a>
-</li>
-
-<li ng-show="hasPermission('VIEW_REQUISITION_REPORT')">
-  <a href="/public/pages/reports/mozambique/index.html#/requisition"
-     openlmis-message="menu.report.requisition.reports"></a>
+<li ng-show="hasPermission('VIEW_EXPIRY_DATES_REPORT') && isExpiryDatesToggleOn && isLotExpiryDatesToggleOff">
+  <a href="/public/pages/reports/mozambique/index.html#/expiry-dates"
+     openlmis-message="menu.report.expiry.dates"></a>
 </li>
 
 <li ng-show="hasPermission('VIEW_EXPIRY_DATES_REPORT') && isExpiryDatesToggleOn && isLotExpiryDatesToggleOn">
@@ -43,9 +43,14 @@
      openlmis-message="menu.report.expiry.dates"></a>
 </li>
 
-<li ng-show="hasPermission('VIEW_EXPIRY_DATES_REPORT') && isExpiryDatesToggleOn && isLotExpiryDatesToggleOff">
-  <a href="/public/pages/reports/mozambique/index.html#/expiry-dates"
-     openlmis-message="menu.report.expiry.dates"></a>
+<li ng-show="hasPermission('VIEW_EXPIRED_PRODUCTS_REPORT')">
+  <a href="/public/pages/reports/mozambique/index.html#/expired-products"
+     openlmis-message="menu.report.expired.products"></a>
+</li>
+
+<li ng-show="hasPermission('VIEW_EXPIRING_PRODUCTS_REPORT')">
+  <a href="/public/pages/reports/mozambique/index.html#/expiring-products"
+     openlmis-message="menu.report.expiring.products"></a>
 </li>
 
 <li ng-show="hasPermission('VIEW_TRACER_DRUGS_REPORT') && isTracerDrugsReportToggleOn">
@@ -58,19 +63,19 @@
      openlmis-message="menu.report.nos.drugs"></a>
 </li>
 
-<li ng-show="hasPermission('VIEW_EXPIRING_PRODUCTS_REPORT')">
-  <a href="/public/pages/reports/mozambique/index.html#/expiring-products"
-     openlmis-message="menu.report.expiring.products"></a>
+<li ng-show="hasPermission('VIEW_RAPID_TEST_REPORTS') && isRapidTestReportOn">
+  <a href="/public/pages/reports/mozambique/index.html#/rapid-test"
+     openlmis-message="menu.report.rapid.test.report"></a>
+</li>
+
+<li ng-show="hasPermission('VIEW_AL_REPORT')">
+  <a href="/public/pages/reports/mozambique/index.html#/al-report"
+     openlmis-message="menu.report.al.report"></a>
 </li>
 
 <li ng-show="hasPermission('VIEW_CONSUMPTION_MOVEMENTS_REPORT') && isConsumptionMovementsReportOn">
   <a href="/public/pages/reports/mozambique/index.html#/consumption"
      openlmis-message="menu.report.consumption.movements"></a>
-</li>
-
-<li ng-show="hasPermission('VIEW_RAPID_TEST_REPORTS') && isRapidTestReportOn">
-  <a href="/public/pages/reports/mozambique/index.html#/rapid-test"
-     openlmis-message="menu.report.rapid.test.report"></a>
 </li>
 
 <li ng-show="hasPermission('VIEW_TABLET_INFO_REPORT')">
