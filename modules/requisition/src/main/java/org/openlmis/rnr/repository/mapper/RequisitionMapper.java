@@ -159,7 +159,8 @@ public interface RequisitionMapper {
           "WHERE programid = #{programid}"}
   )
   @Results(value = {
-          @Result(property = "facility.id", column = "facilityId"),
+          @Result(property = "facility", javaType = Facility.class, column = "facilityId",
+                  one = @One(select = "org.openlmis.core.repository.mapper.FacilityMapper.getById")),
           @Result(property = "program", javaType = Program.class, column = "programId",
                   one = @One(select = "org.openlmis.core.repository.mapper.ProgramMapper.getById")),
           @Result(property = "period.id", column = "periodId"),
