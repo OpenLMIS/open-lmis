@@ -95,11 +95,16 @@ public class WorkbookCreator {
             header.createCell(headerCellIndex).setCellValue(reportHeader);
             headerCellIndex++;
         }
-        for (Object reportContentMap : reportContentList) {
+        for (Object reportLineContent : reportContentList) {
             Row itemRow = sheet.createRow(rowIndex++);
 
             for (int cellIndex = 0; cellIndex < headerKeys.length; cellIndex++) {
-                Object cellWrapper = ((HashMap) reportContentMap).get(headerKeys[cellIndex]);
+                Object cellWrapper;
+                if (reportLineContent instanceof List) {
+                    cellWrapper = ((List)reportLineContent).get(cellIndex);
+                } else {
+                    cellWrapper = ((HashMap)reportLineContent).get(headerKeys[cellIndex]);
+                }
                 if (cellWrapper instanceof String && headerKeys[cellIndex].equals(REPORT_HEADER_KEY_DATE)) {
                     String formattedDateString = "";
                     try {
