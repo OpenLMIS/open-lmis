@@ -17,7 +17,7 @@
                          load-report="loadReport()"></date-picker-container>
   <hr/>
 
-  <div ng-show="true">
+  <div ng-show="alReportObject">
     <div class="search-field">
       <h4 openlmis-message="label.search"></h4>
       <input type="text" ng-change="filterAndSort()" ng-model="filterText"/>
@@ -68,41 +68,24 @@
 
         <tr>
           <th openlmis-message="label.al.hf"></th>
-          <th>ddd</th>
-          <th>dddasd</th>
-          <th>fff</th>
-          <th>a</th>
-          <th>ddd</th>
-          <th>asdf</th>
-          <th>asdf</th>
-          <th>ddd</th>
+          <td ng-repeat="value in alReportObject.hf track by $index">{{ value }}</td>
         </tr>
 
         <tr>
           <th openlmis-message="label.al.chw"></th>
-          <th>ddd</th>
-          <th>dddasd</th>
-          <th>fff</th>
-          <th>a</th>
-          <th>ddd</th>
-          <th>asdf</th>
-          <th>asdf</th>
-          <th>ddd</th>
+          <td ng-repeat="value in alReportObject.chw track by $index">{{ value }}</td>
         </tr>
 
         <tr>
           <th openlmis-message="label.al.total"></th>
-          <th>ddd</th>
-          <th>dddasd</th>
-          <th>fff</th>
-          <th>a</th>
-          <th>ddd</th>
-          <th>asdf</th>
-          <th>asdf</th>
-          <th>ddd</th>
+          <td ng-repeat="value in alReportObject.total track by $index">{{ value }}</td>
         </tr>
       </table>
     </div>
 
+  </div>
+
+  <div class="report-subtitle" ng-show="responseNoData">
+    <h3 openlmis-message="label.report.empty"></h3>
   </div>
 </div>
