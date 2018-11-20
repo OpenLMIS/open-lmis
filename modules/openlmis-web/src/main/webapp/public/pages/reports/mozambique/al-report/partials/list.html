@@ -1,3 +1,108 @@
-<div>
-    this is al report
+<div class="al-report">
+  <div id="control-bar">
+    <h3 class="report-title" openlmis-message="title.al.report"></h3>
+    <div ng-include="'/public/pages/reports/mozambique/province-selection.html'"></div>
+    <div ng-include="'/public/pages/reports/mozambique/district-selection.html'"></div>
+    <div ng-include="'/public/pages/reports/mozambique/facility-selection.html'"></div>
+    <div ng-include="'/public/pages/reports/mozambique/date-selection.html'"></div>
+
+    <div class="report-selection">
+      <input type="submit" class="btn btn-primary" ng-click="loadReport()" openlmis-message="button.generateReport"/>
+    </div>
+    <div style="clear: both"></div>
+  </div>
+
+  <hr/>
+  <date-picker-container get-time-range="getTimeRange(dateRange)" picker-type="period"
+                         load-report="loadReport()"></date-picker-container>
+  <hr/>
+
+  <div ng-show="true">
+    <div class="search-field">
+      <h4 openlmis-message="label.search"></h4>
+      <input type="text" ng-change="filterAndSort()" ng-model="filterText"/>
+    </div>
+    <div class="al-report--table">
+      <table class="table table-condensed table-bordered table-striped header-table">
+        <tr class="al-report--table-header">
+          <th class="table--body-100" rowspan="2"></th>
+          <th class="table--body-350" colspan="2" openlmis-message="report.header.al.6x1"></th>
+          <th class="table--body-350" colspan="2" openlmis-message="report.header.al.6x2"></th>
+          <th class="table--body-350" colspan="2" openlmis-message="report.header.al.6x3"></th>
+          <th class="table--body-350" colspan="2" openlmis-message="report.header.al.6x4"></th>
+        </tr>
+        <tr class="al-report--table-sub-header">
+          <th>
+            <div openlmis-message="report.header.al.treatment"></div>
+            <div class="normal-font" openlmis-message="report.header.al.month"></div>
+          </th>
+          <th>
+            <div openlmis-message="report.header.al.existentstock"></div>
+            <div class="normal-font" openlmis-message="report.header.al.period"></div>
+          </th>
+          <th>
+            <div openlmis-message="report.header.al.treatment"></div>
+            <div class="normal-font" openlmis-message="report.header.al.month"></div>
+          </th>
+          <th>
+            <div openlmis-message="report.header.al.existentstock"></div>
+            <div class="normal-font" openlmis-message="report.header.al.period"></div>
+          </th>
+          <th>
+            <div openlmis-message="report.header.al.treatment"></div>
+            <div class="normal-font" openlmis-message="report.header.al.month"></div>
+          </th>
+          <th>
+            <div openlmis-message="report.header.al.existentstock"></div>
+            <div class="normal-font" openlmis-message="report.header.al.period"></div>
+          </th>
+          <th>
+            <div openlmis-message="report.header.al.treatment"></div>
+            <div class="normal-font" openlmis-message="report.header.al.month"></div>
+          </th>
+          <th>
+            <div openlmis-message="report.header.al.existentstock"></div>
+            <div class="normal-font" openlmis-message="report.header.al.period"></div>
+          </th>
+        </tr>
+
+        <tr>
+          <th openlmis-message="label.al.hf"></th>
+          <th>ddd</th>
+          <th>dddasd</th>
+          <th>fff</th>
+          <th>a</th>
+          <th>ddd</th>
+          <th>asdf</th>
+          <th>asdf</th>
+          <th>ddd</th>
+        </tr>
+
+        <tr>
+          <th openlmis-message="label.al.chw"></th>
+          <th>ddd</th>
+          <th>dddasd</th>
+          <th>fff</th>
+          <th>a</th>
+          <th>ddd</th>
+          <th>asdf</th>
+          <th>asdf</th>
+          <th>ddd</th>
+        </tr>
+
+        <tr>
+          <th openlmis-message="label.al.total"></th>
+          <th>ddd</th>
+          <th>dddasd</th>
+          <th>fff</th>
+          <th>a</th>
+          <th>ddd</th>
+          <th>asdf</th>
+          <th>asdf</th>
+          <th>ddd</th>
+        </tr>
+      </table>
+    </div>
+
+  </div>
 </div>
