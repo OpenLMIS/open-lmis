@@ -43,10 +43,10 @@ public class ALReportGenerator extends AbstractReportModelGenerator {
         if (null != paraMap.get("provinceId") && null == paraMap.get("districtId")) {
             rnrs = requisitionService.alReportRequisitionsByZoneIdAndDate(
                     Integer.parseInt(paraMap.get("provinceId").toString()), start, end);
-        }else if (null != paraMap.get("districtId") && null == paraMap.get("facilityId")) {
+        } else if (null != paraMap.get("districtId") && null == paraMap.get("facilityId")) {
             rnrs = requisitionService.alReportRequisitionsByZoneIdAndDate(
                     Integer.parseInt(paraMap.get("districtId").toString()), start, end);
-        } else if(null != paraMap.get("facilityId")) {
+        } else if (null != paraMap.get("facilityId")) {
             rnrs = requisitionService.alReportRequisitionsByFacilityId(
                     Integer.parseInt(paraMap.get("facilityId").toString()), start, end);
         } else {
@@ -62,7 +62,7 @@ public class ALReportGenerator extends AbstractReportModelGenerator {
         for (Rnr rnr : rnrs) {
             List<RegimenLineItem> list = rnr.getRegimenLineItems();
             for (RegimenLineItem regimenLineItem : list) {
-                if(!map.containsKey(regimenLineItem.getName())) {
+                if (!map.containsKey(regimenLineItem.getName())) {
                     AlRegimenStat stat = new AlRegimenStat();
                     map.put(regimenLineItem.getName(), stat);
                 }
@@ -91,7 +91,7 @@ public class ALReportGenerator extends AbstractReportModelGenerator {
 
     @Override
     protected Object getReportContent(Map<Object, Object> paraMap, Map<String, Object> queryResult) {
-        Map<String, AlRegimenStat> map = (Map<String, AlRegimenStat>)queryResult.get(KEY_QUERY_RESULT);
+        Map<String, AlRegimenStat> map = (Map<String, AlRegimenStat>) queryResult.get(KEY_QUERY_RESULT);
         List<List<String>> list = initReportContentList();
 
         for (String item : ITEMS) {
