@@ -94,6 +94,7 @@ function OverStockReportController($scope, $controller, $filter, DateFormatServi
           productName: overStock.productName,
           lotNumber: lot.lotNumber,
           expiryDate: lot.expiryDate,
+          expiryDateFormat: DateFormatService.formatDateWithLocale(lot.expiryDate),
           stockOnHandOfLot: lot.stockOnHandOfLot
         };
         
