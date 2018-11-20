@@ -1,0 +1,122 @@
+<div class="rapid-test-form">
+  <table cellpadding="0" cellspacing="0">
+    <tr>
+      <td rowspan="3" class="background-black banner-text black-width">
+        <div class="banner-text text-nowrap">CMAM - TDR</div>
+      </td>
+      <td style="width: 100px"><span style="float: left" class="view-table-logo"></span></td>
+      <td class="text__left" style="padding-left: 10px">
+        <h6 openlmis-message="view.rnr.republic.of.mozambique"></h6>
+        <h6 openlmis-message="view.rnr.ministry.of.health"></h6>
+        <h6 openlmis-message="view.rnr.central.medicines.and.medical.arricles"></h6>
+      </td>
+    </tr>
+
+    <tr>
+      <td colspan="2" class="text__center">
+        <span openlmis-message="view.rnr.healthFacility"></span>:
+        <span class="font-bold">{{rnr.facility.name}}</span>
+      </td>
+    </tr>
+  </table>
+
+  <table cellpadding="0" cellspacing="0" style="margin-top: 100px">
+    <tr>
+      <td colspan="3" style="border: 0;">
+        &nbsp;
+        <span openlmis-message="view.rnr.mmia.month"></span>
+        <span> : </span> 1月
+      </td>
+      <td colspan="3" style="border: 0;">
+        &nbsp;
+        <span openlmis-message="view.rnr.mmia.year"></span>
+        <span> : </span> 1年
+      </td>
+    </tr>
+    <tr>
+      <td rowspan="3" class="background-black black-width"></td>
+      <td rowspan="3">HF/CHW</td>
+      <td colspan="8" class="report--title height-50">
+        <span class="report--title-font" openlmis-message="view.rnr.rapid.test.thirdTitle"></span>
+        <span class="report--subtitle" openlmis-message="view.rnr.rapid.test.attentiontests"></span>
+      </td>
+    </tr>
+    <tr class="font-bold">
+      <td colspan="4">abc</td>
+      <td colspan="4">abc</td>
+    </tr>
+    <tr class="font-bold">
+      <td>6 X 1</td>
+      <td>6 X 2</td>
+      <td>6 X 3</td>
+      <td>6 X 4</td>
+      <td>6 X 1</td>
+      <td>6 X 2</td>
+      <td>6 X 3</td>
+      <td>6 X 4</td>
+    </tr>
+    <tr>
+      <td class="background-black black-width">1</td>
+      <td>HF</td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+    </tr>
+    <tr>
+      <td class="background-black black-width">2</td>
+      <td>CHW</td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+    </tr>
+    <tr>
+      <td class="background-black black-width"></td>
+      <td>Total</td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+    </tr>
+    <tr>
+      <td colspan="5" class="text__left" style="padding-left: 10px; border: 0">COMPLETED BY: </td>
+      <td colspan="5" class="text__left" style="padding-left: 10px; border: 0">DATE: </td>
+    </tr>
+    <tr>
+      <td colspan="10" class="text__left" style="padding-left: 10px; border: 0">APPROVED BY: </td>
+    </tr>
+  </table>
+
+  <div style="border: 1px solid black; margin-top: 100px; padding-left: 5px; font-weight: bold; width: 60%">
+      NB. Relatório segue o calendário estatistico <br>
+      Nao pode ser criado sem inventario do fim do periodo estatistico <br>
+      Informação de stock é automatizada, vindo do inventario <br>
+      calculo dos totais tambem automatizados <br>
+      mes, ano, distrito provincia, nome de unidade sanitaria automatizados
+  </div>
+
+  <div class="align-right">
+    <button class="btn btn-primary btn-download btn-download-pdf" ng-click="downloadPdf()" openlmis-message="view.rnr.mmia.download.button"></button>
+  </div>
+
+  <div class="align-right">
+    <button class="btn btn-primary btn-download btn-download-simam" ng-click="downloadSimam()" openlmis-message="view.rnr.download.simam.button"></button>
+  </div>
+</div>
+
