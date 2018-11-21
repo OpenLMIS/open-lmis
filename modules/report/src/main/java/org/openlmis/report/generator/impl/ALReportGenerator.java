@@ -22,6 +22,8 @@ public class ALReportGenerator extends AbstractReportModelGenerator {
 
     private final static String KEY_QUERY_RESULT = "KEY_QUERY_RESULT";
 
+    private final static String KEY_NO_DATA = "KEY_NO_DATA";
+
     private final static String[] ITEMS = {"Consultas AL US/APE Malaria 1x6",
             "Consultas AL STOCK Malaria 1x6",
             "Consultas AL US/APE Malaria 2x6",
@@ -53,7 +55,11 @@ public class ALReportGenerator extends AbstractReportModelGenerator {
             rnrs = requisitionService.alReportRequisitionsByStartAndEndDate(start, end);
         }
         Map<String, Object> result = new HashMap<>();
-        result.put(KEY_QUERY_RESULT, stat(rnrs));
+        Map<String, AlRegimenStat> map = stat(rnrs);
+        if (map.size() == 0) {
+            paraMap.put(KEY_NO_DATA, true);
+        }
+        result.put(KEY_QUERY_RESULT, map);
         return result;
     }
 
@@ -93,7 +99,6 @@ public class ALReportGenerator extends AbstractReportModelGenerator {
     protected Object getReportContent(Map<Object, Object> paraMap, Map<String, Object> queryResult) {
         Map<String, AlRegimenStat> map = (Map<String, AlRegimenStat>) queryResult.get(KEY_QUERY_RESULT);
         List<List<String>> list = initReportContentList();
-
         for (String item : ITEMS) {
             fillReportContent(list, map.get(item));
         }
@@ -102,9 +107,15 @@ public class ALReportGenerator extends AbstractReportModelGenerator {
     }
 
     private void fillReportContent(List<List<String>> list, AlRegimenStat alRegimenStat) {
-        list.get(0).add(String.valueOf(alRegimenStat.getHf()));
-        list.get(1).add(String.valueOf(alRegimenStat.getChw()));
-        list.get(2).add(String.valueOf(alRegimenStat.getTotal()));
+        if (null != alRegimenStat) {
+            list.get(0).add(String.valueOf(alRegimenStat.getHf()));
+            list.get(1).add(String.valueOf(alRegimenStat.getChw()));
+            list.get(2).add(String.valueOf(alRegimenStat.getTotal()));
+        } else {
+            list.get(0).add(String.valueOf(""));
+            list.get(1).add(String.valueOf(""));
+            list.get(2).add(String.valueOf(""));
+        }
     }
 
     private List<List<String>> initReportContentList() {
@@ -145,7 +156,11 @@ public class ALReportGenerator extends AbstractReportModelGenerator {
 
     @Override
     protected Object reportDataForFrontEnd(Map<Object, Object> paraMap) {
-        return generate(paraMap).get("KEY_EXCEL_CONTENT");
+        Map<String, Object> map = generate(paraMap);
+        if (paraMap.containsKey(KEY_NO_DATA)) {
+            return new ArrayList<>();
+        }
+        return map.get("KEY_EXCEL_CONTENT");
     }
 
     @Setter

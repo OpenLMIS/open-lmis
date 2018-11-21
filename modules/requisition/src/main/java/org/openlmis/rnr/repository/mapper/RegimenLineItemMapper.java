@@ -68,7 +68,7 @@ public interface RegimenLineItemMapper {
     "patientsOnTreatmentChildren = #{patientsOnTreatmentChildren}, " +
     "patientsToInitiateTreatmentChildren = #{patientsToInitiateTreatmentChildren}, " +
     "patientsStoppedTreatmentChildren = #{patientsStoppedTreatmentChildren} ," +
-
+    "hf = #{hf}, chw = #{chw}," +
     "remarks = #{remarks},modifiedBy = #{modifiedBy}, modifiedDate =CURRENT_TIMESTAMP where id=#{id}")
   void update(RegimenLineItem regimenLineItem);
 }

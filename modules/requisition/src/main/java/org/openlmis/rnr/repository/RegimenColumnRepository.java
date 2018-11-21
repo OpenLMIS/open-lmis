@@ -40,6 +40,7 @@ public class RegimenColumnRepository {
   public void save(RegimenTemplate regimenTemplate, Long userId) {
     for (Column regimenColumn : regimenTemplate.getColumns()) {
       regimenColumn.setModifiedBy(userId);
+      ((RegimenColumn)regimenColumn).setProgramId(regimenTemplate.getProgramId());
       if (regimenColumn.getId() == null) {
         regimenColumn.setCreatedBy(userId);
         mapper.insert((RegimenColumn) regimenColumn, regimenTemplate.getProgramId());
