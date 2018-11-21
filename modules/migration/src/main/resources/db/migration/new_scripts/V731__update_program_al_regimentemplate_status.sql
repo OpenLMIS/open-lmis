@@ -1,0 +1,1 @@
+UPDATE programs SET regimenTemplateConfigured = true WHERE id = 5;

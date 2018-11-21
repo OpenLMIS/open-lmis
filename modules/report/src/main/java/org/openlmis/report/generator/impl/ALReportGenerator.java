@@ -73,8 +73,12 @@ public class ALReportGenerator extends AbstractReportModelGenerator {
                     map.put(regimenLineItem.getName(), stat);
                 }
                 AlRegimenStat alRegimenStat = map.get(regimenLineItem.getName());
-                alRegimenStat.setChw(alRegimenStat.getChw() + regimenLineItem.getChw());
-                alRegimenStat.setHf(alRegimenStat.getHf() + regimenLineItem.getHf());
+                if (null != regimenLineItem.getChw()) {
+                    alRegimenStat.setChw(alRegimenStat.getChw() + regimenLineItem.getChw());
+                }
+                if (null != regimenLineItem.getHf()) {
+                    alRegimenStat.setHf(alRegimenStat.getHf() + regimenLineItem.getHf());
+                }
             }
         }
         return map;
