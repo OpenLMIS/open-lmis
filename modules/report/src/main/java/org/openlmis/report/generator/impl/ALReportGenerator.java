@@ -120,9 +120,9 @@ public class ALReportGenerator extends AbstractReportModelGenerator {
 
     private List<List<String>> initReportContentList() {
         List<List<String>> list = new ArrayList<>();
-        list.add(new ArrayList<>());
-        list.add(new ArrayList<>());
-        list.add(new ArrayList<>());
+        list.add(new ArrayList<String>());
+        list.add(new ArrayList<String>());
+        list.add(new ArrayList<String>());
         list.get(0).add("HF");
         list.get(1).add("CHW");
         list.get(2).add("TOTAL");
