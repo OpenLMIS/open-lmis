@@ -372,7 +372,8 @@ function RequisitionReportController($scope, $controller, RequisitionReportServi
       "Balance Requisition": "view-requisition-via/",
       "Requisição Balancete": "view-requisition-via/",
       "ESS_MEDS": "view-requisition-via/",
-      "MMIA": "view-requisition-mmia/"
+      "MMIA": "view-requisition-mmia/",
+      "AL": "view-requisition-al/"
     };
 
     var selectedItem = $scope.selectedItems[0];

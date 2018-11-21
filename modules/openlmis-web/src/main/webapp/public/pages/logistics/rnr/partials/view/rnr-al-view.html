@@ -25,12 +25,12 @@
       <td colspan="3" style="border: 0;">
         &nbsp;
         <span openlmis-message="view.rnr.mmia.month"></span>
-        <span> : </span> 1月
+        <span> : </span> {{month}}
       </td>
       <td colspan="3" style="border: 0;">
         &nbsp;
         <span openlmis-message="view.rnr.mmia.year"></span>
-        <span> : </span> 1年
+        <span> : </span> {{year}}
       </td>
     </tr>
     <tr>
@@ -95,11 +95,11 @@
       <td></td>
     </tr>
     <tr>
-      <td colspan="5" class="text__left" style="padding-left: 10px; border: 0">COMPLETED BY: </td>
+      <td colspan="5" class="text__left" style="padding-left: 10px; border: 0">COMPLETED BY: {{submitterSignature}}</td>
       <td colspan="5" class="text__left" style="padding-left: 10px; border: 0">DATE: </td>
     </tr>
     <tr>
-      <td colspan="10" class="text__left" style="padding-left: 10px; border: 0">APPROVED BY: </td>
+      <td colspan="10" class="text__left" style="padding-left: 10px; border: 0">APPROVED BY: {{approverSignature}}</td>
     </tr>
   </table>
 
