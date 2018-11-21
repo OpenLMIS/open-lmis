@@ -17,7 +17,7 @@
                          load-report="loadReport()"></date-picker-container>
   <hr/>
 
-  <div ng-show="alReportObject">
+  <div ng-show="alReportObject && !responseNoData">
     <div class="search-field">
       <h4 openlmis-message="label.search"></h4>
       <input type="text" ng-change="filterAndSort()" ng-model="filterText"/>
@@ -83,6 +83,9 @@
       </table>
     </div>
 
+    <div class="over-flow-hidden" ng-if="!responseNoData">
+      <div ng-include="'/public/pages/reports/mozambique/export-data-button.html'"></div>
+    </div>
   </div>
 
   <div class="report-subtitle" ng-show="responseNoData">

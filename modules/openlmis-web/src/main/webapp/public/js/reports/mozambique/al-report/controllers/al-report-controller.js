@@ -1,4 +1,4 @@
-function ALReportController($scope, $controller, $filter, ReportDataServices) {
+function ALReportController($scope, $controller, $filter, ReportDataServices, messageService) {
   $controller("BaseProductReportController", {$scope: $scope});
   
   $scope.$on('$viewContentLoaded', function () {
@@ -27,6 +27,21 @@ function ALReportController($scope, $controller, $filter, ReportDataServices) {
           $scope.responseNoData = _.isEmpty($scope.alReportObject);
         });
     }
+  };
+  
+  $scope.exportXLSX = function () {
+    var reportParams = $scope.reportParams;
+    var reportParamsObject = {
+      provinceId: reportParams.provinceId.toString(),
+      districtId: reportParams.districtId.toString(),
+      facilityId: reportParams.facilityId.toString(),
+      endTime: $filter('date')(reportParams.endTime, "yyyy-MM-dd") + " 23:59:59",
+      startTime: $filter('date')(reportParams.startTime, "yyyy-MM-dd") + " 23:59:59",
+      reportType: 'alReport'
+    };
+    
+    ReportDataServices.getDataForExport(reportParamsObject,
+      messageService.get('report.file.al.report'));
   };
   
   function formatALResponseData(responseData) {
