@@ -137,10 +137,10 @@ public class ALReportGenerator extends AbstractReportModelGenerator {
     protected List<Map<String, String>> getReportMergedRegions(Map<Object, Object> paraMap, Map<String, Object> queryResult) {
 
         List<Map<String, String>> mergedRegions = new ArrayList<>();
-        mergedRegions.add(createMergedRegion("0", "1", "0", "0", ""));
+        mergedRegions.add(createMergedRegion("2", "3", "0", "0", ""));
         for (int i = 1; i < 9; i += 2) {
-            mergedRegions.add(createMergedRegion("0",
-                    "0", String.valueOf(i), String.valueOf(i + 1), ""));
+            mergedRegions.add(createMergedRegion("2",
+                    "2", String.valueOf(i), String.valueOf(i + 1), ""));
         }
         return mergedRegions;
     }
@@ -148,14 +148,41 @@ public class ALReportGenerator extends AbstractReportModelGenerator {
     @Override
     protected Object getReportTitle(Map<Object, Object> paraMap) {
         List<List<String>> title = new ArrayList<>();
+
+        title.add(regionTitle(paraMap));
+        title.add(generationDate(paraMap));
+        title.add(title());
+        return title;
+    }
+
+    private List<String> regionTitle(Map<Object, Object> paraMap) {
+        List<String> list = new ArrayList<>();
+        list.add(getMessage("report.header.province"));
+        list.add(null != paraMap.get("province") ? paraMap.get("province").toString() : "");
+        list.add(getMessage("report.header.district"));
+        list.add(null != paraMap.get("district") ? paraMap.get("district").toString() : "");
+        list.add(getMessage("report.header.facility"));
+        list.add(null != paraMap.get("facility") ? paraMap.get("facility").toString() : "");
+        return list;
+    }
+
+    private List<String> title() {
         List<String> list = new ArrayList<>();
         list.add("");
         for (int i = 1; i < 5; ++i) {
             list.add("6x" + i);
             list.add("6x" + i);
         }
-        title.add(list);
-        return title;
+        return list;
+    }
+
+    private List<String> generationDate(Map<Object, Object> paraMap) {
+        List<String> generationDate = new ArrayList<>();
+        generationDate.add(getMessage("report.header.generated.for"));
+
+        generationDate.add(DateUtil.transform(paraMap.get("startTime").toString(), DateUtil.FORMAT_DATE_TIME, "dd/MM/yyyy") + "=" +
+                DateUtil.transform(paraMap.get("endTime").toString(), DateUtil.FORMAT_DATE_TIME, "dd/MM/yyyy"));
+        return generationDate;
     }
 
     @Override
