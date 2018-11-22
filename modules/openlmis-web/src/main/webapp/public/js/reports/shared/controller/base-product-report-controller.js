@@ -146,7 +146,9 @@ function BaseProductReportController($scope, $filter, ProductReportService, $cac
     var selectedFacility = _.find($scope.facilities, function (facility) {
       return facility.id == $scope.reportParams.facilityId;
     });
-
+  
+    getNames(selectedFacility);
+    
     $scope.reportParams.districtId = !selectedFacility ? undefined : selectedFacility.geographicZoneId;
     $scope.reportParams.provinceId = !selectedFacility ? undefined : $scope.getParent(selectedFacility.geographicZoneId).id;
   };
@@ -305,6 +307,14 @@ function BaseProductReportController($scope, $filter, ProductReportService, $cac
     return _.find(geographicZoneLevels, function (geographicZoneLevel) {
       return geographicZoneLevel.code == code;
     });
+  }
+  
+  function getNames(selectedFacility) {
+    if (selectedFacility) {
+      $scope.reportParams.facilityName = selectedFacility.name;
+      $scope.reportParams.districtName = $scope.getGeoZone(selectedFacility.geographicZoneId).name;
+      $scope.reportParams.provinceName = $scope.getParent(selectedFacility.geographicZoneId).name;
+    }
   }
 
   $scope.getGeographicZoneById = function (zones, zoneId) {
