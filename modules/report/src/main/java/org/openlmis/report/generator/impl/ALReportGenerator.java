@@ -180,7 +180,7 @@ public class ALReportGenerator extends AbstractReportModelGenerator {
         List<String> generationDate = new ArrayList<>();
         generationDate.add(getMessage("report.header.generated.for"));
 
-        generationDate.add(DateUtil.transform(paraMap.get("startTime").toString(), DateUtil.FORMAT_DATE_TIME, "dd/MM/yyyy") + "=" +
+        generationDate.add(DateUtil.transform(paraMap.get("startTime").toString(), DateUtil.FORMAT_DATE_TIME, "dd/MM/yyyy") + "-" +
                 DateUtil.transform(paraMap.get("endTime").toString(), DateUtil.FORMAT_DATE_TIME, "dd/MM/yyyy"));
         return generationDate;
     }
