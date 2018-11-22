@@ -6,6 +6,12 @@ function ViewRnrALController($scope, $route, Requisitions, messageService, DateF
     $scope.loadALDetail();
   });
 
+  $scope.$on('messagesPopulated', function () {
+    $scope.initMonth();
+    $scope.initDate();
+    $scope.initContent();
+  });
+
   $(".btn-download-pdf").hide();
   $(".btn-download-simam").hide();
   $scope.loadALDetail = function () {
