@@ -1,16 +1,9 @@
-function ViewRnrALController($scope, $route, Requisitions, messageService, Requisitions, downloadPdfService, downloadSimamService) {
-  $scope.rnrLineItems = [];
-  $scope.regimens =[];
-  $scope.regimeTotal = 0;
+function ViewRnrALController($scope, $route, Requisitions, messageService, DateFormatService, downloadPdfService, downloadSimamService) {
 
-  $scope.patient = [];
+  $scope.rnrLineItems = [];
 
   $scope.$on('$viewContentLoaded', function () {
     $scope.loadALDetail();
-  });
-
-  $scope.$on('messagesPopulated', function () {
-    $scope.initMonth();
   });
 
   $(".btn-download-pdf").hide();
@@ -18,17 +11,43 @@ function ViewRnrALController($scope, $route, Requisitions, messageService, Requi
   $scope.loadALDetail = function () {
 
     Requisitions.get({id: $route.current.params.rnr, operation: "skipped"}, function (data) {
-        console.log(data);
         $scope.rnr = data.rnr;
         $scope.year = data.rnr.period.stringYear;
 
         $scope.initMonth();
+        $scope.initDate();
+        $scope.initContent();
 
         parseSignature($scope.rnr.rnrSignatures);
 
         downloadPdfService.init($scope, $scope.rnr.id);
         downloadSimamService.init($scope, $scope.rnr.id);
     });
+  };
+
+  $scope.initContent = function () {
+    var content = {};
+    content["Consultas AL US/APE Malaria"] = "Nº of treatments dispensed in the month";
+    content["Consultas AL STOCK Malaria"] = "Existent stock at the end of Period";
+
+    _.map($scope.rnr.regimenLineItems, function (item) {
+      var regimenItem = {};
+      regimenItem.hf = item.hf;
+      regimenItem.chw = item.chw;
+      regimenItem.total = item.chw + item.hf;
+      content[item.name] = regimenItem;
+    });
+
+    $scope.content = content;
+  };
+
+  $scope.initMonth = function () {
+    var month = "month." + $scope.rnr.period.stringEndDate.substr(3, 2);
+    $scope.month = messageService.get(month);
+  };
+
+  $scope.initDate = function () {
+    $scope.submittedDate = DateFormatService.formatDateWithLocaleNoDay($scope.rnr.submittedDate);
   };
 
   function parseSignature(signatures) {
@@ -40,54 +59,5 @@ function ViewRnrALController($scope, $route, Requisitions, messageService, Requi
       }
     });
   }
-
-  $scope.initMonth = function () {
-    var month = "month." + $scope.rnr.period.stringEndDate.substr(3, 2);
-    $scope.month = messageService.get(month);
-  };
-
-  var formatDate = function (submitiedDate) {
-    if (theOneItem.expirationDate) {
-      var splitDate = theOneItem.expirationDate.split('/');
-      var yearNumber = splitDate[2];
-      var monthNumber = splitDate[1];
-
-      var monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun",
-        "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"
-      ];
-
-      theOneItem.expirationDate = monthNames[monthNumber - 1] + " " + yearNumber;
-    }
-  };
-
-
-  $scope.initRegime = function () {
-    var regimens = _.groupBy($scope.rnr.regimenLineItems, function (item) {
-      return item.categoryName;
-    });
-
-    if (regimens.Adults === undefined) {
-      regimens.Adults = [];
-    }
-
-    if (regimens.Paediatrics === undefined) {
-      regimens.Paediatrics = [];
-    }
-
-    regimens.Adults.push({categoryName: 'Adults'});
-    regimens.Adults.push({categoryName: 'Adults'});
-
-    regimens.Paediatrics.push({categoryName: 'Paediatrics'});
-    regimens.Paediatrics.push({categoryName: 'Paediatrics'});
-
-    $scope.regimens = $scope.regimens.concat(regimens.Adults, regimens.Paediatrics);
-    calculateRegimeTotal($scope.rnr.regimenLineItems);
-  };
-
-  var calculateRegimeTotal = function (regimens) {
-    for (var i = 0; i < regimens.length; i++) {
-      $scope.regimeTotal += regimens[i].patientsOnTreatment;
-    }
-  };
 
 }

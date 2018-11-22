@@ -1,7 +1,7 @@
 <div class="rapid-test-form">
   <table cellpadding="0" cellspacing="0">
     <tr>
-      <td rowspan="3" class="background-black banner-text black-width">
+      <td rowspan="3" class="background-black banner-text black-width" style="padding-bottom: 30px">
         <div class="banner-text text-nowrap">CMAM - TDR</div>
       </td>
       <td style="width: 100px"><span style="float: left" class="view-table-logo"></span></td>
@@ -42,8 +42,8 @@
       </td>
     </tr>
     <tr class="font-bold">
-      <td colspan="4">abc</td>
-      <td colspan="4">abc</td>
+      <td colspan="4">{{content["Consultas AL US/APE Malaria"]}}</td>
+      <td colspan="4">{{content["Consultas AL STOCK Malaria"]}}</td>
     </tr>
     <tr class="font-bold">
       <td>6 X 1</td>
@@ -58,45 +58,45 @@
     <tr>
       <td class="background-black black-width">1</td>
       <td>HF</td>
-      <td></td>
-      <td></td>
-      <td></td>
-      <td></td>
+      <td>{{content["Consultas AL US/APE Malaria 1x6"]["hf"]}}</td>
+      <td>{{content["Consultas AL US/APE Malaria 2x6"]["hf"]}}</td>
+      <td>{{content["Consultas AL US/APE Malaria 3x6"]["hf"]}}</td>
+      <td>{{content["Consultas AL US/APE Malaria 4x6"]["hf"]}}</td>
 
-      <td></td>
-      <td></td>
-      <td></td>
-      <td></td>
+      <td>{{content["Consultas AL STOCK Malaria 1x6"]["hf"]}}</td>
+      <td>{{content["Consultas AL STOCK Malaria 2x6"]["hf"]}}</td>
+      <td>{{content["Consultas AL STOCK Malaria 3x6"]["hf"]}}</td>
+      <td>{{content["Consultas AL STOCK Malaria 4x6"]["hf"]}}</td>
     </tr>
     <tr>
       <td class="background-black black-width">2</td>
       <td>CHW</td>
-      <td></td>
-      <td></td>
-      <td></td>
-      <td></td>
+      <td>{{content["Consultas AL US/APE Malaria 1x6"]["chw"]}}</td>
+      <td>{{content["Consultas AL US/APE Malaria 2x6"]["chw"]}}</td>
+      <td>{{content["Consultas AL US/APE Malaria 3x6"]["chw"]}}</td>
+      <td>{{content["Consultas AL US/APE Malaria 4x6"]["chw"]}}</td>
 
-      <td></td>
-      <td></td>
-      <td></td>
-      <td></td>
+      <td>{{content["Consultas AL STOCK Malaria 1x6"]["chw"]}}</td>
+      <td>{{content["Consultas AL STOCK Malaria 2x6"]["chw"]}}</td>
+      <td>{{content["Consultas AL STOCK Malaria 3x6"]["chw"]}}</td>
+      <td>{{content["Consultas AL STOCK Malaria 4x6"]["chw"]}}</td>
     </tr>
     <tr>
       <td class="background-black black-width"></td>
       <td>Total</td>
-      <td></td>
-      <td></td>
-      <td></td>
-      <td></td>
+      <td>{{content["Consultas AL US/APE Malaria 1x6"]["total"]}}</td>
+      <td>{{content["Consultas AL US/APE Malaria 2x6"]["total"]}}</td>
+      <td>{{content["Consultas AL US/APE Malaria 3x6"]["total"]}}</td>
+      <td>{{content["Consultas AL US/APE Malaria 4x6"]["total"]}}</td>
 
-      <td></td>
-      <td></td>
-      <td></td>
-      <td></td>
+      <td>{{content["Consultas AL STOCK Malaria 1x6"]["total"]}}</td>
+      <td>{{content["Consultas AL STOCK Malaria 2x6"]["total"]}}</td>
+      <td>{{content["Consultas AL STOCK Malaria 3x6"]["total"]}}</td>
+      <td>{{content["Consultas AL STOCK Malaria 4x6"]["total"]}}</td>
     </tr>
     <tr>
       <td colspan="5" class="text__left" style="padding-left: 10px; border: 0">COMPLETED BY: {{submitterSignature}}</td>
-      <td colspan="5" class="text__left" style="padding-left: 10px; border: 0">DATE: </td>
+      <td colspan="5" class="text__left" style="padding-left: 10px; border: 0">DATE: {{submittedDate}}</td>
     </tr>
     <tr>
       <td colspan="10" class="text__left" style="padding-left: 10px; border: 0">APPROVED BY: {{approverSignature}}</td>
