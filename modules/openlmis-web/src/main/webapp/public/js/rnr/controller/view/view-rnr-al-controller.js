@@ -27,8 +27,8 @@ function ViewRnrALController($scope, $route, Requisitions, messageService, DateF
 
   $scope.initContent = function () {
     var content = {};
-    content["Consultas AL US/APE Malaria"] = "Nº of treatments dispensed in the month";
-    content["Consultas AL STOCK Malaria"] = "Existent stock at the end of Period";
+    content["Consultas AL US/APE Malaria"] = messageService.get("report.header.al.treatment") + messageService.get("report.header.al.month");
+    content["Consultas AL STOCK Malaria"] = messageService.get("report.header.al.existentstock") + messageService.get("report.header.al.period");
 
     _.map($scope.rnr.regimenLineItems, function (item) {
       var regimenItem = {};
