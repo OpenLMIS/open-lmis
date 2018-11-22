@@ -1,5 +1,6 @@
 function ALReportController($scope, $controller, $filter, ReportDataServices, messageService) {
   $controller("BaseProductReportController", {$scope: $scope});
+  $scope.filterText = "";
   
   $scope.$on('$viewContentLoaded', function () {
     $scope.loadHealthFacilities();
@@ -23,8 +24,10 @@ function ALReportController($scope, $controller, $filter, ReportDataServices, me
       ReportDataServices
         .getProductList()
         .post(utils.pickEmptyObject(alReportParams), function (alReportResponse) {
-          $scope.alReportObject = formatALResponseData(alReportResponse.data);
-          $scope.responseNoData = _.isEmpty($scope.alReportObject);
+          var formattedALResponseData = formatALResponseData(alReportResponse.data);
+          $scope.total = formattedALResponseData.total || {};
+          $scope.HFAndCHWList = formattedALResponseData.HFAndCHWList || [];
+          $scope.displayHFAndCHWList = $scope.HFAndCHWList;
         });
     }
   };
@@ -47,12 +50,33 @@ function ALReportController($scope, $controller, $filter, ReportDataServices, me
       messageService.get('report.file.al.report'));
   };
   
+  $scope.filterAndSort = function () {
+    var regex = new RegExp($scope.filterText, "gi");
+  
+    $scope.displayHFAndCHWList = $scope.HFAndCHWList.filter(function (HFAndCHW) {
+      return _.some(HFAndCHW.value, function(value) {
+        return regex.test(value);
+      });
+    });
+  };
+  
   function formatALResponseData(responseData) {
     if (responseData.length >= 3) {
       return {
-        hf: responseData[0].splice(1, 8),
-        chw: responseData[1].splice(1, 8),
-        total: responseData[2].splice(1, 8)
+        total: {
+          name: 'total',
+          value: responseData[2].splice(1, 8),
+        },
+        HFAndCHWList: [
+          {
+            name: 'hf',
+            value: responseData[0].splice(1, 8),
+          },
+          {
+            name: 'chw',
+            value: responseData[1].splice(1, 8),
+          }
+        ]
       };
     }
     

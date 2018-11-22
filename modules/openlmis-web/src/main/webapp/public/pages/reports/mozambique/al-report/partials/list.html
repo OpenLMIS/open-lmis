@@ -16,7 +16,7 @@
                          load-report="loadReport()"></date-picker-container>
   <hr/>
 
-  <div ng-show="alReportObject && !responseNoData">
+  <div ng-show="HFAndCHWList.length > 0">
     <div class="search-field">
       <h4 openlmis-message="label.search"></h4>
       <input type="text" ng-change="filterAndSort()" ng-model="filterText"/>
@@ -65,29 +65,24 @@
           </th>
         </tr>
 
-        <tr>
-          <th openlmis-message="label.al.hf"></th>
-          <td ng-repeat="value in alReportObject.hf track by $index">{{ value }}</td>
-        </tr>
-
-        <tr>
-          <th openlmis-message="label.al.chw"></th>
-          <td ng-repeat="value in alReportObject.chw track by $index">{{ value }}</td>
+        <tr ng-repeat="HFAndCHW in displayHFAndCHWList">
+          <th openlmis-message="label.al.{{ HFAndCHW.name.toLowerCase() }}"></th>
+          <td ng-repeat="value in HFAndCHW.value track by $index">{{ value }}</td>
         </tr>
 
         <tr>
           <th openlmis-message="label.al.total"></th>
-          <td ng-repeat="value in alReportObject.total track by $index">{{ value }}</td>
+          <td ng-repeat="value in total.value track by $index">{{ value }}</td>
         </tr>
       </table>
     </div>
 
-    <div class="over-flow-hidden" ng-if="!responseNoData">
+    <div class="over-flow-hidden">
       <div ng-include="'/public/pages/reports/mozambique/export-data-button.html'"></div>
     </div>
   </div>
 
-  <div class="report-subtitle" ng-show="responseNoData">
+  <div class="report-subtitle" ng-show="HFAndCHWList.length === 0">
     <h3 openlmis-message="label.report.empty"></h3>
   </div>
 </div>
