@@ -13,7 +13,7 @@ function ALReportController($scope, $controller, $filter, ReportDataServices, me
       var reportParams = $scope.reportParams;
       
       var alReportParams = {
-        startTime: $filter('date')(reportParams.startTime, "yyyy-MM-dd") + " 00:00:00",
+        startTime: $filter('date')(reportParams.startTime, "yyyy-MM-dd") + " 23:59:59",
         endTime: $filter('date')(reportParams.endTime, "yyyy-MM-dd") + " 23:59:59",
         provinceId: reportParams.provinceId.toString(),
         districtId: reportParams.districtId.toString(),
@@ -38,7 +38,7 @@ function ALReportController($scope, $controller, $filter, ReportDataServices, me
       provinceId: reportParams.provinceId.toString(),
       districtId: reportParams.districtId.toString(),
       facilityId: reportParams.facilityId.toString(),
-      startTime: $filter('date')(reportParams.startTime, "yyyy-MM-dd") + " 00:00:00",
+      startTime: $filter('date')(reportParams.startTime, "yyyy-MM-dd") + " 23:59:59",
       endTime: $filter('date')(reportParams.endTime, "yyyy-MM-dd") + " 23:59:59",
       reportType: 'alReport',
       facility: reportParams.facilityName,
