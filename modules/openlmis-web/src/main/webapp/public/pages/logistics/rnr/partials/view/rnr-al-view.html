@@ -1,11 +1,11 @@
-<div class="rapid-test-form al-form">
+<div class="al-form">
   <table cellpadding="0" cellspacing="0">
     <tr>
       <td rowspan="3" class="background-black banner-text black-width" style="padding-bottom: 30px">
         <div class="banner-text text-nowrap">CMAM - TDR</div>
       </td>
       <td style="width: 100px"><span style="float: left" class="view-table-logo"></span></td>
-      <td class="text__left" style="padding-left: 10px">
+      <td colspan="8" class="text__left">
         <h6 openlmis-message="view.rnr.republic.of.mozambique"></h6>
         <h6 openlmis-message="view.rnr.ministry.of.health"></h6>
         <h6 openlmis-message="view.rnr.central.medicines.and.medical.arricles"></h6>
@@ -13,28 +13,29 @@
     </tr>
 
     <tr>
-      <td colspan="2" class="text__center">
+      <td colspan="9" class="text__center">
         <span openlmis-message="view.rnr.healthFacility"></span>:
         <span class="font-bold">{{rnr.facility.name}}</span>
       </td>
     </tr>
-  </table>
-
-  <table cellpadding="0" cellspacing="0" style="margin-top: 100px">
     <tr>
+      <td colspan="9" style="border: 0; border-right: 1px solid black"></td>
+    </tr>
+
+    <tr>
+      <td rowspan="4" class="background-black black-width"></td>
       <td colspan="3" style="border: 0;">
         &nbsp;
         <span openlmis-message="view.rnr.mmia.month"></span>
         <span> : </span> {{month}}
       </td>
-      <td colspan="7" style="border: 0;">
+      <td colspan="7" class="empty-line">
         &nbsp;
         <span openlmis-message="view.rnr.mmia.year"></span>
         <span> : </span> {{year}}
       </td>
     </tr>
     <tr>
-      <td rowspan="3" class="background-black black-width"></td>
       <td rowspan="3">HF/CHW</td>
       <td colspan="8" class="report--title height-50">
         <span class="report--title-font" openlmis-message="report.header.al.title"></span>
@@ -94,21 +95,30 @@
       <td>{{content["Consultas AL STOCK Malaria 4x6"]["total"]}}</td>
     </tr>
     <tr>
-      <td colspan="5" class="text__left" style="padding-left: 10px; border: 0">COMPLETED BY: {{submitterSignature}}</td>
-      <td colspan="5" class="text__left" style="padding-left: 10px; border: 0">DATE: {{submittedDate}}</td>
+      <td rowspan="4" class="background-black black-width"></td>
+      <td colspan="4" class="text__left" style="padding-left: 10px; border: 0">COMPLETED BY: <span class="font-bold">&nbsp;{{submitterSignature}}</span></td>
+      <td colspan="5" class="text__left empty-line">DATE: <span class="font-bold">&nbsp;{{submittedDate}}</span></td>
     </tr>
     <tr>
-      <td colspan="10" class="text__left" style="padding-left: 10px; border: 0">APPROVED BY: {{approverSignature}}</td>
+      <td colspan="9" class="text__left empty-line">APPROVED BY: <span class="font-bold">&nbsp;{{approverSignature}}</span></td>
+    </tr>
+    <tr>
+      <td colspan="9" class="empty-line"></td>
+    </tr>
+    <tr>
+      <td colspan="9" class="text__left empty-line" style="border-bottom: 1px solid black; padding: 5px">
+        <div style="border: 1px solid black; padding-left: 5px; font-weight: bold; width: 60%">
+          NB. Relatório segue o calendário estatistico <br>
+          Nao pode ser criado sem inventario do fim do periodo estatistico <br>
+          Informação de stock é automatizada, vindo do inventario <br>
+          calculo dos totais tambem automatizados <br>
+          mes, ano, distrito provincia, nome de unidade sanitaria automatizados
+        </div>
+      </td>
     </tr>
   </table>
 
-  <div style="border: 1px solid black; margin-top: 100px; padding-left: 5px; font-weight: bold; width: 60%">
-      NB. Relatório segue o calendário estatistico <br>
-      Nao pode ser criado sem inventario do fim do periodo estatistico <br>
-      Informação de stock é automatizada, vindo do inventario <br>
-      calculo dos totais tambem automatizados <br>
-      mes, ano, distrito provincia, nome de unidade sanitaria automatizados
-  </div>
+
 
   <div class="align-right">
     <button class="btn btn-primary btn-download btn-download-pdf" ng-click="downloadPdf()" openlmis-message="view.rnr.mmia.download.button"></button>
