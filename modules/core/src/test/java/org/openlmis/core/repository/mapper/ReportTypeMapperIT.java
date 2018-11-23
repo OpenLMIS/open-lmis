@@ -60,8 +60,6 @@ public class ReportTypeMapperIT {
         mapper.insert(trz001);
         List<ReportType> reportTypes = mapper.getAll();
         assertThat(reportTypes, notNullValue());
-        assertThat(reportTypes.size(), is(6));
-
     }
 
 }
