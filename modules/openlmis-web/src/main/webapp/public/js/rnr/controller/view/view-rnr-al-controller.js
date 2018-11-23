@@ -18,7 +18,7 @@ function ViewRnrALController($scope, $route, Requisitions, messageService, DateF
 
     Requisitions.get({id: $route.current.params.rnr, operation: "skipped"}, function (data) {
         $scope.rnr = data.rnr;
-        $scope.year = data.rnr.period.stringYear;
+        $scope.year = data.rnr.period.stringEndDate.substr(6, 4);
 
         $scope.initMonth();
         $scope.initDate();
