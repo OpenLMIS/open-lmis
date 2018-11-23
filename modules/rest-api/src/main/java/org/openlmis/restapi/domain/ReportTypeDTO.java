@@ -4,7 +4,6 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.openlmis.report.model.dto.Program;
 
 import static com.fasterxml.jackson.databind.annotation.JsonSerialize.Inclusion.NON_NULL;
 

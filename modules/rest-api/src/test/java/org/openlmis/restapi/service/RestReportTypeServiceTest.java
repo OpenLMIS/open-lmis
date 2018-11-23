@@ -20,13 +20,9 @@ import org.junit.runner.RunWith;
 import org.junit.runners.BlockJUnit4ClassRunner;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.openlmis.core.domain.Facility;
 import org.openlmis.core.domain.Program;
 import org.openlmis.core.domain.ReportType;
-import org.openlmis.core.dto.FacilityFeedDTO;
 import org.openlmis.core.repository.ReportTypeRepository;
-import org.openlmis.core.service.FacilityService;
-import org.openlmis.core.service.ProgramSupportedService;
 import org.openlmis.db.categories.UnitTests;
 import org.openlmis.restapi.domain.ReportTypeDTO;
 import org.powermock.core.classloader.annotations.PrepareForTest;
@@ -39,10 +35,7 @@ import java.util.List;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.junit.Assert.assertThat;
-import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-import static org.powermock.api.mockito.PowerMockito.verifyNew;
-import static org.powermock.api.mockito.PowerMockito.whenNew;
 
 @Category(UnitTests.class)
 @RunWith(PowerMockRunner.class)
