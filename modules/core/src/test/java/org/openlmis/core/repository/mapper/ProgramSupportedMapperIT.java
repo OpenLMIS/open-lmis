@@ -299,27 +299,4 @@ public class ProgramSupportedMapperIT {
     assertThat(mapper.getAllByFacilityId(facility.getId()).size(), is(1));
   }
 
-  @Test
-  public void shouldUpdateSupportedProgramForReportType() throws Exception {
-    Facility facility = make(a(defaultFacility));
-    facilityMapper.insert(facility);
-
-    Program program = make(a(defaultProgram, with(programCode, YELLOW_FEVER)));
-    programMapper.insert(program);
-
-    ProgramSupported programSupported = make(a(defaultProgramSupported,
-            with(supportedFacilityId, facility.getId()),
-            with(supportedProgram, program)));
-    mapper.insert(programSupported);
-    Date d = new Date();
-    programSupported.setReportStartDate(d);
-    programSupported.setActive(true);
-
-    mapper.update(programSupported);
-
-    ProgramSupported programSupportedFromDb = mapper.getBy(programSupported.getFacilityId(), programSupported.getProgram().getId());
-
-    assertThat(programSupportedFromDb.getStringStartDate(), is(d));
-  }
-
 }
