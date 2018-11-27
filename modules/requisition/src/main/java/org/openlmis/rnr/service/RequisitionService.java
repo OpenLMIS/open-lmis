@@ -783,8 +783,8 @@ public class RequisitionService {
     List<Rnr> rnrs = getAllRequsitionsByProgramId(5);
     List<Rnr> result = new ArrayList<>();
     for (Rnr rnr : rnrs) {
-      if (rnr.getActualPeriodStartDate().getTime() >= start.getTime()
-              && rnr.getActualPeriodStartDate().getTime() <= end.getTime()) {
+      if (rnr.getPeriod().getStartDate().getTime() >= start.getTime()
+              && rnr.getPeriod().getEndDate().getTime() <= end.getTime()) {
         result.add(rnr);
       }
     }
