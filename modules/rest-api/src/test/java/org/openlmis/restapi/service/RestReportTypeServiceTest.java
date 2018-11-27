@@ -21,8 +21,10 @@ import org.junit.runners.BlockJUnit4ClassRunner;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.openlmis.core.domain.Program;
+import org.openlmis.core.domain.ProgramSupported;
 import org.openlmis.core.domain.ReportType;
 import org.openlmis.core.repository.ReportTypeRepository;
+import org.openlmis.core.service.ProgramSupportedService;
 import org.openlmis.db.categories.UnitTests;
 import org.openlmis.restapi.domain.ReportTypeDTO;
 import org.powermock.core.classloader.annotations.PrepareForTest;
@@ -35,6 +37,7 @@ import java.util.List;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.junit.Assert.assertThat;
+import static org.mockito.Matchers.anyLong;
 import static org.mockito.Mockito.when;
 
 @Category(UnitTests.class)
@@ -45,6 +48,9 @@ public class RestReportTypeServiceTest {
 
     @Mock
     ReportTypeRepository reportTypeRepository;
+
+    @Mock
+    ProgramSupportedService programSupportedService;
 
     @InjectMocks
     RestReportTypeService restReportTypeService;
@@ -71,6 +77,39 @@ public class RestReportTypeServiceTest {
 
         when(reportTypeRepository.getAll()).thenReturn(reportTypes);
         List<ReportTypeDTO> rts = restReportTypeService.getAllReportType();
+
+        assertThat(rts.size(), notNullValue());
+        assertThat(rts.size(), is(1));
+
+    }
+
+    @Test
+    public void shouldGetAllReportTypesByFacilityIdReturnSuccess() {
+
+        ProgramSupported ps = new ProgramSupported();
+        ps.setId(1l);
+        ps.setFacilityId(1l);
+
+        Program program = new Program();
+        program.setCode("pc");
+        program.setId(1l);
+        program.setName("name");
+
+        ps.setProgram(program);
+
+        ReportType rt = new ReportType();
+        rt.setId(1l);
+        rt.setDescription("desc1");
+        rt.setName("name");
+        rt.setCode("1");
+        ps.setReportType(rt);
+
+        List<ProgramSupported> programSupportedList = new ArrayList<>();
+        programSupportedList.add(ps);
+
+
+        when(programSupportedService.getAllByFacilityId(anyLong())).thenReturn(programSupportedList);
+        List<ReportTypeDTO> rts = restReportTypeService.getReportTypeByFacilityId(anyLong());
 
         assertThat(rts.size(), notNullValue());
         assertThat(rts.size(), is(1));
