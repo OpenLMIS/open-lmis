@@ -191,9 +191,9 @@ public class Facility extends BaseModel implements Importable {
     return new Facility(facilityId, true, false, modifiedBy);
   }
 
-  public void validate() {
+  public void validate(List<ReportType> reportTypes) {
     for (ProgramSupported programSupported : supportedPrograms) {
-      programSupported.isValid();
+      programSupported.isValid(reportTypes);
     }
   }
 

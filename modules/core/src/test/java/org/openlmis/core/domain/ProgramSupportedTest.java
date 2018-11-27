@@ -16,6 +16,7 @@ import org.junit.rules.ExpectedException;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.db.categories.UnitTests;
 
+import java.util.ArrayList;
 import java.util.Collections;
 
 import static java.util.Arrays.asList;
@@ -80,7 +81,7 @@ public class ProgramSupportedTest {
     expectedException.expect(DataException.class);
     expectedException.expectMessage("supported.programs.invalid");
 
-    programSupported.isValid();
+    programSupported.isValid(new ArrayList<ReportType>());
   }
 
   @Test

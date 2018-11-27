@@ -19,6 +19,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.openlmis.core.domain.*;
 import org.openlmis.core.exception.DataException;
+import org.openlmis.core.repository.ReportTypeRepository;
 import org.openlmis.core.service.FacilityService;
 import org.openlmis.core.service.MessageService;
 import org.openlmis.core.service.ProgramService;
@@ -69,6 +70,9 @@ public class FacilityControllerTest {
 
   @Mock
   private MessageService messageService;
+
+  @Mock
+  ReportTypeRepository reportTypeRepository;
 
   @InjectMocks
   @SuppressWarnings("unused")

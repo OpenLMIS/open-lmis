@@ -3,9 +3,9 @@
  * Copyright © 2013 VillageReach
  *
  * This program is free software: you can redistribute it and/or modify it under the terms of the GNU Affero General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
- *  
+ *
  * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Affero General Public License for more details.
- * You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org. 
+ * You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org.
  */
 
 package org.openlmis.core.repository.mapper;
@@ -14,6 +14,7 @@ import org.apache.ibatis.annotations.*;
 import org.openlmis.core.domain.Facility;
 import org.openlmis.core.domain.Program;
 import org.openlmis.core.domain.ProgramSupported;
+import org.openlmis.core.domain.ReportType;
 import org.springframework.stereotype.Repository;
 
 import java.util.Date;
@@ -25,59 +26,63 @@ import java.util.List;
  */
 @Repository
 public interface ProgramSupportedMapper {
-  @Insert("INSERT INTO programs_supported" +
-    "(facilityId, programId, active, startDate, createdBy, modifiedBy, modifiedDate) VALUES (" +
-    "#{facilityId}, #{program.id}, #{active}, #{startDate}, #{createdBy}, #{modifiedBy}, #{modifiedDate})")
-  @Options(flushCache = Options.FlushCachePolicy.TRUE, useGeneratedKeys = true)
-  void insert(ProgramSupported programSupported);
+    @Insert("INSERT INTO programs_supported" +
+            "(facilityId, programId, active, startDate, createdBy, modifiedBy, modifiedDate," +
+            " reportTypeId, reportStartDate, reportActive) VALUES (" +
+            "#{facilityId}, #{program.id}, #{active}, #{startDate}, #{createdBy}, #{modifiedBy}, #{modifiedDate}" +
+            ", #{reportType.id}, #{reportStartDate}, #{reportActive})")
+    @Options(flushCache = Options.FlushCachePolicy.TRUE, useGeneratedKeys = true)
+    void insert(ProgramSupported programSupported);
 
-  @Select("SELECT * FROM programs_supported WHERE facilityId = #{facilityId} AND programId = #{programId}")
-  @Results({
-    @Result(property = "program", javaType = Program.class, column = "programId",
-      one = @One(select = "org.openlmis.core.repository.mapper.ProgramMapper.getById"))
-  })
-  ProgramSupported getBy(@Param("facilityId") Long facilityId, @Param("programId") Long programId);
+    @Select("SELECT * FROM programs_supported WHERE facilityId = #{facilityId} AND programId = #{programId}")
+    @Results({
+            @Result(property = "program", javaType = Program.class, column = "programId",
+                    one = @One(select = "org.openlmis.core.repository.mapper.ProgramMapper.getById"))
+    })
+    ProgramSupported getBy(@Param("facilityId") Long facilityId, @Param("programId") Long programId);
 
-  @Delete("DELETE FROM programs_supported WHERE facilityId = #{facilityId} AND programId = #{programId}")
-  void delete(@Param(value = "facilityId") Long facilityId, @Param(value = "programId") Long programId);
+    @Delete("DELETE FROM programs_supported WHERE facilityId = #{facilityId} AND programId = #{programId}")
+    void delete(@Param(value = "facilityId") Long facilityId, @Param(value = "programId") Long programId);
 
-  @Select({"SELECT * FROM programs_supported",
-    "WHERE facilityId = #{facilityId}",
-    "ORDER BY programId"})
-  @Results({
-    @Result(property = "program", javaType = Program.class, column = "programId", one = @One(select = "org.openlmis.core.repository.mapper.ProgramMapper.getById"))
-  })
-  List<ProgramSupported> getAllByFacilityId(Long facilityId);
+    @Select({"SELECT * FROM programs_supported",
+            "WHERE facilityId = #{facilityId}",
+            "ORDER BY programId"})
+    @Results({
+            @Result(property = "program", javaType = Program.class, column = "programId", one = @One(select = "org.openlmis.core.repository.mapper.ProgramMapper.getById")),
+            @Result(property = "reportType", javaType = ReportType.class, column = "reportTypeId", one = @One(select = "org.openlmis.core.repository.mapper.ReportTypeMapper.getById"))
+    })
+    List<ProgramSupported> getAllByFacilityId(Long facilityId);
 
-  @Update("UPDATE programs_supported SET active=#{active}, startDate=#{startDate}, modifiedDate=#{modifiedDate}, modifiedBy=#{modifiedBy}" +
-    "WHERE facilityId=#{facilityId} AND programId=#{program.id}")
-    //TODO use COALESCE for modifiedDate
-  void update(ProgramSupported programSupported);
+    @Update("UPDATE programs_supported SET active=#{active}, startDate=#{startDate}, modifiedDate=#{modifiedDate}, modifiedBy=#{modifiedBy}"
+            + ", reportTypeId=#{reportType.id}, reportActive=#{reportActive}, reportStartDate=#{reportStartDate}"
+            + " WHERE facilityId=#{facilityId} AND programId=#{program.id}")
+        //TODO use COALESCE for modifiedDate
+    void update(ProgramSupported programSupported);
 
-  @Update({"UPDATE programs_supported SET startDate=#{startDate}, modifiedDate=now()",
-      "WHERE facilityId=#{facilityId} AND programId=#{programId}"})
-  void updateStartDate(@Param("facilityId") Long facilityId, @Param("programId") Long programId, @Param("startDate") Date startDate);
+    @Update({"UPDATE programs_supported SET startDate=#{startDate}, modifiedDate=now()",
+            "WHERE facilityId=#{facilityId} AND programId=#{programId}"})
+    void updateStartDate(@Param("facilityId") Long facilityId, @Param("programId") Long programId, @Param("startDate") Date startDate);
 
-  @Select({"SELECT P.code, P.name, P.parentId ,P.isSupportEmergency FROM programs_supported PS INNER JOIN programs P ON P.id = PS.programId ",
-    "WHERE PS.facilityId = #{facilityId} AND PS.active = TRUE AND P.active = TRUE"})
-  @Results({
-      @Result(property = "program.code", column = "code"),
-      @Result(property = "program.name", column = "name"),
-      @Result(property = "program.isSupportEmergency", column = "isSupportEmergency"),
-      @Result(property = "program.parent", column = "parentId", javaType = Program.class,
-          one = @One(select = "org.openlmis.core.repository.mapper.ProgramMapper.getById")),
-  })
-  List<ProgramSupported> getActiveProgramsByFacilityId(Long facilityId);
+    @Select({"SELECT P.code, P.name, P.parentId ,P.isSupportEmergency FROM programs_supported PS INNER JOIN programs P ON P.id = PS.programId ",
+            "WHERE PS.facilityId = #{facilityId} AND PS.active = TRUE AND P.active = TRUE"})
+    @Results({
+            @Result(property = "program.code", column = "code"),
+            @Result(property = "program.name", column = "name"),
+            @Result(property = "program.isSupportEmergency", column = "isSupportEmergency"),
+            @Result(property = "program.parent", column = "parentId", javaType = Program.class,
+                    one = @One(select = "org.openlmis.core.repository.mapper.ProgramMapper.getById")),
+    })
+    List<ProgramSupported> getActiveProgramsByFacilityId(Long facilityId);
 
 
-  @Delete({"DELETE FROM programs_supported PS USING facilities F",
-    "WHERE PS.facilityId = F.id AND F.parentFacilityId = #{id}"})
-  int deleteVirtualFacilityProgramSupported(Facility parentFacility);
+    @Delete({"DELETE FROM programs_supported PS USING facilities F",
+            "WHERE PS.facilityId = F.id AND F.parentFacilityId = #{id}"})
+    int deleteVirtualFacilityProgramSupported(Facility parentFacility);
 
-  @Insert({"INSERT INTO programs_supported(facilityId, programId, active, startDate, createdBy, modifiedBy)",
-    "SELECT C.virtualFacilityId, programId, active, startDate, createdBy, modifiedBy",
-    "FROM programs_supported PS, ",
-    "(SELECT id as virtualFacilityId FROM facilities where parentFacilityId=#{id}) AS C",
-    "WHERE PS.facilityId = #{id}"})
-  void copyToVirtualFacilities(Facility parentFacility);
+    @Insert({"INSERT INTO programs_supported(facilityId, programId, active, startDate, createdBy, modifiedBy)",
+            "SELECT C.virtualFacilityId, programId, active, startDate, createdBy, modifiedBy",
+            "FROM programs_supported PS, ",
+            "(SELECT id as virtualFacilityId FROM facilities where parentFacilityId=#{id}) AS C",
+            "WHERE PS.facilityId = #{id}"})
+    void copyToVirtualFacilities(Facility parentFacility);
 }
