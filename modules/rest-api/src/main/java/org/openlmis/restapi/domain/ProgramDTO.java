@@ -19,4 +19,10 @@ public class ProgramDTO {
     private String description;
     private Boolean active;
 
+    public ProgramDTO(Long id, String code, String name) {
+        this.id = id;
+        this.name = name;
+        this.code = code;
+    }
+
 }
