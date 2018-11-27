@@ -18,6 +18,9 @@ public class StockOnHandAllProductsReportGenerator extends StockOnHandForSingleP
     @Override
     protected Object getReportHeaders(Map<Object, Object> paraMap, Map<String, Object> queryResult) {
         Map<String, String> headers = new LinkedHashMap<>();
+        headers.put("province", getMessage("report.header.province"));
+        headers.put("district", getMessage("report.header.district"));
+        headers.put("facility", getMessage("report.header.facility"));
         headers.put("drugName", getMessage("report.header.drug.name"));
         headers.put("lot", getMessage("report.header.lot"));
         headers.put("sohOfLot", getMessage("report.header.sohoflot"));
@@ -37,6 +40,9 @@ public class StockOnHandAllProductsReportGenerator extends StockOnHandForSingleP
             Date date = earliestExpiryDate(dto.getLotList());
             for (LotInfo lotinfo : dto.getLotList()) {
                 Map<String, Object> rowMap = new HashMap<>();
+                rowMap.put("province", dto.getProvinceName());
+                rowMap.put("district", dto.getDistrictName());
+                rowMap.put("facility", dto.getFacilityName());
                 rowMap.put("drugName", dto.getProductName());
                 rowMap.put("lot", lotinfo.getLotNumber());
                 rowMap.put("sohOfLot", lotinfo.getStockOnHandOfLot());
