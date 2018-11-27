@@ -49,12 +49,12 @@ public class ALReportGeneratorTest {
 
         Date startDate = DateUtil.parseDate("2017-01-19 23:59:59");
         Date endDate = DateUtil.parseDate("2018-11-19 23:59:59");
-//        when(requisitionService.alReportRequisitionsByFacilityId(1,
-//                startDate, endDate)).thenReturn(mockRnrList());
-//        assertThat(alReportGenerator.generate(paramMap().get("KEY_EXCEL_CONTENT"),
-//                is(returnValue()));
-//        verify(requisitionService).alReportRequisitionsByFacilityId(1,
-//                startDate, endDate);
+        when(requisitionService.alReportRequisitionsByFacilityId(1,
+                startDate, endDate)).thenReturn(mockRnrList());
+        assertThat((List<List<String>>)(alReportGenerator.generate(paramMap()).get("KEY_EXCEL_CONTENT")),
+                is(returnValue()));
+        verify(requisitionService).alReportRequisitionsByFacilityId(1,
+                startDate, endDate);
     }
 
     private Map<Object, Object> paramMap() {
@@ -143,13 +143,14 @@ public class ALReportGeneratorTest {
     @Test
     public void shouldReturnKeyNoData() {
 
+        Map<Object, Object> paramMap = paramMap();
         Date startDate = DateUtil.parseDate("2017-01-19 23:59:59");
         Date endDate = DateUtil.parseDate("2018-11-19 23:59:59");
-//        when(requisitionService.alReportRequisitionsByFacilityId(1,
-//                startDate, endDate)).thenReturn(new ArrayList<Rnr>());
-//        alReportGenerator.generate(paramMap();
-//        assertThat(paraMap.get("KEY_NO_DATA"), is(true));
-//        verify(requisitionService).alReportRequisitionsByFacilityId(1,
-//                startDate, endDate);
+        when(requisitionService.alReportRequisitionsByFacilityId(1,
+                startDate, endDate)).thenReturn(new ArrayList<Rnr>());
+        alReportGenerator.generate(paramMap);
+        assertThat((Boolean)(paramMap.get("KEY_NO_DATA")), is(true));
+        verify(requisitionService).alReportRequisitionsByFacilityId(1,
+                startDate, endDate);
     }
 }
