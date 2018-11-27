@@ -32,6 +32,7 @@ import org.openlmis.core.exception.DataException;
 import org.openlmis.core.repository.FacilityRepository;
 import org.openlmis.core.repository.GeographicZoneRepository;
 import org.openlmis.core.repository.ProgramRepository;
+import org.openlmis.core.repository.ReportTypeRepository;
 import org.openlmis.db.categories.UnitTests;
 import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
@@ -88,6 +89,9 @@ public class FacilityServiceTest {
 
   @Mock
   private EventService eventService;
+
+  @Mock
+  ReportTypeRepository reportTypeRepository;
 
   @Mock
   private FacilityProgramProductService facilityProgramProductService;

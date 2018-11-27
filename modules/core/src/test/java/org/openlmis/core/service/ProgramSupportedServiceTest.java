@@ -19,13 +19,11 @@ import org.junit.runner.RunWith;
 import org.junit.runners.BlockJUnit4ClassRunner;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.openlmis.core.domain.Facility;
-import org.openlmis.core.domain.FacilityProgramProduct;
-import org.openlmis.core.domain.Program;
-import org.openlmis.core.domain.ProgramSupported;
+import org.openlmis.core.domain.*;
 import org.openlmis.core.dto.ProgramSupportedEventDTO;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.core.repository.ProgramSupportedRepository;
+import org.openlmis.core.repository.ReportTypeRepository;
 import org.openlmis.db.categories.UnitTests;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
@@ -66,6 +64,9 @@ public class ProgramSupportedServiceTest {
 
   @Mock
   ProgramSupportedRepository repository;
+
+  @Mock
+  ReportTypeRepository reportTypeRepository;
 
 
   @Mock
@@ -154,6 +155,8 @@ public class ProgramSupportedServiceTest {
     facility.setCode("F1");
     when(facilityService.getByCode(facility)).thenReturn(new Facility(1L));
     when(programService.getByCode("P1")).thenReturn(new Program(1L));
+    when(reportTypeRepository.getAll()).thenReturn(new ArrayList());
+
 
     service.uploadSupportedProgram(programSupported);
 
