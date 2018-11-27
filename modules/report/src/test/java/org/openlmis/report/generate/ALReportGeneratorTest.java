@@ -22,6 +22,7 @@ import java.util.Map;
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
 import static org.powermock.api.mockito.PowerMockito.when;
+import static org.mockito.Mockito.verify;
 
 @RunWith(MockitoJUnitRunner.class)
 public class ALReportGeneratorTest {
@@ -44,8 +45,19 @@ public class ALReportGeneratorTest {
     }
 
     @Test
-    public void test() {
+    public void shouldReturnNormalData() {
 
+        Date startDate = DateUtil.parseDate("2017-01-19 23:59:59");
+        Date endDate = DateUtil.parseDate("2018-11-19 23:59:59");
+//        when(requisitionService.alReportRequisitionsByFacilityId(1,
+//                startDate, endDate)).thenReturn(mockRnrList());
+//        assertThat(alReportGenerator.generate(paramMap().get("KEY_EXCEL_CONTENT"),
+//                is(returnValue()));
+//        verify(requisitionService).alReportRequisitionsByFacilityId(1,
+//                startDate, endDate);
+    }
+
+    private Map<Object, Object> paramMap() {
         Map<Object, Object> paraMap = new HashMap<>();
         paraMap.put("startTime", "2017-01-19 23:59:59");
         paraMap.put("endTime", "2018-11-19 23:59:59");
@@ -53,13 +65,7 @@ public class ALReportGeneratorTest {
         paraMap.put("provinceId", "1");
         paraMap.put("districtId", "1");
         paraMap.put("facilityId", "1");
-
-        Date startDate = DateUtil.parseDate("2017-01-19 23:59:59");
-        Date endDate = DateUtil.parseDate("2018-11-19 23:59:59");
-        when(requisitionService.alReportRequisitionsByFacilityId(1,
-                startDate, endDate)).thenReturn(mockRnrList());
-        assertThat(alReportGenerator.generate(paraMap).get("KEY_EXCEL_CONTENT"),
-                is(returnValue()));
+        return paraMap;
     }
 
     private List<Rnr> mockRnrList() {
@@ -132,5 +138,18 @@ public class ALReportGeneratorTest {
         for (int i = 0; i < n; ++i) {
             list.add(s);
         }
+    }
+
+    @Test
+    public void shouldReturnKeyNoData() {
+
+        Date startDate = DateUtil.parseDate("2017-01-19 23:59:59");
+        Date endDate = DateUtil.parseDate("2018-11-19 23:59:59");
+//        when(requisitionService.alReportRequisitionsByFacilityId(1,
+//                startDate, endDate)).thenReturn(new ArrayList<Rnr>());
+//        alReportGenerator.generate(paramMap();
+//        assertThat(paraMap.get("KEY_NO_DATA"), is(true));
+//        verify(requisitionService).alReportRequisitionsByFacilityId(1,
+//                startDate, endDate);
     }
 }
