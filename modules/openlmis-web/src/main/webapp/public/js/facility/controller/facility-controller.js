@@ -60,6 +60,12 @@ function FacilityController($scope, facilityReferenceData, $routeParams, facilit
         supportedProgram.startDate = supportedProgram.stringStartDate;
       }
     });
+  
+    angular.forEach(facility.supportedReportTypes, function (supportedReportType) {
+      if (supportedReportType.startDate) {
+        supportedReportType.startDate = supportedReportType.stringStartDate;
+      }
+    });
 
     facility.goLiveDate = convertStringToCorrectDateFormat(facility.stringGoLiveDate);
     facility.goDownDate = convertStringToCorrectDateFormat(facility.stringGoDownDate);

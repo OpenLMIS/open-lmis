@@ -314,12 +314,13 @@
                 <tr ng-repeat="supportedReportType in facility.supportedReportTypes">
                   <td ng-bind="supportedReportType.reportType.name" reportTypeId="{{supportedReportType.reportType.id}}"></td>
                   <td><input ng-model="supportedReportType.active" type="checkbox" value="false"/></td>
-                  <td ng-init="supportedReportType.editedStartDate = supportedReportType.startDate">
+                  <td>
                     <input type="text" ng-model="supportedReportType.editedStartDate"
                            readonly
                            ui-date="{dateFormat:'dd/mm/yy', changeYear: true}"
                            ui-date-format="yy-mm-dd"
-                           ng-required="supportedReportType.active === true"/>
+                           ng-required="supportedReportType.active === true"
+                           ng-disabled="!supportedReportType.active"/>
                     <span class="field-error"
                           ng-show="supportedReportType.active && !supportedReportType.startDate && showError"
                           openlmis-message="create.facility.mandatoryStartDate">
@@ -344,7 +345,7 @@
                       readonly
                       ui-date="{dateFormat:'dd/mm/yy', changeYear: true}"
                       ui-date-format="yy-mm-dd"
-                      ng-disabled="!supportedReportType.reportType.id"/>
+                      ng-disabled="!supportedReportType.active"/>
                     <span class="field-error" ng-show="showDateNotEnteredError"
                     openlmis-message="create.facility.mandatoryStartDate">
                     </span>
@@ -360,9 +361,7 @@
           </div>
         </div>
       </div>
-
-
-
+      
       <div id="overrideIsaModal" modal="programProductsISAModal" options="{'backdrop':'static', 'escape':false}"
            ng-controller="FacilityIsaModalController">
 
