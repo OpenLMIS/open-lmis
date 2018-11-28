@@ -26,6 +26,7 @@ function FacilityController($scope, facilityReferenceData, $routeParams, facilit
     $scope.facilityOperators = facilityReferenceData.facilityOperators;
     $scope.images = facilityImages.images;
     $scope.programs = facilityReferenceData.programs;
+    $scope.reportTypes = facilityReferenceData.reportTypes;
     $scope.priceSchedules = priceSchedules;
     $scope.interfaces = interfacesReferenceData;
     if ($routeParams.facilityId) {
@@ -34,10 +35,12 @@ function FacilityController($scope, facilityReferenceData, $routeParams, facilit
       $scope.originalFacilityName = facility.name;
       $scope.isEdit = true;
       updateProgramsToDisplay();
+      updateReportTypeToDisplay();
       updateInterfacesToDisplay();
     } else {
       $scope.facility = {};
       updateProgramsToDisplay();
+      updateReportTypeToDisplay();
       updateInterfacesToDisplay();
       $scope.facility.enabled = true;
     }
@@ -117,6 +120,14 @@ function FacilityController($scope, facilityReferenceData, $routeParams, facilit
     $scope.showDateNotEnteredError = false;
     $scope.supportedProgram = undefined;
     updateProgramsToDisplay();
+    updateReportTypeToDisplay();
+  };
+  
+  $scope.addSupportedReportType = function (supportedReportType) {
+    supportedReportType.reportType = getReportTypeById(supportedReportType.reportType.id);
+    $scope.facility.supportedReportTypes.push(supportedReportType);
+    $scope.supportedReportType = undefined;
+    updateReportTypeToDisplay();
   };
 
   $scope.showConfirmDateChangeWindow = function (program) {
@@ -166,6 +177,10 @@ function FacilityController($scope, facilityReferenceData, $routeParams, facilit
 
   function getProgramById(id) {
     return (_.findWhere($scope.programs, {'id': id}));
+  }
+  
+  function getReportTypeById(id) {
+    return (_.findWhere($scope.reportTypes, {'id': id}));
   }
 
   var successFunc = function (data) {
@@ -218,6 +233,19 @@ function FacilityController($scope, facilityReferenceData, $routeParams, facilit
       return _.contains(supportedProgramIds, supportedProgram.id);
     });
     $scope.programSupportedMessage = ($scope.programsToDisplay.length) ? 'label.select.program.supported' : 'label.no.programs.left';
+  }
+  
+  function updateReportTypeToDisplay() {
+    $scope.facility.supportedReportTypes = $scope.facility.supportedReportTypes || [];
+    var supportedProgramIds = _.pluck(_.pluck($scope.facility.supportedPrograms, 'program'), 'id');
+    var supportedReportTypeId = _.pluck(_.pluck($scope.facility.supportedReportTypes, 'reportType'), "id");
+  
+    var reportTypeListBySelectedProgram = _.filter($scope.reportTypes, function (reportType) {
+      return _.contains(supportedProgramIds, reportType.program.id);
+    });
+    $scope.reportTypesToDisplay = _.reject(reportTypeListBySelectedProgram, function (reportType) {
+      return _.contains(supportedReportTypeId, reportType.id);
+    });
   }
 
   function updateInterfacesToDisplay() {
