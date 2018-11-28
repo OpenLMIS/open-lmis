@@ -9,6 +9,7 @@ import lombok.NoArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 import org.openlmis.core.domain.Signature;
 import org.openlmis.core.domain.moz.ProgramDataForm;
+import org.openlmis.core.domain.moz.ProgramDataFormBasicItem;
 import org.openlmis.core.domain.moz.ProgramDataItem;
 import org.openlmis.core.hash.Encoder;
 import org.openlmis.core.serializer.DateDeserializer;
@@ -32,6 +33,7 @@ public class ProgramDataFormDTO {
   private Date submittedTime;
   private List<ProgramDataFormItemDTO> programDataFormItems;
   private List<Signature> programDataFormSignatures;
+  private List<ProgramDataFormBasicItemDTO> programDataFormBasicItems;
   private String observation;
 
   public ProgramDataFormDTO(Long facilityId, String programCode, Date startDate, Date endDate, Date submittedTime, String observation) {
@@ -60,6 +62,14 @@ public class ProgramDataFormDTO {
         return ProgramDataFormItemDTO.prepareForRest(input);
       }
     }).toList());
+    if (null != programDataForm.getProgramDataFormBasicItems()) {
+      programDataFormDTO.setProgramDataFormBasicItems(FluentIterable.from(programDataForm.getProgramDataFormBasicItems()).transform(new Function<ProgramDataFormBasicItem, ProgramDataFormBasicItemDTO>() {
+        @Override
+        public ProgramDataFormBasicItemDTO apply(ProgramDataFormBasicItem programDataFormBasicItem) {
+          return ProgramDataFormBasicItemDTO.prepareForRest(programDataFormBasicItem);
+        }
+      }).toList());
+    }
     programDataFormDTO.setProgramDataFormSignatures(programDataForm.getProgramDataFormSignatures());
     return programDataFormDTO;
   }

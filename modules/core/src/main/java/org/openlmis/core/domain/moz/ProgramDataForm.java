@@ -27,6 +27,8 @@ public class ProgramDataForm extends BaseModel {
 
   private List<ProgramDataItem> programDataItems;
 
+  private List<ProgramDataFormBasicItem> programDataFormBasicItems;
+
   private List<Signature> programDataFormSignatures;
 
   private String observation;

@@ -27,7 +27,9 @@ public interface ProgramDataMapper {
       @Result(property = "programDataItems", javaType = List.class, column = "id",
           many = @Many(select = "org.openlmis.core.repository.mapper.ProgramDataItemMapper.getByFormId")),
       @Result(property = "programDataFormSignatures", column = "id", javaType = List.class,
-          many = @Many(select = "org.openlmis.core.repository.mapper.ProgramDataMapper.getSignaturesByFormId"))
+          many = @Many(select = "org.openlmis.core.repository.mapper.ProgramDataMapper.getSignaturesByFormId")),
+      @Result(property = "programDataFormBasicItems", javaType = List.class, column = "id",
+          many = @Many(select = "org.openlmis.core.repository.mapper.ProgramDataFormBasicItemMapper.getByFormId"))
   })
   List<ProgramDataForm> getByFacilityId(Long facilityId);
 

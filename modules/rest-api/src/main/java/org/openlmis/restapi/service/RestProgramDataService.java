@@ -5,6 +5,7 @@ import com.google.common.collect.FluentIterable;
 import org.openlmis.core.domain.Facility;
 import org.openlmis.core.domain.moz.ProgramDataColumn;
 import org.openlmis.core.domain.moz.ProgramDataForm;
+import org.openlmis.core.domain.moz.ProgramDataFormBasicItem;
 import org.openlmis.core.domain.moz.ProgramDataItem;
 import org.openlmis.core.domain.moz.SupplementalProgram;
 import org.openlmis.core.exception.DataException;
@@ -13,10 +14,12 @@ import org.openlmis.core.repository.SyncUpHashRepository;
 import org.openlmis.core.repository.mapper.FacilityMapper;
 import org.openlmis.core.repository.mapper.ProgramDataColumnMapper;
 import org.openlmis.core.repository.mapper.SupplementalProgramMapper;
+import org.openlmis.restapi.domain.ProgramDataFormBasicItemDTO;
 import org.openlmis.restapi.domain.ProgramDataFormDTO;
 import org.openlmis.restapi.domain.ProgramDataFormItemDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -39,6 +42,10 @@ public class RestProgramDataService {
   @Autowired
   private SyncUpHashRepository syncUpHashRepository;
 
+  @Autowired
+  private RestRequisitionService restRequisitionService;
+
+  @Transactional
   public void createProgramDataForm(ProgramDataFormDTO requestBodyData, long userId) {
     if (syncUpHashRepository.hashExists(requestBodyData.getSyncUpHash())) {
       return;
@@ -52,6 +59,7 @@ public class RestProgramDataService {
     ProgramDataForm programDataForm = convertRequestBodyDataToProgramDataForm(requestBodyData, userId, facility);
 
     programDataRepository.createProgramDataForm(programDataForm);
+    //restRequisitionService.submitReport(createReport(programDataForm), userId);
     syncUpHashRepository.save(requestBodyData.getSyncUpHash());
   }
 
@@ -72,6 +80,18 @@ public class RestProgramDataService {
           programDataColumn, programDataFormItemDTO.getValue());
       programDataForm.getProgramDataItems().add(programDataItem);
     }
+    programDataForm.setProgramDataFormBasicItems(new ArrayList<ProgramDataFormBasicItem>());
+    if (null != requestBodyData.getProgramDataFormBasicItems()) {
+      for (ProgramDataFormBasicItemDTO programDataFormBasicItemDTO : requestBodyData.getProgramDataFormBasicItems()) {
+        ProgramDataFormBasicItem programDataFormBasicItem = new ProgramDataFormBasicItem(programDataFormBasicItemDTO.getProductCode(),
+                programDataFormBasicItemDTO.getBeginningBalance(),
+                programDataFormBasicItemDTO.getQuantityReceived(),
+                programDataFormBasicItemDTO.getQuantityDispensed(),
+                programDataFormBasicItemDTO.getTotalLossesAndAdjustments(),
+                programDataFormBasicItemDTO.getStockInHand(), programDataForm);
+        programDataForm.getProgramDataFormBasicItems().add(programDataFormBasicItem);
+      }
+    }
     programDataForm.setProgramDataFormSignatures(requestBodyData.getProgramDataFormSignatures());
     return programDataForm;
   }
@@ -84,4 +104,34 @@ public class RestProgramDataService {
       }
     }).toList();
   }
+
+//  public Report createReport(ProgramDataForm programDataForm) {
+//    Report report = new Report();
+//    report.setAgentCode(programDataForm.getFacility().getCode());
+//    report.setProgramCode(programDataForm.getSupplementalProgram().getCode());
+//    report.setEmergency(false);
+//    report.setClientSubmittedTime(DateUtil.formatDate(programDataForm.getSubmittedTime()));
+//    report.setActualPeriodEndDate(DateUtil.formatDate(programDataForm.getEndDate()));
+//    report.setActualPeriodStartDate(DateUtil.formatDate(programDataForm.getStartDate()));
+//    report.setRnrSignatures(programDataForm.getProgramDataFormSignatures());
+//    report.setProgramDataFormId(programDataForm.getId());
+//    List<RnrLineItem> rnrLineItems = FluentIterable.from(programDataForm.getProgramDataFormBasicItems())
+//            .transform(new Function<ProgramDataFormBasicItem, RnrLineItem>() {
+//       @Override
+//       public RnrLineItem apply(ProgramDataFormBasicItem programDataFormBasicItem) {
+//           RnrLineItem rnrLineItem = new RnrLineItem();
+//           rnrLineItem.setProductCode(programDataFormBasicItem.getProductCode());
+//           rnrLineItem.setBeginningBalance(programDataFormBasicItem.getBeginningBalance());
+//           rnrLineItem.setQuantityReceived(programDataFormBasicItem.getQuantityReceived());
+//           rnrLineItem.setQuantityDispensed(programDataFormBasicItem.getQuantityDispensed());
+//           rnrLineItem.setTotalLossesAndAdjustments(programDataFormBasicItem.getTotalLossesAndAdjustments());
+//           rnrLineItem.setStockInHand(programDataFormBasicItem.getStockInHand());
+//       }
+//    }).toList();
+//    report.setProducts(rnrLineItems);
+//
+//    return report;
+//  }
+
+
 }
