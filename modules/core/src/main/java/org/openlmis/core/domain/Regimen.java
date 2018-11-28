@@ -38,4 +38,6 @@ public class Regimen extends BaseModel {
   private Integer displayOrder;
   private boolean isCustom;
 
+  //if skipped is true, will not send this regimen to SIMMAN
+  private boolean skipped;
 }

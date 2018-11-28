@@ -172,7 +172,7 @@ public class RequisitionServiceTest {
                 PROGRAM.getId())).thenReturn(facilityTypeApprovedProducts);
 
         List<Regimen> regimens = new ArrayList<>();
-        regimens.add(new Regimen("name", "code", 1L, true, new RegimenCategory("code", "name", 1), 1, false));
+        regimens.add(new Regimen("name", "code", 1L, true, new RegimenCategory("code", "name", 1), 1, false, false));
 
         List<RegimenLineItem> regimenLineItems = new ArrayList<>();
         regimenLineItems.add(new RegimenLineItem(null, null, 1L, 1L));

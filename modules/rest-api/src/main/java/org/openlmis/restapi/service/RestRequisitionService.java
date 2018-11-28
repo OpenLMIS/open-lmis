@@ -278,7 +278,7 @@ public class RestRequisitionService {
         Regimen regimen = regimenService.getRegimensByCategoryIdAndName(regimenCategory.getId(), regimenLineItemForRest.getName());
 
         if (regimen == null) {
-          regimen = new Regimen(regimenLineItemForRest.getName(), null, programId, true, regimenCategory, regimenService.getRegimensByCategory(regimenCategory).size(), true);
+          regimen = new Regimen(regimenLineItemForRest.getName(), null, programId, true, regimenCategory, regimenService.getRegimensByCategory(regimenCategory).size(), true, false);
           regimen.setCode(String.format("%03d", regimenService.listAll().size() + 1));
           regimenService.save(regimen, userId);
         }
@@ -290,6 +290,7 @@ public class RestRequisitionService {
           regimenLineItem.setCode(regimen.getCode());
           regimenLineItem.setName(regimen.getName());
           regimenLineItem.setRegimenDisplayOrder(regimen.getDisplayOrder());
+          regimenLineItem.setSkipped(regimen.isSkipped());
           regimenLineItemMapper.insert(regimenLineItem);
           customRegimenItems.add(regimenLineItem);
         }

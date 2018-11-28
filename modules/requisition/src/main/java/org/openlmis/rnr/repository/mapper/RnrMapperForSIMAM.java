@@ -38,7 +38,9 @@ public interface RnrMapperForSIMAM {
         "    FROM regimen_line_items rli" +
         "    LEFT JOIN requisitions r" +
         "    ON r.id = rli.rnrId" +
-        "    WHERE r.id = #{rnr.id}"
+        "    WHERE r.id = #{rnr.id}" +
+        "    And rli.skipped <>true" +
+        "    ORDER BY rli.regimendisplayorder"
     )
     List<Map<String, String>> getRegimenItemsForSIMAMImport(@Param("rnr") Rnr rnr);
 
