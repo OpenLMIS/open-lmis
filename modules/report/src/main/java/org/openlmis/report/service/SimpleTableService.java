@@ -226,20 +226,17 @@ public class SimpleTableService {
     private List<RequisitionDTO> getUnSubmittedRequisitions(RequisitionReportsParam filterCriteria) {
         List<RequisitionDTO> requisitions = new ArrayList<>();
         List<Integer> facilityIds = getFacilityIds(filterCriteria);
+        List<Integer> programIds = filterCriteria.getProgramIds();
         NonSubmittedRequisitionReportsParam nonSubmittedRequisitionReportsParam;
         for (Integer facilityId : facilityIds) {
-            for (MonthlyReortProgramType programType : MonthlyReortProgramType.values()) {
-                Integer programId = programType.getProgramId();
-
-                if (filterCriteria.getProgramIds().contains(programId)) {
-                    nonSubmittedRequisitionReportsParam = NonSubmittedRequisitionReportsParam.builder()
-                            .startTime(filterCriteria.getStartTime())
-                            .endTime(filterCriteria.getEndTime())
-                            .facilityId(facilityId)
-                            .programId(programId)
-                            .build();
-                    requisitions.addAll(requisitionReportsMapper.getUnSubmittedRequisitionList(nonSubmittedRequisitionReportsParam));
-                }
+            for (Integer programId : programIds) {
+                nonSubmittedRequisitionReportsParam = NonSubmittedRequisitionReportsParam.builder()
+                        .startTime(filterCriteria.getStartTime())
+                        .endTime(filterCriteria.getEndTime())
+                        .facilityId(facilityId)
+                        .programId(programId)
+                        .build();
+                requisitions.addAll(requisitionReportsMapper.getUnSubmittedRequisitionList(nonSubmittedRequisitionReportsParam));
             }
         }
 

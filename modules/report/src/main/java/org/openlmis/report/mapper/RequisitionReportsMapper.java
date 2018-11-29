@@ -40,8 +40,9 @@ public interface RequisitionReportsMapper {
             "  CROSS JOIN processing_periods pp" +
             " WHERE (pp.startdate >= #{filterCriteria.startTime} AND pp.enddate <= #{filterCriteria.endTime})" +
             "  AND pp.id NOT in (SELECT periodid from requisitions WHERE facilityid = #{filterCriteria.facilityId} AND programid = #{filterCriteria.programId})" +
-            "  AND (pp.startdate >= ps.startdate)" +
+            "  AND (pp.startdate >= ps.reportstartdate)" +
             "  AND p.id = #{filterCriteria.programId}" +
-            "  AND facilityid = #{filterCriteria.facilityId};")
+            "  AND facilityid = #{filterCriteria.facilityId}" +
+            "  AND ps.reportactive is TRUE;")
     List<RequisitionDTO> getUnSubmittedRequisitionList(@Param("filterCriteria")NonSubmittedRequisitionReportsParam filterCriteria);
 }
