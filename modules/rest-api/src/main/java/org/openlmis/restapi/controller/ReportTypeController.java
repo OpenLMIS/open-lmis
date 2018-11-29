@@ -22,7 +22,7 @@ import static org.springframework.web.bind.annotation.RequestMethod.GET;
 @RequestMapping("/rest-api/report-types")
 public class ReportTypeController extends BaseController {
 
-    public static final String REPORT_TYPES = "report-types";
+    public static final String REPORT_TYPES = "reportTypes";
 
     private RestReportTypeService restReportTypeService;
 
