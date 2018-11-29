@@ -64,6 +64,9 @@ public class RestProgramDataServiceTest {
   @Mock
   private SyncUpHashRepository syncUpHashRepository;
 
+  @Mock
+  private RestRequisitionService restRequisitionService;
+
   @InjectMocks
   private RestProgramDataService restProgramDataService;
 

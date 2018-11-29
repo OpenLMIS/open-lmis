@@ -116,7 +116,9 @@ public class RestProgramDataService {
   public Report createReport(ProgramDataForm programDataForm) {
     Report report = new Report();
     report.setAgentCode(programDataForm.getFacility().getCode());
-    report.setProgramCode(programDataForm.getSupplementalProgram().getCode());
+    if (null != programDataForm.getSupplementalProgram()) {
+      report.setProgramCode(programDataForm.getSupplementalProgram().getCode());
+    }
     report.setEmergency(false);
     report.setClientSubmittedTime(DateUtil.formatDate(programDataForm.getSubmittedTime()));
     report.setActualPeriodEndDate(DateUtil.formatDate(programDataForm.getEndDate()));
