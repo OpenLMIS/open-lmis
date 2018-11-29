@@ -120,6 +120,11 @@ public class ProgramSupported extends BaseModel implements Importable {
         return this.startDate == null ? null : simpleDateFormat.format(this.startDate);
     }
 
+    public String getStringReportTypeDate() throws ParseException {
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        return this.reportStartDate == null ? null : simpleDateFormat.format(this.reportStartDate);
+    }
+
     @JsonIgnore
     public Double getWhoRatioFor(final String productCode) {
         FacilityProgramProduct facilityProgramProduct = (FacilityProgramProduct) CollectionUtils.find(this.getProgramProducts(), new Predicate() {
