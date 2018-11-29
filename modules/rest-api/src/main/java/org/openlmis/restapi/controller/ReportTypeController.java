@@ -17,14 +17,12 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
 
 
-@Api(value = "Report Types", description = "Opreate Report Types")
+@Api(value = "Report Types", description = "Manage Report Types")
 @Controller
 @RequestMapping("/rest-api/report-types")
 public class ReportTypeController extends BaseController {
 
     public static final String REPORT_TYPES = "report-types";
-
-    public static final String REPORT_TYPES_MAPPING = "report-types-mapping";
 
     private RestReportTypeService restReportTypeService;
 
@@ -50,7 +48,7 @@ public class ReportTypeController extends BaseController {
     )
     @RequestMapping(value = "/mapping/{facilityId}", method = GET, headers = ACCEPT_JSON)
     public ResponseEntity getProgramSupportedByFacilityId(@PathVariable Long facilityId) {
-        return RestResponse.response(REPORT_TYPES_MAPPING, restReportTypeService.getReportTypeByFacilityId(facilityId));
+        return RestResponse.response(REPORT_TYPES, restReportTypeService.getReportTypeByFacilityId(facilityId));
     }
 
 }
