@@ -69,6 +69,8 @@ public class Report {
 
   private List<Signature> rnrSignatures;
 
+  private Long programDataFormId;
+
   public void validate() {
     if (isEmpty(agentCode) || isEmpty(programCode)) {
       throw new DataException("error.mandatory.fields.missing");

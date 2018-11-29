@@ -127,6 +127,7 @@ public class RestRequisitionService {
 
     insertRnrSignatures(report, rnr, userId);
 
+    rnr.setProgramDataFormId(report.getProgramDataFormId());
     rnr = requisitionService.submit(rnr);
 
     Rnr authorize = requisitionService.authorize(rnr);

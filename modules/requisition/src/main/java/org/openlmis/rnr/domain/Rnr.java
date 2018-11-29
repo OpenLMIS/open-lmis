@@ -72,6 +72,7 @@ public class Rnr extends BaseModel {
   private List<Signature> rnrSignatures;
   private Date actualPeriodStartDate;
   private Date actualPeriodEndDate;
+  private Long programDataFormId;
 
   public Rnr(Facility facility, Program program, ProcessingPeriod period, Boolean emergency, Long modifiedBy, Long createdBy) {
     this.facility = facility;

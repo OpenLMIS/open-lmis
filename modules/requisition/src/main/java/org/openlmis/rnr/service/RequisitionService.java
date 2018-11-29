@@ -319,7 +319,7 @@ public class RequisitionService {
     ProgramRnrTemplate template = rnrTemplateService.fetchProgramTemplate(savedRnr.getProgram().getId());
 
     calculationService.perform(savedRnr, template);
-
+    savedRnr.setProgramDataFormId(rnr.getProgramDataFormId());
     return update(savedRnr);
   }
 
