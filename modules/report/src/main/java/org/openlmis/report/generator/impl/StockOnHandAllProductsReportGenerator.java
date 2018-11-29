@@ -77,15 +77,15 @@ public class StockOnHandAllProductsReportGenerator extends StockOnHandForSingleP
         for (StockProductDto dto : stockProductDtoList) {
             int cmmSpan = dto.getLotList().size();
             mergedRegions.add(createMergedRegion(String.valueOf(index + 1), String.valueOf(index + cmmSpan),
-                    "3", "3", dto.getSumStockOnHand().toString()));
+                    "6", "6", dto.getSumStockOnHand().toString()));
             mergedRegions.add(createMergedRegion(String.valueOf(index + 1), String.valueOf(index + cmmSpan),
-                    "4", "4", getMessage(dto.getStockOnHandStatus().getMessageKey())));
+                    "7", "7", getMessage(dto.getStockOnHandStatus().getMessageKey())));
             mergedRegions.add(createMergedRegion(String.valueOf(index + 1), String.valueOf(index + cmmSpan),
-                    "5", "5", earliestExpiryDate(dto.getLotList()).toString()));
+                    "8", "8", earliestExpiryDate(dto.getLotList()).toString()));
             mergedRegions.add(createMergedRegion(String.valueOf(index + 1), String.valueOf(index + cmmSpan),
-                    "6", "6", getFormatDoubleValue(dto.getMos())));
+                    "9", "9", getFormatDoubleValue(dto.getMos())));
             mergedRegions.add(createMergedRegion(String.valueOf(index + 1), String.valueOf(index + cmmSpan),
-                    "7", "7", getFormatDoubleValue(dto.getCmm())));
+                    "10", "10", getFormatDoubleValue(dto.getCmm())));
             index = index + cmmSpan;
         }
         return mergedRegions;
