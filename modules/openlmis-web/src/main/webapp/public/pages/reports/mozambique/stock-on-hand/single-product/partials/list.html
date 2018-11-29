@@ -106,10 +106,10 @@
           </a></td>
           <td ng-show="entry.isFirst" rowspan="{{entry.rowSpan}}"
               class="align-right"><span ng-hide="angular.isUndefined(entry.estimated_months)"><img
-          src="/public/images/exclamation.png" class="exclamation" ng-show="hasExpirationRisk(entry)">{{entry.estimated_months}}</span>
+          src="/public/images/exclamation.png" class="exclamation" ng-show="hasExpirationRisk(entry)">{{entry.estimated_months | nullFilter}}</span>
           </td>
           <td ng-show="entry.isFirst" rowspan="{{entry.rowSpan}}">
-            {{entry.cmm}}
+            {{entry.cmm | nullFilter}}
           </td>
           <td ng-show="entry.isFirst" rowspan="{{entry.rowSpan}}"><span class="circle-icon" ng-style="checkLastSyncDate(entry.syncDate)"></span>
             <span>{{entry.syncDate}}</span>

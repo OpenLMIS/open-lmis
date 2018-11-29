@@ -40,3 +40,9 @@ function DateAndTimeFilter(DateFormatService) {
       return DateFormatService.formatDateWithLocale(date);
     };
 }
+
+function NullFilter() {
+  return function (data) {
+    return isNaN(data) || isUndefined(data) ? 'N/A' : data;
+  };
+}

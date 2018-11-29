@@ -88,6 +88,7 @@ angular.module('requisition-report', ['openlmis', 'angularCombine', 'ngTable', '
 ).config(function (angularCombineConfigProvider) {
   angularCombineConfigProvider.addConf(/filter-/, '/public/pages/reports/shared/filters.html');
 }).filter("dateAndTimeFilter", DateAndTimeFilter)
+  .filter("nullFilter", NullFilter)
   .filter("districtFilter", DistrictFilter)
   .filter("provinceFilter", ProvinceFilter)
   .filter("facilityFilter", FacilityFilter)

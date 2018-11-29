@@ -113,10 +113,10 @@
             {{overStockItem.price}}
           </td>
           <td class="table--body-150" ng-show="overStockItem.isFirst && !isDistrictExpiredProduct" rowspan="{{overStockItem.rowSpan}}">
-            {{overStockItem.cmm}}
+            {{overStockItem.cmm | nullFilter}}
           </td>
           <td class="table--body-150" ng-show="overStockItem.isFirst && !isDistrictExpiredProduct" rowspan="{{overStockItem.rowSpan}}">
-            {{overStockItem.mos}}
+            {{overStockItem.mos | nullFilter}}
           </td>
         </tr>
       </table>

@@ -103,10 +103,10 @@
           <td ng-show="entry.isFirst" rowspan="{{entry.rowSpan}}">
             <span ng-hide="angular.isUndefined(entry.cmm)"><img
                 src="/public/images/exclamation.png" class="exclamation" ng-show="hasExpirationRisk(entry)">
-            {{entry.estimated_months}}</span>
+            {{entry.estimated_months | nullFilter}}</span>
           </td>
           <td ng-show="entry.isFirst" rowspan="{{entry.rowSpan}}" class="align-right">
-            {{entry.cmm}}
+            {{entry.cmm | nullFilter}}
           </td>
         </tr>
       </table>
