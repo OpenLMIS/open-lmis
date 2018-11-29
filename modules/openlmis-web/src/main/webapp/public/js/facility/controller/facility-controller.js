@@ -273,8 +273,12 @@ function FacilityController($scope, facilityReferenceData, $routeParams, facilit
   
   function updateReportTypeToDisplay() {
     $scope.facility.supportedReportTypes = $scope.facility.supportedReportTypes || [];
-  
-    var supportedProgramIds = _.pluck(_.pluck($scope.facility.supportedPrograms, 'program'), 'id');
+    
+    var supportedProgramIds = _.map($scope.facility.supportedPrograms, function (supportedProgram) {
+      if (supportedProgram.active) {
+        return supportedProgram.program && supportedProgram.program.id;
+      }
+    });
     var supportedReportTypeId = _.pluck(_.pluck($scope.facility.supportedReportTypes, 'reportType'), "id");
     
     var reportTypeListBySelectedProgram = _.filter($scope.reportTypes, function (reportType) {
@@ -289,8 +293,11 @@ function FacilityController($scope, facilityReferenceData, $routeParams, facilit
     if ($scope.facility.supportedPrograms) {
       $scope.facility.supportedReportTypes = _.compact(_.map($scope.facility.supportedPrograms, function (supportedProgramsAndReportTypes) {
         if (supportedProgramsAndReportTypes.reportType) {
+          var reportType = supportedProgramsAndReportTypes.reportType;
+          var program = supportedProgramsAndReportTypes.program;
+
           return {
-            reportType: supportedProgramsAndReportTypes.reportType,
+            reportType: Object.assign({program: program}, reportType),
             active: supportedProgramsAndReportTypes.reportActive,
             editedStartDate: supportedProgramsAndReportTypes.stringReportTypeDate
           };
