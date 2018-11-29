@@ -8,18 +8,15 @@
  * You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org. 
  */
 
-
-function FacilityController($scope, facilityReferenceData, $routeParams, facility, Facility, demographicCategories, $location, FacilityProgramProducts, FacilityProgramProductsISA, priceSchedules, facilityImages, $q, $dialog, messageService, interfacesReferenceData)
-{
+function FacilityController($scope, facilityReferenceData, $routeParams, facility, Facility, demographicCategories, $location, FacilityProgramProducts, FacilityProgramProductsISA, priceSchedules, facilityImages, $q, $dialog, messageService, interfacesReferenceData) {
   $scope.$parent.facilityId = null;
   $scope.message = "";
   $scope.$parent.message = "";
   $scope.isaService = FacilityProgramProductsISA; //isaService is used by ISACoefficientsModalController, which is intended to be used as a descendant controller of this one.
   initialize();
-
+  
   $scope.demographicCategories = demographicCategories; //Will be undefined if we aren't in VIMS
-
-
+  
   function initialize() {
     $scope.facilityTypes = facilityReferenceData.facilityTypes;
     $scope.geographicZones = facilityReferenceData.geographicZones;
@@ -35,8 +32,9 @@ function FacilityController($scope, facilityReferenceData, $routeParams, facilit
       $scope.originalFacilityName = facility.name;
       $scope.isEdit = true;
       updateProgramsToDisplay();
-      updateReportTypeToDisplay();
       updateInterfacesToDisplay();
+      updateSupportedReportTypesFromSupportedPrograms();
+      updateReportTypeToDisplay();
     } else {
       $scope.facility = {};
       updateProgramsToDisplay();
@@ -46,54 +44,45 @@ function FacilityController($scope, facilityReferenceData, $routeParams, facilit
     }
     $scope.facilityProgramProductsList = [];
   }
-
+  
   function convertStringToCorrectDateFormat(stringDate) {
     if (stringDate) {
       return stringDate.split("-").reverse().join("-");
     }
     return null;
   }
-
+  
   function getFacilityWithDateObjects(facility) {
     angular.forEach(facility.supportedPrograms, function (supportedProgram) {
       if (supportedProgram.startDate) {
         supportedProgram.startDate = supportedProgram.stringStartDate;
       }
     });
-  
-    angular.forEach(facility.supportedReportTypes, function (supportedReportType) {
-      if (supportedReportType.startDate) {
-        supportedReportType.startDate = supportedReportType.stringStartDate;
-      }
-    });
-
+    
     facility.goLiveDate = convertStringToCorrectDateFormat(facility.stringGoLiveDate);
     facility.goDownDate = convertStringToCorrectDateFormat(facility.stringGoDownDate);
-
+    
     return facility;
   }
-
+  
   $scope.showISAEditModal = function (supportedProgram) {
     $scope.currentProgram = supportedProgram.program;
     $scope.$broadcast('showISAEditModal');
   };
-
+  
   $scope.cancel = function () {
     $location.path('#/search');
   };
-
-  $scope.saveFacility = function() {
-    if ($scope.facilityForm.$error.pattern || $scope.facilityForm.$error.required)
-    {
+  
+  $scope.saveFacility = function () {
+    if ($scope.facilityForm.$error.pattern || $scope.facilityForm.$error.required) {
       $scope.showError = "true";
       $scope.error = 'form.error';
       $scope.message = "";
       return;
     }
-
-
-    var facilitySaveCallback = function(data)
-    {
+    
+    var facilitySaveCallback = function (data) {
       $scope.showError = "true";
       $scope.error = "";
       $scope.errorProgram = "";
@@ -102,19 +91,40 @@ function FacilityController($scope, facilityReferenceData, $routeParams, facilit
       $scope.$parent.facilityId = $scope.facility.id;
       $location.path('');
     };
-
-
+    
+    conventReportType($scope.facility);
+    
     if (!$scope.isEdit) {
       Facility.getFacilityById().save({}, $scope.facility, facilitySaveCallback, errorFunc);
     } else {
       Facility.getFacilityById().update({id: $scope.facility.id}, $scope.facility, facilitySaveCallback, errorFunc);
     }
+    
+    function conventReportType(facility) {
+      var supportedReportTypes = facility.supportedReportTypes;
+      
+      facility.supportedPrograms.forEach(function (supportedProgram) {
+        if (supportedProgram.program) {
+          var supportedReportType = _.find(supportedReportTypes, function (supportedReportType) {
+            return supportedReportType.reportType && supportedReportType.reportType.program &&
+              supportedReportType.reportType.program.id === supportedProgram.program.id;
+          });
+          if (supportedReportType) {
+            supportedProgram.reportType = {
+              id: supportedReportType.reportType.id
+            };
+            supportedProgram.reportActive = supportedReportType.active;
+            supportedProgram.reportStartDate = supportedReportType.editedStartDate;
+          }
+        }
+      });
+    }
   };
-
+  
   $scope.blurDateFields = function () {
     angular.element("input[ui-date]").blur();
   };
-
+  
   $scope.addSupportedProgram = function (supportedProgram) {
     if (supportedProgram.active && !supportedProgram.editedStartDate) {
       $scope.showDateNotEnteredError = true;
@@ -136,7 +146,7 @@ function FacilityController($scope, facilityReferenceData, $routeParams, facilit
     $scope.supportedReportType = undefined;
     updateReportTypeToDisplay();
   };
-
+  
   $scope.showConfirmDateChangeWindow = function (program) {
     window.program = program;
     if (getProgramById(program.program.id).push) {
@@ -150,7 +160,7 @@ function FacilityController($scope, facilityReferenceData, $routeParams, facilit
     };
     OpenLmisDialog.newDialog(dialogOpts, $scope.dateChangeCallback, $dialog);
   };
-
+  
   $scope.dateChangeCallback = function (result) {
     if (result) {
       window.program.startDate = window.program.editedStartDate;
@@ -158,7 +168,7 @@ function FacilityController($scope, facilityReferenceData, $routeParams, facilit
       window.program.editedStartDate = window.program.startDate;
     }
   };
-
+  
   $scope.showRemoveProgramAndReportTypeConfirmDialog = function (supportedProgram) {
     $scope.selectedSupportedProgram = supportedProgram;
     var options = {
@@ -168,7 +178,7 @@ function FacilityController($scope, facilityReferenceData, $routeParams, facilit
     };
     OpenLmisDialog.newDialog(options, $scope.removeSupportedProgramAndReportTypeConfirm, $dialog);
   };
-
+  
   $scope.removeSupportedProgramAndReportTypeConfirm = function (result) {
     if (result) {
       $scope.removeSupportedProgram();
@@ -176,7 +186,7 @@ function FacilityController($scope, facilityReferenceData, $routeParams, facilit
     }
     $scope.selectedSupportedProgram = undefined;
   };
-
+  
   $scope.removeSupportedProgram = function () {
     $scope.facility.supportedPrograms = _.without($scope.facility.supportedPrograms, $scope.selectedSupportedProgram);
     updateProgramsToDisplay();
@@ -197,18 +207,18 @@ function FacilityController($scope, facilityReferenceData, $routeParams, facilit
     return (_.findWhere($scope.reportTypes, {'id': id}));
   }
   
-  $scope.checkProgramAndReportTypeStartDate = function(supportedReportType) {
+  $scope.checkProgramAndReportTypeStartDate = function (supportedReportType) {
     var reportType = getReportTypeById(supportedReportType.reportType.id);
     var programId = reportType.program.id;
-  
+    
     var supportedProgram = _.find($scope.facility.supportedPrograms, function (supportedProgram) {
       return supportedProgram.program.id === programId;
     });
-  
+    
     $scope.showReportTypeDateError =
       new Date(supportedReportType.editedStartDate) < new Date(supportedProgram.editedStartDate);
   };
-
+  
   var successFunc = function (data) {
     $scope.showError = "true";
     $scope.error = "";
@@ -217,18 +227,18 @@ function FacilityController($scope, facilityReferenceData, $routeParams, facilit
     $scope.originalFacilityCode = data.facility.code;
     $scope.originalFacilityName = data.facility.name;
   };
-
+  
   var errorFunc = function (data) {
     $scope.showError = "true";
     $scope.message = "";
     $scope.error = data.data.error;
   };
-
+  
   $scope.disableFacilityCallBack = function (result) {
     if (!result) return;
     Facility.getFacilityById().remove({id: $scope.facility.id}, {}, successFunc, errorFunc);
   };
-
+  
   $scope.showConfirmFacilityDisableWindow = function () {
     var dialogOpts = {
       id: "disableFacilityDialog",
@@ -237,7 +247,7 @@ function FacilityController($scope, facilityReferenceData, $routeParams, facilit
     };
     OpenLmisDialog.newDialog(dialogOpts, $scope.disableFacilityCallBack, $dialog);
   };
-
+  
   $scope.showConfirmFacilityEnable = function () {
     var dialogOpts = {
       id: "enableConfirmModal",
@@ -246,12 +256,12 @@ function FacilityController($scope, facilityReferenceData, $routeParams, facilit
     };
     OpenLmisDialog.newDialog(dialogOpts, $scope.enableFacilityCallBack, $dialog);
   };
-
+  
   $scope.enableFacilityCallBack = function (result) {
     if (!result) return;
     Facility.getFacilityById().restore({id: $scope.facility.id}, successFunc, errorFunc);
   };
-
+  
   function updateProgramsToDisplay() {
     $scope.facility.supportedPrograms = $scope.facility.supportedPrograms || [];
     var supportedProgramIds = _.pluck(_.pluck($scope.facility.supportedPrograms, 'program'), "id");
@@ -263,9 +273,10 @@ function FacilityController($scope, facilityReferenceData, $routeParams, facilit
   
   function updateReportTypeToDisplay() {
     $scope.facility.supportedReportTypes = $scope.facility.supportedReportTypes || [];
+  
     var supportedProgramIds = _.pluck(_.pluck($scope.facility.supportedPrograms, 'program'), 'id');
     var supportedReportTypeId = _.pluck(_.pluck($scope.facility.supportedReportTypes, 'reportType'), "id");
-  
+    
     var reportTypeListBySelectedProgram = _.filter($scope.reportTypes, function (reportType) {
       return _.contains(supportedProgramIds, reportType.program.id);
     });
@@ -273,7 +284,21 @@ function FacilityController($scope, facilityReferenceData, $routeParams, facilit
       return _.contains(supportedReportTypeId, reportType.id);
     });
   }
-
+  
+  function updateSupportedReportTypesFromSupportedPrograms() {
+    if ($scope.facility.supportedPrograms) {
+      $scope.facility.supportedReportTypes = _.compact(_.map($scope.facility.supportedPrograms, function (supportedProgramsAndReportTypes) {
+        if (supportedProgramsAndReportTypes.reportType) {
+          return {
+            reportType: supportedProgramsAndReportTypes.reportType,
+            active: supportedProgramsAndReportTypes.reportActive,
+            editedStartDate: supportedProgramsAndReportTypes.stringReportTypeDate
+          };
+        }
+      }));
+    }
+  }
+  
   function updateInterfacesToDisplay() {
     $scope.facility.interfaceMappings = $scope.facility.interfaceMappings || [];
     var interfaceIds = _.pluck(_.pluck($scope.facility.interfaceMappings, 'interfaceId'), "id");
@@ -282,29 +307,29 @@ function FacilityController($scope, facilityReferenceData, $routeParams, facilit
     });
     $scope.interfaceSelectMessage = ($scope.interfacesToDisplay.length) ? 'label.select.interface' : 'label.no.interface.left';
   }
-
-  $scope.addInterfaceMapping = function(mapping){
-    if(!mapping.interfaceId){
+  
+  $scope.addInterfaceMapping = function (mapping) {
+    if (!mapping.interfaceId) {
       $scope.showInterfaceRequiredError = true;
       return;
     }
-    if(!mapping.mappedId){
+    if (!mapping.mappedId) {
       $scope.showMappingIdRequiredError = true;
       return;
     }
     $scope.showInterfaceRequiredError = false;
     $scope.showMappingIdRequiredError = false;
-
+    
     mapping.interfaceId = getInterfaceById(mapping.interfaceId);
     $scope.facility.interfaceMappings.push(mapping);
     $scope.interfaceMapping = undefined;
     updateInterfacesToDisplay();
   };
-
-  function getInterfaceById(interfaceId){
+  
+  function getInterfaceById(interfaceId) {
     return (_.findWhere($scope.interfaces, {'id': interfaceId}));
   }
-
+  
   $scope.showRemoveInterfaceMappingConfirmDialog = function (interfaceMapping) {
     $scope.selectedInterfaceMapping = interfaceMapping;
     var options = {
@@ -314,8 +339,8 @@ function FacilityController($scope, facilityReferenceData, $routeParams, facilit
     };
     OpenLmisDialog.newDialog(options, $scope.removeInterfaceMappingConfirm, $dialog);
   };
-
-  $scope.removeInterfaceMappingConfirm = function(result){
+  
+  $scope.removeInterfaceMappingConfirm = function (result) {
     if (result) {
       $scope.facility.interfaceMappings = _.without($scope.facility.interfaceMappings, $scope.selectedInterfaceMapping);
     }
@@ -334,27 +359,27 @@ FacilityController.resolve = {
     }, 100);
     return deferred.promise;
   },
-  facilityImages: function ($q,$route, $timeout, FacilityImages){
+  facilityImages: function ($q, $route, $timeout, FacilityImages) {
     var deferred = $q.defer();
     var facilityId = $route.current.params.facilityId;
-    $timeout(function(){
-      if(!isUndefined(facilityId)){
-        FacilityImages.get({facilityId: facilityId }, function (data){
+    $timeout(function () {
+      if (!isUndefined(facilityId)) {
+        FacilityImages.get({facilityId: facilityId}, function (data) {
           deferred.resolve(data);
         });
-      }else{
+      } else {
         deferred.resolve([]);
       }
     }, 100);
     return deferred.promise;
   },
-
+  
   facility: function ($q, $timeout, Facility, $route) {
     if ($route.current.params.facilityId === undefined) return undefined;
-
+    
     var deferred = $q.defer();
     var facilityId = $route.current.params.facilityId;
-
+    
     $timeout(function () {
       Facility.getFacilityById().get({id: facilityId}, function (data) {
         deferred.resolve(data.facility);
@@ -362,7 +387,7 @@ FacilityController.resolve = {
     }, 100);
     return deferred.promise;
   },
-
+  
   priceSchedules: function ($q, $route, $timeout, PriceScheduleCategories) {
     var deferred = $q.defer();
     $timeout(function () {
@@ -372,16 +397,16 @@ FacilityController.resolve = {
     }, 100);
     return deferred.promise;
   },
-
-  interfacesReferenceData : function ($q, $route, $timeout, ELMISInterface) {
+  
+  interfacesReferenceData: function ($q, $route, $timeout, ELMISInterface) {
     var deferred = $q.defer();
-
+    
     $timeout(function () {
       ELMISInterface.getInterfacesReference().get({}, function (data) {
         deferred.resolve(data.activeInterfaces);
       }, {});
     }, 100);
-
+    
     return deferred.promise;
   }
 };
@@ -390,14 +415,11 @@ FacilityController.resolve = {
 /*  The code below is intended to illustrate one potential way of conditionally injecting demographic-category data
     For now, because we don’t have a way to conditionally toggle OpenLMIS’ features on and off, we simple set injectDemographyCategories to true. */
 var injectDemographyCategories = true;
-if(injectDemographyCategories)
-{
-  FacilityController.resolve.demographicCategories = function ($q, $route, $timeout, DemographicEstimateCategories)
-  {
+if (injectDemographyCategories) {
+  FacilityController.resolve.demographicCategories = function ($q, $route, $timeout, DemographicEstimateCategories) {
     var deferred = $q.defer();
     $timeout(function () {
-      DemographicEstimateCategories.get({}, function(data)
-      {
+      DemographicEstimateCategories.get({}, function (data) {
         //Add 'Facility Population' to the set of available categories
         var categories = data.estimate_categories;
         var facilityCatchmentPopulation = {'id': 0, 'name': 'Facility Catchment Population'};
@@ -411,13 +433,13 @@ if(injectDemographyCategories)
 else //As suggested in the comments above, this else-clause is intended to run for non-Tanzanian countries.
 {
   //demographicEstimateCategories has to be assigned something...
-  FacilityController.resolve.demographicCategories = function($timeout)
-  {
+  FacilityController.resolve.demographicCategories = function ($timeout) {
     //...so set it to a $timeout which returns a promise that will be resolved
     return $timeout
     (
-        function() {},
-        5
+      function () {
+      },
+      5
     );
   };
 }
