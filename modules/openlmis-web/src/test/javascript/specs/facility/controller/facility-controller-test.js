@@ -149,7 +149,7 @@ describe("Facility Controller", function () {
 
       scope.selectedSupportedProgram = arvProgram;
 
-      scope.removeSupportedProgramConfirm(true);
+      scope.removeSupportedProgramAndReportTypeConfirm(true);
 
       expect(scope.facility.supportedPrograms.length).toEqual(1);
       expect(scope.facility.supportedPrograms[0].code).toEqual("HIV");
@@ -167,7 +167,7 @@ describe("Facility Controller", function () {
 
       scope.selectedSupportedProgram = arvProgram;
 
-      scope.removeSupportedProgramConfirm(false);
+      scope.removeSupportedProgramAndReportTypeConfirm(false);
 
       expect(scope.facility.supportedPrograms.length).toEqual(2);
       expect(scope.facility.supportedPrograms[0].code).toEqual("ARV");

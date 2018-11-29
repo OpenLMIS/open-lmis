@@ -82,8 +82,7 @@ function FacilityController($scope, facilityReferenceData, $routeParams, facilit
     $location.path('#/search');
   };
 
-  $scope.saveFacility = function()
-  {
+  $scope.saveFacility = function() {
     if ($scope.facilityForm.$error.pattern || $scope.facilityForm.$error.required)
     {
       $scope.showError = "true";
@@ -130,7 +129,9 @@ function FacilityController($scope, facilityReferenceData, $routeParams, facilit
   };
   
   $scope.addSupportedReportType = function (supportedReportType) {
-    supportedReportType.reportType = getReportTypeById(supportedReportType.reportType.id);
+    var reportType = getReportTypeById(supportedReportType.reportType.id);
+    supportedReportType.reportType = reportType;
+    
     $scope.facility.supportedReportTypes.push(supportedReportType);
     $scope.supportedReportType = undefined;
     updateReportTypeToDisplay();
@@ -158,19 +159,20 @@ function FacilityController($scope, facilityReferenceData, $routeParams, facilit
     }
   };
 
-  $scope.showRemoveProgramConfirmDialog = function (supportedProgram) {
+  $scope.showRemoveProgramAndReportTypeConfirmDialog = function (supportedProgram) {
     $scope.selectedSupportedProgram = supportedProgram;
     var options = {
       id: "removeProgramConfirmDialog",
       header: 'delete.facility.program.header',
       body: messageService.get('delete.facility.program.confirm', $scope.selectedSupportedProgram.program.name)
     };
-    OpenLmisDialog.newDialog(options, $scope.removeSupportedProgramConfirm, $dialog);
+    OpenLmisDialog.newDialog(options, $scope.removeSupportedProgramAndReportTypeConfirm, $dialog);
   };
 
-  $scope.removeSupportedProgramConfirm = function (result) {
+  $scope.removeSupportedProgramAndReportTypeConfirm = function (result) {
     if (result) {
       $scope.removeSupportedProgram();
+      $scope.removeSupportedReportType();
     }
     $scope.selectedSupportedProgram = undefined;
   };
@@ -179,8 +181,14 @@ function FacilityController($scope, facilityReferenceData, $routeParams, facilit
     $scope.facility.supportedPrograms = _.without($scope.facility.supportedPrograms, $scope.selectedSupportedProgram);
     updateProgramsToDisplay();
   };
-
-
+  
+  $scope.removeSupportedReportType = function () {
+    $scope.facility.supportedReportTypes = _.reject($scope.facility.supportedReportTypes, function (supportedReportType) {
+      return supportedReportType.reportType.program.id === $scope.selectedSupportedProgram.program.id;
+    });
+    updateReportTypeToDisplay();
+  };
+  
   function getProgramById(id) {
     return (_.findWhere($scope.programs, {'id': id}));
   }
@@ -188,6 +196,18 @@ function FacilityController($scope, facilityReferenceData, $routeParams, facilit
   function getReportTypeById(id) {
     return (_.findWhere($scope.reportTypes, {'id': id}));
   }
+  
+  $scope.checkProgramAndReportTypeStartDate = function(supportedReportType) {
+    var reportType = getReportTypeById(supportedReportType.reportType.id);
+    var programId = reportType.program.id;
+  
+    var supportedProgram = _.find($scope.facility.supportedPrograms, function (supportedProgram) {
+      return supportedProgram.program.id === programId;
+    });
+  
+    $scope.showReportTypeDateError =
+      new Date(supportedReportType.editedStartDate) < new Date(supportedProgram.editedStartDate);
+  };
 
   var successFunc = function (data) {
     $scope.showError = "true";

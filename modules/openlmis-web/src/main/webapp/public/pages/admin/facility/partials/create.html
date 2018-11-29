@@ -261,7 +261,7 @@
                 </td>
 
                 <td><a href="" class="close" id="remove{{$index}}"
-                       ng-click="showRemoveProgramConfirmDialog(supportedProgram)"
+                       ng-click="showRemoveProgramAndReportTypeConfirmDialog(supportedProgram)"
                        openlmis-message="create.facility.removeProgram"></a></td>
               </tr>
               <tr class="add-supported-program-row">
@@ -312,7 +312,8 @@
               </thead>
               <tbody>
                 <tr ng-repeat="supportedReportType in facility.supportedReportTypes">
-                  <td ng-bind="supportedReportType.reportType.name" reportTypeId="{{supportedReportType.reportType.id}}"></td>
+                  <td ng-bind="supportedReportType.reportType.name"
+                      reportTypeId="{{supportedReportType.reportType.id}}"></td>
                   <td><input ng-model="supportedReportType.active" type="checkbox" value="false"/></td>
                   <td>
                     <input type="text" ng-model="supportedReportType.editedStartDate"
@@ -320,11 +321,10 @@
                            ui-date="{dateFormat:'dd/mm/yy', changeYear: true}"
                            ui-date-format="yy-mm-dd"
                            ng-required="supportedReportType.active === true"
+                           ng-change="checkProgramAndReportTypeStartDate(supportedReportType)"
                            ng-disabled="!supportedReportType.active"/>
-                    <span class="field-error"
-                          ng-show="supportedReportType.active && !supportedReportType.startDate && showError"
-                          openlmis-message="create.facility.mandatoryStartDate">
-                      </span>
+                    <span class="field-error" ng-show="showReportTypeDateError"
+                          openlmis-message="create.facility.reportTypeStartDate"></span>
                   </td>
                   <td></td>
                 </tr>
@@ -341,19 +341,20 @@
                   </td>
                   <td>
                     <input type="text" id="supported-reportType-start-date" name="supportedReportType"
-                      ng-model="supportedReportType.editedStartDate"
-                      readonly
-                      ui-date="{dateFormat:'dd/mm/yy', changeYear: true}"
-                      ui-date-format="yy-mm-dd"
-                      ng-disabled="!supportedReportType.active"/>
-                    <span class="field-error" ng-show="showDateNotEnteredError"
-                    openlmis-message="create.facility.mandatoryStartDate">
-                    </span>
+                           ng-model="supportedReportType.editedStartDate"
+                           readonly
+                           ui-date="{dateFormat:'dd/mm/yy', changeYear: true}"
+                           ui-date-format="yy-mm-dd"
+                           ng-change="checkProgramAndReportTypeStartDate(supportedReportType)"
+                           ng-disabled="!supportedReportType.active"/>
+                    <span class="field-error" ng-show="showReportTypeDateError"
+                          openlmis-message="create.facility.reportTypeStartDate"></span>
                   </td>
                   <td>
                     <input type="button" class="btn btn-primary" id="supported-reportType-add"
-                      openlmis-message="button.add" ng-disabled="!supportedReportType.reportType.id"
-                      ng-click="addSupportedReportType(supportedReportType)">
+                           openlmis-message="button.add"
+                           ng-disabled="!(supportedReportType.active && supportedReportType.editedStartDate && !showReportTypeDateError)"
+                           ng-click="addSupportedReportType(supportedReportType)">
                   </td>
                 </tr>
               </tbody>
@@ -361,7 +362,7 @@
           </div>
         </div>
       </div>
-      
+
       <div id="overrideIsaModal" modal="programProductsISAModal" options="{'backdrop':'static', 'escape':false}"
            ng-controller="FacilityIsaModalController">
 
@@ -804,7 +805,6 @@
                  ng-show="facility.id != null && facility.enabled"
                  ng-click="showConfirmFacilityDisableWindow()" openlmis-message="button.disable"/>
         </div>
-
 
         <div class="toolbar-error" id="saveErrorMsgDiv">
           <span openlmis-message="error" ng-show="error"></span>&nbsp;
