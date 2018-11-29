@@ -153,7 +153,7 @@ public abstract class AbstractReportModelGenerator {
 
     protected String getFormatDoubleValue(Double d) {
         DecimalFormat formatter = new DecimalFormat("0.##");
-        return null != d ? formatter.format(d) : "";
+        return null != d ? formatter.format(d) : "N/A";
     }
 
     protected Map<String, String> createMergedRegion(String firstRow, String lastRow, String firstCol, String lastCol, String value) {

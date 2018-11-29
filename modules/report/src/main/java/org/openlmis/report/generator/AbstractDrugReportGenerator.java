@@ -356,7 +356,7 @@ public abstract class AbstractDrugReportGenerator extends AbstractReportModelGen
                     }
                     if (StringUtils.equalsIgnoreCase(latestDate, kv.getKey())) {
                         latestStockStatus = (StockOnHandStatus)tmpValue.get("status");
-                        obj.put("cmmValue", cmm < 0 ? "" : String.valueOf(cmm));
+                        obj.put("cmmValue", cmm < 0 ? "N/A" : String.valueOf(cmm));
                     }
                     obj.put(kv.getKey(), tmpValue);
                 } else {
