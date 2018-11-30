@@ -215,6 +215,9 @@ function FacilityController($scope, facilityReferenceData, $routeParams, facilit
         if (supportedReportType.reportType.program.id === supportedProgram.program.id &&
         new Date(supportedReportType.editedStartDate) < new Date(supportedProgram.editedStartDate)) {
           supportedReportType.active = false;
+          supportedReportType.reportTypeDateLateThanProgramDate = true;
+        } else {
+          supportedReportType.reportTypeDateLateThanProgramDate = false;
         }
       });
     }
@@ -238,8 +241,11 @@ function FacilityController($scope, facilityReferenceData, $routeParams, facilit
       return supportedProgram.program.id === programId;
     });
     
-    $scope.showReportTypeDateError =
-      new Date(supportedReportType.editedStartDate) < new Date(supportedProgram.editedStartDate);
+    if (new Date(supportedReportType.editedStartDate) < new Date(supportedProgram.editedStartDate)) {
+      supportedReportType.startDateError = true;
+    } else {
+      supportedReportType.startDateError = false;
+    }
   };
   
   var successFunc = function (data) {

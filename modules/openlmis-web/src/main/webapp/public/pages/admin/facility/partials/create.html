@@ -330,8 +330,10 @@
                            ng-required="supportedReportType.active === true"
                            ng-change="checkProgramAndReportTypeStartDate(supportedReportType)"
                            ng-disabled="!supportedReportType.active"/>
-                    <span class="field-error" ng-show="showReportTypeDateError"
+                    <span class="field-error" ng-show="supportedReportType.startDateError"
                           openlmis-message="create.facility.reportTypeStartDate"></span>
+                    <span class="field-error" ng-show="supportedReportType.reportTypeDateLateThanProgramDate"
+                          openlmis-message="create.facility.reportTypeDateLateThanProgramDate"></span>
                   </td>
                   <td></td>
                 </tr>
@@ -354,13 +356,14 @@
                            ui-date-format="yy-mm-dd"
                            ng-change="checkProgramAndReportTypeStartDate(supportedReportType)"
                            ng-disabled="!supportedReportType.active"/>
-                    <span class="field-error" ng-show="showReportTypeDateError"
-                          openlmis-message="create.facility.reportTypeStartDate"></span>
+                    <span class="field-error" ng-show="supportedReportType.startDateError"
+                          openlmis-message="create.facility.reportTypeStartDate"></span
                   </td>
                   <td>
                     <input type="button" class="btn btn-primary" id="supported-reportType-add"
                            openlmis-message="button.add"
-                           ng-disabled="!(supportedReportType.active && supportedReportType.editedStartDate && !showReportTypeDateError)"
+                           ng-disabled="!(supportedReportType.active && supportedReportType.editedStartDate &&
+                           !supportedReportType.startDateError)"
                            ng-click="addSupportedReportType(supportedReportType)">
                   </td>
                 </tr>
