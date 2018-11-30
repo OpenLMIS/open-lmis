@@ -31,7 +31,7 @@ public interface ProgramSupportedMapper {
             " reportTypeId, reportStartDate, reportActive) VALUES (" +
             "#{facilityId}, #{program.id}, #{active}, #{startDate}, #{createdBy}, #{modifiedBy}, #{modifiedDate}" +
             ", #{reportType.id}, #{reportStartDate}, #{reportActive})")
-    @Options(flushCache = Options.FlushCachePolicy.TRUE, useGeneratedKeys = true)
+    @Options(useGeneratedKeys = true)
     void insert(ProgramSupported programSupported);
 
     @Select("SELECT * FROM programs_supported WHERE facilityId = #{facilityId} AND programId = #{programId}")
