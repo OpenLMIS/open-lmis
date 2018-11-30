@@ -239,7 +239,8 @@
               <tr ng-repeat="supportedProgram in facility.supportedPrograms">
                 <td ng-bind="supportedProgram.program.name" programId="{{supportedProgram.program.id}}"></td>
                 <td>
-                  <input ng-model="supportedProgram.active" type="checkbox" value="true"/>
+                  <input ng-model="supportedProgram.active" type="checkbox" value="true"
+                  ng-change="updateProgramActiveStatus(supportedProgram)"/>
                 </td>
                 <td ng-init="supportedProgram.editedStartDate = supportedProgram.startDate">
                   <input type="text" ng-model="supportedProgram.editedStartDate"
@@ -247,6 +248,7 @@
                          ui-date="{dateFormat:'dd/mm/yy', changeYear: true}"
                          ui-date-format="yy-mm-dd"
                          ng-required="supportedProgram.active == true"
+                         ng-disabled="!supportedProgram.active"
                          ng-change="showConfirmDateChangeWindow(supportedProgram)"/>
                   <span class="field-error"
                         ng-show="supportedProgram.active && !supportedProgram.startDate && showError"
@@ -273,23 +275,26 @@
                     <option value="" openlmis-message="programSupportedMessage"></option>
                   </select>
                 </td>
-                <td><input type="checkbox" ng-model="supportedProgram.active" id="supported-program-active"
+                <td>
+                  <input type="checkbox" ng-model="supportedProgram.active" id="supported-program-active"
                            ng-disabled="!supportedProgram.program.id"/></td>
-                <td><input type="text" id="supported-program-start-date" name="supportedProgram"
+                <td>
+                  <input type="text" id="supported-program-start-date" name="supportedProgram"
                            ng-model="supportedProgram.editedStartDate"
                            readonly
                            ng-change="showConfirmDateChangeWindow(supportedProgram)"
                            ui-date="{dateFormat:'dd/mm/yy', changeYear: true}"
                            ui-date-format="yy-mm-dd"
-                           ng-disabled="!supportedProgram.program.id"/>
+                           ng-disabled="!supportedProgram.active"/>
                   <span class="field-error" ng-show="showDateNotEnteredError"
                         openlmis-message="create.facility.mandatoryStartDate">
-            </span>
+
+                  </span>
                 </td>
                 <td></td>
                 <td><input type="button" class="btn btn-primary" id="supported-program-add"
                            openlmis-message="button.add"
-                           ng-disabled="!supportedProgram.program.id"
+                           ng-disabled="!(supportedProgram.active && supportedProgram.editedStartDate)"
                            ng-click="addSupportedProgram(supportedProgram)"></td>
               </tr>
               </tbody>

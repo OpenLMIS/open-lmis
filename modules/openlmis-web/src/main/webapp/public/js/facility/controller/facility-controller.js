@@ -167,6 +167,8 @@ function FacilityController($scope, facilityReferenceData, $routeParams, facilit
     } else {
       window.program.editedStartDate = window.program.startDate;
     }
+  
+    $scope.updateProgramActiveStatus(window.program);
   };
   
   $scope.showRemoveProgramAndReportTypeConfirmDialog = function (supportedProgram) {
@@ -196,6 +198,27 @@ function FacilityController($scope, facilityReferenceData, $routeParams, facilit
     $scope.facility.supportedReportTypes = _.reject($scope.facility.supportedReportTypes, function (supportedReportType) {
       return supportedReportType.reportType.program.id === $scope.selectedSupportedProgram.program.id;
     });
+    updateReportTypeToDisplay();
+  };
+  
+  $scope.updateProgramActiveStatus = function (supportedProgram) {
+    if (!supportedProgram.active) {
+      _.forEach($scope.facility.supportedReportTypes, function (supportedReportType) {
+        if (supportedReportType.reportType.program.id === supportedProgram.program.id) {
+          supportedReportType.active = false;
+        }
+      });
+    }
+    
+    if (supportedProgram.active) {
+      _.forEach($scope.facility.supportedReportTypes, function (supportedReportType) {
+        if (supportedReportType.reportType.program.id === supportedProgram.program.id &&
+        new Date(supportedReportType.editedStartDate) < new Date(supportedProgram.editedStartDate)) {
+          supportedReportType.active = false;
+        }
+      });
+    }
+  
     updateReportTypeToDisplay();
   };
   
