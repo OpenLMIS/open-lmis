@@ -1,3 +1,7 @@
+DO
+$do$
+BEGIN
+IF EXISTS (SELECT * FROM programs WHERE id = 3) THEN
 INSERT INTO regimens(programid, categoryid, code, name, active, displayorder, createdby, modifiedby, iscustom) VALUES (3, 1, 175, 'HIV Determine Consumo', TRUE, 105, NULL, NULL, TRUE );
 INSERT INTO regimens(programid, categoryid, code, name, active, displayorder, createdby, modifiedby, iscustom) VALUES (3, 1, 176, 'Sífilis Teste Rápido Consumo', TRUE, 106, NULL, NULL, TRUE);
 INSERT INTO regimens(programid, categoryid, code, name, active, displayorder, createdby, modifiedby, iscustom) VALUES (3, 1, 177, 'Sífilis Teste Rápido Injustificado', TRUE, 107, NULL, NULL, TRUE);
@@ -10,3 +14,6 @@ INSERT INTO regimens(programid, categoryid, code, name, active, displayorder, cr
 INSERT INTO regimens(programid, categoryid, code, name, active, displayorder, createdby, modifiedby, iscustom) VALUES (3, 1, 184, 'Sífilis Teste Positivos +', TRUE, 114, NULL, NULL, TRUE);
 INSERT INTO regimens(programid, categoryid, code, name, active, displayorder, createdby, modifiedby, iscustom) VALUES (3, 1, 185, 'Malaria Teste Positivos +', TRUE, 115, NULL, NULL, TRUE);
 INSERT INTO regimens(programid, categoryid, code, name, active, displayorder, createdby, modifiedby, iscustom) VALUES (3, 1, 186, 'Malaria Teste Rápido Consumo', TRUE, 116, NULL, NULL, TRUE);
+END IF;
+END
+$do$
