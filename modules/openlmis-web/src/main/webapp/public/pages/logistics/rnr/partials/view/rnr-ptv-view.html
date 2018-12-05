@@ -1,0 +1,80 @@
+<div class="al-form">
+  <table cellpadding="0" cellspacing="0">
+    <tr>
+      <td rowspan="4" class="background-black banner-text black-width title-height">
+        <div class="banner-text text-nowrap">CMAM - Modelo HdD</div>
+      </td>
+      <td rowspan="2"></td>
+      <td rowspan="2" colspan="{{productNumber}}"></td>
+      <td>
+        <span openlmis-message="view.rnr.mmia.month"></span>
+        <span> : </span> {{month}}
+      </td>
+    </tr>
+    <tr>
+      <td>
+        <span openlmis-message="view.rnr.mmia.year"></span>
+        <span> : </span> {{year}}
+      </td>
+    </tr>
+
+    <tr>
+      <td colspan="{{productNumber + 1}}">
+        <span openlmis-message="view.rnr.healthFacility"></span>:
+        <span class="font-bold">{{rnr.facility.name}}</span>
+      </td>
+      <td class="text__center background-black">
+        <span openlmis-message="report.header.period"></span>
+      </td>
+    </tr>
+
+    <tr>
+      <td colspan="{{productNumber + 1}}">
+        <span openlmis-message="view.rnr.district"></span>:
+        <span class="font-bold">{{rnr.facility.name}}</span>
+      </td>
+      <td>
+        <span class="font-bold">{{actualPeriodStartDate}}-{{actualPeriodEndDate}}</span>
+      </td>
+    </tr>
+
+    <tr class="text-header">
+      <td rowspan="4" class="black-width"></td>
+      <td>Registration</td>
+      <td colspan="{{productNumber}}">Medicines</td>
+      <td>dispensation</td>
+    </tr>
+    <tr class="text-header">
+      <td rowspan="3">Patient Name / HF Service</td>
+      <td class="banner-text header-width" rowspan="3" ng-repeat="item in rnr.products">
+        <div class="header-nowrap"><span>{{item.productCode}}</span></div>
+      </td>
+      <td class="text__height">Type of Patient</td>
+    </tr>
+    <tr class="text-header">
+      <td class="text__height">Total Women:</td>
+    </tr>
+    <tr class="text-header">
+      <td class="text__height">Children:</td>
+    </tr>
+    <tr ng-class="{'text-header': $index == 0, 'text-footer': $index > serviceNumber * 2}" ng-repeat="row in content track by $index">
+      <td>{{($index > 0 && $index <= serviceNumber * 2) ? $index : ""}}</td>
+      <td ng-repeat="cell in row track by $index">{{cell}}</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td class="black-width"></td>
+      <td colspan="2" class="text__left"><span openlmis-message="report.footer.al.completed"></span> : <span class="font-bold">&nbsp;{{submitterSignature}}</span></td>
+      <td colspan="{{productNumber}}" class="text__left"><span openlmis-message="report.footer.al.approved"></span> : <span class="font-bold">&nbsp;{{approverSignature}}</span></td>
+    </tr>
+  </table>
+
+  <div class="align-right">
+    <button class="btn btn-primary btn-download btn-download-pdf" ng-click="downloadPdf()" openlmis-message="view.rnr.mmia.download.button"></button>
+  </div>
+
+  <div class="align-right">
+    <button class="btn btn-primary btn-download btn-download-simam" ng-click="downloadSimam()" openlmis-message="view.rnr.download.simam.button"></button>
+  </div>
+</div>
+

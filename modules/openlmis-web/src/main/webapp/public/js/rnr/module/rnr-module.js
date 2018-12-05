@@ -57,5 +57,10 @@ var rnrModule = angular.module('rnr', ['openlmis', 'ngGrid', 'ui.bootstrap.modal
       templateUrl: 'partials/view/rnr-al-view.html',
       reloadOnSearch: false
     })
+    .when('/view-requisition-ptv/:rnr', {
+      controller: ViewRnrPTVController,
+      templateUrl: 'partials/view/rnr-ptv-view.html',
+      reloadOnSearch: false
+    })
     .otherwise({redirectTo: '/view-requisitions'});
 }]);
