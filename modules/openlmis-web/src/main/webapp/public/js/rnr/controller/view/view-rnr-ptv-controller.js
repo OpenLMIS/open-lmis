@@ -248,7 +248,6 @@ function ViewRnrPTVController($scope, $route, Requisitions, messageService, Date
       row.push(product.received);
       row.push(product.adjustment);
       row.push(product.inventory);
-      row.push(product.requestAmount);
       content.push(row);
     });
 
@@ -259,7 +258,6 @@ function ViewRnrPTVController($scope, $route, Requisitions, messageService, Date
     head.push("Entradas");
     head.push("Losses and Adjustments");
     head.push("Final Stock");
-    head.push("Requisition");
     $scope.content = format(content);
   };
 
