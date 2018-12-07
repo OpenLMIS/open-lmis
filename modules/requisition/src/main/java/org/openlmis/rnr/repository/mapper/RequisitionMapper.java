@@ -77,7 +77,9 @@ public interface RequisitionMapper {
       @Result(property = "actualPeriodStartDate", column = "id", javaType = Date.class,
           one = @One(select = "org.openlmis.rnr.repository.mapper.RequisitionMapper.getRnrPeriodStartDateByRnrId")),
       @Result(property = "actualPeriodEndDate", column = "id", javaType = Date.class,
-          one = @One(select = "org.openlmis.rnr.repository.mapper.RequisitionMapper.getRnrPeriodEndDateByRnrId"))
+          one = @One(select = "org.openlmis.rnr.repository.mapper.RequisitionMapper.getRnrPeriodEndDateByRnrId")),
+      @Result(property = "serviceLineItems", column = "id", javaType = List.class,
+          many = @Many(select = "org.openlmis.rnr.repository.mapper.ServiceLineItemMapper.getServiceLineItemsByRnrId"))
   })
   Rnr getById(Long rnrId);
 

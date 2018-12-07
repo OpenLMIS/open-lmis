@@ -8,6 +8,8 @@ import org.openlmis.core.domain.moz.ProgramDataColumn;
 import org.openlmis.core.domain.moz.SupplementalProgram;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 @Repository
 public interface ProgramDataColumnMapper {
   @Select("SELECT * FROM program_data_columns WHERE code=#{code}")
@@ -25,4 +27,7 @@ public interface ProgramDataColumnMapper {
           many = @Many(select = "org.openlmis.core.repository.mapper.SupplementalProgramMapper.getById"))
   })
   ProgramDataColumn getColumnById(Long id);
+
+  @Select("SELECT * FROM program_data_columns")
+  List<ProgramDataColumn> getAll();
 }

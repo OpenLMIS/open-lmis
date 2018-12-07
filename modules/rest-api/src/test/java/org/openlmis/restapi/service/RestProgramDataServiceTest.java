@@ -1,5 +1,6 @@
 package org.openlmis.restapi.service;
 
+import com.google.common.collect.Lists;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
@@ -18,6 +19,7 @@ import org.openlmis.core.domain.moz.ProgramDataForm;
 import org.openlmis.core.domain.moz.ProgramDataItem;
 import org.openlmis.core.domain.moz.SupplementalProgram;
 import org.openlmis.core.exception.DataException;
+import org.openlmis.core.repository.ProgramDataColumnRepository;
 import org.openlmis.core.repository.ProgramDataRepository;
 import org.openlmis.core.repository.SyncUpHashRepository;
 import org.openlmis.core.repository.mapper.FacilityMapper;
@@ -29,6 +31,8 @@ import org.openlmis.restapi.builder.ProgramDataFormBuilder;
 import org.openlmis.restapi.builder.ProgramDataFormItemBuilder;
 import org.openlmis.restapi.domain.ProgramDataFormDTO;
 import org.openlmis.restapi.domain.ProgramDataFormItemDTO;
+import org.openlmis.rnr.domain.Service;
+import org.openlmis.rnr.repository.ServiceRepository;
 import org.powermock.modules.junit4.PowerMockRunner;
 import org.powermock.modules.junit4.PowerMockRunnerDelegate;
 
@@ -66,6 +70,12 @@ public class RestProgramDataServiceTest {
 
   @Mock
   private RestRequisitionService restRequisitionService;
+
+  @Mock
+  private ServiceRepository serviceRepository;
+
+  @Mock
+  private ProgramDataColumnRepository programDataColumnRepository;
 
   @InjectMocks
   private RestProgramDataService restProgramDataService;
@@ -114,12 +124,18 @@ public class RestProgramDataServiceTest {
         with(ProgramDataFormItemBuilder.value, 200L)));
 
     ProgramDataColumn column2 = new ProgramDataColumn();
-    column.setCode("SYPHILLIS");
+    column2.setCode("SYPHILLIS");
     when(programDataColumnMapper.getColumnByCode("SYPHILLIS")).thenReturn(column2);
 
     programDataFormDTO.setProgramDataFormItems(asList(programDataFormItemDTO, programDataFormItemDTO2));
 
     ArgumentCaptor<ProgramDataForm> captor = ArgumentCaptor.forClass(ProgramDataForm.class);
+
+    when(serviceRepository.getAll()).thenReturn(Lists.newArrayList(new Service("code", "PUBLIC_PHARMACY", "programId", true)));
+    when(programDataColumnRepository.getAll())
+            .thenReturn(Lists.newArrayList(new ProgramDataColumn("SYPHILLIS", "SYPHILLIS", "programId"),
+                    new ProgramDataColumn("MALARIA", "MALARIA", "programId")));
+
     restProgramDataService.createProgramDataForm(programDataFormDTO, 1L);
     List<ProgramDataForm> captorAllValues = captor.getAllValues();
     verify(programDataRepository, times(1)).createProgramDataForm(captor.capture());

@@ -35,14 +35,7 @@ import org.openlmis.core.service.UserService;
 import org.openlmis.db.repository.mapper.DbMapper;
 import org.openlmis.equipment.domain.EquipmentInventory;
 import org.openlmis.equipment.service.EquipmentInventoryService;
-import org.openlmis.rnr.domain.Comment;
-import org.openlmis.rnr.domain.EquipmentLineItem;
-import org.openlmis.rnr.domain.LossesAndAdjustmentsType;
-import org.openlmis.rnr.domain.ProgramRnrTemplate;
-import org.openlmis.rnr.domain.RegimenTemplate;
-import org.openlmis.rnr.domain.Rnr;
-import org.openlmis.rnr.domain.RnrLineItem;
-import org.openlmis.rnr.domain.RnrStatus;
+import org.openlmis.rnr.domain.*;
 import org.openlmis.rnr.dto.RnrDTO;
 import org.openlmis.rnr.repository.RequisitionRepository;
 import org.openlmis.rnr.search.criteria.RequisitionSearchCriteria;
@@ -158,7 +151,7 @@ public class RequisitionService {
   }
 
   @Transactional
-  public Rnr initiate(Facility facility, Program program, Long modifiedBy, Boolean emergency, ProcessingPeriod proposedPeriod) {
+  public Rnr initiate(Facility facility, Program program, Long modifiedBy, Boolean emergency, ProcessingPeriod proposedPeriod, List<ServiceLineItem> serviceLineItems) {
 
     if (!requisitionPermissionService.hasPermission(modifiedBy, facility, program, CREATE_REQUISITION)) {
       throw new DataException(RNR_OPERATION_UNAUTHORIZED);
@@ -225,6 +218,7 @@ public class RequisitionService {
        populateEquipments(requisition);
     }
 
+    requisition.setServiceLineItems(serviceLineItems);
     insert(requisition);
     requisition = requisitionRepository.getById(requisition.getId());
 

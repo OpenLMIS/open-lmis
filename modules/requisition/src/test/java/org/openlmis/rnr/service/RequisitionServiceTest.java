@@ -200,7 +200,7 @@ public class RequisitionServiceTest {
         when(programService.getById(PROGRAM.getId())).thenReturn(PROGRAM);
         when(budgetLineItemService.get(FACILITY.getId(), PROGRAM.getId(), PERIOD.getId())).thenReturn(new BudgetLineItem());
 
-        Rnr rnr = spyRequisitionService.initiate(FACILITY, PROGRAM, 1L, false, null);
+        Rnr rnr = spyRequisitionService.initiate(FACILITY, PROGRAM, 1L, false, null, null);
 
         verify(facilityApprovedProductService).getFullSupplyFacilityApprovedProductByFacilityAndProgram(FACILITY.getId(),
                 PROGRAM.getId());
@@ -262,7 +262,7 @@ public class RequisitionServiceTest {
         whenNew(Rnr.class).withArguments(FACILITY, requisitionProgram, PERIOD, false, facilityApprovedProducts, regimens,
                 USER_ID).thenReturn(requisition);
 
-        spyRequisitionService.initiate(FACILITY, requisitionProgram, USER_ID, false, null);
+        spyRequisitionService.initiate(FACILITY, requisitionProgram, USER_ID, false, null, null);
 
         verify(calculationService).fillFieldsForInitiatedRequisition(requisition, rnrTemplate, regimenTemplate);
         assertThat(requisition.getAllocatedBudget(), is(allocatedBudget));
@@ -362,7 +362,7 @@ public class RequisitionServiceTest {
         expectedException.expect(DataException.class);
         expectedException.expectMessage("error.rnr.template.not.defined");
 
-        Rnr rnr = requisitionService.initiate(FACILITY, PROGRAM, USER_ID, false, null);
+        Rnr rnr = requisitionService.initiate(FACILITY, PROGRAM, USER_ID, false, null, null);
 
         Long HIV = 1L;
         verify(facilityApprovedProductService, never()).getFullSupplyFacilityApprovedProductByFacilityAndProgram(
@@ -985,7 +985,7 @@ public class RequisitionServiceTest {
         expectedException.expect(DataException.class);
         expectedException.expectMessage(RNR_OPERATION_UNAUTHORIZED);
 
-        requisitionService.initiate(FACILITY, PROGRAM, USER_ID, false, null);
+        requisitionService.initiate(FACILITY, PROGRAM, USER_ID, false, null, null);
     }
 
     @Test
@@ -1077,7 +1077,7 @@ public class RequisitionServiceTest {
         when(programService.getById(requisition.getProgram().getId())).thenReturn(PROGRAM);
         when(budgetLineItemService.get(FACILITY.getId(), PROGRAM.getId(), PERIOD.getId())).thenReturn(new BudgetLineItem());
 
-        spyRequisitionService.initiate(FACILITY, PROGRAM, 1L, false, null);
+        spyRequisitionService.initiate(FACILITY, PROGRAM, 1L, false, null, null);
 
         verify(requisitionEventService).notifyForStatusChange(requisition);
     }
@@ -1613,7 +1613,7 @@ public class RequisitionServiceTest {
                 new BudgetLineItem());
         when(programService.getById(requisitionProgram.getId())).thenReturn(requisitionProgram);
 
-        spyRequisitionService.initiate(FACILITY, requisitionProgram, USER_ID, false, null);
+        spyRequisitionService.initiate(FACILITY, requisitionProgram, USER_ID, false, null, null);
 
         verify(calculationService).fillReportingDays(requisition);
         verify(requisition).setCreatedDate(createdDateFromDB);
@@ -1709,7 +1709,7 @@ public class RequisitionServiceTest {
         PROGRAM.setBudgetingApplies(false);
         PROGRAM.setIsEquipmentConfigured(false);
 
-        requisitionService.initiate(FACILITY, PROGRAM, 1L, false, null);
+        requisitionService.initiate(FACILITY, PROGRAM, 1L, false, null, null);
         verify(facilityApprovedProductService).getFullSupplyFacilityApprovedProductByFacilityAndProgramIncludingSubPrograms(
             FACILITY.getId(), PROGRAM.getId());
     }
@@ -1729,7 +1729,7 @@ public class RequisitionServiceTest {
         PROGRAM.setBudgetingApplies(false);
         PROGRAM.setIsEquipmentConfigured(false);
 
-        requisitionService.initiate(FACILITY, PROGRAM, 1L, false, null);
+        requisitionService.initiate(FACILITY, PROGRAM, 1L, false, null, null);
         verify(regimenService).getRegimensByProgramAndIsCustom(3L, false);
     }
 
@@ -1748,7 +1748,7 @@ public class RequisitionServiceTest {
         PROGRAM.setBudgetingApplies(false);
         PROGRAM.setIsEquipmentConfigured(false);
 
-        requisitionService.initiate(FACILITY, PROGRAM, 1L, false, null);
+        requisitionService.initiate(FACILITY, PROGRAM, 1L, false, null, null);
         verify(regimenService).getByProgram(3L);
     }
 

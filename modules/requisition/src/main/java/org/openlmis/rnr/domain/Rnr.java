@@ -74,6 +74,8 @@ public class Rnr extends BaseModel {
   private Date actualPeriodEndDate;
   private Long programDataFormId;
 
+  List<ServiceLineItem> serviceLineItems = new ArrayList<>();
+
   public Rnr(Facility facility, Program program, ProcessingPeriod period, Boolean emergency, Long modifiedBy, Long createdBy) {
     this.facility = facility;
     this.program = program;

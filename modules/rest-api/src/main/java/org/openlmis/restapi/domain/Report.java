@@ -20,10 +20,7 @@ import org.openlmis.core.domain.Signature;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.core.hash.Encoder;
 import org.openlmis.core.utils.DateUtil;
-import org.openlmis.rnr.domain.PatientQuantificationLineItem;
-import org.openlmis.rnr.domain.RegimenLineItem;
-import org.openlmis.rnr.domain.Rnr;
-import org.openlmis.rnr.domain.RnrLineItem;
+import org.openlmis.rnr.domain.*;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -70,6 +67,8 @@ public class Report {
   private List<Signature> rnrSignatures;
 
   private Long programDataFormId;
+
+  private List<ServiceLineItem> serviceLineItems;
 
   public void validate() {
     if (isEmpty(agentCode) || isEmpty(programCode)) {

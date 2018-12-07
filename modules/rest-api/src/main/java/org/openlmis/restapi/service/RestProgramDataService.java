@@ -2,27 +2,22 @@ package org.openlmis.restapi.service;
 
 import com.google.common.base.Function;
 import com.google.common.collect.FluentIterable;
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.lang3.math.NumberUtils;
 import org.openlmis.core.domain.Facility;
-import org.openlmis.core.domain.moz.ProgramDataColumn;
-import org.openlmis.core.domain.moz.ProgramDataForm;
-import org.openlmis.core.domain.moz.ProgramDataFormBasicItem;
-import org.openlmis.core.domain.moz.ProgramDataItem;
-import org.openlmis.core.domain.moz.SupplementalProgram;
+import org.openlmis.core.domain.moz.*;
 import org.openlmis.core.exception.DataException;
+import org.openlmis.core.repository.ProgramDataColumnRepository;
 import org.openlmis.core.repository.ProgramDataRepository;
 import org.openlmis.core.repository.SyncUpHashRepository;
 import org.openlmis.core.repository.mapper.FacilityMapper;
 import org.openlmis.core.repository.mapper.ProgramDataColumnMapper;
 import org.openlmis.core.repository.mapper.SupplementalProgramMapper;
 import org.openlmis.core.utils.DateUtil;
-import org.openlmis.restapi.domain.ProgramDataFormBasicItemDTO;
-import org.openlmis.restapi.domain.ProgramDataFormDTO;
-import org.openlmis.restapi.domain.ProgramDataFormItemDTO;
-import org.openlmis.restapi.domain.RegimenLineItemForRest;
-import org.openlmis.restapi.domain.Report;
+import org.openlmis.restapi.domain.*;
 import org.openlmis.rnr.domain.RnrLineItem;
+import org.openlmis.rnr.domain.ServiceLineItem;
+import org.openlmis.rnr.repository.ServiceRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -52,6 +47,12 @@ public class RestProgramDataService {
 
   @Autowired
   private RestRequisitionService restRequisitionService;
+
+  @Autowired
+  private ServiceRepository serviceRepository;
+
+  @Autowired
+  private ProgramDataColumnRepository programDataColumnRepository;
 
   @Transactional
   public void createProgramDataForm(ProgramDataFormDTO requestBodyData, long userId) {
@@ -100,6 +101,7 @@ public class RestProgramDataService {
         programDataForm.getProgramDataFormBasicItems().add(programDataFormBasicItem);
       }
     }
+    programDataForm.setObservation(requestBodyData.getObservation());
     programDataForm.setProgramDataFormSignatures(requestBodyData.getProgramDataFormSignatures());
     return programDataForm;
   }
@@ -127,8 +129,47 @@ public class RestProgramDataService {
     report.setProgramDataFormId(programDataForm.getId());
     report.setProducts(rnrLineItems(programDataForm));
     report.setRegimens(regimens(programDataForm));
+    report.setClientSubmittedNotes(programDataForm.getObservation());
     report.setProgramCode("TEST_KIT");
+    report.setServiceLineItems(converterServiceLineItems(programDataForm));
+
     return report;
+  }
+
+  private List<ServiceLineItem> converterServiceLineItems(ProgramDataForm programDataForm) {
+    List<ServiceLineItem> serviceLineItems = new ArrayList<>();
+    List<ProgramDataItem> programDataItems = programDataForm.getProgramDataItems();
+    List<org.openlmis.rnr.domain.Service> services = serviceRepository.getAll();
+    List<ProgramDataColumn> programDataColumns = programDataColumnRepository.getAll();
+    if(CollectionUtils.isNotEmpty(programDataItems)) {
+      for(ProgramDataItem programDataItem : programDataItems) {
+        ServiceLineItem serviceLineItem = new ServiceLineItem();
+        serviceLineItem.setServiceId(getServiceId(services, programDataItem));
+        serviceLineItem.setProgramDataColumnId(getProgramDateColumnId(programDataColumns, programDataItem));
+        serviceLineItem.setValue(programDataItem.getValue());
+        serviceLineItems.add(serviceLineItem);
+      }
+
+    }
+    return serviceLineItems;
+  }
+
+  private Long getProgramDateColumnId(List<ProgramDataColumn> programDataColumns, ProgramDataItem programDataItem) {
+    for(ProgramDataColumn programDataColumn : programDataColumns) {
+      if(programDataColumn.getCode().equals(programDataItem.getProgramDataColumn().getCode())) {
+        return programDataColumn.getId();
+      }
+    }
+    throw new DataException("1111");
+  }
+
+  private Long getServiceId(List<org.openlmis.rnr.domain.Service> services, ProgramDataItem programDataItem) {
+    for(org.openlmis.rnr.domain.Service service : services) {
+      if(service.getName().equals(programDataItem.getName())) {
+        return service.getId();
+      }
+    }
+    throw new DataException("1111");
   }
 
   private List<RnrLineItem> rnrLineItems(ProgramDataForm programDataForm) {

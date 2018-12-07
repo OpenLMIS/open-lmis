@@ -103,7 +103,7 @@ public class RestRequisitionService {
 
     restRequisitionCalculator.validatePeriod(reportingFacility, reportingProgram, report.getActualPeriodStartDate(), report.getActualPeriodEndDate());
 
-    Rnr rnr = requisitionService.initiate(reportingFacility, reportingProgram, userId, EMERGENCY, null);
+    Rnr rnr = requisitionService.initiate(reportingFacility, reportingProgram, userId, EMERGENCY, null, report.getServiceLineItems());
 
     restRequisitionCalculator.validateProducts(report.getProducts(), rnr);
 
@@ -190,7 +190,7 @@ public class RestRequisitionService {
       rnr = requisitionService.getFullRequisitionById( rnrs.get(0).getId() );
 
     }else{
-      rnr = requisitionService.initiate(reportingFacility, reportingProgram, userId, report.getEmergency(), period);
+      rnr = requisitionService.initiate(reportingFacility, reportingProgram, userId, report.getEmergency(), period, null);
     }
 
     List<RnrLineItem> fullSupplyProducts = new ArrayList<>();
@@ -286,7 +286,6 @@ public class RestRequisitionService {
 
         if (regimen.isCustom()) {
           regimenLineItemForRest.setCode(regimen.getCode());
-
           RegimenLineItem regimenLineItem = new RegimenLineItem(rnr.getId(), regimenCategory, userId, userId);
           regimenLineItem.setCode(regimen.getCode());
           regimenLineItem.setName(regimen.getName());

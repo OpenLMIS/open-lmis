@@ -15,4 +15,9 @@ public class ProgramDataColumn extends BaseModel {
   private String description;
   private SupplementalProgram supplementalProgram;
 
+  public ProgramDataColumn(String code, String label, String description) {
+    this.code = code;
+    this.label = label;
+    this.description = description;
+  }
 }
