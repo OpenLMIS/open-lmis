@@ -33,14 +33,15 @@ function ViewRnrALController($scope, $route, Requisitions, messageService, DateF
 
   $scope.initContent = function () {
     var content = {};
-    content["Consultas AL US/APE Malaria"] = messageService.get("report.header.al.treatment") + messageService.get("report.header.al.month");
-    content["Consultas AL STOCK Malaria"] = messageService.get("report.header.al.existentstock") + messageService.get("report.header.al.period");
+    content["Consultas AL US/APE Malaria"] = messageService.get("report.header.al.treatments");
+    content["Consultas AL STOCK Malaria"] = messageService.get("report.header.al.existentstock") + " " + messageService.get("report.header.al.period");
 
     _.map($scope.rnr.regimenLineItems, function (item) {
       var regimenItem = {};
       regimenItem.hf = item.hf;
       regimenItem.chw = item.chw;
-      regimenItem.total = item.chw + item.hf;
+      var total = item.chw + item.hf;
+      regimenItem.total = total ? total : "";
       content[item.name] = regimenItem;
     });
 
