@@ -41,7 +41,7 @@ function ViewRnrALController($scope, $route, Requisitions, messageService, DateF
       regimenItem.hf = item.hf;
       regimenItem.chw = item.chw;
       var total = item.chw + item.hf;
-      regimenItem.total = total ? total : "";
+      regimenItem.total = isUndefined(total) ? "" : total;
       content[item.name] = regimenItem;
     });
 
