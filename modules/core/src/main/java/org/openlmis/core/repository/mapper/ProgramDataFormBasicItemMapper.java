@@ -12,9 +12,9 @@ import java.util.List;
 public interface ProgramDataFormBasicItemMapper {
 
     @Insert("INSERT INTO program_data_form_basic_items (formId, productCode, beginningBalance," +
-            " quantityReceived, quantityDispensed, totalLossesAndAdjustments, stockInHand, createdBy, modifiedBy, createdDate, modifiedDate) " +
+            " quantityReceived, quantityDispensed, totalLossesAndAdjustments, stockInHand, createdBy, modifiedBy, createdDate, modifiedDate, expirationDate) " +
             "VALUES (#{programDataForm.id}, #{productCode}, #{beginningBalance}, #{quantityReceived}, #{quantityDispensed}, #{totalLossesAndAdjustments}," +
-            "#{stockInHand},  #{createdBy}, #{modifiedBy}, NOW(), NOW())")
+            "#{stockInHand},  #{createdBy}, #{modifiedBy}, NOW(), NOW(), #{expirationDate})")
     @Options(useGeneratedKeys = true)
     void insert(ProgramDataFormBasicItem programDataFormBasicItem);
 

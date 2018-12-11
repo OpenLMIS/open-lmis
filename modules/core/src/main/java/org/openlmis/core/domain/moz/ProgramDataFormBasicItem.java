@@ -5,6 +5,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.openlmis.core.domain.BaseModel;
 
+import java.util.Date;
+
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -16,5 +18,6 @@ public class ProgramDataFormBasicItem extends BaseModel {
     private Integer quantityDispensed;
     private Integer totalLossesAndAdjustments;
     private Integer stockInHand;
+    private String expirationDate;
     private ProgramDataForm programDataForm;
 }
