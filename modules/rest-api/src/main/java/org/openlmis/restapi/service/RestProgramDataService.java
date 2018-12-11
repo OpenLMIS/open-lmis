@@ -97,7 +97,9 @@ public class RestProgramDataService {
                 programDataFormBasicItemDTO.getQuantityReceived(),
                 programDataFormBasicItemDTO.getQuantityDispensed(),
                 programDataFormBasicItemDTO.getTotalLossesAndAdjustments(),
-                programDataFormBasicItemDTO.getStockInHand(), programDataForm);
+                programDataFormBasicItemDTO.getStockInHand(),
+                programDataFormBasicItemDTO.getExpirationDate(),
+                programDataForm);
         programDataForm.getProgramDataFormBasicItems().add(programDataFormBasicItem);
       }
     }
@@ -186,6 +188,7 @@ public class RestProgramDataService {
                   rnrLineItem.setQuantityDispensed(programDataFormBasicItem.getQuantityDispensed());
                   rnrLineItem.setTotalLossesAndAdjustments(programDataFormBasicItem.getTotalLossesAndAdjustments());
                   rnrLineItem.setStockInHand(programDataFormBasicItem.getStockInHand());
+                  rnrLineItem.setExpirationDate(programDataFormBasicItem.getExpirationDate());
                   return rnrLineItem;
                 }
               }).toList();

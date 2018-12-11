@@ -16,6 +16,7 @@ public class ProgramDataFormBasicItemDTO {
     private Integer quantityDispensed;
     private Integer totalLossesAndAdjustments;
     private Integer stockInHand;
+    private String expirationDate;
 
     public static ProgramDataFormBasicItemDTO prepareForRest(ProgramDataFormBasicItem programDataFormBasicItem) {
         return new ProgramDataFormBasicItemDTO(programDataFormBasicItem.getProductCode(),
@@ -23,7 +24,7 @@ public class ProgramDataFormBasicItemDTO {
                 programDataFormBasicItem.getQuantityReceived(),
                 programDataFormBasicItem.getQuantityDispensed(),
                 programDataFormBasicItem.getTotalLossesAndAdjustments(),
-                programDataFormBasicItem.getStockInHand());
+                programDataFormBasicItem.getStockInHand(), programDataFormBasicItem.getExpirationDate());
     }
 
 }
