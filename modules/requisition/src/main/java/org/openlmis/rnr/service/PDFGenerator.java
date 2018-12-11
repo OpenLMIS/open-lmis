@@ -64,7 +64,8 @@ public class PDFGenerator {
         MMIA("mmia"),
         VIA("via"),
         MALARIA("al"),
-        ESS_MEDS("via");
+        ESS_MEDS("via"),
+        TEST_KIT("rapid-test");
 
         private String programName;
 
