@@ -11,5 +11,5 @@ public class ProgramDataColumnDTO {
     private String code;
     private String label;
     private String description;
-    private List<ServiceLineItemDTO> serviceLineItems = new ArrayList<>();
+    private ServiceLineItemDTO serviceLineItem;
 }

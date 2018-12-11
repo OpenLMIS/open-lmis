@@ -424,7 +424,7 @@ public class Rnr extends BaseModel {
       ServiceLineItemDTO serviceLineItemDTO = new ServiceLineItemDTO();
       BeanUtils.copyProperties(serviceLineItem, serviceLineItemDTO);
 
-      programDataColumn.getServiceLineItems().add(serviceLineItemDTO);
+      programDataColumn.setServiceLineItem(serviceLineItemDTO);
       service.getProgramDataColumns().add(programDataColumn);
       if(isNew){
         services.add(service);
