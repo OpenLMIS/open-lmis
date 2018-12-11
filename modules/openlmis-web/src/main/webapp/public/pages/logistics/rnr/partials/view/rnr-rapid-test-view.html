@@ -1,4 +1,3 @@
-<font color="red" size="50px">test</font>
 <div class="rapid-test-form">
   <table cellpadding="0" cellspacing="0">
     <tr>
@@ -49,7 +48,7 @@
     <tr class="table--title">
       <td class="background-black black-width"></td>
       <td colspan="2" openlmis-message="view.rnr.rapid.test.codeandproduct"></td>
-      <td openlmis-message="view.rnr.rapid.test.unit"></td>
+      <!--<td openlmis-message="view.rnr.rapid.test.unit"></td>-->
       <td openlmis-message="view.rnr.rapid.test.initialstork"></td>
       <td openlmis-message="view.rnr.rapid.test.entries"></td>
       <td openlmis-message="view.rnr.rapid.test.issues"></td>
@@ -59,17 +58,17 @@
     </tr>
 
     <!--Todo: waiting the android release, then should change the code.-->
-    <tr>
+    <tr ng-repeat="product in rnr.fullSupplyLineItems">
       <td class="background-black black-width"></td>
-      <td class="font-bold"></td>
-      <td class="font-bold"></td>
-      <td></td>
-      <td></td>
-      <td></td>
-      <td></td>
-      <td></td>
-      <td></td>
-      <td></td>
+      <td class="font-bold">{{product.productCode}}</td>
+      <td class="font-bold">{{product.productPrimaryName}}</td>
+      <!--<td></td>-->
+      <td>{{product.beginningBalance}}</td>
+      <td>{{product.quantityReceived}}</td>
+      <td>{{product.quantityDispensed}}</td>
+      <td>{{product.totalLossesAndAdjustments}}</td>
+      <td>{{product.expirationDate}}</td>
+      <td>{{product.stockInHand}}</td>
     </tr>
   </table>
 
@@ -108,66 +107,66 @@
       <td class="table--subtitle-dark-gray" openlmis-message="view.rnr.rapid.test.unjustifiled"></td>
     </tr>
 
-    <tr>
+    <tr ng-if="service.name !== 'total' && service.name !== 'APES'" ng-repeat="service in content">
       <td class="background-black black-width"></td>
-      <td>name</td>
-      <td>consumo</td>
-      <td>prositivos</td>
-      <td>injustificados</td>
+      <td>{{service.name}}</td>
+      <td>{{service['CONSUME_HIVDETERMINE']}}</td>
+      <td>{{service['POSITIVE_HIVDETERMINE']}}</td>
+      <td>{{service['UNJUSTIFIED_HIVDETERMINE']}}</td>
 
-      <td>consumo</td>
-      <td>prositivos</td>
-      <td>injustificados</td>
+      <td>{{service['CONSUME_HIVUNIGOLD']}}</td>
+      <td>{{service['POSITIVE_HIVUNIGOLD']}}</td>
+      <td>{{service['UNJUSTIFIED_HIVUNIGOLD']}}</td>
 
-      <td>consumo</td>
-      <td>prositivos</td>
-      <td>injustificados</td>
+      <td>{{service['CONSUME_SYPHILLIS']}}</td>
+      <td>{{service['POSITIVE_SYPHILLIS']}}</td>
+      <td>{{service['UNJUSTIFIED_HIVUNIGOLD']}}</td>
 
-      <td>consumo</td>
-      <td>prositivos</td>
-      <td>injustificados</td>
+      <td>{{service['CONSUME_MALARIA']}}</td>
+      <td>{{service['POSITIVE_MALARIA']}}</td>
+      <td>{{service['UNJUSTIFIED_MALARIA']}}</td>
     </tr>
 
-    <tr class="table--title height-30">
+    <tr ng-if="service.name == 'total'" ng-repeat="service in content" class="table--title height-30">
       <td class="background-black black-width"></td>
       <td openlmis-message="label.total"></td>
-      <td></td>
-      <td></td>
-      <td></td>
+      <td>{{service['CONSUME_HIVDETERMINE']}}</td>
+      <td>{{service['POSITIVE_HIVDETERMINE']}}</td>
+      <td>{{service['UNJUSTIFIED_HIVDETERMINE']}}</td>
 
-      <td></td>
-      <td></td>
-      <td></td>
+      <td>{{service['CONSUME_HIVUNIGOLD']}}</td>
+      <td>{{service['POSITIVE_HIVUNIGOLD']}}</td>
+      <td>{{service['UNJUSTIFIED_HIVUNIGOLD']}}</td>
 
-      <td></td>
-      <td></td>
-      <td></td>
+      <td>{{service['CONSUME_SYPHILLIS']}}</td>
+      <td>{{service['POSITIVE_SYPHILLIS']}}</td>
+      <td>{{service['UNJUSTIFIED_HIVUNIGOLD']}}</td>
 
-      <td></td>
-      <td></td>
-      <td></td>
+      <td>{{service['CONSUME_MALARIA']}}</td>
+      <td>{{service['POSITIVE_MALARIA']}}</td>
+      <td>{{service['UNJUSTIFIED_MALARIA']}}</td>
     </tr>
 
     <tr class="black-tr"></tr>
 
-    <tr>
+    <tr ng-if="service.name == 'APES'" ng-repeat="service in content">
       <td class="background-black black-width">a</td>
       <td class="table--subtitle-dark-gray">APEs</td>
-      <td></td>
-      <td></td>
-      <td></td>
+      <td>{{service['CONSUME_HIVDETERMINE']}}</td>
+      <td>{{service['POSITIVE_HIVDETERMINE']}}</td>
+      <td>{{service['UNJUSTIFIED_HIVDETERMINE']}}</td>
 
-      <td></td>
-      <td></td>
-      <td></td>
+      <td>{{service['CONSUME_HIVUNIGOLD']}}</td>
+      <td>{{service['POSITIVE_HIVUNIGOLD']}}</td>
+      <td>{{service['UNJUSTIFIED_HIVUNIGOLD']}}</td>
 
-      <td></td>
-      <td></td>
-      <td></td>
+      <td>{{service['CONSUME_SYPHILLIS']}}</td>
+      <td>{{service['POSITIVE_SYPHILLIS']}}</td>
+      <td>{{service['UNJUSTIFIED_HIVUNIGOLD']}}</td>
 
-      <td></td>
-      <td></td>
-      <td></td>
+      <td>{{service['CONSUME_MALARIA']}}</td>
+      <td>{{service['POSITIVE_MALARIA']}}</td>
+      <td>{{service['UNJUSTIFIED_MALARIA']}}</td>
     </tr>
   </table>
 
@@ -178,9 +177,7 @@
           <span openlmis-message="view.rnr.mmia.comments"></span>:
         </td>
       </tr>
-      <tr class="height-20"><td></td></tr>
-      <tr class="height-20"><td></td></tr>
-      <tr class="height-20"><td></td></tr>
+      <tr class="height-30 text__left"><td>{{rnr.clientSubmittedNotes}}</td></tr>
     </table>
   </div>
 
@@ -188,13 +185,13 @@
     <table>
       <tr class="height-50">
         <td style="vertical-align: baseline" class="font-bold text__left">
-          <span openlmis-message="view.rnr.mmia.createBy"></span>:
+          <span openlmis-message="view.rnr.mmia.createBy"></span>: {{submitterSignature}}
         </td>
         <td style="vertical-align: baseline" class="font-bold text__left">
-          <span openlmis-message="view.rnr.mmia.vistor"></span>:
+          <span openlmis-message="view.rnr.mmia.vistor"></span>: {{approverSignature}}
         </td>
         <td style="vertical-align: baseline" class="font-bold text__left">
-          <span openlmis-message="view.rnr.mmia.dateOfCreate"></span>:
+          <span openlmis-message="view.rnr.mmia.dateOfCreate"></span>: {{submittedDate}}
         </td>
       </tr>
     </table>
