@@ -160,7 +160,7 @@ public class RestProgramDataService {
         return programDataColumn.getId();
       }
     }
-    throw new DataException("1111");
+    throw new DataException("Program data not existed!");
   }
 
   private Long getServiceId(List<org.openlmis.rnr.domain.Service> services, ProgramDataItem programDataItem) {
@@ -169,7 +169,7 @@ public class RestProgramDataService {
         return service.getId();
       }
     }
-    throw new DataException("1111");
+    throw new DataException("Service not existed!");
   }
 
   private List<RnrLineItem> rnrLineItems(ProgramDataForm programDataForm) {
