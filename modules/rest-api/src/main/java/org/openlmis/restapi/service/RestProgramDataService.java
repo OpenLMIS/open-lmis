@@ -15,6 +15,7 @@ import org.openlmis.core.repository.mapper.ProgramDataColumnMapper;
 import org.openlmis.core.repository.mapper.SupplementalProgramMapper;
 import org.openlmis.core.utils.DateUtil;
 import org.openlmis.restapi.domain.*;
+import org.openlmis.rnr.domain.Rnr;
 import org.openlmis.rnr.domain.RnrLineItem;
 import org.openlmis.rnr.domain.ServiceLineItem;
 import org.openlmis.rnr.repository.ServiceRepository;
@@ -26,6 +27,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import static org.openlmis.restapi.response.RestResponse.response;
+import static org.springframework.http.HttpStatus.CREATED;
 
 @Service
 public class RestProgramDataService {
@@ -68,7 +72,10 @@ public class RestProgramDataService {
     ProgramDataForm programDataForm = convertRequestBodyDataToProgramDataForm(requestBodyData, userId, facility);
 
     programDataRepository.createProgramDataForm(programDataForm);
-    restRequisitionService.submitReport(createReport(programDataForm), userId);
+    Rnr requisition = restRequisitionService.submitReport(createReport(programDataForm), userId);
+    if (requisition != null) {
+      restRequisitionService.notifySubmittedEvent(requisition);
+    }
     syncUpHashRepository.save(requestBodyData.getSyncUpHash());
   }
 
