@@ -59,9 +59,9 @@ public class RestProgramDataService {
   private ProgramDataColumnRepository programDataColumnRepository;
 
   @Transactional
-  public void createProgramDataForm(ProgramDataFormDTO requestBodyData, long userId) {
+  public Rnr createProgramDataForm(ProgramDataFormDTO requestBodyData, long userId) {
     if (syncUpHashRepository.hashExists(requestBodyData.getSyncUpHash())) {
-      return;
+      return null;
     }
 
     Facility facility = facilityMapper.getById(requestBodyData.getFacilityId());
@@ -73,10 +73,8 @@ public class RestProgramDataService {
 
     programDataRepository.createProgramDataForm(programDataForm);
     Rnr requisition = restRequisitionService.submitReport(createReport(programDataForm), userId);
-    if (requisition != null) {
-      restRequisitionService.notifySubmittedEvent(requisition);
-    }
     syncUpHashRepository.save(requestBodyData.getSyncUpHash());
+    return requisition;
   }
 
   public ProgramDataForm convertRequestBodyDataToProgramDataForm(ProgramDataFormDTO requestBodyData, long userId, Facility facility) {

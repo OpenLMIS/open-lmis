@@ -6,6 +6,8 @@ import org.openlmis.core.domain.moz.ProgramDataForm;
 import org.openlmis.restapi.domain.ProgramDataFormDTO;
 import org.openlmis.restapi.response.RestResponse;
 import org.openlmis.restapi.service.RestProgramDataService;
+import org.openlmis.restapi.service.RestRequisitionService;
+import org.openlmis.rnr.domain.Rnr;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -27,10 +29,16 @@ public class RestProgramDataController extends BaseController {
   @Autowired
   private RestProgramDataService restProgramDataService;
 
+  @Autowired
+  private RestRequisitionService restRequisitionService;
+
   @RequestMapping(value = "/rest-api/programData", method = POST, headers = ACCEPT_JSON)
   public ResponseEntity createProgramDataForm(@RequestBody ProgramDataFormDTO programDataForm, Principal principal) {
 
-    restProgramDataService.createProgramDataForm(programDataForm, loggedInUserId(principal));
+    Rnr requisition = restProgramDataService.createProgramDataForm(programDataForm, loggedInUserId(principal));
+    if (requisition != null) {
+      restRequisitionService.notifySubmittedEvent(requisition);
+    }
     return RestResponse.success("api.program.data.save.success");
   }
 
