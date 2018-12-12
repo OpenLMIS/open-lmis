@@ -392,6 +392,7 @@ public class RestRequisitionService {
       savedLineItem.setSkipped(true);
       return;
     }
+    savedLineItem.setServiceItems(reportedLineItem.getServiceItems());
 
     for (Column column : rnrTemplate.getColumns()) {
       if (!column.getVisible() || !rnrTemplate.columnsUserInput(column.getName()))

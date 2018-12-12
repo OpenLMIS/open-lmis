@@ -60,6 +60,8 @@ public class ProgramRnrTemplate extends Template {
   private Map<String, RnrColumn> rnrColumnsMap = new HashMap<>();
   private Map<String, OpenLmisMessage> errorMap = new HashMap<>();
 
+  private List<ServiceItem> serviceItems = new ArrayList<>();
+
   @Getter
   @Setter
   private Long modifiedBy;

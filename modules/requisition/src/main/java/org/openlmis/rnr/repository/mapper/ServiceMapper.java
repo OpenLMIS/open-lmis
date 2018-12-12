@@ -15,4 +15,6 @@ public interface ServiceMapper {
     @Select("SELECT * from services where id = #{id}")
     List<Service> getById(Long id);
 
+    @Select("SELECT id from services where code = #{code} limit 1")
+    Long getIdByServiceCode(String code);
 }

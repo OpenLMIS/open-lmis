@@ -57,7 +57,10 @@ public interface RnrLineItemMapper {
    @Result(property = "productPrimaryName", column = "primaryname"),
     @Result(property = "previousNormalizedConsumptions", column = "previousNormalizedConsumptions", typeHandler = StringToList.class),
     @Result(property = "lossesAndAdjustments", javaType = List.class, column = "id",
-      many = @Many(select = "org.openlmis.rnr.repository.mapper.LossesAndAdjustmentsMapper.getByRnrLineItem"))
+      many = @Many(select = "org.openlmis.rnr.repository.mapper.LossesAndAdjustmentsMapper.getByRnrLineItem")),
+    @Result(property = "serviceItems", javaType = List.class, column = "id",
+      many = @Many(select = "org.openlmis.rnr.repository.mapper.ServiceItemMapper.getByRnrLineItem")
+    )
   })
   List<RnrLineItem> getRnrLineItemsByRnrId(Long rnrId);
 

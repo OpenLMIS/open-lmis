@@ -73,6 +73,12 @@ public class RequisitionRepository {
   @Autowired
   private ServiceLineItemMapper serviceLineItemMapper;
 
+  @Autowired
+  private ServiceMapper serviceMapper;
+
+  @Autowired
+  private ServiceItemMapper serviceItemMapper;
+
   public void insert(Rnr requisition) {
     requisition.setStatus(INITIATED);
     requisitionMapper.insert(requisition);
@@ -198,6 +204,20 @@ public class RequisitionRepository {
       updateLineItem(requisition, lineItem);
       lossesAndAdjustmentsMapper.deleteByLineItemId(lineItem.getId());
       insertLossesAndAdjustmentsForLineItem(lineItem);
+      if(lineItem.getSkipped() != true && null != lineItem.getServiceItems()) {
+        serviceItemMapper.deleteByLineItemId(lineItem.getId());
+        insertServiceItemsForLineItem(lineItem);
+      }
+    }
+  }
+
+  private void insertServiceItemsForLineItem(RnrLineItem lineItem) {
+    for(ServiceItem serviceItem : lineItem.getServiceItems()) {
+      Long serviceId = serviceMapper.getIdByServiceCode(serviceItem.getCode());
+      if(null == serviceId) {
+        throw new DataException("could not find service such service by code %s", serviceItem.getCode());
+      }
+      serviceItemMapper.insert(lineItem, serviceItem, serviceId);
     }
   }
 

@@ -14,10 +14,12 @@ package org.openlmis.rnr.dto;
 import lombok.Data;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import org.openlmis.rnr.domain.RnrLineItem;
+import org.openlmis.rnr.domain.ServiceItem;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.lang.reflect.Field;
+import java.util.List;
 
 import static java.lang.reflect.Modifier.isStatic;
 import static com.fasterxml.jackson.databind.annotation.JsonSerialize.Inclusion.NON_EMPTY;
@@ -44,6 +46,7 @@ public class RnrLineItemDTO {
   Integer quantityApproved;
   Boolean skipped;
   String remarks;
+  List<ServiceItem> serviceItems;
 
   private static Logger logger = LoggerFactory.getLogger(RnrLineItemDTO.class);
 
