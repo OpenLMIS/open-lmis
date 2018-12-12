@@ -7,9 +7,7 @@ function ViewRnrRapidTestController($scope, $route, Requisitions, messageService
   });
 
   $scope.$on('messagesPopulated', function () {
-    $scope.initMonth();
-    $scope.initDate();
-    $scope.initContent();
+    $scope.loadALDetail();
   });
 
   $(".btn-download-pdf").hide();
