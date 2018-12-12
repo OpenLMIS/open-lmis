@@ -22,6 +22,7 @@ import org.openlmis.db.categories.UnitTests;
 import org.openlmis.restapi.domain.ProgramDataFormDTO;
 import org.openlmis.restapi.response.RestResponse;
 import org.openlmis.restapi.service.RestProgramDataService;
+import org.openlmis.restapi.service.RestRequisitionService;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 import org.powermock.modules.junit4.PowerMockRunnerDelegate;
@@ -50,6 +51,9 @@ public class RestProgramDataControllerTest {
 
   @Mock
   private RestProgramDataService restProgramDataService;
+
+  @Mock
+  private RestRequisitionService restRequisitionService;
 
   @InjectMocks
   private RestProgramDataController restProgramDataController;

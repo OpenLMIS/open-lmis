@@ -28,9 +28,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static org.openlmis.restapi.response.RestResponse.response;
-import static org.springframework.http.HttpStatus.CREATED;
-
 @Service
 public class RestProgramDataService {
 
