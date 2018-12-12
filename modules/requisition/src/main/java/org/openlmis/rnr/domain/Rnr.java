@@ -447,6 +447,29 @@ public class Rnr extends BaseModel {
     return null;
   }
 
+  public void copyServiceItems(Rnr rnr) {
+    copyServiceItemsForFullSupply(rnr);
+    copyServiceItemsForNonFullSupply(rnr);
+  }
+
+  private void copyServiceItemsForFullSupply(Rnr rnr) {
+    for(RnrLineItem rnrLineItem : rnr.getFullSupplyLineItems()) {
+      RnrLineItem savedLineItem = this.findCorrespondingLineItem(rnrLineItem);
+      if (savedLineItem == null)
+        throw new DataException("product.code.invalid");
+      savedLineItem.setServiceItems(rnrLineItem.getServiceItems());
+    }
+  }
+
+  private void copyServiceItemsForNonFullSupply(Rnr rnr) {
+    for(RnrLineItem rnrLineItem : rnr.getNonFullSupplyLineItems()) {
+      RnrLineItem savedLineItem = this.findCorrespondingLineItem(rnrLineItem);
+      if (savedLineItem == null)
+        throw new DataException("product.code.invalid");
+      savedLineItem.setServiceItems(rnrLineItem.getServiceItems());
+    }
+  }
+
   @JsonIgnore
   public boolean isBudgetingApplicable() {
     return !this.emergency && this.program.getBudgetingApplies();

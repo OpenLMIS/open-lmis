@@ -289,6 +289,8 @@ public class RequisitionService {
       savedRnr.setEquipmentLineItems(rnr.getEquipmentLineItems());
     }
 
+    savedRnr.copyServiceItems(rnr);
+
     requisitionRepository.update(savedRnr);
 
     return savedRnr;
