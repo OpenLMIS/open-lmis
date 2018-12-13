@@ -34,28 +34,31 @@
         <span class="font-bold">{{rnr.facility.name}}</span>
       </td>
       <td>
-        <span class="font-bold">{{actualPeriodStartDate}}-{{actualPeriodEndDate}}</span>
+        <span openlmis-message="view.rnr.via.periodStart"></span>
+        <span class="font-bold">{{startDate}}</span> &nbsp;
+        <span openlmis-message="view.rnr.via.periodEnd"></span>
+        <span class="font-bold">{{endDate}}</span>
       </td>
     </tr>
 
     <tr class="text-header">
       <td rowspan="4" class="black-width"></td>
-      <td>Registration</td>
-      <td colspan="{{productNumber}}">Medicines</td>
-      <td>dispensation</td>
+      <td><span openlmis-message="pdf.ptv.registration"></span></td>
+      <td colspan="{{productNumber}}"><span openlmis-message="pdf.ptv.medicines"></span></td>
+      <td><span openlmis-message="pdf.ptv.dispensation"></span></td>
     </tr>
     <tr class="text-header">
-      <td rowspan="3">Patient Name / HF Service</td>
-      <td class="banner-text header-width" rowspan="3" ng-repeat="item in rnr.products">
-        <div class="header-nowrap"><span>{{item.productCode}}</span></div>
+      <td rowspan="3"><span openlmis-message="pdf.ptv.patient.service"></span></td>
+      <td class="banner-text header-width" rowspan="3" ng-repeat="item in rnr.fullSupplyLineItems">
+        <div class="header-nowrap"><span>{{item.productPrimaryName}}</span></div>
       </td>
-      <td class="text__height">Type of Patient</td>
+      <td class="text__height"><span openlmis-message="pdf.ptv.type.patient"></span></td>
     </tr>
     <tr class="text-header">
-      <td class="text__height">Total Women:</td>
+      <td class="text__height"><span openlmis-message="pdf.ptv.total.women"></span>{{$scope.adults}}</td>
     </tr>
     <tr class="text-header">
-      <td class="text__height">Children:</td>
+      <td class="text__height"><span openlmis-message="pdf.ptv.total.children"></span>{{$scope.children}}</td>
     </tr>
     <tr ng-class="{'text-header': $index == 0, 'text-footer': $index > serviceNumber * 2}" ng-repeat="row in content track by $index">
       <td>{{($index > 0 && $index <= serviceNumber * 2) ? $index : ""}}</td>

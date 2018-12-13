@@ -7,9 +7,7 @@ function ViewRnrPTVController($scope, $route, Requisitions, messageService, Date
   });
 
   $scope.$on('messagesPopulated', function () {
-    $scope.initMonth();
-    $scope.initDate();
-    $scope.initContent();
+    $scope.loadALDetail();
   });
 
   $(".btn-download-pdf").hide();
@@ -17,227 +15,49 @@ function ViewRnrPTVController($scope, $route, Requisitions, messageService, Date
   $scope.loadALDetail = function () {
 
     Requisitions.get({id: $route.current.params.rnr, operation: "skipped"}, function (data) {
-        $scope.rnr = {
-          "clientSubmittedTime": "**",
-          "actualPeriodStartDate": "**",
-          "actualPeriodEndDate": "**",
-          "products": [
-            {
-              "services": [
-                {
-                  "code": "CPN",
-                  "name": "CPN",
-                  "patientsOnTreatment": "0"
-                },
-                {
-                  "code": "Maternity",
-                  "name": "Maternity",
-                  "patientsOnTreatment": "11"
-                },
-                {
-                  "code": "CCR",
-                  "name": "CCR",
-                  "patientsOnTreatment": "0"
-                },
-                {
-                  "code": "Farmacy",
-                  "name": "Farmacy",
-                  "patientsOnTreatment": "0"
-                }
-              ],
-              "productCode": "Zidovudina 300mg/Lamivudine150mg Frasco 60 comps",
-              "initialAmount": "Initial Stock Level",
-              "received": "Entradas",
-              "issued": 0,
-              "adjustment": "Losses and Adjustments",
-              "inventory": "Final Stock",
-              "validate": 0,
-              "requestAmount": 0,
-              "approvedAmount": 0,
-              "calculatedOrderQuantity": "TOTALS/Partials"
-            },
-            {
-              "services": [
-                {
-                  "code": "CPN",
-                  "name": "CPN",
-                  "patientsOnTreatment": "58"
-                },
-                {
-                  "code": "Maternity",
-                  "name": "Maternity",
-                  "patientsOnTreatment": "0"
-                },
-                {
-                  "code": "CCR",
-                  "name": "CCR",
-                  "patientsOnTreatment": "0"
-                },
-                {
-                  "code": "Farmacy",
-                  "name": "Farmacy",
-                  "patientsOnTreatment": "0"
-                }
-              ],
-              "productCode": "Zidovudina 300mg frasco 60 comps",
-              "initialAmount": "Initial Stock Level",
-              "received": "Entradas",
-              "issued": 0,
-              "adjustment": "Losses and Adjustments",
-              "inventory": "Final Stock",
-              "validate": 0,
-              "requestAmount": 0,
-              "approvedAmount": 0,
-              "calculatedOrderQuantity": "TOTALS/Partials"
-            },
-            {
-              "services": [
-                {
-                  "code": "CPN",
-                  "name": "CPN",
-                  "patientsOnTreatment": "1"
-                },
-                {
-                  "code": "Maternity",
-                  "name": "Maternity",
-                  "patientsOnTreatment": "1"
-                },
-                {
-                  "code": "CCR",
-                  "name": "CCR",
-                  "patientsOnTreatment": "0"
-                },
-                {
-                  "code": "Farmacy",
-                  "name": "Farmacy",
-                  "patientsOnTreatment": "0"
-                }
-              ],
-              "productCode": "Nevirapina 200mg frasco 60 Comps",
-              "initialAmount": "Initial Stock Level",
-              "received": "Entradas",
-              "issued": 0,
-              "adjustment": "Losses and Adjustments",
-              "inventory": "Final Stock",
-              "validate": 0,
-              "requestAmount": 0,
-              "approvedAmount": 0,
-              "calculatedOrderQuantity": "TOTALS/Partials"
-            },
-            {
-              "services": [
-                {
-                  "code": "CPN",
-                  "name": "CPN",
-                  "patientsOnTreatment": "0"
-                },
-                {
-                  "code": "Maternity",
-                  "name": "Maternity",
-                  "patientsOnTreatment": "5"
-                },
-                {
-                  "code": "CCR",
-                  "name": "CCR",
-                  "patientsOnTreatment": "0"
-                },
-                {
-                  "code": "Farmacy",
-                  "name": "Farmacy",
-                  "patientsOnTreatment": "0"
-                }
-              ],
-              "productCode": "Zidovudina sol. Oral 100 ou 240ml",
-              "initialAmount": "Initial Stock Level",
-              "received": "Entradas",
-              "issued": 0,
-              "adjustment": "Losses and Adjustments",
-              "inventory": "Final Stock",
-              "validate": 0,
-              "requestAmount": 0,
-              "approvedAmount": 0,
-              "calculatedOrderQuantity": "TOTALS/Partials"
-            },
-            {
-              "services": [
-                {
-                  "code": "CPN",
-                  "name": "CPN",
-                  "patientsOnTreatment": "0"
-                },
-                {
-                  "code": "Maternity",
-                  "name": "Maternity",
-                  "patientsOnTreatment": "39"
-                },
-                {
-                  "code": "CCR",
-                  "name": "CCR",
-                  "patientsOnTreatment": "59"
-                },
-                {
-                  "code": "Farmacy",
-                  "name": "Farmacy",
-                  "patientsOnTreatment": "26"
-                }
-              ],
-              "productCode": "Nevirapina Sol. Oral 240ml",
-              "initialAmount": "Initial Stock Level",
-              "received": "Entradas",
-              "issued": 0,
-              "adjustment": "Losses and Adjustments",
-              "inventory": "Final Stock",
-              "validate": 0,
-              "requestAmount": 0,
-              "approvedAmount": 0,
-              "calculatedOrderQuantity": "TOTALS/Partials"
-            }
-          ],
-          "regimens": [
-            {
-              "name": "PTV Mulheres OpA+",
-              "code": "**",
-              "type": "Adults",
-              "patientsOnTreatment-isCustom": "type Paediatrics",
-              "isCustom": true,
-              "hf": 0,
-              "chw": 0
-            },
-            {
-              "name": "PTV Criancas OpA+",
-              "code": "**",
-              "patientsOnTreatment": "type Paediatrics",
-              "isCustom": true,
-              "hf": 0,
-              "chw": 0
-            }
-          ]
-        };
-        $scope.productNumber = $scope.rnr.products.length;
-        $scope.serviceNumber = $scope.rnr.products[0].services.length;
-        $scope.actualPeriodStartDate = "1/02/2011";
-        $scope.actualPeriodEndDate = "28/02/2011";
+        $scope.rnr = data.rnr;
+        $scope.year = $scope.rnr.period.stringEndDate.substr(6, 4);
+        $scope.productNumber = $scope.rnr.fullSupplyLineItems.length;
+        $scope.serviceNumber = $scope.rnr.fullSupplyLineItems[0].serviceItems.length;
 
-        // $scope.initMonth();
-        // $scope.initDate();
+        $scope.initPatient();
+        $scope.initPeriod();
+        $scope.initMonth();
+        $scope.initDate();
         $scope.initContent();
 
-        // parseSignature($scope.rnr.rnrSignatures);
+        parseSignature($scope.rnr.rnrSignatures);
 
         downloadPdfService.init($scope, $scope.rnr.id);
         downloadSimamService.init($scope, $scope.rnr.id);
     });
   };
 
+  $scope.initPatient = function () {
+    _.map($scope.rnr.regimenLineItems, function (regimen) {
+      if (regimen.categoryName == 'Adults') {
+        $scope.adults = regimen.patientsOnTreatment;
+      }
+      if (regimen.categoryName == 'Paediatrics') {
+        $scope.children = regimen.patientsOnTreatment;
+      }
+    });
+  };
+
+  $scope.initPeriod = function () {
+    $scope.startDate = $scope.rnr.period.stringStartDate;
+    $scope.endDate = $scope.rnr.period.stringEndDate;
+  };
+
   $scope.initContent = function () {
     var content = [];
-    var head = ["Initial STOCK LEVEL"];
+    var head = [messageService.get('pdf.ptv.initial.stock')];
     content.push(head);
 
-    _.map($scope.rnr.products, function (product) {
+    _.map($scope.rnr.fullSupplyLineItems, function (product) {
       var row = [];
-      row.push(product.initialAmount);
-      _.map(product.services, function (service) {
+      row.push(product.beginningBalance);
+      _.map(product.serviceItems, function (service) {
         arrayAdd(head, service.name);
         row.push(service.patientsOnTreatment);
       });
@@ -254,10 +74,10 @@ function ViewRnrPTVController($scope, $route, Requisitions, messageService, Date
     for (var i = 0; i < $scope.serviceNumber; i++) {
       head.push("");
     }
-    head.push("TOTALS / Partials");
-    head.push("Entradas");
-    head.push("Losses and Adjustments");
-    head.push("Final Stock");
+    head.push(messageService.get('pdf.ptv.total.ptv'));
+    head.push(messageService.get('pdf.ptv.entradas'));
+    head.push(messageService.get('pdf.ptv.losses.adjustments'));
+    head.push(messageService.get('pdf.ptv.final.stock'));
     $scope.content = format(content);
   };
 
