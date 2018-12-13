@@ -64,7 +64,7 @@ function ViewRnrPTVController($scope, $route, Requisitions, messageService, Date
       // for (var i = 0; i < $scope.serviceNumber; i++) {
       //   row.push("");
       // }
-      row.push(product.calculatedOrderQuantity);
+      row.push(product.totalServiceQuantity);
       row.push(product.quantityReceived);
       row.push(product.totalLossesAndAdjustments);
       row.push(product.stockInHand);
