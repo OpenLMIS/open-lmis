@@ -86,6 +86,7 @@ public interface RnrLineItemMapper {
     "reportingDays = #{reportingDays},",
     "expirationDate = #{expirationDate},",
     "skipped = #{skipped},",
+    "totalservicequantity = #{totalServiceQuantity},",
     "modifiedBy = #{modifiedBy},",
     "modifiedDate = CURRENT_TIMESTAMP",
     "WHERE id = #{id}"
@@ -98,14 +99,14 @@ public interface RnrLineItemMapper {
     "packRoundingThreshold, fullSupply, modifiedBy, quantityReceived, quantityDispensed, beginningBalance,",
     "stockInHand, totalLossesAndAdjustments, calculatedOrderQuantity, quantityApproved,",
     "newPatientCount, stockOutDays, normalizedConsumption, amc, maxStockQuantity,",
-    "remarks, quantityRequested, reasonForRequestedQuantity)",
+    "remarks, quantityRequested, reasonForRequestedQuantity, totalservicequantity)",
     "VALUES ( ",
     "#{rnrId}, #{productCode}, #{product}, #{productDisplayOrder}, #{productCategory}, #{productCategoryDisplayOrder}, #{dispensingUnit},",
     "#{dosesPerMonth}, #{dosesPerDispensingUnit}, #{maxMonthsOfStock},#{packSize}, #{price}, #{roundToZero},",
     "#{packRoundingThreshold}, #{fullSupply}, #{modifiedBy}, 0, 0, 0,",
     "0, 0, 0, #{quantityApproved},",
     "0, 0, 0, 0, 0,",
-    " #{remarks}, #{quantityRequested}, #{reasonForRequestedQuantity})"})
+    " #{remarks}, #{quantityRequested}, #{reasonForRequestedQuantity}, #{totalServiceQuantity})"})
   @Options(useGeneratedKeys = true)
   void insertNonFullSupply(RnrLineItem requisitionLineItem);
 

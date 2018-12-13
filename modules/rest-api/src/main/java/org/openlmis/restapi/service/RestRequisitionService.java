@@ -393,6 +393,7 @@ public class RestRequisitionService {
       return;
     }
     savedLineItem.setServiceItems(reportedLineItem.getServiceItems());
+    savedLineItem.setTotalServiceQuantity(reportedLineItem.getTotalServiceQuantity());
 
     for (Column column : rnrTemplate.getColumns()) {
       if (!column.getVisible() || !rnrTemplate.columnsUserInput(column.getName()))

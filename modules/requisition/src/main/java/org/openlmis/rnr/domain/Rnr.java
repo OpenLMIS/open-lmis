@@ -331,6 +331,7 @@ public class Rnr extends BaseModel {
         throw new DataException("product.code.invalid");
       savedLineItem.copyCreatorEditableFieldsForFullSupply(lineItem, template);
       savedLineItem.setModifiedBy(rnr.getModifiedBy());
+      savedLineItem.setTotalServiceQuantity(lineItem.getTotalServiceQuantity());
     }
   }
 

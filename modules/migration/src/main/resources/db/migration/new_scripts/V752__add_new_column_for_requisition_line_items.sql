@@ -1,0 +1,1 @@
+ALTER TABLE requisition_line_items ADD totalservicequantity INTEGER;

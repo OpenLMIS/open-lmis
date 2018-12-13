@@ -47,6 +47,7 @@ public class RnrLineItemDTO {
   Boolean skipped;
   String remarks;
   List<ServiceItem> serviceItems;
+  private Integer totalServiceQuantity;
 
   private static Logger logger = LoggerFactory.getLogger(RnrLineItemDTO.class);
 

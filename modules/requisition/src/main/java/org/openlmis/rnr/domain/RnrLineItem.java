@@ -103,6 +103,7 @@ public class RnrLineItem extends LineItem {
   private Integer total;
   @SuppressWarnings("unused")
   private Boolean skipped = false;
+  private Integer totalServiceQuantity;
   private Program program;
   private List<ServiceItem> serviceItems;
 
