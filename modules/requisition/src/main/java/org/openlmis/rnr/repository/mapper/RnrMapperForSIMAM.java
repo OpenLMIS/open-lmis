@@ -21,7 +21,8 @@ public interface RnrMapperForSIMAM {
         "       rl.stockinhand stock_in_hand," +
         "       rl.stockinhand inventory," +
         "       rl.quantityRequested quantity_requested," +
-        "       rl.quantityapproved quantity_approved" +
+        "       rl.quantityapproved quantity_approved," +
+        "       rl.totalServiceQuantity total_service_quantity" +
         "  FROM requisition_line_items rl" +
         "  LEFT JOIN requisitions r" +
         "   ON rl.rnrid = r.id" +
