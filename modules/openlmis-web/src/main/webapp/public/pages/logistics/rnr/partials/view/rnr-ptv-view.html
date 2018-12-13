@@ -44,7 +44,7 @@
     <tr class="text-header">
       <td rowspan="4" class="black-width"></td>
       <td><span openlmis-message="pdf.ptv.registration"></span></td>
-      <td colspan="{{productNumber}}"><span openlmis-message="pdf.ptv.medicines"></span></td>
+      <td ng-show="productNumber > 0" colspan="{{productNumber}}"><span openlmis-message="pdf.ptv.medicines"></span></td>
       <td><span openlmis-message="pdf.ptv.dispensation"></span></td>
     </tr>
     <tr class="text-header">
@@ -55,13 +55,13 @@
       <td class="text__height"><span openlmis-message="pdf.ptv.type.patient"></span></td>
     </tr>
     <tr class="text-header">
-      <td class="text__height"><span openlmis-message="pdf.ptv.total.women"></span>{{$scope.adults}}</td>
+      <td class="text__height"><span openlmis-message="pdf.ptv.total.women"></span>&nbsp;{{adults}}</td>
     </tr>
     <tr class="text-header">
-      <td class="text__height"><span openlmis-message="pdf.ptv.total.children"></span>{{$scope.children}}</td>
+      <td class="text__height"><span openlmis-message="pdf.ptv.total.children"></span>&nbsp;{{children}}</td>
     </tr>
     <tr ng-class="{'text-header': $index == 0, 'text-footer': $index > serviceNumber * 2}" ng-repeat="row in content track by $index">
-      <td>{{($index > 0 && $index <= serviceNumber * 2) ? $index : ""}}</td>
+      <td>{{($index > 0 && $index <= serviceNumber) ? $index : ""}}</td>
       <td ng-repeat="cell in row track by $index">{{cell}}</td>
       <td></td>
     </tr>

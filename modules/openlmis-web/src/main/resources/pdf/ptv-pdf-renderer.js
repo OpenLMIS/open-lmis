@@ -25,7 +25,7 @@ function onLoaded() {
       $('.content.rnr-content').css('-moz-box-shadow', '0 0 0px rgba(255, 255, 255, 0)');
       $('.content.rnr-content').css('box-shadow', '0 0 0px rgba(255, 255, 255, 0)');
 
-      $('.al-form').css('width', 994);
+      $('.al-form').css('width', '90%');
       $('.al-form').css('zoom', 0.50);
       $('.al-form td').css('line-height', 1.0);
 

@@ -61,19 +61,19 @@ function ViewRnrPTVController($scope, $route, Requisitions, messageService, Date
         arrayAdd(head, service.name);
         row.push(service.patientsOnTreatment);
       });
-      for (var i = 0; i < $scope.serviceNumber; i++) {
-        row.push("");
-      }
+      // for (var i = 0; i < $scope.serviceNumber; i++) {
+      //   row.push("");
+      // }
       row.push(product.calculatedOrderQuantity);
-      row.push(product.received);
-      row.push(product.adjustment);
-      row.push(product.inventory);
+      row.push(product.quantityReceived);
+      row.push(product.totalLossesAndAdjustments);
+      row.push(product.stockInHand);
       content.push(row);
     });
 
-    for (var i = 0; i < $scope.serviceNumber; i++) {
-      head.push("");
-    }
+    // for (var i = 0; i < $scope.serviceNumber; i++) {
+    //   head.push("");
+    // }
     head.push(messageService.get('pdf.ptv.total.ptv'));
     head.push(messageService.get('pdf.ptv.entradas'));
     head.push(messageService.get('pdf.ptv.losses.adjustments'));
