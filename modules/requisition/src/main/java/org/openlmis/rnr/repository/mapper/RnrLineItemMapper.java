@@ -168,21 +168,27 @@ public interface RnrLineItemMapper {
     @Result(property = "id", column = "id"),
     @Result(property = "previousNormalizedConsumptions", column = "previousNormalizedConsumptions", typeHandler = StringToList.class),
     @Result(property = "lossesAndAdjustments", javaType = List.class, column = "id",
-      many = @Many(select = "org.openlmis.rnr.repository.mapper.LossesAndAdjustmentsMapper.getByRnrLineItem"))
+      many = @Many(select = "org.openlmis.rnr.repository.mapper.LossesAndAdjustmentsMapper.getByRnrLineItem")),
+    @Result(property = "serviceItems", javaType = List.class, column = "id",
+      many = @Many(select = "org.openlmis.rnr.repository.mapper.ServiceItemMapper.getByRnrLineItem"))
   })
   RnrLineItem getNonSkippedLineItem(@Param("rnrId") Long rnrId, @Param("productCode") String productCode);
 
-  @Select({"SELECT productCode, beginningBalance, quantityReceived, quantityDispensed, ",
+  @Select({"SELECT id, productCode, beginningBalance, quantityReceived, quantityDispensed, ",
       "stockInHand, quantityRequested, calculatedOrderQuantity, quantityApproved, ",
-      "totalLossesAndAdjustments, expirationDate",
+      "totalLossesAndAdjustments, expirationDate, totalServiceQuantity",
       "FROM requisition_line_items",
       "WHERE rnrId = #{rnrId} and fullSupply = TRUE",
       "AND skipped = FALSE"})
+  @Results(value = {
+    @Result(property = "serviceItems", javaType = List.class, column = "id",
+      many = @Many(select = "org.openlmis.rnr.repository.mapper.ServiceItemMapper.getByRnrLineItem"))
+  })
   List<RnrLineItem> getNonSkippedRnrLineItemsByRnrId(Long rnrId);
 
   @Select({"SELECT productCode, beginningBalance, quantityReceived, quantityDispensed, ",
       "stockInHand, quantityRequested, calculatedOrderQuantity, quantityApproved, ",
-      "totalLossesAndAdjustments, expirationDate",
+      "totalLossesAndAdjustments, expirationDate, totalServiceQuantity",
       "FROM requisition_line_items",
       "WHERE rnrId = #{rnrId} and fullSupply = FALSE",
       "AND skipped = FALSE"})
