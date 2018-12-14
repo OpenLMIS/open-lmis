@@ -152,6 +152,12 @@ public class RequisitionEmailServiceForSIMAM {
 
 	public String generateRequisitionExcelForSIMAM(Rnr requisition) {
 		List<Map<String, String>> requisitionItemsData = rnrMapperForSIMAM.getRnrItemsForSIMAMImport(requisition);
+
+		if(requisition.getProgram().getCode().equals("PTV")) {
+			for(Map<String, String> requisitionItem : requisitionItemsData) {
+				requisitionItem.put("quantity_dispensed", requisitionItem.get("total_service_quantity"));
+			}
+		}
 		CollectionUtils.collect(requisitionItemsData, new Transformer() {
 			@Override
 			public Map<String, String> transform(Object input) {
