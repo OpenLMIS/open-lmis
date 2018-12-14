@@ -168,9 +168,7 @@ public interface RnrLineItemMapper {
     @Result(property = "id", column = "id"),
     @Result(property = "previousNormalizedConsumptions", column = "previousNormalizedConsumptions", typeHandler = StringToList.class),
     @Result(property = "lossesAndAdjustments", javaType = List.class, column = "id",
-      many = @Many(select = "org.openlmis.rnr.repository.mapper.LossesAndAdjustmentsMapper.getByRnrLineItem")),
-    @Result(property = "serviceItems", javaType = List.class, column = "id",
-      many = @Many(select = "org.openlmis.rnr.repository.mapper.ServiceItemMapper.getByRnrLineItem"))
+      many = @Many(select = "org.openlmis.rnr.repository.mapper.LossesAndAdjustmentsMapper.getByRnrLineItem"))
   })
   RnrLineItem getNonSkippedLineItem(@Param("rnrId") Long rnrId, @Param("productCode") String productCode);
 
