@@ -1,4 +1,3 @@
-DROP VIEW stock_on_hand_product_vw;
 CREATE OR REPLACE VIEW stock_on_hand_product_vw AS
 select f.code as facilitycode,
        f.name as facilityname,
