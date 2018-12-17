@@ -133,4 +133,9 @@ public class ProgramRepository {
     Long programId = getIdByCode(programCode);
     mapper.associateProgramToParent(programId, parentProgramId);
   }
+
+  public Program getProgramWithParentById(Long programId) {
+    return mapper.getWithParentById(programId);
+  }
+
 }
