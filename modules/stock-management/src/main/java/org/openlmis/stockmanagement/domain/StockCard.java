@@ -43,6 +43,9 @@ public class StockCard extends BaseModel {
   @JsonIgnore
   private StockCardEntryKVReduceStrategy strategy;
 
+  @JsonIgnore
+  private StockCardEntry lastestStockCardEntry;
+
   private StockCard(Facility facility, Product product) {
     Objects.requireNonNull(facility);
     Objects.requireNonNull(product);
@@ -58,6 +61,10 @@ public class StockCard extends BaseModel {
 
   public void addToTotalQuantityOnHand(long quantity) {
     this.totalQuantityOnHand += quantity;
+  }
+
+  public void setLatestStockCardEntry(StockCardEntry entry) {
+    this.lastestStockCardEntry = entry;
   }
 
   public static final StockCard createZeroedStockCard(Facility facility, Product product) {

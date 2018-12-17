@@ -80,7 +80,7 @@ public class StockCardEntry extends BaseModel {
   }
 
   public void validStockCardEntry() {
-    if((this.getStockCard().getEntries() == null || this.getStockCard().getEntries().size() == 0)) {
+    if((this.getStockCard().getEntries() == null && this.getStockCard().getLastestStockCardEntry() == null)) {
       this.validFirstInventory();
     } else {
       this.validOccurredDate();
@@ -90,23 +90,23 @@ public class StockCardEntry extends BaseModel {
 
   private void validStockOnHand() {
     if(stockCard.getTotalQuantityOnHand() + this.getQuantity() != this.getStockOnHand()) {
-      logger.error("stock movement quantity error");
+      logger.error("stock movement quantity error, facilityname: " + this.getStockCard().getFacility().getName() + ", productcode: " + this.getStockCard().getProduct().getCode());
       throw new DataException("error.stockmovementquantity.validation");
     }
   }
 
   private void validOccurredDate() {
     List<StockCardEntry> stockCardEntries = stockCard.getEntries();
-    StockCardEntry latestStockCardEntry = stockCardEntries.get(0);
+    StockCardEntry latestStockCardEntry = stockCard.getLastestStockCardEntry() == null ? stockCardEntries.get(0) : stockCard.getLastestStockCardEntry();
     if(latestStockCardEntry.getOccurred().after(this.getOccurred())) {
-      logger.error("stock movement date error");
+      logger.error("stock movement date error, facilityname: " + this.getStockCard().getFacility().getName() + ", productcode: " + this.getStockCard().getProduct().getCode());
       throw new DataException("error.stockmovementdate.validation");
     }
   }
 
   private void validFirstInventory() {
     if(!(this.getAdjustmentReason().getName().equals("INVENTORY") && this.getQuantity() > 0)) {
-      logger.error("first inventory error");
+      logger.error("first inventory error, facilityname: " + this.getStockCard().getFacility().getName() + ", productcode: " + this.getStockCard().getProduct().getCode());
       throw new DataException("error.firstinventory.validation");
     }
   }
