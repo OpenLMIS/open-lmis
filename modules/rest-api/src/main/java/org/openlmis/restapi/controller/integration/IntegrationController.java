@@ -23,4 +23,9 @@ public class IntegrationController extends BaseController {
         return ResponseEntity.ok(integrationToFCService.getPageInfo(fromStartDate, type));
     }
 
+
+    @RequestMapping("/rest-api/sohs")
+    public ResponseEntity getPageInfo(@RequestParam String fromStartDate, @RequestParam int startPage) {
+        return ResponseEntity.ok(integrationToFCService.getSohByDate(fromStartDate, startPage));
+    }
 }
