@@ -39,17 +39,24 @@ public class RestProgramsService {
     List<ProgramSupported> programSupporteds = programSupportedRepository.getAllByFacilityId(facilityId);
 
     for (ProgramSupported programSupported: programSupporteds) {
-      ProgramWithRegimens programWithRegimens = new ProgramWithRegimens();
       Program program = programRepository.getProgramWithParentById(programSupported.getProgram().getId());
-      programWithRegimens.setId(program.getId());
-      programWithRegimens.setCode(program.getCode());
-      programWithRegimens.setName(program.getName());
-
-      programWithRegimens.setParentCode(program.getParent() != null ? program.getParent().getCode() : null);
-      programWithRegimens.setIsSupportEmergency(program.getIsSupportEmergency());
-      programWithRegimens.setRegimens(regimenRepository.getRegimensByProgramAndIsCustom(program.getId(), false));
+      ProgramWithRegimens programWithRegimens = createProgramWithRegimens(program);
       programWithRegimensList.add(programWithRegimens);
     }
     return programWithRegimensList;
   }
+
+  private ProgramWithRegimens createProgramWithRegimens(Program program) {
+    ProgramWithRegimens programWithRegimens = new ProgramWithRegimens();
+
+    programWithRegimens.setId(program.getId());
+    programWithRegimens.setCode(program.getCode());
+    programWithRegimens.setName(program.getName());
+    programWithRegimens.setParentCode(program.getParent() != null ? program.getParent().getCode() : null);
+    programWithRegimens.setIsSupportEmergency(program.getIsSupportEmergency());
+    programWithRegimens.setRegimens(regimenRepository.getRegimensByProgramAndIsCustom(program.getId(), false));
+
+    return programWithRegimens;
+  }
+
 }
