@@ -11,10 +11,7 @@
 package org.openlmis.core.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
 import java.util.List;
@@ -25,6 +22,7 @@ import static com.fasterxml.jackson.databind.annotation.JsonSerialize.Inclusion.
  * Program represents a Program and its attributes.
  */
 @Data
+@Builder
 @AllArgsConstructor
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = false)
