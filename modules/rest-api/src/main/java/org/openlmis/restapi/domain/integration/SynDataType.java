@@ -5,7 +5,7 @@ import org.openlmis.core.exception.DataException;
 public enum SynDataType {
 
     SOH("soh", "stock_on_hand_product_vw", 1000),
-    MOVEMENT("movement", "", 1000),
+    MOVEMENT("movement", "vw_stock_movements_integration", 1000),
     REQUISITION("requisition", "", 1000);
 
     private String name;

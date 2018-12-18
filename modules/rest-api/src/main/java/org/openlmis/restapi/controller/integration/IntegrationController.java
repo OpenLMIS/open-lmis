@@ -28,4 +28,9 @@ public class IntegrationController extends BaseController {
     public ResponseEntity getPageInfo(@RequestParam String fromStartDate, @RequestParam int startPage) {
         return ResponseEntity.ok(integrationToFCService.getSohByDate(fromStartDate, startPage));
     }
+
+    @RequestMapping("rest-api/movs")
+    public ResponseEntity getStockMovements(@RequestParam String fromStartDate, @RequestParam int startPage) {
+        return ResponseEntity.ok(integrationToFCService.getStockMovementsByDate(fromStartDate, startPage));
+    }
 }

@@ -1,6 +1,7 @@
 package org.openlmis.core.repository;
 
 import org.openlmis.core.domain.Soh;
+import org.openlmis.core.domain.StockMovement;
 import org.openlmis.core.repository.mapper.IntegrationMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
@@ -24,5 +25,9 @@ public class IntegrationRepository {
 
     public List<Soh> getSohByDate(Date fromStartDate, int everyPageCount, int startPosition) {
         return integrationMapper.getSohByDate(fromStartDate, everyPageCount, startPosition);
+    }
+
+    public List<StockMovement> getStockMovementsByDate(Date fromStartDate, int count, int startPosition) {
+        return integrationMapper.getStockMovementsByDate(fromStartDate, count, startPosition);
     }
 }

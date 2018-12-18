@@ -4,9 +4,11 @@ import com.google.common.base.Function;
 import com.google.common.collect.FluentIterable;
 import org.apache.log4j.Logger;
 import org.openlmis.core.domain.Soh;
+import org.openlmis.core.domain.StockMovement;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.core.repository.IntegrationRepository;
 import org.openlmis.restapi.domain.SohDTO;
+import org.openlmis.restapi.domain.StockMovementsDTO;
 import org.openlmis.restapi.domain.integration.SynDataType;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,6 +40,21 @@ public class IntegrationToFCService {
             @Override
             public SohDTO apply(Soh source) {
                 SohDTO target = new SohDTO();
+                BeanUtils.copyProperties(source, target);
+                return target;
+            }
+        }).toList();
+    }
+
+    public List<StockMovementsDTO> getStockMovementsByDate(String fromStartDate, int startPage) {
+        int startPosition = getStartPosition(startPage, SynDataType.MOVEMENT);
+        logger.info(String.format("Get stock movements fromStartDate=%s, startPosition=%s", fromStartDate, startPosition));
+        List<StockMovement> stockMovements = integrationRepository.getStockMovementsByDate(createFromStartDate(fromStartDate), SynDataType.SOH.getCount(), startPosition);
+        logger.info(String.format("Get stock movements from Db size=%d", stockMovements.size()));
+        return FluentIterable.from(stockMovements).transform(new Function<StockMovement, StockMovementsDTO>() {
+            @Override
+            public StockMovementsDTO apply(StockMovement source) {
+                StockMovementsDTO target = new StockMovementsDTO();
                 BeanUtils.copyProperties(source, target);
                 return target;
             }

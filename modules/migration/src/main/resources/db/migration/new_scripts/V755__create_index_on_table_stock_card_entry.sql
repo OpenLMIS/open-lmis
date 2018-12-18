@@ -1,0 +1,1 @@
+CREATE index i_lot_items_stock_card_entry_id ON stock_card_entry_lot_items(stockcardentryid);

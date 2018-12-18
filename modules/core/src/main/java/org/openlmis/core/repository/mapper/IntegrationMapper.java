@@ -3,6 +3,7 @@ package org.openlmis.core.repository.mapper;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
 import org.openlmis.core.domain.Soh;
+import org.openlmis.core.domain.StockMovement;
 import org.springframework.stereotype.Repository;
 
 import java.util.Date;
@@ -21,4 +22,9 @@ public interface IntegrationMapper {
                            @Param(value = "everyPageCount") int everyPageCount,
                            @Param(value = "startPosition") int startPosition);
 
+    @Select("SELECT * from vw_stock_movements_integration WHERE modifieddate >= #{fromStartDate} limit #{everyPageCount} offset #{startPosition}")
+    List<StockMovement> getStockMovementsByDate(
+            @Param(value = "fromStartDate") Date fromStartDate,
+            @Param(value = "everyPageCount") int everyPageCount,
+            @Param(value = "startPosition") int startPosition);
 }
