@@ -13,6 +13,8 @@ public class StockMovement {
     @JsonDeserialize(using = DateUTCDeserializer.class)
     private Date occurred;
 
+    private Integer movementId;
+
     private String productCode;
 
     private String category;
@@ -33,4 +35,6 @@ public class StockMovement {
     private String productStrength;
 
     private String notes;
+
+    private String adjustmentType;
 }

@@ -14,7 +14,7 @@ public class StockMovementsDTO {
     @JsonDeserialize(using = DateUTCDeserializer.class)
     private Date occurred;
 
-    private Integer noMov = null;
+    private Integer movementId;
 
     private String productCode;
 
@@ -31,8 +31,7 @@ public class StockMovementsDTO {
 
     private String referenceNumber;
 
-    @JsonDeserialize(using = DateUTCDeserializer.class)
-    private Date entiDate = null;
+    private String adjustmentType;
 
     private String productFullName;
 
