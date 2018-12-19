@@ -50,12 +50,14 @@ function StockOnHandSingleProductController($scope, $filter, $controller, $http,
         return o.expiryDate;
       });
 
-      formatItem.expiry_date = lotList[0].expiryDate;
-      formatItem.soonest_expiring_loh = DateFormatService.formatDateWithLocale(lotList[0].expiryDate) + " (" + messageService.get("report.stock.on.hand.amount") + lotList[0].stockOnHandOfLot + ")";
+      formatItem.expiry_date = item.sumStockOnHand === 0 ? '' : lotList[0].expiryDate;
+      formatItem.soonest_expiring_loh = formatItem.sumStockOnHand === 0 ? '' :
+        DateFormatService.formatDateWithLocale(lotList[0].expiryDate) +
+        " (" + messageService.get("report.stock.on.hand.amount") +
+        lotList[0].stockOnHandOfLot + ")";
       formatItem.lotList = lotList;
       formattedSingleProductList.push(formatItem);
     });
-
 
     return formattedSingleProductList;
   }
@@ -69,7 +71,7 @@ function StockOnHandSingleProductController($scope, $filter, $controller, $http,
             productName: item.productName,
             stockOnHandStatus: item.stockOnHandStatus,
             facilityCode: item.facilityCode,
-            expiry_date: DateFormatService.formatDateWithLocale(item.expiry_date),
+            expiry_date: item.expiry_date && DateFormatService.formatDateWithLocale(item.expiry_date),
             soonest_expiring_loh: item.soonest_expiring_loh,
             lotNumber: lot.lotNumber,
             stockOnHandOfLot: lot.stockOnHandOfLot,
