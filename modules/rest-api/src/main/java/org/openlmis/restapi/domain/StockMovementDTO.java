@@ -7,7 +7,7 @@ import org.openlmis.core.serializer.DateUTCDeserializer;
 import java.util.Date;
 
 @Data
-public class StockMovementsDTO {
+public class StockMovementDTO {
 
     private String facilityCode;
 

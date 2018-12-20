@@ -42,7 +42,7 @@ public class IntegrationController extends BaseController {
         return ResponseEntity.ok(integrationToFCService.getSohByDate(fromStartDate, startPage));
     }
 
-    @RequestMapping("rest-api/movs")
+    @RequestMapping("/rest-api/movs")
     public ResponseEntity getStockMovements(@RequestParam String fromStartDate, @RequestParam int startPage) {
         return ResponseEntity.ok(integrationToFCService.getStockMovementsByDate(fromStartDate, startPage));
     }
@@ -63,4 +63,9 @@ public class IntegrationController extends BaseController {
 //    public ResponseEntity synRegimen(@RequestParam(required = false) String fromStartDate) {
 //        return ResponseEntity.ok(regimenIntegrationFromFCService.getDataFromFC(fromStartDate));
 //    }
+
+    @RequestMapping("/rest-api/requisitions")
+    public ResponseEntity getRequisitions(@RequestParam String fromStartDate, @RequestParam int startPage) {
+        return ResponseEntity.ok(integrationToFCService.getRequisitionsByDate(fromStartDate, startPage));
+    }
 }

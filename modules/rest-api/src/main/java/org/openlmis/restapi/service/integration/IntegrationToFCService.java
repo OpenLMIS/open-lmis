@@ -7,9 +7,12 @@ import org.openlmis.core.domain.Soh;
 import org.openlmis.core.domain.StockMovement;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.core.repository.IntegrationRepository;
+import org.openlmis.restapi.domain.integration.RequisitionIntergration;
 import org.openlmis.restapi.domain.SohDTO;
-import org.openlmis.restapi.domain.StockMovementsDTO;
+import org.openlmis.restapi.domain.StockMovementDTO;
+import org.openlmis.restapi.domain.integration.RequisitionIntergrationDTO;
 import org.openlmis.restapi.domain.integration.SynDataType;
+import org.openlmis.restapi.mapper.intergration.RequisitionIntergrationMapper;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -25,6 +28,9 @@ public class IntegrationToFCService {
     private static Logger logger = Logger.getLogger(IntegrationToFCService.class);
 
     private IntegrationRepository integrationRepository;
+
+    @Autowired
+    private RequisitionIntergrationMapper requisitionMapper;
 
     @Autowired
     public IntegrationToFCService(IntegrationRepository integrationRepository) {
@@ -46,16 +52,31 @@ public class IntegrationToFCService {
         }).toList();
     }
 
-    public List<StockMovementsDTO> getStockMovementsByDate(String fromStartDate, int startPage) {
+    public List<StockMovementDTO> getStockMovementsByDate(String fromStartDate, int startPage) {
         int startPosition = getStartPosition(startPage, SynDataType.MOVEMENT);
         logger.info(String.format("Get stock movements fromStartDate=%s, startPosition=%s", fromStartDate, startPosition));
         List<StockMovement> stockMovements = integrationRepository.getStockMovementsByDate(createFromStartDate(fromStartDate), SynDataType.SOH.getCount(), startPosition);
         logger.info(String.format("Get stock movements from Db size=%d", stockMovements.size()));
-        return FluentIterable.from(stockMovements).transform(new Function<StockMovement, StockMovementsDTO>() {
+        return FluentIterable.from(stockMovements).transform(new Function<StockMovement, StockMovementDTO>() {
             @Override
-            public StockMovementsDTO apply(StockMovement source) {
-                StockMovementsDTO target = new StockMovementsDTO();
+            public StockMovementDTO apply(StockMovement source) {
+                StockMovementDTO target = new StockMovementDTO();
                 BeanUtils.copyProperties(source, target);
+                return target;
+            }
+        }).toList();
+    }
+
+    public List<RequisitionIntergrationDTO> getRequisitionsByDate(String fromStartDate, int startPage) {
+        int startPosition = getStartPosition(startPage, SynDataType.REQUISITION);
+        logger.info(String.format("Get requisitions fromStartDate=%s, startPosition=%s", fromStartDate, startPosition));
+        List<RequisitionIntergration> requisitions = requisitionMapper.getRequisitions(createFromStartDate(fromStartDate), SynDataType.REQUISITION.getCount(), startPosition);
+        logger.info(String.format("Get requisitions from Db size=%d", requisitions.size()));
+        return FluentIterable.from(requisitions).transform(new Function<RequisitionIntergration, RequisitionIntergrationDTO>() {
+            @Override
+            public RequisitionIntergrationDTO apply(RequisitionIntergration source) {
+                RequisitionIntergrationDTO target = new RequisitionIntergrationDTO();
+                target.prepareDataForFC(source);
                 return target;
             }
         }).toList();
