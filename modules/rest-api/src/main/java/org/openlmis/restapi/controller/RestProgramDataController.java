@@ -42,6 +42,7 @@ public class RestProgramDataController extends BaseController {
     return RestResponse.success("api.program.data.save.success");
   }
 
+  /* 为了兼容android端的老版本，"programCode":"RAPID_TEST", 在新版本中android端将使用TEST_KIT替代 */
   @RequestMapping(value = "/rest-api/programData/facilities/{facilityId}", method = GET)
   public ResponseEntity getProgramDataFormsByFacility(@PathVariable Long facilityId) {
     List<ProgramDataFormDTO> programDataFormList = restProgramDataService.getProgramDataFormsByFacility(facilityId);
