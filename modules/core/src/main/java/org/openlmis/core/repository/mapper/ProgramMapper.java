@@ -216,4 +216,11 @@ public interface ProgramMapper {
       one = @One(select = "org.openlmis.core.repository.mapper.ProgramMapper.getById")),
   })
   Program getWithParentById(Long programId);
+
+  @Update("UPDATE programs SET " +
+          "name = #{name}, " +
+          "description = #{description}, " +
+          "active = #{active} " +
+          "WHERE code = #{code}")
+  void updateBasicInfo(Program program);
 }

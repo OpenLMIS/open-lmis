@@ -85,4 +85,8 @@ public interface ProgramSupportedMapper {
             "(SELECT id as virtualFacilityId FROM facilities where parentFacilityId=#{id}) AS C",
             "WHERE PS.facilityId = #{id}"})
     void copyToVirtualFacilities(Facility parentFacility);
+
+
+    @Update({"UPDATE programs_supported SET active=#{active}, reportActive=#{active} WHERE programId=#{programId}"})
+    void updateActiveByProgramId(@Param("programId") Long programId, @Param("active") Boolean active);
 }

@@ -12,13 +12,17 @@ package org.openlmis.core.repository;
 
 import lombok.NoArgsConstructor;
 import org.openlmis.core.domain.Program;
+import org.openlmis.core.domain.ProgramSupported;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.core.message.OpenLmisMessage;
 import org.openlmis.core.repository.mapper.ProgramMapper;
+import org.openlmis.core.repository.mapper.ProgramSupportedMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Map;
 
 import static org.openlmis.core.domain.RightName.commaSeparateRightNames;
 
@@ -32,11 +36,14 @@ public class ProgramRepository {
 
   private ProgramMapper mapper;
 
+  private ProgramSupportedMapper programSupportedMapper;
+
   public static String PROGRAM_CODE_INVALID = "program.code.invalid";
 
   @Autowired
   public ProgramRepository(ProgramMapper programMapper) {
     this.mapper = programMapper;
+    this.programSupportedMapper = programSupportedMapper;
   }
 
   public List<Program> getByFacility(Long facilityId) {
@@ -138,4 +145,20 @@ public class ProgramRepository {
     return mapper.getWithParentById(programId);
   }
 
+  @Transactional
+  public void toPersistDbByOperationType(List<Program> saves, List<Program> updates, Map<Long, Boolean> toActives) {
+
+    for (Program save : saves) {
+      mapper.insert(save);
+    }
+
+    for (Program update : updates) {
+      mapper.updateBasicInfo(update);
+    }
+
+    for (Map.Entry<Long, Boolean> entry : toActives.entrySet()) {
+      programSupportedMapper.updateActiveByProgramId(entry.getKey(), entry.getValue());
+    }
+
+  }
 }

@@ -1,8 +1,6 @@
 package org.openlmis.core.domain;
 
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import lombok.Data;
-import org.openlmis.core.serializer.DateUTCDeserializer;
 
 import java.util.Date;
 
