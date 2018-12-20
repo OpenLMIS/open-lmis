@@ -5,6 +5,7 @@ import org.openlmis.core.domain.Program;
 import org.openlmis.core.repository.ProgramRepository;
 import org.openlmis.restapi.config.IntegrationFCConfig;
 import org.openlmis.restapi.domain.integration.ProgramIntegrationDTO;
+import org.openlmis.restapi.domain.integration.RegimenIntegrationDTO;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -32,15 +33,7 @@ public class ProgramIntegrationFromFCService extends IntegrationFromFCService<Pr
 
     @Override
     List<ProgramIntegrationDTO> getDataFromFC(String date) {
-        String url = getUrl(date, method);
-        logger.info(String.format("Get program from FC {%s}, the beginning time is %s", url, date));
-        ResponseEntity<ProgramIntegrationDTO[]> programEntities = restTemplate.getForEntity(url, ProgramIntegrationDTO[].class);
-        ProgramIntegrationDTO[] programs = programEntities.getBody();
-        logger.info(String.format("Get program from FC the size is %d", programs.length));
-        if (programs != null && programs.length > 0) {
-            return Arrays.asList(programs);
-        }
-        return null;
+        return getDataTemplate(date, method, ProgramIntegrationDTO[].class);
     }
 
 
