@@ -12,7 +12,7 @@ import java.util.List;
 @Repository
 public interface IntegrationMapper {
 
-    @Select("SELECT count(1) FROM ${tableName} WHERE modifieddate > #{fromStartDate}")
+    @Select("SELECT count(1) FROM ${tableName} WHERE modifieddate >= #{fromStartDate}")
     Integer getPageInfo(@Param(value = "tableName") String tableName, @Param(value = "fromStartDate") Date fromStartDate);
 
 
