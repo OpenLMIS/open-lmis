@@ -143,7 +143,7 @@ function StockOnHandAllProductsController($scope, $filter, $controller, NewRepor
         return o.expiryDate;
       });
       
-      formatItem.expiry_date = lotList[0].expiryDate;
+      formatItem.expiry_date = formatItem.sumStockOnHand === 0 ? '' : lotList[0].expiryDate;
       formatItem.soonest_expiring_loh = formatItem.sumStockOnHand === 0 ? '' :
         DateFormatService.formatDateWithLocale(lotList[0].expiryDate) +
         '(' + messageService.get('report.stock.on.hand.amount') +
