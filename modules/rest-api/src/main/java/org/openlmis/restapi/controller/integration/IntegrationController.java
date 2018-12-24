@@ -8,10 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.bind.annotation.*;
 
 @Controller
 public class IntegrationController extends BaseController {
@@ -31,41 +28,43 @@ public class IntegrationController extends BaseController {
         this.regimenIntegrationFromFCService = regimenIntegrationFromFCService;
     }
 
-    @RequestMapping("/rest-api/page")
+    @RequestMapping(value = "/rest-api/sync/page", method = RequestMethod.GET)
     public ResponseEntity getPageInfo(@RequestParam String fromStartDate, @RequestParam String type) {
         return ResponseEntity.ok(integrationToFCService.getPageInfo(fromStartDate, type));
     }
 
-
-    @RequestMapping("/rest-api/sohs")
+    @RequestMapping(value ="/rest-api/sync/sohs", method = RequestMethod.GET)
     public ResponseEntity getPageInfo(@RequestParam String fromStartDate, @RequestParam int startPage) {
         return ResponseEntity.ok(integrationToFCService.getSohByDate(fromStartDate, startPage));
     }
 
-    @RequestMapping("/rest-api/movs")
+    @RequestMapping(value = "rest-api/sync/movs", method = RequestMethod.GET)
     public ResponseEntity getStockMovements(@RequestParam String fromStartDate, @RequestParam int startPage) {
         return ResponseEntity.ok(integrationToFCService.getStockMovementsByDate(fromStartDate, startPage));
     }
 
-    @RequestMapping("/rest-api/syn/all")
+    @RequestMapping(value = "/rest-api/sync/requisitions", method = RequestMethod.GET)
+    public ResponseEntity getRequisitions(@RequestParam String fromStartDate, @RequestParam int startPage) {
+        return ResponseEntity.ok(integrationToFCService.getRequisitionsByDate(fromStartDate, startPage));
+    }
+
+    @RequestMapping(value = "/rest-api/sync/all", method = RequestMethod.GET)
     @ResponseStatus(HttpStatus.OK)
     public void synAll(@RequestParam(required = false) String fromStartDate) {
         programIntegrationFromFCService.sycDataFromFC(fromStartDate);
+        regimenIntegrationFromFCService.sycDataFromFC(fromStartDate);
     }
 
-    @RequestMapping("/rest-api/syn/program")
+    @RequestMapping(value = "/rest-api/sync/program", method = RequestMethod.GET)
     @ResponseStatus(HttpStatus.OK)
     public void synProgram(@RequestParam(required = false) String fromStartDate) {
         programIntegrationFromFCService.sycDataFromFC(fromStartDate);
     }
 
-//    @RequestMapping("/rest-api/syn/regimen")
-//    public ResponseEntity synRegimen(@RequestParam(required = false) String fromStartDate) {
-//        return ResponseEntity.ok(regimenIntegrationFromFCService.getDataFromFC(fromStartDate));
-//    }
-
-    @RequestMapping("/rest-api/requisitions")
-    public ResponseEntity getRequisitions(@RequestParam String fromStartDate, @RequestParam int startPage) {
-        return ResponseEntity.ok(integrationToFCService.getRequisitionsByDate(fromStartDate, startPage));
+    @RequestMapping(value = "/rest-api/sync/regimen", method = RequestMethod.GET)
+    @ResponseStatus(HttpStatus.OK)
+    public void synRegimen(@RequestParam(required = false) String fromStartDate) {
+        regimenIntegrationFromFCService.sycDataFromFC(fromStartDate);
     }
+
 }

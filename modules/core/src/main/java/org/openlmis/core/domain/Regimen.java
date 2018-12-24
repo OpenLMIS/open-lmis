@@ -10,12 +10,13 @@
 
 package org.openlmis.core.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
 import static com.fasterxml.jackson.databind.annotation.JsonSerialize.Inclusion.NON_EMPTY;
 
@@ -40,4 +41,20 @@ public class Regimen extends BaseModel {
 
   //if skipped is true, will not send this regimen to SIMMAN
   private boolean skipped;
+
+
+  @JsonIgnore
+  public int isEqualForFCRegimen(Regimen regimen) {
+    if (regimen == null) return 0;
+    if (!this.code.equals(regimen.code)) return -1;
+    if (!this.toStringForEqual().equals(regimen.toStringForEqual())) {
+      return 1;
+    }
+    return 0;
+  }
+
+  private String toStringForEqual() {
+    return this.name + this.code + this.active + this.programId
+            + this.category != null ? this.getId() + "" : "" + this.isCustom;
+  }
 }

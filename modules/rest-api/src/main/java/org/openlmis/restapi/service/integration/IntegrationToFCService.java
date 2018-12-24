@@ -103,6 +103,7 @@ public class IntegrationToFCService {
 
     private Date createFromStartDate(String fromStartDate) {
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyyMMdd");
+        simpleDateFormat.setLenient(false);
         try {
             return simpleDateFormat.parse(fromStartDate);
         } catch (ParseException e) {

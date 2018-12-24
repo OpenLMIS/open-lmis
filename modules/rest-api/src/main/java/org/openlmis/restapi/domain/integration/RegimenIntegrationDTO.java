@@ -1,9 +1,12 @@
 package org.openlmis.restapi.domain.integration;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import lombok.Data;
 import org.openlmis.restapi.deserializer.ActiveDeserializer;
 
+@Data
 public class RegimenIntegrationDTO {
 
     @JsonProperty(value="description")
@@ -25,6 +28,7 @@ public class RegimenIntegrationDTO {
     @JsonProperty(value="categoryDescription")
     private String categoryName;
 
+    @JsonIgnore
     private Boolean isCustom = false;
 
 }

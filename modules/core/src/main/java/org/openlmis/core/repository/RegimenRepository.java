@@ -14,6 +14,7 @@ import org.openlmis.core.domain.*;
 import org.openlmis.core.repository.mapper.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -105,5 +106,18 @@ public class RegimenRepository {
   public List<Regimen> getRegimensByProgramAndIsCustom(Long programId, boolean isCustom) {
 
     return mapper.getRegimensByProgramAndIsCustom(programId, isCustom);
+  }
+
+  @Transactional
+  public void toPersistDbByOperationType(List<Regimen> saves, List<Regimen> updates) {
+
+    for (Regimen save : saves) {
+      mapper.insert(save);
+    }
+
+    for (Regimen update : updates) {
+      mapper.updateByCode(update);
+    }
+
   }
 }

@@ -72,4 +72,14 @@ public interface RegimenMapper {
                   one = @One(select = "org.openlmis.core.repository.mapper.RegimenCategoryMapper.getById"))})
   List<Regimen> getRegimensByProgramAndIsCustom(@Param("programId") Long programId, @Param("isCustom") boolean isCustom);
 
+  @Select({"SELECT * FROM regimens where isCustom = false"})
+   List<Regimen> getAllIsNotCustomRegimens();
+
+  @Update({"UPDATE regimens SET code = #{code}, name = #{name}, active = #{active}, programId = #{programId},",
+          "categoryId = #{category.id}, isCustom = #{isCustom}, modifiedDate = NOW() WHERE code = #{code}"})
+  void updateByCode(Regimen regimen);
+
+  @Update({"UPDATE programs_supported SET active=#{active}, modifiedDate=NOW() WHERE programId=#{programId}"})
+  void updateActiveByProgramId(@Param("programId") Long programId, @Param("active") Boolean active);
+
 }

@@ -13,10 +13,12 @@ package org.openlmis.core.repository;
 import lombok.NoArgsConstructor;
 import org.openlmis.core.domain.Program;
 import org.openlmis.core.domain.ProgramSupported;
+import org.openlmis.core.domain.RegimenCategory;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.core.message.OpenLmisMessage;
 import org.openlmis.core.repository.mapper.ProgramMapper;
 import org.openlmis.core.repository.mapper.ProgramSupportedMapper;
+import org.openlmis.core.repository.mapper.RegimenMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
@@ -38,12 +40,16 @@ public class ProgramRepository {
 
   private ProgramSupportedMapper programSupportedMapper;
 
+  private RegimenMapper regimenMapper;
+
   public static String PROGRAM_CODE_INVALID = "program.code.invalid";
 
   @Autowired
-  public ProgramRepository(ProgramMapper programMapper) {
+  public ProgramRepository(ProgramMapper programMapper, ProgramSupportedMapper programSupportedMapper,
+                           RegimenMapper regimenMapper) {
     this.mapper = programMapper;
     this.programSupportedMapper = programSupportedMapper;
+    this.regimenMapper = regimenMapper;
   }
 
   public List<Program> getByFacility(Long facilityId) {
@@ -158,6 +164,7 @@ public class ProgramRepository {
 
     for (Map.Entry<Long, Boolean> entry : toActives.entrySet()) {
       programSupportedMapper.updateActiveByProgramId(entry.getKey(), entry.getValue());
+      regimenMapper.updateActiveByProgramId(entry.getKey(), entry.getValue());
     }
 
   }
