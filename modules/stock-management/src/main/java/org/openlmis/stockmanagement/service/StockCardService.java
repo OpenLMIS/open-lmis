@@ -131,7 +131,6 @@ public class StockCardService {
     logger.info("start to valid stock card entry");
     entry.validStockCardEntry();
     StockCard card = entry.getStockCard();
-    card.setLatestStockCardEntry(entry);
     card.addToTotalQuantityOnHand(entry.getQuantity());
     repository.updateStockCard(card);
     repository.persistStockCardEntry(entry);
