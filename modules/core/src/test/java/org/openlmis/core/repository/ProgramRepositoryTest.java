@@ -18,6 +18,8 @@ import org.junit.rules.ExpectedException;
 import org.openlmis.core.domain.Program;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.core.repository.mapper.ProgramMapper;
+import org.openlmis.core.repository.mapper.ProgramSupportedMapper;
+import org.openlmis.core.repository.mapper.RegimenMapper;
 import org.openlmis.db.categories.UnitTests;
 
 import java.util.ArrayList;
@@ -33,6 +35,8 @@ public class ProgramRepositoryTest {
 
   private ProgramMapper programMapper;
   private ProgramRepository programRepository;
+  private ProgramSupportedMapper programSupportedMapper;
+  private RegimenMapper regimenMapper;
 
   @Rule
   public ExpectedException exception = ExpectedException.none();
@@ -40,7 +44,9 @@ public class ProgramRepositoryTest {
   @Before
   public void setUp() {
     programMapper = mock(ProgramMapper.class);
-    programRepository = new ProgramRepository(programMapper);
+    programSupportedMapper = mock(ProgramSupportedMapper.class);
+    regimenMapper = mock(RegimenMapper.class);
+    programRepository = new ProgramRepository(programMapper, programSupportedMapper, regimenMapper);
   }
 
   @Test
