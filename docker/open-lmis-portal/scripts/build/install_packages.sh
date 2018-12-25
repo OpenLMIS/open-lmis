@@ -2,8 +2,7 @@
 
 #install prerequisite for cubes
 apt-key adv --keyserver keyserver.ubuntu.com --recv-keys EF0F382A1A7B6500
-apt-get update && apt-get -y install libpq-dev \
-                                     postgresql-client \
+apt-get update && apt-get -y install postgresql-client \
                                      ruby
 
 #install flyway
