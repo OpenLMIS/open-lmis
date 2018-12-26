@@ -44,7 +44,7 @@ public class RegimenIntegrationFromFCService extends IntegrationFromFCService<Re
     }
 
     @Override
-    public List<RegimenIntegrationDTO> getDataFromFC(String date) {
+    List<RegimenIntegrationDTO> getDataFromFC(String date) {
         return getDataTemplate(date, method, RegimenIntegrationDTO[].class);
     }
 

@@ -77,6 +77,16 @@
     <appender-ref ref="logFileAppender"/>
   </logger>
 
+  <logger name="org.openlmis.restapi">
+    <level value="INFO"/>
+    <appender-ref ref="logFileAppender"/>
+  </logger>
+
+  <logger name="org.springframework">
+    <level value="ERROR"/>
+    <appender-ref ref="logFileAppender"/>
+  </logger>
+
 <appender name="syncActivityLogFileAppender" class="org.apache.log4j.DailyRollingFileAppender">
     <param name="File" value="${logHome}/sync-activity.log"/>
     <param name="MaxFileSize" value="10MB"/>
