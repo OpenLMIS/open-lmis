@@ -56,11 +56,14 @@ public class ProgramSupported extends BaseModel implements Importable {
     @JsonDeserialize(using = DateDeserializer.class)
     private Date startDate;
 
+    @ImportField(name = "Report Type Code", nested = "code")
     private ReportType reportType;
 
+    @ImportField(name = "Report Start Date", type = "Date")
     @JsonDeserialize(using = DateDeserializer.class)
     private Date reportStartDate;
 
+    @ImportField(name = "Report Active", type = "boolean")
     private boolean reportActive;
 
     private List<FacilityProgramProduct> programProducts;

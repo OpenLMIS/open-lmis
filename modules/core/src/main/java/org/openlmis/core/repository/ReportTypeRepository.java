@@ -20,4 +20,8 @@ public class ReportTypeRepository {
     public List<ReportType> getAll() {
         return reportTypeMapper.getAll();
     }
+
+    public ReportType getByCode(String code) {
+        return reportTypeMapper.getByCode(code);
+    }
 }

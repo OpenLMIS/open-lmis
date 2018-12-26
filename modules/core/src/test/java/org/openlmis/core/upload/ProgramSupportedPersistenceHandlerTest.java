@@ -52,7 +52,7 @@ public class ProgramSupportedPersistenceHandlerTest {
   public void shouldSaveProgramSupported() {
     ProgramSupported programSupported = new ProgramSupported();
     programSupportedPersistenceHandler.save(programSupported);
-    verify(service).uploadSupportedProgram(programSupported);
+    verify(service).uploadSupportedProgram(programSupported, true);
   }
 
   @Test

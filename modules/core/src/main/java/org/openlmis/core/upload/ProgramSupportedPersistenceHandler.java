@@ -42,7 +42,7 @@ public class ProgramSupportedPersistenceHandler extends AbstractModelPersistence
 
   @Override
   protected void save(BaseModel record) {
-    service.uploadSupportedProgram((ProgramSupported) record);
+    service.uploadSupportedProgram((ProgramSupported) record, true);
   }
 
   @Override

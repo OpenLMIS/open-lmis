@@ -23,4 +23,10 @@ public interface ReportTypeMapper {
     @Select("SELECT * FROM reports_type WHERE id = #{id}")
     ReportType getById(Long id);
 
+    @Select("SELECT * FROM reports_type WHERE code = #{code}")
+    @Results(value = {
+            @Result(property = "program", column = "programid", javaType = Program.class,
+                    one = @One(select = "org.openlmis.core.repository.mapper.ProgramMapper.getById"))})
+    ReportType getByCode(String code);
+
 }
