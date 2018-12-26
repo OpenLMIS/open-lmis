@@ -163,15 +163,8 @@ public class RequisitionService {
     }
 
     program = programService.getById(program.getId());
-    ProcessingPeriod period = findPeriod(facility, program, emergency);
+    ProcessingPeriod period = null == proposedPeriod ? findPeriod(facility, program, emergency) : proposedPeriod;
 
-    if(proposedPeriod != null){
-      if(proposedPeriod.getId() != period.getId()){
-        // take caution in this case.
-        // todo: log a warning here.
-        period = proposedPeriod;
-      }
-    }
     List<FacilityTypeApprovedProduct> facilityTypeApprovedProducts;
 
     if (!staticReferenceDataService.getBoolean("toggle.rnr.multiple.programs")) {

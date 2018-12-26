@@ -53,6 +53,8 @@ import static org.openlmis.restapi.domain.ReplenishmentDTO.prepareForREST;
 @NoArgsConstructor
 public class RestRequisitionService {
 
+  private static final String RAPID_TEST_PROGRAM_CODE = "TEST_KIT";
+
   public static final boolean EMERGENCY = false;
   private static final Logger logger = Logger.getLogger(RestRequisitionService.class);
   @Autowired
@@ -82,6 +84,8 @@ public class RestRequisitionService {
   private RegimenService regimenService;
   @Autowired
   private RegimenLineItemMapper regimenLineItemMapper;
+  @Autowired
+  private ProcessingScheduleService processingScheduleService;
 
   @Transactional
   public Rnr submitReport(Report report, Long userId) {
@@ -101,9 +105,12 @@ public class RestRequisitionService {
       }
     }
 
-    restRequisitionCalculator.validatePeriod(reportingFacility, reportingProgram, report.getActualPeriodStartDate(), report.getActualPeriodEndDate());
+    if(!report.getProgramCode().equals(RAPID_TEST_PROGRAM_CODE)) {
+      restRequisitionCalculator.validatePeriod(reportingFacility, reportingProgram, report.getActualPeriodStartDate(), report.getActualPeriodEndDate());
+    }
 
-    Rnr rnr = requisitionService.initiate(reportingFacility, reportingProgram, userId, EMERGENCY, null, report.getServiceLineItems());
+    ProcessingPeriod proposedPeriod = report.getProgramCode().equals(RAPID_TEST_PROGRAM_CODE) ? findRapidTestPeriod(report.getActualPeriodStartDate(), report.getActualPeriodEndDate()) : null;
+    Rnr rnr = requisitionService.initiate(reportingFacility, reportingProgram, userId, EMERGENCY, proposedPeriod, report.getServiceLineItems());
 
     restRequisitionCalculator.validateProducts(report.getProducts(), rnr);
 
@@ -297,6 +304,10 @@ public class RestRequisitionService {
       }
     }
     return customRegimenItems;
+  }
+
+  private ProcessingPeriod findRapidTestPeriod(Date actualPeriodStartDate, Date actualPeriodEndDate) {
+    return processingScheduleService.getPeriodByDate(actualPeriodStartDate, actualPeriodEndDate);
   }
 
   private void insertPatientQuantificationLineItems(Report report, Rnr rnr) {

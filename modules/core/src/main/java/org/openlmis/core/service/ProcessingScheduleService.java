@@ -144,4 +144,8 @@ public class ProcessingScheduleService {
   public List<ProcessingPeriod> getAllPeriodsForScheduleAndYear(Long scheduleId, Long year) {
         return periodRepository.getAllPeriodsForScheduleAndYear(scheduleId, year);
     }
+
+  public ProcessingPeriod getPeriodByDate(Date actualPeriodStartDate, Date actualPeriodEndDate) {
+    return periodRepository.getPeriodByDate(actualPeriodStartDate, actualPeriodEndDate);
+  }
 }
