@@ -307,7 +307,11 @@ public class RestRequisitionService {
   }
 
   private ProcessingPeriod findRapidTestPeriod(Date actualPeriodStartDate, Date actualPeriodEndDate) {
-    return processingScheduleService.getPeriodByDate(actualPeriodStartDate, actualPeriodEndDate);
+    ProcessingPeriod processingPeriod = processingScheduleService.getPeriodByDate(actualPeriodStartDate, actualPeriodEndDate);
+    if(null == processingPeriod) {
+      throw new DataException("error.schedule.period.configuration.missing");
+    }
+    return processingPeriod;
   }
 
   private void insertPatientQuantificationLineItems(Report report, Rnr rnr) {
