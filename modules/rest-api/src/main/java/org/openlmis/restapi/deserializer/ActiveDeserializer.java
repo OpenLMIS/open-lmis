@@ -13,7 +13,9 @@ public class ActiveDeserializer extends JsonDeserializer<Boolean> {
     @Override
     public Boolean deserialize(JsonParser p, DeserializationContext ctxt) throws IOException, JsonProcessingException {
         try {
-            if (p != null && StringUtils.isNotEmpty(p.getText())) {
+            if (p != null &&
+                    StringUtils.isNotEmpty(p.getText()) &&
+                    "Activo".equalsIgnoreCase(p.getText())) {
                 return true;
             } else {
                 return false;
