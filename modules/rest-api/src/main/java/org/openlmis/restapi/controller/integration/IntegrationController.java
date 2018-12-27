@@ -2,6 +2,7 @@ package org.openlmis.restapi.controller.integration;
 
 import org.openlmis.restapi.controller.BaseController;
 import org.openlmis.restapi.service.integration.IntegrationToFCService;
+import org.openlmis.restapi.service.integration.ProductIntegrationFromFCService;
 import org.openlmis.restapi.service.integration.ProgramIntegrationFromFCService;
 import org.openlmis.restapi.service.integration.RegimenIntegrationFromFCService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,13 +20,17 @@ public class IntegrationController extends BaseController {
 
     private RegimenIntegrationFromFCService regimenIntegrationFromFCService;
 
+    private ProductIntegrationFromFCService productIntegrationFromFCService;
+
     @Autowired
     public IntegrationController(IntegrationToFCService integrationToFCService,
                                  ProgramIntegrationFromFCService programIntegrationFromFCService,
-                                 RegimenIntegrationFromFCService regimenIntegrationFromFCService) {
+                                 RegimenIntegrationFromFCService regimenIntegrationFromFCService,
+                                 ProductIntegrationFromFCService productIntegrationFromFCService) {
         this.integrationToFCService = integrationToFCService;
         this.programIntegrationFromFCService = programIntegrationFromFCService;
         this.regimenIntegrationFromFCService = regimenIntegrationFromFCService;
+        this.productIntegrationFromFCService = productIntegrationFromFCService;
     }
 
     @RequestMapping(value = "/rest-api/sync/page", method = RequestMethod.GET)
@@ -65,6 +70,12 @@ public class IntegrationController extends BaseController {
     @ResponseStatus(HttpStatus.OK)
     public void synRegimen(@RequestParam(required = false) String fromStartDate) {
         regimenIntegrationFromFCService.sycDataFromFC(fromStartDate);
+    }
+
+    @RequestMapping(value = "/rest-api/sync/product", method = RequestMethod.GET)
+    @ResponseStatus(HttpStatus.OK)
+    public void synProduct(@RequestParam(required = false) String fromStartDate) {
+        productIntegrationFromFCService.sycDataFromFC(fromStartDate);
     }
 
 }
