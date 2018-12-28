@@ -10,10 +10,7 @@
 
 package org.openlmis.core.domain;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
@@ -27,6 +24,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Objects;
 
 import static org.apache.commons.lang3.builder.EqualsBuilder.reflectionEquals;
 import static org.apache.commons.lang3.builder.HashCodeBuilder.reflectionHashCode;
@@ -167,18 +165,6 @@ public class Facility extends BaseModel implements Importable {
     this.modifiedBy = modifiedBy;
   }
 
-  @Override
-  public boolean equals(Object o) {
-
-    return reflectionEquals(this, o, false, Facility.class, "supportedPrograms", "geographicZone") &&
-      reflectionEquals(this.geographicZone, ((Facility) o).geographicZone, false, GeographicZone.class, "parent", "level");
-  }
-
-  @Override
-  public int hashCode() {
-    return reflectionHashCode(17, 37, this, false, Facility.class, "supportedPrograms", "geographicZone");
-  }
-
   public Facility basicInformation() {
     return new Facility(id, code, name, operatedBy, geographicZone, facilityType, virtualFacility);
   }
@@ -205,12 +191,12 @@ public class Facility extends BaseModel implements Importable {
   }
 
   @SuppressWarnings("unused")
-  public String getStringGoLiveDate() throws ParseException {
+  public String getStringGoLiveDate() {
     return this.goLiveDate == null ? null : new SimpleDateFormat("dd-MM-yyyy").format(this.goLiveDate);
   }
 
   @SuppressWarnings("unused")
-  public String getStringGoDownDate() throws ParseException {
+  public String getStringGoDownDate() {
     return this.goDownDate == null ? null : new SimpleDateFormat("dd-MM-yyyy").format(this.goDownDate);
   }
 
@@ -231,5 +217,32 @@ public class Facility extends BaseModel implements Importable {
   @JsonIgnore
   public Integer getPackSizeFor(String productCode) {
     return this.getSupportedPrograms().get(0).getPackSizeFor(productCode);
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) return true;
+    if (!(o instanceof Facility)) return false;
+    Facility facility = (Facility) o;
+    return Objects.equals(code, facility.code) &&
+          Objects.equals(name, facility.name) &&
+          Objects.equals(mainPhone, facility.mainPhone) &&
+          Objects.equals(fax, facility.fax) &&
+          Objects.equals(address1, facility.address1) &&
+          Objects.equals(geographicZone.getId(), facility.geographicZone.getId()) &&
+          Objects.equals(facilityType.getId(), facility.facilityType.getId()) &&
+          Objects.equals(latitude, facility.latitude) &&
+          Objects.equals(longitude, facility.longitude) &&
+          Objects.equals(sdp, facility.sdp) &&
+          Objects.equals(active, facility.active) &&
+          Objects.equals(getStringGoLiveDate(), facility.getStringGoLiveDate()) &&
+          Objects.equals(enabled, facility.enabled);
+
+  }
+
+  @Override
+  public int hashCode() {
+      return Objects.hash(code, name, mainPhone, fax, address1, geographicZone.getId(), facilityType.getId(), getStringGoLiveDate(), latitude, longitude, sdp, active, enabled);
+
   }
 }

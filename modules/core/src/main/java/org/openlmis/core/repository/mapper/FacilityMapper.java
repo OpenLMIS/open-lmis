@@ -479,4 +479,10 @@ public interface FacilityMapper {
     @Select("select facilities.id, facilities.name, 1 as facility from facilities inner join \n" +
             "vw_user_facilities ON facilities.id = vw_user_facilities.facility_id AND vw_user_facilities.user_id = #{userId}")
     List<FacilityGeoTreeDto> getGeoTreeFlatFacilities(@Param(value = "userId") Long userId);
+
+    @Update("UPDATE facilities SET name = #{name}, mainPhone = #{mainPhone}, fax = #{fax}, address1 = #{address1}," +
+            "geographicZoneId = #{geographicZone.id}, typeId = #{facilityType.id}, latitude = #{latitude}," +
+            "longitude = #{longitude}, sdp = #{sdp}, active = #{active}, " +
+            "goLiveDate = #{goLiveDate}, enabled = #{enabled}, modifiedDate = NOW() WHERE code=#{code}")
+    void updateInfo(Facility facility);
 }

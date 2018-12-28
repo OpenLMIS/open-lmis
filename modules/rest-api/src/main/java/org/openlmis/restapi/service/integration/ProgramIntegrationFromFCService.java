@@ -5,10 +5,8 @@ import org.openlmis.core.domain.Program;
 import org.openlmis.core.repository.ProgramRepository;
 import org.openlmis.restapi.config.IntegrationFCConfig;
 import org.openlmis.restapi.domain.integration.ProgramIntegrationDTO;
-import org.openlmis.restapi.domain.integration.RegimenIntegrationDTO;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 

@@ -1,6 +1,7 @@
 package org.openlmis.restapi.controller.integration;
 
 import org.openlmis.restapi.controller.BaseController;
+import org.openlmis.restapi.service.integration.FacilityIntegrationFromFCService;
 import org.openlmis.restapi.service.integration.IntegrationToFCService;
 import org.openlmis.restapi.service.integration.ProductIntegrationFromFCService;
 import org.openlmis.restapi.service.integration.ProgramIntegrationFromFCService;
@@ -20,16 +21,20 @@ public class IntegrationController extends BaseController {
 
     private RegimenIntegrationFromFCService regimenIntegrationFromFCService;
 
+    private FacilityIntegrationFromFCService facilityIntegrationFromFCService;
+
     private ProductIntegrationFromFCService productIntegrationFromFCService;
 
     @Autowired
     public IntegrationController(IntegrationToFCService integrationToFCService,
                                  ProgramIntegrationFromFCService programIntegrationFromFCService,
                                  RegimenIntegrationFromFCService regimenIntegrationFromFCService,
-                                 ProductIntegrationFromFCService productIntegrationFromFCService) {
+                                 ProductIntegrationFromFCService productIntegrationFromFCService,
+                                 FacilityIntegrationFromFCService facilityIntegrationFromFCService) {
         this.integrationToFCService = integrationToFCService;
         this.programIntegrationFromFCService = programIntegrationFromFCService;
         this.regimenIntegrationFromFCService = regimenIntegrationFromFCService;
+        this.facilityIntegrationFromFCService = facilityIntegrationFromFCService;
         this.productIntegrationFromFCService = productIntegrationFromFCService;
     }
 
@@ -58,6 +63,7 @@ public class IntegrationController extends BaseController {
     public void synAll(@RequestParam(required = false) String fromStartDate) {
         programIntegrationFromFCService.sycDataFromFC(fromStartDate);
         regimenIntegrationFromFCService.sycDataFromFC(fromStartDate);
+        facilityIntegrationFromFCService.sycDataFromFC(fromStartDate);
     }
 
     @RequestMapping(value = "/rest-api/sync/program", method = RequestMethod.GET)
@@ -78,4 +84,9 @@ public class IntegrationController extends BaseController {
         productIntegrationFromFCService.sycDataFromFC(fromStartDate);
     }
 
+    @RequestMapping(value = "/rest-api/sync/facility", method = RequestMethod.GET)
+    @ResponseStatus(HttpStatus.OK)
+    public void synFacility(@RequestParam(required = false) String fromStartDate) {
+        facilityIntegrationFromFCService.sycDataFromFC(fromStartDate);
+    }
 }

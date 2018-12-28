@@ -19,6 +19,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Date;
 import java.util.Iterator;
@@ -119,6 +120,14 @@ public class ProgramSupportedRepository {
         mapper.deleteVirtualFacilityProgramSupported(parentFacility);
         mapper.copyToVirtualFacilities(parentFacility);
     }
+
+    @Transactional
+    public void updateFacilitiesSupportedPrograms(List<Facility> facilities){
+        for (Facility facility : facilities) {
+            updateSupportedPrograms(facility);
+        }
+    }
+
 
     private boolean changeInProgramSupported(ProgramSupported ps1, ProgramSupported ps2) {
         if (ps1.getActive() != ps2.getActive()) {

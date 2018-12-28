@@ -24,6 +24,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Date;
 import java.util.List;
@@ -273,5 +274,18 @@ public class FacilityRepository {
 
     public List<Facility> getAllFacilitiesDetail() {
         return mapper.getAllFacilitiesDetail();
+    }
+
+    @Transactional
+    public void toPersistDbByOperationType(List<Facility> saves, List<Facility> updatedFacilities) {
+
+     for (Facility facility : saves) {
+        mapper.insert(facility);
+      }
+
+      for (Facility facility : updatedFacilities) {
+        mapper.updateInfo(facility);
+      }
+
     }
 }
