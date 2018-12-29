@@ -16,10 +16,10 @@ function StockOnHandAllProductsController($scope, $filter, $controller, NewRepor
   };
   
   var STATUS = {
-    'STOCK_OUT': messageService.get('Ruptura de Stock'),
-    'REGULAR_STOCK': messageService.get('Stock Normal'),
-    'OVER_STOCK': messageService.get('Estoque acumulado'),
-    'LOW_STOCK': messageService.get('Eminência de estoque')
+    'STOCK_OUT': messageService.get("stock.cmm.stock.out"),
+    'REGULAR_STOCK': messageService.get("stock.cmm.regular.stock"),
+    'OVER_STOCK': messageService.get("stock.cmm.over.stock"),
+    'LOW_STOCK': messageService.get("stock.cmm.low.stock")
   };
   
   if ($cacheFactory.get('keepHistoryInStockOnHandPage') === undefined) {
