@@ -12,6 +12,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+
 @Controller
 public class IntegrationController extends BaseController {
 
@@ -25,6 +28,8 @@ public class IntegrationController extends BaseController {
 
     private ProductIntegrationFromFCService productIntegrationFromFCService;
 
+    private static ExecutorService singleThreadExecutor = null;
+
     @Autowired
     public IntegrationController(IntegrationToFCService integrationToFCService,
                                  ProgramIntegrationFromFCService programIntegrationFromFCService,
@@ -36,6 +41,7 @@ public class IntegrationController extends BaseController {
         this.regimenIntegrationFromFCService = regimenIntegrationFromFCService;
         this.facilityIntegrationFromFCService = facilityIntegrationFromFCService;
         this.productIntegrationFromFCService = productIntegrationFromFCService;
+        this.singleThreadExecutor = Executors.newSingleThreadExecutor();
     }
 
     @RequestMapping(value = "/rest-api/sync/page", method = RequestMethod.GET)
@@ -61,9 +67,16 @@ public class IntegrationController extends BaseController {
     @RequestMapping(value = "/rest-api/sync/all", method = RequestMethod.GET)
     @ResponseStatus(HttpStatus.OK)
     public void synAll(@RequestParam(required = false) String fromStartDate) {
-        programIntegrationFromFCService.sycDataFromFC(fromStartDate);
-        regimenIntegrationFromFCService.sycDataFromFC(fromStartDate);
-        facilityIntegrationFromFCService.sycDataFromFC(fromStartDate);
+        singleThreadExecutor.execute(new Runnable() {
+            @Override
+            public void run() {
+                programIntegrationFromFCService.sycDataFromFC(fromStartDate);
+                regimenIntegrationFromFCService.sycDataFromFC(fromStartDate);
+                facilityIntegrationFromFCService.sycDataFromFC(fromStartDate);
+                productIntegrationFromFCService.sycDataFromFC(fromStartDate);
+            }
+        });
+
     }
 
     @RequestMapping(value = "/rest-api/sync/program", method = RequestMethod.GET)
