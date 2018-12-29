@@ -42,7 +42,7 @@ public class StockMovementDTO {
     @JsonDeserialize(using = DateUTCDeserializer.class)
     private Date dtemissaogr = null;
 
-    private String productStrength;
+    private Integer packSize;
 
     private String notes;
 }

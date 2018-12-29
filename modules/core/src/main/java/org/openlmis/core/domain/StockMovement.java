@@ -32,7 +32,7 @@ public class StockMovement {
 
     private String FacilityName;
 
-    private String productStrength;
+    private Integer packSize;
 
     private String notes;
 
