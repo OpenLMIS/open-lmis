@@ -250,9 +250,6 @@ public class FacilityServiceTest {
 
     verify(facilityRepository).save(parentFacility);
     verify(programSupportedService).updateSupportedPrograms(parentFacility);
-    verify(facilityRepository).getChildFacilities(parentFacility);
-    verify(facilityRepository).updateVirtualFacilities(parentFacility);
-    verify(eventService, times(2)).notify(any(Event.class));
 
   }
 

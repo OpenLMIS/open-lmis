@@ -229,8 +229,10 @@ public class Facility extends BaseModel implements Importable {
           Objects.equals(mainPhone, facility.mainPhone) &&
           Objects.equals(fax, facility.fax) &&
           Objects.equals(address1, facility.address1) &&
-          Objects.equals(geographicZone, facility.geographicZone) &&
-          Objects.equals(facilityType, facility.facilityType) &&
+          Objects.equals(geographicZone == null ? null : geographicZone.getId(),
+                  facility.geographicZone == null ? null : facility.geographicZone.getId()) &&
+          Objects.equals(facilityType == null ? null : facilityType.getId(),
+                  facility.facilityType == null ? null : facility.facilityType.getId()) &&
           Objects.equals(latitude, facility.latitude) &&
           Objects.equals(longitude, facility.longitude) &&
           Objects.equals(sdp, facility.sdp) &&
@@ -242,7 +244,10 @@ public class Facility extends BaseModel implements Importable {
 
   @Override
   public int hashCode() {
-      return Objects.hash(code, name, mainPhone, fax, address1, geographicZone, facilityType, getStringGoLiveDate(), latitude, longitude, sdp, active, enabled);
+      return Objects.hash(code, name, mainPhone, fax, address1,
+              geographicZone == null ? 0l : geographicZone.getId(),
+              facilityType == null ? 0l : facilityType.getId(),
+              getStringGoLiveDate(), latitude, longitude, sdp, active, enabled);
 
   }
 }
