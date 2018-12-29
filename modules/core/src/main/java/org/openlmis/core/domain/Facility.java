@@ -219,8 +219,7 @@ public class Facility extends BaseModel implements Importable {
     return this.getSupportedPrograms().get(0).getPackSizeFor(productCode);
   }
 
-  @Override
-  public boolean equals(Object o) {
+  public boolean isEquals(Object o) {
     if (this == o) return true;
     if (!(o instanceof Facility)) return false;
     Facility facility = (Facility) o;
@@ -242,12 +241,4 @@ public class Facility extends BaseModel implements Importable {
 
   }
 
-  @Override
-  public int hashCode() {
-      return Objects.hash(code, name, mainPhone, fax, address1,
-              geographicZone == null ? 0l : geographicZone.getId(),
-              facilityType == null ? 0l : facilityType.getId(),
-              getStringGoLiveDate(), latitude, longitude, sdp, active, enabled);
-
-  }
 }

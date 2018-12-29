@@ -93,7 +93,7 @@ public class FacilityIntegrationFromFCService extends IntegrationFromFCService<F
             Facility facilityFromFc = facilityFcIt.next();
             Facility facility = facilityRepository.getByCode(facilityFromFc.getCode());
             if (facility != null) {
-                if (!facility.equals(facilityFromFc)) {
+                if (!facility.isEquals(facilityFromFc)) {
                     updatedFacilities.add(facilityFromFc);
                 }
                 facilityFcIt.remove();
