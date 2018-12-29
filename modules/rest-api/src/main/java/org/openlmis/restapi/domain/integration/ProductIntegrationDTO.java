@@ -6,6 +6,8 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import lombok.Data;
 import org.openlmis.restapi.deserializer.ActiveDeserializer;
 
+import java.util.List;
+
 @Data
 public class ProductIntegrationDTO {
 
@@ -18,6 +20,9 @@ public class ProductIntegrationDTO {
     @JsonProperty(value="status")
     @JsonDeserialize(using = ActiveDeserializer.class)
     private Boolean active;
+
+    @JsonProperty(value = "areas")
+    private List<ProductSupportedProgramDTO> productSupportedProgramDTOS;
 
     @JsonIgnore
     private Long formId = null;

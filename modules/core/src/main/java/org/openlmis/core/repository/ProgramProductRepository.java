@@ -86,6 +86,11 @@ public class ProgramProductRepository {
     mapper.updateCurrentPrice(programProduct);
   }
 
+  public ProgramProduct getByProgramCodeAndProductCode(String programCode, String productCode) {
+    return getByProgramAndProductId(programRepository.getIdByCode(programCode),
+            productRepository.getIdByCode(productCode));
+  }
+
   public ProgramProduct getByProgramAndProductCode(ProgramProduct programProduct) {
     return getByProgramAndProductId(programRepository.getIdByCode(programProduct.getProgram().getCode()),
       productRepository.getIdByCode(programProduct.getProduct().getCode()));
