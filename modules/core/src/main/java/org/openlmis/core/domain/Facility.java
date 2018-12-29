@@ -242,7 +242,10 @@ public class Facility extends BaseModel implements Importable {
 
   @Override
   public int hashCode() {
-      return Objects.hash(code, name, mainPhone, fax, address1, geographicZone.getId(), facilityType.getId(), getStringGoLiveDate(), latitude, longitude, sdp, active, enabled);
+      return Objects.hash(code, name, mainPhone, fax, address1,
+              geographicZone == null ? 0 : geographicZone.getId(),
+              facilityType == null ? 0 : facilityType.getId(),
+              getStringGoLiveDate(), latitude, longitude, sdp, active, enabled);
 
   }
 }
