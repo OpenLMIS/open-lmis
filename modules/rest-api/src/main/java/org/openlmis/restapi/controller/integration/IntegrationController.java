@@ -66,7 +66,7 @@ public class IntegrationController extends BaseController {
 
     @RequestMapping(value = "/rest-api/sync/all", method = RequestMethod.GET)
     @ResponseStatus(HttpStatus.OK)
-    public void synAll(@RequestParam(required = false) String fromStartDate) {
+    public void synAll(final @RequestParam(required = false) String fromStartDate) {
         singleThreadExecutor.execute(new Runnable() {
             @Override
             public void run() {
@@ -80,10 +80,10 @@ public class IntegrationController extends BaseController {
     }
 
     @RequestMapping(value = "/rest-api/sync/program", method = RequestMethod.GET)
-    @ResponseStatus(HttpStatus.OK)
-    public void synProgram(@RequestParam(required = false) String fromStartDate) {
-        programIntegrationFromFCService.sycDataFromFC(fromStartDate);
-    }
+@ResponseStatus(HttpStatus.OK)
+public void synProgram(@RequestParam(required = false) String fromStartDate) {
+    programIntegrationFromFCService.sycDataFromFC(fromStartDate);
+}
 
     @RequestMapping(value = "/rest-api/sync/regimen", method = RequestMethod.GET)
     @ResponseStatus(HttpStatus.OK)
