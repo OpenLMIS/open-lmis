@@ -138,6 +138,10 @@ public class Rnr extends BaseModel {
     this.nonFullSupplyItemsSubmittedCost = calculateCost(nonFullSupplyLineItems);
   }
 
+  public Date getSubmittedDate() {
+    return this.submittedDate == null ? this.clientSubmittedTime : this.submittedDate;
+  }
+
   private Money calculateCost(List<RnrLineItem> lineItems) {
     Money totalFullSupplyCost = new Money("0");
     for (RnrLineItem lineItem : lineItems) {
