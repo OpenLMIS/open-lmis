@@ -372,4 +372,8 @@ public class RequisitionRepository {
     }
     return requisitionMapper.findNormalRnrByPeriodAndProgram(DateUtil.getFormattedDate(beginDate, DateUtil.FORMAT_YEAR_MONTH), DateUtil.getFormattedDate(endDate, DateUtil.FORMAT_YEAR_MONTH), programId, facilityId);
   }
+
+  public Rnr getLastRegularRequisitionByReportDate(Facility facility, Program program) {
+    return requisitionMapper.getLastRegularRequisitionByReportDate(facility, program);
+  }
 }

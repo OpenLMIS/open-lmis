@@ -49,6 +49,7 @@ import org.powermock.modules.junit4.PowerMockRunner;
 import org.powermock.modules.junit4.PowerMockRunnerDelegate;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -137,6 +138,7 @@ public class RestRequisitionServiceTest {
     user.setId(1L);
     whenNew(User.class).withNoArguments().thenReturn(user);
     when(userService.getByUserName(user.getUserName())).thenReturn(user);
+    when(programService.getReportStartDate(any(Long.class), any(Long.class))).thenReturn(setUpReportDate(new Date()));
     mockStatic(Base64.class);
     encodedCredentialsBytes = encodedCredentials.getBytes();
   }
@@ -148,7 +150,6 @@ public class RestRequisitionServiceTest {
     RegimenLineItem reportRegimenLineItem = make(a(defaultRegimenLineItem, with(patientsOnTreatment, 10), with(patientsStoppedTreatment, 5)));
     report.setRegimens(asList(RegimenLineItemForRest.convertFromRegimenLineItem(reportRegimenLineItem)));
     service.submitReport(report, 1L);
-
     verify(facilityService).getOperativeFacilityByCode(DEFAULT_AGENT_CODE);
     verify(programService).getValidatedProgramByCode(DEFAULT_PROGRAM_CODE);
     verify(requisitionService).initiate(facility, new Program(PROGRAM_ID), 1L, false, null, null);
@@ -199,9 +200,6 @@ public class RestRequisitionServiceTest {
     when(staticReferenceDataService.getBoolean("toggle.sync.period.date.for.rnr")).thenReturn(false);
 
     setUpRequisitionReportBeforeSubmit();
-    Date actualPeriodDate = new Date();
-    report.setActualPeriodStartDate(DateUtil.formatDate(actualPeriodDate));
-    report.setActualPeriodEndDate(DateUtil.formatDate(actualPeriodDate));
 
     service.submitReport(report, 1L);
 
@@ -349,10 +347,10 @@ public class RestRequisitionServiceTest {
   public void shouldThrowErrorIfPeriodValidationFails() throws Exception {
     expectedException.expect(DataException.class);
     expectedException.expectMessage("rnr.error");
-    when(requisitionService.getLastRegularRequisition(any(Facility.class), any(Program.class))).thenReturn(new Rnr());
-
+    when(programService.getValidatedProgramByCode(anyString())).thenReturn(new Program());
+    when(facilityService.getOperativeFacilityByCode(anyString())).thenReturn(new Facility());
+    when(requisitionService.getLastRegularRequisitionByReportDate(any(Facility.class), any(Program.class))).thenReturn(new Rnr());
     doThrow(new DataException("rnr.error")).when(restRequisitionCalculator).validatePeriod(any(Facility.class), any(Program.class), any(Date.class), any(Date.class));
-
     service.submitReport(report, 1l);
 
     verify(requisitionService, never()).initiate(any(Facility.class), any(Program.class), any(Long.class), any(Boolean.class),any(ProcessingPeriod.class), any(List.class));
@@ -380,6 +378,8 @@ public class RestRequisitionServiceTest {
   public void shouldThrowErrorIfProductValidationFails() throws Exception {
     expectedException.expect(DataException.class);
     expectedException.expectMessage("rnr.error");
+    when(programService.getValidatedProgramByCode(anyString())).thenReturn(new Program());
+    when(facilityService.getOperativeFacilityByCode(anyString())).thenReturn(new Facility());
     when(requisitionService.getLastRegularRequisition(any(Facility.class), any(Program.class))).thenReturn(new Rnr());
 
     doThrow(new DataException("rnr.error")).when(restRequisitionCalculator).validateProducts(any(List.class), any(Rnr.class));
@@ -878,7 +878,7 @@ public class RestRequisitionServiceTest {
     service.submitReport(report, 1L);
 
     ArgumentCaptor<Date> updateTimeCapture = ArgumentCaptor.forClass(Date.class);
-    verify(programSupportedService).updateProgramSupportedStartDate(eq(facility.getId()), eq(program.getId()), updateTimeCapture.capture());
+    verify(programSupportedService).updateProgramSupportedReportStartDate(eq(facility.getId()), eq(program.getId()), updateTimeCapture.capture());
     assertThat(new DateTime(updateTimeCapture.getValue()), is(new DateTime(2016, 5, 21, 0 ,0)));
   }
 
@@ -902,5 +902,13 @@ public class RestRequisitionServiceTest {
     stockInHandColumn.setVisible(visibility);
     stockInHandColumn.setSource(source);
     return stockInHandColumn;
+  }
+
+  private Date setUpReportDate(Date actualPeriodDate) {
+    Calendar calendar = Calendar.getInstance();
+    calendar.setTime(actualPeriodDate);
+    calendar.add(Calendar.DAY_OF_YEAR, -1);
+    Date reportDate = calendar.getTime();
+    return reportDate;
   }
 }

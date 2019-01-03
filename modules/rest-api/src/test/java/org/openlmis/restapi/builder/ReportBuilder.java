@@ -13,10 +13,12 @@ package org.openlmis.restapi.builder;
 import com.natpryce.makeiteasy.Instantiator;
 import com.natpryce.makeiteasy.Property;
 import com.natpryce.makeiteasy.PropertyLookup;
+import org.openlmis.core.utils.DateUtil;
 import org.openlmis.restapi.domain.Report;
 import org.openlmis.rnr.builder.RnrLineItemBuilder;
 import org.openlmis.rnr.domain.RnrLineItem;
 
+import java.util.Date;
 import java.util.List;
 
 import static com.natpryce.makeiteasy.MakeItEasy.a;
@@ -45,6 +47,9 @@ public class ReportBuilder {
       report.setProducts(lookup.valueOf(products, asList(make(a(RnrLineItemBuilder.defaultRnrLineItem)))));
       report.setProgramCode(lookup.valueOf(programCode, DEFAULT_PROGRAM_CODE));
       report.setApproverName(lookup.valueOf(approverName, DEFAULT_APPROVER_NAME));
+      Date actualPeriodDate = new Date();
+      report.setActualPeriodStartDate(DateUtil.formatDate(actualPeriodDate));
+      report.setActualPeriodEndDate(DateUtil.formatDate(actualPeriodDate));
       return report;
     }
   };

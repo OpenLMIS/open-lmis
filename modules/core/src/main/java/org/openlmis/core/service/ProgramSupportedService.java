@@ -140,6 +140,10 @@ public class ProgramSupportedService {
         repository.updateProgramSupportedStartDate(facilityId, programId, startDate);
     }
 
+    public void updateProgramSupportedReportStartDate(Long facilityId, Long programId, Date startDate) {
+        repository.updateProgramSupportedReportStartDate(facilityId, programId, startDate);
+    }
+
     public ProgramSupported getProgramSupported(ProgramSupported programSupported) {
         Facility facility = getFacility(programSupported);
 

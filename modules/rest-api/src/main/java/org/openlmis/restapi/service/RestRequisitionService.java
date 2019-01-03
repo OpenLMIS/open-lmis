@@ -98,10 +98,12 @@ public class RestRequisitionService {
     Facility reportingFacility = facilityService.getOperativeFacilityByCode(report.getAgentCode());
     Program reportingProgram = programService.getValidatedProgramByCode(report.getProgramCode());
 
+    validReportDate(report.getActualPeriodEndDate(), reportingFacility.getId(), reportingProgram.getId());
+
     if (staticReferenceDataService.getBoolean("toggle.skip.initial.requisition.validation")) {
-      Rnr lastRegularRequisition = requisitionService.getLastRegularRequisition(reportingFacility, reportingProgram);
+      Rnr lastRegularRequisition = requisitionService.getLastRegularRequisitionByReportDate(reportingFacility, reportingProgram);
       if (lastRegularRequisition == null) {
-        programSupportedService.updateProgramSupportedStartDate(reportingFacility.getId(), reportingProgram.getId(), getDateOf21(report.getActualPeriodStartDate()));
+        programSupportedService.updateProgramSupportedReportStartDate(reportingFacility.getId(), reportingProgram.getId(), getDateOf21(report.getActualPeriodStartDate()));
       }
     }
 
@@ -142,6 +144,16 @@ public class RestRequisitionService {
     syncUpHashRepository.save(report.getSyncUpHash());
 
     return authorize;
+  }
+
+  private void validReportDate(Date actualPeriodEndDate, Long facilityId, Long programId) {
+    Date reportStartDate = programService.getReportStartDate(facilityId, programId);
+    if(null == reportStartDate) {
+      throw new DataException(String.format("error.facility.supported.report.date.invalid"));
+    }
+    if(actualPeriodEndDate.before(reportStartDate)) {
+      throw new DataException(String.format("error.report.start.date.invalid"));
+    }
   }
 
   public void notifySubmittedEvent(Rnr rnr){

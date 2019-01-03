@@ -1304,14 +1304,14 @@ public class RequisitionServiceTest {
 
     @Test
     public void shouldGetCurrentPeriodForFacilityAndProgram() {
-        Date programStartDate = new Date();
-        when(programService.getProgramStartDate(1L, 2L)).thenReturn(programStartDate);
+        Date reportStartDate = new Date();
+        when(programService.getProgramStartDate(1L, 2L)).thenReturn(reportStartDate);
         RequisitionSearchCriteria criteria = make(a(defaultSearchCriteria,
                 with(facilityIdProperty, 1L),
                 with(programIdProperty, 2L)));
         requisitionService.getCurrentPeriod(criteria);
 
-        verify(processingScheduleService).getCurrentPeriod(1L, 2L, programStartDate);
+        verify(processingScheduleService).getCurrentPeriod(1L, 2L, reportStartDate);
     }
 
     @Test
@@ -1454,30 +1454,30 @@ public class RequisitionServiceTest {
 
     @Test
     public void shouldGetPeriodCurrentPeriodIfEmergency() throws Exception {
-        Date programStartDate = new Date();
-        when(programService.getProgramStartDate(FACILITY.getId(), PROGRAM.getId())).thenReturn(programStartDate);
+        Date reportStartDate = new Date();
+        when(programService.getProgramStartDate(FACILITY.getId(), PROGRAM.getId())).thenReturn(reportStartDate);
         ProcessingPeriod expectedPeriod = new ProcessingPeriod();
-        when(processingScheduleService.getCurrentPeriod(FACILITY.getId(), PROGRAM.getId(), programStartDate)).thenReturn(
+        when(processingScheduleService.getCurrentPeriod(FACILITY.getId(), PROGRAM.getId(), reportStartDate)).thenReturn(
                 expectedPeriod);
 
         ProcessingPeriod actualPeriod = requisitionService.findPeriod(FACILITY, PROGRAM, true);
 
-        verify(processingScheduleService).getCurrentPeriod(FACILITY.getId(), PROGRAM.getId(), programStartDate);
+        verify(processingScheduleService).getCurrentPeriod(FACILITY.getId(), PROGRAM.getId(), reportStartDate);
         assertThat(actualPeriod, is(expectedPeriod));
     }
 
     @Test
     public void shouldGetPeriodCurrentPeriodIfFacilityVirtual() throws Exception {
-        Date programStartDate = new Date();
+        Date reportStartDate = new Date();
         FACILITY.setVirtualFacility(true);
-        when(programService.getProgramStartDate(FACILITY.getId(), PROGRAM.getId())).thenReturn(programStartDate);
+        when(programService.getProgramStartDate(FACILITY.getId(), PROGRAM.getId())).thenReturn(reportStartDate);
         ProcessingPeriod expectedPeriod = new ProcessingPeriod();
-        when(processingScheduleService.getCurrentPeriod(FACILITY.getId(), PROGRAM.getId(), programStartDate)).thenReturn(
+        when(processingScheduleService.getCurrentPeriod(FACILITY.getId(), PROGRAM.getId(), reportStartDate)).thenReturn(
                 expectedPeriod);
 
         ProcessingPeriod actualPeriod = requisitionService.findPeriod(FACILITY, PROGRAM, false);
 
-        verify(processingScheduleService).getCurrentPeriod(FACILITY.getId(), PROGRAM.getId(), programStartDate);
+        verify(processingScheduleService).getCurrentPeriod(FACILITY.getId(), PROGRAM.getId(), reportStartDate);
         assertThat(actualPeriod, is(expectedPeriod));
     }
 
@@ -1504,15 +1504,15 @@ public class RequisitionServiceTest {
 
     @Test
     public void shouldGetPeriodForInitiatingRequisition() throws Exception {
-        Date programStartDate = new Date();
+        Date reportStartDate = new Date();
         Long startingPeriod = 3l;
         RequisitionService service = spy(requisitionService);
-        when(requisitionRepository.getLastRegularRequisition(FACILITY, PROGRAM)).thenReturn(
+        when(requisitionRepository.getLastRegularRequisitionByReportDate(FACILITY, PROGRAM)).thenReturn(
                 make(a(defaultRequisition, with(periodId, startingPeriod), with(status, AUTHORIZED))));
-        when(programService.getProgramStartDate(FACILITY.getId(), PROGRAM.getId())).thenReturn(programStartDate);
-        when(processingScheduleService.getCurrentPeriod(FACILITY.getId(), PROGRAM.getId(), programStartDate)).thenReturn(
+        when(programService.getReportStartDate(FACILITY.getId(), PROGRAM.getId())).thenReturn(reportStartDate);
+        when(processingScheduleService.getCurrentPeriod(FACILITY.getId(), PROGRAM.getId(), reportStartDate)).thenReturn(
                 new ProcessingPeriod(5l));
-        when(processingScheduleService.getAllPeriodsAfterDateAndPeriod(FACILITY.getId(), PROGRAM.getId(), programStartDate,
+        when(processingScheduleService.getAllPeriodsAfterDateAndPeriod(FACILITY.getId(), PROGRAM.getId(), reportStartDate,
                 startingPeriod)).thenReturn(asList(PERIOD));
 
         ProcessingPeriod period = service.getPeriodForInitiating(FACILITY, PROGRAM);
@@ -1522,10 +1522,10 @@ public class RequisitionServiceTest {
 
     @Test
     public void shouldAllowCreatingRnrIfPreviousRequisitionsDoNotExist() throws Exception {
-        Date programStartDate = new Date();
-        when(requisitionRepository.getLastRegularRequisition(FACILITY, PROGRAM)).thenReturn(null);
-        when(programService.getProgramStartDate(FACILITY.getId(), PROGRAM.getId())).thenReturn(programStartDate);
-        when(processingScheduleService.getAllPeriodsAfterDateAndPeriod(FACILITY.getId(), PROGRAM.getId(), programStartDate,
+        Date reportStartDate = new Date();
+        when(requisitionRepository.getLastRegularRequisitionByReportDate(FACILITY, PROGRAM)).thenReturn(null);
+        when(programService.getReportStartDate(FACILITY.getId(), PROGRAM.getId())).thenReturn(reportStartDate);
+        when(processingScheduleService.getAllPeriodsAfterDateAndPeriod(FACILITY.getId(), PROGRAM.getId(), reportStartDate,
                 null)).thenReturn(asList(PERIOD, new ProcessingPeriod()));
 
         ProcessingPeriod period = requisitionService.getPeriodForInitiating(FACILITY, PROGRAM);
@@ -1535,10 +1535,10 @@ public class RequisitionServiceTest {
 
     @Test
     public void shouldThrowErrorIfNoPeriodExistsForInitiating() throws Exception {
-        Date programStartDate = new Date();
-        when(requisitionRepository.getLastRegularRequisition(FACILITY, PROGRAM)).thenReturn(null);
-        when(programService.getProgramStartDate(FACILITY.getId(), PROGRAM.getId())).thenReturn(programStartDate);
-        when(processingScheduleService.getAllPeriodsAfterDateAndPeriod(FACILITY.getId(), PROGRAM.getId(), programStartDate,
+        Date reportStartDate = new Date();
+        when(requisitionRepository.getLastRegularRequisitionByReportDate(FACILITY, PROGRAM)).thenReturn(null);
+        when(programService.getReportStartDate(FACILITY.getId(), PROGRAM.getId())).thenReturn(reportStartDate);
+        when(processingScheduleService.getAllPeriodsAfterDateAndPeriod(FACILITY.getId(), PROGRAM.getId(), reportStartDate,
                 null)).thenReturn(new ArrayList<ProcessingPeriod>());
 
         expectedException.expect(DataException.class);
@@ -1549,11 +1549,10 @@ public class RequisitionServiceTest {
 
     @Test
     public void shouldThrowErrorIfLastRegularRequisitionExistsAndIsPreAuthorized() {
-        Date programStartDate = new Date();
+        Date reportStartDate = new Date();
         Rnr requisition = new Rnr();
         requisition.setStatus(INITIATED);
-        when(requisitionRepository.getLastRegularRequisition(FACILITY, PROGRAM)).thenReturn(requisition);
-        when(programService.getProgramStartDate(FACILITY.getId(), PROGRAM.getId())).thenReturn(programStartDate);
+        when(requisitionRepository.getLastRegularRequisitionByReportDate(FACILITY, PROGRAM)).thenReturn(requisition);
 
         expectedException.expect(DataException.class);
         expectedException.expectMessage("error.rnr.previous.not.filled");
@@ -1700,9 +1699,9 @@ public class RequisitionServiceTest {
         setupForInitRnr();
         createProcessingPeriod(1L, new DateTime());
         when(programService.getById(PROGRAM.getId())).thenReturn(PROGRAM);
-        Date programStartDate = new Date();
-        when(programService.getProgramStartDate(FACILITY.getId(), PROGRAM.getId())).thenReturn(programStartDate);
-        when(processingScheduleService.getCurrentPeriod(FACILITY.getId(), PROGRAM.getId(), programStartDate)).thenReturn(PERIOD);
+        Date reportStartDate = new Date();
+        when(programService.getProgramStartDate(FACILITY.getId(), PROGRAM.getId())).thenReturn(reportStartDate);
+        when(processingScheduleService.getCurrentPeriod(FACILITY.getId(), PROGRAM.getId(), reportStartDate)).thenReturn(PERIOD);
         when(staticReferenceDataService.getBoolean("toggle.rnr.multiple.programs")).thenReturn(true);
         when(processingScheduleService.getAllPeriodsAfterDateAndPeriod(anyLong(), anyLong(), any(Date.class), anyLong())).thenReturn(asList(PERIOD));
         PROGRAM.setUsePriceSchedule(false);
@@ -1719,9 +1718,9 @@ public class RequisitionServiceTest {
         setupForInitRnr();
         createProcessingPeriod(1L, new DateTime());
         when(programService.getById(PROGRAM.getId())).thenReturn(PROGRAM);
-        Date programStartDate = new Date();
-        when(programService.getProgramStartDate(FACILITY.getId(), PROGRAM.getId())).thenReturn(programStartDate);
-        when(processingScheduleService.getCurrentPeriod(FACILITY.getId(), PROGRAM.getId(), programStartDate)).thenReturn(PERIOD);
+        Date reportStartDate = new Date();
+        when(programService.getProgramStartDate(FACILITY.getId(), PROGRAM.getId())).thenReturn(reportStartDate);
+        when(processingScheduleService.getCurrentPeriod(FACILITY.getId(), PROGRAM.getId(), reportStartDate)).thenReturn(PERIOD);
         when(staticReferenceDataService.getBoolean("toggle.rnr.multiple.programs")).thenReturn(true);
         when(staticReferenceDataService.getBoolean("toggle.mmia.custom.regimen")).thenReturn(true);
         when(processingScheduleService.getAllPeriodsAfterDateAndPeriod(anyLong(), anyLong(), any(Date.class), anyLong())).thenReturn(asList(PERIOD));
@@ -1738,9 +1737,9 @@ public class RequisitionServiceTest {
         setupForInitRnr();
         createProcessingPeriod(1L, new DateTime());
         when(programService.getById(PROGRAM.getId())).thenReturn(PROGRAM);
-        Date programStartDate = new Date();
-        when(programService.getProgramStartDate(FACILITY.getId(), PROGRAM.getId())).thenReturn(programStartDate);
-        when(processingScheduleService.getCurrentPeriod(FACILITY.getId(), PROGRAM.getId(), programStartDate)).thenReturn(PERIOD);
+        Date reportStartDate = new Date();
+        when(programService.getProgramStartDate(FACILITY.getId(), PROGRAM.getId())).thenReturn(reportStartDate);
+        when(processingScheduleService.getCurrentPeriod(FACILITY.getId(), PROGRAM.getId(), reportStartDate)).thenReturn(PERIOD);
         when(staticReferenceDataService.getBoolean("toggle.rnr.multiple.programs")).thenReturn(true);
         when(staticReferenceDataService.getBoolean("toggle.mmia.custom.regimen")).thenReturn(false);
         when(processingScheduleService.getAllPeriodsAfterDateAndPeriod(anyLong(), anyLong(), any(Date.class), anyLong())).thenReturn(asList(PERIOD));

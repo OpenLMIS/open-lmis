@@ -341,6 +341,22 @@ public interface RequisitionMapper {
                                             @Param("programId") Long programId,
                                             @Param("facilityId") Long facilityId);
 
+  @Select({"SELECT processing_periods.startdate, programs_supported.reportstartdate FROM requisitions\n" +
+          "  JOIN programs_supported ON requisitions.programid = programs_supported.programid AND requisitions.facilityid = programs_supported.facilityid\n" +
+          "  JOIN processing_periods ON requisitions.periodid = processing_periods.id\n" +
+          "WHERE requisitions.facilityId = #{facility.id}\n" +
+          "      AND requisitions.programId = #{program.id}\n" +
+          "      AND requisitions.emergency = false\n" +
+          "      AND processing_periods.enddate >= programs_supported.reportstartdate\n" +
+          "ORDER BY requisitions.createdDate DESC limit 1;"})
+  @Results(value = {
+          @Result(property = "facility.id", column = "facilityId"),
+          @Result(property = "program.id", column = "programId"),
+          @Result(property = "period.id", column = "periodId")
+  })
+  Rnr getLastRegularRequisitionByReportDate( @Param("facility") Facility facility,
+                                             @Param("program") Program program);
+
   public class ApprovedRequisitionSearch {
 
     @SuppressWarnings("UnusedDeclaration")

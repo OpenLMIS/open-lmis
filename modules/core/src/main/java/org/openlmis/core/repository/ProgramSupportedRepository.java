@@ -40,6 +40,10 @@ public class ProgramSupportedRepository {
         return mapper.getBy(facilityId, programId).getStartDate();
     }
 
+    public Date getReportStartDate(Long facilityId, Long programId) {
+        return mapper.getBy(facilityId, programId).getReportStartDate();
+    }
+
     public void deleteSupportedPrograms(Long facilityId, Long programId) {
         mapper.delete(facilityId, programId);
     }
@@ -110,6 +114,10 @@ public class ProgramSupportedRepository {
 
     public void updateProgramSupportedStartDate(Long facilityId, Long programId, Date startDate) {
         mapper.updateStartDate(facilityId, programId, startDate);
+    }
+
+    public void updateProgramSupportedReportStartDate(Long facilityId, Long programId, Date startDate) {
+        mapper.updateReportStartDate(facilityId, programId, startDate);
     }
 
     public List<ProgramSupported> getActiveByFacilityId(Long facilityId) {

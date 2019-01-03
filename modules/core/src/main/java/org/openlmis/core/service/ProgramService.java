@@ -82,6 +82,10 @@ public class ProgramService {
     return programSupportedRepository.getProgramStartDate(facilityId, programId);
   }
 
+  public Date getReportStartDate(Long facilityId, Long programId) {
+    return programSupportedRepository.getReportStartDate(facilityId, programId);
+  }
+
   public Program getById(Long id) {
     return programRepository.getById(id);
   }
