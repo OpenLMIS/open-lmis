@@ -24,9 +24,9 @@ function DatePickerContainerController($scope, $filter, DateFormatService, messa
 
     var twelvePeriodsBeforeExcludingCurrent = new Date(lastPeriodStartDate.getFullYear(), lastPeriodStartDate.getMonth() - 11, 21);
     if (lastPeriodStartDate.getMonth() - 11 > currentDate.getMonth()) {
-        twelvePeriodsBeforeExcludingCurrent = new Date(twelvePeriodsBeforeExcludingCurrent).setYear(currentDate.getFullYear() - 2);
+        twelvePeriodsBeforeExcludingCurrent = new Date(twelvePeriodsBeforeExcludingCurrent).setYear(lastPeriodStartDate.getFullYear() - 2);
     } else {
-        twelvePeriodsBeforeExcludingCurrent = new Date(twelvePeriodsBeforeExcludingCurrent).setYear(currentDate.getFullYear() - 1);
+        twelvePeriodsBeforeExcludingCurrent = new Date(twelvePeriodsBeforeExcludingCurrent).setYear(lastPeriodStartDate.getFullYear() - 1);
     }
 
     var threePeriodsBeforeIncludingCurrent = new Date(thisPeriodStartDate.getFullYear(), thisPeriodStartDate.getMonth() - 2, 21);
