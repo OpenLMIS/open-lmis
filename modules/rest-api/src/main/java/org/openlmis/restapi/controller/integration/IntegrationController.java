@@ -80,10 +80,10 @@ public class IntegrationController extends BaseController {
     }
 
     @RequestMapping(value = "/rest-api/sync/program", method = RequestMethod.GET)
-@ResponseStatus(HttpStatus.OK)
-public void synProgram(@RequestParam(required = false) String fromStartDate) {
-    programIntegrationFromFCService.sycDataFromFC(fromStartDate);
-}
+    @ResponseStatus(HttpStatus.OK)
+    public void synProgram(@RequestParam(required = false) String fromStartDate) {
+        programIntegrationFromFCService.sycDataFromFC(fromStartDate);
+    }
 
     @RequestMapping(value = "/rest-api/sync/regimen", method = RequestMethod.GET)
     @ResponseStatus(HttpStatus.OK)
