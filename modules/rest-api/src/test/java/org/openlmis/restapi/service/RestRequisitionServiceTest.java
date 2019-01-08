@@ -879,12 +879,7 @@ public class RestRequisitionServiceTest {
 
     ArgumentCaptor<Date> updateTimeCapture = ArgumentCaptor.forClass(Date.class);
     verify(programSupportedService).updateProgramSupportedReportStartDate(eq(facility.getId()), eq(program.getId()), updateTimeCapture.capture());
-
-    Calendar calendar = Calendar.getInstance();
-    calendar.setTime(report.getActualPeriodStartDate());
-    calendar.add(Calendar.DAY_OF_MONTH, -1);
-    Date expectedDate = calendar.getTime();
-    assertThat(updateTimeCapture.getValue(), is(expectedDate));
+    assertThat(new DateTime(updateTimeCapture.getValue()), is(new DateTime(2016, 5, 21, 0 ,0)));
   }
 
   private List<RnrColumn> getRnrColumns() {

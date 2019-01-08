@@ -17,6 +17,7 @@ import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
 import org.apache.commons.collections.Transformer;
 import org.apache.log4j.Logger;
+import org.joda.time.DateTime;
 import org.openlmis.core.domain.*;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.core.repository.SyncUpHashRepository;
@@ -36,7 +37,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
@@ -103,7 +103,7 @@ public class RestRequisitionService {
     if (staticReferenceDataService.getBoolean("toggle.skip.initial.requisition.validation")) {
       Rnr lastRegularRequisition = requisitionService.getLastRegularRequisitionByReportDate(reportingFacility, reportingProgram);
       if (lastRegularRequisition == null) {
-        programSupportedService.updateProgramSupportedReportStartDate(reportingFacility.getId(), reportingProgram.getId(), getDateOfFirstReportDate(report.getActualPeriodStartDate()));
+        programSupportedService.updateProgramSupportedReportStartDate(reportingFacility.getId(), reportingProgram.getId(), getDateOf21(report.getActualPeriodStartDate()));
       }
     }
 
@@ -454,10 +454,9 @@ public class RestRequisitionService {
     }).toList();
   }
 
-  private Date getDateOfFirstReportDate(Date date) {
-    Calendar calendar = Calendar.getInstance();
-    calendar.setTime(date);
-    calendar.add(Calendar.DAY_OF_MONTH, -1);
-    return calendar.getTime();
+  private Date getDateOf21(Date date) {
+    final int DAY_OF_PERIOD_START = 21;
+    DateTime dateTime = new DateTime(date);
+    return new DateTime(dateTime.getYear(), dateTime.getMonthOfYear(), DAY_OF_PERIOD_START,0 , 0).toDate();
   }
 }
