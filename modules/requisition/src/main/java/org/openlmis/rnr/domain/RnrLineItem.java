@@ -200,6 +200,7 @@ public class RnrLineItem extends LineItem {
       if (template.columnsVisible(fieldName) &&
         !template.columnsCalculated(fieldName) &&
         (getValueFor(fieldName) == null || (Integer) getValueFor(fieldName) < 0)) {
+        LOGGER.error(String.format("field name is %s, productcode is %s", fieldName, productCode));
         throw new DataException(RNR_VALIDATION_ERROR);
       }
     }
@@ -224,7 +225,7 @@ public class RnrLineItem extends LineItem {
       boolean valid = quantityDispensed >= 0 && stockInHand >= 0 && validQuantityDispensed;
 
       if (!valid) {
-        LOGGER.error("The product code is: %s", productCode);
+        LOGGER.error(String.format("invalid productcode is %s", productCode));
         throw new DataException(RNR_VALIDATION_ERROR);
       }
     }
