@@ -9,6 +9,7 @@ import org.openlmis.core.domain.ProgramSupported;
 import org.openlmis.core.domain.ReportType;
 import org.openlmis.core.repository.ReportTypeRepository;
 import org.openlmis.core.service.ProgramSupportedService;
+import org.openlmis.core.utils.DateUtil;
 import org.openlmis.restapi.domain.ProgramDTO;
 import org.openlmis.restapi.domain.ReportTypeDTO;
 import org.springframework.beans.BeanUtils;
@@ -33,12 +34,12 @@ public class RestReportTypeService {
 
     public List<ReportTypeDTO> getReportTypeByFacilityId(Long facilityId) {
         List<ProgramSupported> programSupportedList = filterInvalidData(programSupportedService.getAllByFacilityId(facilityId));
-        return FluentIterable.from(programSupportedList).transform(new Function<ProgramSupported, ReportTypeDTO>() {
+        List<ReportTypeDTO> reportTypeDTOS = FluentIterable.from(programSupportedList).transform(new Function<ProgramSupported, ReportTypeDTO>() {
             @Override
             public ReportTypeDTO apply(ProgramSupported input) {
                 ReportTypeDTO reportType = new ReportTypeDTO();
                 reportType.setActive(input.isReportActive());
-                reportType.setStartTime(input.getReportStartDate());
+                reportType.setStartTime(DateUtil.formatDate(input.getReportStartDate()));
                 ReportType reportTypeDomain = input.getReportType();
                 reportType.setCode(reportTypeDomain.getCode());
                 reportType.setId(reportTypeDomain.getId());
@@ -50,6 +51,8 @@ public class RestReportTypeService {
             }
 
         }).toList();
+
+        return reportTypeDTOS;
     }
 
     private List<ProgramSupported> filterInvalidData(List<ProgramSupported> programSupportedList) {

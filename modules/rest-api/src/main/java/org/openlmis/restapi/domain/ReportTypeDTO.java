@@ -5,8 +5,6 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.Date;
-
 import static com.fasterxml.jackson.databind.annotation.JsonSerialize.Inclusion.NON_NULL;
 
 
@@ -28,7 +26,7 @@ public class ReportTypeDTO {
 
     private boolean active;
 
-    private Date startTime;
+    private String startTime;
 
     private ProgramDTO program;
 
