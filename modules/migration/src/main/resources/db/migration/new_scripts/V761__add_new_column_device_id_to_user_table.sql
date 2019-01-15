@@ -1,0 +1,1 @@
+ALTER TABLE users ADD deviceid VARCHAR(50) UNIQUE ;
