@@ -92,6 +92,8 @@ public class User extends BaseModel implements Importable {
 
   private Boolean isMobileUser = false;
 
+  private String deviceId;
+
   public User(Long id, String userName) {
     this.id = id;
     this.userName = userName;

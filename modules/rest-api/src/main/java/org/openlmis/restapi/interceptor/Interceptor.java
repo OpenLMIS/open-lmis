@@ -1,6 +1,9 @@
 package org.openlmis.restapi.interceptor;
 
+import org.openlmis.core.domain.User;
 import org.openlmis.core.exception.DataException;
+import org.openlmis.core.repository.mapper.UserMapper;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 
@@ -11,6 +14,10 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class Interceptor extends HandlerInterceptorAdapter {
+
+    @Autowired
+    private UserMapper userMapper;
+
     @Value("${andorid.app.old.version.expiration.date}")
     private String expirationDate;
 
@@ -22,9 +29,19 @@ public class Interceptor extends HandlerInterceptorAdapter {
                              HttpServletResponse response,
                              Object handler) throws Exception {
         Date expirationDateOfAndoridApp = getExpirationDate();
-        Integer androidVersionCode = Integer.valueOf(versionCode);
 
         // if the android version is less than 86, the request version vode will be null
+        validAppVersion(request, expirationDateOfAndoridApp);
+
+        if(null != request.getHeader("UniqueId")) {
+            validAndUpdateUserDeviceId(request);
+        }
+        return true;
+    }
+
+    private void validAppVersion(HttpServletRequest request, Date expirationDateOfAndoridApp) {
+        Integer androidVersionCode = Integer.valueOf(versionCode);
+
         if(null == request.getHeader("VersionCode")
                 && new Date().after(expirationDateOfAndoridApp)) {
             throw new DataException(String.format("Please upgrade your android version"));
@@ -35,7 +52,21 @@ public class Interceptor extends HandlerInterceptorAdapter {
                 && new Date().after(expirationDateOfAndoridApp)) {
             throw new DataException(String.format("Please upgrade your android version"));
         }
-        return true;
+    }
+
+    private void validAndUpdateUserDeviceId(HttpServletRequest request) {
+        User user = userMapper.getUserByNameAndFacilityName(request.getHeader("UserName"), request.getHeader("FacilityName"));
+        if(null == user) {
+            throw new DataException(String.format("Could not find user by username %s and facilityname %s",
+                    request.getHeader("UserName"), request.getHeader("FacilityName")));
+        }
+        if(null == user.getDeviceId()) {
+            userMapper.updateDeviceId(user.getId(), request.getHeader("UniqueId"));
+            return;
+        }
+        if(!user.getDeviceId().equals(request.getHeader("UniqueId"))) {
+            throw new DataException(String.format("Invalid deviceid %s", request.getHeader("UniqueId")));
+        }
     }
 
     private Date getExpirationDate() throws ParseException {
