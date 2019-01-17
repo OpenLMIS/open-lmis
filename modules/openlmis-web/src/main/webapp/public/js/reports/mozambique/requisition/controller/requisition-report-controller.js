@@ -41,7 +41,7 @@ function RequisitionReportController($scope, $controller, RequisitionReportServi
         return program.id;
       });
 
-      $scope.selectedProgramNames = ['ALL'];
+      $scope.selectedProgramNames = [messageService.get('report.option.all')];
 
     } else {
       $scope.selectedProgramClass = _.map($scope.requisitionPrograms, function (program) {
@@ -89,7 +89,7 @@ function RequisitionReportController($scope, $controller, RequisitionReportServi
     if (intersectionIds.length === allProgramIds.length) {
       $scope.selectedProgramAllClass = SELECTION_CHECKBOX_ALL_STYLES;
       $scope.selectedAll = true;
-      $scope.selectedProgramNames = ['ALL'];
+      $scope.selectedProgramNames = [messageService.get('report.option.all')];
     }
 
     if (intersectionIds.length > 0 && intersectionIds.length < allProgramIds.length) {

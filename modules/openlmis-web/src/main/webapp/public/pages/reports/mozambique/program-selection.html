@@ -21,7 +21,8 @@
             <ul>
                 <li ng-click="selectALL()">
                     <div>
-                        <span class="selection-checkbox" ng-class="selectedProgramAllClass"></span>ALL
+                        <span class="selection-checkbox" ng-class="selectedProgramAllClass"></span>
+                        <span openlmis-message="report.option.all"></span>
                     </div>
                 </li>
                 <li ng-repeat="program in requisitionPrograms"
@@ -30,7 +31,8 @@
                     <div>
                         <span class="selection-checkbox"
                               ng-class="program.isSelected ?
-                              'selection-checkbox__all' : 'selection-checkbox__not-select'"></span>{{program.name}}
+                              'selection-checkbox__all' : 'selection-checkbox__not-select'"></span>
+                        <span>{{program.name}}</span>
                     </div>
                 </li>
             </ul>
