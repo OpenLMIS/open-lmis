@@ -362,7 +362,7 @@ function RequisitionReportController($scope, $controller, RequisitionReportServi
   };
 
   function formatDate(date) {
-    return !!date ? DateFormatService.formatDateWithLocale(date) : '';
+    return !!date ? DateFormatService.formatDateWithUTC(date, true) : '';
   }
 
   $scope.getRedirectUrl = function () {

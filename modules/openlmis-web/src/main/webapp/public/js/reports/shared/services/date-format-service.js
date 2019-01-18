@@ -42,6 +42,17 @@ services.factory('DateFormatService', function ($filter, messageService) {
       return monthYear;
     }
   }
+
+  function formatDateWithUTC(dateString, withDay) {
+    var date = new Date(dateString);
+    var monthYear = messageService.get('month.abbr.' + (date.getUTCMonth() + 1)) + " " + date.getUTCFullYear();
+
+    if (withDay) {
+      return date.getUTCDate() + " " + monthYear;
+    } else {
+      return monthYear;
+    }
+  }
   
   function formatDateWithTimeAndLocale(dateString) {
     var dateWithLocale = formatDateWithLocale(dateString);
@@ -119,6 +130,7 @@ services.factory('DateFormatService', function ($filter, messageService) {
     formatDateWithFirstDayOfMonth: formatDateWithFirstDayOfMonth,
     formatDateWithLastDayOfMonth: formatDateWithLastDayOfMonth,
     formatDateWithLocale: formatDateWithLocale,
+    formatDateWithUTC: formatDateWithUTC,
     formatDateWithLocaleNoDay: formatDateWithLocaleNoDay,
     formatDateWithStartDayOfPeriod: formatDateWithStartDayOfPeriod,
     formatDateWithEndDayOfPeriod: formatDateWithEndDayOfPeriod,
