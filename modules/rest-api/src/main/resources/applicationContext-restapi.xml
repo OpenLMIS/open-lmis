@@ -37,6 +37,7 @@
         <bean class="org.springframework.web.servlet.i18n.LocaleChangeInterceptor" />
         <mvc:interceptor>
             <mvc:mapping path="/rest-api/*"/>
+            <mvc:exclude-mapping path="/rest-api/login"/>
             <bean class="org.openlmis.restapi.interceptor.Interceptor" />
         </mvc:interceptor>
     </mvc:interceptors>
