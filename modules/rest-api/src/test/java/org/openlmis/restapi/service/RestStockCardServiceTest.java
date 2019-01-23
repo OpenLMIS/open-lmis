@@ -109,15 +109,15 @@ public class RestStockCardServiceTest {
     restStockCardService.adjustStock(facilityId, stockEventList, userId);
   }
 
-  @Test
-  public void shouldThrowDataExceptionIfProductIsInvalid() throws Exception {
-    expectedException.expect(DataException.class);
-    expectedException.expectMessage("error.product.unknown");
-
-    when(productService.getByCode(productCode)).thenReturn(null);
-
-    restStockCardService.adjustStock(facilityId, stockEventList, userId);
-  }
+//  @Test
+//  public void shouldThrowDataExceptionIfProductIsInvalid() throws Exception {
+//    expectedException.expect(DataException.class);
+//    expectedException.expectMessage("error.product.unknown");
+//
+//    when(productService.getByCode(productCode)).thenReturn(null);
+//
+//    restStockCardService.adjustStock(facilityId, stockEventList, userId);
+//  }
 
   @Test
   public void shouldThrowDataExceptionIfAdjustmentReasonIsInvalid() throws Exception {
