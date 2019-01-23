@@ -10,6 +10,7 @@
 
 package org.openlmis.restapi.service;
 
+import org.apache.log4j.Logger;
 import org.joda.time.DateTime;
 import org.openlmis.core.domain.Facility;
 import org.openlmis.core.domain.ProcessingPeriod;
@@ -49,6 +50,8 @@ public class RestRequisitionCalculator {
 
   @Autowired
   private StaticReferenceDataService staticReferenceDataService;
+
+  private static final Logger LOGGER = Logger.getLogger(RestRequisitionCalculator.class);
 
   public void validatePeriod(Facility reportingFacility, Program reportingProgram, Date periodStartDate, Date periodEndDate) {
 
@@ -123,7 +126,8 @@ public class RestRequisitionCalculator {
       }
     }
     if (!invalidProductCodes.isEmpty()) {
-      throw new DataException("invalid.product.codes", invalidProductCodes.toString());
+      LOGGER.info(String.format("invalid product code : %s", invalidProductCodes.toString()));
+//      throw new DataException("invalid.product.codes", invalidProductCodes.toString());
     }
   }
 
