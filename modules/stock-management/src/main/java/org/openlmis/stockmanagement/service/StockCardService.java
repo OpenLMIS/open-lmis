@@ -129,7 +129,7 @@ public class StockCardService {
   @Transactional
   public void addStockCardEntry(StockCardEntry entry) {
     logger.info("start to valid stock card entry");
-    entry.validStockCardEntry();
+//    entry.validStockCardEntry();
     StockCard card = entry.getStockCard();
     card.setLatestStockCardEntry(entry);
     card.addToTotalQuantityOnHand(entry.getQuantity());

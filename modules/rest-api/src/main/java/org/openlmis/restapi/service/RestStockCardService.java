@@ -85,6 +85,10 @@ public class RestStockCardService {
         continue;
       }
 
+      if(!validProduct(stockEvent)) {
+        continue;
+      }
+
       syncUpHashRepository.save(stockEvent.getSyncUpHash());
       String errorInStockEvent = validateStockEvent(stockEvent);
       if (errorInStockEvent != null) {
@@ -179,7 +183,7 @@ public class RestStockCardService {
 
   private String validateStockEvent(StockEvent stockEvent) {
     if (!stockEvent.isValidAdjustment()) return "error.stockmanagement.invalidadjustment";
-    if (!validProduct(stockEvent)) return "error.product.unknown";
+//    if (!validProduct(stockEvent)) return "error.product.unknown";
     if (!validAdjustmentReason(stockEvent)) return "error.stockadjustmentreason.unknown";
     return null;
   }
