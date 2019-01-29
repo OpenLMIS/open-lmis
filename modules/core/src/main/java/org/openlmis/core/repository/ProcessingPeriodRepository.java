@@ -112,7 +112,7 @@ public class ProcessingPeriodRepository {
       return mapper.getAllPeriodsForScheduleAndYear(scheduleId, year);
   }
 
-  public ProcessingPeriod getPeriodByDate(Date actualPeriodStartDate, Date actualPeriodEndDate) {
-    return mapper.getProcessingPeriodByStartDateAndEndDate(actualPeriodStartDate, actualPeriodEndDate);
+  public ProcessingPeriod getPeriodByDate(Long scheduleId, Date actualPeriodStartDate, Date actualPeriodEndDate) {
+    return mapper.getProcessingPeriodByStartDateAndEndDate(scheduleId, actualPeriodStartDate, actualPeriodEndDate);
   }
 }

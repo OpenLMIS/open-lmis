@@ -110,11 +110,12 @@ public interface ProcessingPeriodMapper {
   @Select("SELECT * FROM processing_periods WHERE scheduleId = #{scheduleId} AND extract('year' from startdate) = #{year}  ORDER BY startDate DESC")
   List<ProcessingPeriod> getAllPeriodsForScheduleAndYear(@Param("scheduleId")Long scheduleId, @Param("year") Long year);
 
-  @Select("SELECT * FROM processing_periods WHERE (date_part('year'::text, startdate::TIMESTAMP) = date_part('year'::text, #{actualPeriodStartDate}::DATE ))\n" +
+  @Select("SELECT * FROM processing_periods WHERE scheduleId = #{scheduleId} AND (date_part('year'::text, startdate::TIMESTAMP) = date_part('year'::text, #{actualPeriodStartDate}::DATE ))\n" +
           "                                       AND (date_part('month'::text, startdate::TIMESTAMP) = date_part('month'::text, #{actualPeriodStartDate}::DATE))\n" +
           "                                       AND (date_part('year'::text, enddate::TIMESTAMP) = date_part('year'::text, #{actualPeriodEndDate}::DATE))\n" +
           "                                       AND (date_part('month'::text, enddate::TIMESTAMP) = date_part('month'::text, #{actualPeriodEndDate}::DATE));")
   ProcessingPeriod getProcessingPeriodByStartDateAndEndDate(
+          @Param("scheduleId") Long scheduleId,
           @Param("actualPeriodStartDate") Date actualPeriodStartDate,
           @Param("actualPeriodEndDate") Date actualPeriodEndDate);
 }

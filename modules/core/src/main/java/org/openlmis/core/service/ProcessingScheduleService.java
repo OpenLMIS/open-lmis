@@ -145,7 +145,8 @@ public class ProcessingScheduleService {
         return periodRepository.getAllPeriodsForScheduleAndYear(scheduleId, year);
     }
 
-  public ProcessingPeriod getPeriodByDate(Date actualPeriodStartDate, Date actualPeriodEndDate) {
-    return periodRepository.getPeriodByDate(actualPeriodStartDate, actualPeriodEndDate);
+  public ProcessingPeriod getPeriodByDate(Date actualPeriodStartDate, Date actualPeriodEndDate, Long facilityId, Long programId) {
+    RequisitionGroupProgramSchedule requisitionGroupProgramSchedule = getSchedule(new Facility(facilityId), new Program(programId));
+    return periodRepository.getPeriodByDate(requisitionGroupProgramSchedule.getProcessingSchedule().getId(), actualPeriodStartDate, actualPeriodEndDate);
   }
 }

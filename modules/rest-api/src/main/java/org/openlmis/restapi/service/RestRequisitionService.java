@@ -111,7 +111,8 @@ public class RestRequisitionService {
       restRequisitionCalculator.validatePeriod(reportingFacility, reportingProgram, report.getActualPeriodStartDate(), report.getActualPeriodEndDate());
     }
 
-    ProcessingPeriod proposedPeriod = report.getProgramCode().equals(RAPID_TEST_PROGRAM_CODE) ? findRapidTestPeriod(report.getActualPeriodStartDate(), report.getActualPeriodEndDate()) : null;
+    ProcessingPeriod proposedPeriod = report.getProgramCode().equals(RAPID_TEST_PROGRAM_CODE) ?
+            findRapidTestPeriod(report.getActualPeriodStartDate(), report.getActualPeriodEndDate(), reportingFacility.getId(), reportingProgram.getId()) : null;
     Rnr rnr = requisitionService.initiate(reportingFacility, reportingProgram, userId, EMERGENCY, proposedPeriod, report.getServiceLineItems());
 
     restRequisitionCalculator.validateProducts(report.getProducts(), rnr);
@@ -318,8 +319,8 @@ public class RestRequisitionService {
     return customRegimenItems;
   }
 
-  private ProcessingPeriod findRapidTestPeriod(Date actualPeriodStartDate, Date actualPeriodEndDate) {
-    ProcessingPeriod processingPeriod = processingScheduleService.getPeriodByDate(actualPeriodStartDate, actualPeriodEndDate);
+  private ProcessingPeriod findRapidTestPeriod(Date actualPeriodStartDate, Date actualPeriodEndDate, Long facilityId, Long programId) {
+    ProcessingPeriod processingPeriod = processingScheduleService.getPeriodByDate(actualPeriodStartDate, actualPeriodEndDate, facilityId, programId);
     if(null == processingPeriod) {
       throw new DataException("error.schedule.period.configuration.missing");
     }
