@@ -30,6 +30,6 @@ public class DateTimeDeserializer extends JsonDeserializer<Date> {
 
         String dtToParse = jsonparser.getText();
         if (isBlank(dtToParse)) return null;
-        return formatter.parseLocalDateTime(dtToParse).toDate();
+        return formatter.parseDateTime(dtToParse).toDate();
     }
 }
