@@ -13,8 +13,6 @@ package org.openlmis.core.builder;
 import com.natpryce.makeiteasy.Instantiator;
 import com.natpryce.makeiteasy.Property;
 import com.natpryce.makeiteasy.PropertyLookup;
-import lombok.Getter;
-import lombok.Setter;
 import org.apache.commons.lang.time.DateUtils;
 import org.openlmis.core.domain.ProcessingPeriod;
 
@@ -23,8 +21,6 @@ import java.util.Date;
 
 import static com.natpryce.makeiteasy.Property.newProperty;
 
-@Getter
-@Setter
 public class ProcessingPeriodBuilder {
 
   public static final Property<ProcessingPeriod, String> name = newProperty();

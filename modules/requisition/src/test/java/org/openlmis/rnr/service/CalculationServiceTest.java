@@ -25,8 +25,6 @@ import org.openlmis.rnr.builder.RnrLineItemBuilder;
 import org.openlmis.rnr.domain.*;
 import org.openlmis.rnr.repository.RequisitionRepository;
 
-import java.text.ParsePosition;
-import java.text.SimpleDateFormat;
 import java.util.*;
 
 import static com.natpryce.makeiteasy.MakeItEasy.*;
@@ -62,7 +60,6 @@ public class CalculationServiceTest {
   CalculationService calculationService;
 
   private List<ProcessingPeriod> emptyPeriodList;
-  private static final Date NON_FOMULAR_CHECK_END_DATE = new SimpleDateFormat("yyyy-MM-dd").parse("2018-11-30 23:59", new ParsePosition(0));
 
   @Before
   public void setUp() throws Exception {
@@ -91,7 +88,7 @@ public class CalculationServiceTest {
     calculationService.perform(rnr, template);
 
     verify(rnrLineItem1).validateMandatoryFields(template);
-    verify(rnrLineItem1).validateCalculatedFields(template, rnr);
+    verify(rnrLineItem1).validateCalculatedFields(template);
     verify(rnrLineItem2).validateNonFullSupply();
   }
   
@@ -136,7 +133,7 @@ public class CalculationServiceTest {
 
     verify(rnrLineItem1).calculateForFullSupply(eq(template), eq(rnr.getStatus()), eq(lossesAndAdjustmentsTypes), eq(M));
     verify(rnrLineItem1).validateMandatoryFields(template);
-    verify(rnrLineItem1).validateCalculatedFields(template, rnr);
+    verify(rnrLineItem1).validateCalculatedFields(template);
   }
 
   @Test

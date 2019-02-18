@@ -22,10 +22,7 @@ import org.slf4j.LoggerFactory;
 import java.lang.reflect.Field;
 import java.math.BigDecimal;
 import java.math.MathContext;
-import java.text.ParsePosition;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import static java.lang.Math.floor;
@@ -59,7 +56,6 @@ public class RnrLineItem extends LineItem {
   public static final String DISPENSED_X_2 = "DISPENSED_X_2";
   public static final String CONSUMPTION_X_2 = "CONSUMPTION_X_2";
   private static final Logger LOGGER = LoggerFactory.getLogger(RnrLineItem.class);
-  private static final Date NON_FOMULAR_CHECK_END_DATE = new SimpleDateFormat("yyyy-MM-dd").parse("2018-11-30", new ParsePosition(0));
   //TODO : hack to display it on UI. This is concatenated string of Product properties like name, strength, form and dosage unit
   private String product;
   private Integer productDisplayOrder;
@@ -213,12 +209,12 @@ public class RnrLineItem extends LineItem {
     }
   }
 
-  public void validateCalculatedFields(ProgramRnrTemplate template, Rnr requisition) {
+  public void validateCalculatedFields(ProgramRnrTemplate template) {
     boolean validQuantityDispensed = true;
 
     RnrColumn rnrColumn = (RnrColumn) template.getColumns().get(0);
 
-    if (null != program && !program.isMmiaRequisition() && requisition.getPeriod().getEndDate().after(NON_FOMULAR_CHECK_END_DATE)) {
+    if (null != program && !program.isMmiaRequisition()) {
       if (rnrColumn.isFormulaValidationRequired()) {
         validQuantityDispensed = (quantityDispensed == (beginningBalance + quantityReceived + totalLossesAndAdjustments - stockInHand));
       }
