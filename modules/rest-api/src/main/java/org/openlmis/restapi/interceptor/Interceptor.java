@@ -60,6 +60,12 @@ public class Interceptor extends HandlerInterceptorAdapter {
             throw new DataException(String.format("Could not find user by username %s and facilityname %s",
                     request.getHeader("UserName"), request.getHeader("FacilityName")));
         }
+
+        User usersByDeviceId = userMapper.getUsersByDeviceId(request.getHeader("UniqueId"));
+        if(usersByDeviceId != null && usersByDeviceId.getId() != user.getId()) {
+            throw new DataException(String.format("The device id has been used by the other user %s", usersByDeviceId.getUserName()));
+        }
+
         if(null == user.getDeviceId()) {
             userMapper.updateDeviceId(user.getId(), request.getHeader("UniqueId"));
             return;

@@ -153,4 +153,7 @@ public interface UserMapper {
 
   @Update("UPDATE users SET deviceid = #{deviceId} WHERE id = #{userId}")
   void updateDeviceId(@Param(value = "userId") Long userId, @Param(value = "deviceId") String deviceId);
+
+  @Select("SELECT * FROM users WHERE deviceid = #{deviceId}")
+  User getUsersByDeviceId(@Param(value = "deviceId") String deviceId);
 }
