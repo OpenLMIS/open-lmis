@@ -18,7 +18,8 @@ public class RequestLogFilter extends AbstractRequestLoggingFilter {
     protected void afterRequest(HttpServletRequest request, String message) {
         logger.info("User: " + request.getHeader("UserName") +
                 " Facility: " + request.getHeader("FacilityName") +
-                " Device:" + request.getHeader("DeviceInfo"));
+                " Device:" + request.getHeader("DeviceInfo") +
+                " Unique Device id:" + request.getHeader("UniqueId"));
         if (!message.contains("password")) {
             logger.info(message);
         } else {
