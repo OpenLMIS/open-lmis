@@ -62,7 +62,7 @@ public class Interceptor extends HandlerInterceptorAdapter {
         }
 
         User usersByDeviceId = userMapper.getUsersByDeviceId(request.getHeader("UniqueId"));
-        if(usersByDeviceId != null && usersByDeviceId.getId() != user.getId()) {
+        if(usersByDeviceId != null && usersByDeviceId.getId().compareTo(user.getId()) != 0) {
             throw new DataException(String.format("The device id has been used by the other user %s", usersByDeviceId.getUserName()));
         }
 
