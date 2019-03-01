@@ -145,15 +145,4 @@ public interface UserMapper {
 
   @Update("UPDATE users SET verified = TRUE WHERE id = #{id}")
   void verify(User user);
-
-  @Select("SELECT users.id, users.username, users.deviceid FROM users " +
-          "JOIN facilities ON users.facilityid = facilities.id " +
-          "WHERE users.username = #{userName} AND facilities.name = #{facilityName};")
-  User getUserByNameAndFacilityName(@Param(value = "userName") String userName, @Param(value = "facilityName") String facilityName);
-
-  @Update("UPDATE users SET deviceid = #{deviceId} WHERE id = #{userId}")
-  void updateDeviceId(@Param(value = "userId") Long userId, @Param(value = "deviceId") String deviceId);
-
-  @Select("SELECT * FROM users WHERE deviceid = #{deviceId}")
-  User getUsersByDeviceId(@Param(value = "deviceId") String deviceId);
 }
