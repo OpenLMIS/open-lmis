@@ -49,8 +49,8 @@ describe('ViewRnrViaDetailController', function () {
     rnr: {
       facility: {code: "F10", name: "Health Facility 1"},
       fullSupplyLineItems: [
-        {quantityReceived: 10, quantityDispensed: 3, isKit: true, productCode: 'SCOD10'},
-        {quantityReceived: 5, quantityDispensed: 2, isKit: true, productCode: 'SCOD12'},
+        {quantityReceived: 10, quantityDispensed: 3, isKit: true, productCode: '26A01'},
+        {quantityReceived: 5, quantityDispensed: 2, isKit: true, productCode: '26A02'},
         {quantityReceived: 20, quantityDispensed: 3, isKit: false, productCode: 'P1'}
       ],
       period: {stringStartDate: "01/01/2014", stringEndDate: "31/01/2014"},
@@ -148,11 +148,11 @@ describe('ViewRnrViaDetailController', function () {
     expect(scope.rnrItemsVisible.length).toEqual(20);
     expect(scope.rnrItemsVisible[0].productCode).toEqual('P1');
     expect(scope.usKitItem.quantityDispensed).toEqual(3);
-    expect(scope.usKitItem.productCode).toEqual('SCOD10');
+    expect(scope.usKitItem.productCode).toEqual('26A01');
     expect(scope.usKitItem.quantityReceived).toEqual(10);
     expect(scope.apeKitItem.quantityDispensed).toEqual(2);
     expect(scope.apeKitItem.quantityReceived).toEqual(5);
-    expect(scope.apeKitItem.productCode).toEqual('SCOD12');
+    expect(scope.apeKitItem.productCode).toEqual('26A02');
 
   });
 

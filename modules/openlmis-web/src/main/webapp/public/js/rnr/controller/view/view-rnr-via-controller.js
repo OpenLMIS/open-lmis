@@ -65,9 +65,9 @@ function ViewRnrViaDetailController($scope, $route, $filter, $location, Requisit
         for (var i = 0; i < rnrItems.length; i++) {
             var currentItem = rnrItems[i];
             if (currentItem.isKit) {
-                if (currentItem.productCode === 'SCOD10') {
+                if (currentItem.productCode === '26A01') {
                     $scope.usKitItem = currentItem;
-                } else if (currentItem.productCode === 'SCOD12') {
+                } else if (currentItem.productCode === '26A02') {
                     $scope.apeKitItem = currentItem;
                 }
             } else {
