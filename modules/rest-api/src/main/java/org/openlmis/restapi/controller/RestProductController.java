@@ -12,6 +12,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
@@ -48,5 +49,15 @@ public class RestProductController extends BaseController {
     } catch (DataException e) {
       return error(e.getOpenLmisMessage(), BAD_REQUEST);
     }
+  }
+
+  @RequestMapping(value = "/rest-api/temp86-notice-kit-change")
+  public ResponseEntity<RestResponse> getTemp86FilterProduct(@RequestHeader("VersionCode") String versionCode, Principal principal){
+    if(versionCode!=null && versionCode.equals("86")){
+      List<ProductResponse> products = restProductService.getTemp86KitChangeProducts(loggedInUserId(principal));
+      RestResponse restResponse = new RestResponse("kitChangeProducts", products);
+      return new ResponseEntity<>(restResponse, HttpStatus.OK);
+    }
+    return null;
   }
 }

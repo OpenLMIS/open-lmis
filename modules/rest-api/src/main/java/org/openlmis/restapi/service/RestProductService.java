@@ -73,6 +73,47 @@ public class RestProductService {
     return prepareProductsBasedOnFacilitySupportedPrograms(latestProducts, allSupportedPrograms);
   }
 
+  public List<ProductResponse> getTemp86KitChangeProducts(Long userId){
+    Long facilityId = userService.getById(userId).getFacilityId();
+    List<Product> kitChangesProducts = getKitChangeProducts();
+    List<String> allSupportedPrograms = getSupportedProgramsByFacility(facilityId);
+
+    return prepareProductsBasedOnFacilitySupportedPrograms(kitChangesProducts, allSupportedPrograms);
+  }
+
+  private List<Product> getKitChangeProducts() {
+    List<Product> results = new ArrayList<>();
+    ArrayList<String> wrongKitProductCodes = new ArrayList();
+    wrongKitProductCodes.add("SCOD10");
+    wrongKitProductCodes.add("SCOD10-AL");
+    wrongKitProductCodes.add("SCOD12");
+    wrongKitProductCodes.add("SCOD12-AL");
+
+    for (String wrongKitProductCode : wrongKitProductCodes) {
+      Product product = productService.getByCode(wrongKitProductCode);
+      if(product!=null){
+          product.setActive(false);
+          product.setIsKit(false);
+          results.add(product);
+      }
+    }
+
+    ArrayList<String> rightKitProductCodes = new ArrayList();
+    rightKitProductCodes.add("26A01");
+    rightKitProductCodes.add("26B01");
+    rightKitProductCodes.add("26A02");
+    rightKitProductCodes.add("26B01");
+
+    for (String rightKitProductCode : rightKitProductCodes) {
+      Product product = productService.getByCode(rightKitProductCode);
+      if(product!=null){
+        product.setIsKit(true);
+        results.add(product);
+      }
+    }
+    return results;
+  }
+
   private boolean isContainedInLatestProduct(List<Product> latestProducts, ProgramProduct programProduct) {
     boolean isContainedInLatestProduct = false;
     for (Product latestProduct : latestProducts) {
