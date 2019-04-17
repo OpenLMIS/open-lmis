@@ -1,7 +1,5 @@
 package org.openlmis.restapi.service;
 
-import com.google.common.base.Predicate;
-import com.google.common.collect.FluentIterable;
 import lombok.NoArgsConstructor;
 import org.openlmis.core.domain.Product;
 import org.openlmis.core.domain.StockAdjustmentReason;
@@ -64,16 +62,16 @@ public class RestStockCardService {
   private List<StockEvent> filterStockEventsList(List<StockEvent> stockEvents) {
     String[] filteredProductCodes = new String[]{"SCOD10", "SCOD10-AL", "SCOD12", "SCOD12-AL", "26A01", "26B01", "26A02", "26B02"};
     Set<String> filteredProductsCodesSet = new HashSet<>();
-    for (final String filteredProductCode : filteredProductCodes) {
+    for (String filteredProductCode : filteredProductCodes) {
       filteredProductsCodesSet.add(filteredProductCode);
     }
-    return FluentIterable.from(stockEvents)
-            .filter(new Predicate<StockEvent>() {
-              @Override
-              public boolean apply(StockEvent stockEvent) {
-                return !filteredProductsCodesSet.contains(stockEvent.getProductCode());
-              }
-            }).toList();
+    List<StockEvent> filteredList = new ArrayList<>();
+    for (StockEvent stockEvent : stockEvents) {
+        if(!filteredProductsCodesSet.contains(stockEvent.getProductCode())){
+            filteredList.add(stockEvent);
+        }
+    }
+    return filteredList;
   }
 
   @Transactional
