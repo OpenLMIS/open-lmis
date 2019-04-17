@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
@@ -83,34 +84,26 @@ public class RestProductService {
 
   private List<Product> getKitChangeProducts() {
     List<Product> results = new ArrayList<>();
-    ArrayList<String> wrongKitProductCodes = new ArrayList();
-    wrongKitProductCodes.add("SCOD10");
-    wrongKitProductCodes.add("SCOD10-AL");
-    wrongKitProductCodes.add("SCOD12");
-    wrongKitProductCodes.add("SCOD12-AL");
 
+    List<String> wrongKitProductCodes = Arrays.asList(new String[]{"SCOD10","SCOD10-AL","SCOD12","SCOD12-AL"});
     for (String wrongKitProductCode : wrongKitProductCodes) {
-      Product product = productService.getByCode(wrongKitProductCode);
+      Product product = productService.getProductByCode(wrongKitProductCode);
       if(product!=null){
-          product.setActive(false);
-          product.setIsKit(false);
-          results.add(product);
+        product.setActive(false);
+        product.setIsKit(false);
+        results.add(product);
       }
     }
 
-    ArrayList<String> rightKitProductCodes = new ArrayList();
-    rightKitProductCodes.add("26A01");
-    rightKitProductCodes.add("26B01");
-    rightKitProductCodes.add("26A02");
-    rightKitProductCodes.add("26B01");
-
+    List<String> rightKitProductCodes = Arrays.asList(new String[]{"26A01","26B01","26A02","26B02"});
     for (String rightKitProductCode : rightKitProductCodes) {
-      Product product = productService.getByCode(rightKitProductCode);
+      Product product = productService.getProductByCode(rightKitProductCode);
       if(product!=null){
         product.setIsKit(true);
         results.add(product);
       }
     }
+
     return results;
   }
 

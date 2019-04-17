@@ -159,6 +159,10 @@ public class ProductService {
     return repository.getProductsAfterUpdatedTime(afterUpdatedTime);
   }
 
+  public Product getProductByCode(String productCode){
+    return repository.getProductByCode(productCode);
+  }
+
 
   public List<Product> getProductsForUpdateStatus(){
     return repository.getProductCodeForUpdateStatus();

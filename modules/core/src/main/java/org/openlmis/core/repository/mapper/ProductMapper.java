@@ -167,6 +167,19 @@ public interface ProductMapper {
           many = @Many(select = "org.openlmis.core.repository.mapper.DosageUnitMapper.getById"))})
   List<Product> listProductsAfterUpdatedTime(Date date);
 
+  @Select("SELECT * FROM products WHERE LOWER(code)=LOWER(#{productCode})")
+  @Results({
+          @Result(property = "code", column = "code"),
+          @Result(property = "kitProductList", column = "code", javaType = List.class,
+                  many = @Many(select = "org.openlmis.core.repository.mapper.ProductMapper.getKitProductsByKitCode")),
+          @Result(
+                  property = "form", column = "formId", javaType = ProductForm.class,
+                  many = @Many(select = "org.openlmis.core.repository.mapper.ProductFormMapper.getById")),
+          @Result(
+                  property = "dosageUnit", column = "dosageUnitId", javaType = DosageUnit.class,
+                  many = @Many(select = "org.openlmis.core.repository.mapper.DosageUnitMapper.getById"))})
+  Product getProductByCode(String productCode);
+
   @Update("UPDATE products SET modifiedDate=CURRENT_TIMESTAMP,ACTIVE=#{active} WHERE id=#{id} ")
   void updateProductActiveStatus(@Param("active") boolean active, @Param("id") long id);
 

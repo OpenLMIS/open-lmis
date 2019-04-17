@@ -152,6 +152,10 @@ public class ProductRepository {
     return mapper.listProductsAfterUpdatedTime(date);
   }
 
+  public Product getProductByCode(String productCode){
+    return mapper.getProductByCode(productCode);
+  }
+
 
   public List<Product> getProductCodeForUpdateStatus() {
     return mapper.getAllProductWithCode();
