@@ -64,7 +64,7 @@ public class RestStockCardService {
   private List<StockEvent> filterStockEventsList(List<StockEvent> stockEvents) {
     String[] filteredProductCodes = new String[]{"SCOD10", "SCOD10-AL", "SCOD12", "SCOD12-AL", "26A01", "26B01", "26A02", "26B02"};
     Set<String> filteredProductsCodesSet = new HashSet<>();
-    for (String filteredProductCode : filteredProductCodes) {
+    for (final String filteredProductCode : filteredProductCodes) {
       filteredProductsCodesSet.add(filteredProductCode);
     }
     return FluentIterable.from(stockEvents)
