@@ -91,7 +91,6 @@ public class StockCardEntry extends BaseModel {
   private void validStockOnHand() {
     if(stockCard.getTotalQuantityOnHand() + this.getQuantity() != this.getStockOnHand()) {
       logger.error("stock movement quantity error, facilityname: " + this.getStockCard().getFacility().getName() + ", productcode: " + this.getStockCard().getProduct().getCode());
-      throw new DataException("error.stockmovementquantity.validation");
     }
   }
 
@@ -100,14 +99,12 @@ public class StockCardEntry extends BaseModel {
     StockCardEntry latestStockCardEntry = stockCard.getLastestStockCardEntry() == null ? stockCardEntries.get(0) : stockCard.getLastestStockCardEntry();
     if(latestStockCardEntry.getOccurred().after(this.getOccurred())) {
       logger.error("stock movement date error, facilityname: " + this.getStockCard().getFacility().getName() + ", productcode: " + this.getStockCard().getProduct().getCode());
-      throw new DataException("error.stockmovementdate.validation");
     }
   }
 
   private void validFirstInventory() {
     if(!(this.getAdjustmentReason().getName().equals("INVENTORY") && this.getQuantity() >= 0)) {
       logger.error("first inventory error, facilityname: " + this.getStockCard().getFacility().getName() + ", productcode: " + this.getStockCard().getProduct().getCode());
-      throw new DataException("error.firstinventory.validation");
     }
   }
 
