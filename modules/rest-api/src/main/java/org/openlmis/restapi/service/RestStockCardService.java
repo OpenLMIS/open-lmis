@@ -49,29 +49,11 @@ public class RestStockCardService {
       throw new DataException("error.facility.unknown");
     }
 
-    // FIXME: 2019-04-17 remove after the app version are over than 86
-    List<StockEvent> filterStockEvents = filterStockEventsList(stockEvents);
-
-    List<StockCardEntry> entries = createStockCardEntries(filterStockEvents, facilityId, userId);
+    List<StockCardEntry> entries = createStockCardEntries(stockEvents, facilityId, userId);
     stockCardService.addStockCardEntries(entries);
     stockCardService.updateAllStockCardSyncTimeForFacilityToNow(facilityId);
 
     return entries;
-  }
-
-  private List<StockEvent> filterStockEventsList(List<StockEvent> stockEvents) {
-    String[] filteredProductCodes = new String[]{"SCOD10", "SCOD10-AL", "SCOD12", "SCOD12-AL", "26A01", "26B01", "26A02", "26B02"};
-    Set<String> filteredProductsCodesSet = new HashSet<>();
-    for (String filteredProductCode : filteredProductCodes) {
-      filteredProductsCodesSet.add(filteredProductCode);
-    }
-    List<StockEvent> filteredList = new ArrayList<>();
-    for (StockEvent stockEvent : stockEvents) {
-        if(!filteredProductsCodesSet.contains(stockEvent.getProductCode())){
-            filteredList.add(stockEvent);
-        }
-    }
-    return filteredList;
   }
 
   @Transactional

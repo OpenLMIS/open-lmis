@@ -11,14 +11,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 import static org.openlmis.restapi.response.RestResponse.error;
 import static org.openlmis.restapi.response.RestResponse.response;
@@ -36,15 +32,41 @@ public class RestStockCardController extends BaseController {
 
   @RequestMapping(value = "/rest-api/facilities/{facilityId}/stockCards", method = POST, headers = ACCEPT_JSON)
   public ResponseEntity adjustStock(@PathVariable long facilityId,
+                                    @RequestHeader("VersionCode") String versionCode,
                                     @RequestBody List<StockEvent> events,
                                     Principal principal) {
+
+    // FIXME: 2019-04-17 remove dirty data ,fixme after app version over than 86
+    List<StockEvent> filterStockEvents;
+    if(versionCode == null){
+      filterStockEvents = filterStockEventsList(events,
+              new String[]{"SCOD10", "SCOD10-AL", "SCOD12", "SCOD12-AL", "26A01", "26B01", "26A02", "26B02"});
+    }else{
+      filterStockEvents = filterStockEventsList(events,
+              new String[]{"SCOD10", "SCOD10-AL", "SCOD12", "SCOD12-AL"});
+    }
+
     try {
-      restStockCardService.adjustStock(facilityId, events, loggedInUserId(principal));
+      restStockCardService.adjustStock(facilityId, filterStockEvents, loggedInUserId(principal));
     } catch (DataException e) {
       return error(e.getOpenLmisMessage(), BAD_REQUEST);
     }
 
     return RestResponse.success("msg.stockmanagement.adjuststocksuccess");
+  }
+
+  private List<StockEvent> filterStockEventsList(List<StockEvent> stockEvents,String[] filteredProductCodes) {
+    Set<String> filteredProductsCodesSet = new HashSet<>();
+    for (String filteredProductCode : filteredProductCodes) {
+      filteredProductsCodesSet.add(filteredProductCode);
+    }
+    List<StockEvent> filteredList = new ArrayList<>();
+    for (StockEvent stockEvent : stockEvents) {
+      if(!filteredProductsCodesSet.contains(stockEvent.getProductCode())){
+        filteredList.add(stockEvent);
+      }
+    }
+    return filteredList;
   }
 
   @RequestMapping(value = "/rest-api/facilities/{facilityId}/stockCards", method = GET, headers = ACCEPT_JSON)
