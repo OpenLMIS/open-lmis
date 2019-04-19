@@ -8,6 +8,7 @@ import org.openlmis.core.domain.Product;
 import org.openlmis.core.domain.ProgramProduct;
 import org.openlmis.core.domain.ProgramSupported;
 import org.openlmis.core.service.*;
+import org.openlmis.restapi.config.FilterProductConfig;
 import org.openlmis.restapi.domain.ProductResponse;
 import org.openlmis.restapi.domain.ProgramProductResponse;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -74,7 +75,7 @@ public class RestProductService {
     return prepareProductsBasedOnFacilitySupportedPrograms(latestProducts, allSupportedPrograms);
   }
 
-  public List<ProductResponse> getTemp86KitChangeProducts(Long userId){
+  public List<ProductResponse> getTemp86KitChangeProducts(Long userId) {
     Long facilityId = userService.getById(userId).getFacilityId();
     List<Product> kitChangesProducts = getKitChangeProducts();
     List<String> allSupportedPrograms = getSupportedProgramsByFacility(facilityId);
@@ -82,29 +83,28 @@ public class RestProductService {
     return prepareProductsBasedOnFacilitySupportedPrograms(kitChangesProducts, allSupportedPrograms);
   }
 
+  private List<Product> getKitChangeProducts(String[] productList, boolean isRightProduct) {
+    List<Product> changeProducts = new ArrayList<>();
+
+    List<String> kitProductsCodes = Arrays.asList(productList);
+    for (String kitProductCode : kitProductsCodes) {
+      Product product = productService.getProductByCode(kitProductCode);
+      if (product == null) continue;
+      if (!isRightProduct) product.setActive(false);
+
+      product.setIsKit(isRightProduct);
+      changeProducts.add(product);
+    }
+    return changeProducts;
+  }
+
   private List<Product> getKitChangeProducts() {
-    List<Product> results = new ArrayList<>();
-
-    List<String> wrongKitProductCodes = Arrays.asList(new String[]{"SCOD10","SCOD10-AL","SCOD12","SCOD12-AL"});
-    for (String wrongKitProductCode : wrongKitProductCodes) {
-      Product product = productService.getProductByCode(wrongKitProductCode);
-      if(product!=null){
-        product.setActive(false);
-        product.setIsKit(false);
-        results.add(product);
-      }
-    }
-
-    List<String> rightKitProductCodes = Arrays.asList(new String[]{"26A01","26B01","26A02","26B02"});
-    for (String rightKitProductCode : rightKitProductCodes) {
-      Product product = productService.getProductByCode(rightKitProductCode);
-      if(product!=null){
-        product.setIsKit(true);
-        results.add(product);
-      }
-    }
-
-    return results;
+    List<Product> lists = new ArrayList<>();
+    List<Product> wrongKitProducts = getKitChangeProducts(FilterProductConfig.WRONG_KIT_PRODUCT, false);
+    List<Product> rightKitProducts = getKitChangeProducts(FilterProductConfig.RIGHT_KIT_PRODUCT, true);
+    lists.addAll(wrongKitProducts);
+    lists.addAll(rightKitProducts);
+    return lists;
   }
 
   private boolean isContainedInLatestProduct(List<Product> latestProducts, ProgramProduct programProduct) {
