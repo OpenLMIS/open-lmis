@@ -2,6 +2,8 @@ package org.openlmis.restapi.controller;
 
 import com.wordnik.swagger.annotations.Api;
 import lombok.NoArgsConstructor;
+import org.apache.commons.lang.ArrayUtils;
+import org.apache.commons.lang.StringUtils;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.restapi.domain.StockCardDTO;
 import org.openlmis.restapi.response.RestResponse;
@@ -21,6 +23,7 @@ import static org.openlmis.restapi.response.RestResponse.response;
 import static org.springframework.http.HttpStatus.BAD_REQUEST;
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
 import static org.springframework.web.bind.annotation.RequestMethod.POST;
+import static org.openlmis.restapi.config.FilterProductConfig.*;
 
 @Controller
 @NoArgsConstructor
@@ -38,12 +41,11 @@ public class RestStockCardController extends BaseController {
 
     // FIXME: 2019-04-17 remove dirty data ,fixme after app version over than 86
     List<StockEvent> filterStockEvents;
-    if(versionCode == null){
-      filterStockEvents = filterStockEventsList(events,
-              new String[]{"SCOD10", "SCOD10-AL", "SCOD12", "SCOD12-AL", "26A01", "26B01", "26A02", "26B02"});
+    if(StringUtils.isEmpty(versionCode) || Integer.valueOf(versionCode) < 86){
+      filterStockEvents = restStockCardService.filterStockEventsList(events,
+              (String[]) ArrayUtils.addAll(RIGHT_KIT_PRODUCT,WRONG_KIT_PRODUCT));
     }else{
-      filterStockEvents = filterStockEventsList(events,
-              new String[]{"SCOD10", "SCOD10-AL", "SCOD12", "SCOD12-AL"});
+      filterStockEvents = restStockCardService.filterStockEventsList(events, RIGHT_KIT_PRODUCT);
     }
 
     try {
@@ -53,20 +55,6 @@ public class RestStockCardController extends BaseController {
     }
 
     return RestResponse.success("msg.stockmanagement.adjuststocksuccess");
-  }
-
-  private List<StockEvent> filterStockEventsList(List<StockEvent> stockEvents,String[] filteredProductCodes) {
-    Set<String> filteredProductsCodesSet = new HashSet<>();
-    for (String filteredProductCode : filteredProductCodes) {
-      filteredProductsCodesSet.add(filteredProductCode);
-    }
-    List<StockEvent> filteredList = new ArrayList<>();
-    for (StockEvent stockEvent : stockEvents) {
-      if(!filteredProductsCodesSet.contains(stockEvent.getProductCode())){
-        filteredList.add(stockEvent);
-      }
-    }
-    return filteredList;
   }
 
   @RequestMapping(value = "/rest-api/facilities/{facilityId}/stockCards", method = GET, headers = ACCEPT_JSON)

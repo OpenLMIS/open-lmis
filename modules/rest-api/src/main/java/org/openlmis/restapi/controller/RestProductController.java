@@ -2,6 +2,7 @@ package org.openlmis.restapi.controller;
 
 
 import lombok.NoArgsConstructor;
+import org.apache.commons.lang.StringUtils;
 import org.openlmis.core.domain.Product;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.restapi.domain.ProductResponse;
@@ -53,7 +54,7 @@ public class RestProductController extends BaseController {
 
   @RequestMapping(value = "/rest-api/temp86-notice-kit-change")
   public ResponseEntity<RestResponse> getTemp86FilterProduct(@RequestHeader("VersionCode") String versionCode, Principal principal){
-    if(versionCode!=null && versionCode.equals("86")){
+    if (!StringUtils.isEmpty(versionCode) && Integer.valueOf(versionCode) >= 86) {
       List<ProductResponse> products = restProductService.getTemp86KitChangeProducts(loggedInUserId(principal));
       RestResponse restResponse = new RestResponse("kitChangeProducts", products);
       return new ResponseEntity<>(restResponse, HttpStatus.OK);

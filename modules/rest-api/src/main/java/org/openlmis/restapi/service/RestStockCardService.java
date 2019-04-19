@@ -56,6 +56,20 @@ public class RestStockCardService {
     return entries;
   }
 
+  public List<StockEvent> filterStockEventsList(List<StockEvent> stockEvents,String[] filteredProductCodes) {
+    Set<String> filteredProductsCodesSet = new HashSet<>();
+    for (String filteredProductCode : filteredProductCodes) {
+      filteredProductsCodesSet.add(filteredProductCode);
+    }
+    List<StockEvent> filteredList = new ArrayList<>();
+    for (StockEvent stockEvent : stockEvents) {
+      if(!filteredProductsCodesSet.contains(stockEvent.getProductCode())){
+        filteredList.add(stockEvent);
+      }
+    }
+    return filteredList;
+  }
+
   @Transactional
   public void updateStockCardSyncTime(Long facilityId, List<String> stockCardProductCodeList) {
     if (facilityId == null || stockCardProductCodeList == null) {
