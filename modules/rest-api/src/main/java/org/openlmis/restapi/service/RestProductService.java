@@ -15,10 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 @Service
 public class RestProductService {
@@ -61,6 +58,7 @@ public class RestProductService {
   public List<ProductResponse> getLatestProductsAfterUpdatedTime(Date afterUpdatedTime, Long userId) {
     Long facilityId = userService.getById(userId).getFacilityId();
 
+    // todo afterUpdatedTime 请求之后，也需要访问修改后的虚拟请求产品列表c
     List<Product> latestProducts = getLatestProducts(afterUpdatedTime,facilityId);
 
     List<ProgramProduct> latestProgramProduct = programProductSevice.getLatestUpdatedProgramProduct(afterUpdatedTime);
@@ -130,8 +128,28 @@ public class RestProductService {
         }
       }).toList();
     } else {
-      return productService.getProductsAfterUpdatedDate(afterUpdatedTime);
+      // if afterUpdatedTime not null, the filter the data，ensure the flag not null
+      return filterProductFromGetProductsAfterUpdatedDate(afterUpdatedTime);
     }
+  }
+
+  private List<Product> filterProductFromGetProductsAfterUpdatedDate(Date afterUpdatedTime){
+      List<Product> products = productService.getProductsAfterUpdatedDate(afterUpdatedTime);
+      final Set<String> wrongKitSets = FilterProductConfig.ConvertArrayToSet(FilterProductConfig.WRONG_KIT_PRODUCT);
+      final Set<String> rightKitSets = FilterProductConfig.ConvertArrayToSet(FilterProductConfig.RIGHT_KIT_PRODUCT);
+      return new ArrayList<Product>(FluentIterable.from(products).transform(new Function<Product, Product>() {
+          @Override
+          public Product apply(Product product) {
+              if (wrongKitSets.contains(product.getCode())) {
+                  product.setArchived(false);
+                  product.setIsKit(false);
+              }
+              if (rightKitSets.contains(product.getCode())) {
+                  product.setIsKit(true);
+              }
+              return product;
+          }
+      }).toList());
   }
 
   private List<String> getSupportedProgramsByFacility(Long facilityId) {
