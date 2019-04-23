@@ -2,8 +2,6 @@ package org.openlmis.restapi.controller;
 
 import com.wordnik.swagger.annotations.Api;
 import lombok.NoArgsConstructor;
-import org.apache.commons.lang.ArrayUtils;
-import org.apache.commons.lang.StringUtils;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.restapi.domain.StockCardDTO;
 import org.openlmis.restapi.response.RestResponse;
@@ -16,14 +14,15 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
-import java.util.*;
+import java.util.Date;
+import java.util.List;
 
+import static org.openlmis.restapi.config.FilterProductConfig.*;
 import static org.openlmis.restapi.response.RestResponse.error;
 import static org.openlmis.restapi.response.RestResponse.response;
 import static org.springframework.http.HttpStatus.BAD_REQUEST;
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
 import static org.springframework.web.bind.annotation.RequestMethod.POST;
-import static org.openlmis.restapi.config.FilterProductConfig.*;
 
 @Controller
 @NoArgsConstructor
@@ -41,11 +40,10 @@ public class RestStockCardController extends BaseController {
 
     // FIXME: 2019-04-17 remove dirty data ,fixme after app version over than 86
     List<StockEvent> filterStockEvents;
-    if(StringUtils.isEmpty(versionCode) || Integer.valueOf(versionCode) < 86){
-      filterStockEvents = restStockCardService.filterStockEventsList(events,
-              (String[]) ArrayUtils.addAll(RIGHT_KIT_PRODUCT,WRONG_KIT_PRODUCT));
+    if(isVersionCodeOverThanFilterThresholdVersion(versionCode)){
+      filterStockEvents = restStockCardService.filterStockEventsList(events, RIGHT_KIT_PRODUCTS_SET);
     }else{
-      filterStockEvents = restStockCardService.filterStockEventsList(events, RIGHT_KIT_PRODUCT);
+      filterStockEvents = restStockCardService.filterStockEventsList(events, ALL_FILTER_KIT_PRODUCTS_SET);
     }
 
     try {

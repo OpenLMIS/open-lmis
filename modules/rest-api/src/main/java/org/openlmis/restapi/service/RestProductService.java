@@ -8,35 +8,34 @@ import org.openlmis.core.domain.Product;
 import org.openlmis.core.domain.ProgramProduct;
 import org.openlmis.core.domain.ProgramSupported;
 import org.openlmis.core.service.*;
-import org.openlmis.restapi.config.FilterProductConfig;
 import org.openlmis.restapi.domain.ProductResponse;
 import org.openlmis.restapi.domain.ProgramProductResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Date;
+import java.util.List;
+
+import static org.openlmis.restapi.config.FilterProductConfig.*;
 
 @Service
 public class RestProductService {
 
   @Autowired
-  private ProductService productService;
-
-  @Autowired
-  private ProgramProductService programProductSevice;
-
-  @Autowired
-  private UserService userService;
-
-  @Autowired
-  private ProgramSupportedService programSupportedService;
-
-  @Autowired
   ArchivedProductService archivedProductService;
-
   @Autowired
   StaticReferenceDataService staticReferenceDataService;
+  @Autowired
+  private ProductService productService;
+  @Autowired
+  private ProgramProductService programProductSevice;
+  @Autowired
+  private UserService userService;
+  @Autowired
+  private ProgramSupportedService programSupportedService;
 
   @Transactional
   public Product buildAndSave(Product product) {
@@ -59,11 +58,11 @@ public class RestProductService {
     Long facilityId = userService.getById(userId).getFacilityId();
 
     // todo afterUpdatedTime 请求之后，也需要访问修改后的虚拟请求产品列表c
-    List<Product> latestProducts = getLatestProducts(afterUpdatedTime,facilityId);
+    List<Product> latestProducts = getLatestProducts(afterUpdatedTime, facilityId);
 
     List<ProgramProduct> latestProgramProduct = programProductSevice.getLatestUpdatedProgramProduct(afterUpdatedTime);
     for (ProgramProduct programProduct : latestProgramProduct) {
-      if (!isContainedInLatestProduct(latestProducts, programProduct)){
+      if (!isContainedInLatestProduct(latestProducts, programProduct)) {
         latestProducts.add(programProduct.getProduct());
       }
     }
@@ -98,8 +97,8 @@ public class RestProductService {
 
   private List<Product> getKitChangeProducts() {
     List<Product> lists = new ArrayList<>();
-    List<Product> wrongKitProducts = getKitChangeProducts(FilterProductConfig.WRONG_KIT_PRODUCT, false);
-    List<Product> rightKitProducts = getKitChangeProducts(FilterProductConfig.RIGHT_KIT_PRODUCT, true);
+    List<Product> wrongKitProducts = getKitChangeProducts(WRONG_KIT_PRODUCTS, false);
+    List<Product> rightKitProducts = getKitChangeProducts(RIGHT_KIT_PRODUCTS, true);
     lists.addAll(wrongKitProducts);
     lists.addAll(rightKitProducts);
     return lists;
@@ -116,7 +115,7 @@ public class RestProductService {
 
   private List<Product> getLatestProducts(Date afterUpdatedTime, Long facilityId) {
 
-    if(afterUpdatedTime == null) {
+    if (afterUpdatedTime == null) {
 
       final List<String> archivedProductCodes = archivedProductService.getAllArchivedProducts(facilityId);
 
@@ -128,28 +127,25 @@ public class RestProductService {
         }
       }).toList();
     } else {
-      // if afterUpdatedTime not null, the filter the data，ensure the flag not null
-      return filterProductFromGetProductsAfterUpdatedDate(afterUpdatedTime);
+      List<Product> products = productService.getProductsAfterUpdatedDate(afterUpdatedTime);
+      return filterProductFromGetProductsAfterUpdatedDate(products);
     }
   }
 
-  private List<Product> filterProductFromGetProductsAfterUpdatedDate(Date afterUpdatedTime){
-      List<Product> products = productService.getProductsAfterUpdatedDate(afterUpdatedTime);
-      final Set<String> wrongKitSets = FilterProductConfig.ConvertArrayToSet(FilterProductConfig.WRONG_KIT_PRODUCT);
-      final Set<String> rightKitSets = FilterProductConfig.ConvertArrayToSet(FilterProductConfig.RIGHT_KIT_PRODUCT);
-      return new ArrayList<Product>(FluentIterable.from(products).transform(new Function<Product, Product>() {
-          @Override
-          public Product apply(Product product) {
-              if (wrongKitSets.contains(product.getCode())) {
-                  product.setArchived(false);
-                  product.setIsKit(false);
-              }
-              if (rightKitSets.contains(product.getCode())) {
-                  product.setIsKit(true);
-              }
-              return product;
-          }
-      }).toList());
+  private List<Product> filterProductFromGetProductsAfterUpdatedDate(List<Product> products) {
+    return new ArrayList<Product>(FluentIterable.from(products).transform(new Function<Product, Product>() {
+      @Override
+      public Product apply(Product product) {
+        if (WRONG_KIT_PRODUCTS_SET.contains(product.getCode())) {
+          product.setArchived(false);
+          product.setIsKit(false);
+        }
+        if (RIGHT_KIT_PRODUCTS_SET.contains(product.getCode())) {
+          product.setIsKit(true);
+        }
+        return product;
+      }
+    }).toList());
   }
 
   private List<String> getSupportedProgramsByFacility(Long facilityId) {
@@ -176,7 +172,7 @@ public class RestProductService {
         @Override
         public ProgramProductResponse apply(ProgramProduct programProduct) {
           return new ProgramProductResponse(programProduct.getProgram().getCode(), product.getCode(),
-              programProduct.getActive(), programProduct.getProductCategory().getName());
+                  programProduct.getActive(), programProduct.getProductCategory().getName());
         }
       }).toList();
 

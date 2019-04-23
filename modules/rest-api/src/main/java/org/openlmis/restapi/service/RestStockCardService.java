@@ -56,14 +56,11 @@ public class RestStockCardService {
     return entries;
   }
 
-  public List<StockEvent> filterStockEventsList(List<StockEvent> stockEvents,String[] filteredProductCodes) {
-    Set<String> filteredProductsCodesSet = new HashSet<>();
-    for (String filteredProductCode : filteredProductCodes) {
-      filteredProductsCodesSet.add(filteredProductCode);
-    }
+  public List<StockEvent> filterStockEventsList(List<StockEvent> stockEvents, Set<String> filteredProductsCodesSet) {
+
     List<StockEvent> filteredList = new ArrayList<>();
     for (StockEvent stockEvent : stockEvents) {
-      if(!filteredProductsCodesSet.contains(stockEvent.getProductCode())){
+      if (!filteredProductsCodesSet.contains(stockEvent.getProductCode())) {
         filteredList.add(stockEvent);
       }
     }
@@ -99,7 +96,7 @@ public class RestStockCardService {
         continue;
       }
 
-      if(!validProduct(stockEvent)) {
+      if (!validProduct(stockEvent)) {
         continue;
       }
 

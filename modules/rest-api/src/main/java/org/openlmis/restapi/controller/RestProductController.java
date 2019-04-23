@@ -2,7 +2,6 @@ package org.openlmis.restapi.controller;
 
 
 import lombok.NoArgsConstructor;
-import org.apache.commons.lang.StringUtils;
 import org.openlmis.core.domain.Product;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.restapi.domain.ProductResponse;
@@ -21,6 +20,7 @@ import java.security.Principal;
 import java.util.Date;
 import java.util.List;
 
+import static org.openlmis.restapi.config.FilterProductConfig.isVersionCodeOverThanFilterThresholdVersion;
 import static org.openlmis.restapi.response.RestResponse.error;
 import static org.springframework.http.HttpStatus.BAD_REQUEST;
 import static org.springframework.web.bind.annotation.RequestMethod.PUT;
@@ -53,8 +53,8 @@ public class RestProductController extends BaseController {
   }
 
   @RequestMapping(value = "/rest-api/temp86-notice-kit-change")
-  public ResponseEntity<RestResponse> getTemp86FilterProduct(@RequestHeader("VersionCode") String versionCode, Principal principal){
-    if (!StringUtils.isEmpty(versionCode) && Integer.valueOf(versionCode) >= 86) {
+  public ResponseEntity<RestResponse> getTemp86FilterProduct(@RequestHeader("VersionCode") String versionCode, Principal principal) {
+    if (isVersionCodeOverThanFilterThresholdVersion(versionCode)) {
       List<ProductResponse> products = restProductService.getTemp86KitChangeProducts(loggedInUserId(principal));
       RestResponse restResponse = new RestResponse("kitChangeProducts", products);
       return new ResponseEntity<>(restResponse, HttpStatus.OK);
