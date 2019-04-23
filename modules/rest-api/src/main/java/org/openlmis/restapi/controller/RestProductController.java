@@ -55,7 +55,7 @@ public class RestProductController extends BaseController {
   }
 
   @RequestMapping(value = "/rest-api/temp86-notice-kit-change")
-  public ResponseEntity<RestResponse> getTemp86FilterProduct(@RequestHeader("VersionCode") String versionCode, Principal principal) {
+  public ResponseEntity<RestResponse> getTemp86FilterProduct(@RequestHeader(value = "VersionCode",required = false) String versionCode, Principal principal) {
     if (isVersionCodeMoreThanFilterThresholdVersion(versionCode)) {
       List<ProductResponse> products = restProductService.getTemp86KitChangeProducts(loggedInUserId(principal));
       RestResponse restResponse = new RestResponse("kitChangeProducts", products);

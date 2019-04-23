@@ -15,7 +15,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
@@ -82,7 +81,10 @@ public class RestProductService {
   private List<Product> getKitChangeProducts() {
     List<Product> lists = new ArrayList<>();
     for (String productCode : ALL_FILTER_KIT_PRODUCTS_SET) {
-      lists.add(productService.getProductByCode(productCode));
+      Product product = productService.getProductByCode(productCode);
+      if (product != null) {
+        lists.add(product);
+      }
     }
     return filterProductFromGetProductsAfterUpdatedDate(lists);
   }
