@@ -79,28 +79,12 @@ public class RestProductService {
     return prepareProductsBasedOnFacilitySupportedPrograms(kitChangesProducts, allSupportedPrograms);
   }
 
-  private List<Product> getKitChangeProducts(String[] productList, boolean isRightProduct) {
-    List<Product> changeProducts = new ArrayList<>();
-
-    List<String> kitProductsCodes = Arrays.asList(productList);
-    for (String kitProductCode : kitProductsCodes) {
-      Product product = productService.getProductByCode(kitProductCode);
-      if (product == null) continue;
-      if (!isRightProduct) product.setActive(false);
-
-      product.setIsKit(isRightProduct);
-      changeProducts.add(product);
-    }
-    return changeProducts;
-  }
-
   private List<Product> getKitChangeProducts() {
     List<Product> lists = new ArrayList<>();
-    List<Product> wrongKitProducts = getKitChangeProducts(WRONG_KIT_PRODUCTS, false);
-    List<Product> rightKitProducts = getKitChangeProducts(RIGHT_KIT_PRODUCTS, true);
-    lists.addAll(wrongKitProducts);
-    lists.addAll(rightKitProducts);
-    return lists;
+    for (String productCode : ALL_FILTER_KIT_PRODUCTS_SET) {
+      lists.add(productService.getProductByCode(productCode));
+    }
+    return filterProductFromGetProductsAfterUpdatedDate(lists);
   }
 
   private boolean isContainedInLatestProduct(List<Product> latestProducts, ProgramProduct programProduct) {
@@ -127,7 +111,7 @@ public class RestProductService {
       }).toList();
     } else {
       List<Product> products = productService.getProductsAfterUpdatedDate(afterUpdatedTime);
-      if (isVersionCodeOverThanFilterThresholdVersion(versionCode)) {
+      if (isVersionCodeMoreThanFilterThresholdVersion(versionCode)) {
         return filterProductFromGetProductsAfterUpdatedDate(products);
       }
       return products;

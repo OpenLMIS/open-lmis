@@ -40,9 +40,9 @@ public class RestStockCardController extends BaseController {
 
     // FIXME: 2019-04-17 remove dirty data ,fixme after app version over than 86
     List<StockEvent> filterStockEvents;
-    if(isVersionCodeOverThanFilterThresholdVersion(versionCode)){
+    if (isVersionCodeMoreThanFilterThresholdVersion(versionCode)) {
       filterStockEvents = restStockCardService.filterStockEventsList(events, RIGHT_KIT_PRODUCTS_SET);
-    }else{
+    } else {
       filterStockEvents = restStockCardService.filterStockEventsList(events, ALL_FILTER_KIT_PRODUCTS_SET);
     }
 
