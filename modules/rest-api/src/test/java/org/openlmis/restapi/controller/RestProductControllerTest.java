@@ -26,9 +26,7 @@ import java.util.List;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 import static org.openlmis.restapi.response.RestResponse.SUCCESS;
 import static org.powermock.api.mockito.PowerMockito.mockStatic;
 
@@ -37,6 +35,7 @@ import static org.powermock.api.mockito.PowerMockito.mockStatic;
 @PowerMockRunnerDelegate(BlockJUnit4ClassRunner.class)
 @PrepareForTest(RestResponse.class)
 public class RestProductControllerTest {
+  private final static String versionCode = "86";
 
   @InjectMocks
   private RestProductController restProductController;
@@ -71,9 +70,9 @@ public class RestProductControllerTest {
     products.add(new ProductResponse());
     long date = 1234L;
     Date afterUpdatedTime = new Date(date);
-    when(restProductService.getLatestProductsAfterUpdatedTime(afterUpdatedTime, 1L)).thenReturn(products);
+    when(restProductService.getLatestProductsAfterUpdatedTime(afterUpdatedTime, versionCode, 1L)).thenReturn(products);
 
-    ResponseEntity<RestResponse> response = restProductController.getLatestProducts(date, principal);
+    ResponseEntity<RestResponse> response = restProductController.getLatestProducts(date, versionCode, principal);
     assertEquals(HttpStatus.OK, response.getStatusCode());
     assertEquals(products, response.getBody().getData().get("latestProducts"));
     assertNotNull(response.getBody().getData().get("latestUpdatedTime"));
@@ -81,8 +80,8 @@ public class RestProductControllerTest {
 
   @Test
   public void shouldCallLatestProgramsWithProductsWithNullTimeWhenTimeIsNotProvided() {
-    ResponseEntity<RestResponse> response = restProductController.getLatestProducts(null, principal);
+    ResponseEntity<RestResponse> response = restProductController.getLatestProducts(null, "86", principal);
     assertEquals(HttpStatus.OK, response.getStatusCode());
-    verify(restProductService).getLatestProductsAfterUpdatedTime(null, 1L);
+    verify(restProductService).getLatestProductsAfterUpdatedTime(null, versionCode, 1L);
   }
 }

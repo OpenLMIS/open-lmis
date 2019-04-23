@@ -39,11 +39,13 @@ public class RestProductController extends BaseController {
   }
 
   @RequestMapping(value = "/rest-api/latest-products")
-  public ResponseEntity<RestResponse> getLatestProducts(@RequestParam(required = false) Long afterUpdatedTime, Principal principal) {
+  public ResponseEntity<RestResponse> getLatestProducts(@RequestParam(required = false) Long afterUpdatedTime,
+                                                        @RequestHeader(value = "VersionCode", required = false) String versionCode,
+                                                        Principal principal) {
 
     try {
       Date afterUpdatedTimeInDate = (afterUpdatedTime == null ? null : new Date(afterUpdatedTime));
-      List<ProductResponse> products = restProductService.getLatestProductsAfterUpdatedTime(afterUpdatedTimeInDate, loggedInUserId(principal));
+      List<ProductResponse> products = restProductService.getLatestProductsAfterUpdatedTime(afterUpdatedTimeInDate, versionCode, loggedInUserId(principal));
       RestResponse restResponse = new RestResponse("latestProducts", products);
       restResponse.addData("latestUpdatedTime", new Date());
       return new ResponseEntity<>(restResponse, HttpStatus.OK);

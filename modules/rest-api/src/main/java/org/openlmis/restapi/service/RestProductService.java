@@ -54,11 +54,10 @@ public class RestProductService {
     return product;
   }
 
-  public List<ProductResponse> getLatestProductsAfterUpdatedTime(Date afterUpdatedTime, Long userId) {
+  public List<ProductResponse> getLatestProductsAfterUpdatedTime(Date afterUpdatedTime, String versionCode, Long userId) {
     Long facilityId = userService.getById(userId).getFacilityId();
 
-    // todo afterUpdatedTime 请求之后，也需要访问修改后的虚拟请求产品列表c
-    List<Product> latestProducts = getLatestProducts(afterUpdatedTime, facilityId);
+    List<Product> latestProducts = getLatestProducts(afterUpdatedTime, versionCode, facilityId);
 
     List<ProgramProduct> latestProgramProduct = programProductSevice.getLatestUpdatedProgramProduct(afterUpdatedTime);
     for (ProgramProduct programProduct : latestProgramProduct) {
@@ -113,7 +112,7 @@ public class RestProductService {
     return isContainedInLatestProduct;
   }
 
-  private List<Product> getLatestProducts(Date afterUpdatedTime, Long facilityId) {
+  private List<Product> getLatestProducts(Date afterUpdatedTime, String versionCode, Long facilityId) {
 
     if (afterUpdatedTime == null) {
 
@@ -128,7 +127,10 @@ public class RestProductService {
       }).toList();
     } else {
       List<Product> products = productService.getProductsAfterUpdatedDate(afterUpdatedTime);
-      return filterProductFromGetProductsAfterUpdatedDate(products);
+      if (isVersionCodeOverThanFilterThresholdVersion(versionCode)) {
+        return filterProductFromGetProductsAfterUpdatedDate(products);
+      }
+      return products;
     }
   }
 

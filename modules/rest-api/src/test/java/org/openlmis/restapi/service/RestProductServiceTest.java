@@ -33,28 +33,22 @@ import static org.mockito.Mockito.when;
 @PowerMockRunnerDelegate(BlockJUnit4ClassRunner.class)
 public class RestProductServiceTest {
 
-  private Product product = new Product();
-
-  @Mock
-  private ProductService productService;
-
-  @Mock
-  private UserService userService;
-
-  @Mock
-  private ProgramProductService programProductService;
-
-  @Mock
-  private ArchivedProductService archivedProductService;
-
-  @Mock
-  private ProgramSupportedService programSupportedService;
-
-  @Mock
-  private StaticReferenceDataService staticReferenceDataService;
-
+  private final static String versionCode = "86";
   @InjectMocks
   RestProductService restProductService;
+  private Product product = new Product();
+  @Mock
+  private ProductService productService;
+  @Mock
+  private UserService userService;
+  @Mock
+  private ProgramProductService programProductService;
+  @Mock
+  private ArchivedProductService archivedProductService;
+  @Mock
+  private ProgramSupportedService programSupportedService;
+  @Mock
+  private StaticReferenceDataService staticReferenceDataService;
 
   @Before
   public void setUp() throws Exception {
@@ -89,7 +83,7 @@ public class RestProductServiceTest {
   }
 
   @Test
-  public void shouldSaveKit(){
+  public void shouldSaveKit() {
 
     restProductService.buildAndSave(product);
 
@@ -100,9 +94,9 @@ public class RestProductServiceTest {
   @Test
   public void shouldGetAllLatestProgramsWithProductsByFacilityIdWhenAfterUpdatedTimeIsEmpty() {
     ProgramSupported programSupported1 = make(a(ProgramSupportedBuilder.defaultProgramSupported,
-          with(ProgramSupportedBuilder.supportedProgram, makeProgram("PR1", "program 1"))));
+            with(ProgramSupportedBuilder.supportedProgram, makeProgram("PR1", "program 1"))));
     ProgramSupported programSupported2 = make(a(ProgramSupportedBuilder.defaultProgramSupported,
-          with(ProgramSupportedBuilder.supportedProgram, makeProgram("PR2", "program 2"))));
+            with(ProgramSupportedBuilder.supportedProgram, makeProgram("PR2", "program 2"))));
 
     Facility facility = make(a(FacilityBuilder.defaultFacility));
     facility.setSupportedPrograms(asList(programSupported1, programSupported2));
@@ -112,7 +106,7 @@ public class RestProductServiceTest {
     user.setFacilityId(facility.getId());
 
     when(productService.getAllProducts()).thenReturn(asList(makeProduct("P1", "product 1", false), makeProduct("P2", "product 2", false)));
-    when(programProductService.getActiveProgramCodesByProductCode("P1")).thenReturn(asList("PR1","PR2"));
+    when(programProductService.getActiveProgramCodesByProductCode("P1")).thenReturn(asList("PR1", "PR2"));
     when(programProductService.getActiveProgramCodesByProductCode("P2")).thenReturn(asList("PR1"));
 
     when(programProductService.getByProductCode("P1")).thenReturn(asList(makeProgramProduct("PR1", "P1", true), makeProgramProduct("PR2", "P1", true)));
@@ -122,7 +116,7 @@ public class RestProductServiceTest {
     when(programSupportedService.getAllByFacilityId(user.getFacilityId())).thenReturn(facility.getSupportedPrograms());
     when(archivedProductService.getAllArchivedProducts(anyLong())).thenReturn(asList("P1"));
 
-    List<ProductResponse> products = restProductService.getLatestProductsAfterUpdatedTime(null, user.getId());
+    List<ProductResponse> products = restProductService.getLatestProductsAfterUpdatedTime(null, versionCode, user.getId());
 
     assertEquals(2, products.size());
     assertEquals("PR1", products.get(0).getProductPrograms().get(0).getProgramCode());
@@ -148,9 +142,9 @@ public class RestProductServiceTest {
     ProgramProduct programProduct4 = makeProgramProduct(program1, product3);
 
     ProgramSupported programSupported1 = make(a(ProgramSupportedBuilder.defaultProgramSupported,
-        with(ProgramSupportedBuilder.supportedProgram, program1)));
+            with(ProgramSupportedBuilder.supportedProgram, program1)));
     ProgramSupported programSupported2 = make(a(ProgramSupportedBuilder.defaultProgramSupported,
-        with(ProgramSupportedBuilder.supportedProgram, program2)));
+            with(ProgramSupportedBuilder.supportedProgram, program2)));
 
     Facility facility = make(a(FacilityBuilder.defaultFacility));
     facility.setSupportedPrograms(asList(programSupported1, programSupported2));
@@ -169,7 +163,7 @@ public class RestProductServiceTest {
     when(programSupportedService.getAllByFacilityId(user.getFacilityId())).thenReturn(facility.getSupportedPrograms());
     when(programProductService.getLatestUpdatedProgramProduct(afterUpdatedTime)).thenReturn(programProducts);
 
-    List<ProductResponse> products = restProductService.getLatestProductsAfterUpdatedTime(afterUpdatedTime, user.getId());
+    List<ProductResponse> products = restProductService.getLatestProductsAfterUpdatedTime(afterUpdatedTime, versionCode, user.getId());
 
     assertEquals(3, products.size());
     assertEquals("PR1", products.get(0).getProductPrograms().get(0).getProgramCode());
@@ -190,7 +184,7 @@ public class RestProductServiceTest {
     ProgramProduct programProduct = makeProgramProduct(program1, product);
 
     ProgramSupported programSupported1 = make(a(ProgramSupportedBuilder.defaultProgramSupported,
-        with(ProgramSupportedBuilder.supportedProgram, program1)));
+            with(ProgramSupportedBuilder.supportedProgram, program1)));
 
     Facility facility = make(a(FacilityBuilder.defaultFacility));
     facility.setSupportedPrograms(asList(programSupported1));
@@ -207,7 +201,7 @@ public class RestProductServiceTest {
     when(programSupportedService.getAllByFacilityId(user.getFacilityId())).thenReturn(facility.getSupportedPrograms());
     when(programProductService.getLatestUpdatedProgramProduct(afterUpdatedTime)).thenReturn(programProducts);
 
-    List<ProductResponse> products = restProductService.getLatestProductsAfterUpdatedTime(afterUpdatedTime, user.getId());
+    List<ProductResponse> products = restProductService.getLatestProductsAfterUpdatedTime(afterUpdatedTime, versionCode, user.getId());
 
     assertEquals(1, products.size());
   }
@@ -217,7 +211,7 @@ public class RestProductServiceTest {
     Date afterUpdatedTime = DateUtil.parseDate("2015-11-11 10:10:10");
 
     ProgramSupported programSupported = make(a(ProgramSupportedBuilder.defaultProgramSupported,
-      with(ProgramSupportedBuilder.supportedProgram, makeProgram("PR1", "program 1"))));
+            with(ProgramSupportedBuilder.supportedProgram, makeProgram("PR1", "program 1"))));
 
     Facility facility = make(a(FacilityBuilder.defaultFacility));
     facility.setSupportedPrograms(asList(programSupported));
@@ -233,7 +227,7 @@ public class RestProductServiceTest {
     when(userService.getById(user.getId())).thenReturn(user);
     when(programSupportedService.getAllByFacilityId(user.getFacilityId())).thenReturn(facility.getSupportedPrograms());
 
-    List<ProductResponse> products = restProductService.getLatestProductsAfterUpdatedTime(afterUpdatedTime, user.getId());
+    List<ProductResponse> products = restProductService.getLatestProductsAfterUpdatedTime(afterUpdatedTime, versionCode, user.getId());
 
     assertEquals(2, products.size());
     assertEquals("PR1", products.get(0).getProductPrograms().get(0).getProgramCode());
